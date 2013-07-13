@@ -18,7 +18,6 @@
 package org.apache.commons.configuration;
 
 import java.awt.Color;
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -29,13 +28,8 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
@@ -511,135 +505,6 @@ public final class PropertyConverter
     }
 
     /**
-     * Split a string on the specified delimiter. To be removed when
-     * commons-lang has a better replacement available (Tokenizer?).
-     *
-     * todo: replace with a commons-lang equivalent
-     *
-     * @param s          the string to split
-     * @param delimiter  the delimiter
-     * @param trim       a flag whether the single elements should be trimmed
-     * @return a list with the single tokens
-     */
-    public static List<String> split(String s, char delimiter, boolean trim)
-    {
-        if (s == null)
-        {
-            return new ArrayList<String>();
-        }
-
-        List<String> list = new ArrayList<String>();
-
-        StringBuilder token = new StringBuilder();
-        int begin = 0;
-        boolean inEscape = false;
-
-        while (begin < s.length())
-        {
-            char c = s.charAt(begin);
-            if (inEscape)
-            {
-                // last character was the escape marker
-                // can current character be escaped?
-                if (c != delimiter && c != LIST_ESC_CHAR)
-                {
-                    // no, also add escape character
-                    token.append(LIST_ESC_CHAR);
-                }
-                token.append(c);
-                inEscape = false;
-            }
-
-            else
-            {
-                if (c == delimiter)
-                {
-                    // found a list delimiter -> add token and resetDefaultFileSystem buffer
-                    String t = token.toString();
-                    if (trim)
-                    {
-                        t = t.trim();
-                    }
-                    list.add(t);
-                    token = new StringBuilder();
-                }
-                else if (c == LIST_ESC_CHAR)
-                {
-                    // eventually escape next character
-                    inEscape = true;
-                }
-                else
-                {
-                    token.append(c);
-                }
-            }
-
-            begin++;
-        }
-
-        // Trailing delimiter?
-        if (inEscape)
-        {
-            token.append(LIST_ESC_CHAR);
-        }
-        // Add last token
-        String t = token.toString();
-        if (trim)
-        {
-            t = t.trim();
-        }
-        list.add(t);
-
-        return list;
-    }
-
-    /**
-     * Split a string on the specified delimiter always trimming the elements.
-     * This is a shortcut for {@code split(s, delimiter, true)}.
-     *
-     * @param s          the string to split
-     * @param delimiter  the delimiter
-     * @return a list with the single tokens
-     */
-    public static List<String> split(String s, char delimiter)
-    {
-        return split(s, delimiter, true);
-    }
-
-    /**
-     * Escapes the delimiters that might be contained in the given string. This
-     * method works like {@link #escapeListDelimiter(String, char)}. In addition,
-     * a single backslash will also be escaped.
-     *
-     * @param s the string with the value
-     * @param delimiter the list delimiter to use
-     * @return the correctly escaped string
-     */
-    public static String escapeDelimiters(String s, char delimiter)
-    {
-        String s1 = StringUtils.replace(s, LIST_ESCAPE, LIST_ESCAPE + LIST_ESCAPE);
-        return escapeListDelimiter(s1, delimiter);
-    }
-
-    /**
-     * Escapes the list delimiter if it is contained in the given string. This
-     * method ensures that list delimiter characters that are part of a
-     * property's value are correctly escaped when a configuration is saved to a
-     * file. Otherwise when loaded again the property will be treated as a list
-     * property.
-     *
-     * @param s the string with the value
-     * @param delimiter the list delimiter to use
-     * @return the escaped string
-     * @since 1.7
-     */
-    public static String escapeListDelimiter(String s, char delimiter)
-    {
-        return StringUtils.replace(s, String.valueOf(delimiter), LIST_ESCAPE
-                + delimiter);
-    }
-
-    /**
      * Convert the specified object into a Color. If the value is a String,
      * the format allowed is (#)?[0-9A-F]{6}([0-9A-F]{2})?. Examples:
      * <ul>
@@ -900,97 +765,6 @@ public final class PropertyConverter
         else
         {
             throw new ConversionException("The value " + value + " can't be converted to a Calendar");
-        }
-    }
-
-    /**
-     * Returns an iterator over the simple values of a composite value. This
-     * implementation calls {@link #flatten(Object, char)} and
-     * returns an iterator over the returned collection.
-     *
-     * @param value the value to "split"
-     * @param delimiter the delimiter for String values
-     * @return an iterator for accessing the single values
-     */
-    public static Iterator<?> toIterator(Object value, char delimiter)
-    {
-        return flatten(value, delimiter).iterator();
-    }
-
-    /**
-     * Returns a collection with all values contained in the specified object.
-     * This method is used for instance by the {@code addProperty()}
-     * implementation of the default configurations to gather all values of the
-     * property to add. Depending on the type of the passed in object the
-     * following things happen:
-     * <ul>
-     * <li>Strings are checked for delimiter characters and split if necessary.</li>
-     * <li>For objects implementing the {@code Iterable} interface, the
-     * corresponding {@code Iterator} is obtained, and contained elements
-     * are added to the resulting collection.</li>
-     * <li>Arrays are treated as {@code Iterable} objects.</li>
-     * <li>All other types are directly inserted.</li>
-     * <li>Recursive combinations are supported, e.g. a collection containing
-     * an array that contains strings: The resulting collection will only
-     * contain primitive objects (hence the name &quot;flatten&quot;).</li>
-     * </ul>
-     *
-     * @param value the value to be processed
-     * @param delimiter the delimiter for String values
-     * @return a &quot;flat&quot; collection containing all primitive values of
-     *         the passed in object
-     */
-    private static Collection<?> flatten(Object value, char delimiter)
-    {
-        if (value instanceof String)
-        {
-            String s = (String) value;
-            if (s.indexOf(delimiter) > 0)
-            {
-                return split(s, delimiter);
-            }
-        }
-
-        Collection<Object> result = new LinkedList<Object>();
-        if (value instanceof Iterable)
-        {
-            flattenIterator(result, ((Iterable<?>) value).iterator(), delimiter);
-        }
-        else if (value instanceof Iterator)
-        {
-            flattenIterator(result, (Iterator<?>) value, delimiter);
-        }
-        else if (value != null)
-        {
-            if (value.getClass().isArray())
-            {
-                for (int len = Array.getLength(value), idx = 0; idx < len; idx++)
-                {
-                    result.addAll(flatten(Array.get(value, idx), delimiter));
-                }
-            }
-            else
-            {
-                result.add(value);
-            }
-        }
-
-        return result;
-    }
-
-    /**
-     * Flattens the given iterator. For each element in the iteration
-     * {@code flatten()} will be called recursively.
-     *
-     * @param target the target collection
-     * @param it the iterator to process
-     * @param delimiter the delimiter for String values
-     */
-    private static void flattenIterator(Collection<Object> target, Iterator<?> it, char delimiter)
-    {
-        while (it.hasNext())
-        {
-            target.addAll(flatten(it.next(), delimiter));
         }
     }
 

@@ -18,14 +18,10 @@
 package org.apache.commons.configuration;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
 import java.lang.annotation.ElementType;
 import java.math.BigDecimal;
-import java.util.Iterator;
-import java.util.List;
 
 import org.junit.Test;
 
@@ -39,118 +35,6 @@ public class TestPropertyConverter
 {
     /** Constant for an enumeration class used by some tests. */
     private static final Class<ElementType> ENUM_CLASS = ElementType.class;
-
-    @Test
-    public void testSplit()
-    {
-        String s = "abc, xyz , 123";
-        List<String> list = PropertyConverter.split(s, ',');
-
-        assertEquals("size", 3, list.size());
-        assertEquals("1st token for '" + s + "'", "abc", list.get(0));
-        assertEquals("2nd token for '" + s + "'", "xyz", list.get(1));
-        assertEquals("3rd token for '" + s + "'", "123", list.get(2));
-    }
-
-    @Test
-    public void testSplitNoTrim()
-    {
-        String s = "abc, xyz , 123";
-        List<String> list = PropertyConverter.split(s, ',', false);
-
-        assertEquals("size", 3, list.size());
-        assertEquals("1st token for '" + s + "'", "abc", list.get(0));
-        assertEquals("2nd token for '" + s + "'", " xyz ", list.get(1));
-        assertEquals("3rd token for '" + s + "'", " 123", list.get(2));
-    }
-
-    @Test
-    public void testSplitWithEscapedSeparator()
-    {
-        String s = "abc\\,xyz, 123";
-        List<String> list = PropertyConverter.split(s, ',');
-
-        assertEquals("size", 2, list.size());
-        assertEquals("1st token for '" + s + "'", "abc,xyz", list.get(0));
-        assertEquals("2nd token for '" + s + "'", "123", list.get(1));
-    }
-
-    @Test
-    public void testSplitEmptyValues()
-    {
-        String s = ",,";
-        List<String> list = PropertyConverter.split(s, ',');
-
-        assertEquals("size", 3, list.size());
-        assertEquals("1st token for '" + s + "'", "", list.get(0));
-        assertEquals("2nd token for '" + s + "'", "", list.get(1));
-        assertEquals("3rd token for '" + s + "'", "", list.get(2));
-    }
-
-    @Test
-    public void testSplitWithEndingSlash()
-    {
-        String s = "abc, xyz\\";
-        List<String> list = PropertyConverter.split(s, ',');
-
-        assertEquals("size", 2, list.size());
-        assertEquals("1st token for '" + s + "'", "abc", list.get(0));
-        assertEquals("2nd token for '" + s + "'", "xyz\\", list.get(1));
-    }
-
-    @Test
-    public void testSplitNull()
-    {
-        List<String> list = PropertyConverter.split(null, ',');
-        assertNotNull(list);
-        assertTrue(list.isEmpty());
-    }
-
-    /**
-     * Tests whether an escape character can be itself escaped.
-     */
-    @Test
-    public void testSplitEscapeEscapeChar()
-    {
-        List<String> list = PropertyConverter.split("C:\\Temp\\\\,xyz", ',');
-        assertEquals("Wrong list size", 2, list.size());
-        assertEquals("Wrong element 1", "C:\\Temp\\", list.get(0));
-        assertEquals("Wrong element 2", "xyz", list.get(1));
-    }
-
-    /**
-     * Tests whether delimiters are correctly escaped.
-     */
-    @Test
-    public void testEscapeDelimiters()
-    {
-        assertEquals("Wrong escaped delimiters",
-                "C:\\\\Temp\\\\\\,D:\\\\Data\\\\", PropertyConverter
-                        .escapeDelimiters("C:\\Temp\\,D:\\Data\\", ','));
-    }
-
-    /**
-     * Tests whether only the list delimiter can be escaped.
-     */
-    @Test
-    public void testEscapeListDelimiter()
-    {
-        assertEquals("Wrong escaped list delimiter", "C:\\Temp\\\\,D:\\Data\\",
-                PropertyConverter.escapeListDelimiter("C:\\Temp\\,D:\\Data\\",
-                        ','));
-    }
-
-    @Test
-    public void testToIterator()
-    {
-        int[] array = new int[]{1, 2, 3};
-
-        Iterator<?> it = PropertyConverter.toIterator(array, ',');
-
-        assertEquals("1st element", new Integer(1), it.next());
-        assertEquals("2nd element", new Integer(2), it.next());
-        assertEquals("3rd element", new Integer(3), it.next());
-    }
 
     /**
      * Tests the interpolation features.
