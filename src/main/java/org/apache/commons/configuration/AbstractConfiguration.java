@@ -1604,12 +1604,10 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Get an array of strings associated with the given configuration key.
      * If the key doesn't map to an existing object, an empty array is returned.
-     * If a property is added to a configuration, it is checked whether it
+     * When a property is added to a configuration, it is checked whether it
      * contains multiple values. This is obvious if the added object is a list
-     * or an array. For strings it is checked whether the string contains the
-     * list delimiter character that can be specified using the
-     * {@code setListDelimiter()} method. If this is the case, the string
-     * is split at these positions resulting in a property with multiple
+     * or an array. For strings the association {@link ListDelimiterHandler} is
+     * consulted to find out whether the string can be split into multiple
      * values.
      *
      * @param key The configuration key.
@@ -1617,8 +1615,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a String/List of Strings.
-     * @see #setListDelimiter(char)
-     * @see #setDelimiterParsingDisabled(boolean)
+     * @see #setListDelimiterHandler(ListDelimiterHandler)
      */
     public String[] getStringArray(String key)
     {
