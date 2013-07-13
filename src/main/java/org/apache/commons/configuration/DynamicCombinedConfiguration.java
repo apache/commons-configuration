@@ -1017,9 +1017,8 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             }
         }
         config.setExpressionEngine(this.getExpressionEngine());
-        config.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
         config.setConversionExpressionEngine(getConversionExpressionEngine());
-        config.setListDelimiter(getListDelimiter());
+        config.setListDelimiterHandler(getListDelimiterHandler());
         for (ConfigurationErrorListener listener : getErrorListeners())
         {
             config.addErrorListener(listener);

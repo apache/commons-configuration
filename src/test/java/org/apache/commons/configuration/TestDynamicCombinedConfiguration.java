@@ -68,10 +68,11 @@ public class TestDynamicCombinedConfiguration
     public void testConfiguration() throws Exception
     {
         DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
+        DefaultListDelimiterHandler listHandler = new DefaultListDelimiterHandler(',');
+        config.setListDelimiterHandler(listHandler);
         XPathExpressionEngine engine = new XPathExpressionEngine();
         config.setExpressionEngine(engine);
         config.setKeyPattern(PATTERN);
-        config.setDelimiterParsingDisabled(true);
         ConfigurationBuilder<XMLConfiguration> multiBuilder =
                 new MultiFileConfigurationBuilder<XMLConfiguration>(
                         XMLConfiguration.class).configure(Parameters
@@ -81,14 +82,14 @@ public class TestDynamicCombinedConfiguration
                                 ConfigurationInterpolator
                                         .getDefaultPrefixLookups())
                         .setManagedBuilderParameters(
-                                Parameters.xml().setExpressionEngine(engine)));
+                                Parameters.xml().setExpressionEngine(engine)
+                                        .setListDelimiterHandler(listHandler)));
         BuilderConfigurationWrapperFactory wrapFactory =
                 new BuilderConfigurationWrapperFactory();
         config.addConfiguration(wrapFactory.createBuilderConfigurationWrapper(
                 HierarchicalConfiguration.class, multiBuilder), "Multi");
         XMLConfiguration xml = new XMLConfiguration();
         xml.setExpressionEngine(engine);
-        xml.setDelimiterParsingDisabled(true);
         FileHandler handler = new FileHandler(xml);
         handler.setFile(new File(DEFAULT_FILE));
         handler.load();
@@ -101,9 +102,11 @@ public class TestDynamicCombinedConfiguration
         assertEquals("a,b,c", config.getString("split/list3/@values"));
         assertEquals(0, config.getMaxIndex("split/list3/@values"));
         assertEquals("a\\,b\\,c", config.getString("split/list4/@values"));
-        assertEquals("a,b,c", config.getString("split/list1"));
-        assertEquals(0, config.getMaxIndex("split/list1"));
+        assertEquals("OK-1", config.getString("buttons/name"));
+        assertEquals(3, config.getMaxIndex("buttons/name"));
         assertEquals("a\\,b\\,c", config.getString("split/list2"));
+        config.addProperty("listDelimiterTest", "1,2,3");
+        assertEquals("List delimiter not detected", "1", config.getString("listDelimiterTest"));
     }
 
     /**
