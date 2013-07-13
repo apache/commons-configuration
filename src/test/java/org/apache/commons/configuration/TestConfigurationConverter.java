@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.collections.ExtendedProperties;
+import org.easymock.EasyMock;
+import org.easymock.IAnswer;
 import org.junit.Test;
 
 /**
@@ -90,8 +92,11 @@ public class TestConfigurationConverter
         assertEquals("This returns 123", 123, eprops.getInt("int"));
     }
 
-    @Test
-    public void testConfigurationToProperties()
+    /**
+     * Creates a configuration object with some test values.
+     * @return the test configuration
+     */
+    private static BaseConfiguration createTestConfiguration()
     {
         BaseConfiguration config = new BaseConfiguration();
         config.addProperty("string", "teststring");
@@ -100,7 +105,17 @@ public class TestConfigurationConverter
         config.addProperty("interpolated", "${string}");
         config.addProperty("interpolated-array", "${interpolated}");
         config.addProperty("interpolated-array", "${interpolated}");
+        return config;
+    }
 
+    /**
+     * Tests a conversion to Properties if the default list delimiter handler
+     * is used (which does not support list joining).
+     */
+    @Test
+    public void testConfigurationToPropertiesDefaultListHandling()
+    {
+        BaseConfiguration config = createTestConfiguration();
         Properties props = ConfigurationConverter.getProperties(config);
 
         assertNotNull("null properties", props);
@@ -108,11 +123,45 @@ public class TestConfigurationConverter
         assertEquals("'interpolated' property", "teststring", props.getProperty("interpolated"));
         assertEquals("'array' property", "item 1,item 2", props.getProperty("array"));
         assertEquals("'interpolated-array' property", "teststring,teststring", props.getProperty("interpolated-array"));
+    }
 
-        // change the list delimiter
-        config.setListDelimiter(';');
-        props = ConfigurationConverter.getProperties(config);
+    /**
+     * Tests a conversion to Properties if the list delimiter handler supports
+     * list joining.
+     */
+    @Test
+    public void testConfigurationToPropertiesListDelimiterHandler()
+    {
+        BaseConfiguration config = createTestConfiguration();
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(';'));
+        Properties props = ConfigurationConverter.getProperties(config);
         assertEquals("'array' property", "item 1;item 2", props.getProperty("array"));
+    }
+
+    /**
+     * Tests a conversion to Properties if the source configuration does not
+     * extend AbstractConfiguration. In this case, properties with multiple
+     * values have to be handled in a special way.
+     */
+    @Test
+    public void testConfigurationToPropertiesNoAbstractConfiguration()
+    {
+        Configuration src = EasyMock.createMock(Configuration.class);
+        final BaseConfiguration config = createTestConfiguration();
+        EasyMock.expect(src.getKeys()).andReturn(config.getKeys());
+        src.getList(EasyMock.anyObject(String.class));
+        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>()
+        {
+            public Object answer() throws Throwable
+            {
+                String key = (String) EasyMock.getCurrentArguments()[0];
+                return config.getList(key);
+            }
+        }).anyTimes();
+        EasyMock.replay(src);
+        Properties props = ConfigurationConverter.getProperties(src);
+        assertEquals("'array' property", "item 1,item 2",
+                props.getProperty("array"));
     }
 
     /**
