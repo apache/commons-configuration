@@ -24,6 +24,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -552,18 +553,11 @@ public class PropertiesConfiguration extends BaseConfiguration
         {
             if (isIncludesAllowed())
             {
-                String[] files;
-                if (!isDelimiterParsingDisabled())
-                {
-                    files = StringUtils.split(value, getListDelimiter());
-                }
-                else
-                {
-                    files = new String[]{value};
-                }
+                Collection<String> files =
+                        getListDelimiterHandler().split(value, true);
                 for (String f : files)
                 {
-                    loadIncludeFile(interpolate(f.trim()));
+                    loadIncludeFile(interpolate(f));
                 }
             }
             result = false;
