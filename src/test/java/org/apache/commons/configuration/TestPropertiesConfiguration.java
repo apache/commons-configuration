@@ -478,29 +478,22 @@ public class TestPropertiesConfiguration
         assertEquals("'test.multilines' property", property, conf.getString("test.multilines"));
     }
 
-    @Test
-    public void testChangingDefaultListDelimiter() throws Exception
-    {
-        assertEquals(4, conf.getList("test.mixed.array").size());
-
-        char delimiter = PropertiesConfiguration.getDefaultListDelimiter();
-        PropertiesConfiguration.setDefaultListDelimiter('^');
-        PropertiesConfiguration pc = new PropertiesConfiguration();
-        load(pc, testProperties);
-        assertEquals(2, pc.getList("test.mixed.array").size());
-        PropertiesConfiguration.setDefaultListDelimiter(delimiter);
-    }
-
+    /**
+     * Tests whether another list delimiter character can be set (by using an
+     * alternative list delimiter handler).
+     */
     @Test
     public void testChangingListDelimiter() throws Exception
     {
-        assertEquals(4, conf.getList("test.mixed.array").size());
-
+        assertEquals("Wrong initial string", "a^b^c",
+                conf.getString("test.other.delimiter"));
         PropertiesConfiguration pc2 = new PropertiesConfiguration();
-        pc2.setListDelimiter('^');
+        pc2.setListDelimiterHandler(new DefaultListDelimiterHandler('^'));
         load(pc2, testProperties);
-        assertEquals("Should obtain the first value", "a", pc2.getString("test.mixed.array"));
-        assertEquals(2, pc2.getList("test.mixed.array").size());
+        assertEquals("Should obtain the first value", "a",
+                pc2.getString("test.other.delimiter"));
+        assertEquals("Wrong list size", 3, pc2.getList("test.other.delimiter")
+                .size());
     }
 
     @Test
@@ -509,7 +502,6 @@ public class TestPropertiesConfiguration
         assertEquals(4, conf.getList("test.mixed.array").size());
 
         PropertiesConfiguration pc2 = new PropertiesConfiguration();
-        pc2.setDelimiterParsingDisabled(true);
         load(pc2, testProperties);
         assertEquals(2, pc2.getList("test.mixed.array").size());
     }
@@ -978,7 +970,7 @@ public class TestPropertiesConfiguration
             throws ConfigurationException
     {
         String prop = "delimiterListProp";
-        conf.setDelimiterParsingDisabled(true);
+        conf.setListDelimiterHandler(DisabledListDelimiterHandler.INSTANCE);
         List<String> list = Arrays.asList("val", "val2", "val3");
         conf.setProperty(prop, list);
         saveTestConfig();
