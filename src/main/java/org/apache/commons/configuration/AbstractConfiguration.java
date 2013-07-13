@@ -134,20 +134,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /** end token */
     protected static final String END_TOKEN = "}";
 
-    /** The default value for listDelimiter */
-    private static char defaultListDelimiter = ',';
-
     /** The list delimiter handler. */
     private ListDelimiterHandler listDelimiterHandler;
-
-    /** Delimiter used to convert single values to lists */
-    private char listDelimiter = defaultListDelimiter;
-
-    /**
-     * When set to true the given configuration delimiter will not be used
-     * while parsing for this configuration.
-     */
-    private boolean delimiterParsingDisabled;
 
     /**
      * Whether the configuration should throw NoSuchElementExceptions or simply
@@ -173,54 +161,6 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         setLogger(null);
         installDefaultInterpolator();
         listDelimiterHandler = DisabledListDelimiterHandler.INSTANCE;
-    }
-
-    /**
-     * For configurations extending AbstractConfiguration, allow them to change
-     * the listDelimiter from the default comma (","). This value will be used
-     * only when creating new configurations. Those already created will not be
-     * affected by this change
-     *
-     * @param delimiter The new listDelimiter
-     */
-    public static void setDefaultListDelimiter(char delimiter)
-    {
-        AbstractConfiguration.defaultListDelimiter = delimiter;
-    }
-
-    /**
-     * Sets the default list delimiter.
-     *
-     * @param delimiter the delimiter character
-     * @deprecated Use AbstractConfiguration.setDefaultListDelimiter(char)
-     * instead
-     */
-    @Deprecated
-    public static void setDelimiter(char delimiter)
-    {
-        setDefaultListDelimiter(delimiter);
-    }
-
-    /**
-     * Retrieve the current delimiter. By default this is a comma (",").
-     *
-     * @return The delimiter in use
-     */
-    public static char getDefaultListDelimiter()
-    {
-        return AbstractConfiguration.defaultListDelimiter;
-    }
-
-    /**
-     * Returns the default list delimiter.
-     *
-     * @return the default list delimiter
-     * @deprecated Use AbstractConfiguration.getDefaultListDelimiter() instead
-     */
-    @Deprecated
-    public static char getDelimiter()
-    {
-        return getDefaultListDelimiter();
     }
 
     /**
@@ -257,57 +197,6 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
                     "List delimiter handler must not be null!");
         }
         this.listDelimiterHandler = listDelimiterHandler;
-    }
-
-    /**
-     * Change the list delimiter for this configuration.
-     *
-     * Note: this change will only be effective for new parsings. If you
-     * want it to take effect for all loaded properties use the no arg constructor
-     * and call this method before setting the source.
-     *
-     * @param listDelimiter The new listDelimiter
-     */
-    public void setListDelimiter(char listDelimiter)
-    {
-        this.listDelimiter = listDelimiter;
-    }
-
-    /**
-     * Retrieve the delimiter for this configuration. The default
-     * is the value of defaultListDelimiter.
-     *
-     * @return The listDelimiter in use
-     */
-    public char getListDelimiter()
-    {
-        return listDelimiter;
-    }
-
-    /**
-     * Determine if this configuration is using delimiters when parsing
-     * property values to convert them to lists of values. Defaults to false
-     * @return true if delimiters are not being used
-     */
-    public boolean isDelimiterParsingDisabled()
-    {
-        return delimiterParsingDisabled;
-    }
-
-    /**
-     * Set whether this configuration should use delimiters when parsing
-     * property values to convert them to lists of values. By default delimiter
-     * parsing is enabled
-     *
-     * Note: this change will only be effective for new parsings. If you
-     * want it to take effect for all loaded properties use the no arg constructor
-     * and call this method before setting source.
-     * @param delimiterParsingDisabled a flag whether delimiter parsing should
-     * be disabled
-     */
-    public void setDelimiterParsingDisabled(boolean delimiterParsingDisabled)
-    {
-        this.delimiterParsingDisabled = delimiterParsingDisabled;
     }
 
     /**
