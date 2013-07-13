@@ -74,15 +74,18 @@ import org.apache.commons.lang3.text.translate.UnicodeEscaper;
  *   is placed at the end of the line that continues below.
  *  </li>
  *  <li>
- *   <i>value</i> can contain <em>value delimiters</em> and will then be interpreted
- *   as a list of tokens. Default value delimiter is the comma ','. So the
+ *   The list delimiter facilities provided by {@link AbstractConfiguration}
+ *   are supported, too. If an appropriate {@link ListDelimiterHandler} is
+ *   set (for instance a {@link DefaultListDelimiterHandler} object configured
+ *   with a comma as delimiter character), <i>value</i> can contain <em>value
+ *   delimiters</em> and will then be interpreted as a list of tokens. So the
  *   following property definition
  * <pre>
  *  key = This property, has multiple, values
  * </pre>
- *   will result in a property with three values. You can change the value
- *   delimiter using the {@link AbstractConfiguration#setListDelimiter(char)}
- *   method. Setting the delimiter to 0 will disable value splitting completely.
+ *   will result in a property with three values. You can change the handling
+ *   of delimiters using the {@link AbstractConfiguration#setListDelimiterHandler(char)}
+ *   method. Per default, list splitting is disabled.
  *  </li>
  *  <li>
  *   Commas in each token are escaped placing a backslash right before
