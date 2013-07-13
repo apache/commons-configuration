@@ -581,8 +581,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                     writeComment(writer, getCanonicalComment(key, true));
 
                     // Output the property and its value
-                    boolean singleLine = (isForceSingleLine() || isSingleLine(key))
-                            && !config.isDelimiterParsingDisabled();
+                    boolean singleLine = isForceSingleLine() || isSingleLine(key);
                     writer.setCurrentSeparator(getSeparator(key));
                     writer.writeProperty(key, config.getPropertyInternal(
                             key), singleLine);

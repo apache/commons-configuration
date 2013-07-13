@@ -452,7 +452,6 @@ public class TestPropertiesConfigurationLayout
     @Test
     public void testSaveForceSingleLine() throws ConfigurationException
     {
-        config.setListDelimiter(';');
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(';'));
         config.addProperty(TEST_KEY, TEST_VALUE);
         config.addProperty(TEST_KEY, TEST_VALUE + "2");
