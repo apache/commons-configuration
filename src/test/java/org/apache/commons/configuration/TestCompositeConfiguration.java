@@ -39,7 +39,6 @@ import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.io.FileHandler;
 import org.easymock.EasyMock;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -615,31 +614,32 @@ public class TestCompositeConfiguration
     }
 
     /**
-     * Tests changing the list delimiter character.
+     * Tests changing the list delimiter handler.
      */
-    @Test @Ignore // TODO enable after list delimiter handler is fully integrated
+    @Test
     public void testSetListDelimiter()
     {
-        cc.setListDelimiter('/');
-        checkSetListDelimiter();
+        cc.setListDelimiterHandler(new DefaultListDelimiterHandler('/'));
+        checkSetListDelimiterHandler();
     }
 
     /**
-     * Tests whether the correct list delimiter is set after a clear operation.
+     * Tests whether the correct list delimiter handler is set after a clear
+     * operation.
      */
-    @Test @Ignore // TODO enable after list delimiter handler is fully integrated
+    @Test
     public void testSetListDelimiterAfterClear()
     {
-        cc.setListDelimiter('/');
+        cc.setListDelimiterHandler(new DefaultListDelimiterHandler('/'));
         cc.clear();
-        checkSetListDelimiter();
+        checkSetListDelimiterHandler();
     }
 
     /**
      * Helper method for testing whether the list delimiter is correctly
      * handled.
      */
-    private void checkSetListDelimiter()
+    private void checkSetListDelimiterHandler()
     {
         cc.addProperty("test.list", "a/b/c");
         cc.addProperty("test.property", "a,b,c");
@@ -647,39 +647,12 @@ public class TestCompositeConfiguration
                 .getList("test.list").size());
         assertEquals("Wrong value of property", "a,b,c", cc
                 .getString("test.property"));
-    }
 
-    /**
-     * Tests whether list splitting can be disabled.
-     */
-    @Test
-    public void testSetDelimiterParsingDisabled()
-    {
-        cc.setDelimiterParsingDisabled(true);
-        checkSetListDelimiterParsingDisabled();
-    }
-
-    /**
-     * Tests whether the list parsing flag is correctly handled after a clear()
-     * operation.
-     */
-    @Test
-    public void testSetDelimiterParsingDisabledAfterClear()
-    {
-        cc.setDelimiterParsingDisabled(true);
-        cc.clear();
-        checkSetListDelimiterParsingDisabled();
-    }
-
-    /**
-     * Helper method for checking whether the list parsing flag is correctly
-     * handled.
-     */
-    private void checkSetListDelimiterParsingDisabled()
-    {
-        cc.addProperty("test.property", "a,b,c");
-        assertEquals("Wrong value of property", "a,b,c", cc
-                .getString("test.property"));
+        AbstractConfiguration config =
+                (AbstractConfiguration) cc.getInMemoryConfiguration();
+        DefaultListDelimiterHandler listHandler =
+                (DefaultListDelimiterHandler) config.getListDelimiterHandler();
+        assertEquals("Wrong list delimiter", '/', listHandler.getDelimiter());
     }
 
     /**
@@ -811,7 +784,7 @@ public class TestCompositeConfiguration
     }
 
     /**
-     * Tests the behavior of setListDelimiter() if the in-memory configuration
+     * Tests the behavior of setListDelimiterHandler() if the in-memory configuration
      * is not derived from BaseConfiguration. This test is related to
      * CONFIGURATION-476.
      */
@@ -821,21 +794,7 @@ public class TestCompositeConfiguration
         Configuration inMemoryConfig = EasyMock.createMock(Configuration.class);
         EasyMock.replay(inMemoryConfig);
         cc = new CompositeConfiguration(inMemoryConfig);
-        cc.setListDelimiter(';');
-    }
-
-    /**
-     * Tests the behavior of setDelimiterParsingDisabled() if the in-memory
-     * configuration is not derived from BaseConfiguration. This test is related
-     * to CONFIGURATION-476.
-     */
-    @Test
-    public void testSetDelimiterParsingDisabledInMemoryConfigNonBaseConfig()
-    {
-        Configuration inMemoryConfig = EasyMock.createMock(Configuration.class);
-        EasyMock.replay(inMemoryConfig);
-        cc = new CompositeConfiguration(inMemoryConfig);
-        cc.setDelimiterParsingDisabled(true);
+        cc.setListDelimiterHandler(new DefaultListDelimiterHandler(';'));
     }
 
     /**

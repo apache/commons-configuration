@@ -263,14 +263,13 @@ implements Cloneable
         // recreate the in memory configuration
         inMemoryConfiguration = new BaseConfiguration();
         ((BaseConfiguration) inMemoryConfiguration).setThrowExceptionOnMissing(isThrowExceptionOnMissing());
-        ((BaseConfiguration) inMemoryConfiguration).setListDelimiter(getListDelimiter());
-        ((BaseConfiguration) inMemoryConfiguration).setDelimiterParsingDisabled(isDelimiterParsingDisabled());
+        ((BaseConfiguration) inMemoryConfiguration).setListDelimiterHandler(getListDelimiterHandler());
         configList.add(inMemoryConfiguration);
         inMemoryConfigIsChild = false;
     }
 
     /**
-     * Add this property to the inmemory Configuration.
+     * Add this property to the in-memory Configuration.
      *
      * @param key The Key to add the property to.
      * @param token The Value to add.
@@ -507,40 +506,19 @@ implements Cloneable
     }
 
     /**
-     * Sets a flag whether added values for string properties should be checked
-     * for the list delimiter. This implementation ensures that the in memory
+     * {@inheritDoc} This implementation ensures that the in memory
      * configuration is correctly initialized.
-     *
-     * @param delimiterParsingDisabled the new value of the flag
-     * @since 1.4
      */
     @Override
-    public void setDelimiterParsingDisabled(boolean delimiterParsingDisabled)
+    public void setListDelimiterHandler(
+            ListDelimiterHandler listDelimiterHandler)
     {
         if (inMemoryConfiguration instanceof AbstractConfiguration)
         {
             ((AbstractConfiguration) inMemoryConfiguration)
-                    .setDelimiterParsingDisabled(delimiterParsingDisabled);
+                    .setListDelimiterHandler(listDelimiterHandler);
         }
-        super.setDelimiterParsingDisabled(delimiterParsingDisabled);
-    }
-
-    /**
-     * Sets the character that is used as list delimiter. This implementation
-     * ensures that the in memory configuration is correctly initialized.
-     *
-     * @param listDelimiter the new list delimiter character
-     * @since 1.4
-     */
-    @Override
-    public void setListDelimiter(char listDelimiter)
-    {
-        if (inMemoryConfiguration instanceof AbstractConfiguration)
-        {
-            ((AbstractConfiguration) inMemoryConfiguration)
-                    .setListDelimiter(listDelimiter);
-        }
-        super.setListDelimiter(listDelimiter);
+        super.setListDelimiterHandler(listDelimiterHandler);
     }
 
     /**
