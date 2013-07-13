@@ -301,7 +301,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
                         value = values.next();
                         out.print(key);
                         out.print(" = ");
-                        out.print(formatValue(value.toString()));
+                        out.print(escapeValue(value.toString()));
                         out.println();
                     }
                 }
@@ -309,7 +309,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
                 {
                     out.print(key);
                     out.print(" = ");
-                    out.print(formatValue(value.toString()));
+                    out.print(escapeValue(value.toString()));
                     out.println();
                 }
             }
@@ -396,7 +396,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
         }
         else
         {
-            values = PropertyConverter.split(value, getListDelimiter(), false);
+            values = getListDelimiterHandler().split(value, false);
         }
 
         for (String v : values)
@@ -654,9 +654,25 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
     }
 
     /**
-     * Add quotes around the specified value if it contains a comment character.
+     * Escapes the given property value before it is written. This method add
+     * quotes around the specified value if it contains a comment character and
+     * handles list delimiter characters.
+     *
+     * @param value the string to be escaped
      */
-    private String formatValue(String value)
+    private String escapeValue(String value)
+    {
+        return String.valueOf(getListDelimiterHandler().escape(
+                escapeComments(value), ListDelimiterHandler.NOOP_TRANSFORMER));
+    }
+
+    /**
+     * Escapes comment characters in the given value.
+     *
+     * @param value the value to be escaped
+     * @return the value with comment characters escaped
+     */
+    private static String escapeComments(String value)
     {
         boolean quoted = false;
 

@@ -122,6 +122,7 @@ public class TestINIConfiguration
             throws ConfigurationException
     {
         INIConfiguration instance = new INIConfiguration();
+        instance.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         load(instance, data);
         return instance;
     }
@@ -146,6 +147,29 @@ public class TestINIConfiguration
             throw new ConfigurationException(e);
         }
         reader.close();
+    }
+
+    /**
+     * Saves the specified configuration to a string. The string can be compared
+     * with an expected value or again loaded into a configuration.
+     *
+     * @param config the configuration to be saved
+     * @return the content of this configuration saved to a string
+     * @throws ConfigurationException if an error occurs
+     */
+    private static String saveToString(INIConfiguration config)
+            throws ConfigurationException
+    {
+        StringWriter writer = new StringWriter();
+        try
+        {
+            config.write(writer);
+        }
+        catch (IOException e)
+        {
+            throw new ConfigurationException(e);
+        }
+        return writer.toString();
     }
 
     /**
@@ -202,16 +226,8 @@ public class TestINIConfiguration
     private void checkSave(String content) throws ConfigurationException
     {
         INIConfiguration config = setUpConfig(content);
-        StringWriter writer = new StringWriter();
-        try
-        {
-            config.write(writer);
-        }
-        catch (IOException e)
-        {
-            throw new ConfigurationException(e);
-        }
-        assertEquals("Wrong content of ini file", content, writer.toString());
+        String sOutput = saveToString(config);
+        assertEquals("Wrong content of ini file", content, sOutput);
     }
 
     /**
@@ -231,6 +247,27 @@ public class TestINIConfiguration
     public void testSaveWithOnlyGlobalSection() throws ConfigurationException
     {
         checkSave(INI_DATA_GLOBAL_ONLY);
+    }
+
+    /**
+     * Tests whether list delimiter parsing can be disabled.
+     */
+    @Test
+    public void testSaveWithDelimiterParsingDisabled()
+            throws ConfigurationException
+    {
+        INIConfiguration config = new INIConfiguration();
+        String data =
+                INI_DATA.substring(0, INI_DATA.length() - 2)
+                        + "nolist = 1,2, 3";
+        load(config, data);
+        assertEquals("Wrong property value", "1,2, 3",
+                config.getString("section3.nolist"));
+        String content = saveToString(config);
+        INIConfiguration config2 = new INIConfiguration();
+        load(config2, content);
+        assertEquals("Wrong property value after reload", "1,2, 3",
+                config2.getString("section3.nolist"));
     }
 
     /**
@@ -999,6 +1036,42 @@ public class TestINIConfiguration
         checkGetSectionSynchronized("Non-existing-section?",
                 Methods.BEGIN_WRITE, Methods.END_WRITE, Methods.BEGIN_WRITE,
                 Methods.END_WRITE);
+    }
+
+    /**
+     * Tests whether the configuration deals correctly with list delimiters.
+     */
+    @Test
+    public void testListDelimiterHandling() throws ConfigurationException
+    {
+        INIConfiguration config = new INIConfiguration();
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        config.addProperty("list", "a,b,c");
+        config.addProperty("listesc", "3\\,1415");
+        String output = saveToString(config);
+        INIConfiguration config2 = setUpConfig(output);
+        assertEquals("Wrong list size", 3, config2.getList("list").size());
+        assertEquals("Wrong list element", "b", config2.getList("list").get(1));
+        assertEquals("Wrong escaped list element", "3,1415",
+                config2.getString("listesc"));
+    }
+
+    /**
+     * Tests whether property values are correctly escaped even if they are part
+     * of a property with multiple values.
+     */
+    @Test
+    public void testListDelimiterHandlingInList() throws ConfigurationException
+    {
+        String data =
+                INI_DATA + "[sectest]" + LINE_SEPARATOR
+                        + "list = 3\\,1415,pi,\\\\Test\\,5" + LINE_SEPARATOR;
+        INIConfiguration config = setUpConfig(data);
+        INIConfiguration config2 = setUpConfig(saveToString(config));
+        List<Object> list = config2.getList("sectest.list");
+        assertEquals("Wrong number of values", 3, list.size());
+        assertEquals("Wrong element 1", "3,1415", list.get(0));
+        assertEquals("Wrong element 3", "\\Test,5", list.get(2));
     }
 
     /**
