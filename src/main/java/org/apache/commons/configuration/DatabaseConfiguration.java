@@ -318,31 +318,26 @@ public class DatabaseConfiguration extends AbstractConfiguration
             @Override
             protected Object performOperation() throws SQLException
             {
-                ResultSet rs = openResultSet(String.format(
-                        SQL_GET_PROPERTY, table, keyColumn), true, key);
+                ResultSet rs =
+                        openResultSet(String.format(SQL_GET_PROPERTY,
+                                table, keyColumn), true, key);
 
                 List<Object> results = new ArrayList<Object>();
                 while (rs.next())
                 {
                     Object value = extractPropertyValue(rs);
-                    if (isDelimiterParsingDisabled())
+                    // Split value if it contains the list delimiter
+                    Iterator<?> it = getListDelimiterHandler().parse(value);
+                    while (it.hasNext())
                     {
-                        results.add(value);
-                    }
-                    else
-                    {
-                        // Split value if it contains the list delimiter
-                        Iterator<?> it = PropertyConverter.toIterator(value, getListDelimiter());
-                        while (it.hasNext())
-                        {
-                            results.add(it.next());
-                        }
+                        results.add(it.next());
                     }
                 }
 
                 if (!results.isEmpty())
                 {
-                    return (results.size() > 1) ? results : results.get(0);
+                    return (results.size() > 1) ? results : results
+                            .get(0);
                 }
                 else
                 {
@@ -401,11 +396,11 @@ public class DatabaseConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Adds a property to this configuration. This implementation will
-     * temporarily disable list delimiter parsing, so that even if the value
-     * contains the list delimiter, only a single record will be written into
+     * Adds a property to this configuration. This implementation
+     * temporarily disables list delimiter parsing, so that even if the value
+     * contains the list delimiter, only a single record is written into
      * the managed table. The implementation of {@code getProperty()}
-     * will take care about delimiters. So list delimiters are fully supported
+     * takes care about delimiters. So list delimiters are fully supported
      * by {@code DatabaseConfiguration}, but internally treated a bit
      * differently.
      *
@@ -415,19 +410,16 @@ public class DatabaseConfiguration extends AbstractConfiguration
     @Override
     protected void addPropertyInternal(String key, Object value)
     {
-        boolean parsingFlag = isDelimiterParsingDisabled();
+        ListDelimiterHandler oldHandler = getListDelimiterHandler();
         try
         {
-            if (value instanceof String)
-            {
-                // temporarily disable delimiter parsing
-                setDelimiterParsingDisabled(true);
-            }
+            // temporarily disable delimiter parsing
+            setListDelimiterHandler(DisabledListDelimiterHandler.INSTANCE);
             super.addPropertyInternal(key, value);
         }
         finally
         {
-            setDelimiterParsingDisabled(parsingFlag);
+            setListDelimiterHandler(oldHandler);
         }
     }
 

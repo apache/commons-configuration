@@ -452,8 +452,7 @@ public class TestDatabaseConfiguration
     public void testGetListWithDelimiter() throws ConfigurationException
     {
         DatabaseConfiguration config = setUpConfig();
-        config.setListDelimiter(';');
-        config.setDelimiterParsingDisabled(false);
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(';'));
         List<Object> values = config.getList("keyMulti");
         assertEquals("Wrong number of list elements", 3, values.size());
         assertEquals("Wrong list element 0", "a", values.get(0));
@@ -481,8 +480,7 @@ public class TestDatabaseConfiguration
     public void testAddWithDelimiter() throws ConfigurationException
     {
         DatabaseConfiguration config = setUpConfig();
-        config.setListDelimiter(';');
-        config.setDelimiterParsingDisabled(false);
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(';'));
         config.addProperty("keyList", "1;2;3");
         String[] values = config.getStringArray("keyList");
         assertEquals("Wrong number of property values", 3, values.length);
@@ -496,8 +494,7 @@ public class TestDatabaseConfiguration
     public void testSetPropertyWithDelimiter() throws ConfigurationException
     {
         DatabaseConfiguration config = helper.setUpMultiConfig();
-        config.setListDelimiter(';');
-        config.setDelimiterParsingDisabled(false);
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(';'));
         config.setProperty("keyList", "1;2;3");
         String[] values = config.getStringArray("keyList");
         assertEquals("Wrong number of property values", 3, values.length);
