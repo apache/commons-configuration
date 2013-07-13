@@ -29,7 +29,6 @@ import javax.xml.parsers.SAXParserFactory;
 import org.apache.commons.configuration.io.FileLocator;
 import org.apache.commons.configuration.io.FileLocatorAware;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -253,10 +252,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
 
         if (value != null)
         {
-            // escape the value
-            String v = StringEscapeUtils.escapeXml(String.valueOf(value));
-            v = StringUtils.replace(v, String.valueOf(getListDelimiter()), "\\" + getListDelimiter());
-
+            String v = escapeValue(value);
             out.println("  <entry key=\"" + k + "\">" + v + "</entry>");
         }
         else
@@ -337,9 +333,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
 
         if (value != null)
         {
-            // escape the value
-            String v = StringEscapeUtils.escapeXml(String.valueOf(value));
-            v = StringUtils.replace(v, String.valueOf(getListDelimiter()), "\\" + getListDelimiter());
+            String v = escapeValue(value);
             entry.setTextContent(v);
         }
     }
@@ -350,6 +344,19 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
         {
             writeProperty(document, properties, key, value);
         }
+    }
+
+    /**
+     * Escapes a property value before it is written to disk.
+     *
+     * @param value the value to be escaped
+     * @return the escaped value
+     */
+    private String escapeValue(Object value)
+    {
+        String v = StringEscapeUtils.escapeXml(String.valueOf(value));
+        return String.valueOf(getListDelimiterHandler().escape(v,
+                ListDelimiterHandler.NOOP_TRANSFORMER));
     }
 
     /**
