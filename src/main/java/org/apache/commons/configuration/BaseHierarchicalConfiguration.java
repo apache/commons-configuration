@@ -1021,15 +1021,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     {
         // Update the existing nodes for this property
         Iterator<ConfigurationNode> itNodes = fetchNodeList(key).iterator();
-        Iterator<?> itValues;
-        if (!isDelimiterParsingDisabled() || !(value instanceof String))
-        {
-            itValues = PropertyConverter.toIterator(value, getListDelimiter());
-        }
-        else
-        {
-            itValues = Collections.singleton(value).iterator();
-        }
+        Iterator<?> itValues = getListDelimiterHandler().parse(value);
 
         while (itNodes.hasNext() && itValues.hasNext())
         {

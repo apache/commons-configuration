@@ -157,6 +157,7 @@ public class TestHierarchicalConfiguration
     @Test
     public void testSetProperty()
     {
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         config.setProperty("tables.table(0).name", "resources");
         assertEquals("resources", config.getString("tables.table(0).name"));
         config.setProperty("tables.table.name", "tab1,tab2");
@@ -1028,6 +1029,7 @@ public class TestHierarchicalConfiguration
     @Test
     public void testInterpolatedConfiguration()
     {
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         BaseHierarchicalConfiguration c = (BaseHierarchicalConfiguration) InterpolationTestHelper
                 .testInterpolatedConfiguration(config);
 
