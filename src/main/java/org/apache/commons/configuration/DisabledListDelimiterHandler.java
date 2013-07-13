@@ -44,6 +44,14 @@ import java.util.List;
 public class DisabledListDelimiterHandler extends AbstractListDelimiterHandler
 {
     /**
+     * A default instance of this class. Because it is safe to share
+     * {@code DisabledListDelimiterHandler} objects this instance can be used
+     * whenever such an object is needed.
+     */
+    public static final ListDelimiterHandler INSTANCE =
+            new DisabledListDelimiterHandler();
+
+    /**
      * {@inheritDoc} This implementation always throws an
      * {@code UnsupportedOperationException} exception.
      */

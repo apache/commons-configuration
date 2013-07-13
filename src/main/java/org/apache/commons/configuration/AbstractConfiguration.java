@@ -126,10 +126,6 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public static final int EVENT_READ_PROPERTY = 5;
 
-    /** Constant for the default list delimiter handler. */
-    private static final ListDelimiterHandler DEFAULT_LIST_DELIMITER_HANDLER =
-            new DisabledListDelimiterHandler();
-
     /** start token */
     protected static final String START_TOKEN = "${";
 
@@ -174,7 +170,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         interpolator = new AtomicReference<ConfigurationInterpolator>();
         setLogger(null);
         installDefaultInterpolator();
-        listDelimiterHandler = DEFAULT_LIST_DELIMITER_HANDLER;
+        listDelimiterHandler = DisabledListDelimiterHandler.INSTANCE;
     }
 
     /**
