@@ -297,8 +297,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
     protected void initFromParent(BaseHierarchicalConfiguration parentConfig)
     {
         setExpressionEngine(parentConfig.getExpressionEngine());
-        setListDelimiter(parentConfig.getListDelimiter());
-        setDelimiterParsingDisabled(parentConfig.isDelimiterParsingDisabled());
+        setListDelimiterHandler(parentConfig.getListDelimiterHandler());
         setThrowExceptionOnMissing(parentConfig.isThrowExceptionOnMissing());
     }
 

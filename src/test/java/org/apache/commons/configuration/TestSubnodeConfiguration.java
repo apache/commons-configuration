@@ -35,7 +35,6 @@ import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -213,45 +212,25 @@ public class TestSubnodeConfiguration
     }
 
     /**
-     * Tests handling of the delimiter parsing disabled flag. This is shared
-     * with the parent, too.
+     * Tests manipulating the list delimiter handler. This object is derived
+     * from the parent.
      */
     @Test
-    public void testSetDelimiterParsingDisabled()
+    public void testSetListDelimiterHandler()
     {
-        parent.setDelimiterParsingDisabled(true);
+        ListDelimiterHandler handler1 = new DefaultListDelimiterHandler('/');
+        ListDelimiterHandler handler2 = new DefaultListDelimiterHandler(';');
+        parent.setListDelimiterHandler(handler1);
         setUpSubnodeConfig();
-        parent.setDelimiterParsingDisabled(false);
-        assertTrue("Delimiter parsing flag was not received from parent",
-                config.isDelimiterParsingDisabled());
-        config.addProperty("newProp", "test1,test2,test3");
-        assertEquals("New property was splitted", "test1,test2,test3", parent
-                .getString("tables.table(0).newProp"));
-        parent.setDelimiterParsingDisabled(true);
-        config.setDelimiterParsingDisabled(false);
-        assertTrue("Delimiter parsing flag was reset on parent", parent
-                .isDelimiterParsingDisabled());
-    }
-
-    /**
-     * Tests manipulating the list delimiter. This piece of data is derived from
-     * the parent.
-     */
-    @Ignore //TODO enable again when delimiter handling has been reworked
-    @Test
-    public void testSetListDelimiter()
-    {
-        parent.setListDelimiter('/');
-        setUpSubnodeConfig();
-        parent.setListDelimiter(';');
-        assertEquals("List delimiter not obtained from parent", '/', config
-                .getListDelimiter());
+        parent.setListDelimiterHandler(handler2);
+        assertEquals("List delimiter handler not obtained from parent",
+                handler1, config.getListDelimiterHandler());
         config.addProperty("newProp", "test1,test2/test3");
-        assertEquals("List was incorrectly splitted", "test1,test2", parent
-                .getString("tables.table(0).newProp"));
-        config.setListDelimiter(',');
-        assertEquals("List delimiter changed on parent", ';', parent
-                .getListDelimiter());
+        assertEquals("List was incorrectly splitted", "test1,test2",
+                parent.getString("tables.table(0).newProp"));
+        config.setListDelimiterHandler(DisabledListDelimiterHandler.INSTANCE);
+        assertEquals("List delimiter changed on parent", handler2,
+                parent.getListDelimiterHandler());
     }
 
     /**
