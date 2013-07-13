@@ -488,14 +488,14 @@ public final class PropertyConverter
         }
         else if (value instanceof String)
         {
-            List<String> elements = split((String) value, '_');
-            int size = elements.size();
+            String[] elements = ((String) value).split("_");
+            int size = elements.length;
 
-            if (size >= 1 && ((elements.get(0)).length() == 2 || (elements.get(0)).length() == 0))
+            if (size >= 1 && ((elements[0]).length() == 2 || (elements[0]).length() == 0))
             {
-                String language = elements.get(0);
-                String country = (size >= 2) ? elements.get(1) : "";
-                String variant = (size >= 3) ? elements.get(2) : "";
+                String language = elements[0];
+                String country = (size >= 2) ? elements[1] : "";
+                String variant = (size >= 3) ? elements[2] : "";
 
                 return new Locale(language, country, variant);
             }
