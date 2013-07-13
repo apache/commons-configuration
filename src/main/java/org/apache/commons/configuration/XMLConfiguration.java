@@ -113,27 +113,19 @@ import org.xml.sax.helpers.DefaultHandler;
  * XMLConfiguration config = new XMLConfiguration();
  * config.addProperty("test.dir[@name]", "C:\\Temp\\");
  * config.addProperty("test.dir[@name]", "D:\\Data\\");
- * </pre></p>
- *
- * <p>Because in XML such a constellation is not directly supported (an attribute
- * can appear only once for a single element), the values are concatenated to a
- * single value. If delimiter parsing is enabled (refer to the
- * {@link #setDelimiterParsingDisabled(boolean)} method), the
- * current list delimiter character will be used as separator. Otherwise the
- * pipe symbol ("|") will be used for this purpose. No matter which character is
- * used as delimiter, it can always be escaped with a backslash. A backslash
- * itself can also be escaped with another backslash. Consider the following
- * example fragment from a configuration file:
- * <pre>
- * &lt;directories names="C:\Temp\\|D:\Data\"/&gt;
  * </pre>
- * Here the backslash after Temp is escaped. This is necessary because it
- * would escape the list delimiter (the pipe symbol assuming that list delimiter
- * parsing is disabled) otherwise. So this attribute would have two values.</p>
+ * However, in XML such a constellation is not supported; an attribute
+ * can appear only once for a single element. Therefore, an attempt to save
+ * a configuration which violates this condition will throw an exception.</p>
  *
- * <p>Note: You should ensure that the <em>delimiter parsing disabled</em>
- * property is always consistent when you load and save a configuration file.
- * Otherwise the values of properties can become corrupted.</p>
+ * <p>Like other {@code Configuration} implementations, {@code XMLConfiguration}
+ * uses a {@link ListDelimiterHandler} object for controlling list split
+ * operations. Per default, a list delimiter handler object is set which
+ * disables this feature. XML has a built-in support for complex structures
+ * including list properties; therefore, list splitting is not that relevant
+ * for this configuration type. Nevertheless, by setting an alternative
+ * {@code ListDelimiterHandler} implementation, this feature can be enabled.
+ * It works as for any other concrete {@code Configuration} implementation.</p>
  *
  * <p>Whitespace in the content of XML documents is trimmed per default. In most
  * cases this is desired. However, sometimes whitespace is indeed important and
@@ -676,17 +668,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     {
         if (child.getValue() != null)
         {
-            Collection<String> values;
-            if (isDelimiterParsingDisabled())
-            {
-                values = new ArrayList<String>();
-                values.add(child.getValue().toString());
-            }
-            else
-            {
-                values = getListDelimiterHandler().split(
+            Collection<String> values =
+                    getListDelimiterHandler().split(
                             child.getValue().toString(), trim);
-            }
 
             if (values.size() > 1)
             {

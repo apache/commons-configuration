@@ -755,7 +755,6 @@ public class TestXMLConfiguration
     @Test
     public void testDelimiterParsingDisabled() throws ConfigurationException {
         XMLConfiguration conf2 = new XMLConfiguration();
-        conf2.setDelimiterParsingDisabled(true);
         load(conf2, testProperties);
 
         assertEquals("a,b,c", conf2.getString("split.list3[@values]"));
@@ -775,7 +774,6 @@ public class TestXMLConfiguration
     {
         XMLConfiguration conf2 = new XMLConfiguration();
         conf2.setExpressionEngine(new XPathExpressionEngine());
-        conf2.setDelimiterParsingDisabled(true);
         load(conf2, testProperties);
 
         assertEquals("a,b,c", conf2.getString("split/list3/@values"));
@@ -794,7 +792,6 @@ public class TestXMLConfiguration
     public void testSaveWithDelimiterParsingDisabled() throws ConfigurationException {
         conf = new XMLConfiguration();
         conf.setExpressionEngine(new XPathExpressionEngine());
-        conf.setDelimiterParsingDisabled(true);
         load(conf, testProperties);
 
         assertEquals("a,b,c", conf.getString("split/list3/@values"));
@@ -808,14 +805,12 @@ public class TestXMLConfiguration
 
         XMLConfiguration config = new XMLConfiguration();
         //config.setExpressionEngine(new XPathExpressionEngine());
-        config.setDelimiterParsingDisabled(true);
         load(config, testFile2);
         config.setProperty("Employee[@attr1]", "3,2,1");
         assertEquals("3,2,1", config.getString("Employee[@attr1]"));
         new FileHandler(config).save(testSaveFile);
         config = new XMLConfiguration();
         //config.setExpressionEngine(new XPathExpressionEngine());
-        config.setDelimiterParsingDisabled(true);
         load(config, testSaveFile.getAbsolutePath());
         config.setProperty("Employee[@attr1]", "1,2,3");
         assertEquals("1,2,3", config.getString("Employee[@attr1]"));
@@ -828,7 +823,6 @@ public class TestXMLConfiguration
         new FileHandler(config).save(testSaveFile);
         XMLConfiguration checkConfig = new XMLConfiguration();
         checkConfig.setExpressionEngine(new XPathExpressionEngine());
-        checkConfig.setDelimiterParsingDisabled(true);
         load(checkConfig, testSaveFile.getAbsolutePath());
         assertEquals("1,2,3", checkConfig.getString("Employee/@attr1"));
         assertEquals("one, two, three", checkConfig.getString("Employee/@attr2"));
@@ -1225,7 +1219,6 @@ public class TestXMLConfiguration
     public void testNoDelimiterParsingInAttrValues() throws ConfigurationException
     {
         conf.clear();
-        conf.setDelimiterParsingDisabled(true);
         load(conf, testProperties);
         List<Object> expr = conf.getList("expressions[@value]");
         assertEquals("Wrong list size", 1, expr.size());
@@ -1605,7 +1598,6 @@ public class TestXMLConfiguration
             throws ConfigurationException
     {
         String prop = "delimiterListProp";
-        conf.setDelimiterParsingDisabled(true);
         List<String> list = Arrays.asList("val", "val2", "val3");
         conf.setProperty(prop, list);
         saveTestConfig();
@@ -1623,7 +1615,7 @@ public class TestXMLConfiguration
             throws ConfigurationException
     {
         String prop = "delimiterListProp";
-        conf.setDelimiterParsingDisabled(true);
+        conf.setListDelimiterHandler(DisabledListDelimiterHandler.INSTANCE);
         List<String> list = Arrays.asList("val", "val2", "val3");
         conf.addProperty(prop, list);
         saveTestConfig();
