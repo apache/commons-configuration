@@ -258,7 +258,7 @@ public class TestINIConfiguration
     {
         INIConfiguration config = new INIConfiguration();
         String data =
-                INI_DATA.substring(0, INI_DATA.length() - 2)
+                INI_DATA.substring(0, INI_DATA.length() - LINE_SEPARATOR.length())
                         + "nolist = 1,2, 3";
         load(config, data);
         assertEquals("Wrong property value", "1,2, 3",
