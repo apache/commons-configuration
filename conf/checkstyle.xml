@@ -72,7 +72,6 @@
 	    <property name="allowMissingJavadoc" value="true"/>
         </module>
         <module name="JavadocType">
-            <property name="authorFormat" value="\S"/>
         </module>
         <module name="JavadocVariable"/>
 
