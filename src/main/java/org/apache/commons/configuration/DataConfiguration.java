@@ -33,6 +33,7 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.configuration.convert.ConversionException;
+import org.apache.commons.configuration.convert.PropertyConverter;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 

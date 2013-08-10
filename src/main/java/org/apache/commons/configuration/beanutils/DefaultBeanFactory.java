@@ -20,7 +20,7 @@ import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.apache.commons.configuration.PropertyConverter;
+import org.apache.commons.configuration.convert.PropertyConverter;
 
 /**
  * <p>

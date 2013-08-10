@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.configuration;
+package org.apache.commons.configuration.convert;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -23,7 +23,9 @@ import static org.junit.Assert.assertSame;
 import java.lang.annotation.ElementType;
 import java.math.BigDecimal;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.convert.ConversionException;
+import org.apache.commons.configuration.convert.PropertyConverter;
 import org.junit.Test;
 
 /**

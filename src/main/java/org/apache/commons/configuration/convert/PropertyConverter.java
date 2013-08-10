@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.configuration;
+package org.apache.commons.configuration.convert;
 
 import java.awt.Color;
 import java.lang.reflect.Constructor;
@@ -32,7 +32,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.commons.configuration.convert.ConversionException;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
