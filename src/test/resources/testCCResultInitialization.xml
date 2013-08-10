@@ -22,7 +22,7 @@
   <header>
     <result>
       <listDelimiterHandler
-        config-class="org.apache.commons.configuration.DefaultListDelimiterHandler">
+        config-class="org.apache.commons.configuration.convert.DefaultListDelimiterHandler">
         <config-constrarg config-value=","/>
       </listDelimiterHandler>
       <nodeCombiner config-class="org.apache.commons.configuration.tree.OverrideCombiner"/>

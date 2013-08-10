@@ -24,9 +24,9 @@ import java.util.Properties;
 
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.BaseConfiguration;
-import org.apache.commons.configuration.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.TestAbstractConfiguration;
+import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.junit.Before;
 import org.junit.Test;
 

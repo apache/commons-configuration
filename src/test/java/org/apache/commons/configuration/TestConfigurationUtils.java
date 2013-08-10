@@ -36,6 +36,7 @@ import java.util.Map;
 import junitx.framework.ListAssert;
 
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
+import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.event.EventSource;

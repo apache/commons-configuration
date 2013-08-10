@@ -30,6 +30,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.LogFactory;
 

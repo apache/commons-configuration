@@ -30,7 +30,6 @@ import java.util.Collections;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationLookup;
-import org.apache.commons.configuration.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.DynamicCombinedConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -40,6 +39,7 @@ import org.apache.commons.configuration.builder.BuilderListener;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
+import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;

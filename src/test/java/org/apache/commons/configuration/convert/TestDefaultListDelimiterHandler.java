@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.configuration;
+package org.apache.commons.configuration.convert;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.configuration.ValueTransformer;
+import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;

@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.collections.ExtendedProperties;
+import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 import org.junit.Test;

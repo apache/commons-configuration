@@ -40,6 +40,7 @@ import org.apache.commons.configuration.builder.combined.CombinedConfigurationBu
 import org.apache.commons.configuration.builder.combined.MultiFileConfigurationBuilder;
 import org.apache.commons.configuration.builder.combined.ReloadingCombinedConfigurationBuilder;
 import org.apache.commons.configuration.builder.fluent.Parameters;
+import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.io.FileHandler;

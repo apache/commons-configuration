@@ -14,13 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.configuration;
+package org.apache.commons.configuration.convert;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+
+import org.apache.commons.configuration.ListDelimiterHandler;
+import org.apache.commons.configuration.ValueTransformer;
 
 /**
  * <p>

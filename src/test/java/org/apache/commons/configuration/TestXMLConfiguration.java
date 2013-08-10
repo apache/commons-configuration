@@ -43,6 +43,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
+import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.apache.commons.configuration.tree.ConfigurationNode;

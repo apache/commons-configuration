@@ -31,6 +31,7 @@ import java.util.NoSuchElementException;
 import java.util.Properties;
 
 import org.apache.commons.configuration.convert.ConversionException;
+import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.junit.Before;
 import org.junit.Test;
 

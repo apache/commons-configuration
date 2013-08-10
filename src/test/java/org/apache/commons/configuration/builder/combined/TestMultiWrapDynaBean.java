@@ -28,10 +28,10 @@ import java.util.Map;
 import org.apache.commons.beanutils.DynaClass;
 import org.apache.commons.beanutils.LazyDynaBean;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.configuration.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.ListDelimiterHandler;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.junit.Test;
 
 /**

@@ -22,8 +22,8 @@ import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 
 import org.apache.commons.configuration.AbstractConfiguration;
-import org.apache.commons.configuration.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.TestAbstractConfiguration;
+import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.junit.Test;
 
 import com.mockobjects.servlet.MockServletConfig;
