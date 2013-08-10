@@ -34,7 +34,7 @@ import org.junit.Test;
 /**
  * Test class for {@code DefaultConversionHandler}.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class TestDefaultConversionHandler
 {

@@ -50,7 +50,7 @@ import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
  * configuration object can be adapted.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public interface ConversionHandler
