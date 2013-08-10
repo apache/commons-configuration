@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 
-package org.apache.commons.configuration;
+package org.apache.commons.configuration.convert;
+
+import org.apache.commons.configuration.ConfigurationRuntimeException;
 
 /**
  * Exception thrown when a property is incompatible with the type requested.

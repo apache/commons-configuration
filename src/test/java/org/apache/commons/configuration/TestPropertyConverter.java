@@ -23,6 +23,7 @@ import static org.junit.Assert.assertSame;
 import java.lang.annotation.ElementType;
 import java.math.BigDecimal;
 
+import org.apache.commons.configuration.convert.ConversionException;
 import org.junit.Test;
 
 /**

@@ -31,6 +31,7 @@ import java.util.List;
 
 import junitx.framework.ListAssert;
 
+import org.apache.commons.configuration.convert.ConversionException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;

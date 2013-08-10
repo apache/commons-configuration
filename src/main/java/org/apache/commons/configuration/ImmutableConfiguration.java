@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.configuration.convert.ConversionException;
+
 /**
  * <p>The main interface for accessing configuration data in a read-only fashion.</p>
  * <p>

@@ -39,6 +39,7 @@ import java.util.StringTokenizer;
 
 import junitx.framework.ListAssert;
 
+import org.apache.commons.configuration.convert.ConversionException;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
