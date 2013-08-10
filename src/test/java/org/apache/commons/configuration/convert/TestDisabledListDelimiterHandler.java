@@ -19,12 +19,13 @@ package org.apache.commons.configuration.convert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.commons.configuration.ListDelimiterHandler;
 import org.apache.commons.configuration.ValueTransformer;
-import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -178,5 +179,46 @@ public class TestDisabledListDelimiterHandler
     {
         handler.escapeList(Arrays.asList(VALUES),
                 ListDelimiterHandler.NOOP_TRANSFORMER);
+    }
+
+    /**
+     * Tests whether a limit is applied when extracting values from an array.
+     */
+    @Test
+    public void testFlattenArrayWithLimit()
+    {
+        Collection<?> res = handler.flatten(VALUES, 1);
+        assertEquals("Wrong collection size", 1, res.size());
+        assertEquals("Wrong element", VALUES[0], res.iterator().next());
+    }
+
+    /**
+     * Tests whether a limit is applied when extracting elements from a
+     * collection.
+     */
+    @Test
+    public void testFlattenCollectionWithLimit()
+    {
+        Collection<Object> src = Arrays.asList(VALUES);
+        Collection<?> res = handler.flatten(src, 1);
+        assertEquals("Wrong collection size", 1, res.size());
+        assertEquals("Wrong element", VALUES[0], res.iterator().next());
+    }
+
+    /**
+     * Tests whether elements can be extracted from a collection that contains
+     * an array if a limit is specified.
+     */
+    @Test
+    public void testFlattenCollectionWithArrayWithLimit()
+    {
+        Collection<Object> src = new ArrayList<Object>(2);
+        src.add(STR_VALUE);
+        src.add(VALUES);
+        Collection<?> res = handler.flatten(src, 2);
+        assertEquals("Wrong collection size", 2, res.size());
+        Iterator<?> it = res.iterator();
+        assertEquals("Wrong element (1)", STR_VALUE, it.next());
+        assertEquals("Wrong element (2)", VALUES[0], it.next());
     }
 }

@@ -119,16 +119,21 @@ public abstract class AbstractListDelimiterHandler implements
     protected abstract String escapeString(String s);
 
     /**
-     * Performs the actual work as advertised by the {@code parse()} method. The
-     * passed in object is evaluated (if necessary, in a recursive way), and all
-     * simple value objects it contains are extracted. They are returned as a
-     * collection.
+     * Extracts all values contained in the specified object up to the given
+     * limit. The passed in object is evaluated (if necessary in a recursive
+     * way). If it is a complex object (e.g. a collection or an array), all its
+     * elements are processed recursively and added to a target collection. The
+     * process stops if the limit is reached, but depending on the input object,
+     * it might be exceeded. (The limit is just an indicator to stop the process
+     * to avoid unnecessary work if the caller is only interested in a few
+     * values.)
      *
      * @param value the value to be processed
+     * @param limit the limit for aborting the processing
      * @return a &quot;flat&quot; collection containing all primitive values of
      *         the passed in object
      */
-    private Collection<?> flatten(Object value)
+    Collection<?> flatten(Object value, int limit)
     {
         if (value instanceof String)
         {
@@ -138,19 +143,20 @@ public abstract class AbstractListDelimiterHandler implements
         Collection<Object> result = new LinkedList<Object>();
         if (value instanceof Iterable)
         {
-            flattenIterator(result, ((Iterable<?>) value).iterator());
+            flattenIterator(result, ((Iterable<?>) value).iterator(), limit);
         }
         else if (value instanceof Iterator)
         {
-            flattenIterator(result, (Iterator<?>) value);
+            flattenIterator(result, (Iterator<?>) value, limit);
         }
         else if (value != null)
         {
             if (value.getClass().isArray())
             {
-                for (int len = Array.getLength(value), idx = 0; idx < len; idx++)
+                for (int len = Array.getLength(value), idx = 0, size = 0; idx < len
+                        && size < limit; idx++, size = result.size())
                 {
-                    result.addAll(flatten(Array.get(value, idx)));
+                    result.addAll(flatten(Array.get(value, idx), limit - size));
                 }
             }
             else
@@ -163,17 +169,34 @@ public abstract class AbstractListDelimiterHandler implements
     }
 
     /**
+     * Performs the actual work as advertised by the {@code parse()} method.
+     * This method delegates to {@link #flatten(Object, int)} without specifying
+     * a limit.
+     *
+     * @param value the value to be processed
+     * @return a &quot;flat&quot; collection containing all primitive values of
+     *         the passed in object
+     */
+    private Collection<?> flatten(Object value)
+    {
+        return flatten(value, Integer.MAX_VALUE);
+    }
+
+    /**
      * Flattens the given iterator. For each element in the iteration
      * {@code flatten()} is called recursively.
      *
      * @param target the target collection
      * @param it the iterator to process
+     * @param limit a limit for the number of elements to extract
      */
-    private void flattenIterator(Collection<Object> target, Iterator<?> it)
+    private void flattenIterator(Collection<Object> target, Iterator<?> it, int limit)
     {
-        while (it.hasNext())
+        int size = target.size();
+        while (size < limit && it.hasNext())
         {
-            target.addAll(flatten(it.next()));
+            target.addAll(flatten(it.next(), limit - size));
+            size = target.size();
         }
     }
 }
