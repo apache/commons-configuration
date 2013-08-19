@@ -32,8 +32,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -797,31 +795,6 @@ public final class PropertyConverter
         {
             throw new ConversionException("The value " + value + " can't be converted to a Calendar");
         }
-    }
-
-    /**
-     * Performs interpolation of the specified value using the given
-     * {@code Configuration} object. This method checks if the given
-     * {@code Configuration} has a {@link ConfigurationInterpolator} object. If
-     * so, it is called to perform interpolation. Otherwise, the passed in value
-     * is return unchanged.
-     *
-     * @param value the value to be interpolated
-     * @param config the current configuration object (may be <b>null</b>)
-     * @return the interpolated value
-     */
-    public static Object interpolate(Object value, Configuration config)
-    {
-        Object result = value;
-        if (config != null)
-        {
-            ConfigurationInterpolator interpolator = config.getInterpolator();
-            if (interpolator != null)
-            {
-                result = interpolator.interpolate(value);
-            }
-        }
-        return result;
     }
 
     /**

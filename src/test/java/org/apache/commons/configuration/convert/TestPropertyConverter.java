@@ -37,17 +37,6 @@ public class TestPropertyConverter
     private static final Class<ElementType> ENUM_CLASS = ElementType.class;
 
     /**
-     * Tests interpolate() if the passed in configuration is null.
-     */
-    @Test
-    public void testInterpolationNoConfiguration()
-    {
-        String txt = "The ${animal} jumps over the ${target}.";
-        assertEquals("Interpolation was performed", txt,
-                PropertyConverter.interpolate(txt, null));
-    }
-
-    /**
      * Tests conversion to numbers when the passed in objects are already
      * numbers.
      */
