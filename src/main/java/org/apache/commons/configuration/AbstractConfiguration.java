@@ -1598,6 +1598,56 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         return list;
     }
 
+    public <T> T get(Class<T> cls, String key)
+    {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
+    public <T> T get(Class<T> cls, String key, T defaultValue)
+    {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
+    public Object getArray(Class<?> cls, String key)
+    {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
+    public Object getArray(Class<?> cls, String key, Object defaultValue)
+    {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
+    public <T> List<T> getList(Class<T> cls, String key)
+    {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
+    public <T> List<T> getList(Class<T> cls, String key, List<T> defaultValue)
+    {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
+    public <T> Collection<T> getCollection(Class<T> cls, String key,
+            Collection<T> target)
+    {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
+    public <T> Collection<T> getCollection(Class<T> cls, String key,
+            Collection<T> target, Collection<T> defaultValue)
+    {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
     /**
      * Returns an object from the store described by the key. If the value is a
      * Collection object, replace it with the first object in the collection.

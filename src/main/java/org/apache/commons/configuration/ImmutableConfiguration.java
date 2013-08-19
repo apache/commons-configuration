@@ -18,8 +18,10 @@ package org.apache.commons.configuration;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Properties;
 
 import org.apache.commons.configuration.convert.ConversionException;
@@ -517,6 +519,149 @@ public interface ImmutableConfiguration
      *         object that is not a List.
      */
     List<Object> getList(String key, List<Object> defaultValue);
+
+    /**
+     * Get an object of the specified type associated with the given
+     * configuration key. If the key doesn't map to an existing object, the
+     * method returns null unless {@link #isThrowExceptionOnMissing()} is set
+     * to <tt>true</tt>.
+     *
+     * @param <T> the target type of the value
+     * @param cls the target class of the value
+     * @param key the key of the value
+     *
+     * @return the value of the requested type for the key
+     *
+     * @throws NoSuchElementException if the key doesn't map to an existing
+     *     object and <tt>throwExceptionOnMissing=true</tt>
+     * @throws ConversionException if the value is not compatible with the requested type
+     *
+     * @since 2.0
+     */
+    <T> T get(Class<T> cls, String key);
+
+    /**
+     * Get an object of the specified type associated with the given
+     * configuration key using a default value. If the key doesn't map to an
+     * existing object, the default value is returned.
+     *
+     * @param <T>          the target type of the value
+     * @param cls          the target class of the value
+     * @param key          the key of the value
+     * @param defaultValue the default value
+     *
+     * @return the value of the requested type for the key
+     *
+     * @throws ConversionException if the value is not compatible with the requested type
+     *
+     * @since 2.0
+     */
+    <T> T get(Class<T> cls, String key, T defaultValue);
+
+    /**
+     * Get an array of typed objects associated with the given configuration key.
+     * If the key doesn't map to an existing object, an empty list is returned.
+     *
+     * @param cls the type expected for the elements of the array
+     * @param key The configuration key.
+     * @return The associated array if the key is found, and the value compatible with the type specified.
+     *
+     * @throws ConversionException is thrown if the key maps to an object that
+     *     is not compatible with a list of the specified class.
+     *
+     * @since 2.0
+     */
+    Object getArray(Class<?> cls, String key);
+
+    /**
+     * Get an array of typed objects associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value is returned.
+     *
+     * @param cls          the type expected for the elements of the array
+     * @param key          the configuration key.
+     * @param defaultValue the default value
+     * @return The associated array if the key is found, and the value compatible with the type specified.
+     *
+     * @throws ConversionException is thrown if the key maps to an object that
+     *     is not compatible with an array of the specified class.
+     * @throws IllegalArgumentException if the default value is not an array of the specified type
+     *
+     * @since 2.0
+     */
+    Object getArray(Class<?> cls, String key, Object defaultValue);
+
+    /**
+     * Get a list of typed objects associated with the given configuration key
+     * returning an empty list if the key doesn't map to an existing object.
+     *
+     * @param <T> the type expected for the elements of the list
+     * @param cls the class expected for the elements of the list
+     * @param key The configuration key.
+     * @return The associated list if the key is found.
+     *
+     * @throws ConversionException is thrown if the key maps to an object that
+     *     is not compatible with a list of the specified class.
+     *
+     * @since 2.0
+     */
+    <T> List<T> getList(Class<T> cls, String key);
+
+    /**
+     * Get a list of typed objects associated with the given configuration key
+     * returning the specified default value if the key doesn't map to an
+     * existing object.
+     *
+     * @param <T>          the type expected for the elements of the list
+     * @param cls          the class expected for the elements of the list
+     * @param key          the configuration key.
+     * @param defaultValue the default value.
+     * @return The associated List.
+     *
+     * @throws ConversionException is thrown if the key maps to an object that
+     *     is not compatible with a list of the specified class.
+     *
+     * @since 2.0
+     */
+    <T> List<T> getList(Class<T> cls, String key, List<T> defaultValue);
+
+    /**
+     * Get a collection of typed objects associated with the given configuration
+     * key. This method is similar to {@code getList()}, however, it allows
+     * specifying a target collection. Results are added to this collection.
+     * This is useful if the data retrieved should be added to a specific kind
+     * of collection, e.g. a set to remove duplicates. The return value is the
+     * passed in collection if it is not <b>null</b>. Otherwise, a default
+     * collection is created and returned.
+     *
+     * @param <T> the element type of the result list
+     * @param cls the the element class of the result list
+     * @param key the configuration key
+     * @param target the target collection (may be <b>null</b>)
+     * @return the collection to which data was added
+     * @throws ConversionException if the conversion is not possible
+     * @since 2.0
+     */
+    <T> Collection<T> getCollection(Class<T> cls, String key,
+            Collection<T> target);
+
+    /**
+     * Get a collection of typed objects associated with the given configuration
+     * key using the values in the specified default collection if the key does
+     * not map to an existing object.
+     *
+     * @param <T> the element type of the result list
+     * @param cls the the element class of the result list
+     * @param key the configuration key
+     * @param target the target collection (may be <b>null</b>)
+     * @param defaultValue the default value (may be <b>null</b>)
+     * @return the collection to which data was added
+     * @throws ConversionException if the conversion is not possible
+     * @since 2.0
+     * @see #getCollection(Class, String, Collection)
+     */
+    <T> Collection<T> getCollection(Class<T> cls, String key,
+            Collection<T> target, Collection<T> defaultValue);
+
     /**
      * Return a decorator immutable Configuration containing every key from the current
      * Configuration that starts with the specified prefix. The prefix is
