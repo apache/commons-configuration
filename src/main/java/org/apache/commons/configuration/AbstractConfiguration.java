@@ -32,6 +32,8 @@ import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.configuration.convert.ConversionException;
+import org.apache.commons.configuration.convert.ConversionHandler;
+import org.apache.commons.configuration.convert.DefaultConversionHandler;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration.convert.PropertyConverter;
@@ -138,8 +140,15 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /** end token */
     protected static final String END_TOKEN = "}";
 
+    /** The default {@code ConversionHandler} instance. */
+    private static final ConversionHandler DEF_CONVERSION_HANDLER =
+            new DefaultConversionHandler();
+
     /** The list delimiter handler. */
     private ListDelimiterHandler listDelimiterHandler;
+
+    /** The conversion handler. */
+    private ConversionHandler conversionHandler;
 
     /**
      * Whether the configuration should throw NoSuchElementExceptions or simply
@@ -165,6 +174,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         setLogger(null);
         installDefaultInterpolator();
         listDelimiterHandler = DisabledListDelimiterHandler.INSTANCE;
+        conversionHandler = DEF_CONVERSION_HANDLER;
     }
 
     /**
@@ -201,6 +211,42 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
                     "List delimiter handler must not be null!");
         }
         this.listDelimiterHandler = listDelimiterHandler;
+    }
+
+    /**
+     * Returns the {@code ConversionHandler} used by this instance.
+     *
+     * @return the {@code ConversionHandler}
+     * @since 2.0
+     */
+    public ConversionHandler getConversionHandler()
+    {
+        return conversionHandler;
+    }
+
+    /**
+     * Sets the {@code ConversionHandler} to be used by this instance. The
+     * {@code ConversionHandler} is responsible for every kind of data type
+     * conversion. It is consulted by all get methods returning results in
+     * specific data types. A newly created configuration uses a default
+     * {@code ConversionHandler} implementation. This can be changed while
+     * initializing the configuration (e.g. via a builder). Note that access to
+     * this property is not synchronized.
+     *
+     * @param conversionHandler the {@code ConversionHandler} to be used (must
+     *        not be <b>null</b>)
+     * @throws IllegalArgumentException if the {@code ConversionHandler} is
+     *         <b>null</b>
+     * @since 2.0
+     */
+    public void setConversionHandler(ConversionHandler conversionHandler)
+    {
+        if (conversionHandler == null)
+        {
+            throw new IllegalArgumentException(
+                    "ConversionHandler must not be null!");
+        }
+        this.conversionHandler = conversionHandler;
     }
 
     /**
@@ -1600,52 +1646,85 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     public <T> T get(Class<T> cls, String key)
     {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not yet implemented!");
+        return get(cls, key, null);
     }
 
+    /**
+     * {@inheritDoc} This implementation delegates to the
+     * {@link ConversionHandler} to perform the actual type conversion.
+     */
     public <T> T get(Class<T> cls, String key, T defaultValue)
     {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not yet implemented!");
+        return ObjectUtils.defaultIfNull(
+                getConversionHandler().to(getProperty(key), cls,
+                        getInterpolator()), defaultValue);
     }
 
     public Object getArray(Class<?> cls, String key)
     {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not yet implemented!");
+        return getArray(cls, key, null);
     }
 
+    /**
+     * {@inheritDoc} This implementation delegates to the
+     * {@link ConversionHandler} to perform the actual type conversion. If this
+     * results in a <b>null</b> result (because the property is undefined), the
+     * default value is returned. It is checked whether the default value is an
+     * array with the correct component type. If not, an exception is thrown.
+     *
+     * @throws IllegalArgumentException if the default value is not a compatible
+     *         array
+     */
     public Object getArray(Class<?> cls, String key, Object defaultValue)
     {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not yet implemented!");
+        checkDefaultValueArray(cls, defaultValue);
+        return ObjectUtils.defaultIfNull(
+                getConversionHandler().toArray(getProperty(key), cls,
+                        getInterpolator()), defaultValue);
     }
 
     public <T> List<T> getList(Class<T> cls, String key)
     {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not yet implemented!");
+        return getList(cls, key, null);
     }
 
+    /**
+     * {@inheritDoc} This implementation delegates to the generic
+     * {@code getCollection()}. As target collection a newly created
+     * {@code ArrayList} is passed in.
+     */
     public <T> List<T> getList(Class<T> cls, String key, List<T> defaultValue)
     {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not yet implemented!");
+        List<T> result = new ArrayList<T>();
+        getCollection(cls, key, result, defaultValue);
+        return result;
     }
 
     public <T> Collection<T> getCollection(Class<T> cls, String key,
             Collection<T> target)
     {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not yet implemented!");
+        return getCollection(cls, key, target, null);
     }
 
+    /**
+     * {@inheritDoc} This implementation delegates to the
+     * {@link ConversionHandler} to perform the actual conversion. If no target
+     * collection is provided, an {@code ArrayList} is created.
+     */
     public <T> Collection<T> getCollection(Class<T> cls, String key,
             Collection<T> target, Collection<T> defaultValue)
     {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not yet implemented!");
+        Object src = getProperty(key);
+        if (src == null)
+        {
+            return handleDefaultCollection(target, defaultValue);
+        }
+
+        Collection<T> targetCol =
+                (target != null) ? target : new ArrayList<T>();
+        getConversionHandler().toCollection(src, cls, getInterpolator(),
+                targetCol);
+        return targetCol;
     }
 
     /**
@@ -1817,6 +1896,63 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         for (Object value : values)
         {
             result.add(encodeForCopy(value));
+        }
+        return result;
+    }
+
+    /**
+     * Checks an object provided as default value for the {@code getArray()}
+     * method. Throws an exception if this is not an array with the correct
+     * component type.
+     *
+     * @param cls the component class for the array
+     * @param defaultValue the default value object to be checked
+     * @throws IllegalArgumentException if this is not a valid default object
+     */
+    private static void checkDefaultValueArray(Class<?> cls, Object defaultValue)
+    {
+        if (defaultValue != null
+                && (!defaultValue.getClass().isArray() || !cls
+                        .isAssignableFrom(defaultValue.getClass()
+                                .getComponentType())))
+        {
+            throw new IllegalArgumentException(
+                    "The type of the default value (" + defaultValue.getClass()
+                            + ")" + " is not an array of the specified class ("
+                            + cls + ")");
+        }
+    }
+
+    /**
+     * Handles the default collection for a collection conversion. This method
+     * fills the target collection with the content of the default collection.
+     * Both collections may be <b>null</b>.
+     *
+     * @param target the target collection
+     * @param defaultValue the default collection
+     * @return the initialized target collection
+     */
+    private static <T> Collection<T> handleDefaultCollection(Collection<T> target,
+            Collection<T> defaultValue)
+    {
+        Collection<T> defCol;
+        if (defaultValue != null)
+        {
+            defCol = defaultValue;
+        }
+        else
+        {
+            defCol = Collections.emptyList();
+        }
+        Collection<T> result;
+        if (target == null)
+        {
+            result = new ArrayList<T>(defCol);
+        }
+        else
+        {
+            target.addAll(defCol);
+            result = target;
         }
         return result;
     }

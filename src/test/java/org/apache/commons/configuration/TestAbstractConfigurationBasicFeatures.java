@@ -16,7 +16,9 @@
  */
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -30,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.configuration.convert.ConversionHandler;
+import org.apache.commons.configuration.convert.DefaultConversionHandler;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationEvent;
@@ -628,6 +632,286 @@ public class TestAbstractConfigurationBasicFeatures
         config.setInterpolator(null);
         assertEquals("Interpolation was performed", SUBST_TXT,
                 config.getString(KEY_PREFIX));
+    }
+
+    /**
+     * Tests whether a configuration instance has a default conversion hander.
+     */
+    @Test
+    public void testDefaultConversionHandler()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        assertEquals("Wrong default conversion handler",
+                DefaultConversionHandler.class, config.getConversionHandler()
+                        .getClass());
+    }
+
+    /**
+     * Tests that the default conversion handler is shared between all
+     * configuration instances.
+     */
+    @Test
+    public void testDefaultConversionHandlerSharedInstance()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        PropertiesConfiguration config2 = new PropertiesConfiguration();
+        assertSame("Multiple conversion handlers",
+                config.getConversionHandler(), config2.getConversionHandler());
+    }
+
+    /**
+     * Tests whether the conversion handler can be changed.
+     */
+    @Test
+    public void testSetDefaultConversionHandler()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        ConversionHandler handler = new DefaultConversionHandler();
+        config.setConversionHandler(handler);
+        assertSame("Handler not set", handler, config.getConversionHandler());
+    }
+
+    /**
+     * Tries to set a null value for the conversion handler.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetDefaultConversionHandlerNull()
+    {
+        new PropertiesConfiguration().setConversionHandler(null);
+    }
+
+    /**
+     * Tests the generic get() method.
+     */
+    @Test
+    public void testGet()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        Integer value = 20130816;
+        config.addProperty(KEY_PREFIX, value.toString());
+        assertEquals("Wrong result", value, config.get(Integer.class, KEY_PREFIX));
+    }
+
+    /**
+     * Tests get() for an unknown property if no default value is provided.
+     */
+    @Test
+    public void testGetUnknownNoDefaultValue()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        assertNull("Wrong result", config.get(Integer.class, KEY_PREFIX));
+    }
+
+    /**
+     * Tests get() for an unknown property if a default value is provided.
+     */
+    @Test
+    public void testGetUnknownWithDefaultValue()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        Integer defaultValue = 2121;
+        assertEquals("Wrong result", defaultValue,
+                config.get(Integer.class, KEY_PREFIX, defaultValue));
+    }
+
+    /**
+     * Tests whether conversion to an array is possible.
+     */
+    @Test
+    public void testGetArray()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        Integer[] expected = new Integer[PROP_COUNT];
+        for (int i = 0; i < PROP_COUNT; i++)
+        {
+            config.addProperty(KEY_PREFIX, String.valueOf(i));
+            expected[i] = Integer.valueOf(i);
+        }
+        Integer[] result =
+                (Integer[]) config.getArray(Integer.class, KEY_PREFIX);
+        assertArrayEquals("Wrong result", expected, result);
+    }
+
+    /**
+     * Tests a conversion to an array of primitive types.
+     */
+    @Test
+    public void testGetArrayPrimitive()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        short[] expected = new short[PROP_COUNT];
+        for (int i = 0; i < PROP_COUNT; i++)
+        {
+            config.addProperty(KEY_PREFIX, String.valueOf(i));
+            expected[i] = (short) i;
+        }
+        short[] result =
+                (short[]) config.getArray(Short.TYPE, KEY_PREFIX, new short[0]);
+        assertArrayEquals("Wrong result", expected, result);
+    }
+
+    /**
+     * Tests getArray() for an unknown property if no default value is provided.
+     */
+    @Test
+    public void testGetArrayUnknownNoDefault()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        assertNull("Wrong result", config.getArray(Integer.class, KEY_PREFIX));
+    }
+
+    /**
+     * Tests getArray() for an unknown property if a default value is provided.
+     */
+    @Test
+    public void testGetArrayUnknownWithDefault()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        int[] defValue = {
+                1, 2, 3
+        };
+        assertArrayEquals("Wrong result", defValue,
+                (int[]) config.getArray(Integer.TYPE, KEY_PREFIX, defValue));
+    }
+
+    /**
+     * Tests getArray() if the default value is not an array.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetArrayDefaultValueNotAnArray()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.getArray(Integer.class, KEY_PREFIX, this);
+    }
+
+    /**
+     * Tests getArray() if the default value is an array with a different
+     * component type.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetArrayDefaultValueWrongComponentClass()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.getArray(Integer.class, KEY_PREFIX, new short[1]);
+    }
+
+    /**
+     * Prepares a test configuration for a test for a list conversion. The
+     * configuration is populated with a list property. The returned list
+     * contains the expected list values converted to integers.
+     *
+     * @param config the test configuration
+     * @return the list with expected values
+     */
+    private static List<Integer> prepareListTest(PropertiesConfiguration config)
+    {
+        List<Integer> expected = new ArrayList<Integer>(PROP_COUNT);
+        for (int i = 0; i < PROP_COUNT; i++)
+        {
+            config.addProperty(KEY_PREFIX, String.valueOf(i));
+            expected.add(i);
+        }
+        return expected;
+    }
+
+    /**
+     * Tests a conversion to a list.
+     */
+    @Test
+    public void testGetList()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        List<Integer> expected = prepareListTest(config);
+        List<Integer> result = config.getList(Integer.class, KEY_PREFIX);
+        assertEquals("Wrong result", expected, result);
+    }
+
+    /**
+     * Tests a conversion to a list if the property is unknown and no default
+     * value is provided.
+     */
+    @Test
+    public void testGetListUnknownNoDefault()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        assertTrue("Wrong result", config.getList(Integer.class, KEY_PREFIX).isEmpty());
+    }
+
+    /**
+     * Tests a conversion to a list if the property is unknown and a default
+     * list is provided.
+     */
+    @Test
+    public void testGetListUnknownWithDefault()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        List<Integer> defValue = Arrays.asList(1, 2, 3);
+        assertEquals("Wrong result", defValue, config.getList(Integer.class, KEY_PREFIX, defValue));
+    }
+
+    /**
+     * Tests a conversion to a collection.
+     */
+    @Test
+    public void testGetCollection()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        List<Integer> expected = prepareListTest(config);
+        List<Integer> result = new ArrayList<Integer>(PROP_COUNT);
+        assertSame("Wrong result", result, config.getCollection(Integer.class, KEY_PREFIX, result));
+        assertEquals("Wrong converted content", expected, result);
+    }
+
+    /**
+     * Tests getCollection() if no target collection is provided.
+     */
+    @Test
+    public void testGetCollectionNullTarget()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        List<Integer> expected = prepareListTest(config);
+        Collection<Integer> result = config.getCollection(Integer.class, KEY_PREFIX, null, new ArrayList<Integer>());
+        assertEquals("Wrong result", expected, result);
+    }
+
+    /**
+     * Tests whether a single value property can be converted to a collection.
+     */
+    @Test
+    public void testGetCollectionSingleValue()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.addProperty(KEY_PREFIX, "1");
+        List<Integer> result = new ArrayList<Integer>(1);
+        config.getCollection(Integer.class, KEY_PREFIX, result);
+        assertEquals("Wrong number of elements", 1, result.size());
+        assertEquals("Wrong element", Integer.valueOf(1), result.get(0));
+    }
+
+    /**
+     * Tests getCollection() for an unknown property if no default value is
+     * provided.
+     */
+    @Test
+    public void testGetCollectionUnknownNoDefault()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        List<Integer> result = new ArrayList<Integer>();
+        assertSame("Wrong result", result, config.getCollection(Integer.class, KEY_PREFIX, result));
+        assertTrue("Got elements", result.isEmpty());
+    }
+
+    /**
+     * Tests getCollection() for an unknown property if a default collection is
+     * provided.
+     */
+    @Test
+    public void testGetCollectionUnknownWithDefault()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        List<Integer> defValue = Arrays.asList(1, 2, 4, 8, 16, 32);
+        Collection<Integer> result = config.getCollection(Integer.class, KEY_PREFIX, null, defValue);
+        assertEquals("Wrong result", defValue, result);
     }
 
     /**
