@@ -484,6 +484,24 @@ public class TestXMLBeanDeclaration
     }
 
     /**
+     * Tests interpolate() if no ConfigurationInterpolator is available.
+     */
+    @Test
+    public void testInterpolateNoInterpolator()
+    {
+        HierarchicalConfiguration config = new BaseHierarchicalConfiguration();
+        config.addProperty("value", "expectedValue");
+        setupBeanDeclaration(config, KEY, TEST_PROPS, TEST_VALUES);
+        String value = "${value}";
+        config.addProperty(KEY + ".config-constrarg[@config-value]", value);
+        config.setInterpolator(null);
+        XMLBeanDeclaration decl = new XMLBeanDeclaration(config, KEY);
+        Collection<ConstructorArg> args = decl.getConstructorArgs();
+        ConstructorArg arg = args.iterator().next();
+        assertEquals("Value was changed", value, arg.getValue());
+    }
+
+    /**
      * Initializes a configuration object with a bean declaration. Under the
      * specified key the given properties will be added.
      *

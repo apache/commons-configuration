@@ -27,7 +27,7 @@ import java.util.Map;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
-import org.apache.commons.configuration.convert.PropertyConverter;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 
@@ -448,8 +448,9 @@ public class XMLBeanDeclaration implements BeanDeclaration
      */
     protected Object interpolate(Object value)
     {
-        return PropertyConverter.interpolate(value, getConfiguration()
-                .getParent());
+        ConfigurationInterpolator interpolator =
+                getConfiguration().getParent().getInterpolator();
+        return (interpolator != null) ? interpolator.interpolate(value) : value;
     }
 
     /**
