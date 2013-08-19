@@ -47,6 +47,9 @@ import org.junit.Test;
  */
 public class TestAbstractConfigurationBasicFeatures
 {
+    /** Constant for text to be used in tests for variable substitution. */
+    private static final String SUBST_TXT = "The ${animal} jumps over the ${target}.";
+
     /** Constant for the prefix of test keys.*/
     private static final String KEY_PREFIX = "key";
 
@@ -546,6 +549,85 @@ public class TestAbstractConfigurationBasicFeatures
         assertTrue(
                 "Wrong list delimiter handler",
                 config.getListDelimiterHandler() instanceof DisabledListDelimiterHandler);
+    }
+
+    /**
+     * Tests the interpolation features.
+     */
+    @Test
+    public void testInterpolateString()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.addProperty("animal", "quick brown fox");
+        config.addProperty("target", "lazy dog");
+        config.addProperty(KEY_PREFIX, SUBST_TXT);
+        assertEquals("Wrong interpolation",
+                "The quick brown fox jumps over the lazy dog.",
+                config.getString(KEY_PREFIX));
+    }
+
+    /**
+     * Tests complex interpolation where the variables' values contain in turn
+     * other variables.
+     */
+    @Test
+    public void testInterpolateRecursive()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.addProperty("animal", "${animal_attr} fox");
+        config.addProperty("target", "${target_attr} dog");
+        config.addProperty("animal_attr", "quick brown");
+        config.addProperty("target_attr", "lazy");
+        config.addProperty(KEY_PREFIX, SUBST_TXT);
+        assertEquals("Wrong complex interpolation",
+                "The quick brown fox jumps over the lazy dog.",
+                config.getString(KEY_PREFIX));
+    }
+
+    /**
+     * Tests an interpolation that leads to a cycle. This should throw an
+     * exception.
+     */
+    @Test(expected = IllegalStateException.class)
+    public void testCyclicInterpolation()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.addProperty("animal", "${animal_attr} ${species}");
+        config.addProperty("animal_attr", "quick brown");
+        config.addProperty("species", "${animal}");
+        config.addProperty(KEY_PREFIX, "This is a ${animal}");
+        config.getString(KEY_PREFIX);
+    }
+
+    /**
+     * Tests interpolation if a variable is unknown. Then the variable won't be
+     * substituted.
+     */
+    @Test
+    public void testInterpolationUnknownVariable()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.addProperty("animal", "quick brown fox");
+        config.addProperty(KEY_PREFIX, SUBST_TXT);
+        assertEquals("Wrong interpolation",
+                "The quick brown fox jumps over the ${target}.",
+                config.getString(KEY_PREFIX));
+    }
+
+    /**
+     * Tests interpolate() if the configuration does not have a
+     * {@code ConfigurationInterpolator}.
+     */
+    @Test
+    public void testInterpolationNoInterpolator()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.addProperty("animal", "quick brown fox");
+        config.addProperty("target", "lazy dog");
+        config.addProperty(KEY_PREFIX, SUBST_TXT);
+        config.setInterpolator(null);
+        assertEquals("Interpolation was performed", SUBST_TXT,
+                config.getString(KEY_PREFIX));
     }
 
     /**

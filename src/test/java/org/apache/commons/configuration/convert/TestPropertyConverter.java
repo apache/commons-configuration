@@ -23,9 +23,6 @@ import static org.junit.Assert.assertSame;
 import java.lang.annotation.ElementType;
 import java.math.BigDecimal;
 
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.configuration.convert.ConversionException;
-import org.apache.commons.configuration.convert.PropertyConverter;
 import org.junit.Test;
 
 /**
@@ -38,91 +35,6 @@ public class TestPropertyConverter
 {
     /** Constant for an enumeration class used by some tests. */
     private static final Class<ElementType> ENUM_CLASS = ElementType.class;
-
-    /**
-     * Tests the interpolation features.
-     */
-    @Test
-    public void testInterpolateString()
-    {
-        PropertiesConfiguration config = new PropertiesConfiguration();
-        config.addProperty("animal", "quick brown fox");
-        config.addProperty("target", "lazy dog");
-        assertEquals("Wrong interpolation",
-                "The quick brown fox jumps over the lazy dog.",
-                PropertyConverter.interpolate("The ${animal} jumps over the ${target}.", config));
-    }
-
-    /**
-     * Tests interpolation of an object. Here nothing should be substituted.
-     */
-    @Test
-    public void testInterpolateObject()
-    {
-        assertEquals("Object was not correctly interpolated", new Integer(42),
-                PropertyConverter.interpolate(new Integer(42), new PropertiesConfiguration()));
-    }
-
-    /**
-     * Tests complex interpolation where the variables' values contain in turn
-     * other variables.
-     */
-    @Test
-    public void testInterpolateRecursive()
-    {
-        PropertiesConfiguration config = new PropertiesConfiguration();
-        config.addProperty("animal", "${animal_attr} fox");
-        config.addProperty("target", "${target_attr} dog");
-        config.addProperty("animal_attr", "quick brown");
-        config.addProperty("target_attr", "lazy");
-        assertEquals("Wrong complex interpolation",
-                "The quick brown fox jumps over the lazy dog.",
-                PropertyConverter.interpolate("The ${animal} jumps over the ${target}.", config));
-    }
-
-    /**
-     * Tests an interpolation that leads to a cycle. This should throw an
-     * exception.
-     */
-    @Test(expected = IllegalStateException.class)
-    public void testCyclicInterpolation()
-    {
-        PropertiesConfiguration config = new PropertiesConfiguration();
-        config.addProperty("animal", "${animal_attr} ${species}");
-        config.addProperty("animal_attr", "quick brown");
-        config.addProperty("species", "${animal}");
-        PropertyConverter.interpolate("This is a ${animal}", config);
-    }
-
-    /**
-     * Tests interpolation if a variable is unknown. Then the variable won't be
-     * substituted.
-     */
-    @Test
-    public void testInterpolationUnknownVariable()
-    {
-        PropertiesConfiguration config = new PropertiesConfiguration();
-        config.addProperty("animal", "quick brown fox");
-        assertEquals("Wrong interpolation",
-                "The quick brown fox jumps over ${target}.",
-                PropertyConverter.interpolate("The ${animal} jumps over ${target}.", config));
-    }
-
-    /**
-     * Tests interpolate() if the configuration does not have a
-     * {@code ConfigurationInterpolator}.
-     */
-    @Test
-    public void testInterpolationNoInterpolator()
-    {
-        PropertiesConfiguration config = new PropertiesConfiguration();
-        config.addProperty("animal", "quick brown fox");
-        config.addProperty("target", "lazy dog");
-        config.setInterpolator(null);
-        String txt = "The ${animal} jumps over the ${target}.";
-        assertEquals("Interpolation was performed", txt,
-                PropertyConverter.interpolate(txt, config));
-    }
 
     /**
      * Tests interpolate() if the passed in configuration is null.
