@@ -202,4 +202,15 @@ public class TestPropertyConverter
     {
         PropertyConverter.to(Character.TYPE, "FF", null);
     }
+
+    /**
+     * Tests a conversion to a string.
+     */
+    @Test
+    public void testToStringConversion()
+    {
+        Integer src = 42;
+        Object result = PropertyConverter.to(String.class, src, null);
+        assertEquals("Wrong resulting string", "42", result);
+    }
 }

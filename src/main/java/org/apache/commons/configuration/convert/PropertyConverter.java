@@ -96,6 +96,10 @@ public final class PropertyConverter
             return value; // no conversion needed
         }
 
+        if (String.class.equals(cls))
+        {
+            return String.valueOf(value);
+        }
         if (Boolean.class.equals(cls) || Boolean.TYPE.equals(cls))
         {
             return toBoolean(value);
