@@ -33,6 +33,7 @@ import java.util.WeakHashMap;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
 import org.apache.commons.configuration.sync.Synchronizer;
@@ -569,6 +570,12 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
                         protected Object interpolate(Object value)
                         {
                             return parent.interpolate(value);
+                        }
+
+                        @Override
+                        public ConfigurationInterpolator getInterpolator()
+                        {
+                            return parent.getInterpolator();
                         }
                     };
             CloneVisitor visitor = new CloneVisitor();

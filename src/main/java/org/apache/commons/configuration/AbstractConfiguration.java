@@ -1123,15 +1123,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public boolean getBoolean(String key)
     {
-        Boolean b = getBoolean(key, null);
-        if (b != null)
-        {
-            return b.booleanValue();
-        }
-        else
-        {
-            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
-        }
+        Boolean b = convert(Boolean.class, key, null, true);
+        return checkNonNullValue(key, b).booleanValue();
     }
 
     /**
@@ -1157,264 +1150,103 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public Boolean getBoolean(String key, Boolean defaultValue)
     {
-        Object value = resolveContainerStore(key);
-
-        if (value == null)
-        {
-            return defaultValue;
-        }
-        else
-        {
-            try
-            {
-                return PropertyConverter.toBoolean(interpolate(value));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Boolean object", e);
-            }
-        }
+        return convert(Boolean.class, key, defaultValue, false);
     }
 
     public byte getByte(String key)
     {
-        Byte b = getByte(key, null);
-        if (b != null)
-        {
-            return b.byteValue();
-        }
-        else
-        {
-            throw new NoSuchElementException('\'' + key + " doesn't map to an existing object");
-        }
+        Byte b = convert(Byte.class, key, null, true);
+        return checkNonNullValue(key, b).byteValue();
     }
 
     public byte getByte(String key, byte defaultValue)
     {
-        return getByte(key, new Byte(defaultValue)).byteValue();
+        return getByte(key, Byte.valueOf(defaultValue)).byteValue();
     }
 
     public Byte getByte(String key, Byte defaultValue)
     {
-        Object value = resolveContainerStore(key);
-
-        if (value == null)
-        {
-            return defaultValue;
-        }
-        else
-        {
-            try
-            {
-                return PropertyConverter.toByte(interpolate(value));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Byte object", e);
-            }
-        }
+        return convert(Byte.class, key, defaultValue, false);
     }
 
     public double getDouble(String key)
     {
-        Double d = getDouble(key, null);
-        if (d != null)
-        {
-            return d.doubleValue();
-        }
-        else
-        {
-            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
-        }
+        Double d = convert(Double.class, key, null, true);
+        return checkNonNullValue(key, d).doubleValue();
     }
 
     public double getDouble(String key, double defaultValue)
     {
-        return getDouble(key, new Double(defaultValue)).doubleValue();
+        return getDouble(key, Double.valueOf(defaultValue)).doubleValue();
     }
 
     public Double getDouble(String key, Double defaultValue)
     {
-        Object value = resolveContainerStore(key);
-
-        if (value == null)
-        {
-            return defaultValue;
-        }
-        else
-        {
-            try
-            {
-                return PropertyConverter.toDouble(interpolate(value));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Double object", e);
-            }
-        }
+        return convert(Double.class, key, defaultValue, false);
     }
 
     public float getFloat(String key)
     {
-        Float f = getFloat(key, null);
-        if (f != null)
-        {
-            return f.floatValue();
-        }
-        else
-        {
-            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
-        }
+        Float f = convert(Float.class, key, null, true);
+        return checkNonNullValue(key, f).floatValue();
     }
 
     public float getFloat(String key, float defaultValue)
     {
-        return getFloat(key, new Float(defaultValue)).floatValue();
+        return getFloat(key, Float.valueOf(defaultValue)).floatValue();
     }
 
     public Float getFloat(String key, Float defaultValue)
     {
-        Object value = resolveContainerStore(key);
-
-        if (value == null)
-        {
-            return defaultValue;
-        }
-        else
-        {
-            try
-            {
-                return PropertyConverter.toFloat(interpolate(value));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Float object", e);
-            }
-        }
+        return convert(Float.class, key, defaultValue, false);
     }
 
     public int getInt(String key)
     {
-        Integer i = getInteger(key, null);
-        if (i != null)
-        {
-            return i.intValue();
-        }
-        else
-        {
-            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
-        }
+        Integer i = convert(Integer.class, key, null, true);
+        return checkNonNullValue(key, i).intValue();
     }
 
     public int getInt(String key, int defaultValue)
     {
-        Integer i = getInteger(key, null);
-
-        if (i == null)
-        {
-            return defaultValue;
-        }
-
-        return i.intValue();
+        return getInteger(key, Integer.valueOf(defaultValue)).intValue();
     }
 
     public Integer getInteger(String key, Integer defaultValue)
     {
-        Object value = resolveContainerStore(key);
-
-        if (value == null)
-        {
-            return defaultValue;
-        }
-        else
-        {
-            try
-            {
-                return PropertyConverter.toInteger(interpolate(value));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to an Integer object", e);
-            }
-        }
+        return convert(Integer.class, key, defaultValue, false);
     }
 
     public long getLong(String key)
     {
-        Long l = getLong(key, null);
-        if (l != null)
-        {
-            return l.longValue();
-        }
-        else
-        {
-            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
-        }
+        Long l = convert(Long.class, key, null, true);
+        return checkNonNullValue(key, l).longValue();
     }
 
     public long getLong(String key, long defaultValue)
     {
-        return getLong(key, new Long(defaultValue)).longValue();
+        return getLong(key, Long.valueOf(defaultValue)).longValue();
     }
 
     public Long getLong(String key, Long defaultValue)
     {
-        Object value = resolveContainerStore(key);
-
-        if (value == null)
-        {
-            return defaultValue;
-        }
-        else
-        {
-            try
-            {
-                return PropertyConverter.toLong(interpolate(value));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Long object", e);
-            }
-        }
+        return convert(Long.class, key, defaultValue, false);
     }
 
     public short getShort(String key)
     {
-        Short s = getShort(key, null);
-        if (s != null)
-        {
-            return s.shortValue();
-        }
-        else
-        {
-            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
-        }
+        Short s = convert(Short.class, key, null, true);
+        return checkNonNullValue(key, s).shortValue();
     }
 
     public short getShort(String key, short defaultValue)
     {
-        return getShort(key, new Short(defaultValue)).shortValue();
+        return getShort(key, Short.valueOf(defaultValue)).shortValue();
     }
 
     public Short getShort(String key, Short defaultValue)
     {
-        Object value = resolveContainerStore(key);
-
-        if (value == null)
-        {
-            return defaultValue;
-        }
-        else
-        {
-            try
-            {
-                return PropertyConverter.toShort(interpolate(value));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Short object", e);
-            }
-        }
+        return convert(Short.class, key, defaultValue, false);
     }
 
     /**
@@ -1423,40 +1255,12 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public BigDecimal getBigDecimal(String key)
     {
-        BigDecimal number = getBigDecimal(key, null);
-        if (number != null)
-        {
-            return number;
-        }
-        else if (isThrowExceptionOnMissing())
-        {
-            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
-        }
-        else
-        {
-            return null;
-        }
+        return convert(BigDecimal.class, key, null, true);
     }
 
     public BigDecimal getBigDecimal(String key, BigDecimal defaultValue)
     {
-        Object value = resolveContainerStore(key);
-
-        if (value == null)
-        {
-            return defaultValue;
-        }
-        else
-        {
-            try
-            {
-                return PropertyConverter.toBigDecimal(interpolate(value));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a BigDecimal object", e);
-            }
-        }
+        return convert(BigDecimal.class, key, defaultValue, false);
     }
 
     /**
@@ -1465,40 +1269,12 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public BigInteger getBigInteger(String key)
     {
-        BigInteger number = getBigInteger(key, null);
-        if (number != null)
-        {
-            return number;
-        }
-        else if (isThrowExceptionOnMissing())
-        {
-            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
-        }
-        else
-        {
-            return null;
-        }
+        return convert(BigInteger.class, key, null, true);
     }
 
     public BigInteger getBigInteger(String key, BigInteger defaultValue)
     {
-        Object value = resolveContainerStore(key);
-
-        if (value == null)
-        {
-            return defaultValue;
-        }
-        else
-        {
-            try
-            {
-                return PropertyConverter.toBigInteger(interpolate(value));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a BigInteger object", e);
-            }
-        }
+        return convert(BigInteger.class, key, defaultValue, false);
     }
 
     /**
@@ -1507,37 +1283,13 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public String getString(String key)
     {
-        String s = getString(key, null);
-        if (s != null)
-        {
-            return s;
-        }
-        else if (isThrowExceptionOnMissing())
-        {
-            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
-        }
-        else
-        {
-            return null;
-        }
+        return convert(String.class, key, null, true);
     }
 
     public String getString(String key, String defaultValue)
     {
-        Object value = resolveContainerStore(key);
-
-        if (value instanceof String)
-        {
-            return interpolate((String) value);
-        }
-        else if (value == null)
-        {
-            return interpolate(defaultValue);
-        }
-        else
-        {
-            throw new ConversionException('\'' + key + "' doesn't map to a String object");
-        }
+        String result = convert(String.class, key, null, false);
+        return (result != null) ? result : interpolate(defaultValue);
     }
 
     /**
@@ -1623,9 +1375,21 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public <T> T get(Class<T> cls, String key, T defaultValue)
     {
-        return ObjectUtils.defaultIfNull(
-                getConversionHandler().to(getProperty(key), cls,
-                        getInterpolator()), defaultValue);
+        Object value = getProperty(key);
+        try
+        {
+            return ObjectUtils.defaultIfNull(
+                    getConversionHandler().to(value, cls, getInterpolator()),
+                    defaultValue);
+        }
+        catch (ConversionException cex)
+        {
+            // improve error message
+            throw new ConversionException(
+                    String.format(
+                            "Key '%s' cannot be converted to class %s. Value is: '%s'.",
+                            key, cls.getName(), String.valueOf(value)));
+        }
     }
 
     public Object getArray(Class<?> cls, String key)
@@ -1869,6 +1633,33 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
+     * Helper method for obtaining a property value with a type conversion.
+     *
+     * @param <T> the target type of the conversion
+     * @param cls the target class
+     * @param key the key of the desired property
+     * @param defValue a default value
+     * @param throwOnMissing a flag whether an exception should be thrown for a
+     *        missing value
+     * @return the converted value
+     */
+    private <T> T convert(Class<T> cls, String key, T defValue,
+            boolean throwOnMissing)
+    {
+        T result = get(cls, key, defValue);
+        if (result == null)
+        {
+            if (throwOnMissing && isThrowExceptionOnMissing())
+            {
+                throwMissingPropertyException(key);
+            }
+            return defValue;
+        }
+
+        return result;
+    }
+
+    /**
      * Checks an object provided as default value for the {@code getArray()}
      * method. Throws an exception if this is not an array with the correct
      * component type.
@@ -1923,5 +1714,37 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
             result = target;
         }
         return result;
+    }
+
+    /**
+     * Checks whether the specified value is <b>null</b> and throws an exception
+     * in this case. This method is used by conversion methods returning
+     * primitive Java types. Here values to be returned must not be <b>null</b>.
+     *
+     * @param <T> the type of the object to be checked
+     * @param key the key which caused the problem
+     * @param value the value to be checked
+     * @return the passed in value for chaining this method call
+     * @throws NoSuchElementException if the value is <b>null</b>
+     */
+    private static <T> T checkNonNullValue(String key, T value)
+    {
+        if (value == null)
+        {
+            throwMissingPropertyException(key);
+        }
+        return value;
+    }
+
+    /**
+     * Helper method for throwing an exception for a key that does not map to an
+     * existing object.
+     *
+     * @param key the key (to be part of the error message)
+     */
+    private static void throwMissingPropertyException(String key)
+    {
+        throw new NoSuchElementException(String.format(
+                "Key '%s' does not map to an existing object!", key));
     }
 }
