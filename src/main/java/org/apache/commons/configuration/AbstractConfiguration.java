@@ -1558,40 +1558,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public String[] getStringArray(String key)
     {
-        Object value = getProperty(key);
-
-        String[] array;
-
-        if (value instanceof String)
-        {
-            array = new String[1];
-
-            array[0] = interpolate((String) value);
-        }
-        else if (value instanceof List)
-        {
-            List<?> list = (List<?>) value;
-            array = new String[list.size()];
-
-            for (int i = 0; i < array.length; i++)
-            {
-                array[i] = interpolate(ObjectUtils.toString(list.get(i), null));
-            }
-        }
-        else if (value == null)
-        {
-            array = new String[0];
-        }
-        else if (isScalarValue(value))
-        {
-            array = new String[1];
-            array[0] = value.toString();
-        }
-        else
-        {
-            throw new ConversionException('\'' + key + "' doesn't map to a String/List object");
-        }
-        return array;
+        String[] result = (String[]) getArray(String.class, key);
+        return (result == null) ? new String[0] : result;
     }
 
     /**

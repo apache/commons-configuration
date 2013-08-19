@@ -491,6 +491,17 @@ public class TestAbstractConfigurationBasicFeatures
     }
 
     /**
+     * Tests getStringArray() if the key cannot be found.
+     */
+    @Test
+    public void testGetStringArrayUnknown()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        String[] array = config.getStringArray(KEY_PREFIX);
+        assertEquals("Got elements", 0, array.length);
+    }
+
+    /**
      * Helper method for checking getList() if the property value is a scalar.
      * @param value the value of the property
      */
