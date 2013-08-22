@@ -845,7 +845,7 @@ public class TestAbstractConfigurationBasicFeatures
     public void testGetListUnknownNoDefault()
     {
         PropertiesConfiguration config = new PropertiesConfiguration();
-        assertTrue("Wrong result", config.getList(Integer.class, KEY_PREFIX).isEmpty());
+        assertNull("Wrong result", config.getList(Integer.class, KEY_PREFIX));
     }
 
     /**
@@ -908,7 +908,7 @@ public class TestAbstractConfigurationBasicFeatures
     {
         PropertiesConfiguration config = new PropertiesConfiguration();
         List<Integer> result = new ArrayList<Integer>();
-        assertSame("Wrong result", result, config.getCollection(Integer.class, KEY_PREFIX, result));
+        assertNull("Wrong result", config.getCollection(Integer.class, KEY_PREFIX, result));
         assertTrue("Got elements", result.isEmpty());
     }
 

@@ -1424,7 +1424,10 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     public <T> List<T> getList(Class<T> cls, String key, List<T> defaultValue)
     {
         List<T> result = new ArrayList<T>();
-        getCollection(cls, key, result, defaultValue);
+        if (getCollection(cls, key, result, defaultValue) == null)
+        {
+            return null;
+        }
         return result;
     }
 
@@ -1690,23 +1693,19 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     private static <T> Collection<T> handleDefaultCollection(Collection<T> target,
             Collection<T> defaultValue)
     {
-        Collection<T> defCol;
-        if (defaultValue != null)
+        if (defaultValue == null)
         {
-            defCol = defaultValue;
+            return null;
         }
-        else
-        {
-            defCol = Collections.emptyList();
-        }
+
         Collection<T> result;
         if (target == null)
         {
-            result = new ArrayList<T>(defCol);
+            result = new ArrayList<T>(defaultValue);
         }
         else
         {
-            target.addAll(defCol);
+            target.addAll(defaultValue);
             result = target;
         }
         return result;
