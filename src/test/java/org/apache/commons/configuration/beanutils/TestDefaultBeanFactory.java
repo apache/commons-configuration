@@ -19,6 +19,7 @@ package org.apache.commons.configuration.beanutils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -28,6 +29,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.convert.ConversionHandler;
+import org.apache.commons.configuration.convert.DefaultConversionHandler;
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,6 +62,32 @@ public class TestDefaultBeanFactory
     public void testGetDefaultBeanClass()
     {
         assertNull("Default class is not null", factory.getDefaultBeanClass());
+    }
+
+    /**
+     * Tests whether a correct default conversion handler is set.
+     */
+    @Test
+    public void testDefaultConversionHandler()
+    {
+        assertSame("Wrong default conversion handler",
+                DefaultConversionHandler.INSTANCE,
+                factory.getConversionHandler());
+    }
+
+    /**
+     * Tests whether a custom conversion handler can be passed to the
+     * constructor.
+     */
+    @Test
+    public void testInitWithConversionHandler()
+    {
+        ConversionHandler handler =
+                EasyMock.createMock(ConversionHandler.class);
+        EasyMock.replay(handler);
+        factory = new DefaultBeanFactory(handler);
+        assertSame("Wrong conversion handler", handler,
+                factory.getConversionHandler());
     }
 
     /**

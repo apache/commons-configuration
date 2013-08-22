@@ -20,7 +20,8 @@ import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.apache.commons.configuration.convert.PropertyConverter;
+import org.apache.commons.configuration.convert.ConversionHandler;
+import org.apache.commons.configuration.convert.DefaultConversionHandler;
 
 /**
  * <p>
@@ -28,26 +29,67 @@ import org.apache.commons.configuration.convert.PropertyConverter;
  * </p>
  * <p>
  * This class creates beans of arbitrary types using reflection. Each time the
- * {@code createBean()} method is invoked, a new bean instance is
- * created. A default bean class is not supported.
+ * {@code createBean()} method is invoked, a new bean instance is created. A
+ * default bean class is not supported.
+ * </p>
+ * <p>
+ * For data type conversions (which may be needed before invoking methods
+ * through reflection to ensure that the current parameters match their declared
+ * types) a {@link ConversionHandler} object is used. An instance of this class
+ * can be passed to the constructor. Alternatively, a default
+ * {@code ConversionHandler} instance is used.
  * </p>
  * <p>
  * An instance of this factory class will be set as the default bean factory for
- * the {@link BeanHelper} class. This means that if not bean
- * factory is specified in a {@link BeanDeclaration}, this
- * default instance will be used.
+ * the {@link BeanHelper} class. This means that if not bean factory is
+ * specified in a {@link BeanDeclaration}, this default instance will be used.
  * </p>
  *
  * @since 1.3
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  */
 public class DefaultBeanFactory implements BeanFactory
 {
     /** Stores the default instance of this class. */
     public static final DefaultBeanFactory INSTANCE = new DefaultBeanFactory();
+
+    /** The conversion handler used by this instance. */
+    private final ConversionHandler conversionHandler;
+
+    /**
+     * Creates a new instance of {@code DefaultBeanFactory} using a default
+     * {@code ConversionHandler}.
+     */
+    public DefaultBeanFactory()
+    {
+        this(null);
+    }
+
+    /**
+     * Creates a new instance of {@code DefaultBeanFactory} using the specified
+     * {@code ConversionHandler} for data type conversions.
+     *
+     * @param convHandler the {@code ConversionHandler}; can be <b>null</b>,
+     *        then a default handler is used
+     * @since 2.0
+     */
+    public DefaultBeanFactory(ConversionHandler convHandler)
+    {
+        conversionHandler =
+                (convHandler != null) ? convHandler
+                        : DefaultConversionHandler.INSTANCE;
+    }
+
+    /**
+     * Returns the {@code ConversionHandler} used by this object.
+     *
+     * @return the {@code ConversionHandler}
+     * @since 2.0
+     */
+    public ConversionHandler getConversionHandler()
+    {
+        return conversionHandler;
+    }
 
     /**
      * Creates a new bean instance. This implementation delegates to the
@@ -125,7 +167,7 @@ public class DefaultBeanFactory implements BeanFactory
      * @param data the current bean declaration
      * @return an array with constructor arguments
      */
-    private static Object[] fetchConstructorArgs(Constructor<?> ctor,
+    private Object[] fetchConstructorArgs(Constructor<?> ctor,
             BeanDeclaration data)
     {
         Class<?>[] types = ctor.getParameterTypes();
@@ -139,7 +181,7 @@ public class DefaultBeanFactory implements BeanFactory
             Object val =
                     arg.isNestedBeanDeclaration() ? BeanHelper.createBean(arg
                             .getBeanDeclaration()) : arg.getValue();
-            args[idx] = PropertyConverter.to(types[idx], val, (Object[]) null);
+            args[idx] = getConversionHandler().to(val, types[idx], null);
             idx++;
         }
 
