@@ -161,8 +161,8 @@ public class TestPropertyConverter
     public void testToNoConversionNeeded()
     {
         String value = "testValue";
-        assertEquals("Wrong conversion result", value,
-                PropertyConverter.to(String.class, value, null));
+        assertEquals("Wrong conversion result", value, PropertyConverter.to(
+                String.class, value, new DefaultConversionHandler()));
     }
 
     /**
@@ -172,7 +172,8 @@ public class TestPropertyConverter
     public void testToCharSuccess()
     {
         assertEquals("Wrong conversion result", Character.valueOf('t'),
-                PropertyConverter.to(Character.class, "t", null));
+                PropertyConverter.to(Character.class, "t",
+                        new DefaultConversionHandler()));
     }
 
     /**
@@ -191,7 +192,8 @@ public class TestPropertyConverter
             }
         };
         assertEquals("Wrong conversion result", Character.valueOf('X'),
-                PropertyConverter.to(Character.TYPE, value, null));
+                PropertyConverter.to(Character.TYPE, value,
+                        new DefaultConversionHandler()));
     }
 
     /**
@@ -200,7 +202,8 @@ public class TestPropertyConverter
     @Test(expected = ConversionException.class)
     public void testToCharFailed()
     {
-        PropertyConverter.to(Character.TYPE, "FF", null);
+        PropertyConverter.to(Character.TYPE, "FF",
+                new DefaultConversionHandler());
     }
 
     /**
@@ -210,7 +213,9 @@ public class TestPropertyConverter
     public void testToStringConversion()
     {
         Integer src = 42;
-        Object result = PropertyConverter.to(String.class, src, null);
+        Object result =
+                PropertyConverter.to(String.class, src,
+                        new DefaultConversionHandler());
         assertEquals("Wrong resulting string", "42", result);
     }
 }

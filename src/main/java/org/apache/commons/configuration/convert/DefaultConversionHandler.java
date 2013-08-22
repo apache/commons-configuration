@@ -273,7 +273,7 @@ public class DefaultConversionHandler implements ConversionHandler
         }
 
         return targetCls.cast(PropertyConverter.to(targetCls, src,
-                new Object[0]));
+                this));
     }
 
     /**

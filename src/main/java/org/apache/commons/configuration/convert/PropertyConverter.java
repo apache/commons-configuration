@@ -181,6 +181,113 @@ public final class PropertyConverter
     }
 
     /**
+     * Performs a data type conversion from the specified value object to the
+     * given target data class. If additional information is required for this
+     * conversion, it is obtained from the passed in
+     * {@code DefaultConversionHandler} object. If the class is a primitive type
+     * (Integer.TYPE, Boolean.TYPE, etc), the value returned will use the
+     * wrapper type (Integer.class, Boolean.class, etc).
+     *
+     * @param cls the target class of the converted value
+     * @param value the value to convert
+     * @param convHandler the conversion handler object
+     * @return the converted value
+     * @throws ConversionException if the value is not compatible with the
+     *         requested type
+     */
+    public static Object to(Class<?> cls, Object value,
+            DefaultConversionHandler convHandler) throws ConversionException
+    {
+        if (cls.isInstance(value))
+        {
+            return value; // no conversion needed
+        }
+
+        if (String.class.equals(cls))
+        {
+            return String.valueOf(value);
+        }
+        if (Boolean.class.equals(cls) || Boolean.TYPE.equals(cls))
+        {
+            return toBoolean(value);
+        }
+        else if (Character.class.equals(cls) || Character.TYPE.equals(cls))
+        {
+            return toCharacter(value);
+        }
+        else if (Number.class.isAssignableFrom(cls) || cls.isPrimitive())
+        {
+            if (Integer.class.equals(cls) || Integer.TYPE.equals(cls))
+            {
+                return toInteger(value);
+            }
+            else if (Long.class.equals(cls) || Long.TYPE.equals(cls))
+            {
+                return toLong(value);
+            }
+            else if (Byte.class.equals(cls) || Byte.TYPE.equals(cls))
+            {
+                return toByte(value);
+            }
+            else if (Short.class.equals(cls) || Short.TYPE.equals(cls))
+            {
+                return toShort(value);
+            }
+            else if (Float.class.equals(cls) || Float.TYPE.equals(cls))
+            {
+                return toFloat(value);
+            }
+            else if (Double.class.equals(cls) || Double.TYPE.equals(cls))
+            {
+                return toDouble(value);
+            }
+            else if (BigInteger.class.equals(cls))
+            {
+                return toBigInteger(value);
+            }
+            else if (BigDecimal.class.equals(cls))
+            {
+                return toBigDecimal(value);
+            }
+        }
+        else if (Date.class.equals(cls))
+        {
+            return toDate(value, convHandler.getDateFormat());
+        }
+        else if (Calendar.class.equals(cls))
+        {
+            return toCalendar(value, convHandler.getDateFormat());
+        }
+        else if (URL.class.equals(cls))
+        {
+            return toURL(value);
+        }
+        else if (Locale.class.equals(cls))
+        {
+            return toLocale(value);
+        }
+        else if (isEnum(cls))
+        {
+            return convertToEnum(cls, value);
+        }
+        else if (Color.class.equals(cls))
+        {
+            return toColor(value);
+        }
+        else if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME))
+        {
+            return toInternetAddress(value);
+        }
+        else if (InetAddress.class.isAssignableFrom(cls))
+        {
+            return toInetAddress(value);
+        }
+
+        throw new ConversionException("The value '" + value + "' (" + value.getClass() + ")"
+                + " can't be converted to a " + cls.getName() + " object");
+    }
+
+    /**
      * Convert the specified object into a Boolean. Internally the
      * {@code org.apache.commons.lang.BooleanUtils} class from the
      * <a href="http://commons.apache.org/lang/">Commons Lang</a>

@@ -22,7 +22,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -301,9 +303,40 @@ public class TestDefaultConversionHandler
     @Test
     public void testSetDateFormat()
     {
-        String dateFormat = "dd.mm.yyyy";
+        String dateFormat = "dd.MM.yyyy";
         handler.setDateFormat(dateFormat);
         assertEquals("Date format not changed", dateFormat,
                 handler.getDateFormat());
+    }
+
+    /**
+     * Tests whether a conversion to a date object is possible if a specific
+     * date format is used.
+     */
+    @Test
+    public void testToDateWithFormat()
+    {
+        handler.setDateFormat("dd.MM.yyyy");
+        Date dt = handler.to("19.08.2013", Date.class, null);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dt);
+        assertEquals("Wrong day", 19, cal.get(Calendar.DATE));
+        assertEquals("Wrong month", Calendar.AUGUST, cal.get(Calendar.MONTH));
+        assertEquals("Wrong year", 2013, cal.get(Calendar.YEAR));
+    }
+
+    /**
+     * Tests a conversion to a Calendar object using the default format.
+     */
+    @Test
+    public void testToCalendarWithDefaultFormat()
+    {
+        Calendar cal = handler.to("2013-08-19 21:17:22", Calendar.class, null);
+        assertEquals("Wrong day", 19, cal.get(Calendar.DATE));
+        assertEquals("Wrong month", Calendar.AUGUST, cal.get(Calendar.MONTH));
+        assertEquals("Wrong year", 2013, cal.get(Calendar.YEAR));
+        assertEquals("Wrong hour", 21, cal.get(Calendar.HOUR_OF_DAY));
+        assertEquals("Wrong minute", 17, cal.get(Calendar.MINUTE));
+        assertEquals("Wrong second", 22, cal.get(Calendar.SECOND));
     }
 }

@@ -139,7 +139,7 @@ public class DefaultBeanFactory implements BeanFactory
             Object val =
                     arg.isNestedBeanDeclaration() ? BeanHelper.createBean(arg
                             .getBeanDeclaration()) : arg.getValue();
-            args[idx] = PropertyConverter.to(types[idx], val, null);
+            args[idx] = PropertyConverter.to(types[idx], val, (Object[]) null);
             idx++;
         }
 
