@@ -19,13 +19,11 @@ package org.apache.commons.configuration;
 
 import java.awt.Color;
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -33,8 +31,8 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.configuration.convert.ConversionException;
-import org.apache.commons.configuration.convert.PropertyConverter;
-import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.configuration.convert.ConversionHandler;
+import org.apache.commons.configuration.convert.DefaultConversionHandler;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -51,7 +49,11 @@ import org.apache.commons.lang3.StringUtils;
  *   <li>{@link java.lang.Enum} (Java 5 enumeration types)</li>
  * </ul>
  *
- * Lists and arrays are available for all types.
+ * Lists and arrays are available for all types.<br>
+ * Note that this class is only a thin wrapper over functionality already
+ * provided by {@link AbstractConfiguration}. Basically, the generic
+ * {@code get()}, {@code getCollection()}, and {@code getArray()} methods are
+ * used to actually perform data conversions.
  *
  * <h4>Example</h4>
  *
@@ -60,7 +62,7 @@ import org.apache.commons.lang3.StringUtils;
  * title.color = #0000FF
  * remote.host = 192.168.0.53
  * default.locales = fr,en,de
- * email.contact = ebourg@apache.org, oheger@apache.org
+ * email.contact = ebourg@apache.org, tester@test.org
  * </pre>
  *
  * Usage:
@@ -82,7 +84,15 @@ import org.apache.commons.lang3.StringUtils;
  * Date objects are expected to be formatted with the pattern <tt>yyyy-MM-dd HH:mm:ss</tt>.
  * This default format can be changed by specifying another format in the
  * getters, or by putting a date format in the configuration under the key
- * <tt>org.apache.commons.configuration.format.date</tt>.
+ * <tt>org.apache.commons.configuration.format.date</tt>. Alternatively, the
+ * date format can also be specified via the {@code ConversionHandler} used
+ * by a configuration instance:
+ *
+ * <pre>
+ * DefaultConversionHandler handler = new DefaultConversionHandler();
+ * handler.setDateFormat("mm/dd/yyyy");
+ * config.setConversionHandler(handler);
+ * </pre>
  *
  * @author <a href="ebourg@apache.org">Emmanuel Bourg</a>
  * @version $Id$
@@ -101,8 +111,14 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     private static final long serialVersionUID = -69011336405718640L;
 
+    /** Stores temporary date formats. */
+    private static final ThreadLocal<String> TEMP_DATE_FORMAT = new ThreadLocal<String>();
+
     /** Stores the wrapped configuration.*/
     protected Configuration configuration;
+
+    /** A special conversion handler object used by this configuration. */
+    private final ConversionHandler dataConversionHandler;
 
     /**
      * Creates a new instance of {@code DataConfiguration} and sets the
@@ -113,6 +129,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
     public DataConfiguration(Configuration configuration)
     {
         this.configuration = configuration;
+        dataConversionHandler = new DataConversionHandler();
     }
 
     /**
@@ -123,6 +140,16 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
     public Configuration getConfiguration()
     {
         return configuration;
+    }
+
+    /**
+     * {@inheritDoc} This implementation returns the special conversion handler
+     * used by this configuration instance.
+     */
+    @Override
+    public ConversionHandler getConversionHandler()
+    {
+        return dataConversionHandler;
     }
 
     @Override
@@ -178,328 +205,6 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
     protected Iterator<String> getKeysInternal()
     {
         return configuration.getKeys();
-    }
-
-    /**
-     * Get an object of the specified type associated with the given
-     * configuration key. If the key doesn't map to an existing object, the
-     * method returns null unless {@link #isThrowExceptionOnMissing()} is set
-     * to <tt>true</tt>.
-     *
-     * @param <T> the target type of the value
-     * @param cls the target class of the value
-     * @param key the key of the value
-     *
-     * @return the value of the requested type for the key
-     *
-     * @throws NoSuchElementException if the key doesn't map to an existing
-     *     object and <tt>throwExceptionOnMissing=true</tt>
-     * @throws ConversionException if the value is not compatible with the requested type
-     *
-     * @since 1.5
-     */
-    public <T> T get(Class<T> cls, String key)
-    {
-        T value = get(cls, key, null);
-        if (value != null)
-        {
-            return value;
-        }
-        else if (isThrowExceptionOnMissing())
-        {
-            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    /**
-     * Get an object of the specified type associated with the given
-     * configuration key. If the key doesn't map to an existing object, the
-     * default value is returned.
-     *
-     * @param <T>          the target type of the value
-     * @param cls          the target class of the value
-     * @param key          the key of the value
-     * @param defaultValue the default value
-     *
-     * @return the value of the requested type for the key
-     *
-     * @throws ConversionException if the value is not compatible with the requested type
-     *
-     * @since 1.5
-     */
-    public <T> T get(Class<T> cls, String key, T defaultValue)
-    {
-        Object value = resolveContainerStore(key);
-
-        if (value == null)
-        {
-            return defaultValue;
-        }
-
-        if (Date.class.equals(cls) || Calendar.class.equals(cls))
-        {
-            return convert(cls, key, interpolate(value), new String[] {getDefaultDateFormat()});
-        }
-        else
-        {
-            return convert(cls, key, interpolate(value), null);
-        }
-    }
-
-    /**
-     * Get a list of typed objects associated with the given configuration key.
-     * If the key doesn't map to an existing object, an empty list is returned.
-     *
-     * @param <T> the type expected for the elements of the list
-     * @param cls the class expected for the elements of the list
-     * @param key The configuration key.
-     * @return The associated list if the key is found.
-     *
-     * @throws ConversionException is thrown if the key maps to an object that
-     *     is not compatible with a list of the specified class.
-     *
-     * @since 1.5
-     */
-    public <T> List<T> getList(Class<T> cls, String key)
-    {
-        return getList(cls, key, new ArrayList<T>());
-    }
-
-    /**
-     * Get a list of typed objects associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value is
-     * returned.
-     *
-     * @param <T>          the type expected for the elements of the list
-     * @param cls          the class expected for the elements of the list
-     * @param key          the configuration key.
-     * @param defaultValue the default value.
-     * @return The associated List.
-     *
-     * @throws ConversionException is thrown if the key maps to an object that
-     *     is not compatible with a list of the specified class.
-     *
-     * @since 1.5
-     */
-    public <T> List<T> getList(Class<T> cls, String key, List<T> defaultValue)
-    {
-        Object value = getProperty(key);
-        Class<?> valueClass = value != null ? value.getClass() : null;
-
-        List<T> list;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            // the value is null or is an empty string
-            list = defaultValue;
-        }
-        else
-        {
-            list = new ArrayList<T>();
-
-            Object[] params = null;
-            if (cls.equals(Date.class) || cls.equals(Calendar.class))
-            {
-                params = new Object[] {getDefaultDateFormat()};
-            }
-
-            if (valueClass.isArray())
-            {
-                // get the class of the objects contained in the array
-                Class<?> arrayType = valueClass.getComponentType();
-                int length = Array.getLength(value);
-
-                if (arrayType.equals(cls)
-                        || (arrayType.isPrimitive() && cls.equals(ClassUtils.primitiveToWrapper(arrayType))))
-                {
-                    // the value is an array of the specified type, or an array
-                    // of the primitive type derived from the specified type
-                    for (int i = 0; i < length; i++)
-                    {
-                        list.add(cls.cast(Array.get(value, i)));
-                    }
-                }
-                else
-                {
-                    // attempt to convert the elements of the array
-                    for (int i = 0; i < length; i++)
-                    {
-                        list.add(convert(cls, key, interpolate(Array.get(value, i)), params));
-                    }
-                }
-            }
-            else if (value instanceof Collection)
-            {
-                Collection<?> values = (Collection<?>) value;
-
-                for (Object o : values)
-                {
-                    list.add(convert(cls, key, interpolate(o), params));
-                }
-            }
-            else
-            {
-                // attempt to convert a single value
-                list.add(convert(cls, key, interpolate(value), params));
-            }
-        }
-
-        return list;
-    }
-
-    /**
-     * Get an array of typed objects associated with the given configuration key.
-     * If the key doesn't map to an existing object, an empty list is returned.
-     *
-     * @param cls the type expected for the elements of the array
-     * @param key The configuration key.
-     * @return The associated array if the key is found, and the value compatible with the type specified.
-     *
-     * @throws ConversionException is thrown if the key maps to an object that
-     *     is not compatible with a list of the specified class.
-     *
-     * @since 1.5
-     */
-    public Object getArray(Class<?> cls, String key)
-    {
-        return getArray(cls, key, Array.newInstance(cls, 0));
-    }
-
-    /**
-     * Get an array of typed objects associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value is returned.
-     *
-     * @param cls          the type expected for the elements of the array
-     * @param key          the configuration key.
-     * @param defaultValue the default value
-     * @return The associated array if the key is found, and the value compatible with the type specified.
-     *
-     * @throws ConversionException is thrown if the key maps to an object that
-     *     is not compatible with an array of the specified class.
-     * @throws IllegalArgumentException if the default value is not an array of the specified type
-     *
-     * @since 1.5
-     */
-    public Object getArray(Class<?> cls, String key, Object defaultValue)
-    {
-        // check the type of the default value
-        if (defaultValue != null
-                && (!defaultValue.getClass().isArray() || !cls
-                        .isAssignableFrom(defaultValue.getClass()
-                                .getComponentType())))
-        {
-            throw new IllegalArgumentException(
-                    "The type of the default value (" + defaultValue.getClass()
-                            + ")" + " is not an array of the specified class ("
-                            + cls + ")");
-        }
-
-        if (cls.isPrimitive())
-        {
-            return getPrimitiveArray(cls, key, defaultValue);
-        }
-
-        List<?> list = getList(cls, key);
-        if (list.isEmpty())
-        {
-            return defaultValue;
-        }
-        else
-        {
-            return list.toArray((Object[]) Array.newInstance(cls, list.size()));
-        }
-    }
-
-    /**
-     * Get an array of primitive values associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value is returned.
-     *
-     * @param cls          the primitive type expected for the elements of the array
-     * @param key          the configuration key.
-     * @param defaultValue the default value
-     * @return The associated array if the key is found, and the value compatible with the type specified.
-     *
-     * @throws ConversionException is thrown if the key maps to an object that
-     *     is not compatible with an array of the specified class.
-     *
-     * @since 1.5
-     */
-    private Object getPrimitiveArray(Class<?> cls, String key, Object defaultValue)
-    {
-        Object value = getProperty(key);
-        Class<?> valueClass = value != null ? value.getClass() : null;
-
-        Object array;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            // the value is null or is an empty string
-            array = defaultValue;
-        }
-        else
-        {
-            if (valueClass.isArray())
-            {
-                // get the class of the objects contained in the array
-                Class<?> arrayType = valueClass.getComponentType();
-                int length = Array.getLength(value);
-
-                if (arrayType.equals(cls))
-                {
-                    // the value is an array of the same primitive type
-                    array = value;
-                }
-                else if (arrayType.equals(ClassUtils.primitiveToWrapper(cls)))
-                {
-                    // the value is an array of the wrapper type derived from the specified primitive type
-                    array = Array.newInstance(cls, length);
-
-                    for (int i = 0; i < length; i++)
-                    {
-                        Array.set(array, i, Array.get(value, i));
-                    }
-                }
-                else
-                {
-                    throw new ConversionException('\'' + key + "' (" + arrayType + ")"
-                            + " doesn't map to a compatible array of " + cls);
-                }
-            }
-            else if (value instanceof Collection)
-            {
-                Collection<?> values = (Collection<?>) value;
-
-                array = Array.newInstance(cls, values.size());
-
-                int i = 0;
-                for (Object o : values)
-                {
-                    // This is safe because PropertyConverter can handle
-                    // conversion to wrapper classes correctly.
-                    @SuppressWarnings("unchecked")
-                    Object convertedValue = convert(ClassUtils.primitiveToWrapper(cls), key, interpolate(o), null);
-                    Array.set(array, i++, convertedValue);
-                }
-            }
-            else
-            {
-                // attempt to convert a single value
-                // This is safe because PropertyConverter can handle
-                // conversion to wrapper classes correctly.
-                @SuppressWarnings("unchecked")
-                Object convertedValue = convert(ClassUtils.primitiveToWrapper(cls), key, interpolate(value), null);
-
-                // create an array of one element
-                array = Array.newInstance(cls, 1);
-                Array.set(array, 0, convertedValue);
-            }
-        }
-
-        return array;
     }
 
     /**
@@ -1245,7 +950,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Date getDate(String key, Date defaultValue)
     {
-        return getDate(key, defaultValue, getDefaultDateFormat());
+        return getDate(key, defaultValue, null);
     }
 
     /**
@@ -1264,24 +969,17 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Date getDate(String key, Date defaultValue, String format)
     {
-        Object value = resolveContainerStore(key);
-
-        if (value == null)
+        TEMP_DATE_FORMAT.set(format);
+        try
         {
-            return defaultValue;
+            return get(Date.class, key, defaultValue);
         }
-        else
+        finally
         {
-            try
-            {
-                return PropertyConverter.toDate(interpolate(value), format);
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Date", e);
-            }
+            TEMP_DATE_FORMAT.remove();
         }
     }
+
     public List<Date> getDateList(String key)
     {
         return getDateList(key, new ArrayList<Date>());
@@ -1322,7 +1020,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public List<Date> getDateList(String key, List<Date> defaultValue)
     {
-        return getDateList(key, defaultValue, getDefaultDateFormat());
+        return getDateList(key, defaultValue, null);
     }
 
     /**
@@ -1341,41 +1039,15 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public List<Date> getDateList(String key, List<Date> defaultValue, String format)
     {
-        Object value = getProperty(key);
-
-        List<Date> list;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
+        TEMP_DATE_FORMAT.set(format);
+        try
         {
-            list = defaultValue;
+            return getList(Date.class, key, defaultValue);
         }
-        else if (value.getClass().isArray())
+        finally
         {
-            list = new ArrayList<Date>();
-            int length = Array.getLength(value);
-            for (int i = 0; i < length; i++)
-            {
-                list.add(convert(Date.class, key, interpolate(Array.get(value, i)), new String[] {format}));
-            }
+            TEMP_DATE_FORMAT.remove();
         }
-        else if (value instanceof Collection)
-        {
-            Collection<?> values = (Collection<?>) value;
-            list = new ArrayList<Date>();
-
-            for (Object o : values)
-            {
-                list.add(convert(Date.class, key, interpolate(o), new String[] {format}));
-            }
-        }
-        else
-        {
-            // attempt to convert a single value
-            list = new ArrayList<Date>();
-            list.add(convert(Date.class, key, interpolate(value), new String[] {format}));
-        }
-
-        return list;
     }
 
     /**
@@ -1430,7 +1102,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Date[] getDateArray(String key, Date[] defaultValue)
     {
-        return getDateArray(key, defaultValue, getDefaultDateFormat());
+        return getDateArray(key, defaultValue, null);
     }
 
     /**
@@ -1449,14 +1121,14 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Date[] getDateArray(String key, Date[] defaultValue, String format)
     {
-        List<Date> list = getDateList(key, format);
-        if (list.isEmpty())
+        TEMP_DATE_FORMAT.set(format);
+        try
         {
-            return defaultValue;
+            return (Date[]) getArray(Date.class, key, defaultValue);
         }
-        else
+        finally
         {
-            return list.toArray(new Date[list.size()]);
+            TEMP_DATE_FORMAT.remove();
         }
     }
 
@@ -1522,7 +1194,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Calendar getCalendar(String key, Calendar defaultValue)
     {
-        return getCalendar(key, defaultValue, getDefaultDateFormat());
+        return getCalendar(key, defaultValue, null);
     }
 
     /**
@@ -1541,22 +1213,14 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Calendar getCalendar(String key, Calendar defaultValue, String format)
     {
-        Object value = resolveContainerStore(key);
-
-        if (value == null)
+        TEMP_DATE_FORMAT.set(format);
+        try
         {
-            return defaultValue;
+            return get(Calendar.class, key, defaultValue);
         }
-        else
+        finally
         {
-            try
-            {
-                return PropertyConverter.toCalendar(interpolate(value), format);
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Calendar", e);
-            }
+            TEMP_DATE_FORMAT.remove();
         }
     }
 
@@ -1613,7 +1277,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public List<Calendar> getCalendarList(String key, List<Calendar> defaultValue)
     {
-        return getCalendarList(key, defaultValue, getDefaultDateFormat());
+        return getCalendarList(key, defaultValue, null);
     }
 
     /**
@@ -1632,41 +1296,15 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public List<Calendar> getCalendarList(String key, List<Calendar> defaultValue, String format)
     {
-        Object value = getProperty(key);
-
-        List<Calendar> list;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
+        TEMP_DATE_FORMAT.set(format);
+        try
         {
-            list = defaultValue;
+            return getList(Calendar.class, key, defaultValue);
         }
-        else if (value.getClass().isArray())
+        finally
         {
-            list = new ArrayList<Calendar>();
-            int length = Array.getLength(value);
-            for (int i = 0; i < length; i++)
-            {
-                list.add(convert(Calendar.class, key, interpolate(Array.get(value, i)), new String[] {format}));
-            }
+            TEMP_DATE_FORMAT.remove();
         }
-        else if (value instanceof Collection)
-        {
-            Collection<?> values = (Collection<?>) value;
-            list = new ArrayList<Calendar>();
-
-            for (Object o : values)
-            {
-                list.add(convert(Calendar.class, key, interpolate(o), new String[] {format}));
-            }
-        }
-        else
-        {
-            // attempt to convert a single value
-            list = new ArrayList<Calendar>();
-            list.add(convert(Calendar.class, key, interpolate(value), new String[] {format}));
-        }
-
-        return list;
     }
 
     /**
@@ -1721,7 +1359,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Calendar[] getCalendarArray(String key, Calendar[] defaultValue)
     {
-        return getCalendarArray(key, defaultValue, getDefaultDateFormat());
+        return getCalendarArray(key, defaultValue, null);
     }
 
     /**
@@ -1740,14 +1378,14 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Calendar[] getCalendarArray(String key, Calendar[] defaultValue, String format)
     {
-        List<Calendar> list = getCalendarList(key, format);
-        if (list.isEmpty())
+        TEMP_DATE_FORMAT.set(format);
+        try
         {
-            return defaultValue;
+            return (Calendar[]) getArray(Calendar.class, key, defaultValue);
         }
-        else
+        finally
         {
-            return list.toArray(new Calendar[list.size()]);
+            TEMP_DATE_FORMAT.remove();
         }
     }
 
@@ -1955,31 +1593,53 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
     }
 
     /**
-     * Helper method for performing a type conversion using the
-     * {@code PropertyConverter} class.
+     * Returns the original conversion handler set for this configuration. If
+     * this is not a {@code DefaultConversionHandler}, result is <b>null</b>.
      *
-     * @param <T> the target type of the conversion
-     * @param cls the target class of the conversion
-     * @param key the configuration key
-     * @param value the value to be converted
-     * @param params additional parameters
-     * @throws ConversionException if the value is not compatible with the
-     *         requested type
+     * @return the original conversion handler or <b>null</b>
      */
-    private static <T> T convert(Class<T> cls, String key, Object value,
-            Object[] params)
+    private DefaultConversionHandler getOriginalConversionHandler()
     {
-        try
+        ConversionHandler handler = super.getConversionHandler();
+        return (DefaultConversionHandler) ((handler instanceof DefaultConversionHandler) ? handler
+                : null);
+    }
+
+    /**
+     * A specialized {@code ConversionHandler} implementation which allows
+     * overriding the date format pattern. This class takes care that the format
+     * pattern can be defined as a property of the wrapped configuration or
+     * temporarily passed when calling a conversion method.
+     */
+    private class DataConversionHandler extends DefaultConversionHandler
+    {
+        /**
+         * {@inheritDoc} This implementation checks for a defined data format in
+         * the following order:
+         * <ul>
+         * <li>If a temporary date format is set for the current call, it is
+         * used.</li>
+         * <li>If a date format is specified in this configuration using the
+         * {@code DATE_FORMAT_KEY} property, it is used.</li>
+         * <li>Otherwise, the date format set for the original conversion
+         * handler is used if available.</li>
+         * </ul>
+         */
+        @Override
+        public String getDateFormat()
         {
-            Object result = PropertyConverter.to(cls, value, params);
-            // Will not throw a ClassCastException because PropertyConverter
-            // would have thrown a ConversionException if conversion had failed.
-            return cls.cast(result);
-        }
-        catch (ConversionException e)
-        {
-            throw new ConversionException('\'' + key + "' doesn't map to a "
-                    + cls, e);
+            if (StringUtils.isNotEmpty(TEMP_DATE_FORMAT.get()))
+            {
+                return TEMP_DATE_FORMAT.get();
+            }
+            if (containsKey(DATE_FORMAT_KEY))
+            {
+                return getDefaultDateFormat();
+            }
+
+            DefaultConversionHandler orgHandler =
+                    getOriginalConversionHandler();
+            return (orgHandler != null) ? orgHandler.getDateFormat() : null;
         }
     }
 }

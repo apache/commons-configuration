@@ -30,6 +30,7 @@ import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,6 +44,7 @@ import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;
 
 import org.apache.commons.configuration.convert.ConversionException;
+import org.apache.commons.configuration.convert.DefaultConversionHandler;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -54,6 +56,10 @@ import org.junit.Test;
  */
 public class TestDataConfiguration
 {
+    /** Constant for the date pattern used by tests. */
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
+
+    /** The test instance. */
     private DataConfiguration conf;
 
     @Before
@@ -261,7 +267,7 @@ public class TestDataConfiguration
         conf.addProperty("color.list.interpolated", "${color.string}," + color2);
 
         // Dates & Calendars
-        String pattern = "yyyy-MM-dd";
+        String pattern = DATE_PATTERN;
         DateFormat format = new SimpleDateFormat(pattern);
         conf.setProperty(DataConfiguration.DATE_FORMAT_KEY, pattern);
 
@@ -989,7 +995,8 @@ public class TestDataConfiguration
     public void testGetBigIntegerList()
     {
         // missing list
-        ListAssert.assertEquals(null, conf.getBigIntegerList("biginteger.list", null));
+        List<BigInteger> bigIntegerList = conf.getBigIntegerList("biginteger.list", null);
+        ListAssert.assertEquals(null, bigIntegerList);
 
         List<Object> expected = new ArrayList<Object>();
         expected.add(new BigInteger("1"));
@@ -1397,21 +1404,33 @@ public class TestDataConfiguration
         ListAssert.assertEquals(new ArrayList<Object>(), conf.getColorList("empty"));
     }
 
+    /**
+     * Returns the expected test date.
+     *
+     * @return the expected test date
+     * @throws ParseException if the date cannot be parsed
+     */
+    private static Date expectedDate() throws ParseException
+    {
+        DateFormat format = new SimpleDateFormat(DATE_PATTERN);
+        return format.parse("2004-01-01");
+    }
+
     @Test
     public void testGetDate() throws Exception
     {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date expected = expectedDate();
 
         // missing Date
         Date defaultValue = new Date();
         assertEquals(defaultValue, conf.getDate("date", defaultValue));
-        assertNull("non null object for a missing key", conf.getDate("unknownkey", "yyyy-MM-dd"));
+        assertNull("non null object for a missing key", conf.getDate("unknownkey", DATE_PATTERN));
 
         conf.setThrowExceptionOnMissing(true);
 
         try
         {
-            conf.getDate("unknownkey", "yyyy-MM-dd");
+            conf.getDate("unknownkey", DATE_PATTERN);
             fail("NoSuchElementException should be thrown for missing properties");
         }
         catch (NoSuchElementException e)
@@ -1419,11 +1438,10 @@ public class TestDataConfiguration
             // expected
         }
 
-        Date expected = format.parse("2004-01-01");
 
         // Date string
         assertEquals(expected, conf.getDate("date.string"));
-        assertEquals(expected, conf.getDate("date.string", "yyyy-MM-dd"));
+        assertEquals(expected, conf.getDate("date.string", DATE_PATTERN));
 
         // Date object
         assertEquals(expected, conf.getDate("date.object"));
@@ -1435,10 +1453,35 @@ public class TestDataConfiguration
         assertEquals(expected, conf.getDate("date.string.interpolated"));
     }
 
+    /**
+     * Tests a conversion to a Date if no property is set with the date format,
+     * and the format is directly passed in.
+     */
+    @Test
+    public void testGetDateNoFormatPropertyDirectlySpecified() throws Exception
+    {
+        conf.clearProperty(DataConfiguration.DATE_FORMAT_KEY);
+        assertEquals("Wrong result", expectedDate(), conf.getDate("date.string", DATE_PATTERN));
+    }
+
+    /**
+     * Tests a conversion to a Date if no property is set with the date format,
+     * and the format is specified in the conversion handler.
+     */
+    @Test
+    public void testGetDateNoFormatPropertyConversionHandler() throws Exception
+    {
+        conf.clearProperty(DataConfiguration.DATE_FORMAT_KEY);
+        DefaultConversionHandler handler = new DefaultConversionHandler();
+        handler.setDateFormat(DATE_PATTERN);
+        conf.setConversionHandler(handler);
+        assertEquals("Wrong result", expectedDate(), conf.getDate("date.string"));
+    }
+
     @Test
     public void testGetDateArray() throws Exception
     {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat format = new SimpleDateFormat(DATE_PATTERN);
         Date date1 = format.parse("2004-01-01");
         Date date2 = format.parse("2004-12-31");
 
@@ -1493,7 +1536,7 @@ public class TestDataConfiguration
     @Test
     public void testGetDateList() throws Exception
     {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat format = new SimpleDateFormat(DATE_PATTERN);
         Date date1 = format.parse("2004-01-01");
         Date date2 = format.parse("2004-12-31");
 
@@ -1543,19 +1586,19 @@ public class TestDataConfiguration
     @Test
     public void testGetCalendar() throws Exception
     {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat format = new SimpleDateFormat(DATE_PATTERN);
 
         // missing Date
         Calendar defaultValue = Calendar.getInstance();
         defaultValue.setTime(new Date());
         assertEquals(defaultValue, conf.getCalendar("calendar", defaultValue));
-        assertNull("non null object for a missing key", conf.getCalendar("unknownkey", "yyyy-MM-dd"));
+        assertNull("non null object for a missing key", conf.getCalendar("unknownkey", DATE_PATTERN));
 
         conf.setThrowExceptionOnMissing(true);
 
         try
         {
-            conf.getCalendar("unknownkey", "yyyy-MM-dd");
+            conf.getCalendar("unknownkey", DATE_PATTERN);
             fail("NoSuchElementException should be thrown for missing properties");
         }
         catch (NoSuchElementException e)
@@ -1568,7 +1611,7 @@ public class TestDataConfiguration
 
         // Calendar string
         assertEquals(expected, conf.getCalendar("calendar.string"));
-        assertEquals(expected, conf.getCalendar("calendar.string",  "yyyy-MM-dd"));
+        assertEquals(expected, conf.getCalendar("calendar.string",  DATE_PATTERN));
 
         // Calendar object
         assertEquals(expected, conf.getCalendar("calendar.object"));
@@ -1583,7 +1626,7 @@ public class TestDataConfiguration
     @Test
     public void testGetCalendarArray() throws Exception
     {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat format = new SimpleDateFormat(DATE_PATTERN);
         Date date1 = format.parse("2004-01-01");
         Date date2 = format.parse("2004-12-31");
         Calendar calendar1 = Calendar.getInstance();
@@ -1647,7 +1690,7 @@ public class TestDataConfiguration
     @Test
     public void testGetCalendarList() throws Exception
     {
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat format = new SimpleDateFormat(DATE_PATTERN);
         Date date1 = format.parse("2004-01-01");
         Date date2 = format.parse("2004-12-31");
         Calendar calendar1 = Calendar.getInstance();
@@ -2263,7 +2306,7 @@ public class TestDataConfiguration
 
         try
         {
-            conf.getDate("key1", "yyyy-MM-dd");
+            conf.getDate("key1", DATE_PATTERN);
             fail("getDate didn't throw a ConversionException");
         }
         catch (ConversionException e)
@@ -2273,7 +2316,7 @@ public class TestDataConfiguration
 
         try
         {
-            conf.getDate("key2", "yyyy-MM-dd");
+            conf.getDate("key2", DATE_PATTERN);
             fail("getDate didn't throw a ConversionException");
         }
         catch (ConversionException e)
@@ -2313,7 +2356,7 @@ public class TestDataConfiguration
 
         try
         {
-            conf.getCalendar("key1", "yyyy-MM-dd");
+            conf.getCalendar("key1", DATE_PATTERN);
             fail("getCalendar didn't throw a ConversionException");
         }
         catch (ConversionException e)
@@ -2323,7 +2366,7 @@ public class TestDataConfiguration
 
         try
         {
-            conf.getCalendar("key2","yyyy-MM-dd");
+            conf.getCalendar("key2",DATE_PATTERN);
             fail("getCalendar didn't throw a ConversionException");
         }
         catch (ConversionException e)
