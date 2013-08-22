@@ -115,7 +115,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
     private static final ThreadLocal<String> TEMP_DATE_FORMAT = new ThreadLocal<String>();
 
     /** Stores the wrapped configuration.*/
-    protected Configuration configuration;
+    private final Configuration configuration;
 
     /** A special conversion handler object used by this configuration. */
     private final ConversionHandler dataConversionHandler;
