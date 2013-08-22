@@ -280,8 +280,12 @@ public class DefaultConversionHandler implements ConversionHandler
             return null;
         }
 
-        return targetCls.cast(PropertyConverter.to(targetCls, src,
-                this));
+        // This is a safe cast because PropertyConverter either returns an
+        // object of the correct class or throws an exception.
+        @SuppressWarnings("unchecked")
+        T result = (T) PropertyConverter.to(targetCls, src,
+               this);
+        return result;
     }
 
     /**

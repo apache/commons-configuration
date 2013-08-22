@@ -339,4 +339,15 @@ public class TestDefaultConversionHandler
         assertEquals("Wrong minute", 17, cal.get(Calendar.MINUTE));
         assertEquals("Wrong second", 22, cal.get(Calendar.SECOND));
     }
+
+    /**
+     * Tests a conversion to a primitive type.
+     */
+    @Test
+    public void testToPrimitive()
+    {
+        Long value = 20130819214935L;
+        Object result = handler.to(value.toString(), Long.TYPE, null);
+        assertEquals("Wrong conversion result", value, result);
+    }
 }
