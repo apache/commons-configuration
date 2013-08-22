@@ -495,8 +495,14 @@ public interface ImmutableConfiguration
     String[] getStringArray(String key);
 
     /**
-     * Get a List of strings associated with the given configuration key.
-     * If the key doesn't map to an existing object an empty List is returned.
+     * Get a List of the values associated with the given configuration key.
+     * This method is different from the generic {@code getList()} method in
+     * that it does not recursively obtain all values stored for the specified
+     * property key. Rather, only the first level of the hierarchy is processed.
+     * So the resulting list may contain complex objects like arrays or
+     * collections - depending on the storage structure used by a concrete
+     * subclass. If the key doesn't map to an existing object, an empty List is
+     * returned.
      *
      * @param key The configuration key.
      * @return The associated List.
@@ -517,6 +523,7 @@ public interface ImmutableConfiguration
      *
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a List.
+     * @see #getList(Class, String, List)
      */
     List<Object> getList(String key, List<Object> defaultValue);
 
@@ -609,7 +616,11 @@ public interface ImmutableConfiguration
     /**
      * Get a list of typed objects associated with the given configuration key
      * returning the specified default value if the key doesn't map to an
-     * existing object.
+     * existing object. This method recursively retrieves all values stored
+     * for the passed in key, i.e. if one of these values is again a complex
+     * object like an array or a collection (which may be the case for some
+     * concrete subclasses), all values are extracted and added to the
+     * resulting list - performing a type conversion if necessary.
      *
      * @param <T>          the type expected for the elements of the list
      * @param cls          the class expected for the elements of the list
