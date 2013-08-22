@@ -209,6 +209,18 @@ public class TestDefaultConversionHandler
     }
 
     /**
+     * Tests a conversion to a collection if an empty string is passed in. An
+     * empty string should be interpreted as a list with no values.
+     */
+    @Test
+    public void testToCollectionEmptyString()
+    {
+        List<Integer> col = new ArrayList<Integer>(1);
+        handler.toCollection("", Integer.class, null, col);
+        assertTrue("Got elements", col.isEmpty());
+    }
+
+    /**
      * Tests toArray() if the source object is null.
      */
     @Test
@@ -284,6 +296,17 @@ public class TestDefaultConversionHandler
                 array[0]);
         assertEquals("Wrong element (2)", Integer.parseInt(src.get(1)),
                 array[1]);
+    }
+
+    /**
+     * Tests a conversion to an array from an empty string. An empty string
+     * should be interpreted as an empty array.
+     */
+    @Test
+    public void testToArrayEmptyString()
+    {
+        int[] array = (int[]) handler.toArray("", Integer.TYPE, null);
+        assertEquals("Got elements", 0, array.length);
     }
 
     /**

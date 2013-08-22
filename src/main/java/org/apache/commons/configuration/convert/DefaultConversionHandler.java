@@ -128,6 +128,10 @@ public class DefaultConversionHandler implements ConversionHandler
         {
             return null;
         }
+        if (isEmptyElement(src))
+        {
+            return Array.newInstance(elemClass, 0);
+        }
 
         ConfigurationInterpolator interpolator = fetchInterpolator(ci);
         return elemClass.isPrimitive() ? toPrimitiveArray(src, elemClass,
@@ -151,7 +155,7 @@ public class DefaultConversionHandler implements ConversionHandler
                     "Target collection must not be null!");
         }
 
-        if (src != null)
+        if (src != null && !isEmptyElement(src))
         {
             ConfigurationInterpolator interpolator = fetchInterpolator(ci);
             convertToCollection(src, elemClass, interpolator, dest);
@@ -178,6 +182,23 @@ public class DefaultConversionHandler implements ConversionHandler
     {
         return src instanceof Iterator<?> || src instanceof Iterable<?>
                 || (src != null && src.getClass().isArray());
+    }
+
+    /**
+     * Tests whether the passed in object represents an empty element. This
+     * method is called by conversion methods to arrays or collections. If it
+     * returns <b>true</b>, the resulting array or collection will be empty.
+     * This implementation returns <b>true</b> if and only if the passed in
+     * object is an empty string. With this method it can be controlled if and
+     * how empty elements in configurations are handled.
+     *
+     * @param src the object to be tested
+     * @return a flag whether this object is an empty element
+     */
+    protected boolean isEmptyElement(Object src)
+    {
+        return (src instanceof CharSequence)
+                && ((CharSequence) src).length() == 0;
     }
 
     /**
