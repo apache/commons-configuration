@@ -36,7 +36,6 @@ import org.apache.commons.configuration.convert.ConversionHandler;
 import org.apache.commons.configuration.convert.DefaultConversionHandler;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
-import org.apache.commons.configuration.convert.PropertyConverter;
 import org.apache.commons.configuration.event.BaseEventSource;
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
@@ -1113,20 +1112,12 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         return props;
     }
 
-    /**
-     * {@inheritDoc}
-     * @see PropertyConverter#toBoolean(Object)
-     */
     public boolean getBoolean(String key)
     {
         Boolean b = convert(Boolean.class, key, null, true);
         return checkNonNullValue(key, b).booleanValue();
     }
 
-    /**
-     * {@inheritDoc}
-     * @see PropertyConverter#toBoolean(Object)
-     */
     public boolean getBoolean(String key, boolean defaultValue)
     {
         return getBoolean(key, Boolean.valueOf(defaultValue)).booleanValue();
@@ -1142,7 +1133,6 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @return the value of this key converted to a {@code Boolean}
      * @throws ConversionException if the value cannot be converted to a
      * {@code Boolean}
-     * @see PropertyConverter#toBoolean(Object)
      */
     public Boolean getBoolean(String key, Boolean defaultValue)
     {
