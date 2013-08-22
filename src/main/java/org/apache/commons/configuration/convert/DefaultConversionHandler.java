@@ -50,6 +50,14 @@ import org.apache.commons.lang3.ClassUtils;
  */
 public class DefaultConversionHandler implements ConversionHandler
 {
+    /**
+     * A default instance of this class. Because an instance of this class can
+     * be shared between arbitrary objects it is possible to make use of this
+     * default instance anywhere.
+     */
+    public static final DefaultConversionHandler INSTANCE =
+            new DefaultConversionHandler();
+
     /** The default format for dates. */
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 

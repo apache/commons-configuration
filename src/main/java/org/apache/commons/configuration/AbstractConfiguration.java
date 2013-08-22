@@ -140,10 +140,6 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /** end token */
     protected static final String END_TOKEN = "}";
 
-    /** The default {@code ConversionHandler} instance. */
-    private static final ConversionHandler DEF_CONVERSION_HANDLER =
-            new DefaultConversionHandler();
-
     /** The list delimiter handler. */
     private ListDelimiterHandler listDelimiterHandler;
 
@@ -174,7 +170,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         setLogger(null);
         installDefaultInterpolator();
         listDelimiterHandler = DisabledListDelimiterHandler.INSTANCE;
-        conversionHandler = DEF_CONVERSION_HANDLER;
+        conversionHandler = DefaultConversionHandler.INSTANCE;
     }
 
     /**
