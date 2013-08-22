@@ -283,4 +283,27 @@ public class TestDefaultConversionHandler
         assertEquals("Wrong element (2)", Integer.parseInt(src.get(1)),
                 array[1]);
     }
+
+    /**
+     * Tests whether the default date format is used if no format has been set.
+     */
+    @Test
+    public void testGetDateFormatNotSet()
+    {
+        assertEquals("Wrong date format",
+                DefaultConversionHandler.DEFAULT_DATE_FORMAT,
+                handler.getDateFormat());
+    }
+
+    /**
+     * Tests whether the date format can be changed.
+     */
+    @Test
+    public void testSetDateFormat()
+    {
+        String dateFormat = "dd.mm.yyyy";
+        handler.setDateFormat(dateFormat);
+        assertEquals("Date format not changed", dateFormat,
+                handler.getDateFormat());
+    }
 }

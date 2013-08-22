@@ -50,6 +50,9 @@ import org.apache.commons.lang3.ClassUtils;
  */
 public class DefaultConversionHandler implements ConversionHandler
 {
+    /** The default format for dates. */
+    public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
     /** A helper object used for extracting values from complex objects. */
     private static final AbstractListDelimiterHandler EXTRACTOR =
             (AbstractListDelimiterHandler) DisabledListDelimiterHandler.INSTANCE;
@@ -67,6 +70,35 @@ public class DefaultConversionHandler implements ConversionHandler
                     return value;
                 };
             };
+
+    /** The current date format. */
+    private volatile String dateFormat;
+
+    /**
+     * Returns the date format used by this conversion handler.
+     *
+     * @return the date format
+     */
+    public String getDateFormat()
+    {
+        String fmt = dateFormat;
+        return (fmt != null) ? fmt : DEFAULT_DATE_FORMAT;
+    }
+
+    /**
+     * Sets the date format to be used by this conversion handler. This format
+     * is applied by conversions to {@code Date} or {@code Calendar} objects.
+     * The string is passed to the {@code java.text.SimpleDateFormat} class, so
+     * it must be compatible with this class. If no date format has been set, a
+     * default format is used.
+     *
+     * @param dateFormat the date format string
+     * @see #DEFAULT_DATE_FORMAT
+     */
+    public void setDateFormat(String dateFormat)
+    {
+        this.dateFormat = dateFormat;
+    }
 
     public <T> T to(Object src, Class<T> targetCls, ConfigurationInterpolator ci)
     {
