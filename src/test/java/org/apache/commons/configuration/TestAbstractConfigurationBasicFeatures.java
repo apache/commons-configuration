@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.convert.ConversionHandler;
@@ -720,6 +721,33 @@ public class TestAbstractConfigurationBasicFeatures
     public void testGetUnknownWithDefaultValue()
     {
         PropertiesConfiguration config = new PropertiesConfiguration();
+        Integer defaultValue = 2121;
+        assertEquals("Wrong result", defaultValue,
+                config.get(Integer.class, KEY_PREFIX, defaultValue));
+    }
+
+    /**
+     * Tests get() for an unknown property if the throwExceptionOnMissing
+     * flag is set.
+     */
+    @Test(expected = NoSuchElementException.class)
+    public void testGetUnknownWithThrowExceptionOnMissing()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.setThrowExceptionOnMissing(true);
+        config.get(Integer.class, KEY_PREFIX);
+    }
+
+    /**
+     * Tests get() for an unknown property with a default value and the
+     * throwExceptionOnMissing flag. Because of the default value no exception
+     * should be thrown.
+     */
+    @Test
+    public void testGetUnownWithDefaultValueThrowExceptionOnMissing()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.setThrowExceptionOnMissing(true);
         Integer defaultValue = 2121;
         assertEquals("Wrong result", defaultValue,
                 config.get(Integer.class, KEY_PREFIX, defaultValue));

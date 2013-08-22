@@ -1362,7 +1362,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     public <T> T get(Class<T> cls, String key)
     {
-        return get(cls, key, null);
+        return convert(cls, key, null, true);
     }
 
     /**
@@ -1371,21 +1371,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public <T> T get(Class<T> cls, String key, T defaultValue)
     {
-        Object value = getProperty(key);
-        try
-        {
-            return ObjectUtils.defaultIfNull(
-                    getConversionHandler().to(value, cls, getInterpolator()),
-                    defaultValue);
-        }
-        catch (ConversionException cex)
-        {
-            // improve error message
-            throw new ConversionException(
-                    String.format(
-                            "Key '%s' cannot be converted to class %s. Value is: '%s'.",
-                            key, cls.getName(), String.valueOf(value)));
-        }
+        return convert(cls, key, defaultValue, false);
     }
 
     public Object getArray(Class<?> cls, String key)
@@ -1632,6 +1618,36 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
+     * Obtains the property value for the specified key and converts it to the
+     * given target class.
+     *
+     * @param <T> the target type of the conversion
+     * @param cls the target class
+     * @param key the key of the desired property
+     * @param defaultValue a default value
+     * @return the converted value of this property
+     * @throws ConversionException if the conversion cannot be performed
+     */
+    private <T> T getAndConvertProperty(Class<T> cls, String key, T defaultValue)
+    {
+        Object value = getProperty(key);
+        try
+        {
+            return ObjectUtils.defaultIfNull(
+                    getConversionHandler().to(value, cls, getInterpolator()),
+                    defaultValue);
+        }
+        catch (ConversionException cex)
+        {
+            // improve error message
+            throw new ConversionException(
+                    String.format(
+                            "Key '%s' cannot be converted to class %s. Value is: '%s'.",
+                            key, cls.getName(), String.valueOf(value)));
+        }
+    }
+
+    /**
      * Helper method for obtaining a property value with a type conversion.
      *
      * @param <T> the target type of the conversion
@@ -1645,7 +1661,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     private <T> T convert(Class<T> cls, String key, T defValue,
             boolean throwOnMissing)
     {
-        T result = get(cls, key, defValue);
+        T result = getAndConvertProperty(cls, key, defValue);
         if (result == null)
         {
             if (throwOnMissing && isThrowExceptionOnMissing())
