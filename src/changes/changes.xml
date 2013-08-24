@@ -27,6 +27,12 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="add" issue="CONFIGURATION-551">
+        The data type conversion mechanism has been made extensible. There is a
+        new interface ConversionHandler which controls the data type conversions
+        available for a configuration object. By setting a custom implementation,
+        conversions can be adapted or extended.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-550">
         Conversion to Character is now supported.
       </action>
@@ -135,6 +141,11 @@
         ImmutableConfiguration, and ImmutableHierarchicalConfiguration have
         been introduced.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-508">
+        Generic get() methods have been added to the Configuration interface.
+        These methods expect a target class and try to convert the value of
+        the specified property to this target class.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-506">
         Removed obsolete nested classes Node and NodeVisitor of
         HierarchicalConfiguration. The related deprecated class
@@ -174,6 +185,13 @@
       </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-330">
         Concurrent access to configurations has been reworked.
+      </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-26">
+        It is now possible to influence the conversion from a container object
+        (a collection or an array) to a single value (e.g. what is returned by
+        getString() if the current property has multiple values). Per default,
+        the first value is returned. By overriding methods of the
+        configuration's ConversionHandler, this behavior can be changed.
       </action>
     </release>
 
