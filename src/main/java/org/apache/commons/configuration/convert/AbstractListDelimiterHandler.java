@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.apache.commons.configuration.ListDelimiterHandler;
 import org.apache.commons.configuration.ValueTransformer;
 
 /**

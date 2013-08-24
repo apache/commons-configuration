@@ -16,6 +16,8 @@
  */
 package org.apache.commons.configuration;
 
+import org.apache.commons.configuration.convert.ListDelimiterHandler;
+
 /**
  * <p>
  * Definition of an interface used by {@link ListDelimiterHandler} to perform

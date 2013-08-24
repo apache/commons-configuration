@@ -36,6 +36,7 @@ import org.apache.commons.configuration.convert.ConversionHandler;
 import org.apache.commons.configuration.convert.DefaultConversionHandler;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
+import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.event.BaseEventSource;
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;

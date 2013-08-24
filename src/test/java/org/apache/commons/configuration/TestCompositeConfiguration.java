@@ -36,6 +36,7 @@ import java.util.NoSuchElementException;
 import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.LegacyListDelimiterHandler;
+import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.io.FileHandler;

@@ -48,7 +48,6 @@ import org.apache.commons.configuration.DefaultFileSystem;
 import org.apache.commons.configuration.DynamicCombinedConfiguration;
 import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.ListDelimiterHandler;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -64,6 +63,7 @@ import org.apache.commons.configuration.builder.ReloadingFileBasedConfigurationB
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.builder.fluent.Parameters;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
+import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;

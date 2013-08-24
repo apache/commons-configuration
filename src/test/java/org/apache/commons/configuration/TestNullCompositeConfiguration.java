@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.configuration.convert.LegacyListDelimiterHandler;
+import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Before;
 import org.junit.Test;

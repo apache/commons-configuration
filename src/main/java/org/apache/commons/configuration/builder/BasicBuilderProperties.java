@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.apache.commons.configuration.AbstractConfiguration;
-import org.apache.commons.configuration.ListDelimiterHandler;
+import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.sync.Synchronizer;

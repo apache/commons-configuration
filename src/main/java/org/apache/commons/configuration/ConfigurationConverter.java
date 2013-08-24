@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.collections.ExtendedProperties;
+import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.lang3.StringUtils;
 
 /**

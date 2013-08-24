@@ -34,6 +34,7 @@ import java.util.Set;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.CombinedConfigurationBuilder;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
+import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.easymock.EasyMock;

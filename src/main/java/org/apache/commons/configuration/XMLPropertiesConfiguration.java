@@ -26,6 +26,7 @@ import java.util.List;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.io.FileLocator;
 import org.apache.commons.configuration.io.FileLocatorAware;
 import org.apache.commons.lang3.StringEscapeUtils;

@@ -19,6 +19,8 @@ package org.apache.commons.configuration;
 
 import java.util.Iterator;
 
+import org.apache.commons.configuration.convert.ListDelimiterHandler;
+
 /**
  * <p>A subset of another configuration. The new Configuration object contains
  * every key from the parent Configuration that starts with prefix. The prefix

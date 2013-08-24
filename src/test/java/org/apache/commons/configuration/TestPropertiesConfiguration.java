@@ -54,6 +54,7 @@ import org.apache.commons.configuration.builder.combined.CombinedConfigurationBu
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration.convert.LegacyListDelimiterHandler;
+import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.junit.Before;

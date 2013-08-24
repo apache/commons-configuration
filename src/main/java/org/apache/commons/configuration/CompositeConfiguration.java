@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.apache.commons.configuration.convert.ListDelimiterHandler;
+
 /**
  * <p>{@code CompositeConfiguration} allows you to add multiple {@code Configuration}
  * objects to an aggregated configuration. If you add Configuration1, and then Configuration2,

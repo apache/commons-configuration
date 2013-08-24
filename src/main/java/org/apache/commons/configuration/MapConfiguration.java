@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
+import org.apache.commons.configuration.convert.ListDelimiterHandler;
 
 /**
  * <p>

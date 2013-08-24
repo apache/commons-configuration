@@ -14,11 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.configuration;
+package org.apache.commons.configuration.convert;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.ValueTransformer;
 
 /**
  * <p>
