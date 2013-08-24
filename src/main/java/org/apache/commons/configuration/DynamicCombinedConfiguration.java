@@ -68,18 +68,6 @@ import org.apache.commons.logging.LogFactory;
 public class DynamicCombinedConfiguration extends CombinedConfiguration
 {
     /**
-     * Prevent recursion while resolving unprefixed properties.
-     */
-    private static ThreadLocal<Boolean> recursive = new ThreadLocal<Boolean>()
-    {
-        @Override
-        protected synchronized Boolean initialValue()
-        {
-            return Boolean.FALSE;
-        }
-    };
-
-    /**
      * Stores the current configuration for each involved thread. This value is
      * set at the beginning of an operation and removed at the end.
      */
@@ -857,29 +845,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         for (CombinedConfiguration cc : configs.values())
         {
             cc.invalidate();
-        }
-    }
-
-    /*
-     * Don't allow resolveContainerStore to be called recursively.
-     * @param key The key to resolve.
-     * @return The value of the key.
-     */
-    @Override
-    protected Object resolveContainerStore(String key)
-    {
-        if (recursive.get().booleanValue())
-        {
-            return null;
-        }
-        recursive.set(Boolean.TRUE);
-        try
-        {
-            return super.resolveContainerStore(key);
-        }
-        finally
-        {
-            recursive.set(Boolean.FALSE);
         }
     }
 

@@ -17,7 +17,6 @@
 
 package org.apache.commons.configuration;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -1433,33 +1432,6 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         getConversionHandler().toCollection(src, cls, getInterpolator(),
                 targetCol);
         return targetCol;
-    }
-
-    /**
-     * Returns an object from the store described by the key. If the value is a
-     * Collection object, replace it with the first object in the collection.
-     *
-     * @param key The property key.
-     *
-     * @return value Value, transparently resolving a possible collection dependency.
-     */
-    protected Object resolveContainerStore(String key)
-    {
-        Object value = getProperty(key);
-        if (value != null)
-        {
-            if (value instanceof Collection)
-            {
-                Collection<?> collection = (Collection<?>) value;
-                value = collection.isEmpty() ? null : collection.iterator().next();
-            }
-            else if (value.getClass().isArray() && Array.getLength(value) > 0)
-            {
-                value = Array.get(value, 0);
-            }
-        }
-
-        return value;
     }
 
     /**

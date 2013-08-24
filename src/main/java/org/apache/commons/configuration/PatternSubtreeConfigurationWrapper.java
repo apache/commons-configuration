@@ -46,18 +46,6 @@ import org.apache.commons.configuration.tree.ExpressionEngine;
 public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfiguration
     implements FileBasedConfiguration
 {
-    /**
-     * Prevent recursion while resolving unprefixed properties.
-     */
-    private static ThreadLocal<Boolean> recursive = new ThreadLocal<Boolean>()
-    {
-        @Override
-        protected synchronized Boolean initialValue()
-        {
-            return Boolean.FALSE;
-        }
-    };
-
     /** The wrapped configuration */
     private final HierarchicalConfiguration config;
 
@@ -466,24 +454,6 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     public Collection<ConfigurationErrorListener> getErrorListeners()
     {
         return getConfig().getErrorListeners();
-    }
-
-    @Override
-    protected Object resolveContainerStore(String key)
-    {
-        if (recursive.get().booleanValue())
-        {
-            return null;
-        }
-        recursive.set(Boolean.TRUE);
-        try
-        {
-            return super.resolveContainerStore(key);
-        }
-        finally
-        {
-            recursive.set(Boolean.FALSE);
-        }
     }
 
     private BaseHierarchicalConfiguration getConfig()
