@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.convert.ConversionHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
@@ -145,4 +146,15 @@ public interface BasicBuilderProperties<T>
      * @return a reference to this object for method chaining
      */
     T setSynchronizer(Synchronizer sync);
+
+    /**
+     * Sets the {@code ConversionHandler} object for this configuration. This
+     * object is responsible for all data type conversions required for
+     * accessing configuration properties in a specific target type. If this
+     * property is not set, a default {@code ConversionHandler} is used.
+     *
+     * @param handler the {@code ConversionHandler} to be used
+     * @return a reference to this object for method chaining
+     */
+    T setConversionHandler(ConversionHandler handler);
 }

@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.configuration.convert.ConversionHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.InterpolatorSpecification;
@@ -467,5 +468,19 @@ public class TestBasicBuilderParameters
         assertSame("Wrong result", params, params.setSynchronizer(sync));
         assertSame("Synchronizer not set", sync,
                 params.getParameters().get("synchronizer"));
+    }
+
+    /**
+     * Tests whether a ConversionHandler can be set.
+     */
+    @Test
+    public void testSetConversionHandler()
+    {
+        ConversionHandler handler =
+                EasyMock.createMock(ConversionHandler.class);
+        EasyMock.replay(handler);
+        assertSame("Wrong result", params, params.setConversionHandler(handler));
+        assertSame("ConversionHandler not set", handler, params.getParameters()
+                .get("conversionHandler"));
     }
 }

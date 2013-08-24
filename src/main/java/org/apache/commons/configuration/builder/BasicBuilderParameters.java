@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.convert.ConversionHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.InterpolatorSpecification;
@@ -76,6 +77,9 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
 
     /** The key for the <em>synchronizer</em> property. */
     private static final String PROP_SYNCHRONIZER = "synchronizer";
+
+    /** The key or the <em>conversionHandler</em> property. */
+    private static final String PROP_CONVERSION_HANDLER = "conversionHandler";
 
     /** The map for storing the current property values. */
     private Map<String, Object> properties;
@@ -222,6 +226,15 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
     public BasicBuilderParameters setSynchronizer(Synchronizer sync)
     {
         return setProperty(PROP_SYNCHRONIZER, sync);
+    }
+
+    /**
+     * {@inheritDoc} This implementation stores the passed in
+     * {@code ConversionHandler} object in the internal parameters map.
+     */
+    public BasicBuilderParameters setConversionHandler(ConversionHandler handler)
+    {
+        return setProperty(PROP_CONVERSION_HANDLER, handler);
     }
 
     /**
