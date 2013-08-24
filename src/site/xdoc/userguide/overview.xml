@@ -169,12 +169,14 @@ Configuration config = factory.getConfiguration();
         </ul>
         The names of these methods start with <code>get</code> followed by their
         data type. The <code>getString()</code> method for instance will return
-        String values, <code>getInt()</code> will operate on integers.
+        String values, <code>getInt()</code> will operate on integers. In
+        addition, there is a generic <code>get()</code> method which tries to
+        convert the value of a property to a specified target class.
       </p>
       <p>
         Properties can have multiple values, so it is also possible to query a
-        list containing all of the available values. This is done using the
-        <code>getList()</code> method.
+        list or an array containing all of the available values. This is done
+        using the <code>getList()</code> or <code>getArray()</code> methods.
       </p>
       <p>
         For manipulating properties or their values the following methods can

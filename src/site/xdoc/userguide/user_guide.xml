@@ -51,6 +51,9 @@
         <li><a href="howto_basicfeatures.html#List_handling">List handling</a></li>
         <li><a href="howto_basicfeatures.html#Variable_Interpolation">Variable Interpolation</a></li>
         <li><a href="howto_basicfeatures.html#Customizing_interpolation">Customizing interpolation</a></li>
+        <li><a href="howto_basicfeatures.html#Using_Expressions">Using Expressions</a></li>
+        <li><a href="howto_basicfeatures.html#Data_type_conversions">Data type conversions</a></li>
+        <li><a href="howto_basicfeatures.html#Customizing_data_type_conversions">Customizing data type conversions</a></li>
       </ul>
       <li><a href="howto_properties.html#Properties_files">Properties files</a></li>
       <ul>

@@ -96,18 +96,50 @@ long longValue = config.getLong("NonExistingProperty");
       <code>setProperty()</code> methods of <code>AbstractConfiguration</code>
       also implement special list handling. The property value that is passed
       to these methods can be a list or an array resulting in a property
-      with multiple values. If the property value is a string, it is checked
-      whether it contains the <em>list delimiter character</em>. If this is
-      the case, the string is splitted, and its single parts are added one
-      by one. The list delimiter character is the comma by default. It is
-      also taken into account when the configuration source is loaded
-      (i.e. string values of properties will be checked whether they contain
-      this delimiter). By using the <code>setListDelimiter()</code>
-      method you can set it to a different character. Here are some examples:
+      with multiple values.
+    </p>
+    <p>
+      For some use cases it makes sense to treat string values in a special way.
+      For instance, some configuration formats do not support lists directly.
+      As an example, properties files can be used: they just consist of
+      key-value pairs, and there is no default syntax to assign multiple values
+      to a key. <code>AbstractConfiguration</code> supports a mechanism to split
+      strings at specific characters, so that effectively multiple values are
+      generated from a single string. To achieve this, an
+      <code>AbstractConfiguration</code> instance collaborates with an object
+      implementing the
+      <code><a href="../apidocs/org/apache/commons/configuration/convert/ListDelimiterHandler.html">
+      ListDelimiterHandler</a></code> interface. This interface defines methods
+      for dealing with objects that may contain multiple values. Examples of
+      such complex objects are arrays, lists, and strings containing a specific
+      list delimiter. Depending on a concrete implementation of the
+      <code>ListDelimiterHandler</code> interface, these objects are treated in
+      a special way.
+    </p>
+    <p>
+      Per default, <code>AbstractConfiguration</code> uses an instance of the
+      <code><a href="../apidocs/org/apache/commons/configuration/convert/DisabledListDelimiterHandler.html">
+      DisabledListDelimiterHandler</a></code> class as list handler. This
+      class can deal with lists and arrays, but it does not recognize any list
+      delimiter characters in strings. (Hence the name, as splitting of strings
+      at list delimiters is disabled.)
+    </p>
+    <p>
+      An alternative implementation of <code>ListDelimiterHandler</code> is
+      <code><a href="../apidocs/org/apache/commons/configuration/convert/DefaultListDelimiterHandler.html">
+      DefaultListDelimiterHandler</a></code>. This class actually supports
+      string splitting; the list delimiter character has to be passed to the
+      constructor. Whenever a property is added to the configuration (or the
+      configuration is loaded from its source), it is checked whether the
+      property value is a string and - if so - if it contains the list
+      delimiter character. In this case, the string is split, and its single
+      parts are added one by one. By using the <code>setListDelimiterHandler()</code>
+      method you can set a specific list handler implementation. Here are some
+      examples:
     </p>
 <source>
-// Change the list delimiter character to a slash
-config.setListDelimiter('/');
+// Enable list delimiter handling using a slash as delimiter character
+config.setListDelimiterHandler(new DefaultListDelimiterHandler('/'));
 // Now add some properties
 config.addProperty("greeting", "Hello, how are you?");
 config.addProperty("colors.pie",
@@ -122,28 +154,24 @@ String[] colGraph = config.getStringArray("colors.graph");
 String firstPieColor = config.getString("colors.pie");
 </source>
     <p>
-      In this example the list delimiter character is changed from a comma
-      to a slash. Because of this the <code>greeting</code> property won't
-      be split, but remains a single string. The string passed as value
-      for the <code>colors.graph</code> property in opposite contains the
-      new delimiter character and thus will result in a property with three
-      values. Note that lists are of type <code>Object</code>. This is because
-      the concrete class of the values of a property is not known. For instance,
-      if you call <code>addProperty(&quot;answer&quot;, 42)</code>, an
-      <code>Integer</code> object will be stored in the configuration.
+      In this example splitting of strings is enabled using the slash character
+      as delimiter. Because this character is not contained in the
+      <code>greeting</code> property it won't be split, but remains a single
+      string. In contrast, the string passed as value for the
+      <code>colors.graph</code> property contains the delimiter character and
+      thus will result in a property with three values. Note that the
+      version of the <code>getList()</code> method used here returns lists of type
+      <code>Object</code>. This is because the concrete class of the values of a
+      property is not known. For instance, if you call
+      <code>addProperty(&quot;answer&quot;, 42)</code>, an
+      <code>Integer</code> object will be stored in the configuration. However,
+      there are overloaded versions of <code>getList()</code> supporting a
+      data type conversion to a specific target class (see below).
     </p>
     <p>
       Of interest is also the last line of the example fragment. Here the
       <code>getString()</code> method is called for a property that has
       multiple values. This call will return the first value of the list.
-    </p>
-    <p>
-      If you want to change the list delimiter character for all configuration
-      objects, you can use the static <code>setDefaultListDelimiter()</code>
-      method of <code>AbstractConfiguration</code>. It is also possible to
-      disable splitting of string properties at all for a Configuration
-      instance by calling its <code>setDelimiterParsingDisabled()</code>
-      method with a value of <b>true</b>.
     </p>
     </subsection>
 
@@ -282,6 +310,7 @@ ConfigurationInterpolator.registerGlobalLookup("echo", new EchoLookup());
       which are then only used by this configuration instance.
     </p>
     </subsection>
+
     <subsection name="Using Expressions">
       <p>
         In addition to the simple lookup mechanisms previously described, Commond Configuration
@@ -354,6 +383,180 @@ user.file = ${expr:System.getProperty("user.home"}/settings.xml
   </override>
 </configuration>
 ]]></source>
+    </subsection>
+
+    <subsection name="Data type conversions">
+    <p>
+      As was already mentioned when discussing the
+      <code><a href="../apidocs/org/apache/commons/configuration/Configuration.html">
+      Configuration</a></code> interface, there are various <code>get()</code>
+      methods returning property values in different target data types. If
+      necessary, a data type conversion is performed. Take a look at the
+      following example:
+    </p>
+<source><![CDATA[
+config.addProperty("answer", "42");
+int theAnswer = config.getInt("answer");
+]]></source>
+    <p>
+      Here a string value is assigned to the key <em>answer</em>. Then the
+      <code>getInt()</code> method is called to query this key as an integer
+      value. <code>getInt()</code> triggers a type conversion automatically.
+      If such a conversion is not possible, a runtime exception of type
+      <code>ConversionException</code> is thrown.
+    </p>
+    <p>
+      The <code>Configuration</code> interface defines a bunch of methods
+      returning property values in different data types. All of these methods
+      work in the same way: they obtain the actual value of the property and
+      attempt a data type conversion if necessary. In addition, there are
+      generic methods for accessing properties in specific data types:
+      <dl>
+        <dt>&lt;T&gt; get(Class&lt;T&gt; cls, String key);</dt>
+        <dd>Obtains the value of the specified property and tries to convert it
+        to the specified target type. If the key cannot be resolved, result is
+        <b>null</b>, or - if the <em>throwExceptionOnMissing</em> flag is set -
+        an exception is thrown.</dd>
+        <dt>&lt;T&gt; get(Class&lt;T&gt; cls, String key, T defValue);</dt>
+        <dd>Obtains the value of the specified property and tries to convert it
+        to the specified target type. If the key cannot be resolved, the
+        specified default value is returned (which may be <b>null</b>).</dd>
+      </dl>
+      In fact, all specialized <code>get()</code> methods are based on these
+      generic methods.
+    </p>
+    <p>
+      Generic conversion methods are also available for obtaining arrays or
+      collections. For instance, it is possible to obtain the value of a
+      property as an array of <b>int</b> or a list of <code>java.lang.Long</code>
+      objects. This can be achieved using the following methods:
+      <dl>
+        <dt>Object getArray(Class&lt;?&gt; cls, String key);</dt>
+        <dd>Returns an array of the specified element class. This method can
+        handle both object and primitive arrays. (Therefore, the return type
+        is just <code>Object</code> because there is no common base class for
+        all kinds of arrays.)</dd>
+        <dt>&lt;T&gt; List&lt;T&gt; getList(Class&lt;T&gt; cls, String key);</dt>
+        <dd>Returns a list of the specified element class.</dd>
+        <dt>&lt;T&gt; Collection&lt;T&gt; getCollection(Class&lt;T&gt; cls,
+        String key, Collection&lt;T&gt; target);</dt>
+        <dd>This method is similar to <code>getList()</code>, but it allows
+        specifying the target collection. This is useful if the result should
+        be stored in a different collection type, e.g. a set to remove
+        duplicates.</dd>
+      </dl>
+    </p>
+    <p>
+      These methods obtain all values stored for the property with the
+      passed in key. For each value a conversion to the desired target type is
+      performed. Then the resulting values are stored in the target array or
+      collection. There are also variants supporting default values.
+    </p>
+    <p>
+      It is worth to mention that data type conversion plays well together with
+      <a href="#Variable_Interpolation">variable interpolation</a>: Before a
+      data type conversion is attempted interpolation is handled first. Then
+      the resulting object is converted if necessary.
+    </p>
+    </subsection>
+
+    <subsection name="Customizing data type conversions">
+    <p>
+      <em>Commons Configuration</em> supports a number of conversions to
+      standard types out of the box. In addition to the result types of the
+      <code>get()</code> methods in the <code>Configuration</code> interface,
+      some more types are supported. These are listed in the documentation of the
+      <code><a href="../apidocs/org/apache/commons/configuration/DataConfiguration.html">
+      DataConfiguration</a></code> class. <code>DataConfiguration</code> is a
+      <em>decorator</em> providing additional data type conversion methods for
+      more target types; these additional methods are implemented on top of the
+      generic conversion methods provided by <code>AbstractConfiguration</code>.
+    </p>
+    <p>
+      If your application deals with special objects, there may be the
+      requirement to extend the conversion capabilities offered by the
+      library. To support this use case, there is the
+      <code><a href="../apidocs/org/apache/commons/configuration/convert/ConversionHandler.html">
+      ConversionHandler</a></code> interface. Each instance of a configuration
+      class derived from <code>AbstractConfiguration</code> is associated with
+      such a <code>ConversionHandler</code> object. The interface defines
+      methods for converting an object to a target class, and for converting
+      values to arrays or collections of a given element type. The data type
+      conversion methods implemented in <code>AbstractConfiguration</code>
+      delegate to this handler object.
+    </p>
+    <p>
+      The <code>ConversionHandler</code> interface gives a developer full
+      control over the whole data conversion process. By implementing the
+      different conversion methods, it is possible to integrate existing
+      conversion libraries (e.g. the converters offered by
+      <a href="http://commons.apache.org/proper/commons-beanutils/">Commons
+      BeanUtils</a>) with <em>Commons Configuration</em>.
+    </p>
+    <p>
+      If the conversion facilities provided by <em>Commons Configuration</em>
+      are not to be fully replaced, but only extended by some custom types,
+      the class <code><a href="../apidocs/org/apache/commons/configuration/convert/DefaultConversionHandler.html">
+      DefaultConversionHandler</a></code> is a good starting point. As the name
+      implies, an instance of this class is used per default for doing type
+      conversions. <code>DefaultConversionHandler</code> has some protected
+      methods which can be overridden by subclasses in order to extend data type
+      conversions:
+      <dl>
+        <dt><code>convertValue()</code></dt>
+        <dd>This is the main conversion method for single values. It is called
+        when a single value is to be converted to a target type and also for
+        the single elements of arrays or collections. If a conversion to another
+        target class is to be supported, this is the method to override. A
+        custom implementation typically checks whether the desired target class
+        is one of the classes it supports. If this is the case, the passed in
+        source object is converted, and the result is returned. Otherwise, the
+        super method is called to handle standard conversions.</dd>
+        <dt><code>isComplexObject()</code></dt>
+        <dd>This boolean method determines whether a passed in object contains
+        multiple values. When doing a conversion to a target class
+        <code>DefaultConversionHandler</code> checks whether the source object
+        is a complex object like an array or a collection. If this is the case,
+        it first extracts the value to be converted from the source object
+        before it calls <code>convertValue()</code>.</dd>
+        <dt><code>extractConversionValue()</code></dt>
+        <dd><code>extractConversionValue()</code> is called if a complex object
+        (i.e. an object containing multiple values) is to be converted to a
+        single object (i.e. not an array or a collection). In this case, it is
+        not directly obvious how the multiple values should be handled. This
+        situation occurs for example if a client calls <code>getInt()</code>
+        on a property which actually has multiple values. The default
+        implementation of <code>extractConversionValue()</code> simply returns
+        the first value available. If an application needs a different
+        behavior, it can provide a custom implementation of this method.</dd>
+        <dt><code>convert()</code></dt>
+        <dd>This method contains the logic for converting a single value. It
+        delegates to the other methods discussed here. It first checks whether
+        the object to be converted is a complex one. If so, it extracts the
+        value to be converted. Eventually, it delegates to
+        <code>convertValue()</code> for performing the actual conversion. So
+        in order to gain more control over the whole conversion process, this
+        method is a good candidate for overriding.</dd>
+      </dl>
+    </p>
+    <p>
+      After a custom <code>ConversionHandler</code> implementation has been
+      created, it can be installed at a configuration instance by using the
+      <code>setConversionHandler()</code> method:
+    </p>
+<source><![CDATA[
+CustomConversionHandler handler = new CustomConversionHandler(...);
+config.setConversionHandler(handler);
+]]></source>
+    <p>
+      Another feature of <code>DefaultConversionHandler</code> is that is
+      allows defining the format for the conversion of <code>Date</code> and
+      <code>Calendar</code> objects. This can be done by calling
+      <code>setDateFormat()</code> with the corresponding date pattern. The
+      expected string argument must be a pattern string compatible with the
+      <code>java.text.SimpleDateFormat</code> class. If no date format was set,
+      the default pattern <code>yyyy-MM-dd HH:mm:ss</code> is used.
+    </p>
     </subsection>
   </section>
 </body>
