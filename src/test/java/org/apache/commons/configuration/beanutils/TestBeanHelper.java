@@ -90,6 +90,17 @@ public class TestBeanHelper
     }
 
     /**
+     * Tests the default instance of BeanHelper.
+     */
+    @Test
+    public void testDefaultInstance()
+    {
+        assertSame("Wrong factory for default instance",
+                DefaultBeanFactory.INSTANCE,
+                BeanHelper.INSTANCE.getDefaultBeanFactory());
+    }
+
+    /**
      * Tests that a newly created instance does not have any bean factories
      * registered.
      */

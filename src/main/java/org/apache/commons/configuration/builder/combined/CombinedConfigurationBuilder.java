@@ -860,7 +860,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         {
             XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
             String key = config.getString(KEY_LOOKUP_KEY);
-            Lookup lookup = (Lookup) BeanHelper.createBean(decl);
+            Lookup lookup = (Lookup) fetchBeanHelper().createBean(decl);
             lookups.put(key, lookup);
         }
 
@@ -892,7 +892,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         {
             XMLBeanDeclaration decl =
                     new XMLBeanDeclaration(config, FILE_SYSTEM);
-            return (FileSystem) BeanHelper.createBean(decl);
+            return (FileSystem) fetchBeanHelper().createBean(decl);
         }
         return null;
     }
@@ -942,7 +942,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             XMLBeanDeclaration decl =
                     new XMLBeanDeclaration(config, KEY_ENTITY_RESOLVER, true);
             EntityResolver resolver =
-                    (EntityResolver) BeanHelper.createBean(decl,
+                    (EntityResolver) fetchBeanHelper().createBean(decl,
                             CatalogResolver.class);
             FileSystem fileSystem = xmlParams.getFileHandler().getFileSystem();
             if (fileSystem != null)
@@ -1035,6 +1035,20 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     CombinedConfiguration getConfigurationUnderConstruction()
     {
         return currentConfiguration;
+    }
+
+    /**
+     * Initializes a bean using the current {@code BeanHelper}. This is needed
+     * by builder providers when the configuration objects for sub builders are
+     * constructed.
+     *
+     * @param bean the bean to be initialized
+     * @param decl the {@code BeanDeclaration}
+     */
+    void initBean(Object bean, BeanDeclaration decl)
+    {
+        fetchBeanHelper().initBean(bean, decl);
+        ;
     }
 
     /**
@@ -1261,7 +1275,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
             String key = config.getString(KEY_PROVIDER_KEY);
             currentParameters.registerProvider(key,
-                    (ConfigurationBuilderProvider) BeanHelper.createBean(decl));
+                    (ConfigurationBuilderProvider) fetchBeanHelper().createBean(decl));
         }
     }
 

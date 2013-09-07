@@ -25,7 +25,6 @@ import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationUtils;
-import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
@@ -245,7 +244,7 @@ public class BaseConfigurationBuilderProvider implements
     {
         inheritParentBuilderProperties(decl, params);
         MultiWrapDynaBean wrapBean = new MultiWrapDynaBean(params);
-        BeanHelper.initBean(wrapBean, decl);
+        decl.getConfigurationBuilder().initBean(wrapBean, decl);
     }
 
     /**

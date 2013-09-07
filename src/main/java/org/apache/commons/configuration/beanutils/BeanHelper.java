@@ -69,6 +69,14 @@ import org.apache.commons.lang3.ClassUtils;
  */
 public final class BeanHelper
 {
+    /**
+     * A default instance of {@code BeanHelper} which can be shared between
+     * arbitrary components. If no special configuration is needed, this
+     * instance can be used throughout an application. Otherwise, new instances
+     * can be created with their own configuration.
+     */
+    public static final BeanHelper INSTANCE = new BeanHelper();
+
     /** Stores a map with the registered bean factories. */
     private final Map<String, BeanFactory> BEAN_FACTORIES = Collections
             .synchronizedMap(new HashMap<String, BeanFactory>());

@@ -469,7 +469,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      */
     protected T createResultInstance() throws ConfigurationException
     {
-        Object bean = BeanHelper.createBean(getResultDeclaration());
+        Object bean = fetchBeanHelper().createBean(getResultDeclaration());
         checkResultInstance(bean);
         return getResultClass().cast(bean);
     }
@@ -487,7 +487,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      */
     protected void initResultInstance(T obj) throws ConfigurationException
     {
-        BeanHelper.initBean(obj, getResultDeclaration());
+        fetchBeanHelper().initBean(obj, getResultDeclaration());
         registerEventListeners(obj);
         handleInitializable(obj);
     }
@@ -526,6 +526,20 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
             return parameters;
         }
         return Collections.emptyMap();
+    }
+
+    /**
+     * Obtains the {@code BeanHelper} object to be used when dealing with bean
+     * declarations. This method checks whether this builder was configured with
+     * a specific {@code BeanHelper} instance. If so, this instance is used.
+     * Otherwise, the default {@code BeanHelper} is returned.
+     *
+     * @return the {@code BeanHelper} to be used
+     */
+    protected final BeanHelper fetchBeanHelper()
+    {
+        // TODO support configuration of a BeanHelper
+        return BeanHelper.INSTANCE;
     }
 
     /**
