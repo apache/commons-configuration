@@ -566,26 +566,25 @@ public class TestBeanHelper
 
         boolean supportsDefaultClass;
 
-        public Object createBean(Class<?> beanClass, BeanDeclaration data, Object param)
-                throws Exception
+        public Object createBean(BeanCreationContext bcc) throws Exception
         {
-            parameter = param;
-            if (BeanCreationTestBean.class.equals(beanClass))
+            parameter = bcc.getParameter();
+            if (BeanCreationTestBean.class.equals(bcc.getBeanClass()))
             {
                 BeanCreationTestBean bean = new BeanCreationTestBean();
-                BeanHelper.initBean(bean, data);
+                BeanHelper.initBean(bean, bcc.getBeanDeclaration());
                 return bean;
             }
-            else if (BeanCreationTestBeanWithListChild.class.equals(beanClass))
+            else if (BeanCreationTestBeanWithListChild.class.equals(bcc.getBeanClass()))
             {
                 BeanCreationTestBeanWithListChild bean = new BeanCreationTestBeanWithListChild();
-                BeanHelper.initBean(bean, data);
+                BeanHelper.initBean(bean, bcc.getBeanDeclaration());
                 return bean;
             }
             else
             {
                 throw new IllegalArgumentException("Unsupported class: "
-                        + beanClass);
+                        + bcc.getBeanClass());
             }
         }
 

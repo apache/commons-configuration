@@ -391,10 +391,11 @@ public final class BeanHelper
         }
 
         BeanFactory factory = fetchBeanFactory(data);
+        BeanCreationContext bcc =
+                createBeanCreationContext(data, defaultClass, param, factory);
         try
         {
-            return factory.createBean(fetchBeanClass(data, defaultClass,
-                    factory), data, param);
+            return factory.createBean(bcc);
         }
         catch (Exception ex)
         {
@@ -546,6 +547,54 @@ public final class BeanHelper
         {
             return getDefaultBeanFactory();
         }
+    }
+
+    /**
+     * Creates a {@code BeanCreationContext} object for the creation of the
+     * specified bean.
+     *
+     * @param data the bean declaration
+     * @param defaultClass the default class to use
+     * @param param an additional parameter that will be passed to the bean
+     *        factory; some factories may support parameters and behave
+     *        different depending on the value passed in here
+     * @param factory the current bean factory
+     * @return the {@code BeanCreationContext}
+     * @throws ConfigurationRuntimeException if the bean class cannot be
+     *         determined
+     */
+    private static BeanCreationContext createBeanCreationContext(
+            final BeanDeclaration data, Class<?> defaultClass,
+            final Object param, BeanFactory factory)
+    {
+        final Class<?> beanClass = fetchBeanClass(data, defaultClass, factory);
+        return new BeanCreationContext()
+        {
+            public void initBean(Object bean, BeanDeclaration data)
+            {
+                BeanHelper.initBean(bean, data);
+            }
+
+            public Object getParameter()
+            {
+                return param;
+            }
+
+            public BeanDeclaration getBeanDeclaration()
+            {
+                return data;
+            }
+
+            public Class<?> getBeanClass()
+            {
+                return beanClass;
+            }
+
+            public Object createBean(BeanDeclaration data)
+            {
+                return BeanHelper.createBean(data);
+            }
+        };
     }
 
     /**

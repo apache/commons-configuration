@@ -98,18 +98,14 @@ public class DefaultBeanFactory implements BeanFactory
      * This makes it easier for derived classes that need to change specific
      * functionality of the base class.
      *
-     * @param beanClass the class of the bean, from which an instance is to be
-     * created
-     * @param data the bean declaration object
-     * @param parameter an additional parameter (ignored by this implementation)
+     * @param bcc the context object defining the bean to be created
      * @return the new bean instance
      * @throws Exception if an error occurs
      */
-    public Object createBean(Class<?> beanClass, BeanDeclaration data,
-            Object parameter) throws Exception
+    public Object createBean(BeanCreationContext bcc) throws Exception
     {
-        Object result = createBeanInstance(beanClass, data);
-        initBeanInstance(result, data);
+        Object result = createBeanInstance(bcc);
+        initBeanInstance(result, bcc);
         return result;
     }
 
@@ -129,33 +125,32 @@ public class DefaultBeanFactory implements BeanFactory
      * {@code createBean()}. It uses reflection to create a new instance
      * of the specified class.
      *
-     * @param beanClass the class of the bean to be created
-     * @param data the bean declaration
+     * @param bcc the context object defining the bean to be created
      * @return the new bean instance
      * @throws Exception if an error occurs
      */
-    protected Object createBeanInstance(Class<?> beanClass, BeanDeclaration data)
+    protected Object createBeanInstance(BeanCreationContext bcc)
             throws Exception
     {
-        Constructor<?> ctor = BeanHelper.findMatchingConstructor(beanClass, data);
-        Object[] args = fetchConstructorArgs(ctor, data);
+        Constructor<?> ctor =
+                BeanHelper.findMatchingConstructor(bcc.getBeanClass(),
+                        bcc.getBeanDeclaration());
+        Object[] args = fetchConstructorArgs(ctor, bcc);
         return ctor.newInstance(args);
     }
 
     /**
      * Initializes the newly created bean instance. This method is called by
-     * {@code createBean()}. It calls the
-     * {@link BeanHelper#initBean(Object, BeanDeclaration) initBean()}
-     * of {@link BeanHelper} for performing the initialization.
+     * {@code createBean()}. It calls the {@code initBean()} method of the
+     * context object for performing the initialization.
      *
      * @param bean the newly created bean instance
-     * @param data the bean declaration object
+     * @param bcc the context object defining the bean to be created
      * @throws Exception if an error occurs
      */
-    protected void initBeanInstance(Object bean, BeanDeclaration data)
-            throws Exception
+    protected void initBeanInstance(Object bean, BeanCreationContext bcc) throws Exception
     {
-        BeanHelper.initBean(bean, data);
+        bcc.initBean(bean, bcc.getBeanDeclaration());
     }
 
     /**
@@ -164,22 +159,22 @@ public class DefaultBeanFactory implements BeanFactory
      * conversions.
      *
      * @param ctor the constructor to be invoked
-     * @param data the current bean declaration
+     * @param bcc the context object defining the bean to be created
      * @return an array with constructor arguments
      */
     private Object[] fetchConstructorArgs(Constructor<?> ctor,
-            BeanDeclaration data)
+            BeanCreationContext bcc)
     {
         Class<?>[] types = ctor.getParameterTypes();
-        assert types.length == nullSafeConstructorArgs(data).size() :
+        assert types.length == nullSafeConstructorArgs(bcc.getBeanDeclaration()).size() :
             "Wrong number of constructor arguments!";
         Object[] args = new Object[types.length];
         int idx = 0;
 
-        for (ConstructorArg arg : nullSafeConstructorArgs(data))
+        for (ConstructorArg arg : nullSafeConstructorArgs(bcc.getBeanDeclaration()))
         {
             Object val =
-                    arg.isNestedBeanDeclaration() ? BeanHelper.createBean(arg
+                    arg.isNestedBeanDeclaration() ? bcc.createBean(arg
                             .getBeanDeclaration()) : arg.getValue();
             args[idx] = getConversionHandler().to(val, types[idx], null);
             idx++;

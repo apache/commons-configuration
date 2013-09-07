@@ -56,6 +56,45 @@ public class TestDefaultBeanFactory
     }
 
     /**
+     * Creates a bean creation context for a create operation.
+     *
+     * @param cls the bean class
+     * @param decl the bean declaration
+     * @return the new creation context
+     */
+    private static BeanCreationContext createBcc(final Class<?> cls,
+            final BeanDeclaration decl)
+    {
+        return new BeanCreationContext()
+        {
+            public void initBean(Object bean, BeanDeclaration data)
+            {
+                BeanHelper.initBean(bean, data);
+            }
+
+            public Object getParameter()
+            {
+                return null;
+            }
+
+            public BeanDeclaration getBeanDeclaration()
+            {
+                return decl;
+            }
+
+            public Class<?> getBeanClass()
+            {
+                return cls;
+            }
+
+            public Object createBean(BeanDeclaration data)
+            {
+                return BeanHelper.createBean(data);
+            }
+        };
+    }
+
+    /**
      * Tests obtaining the default class. This should be null.
      */
     @Test
@@ -100,8 +139,7 @@ public class TestDefaultBeanFactory
         Map<String, Object> props = new HashMap<String, Object>();
         props.put("throwExceptionOnMissing", Boolean.TRUE);
         decl.setBeanProperties(props);
-        Object bean = factory.createBean(PropertiesConfiguration.class,
-                decl, null);
+        Object bean = factory.createBean(createBcc(PropertiesConfiguration.class, decl));
         assertNotNull("New bean is null", bean);
         assertEquals("Bean is of wrong class", PropertiesConfiguration.class,
                 bean.getClass());
@@ -122,8 +160,8 @@ public class TestDefaultBeanFactory
         args.add(ConstructorArg.forValue("42"));
         decl.setConstructorArgs(args);
         BeanCreationTestCtorBean bean =
-                (BeanCreationTestCtorBean) factory.createBean(
-                        BeanCreationTestCtorBean.class, decl, null);
+                (BeanCreationTestCtorBean) factory.createBean(createBcc(
+                        BeanCreationTestCtorBean.class, decl));
         assertEquals("Wrong string property", "test", bean.getStringValue());
         assertEquals("Wrong int property", 42, bean.getIntValue());
     }
@@ -145,8 +183,8 @@ public class TestDefaultBeanFactory
                 .forBeanDeclaration(declNested,
                         BeanCreationTestBean.class.getName())));
         BeanCreationTestCtorBean bean =
-                (BeanCreationTestCtorBean) factory.createBean(
-                        BeanCreationTestCtorBean.class, decl, null);
+                (BeanCreationTestCtorBean) factory.createBean(createBcc(
+                        BeanCreationTestCtorBean.class, decl));
         assertNotNull("Buddy bean was not set", bean.getBuddy());
         assertEquals("Wrong property of buddy bean", "test", bean.getBuddy()
                 .getStringValue());

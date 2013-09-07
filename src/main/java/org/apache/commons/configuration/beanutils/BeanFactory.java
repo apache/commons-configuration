@@ -32,8 +32,8 @@ package org.apache.commons.configuration.beanutils;
  * </p>
  * <p>
  * The interface itself is quite simple. There is a single method for creating a
- * bean of a given class. All necessary parameters are obtained from an also
- * passed in {@link BeanDeclaration} object. It is also possible
+ * bean of a given class. All necessary parameters are obtained from a
+ * passed in {@link BeanCreationContext} object. It is also possible
  * (but optional) for a bean factory to declare the default class of the bean it
  * creates. Then it is not necessary to specify a bean class in the bean
  * declaration.
@@ -48,22 +48,19 @@ package org.apache.commons.configuration.beanutils;
 public interface BeanFactory
 {
     /**
-     * Returns a bean instance for the given class. The bean will be initialized
-     * from the specified bean declaration object. It is up to a concrete
-     * implementation how the bean will be created and initialized.
+     * Returns a bean instance for the given context object. All information
+     * about the bean to be created are contained in the provided
+     * {@code BeanCreationContext} object. This includes a
+     * {@link BeanDeclaration} defining the properties of the bean. It is up to
+     * a concrete implementation how the bean is created and initialized.
      *
-     * @param beanClass the class for the bean
-     * @param data the bean declaration object containing all data about the
-     * bean to be created
-     * @param param an additional parameter that may be passed by calling code;
-     * it is up to a concrete implementation how this parameter is evaluated
+     * @param bcc the context object for the bean to be created
      * @return the new bean instance (should not be <b>null</b>)
      * @throws Exception if an error occurs (the helper classes for creating
-     * beans will catch this unspecific exception and wrap it in a configuration
-     * exception)
+     *         beans will catch this generic exception and wrap it in a
+     *         configuration exception)
      */
-    Object createBean(Class<?> beanClass, BeanDeclaration data, Object param)
-            throws Exception;
+    Object createBean(BeanCreationContext bcc) throws Exception;
 
     /**
      * Returns the default bean class of this bean factory. If an implementation
