@@ -27,6 +27,12 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-554">
+        BeanHelper is no longer a static utility class. Instances can be
+        created with a specific configuration of bean factories. There is still
+        a default instance which can be obtained via the BeanHelper.INSTANCE
+        field.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-551">
         The data type conversion mechanism has been made extensible. There is a
         new interface ConversionHandler which controls the data type conversions
