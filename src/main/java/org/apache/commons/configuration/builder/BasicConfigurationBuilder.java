@@ -538,8 +538,9 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      */
     protected final BeanHelper fetchBeanHelper()
     {
-        // TODO support configuration of a BeanHelper
-        return BeanHelper.INSTANCE;
+        BeanHelper helper =
+                BasicBuilderParameters.fetchBeanHelper(getParameters());
+        return (helper != null) ? helper : BeanHelper.INSTANCE;
     }
 
     /**

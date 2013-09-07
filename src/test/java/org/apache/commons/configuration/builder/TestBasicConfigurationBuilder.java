@@ -38,7 +38,11 @@ import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.Initializable;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration.beanutils.BeanCreationContext;
 import org.apache.commons.configuration.beanutils.BeanDeclaration;
+import org.apache.commons.configuration.beanutils.BeanFactory;
+import org.apache.commons.configuration.beanutils.BeanHelper;
+import org.apache.commons.configuration.beanutils.DefaultBeanFactory;
 import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
@@ -537,6 +541,32 @@ public class TestBasicConfigurationBuilder
         InitializableConfiguration config = builder.getConfiguration();
         assertEquals("Property not correctly initialized",
                 "Initialized with flag true", config.getInitProperty());
+    }
+
+    /**
+     * Tests whether a configured BeanHelper is used for result creation.
+     */
+    @Test
+    public void testBeanHelperInConfiguration() throws ConfigurationException
+    {
+        final Set<Class<?>> classesPassedToFactory = new HashSet<Class<?>>();
+        BeanFactory factory = new DefaultBeanFactory()
+        {
+            @Override
+            public Object createBean(BeanCreationContext bcc) throws Exception
+            {
+                classesPassedToFactory.add(bcc.getBeanClass());
+                return super.createBean(bcc);
+            }
+        };
+        BeanHelper helper = new BeanHelper(factory);
+        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        builder.configure(new BasicBuilderParameters().setBeanHelper(helper));
+        PropertiesConfiguration config = builder.getConfiguration();
+        assertTrue("BeanFactory was not used correctly",
+                classesPassedToFactory.contains(config.getClass()));
     }
 
     /**
