@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.convert.ConversionHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
@@ -482,5 +483,36 @@ public class TestBasicBuilderParameters
         assertSame("Wrong result", params, params.setConversionHandler(handler));
         assertSame("ConversionHandler not set", handler, params.getParameters()
                 .get("conversionHandler"));
+    }
+
+    /**
+     * Tests whether a BeanHelper can be set.
+     */
+    @Test
+    public void testSetBeanHelper()
+    {
+        BeanHelper helper = new BeanHelper();
+        assertSame("Wrong result", params, params.setBeanHelper(helper));
+        assertSame("BeanHelper not set", helper,
+                BasicBuilderParameters.fetchBeanHelper(params.getParameters()));
+    }
+
+    /**
+     * Tests fetchBeanHelper() if no helper was set.
+     */
+    @Test
+    public void testFetchBeanHelperNoSet()
+    {
+        assertNull("Got a BeanHelper",
+                BasicBuilderParameters.fetchBeanHelper(params.getParameters()));
+    }
+
+    /**
+     * Tries to invoke fetchBeanHelper() on a null map.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testFetchBeanHelperNullMap()
+    {
+        BasicBuilderParameters.fetchBeanHelper(null);
     }
 }

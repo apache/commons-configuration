@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.convert.ConversionHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
@@ -78,8 +79,12 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
     /** The key for the <em>synchronizer</em> property. */
     private static final String PROP_SYNCHRONIZER = "synchronizer";
 
-    /** The key or the <em>conversionHandler</em> property. */
+    /** The key for the <em>conversionHandler</em> property. */
     private static final String PROP_CONVERSION_HANDLER = "conversionHandler";
+
+    /** The key for the {@code BeanHelper}. */
+    private static final String PROP_BEAN_HELPER = RESERVED_PARAMETER_PREFIX
+            + "BeanHelper";
 
     /** The map for storing the current property values. */
     private Map<String, Object> properties;
@@ -238,6 +243,18 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
     }
 
     /**
+     * {@inheritDoc} This implementation stores the passed in {@code BeanHelper}
+     * object in the internal parameters map, but uses a reserved key, so that
+     * it is not used for the initialization of properties of the managed
+     * configuration object. The {@code fetchBeanHelper()} method can be used to
+     * obtain the {@code BeanHelper} instance from a parameters map.
+     */
+    public BasicBuilderParameters setBeanHelper(BeanHelper beanHelper)
+    {
+        return setProperty(PROP_BEAN_HELPER, beanHelper);
+    }
+
+    /**
      * Merges this object with the given parameters object. This method adds all
      * property values defined by the passed in parameters object to the
      * internal storage which are not already in. So properties already defined
@@ -291,6 +308,22 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
                 .withPrefixLookups(fetchAndCheckPrefixLookups(params))
                 .withDefaultLookups(fetchAndCheckDefaultLookups(params))
                 .create();
+    }
+
+    /**
+     * Obtains the {@code BeanHelper} object from the specified map with
+     * parameters. This method can be used to obtain an instance from a
+     * parameters map that has been set via the {@code setBeanHelper()} method.
+     * If no such instance is found, result is <b>null</b>.
+     *
+     * @param params the map with parameters (must not be <b>null</b>)
+     * @return the {@code BeanHelper} stored in this map or <b>null</b>
+     * @throws IllegalArgumentException if the map is <b>null</b<
+     */
+    public static BeanHelper fetchBeanHelper(Map<String, Object> params)
+    {
+        checkParameters(params);
+        return (BeanHelper) params.get(PROP_BEAN_HELPER);
     }
 
     /**

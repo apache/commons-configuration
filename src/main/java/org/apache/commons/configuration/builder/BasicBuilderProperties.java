@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.convert.ConversionHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
@@ -157,4 +158,23 @@ public interface BasicBuilderProperties<T>
      * @return a reference to this object for method chaining
      */
     T setConversionHandler(ConversionHandler handler);
+
+    /**
+     * Sets a {@code BeanHelper} object to be used by the configuration builder.
+     * The {@code BeanHelper} is used to create the managed configuration
+     * instance dynamically. It is not a property of the configuration as most
+     * other properties defined by this interface. By setting an alternative
+     * {@code BeanHelper} the process of creating configuration instances via
+     * reflection can be adapted. (Some specialized configuration builder
+     * implementations also use a {@code BeanHelper} to create complex helper
+     * objects during construction of their result object.
+     * {@code CombinedConfigurationBuilder} for instance supports a complex
+     * configuration definition format which may contain several specialized
+     * bean declarations.) If no specific {@code BeanHelper} is set, the builder
+     * uses the default instance.
+     *
+     * @param beanHelper the {@code BeanHelper} to be used by the builder
+     * @return a reference to this object for method chaining
+     */
+    T setBeanHelper(BeanHelper beanHelper);
 }
