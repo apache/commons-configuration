@@ -40,7 +40,7 @@ import org.apache.commons.lang3.ClassUtils;
  * files.
  * </p>
  * <p>
- * This class provides static utility methods related to bean creation
+ * This class provides utility methods related to bean creation
  * operations. These methods simplify such operations because a client need not
  * deal with all involved interfaces. Usually, if a bean declaration has already
  * been obtained, a single method call is necessary to create a new bean
@@ -54,17 +54,23 @@ import org.apache.commons.lang3.ClassUtils;
  * specified in the bean declaration. Then this factory will be used to create
  * the bean.
  * </p>
+ * <p>
+ * In order to create beans using {@code BeanHelper}, create and instance of
+ * this class and initialize it accordingly - a default {@link BeanFactory}
+ * can be passed to the constructor, and additional bean factories can be
+ * registered (see above). Then this instance can be used to create beans from
+ * {@link BeanDeclaration} objects. {@code BeanHelper} is thread-safe. So an
+ * instance can be passed around in an application and shared between multiple
+ * components.
+ * </p>
  *
  * @since 1.3
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  */
 public final class BeanHelper
 {
     /** Stores a map with the registered bean factories. */
-    private static final Map<String, BeanFactory> BEAN_FACTORIES = Collections
+    private final Map<String, BeanFactory> BEAN_FACTORIES = Collections
             .synchronizedMap(new HashMap<String, BeanFactory>());
 
     /** A format string for generating error messages for constructor matching. */
@@ -72,16 +78,31 @@ public final class BeanHelper
             "%s! Bean class = %s, constructor arguments = %s";
 
     /**
-     * Stores the default bean factory, which will be used if no other factory
-     * is provided.
+     * Stores the default bean factory, which is used if no other factory
+     * is provided in a bean declaration.
      */
-    private static BeanFactory defaultBeanFactory = DefaultBeanFactory.INSTANCE;
+    private final BeanFactory defaultBeanFactory;
 
     /**
-     * Private constructor, so no instances can be created.
+     * Creates a new instance of {@code BeanHelper} with the default instance of
+     * {@link DefaultBeanFactory} as default {@link BeanFactory}.
      */
-    private BeanHelper()
+    public BeanHelper()
     {
+        this(null);
+    }
+
+    /**
+     * Creates a new instance of {@code BeanHelper} and sets the specified
+     * default {@code BeanFactory}.
+     *
+     * @param defFactory the default {@code BeanFactory} (can be <b>null</b>,
+     *        then a default instance is used)
+     */
+    public BeanHelper(BeanFactory defFactory)
+    {
+        defaultBeanFactory =
+                (defFactory != null) ? defFactory : DefaultBeanFactory.INSTANCE;
     }
 
     /**
@@ -93,7 +114,7 @@ public final class BeanHelper
      * @param name the name of the factory
      * @param factory the factory to be registered
      */
-    public static void registerBeanFactory(String name, BeanFactory factory)
+    public void registerBeanFactory(String name, BeanFactory factory)
     {
         if (name == null)
         {
@@ -116,7 +137,7 @@ public final class BeanHelper
      * @return the factory that was registered under this name; <b>null</b> if
      * there was no such factory
      */
-    public static BeanFactory deregisterBeanFactory(String name)
+    public BeanFactory deregisterBeanFactory(String name)
     {
         return BEAN_FACTORIES.remove(name);
     }
@@ -126,7 +147,7 @@ public final class BeanHelper
      *
      * @return a set with the names of the registered bean factories
      */
-    public static Set<String> registeredFactoryNames()
+    public Set<String> registeredFactoryNames()
     {
         return BEAN_FACTORIES.keySet();
     }
@@ -136,26 +157,9 @@ public final class BeanHelper
      *
      * @return the default bean factory
      */
-    public static BeanFactory getDefaultBeanFactory()
+    public BeanFactory getDefaultBeanFactory()
     {
         return defaultBeanFactory;
-    }
-
-    /**
-     * Sets the default bean factory. This factory will be used for all create
-     * operations, for which no special factory is provided in the bean
-     * declaration.
-     *
-     * @param factory the default bean factory (must not be <b>null</b>)
-     */
-    public static void setDefaultBeanFactory(BeanFactory factory)
-    {
-        if (factory == null)
-        {
-            throw new IllegalArgumentException(
-                    "Default bean factory must not be null!");
-        }
-        defaultBeanFactory = factory;
     }
 
     /**
@@ -168,7 +172,7 @@ public final class BeanHelper
      * @param data the bean declaration
      * @throws ConfigurationRuntimeException if a property cannot be set
      */
-    public static void initBean(Object bean, BeanDeclaration data)
+    public void initBean(Object bean, BeanDeclaration data)
             throws ConfigurationRuntimeException
     {
         initBeanProperties(bean, data);
@@ -381,7 +385,7 @@ public final class BeanHelper
      * @return the new bean
      * @throws ConfigurationRuntimeException if an error occurs
      */
-    public static Object createBean(BeanDeclaration data, Class<?> defaultClass,
+    public Object createBean(BeanDeclaration data, Class<?> defaultClass,
             Object param) throws ConfigurationRuntimeException
     {
         if (data == null)
@@ -413,7 +417,7 @@ public final class BeanHelper
      * @return the new bean
      * @throws ConfigurationRuntimeException if an error occurs
      */
-    public static Object createBean(BeanDeclaration data, Class<?> defaultClass)
+    public Object createBean(BeanDeclaration data, Class<?> defaultClass)
             throws ConfigurationRuntimeException
     {
         return createBean(data, defaultClass, null);
@@ -427,7 +431,7 @@ public final class BeanHelper
      * @return the new bean
      * @throws ConfigurationRuntimeException if an error occurs
      */
-    public static Object createBean(BeanDeclaration data)
+    public Object createBean(BeanDeclaration data)
             throws ConfigurationRuntimeException
     {
         return createBean(data, null);
@@ -526,7 +530,7 @@ public final class BeanHelper
      * @return the bean factory to use
      * @throws ConfigurationRuntimeException if the factory cannot be determined
      */
-    private static BeanFactory fetchBeanFactory(BeanDeclaration data)
+    private BeanFactory fetchBeanFactory(BeanDeclaration data)
             throws ConfigurationRuntimeException
     {
         String factoryName = data.getBeanFactoryName();
@@ -563,38 +567,12 @@ public final class BeanHelper
      * @throws ConfigurationRuntimeException if the bean class cannot be
      *         determined
      */
-    private static BeanCreationContext createBeanCreationContext(
+    private BeanCreationContext createBeanCreationContext(
             final BeanDeclaration data, Class<?> defaultClass,
             final Object param, BeanFactory factory)
     {
         final Class<?> beanClass = fetchBeanClass(data, defaultClass, factory);
-        return new BeanCreationContext()
-        {
-            public void initBean(Object bean, BeanDeclaration data)
-            {
-                BeanHelper.initBean(bean, data);
-            }
-
-            public Object getParameter()
-            {
-                return param;
-            }
-
-            public BeanDeclaration getBeanDeclaration()
-            {
-                return data;
-            }
-
-            public Class<?> getBeanClass()
-            {
-                return beanClass;
-            }
-
-            public Object createBean(BeanDeclaration data)
-            {
-                return BeanHelper.createBean(data);
-            }
-        };
+        return new BeanCreationContextImpl(this, beanClass, data, param);
     }
 
     /**
@@ -711,5 +689,62 @@ public final class BeanHelper
     {
         return new ConfigurationRuntimeException(String.format(FMT_CTOR_ERROR,
                 msg, beanClass.getName(), getConstructorArgs(data).toString()));
+    }
+
+    /**
+     * An implementation of the {@code BeanCreationContext} interface used by
+     * {@code BeanHelper} to communicate with a {@code BeanFactory}. This class
+     * contains all information required for the creation of a bean. The methods
+     * for creating and initializing bean instances are implemented by calling
+     * back to the provided {@code BeanHelper} instance (which is the instance
+     * that created this object).
+     */
+    private static class BeanCreationContextImpl implements BeanCreationContext
+    {
+        /** The association BeanHelper instance. */
+        private final BeanHelper beanHelper;
+
+        /** The class of the bean to be created. */
+        private final Class<?> beanClass;
+
+        /** The underlying bean declaration. */
+        private final BeanDeclaration data;
+
+        /** The parameter for the bean factory. */
+        private final Object param;
+
+        private BeanCreationContextImpl(BeanHelper helper, Class<?> beanClass,
+                BeanDeclaration data, Object param)
+        {
+            beanHelper = helper;
+            this.beanClass = beanClass;
+            this.param = param;
+            this.data = data;
+        }
+
+        public void initBean(Object bean, BeanDeclaration data)
+        {
+            beanHelper.initBean(bean, data);
+        }
+
+        public Object getParameter()
+        {
+            return param;
+        }
+
+        public BeanDeclaration getBeanDeclaration()
+        {
+            return data;
+        }
+
+        public Class<?> getBeanClass()
+        {
+            return beanClass;
+        }
+
+        public Object createBean(BeanDeclaration data)
+        {
+            return beanHelper.createBean(data);
+        }
     }
 }

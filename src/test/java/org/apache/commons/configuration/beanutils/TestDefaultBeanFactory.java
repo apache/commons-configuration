@@ -67,9 +67,11 @@ public class TestDefaultBeanFactory
     {
         return new BeanCreationContext()
         {
+            private final BeanHelper beanHelper = new BeanHelper();
+
             public void initBean(Object bean, BeanDeclaration data)
             {
-                BeanHelper.initBean(bean, data);
+                beanHelper.initBean(bean, data);
             }
 
             public Object getParameter()
@@ -89,7 +91,7 @@ public class TestDefaultBeanFactory
 
             public Object createBean(BeanDeclaration data)
             {
-                return BeanHelper.createBean(data);
+                return beanHelper.createBean(data);
             }
         };
     }
