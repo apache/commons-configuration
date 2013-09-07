@@ -175,7 +175,6 @@ public final class BeanHelper
      * @throws ConfigurationRuntimeException if a property cannot be set
      */
     public void initBean(Object bean, BeanDeclaration data)
-            throws ConfigurationRuntimeException
     {
         initBeanProperties(bean, data);
 
@@ -251,7 +250,6 @@ public final class BeanHelper
      * @throws ConfigurationRuntimeException if a property cannot be set
      */
     public static void initBeanProperties(Object bean, BeanDeclaration data)
-            throws ConfigurationRuntimeException
     {
         Map<String, Object> properties = data.getBeanProperties();
         if (properties != null)
@@ -297,7 +295,6 @@ public final class BeanHelper
      * an error occurred
      */
     private static void initProperty(Object bean, String propName, Object value)
-            throws ConfigurationRuntimeException
     {
         if (!PropertyUtils.isWriteable(bean, propName))
         {
@@ -388,7 +385,7 @@ public final class BeanHelper
      * @throws ConfigurationRuntimeException if an error occurs
      */
     public Object createBean(BeanDeclaration data, Class<?> defaultClass,
-            Object param) throws ConfigurationRuntimeException
+            Object param)
     {
         if (data == null)
         {
@@ -420,7 +417,6 @@ public final class BeanHelper
      * @throws ConfigurationRuntimeException if an error occurs
      */
     public Object createBean(BeanDeclaration data, Class<?> defaultClass)
-            throws ConfigurationRuntimeException
     {
         return createBean(data, defaultClass, null);
     }
@@ -434,7 +430,6 @@ public final class BeanHelper
      * @throws ConfigurationRuntimeException if an error occurs
      */
     public Object createBean(BeanDeclaration data)
-            throws ConfigurationRuntimeException
     {
         return createBean(data, null);
     }
@@ -471,7 +466,6 @@ public final class BeanHelper
      */
     private static Class<?> fetchBeanClass(BeanDeclaration data,
             Class<?> defaultClass, BeanFactory factory)
-            throws ConfigurationRuntimeException
     {
         String clsName = data.getBeanClassName();
         if (clsName != null)
@@ -510,7 +504,6 @@ public final class BeanHelper
      * @throws ConfigurationRuntimeException if the factory cannot be determined
      */
     private BeanFactory fetchBeanFactory(BeanDeclaration data)
-            throws ConfigurationRuntimeException
     {
         String factoryName = data.getBeanFactoryName();
         if (factoryName != null)
