@@ -83,7 +83,7 @@
           file is organized and how the needed information can be extracted. So
           the way the bean is declared in the configuration file must match the
           expectations of this object.</li>
-          <li>The utility class
+          <li>The helper class
           <code><a href="../apidocs/org/apache/commons/configuration/beanutils/BeanHelper.html">BeanHelper</a></code>
           brings all these together and performs the bean creation operation.
           Usually client code will create a <code>BeanDeclaration</code> object
@@ -183,22 +183,53 @@ public class DefaultWindowManager implements WindowManager
 <source><![CDATA[
 XMLConfiguration config = new XMLConfiguration("windowconfig.xml");
 BeanDeclaration decl = new XMLBeanDeclaration(config, "gui.windowManager");
-WindowManager wm = (WindowManager) BeanHelper.createBean(decl);
+WindowManager wm = (WindowManager) BeanHelper.INSTANCE.createBean(decl);
 ]]></source>
       <p>
         This fragment loads the configuration file using a <code>XMLConfiguration</code>
         object. Then a bean declaration object is created, in this case an
         instance of the <code><a href="../apidocs/org/apache/commons/configuration/beanutils/XMLBeanDeclaration.html">XMLBeanDeclaration</a></code>
         class, which can deal with bean declarations in XML documents. This
-        declaration is passed to the static <code>createBean()</code> method of
-        the <code><a href="../apidocs/org/apache/commons/configuration/beanutils/BeanHelper.html">BeanHelper</a></code>
+        declaration is passed to the <code>createBean()</code> method of
+        the default instance of the
+        <code><a href="../apidocs/org/apache/commons/configuration/beanutils/BeanHelper.html">BeanHelper</a></code>
         class, which returns the new bean instance.
       </p>
       <p>
+        A <code>BeanHelper</code> object does the hard work behind the scenes to
+        create a bean instance. It determines the class of the bean to be
+        created and delegates to a <code>BeanFactory</code> to create an
+        instance. Then all initialization properties defined in the bean
+        declaration are evaluated and set on the newly created bean. The
+        <code>BeanFactory</code> to be used is determined based on the
+        bean helper's configuration:
+        <ul>
+          <li>A <code>BeanHelper</code> can be configured with a number of
+          <code>BeanFactory</code> objects that are registered under a specific
+          key. The <code>BeanDeclaration</code> can contain the key of the
+          <code>BeanFactory</code> to be used. Please refer to the
+          JavaDocs of <code><a href="../apidocs/org/apache/commons/configuration/beanutils/XMLBeanDeclaration.html">
+          XMLBeanDeclaration</a></code> for further information.</li>
+          <li>When a <code>BeanHelper</code> object is constructed a default
+          <code>BeanFactory</code> is set. This one is used if no specific
+          factory is referenced by the bean declaration.</li>
+        </ul>
+        If an application does not need special bean factories, it can use the
+        default <code>BeanHelper</code> instance which is available via the
+        static <code>INSTANCE</code> member field (as shown in the example
+        fragment above). This instance uses a
+        <code><a href="../apidocs/org/apache/commons/configuration/beanutils/DefaultBeanFactory.html">
+        DefaultBeanFactory</a></code> object as bean factory.
+        Otherwise, specialized <code>BeanHelper</code>
+        instances can be created that are configured with other bean factories.
+        A <code>BeanHelper</code> object is thread-safe and can be passed
+        around between the components of an application.
+      </p>
+      <p>
         <code>BeanHelper</code> defines some overloaded versions of the
-        <code>createBean()</code> method. Some allow to pass in a default bean
+        <code>createBean()</code> method. Some allow passing in a default bean
         class; then it is not necessary to define the class in the bean declaration
-        - an instance of this default class will be created if it is lacking in
+        - an instance of this default class will be created if it is missing in
         the configuration file. If the bean cannot be created for some reason
         (e.g. a wrong class name was specified), a <code>ConfigurationRuntimeException</code>
         will be thrown.
@@ -221,7 +252,7 @@ WindowManager wm = (WindowManager) BeanHelper.createBean(decl);
 public class WindowStyleDefinition
 {
     ...
-    public WindowStyleDefinition(String forefround, String background,
+    public WindowStyleDefinition(String foreground, String background,
         Font stdFont)
     {
         ...
@@ -393,9 +424,10 @@ public class MyBean
           instance of a class whose <code>Class</code> object is provided, and
           another method, which is called for querying a default class.</li>
           <li>Register this new factory class at the <code>BeanHelper</code>
-          class.</li>
+          instanced used for bean creation.</li>
           <li>In the bean declaration in your configuration file refer to the
-          factory that should be used for creating the bean.</li>
+          factory that should be used for creating the bean (unless this factory
+          is used as the <code>BeanHelper</code>'s default bean factory).</li>
         </ol>
       </p>
       <p>
@@ -415,15 +447,16 @@ public class MyBean
         class already an instance exists. If this is the case, it is directly
         returned. Otherwise we call the inherited <code>createBean()</code> method
         and store its result in the map. (Note that this implementation is a bit
-        simplicistic; a real world implementation would also have to take the
-        initialization parameters into account. But for the purpose of an example
-        it should be good enough). Here is the code:
+        simplicistic. A real world implementation would also have to take
+        initialization parameters into account and use a more sophisticated
+        approach to deal with concurrency issues. But for the purpose of an
+        example it should be good enough). Here is the code:
       </p>
 <source><![CDATA[
 public class SingletonBeanFactory extends DefaultBeanFactory
 {
     /** A map for the so far created instances.*/
-    private Map beans;
+    private final Map beans;
     
     public SingletonBeanFactory()
     {
@@ -432,10 +465,9 @@ public class SingletonBeanFactory extends DefaultBeanFactory
     }
     
     // Creates the bean. Checks if already an instance exists.
-    public synchronized Object createBean(Class beanClass, BeanDeclaration decl,
-        Object param) throws Exception
+    public synchronized Object createBean(BeanCreationContext bcc) throws Exception
     {
-        Object bean = beans.get(beanClass.getName());
+        Object bean = beans.get(bcc.getBeanClass().getName());
         if (bean != null)
         {
             // Yes, there is already an instance
@@ -444,7 +476,7 @@ public class SingletonBeanFactory extends DefaultBeanFactory
         else
         {
             // No, create it now (done by the super class)
-            bean = super.createBean(beanClass, decl, param);
+            bean = super.createBean(bcc);
             // Store it in map
             beans.put(beanClass.getName(), bean);
             return bean;
@@ -453,14 +485,23 @@ public class SingletonBeanFactory extends DefaultBeanFactory
 }
 ]]></source>
       <p>
+        The main method to define is <code>createBean()</code>. It is passed
+        a <code><a href="../apidocs/org/apache/commons/configuration/beanutils/BeanCreationContext.html">
+        BeanCreationContext</a></code> object which contains all information
+        required for creating a bean (e.g. via reflection).
         Note the <b>synchronized</b> key word, which is necessary because the
-        method can be accessed by multiple threads concurrently. Now we have to
-        register an instance of this class at the <code>BeanHelper</code> class.
-        This can be done in the initialization phase of your application and
-        looks as follows:
+        method can be accessed by multiple threads concurrently.
+      </p>
+      <p>
+        Now we have to register an instance of this class at a
+        <code>BeanHelper</code> instance. There are multiple ways how this can
+        be done. For applications making use of the default
+        <code>BeanHelper</code> instance, the factory can be added using the
+        <code>registerBeanFactory()</code> method. This can happen in the
+        initialization phase of your application and looks as follows:
       </p>
 <source><![CDATA[
-BeanHelper.registerBeanFactory("SINGLETON", new SingletonBeanFactory());
+BeanHelper.INSTANCE.registerBeanFactory("SINGLETON", new SingletonBeanFactory());
 ]]></source>
       <p>
         To make use of the new factory a bean declaration must contain an
@@ -484,9 +525,26 @@ BeanHelper.registerBeanFactory("SINGLETON", new SingletonBeanFactory());
         declaration for some service object. Apart from the <code>config-class</code>
         attribute the important part is the <code>config-factory</code> attribute.
         This attribute tells the <code>BeanHelper</code> class that it should
-        use a special factory when it processes this bean declaration. As was
-        demonstrated by this example, it should not be too difficult to extend
-        the custom mechanism for creating beans.
+        use a special factory when it processes this bean declaration.
+      </p>
+      <p>
+        Alternatively, a separate <code>BeanHelper</code> instance can be
+        created passing in the new factory object as its default bean factory.
+        In the bean declarations, it is then no longer necessary to refer to a
+        a specific bean factory. Below is an example showing this approach:
+      </p>
+<source><![CDATA[
+BeanHelper singletonBeanHelper = new BeanHelper(new SingletonBeanFactory());
+BeanDeclaration decl = ... // somehow obtain the bean declaration
+Object mySingletonBean = singletonBeanHelper.createBean(decl);
+]]></source>
+      <p>
+        Of course, this new <code>BeanHelper</code> instance must now be used
+        everywhere where singleton beans are required. So it has to be made
+        available globally. Because a <code>BeanHelper</code> object is
+        thread-safe this can be done safely. As was demonstrated by this example,
+        it should not be too difficult to extend the custom mechanism for
+        creating beans.
       </p>
       </subsection>
     </section>
