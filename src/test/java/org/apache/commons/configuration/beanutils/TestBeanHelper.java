@@ -21,11 +21,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -366,98 +363,6 @@ public class TestBeanHelper
         data.setBeanClassName(BeanCreationTestBean.class.getName());
         checkBean((BeanCreationTestBean) helper.createBean(data, null, param));
         assertSame("Wrong parameter", param, factory.parameter);
-    }
-
-    /**
-     * Tests whether the standard constructor can be found.
-     */
-    @Test
-    public void testFindMatchingConstructorNoArgs()
-    {
-        BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
-        Constructor<BeanCreationTestBean> ctor =
-                BeanHelper.findMatchingConstructor(BeanCreationTestBean.class, decl);
-        assertEquals("Not the standard constructor", 0,
-                ctor.getParameterTypes().length);
-    }
-
-    /**
-     * Tests whether a matching constructor is found if the number of arguments
-     * is unique.
-     */
-    @Test
-    public void testFindMatchingConstructorArgCount()
-    {
-        BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
-        Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
-        args.add(ConstructorArg.forValue(TEST_STRING));
-        args.add(ConstructorArg.forValue(String.valueOf(TEST_INT)));
-        decl.setConstructorArgs(args);
-        Constructor<BeanCreationTestCtorBean> ctor =
-                BeanHelper.findMatchingConstructor(BeanCreationTestCtorBean.class, decl);
-        Class<?>[] paramTypes = ctor.getParameterTypes();
-        assertEquals("Wrong number of parameters", 2, paramTypes.length);
-        assertEquals("Wrong parameter type 1", String.class, paramTypes[0]);
-        assertEquals("Wrong parameter type 2", Integer.TYPE, paramTypes[1]);
-    }
-
-    /**
-     * Tests whether ambiguous constructor arguments are detected.
-     */
-    @Test(expected = ConfigurationRuntimeException.class)
-    public void testFindMatchingConstructorAmbiguous()
-    {
-        BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
-        Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
-        args.add(ConstructorArg.forValue(TEST_STRING));
-        decl.setConstructorArgs(args);
-        BeanHelper.findMatchingConstructor(BeanCreationTestCtorBean.class, decl);
-    }
-
-    /**
-     * Tests whether explicit type declarations are used to resolve ambiguous
-     * parameter types.
-     */
-    @Test
-    public void testFindMatchingConstructorExplicitType()
-    {
-        BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
-        Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
-        args.add(ConstructorArg.forBeanDeclaration(setUpBeanDeclaration(),
-                BeanCreationTestBean.class.getName()));
-        decl.setConstructorArgs(args);
-        Constructor<BeanCreationTestCtorBean> ctor =
-                BeanHelper.findMatchingConstructor(BeanCreationTestCtorBean.class, decl);
-        Class<?>[] paramTypes = ctor.getParameterTypes();
-        assertEquals("Wrong number of parameters", 1, paramTypes.length);
-        assertEquals("Wrong parameter type", BeanCreationTestBean.class, paramTypes[0]);
-    }
-
-    /**
-     * Tests the case that no matching constructor is found.
-     */
-    @Test
-    public void testFindMatchingConstructorNoMatch()
-    {
-        BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
-        Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
-        args.add(ConstructorArg.forValue(TEST_STRING, getClass().getName()));
-        decl.setConstructorArgs(args);
-        try
-        {
-            BeanHelper.findMatchingConstructor(BeanCreationTestCtorBean.class, decl);
-            fail("No exception thrown!");
-        }
-        catch (ConfigurationRuntimeException crex)
-        {
-            String msg = crex.getMessage();
-            assertTrue("Bean class not found:" + msg,
-                    msg.indexOf(BeanCreationTestCtorBean.class.getName()) > 0);
-            assertTrue("Parameter value not found: " + msg,
-                    msg.indexOf(TEST_STRING) > 0);
-            assertTrue("Parameter type not found: " + msg,
-                    msg.indexOf("(" + getClass().getName() + ')') > 0);
-        }
     }
 
     /**

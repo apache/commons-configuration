@@ -17,13 +17,11 @@
 package org.apache.commons.configuration.beanutils;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -80,10 +78,6 @@ public final class BeanHelper
     /** Stores a map with the registered bean factories. */
     private final Map<String, BeanFactory> BEAN_FACTORIES = Collections
             .synchronizedMap(new HashMap<String, BeanFactory>());
-
-    /** A format string for generating error messages for constructor matching. */
-    private static final String FMT_CTOR_ERROR =
-            "%s! Bean class = %s, constructor arguments = %s";
 
     /**
      * Stores the default bean factory, which is used if no other factory
@@ -446,29 +440,6 @@ public final class BeanHelper
     }
 
     /**
-     * Evaluates constructor arguments in the specified {@code BeanDeclaration}
-     * and tries to find a unique matching constructor. If this is not possible,
-     * an exception is thrown. Note: This method is intended to be used by
-     * concrete {@link BeanFactory} implementations and not by client code.
-     *
-     * @param beanClass the class of the bean to be created
-     * @param data the current {@code BeanDeclaration}
-     * @return the single matching constructor
-     * @throws ConfigurationRuntimeException if no single matching constructor
-     *         can be found
-     * @throws NullPointerException if the bean class or bean declaration are
-     *         <b>null</b>
-     */
-    public static <T> Constructor<T> findMatchingConstructor(
-            Class<T> beanClass, BeanDeclaration data)
-    {
-        List<Constructor<T>> matchingConstructors =
-                findMatchingConstructors(beanClass, data);
-        checkSingleMatchingConstructor(beanClass, data, matchingConstructors);
-        return matchingConstructors.get(0);
-    }
-
-    /**
      * Returns a {@code java.lang.Class} object for the specified name.
      * Because class loading can be tricky in some environments the code for
      * retrieving a class by its name was extracted into this helper method. So
@@ -581,122 +552,6 @@ public final class BeanHelper
     {
         final Class<?> beanClass = fetchBeanClass(data, defaultClass, factory);
         return new BeanCreationContextImpl(this, beanClass, data, param);
-    }
-
-    /**
-     * Returns a list with all constructors which are compatible with the
-     * constructor arguments specified by the given {@code BeanDeclaration}.
-     *
-     * @param beanClass the bean class to be instantiated
-     * @param data the current {@code BeanDeclaration}
-     * @return a list with all matching constructors
-     */
-    private static <T> List<Constructor<T>> findMatchingConstructors(
-            Class<T> beanClass, BeanDeclaration data)
-    {
-        List<Constructor<T>> result = new LinkedList<Constructor<T>>();
-        Collection<ConstructorArg> args = getConstructorArgs(data);
-        for (Constructor<?> ctor : beanClass.getConstructors())
-        {
-            if (matchesConstructor(ctor, args))
-            {
-                // cast should be okay according to the JavaDocs of
-                // getConstructors()
-                @SuppressWarnings("unchecked")
-                Constructor<T> match = (Constructor<T>) ctor;
-                result.add(match);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Checks whether the given constructor is compatible with the given list of
-     * arguments.
-     *
-     * @param ctor the constructor to be checked
-     * @param args the collection of constructor arguments
-     * @return a flag whether this constructor is compatible with the given
-     *         arguments
-     */
-    private static boolean matchesConstructor(Constructor<?> ctor,
-            Collection<ConstructorArg> args)
-    {
-        Class<?>[] types = ctor.getParameterTypes();
-        if (types.length != args.size())
-        {
-            return false;
-        }
-
-        int idx = 0;
-        for (ConstructorArg arg : args)
-        {
-            if (!arg.matches(types[idx++]))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Helper method for extracting constructor arguments from a bean
-     * declaration. Deals with <b>null</b> values.
-     *
-     * @param data the bean declaration
-     * @return the collection with constructor arguments (never <b>null</b>)
-     */
-    private static Collection<ConstructorArg> getConstructorArgs(
-            BeanDeclaration data)
-    {
-        Collection<ConstructorArg> args = data.getConstructorArgs();
-        if (args == null)
-        {
-            args = Collections.emptySet();
-        }
-        return args;
-    }
-
-    /**
-     * Helper method for testing whether exactly one matching constructor was
-     * found. Throws a meaningful exception if there is not a single matching
-     * constructor.
-     *
-     * @param beanClass the bean class
-     * @param data the bean declaration
-     * @param matchingConstructors the list with matching constructors
-     * @throws ConfigurationRuntimeException if there is not exactly one match
-     */
-    private static <T> void checkSingleMatchingConstructor(Class<T> beanClass,
-            BeanDeclaration data, List<Constructor<T>> matchingConstructors)
-    {
-        if (matchingConstructors.isEmpty())
-        {
-            throw constructorMatchingException(beanClass, data,
-                    "No matching constructor found");
-        }
-        if (matchingConstructors.size() > 1)
-        {
-            throw constructorMatchingException(beanClass, data,
-                    "Multiple matching constructors found");
-        }
-    }
-
-    /**
-     * Creates an exception if no single matching constructor was found with a
-     * meaningful error message.
-     *
-     * @param beanClass the affected bean class
-     * @param data the bean declaration
-     * @param msg an error message
-     * @return the exception with the error message
-     */
-    private static ConfigurationRuntimeException constructorMatchingException(
-            Class<?> beanClass, BeanDeclaration data, String msg)
-    {
-        return new ConfigurationRuntimeException(String.format(FMT_CTOR_ERROR,
-                msg, beanClass.getName(), getConstructorArgs(data).toString()));
     }
 
     /**
