@@ -142,37 +142,6 @@ public class TestConfigurationUtils
     }
 
     @Test
-    public void testGetBasePath() throws Exception
-    {
-        URL url = new URL("http://xyz.net/foo/bar.xml");
-        assertEquals("base path of " + url, "http://xyz.net/foo/", ConfigurationUtils.getBasePath(url));
-
-        url = new URL("http://xyz.net/foo/");
-        assertEquals("base path of " + url, "http://xyz.net/foo/", ConfigurationUtils.getBasePath(url));
-
-        url = new URL("http://xyz.net/foo");
-        assertEquals("base path of " + url, "http://xyz.net/", ConfigurationUtils.getBasePath(url));
-
-        url = new URL("http://xyz.net/");
-        assertEquals("base path of " + url, "http://xyz.net/", ConfigurationUtils.getBasePath(url));
-
-        url = new URL("http://xyz.net");
-        assertEquals("base path of " + url, "http://xyz.net", ConfigurationUtils.getBasePath(url));
-    }
-
-    @Test
-    public void testGetFileName() throws Exception
-    {
-        assertEquals("file name for a null URL", null, ConfigurationUtils.getFileName(null));
-
-        URL url = new URL("http://xyz.net/foo/");
-        assertEquals("file for a directory URL " + url, null, ConfigurationUtils.getFileName(url));
-
-        url = new URL("http://xyz.net/foo/bar.xml");
-        assertEquals("file name for a valid URL " + url, "bar.xml", ConfigurationUtils.getFileName(url));
-    }
-
-    @Test
     public void testCopy()
     {
         // create the source configuration
@@ -217,23 +186,6 @@ public class TestConfigurationUtils
         expected.add("value4");
         expected.add("value2");
         ListAssert.assertEquals("'key2' property", expected, conf2.getList("key2"));
-    }
-
-    @Test
-    public void testLocateWithNullTCCL() throws Exception
-    {
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        try
-        {
-            Thread.currentThread().setContextClassLoader(null);
-            assertNull(ConfigurationUtils.locate("abase", "aname"));
-            // This assert fails when maven 2 is used, so commented out
-            //assertNotNull(ConfigurationUtils.locate("test.xml"));
-        }
-        finally
-        {
-            Thread.currentThread().setContextClassLoader(cl);
-        }
     }
 
     /**

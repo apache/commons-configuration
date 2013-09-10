@@ -24,8 +24,8 @@ import java.net.URLConnection;
 import java.util.Vector;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.io.FileLocatorUtils;
 import org.apache.commons.configuration.io.FileSystem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -392,7 +392,7 @@ public class CatalogResolver implements EntityResolver
 
                     try
                     {
-                        url = ConfigurationUtils.locate(fs, base, fileName);
+                        url = FileLocatorUtils.locate(fs, base, fileName);
                         if (url != null)
                         {
                             is = fs.getInputStream(url);
@@ -442,7 +442,7 @@ public class CatalogResolver implements EntityResolver
          */
         public void parseCatalog(String baseDir, String fileName) throws IOException
         {
-            base = ConfigurationUtils.locate(fs, baseDir, fileName);
+            base = FileLocatorUtils.locate(fs, baseDir, fileName);
             catalogCwd = base;
             default_override = catalogManager.getPreferPublic();
             catalogManager.debug.message(DEBUG_NORMAL, "Parse catalog: " + fileName);

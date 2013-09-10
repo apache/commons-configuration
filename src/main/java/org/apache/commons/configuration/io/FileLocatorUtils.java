@@ -68,136 +68,6 @@ public final class FileLocatorUtils
     }
 
     /**
-     * Return the path without the file name, for example http://xyz.net/foo/bar.xml
-     * results in http://xyz.net/foo/
-     *
-     * @param url the URL from which to extract the path
-     * @return the path component of the passed in URL
-     */
-    static String getBasePath(URL url)
-    {
-        if (url == null)
-        {
-            return null;
-        }
-
-        String s = url.toString();
-        if (s.startsWith(FILE_SCHEME) && !s.startsWith("file://"))
-        {
-            s = "file://" + s.substring(FILE_SCHEME.length());
-        }
-
-        if (s.endsWith("/") || StringUtils.isEmpty(url.getPath()))
-        {
-            return s;
-        }
-        else
-        {
-            return s.substring(0, s.lastIndexOf("/") + 1);
-        }
-    }
-
-    /**
-     * Extract the file name from the specified URL.
-     *
-     * @param url the URL from which to extract the file name
-     * @return the extracted file name
-     */
-    static String getFileName(URL url)
-    {
-        if (url == null)
-        {
-            return null;
-        }
-
-        String path = url.getPath();
-
-        if (path.endsWith("/") || StringUtils.isEmpty(path))
-        {
-            return null;
-        }
-        else
-        {
-            return path.substring(path.lastIndexOf("/") + 1);
-        }
-    }
-
-    /**
-     * Tries to convert the specified base path and file name into a file object.
-     * This method is called e.g. by the save() methods of file based
-     * configurations. The parameter strings can be relative files, absolute
-     * files and URLs as well. This implementation checks first whether the passed in
-     * file name is absolute. If this is the case, it is returned. Otherwise
-     * further checks are performed whether the base path and file name can be
-     * combined to a valid URL or a valid file name. <em>Note:</em> The test
-     * if the passed in file name is absolute is performed using
-     * {@code java.io.File.isAbsolute()}. If the file name starts with a
-     * slash, this method will return <b>true</b> on Unix, but <b>false</b> on
-     * Windows. So to ensure correct behavior for relative file names on all
-     * platforms you should never let relative paths start with a slash. E.g.
-     * in a configuration definition file do not use something like that:
-     * <pre>
-     * &lt;properties fileName="/subdir/my.properties"/&gt;
-     * </pre>
-     * Under Windows this path would be resolved relative to the configuration
-     * definition file. Under Unix this would be treated as an absolute path
-     * name.
-     *
-     * @param basePath the base path
-     * @param fileName the file name
-     * @return the file object (<b>null</b> if no file can be obtained)
-     */
-    public static File getFile(String basePath, String fileName)
-    {
-        // Check if the file name is absolute
-        File f = new File(fileName);
-        if (f.isAbsolute())
-        {
-            return f;
-        }
-
-        // Check if URLs are involved
-        URL url;
-        try
-        {
-            url = new URL(new URL(basePath), fileName);
-        }
-        catch (MalformedURLException mex1)
-        {
-            try
-            {
-                url = new URL(fileName);
-            }
-            catch (MalformedURLException mex2)
-            {
-                url = null;
-            }
-        }
-
-        if (url != null)
-        {
-            return fileFromURL(url);
-        }
-
-        return constructFile(basePath, fileName);
-    }
-
-    /**
-     * Convert the specified file into an URL. This method is equivalent
-     * to file.toURI().toURL(). It was used to work around a bug in the JDK
-     * preventing the transformation of a file into an URL if the file name
-     * contains a '#' character. See the issue CONFIGURATION-300 for
-     * more details. Now that we switched to JDK 1.4 we can directly use
-     * file.toURI().toURL().
-     *
-     * @param file the file to be converted into an URL
-     */
-    static URL toURL(File file) throws MalformedURLException
-    {
-        return file.toURI().toURL();
-    }
-
-    /**
      * Return the location of the specified resource by searching the user home
      * directory, the current classpath and the system classpath.
      *
@@ -207,7 +77,7 @@ public final class FileLocatorUtils
      *
      * @return the location of the resource
      */
-    static URL locate(FileSystem fileSystem, String base, String name)
+    public static URL locate(FileSystem fileSystem, String base, String name)
     {
         if (LOG.isDebugEnabled())
         {
@@ -296,6 +166,136 @@ public final class FileLocatorUtils
             url = locateFromClasspath(name);
         }
         return url;
+    }
+
+    /**
+     * Return the path without the file name, for example http://xyz.net/foo/bar.xml
+     * results in http://xyz.net/foo/
+     *
+     * @param url the URL from which to extract the path
+     * @return the path component of the passed in URL
+     */
+    static String getBasePath(URL url)
+    {
+        if (url == null)
+        {
+            return null;
+        }
+
+        String s = url.toString();
+        if (s.startsWith(FILE_SCHEME) && !s.startsWith("file://"))
+        {
+            s = "file://" + s.substring(FILE_SCHEME.length());
+        }
+
+        if (s.endsWith("/") || StringUtils.isEmpty(url.getPath()))
+        {
+            return s;
+        }
+        else
+        {
+            return s.substring(0, s.lastIndexOf("/") + 1);
+        }
+    }
+
+    /**
+     * Extract the file name from the specified URL.
+     *
+     * @param url the URL from which to extract the file name
+     * @return the extracted file name
+     */
+    static String getFileName(URL url)
+    {
+        if (url == null)
+        {
+            return null;
+        }
+
+        String path = url.getPath();
+
+        if (path.endsWith("/") || StringUtils.isEmpty(path))
+        {
+            return null;
+        }
+        else
+        {
+            return path.substring(path.lastIndexOf("/") + 1);
+        }
+    }
+
+    /**
+     * Tries to convert the specified base path and file name into a file object.
+     * This method is called e.g. by the save() methods of file based
+     * configurations. The parameter strings can be relative files, absolute
+     * files and URLs as well. This implementation checks first whether the passed in
+     * file name is absolute. If this is the case, it is returned. Otherwise
+     * further checks are performed whether the base path and file name can be
+     * combined to a valid URL or a valid file name. <em>Note:</em> The test
+     * if the passed in file name is absolute is performed using
+     * {@code java.io.File.isAbsolute()}. If the file name starts with a
+     * slash, this method will return <b>true</b> on Unix, but <b>false</b> on
+     * Windows. So to ensure correct behavior for relative file names on all
+     * platforms you should never let relative paths start with a slash. E.g.
+     * in a configuration definition file do not use something like that:
+     * <pre>
+     * &lt;properties fileName="/subdir/my.properties"/&gt;
+     * </pre>
+     * Under Windows this path would be resolved relative to the configuration
+     * definition file. Under Unix this would be treated as an absolute path
+     * name.
+     *
+     * @param basePath the base path
+     * @param fileName the file name
+     * @return the file object (<b>null</b> if no file can be obtained)
+     */
+    static File getFile(String basePath, String fileName)
+    {
+        // Check if the file name is absolute
+        File f = new File(fileName);
+        if (f.isAbsolute())
+        {
+            return f;
+        }
+
+        // Check if URLs are involved
+        URL url;
+        try
+        {
+            url = new URL(new URL(basePath), fileName);
+        }
+        catch (MalformedURLException mex1)
+        {
+            try
+            {
+                url = new URL(fileName);
+            }
+            catch (MalformedURLException mex2)
+            {
+                url = null;
+            }
+        }
+
+        if (url != null)
+        {
+            return fileFromURL(url);
+        }
+
+        return constructFile(basePath, fileName);
+    }
+
+    /**
+     * Convert the specified file into an URL. This method is equivalent
+     * to file.toURI().toURL(). It was used to work around a bug in the JDK
+     * preventing the transformation of a file into an URL if the file name
+     * contains a '#' character. See the issue CONFIGURATION-300 for
+     * more details. Now that we switched to JDK 1.4 we can directly use
+     * file.toURI().toURL().
+     *
+     * @param file the file to be converted into an URL
+     */
+    static URL toURL(File file) throws MalformedURLException
+    {
+        return file.toURI().toURL();
     }
 
     /**

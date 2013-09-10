@@ -34,6 +34,7 @@ import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.io.FileLocator;
 import org.apache.commons.configuration.io.FileLocatorAware;
+import org.apache.commons.configuration.io.FileLocatorUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -1388,7 +1389,7 @@ public class PropertiesConfiguration extends BaseConfiguration
     {
         assert locator != null : "Locator has not been set!";
         URL url =
-                ConfigurationUtils.locate(locator.getFileSystem(),
+                FileLocatorUtils.locate(locator.getFileSystem(),
                         locator.getBasePath(), fileName);
         if (url == null)
         {
@@ -1396,7 +1397,7 @@ public class PropertiesConfiguration extends BaseConfiguration
             if (baseURL != null)
             {
                 url =
-                        ConfigurationUtils.locate(locator.getFileSystem(),
+                        FileLocatorUtils.locate(locator.getFileSystem(),
                                 baseURL.toString(), fileName);
             }
         }
