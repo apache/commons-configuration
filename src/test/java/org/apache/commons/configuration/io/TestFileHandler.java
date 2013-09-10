@@ -41,7 +41,6 @@ import java.net.URL;
 
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SynchronizerTestImpl;
 import org.apache.commons.configuration.SynchronizerTestImpl.Methods;

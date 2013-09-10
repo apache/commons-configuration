@@ -19,7 +19,7 @@ package org.apache.commons.configuration.builder;
 import java.io.File;
 import java.net.URL;
 
-import org.apache.commons.configuration.FileSystem;
+import org.apache.commons.configuration.io.FileSystem;
 
 /**
  * <p>

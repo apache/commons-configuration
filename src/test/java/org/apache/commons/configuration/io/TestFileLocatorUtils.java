@@ -23,7 +23,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.configuration.DefaultFileSystem;
 import org.junit.Test;
 
 /**
@@ -102,6 +101,22 @@ public class TestFileLocatorUtils
     }
 
     @Test
+    public void testGetFile() throws Exception
+    {
+        File directory = new File("target");
+        File reference = new File(directory, "test.txt").getAbsoluteFile();
+
+        assertEquals(reference, FileLocatorUtils.getFile(null, reference.getAbsolutePath()));
+        assertEquals(reference, FileLocatorUtils.getFile(directory.getAbsolutePath(), reference.getAbsolutePath()));
+        assertEquals(reference, FileLocatorUtils.getFile(directory.getAbsolutePath(), reference.getName()));
+        assertEquals(reference, FileLocatorUtils.getFile(directory.toURI().toURL().toString(), reference.getName()));
+        assertEquals(reference, FileLocatorUtils.getFile("invalid", reference.toURI().toURL().toString()));
+        assertEquals(reference, FileLocatorUtils.getFile(
+                "jar:file:/C:/myjar.jar!/my-config.xml/someprops.properties",
+                reference.getAbsolutePath()));
+    }
+
+    @Test
     public void testLocateWithNullTCCL() throws Exception
     {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -110,7 +125,7 @@ public class TestFileLocatorUtils
             Thread.currentThread().setContextClassLoader(null);
             assertNull(FileLocatorUtils.locate(new DefaultFileSystem(), "abase", "aname"));
             // This assert fails when maven 2 is used, so commented out
-            //assertNotNull(ConfigurationUtils.locate("test.xml"));
+            //assertNotNull(FileLocatorUtils.locate("test.xml"));
         }
         finally
         {

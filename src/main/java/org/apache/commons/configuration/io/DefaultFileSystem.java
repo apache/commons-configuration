@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.configuration;
+package org.apache.commons.configuration.io;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,7 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.apache.commons.configuration.io.VerifiableOutputStream;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -50,7 +50,7 @@ public class DefaultFileSystem extends FileSystem
     {
         try
         {
-            URL url = ConfigurationUtils.locate(this, basePath, fileName);
+            URL url = FileLocatorUtils.locate(this, basePath, fileName);
 
             if (url == null)
             {
@@ -72,7 +72,7 @@ public class DefaultFileSystem extends FileSystem
     public InputStream getInputStream(URL url) throws ConfigurationException
     {
         // throw an exception if the target URL is a directory
-        File file = ConfigurationUtils.fileFromURL(url);
+        File file = FileLocatorUtils.fileFromURL(url);
         if (file != null && file.isDirectory())
         {
             throw new ConfigurationException("Cannot load a configuration from a directory");
@@ -93,7 +93,7 @@ public class DefaultFileSystem extends FileSystem
     {
         // file URLs have to be converted to Files since FileURLConnection is
         // read only (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4191800)
-        File file = ConfigurationUtils.fileFromURL(url);
+        File file = FileLocatorUtils.fileFromURL(url);
         if (file != null)
         {
             return getOutputStream(file);
@@ -191,7 +191,7 @@ public class DefaultFileSystem extends FileSystem
         try
         {
             url = getURL(null, path);
-            return ConfigurationUtils.getBasePath(url);
+            return FileLocatorUtils.getBasePath(url);
         }
         catch (Exception e)
         {
@@ -206,7 +206,7 @@ public class DefaultFileSystem extends FileSystem
         try
         {
             url = getURL(null, path);
-            return ConfigurationUtils.getFileName(url);
+            return FileLocatorUtils.getFileName(url);
         }
         catch (Exception e)
         {
@@ -221,7 +221,7 @@ public class DefaultFileSystem extends FileSystem
         File f = new File(file);
         if (f.isAbsolute()) // already absolute?
         {
-            return ConfigurationUtils.toURL(f);
+            return FileLocatorUtils.toURL(f);
         }
 
         try
@@ -238,7 +238,7 @@ public class DefaultFileSystem extends FileSystem
         }
         catch (MalformedURLException uex)
         {
-            return ConfigurationUtils.toURL(ConfigurationUtils.constructFile(basePath, file));
+            return FileLocatorUtils.toURL(FileLocatorUtils.constructFile(basePath, file));
         }
     }
 

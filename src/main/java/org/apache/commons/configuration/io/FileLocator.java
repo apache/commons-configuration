@@ -18,8 +18,6 @@ package org.apache.commons.configuration.io;
 
 import java.net.URL;
 
-import org.apache.commons.configuration.FileSystem;
-
 /**
  * <p>
  * An interface describing the location of a file.

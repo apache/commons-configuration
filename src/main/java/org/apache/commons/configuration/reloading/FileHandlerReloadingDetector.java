@@ -20,8 +20,8 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.io.FileLocatorUtils;
 
 /**
  * <p>
@@ -254,7 +254,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
             String path = url.getPath();
             try
             {
-                return ConfigurationUtils.fileFromURL(new URL(path.substring(0,
+                return FileLocatorUtils.fileFromURL(new URL(path.substring(0,
                         path.indexOf('!'))));
             }
             catch (MalformedURLException mex)
@@ -264,7 +264,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
         }
         else
         {
-            return ConfigurationUtils.fileFromURL(url);
+            return FileLocatorUtils.fileFromURL(url);
         }
     }
 }

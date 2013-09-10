@@ -32,8 +32,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.ConfigurationUtils;
-import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
 import org.apache.commons.configuration.sync.Synchronizer;
@@ -315,11 +313,11 @@ public class FileHandler
         }
         else if (sourceURL != null)
         {
-            return ConfigurationUtils.fileFromURL(sourceURL);
+            return FileLocatorUtils.fileFromURL(sourceURL);
         }
         else
         {
-            return ConfigurationUtils.getFile(basePath, fileName);
+            return FileLocatorUtils.getFile(basePath, fileName);
         }
     }
 
@@ -400,7 +398,7 @@ public class FileHandler
             fileName = fileSpec.getFileName();
         }
 
-        return (sourceURL != null) ? sourceURL : ConfigurationUtils.locate(
+        return (sourceURL != null) ? sourceURL : FileLocatorUtils.locate(
                 fileSystem, basePath, fileName);
     }
 
@@ -555,7 +553,7 @@ public class FileHandler
         URL url;
         try
         {
-            url = ConfigurationUtils.toURL(file);
+            url = FileLocatorUtils.toURL(file);
         }
         catch (MalformedURLException e1)
         {
@@ -837,7 +835,7 @@ public class FileHandler
             throws ConfigurationException
     {
         URL url =
-                ConfigurationUtils.locate(spec.getFileSystem(),
+                FileLocatorUtils.locate(spec.getFileSystem(),
                         spec.getBasePath(), fileName);
 
         if (url == null)
@@ -1277,8 +1275,8 @@ public class FileHandler
      */
     private static void initFileSpecWithURL(FileSpec spec, URL url)
     {
-        String basePath = ConfigurationUtils.getBasePath(url);
-        String fileName = ConfigurationUtils.getFileName(url);
+        String basePath = FileLocatorUtils.getBasePath(url);
+        String fileName = FileLocatorUtils.getFileName(url);
         spec.setBasePath(basePath);
         spec.setFileName(fileName);
         spec.setSourceURL(url);

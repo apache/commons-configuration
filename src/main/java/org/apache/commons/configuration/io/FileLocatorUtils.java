@@ -21,11 +21,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.configuration.ConfigurationUtils;
-import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.plexus.util.FileUtils;
 
 /**
  * <p>
@@ -35,13 +33,14 @@ import org.codehaus.plexus.util.FileUtils;
  * The methods of this class are used behind the scenes when retrieving
  * configuration files based on different criteria, e.g. URLs, files, or more
  * complex search strategies. They also implement functionality required by the
- * default {@link FileSystem} implementations.
+ * default {@link FileSystem} implementations. Most methods are intended to be
+ * used internally only by other classes in the {@code io} package.
  * </p>
  *
  * @version $Id: $
  * @since 2.0
  */
-final class FileLocatorUtils
+public final class FileLocatorUtils
 {
     /** Constant for the file URL protocol */
     private static final String FILE_SCHEME = "file:";
@@ -63,7 +62,7 @@ final class FileLocatorUtils
      * @param url the URL
      * @return the resulting file object
      */
-    static File fileFromURL(URL url)
+    public static File fileFromURL(URL url)
     {
         return FileUtils.toFile(url);
     }
@@ -121,6 +120,66 @@ final class FileLocatorUtils
         {
             return path.substring(path.lastIndexOf("/") + 1);
         }
+    }
+
+    /**
+     * Tries to convert the specified base path and file name into a file object.
+     * This method is called e.g. by the save() methods of file based
+     * configurations. The parameter strings can be relative files, absolute
+     * files and URLs as well. This implementation checks first whether the passed in
+     * file name is absolute. If this is the case, it is returned. Otherwise
+     * further checks are performed whether the base path and file name can be
+     * combined to a valid URL or a valid file name. <em>Note:</em> The test
+     * if the passed in file name is absolute is performed using
+     * {@code java.io.File.isAbsolute()}. If the file name starts with a
+     * slash, this method will return <b>true</b> on Unix, but <b>false</b> on
+     * Windows. So to ensure correct behavior for relative file names on all
+     * platforms you should never let relative paths start with a slash. E.g.
+     * in a configuration definition file do not use something like that:
+     * <pre>
+     * &lt;properties fileName="/subdir/my.properties"/&gt;
+     * </pre>
+     * Under Windows this path would be resolved relative to the configuration
+     * definition file. Under Unix this would be treated as an absolute path
+     * name.
+     *
+     * @param basePath the base path
+     * @param fileName the file name
+     * @return the file object (<b>null</b> if no file can be obtained)
+     */
+    public static File getFile(String basePath, String fileName)
+    {
+        // Check if the file name is absolute
+        File f = new File(fileName);
+        if (f.isAbsolute())
+        {
+            return f;
+        }
+
+        // Check if URLs are involved
+        URL url;
+        try
+        {
+            url = new URL(new URL(basePath), fileName);
+        }
+        catch (MalformedURLException mex1)
+        {
+            try
+            {
+                url = new URL(fileName);
+            }
+            catch (MalformedURLException mex2)
+            {
+                url = null;
+            }
+        }
+
+        if (url != null)
+        {
+            return fileFromURL(url);
+        }
+
+        return constructFile(basePath, fileName);
     }
 
     /**

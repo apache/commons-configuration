@@ -43,10 +43,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
-import org.apache.commons.configuration.ConfigurationUtils;
-import org.apache.commons.configuration.DefaultFileSystem;
 import org.apache.commons.configuration.DynamicCombinedConfiguration;
-import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
@@ -68,7 +65,10 @@ import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
+import org.apache.commons.configuration.io.DefaultFileSystem;
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.io.FileLocatorUtils;
+import org.apache.commons.configuration.io.FileSystem;
 import org.apache.commons.configuration.reloading.ReloadingController;
 import org.apache.commons.configuration.reloading.ReloadingControllerSupport;
 import org.apache.commons.configuration.resolver.CatalogResolver;
@@ -813,7 +813,7 @@ public class TestCombinedConfigurationBuilder
         XMLBuilderParametersImpl xmlParams = new XMLBuilderParametersImpl();
         builder.initChildBuilderParameters(xmlParams);
         File basePathFile =
-                ConfigurationUtils.fileFromURL(new URL(xmlParams
+                FileLocatorUtils.fileFromURL(new URL(xmlParams
                         .getFileHandler().getBasePath()));
         assertEquals("Wrong base path",
                 ConfigurationAssert.getTestFile(testFile).getAbsoluteFile(),

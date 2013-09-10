@@ -20,8 +20,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.Map;
 
-import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.io.FileSystem;
 
 /**
  * <p>

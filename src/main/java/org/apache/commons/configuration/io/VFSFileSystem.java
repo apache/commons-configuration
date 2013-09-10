@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.configuration;
+package org.apache.commons.configuration.io;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +27,8 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.util.Map;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;

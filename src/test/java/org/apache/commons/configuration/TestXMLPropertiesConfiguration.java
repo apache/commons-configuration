@@ -32,6 +32,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.io.FileSystem;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;

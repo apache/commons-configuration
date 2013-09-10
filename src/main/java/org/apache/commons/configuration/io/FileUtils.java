@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.configuration;
+package org.apache.commons.configuration.io;
 
 import java.io.File;
 import java.net.URL;
@@ -24,7 +24,7 @@ import java.nio.charset.Charset;
 /**
  * This class is a subset of org.apache.commons.io.FileUtils,
  * git-svn-id: https://svn.apache.org/repos/asf/commons/proper/io/trunk@1423916 13f79535-47bb-0310-9956-ffa450edef68.
- * The subset is determined by {@link org.apache.commons.configuration.ConfigurationUtils}.
+ * The subset is determined by {@link FileLocatorUtils}.
  * The copied constants and methods are <em>literally</em> copied.<br />
  *
  * See CONFIGURATION-521 for a discussion.

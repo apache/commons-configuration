@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.configuration;
+package org.apache.commons.configuration.io;
 
 import java.io.File;
 import java.io.InputStream;
@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.NoOpLog;

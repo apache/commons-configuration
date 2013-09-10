@@ -26,7 +26,6 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -218,59 +217,6 @@ public class TestConfigurationUtils
         expected.add("value4");
         expected.add("value2");
         ListAssert.assertEquals("'key2' property", expected, conf2.getList("key2"));
-    }
-
-    @Test
-    public void testGetFile() throws Exception
-    {
-        File directory = new File("target");
-        File reference = new File(directory, "test.txt").getAbsoluteFile();
-
-        assertEquals(reference, ConfigurationUtils.getFile(null, reference.getAbsolutePath()));
-        assertEquals(reference, ConfigurationUtils.getFile(directory.getAbsolutePath(), reference.getAbsolutePath()));
-        assertEquals(reference, ConfigurationUtils.getFile(directory.getAbsolutePath(), reference.getName()));
-        assertEquals(reference, ConfigurationUtils.getFile(directory.toURI().toURL().toString(), reference.getName()));
-        assertEquals(reference, ConfigurationUtils.getFile("invalid", reference.toURI().toURL().toString()));
-        assertEquals(reference, ConfigurationUtils.getFile(
-                "jar:file:/C:/myjar.jar!/my-config.xml/someprops.properties",
-                reference.getAbsolutePath()));
-    }
-
-    /**
-     * Tests whether an encoded "%" character in the file name is handled correctly by
-     * fileFromURL(). This test is related to CONFIGURATION-521.
-     */
-    @Test
-    public void testFileFromURLWithEncodedPercent() throws MalformedURLException
-    {
-        File file = new File("https%3A%2F%2Fwww.apache.org%2F.url").getAbsoluteFile();
-        URL fileURL = file.toURI().toURL();
-        File file2 = ConfigurationUtils.fileFromURL(fileURL);
-        assertEquals("Wrong file", file, file2);
-    }
-
-    /**
-     * Tests whether a "+" character in the file name is handled correctly by
-     * fileFromURL(). This test is related to CONFIGURATION-415.
-     */
-    @Test
-    public void testFileFromURLWithPlus() throws MalformedURLException
-    {
-        File file = new File(new File("target"), "foo+bar.txt")
-                .getAbsoluteFile();
-        URL fileURL = file.toURI().toURL();
-        File file2 = ConfigurationUtils.fileFromURL(fileURL);
-        assertEquals("Wrong file", file, file2);
-    }
-
-    /**
-     * Tests whether fileFromURL() handles null URLs correctly.
-     */
-    @Test
-    public void testFileFromURLNull() throws Exception
-    {
-        assertNull("Wrong file for null URL", ConfigurationUtils
-                .fileFromURL(null));
     }
 
     @Test

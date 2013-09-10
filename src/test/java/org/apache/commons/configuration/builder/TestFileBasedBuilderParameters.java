@@ -30,9 +30,9 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.configuration.ConfigurationAssert;
-import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.io.FileBased;
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.io.FileSystem;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
