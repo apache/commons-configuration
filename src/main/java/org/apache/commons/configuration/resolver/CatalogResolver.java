@@ -190,7 +190,13 @@ public class CatalogResolver implements EntityResolver
 
             try
             {
-                InputStream is = fs.getInputStream(null, resolved);
+                URL url = FileLocatorUtils.locate(fs, null, resolved);
+                if (url == null)
+                {
+                    throw new ConfigurationException("Could not locate "
+                            + resolved);
+                }
+                InputStream is = fs.getInputStream(url);
                 InputSource iSource = new InputSource(resolved);
                 iSource.setPublicId(publicId);
                 iSource.setByteStream(is);
@@ -198,8 +204,7 @@ public class CatalogResolver implements EntityResolver
             }
             catch (Exception e)
             {
-                log.warn("Failed to create InputSource for " + resolved + " ("
-                                + e.toString() + ")");
+                log.warn("Failed to create InputSource for " + resolved, e);
                 return null;
             }
         }
