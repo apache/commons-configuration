@@ -45,30 +45,6 @@ public class DefaultFileSystem extends FileSystem
     private Log log = LogFactory.getLog(DefaultFileSystem.class);
 
     @Override
-    public InputStream getInputStream(String basePath, String fileName)
-        throws ConfigurationException
-    {
-        try
-        {
-            URL url = FileLocatorUtils.locate(this, basePath, fileName);
-
-            if (url == null)
-            {
-                throw new ConfigurationException("Cannot locate configuration source " + fileName);
-            }
-            return getInputStream(url);
-        }
-        catch (ConfigurationException e)
-        {
-            throw e;
-        }
-        catch (Exception e)
-        {
-            throw new ConfigurationException("Unable to load the configuration file " + fileName, e);
-        }
-    }
-
-    @Override
     public InputStream getInputStream(URL url) throws ConfigurationException
     {
         // throw an exception if the target URL is a directory

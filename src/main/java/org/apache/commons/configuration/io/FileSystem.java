@@ -161,9 +161,6 @@ public abstract class FileSystem
         return this.optionsProvider;
     }
 
-    public abstract InputStream getInputStream(String basePath, String fileName)
-            throws ConfigurationException;
-
     public abstract InputStream getInputStream(URL url) throws ConfigurationException;
 
     public abstract OutputStream getOutputStream(URL url) throws ConfigurationException;

@@ -54,46 +54,6 @@ public class VFSFileSystem extends DefaultFileSystem
     }
 
     @Override
-    public InputStream getInputStream(String basePath, String fileName)
-        throws ConfigurationException
-    {
-        try
-        {
-            FileSystemManager manager = VFS.getManager();
-            FileName path;
-            if (basePath != null)
-            {
-                FileName base = manager.resolveURI(basePath);
-                path = manager.resolveName(base, fileName);
-            }
-            else
-            {
-                FileName file = manager.resolveURI(fileName);
-                FileName base = file.getParent();
-                path = manager.resolveName(base, file.getBaseName());
-            }
-            FileSystemOptions opts = getOptions(path.getScheme());
-            FileObject file = (opts == null) ? manager.resolveFile(path.getURI())
-                    : manager.resolveFile(path.getURI(), opts);
-            FileContent content = file.getContent();
-            if (content == null)
-            {
-                String msg = "Cannot access content of " + file.getName().getFriendlyURI();
-                throw new ConfigurationException(msg);
-            }
-            return content.getInputStream();
-        }
-        catch (ConfigurationException e)
-        {
-            throw e;
-        }
-        catch (Exception e)
-        {
-            throw new ConfigurationException("Unable to load the configuration file " + fileName, e);
-        }
-    }
-
-    @Override
     public InputStream getInputStream(URL url) throws ConfigurationException
     {
         FileObject file;
