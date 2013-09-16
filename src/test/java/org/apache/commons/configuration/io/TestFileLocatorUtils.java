@@ -22,6 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -355,5 +356,52 @@ public class TestFileLocatorUtils
                 FileLocatorUtils.fileLocator().fileSystem(fs).create();
         assertSame("Wrong file system", fs,
                 FileLocatorUtils.obtainFileSystem(locator));
+    }
+
+    /**
+     * Tests whether isLocationDefined() can handle null input.
+     */
+    @Test
+    public void testIsLocationDefinedNull()
+    {
+        assertFalse("Wrong result", FileLocatorUtils.isLocationDefined(null));
+    }
+
+    /**
+     * Tests isLocationDefined() if no location is defined.
+     */
+    @Test
+    public void testIsLocationDefinedFalse()
+    {
+        FileLocator locator =
+                FileLocatorUtils.fileLocator().encoding(ENCODING)
+                        .basePath(BASE_PATH)
+                        .fileSystem(FileLocatorUtils.DEFAULT_FILE_SYSTEM)
+                        .create();
+        assertFalse("Wrong result", FileLocatorUtils.isLocationDefined(locator));
+    }
+
+    /**
+     * Tests isLocationDefined() if a file name is set.
+     */
+    @Test
+    public void testIsLocationDefinedFileName()
+    {
+        FileLocator locator =
+                FileLocatorUtils.fileLocator().fileName(FILE_NAME).create();
+        assertTrue("Wrong result", FileLocatorUtils.isLocationDefined(locator));
+    }
+
+    /**
+     * Tests isLocationDefined() if a URL is set.
+     */
+    @Test
+    public void testIsLocationDefinedURL()
+    {
+        FileLocator locator =
+                FileLocatorUtils.fileLocator()
+                        .sourceURL(ConfigurationAssert.getTestURL("test.xml"))
+                        .create();
+        assertTrue("Wrong result", FileLocatorUtils.isLocationDefined(locator));
     }
 }

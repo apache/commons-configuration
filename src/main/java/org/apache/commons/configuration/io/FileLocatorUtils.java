@@ -134,6 +134,22 @@ public final class FileLocatorUtils
     }
 
     /**
+     * Checks whether the specified {@code FileLocator} contains enough
+     * information to locate a file. This is the case if a file name or a URL is
+     * defined. If the passed in {@code FileLocator} is <b>null</b>, result is
+     * <b>false</b>.
+     *
+     * @param locator the {@code FileLocator} to check
+     * @return a flag whether a file location is defined by this
+     *         {@code FileLocator}
+     */
+    public static boolean isLocationDefined(FileLocator locator)
+    {
+        return (locator != null)
+                && (locator.getFileName() != null || locator.getSourceURL() != null);
+    }
+
+    /**
      * Return the location of the specified resource by searching the user home
      * directory, the current classpath and the system classpath.
      *
