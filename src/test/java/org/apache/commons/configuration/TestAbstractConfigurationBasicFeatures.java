@@ -215,7 +215,7 @@ public class TestAbstractConfigurationBasicFeatures
     {
         AbstractConfiguration config = setUpDestConfig();
         config.copy(null);
-        ConfigurationAssert.assertEquals(setUpDestConfig(), config);
+        ConfigurationAssert.assertConfigurationEquals(setUpDestConfig(), config);
     }
 
     /**
@@ -297,7 +297,7 @@ public class TestAbstractConfigurationBasicFeatures
     {
         AbstractConfiguration config = setUpDestConfig();
         config.append(null);
-        ConfigurationAssert.assertEquals(setUpDestConfig(), config);
+        ConfigurationAssert.assertConfigurationEquals(setUpDestConfig(), config);
     }
 
     /**

@@ -17,12 +17,13 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
-
-import junit.framework.Assert;
 
 /**
  * Assertions on configurations for the unit tests. This class also provides
@@ -51,21 +52,21 @@ public class ConfigurationAssert
      * @param expected the expected properties
      * @param actual the configuration to check
      */
-    public static void assertEquals(Configuration expected, Configuration actual)
+    public static void assertConfigurationEquals(Configuration expected, Configuration actual)
     {
         // check that the actual configuration contains all the properties of the expected configuration
         for (Iterator<String> it = expected.getKeys(); it.hasNext();)
         {
             String key = it.next();
-            Assert.assertTrue("The actual configuration doesn't contain the expected key '" + key + "'", actual.containsKey(key));
-            Assert.assertEquals("Value of the '" + key + "' property", expected.getProperty(key), actual.getProperty(key));
+            assertTrue("The actual configuration doesn't contain the expected key '" + key + "'", actual.containsKey(key));
+            assertEquals("Value of the '" + key + "' property", expected.getProperty(key), actual.getProperty(key));
         }
 
         // check that the actual configuration has no extra properties
         for (Iterator<String> it = actual.getKeys(); it.hasNext();)
         {
             String key = it.next();
-            Assert.assertTrue("The actual configuration contains an extra key '" + key + "'", expected.containsKey(key));
+            assertTrue("The actual configuration contains an extra key '" + key + "'", expected.containsKey(key));
         }
     }
 
@@ -113,6 +114,27 @@ public class ConfigurationAssert
     public static URL getOutURL(String name)
     {
         return urlFromFile(getOutFile(name));
+    }
+
+    /**
+     * Helper method for testing the equals() implementation of a class. It is
+     * also checked, whether hashCode() is compatible with equals().
+     *
+     * @param o1 test object 1
+     * @param o2 test object 2
+     * @param expEquals the expected result of equals()
+     */
+    public static void checkEquals(Object o1, Object o2, boolean expEquals)
+    {
+        assertEquals("Wrong result of equals()", expEquals, o1.equals(o2));
+        if (o2 != null)
+        {
+            assertEquals("Not symmetric", expEquals, o2.equals(o1));
+        }
+        if (expEquals)
+        {
+            assertEquals("Different hash codes", o1.hashCode(), o2.hashCode());
+        }
     }
 
     /**

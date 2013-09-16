@@ -1211,7 +1211,7 @@ public class TestXMLConfiguration
         XMLConfiguration checkConf = new XMLConfiguration();
         checkConf.setListDelimiterHandler(conf.getListDelimiterHandler());
         load(checkConf, testSaveConf.getAbsolutePath());
-        ConfigurationAssert.assertEquals(conf, checkConf);
+        ConfigurationAssert.assertConfigurationEquals(conf, checkConf);
     }
 
     /**
@@ -1328,7 +1328,7 @@ public class TestXMLConfiguration
         checkConfig.registerEntityId(publicId, dtdURL);
         checkConfig.setValidating(true);
         load(checkConfig, testSaveConf.getAbsolutePath());
-        ConfigurationAssert.assertEquals(conf, checkConfig);
+        ConfigurationAssert.assertConfigurationEquals(conf, checkConfig);
     }
 
     /**
@@ -1700,7 +1700,7 @@ public class TestXMLConfiguration
             throws ConfigurationException
     {
         XMLConfiguration config = createFromFile(saveFile.getAbsolutePath());
-        ConfigurationAssert.assertEquals(conf, config);
+        ConfigurationAssert.assertConfigurationEquals(conf, config);
         return config;
     }
 

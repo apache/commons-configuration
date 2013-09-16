@@ -315,7 +315,7 @@ public class TestPropertiesConfiguration
         PropertiesConfiguration checkConfig = new PropertiesConfiguration();
         checkConfig.setListDelimiterHandler(new DisabledListDelimiterHandler());
         new FileHandler(checkConfig).load(testSavePropertiesFile);
-        ConfigurationAssert.assertEquals(conf, checkConfig);
+        ConfigurationAssert.assertConfigurationEquals(conf, checkConfig);
     }
 
     /**
@@ -331,7 +331,7 @@ public class TestPropertiesConfiguration
         PropertiesConfiguration checkConfig = new PropertiesConfiguration();
         checkConfig.setListDelimiterHandler(conf.getListDelimiterHandler());
         new FileHandler(checkConfig).load(testSavePropertiesFile);
-        ConfigurationAssert.assertEquals(conf, checkConfig);
+        ConfigurationAssert.assertConfigurationEquals(conf, checkConfig);
     }
 
     @Test(expected = ConfigurationException.class)
@@ -426,7 +426,7 @@ public class TestPropertiesConfiguration
         PropertiesConfiguration checkConfig = new PropertiesConfiguration();
         checkConfig.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
         load(checkConfig, testSavePropertiesFile.getAbsolutePath());
-        ConfigurationAssert.assertEquals(conf, checkConfig);
+        ConfigurationAssert.assertConfigurationEquals(conf, checkConfig);
         return checkConfig;
     }
 
