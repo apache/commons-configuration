@@ -35,6 +35,7 @@ import org.apache.commons.vfs2.FileSystemException;
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
@@ -54,6 +55,7 @@ public class TestVFSFileHandlerReloadingDetector
             + ">%s</" + PROPERTY + "></configuration>";
 
     /** A helper object for creating temporary files. */
+    @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
     @Before
