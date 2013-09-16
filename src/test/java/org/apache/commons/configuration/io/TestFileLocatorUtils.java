@@ -320,4 +320,40 @@ public class TestFileLocatorUtils
         assertThat(s, containsString("encoding=" + ENCODING));
         assertThat(s, containsString("fileSystem=" + fileSystem));
     }
+
+    /**
+     * Tests whether obtainFileSystem() can handle a null locator.
+     */
+    @Test
+    public void testObtainFileSystemNullLocator()
+    {
+        assertSame("Wrong file system", FileLocatorUtils.DEFAULT_FILE_SYSTEM,
+                FileLocatorUtils.obtainFileSystem(null));
+    }
+
+    /**
+     * Tests whether the default file system is returned if it is not set in a
+     * locator.
+     */
+    @Test
+    public void testObtainFileSystemNotSetInLocator()
+    {
+        assertSame("Wrong file system", FileLocatorUtils.DEFAULT_FILE_SYSTEM,
+                FileLocatorUtils.obtainFileSystem(FileLocatorUtils
+                        .fileLocator().create()));
+    }
+
+    /**
+     * Tests whether obtainFileSystem() returns the file system stored in the
+     * locator.
+     */
+    @Test
+    public void testObtainFileSystemSetInLocator()
+    {
+        FileSystem fs = EasyMock.createMock(FileSystem.class);
+        FileLocator locator =
+                FileLocatorUtils.fileLocator().fileSystem(fs).create();
+        assertSame("Wrong file system", fs,
+                FileLocatorUtils.obtainFileSystem(locator));
+    }
 }

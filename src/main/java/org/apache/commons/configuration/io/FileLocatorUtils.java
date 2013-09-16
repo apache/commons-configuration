@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.configuration.ConfigurationUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -45,6 +46,14 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class FileLocatorUtils
 {
+    /**
+     * Constant for the default {@code FileSystem}. This file system is used by
+     * operations of this class if no specific file system is provided. An
+     * instance of {@link DefaultFileSystem} is used.
+     */
+    public static final FileSystem DEFAULT_FILE_SYSTEM =
+            new DefaultFileSystem();
+
     /** Constant for the file URL protocol */
     private static final String FILE_SCHEME = "file:";
 
@@ -106,6 +115,22 @@ public final class FileLocatorUtils
     public static FileLocatorBuilder fileLocator(FileLocator src)
     {
         return new FileLocatorBuilder(src);
+    }
+
+    /**
+     * Obtains a non-<b>null</b> {@code FileSystem} object from the passed in
+     * {@code FileLocator}. If the passed in {@code FileLocator} has a
+     * {@code FileSystem} object, it is returned. Otherwise, result is the
+     * default {@code FileSystem}.
+     *
+     * @param locator the {@code FileLocator} (may be <b>null</b>)
+     * @return the {@code FileSystem} to be used for this {@code FileLocator}
+     */
+    public static FileSystem obtainFileSystem(FileLocator locator)
+    {
+        return (locator != null) ? ObjectUtils.defaultIfNull(
+                locator.getFileSystem(), DEFAULT_FILE_SYSTEM)
+                : DEFAULT_FILE_SYSTEM;
     }
 
     /**
