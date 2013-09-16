@@ -19,6 +19,7 @@ package org.apache.commons.configuration.io;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
@@ -29,6 +30,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.commons.configuration.ConfigurationAssert;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.XMLConfiguration;
 import org.easymock.EasyMock;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,7 +44,7 @@ import org.junit.Test;
 public class TestFileLocatorUtils
 {
     /** Constant for a file name. */
-    private static final String FILE_NAME = "testFile.dat";
+    private static final String FILE_NAME = "test.xml";
 
     /** Constant for a base path. */
     private static final String BASE_PATH = "/etc/test/path/";
@@ -58,7 +61,7 @@ public class TestFileLocatorUtils
     @BeforeClass
     public static void setUpOnce() throws Exception
     {
-        sourceURL = ConfigurationAssert.getTestURL("test.xml");
+        sourceURL = ConfigurationAssert.getTestURL(FILE_NAME);
         fileSystem = EasyMock.createMock(FileSystem.class);
         EasyMock.replay(fileSystem);
     }
@@ -400,8 +403,115 @@ public class TestFileLocatorUtils
     {
         FileLocator locator =
                 FileLocatorUtils.fileLocator()
-                        .sourceURL(ConfigurationAssert.getTestURL("test.xml"))
+                        .sourceURL(ConfigurationAssert.getTestURL(FILE_NAME))
                         .create();
         assertTrue("Wrong result", FileLocatorUtils.isLocationDefined(locator));
+    }
+
+    /**
+     * Tries to obtain a fully initialized locator if the source locator is not
+     * defined.
+     */
+    @Test
+    public void testFullyInitializedLocatorUndefined()
+    {
+        assertNull("Got a result",
+                FileLocatorUtils.fullyInitializedLocator(FileLocatorUtils
+                        .fileLocator().create()));
+    }
+
+    /**
+     * Checks whether the expected test configuration can be loaded using the
+     * specified handler.
+     *
+     * @param handler the file handler
+     * @throws ConfigurationException if an error occurs
+     */
+    private static void checkTestConfiguration(FileHandler handler)
+            throws ConfigurationException
+    {
+        XMLConfiguration config = new XMLConfiguration();
+        FileHandler h2 = new FileHandler(config, handler);
+        h2.load();
+        assertEquals("Wrong content", "value", config.getString("element"));
+    }
+
+    /**
+     * Checks whether the specified locator points to the expected test
+     * configuration file.
+     *
+     * @param locator the locator to check
+     * @throws ConfigurationException if an error occurs
+     */
+    private static void checkFullyInitializedLocator(FileLocator locator)
+            throws ConfigurationException
+    {
+        assertNotNull("No base path", locator.getBasePath());
+        assertNotNull("No file name", locator.getFileName());
+        assertNotNull("No source URL", locator.getSourceURL());
+
+        FileHandler handler = new FileHandler();
+        handler.setBasePath(locator.getBasePath());
+        handler.setFileName(locator.getFileName());
+        checkTestConfiguration(handler);
+
+        handler = new FileHandler();
+        handler.setURL(locator.getSourceURL());
+        checkTestConfiguration(handler);
+    }
+
+    /**
+     * Tests whether a fully initialized locator can be obtained if a file name
+     * is available.
+     */
+    @Test
+    public void testFullyInitializedLocatorFileName()
+            throws ConfigurationException
+    {
+        FileLocator locator =
+                FileLocatorUtils.fileLocator().fileName(FILE_NAME).create();
+        checkFullyInitializedLocator(FileLocatorUtils
+                .fullyInitializedLocator(locator));
+    }
+
+    /**
+     * Tests whether a fully initialized locator can be obtained if a URL is
+     * available.
+     */
+    @Test
+    public void testFullyInitializedLocatorURL() throws ConfigurationException
+    {
+        FileLocator locator =
+                FileLocatorUtils.fileLocator().sourceURL(sourceURL).create();
+        checkFullyInitializedLocator(FileLocatorUtils
+                .fullyInitializedLocator(locator));
+    }
+
+    /**
+     * Tests fullyInitializedLocator() if the locator is already fully
+     * initialized.
+     */
+    @Test
+    public void testFullyInitializedLocatorAlreadyComplete()
+    {
+        FileLocator locator =
+                FileLocatorUtils.fileLocator().fileName(FILE_NAME).create();
+        FileLocator fullLocator =
+                FileLocatorUtils.fullyInitializedLocator(locator);
+        assertSame("Different instance", fullLocator,
+                FileLocatorUtils.fullyInitializedLocator(fullLocator));
+    }
+
+    /**
+     * Tests fullyInitializedLocator() if a locate() operation fails.
+     */
+    @Test
+    public void testFullyInitializedLocatorLocateFails()
+    {
+        FileLocator locator =
+                FileLocatorUtils.fileLocator().fileName("non existing file")
+                        .create();
+        assertSame("Wrong result", locator,
+                FileLocatorUtils.fullyInitializedLocator(locator));
     }
 }

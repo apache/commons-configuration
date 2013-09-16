@@ -150,6 +150,50 @@ public final class FileLocatorUtils
     }
 
     /**
+     * Returns a {@code FileLocator} object based on the passed in one whose
+     * location is fully defined. This method ensures that all components of the
+     * {@code FileLocator} pointing to the file are set in a consistent way. In
+     * detail it behaves as follows:
+     * <ul>
+     * <li>If the {@code FileLocator} has no location (refer to
+     * {@link #isLocationDefined(FileLocator)}), result is <b>null</b>.</li>
+     * <li>If the {@code FileLocator} has already all components set which
+     * define the file, it is returned unchanged. <em>Note:</em> It is not
+     * checked whether all components are really consistent!</li>
+     * <li>If a source URL is set, the file name and base path are determined
+     * based on this URL.</li>
+     * <li>Otherwise, an attempt to locate the URL of the file based on the
+     * information available is made. A {@code FileLocator} with the resulting
+     * information is returned; this may be incomplete if it was not possible to
+     * determine the URL.</li>
+     * </ul>
+     *
+     * @param locator the {@code FileLocator} to be completed
+     * @return a {@code FileLocator} with a fully initialized location if
+     *         possible
+     */
+    public static FileLocator fullyInitializedLocator(FileLocator locator)
+    {
+        if (!isLocationDefined(locator))
+        {
+            return null;
+        }
+
+        if (locator.getBasePath() != null && locator.getFileName() != null
+                && locator.getSourceURL() != null)
+        {
+            // already fully initialized
+            return locator;
+        }
+
+        if (locator.getSourceURL() != null)
+        {
+            return fullyInitializedLocatorFromURL(locator);
+        }
+        return fullyInitializedLocatorFromPathAndName(locator);
+    }
+
+    /**
      * Return the location of the specified resource by searching the user home
      * directory, the current classpath and the system classpath.
      *
@@ -468,6 +512,53 @@ public final class FileLocatorUtils
         }
 
         return file;
+    }
+
+    /**
+     * Creates a fully initialized {@code FileLocator} based on a URL.
+     *
+     * @param locator the source {@code FileLocator}
+     * @return the fully initialized {@code FileLocator}
+     */
+    private static FileLocator fullyInitializedLocatorFromURL(
+            FileLocator locator)
+    {
+        return createFullyInitializedLocator(locator, locator.getSourceURL());
+    }
+
+    /**
+     * Creates a fully initialized {@code FileLocator} based on a base path and
+     * file name combination.
+     *
+     * @param locator the source {@code FileLocator}
+     * @return the fully initialized {@code FileLocator}
+     */
+    private static FileLocator fullyInitializedLocatorFromPathAndName(
+            FileLocator locator)
+    {
+        URL url =
+                locate(obtainFileSystem(locator), locator.getBasePath(),
+                        locator.getFileName());
+        if (url == null)
+        {
+            return locator;
+        }
+        return createFullyInitializedLocator(locator, url);
+    }
+
+    /**
+     * Creates a fully initialized {@code FileLocator} based on the specified
+     * URL.
+     *
+     * @param src the source {@code FileLocator}
+     * @param url the URL
+     * @return the fully initialized {@code FileLocator}
+     */
+    private static FileLocator createFullyInitializedLocator(FileLocator src,
+            URL url)
+    {
+        return fileLocator(src).sourceURL(url).fileName(getFileName(url))
+                .basePath(getBasePath(url)).create();
     }
 
     /**
