@@ -38,6 +38,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationException;
@@ -179,7 +181,7 @@ public class TestFileHandler
     {
         FileHandler handler = new FileHandler(new FileBasedTestImpl());
         assertEquals("Wrong default file system",
-                FileSystem.getDefaultFileSystem(), handler.getFileSystem());
+                FileLocatorUtils.DEFAULT_FILE_SYSTEM, handler.getFileSystem());
     }
 
     /**
@@ -195,7 +197,7 @@ public class TestFileHandler
         assertSame("File system not set", sys, handler.getFileSystem());
         handler.setFileSystem(null);
         assertEquals("Not default file system",
-                FileSystem.getDefaultFileSystem(), handler.getFileSystem());
+                FileLocatorUtils.DEFAULT_FILE_SYSTEM, handler.getFileSystem());
     }
 
     /**
@@ -210,7 +212,7 @@ public class TestFileHandler
         handler.setFileSystem(sys);
         handler.resetFileSystem();
         assertEquals("Not default file system",
-                FileSystem.getDefaultFileSystem(), handler.getFileSystem());
+                FileLocatorUtils.DEFAULT_FILE_SYSTEM, handler.getFileSystem());
     }
 
     /**
@@ -226,7 +228,17 @@ public class TestFileHandler
         assertEquals("base path", "http://commons.apache.org/configuration/",
                 handler.getBasePath());
         assertEquals("file name", "index.html", handler.getFileName());
+        assertNull("Got a file name in locator", handler.getFileLocator()
+                .getFileName());
+    }
 
+    /**
+     * Tests whether the correct file scheme is applied.
+     */
+    @Test
+    public void testSetURLFileScheme() throws MalformedURLException
+    {
+        FileHandler handler = new FileHandler();
         // file URL - This url is invalid, a valid url would be
         // file:///temp/test.properties.
         handler.setURL(new URL("file:/temp/test.properties"));
@@ -253,6 +265,21 @@ public class TestFileHandler
     }
 
     /**
+     * Tests whether a null URL can be set.
+     */
+    @Test
+    public void testSetURLNull()
+    {
+        FileHandler handler = new FileHandler();
+        handler.setURL(ConfigurationAssert.getTestURL(TEST_FILENAME));
+        handler.setURL(null);
+        FileLocator locator = handler.getFileLocator();
+        assertNull("Got a base path", locator.getBasePath());
+        assertNull("Got a file name", locator.getFileName());
+        assertNull("Got a URL", locator.getSourceURL());
+    }
+
+    /**
      * Tests whether the location can be set as a file.
      */
     @Test
@@ -274,16 +301,17 @@ public class TestFileHandler
     @Test
     public void testSetPath() throws MalformedURLException
     {
-        FileHandler config = new FileHandler();
-        config.setPath(ConfigurationAssert.TEST_DIR_NAME + File.separator
+        FileHandler handler = new FileHandler();
+        handler.setPath(ConfigurationAssert.TEST_DIR_NAME + File.separator
                 + TEST_FILENAME);
-        assertEquals("Wrong file name", TEST_FILENAME, config.getFileName());
+        assertEquals("Wrong file name", TEST_FILENAME, handler.getFileName());
         assertEquals("Wrong base path",
                 ConfigurationAssert.TEST_DIR.getAbsolutePath(),
-                config.getBasePath());
+                handler.getBasePath());
         File file = ConfigurationAssert.getTestFile(TEST_FILENAME);
-        assertEquals("Wrong path", file.getAbsolutePath(), config.getPath());
-        assertEquals("Wrong URL", file.toURI().toURL(), config.getURL());
+        assertEquals("Wrong path", file.getAbsolutePath(), handler.getPath());
+        assertEquals("Wrong URL", file.toURI().toURL(), handler.getURL());
+        assertNull("Got a URL", handler.getFileLocator().getSourceURL());
     }
 
     /**
@@ -292,11 +320,73 @@ public class TestFileHandler
     @Test
     public void testSetFileName()
     {
-        FileHandler config = new FileHandler();
-        config.setBasePath(null);
-        config.setFileName(TEST_FILENAME);
-        assertNull("Got a base path", config.getBasePath());
-        assertEquals("Wrong file name", TEST_FILENAME, config.getFileName());
+        FileHandler handler = new FileHandler();
+        handler.setURL(ConfigurationAssert.getTestURL(TEST_FILENAME));
+        handler.setFileName(TEST_FILENAME);
+        assertNull("Got a base path", handler.getBasePath());
+        assertEquals("Wrong file name", TEST_FILENAME, handler.getFileName());
+        assertEquals("Wrong file name in locator", TEST_FILENAME, handler
+                .getFileLocator().getFileName());
+        assertNull("Got a URL", handler.getFileLocator().getSourceURL());
+    }
+
+    /**
+     * Tests whether the file scheme is corrected when setting the file name.
+     */
+    @Test
+    public void testSetFileNameFileScheme()
+    {
+        FileHandler handler = new FileHandler();
+        handler.setFileName("file:/test/path/test.txt");
+        assertEquals("Wrong file name", "file:///test/path/test.txt", handler
+                .getFileLocator().getFileName());
+    }
+
+    /**
+     * Tests getFileName() if no information is set.
+     */
+    @Test
+    public void testGetFileNameUndefined()
+    {
+        assertNull("Got a file name", new FileHandler().getFileName());
+    }
+
+    /**
+     * Tests whether a base path can be set and whether this removes an already
+     * set URL.
+     */
+    @Test
+    public void testSetBasePath()
+    {
+        FileHandler handler = new FileHandler();
+        handler.setURL(ConfigurationAssert.getTestURL(TEST_FILENAME));
+        String basePath = ConfigurationAssert.TEST_DIR_NAME;
+        handler.setBasePath(basePath);
+        FileLocator locator = handler.getFileLocator();
+        assertEquals("Wrong base path", basePath, locator.getBasePath());
+        assertNull("Got a URL", locator.getSourceURL());
+        assertNull("Got a file name", locator.getFileName());
+    }
+
+    /**
+     * Tests whether the file scheme is corrected when setting the base path.
+     */
+    @Test
+    public void testSetBasePathFileScheme()
+    {
+        FileHandler handler = new FileHandler();
+        handler.setBasePath("file:/test/path/");
+        assertEquals("Wrong base path", "file:///test/path/", handler
+                .getFileLocator().getBasePath());
+    }
+
+    /**
+     * Tests getBasePath() if no information is available.
+     */
+    @Test
+    public void testGetBasePathUndefined()
+    {
+        assertNull("Got a base path", new FileHandler().getBasePath());
     }
 
     /**
@@ -793,6 +883,15 @@ public class TestFileHandler
     }
 
     /**
+     * Tries to invoke the assignment constructor with a null handler.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAssignNullHandler()
+    {
+        new FileHandler(new FileBasedTestImpl(), null);
+    }
+
+    /**
      * Tests isLocationDefined() if a File has been set.
      */
     @Test
@@ -1137,6 +1236,21 @@ public class TestFileHandler
     }
 
     /**
+     * Tests whether a notification is sent if the whole locator was changed.
+     */
+    @Test
+    public void testLocationChangedLocator()
+    {
+        FileHandler handler = new FileHandler();
+        FileHandlerListenerTestImpl listener =
+                new FileHandlerListenerTestImpl(handler);
+        handler.addFileHandlerListener(listener);
+        handler.setFileLocator(FileLocatorUtils.fileLocator()
+                .fileName(TEST_FILENAME).create());
+        listener.checkMethods("locationChanged");
+    }
+
+    /**
      * Tests whether data can be read from an input stream.
      */
     @Test
@@ -1208,6 +1322,86 @@ public class TestFileHandler
         File f = folder.newFile();
         handler.save(f);
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
+    }
+
+    /**
+     * Tests whether the initialization of properties is safe even if performed
+     * in multiple threads.
+     */
+    @Test
+    public void testInitPropertiesMultiThreaded() throws InterruptedException
+    {
+        final String encoding = "TestEncoding";
+        final FileSystem fileSystem = new DefaultFileSystem();
+        final int loops = 8;
+
+        for (int i = 0; i < loops; i++)
+        {
+            final FileHandler handler = new FileHandler();
+            Thread t1 = new Thread()
+            {
+                @Override
+                public void run()
+                {
+                    handler.setFileSystem(fileSystem);
+                };
+            };
+            Thread t2 = new Thread()
+            {
+                @Override
+                public void run()
+                {
+                    handler.setFileName(TEST_FILENAME);
+                };
+            };
+            Thread t3 = new Thread()
+            {
+                @Override
+                public void run()
+                {
+                    handler.setEncoding(encoding);
+                };
+            };
+            List<Thread> threads = Arrays.asList(t1, t2, t3);
+            for (Thread t : threads)
+            {
+                t.start();
+            }
+            for (Thread t : threads)
+            {
+                t.join();
+            }
+            FileLocator locator = handler.getFileLocator();
+            assertEquals("Wrong file name", TEST_FILENAME,
+                    locator.getFileName());
+            assertNull("Got a URL", locator.getSourceURL());
+            assertEquals("Wrong encoding", encoding, locator.getEncoding());
+            assertSame("Wrong file system", fileSystem, locator.getFileSystem());
+        }
+    }
+
+    /**
+     * Tries to set the FileLocator to null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetFileLocatorNull()
+    {
+        FileHandler handler = new FileHandler();
+        handler.setFileLocator(null);
+    }
+
+    /**
+     * Tests whether the handler can be initialized using a FileLocator.
+     */
+    @Test
+    public void testSetFileLocator()
+    {
+        FileLocator locator =
+                FileLocatorUtils.fileLocator().fileName(TEST_FILENAME).create();
+        FileHandler handler = new FileHandler();
+        handler.setFileLocator(locator);
+        assertEquals("Handler not initialized", TEST_FILENAME,
+                handler.getFileName());
     }
 
     /**

@@ -30,8 +30,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.io.FileLocatorUtils.FileLocatorBuilder;
 import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
 import org.apache.commons.configuration.sync.Synchronizer;
@@ -131,8 +133,8 @@ public class FileHandler
     /** The file-based object managed by this handler. */
     private final FileBased content;
 
-    /** Stores the location of the associated file. */
-    private final FileSpec fileSpec;
+    /** A reference to the current {@code FileLocator} object. */
+    private final AtomicReference<FileLocator> fileLocator;
 
     /** A collection with the registered listeners. */
     private final List<FileHandlerListener> listeners =
@@ -158,7 +160,7 @@ public class FileHandler
     public FileHandler(FileBased obj)
     {
         content = obj;
-        fileSpec = new FileSpec();
+        fileLocator = initFileLocator();
     }
 
     /**
@@ -176,8 +178,14 @@ public class FileHandler
      */
     public FileHandler(FileBased obj, FileHandler c)
     {
+        if (c == null)
+        {
+            throw new IllegalArgumentException(
+                    "FileHandler to assign must not be null!");
+        }
+
         content = obj;
-        fileSpec = c.snapshotFileSpec();
+        fileLocator = new AtomicReference<FileLocator>(c.getFileLocator());
     }
 
     /**
@@ -218,47 +226,70 @@ public class FileHandler
     }
 
     /**
-     * Return the name of the file.
+     * Return the name of the file. If only a URL is defined, the file name
+     * is derived from there.
      *
      * @return the file name
      */
     public String getFileName()
     {
-        synchronized (fileSpec)
+        FileLocator locator = getFileLocator();
+        if (locator.getFileName() != null)
         {
-            return fileSpec.getFileName();
+            return locator.getFileName();
         }
+
+        if (locator.getSourceURL() != null)
+        {
+            return FileLocatorUtils.getFileName(locator.getSourceURL());
+        }
+
+        return null;
     }
 
     /**
      * Set the name of the file. The passed in file name can contain a relative
      * path. It must be used when referring files with relative paths from
-     * classpath. Use {@code setPath()} to set a full qualified file name.
+     * classpath. Use {@code setPath()} to set a full qualified file name. The
+     * URL is set to <b>null</b> as it has to be determined anew based on the
+     * file name and the base path.
      *
      * @param fileName the name of the file
      */
     public void setFileName(String fileName)
     {
-        String name = normalizeFileURL(fileName);
-        synchronized (fileSpec)
+        final String name = normalizeFileURL(fileName);
+        new Updater()
         {
-            fileSpec.setFileName(name);
-            fileSpec.setSourceURL(null);
-        }
-        fireLocationChangedEvent();
+            @Override
+            protected void updateBuilder(FileLocatorBuilder builder)
+            {
+                builder.fileName(name);
+                builder.sourceURL(null);
+            }
+        }.update();
     }
 
     /**
-     * Return the base path.
+     * Return the base path. If no base path is defined, but a URL, the base
+     * path is derived from there.
      *
      * @return the base path
      */
     public String getBasePath()
     {
-        synchronized (fileSpec)
+        FileLocator locator = getFileLocator();
+        if (locator.getBasePath() != null)
         {
-            return fileSpec.getBasePath();
+            return locator.getBasePath();
         }
+
+        if (locator.getSourceURL() != null)
+        {
+            return FileLocatorUtils.getBasePath(locator.getSourceURL());
+        }
+
+        return null;
     }
 
     /**
@@ -271,19 +302,24 @@ public class FileHandler
      * be a URL, in which case the file name is interpreted in this URL's
      * context. If other methods are used for determining the location of the
      * associated file (e.g. {@code setFile()} or {@code setURL()}), the base
-     * path is automatically set.
+     * path is automatically set. Setting the base path using this method
+     * automatically sets the URL to <b>null</b> because it has to be
+     * determined anew based on the file name and the base path.
      *
      * @param basePath the base path.
      */
     public void setBasePath(String basePath)
     {
-        String path = normalizeFileURL(basePath);
-        synchronized (fileSpec)
+        final String path = normalizeFileURL(basePath);
+        new Updater()
         {
-            fileSpec.setBasePath(path);
-            fileSpec.setSourceURL(null);
-        }
-        fireLocationChangedEvent();
+            @Override
+            protected void updateBuilder(FileLocatorBuilder builder)
+            {
+                builder.basePath(path);
+                builder.sourceURL(null);
+            }
+        }.update();
     }
 
     /**
@@ -296,29 +332,7 @@ public class FileHandler
      */
     public File getFile()
     {
-        String fileName;
-        String basePath;
-        URL sourceURL;
-
-        synchronized (fileSpec)
-        {
-            fileName = fileSpec.getFileName();
-            basePath = fileSpec.getBasePath();
-            sourceURL = fileSpec.getSourceURL();
-        }
-
-        if (fileName == null && sourceURL == null)
-        {
-            return null;
-        }
-        else if (sourceURL != null)
-        {
-            return FileLocatorUtils.fileFromURL(sourceURL);
-        }
-        else
-        {
-            return FileLocatorUtils.getFile(basePath, fileName);
-        }
+        return createFile(getFileLocator());
     }
 
     /**
@@ -331,14 +345,18 @@ public class FileHandler
      */
     public void setFile(File file)
     {
-        synchronized (fileSpec)
+        final String fileName = file.getName();
+        final String basePath =
+                (file.getParentFile() != null) ? file.getParentFile()
+                        .getAbsolutePath() : null;
+        new Updater()
         {
-            fileSpec.setFileName(file.getName());
-            fileSpec.setBasePath((file.getParentFile() != null) ? file
-                    .getParentFile().getAbsolutePath() : null);
-            fileSpec.setSourceURL(null);
-        }
-        fireLocationChangedEvent();
+            @Override
+            protected void updateBuilder(FileLocatorBuilder builder)
+            {
+                builder.fileName(fileName).basePath(basePath).sourceURL(null);
+            }
+        }.update();
     }
 
     /**
@@ -351,16 +369,10 @@ public class FileHandler
      */
     public String getPath()
     {
-        FileSpec spec;
-        File file;
-        synchronized (fileSpec)
-        {
-            spec = snapshotFileSpec();
-            file = getFile();
-        }
-
-        return spec.getFileSystem().getPath(file, spec.getSourceURL(),
-                spec.getBasePath(), spec.getFileName());
+        FileLocator locator = getFileLocator();
+        File file = createFile(locator);
+        return FileLocatorUtils.obtainFileSystem(locator).getPath(file,
+                locator.getSourceURL(), locator.getBasePath(), locator.getFileName());
     }
 
     /**
@@ -386,35 +398,66 @@ public class FileHandler
      */
     public URL getURL()
     {
-        URL sourceURL;
-        FileSystem fileSystem;
-        String basePath;
-        String fileName;
-        synchronized (fileSpec)
-        {
-            sourceURL = fileSpec.getSourceURL();
-            fileSystem = fileSpec.getFileSystem();
-            basePath = fileSpec.getBasePath();
-            fileName = fileSpec.getFileName();
-        }
-
-        return (sourceURL != null) ? sourceURL : FileLocatorUtils.locate(
-                fileSystem, basePath, fileName);
+        FileLocator locator = getFileLocator();
+        return (locator.getSourceURL() != null) ? locator.getSourceURL()
+                : FileLocatorUtils.locate(FileLocatorUtils.obtainFileSystem(locator),
+                        locator.getBasePath(), locator.getFileName());
     }
 
     /**
      * Sets the location of the associated file as a URL. For loading this can
      * be an arbitrary URL with a supported protocol. If the file is to be
      * saved, too, a URL with the &quot;file&quot; protocol should be provided.
+     * This method sets the file name and the base path to <b>null</b>.
+     * They have to be determined anew based on the new URL.
      *
      * @param url the location of the file as URL
      */
-    public void setURL(URL url)
+    public void setURL(final URL url)
     {
-        synchronized (fileSpec)
+        new Updater()
         {
-            initFileSpecWithURL(fileSpec, url);
+            @Override
+            protected void updateBuilder(FileLocatorBuilder builder)
+            {
+                builder.sourceURL(url);
+                builder.basePath(null).fileName(null);
+            }
+        }.update();
+    }
+
+    /**
+     * Returns a {@code FileLocator} object with the specification of the file
+     * stored by this {@code FileHandler}. Note that this method returns the
+     * internal data managed by this {@code FileHandler} as it was defined.
+     * This is not necessarily the same as the data returned by the single
+     * access methods like {@code getFileName()} or {@code getURL()}: These
+     * methods try to derive missing data from other values that have been set.
+     *
+     * @return a {@code FileLocator} with the referenced file
+     */
+    public FileLocator getFileLocator()
+    {
+        return fileLocator.get();
+    }
+
+    /**
+     * Sets the file to be accessed by this {@code FileHandler} as a
+     * {@code FileLocator} object.
+     *
+     * @param locator the {@code FileLocator} with the definition of the file to
+     *        be accessed (must not be <b>null</b>
+     * @throws IllegalArgumentException if the {@code FileLocator} is
+     *         <b>null</b>
+     */
+    public void setFileLocator(FileLocator locator)
+    {
+        if (locator == null)
+        {
+            throw new IllegalArgumentException("FileLocator must not be null!");
         }
+
+        fileLocator.set(locator);
         fireLocationChangedEvent();
     }
 
@@ -425,10 +468,7 @@ public class FileHandler
      */
     public boolean isLocationDefined()
     {
-        synchronized (fileSpec)
-        {
-            return fileSpec.getFileName() != null;
-        }
+        return FileLocatorUtils.isLocationDefined(getFileLocator());
     }
 
     /**
@@ -437,12 +477,14 @@ public class FileHandler
      */
     public void clearLocation()
     {
-        synchronized (fileSpec)
+        new Updater()
         {
-            fileSpec.setBasePath(null);
-            fileSpec.setFileName(null);
-            fileSpec.setSourceURL(null);
-        }
+            @Override
+            protected void updateBuilder(FileLocatorBuilder builder)
+            {
+                builder.basePath(null).fileName(null).sourceURL(null);
+            }
+        }.update();
     }
 
     /**
@@ -453,10 +495,7 @@ public class FileHandler
      */
     public String getEncoding()
     {
-        synchronized (fileSpec)
-        {
-            return fileSpec.getEncoding();
-        }
+        return getFileLocator().getEncoding();
     }
 
     /**
@@ -465,13 +504,16 @@ public class FileHandler
      *
      * @param encoding the encoding of the associated file
      */
-    public void setEncoding(String encoding)
+    public void setEncoding(final String encoding)
     {
-        synchronized (fileSpec)
+        new Updater()
         {
-            fileSpec.setEncoding(encoding);
-        }
-        fireLocationChangedEvent();
+            @Override
+            protected void updateBuilder(FileLocatorBuilder builder)
+            {
+                builder.encoding(encoding);
+            }
+        }.update();
     }
 
     /**
@@ -483,10 +525,7 @@ public class FileHandler
      */
     public FileSystem getFileSystem()
     {
-        synchronized (fileSpec)
-        {
-            return fileSpec.getFileSystem();
-        }
+        return FileLocatorUtils.obtainFileSystem(getFileLocator());
     }
 
     /**
@@ -496,16 +535,16 @@ public class FileHandler
      *
      * @param fileSystem the {@code FileSystem}
      */
-    public void setFileSystem(FileSystem fileSystem)
+    public void setFileSystem(final FileSystem fileSystem)
     {
-        FileSystem fs =
-                (fileSystem != null) ? fileSystem : FileSystem
-                        .getDefaultFileSystem();
-        synchronized (fileSpec)
+        new Updater()
         {
-            fileSpec.setFileSystem(fs);
-        }
-        fireLocationChangedEvent();
+            @Override
+            protected void updateBuilder(FileLocatorBuilder builder)
+            {
+                builder.fileSystem(fileSystem);
+            }
+        }.update();
     }
 
     /**
@@ -525,7 +564,7 @@ public class FileHandler
      */
     public void load() throws ConfigurationException
     {
-        load(checkContentAndCreateSnapshotFileSpec());
+        load(checkContentAndGetLocator());
     }
 
     /**
@@ -539,7 +578,7 @@ public class FileHandler
      */
     public void load(String fileName) throws ConfigurationException
     {
-        load(fileName, checkContentAndCreateSnapshotFileSpec());
+        load(fileName, checkContentAndGetLocator());
     }
 
     /**
@@ -573,7 +612,7 @@ public class FileHandler
      */
     public void load(URL url) throws ConfigurationException
     {
-        load(url, checkContentAndCreateSnapshotFileSpec());
+        load(url, checkContentAndGetLocator());
     }
 
     /**
@@ -586,7 +625,7 @@ public class FileHandler
      */
     public void load(InputStream in) throws ConfigurationException
     {
-        load(in, checkContentAndCreateSnapshotFileSpec());
+        load(in, checkContentAndGetLocator());
     }
 
     /**
@@ -628,7 +667,7 @@ public class FileHandler
      */
     public void save() throws ConfigurationException
     {
-        save(checkContentAndCreateSnapshotFileSpec());
+        save(checkContentAndGetLocator());
     }
 
     /**
@@ -642,7 +681,7 @@ public class FileHandler
      */
     public void save(String fileName) throws ConfigurationException
     {
-        save(fileName, checkContentAndCreateSnapshotFileSpec());
+        save(fileName, checkContentAndGetLocator());
     }
 
     /**
@@ -655,7 +694,7 @@ public class FileHandler
      */
     public void save(URL url) throws ConfigurationException
     {
-        save(url, checkContentAndCreateSnapshotFileSpec());
+        save(url, checkContentAndGetLocator());
     }
 
     /**
@@ -669,7 +708,7 @@ public class FileHandler
      */
     public void save(File file) throws ConfigurationException
     {
-        save(file, checkContentAndCreateSnapshotFileSpec());
+        save(file, checkContentAndGetLocator());
     }
 
     /**
@@ -682,7 +721,7 @@ public class FileHandler
      */
     public void save(OutputStream out) throws ConfigurationException
     {
-        save(out, checkContentAndCreateSnapshotFileSpec());
+        save(out, checkContentAndGetLocator());
     }
 
     /**
@@ -716,6 +755,19 @@ public class FileHandler
     }
 
     /**
+     * Prepares a builder for a {@code FileLocator} which does not have a
+     * defined file location. Other properties (e.g. encoding or file system)
+     * are initialized from the {@code FileLocator} associated with this object.
+     *
+     * @return the initialized builder for a {@code FileLocator}
+     */
+    private FileLocatorBuilder prepareNullLocatorBuilder()
+    {
+        return FileLocatorUtils.fileLocator(getFileLocator()).sourceURL(null)
+                .basePath(null).fileName(null);
+    }
+
+    /**
      * Checks whether the associated {@code FileBased} object implements the
      * {@code FileLocatorAware} interface. If this is the case, a
      * {@code FileLocator} instance is injected which returns only <b>null</b>
@@ -727,9 +779,8 @@ public class FileHandler
     {
         if (getContent() instanceof FileLocatorAware)
         {
-            FileSpec spec = new FileSpec();
-            spec.setEncoding(getEncoding());
-            ((FileLocatorAware) getContent()).initFileLocator(spec);
+            FileLocator locator = prepareNullLocatorBuilder().create();
+            ((FileLocatorAware) getContent()).initFileLocator(locator);
         }
     }
 
@@ -750,9 +801,9 @@ public class FileHandler
         {
             if (getContent() instanceof FileLocatorAware)
             {
-                FileSpec spec = new FileSpec();
-                initFileSpecWithURL(spec, url);
-                ((FileLocatorAware) getContent()).initFileLocator(spec);
+                FileLocator locator =
+                        prepareNullLocatorBuilder().sourceURL(url).create();
+                ((FileLocatorAware) getContent()).initFileLocator(locator);
             }
         }
     }
@@ -776,20 +827,20 @@ public class FileHandler
 
     /**
      * Internal helper method for loading the associated file from the location
-     * specified in the given {@code FileSpec}.
+     * specified in the given {@code FileLocator}.
      *
-     * @param spec the current {@code FileSpec}
+     * @param locator the current {@code FileLocator}
      * @throws ConfigurationException if an error occurs
      */
-    private void load(FileSpec spec) throws ConfigurationException
+    private void load(FileLocator locator) throws ConfigurationException
     {
-        if (spec.getSourceURL() != null)
+        if (locator.getSourceURL() != null)
         {
-            load(spec.getSourceURL(), spec);
+            load(locator.getSourceURL(), locator);
         }
         else
         {
-            load(spec.getFileName(), spec);
+            load(locator.getFileName(), locator);
         }
     }
 
@@ -797,17 +848,17 @@ public class FileHandler
      * Internal helper method for loading a file from the given URL.
      *
      * @param url the URL
-     * @param spec the current {@code FileSpec}
+     * @param locator the current {@code FileLocator}
      * @throws ConfigurationException if an error occurs
      */
-    private void load(URL url, FileSpec spec) throws ConfigurationException
+    private void load(URL url, FileLocator locator) throws ConfigurationException
     {
         InputStream in = null;
 
         try
         {
-            in = spec.getFileSystem().getInputStream(url);
-            loadFromStream(in, spec.getEncoding(), url);
+            in = FileLocatorUtils.obtainFileSystem(locator).getInputStream(url);
+            loadFromStream(in, locator.getEncoding(), url);
         }
         catch (ConfigurationException e)
         {
@@ -828,35 +879,35 @@ public class FileHandler
      * Internal helper method for loading a file from a file name.
      *
      * @param fileName the file name
-     * @param spec the current {@code FileSpec}
+     * @param locator the current {@code FileLocator}
      * @throws ConfigurationException if an error occurs
      */
-    private void load(String fileName, FileSpec spec)
+    private void load(String fileName, FileLocator locator)
             throws ConfigurationException
     {
         URL url =
-                FileLocatorUtils.locate(spec.getFileSystem(),
-                        spec.getBasePath(), fileName);
+                FileLocatorUtils.locate(FileLocatorUtils.obtainFileSystem(locator),
+                        locator.getBasePath(), fileName);
 
         if (url == null)
         {
             throw new ConfigurationException(
                     "Cannot locate configuration source " + fileName);
         }
-        load(url, spec);
+        load(url, locator);
     }
 
     /**
      * Internal helper method for loading a file from the given input stream.
      *
      * @param in the input stream
-     * @param spec the current {@code FileSpec}
+     * @param locator the current {@code FileLocator}
      * @throws ConfigurationException if an error occurs
      */
-    private void load(InputStream in, FileSpec spec)
+    private void load(InputStream in, FileLocator locator)
             throws ConfigurationException
     {
-        load(in, spec.getEncoding());
+        load(in, locator.getEncoding());
     }
 
     /**
@@ -974,24 +1025,24 @@ public class FileHandler
      * Internal helper method for saving data to the internal location stored
      * for this object.
      *
-     * @param spec the current {@code FileSpec}
+     * @param locator the current {@code FileLocator}
      * @throws ConfigurationException if an error occurs during the save
      *         operation
      */
-    private void save(FileSpec spec) throws ConfigurationException
+    private void save(FileLocator locator) throws ConfigurationException
     {
-        if (spec.getFileName() == null)
+        if (!FileLocatorUtils.isLocationDefined(locator))
         {
-            throw new ConfigurationException("No file name has been set!");
+            throw new ConfigurationException("No file location has been set!");
         }
 
-        if (spec.getSourceURL() != null)
+        if (locator.getSourceURL() != null)
         {
-            save(spec.getSourceURL(), spec);
+            save(locator.getSourceURL(), locator);
         }
         else
         {
-            save(spec.getFileName(), spec);
+            save(locator.getFileName(), locator);
         }
     }
 
@@ -999,17 +1050,18 @@ public class FileHandler
      * Internal helper method for saving data to the given file name.
      *
      * @param fileName the path to the target file
-     * @param spec the current {@code FileSpec}
+     * @param locator the current {@code FileLocator}
      * @throws ConfigurationException if an error occurs during the save
      *         operation
      */
-    private void save(String fileName, FileSpec spec)
+    private void save(String fileName, FileLocator locator)
             throws ConfigurationException
     {
         URL url;
         try
         {
-            url = spec.getFileSystem().getURL(spec.getBasePath(), fileName);
+            url = FileLocatorUtils.obtainFileSystem(locator).getURL(
+                    locator.getBasePath(), fileName);
         }
         catch (MalformedURLException e)
         {
@@ -1021,24 +1073,24 @@ public class FileHandler
             throw new ConfigurationException(
                     "Cannot locate configuration source " + fileName);
         }
-        save(url, spec);
+        save(url, locator);
     }
 
     /**
      * Internal helper method for saving data to the given URL.
      *
      * @param url the target URL
-     * @param spec the {@code FileSpec}
+     * @param locator the {@code FileLocator}
      * @throws ConfigurationException if an error occurs during the save
      *         operation
      */
-    private void save(URL url, FileSpec spec) throws ConfigurationException
+    private void save(URL url, FileLocator locator) throws ConfigurationException
     {
         OutputStream out = null;
         try
         {
-            out = spec.getFileSystem().getOutputStream(url);
-            saveToStream(out, spec.getEncoding(), url);
+            out = FileLocatorUtils.obtainFileSystem(locator).getOutputStream(url);
+            saveToStream(out, locator.getEncoding(), url);
             if(out instanceof VerifiableOutputStream)
             {
                 try
@@ -1061,18 +1113,18 @@ public class FileHandler
      * Internal helper method for saving data to the given {@code File}.
      *
      * @param file the target file
-     * @param spec the current {@code FileSpec}
+     * @param locator the current {@code FileLocator}
      * @throws ConfigurationException if an error occurs during the save
      *         operation
      */
-    private void save(File file, FileSpec spec) throws ConfigurationException
+    private void save(File file, FileLocator locator) throws ConfigurationException
     {
         OutputStream out = null;
 
         try
         {
-            out = spec.getFileSystem().getOutputStream(file);
-            saveToStream(out, spec.getEncoding(), file.toURI().toURL());
+            out = FileLocatorUtils.obtainFileSystem(locator).getOutputStream(file);
+            saveToStream(out, locator.getEncoding(), file.toURI().toURL());
         }
         catch (MalformedURLException muex)
         {
@@ -1088,14 +1140,14 @@ public class FileHandler
      * Internal helper method for saving a file to the given output stream.
      *
      * @param out the output stream
-     * @param spec the current {@code FileSpec}
+     * @param locator the current {@code FileLocator}
      * @throws ConfigurationException if an error occurs during the save
      *         operation
      */
-    private void save(OutputStream out, FileSpec spec)
+    private void save(OutputStream out, FileLocator locator)
             throws ConfigurationException
     {
-        save(out, spec.getEncoding());
+        save(out, locator.getEncoding());
     }
 
     /**
@@ -1168,21 +1220,6 @@ public class FileHandler
     }
 
     /**
-     * Creates a snapshot of the current location data of the associated file.
-     * This snapshot can be used in code which does not have to synchronize on
-     * the internal {@code FileSpec} object.
-     *
-     * @return a snapshot of the current file location
-     */
-    private FileSpec snapshotFileSpec()
-    {
-        synchronized (fileSpec)
-        {
-            return fileSpec.clone();
-        }
-    }
-
-    /**
      * Checks whether a content object is available. If not, an exception is
      * thrown. This method is called whenever the content object is accessed.
      *
@@ -1197,18 +1234,19 @@ public class FileHandler
     }
 
     /**
-     * Checks whether a content object is available and creates a snapshot from
-     * the current file specification. If there is no content object, an
-     * exception is thrown. This is a typical operation to be performed before a
-     * load() or save() operation.
+     * Checks whether a content object is available and returns the current
+     * {@code FileLocator}. If there is no content object, an exception is
+     * thrown. This is a typical operation to be performed before a load() or
+     * save() operation.
      *
-     * @return a snapshot of the current file location
+     * @return the current {@code FileLocator} to be used for the calling
+     *         operation
      */
-    private FileSpec checkContentAndCreateSnapshotFileSpec()
+    private FileLocator checkContentAndGetLocator()
             throws ConfigurationException
     {
         checkContent();
-        return snapshotFileSpec();
+        return getFileLocator();
     }
 
     /**
@@ -1267,22 +1305,6 @@ public class FileHandler
     }
 
     /**
-     * Initializes a {@code FileSpec} object with a URL. This method ensures
-     * that base path and file name are set correctly.
-     *
-     * @param spec the {@code FileSpec} to be initialized
-     * @param url the URL to set
-     */
-    private static void initFileSpecWithURL(FileSpec spec, URL url)
-    {
-        String basePath = FileLocatorUtils.getBasePath(url);
-        String fileName = FileLocatorUtils.getFileName(url);
-        spec.setBasePath(basePath);
-        spec.setFileName(fileName);
-        spec.setSourceURL(url);
-    }
-
-    /**
      * Normalizes URLs to files. Ensures that file URLs start with the correct
      * protocol.
      *
@@ -1323,87 +1345,79 @@ public class FileHandler
     }
 
     /**
-     * A bean class defining the location of a file.
+     * Creates a {@code File} object from the content of the given
+     * {@code FileLocator} object. If the locator is not defined, result is
+     * <b>null</b>.
+     *
+     * @param loc the {@code FileLocator}
+     * @return a {@code File} object pointing to the associated file
      */
-    private static class FileSpec implements Cloneable, FileLocator
+    private static File createFile(FileLocator loc)
     {
-        /** Stores the file name. */
-        private String fileName;
-
-        /** Stores the base path. */
-        private String basePath;
-
-        /** Stores the URL of the associated file. */
-        private URL sourceURL;
-
-        /** Stores the encoding for binary streams. */
-        private String encoding;
-
-        /** The FileSystem being used for this Configuration */
-        private FileSystem fileSystem = FileSystem.getDefaultFileSystem();
-
-        public String getFileName()
+        if (loc.getFileName() == null && loc.getSourceURL() == null)
         {
-            return fileName;
+            return null;
         }
-
-        public void setFileName(String fileName)
+        else if (loc.getSourceURL() != null)
         {
-            this.fileName = fileName;
+            return FileLocatorUtils.fileFromURL(loc.getSourceURL());
         }
-
-        public String getBasePath()
+        else
         {
-            return basePath;
+            return FileLocatorUtils.getFile(loc.getBasePath(),
+                    loc.getFileName());
         }
+    }
 
-        public void setBasePath(String basePath)
-        {
-            this.basePath = basePath;
-        }
+    /**
+     * Initializes the reference to the {@code FileLocator}. Sets an undefined
+     * locator object.
+     *
+     * @return the reference to the file locator
+     */
+    private static AtomicReference<FileLocator> initFileLocator()
+    {
+        return new AtomicReference<FileLocator>(FileLocatorUtils.fileLocator()
+                .create());
+    }
 
-        public URL getSourceURL()
+    /**
+     * An internal class that performs all update operations of the handler's
+     * {@code FileLocator} in a safe way even if there is concurrent access.
+     * This class implements anon-blocking algorithm for replacing the immutable
+     * {@code FileLocator} instance stored in an atomic reference by a
+     * manipulated instance. (If we already had lambdas, this could be done
+     * without a class in a more elegant way.)
+     */
+    private abstract class Updater
+    {
+        /**
+         * Performs an update of the enclosing file handler's
+         * {@code FileLocator} object.
+         */
+        public void update()
         {
-            return sourceURL;
-        }
-
-        public void setSourceURL(URL sourceURL)
-        {
-            this.sourceURL = sourceURL;
-        }
-
-        public String getEncoding()
-        {
-            return encoding;
-        }
-
-        public void setEncoding(String encoding)
-        {
-            this.encoding = encoding;
-        }
-
-        public FileSystem getFileSystem()
-        {
-            return fileSystem;
-        }
-
-        public void setFileSystem(FileSystem fileSystem)
-        {
-            this.fileSystem = fileSystem;
-        }
-
-        @Override
-        protected FileSpec clone()
-        {
-            try
+            boolean done;
+            do
             {
-                return (FileSpec) super.clone();
-            }
-            catch (CloneNotSupportedException cex)
-            {
-                // should not happen
-                throw new AssertionError("Could not clone!");
-            }
+                FileLocator oldLocator = fileLocator.get();
+                FileLocatorUtils.FileLocatorBuilder builder =
+                        FileLocatorUtils.fileLocator(oldLocator);
+                updateBuilder(builder);
+                done = fileLocator.compareAndSet(oldLocator, builder.create());
+            } while (!done);
+            fireLocationChangedEvent();
         }
+
+        /**
+         * Updates the passed in builder object to apply the manipulation to be
+         * performed by this {@code Updater}. The builder has been setup with
+         * the former content of the {@code FileLocator} to be manipulated.
+         *
+         * @param builder the builder for creating an updated
+         *        {@code FileLocator}
+         */
+        protected abstract void updateBuilder(
+                FileLocatorUtils.FileLocatorBuilder builder);
     }
 }

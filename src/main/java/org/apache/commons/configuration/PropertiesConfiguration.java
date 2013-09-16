@@ -1389,7 +1389,7 @@ public class PropertiesConfiguration extends BaseConfiguration
     {
         assert locator != null : "Locator has not been set!";
         URL url =
-                FileLocatorUtils.locate(locator.getFileSystem(),
+                FileLocatorUtils.locate(FileLocatorUtils.obtainFileSystem(locator),
                         locator.getBasePath(), fileName);
         if (url == null)
         {
