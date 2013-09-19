@@ -557,6 +557,51 @@ public class FileHandler
     }
 
     /**
+     * Locates the referenced file if necessary and ensures that the associated
+     * {@link FileLocator} is fully initialized. When accessing the referenced
+     * file the information stored in the associated {@code FileLocator} is
+     * used. If this information is incomplete (e.g. only the file name is set),
+     * an attempt to locate the file may have to be performed on each access. By
+     * calling this method such an attempt is performed once, and the results of
+     * a successful localization are stored. Hence, later access to the
+     * referenced file can be more efficient. Also, all properties pointing to
+     * the referenced file in this object's {@code FileLocator} are set (i.e.
+     * the URL, the base path, and the file name). If the referenced file cannot
+     * be located, result is <b>false</b>. This means that the information in
+     * the current {@code FileLocator} is insufficient or wrong. If the
+     * {@code FileLocator} is already fully defined, it is not changed.
+     *
+     * @return a flag whether the referenced file could be located successfully
+     * @see FileLocatorUtils#fullyInitializedLocator(FileLocator)
+     */
+    public boolean locate()
+    {
+        boolean result = false;
+        boolean done;
+
+        do
+        {
+            FileLocator locator = getFileLocator();
+            FileLocator fullLocator =
+                    FileLocatorUtils.fullyInitializedLocator(locator);
+            if (fullLocator == null)
+            {
+                result = false;
+                fullLocator = locator;
+            }
+            else
+            {
+                result =
+                        fullLocator != locator
+                                || FileLocatorUtils.isFullyInitialized(locator);
+            }
+            done = fileLocator.compareAndSet(locator, fullLocator);
+        } while (!done);
+
+        return result;
+    }
+
+    /**
      * Loads the associated file from the underlying location. If no location
      * has been set, an exception is thrown.
      *

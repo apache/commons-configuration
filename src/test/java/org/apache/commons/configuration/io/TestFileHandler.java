@@ -18,6 +18,7 @@ package org.apache.commons.configuration.io;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -1402,6 +1403,55 @@ public class TestFileHandler
         handler.setFileLocator(locator);
         assertEquals("Handler not initialized", TEST_FILENAME,
                 handler.getFileName());
+    }
+
+    /**
+     * Tests a successful locate() operation.
+     */
+    @Test
+    public void testLocateSuccess() throws ConfigurationException
+    {
+        FileHandler handler = new FileHandler();
+        handler.setFileName(TEST_FILENAME);
+        assertTrue("Wrong result", handler.locate());
+        FileLocator locator = handler.getFileLocator();
+        assertNotNull("URL not filled", locator.getSourceURL());
+        assertNotNull("Base path not filled", locator.getBasePath());
+        assertEquals("Wrong file name", TEST_FILENAME, locator.getFileName());
+
+        // check whether the correct URL was obtained
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        FileHandler h2 = new FileHandler(config);
+        h2.setURL(locator.getSourceURL());
+        h2.load();
+        assertTrue("Configuration not loaded",
+                config.getBoolean("configuration.loaded"));
+    }
+
+    /**
+     * Tests a locate() operation if the specified file cannot be resolved.
+     */
+    @Test
+    public void testLocateUnknownFile()
+    {
+        FileHandler handler = new FileHandler();
+        handler.setFileName("unknown file");
+        FileLocator locator = handler.getFileLocator();
+        assertFalse("Wrong result", handler.locate());
+        assertSame("Locator was changed", locator, handler.getFileLocator());
+    }
+
+    /**
+     * Tests a locate() operation if there is not enough information.
+     */
+    @Test
+    public void testLocateUndefinedLocator()
+    {
+        FileHandler handler = new FileHandler();
+        handler.setBasePath("only/a/base/path");
+        FileLocator locator = handler.getFileLocator();
+        assertFalse("Wrong result", handler.locate());
+        assertSame("Locator was changed", locator, handler.getFileLocator());
     }
 
     /**
