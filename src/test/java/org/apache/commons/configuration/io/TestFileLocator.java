@@ -31,7 +31,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Test class for {@code FileLocatorImpl}.
+ * Test class for {@code FileLocator}.
  *
  * @version $Id: $
  */
@@ -66,7 +66,7 @@ public class TestFileLocator
     @Test
     public void testCreateFileLocatorUndefined()
     {
-        FileLocatorImpl locator = FileLocatorUtils.fileLocator().create();
+        FileLocator locator = FileLocatorUtils.fileLocator().create();
         assertNull("Got a base path", locator.getBasePath());
         assertNull("Got a file name", locator.getFileName());
         assertNull("Got a URL", locator.getSourceURL());
@@ -79,7 +79,7 @@ public class TestFileLocator
      *
      * @param locator the locator to check
      */
-    private static void checkLocator(FileLocatorImpl locator)
+    private static void checkLocator(FileLocator locator)
     {
         assertEquals("Wrong base path", BASE_PATH, locator.getBasePath());
         assertEquals("Wrong file name", FILE_NAME, locator.getFileName());
@@ -95,7 +95,7 @@ public class TestFileLocator
     @Test
     public void testCreateFileLocator()
     {
-        FileLocatorImpl locator =
+        FileLocator locator =
                 FileLocatorUtils.fileLocator().basePath(BASE_PATH)
                         .fileName(FILE_NAME).encoding(ENCODING)
                         .fileSystem(fileSystem).sourceURL(sourceURL).create();
@@ -108,11 +108,11 @@ public class TestFileLocator
     @Test
     public void testCreateFileLocatorFromSource()
     {
-        FileLocatorImpl locatorSrc =
+        FileLocator locatorSrc =
                 FileLocatorUtils.fileLocator().basePath(BASE_PATH)
                         .fileName("someFile").encoding(ENCODING)
                         .fileSystem(fileSystem).sourceURL(sourceURL).create();
-        FileLocatorImpl locator =
+        FileLocator locator =
                 FileLocatorUtils.fileLocator(locatorSrc).fileName(FILE_NAME)
                         .create();
         checkLocator(locator);
@@ -125,9 +125,9 @@ public class TestFileLocator
     @Test
     public void testFileLocatorEqualsTrue()
     {
-        FileLocatorImpl loc1 = FileLocatorUtils.fileLocator().create();
+        FileLocator loc1 = FileLocatorUtils.fileLocator().create();
         ConfigurationAssert.checkEquals(loc1, loc1, true);
-        FileLocatorImpl loc2 = FileLocatorUtils.fileLocator().create();
+        FileLocator loc2 = FileLocatorUtils.fileLocator().create();
         ConfigurationAssert.checkEquals(loc1, loc2, true);
         loc1 =
                 FileLocatorUtils.fileLocator().basePath(BASE_PATH)
@@ -147,11 +147,11 @@ public class TestFileLocator
     @Test
     public void testFileLocatorEqualsFalse()
     {
-        FileLocatorImpl loc1 =
+        FileLocator loc1 =
                 FileLocatorUtils.fileLocator().basePath(BASE_PATH)
                         .fileName(FILE_NAME).encoding(ENCODING)
                         .fileSystem(fileSystem).sourceURL(sourceURL).create();
-        FileLocatorImpl loc2 =
+        FileLocator loc2 =
                 FileLocatorUtils.fileLocator(loc1)
                         .basePath(BASE_PATH + "_other").create();
         ConfigurationAssert.checkEquals(loc1, loc2, false);
@@ -184,7 +184,7 @@ public class TestFileLocator
     @Test
     public void testFileLocatorEqualsNull()
     {
-        FileLocatorImpl loc =
+        FileLocator loc =
                 FileLocatorUtils.fileLocator().fileName(FILE_NAME).create();
         assertFalse("Wrong result", loc.equals(null));
     }
@@ -195,7 +195,7 @@ public class TestFileLocator
     @Test
     public void testFileLocatorEqualsOtherClass()
     {
-        FileLocatorImpl loc =
+        FileLocator loc =
                 FileLocatorUtils.fileLocator().fileName(FILE_NAME).create();
         assertFalse("Wrong result", loc.equals(this));
     }
@@ -206,7 +206,7 @@ public class TestFileLocator
     @Test
     public void testFileLocatorToString()
     {
-        FileLocatorImpl loc =
+        FileLocator loc =
                 FileLocatorUtils.fileLocator().basePath(BASE_PATH)
                         .fileName(FILE_NAME).encoding(ENCODING)
                         .fileSystem(fileSystem).sourceURL(sourceURL).create();

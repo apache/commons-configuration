@@ -89,7 +89,7 @@ public final class FileLocatorUtils
      * </pre>
      * @return a builder object for defining a {@code FileLocator}
      */
-    public static FileLocatorImpl.FileLocatorBuilder fileLocator()
+    public static FileLocator.FileLocatorBuilder fileLocator()
     {
         return fileLocator(null);
     }
@@ -109,9 +109,9 @@ public final class FileLocatorUtils
      * @param src the source {@code FileLocator} (may be <b>null</b>)
      * @return an initialized builder object for defining a {@code FileLocator}
      */
-    public static FileLocatorImpl.FileLocatorBuilder fileLocator(FileLocator src)
+    public static FileLocator.FileLocatorBuilder fileLocator(FileLocator src)
     {
-        return new FileLocatorImpl.FileLocatorBuilder(src);
+        return new FileLocator.FileLocatorBuilder(src);
     }
 
     /**

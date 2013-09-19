@@ -33,7 +33,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.io.FileLocatorImpl.FileLocatorBuilder;
+import org.apache.commons.configuration.io.FileLocator.FileLocatorBuilder;
 import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
 import org.apache.commons.configuration.sync.Synchronizer;
