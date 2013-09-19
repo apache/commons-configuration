@@ -37,7 +37,7 @@ import org.junit.Test;
 /**
  * Test class for {@code FileLocatorUtils}.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class TestFileLocatorUtils
 {

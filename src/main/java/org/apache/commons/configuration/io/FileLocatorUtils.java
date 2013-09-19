@@ -38,7 +38,7 @@ import org.apache.commons.logging.LogFactory;
  * used internally only by other classes in the {@code io} package.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public final class FileLocatorUtils
