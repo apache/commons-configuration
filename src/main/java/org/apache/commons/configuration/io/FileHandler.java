@@ -33,7 +33,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.io.FileLocatorUtils.FileLocatorBuilder;
+import org.apache.commons.configuration.io.FileLocatorImpl.FileLocatorBuilder;
 import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
 import org.apache.commons.configuration.sync.Synchronizer;
@@ -1446,7 +1446,7 @@ public class FileHandler
             do
             {
                 FileLocator oldLocator = fileLocator.get();
-                FileLocatorUtils.FileLocatorBuilder builder =
+                FileLocatorBuilder builder =
                         FileLocatorUtils.fileLocator(oldLocator);
                 updateBuilder(builder);
                 done = fileLocator.compareAndSet(oldLocator, builder.create());
@@ -1462,7 +1462,6 @@ public class FileHandler
          * @param builder the builder for creating an updated
          *        {@code FileLocator}
          */
-        protected abstract void updateBuilder(
-                FileLocatorUtils.FileLocatorBuilder builder);
+        protected abstract void updateBuilder(FileLocatorBuilder builder);
     }
 }
