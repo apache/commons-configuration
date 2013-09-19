@@ -150,6 +150,35 @@ public final class FileLocatorUtils
     }
 
     /**
+     * Returns a flag whether all components of the given {@code FileLocator}
+     * describing the referenced file are defined. In order to reference a file,
+     * it is not necessary that all components are filled in (for instance, the
+     * URL alone is sufficient). For some use cases however, it might be of
+     * interest to have different methods for accessing the referenced file.
+     * Also, depending on the filled out properties, there is a subtle
+     * difference how the file is accessed: If only the file name is set (and
+     * optionally the base path), each time the file is accessed a
+     * {@code locate()} operation has to be performed to uniquely identify the
+     * file. If however the URL is determined once based on the other components
+     * and stored in a fully defined {@code FileLocator}, it can be used
+     * directly to identify the file. If the passed in {@code FileLocator} is
+     * <b>null</b>, result is <b>false</b>.
+     *
+     * @param locator the {@code FileLocator} to be checked (may be <b>null</b>)
+     * @return a flag whether all components describing the referenced file are
+     *         initialized
+     */
+    public static boolean isFullyInitialized(FileLocator locator)
+    {
+        if (locator == null)
+        {
+            return false;
+        }
+        return locator.getBasePath() != null && locator.getFileName() != null
+                && locator.getSourceURL() != null;
+    }
+
+    /**
      * Returns a {@code FileLocator} object based on the passed in one whose
      * location is fully defined. This method ensures that all components of the
      * {@code FileLocator} pointing to the file are set in a consistent way. In
@@ -179,8 +208,7 @@ public final class FileLocatorUtils
             return null;
         }
 
-        if (locator.getBasePath() != null && locator.getFileName() != null
-                && locator.getSourceURL() != null)
+        if (isFullyInitialized(locator))
         {
             // already fully initialized
             return locator;

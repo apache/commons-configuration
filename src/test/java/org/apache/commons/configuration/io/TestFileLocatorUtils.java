@@ -514,4 +514,28 @@ public class TestFileLocatorUtils
         assertSame("Wrong result", locator,
                 FileLocatorUtils.fullyInitializedLocator(locator));
     }
+
+    /**
+     * Tests isFullyInitialized() for null input.
+     */
+    @Test
+    public void testIsFullyInitializedNull()
+    {
+        assertFalse("Wrong result", FileLocatorUtils.isFullyInitialized(null));
+    }
+
+    /**
+     * Tests whether a missing base path is detected when checking for a fully
+     * initialized locator.
+     */
+    @Test
+    public void testIsFullyInitializedNoBasePath()
+    {
+        FileLocator locator =
+                FileLocatorUtils.fileLocator()
+                        .sourceURL(ConfigurationAssert.getTestURL(FILE_NAME))
+                        .fileName(FILE_NAME).create();
+        assertFalse("Wrong result",
+                FileLocatorUtils.isFullyInitialized(locator));
+    }
 }
