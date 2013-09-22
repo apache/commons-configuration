@@ -30,7 +30,7 @@ import org.junit.Test;
 /**
  * Test class for {@code BasePathLocationStrategy}.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class TestBasePathLocationStrategy
 {

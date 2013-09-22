@@ -29,7 +29,7 @@ import org.junit.Test;
 /**
  * Test class for {@code ClasspathLocationStrategy}.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class TestClasspathLocationStrategy
 {

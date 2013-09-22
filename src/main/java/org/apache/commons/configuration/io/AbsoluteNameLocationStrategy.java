@@ -32,7 +32,7 @@ import org.apache.commons.lang3.StringUtils;
  * {@code fileName} component.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public class AbsoluteNameLocationStrategy implements FileLocationStrategy

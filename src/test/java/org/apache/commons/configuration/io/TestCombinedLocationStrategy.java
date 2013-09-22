@@ -33,7 +33,7 @@ import org.junit.Test;
 /**
  * Test class for {@code CombinedLocationStrategy}.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class TestCombinedLocationStrategy
 {

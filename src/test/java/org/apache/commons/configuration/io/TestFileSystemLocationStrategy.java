@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * Test class for {@code FileSystemLocationStrategy}.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class TestFileSystemLocationStrategy
 {

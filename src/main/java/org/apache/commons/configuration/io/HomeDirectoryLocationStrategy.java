@@ -43,7 +43,7 @@ import org.apache.commons.lang3.StringUtils;
  * the file name is evaluated.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class HomeDirectoryLocationStrategy implements FileLocationStrategy
 {

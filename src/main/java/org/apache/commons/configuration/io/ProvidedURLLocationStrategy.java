@@ -31,7 +31,7 @@ import java.net.URL;
  * be made.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public class ProvidedURLLocationStrategy implements FileLocationStrategy

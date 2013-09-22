@@ -34,7 +34,7 @@ import org.junit.rules.TemporaryFolder;
 /**
  * Test class for {@code HomeDirectoryLocationStrategy}.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class TestHomeDirectoryLocationStrategy
 {

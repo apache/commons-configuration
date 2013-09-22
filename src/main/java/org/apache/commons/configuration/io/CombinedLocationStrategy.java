@@ -45,7 +45,7 @@ import java.util.Collections;
  * passed to the constructor.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public class CombinedLocationStrategy implements FileLocationStrategy
