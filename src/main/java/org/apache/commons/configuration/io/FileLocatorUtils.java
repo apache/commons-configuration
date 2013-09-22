@@ -541,34 +541,46 @@ public final class FileLocatorUtils
         }
         else
         {
-            StringBuilder fName = new StringBuilder();
-            fName.append(basePath);
-
-            // My best friend. Paranoia.
-            if (!basePath.endsWith(File.separator))
-            {
-                fName.append(File.separator);
-            }
-
-            //
-            // We have a relative path, and we have
-            // two possible forms here. If we have the
-            // "./" form then just strip that off first
-            // before continuing.
-            //
-            if (fileName.startsWith("." + File.separator))
-            {
-                fName.append(fileName.substring(2));
-            }
-            else
-            {
-                fName.append(fileName);
-            }
-
-            file = new File(fName.toString());
+            file = new File(appendPath(basePath, fileName));
         }
 
         return file;
+    }
+
+    /**
+     * Extends a path by another component. The given extension is added to the
+     * already existing path adding a separator if necessary.
+     *
+     * @param path the path to be extended
+     * @param ext the extension of the path
+     * @return the extended path
+     */
+    static String appendPath(String path, String ext)
+    {
+        StringBuilder fName = new StringBuilder();
+        fName.append(path);
+
+        // My best friend. Paranoia.
+        if (!path.endsWith(File.separator))
+        {
+            fName.append(File.separator);
+        }
+
+        //
+        // We have a relative path, and we have
+        // two possible forms here. If we have the
+        // "./" form then just strip that off first
+        // before continuing.
+        //
+        if (ext.startsWith("." + File.separator))
+        {
+            fName.append(ext.substring(2));
+        }
+        else
+        {
+            fName.append(ext);
+        }
+        return fName.toString();
     }
 
     /**
