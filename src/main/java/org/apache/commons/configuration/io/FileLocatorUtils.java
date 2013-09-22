@@ -18,6 +18,7 @@ package org.apache.commons.configuration.io;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 import org.apache.commons.configuration.ConfigurationUtils;
@@ -447,6 +448,37 @@ public final class FileLocatorUtils
     static URL toURL(File file) throws MalformedURLException
     {
         return file.toURI().toURL();
+    }
+
+    /**
+     * Tries to convert the specified URI to a URL. If this causes an exception,
+     * result is <b>null</b>.
+     *
+     * @param uri the URI to be converted
+     * @return the resulting URL or <b>null</b>
+     */
+    static URL convertURIToURL(URI uri)
+    {
+        try
+        {
+            return uri.toURL();
+        }
+        catch (MalformedURLException e)
+        {
+            return null;
+        }
+    }
+
+    /**
+     * Tries to convert the specified file to a URL. If this causes an
+     * exception, result is <b>null</b>.
+     *
+     * @param file the file to be converted
+     * @return the resulting URL or <b>null</b>
+     */
+    static URL convertFileToURL(File file)
+    {
+        return convertURIToURL(file.toURI());
     }
 
     /**

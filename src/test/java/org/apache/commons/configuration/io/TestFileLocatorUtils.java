@@ -25,6 +25,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.commons.configuration.ConfigurationAssert;
@@ -377,5 +379,27 @@ public class TestFileLocatorUtils
                         .fileName(FILE_NAME).create();
         assertFalse("Wrong result",
                 FileLocatorUtils.isFullyInitialized(locator));
+    }
+
+    /**
+     * Tests whether exceptions are handled when converting a URI to a URL.
+     */
+    @Test
+    public void testConvertToURIException() throws URISyntaxException
+    {
+        URI uri = new URI("test://test/path/file.tst");
+        assertNull("Got a URL", FileLocatorUtils.convertURIToURL(uri));
+    }
+
+    /**
+     * Tests a successful conversion from a file to a URL.
+     */
+    @Test
+    public void testConvertFileToURL() throws ConfigurationException
+    {
+        File file = ConfigurationAssert.getTestFile(FILE_NAME);
+        FileHandler handler = new FileHandler();
+        handler.setURL(FileLocatorUtils.convertFileToURL(file));
+        checkTestConfiguration(handler);
     }
 }
