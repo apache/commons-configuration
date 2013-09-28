@@ -151,22 +151,6 @@ public final class FileLocatorUtils
     }
 
     /**
-     * Obtains a non-<b>null</b> {@code FileSystem} object from the passed in
-     * {@code FileLocator}. If the passed in {@code FileLocator} has a
-     * {@code FileSystem} object, it is returned. Otherwise, result is the
-     * default {@code FileSystem}.
-     *
-     * @param locator the {@code FileLocator} (may be <b>null</b>)
-     * @return the {@code FileSystem} to be used for this {@code FileLocator}
-     */
-    public static FileSystem obtainFileSystem(FileLocator locator)
-    {
-        return (locator != null) ? ObjectUtils.defaultIfNull(
-                locator.getFileSystem(), DEFAULT_FILE_SYSTEM)
-                : DEFAULT_FILE_SYSTEM;
-    }
-
-    /**
      * Checks whether the specified {@code FileLocator} contains enough
      * information to locate a file. This is the case if a file name or a URL is
      * defined. If the passed in {@code FileLocator} is <b>null</b>, result is
@@ -242,107 +226,6 @@ public final class FileLocatorUtils
         URL url = locate(locator);
         return (url != null) ? createFullyInitializedLocatorFromURL(locator,
                 url) : null;
-    }
-
-    /**
-     * Return the location of the specified resource by searching the user home
-     * directory, the current classpath and the system classpath.
-     *
-     * @param fileSystem the FileSystem to use.
-     * @param base the base path of the resource
-     * @param name the name of the resource
-     *
-     * @return the location of the resource
-     */
-    public static URL locate(FileSystem fileSystem, String base, String name)
-    {
-        if (LOG.isDebugEnabled())
-        {
-            StringBuilder buf = new StringBuilder();
-            buf.append("ConfigurationUtils.locate(): base is ").append(base);
-            buf.append(", name is ").append(name);
-            LOG.debug(buf.toString());
-        }
-
-        if (name == null)
-        {
-            // undefined, always return null
-            return null;
-        }
-
-        // attempt to create an URL directly
-
-        URL url = fileSystem.locateFromURL(base, name);
-
-        // attempt to load from an absolute path
-        if (url == null)
-        {
-            File file = new File(name);
-            if (file.isAbsolute() && file.exists()) // already absolute?
-            {
-                try
-                {
-                    url = toURL(file);
-                    LOG.debug("Loading configuration from the absolute path " + name);
-                }
-                catch (MalformedURLException e)
-                {
-                    LOG.warn("Could not obtain URL from file", e);
-                }
-            }
-        }
-
-        // attempt to load from the base directory
-        if (url == null)
-        {
-            try
-            {
-                File file = constructFile(base, name);
-                if (file != null && file.exists())
-                {
-                    url = toURL(file);
-                }
-
-                if (url != null)
-                {
-                    LOG.debug("Loading configuration from the path " + file);
-                }
-            }
-            catch (MalformedURLException e)
-            {
-                LOG.warn("Could not obtain URL from file", e);
-            }
-        }
-
-        // attempt to load from the user home directory
-        if (url == null)
-        {
-            try
-            {
-                File file = constructFile(System.getProperty("user.home"), name);
-                if (file != null && file.exists())
-                {
-                    url = toURL(file);
-                }
-
-                if (url != null)
-                {
-                    LOG.debug("Loading configuration from the home path " + file);
-                }
-
-            }
-            catch (MalformedURLException e)
-            {
-                LOG.warn("Could not obtain URL from file", e);
-            }
-        }
-
-        // attempt to load from classpath
-        if (url == null)
-        {
-            url = locateFromClasspath(name);
-        }
-        return url;
     }
 
     /**
@@ -653,6 +536,22 @@ public final class FileLocatorUtils
             fName.append(ext);
         }
         return fName.toString();
+    }
+
+    /**
+     * Obtains a non-<b>null</b> {@code FileSystem} object from the passed in
+     * {@code FileLocator}. If the passed in {@code FileLocator} has a
+     * {@code FileSystem} object, it is returned. Otherwise, result is the
+     * default {@code FileSystem}.
+     *
+     * @param locator the {@code FileLocator} (may be <b>null</b>)
+     * @return the {@code FileSystem} to be used for this {@code FileLocator}
+     */
+    static FileSystem obtainFileSystem(FileLocator locator)
+    {
+        return (locator != null) ? ObjectUtils.defaultIfNull(
+                locator.getFileSystem(), DEFAULT_FILE_SYSTEM)
+                : DEFAULT_FILE_SYSTEM;
     }
 
     /**
