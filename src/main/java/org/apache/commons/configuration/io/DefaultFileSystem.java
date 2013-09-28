@@ -28,8 +28,6 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * FileSystem that uses java.io.File or HttpClient
@@ -39,11 +37,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DefaultFileSystem extends FileSystem
 {
-    /**
-     * The Log for diagnostic messages.
-     */
-    private Log log = LogFactory.getLog(DefaultFileSystem.class);
-
     @Override
     public InputStream getInputStream(URL url) throws ConfigurationException
     {
@@ -147,9 +140,9 @@ public class DefaultFileSystem extends FileSystem
                 catch (Exception e)
                 {
                     // simply ignore it and return null
-                    if (log.isDebugEnabled())
+                    if (getLogger().isDebugEnabled())
                     {
-                        log.debug(String.format("Could not determine URL for "
+                        getLogger().debug(String.format("Could not determine URL for "
                                 + "basePath = %s, fileName = %s.", basePath,
                                 fileName), e);
                     }
@@ -253,9 +246,9 @@ public class DefaultFileSystem extends FileSystem
         }
         catch (IOException e)
         {
-            if (log.isDebugEnabled())
+            if (getLogger().isDebugEnabled())
             {
-                log.debug("Could not locate file " + fileName + " at " + basePath + ": " + e.getMessage());
+                getLogger().debug("Could not locate file " + fileName + " at " + basePath + ": " + e.getMessage());
             }
             return null;
         }
