@@ -158,9 +158,8 @@ public class TestFileLocatorUtils
         try
         {
             Thread.currentThread().setContextClassLoader(null);
-            assertNull(FileLocatorUtils.locate(new DefaultFileSystem(), "abase", "aname"));
-            // This assert fails when maven 2 is used, so commented out
-            //assertNotNull(FileLocatorUtils.locate("test.xml"));
+            assertNull(FileLocatorUtils.locate(FileLocatorUtils.fileLocator()
+                    .basePath("abase").fileName("aname").create()));
         }
         finally
         {
