@@ -37,6 +37,8 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.XMLPropertiesConfiguration;
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.io.FileLocator;
+import org.apache.commons.configuration.io.FileLocatorUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -145,6 +147,24 @@ public class TestFileBasedConfigurationBuilder
         PropertiesConfiguration config2 = builder.getConfiguration();
         assertNotSame("Same configuration", config, config2);
         assertEquals("Not read from file", 1, config2.getInt(PROP));
+    }
+
+    /**
+     * Tests whether the location in the FileHandler is fully defined. This
+     * ensures that saving writes to the expected file.
+     */
+    @Test
+    public void testLocationIsFullyDefined() throws ConfigurationException
+    {
+        File file = createTestFile(1);
+        FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        builder.configure(new FileBasedBuilderParametersImpl().setFile(file));
+        builder.getConfiguration();
+        FileLocator locator = builder.getFileHandler().getFileLocator();
+        assertTrue("Not fully defined: " + locator,
+                FileLocatorUtils.isFullyInitialized(locator));
     }
 
     /**

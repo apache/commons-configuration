@@ -296,6 +296,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
         initEncoding(handler);
         if (handler.isLocationDefined())
         {
+            handler.locate();
             handler.load();
         }
     }
