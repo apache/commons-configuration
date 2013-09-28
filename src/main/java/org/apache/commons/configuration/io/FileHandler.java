@@ -59,10 +59,10 @@ import org.apache.commons.configuration.sync.SynchronizerSupport;
  * former case the file is resolved based on the current directory.</li>
  * <li>As file paths in string form: With the {@code setPath()} method a full
  * path to a configuration file can be provided as a string.</li>
- * <li>Separated as base path and file name: This is the native form in which
- * the location is stored. The base path is a string defining either a local
- * directory or a URL. It can be set using the {@code setBasePath()} method. The
- * file name, non surprisingly, defines the name of the configuration file.</li>
+ * <li>Separated as base path and file name: The base path is a string defining
+ * either a local directory or a URL. It can be set using the
+ * {@code setBasePath()} method. The file name, non surprisingly, defines the
+ * name of the configuration file.</li>
  * </ul>
  * </p>
  * <p>
@@ -74,8 +74,27 @@ import org.apache.commons.configuration.sync.SynchronizerSupport;
  * location is not changed.
  * </p>
  * <p>
- * When loading or saving a {@code FileBased} object some additional functionality
- * is performed if the object implements one of the following interfaces:
+ * The actual position of the file to be loaded is determined by a
+ * {@link FileLocationStrategy} based on the location information that has been
+ * provided. By providing a custom location strategy the algorithm for searching
+ * files can be adapted. Save operations require more explicit information. They
+ * cannot rely on a location strategy because the file to be written may not yet
+ * exist. So there may be some differences in the way location information is
+ * interpreted by load and save operations. In order to avoid this, the
+ * following approach is recommended:
+ * <ul>
+ * <li>Use the desired {@code setXXX()} methods to define the location of the
+ * file to be loaded.</li>
+ * <li>Call the {@code locate()} method. This method resolves the referenced
+ * file (if possible) and fills out all supported location information.</li>
+ * <li>Later on, {@code save()} can be called. This method now has sufficient
+ * information to store the file at the correct location.</li>
+ * </ul>
+ * </p>
+ * <p>
+ * When loading or saving a {@code FileBased} object some additional
+ * functionality is performed if the object implements one of the following
+ * interfaces:
  * <ul>
  * <li>{@code FileLocatorAware}: In this case an object with the current file
  * location is injected before the load or save operation is executed. This is
@@ -94,6 +113,7 @@ import org.apache.commons.configuration.sync.SynchronizerSupport;
  * </p>
  *
  * @version $Id$
+ * @since 2.0
  */
 public class FileHandler
 {
@@ -391,7 +411,9 @@ public class FileHandler
     }
 
     /**
-     * Returns the location of the associated file as a URL.
+     * Returns the location of the associated file as a URL. If a URL is set,
+     * it is directly returned. Otherwise, an attempt to locate the referenced
+     * file is made.
      *
      * @return a URL to the associated file; can be <b>null</b> if the location
      *         is unspecified
@@ -400,8 +422,7 @@ public class FileHandler
     {
         FileLocator locator = getFileLocator();
         return (locator.getSourceURL() != null) ? locator.getSourceURL()
-                : FileLocatorUtils.locate(FileLocatorUtils.obtainFileSystem(locator),
-                        locator.getBasePath(), locator.getFileName());
+                : FileLocatorUtils.locate(locator);
     }
 
     /**
@@ -914,14 +935,8 @@ public class FileHandler
      */
     private void load(FileLocator locator) throws ConfigurationException
     {
-        if (locator.getSourceURL() != null)
-        {
-            load(locator.getSourceURL(), locator);
-        }
-        else
-        {
-            load(locator.getFileName(), locator);
-        }
+        URL url = FileLocatorUtils.locateOrThrow(locator);
+        load(url, locator);
     }
 
     /**
@@ -965,15 +980,8 @@ public class FileHandler
     private void load(String fileName, FileLocator locator)
             throws ConfigurationException
     {
-        URL url =
-                FileLocatorUtils.locate(FileLocatorUtils.obtainFileSystem(locator),
-                        locator.getBasePath(), fileName);
-
-        if (url == null)
-        {
-            throw new ConfigurationException(
-                    "Cannot locate configuration source " + fileName);
-        }
+        FileLocator locFileName = createLocatorWithFileName(fileName, locator);
+        URL url = FileLocatorUtils.locateOrThrow(locFileName);
         load(url, locator);
     }
 
@@ -1297,6 +1305,21 @@ public class FileHandler
         {
             fireSavedEvent();
         }
+    }
+
+    /**
+     * Creates a {@code FileLocator} which is a copy of the passed in one, but
+     * has the given file name set to reference the target file.
+     *
+     * @param fileName the file name
+     * @param locator the {@code FileLocator} to copy
+     * @return the manipulated {@code FileLocator} with the file name
+     */
+    private FileLocator createLocatorWithFileName(String fileName,
+            FileLocator locator)
+    {
+        return FileLocatorUtils.fileLocator(locator).sourceURL(null)
+                .fileName(fileName).create();
     }
 
     /**

@@ -581,6 +581,22 @@ public class TestFileHandler
     }
 
     /**
+     * Tests that a load() operation with a file path overrides a URL which
+     * might have been set.
+     */
+    @Test
+    public void testLoadFromFilePathWithURLDefined()
+            throws ConfigurationException
+    {
+        File file = createTestFile();
+        FileBasedTestImpl content = new FileBasedTestImpl();
+        FileHandler handler = new FileHandler(content);
+        handler.setURL(ConfigurationAssert.getTestURL("test.xml"));
+        handler.load(file.getAbsolutePath());
+        assertEquals("Wrong content", CONTENT, content.getContent());
+    }
+
+    /**
      * Tests whether data from an input stream can be read.
      */
     @Test
