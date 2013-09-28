@@ -68,6 +68,9 @@ public final class FileLocator
     /** The file system. */
     private final FileSystem fileSystem;
 
+    /** The file location strategy. */
+    private final FileLocationStrategy locationStrategy;
+
     /**
      * Creates a new instance of {@code FileLocatorImpl} and initializes it from
      * the given builder instance
@@ -81,6 +84,7 @@ public final class FileLocator
         sourceURL = builder.sourceURL;
         encoding = builder.encoding;
         fileSystem = builder.fileSystem;
+        locationStrategy = builder.locationStrategy;
     }
 
     /**
@@ -139,6 +143,19 @@ public final class FileLocator
     }
 
     /**
+     * Returns the {@code FileLocationStrategy} to be used for locating the
+     * referenced file. If no specific {@code FileLocationStrategy} has been
+     * set, result is <b>null</b>. This means that the default strategy should
+     * be used.
+     *
+     * @return the {@code FileLocationStrategy} to be used
+     */
+    public FileLocationStrategy getLocationStrategy()
+    {
+        return locationStrategy;
+    }
+
+    /**
      * Returns a hash code for this object.
      *
      * @return a hash code for this object
@@ -148,7 +165,8 @@ public final class FileLocator
     {
         return new HashCodeBuilder().append(getFileName())
                 .append(getBasePath()).append(sourceURLAsString())
-                .append(getEncoding()).append(getFileSystem()).toHashCode();
+                .append(getEncoding()).append(getFileSystem())
+                .append(getLocationStrategy()).toHashCode();
     }
 
     /**
@@ -176,7 +194,9 @@ public final class FileLocator
                 .append(getBasePath(), c.getBasePath())
                 .append(sourceURLAsString(), c.sourceURLAsString())
                 .append(getEncoding(), c.getEncoding())
-                .append(getFileSystem(), c.getFileSystem()).isEquals();
+                .append(getFileSystem(), c.getFileSystem())
+                .append(getLocationStrategy(), c.getLocationStrategy())
+                .isEquals();
     }
 
     /**
@@ -192,7 +212,8 @@ public final class FileLocator
                 .append("basePath", getBasePath())
                 .append("sourceURL", sourceURLAsString())
                 .append("encoding", getEncoding())
-                .append("fileSystem", getFileSystem()).toString();
+                .append("fileSystem", getFileSystem())
+                .append("locationStrategy", getLocationStrategy()).toString();
     }
 
     /**
@@ -231,6 +252,9 @@ public final class FileLocator
 
         /** The file system. */
         private FileSystem fileSystem;
+
+        /** The location strategy. */
+        private FileLocationStrategy locationStrategy;
 
         /**
          * Creates a new instance of {@code FileLocatorBuilder} and initializes
@@ -308,6 +332,19 @@ public final class FileLocator
         }
 
         /**
+         * Specifies the {@code FileLocationStrategy} to be used when the
+         * referenced file is to be located.
+         *
+         * @param strategy the {@code FileLocationStrategy}
+         * @return a reference to this builder for method chaining
+         */
+        public FileLocatorBuilder locationStrategy(FileLocationStrategy strategy)
+        {
+            locationStrategy = strategy;
+            return this;
+        }
+
+        /**
          * Creates a new immutable {@code FileLocatorImpl} object based on the
          * properties set so far for this builder.
          *
@@ -331,6 +368,7 @@ public final class FileLocator
             sourceURL = src.getSourceURL();
             encoding = src.getEncoding();
             fileSystem = src.getFileSystem();
+            locationStrategy = src.getLocationStrategy();
         }
     }
 }

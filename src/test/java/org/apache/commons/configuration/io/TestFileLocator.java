@@ -52,12 +52,16 @@ public class TestFileLocator
     /** A test file system. */
     private static FileSystem fileSystem;
 
+    /** A test location strategy. */
+    private static FileLocationStrategy locationStrategy;
+
     @BeforeClass
     public static void setUpOnce() throws Exception
     {
         sourceURL = ConfigurationAssert.getTestURL(FILE_NAME);
         fileSystem = EasyMock.createMock(FileSystem.class);
-        EasyMock.replay(fileSystem);
+        locationStrategy = EasyMock.createMock(FileLocationStrategy.class);
+        EasyMock.replay(fileSystem, locationStrategy);
     }
 
     /**
@@ -72,6 +76,7 @@ public class TestFileLocator
         assertNull("Got a URL", locator.getSourceURL());
         assertNull("Got an encoding", locator.getEncoding());
         assertNull("Got a file system", locator.getFileSystem());
+        assertNull("Got a location strategy", locator.getLocationStrategy());
     }
 
     /**
@@ -87,6 +92,8 @@ public class TestFileLocator
         assertEquals("Wrong URL", sourceURL.toExternalForm(), locator
                 .getSourceURL().toExternalForm());
         assertSame("Wrong file system", fileSystem, locator.getFileSystem());
+        assertSame("Wrong location strategy", locationStrategy,
+                locator.getLocationStrategy());
     }
 
     /**
@@ -98,7 +105,8 @@ public class TestFileLocator
         FileLocator locator =
                 FileLocatorUtils.fileLocator().basePath(BASE_PATH)
                         .fileName(FILE_NAME).encoding(ENCODING)
-                        .fileSystem(fileSystem).sourceURL(sourceURL).create();
+                        .fileSystem(fileSystem).sourceURL(sourceURL)
+                        .locationStrategy(locationStrategy).create();
         checkLocator(locator);
     }
 
@@ -111,7 +119,8 @@ public class TestFileLocator
         FileLocator locatorSrc =
                 FileLocatorUtils.fileLocator().basePath(BASE_PATH)
                         .fileName("someFile").encoding(ENCODING)
-                        .fileSystem(fileSystem).sourceURL(sourceURL).create();
+                        .fileSystem(fileSystem).sourceURL(sourceURL)
+                        .locationStrategy(locationStrategy).create();
         FileLocator locator =
                 FileLocatorUtils.fileLocator(locatorSrc).fileName(FILE_NAME)
                         .create();
@@ -132,11 +141,13 @@ public class TestFileLocator
         loc1 =
                 FileLocatorUtils.fileLocator().basePath(BASE_PATH)
                         .fileName(FILE_NAME).encoding(ENCODING)
-                        .fileSystem(fileSystem).sourceURL(sourceURL).create();
+                        .fileSystem(fileSystem).sourceURL(sourceURL)
+                        .locationStrategy(locationStrategy).create();
         loc2 =
                 FileLocatorUtils.fileLocator().basePath(BASE_PATH)
                         .fileName(FILE_NAME).encoding(ENCODING)
-                        .fileSystem(fileSystem).sourceURL(sourceURL).create();
+                        .fileSystem(fileSystem).sourceURL(sourceURL)
+                        .locationStrategy(locationStrategy).create();
         ConfigurationAssert.checkEquals(loc1, loc2, true);
     }
 
@@ -150,7 +161,8 @@ public class TestFileLocator
         FileLocator loc1 =
                 FileLocatorUtils.fileLocator().basePath(BASE_PATH)
                         .fileName(FILE_NAME).encoding(ENCODING)
-                        .fileSystem(fileSystem).sourceURL(sourceURL).create();
+                        .fileSystem(fileSystem).sourceURL(sourceURL)
+                        .locationStrategy(locationStrategy).create();
         FileLocator loc2 =
                 FileLocatorUtils.fileLocator(loc1)
                         .basePath(BASE_PATH + "_other").create();
@@ -174,6 +186,13 @@ public class TestFileLocator
                         .sourceURL(
                                 ConfigurationAssert
                                         .getTestURL("test.properties"))
+                        .create();
+        ConfigurationAssert.checkEquals(loc1, loc2, false);
+        loc2 =
+                FileLocatorUtils
+                        .fileLocator(loc1)
+                        .locationStrategy(
+                                EasyMock.createMock(FileLocationStrategy.class))
                         .create();
         ConfigurationAssert.checkEquals(loc1, loc2, false);
     }
@@ -209,12 +228,14 @@ public class TestFileLocator
         FileLocator loc =
                 FileLocatorUtils.fileLocator().basePath(BASE_PATH)
                         .fileName(FILE_NAME).encoding(ENCODING)
-                        .fileSystem(fileSystem).sourceURL(sourceURL).create();
+                        .fileSystem(fileSystem).sourceURL(sourceURL)
+                        .locationStrategy(locationStrategy).create();
         String s = loc.toString();
         assertThat(s, containsString("fileName=" + FILE_NAME));
         assertThat(s, containsString("basePath=" + BASE_PATH));
         assertThat(s, containsString("sourceURL=" + sourceURL));
         assertThat(s, containsString("encoding=" + ENCODING));
         assertThat(s, containsString("fileSystem=" + fileSystem));
+        assertThat(s, containsString("locationStrategy=" + locationStrategy));
     }
 }
