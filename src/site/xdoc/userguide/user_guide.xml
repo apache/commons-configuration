@@ -138,11 +138,11 @@
         <li><a href="howto_utilities.html#Interpolation_of_all_variables">Interpolation of all variables</a></li>
         <li><a href="howto_utilities.html#Handling_of_runtime_exceptions">Handling of runtime exceptions</a></li>
       </ul>
-      <li><a href="howto_filesystems.html#File_Systems">File Systems</a></li>
+      <li><a href="howto_filesystems.html">Access to Files</a></li>
       <ul>
-        <li><a href="howto_filesystems.html#File_Systems#Configuration">Configuration</a></li>
-        <li><a href="howto_filesystems.html#File_Systems#File_Options_Provider">File Options Provider</a></li>
-        <li><a href="howto_filesystems.html#File_Systems#File_Reloading_Strategy">File Reloading Strategy</a></li>
+        <li><a href="howto_filesystems.html#File_Systems#FileHandler_and_FileLocator">FileHandler and FileLocator</a></li>
+        <li><a href="howto_filesystems.html#File_Systems#File_Systems">File Systems</a></li>
+        <li><a href="howto_filesystems.html#File_Systems#File_Location_Strategies">File Location Strategies</a></li>
       </ul>
       <li><a href="howto_concurrency.html">Configurations and Concurrent Access</a></li>
       <ul>
