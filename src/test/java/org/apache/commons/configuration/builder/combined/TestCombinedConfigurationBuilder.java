@@ -158,6 +158,16 @@ public class TestCombinedConfigurationBuilder
     }
 
     /**
+     * Creates an object with parameters for defining the file to be loaded.
+     *
+     * @return the parameters object
+     */
+    protected FileBasedBuilderParametersImpl createParameters()
+    {
+        return new FileBasedBuilderParametersImpl();
+    }
+
+    /**
      * Tries to build a configuration if no definition builder is provided.
      */
     @Test(expected = ConfigurationException.class)
@@ -219,7 +229,7 @@ public class TestCombinedConfigurationBuilder
     @Test
     public void testLoadConfiguration() throws ConfigurationException
     {
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(TEST_FILE));
         checkConfiguration();
     }
@@ -233,7 +243,7 @@ public class TestCombinedConfigurationBuilder
         File additonalFile =
                 ConfigurationAssert
                         .getTestFile("testDigesterConfiguration2.xml");
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(additonalFile));
         CombinedConfiguration compositeConfiguration =
                 builder.getConfiguration();
@@ -282,7 +292,7 @@ public class TestCombinedConfigurationBuilder
         File optionalFile =
                 ConfigurationAssert
                         .getTestFile("testDigesterOptionalConfiguration.xml");
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(optionalFile));
         Configuration config = builder.getConfiguration();
         assertTrue(config.getBoolean("test.boolean"));
@@ -300,7 +310,7 @@ public class TestCombinedConfigurationBuilder
         File optionalExFile =
                 ConfigurationAssert
                         .getTestFile("testDigesterOptionalConfigurationEx.xml");
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(optionalExFile));
         builder.getConfiguration();
     }
@@ -338,7 +348,7 @@ public class TestCombinedConfigurationBuilder
     public void testBuilderNamesBeforeConfigurationAccess()
     {
         assertTrue("Got builders (1)", builder.builderNames().isEmpty());
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(TEST_FILE));
         assertTrue("Got builders (2)", builder.builderNames().isEmpty());
     }
@@ -349,7 +359,7 @@ public class TestCombinedConfigurationBuilder
     @Test
     public void testBuilderNames() throws ConfigurationException
     {
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(TEST_FILE));
         builder.getConfiguration();
         Set<String> names = builder.builderNames();
@@ -365,7 +375,7 @@ public class TestCombinedConfigurationBuilder
     @Test(expected = UnsupportedOperationException.class)
     public void testBuilderNamesManipulate() throws ConfigurationException
     {
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(TEST_FILE));
         builder.getConfiguration();
         Set<String> names = builder.builderNames();
@@ -378,7 +388,7 @@ public class TestCombinedConfigurationBuilder
     @Test
     public void testGetNamedBuilder() throws ConfigurationException
     {
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(TEST_FILE));
         builder.getConfiguration();
         ConfigurationBuilder<? extends Configuration> propBuilder =
@@ -396,7 +406,7 @@ public class TestCombinedConfigurationBuilder
     @Test(expected = ConfigurationException.class)
     public void testGetNamedBuilderUnknown() throws ConfigurationException
     {
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(TEST_FILE));
         builder.getConfiguration();
         builder.getNamedBuilder("nonExistingBuilder");
@@ -410,7 +420,7 @@ public class TestCombinedConfigurationBuilder
     public void testGetNamedBuilderBeforeConfigurationAccess()
             throws ConfigurationException
     {
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(TEST_FILE));
         builder.getNamedBuilder("nonExistingBuilder");
     }
@@ -542,7 +552,7 @@ public class TestCombinedConfigurationBuilder
         File initFile =
                 ConfigurationAssert
                         .getTestFile("testCCResultInitialization.xml");
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(initFile));
         CombinedConfiguration cc = builder.getConfiguration();
         checkCombinedConfigAttrs(cc);
@@ -560,7 +570,7 @@ public class TestCombinedConfigurationBuilder
     public void testCombinedConfigurationNoAdditional()
             throws ConfigurationException
     {
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(TEST_FILE));
         CombinedConfiguration cc = builder.getConfiguration();
         assertNull(
@@ -578,7 +588,7 @@ public class TestCombinedConfigurationBuilder
         File initFile =
                 ConfigurationAssert
                         .getTestFile("testCCResultInitialization.xml");
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(initFile));
         CombinedConfiguration cc = builder.getConfiguration();
         Set<String> listNodes = cc.getNodeCombiner().getListNodes();
@@ -634,7 +644,7 @@ public class TestCombinedConfigurationBuilder
     @Test
     public void testProviderInDefinitionConfig() throws ConfigurationException
     {
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(ConfigurationAssert
                         .getTestFile("testCCCustomProvider.xml")));
         CombinedConfiguration cc = builder.getConfiguration();
@@ -651,7 +661,7 @@ public class TestCombinedConfigurationBuilder
     {
         File systemFile =
                 ConfigurationAssert.getTestFile("testCCSystemProperties.xml");
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(systemFile));
         CombinedConfiguration cc = builder.getConfiguration();
         assertTrue("System property not found", cc.containsKey("user.name"));
@@ -668,7 +678,7 @@ public class TestCombinedConfigurationBuilder
     {
         File envFile =
                 ConfigurationAssert.getTestFile("testCCEnvProperties.xml");
-        builder.configure(new FileBasedBuilderParametersImpl().setFile(envFile));
+        builder.configure(createParameters().setFile(envFile));
         CombinedConfiguration cc = builder.getConfiguration();
         assertFalse("Configuration is empty", cc.isEmpty());
         for (Map.Entry<String, String> e : System.getenv().entrySet())
@@ -689,7 +699,7 @@ public class TestCombinedConfigurationBuilder
                 ConfigurationAssert
                         .getTestFile("testDigesterConfiguration3.xml");
         builder.configure(new CombinedBuilderParametersImpl()
-                .setDefinitionBuilderParameters(new FileBasedBuilderParametersImpl()
+                .setDefinitionBuilderParameters(createParameters()
                         .setFile(multiFile)));
         CombinedConfiguration cc = builder.getConfiguration();
         assertTrue("JNDI property not found", cc.getBoolean("test.onlyinjndi"));
@@ -706,7 +716,7 @@ public class TestCombinedConfigurationBuilder
                 ConfigurationAssert
                         .getTestFile("testDigesterConfiguration3.xml");
         builder.configure(new CombinedBuilderParametersImpl()
-                .setDefinitionBuilderParameters(new FileBasedBuilderParametersImpl()
+                .setDefinitionBuilderParameters(createParameters()
                         .setFile(multiFile)));
         CombinedConfiguration cc = builder.getConfiguration();
         assertEquals("Property from ini file not found", "yes",
@@ -721,7 +731,7 @@ public class TestCombinedConfigurationBuilder
     {
         File resolverFile =
                 ConfigurationAssert.getTestFile("testCCEntityResolver.xml");
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(resolverFile));
         CombinedConfiguration cc = builder.getConfiguration();
         XMLConfiguration xmlConf =
@@ -766,7 +776,7 @@ public class TestCombinedConfigurationBuilder
      */
     private void checkFileSystem(File fsFile) throws ConfigurationException
     {
-        builder.configure(new FileBasedBuilderParametersImpl().setFile(fsFile));
+        builder.configure(createParameters().setFile(fsFile));
         builder.getConfiguration();
         FileBasedConfigurationBuilder<? extends Configuration> xmlBuilder =
                 (FileBasedConfigurationBuilder<? extends Configuration>) builder
@@ -810,7 +820,7 @@ public class TestCombinedConfigurationBuilder
         String basePath = ConfigurationAssert.OUT_DIR.getAbsolutePath();
         builder.configure(new CombinedBuilderParametersImpl().setBasePath(
                 basePath).setDefinitionBuilderParameters(
-                new FileBasedBuilderParametersImpl().setFile(testFile)));
+                createParameters().setFile(testFile)));
         builder.getConfiguration();
         XMLBuilderParametersImpl xmlParams = new XMLBuilderParametersImpl();
         builder.initChildBuilderParameters(xmlParams);
@@ -828,7 +838,7 @@ public class TestCombinedConfigurationBuilder
     {
         String testFile = "testCCSystemProperties.xml";
         builder.configure(new CombinedBuilderParametersImpl()
-                .setDefinitionBuilderParameters(new FileBasedBuilderParametersImpl()
+                .setDefinitionBuilderParameters(createParameters()
                         .setBasePath(
                                 ConfigurationAssert.TEST_DIR.getAbsolutePath())
                         .setFileName(testFile)));
@@ -964,7 +974,7 @@ public class TestCombinedConfigurationBuilder
     public void testConfigurationBuilderProviderInheritCustomProviders()
             throws ConfigurationException
     {
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(ConfigurationAssert
                         .getTestFile("testCCCustomProvider.xml")));
         builder.getConfiguration();
@@ -988,7 +998,7 @@ public class TestCombinedConfigurationBuilder
         String basePath = ConfigurationAssert.OUT_DIR.getAbsolutePath();
         builder.configure(new CombinedBuilderParametersImpl().setBasePath(
                 basePath).setDefinitionBuilderParameters(
-                new FileBasedBuilderParametersImpl().setFile(envFile)));
+                createParameters().setFile(envFile)));
         builder.getConfiguration();
         CombinedBuilderParametersImpl params =
                 new CombinedBuilderParametersImpl();
@@ -1011,7 +1021,7 @@ public class TestCombinedConfigurationBuilder
                 .setDefinitionBuilderParameters(
                         Parameters.fileBased().setFile(TEST_FILE))
                 .addChildParameters(
-                        new FileBasedBuilderParametersImpl()
+                        createParameters()
                                 .setReloadingRefreshDelay(defRefresh)
                                 .setThrowExceptionOnMissing(true))
                 .addChildParameters(
@@ -1076,7 +1086,7 @@ public class TestCombinedConfigurationBuilder
     public void testCustomLookup() throws ConfigurationException
     {
         File testFile = ConfigurationAssert.getTestFile("testCCLookup.xml");
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(testFile));
         CombinedConfiguration cc = builder.getConfiguration();
         assertTrue("Lookup not registered in CC", cc.getInterpolator()
@@ -1096,7 +1106,7 @@ public class TestCombinedConfigurationBuilder
     {
         File testFile =
                 ConfigurationAssert.getTestFile("testInterpolationBuilder.xml");
-        builder.configure(new FileBasedBuilderParametersImpl().setFile(testFile));
+        builder.configure(createParameters().setFile(testFile));
         CombinedConfiguration combConfig = builder.getConfiguration();
         assertEquals("Wrong value", "abc-product",
                 combConfig.getString("products.product.desc"));
@@ -1117,7 +1127,7 @@ public class TestCombinedConfigurationBuilder
     @Test
     public void testGetChildBuilders() throws ConfigurationException
     {
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(TEST_FILE));
         builder.getConfiguration();
         Collection<ConfigurationBuilder<? extends Configuration>> childBuilders =
@@ -1137,7 +1147,7 @@ public class TestCombinedConfigurationBuilder
             throws ConfigurationException
     {
         File testFile = ConfigurationAssert.getTestFile(fileName);
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(testFile));
         CombinedConfiguration config = builder.getConfiguration();
         assertTrue("Incorrect result configuration",
@@ -1278,7 +1288,7 @@ public class TestCombinedConfigurationBuilder
     public void testRootNodeInitializedAfterCreation()
             throws ConfigurationException
     {
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(TEST_FILE));
         CombinedConfiguration cc = builder.getConfiguration();
         assertNotNull("Root node not initialized", cc.getRootNode());
@@ -1292,7 +1302,7 @@ public class TestCombinedConfigurationBuilder
     public void testConcurrentReadAccessWithoutSynchronizer()
             throws ConfigurationException
     {
-        builder.configure(new FileBasedBuilderParametersImpl()
+        builder.configure(createParameters()
                 .setFile(TEST_FILE));
         CombinedConfiguration config = builder.getConfiguration();
         final int threadCount = 32;

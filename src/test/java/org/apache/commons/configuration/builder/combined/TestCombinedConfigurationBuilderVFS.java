@@ -27,10 +27,8 @@ import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
-import org.apache.commons.configuration.io.FileSystem;
+import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.io.VFSFileSystem;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -42,18 +40,15 @@ import org.junit.Test;
 public class TestCombinedConfigurationBuilderVFS extends
         TestCombinedConfigurationBuilder
 {
+    /**
+     * {@inheritDoc} This implementation initializes the parameters object with
+     * the VFS file system.
+     */
     @Override
-    @Before
-    public void setUp() throws Exception
+    protected FileBasedBuilderParametersImpl createParameters()
     {
-        super.setUp();
-        FileSystem.setDefaultFileSystem(new VFSFileSystem());
-    }
-
-    @After
-    public void tearDown() throws Exception
-    {
-        FileSystem.resetDefaultFileSystem();
+        FileBasedBuilderParametersImpl params = super.createParameters();
+        return params.setFileSystem(new VFSFileSystem());
     }
 
     /**
@@ -65,9 +60,12 @@ public class TestCombinedConfigurationBuilderVFS extends
         File deepDir = new File(ConfigurationAssert.TEST_DIR, "config/deep");
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("fileName", "test.properties");
+        HierarchicalConfiguration defConfig =
+                createDefinitionConfig("properties", params);
+        defConfig.addProperty("override.properties.fileSystem[@config-class]",
+                VFSFileSystem.class.getName());
         BasicConfigurationBuilder<? extends HierarchicalConfiguration> defBuilder =
-                createDefinitionBuilder(createDefinitionConfig("properties",
-                        params));
+                createDefinitionBuilder(defConfig);
         builder.configure(new CombinedBuilderParametersImpl()
                 .setDefinitionBuilder(defBuilder).setBasePath(
                         deepDir.getAbsolutePath()));
