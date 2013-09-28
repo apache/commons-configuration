@@ -217,6 +217,37 @@ public class TestFileHandler
     }
 
     /**
+     * Tests whether a newly created instance uses the default location
+     * strategy.
+     */
+    @Test
+    public void testGetLocationStrategyDefault()
+    {
+        FileHandler handler = new FileHandler();
+        assertNull("Strategy in locator", handler.getFileLocator()
+                .getLocationStrategy());
+        assertSame("Wrong default strategy",
+                FileLocatorUtils.DEFAULT_LOCATION_STRATEGY,
+                handler.getLocationStrategy());
+    }
+
+    /**
+     * Tests whether the location strategy can be changed.
+     */
+    @Test
+    public void testSetLocationStrategy()
+    {
+        FileLocationStrategy strategy =
+                EasyMock.createMock(FileLocationStrategy.class);
+        EasyMock.replay(strategy);
+        FileHandler handler = new FileHandler();
+        handler.setLocationStrategy(strategy);
+        assertSame("Wrong strategy in locator", strategy, handler
+                .getFileLocator().getLocationStrategy());
+        assertSame("Wrong strategy", strategy, handler.getLocationStrategy());
+    }
+
+    /**
      * Tests whether a URL can be set.
      */
     @Test
@@ -1334,6 +1365,8 @@ public class TestFileHandler
     {
         final String encoding = "TestEncoding";
         final FileSystem fileSystem = new DefaultFileSystem();
+        final FileLocationStrategy locationStrategy =
+                new ProvidedURLLocationStrategy();
         final int loops = 8;
 
         for (int i = 0; i < loops; i++)
@@ -1363,7 +1396,15 @@ public class TestFileHandler
                     handler.setEncoding(encoding);
                 };
             };
-            List<Thread> threads = Arrays.asList(t1, t2, t3);
+            Thread t4 = new Thread()
+            {
+                @Override
+                public void run()
+                {
+                    handler.setLocationStrategy(locationStrategy);
+                }
+            };
+            List<Thread> threads = Arrays.asList(t1, t2, t3, t4);
             for (Thread t : threads)
             {
                 t.start();
@@ -1378,6 +1419,8 @@ public class TestFileHandler
             assertNull("Got a URL", locator.getSourceURL());
             assertEquals("Wrong encoding", encoding, locator.getEncoding());
             assertSame("Wrong file system", fileSystem, locator.getFileSystem());
+            assertSame("Wrong location strategy", locationStrategy,
+                    locator.getLocationStrategy());
         }
     }
 

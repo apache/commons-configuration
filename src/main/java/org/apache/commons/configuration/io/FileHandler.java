@@ -557,6 +557,41 @@ public class FileHandler
     }
 
     /**
+     * Returns the {@code FileLocationStrategy} to be applied when accessing the
+     * associated file. This method never returns <b>null</b>. If a
+     * {@code FileLocationStrategy} has been set, it is returned. Otherwise,
+     * result is the default {@code FileLocationStrategy}.
+     *
+     * @return the {@code FileLocationStrategy} to be used
+     */
+    public FileLocationStrategy getLocationStrategy()
+    {
+        return FileLocatorUtils.obtainLocationStrategy(getFileLocator());
+    }
+
+    /**
+     * Sets the {@code FileLocationStrategy} to be applied when accessing the
+     * associated file. The strategy is stored in the underlying
+     * {@link FileLocator}. The argument can be <b>null</b>; this causes the
+     * default {@code FileLocationStrategy} to be used.
+     *
+     * @param strategy the {@code FileLocationStrategy}
+     * @see FileLocatorUtils#DEFAULT_LOCATION_STRATEGY
+     */
+    public void setLocationStrategy(final FileLocationStrategy strategy)
+    {
+        new Updater()
+        {
+            @Override
+            protected void updateBuilder(FileLocatorBuilder builder)
+            {
+                builder.locationStrategy(strategy);
+            }
+
+        }.update();
+    }
+
+    /**
      * Locates the referenced file if necessary and ensures that the associated
      * {@link FileLocator} is fully initialized. When accessing the referenced
      * file the information stored in the associated {@code FileLocator} is
