@@ -65,12 +65,12 @@ public class CatalogResolver implements EntityResolver
     /**
      * The CatalogManager
      */
-    protected CatalogManager manager = new CatalogManager();
+    private CatalogManager manager = new CatalogManager();
 
     /**
      * The FileSystem in use.
      */
-    protected FileSystem fs = FileSystem.getDefaultFileSystem();
+    private FileSystem fs = FileLocatorUtils.DEFAULT_FILE_SYSTEM;
 
     /**
      * The CatalogResolver
