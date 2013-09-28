@@ -435,4 +435,46 @@ public class TestFileLocatorUtils
         assertTrue("Wrong strategy (7)",
                 it.next() instanceof ClasspathLocationStrategy);
     }
+
+    /**
+     * Tests whether a location strategy can be obtained if it is defined by the
+     * locator.
+     */
+    @Test
+    public void testObtainLocationStrategySetInLocator()
+    {
+        FileLocationStrategy strategy =
+                EasyMock.createMock(FileLocationStrategy.class);
+        EasyMock.replay(strategy);
+        FileLocator locator =
+                FileLocatorUtils.fileLocator().locationStrategy(strategy)
+                        .create();
+        assertSame("Wrong strategy", strategy,
+                FileLocatorUtils.obtainLocationStrategy(locator));
+    }
+
+    /**
+     * Tests whether a location strategy can be obtained if it is not defined by
+     * the locator.
+     */
+    @Test
+    public void testObtainLocationStrategyNotSetInLocator()
+    {
+        FileLocator locator = FileLocatorUtils.fileLocator().create();
+        assertSame("Wrong strategy",
+                FileLocatorUtils.DEFAULT_LOCATION_STRATEGY,
+                FileLocatorUtils.obtainLocationStrategy(locator));
+    }
+
+    /**
+     * Tests whether a location strategy can be obtained if a null locator is
+     * passed.
+     */
+    @Test
+    public void testObtainLocationStrategyNullLocator()
+    {
+        assertSame("Wrong strategy",
+                FileLocatorUtils.DEFAULT_LOCATION_STRATEGY,
+                FileLocatorUtils.obtainLocationStrategy(null));
+    }
 }

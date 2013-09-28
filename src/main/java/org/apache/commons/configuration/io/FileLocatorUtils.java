@@ -618,6 +618,23 @@ public final class FileLocatorUtils
     }
 
     /**
+     * Obtains a non <b>null</b> {@code FileLocationStrategy} object from the
+     * passed in {@code FileLocator}. If the {@code FileLocator} is not
+     * <b>null</b> and has a {@code FileLocationStrategy} defined, this strategy
+     * is returned. Otherwise, result is the default
+     * {@code FileLocationStrategy}.
+     *
+     * @param locator the {@code FileLocator}
+     * @return the {@code FileLocationStrategy} for this {@code FileLocator}
+     */
+    static FileLocationStrategy obtainLocationStrategy(FileLocator locator)
+    {
+        return (locator != null) ? ObjectUtils.defaultIfNull(
+                locator.getLocationStrategy(), DEFAULT_LOCATION_STRATEGY)
+                : DEFAULT_LOCATION_STRATEGY;
+    }
+
+    /**
      * Creates a fully initialized {@code FileLocator} based on a URL.
      *
      * @param locator the source {@code FileLocator}
