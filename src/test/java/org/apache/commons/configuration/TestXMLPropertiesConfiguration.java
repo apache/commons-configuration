@@ -32,8 +32,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.configuration.io.FileHandler;
-import org.apache.commons.configuration.io.FileLocatorUtils;
-import org.apache.commons.configuration.io.FileSystem;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -85,7 +83,7 @@ public class TestXMLPropertiesConfiguration
     @Test
     public void testDOMLoad() throws Exception
     {
-        URL location = FileLocatorUtils.locate(FileSystem.getDefaultFileSystem(), null, TEST_PROPERTIES_FILE);
+        URL location = ConfigurationAssert.getTestURL(TEST_PROPERTIES_FILE);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         File file = new File(location.toURI());
