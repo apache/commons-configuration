@@ -25,6 +25,7 @@ import java.util.Vector;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.io.FileLocator;
 import org.apache.commons.configuration.io.FileLocatorUtils;
 import org.apache.commons.configuration.io.FileSystem;
 import org.apache.commons.logging.Log;
@@ -190,7 +191,7 @@ public class CatalogResolver implements EntityResolver
 
             try
             {
-                URL url = FileLocatorUtils.locate(fs, null, resolved);
+                URL url = locate(fs, null, resolved);
                 if (url == null)
                 {
                     throw new ConfigurationException("Could not locate "
@@ -243,6 +244,23 @@ public class CatalogResolver implements EntityResolver
             resolver = new org.apache.xml.resolver.tools.CatalogResolver(manager);
         }
         return resolver;
+    }
+
+    /**
+     * Helper method for locating a given file. This implementation delegates to
+     * the corresponding method in {@link FileLocatorUtils}.
+     *
+     * @param fs the {@code FileSystem}
+     * @param basePath the base path
+     * @param name the file name
+     * @return the URL pointing to the file
+     */
+    private static URL locate(FileSystem fs, String basePath, String name)
+    {
+        FileLocator locator =
+                FileLocatorUtils.fileLocator().fileSystem(fs)
+                        .basePath(basePath).fileName(name).create();
+        return FileLocatorUtils.locate(locator);
     }
 
     /**
@@ -397,7 +415,7 @@ public class CatalogResolver implements EntityResolver
 
                     try
                     {
-                        url = FileLocatorUtils.locate(fs, base, fileName);
+                        url = locate(fs, base, fileName);
                         if (url != null)
                         {
                             is = fs.getInputStream(url);
@@ -447,7 +465,7 @@ public class CatalogResolver implements EntityResolver
          */
         public void parseCatalog(String baseDir, String fileName) throws IOException
         {
-            base = FileLocatorUtils.locate(fs, baseDir, fileName);
+            base = locate(fs, baseDir, fileName);
             catalogCwd = base;
             default_override = catalogManager.getPreferPublic();
             catalogManager.debug.message(DEBUG_NORMAL, "Parse catalog: " + fileName);
