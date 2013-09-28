@@ -1388,17 +1388,13 @@ public class PropertiesConfiguration extends BaseConfiguration
     private void loadIncludeFile(String fileName) throws ConfigurationException
     {
         assert locator != null : "Locator has not been set!";
-        URL url =
-                FileLocatorUtils.locate(FileLocatorUtils.obtainFileSystem(locator),
-                        locator.getBasePath(), fileName);
+        URL url = locateIncludeFile(locator.getBasePath(), fileName);
         if (url == null)
         {
             URL baseURL = locator.getSourceURL();
             if (baseURL != null)
             {
-                url =
-                        FileLocatorUtils.locate(locator.getFileSystem(),
-                                baseURL.toString(), fileName);
+                url = locateIncludeFile(baseURL.toString(), fileName);
             }
         }
 
@@ -1410,5 +1406,22 @@ public class PropertiesConfiguration extends BaseConfiguration
 
         FileHandler fh = new FileHandler(this);
         fh.load(url);
+    }
+
+    /**
+     * Tries to obtain the URL of an include file using the specified (optional)
+     * base path and file name.
+     *
+     * @param basePath the base path
+     * @param fileName the file name
+     * @return the URL of the include file or <b>null</b> if it cannot be
+     *         resolved
+     */
+    private URL locateIncludeFile(String basePath, String fileName)
+    {
+        FileLocator includeLocator =
+                FileLocatorUtils.fileLocator(locator).sourceURL(null)
+                        .basePath(basePath).fileName(fileName).create();
+        return FileLocatorUtils.locate(includeLocator);
     }
 }
