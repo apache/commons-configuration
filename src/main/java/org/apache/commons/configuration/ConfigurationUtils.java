@@ -17,22 +17,18 @@
 
 package org.apache.commons.configuration;
 
-import java.io.File;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Iterator;
 
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.event.EventSource;
-import org.apache.commons.configuration.io.FileSystem;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
 import org.apache.commons.configuration.sync.Synchronizer;
 import org.apache.commons.configuration.tree.ExpressionEngine;
@@ -428,36 +424,6 @@ public final class ConfigurationUtils
             throw new ConfigurationRuntimeException(
                     "Cannot clone Synchronizer " + sync);
         }
-    }
-
-    /**
-     * Constructs a URL from a base path and a file name. The file name can
-     * be absolute, relative or a full URL. If necessary the base path URL is
-     * applied.
-     *
-     * @param basePath the base path URL (can be <b>null</b>)
-     * @param file the file name
-     * @return the resulting URL
-     * @throws MalformedURLException if URLs are invalid
-     */
-    public static URL getURL(String basePath, String file) throws MalformedURLException
-    {
-        return FileSystem.getDefaultFileSystem().getURL(basePath, file);
-    }
-
-    /**
-     * Convert the specified file into an URL. This method is equivalent
-     * to file.toURI().toURL(). It was used to work around a bug in the JDK
-     * preventing the transformation of a file into an URL if the file name
-     * contains a '#' character. See the issue CONFIGURATION-300 for
-     * more details. Now that we switched to JDK 1.4 we can directly use
-     * file.toURI().toURL().
-     *
-     * @param file the file to be converted into an URL
-     */
-    public static URL toURL(File file) throws MalformedURLException
-    {
-        return file.toURI().toURL();
     }
 
     /**

@@ -25,8 +25,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -92,53 +90,6 @@ public class TestConfigurationUtils
 
         config.setProperty("one","1");
         assertEquals("String representation of a configuration", "two=2" + lineSeparator + "one=1" , ConfigurationUtils.toString(config));
-    }
-
-    @Test
-    public void testGetURL() throws Exception
-    {
-        assertEquals(
-            "http://localhost:8080/webapp/config/config.xml",
-            ConfigurationUtils
-                .getURL(
-                    "http://localhost:8080/webapp/config/baseConfig.xml",
-                    "config.xml")
-                .toString());
-        assertEquals(
-            "http://localhost:8080/webapp/config/config.xml",
-            ConfigurationUtils
-                .getURL(
-                    "http://localhost:8080/webapp/baseConfig.xml",
-                    "config/config.xml")
-                .toString());
-        URL url = ConfigurationUtils.getURL(null, "config.xml");
-        assertEquals("file", url.getProtocol());
-        assertEquals("", url.getHost());
-
-        assertEquals(
-            "http://localhost:8080/webapp/config/config.xml",
-            ConfigurationUtils
-                .getURL(
-                    "ftp://ftp.server.com/downloads/baseConfig.xml",
-                    "http://localhost:8080/webapp/config/config.xml")
-                .toString());
-        assertEquals(
-            "http://localhost:8080/webapp/config/config.xml",
-            ConfigurationUtils
-                .getURL(null, "http://localhost:8080/webapp/config/config.xml")
-                .toString());
-        File absFile = new File("config.xml").getAbsoluteFile();
-        assertEquals(
-            absFile.toURI().toURL(),
-            ConfigurationUtils.getURL(
-                "http://localhost:8080/webapp/config/baseConfig.xml",
-                absFile.getAbsolutePath()));
-        assertEquals(
-            absFile.toURI().toURL(),
-            ConfigurationUtils.getURL(null, absFile.getAbsolutePath()));
-
-        assertEquals(absFile.toURI().toURL(),
-        ConfigurationUtils.getURL(absFile.getParent(), "config.xml"));
     }
 
     @Test
