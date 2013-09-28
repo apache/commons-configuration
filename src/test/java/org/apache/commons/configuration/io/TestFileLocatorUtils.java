@@ -28,6 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Iterator;
 
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationException;
@@ -401,5 +402,37 @@ public class TestFileLocatorUtils
         FileHandler handler = new FileHandler();
         handler.setURL(FileLocatorUtils.convertFileToURL(file));
         checkTestConfiguration(handler);
+    }
+
+    /**
+     * Tests the definition of the default location strategy.
+     */
+    @Test
+    public void testDefaultFileLocationStrategy()
+    {
+        CombinedLocationStrategy strategy =
+                (CombinedLocationStrategy) FileLocatorUtils.DEFAULT_LOCATION_STRATEGY;
+        Iterator<FileLocationStrategy> it =
+                strategy.getSubStrategies().iterator();
+        assertTrue("Wrong strategy (1)",
+                it.next() instanceof ProvidedURLLocationStrategy);
+        assertTrue("Wrong strategy (2)",
+                it.next() instanceof FileSystemLocationStrategy);
+        assertTrue("Wrong strategy (3)",
+                it.next() instanceof AbsoluteNameLocationStrategy);
+        assertTrue("Wrong strategy (4)",
+                it.next() instanceof BasePathLocationStrategy);
+        FileLocationStrategy sub = it.next();
+        assertTrue("Wrong strategy (5)",
+                sub instanceof HomeDirectoryLocationStrategy);
+        assertTrue("Base path ignored",
+                ((HomeDirectoryLocationStrategy) sub).isEvaluateBasePath());
+        sub = it.next();
+        assertTrue("Wrong strategy (6)",
+                sub instanceof HomeDirectoryLocationStrategy);
+        assertFalse("Base path not ignored",
+                ((HomeDirectoryLocationStrategy) sub).isEvaluateBasePath());
+        assertTrue("Wrong strategy (7)",
+                it.next() instanceof ClasspathLocationStrategy);
     }
 }

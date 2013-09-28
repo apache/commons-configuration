@@ -20,6 +20,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
 
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -51,6 +52,39 @@ public final class FileLocatorUtils
      */
     public static final FileSystem DEFAULT_FILE_SYSTEM =
             new DefaultFileSystem();
+
+    /**
+     * Constant for the default {@code FileLocationStrategy}. This strategy is
+     * used by the {@code locate()} method if the passed in {@code FileLocator}
+     * does not define its own location strategy. The default location strategy
+     * is roughly equivalent to the search algorithm used in version 1.x of
+     * <em>Commons Configuration</em> (there it was hard-coded though). It
+     * behaves in the following way when passed a {@code FileLocator}:
+     * <ul>
+     * <li>If the {@code FileLocator} has a defined URL, this URL is used as the
+     * file's URL (without any further checks).</li>
+     * <li>Otherwise, base path and file name stored in the {@code FileLocator}
+     * are passed to the current {@code FileSystem}'s {@code locateFromURL()}
+     * method. If this results in a URL, it is returned.</li>
+     * <li>Otherwise, if the locator's file name is an absolute path to an
+     * existing file, the URL of this file is returned.</li>
+     * <li>Otherwise, the concatenation of base path and file name is
+     * constructed. If this path points to an existing file, its URL is
+     * returned.</li>
+     * <li>Otherwise, a sub directory of the current user's home directory as
+     * defined by the base path is searched for the referenced file. If the file
+     * can be found there, its URL is returned.</li>
+     * <li>Otherwise, the base path is ignored, and the file name is searched in
+     * the current user's home directory. If the file can be found there, its
+     * URL is returned.</li>
+     * <li>Otherwise, a resource with the name of the locator's file name is
+     * searched in the classpath. If it can be found, its URL is returned.</li>
+     * <li>Otherwise, the strategy gives up and returns <b>null</b> indicating
+     * that the file cannot be resolved.</li>
+     * </ul>
+     */
+    public static final FileLocationStrategy DEFAULT_LOCATION_STRATEGY =
+            initDefaultLocationStrategy();
 
     /** Constant for the file URL protocol */
     private static final String FILE_SCHEME = "file:";
@@ -628,5 +662,27 @@ public final class FileLocatorUtils
     {
         return fileLocator(src).sourceURL(url).fileName(getFileName(url))
                 .basePath(getBasePath(url)).create();
+    }
+
+    /**
+     * Creates the default location strategy. This method creates a combined
+     * location strategy as described in the comment of the
+     * {@link #DEFAULT_LOCATION_STRATEGY} member field.
+     *
+     * @return the default {@code FileLocationStrategy}
+     */
+    private static FileLocationStrategy initDefaultLocationStrategy()
+    {
+        FileLocationStrategy[] subStrategies =
+                new FileLocationStrategy[] {
+                        new ProvidedURLLocationStrategy(),
+                        new FileSystemLocationStrategy(),
+                        new AbsoluteNameLocationStrategy(),
+                        new BasePathLocationStrategy(),
+                        new HomeDirectoryLocationStrategy(true),
+                        new HomeDirectoryLocationStrategy(false),
+                        new ClasspathLocationStrategy()
+                };
+        return new CombinedLocationStrategy(Arrays.asList(subStrategies));
     }
 }
