@@ -758,13 +758,14 @@ public class TestCombinedConfigurationBuilder
     }
 
     /**
-     * Tests whether a default file system can be configured in the definition
-     * file.
+     * Helper method for testing whether the file system can be customized in
+     * the configuration definition file.
+     *
+     * @param fsFile the file to be processed
+     * @throws ConfigurationException if an error occurs
      */
-    @Test
-    public void testCustomFileSystem() throws ConfigurationException
+    private void checkFileSystem(File fsFile) throws ConfigurationException
     {
-        File fsFile = ConfigurationAssert.getTestFile("testCCFileSystem.xml");
         builder.configure(new FileBasedBuilderParametersImpl().setFile(fsFile));
         builder.getConfiguration();
         FileBasedConfigurationBuilder<? extends Configuration> xmlBuilder =
@@ -773,6 +774,28 @@ public class TestCombinedConfigurationBuilder
         assertTrue("Wrong file system: "
                 + xmlBuilder.getFileHandler().getFileSystem(), xmlBuilder
                 .getFileHandler().getFileSystem() instanceof FileSystemTestImpl);
+    }
+
+    /**
+     * Tests whether a default file system can be configured in the definition
+     * file.
+     */
+    @Test
+    public void testCustomFileSystem() throws ConfigurationException
+    {
+        checkFileSystem(ConfigurationAssert.getTestFile("testCCFileSystem.xml"));
+    }
+
+    /**
+     * Tests whether a specific file system can be applied to a sub
+     * configuration.
+     */
+    @Test
+    public void testCustomFileSystemForSubConfig()
+            throws ConfigurationException
+    {
+        checkFileSystem(ConfigurationAssert
+                .getTestFile("testCCFileSystemSubConfig.xml"));
     }
 
     /**
