@@ -24,7 +24,6 @@ import java.net.URL;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.NoOpLog;
 
 /**
@@ -36,22 +35,14 @@ import org.apache.commons.logging.impl.NoOpLog;
  */
 public abstract class FileSystem
 {
-    /** The name of the system property that can be used to set the file system class name */
-    private static final String FILE_SYSTEM = "org.apache.commons.configuration.filesystem";
-
-    /** The default file system */
-    private static FileSystem fileSystem;
+    /** Constant for the default logger. */
+    private static final Log DEFAULT_LOG = new NoOpLog();
 
     /** The Logger */
-    private Log log;
+    private volatile Log log;
 
     /** FileSystem options provider */
-    private FileOptionsProvider optionsProvider;
-
-    public FileSystem()
-    {
-        setLogger(null);
-    }
+    private volatile FileOptionsProvider optionsProvider;
 
     /**
      * Returns the logger used by this FileSystem.
@@ -60,7 +51,8 @@ public abstract class FileSystem
      */
     public Log getLogger()
     {
-        return log;
+        Log result = log;
+        return (result != null) ? result : DEFAULT_LOG;
     }
 
     /**
@@ -74,77 +66,7 @@ public abstract class FileSystem
      */
     public void setLogger(Log log)
     {
-        this.log = (log != null) ? log : new NoOpLog();
-    }
-
-    static
-    {
-        String fsClassName = System.getProperty(FILE_SYSTEM);
-        if (fsClassName != null)
-        {
-            Log log = LogFactory.getLog(FileSystem.class);
-
-            try
-            {
-                Class<?> clazz = Class.forName(fsClassName);
-                if (FileSystem.class.isAssignableFrom(clazz))
-                {
-                    fileSystem = (FileSystem) clazz.newInstance();
-                    if (log.isDebugEnabled())
-                    {
-                        log.debug("Using " + fsClassName);
-                    }
-                }
-            }
-            catch (InstantiationException ex)
-            {
-                log.error("Unable to create " + fsClassName, ex);
-            }
-            catch (IllegalAccessException ex)
-            {
-                log.error("Unable to create " + fsClassName, ex);
-            }
-            catch (ClassNotFoundException ex)
-            {
-                log.error("Unable to create " + fsClassName, ex);
-            }
-        }
-
-        if (fileSystem == null)
-        {
-            fileSystem = new DefaultFileSystem();
-        }
-    }
-
-    /**
-     * Set the FileSystem to use.
-     * @param fs The FileSystem
-     * @throws NullPointerException if the FileSystem parameter is null.
-     */
-    public static void setDefaultFileSystem(FileSystem fs) throws NullPointerException
-    {
-        if (fs == null)
-        {
-            throw new NullPointerException("A FileSystem implementation is required");
-        }
-        fileSystem = fs;
-    }
-
-    /**
-     * Reset the FileSystem to the default.
-     */
-    public static void resetDefaultFileSystem()
-    {
-        fileSystem = new DefaultFileSystem();
-    }
-
-    /**
-     * Retrieve the FileSystem being used.
-     * @return The FileSystem.
-     */
-    public static FileSystem getDefaultFileSystem()
-    {
-        return fileSystem;
+        this.log = log;
     }
 
     /**
