@@ -477,4 +477,86 @@ public class TestFileLocatorUtils
                 FileLocatorUtils.DEFAULT_LOCATION_STRATEGY,
                 FileLocatorUtils.obtainLocationStrategy(null));
     }
+
+    /**
+     * Tests a locate() operation with a null locator.
+     */
+    @Test
+    public void testLocateNullLocator()
+    {
+        assertNull("Wrong result", FileLocatorUtils.locate(null));
+    }
+
+    /**
+     * Tests a successful locate() operation if the passed in locator contains a
+     * strategy and a file system.
+     */
+    @Test
+    public void testLocateSuccessWithStrategyAndFileSystem()
+            throws ConfigurationException
+    {
+        FileSystem fs = EasyMock.createMock(FileSystem.class);
+        FileLocationStrategy strategy =
+                EasyMock.createMock(FileLocationStrategy.class);
+        FileLocator locator =
+                FileLocatorUtils.fileLocator().fileSystem(fs)
+                        .locationStrategy(strategy).create();
+        EasyMock.expect(strategy.locate(fs, locator)).andReturn(sourceURL);
+        EasyMock.replay(fs, strategy);
+        assertSame("Wrong URL", sourceURL,
+                FileLocatorUtils.locateOrThrow(locator));
+        EasyMock.verify(strategy);
+    }
+
+    /**
+     * Tests a successful locate() operation if the passed in locator contains a
+     * strategy, but no file system.
+     */
+    @Test
+    public void testLocateSuccessWithStrategyDefaultFileSystem()
+            throws ConfigurationException
+    {
+        FileLocationStrategy strategy =
+                EasyMock.createMock(FileLocationStrategy.class);
+        FileLocator locator =
+                FileLocatorUtils.fileLocator().locationStrategy(strategy)
+                        .create();
+        EasyMock.expect(
+                strategy.locate(FileLocatorUtils.DEFAULT_FILE_SYSTEM, locator))
+                .andReturn(sourceURL);
+        EasyMock.replay(strategy);
+        assertSame("Wrong URL", sourceURL,
+                FileLocatorUtils.locateOrThrow(locator));
+        EasyMock.verify(strategy);
+    }
+
+    /**
+     * Tests a successful locate() operation that uses defaults for location
+     * strategy and file system.
+     */
+    @Test
+    public void testLocateSuccessWithDefaults()
+    {
+        FileLocator locator =
+                FileLocatorUtils.fileLocator().sourceURL(sourceURL).create();
+        assertSame("Wrong URL", sourceURL, FileLocatorUtils.locate(locator));
+    }
+
+    /**
+     * Tests whether an exception is thrown for a failed locate() operation.
+     */
+    @Test(expected = ConfigurationException.class)
+    public void testLocateOrThrowFailed() throws ConfigurationException
+    {
+        FileLocationStrategy strategy =
+                EasyMock.createMock(FileLocationStrategy.class);
+        EasyMock.expect(
+                strategy.locate(EasyMock.anyObject(FileSystem.class),
+                        EasyMock.anyObject(FileLocator.class))).andReturn(null);
+        EasyMock.replay(strategy);
+        FileLocator locator =
+                FileLocatorUtils.fileLocator().locationStrategy(strategy)
+                        .create();
+        FileLocatorUtils.locateOrThrow(locator);
+    }
 }

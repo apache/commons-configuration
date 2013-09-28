@@ -22,6 +22,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -350,6 +351,53 @@ public final class FileLocatorUtils
         if (url == null)
         {
             url = locateFromClasspath(name);
+        }
+        return url;
+    }
+
+    /**
+     * Locates the provided {@code FileLocator}, returning a URL for accessing
+     * the referenced file. This method uses a {@link FileLocationStrategy} to
+     * locate the file the passed in {@code FileLocator} points to. If the
+     * {@code FileLocator} contains itself a {@code FileLocationStrategy}, it is
+     * used. Otherwise, the default {@code FileLocationStrategy} is applied. The
+     * strategy is passed the locator and a {@code FileSystem}. The resulting
+     * URL is returned. If the {@code FileLocator} is <b>null</b>, result is
+     * <b>null</b>.
+     *
+     * @param locator the {@code FileLocator} to be resolved
+     * @return the URL pointing to the referenced file or <b>null</b> if the
+     *         {@code FileLocator} could not be resolved
+     * @see #DEFAULT_LOCATION_STRATEGY
+     */
+    public static URL locate(FileLocator locator)
+    {
+        if (locator == null)
+        {
+            return null;
+        }
+
+        return obtainLocationStrategy(locator).locate(
+                obtainFileSystem(locator), locator);
+    }
+
+    /**
+     * Tries to locate the file referenced by the passed in {@code FileLocator}.
+     * If this fails, an exception is thrown. This method works like
+     * {@link #locate(FileLocator)}; however, in case of a failed location
+     * attempt an exception is thrown.
+     *
+     * @param locator the {@code FileLocator} to be resolved
+     * @return the URL pointing to the referenced file
+     * @throws ConfigurationException if the file cannot be resolved
+     */
+    public static URL locateOrThrow(FileLocator locator)
+            throws ConfigurationException
+    {
+        URL url = locate(locator);
+        if (url == null)
+        {
+            throw new ConfigurationException("Could not locate: " + locator);
         }
         return url;
     }
