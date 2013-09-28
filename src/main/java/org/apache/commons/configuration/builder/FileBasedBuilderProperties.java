@@ -19,6 +19,7 @@ package org.apache.commons.configuration.builder;
 import java.io.File;
 import java.net.URL;
 
+import org.apache.commons.configuration.io.FileLocationStrategy;
 import org.apache.commons.configuration.io.FileSystem;
 
 /**
@@ -104,6 +105,14 @@ public interface FileBasedBuilderProperties<T>
      * @return a reference to this object for method chaining
      */
     T setFileSystem(FileSystem fs);
+
+    /**
+     * Sets the {@code FileLocationStrategy} for resolving the referenced file.
+     *
+     * @param strategy the {@code FileLocationStrategy}
+     * @return a reference to this object for method chaining
+     */
+    T setLocationStrategy(FileLocationStrategy strategy);
 
     /**
      * Sets the encoding of the associated {@code FileHandler}.

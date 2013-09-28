@@ -32,6 +32,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.io.FileBased;
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.io.FileLocationStrategy;
 import org.apache.commons.configuration.io.FileSystem;
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -177,6 +178,22 @@ public class TestFileBasedBuilderParameters
         assertSame("Wrong result", params, params.setFileSystem(fs));
         assertSame("Wrong file system", fs, params.getFileHandler()
                 .getFileSystem());
+    }
+
+    /**
+     * Tests whether a location strategy can be set.
+     */
+    @Test
+    public void testSetLocationStrategy()
+    {
+        FileLocationStrategy strat =
+                EasyMock.createMock(FileLocationStrategy.class);
+        EasyMock.replay(strat);
+        FileBasedBuilderParametersImpl params =
+                new FileBasedBuilderParametersImpl();
+        assertSame("Wrong result", params, params.setLocationStrategy(strat));
+        assertSame("Wrong location strategy", strat, params.getFileHandler()
+                .getLocationStrategy());
     }
 
     /**

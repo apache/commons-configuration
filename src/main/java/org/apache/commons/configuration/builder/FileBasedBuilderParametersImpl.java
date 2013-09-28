@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.Map;
 
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.io.FileLocationStrategy;
 import org.apache.commons.configuration.io.FileSystem;
 
 /**
@@ -203,6 +204,13 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
     public FileBasedBuilderParametersImpl setFileSystem(FileSystem fs)
     {
         getFileHandler().setFileSystem(fs);
+        return this;
+    }
+
+    public FileBasedBuilderParametersImpl setLocationStrategy(
+            FileLocationStrategy strategy)
+    {
+        getFileHandler().setLocationStrategy(strategy);
         return this;
     }
 
