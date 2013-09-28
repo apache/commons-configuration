@@ -354,7 +354,7 @@ public class TestFileLocatorUtils
         FileLocator locator =
                 FileLocatorUtils.fileLocator().fileName("non existing file")
                         .create();
-        assertSame("Wrong result", locator,
+        assertNull("Wrong result",
                 FileLocatorUtils.fullyInitializedLocator(locator));
     }
 
