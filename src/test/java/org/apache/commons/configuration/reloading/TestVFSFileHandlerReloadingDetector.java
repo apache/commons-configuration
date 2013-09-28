@@ -27,14 +27,11 @@ import java.io.IOException;
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.io.FileHandler;
-import org.apache.commons.configuration.io.FileSystem;
 import org.apache.commons.configuration.io.VFSFileSystem;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.easymock.EasyMock;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -57,18 +54,6 @@ public class TestVFSFileHandlerReloadingDetector
     /** A helper object for creating temporary files. */
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
-
-    @Before
-    public void setUp() throws Exception
-    {
-        FileSystem.setDefaultFileSystem(new VFSFileSystem());
-    }
-
-    @After
-    public void tearDown() throws Exception
-    {
-        FileSystem.resetDefaultFileSystem();
-    }
 
     /**
      * Writes a test configuration file containing a single property with the
@@ -97,6 +82,7 @@ public class TestVFSFileHandlerReloadingDetector
         VFSFileHandlerReloadingDetector strategy =
                 new VFSFileHandlerReloadingDetector();
         strategy.getFileHandler().setFile(file);
+        strategy.getFileHandler().setFileSystem(new VFSFileSystem());
         long modificationDate = strategy.getLastModificationDate();
         assertEquals("Wrong modification date", file.lastModified(),
                 modificationDate);
@@ -110,6 +96,7 @@ public class TestVFSFileHandlerReloadingDetector
     {
         File file = ConfigurationAssert.getOutFile("NonExistingFile.xml");
         FileHandler handler = new FileHandler();
+        handler.setFileSystem(new VFSFileSystem());
         handler.setFile(file);
         VFSFileHandlerReloadingDetector strategy =
                 new VFSFileHandlerReloadingDetector(handler);
@@ -174,6 +161,7 @@ public class TestVFSFileHandlerReloadingDetector
                         return null;
                     }
                 };
+        strategy.getFileHandler().setFileSystem(new VFSFileSystem());
         strategy.getFileHandler().setFileName("test.xml");
         strategy.getLastModificationDate();
     }
