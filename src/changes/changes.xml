@@ -27,6 +27,11 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-555">
+        Fixed a bug in the handling of the xml:space attribute in
+        XMLConfiguration. The attribute is now also applied to the current
+        element, not only to sub elements.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-554">
         BeanHelper is no longer a static utility class. Instances can be
         created with a specific configuration of bean factories. There is still

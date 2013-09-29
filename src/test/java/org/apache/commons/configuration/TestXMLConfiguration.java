@@ -1432,6 +1432,16 @@ public class TestXMLConfiguration
     }
 
     /**
+     * Tests whether the xml:space attribute works directly on the current
+     * element. This test is related to CONFIGURATION-555.
+     */
+    @Test
+    public void testPreserveSpaceOnElement()
+    {
+        assertEquals("Wrong value", " preserved ", conf.getString("spaceElement"));
+    }
+
+    /**
      * Tests whether the xml:space attribute can be overridden in nested
      * elements.
      */
