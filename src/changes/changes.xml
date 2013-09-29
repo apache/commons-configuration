@@ -33,6 +33,13 @@
         a default instance which can be obtained via the BeanHelper.INSTANCE
         field.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-553">
+        The code for accessing configuration files hs been reworked. Methods
+        related to locating configuration files have been moved from
+        ConfigurationUtils to a new FileLocatorUtils class. Customizable
+        strategy classes (implementing the new FileLocationStrategy) can be
+        used for searching for configuration files.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-551">
         The data type conversion mechanism has been made extensible. There is a
         new interface ConversionHandler which controls the data type conversions
@@ -191,6 +198,10 @@
       </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-330">
         Concurrent access to configurations has been reworked.
+      </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-153">
+        It is now possible to define the strategy used for locating
+        configuration files.
       </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-26">
         It is now possible to influence the conversion from a container object
