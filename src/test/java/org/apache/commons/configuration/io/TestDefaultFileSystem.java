@@ -30,7 +30,7 @@ import org.junit.Test;
  * functionality. Other parts are tested by actual access to configuration files
  * in other test classes.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class TestDefaultFileSystem
 {
