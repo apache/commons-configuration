@@ -37,7 +37,15 @@ BUG FIXES IN 1.10
   SystemConfiguration object. This behaviour broke in 1.8 and 1.9. This has been fixed
   for 1.10.
 
+* [CONFIGURATION-557] Regression: MapConfiguration no longer accepts a Map<String, String>
 
+  In 1.7 and before, it was possible to pass an arbitrary Map into the constructor of 
+  MapConfiguration. With the generification in 1.8, this actually broke and it was no longer
+  possible to pass in e.g. a Map<String, String> because the signature now required a 
+  Map<String, Object>. Changing the constructor to accept a Map<String, ?> restores this.
+
+  All of this is purely a compiler issue, the runtime itself does not see any of the generics
+  due to the Java type erasure. 
 
 IMPROVEMENTS AND NEW FEATURES IN 1.10
 =====================================
