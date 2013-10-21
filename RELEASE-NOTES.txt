@@ -80,6 +80,11 @@ IMPROVEMENTS AND NEW FEATURES IN 1.10
   The includesAllowed property of PropertyConfiguration is now independent
   from the existence of a base path.
 
+* [CONFIGURATION-526] Support loading from and saving to DOM nodes
+
+  XMLPropertiesConfiguration now supports loading from and saving to DOM
+  nodes.
+
 * [CONFIGURATION-550] Missing conversion to char
 
   Conversion to Character is now supported.

@@ -68,6 +68,9 @@ public class TestPropertiesConfiguration
     /** Constant for a test property value.*/
     private static final String PROP_VALUE = "value";
 
+    /** Constant for the line break character. */
+    private static final String CR = System.getProperty("line.separator");
+
     /** The configuration to be tested.*/
     private PropertiesConfiguration conf;
 
@@ -165,7 +168,7 @@ public class TestPropertiesConfiguration
                 new StringReader(PropertiesConfiguration.getInclude() + " = "
                         + ConfigurationAssert.getTestURL("include.properties"));
         conf = new PropertiesConfiguration();
-        conf.read(in);
+        conf.load(in);
         assertEquals("Include file not loaded", "true",
                 conf.getString("include.loaded"));
     }
@@ -184,7 +187,7 @@ public class TestPropertiesConfiguration
         StringReader in = new StringReader(content);
         conf = new PropertiesConfiguration();
         conf.setIncludesAllowed(false);
-        conf.read(in);
+        conf.load(in);
         assertEquals("Data not loaded", PROP_VALUE, conf.getString(PROP_NAME));
     }
 
