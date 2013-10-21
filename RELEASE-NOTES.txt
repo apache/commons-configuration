@@ -74,16 +74,22 @@ BUG FIXES IN 1.10
 IMPROVEMENTS AND NEW FEATURES IN 1.10
 =====================================
 
-* [CONFIGURATION-534] PropertyConfiguration's handling of includes depends on the
-                      existence of a base path
+* [CONFIGURATION-525] PropertiesConfigurationLayout does not preserve comments at bottom of a file
 
-  The includesAllowed property of PropertyConfiguration is now independent
-  from the existence of a base path.
+  PropertiesConfiguration now keeps a comment at the bottom of a
+  properties file. A new footer property was added for reading and
+  writing this footer comment.
 
 * [CONFIGURATION-526] Support loading from and saving to DOM nodes
 
   XMLPropertiesConfiguration now supports loading from and saving to DOM
   nodes.
+
+* [CONFIGURATION-534] PropertyConfiguration's handling of includes depends on the
+                      existence of a base path
+
+  The includesAllowed property of PropertyConfiguration is now independent
+  from the existence of a base path.
 
 * [CONFIGURATION-550] Missing conversion to char
 

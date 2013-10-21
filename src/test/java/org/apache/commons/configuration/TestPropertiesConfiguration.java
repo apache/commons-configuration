@@ -1116,6 +1116,36 @@ public class TestPropertiesConfiguration
     }
 
     /**
+     * Tests whether a footer comment is correctly read.
+     */
+    @Test
+    public void testReadFooterComment()
+    {
+        assertEquals("Wrong footer comment", "\n# This is a foot comment\n",
+                conf.getFooter());
+        assertEquals("Wrong footer comment from layout",
+                "\nThis is a foot comment\n", conf.getLayout()
+                        .getCanonicalFooterCooment(false));
+    }
+
+    /**
+     * Tests whether a footer comment is correctly written out.
+     */
+    @Test
+    public void testWriteFooterComment() throws ConfigurationException,
+            IOException
+    {
+        final String footer = "my footer";
+        conf.clear();
+        conf.setProperty(PROP_NAME, PROP_VALUE);
+        conf.setFooter(footer);
+        StringWriter out = new StringWriter();
+        conf.save(out);
+        assertEquals("Wrong result", PROP_NAME + " = " + PROP_VALUE + CR + "# "
+                + footer + CR, out.toString());
+    }
+
+    /**
      * Helper method for testing the content of a list with elements that
      * contain backslashes.
      *

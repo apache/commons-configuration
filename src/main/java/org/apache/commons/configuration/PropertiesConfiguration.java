@@ -366,6 +366,30 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     }
 
     /**
+     * Returns the footer comment. This is a comment at the very end of the
+     * file.
+     *
+     * @return the footer comment
+     * @since 1.10
+     */
+    public String getFooter()
+    {
+        return getLayout().getFooterComment();
+    }
+
+    /**
+     * Sets the footer comment. If set, this comment is written after all
+     * properties at the end of the file.
+     *
+     * @param footer the footer comment
+     * @since 1.10
+     */
+    public void setFooter(String footer)
+    {
+        getLayout().setFooterComment(footer);
+    }
+
+    /**
      * Returns the encoding to be used when loading or storing configuration
      * data. This implementation ensures that the default encoding will be used
      * if none has been set explicitly.

@@ -601,11 +601,14 @@ public class TestPropertiesConfigurationLayout
                 config, layout);
         assertEquals("Wrong number of keys", layout.getKeys().size(), l2
                 .getKeys().size());
-        for (Iterator<String> it = layout.getKeys().iterator(); it.hasNext();)
+        for (String key : layout.getKeys())
         {
-            Object key = it.next();
             assertTrue("Key was not found: " + key, l2.getKeys().contains(key));
         }
+        assertEquals("Wrong header comment", layout.getHeaderComment(),
+                l2.getHeaderComment());
+        assertEquals("Wrong footer comment", layout.getFooterComment(),
+                l2.getFooterComment());
     }
 
     /**
@@ -699,6 +702,7 @@ public class TestPropertiesConfigurationLayout
         builder.addComment(TEST_COMMENT);
         builder.addProperty(TEST_KEY, TEST_VALUE);
         builder.addProperty("anotherProp", "anotherValue");
+        builder.addComment("A footer comment");
         try
         {
             layout.load(builder.getReader());

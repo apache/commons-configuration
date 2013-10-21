@@ -31,6 +31,11 @@
         XMLConfiguration now adds attributes of elements defining a list to
         all list nodes.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-525">
+        PropertiesConfiguration now keeps a comment at the bottom of a
+        properties file. A new footer property was added for reading and
+        writing this footer comment.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-526" due-to="Oliver Kopp">
         XMLPropertiesConfiguration now supports loading from and saving to DOM
         nodes.
