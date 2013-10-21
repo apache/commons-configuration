@@ -31,6 +31,11 @@ Following is a complete list of all changes in the new 1.10 release:
 BUG FIXES IN 1.10
 =================
 
+* [CONFIGURATION-500] Attributes in xml config should apply to all entries of a list
+
+  XMLConfiguration now adds attributes of elements defining a list to
+  all list nodes.
+
 * [CONFIGURATION-556] Regression with SystemProperties in 1.8 and 1.9
 
   In 1.7 and before, any change to the system properties was immediately reflected in a 
