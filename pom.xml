@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>26</version>
+    <version>32</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>commons-configuration</groupId>
@@ -350,7 +350,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.10</version>
+      <version>4.11</version>
       <scope>test</scope>
     </dependency>
 
@@ -388,7 +388,7 @@
     <dependency>
       <groupId>org.easymock</groupId>
       <artifactId>easymock</artifactId>
-      <version>3.1</version>
+      <version>3.2</version>
       <scope>test</scope>
     </dependency>
 
@@ -434,8 +434,8 @@
     <commons.rc.version>RC1</commons.rc.version>
     <commons.jira.id>CONFIGURATION</commons.jira.id>
     <commons.jira.pid>12319742</commons.jira.pid>
-    <maven.compile.source>1.5</maven.compile.source>
-    <maven.compile.target>1.5</maven.compile.target>
+    <maven.compiler.source>1.5</maven.compiler.source>
+    <maven.compiler.target>1.5</maven.compiler.target>
 
     <!-- Explicitly declare optional dependencies for the OSGi manifest. -->
     <commons.osgi.import>
@@ -547,6 +547,15 @@
 
       <pluginManagement>
         <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-scm-publish-plugin</artifactId>
+            <configuration>
+              <ignorePathsToDelete>
+                <ignorePathToDelete>javadocs</ignorePathToDelete>
+              </ignorePathsToDelete>
+            </configuration>
+          </plugin>
           <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
           <plugin>
             <groupId>org.eclipse.m2e</groupId>
@@ -695,6 +704,16 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
         <version>2.4</version>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>clirr-maven-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <excludes>
+            <exclude>org/apache/commons/configuration/plist/PropertyListParser*</exclude>
+          </excludes>
+        </configuration>
       </plugin>
     </plugins>
   </reporting>
