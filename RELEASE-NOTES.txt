@@ -36,6 +36,12 @@ BUG FIXES IN 1.10
   XMLConfiguration now adds attributes of elements defining a list to
   all list nodes.
 
+* [CONFIGURATION-555] XMLConfiguration doesn't seem to be preserving whitespace 
+                      for the current node where xml:space="preserve" is set.
+
+  Fixed a bug in the handling of the xml:space attribute in XMLConfiguration. 
+  The attribute is now also applied to the current element, not only to sub elements.
+
 * [CONFIGURATION-556] Regression with SystemProperties in 1.8 and 1.9
 
   In 1.7 and before, any change to the system properties was immediately reflected in a 

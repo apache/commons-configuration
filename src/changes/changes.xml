@@ -31,6 +31,11 @@
         XMLConfiguration now adds attributes of elements defining a list to
         all list nodes.
       </action>
+       <action dev="oheger" type="update" issue="CONFIGURATION-555">
+         Fixed a bug in the handling of the xml:space attribute in
+         XMLConfiguration. The attribute is now also applied to the current
+         element, not only to sub elements.
+       </action>
       <action dev="henning" type="fix" issue="CONFIGURATION-556">
         In 1.7 and before, any change to the system properties was
         immediately reflected in a SystemConfiguration object. This

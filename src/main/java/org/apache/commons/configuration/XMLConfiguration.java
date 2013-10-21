@@ -46,9 +46,11 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.resolver.DefaultEntityResolver;
 import org.apache.commons.configuration.resolver.EntityRegistry;
 import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -605,10 +607,13 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      *
      * @param node the actual node
      * @param element the actual XML element
-     * @param elemRefs a flag whether references to the XML elements should be set
-     * @param trim a flag whether the text content of elements should be trimmed;
-     * this controls the whitespace handling
-     * @return a map with all attribute values extracted for the current node
+     * @param elemRefs a flag whether references to the XML elements should be
+     *        set
+     * @param trim a flag whether the text content of elements should be
+     *        trimmed; this controls the whitespace handling
+     * @return a map with all attribute values extracted for the current node;
+     *         this map also contains the value of the trim flag for this node
+     *         under the key {@value #ATTR_SPACE}
      */
     private Map<String, Collection<String>> constructHierarchy(Node node,
             Element element, boolean elemRefs, boolean trim)
@@ -616,6 +621,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         boolean trimFlag = shouldTrim(element, trim);
         Map<String, Collection<String>> attributes =
                 processAttributes(node, element, elemRefs);
+        attributes.put(ATTR_SPACE, Collections.singleton(String.valueOf(trimFlag)));
         StringBuilder buffer = new StringBuilder();
         NodeList list = element.getChildNodes();
         for (int i = 0; i < list.getLength(); i++)
@@ -629,7 +635,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 Map<String, Collection<String>> attrmap =
                         constructHierarchy(childNode, child, elemRefs, trimFlag);
                 node.addChild(childNode);
-                handleDelimiters(node, childNode, trimFlag, attrmap);
+                Collection<String> attrSpace = attrmap.remove(ATTR_SPACE);
+                Boolean childTrim = CollectionUtils.isEmpty(attrSpace) ? Boolean.FALSE : Boolean.valueOf(attrSpace.iterator().next());
+                handleDelimiters(node, childNode, childTrim.booleanValue(), attrmap);
             }
             else if (w3cNode instanceof Text)
             {
@@ -638,16 +646,34 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             }
         }
 
-        String text = buffer.toString();
-        if (trimFlag)
-        {
-            text = text.trim();
-        }
+        String text = determineValue(node, buffer.toString(), trimFlag);
         if (text.length() > 0 || (!node.hasChildren() && node != getRoot()))
         {
             node.setValue(text);
         }
         return attributes;
+    }
+
+    /**
+     * Determines the value of a configuration node. This method mainly checks
+     * whether the text value is to be trimmed or not. This is normally defined
+     * by the trim flag. However, if the node has children and its content is
+     * only whitespace, then it makes no sense to store any value; this would
+     * only scramble layout when the configuration is saved again.
+     *
+     * @param node the current {@code ConfigurationNode}
+     * @param content the text content of this node
+     * @param trimFlag the trim flag
+     * @return the value to be stored for this node
+     */
+    private static String determineValue(ConfigurationNode node,
+            String content, boolean trimFlag)
+    {
+        boolean shouldTrim =
+                trimFlag
+                        || (StringUtils.isBlank(content) && node
+                                .getChildrenCount() > 0);
+        return shouldTrim ? content.trim() : content;
     }
 
     /**
@@ -663,15 +689,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             Element element, boolean elemRefs)
     {
         NamedNodeMap attributes = element.getAttributes();
-        Map<String, Collection<String>> attrmap;
-        if (attributes.getLength() > 0)
-        {
-            attrmap = new HashMap<String, Collection<String>>();
-        }
-        else
-        {
-            attrmap = Collections.emptyMap();
-        }
+        Map<String, Collection<String>> attrmap = new HashMap<String, Collection<String>>();
 
         for (int i = 0; i < attributes.getLength(); ++i)
         {
