@@ -227,7 +227,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     private volatile IOFactory ioFactory;
 
     /** Allow file inclusion or not */
-    private boolean includesAllowed;
+    private boolean includesAllowed = true;
 
     /**
      * Creates an empty PropertyConfiguration object which can be
@@ -237,7 +237,6 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     public PropertiesConfiguration()
     {
         layout = createLayout();
-        setIncludesAllowed(false);
     }
 
     /**
@@ -309,12 +308,11 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
     /**
      * Controls whether additional files can be loaded by the include = <xxx>
-     * statement or not. Base rule is, that objects created by the empty
-     * C'tor can not have included files.
+     * statement or not. This is <b>true</b> per default.
      *
-     * @param includesAllowed includesAllowed True if Includes are allowed.
+     * @param includesAllowed True if Includes are allowed.
      */
-    protected void setIncludesAllowed(boolean includesAllowed)
+    public void setIncludesAllowed(boolean includesAllowed)
     {
         this.includesAllowed = includesAllowed;
     }
@@ -323,8 +321,24 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      * Reports the status of file inclusion.
      *
      * @return True if include files are loaded.
+     *
+     * @see isIncludedAllowed()
+     *
+     * @deprecated Only exists to not break backwards compatibility.
+     * Use {@link isIncludesAllowed()} instead.
      */
+    @Deprecated
     public boolean getIncludesAllowed()
+    {
+        return isIncludesAllowed();
+    }
+
+    /**
+     * Reports the status of file inclusion.
+     *
+     * @return True if include files are loaded.
+     */
+    public boolean isIncludesAllowed()
     {
         return this.includesAllowed;
     }
@@ -552,7 +566,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         if (StringUtils.isNotEmpty(getInclude())
                 && key.equalsIgnoreCase(getInclude()))
         {
-            if (getIncludesAllowed())
+            if (isIncludesAllowed())
             {
                 String[] files;
                 if (!isDelimiterParsingDisabled())
