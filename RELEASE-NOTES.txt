@@ -1,7 +1,7 @@
 $Id$
 
                            Commons Configuration Package
-                               Version 1.9
+                               Version 1.10
                                Release Notes
 
 
@@ -14,59 +14,33 @@ The Commons Configuration software library provides a generic configuration
 interface which enables an application to read configuration data from a variety
 of sources.
 
-The 1.9 release contains a couple of minor bug fixes and improvements. There
+The 1.10 release contains a couple of minor bug fixes and improvements. There
 are no important new features. The idea is to release the current changes which
 have been applied to the 1.x branch, so that we can start with new development
 on an improved (and partly binary incompatible) 2.0 version.
 
-As there are small changes only, Commons Configuration 1.8 is fully binary
+As there are small changes only, Commons Configuration 1.10 is fully binary
 compatible to the previous version. The minimum required Java version is 1.5.
 
-Following is a complete list of all changes in the new 1.9 release:
+Please note that this release was compiled with the Java 1.6 compiler in 1.5 
+mode. There is a very small chance that this introduced incompatibilities with
+the Java 1.5 runtime. Java 1.5 was EOLed in October 2009. 
 
-BUG FIXES IN 1.9
-================
-* [CONFIGURATION-495]
-  List properties can now be set correctly on a HierarchicalConfiguration if
-  delimiter parsing is disabled.
+Following is a complete list of all changes in the new 1.10 release:
 
-* [CONFIGURATION-487]
-  DataConfiguration.get() now also works with String properties and if no data
-  type conversion is required.
+BUG FIXES IN 1.10
+=================
 
-* [CONFIGURATION-481]
-  Variable substitution in configuration sources declared in a definition file
-  for DefaultConfigurationBuilder now works across multiple sources.
+* [CONFIGURATION-556] Regression with SystemProperties in 1.8 and 1.9
 
- * [CONFIGURATION-477]
-   PropertyListConfiguration now can deal with C-style comments in plist
-   configuration files. Both block and single-line comments are supported.
+  In 1.7 and before, any change to the system properties was immediately reflected in a 
+  SystemConfiguration object. This behaviour broke in 1.8 and 1.9. This has been fixed
+  for 1.10.
 
-IMPROVEMENTS AND NEW FEATURES IN 1.9
-====================================
-* [CONFIGURATION-503]
-  Small changes in user guide documentation.
 
-* [CONFIGURATION-502]
-  Improvements of basic features and AbstractConfiguration documentation.
 
-* [CONFIGURATION-501]
-  XMLPropertyListConfiguration no longer swallows exception caused by invalid
-  date properties. Now a warning message is logged.
-
-* [CONFIGURATION-488]
-  Made static DateFormat fields in XMLPropertyListConfiguration.PListNode final
-  and added a note about proper synchronization.
-
-* [CONFIGURATION-483]
-  DatabaseConfiguration now always closes the result set.
-
-* [CONFIGURATION-482]
-  The Import-Package section in the OSGi manifest now uses the
-  resolution:=optional directive for optional dependencies.
+IMPROVEMENTS AND NEW FEATURES IN 1.10
+=====================================
 
 OTHER CHANGES
 =============
-* The dependency to Commons Codec has been updated to the most recent 1.6
-  version. The older version still works.
-

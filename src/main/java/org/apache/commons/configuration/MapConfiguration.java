@@ -17,12 +17,14 @@
 
 package org.apache.commons.configuration;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * <p>
@@ -255,16 +257,37 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      * @param props the {@code Properties} to be copied
      * @return a newly created map with all string keys of the properties
      */
-    private static Map<String, Object> convertPropertiesToMap(Properties props)
+    private static Map<String, Object> convertPropertiesToMap(final Properties props)
     {
-        Map<String, Object> map = new HashMap<String, Object>();
-        for (Map.Entry<Object, Object> e : props.entrySet())
-        {
-            if (e.getKey() instanceof String)
+        return new AbstractMap<String, Object>() {
+
+            @Override
+            public Set<Map.Entry<String, Object>> entrySet()
             {
-                map.put((String) e.getKey(), e.getValue());
+                Set<Map.Entry<String, Object>> entries = new HashSet<Map.Entry<String, Object>>();
+                for (final Map.Entry<Object, Object> propertyEntry : props.entrySet()) {
+                    if (propertyEntry.getKey() instanceof String) {
+                        entries.add(new Map.Entry<String, Object>() {
+
+                            public String getKey()
+                            {
+                                return propertyEntry.getKey().toString();
+                            }
+
+                            public Object getValue()
+                            {
+                                return propertyEntry.getValue();
+                            }
+
+                            public Object setValue(Object value)
+                            {
+                                throw new UnsupportedOperationException();
+                            }
+                        });
+                    }
+                }
+                return entries;
             }
-        }
-        return map;
+        };
     }
 }
