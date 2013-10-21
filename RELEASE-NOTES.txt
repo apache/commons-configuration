@@ -36,9 +36,11 @@ BUG FIXES IN 1.10
   XMLConfiguration now adds attributes of elements defining a list to
   all list nodes.
 
-* [CONFIGURATION-550] Missing conversion to char
+* [CONFIGURATION-546] ClassCastException in BeanHelper constructing beans with a list 
+                     of child beans.
 
-  Conversion to Character is now supported.
+  BeanHelper can now process BeanDefinitions initializing properties of
+  collection types of their target beans.
 
 * [CONFIGURATION-555] XMLConfiguration doesn't seem to be preserving whitespace 
                       for the current node where xml:space="preserve" is set.
@@ -71,6 +73,11 @@ BUG FIXES IN 1.10
 
 IMPROVEMENTS AND NEW FEATURES IN 1.10
 =====================================
+
+* [CONFIGURATION-550] Missing conversion to char
+
+  Conversion to Character is now supported.
+
 
 OTHER CHANGES
 =============

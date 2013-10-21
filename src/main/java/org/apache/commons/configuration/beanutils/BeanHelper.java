@@ -18,12 +18,14 @@ package org.apache.commons.configuration.beanutils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -203,8 +205,27 @@ public final class BeanHelper
                 {
                     String propName = e.getKey();
                     Class<?> defaultClass = getDefaultClass(bean, propName);
-                    initProperty(bean, propName, createBean(
-                        (BeanDeclaration) e.getValue(), defaultClass));
+
+                    Object prop = e.getValue();
+
+                    if (prop instanceof Collection)
+                    {
+                        Collection<Object> beanCollection =
+                                createPropertyCollection(propName, defaultClass);
+
+                        for (Object elemDef : (Collection<?>) prop)
+                        {
+                            beanCollection
+                                    .add(createBean((BeanDeclaration) elemDef));
+                        }
+
+                        initProperty(bean, propName, beanCollection);
+                    }
+                    else
+                    {
+                        initProperty(bean, propName, createBean(
+                            (BeanDeclaration) e.getValue(), defaultClass));
+                    }
                 }
             }
         }
@@ -284,6 +305,39 @@ public final class BeanHelper
         {
             throw new ConfigurationRuntimeException(itex);
         }
+    }
+
+    /**
+     * Creates a concrete collection instance to populate a property of type
+     * collection. This method tries to guess an appropriate collection type.
+     * Mostly the type of the property will be one of the collection interfaces
+     * rather than a concrete class; so we have to create a concrete equivalent.
+     *
+     * @param propName the name of the collection property
+     * @param propertyClass the type of the property
+     * @return the newly created collection
+     */
+    private static Collection<Object> createPropertyCollection(String propName,
+            Class<?> propertyClass)
+    {
+        Collection<Object> beanCollection = null;
+
+        if (List.class.isAssignableFrom(propertyClass))
+        {
+            beanCollection = new ArrayList<Object>();
+        }
+        else if (Set.class.isAssignableFrom(propertyClass))
+        {
+            beanCollection = new TreeSet<Object>();
+        }
+        else
+        {
+            throw new UnsupportedOperationException(
+                    "Unable to handle collection of type : "
+                            + propertyClass.getName() + " for property "
+                            + propName);
+        }
+        return beanCollection;
     }
 
     /**

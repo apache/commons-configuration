@@ -31,6 +31,10 @@
         XMLConfiguration now adds attributes of elements defining a list to
         all list nodes.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-546" due-to="Justin Couch">
+        BeanHelper can now process BeanDefinitions initializing properties of
+        collection types of their target beans.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-550">
         Conversion to Character is now supported.
       </action>
