@@ -22,9 +22,9 @@ on an improved (and partly binary incompatible) 2.0 version.
 As there are small changes only, Commons Configuration 1.10 is fully binary
 compatible to the previous version. The minimum required Java version is 1.5.
 
-Please note that this release was compiled with the Java 1.6 compiler in 1.5 
+Please note that this release was compiled with the Java 1.6 compiler in 1.5
 mode. There is a very small chance that this introduced incompatibilities with
-the Java 1.5 runtime. Java 1.5 was EOLed in October 2009. 
+the Java 1.5 runtime. Java 1.5 was EOLed in October 2009.
 
 Following is a complete list of all changes in the new 1.10 release:
 
@@ -36,33 +36,33 @@ BUG FIXES IN 1.10
   XMLConfiguration now adds attributes of elements defining a list to
   all list nodes.
 
-* [CONFIGURATION-546] ClassCastException in BeanHelper constructing beans with a list 
+* [CONFIGURATION-546] ClassCastException in BeanHelper constructing beans with a list
                      of child beans.
 
   BeanHelper can now process BeanDefinitions initializing properties of
   collection types of their target beans.
 
-* [CONFIGURATION-555] XMLConfiguration doesn't seem to be preserving whitespace 
+* [CONFIGURATION-555] XMLConfiguration doesn't seem to be preserving whitespace
                       for the current node where xml:space="preserve" is set.
 
-  Fixed a bug in the handling of the xml:space attribute in XMLConfiguration. 
+  Fixed a bug in the handling of the xml:space attribute in XMLConfiguration.
   The attribute is now also applied to the current element, not only to sub elements.
 
 * [CONFIGURATION-556] Regression with SystemProperties in 1.8 and 1.9
 
-  In 1.7 and before, any change to the system properties was immediately reflected in a 
+  In 1.7 and before, any change to the system properties was immediately reflected in a
   SystemConfiguration object. This behaviour broke in 1.8 and 1.9. This has been fixed
   for 1.10.
 
 * [CONFIGURATION-557] Regression: MapConfiguration no longer accepts a Map<String, String>
 
-  In 1.7 and before, it was possible to pass an arbitrary Map into the constructor of 
+  In 1.7 and before, it was possible to pass an arbitrary Map into the constructor of
   MapConfiguration. With the generification in 1.8, this actually broke and it was no longer
-  possible to pass in e.g. a Map<String, String> because the signature now required a 
+  possible to pass in e.g. a Map<String, String> because the signature now required a
   Map<String, Object>. Changing the constructor to accept a Map<String, ?> restores this.
 
   All of this is purely a compiler issue, the runtime itself does not see any of the generics
-  due to the Java type erasure. 
+  due to the Java type erasure.
 
 * [CONFIGURATION-558] Configuration no longer accepts List<String> as default for getList()
 

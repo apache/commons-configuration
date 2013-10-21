@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A simple bean class used for testing bean creation operations that has 
+ * A simple bean class used for testing bean creation operations that has
  * a list of children of a different bean type.
  *
  * @version $Id$
