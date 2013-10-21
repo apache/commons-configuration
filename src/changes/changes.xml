@@ -27,6 +27,10 @@
   <body>
     <release version="1.10" date="in SVN"
       description="Minor bug fixes and improvements">
+      <action dev="oheger" type="update" issue="CONFIGURATION-500">
+        XMLConfiguration now adds attributes of elements defining a list to
+        all list nodes.
+      </action>
       <action dev="henning" type="fix" issue="CONFIGURATION-556">
         In 1.7 and before, any change to the system properties was
         immediately reflected in a SystemConfiguration object. This
