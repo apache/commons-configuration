@@ -349,4 +349,42 @@ public class TestPropertyConverter
         assertEquals("Wrong conversion result", value,
                 PropertyConverter.to(String.class, value, null));
     }
+
+    /**
+     * Tests whether a conversion to character is possible.
+     */
+    @Test
+    public void testToCharSuccess()
+    {
+        assertEquals("Wrong conversion result", Character.valueOf('t'),
+                PropertyConverter.to(Character.class, "t", null));
+    }
+
+    /**
+     * Tests whether other objects implementing a toString() method can be
+     * converted to character.
+     */
+    @Test
+    public void testToCharViaToString()
+    {
+        Object value = new Object()
+        {
+            @Override
+            public String toString()
+            {
+                return "X";
+            }
+        };
+        assertEquals("Wrong conversion result", Character.valueOf('X'),
+                PropertyConverter.to(Character.TYPE, value, null));
+    }
+
+    /**
+     * Tests a failed conversion to character.
+     */
+    @Test(expected = ConversionException.class)
+    public void testToCharFailed()
+    {
+        PropertyConverter.to(Character.TYPE, "FF", null);
+    }
 }
