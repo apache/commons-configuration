@@ -236,7 +236,7 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
     }
 
     @Override
-    public List<Object> getList(String key, List<Object> defaultValue)
+    public List<Object> getList(String key, List<?> defaultValue)
     {
         return config.getList(makePath(key), defaultValue);
     }

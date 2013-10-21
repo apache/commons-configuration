@@ -47,6 +47,13 @@ BUG FIXES IN 1.10
   All of this is purely a compiler issue, the runtime itself does not see any of the generics
   due to the Java type erasure. 
 
+* [CONFIGURATION-558] Configuration no longer accepts List<String> as default for getList()
+
+  Similar to CONFIGURATION-557, the getList(String, List) method was generified to be
+  getList(String, List<Object>) but needs to be getList(String, List<?>) so that code that
+  used a more specific list (such as a List<String>) still compiles against the new API.
+
+
 IMPROVEMENTS AND NEW FEATURES IN 1.10
 =====================================
 

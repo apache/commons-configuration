@@ -339,7 +339,7 @@ implements Cloneable
     }
 
     @Override
-    public List<Object> getList(String key, List<Object> defaultValue)
+    public List<Object> getList(String key, List<?> defaultValue)
     {
         List<Object> list = new ArrayList<Object>();
 
@@ -359,7 +359,7 @@ implements Cloneable
 
         if (list.isEmpty())
         {
-            return defaultValue;
+            return (List<Object>) defaultValue;
         }
 
         ListIterator<Object> lit = list.listIterator();

@@ -357,7 +357,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     }
 
     @Override
-    public List<Object> getList(String key, List<Object> defaultValue)
+    public List<Object> getList(String key, List<?> defaultValue)
     {
         return this.getConfiguration().getList(key, defaultValue);
     }

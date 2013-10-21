@@ -594,5 +594,5 @@ public interface Configuration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a List.
      */
-    List<Object> getList(String key, List<Object> defaultValue);
+    List<Object> getList(String key, List<?> defaultValue);
 }
