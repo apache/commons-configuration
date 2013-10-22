@@ -631,7 +631,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.10</version>
+        <version>2.7</version>
         <configuration>
           <configLocation>${basedir}/conf/checkstyle.xml</configLocation>
           <suppressionsLocation>${basedir}/conf/checkstyle-suppressions.xml</suppressionsLocation>
@@ -659,7 +659,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
-        <version>2.5.2</version>
+        <version>2.3.1</version>
         <configuration>
           <threshold>Normal</threshold>
           <effort>Default</effort>
