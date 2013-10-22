@@ -322,10 +322,10 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      *
      * @return True if include files are loaded.
      *
-     * @see isIncludedAllowed()
+     * @see PropertiesConfiguration#isIncludesAllowed()
      *
      * @deprecated Only exists to not break backwards compatibility.
-     * Use {@link isIncludesAllowed()} instead.
+     * Use {@link PropertiesConfiguration#isIncludesAllowed()} instead.
      */
     @Deprecated
     public boolean getIncludesAllowed()
