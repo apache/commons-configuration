@@ -265,8 +265,10 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
             public Set<Map.Entry<String, Object>> entrySet()
             {
                 Set<Map.Entry<String, Object>> entries = new HashSet<Map.Entry<String, Object>>();
-                for (final Map.Entry<Object, Object> propertyEntry : props.entrySet()) {
-                    if (propertyEntry.getKey() instanceof String) {
+                for (final Map.Entry<Object, Object> propertyEntry : props.entrySet())
+                {
+                    if (propertyEntry.getKey() instanceof String)
+                    {
                         entries.add(new Map.Entry<String, Object>() {
 
                             public String getKey()

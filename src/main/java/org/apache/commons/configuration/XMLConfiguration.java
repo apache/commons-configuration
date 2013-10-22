@@ -636,7 +636,11 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                         constructHierarchy(childNode, child, elemRefs, trimFlag);
                 node.addChild(childNode);
                 Collection<String> attrSpace = attrmap.remove(ATTR_SPACE);
-                Boolean childTrim = CollectionUtils.isEmpty(attrSpace) ? Boolean.FALSE : Boolean.valueOf(attrSpace.iterator().next());
+
+                Boolean childTrim = CollectionUtils.isEmpty(attrSpace)
+                    ? Boolean.FALSE
+                    : Boolean.valueOf(attrSpace.iterator().next());
+
                 handleDelimiters(node, childNode, childTrim.booleanValue(), attrmap);
             }
             else if (w3cNode instanceof Text)
