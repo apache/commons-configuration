@@ -433,7 +433,6 @@
     <commons.release.version>1.10</commons.release.version>
     <commons.rc.version>RC1</commons.rc.version>
     <commons.jira.id>CONFIGURATION</commons.jira.id>
-    <commons.jira.pid>12319742</commons.jira.pid>
     <maven.compiler.source>1.5</maven.compiler.source>
     <maven.compiler.target>1.5</maven.compiler.target>
 
@@ -657,7 +656,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-changes-plugin</artifactId>
         <configuration>
-          <fixVersionIds>${commons.jira.pid}</fixVersionIds>
+          <onlyCurrentVersion>true</onlyCurrentVersion>
         </configuration>
       </plugin>
       <plugin>
