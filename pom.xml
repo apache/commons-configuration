@@ -103,9 +103,8 @@
         <developer>
           <name>Henning P. Schmiedehausen</name>
           <id>henning</id>
-          <email>hps@intermeta.de</email>
-          <organization>INTERMETA - Gesellschaft fuer Mehrwertdienste mbH</organization>
-          <timezone>2</timezone>
+          <email>henning@schmiedehausen.org</email>
+          <timezone>-8</timezone>
           <roles>
             <role>Java Developer</role>
           </roles>
