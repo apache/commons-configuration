@@ -47,9 +47,9 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/configuration/branches/CONFIGURATION_1_X_MAINTENANCE</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/configuration/branches/CONFIGURATION_1_X_MAINTENANCE</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/configuration/branches/CONFIGURATION_1_X_MAINTENANCE</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/configuration/branches/RELEASE_1_10_BRANCH</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/configuration/branches/RELEASE_1_10_BRANCH</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/configuration/branches/RELEASE_1_10_BRANCH</url>
   </scm>
 
   <distributionManagement>
