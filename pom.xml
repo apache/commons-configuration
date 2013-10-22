@@ -27,7 +27,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>commons-configuration</groupId>
   <artifactId>commons-configuration</artifactId>
-  <version>1.10-SNAPSHOT</version>
+  <version>1.10-RC1</version>
   <name>Apache Commons Configuration</name>
 
   <inceptionYear>2001</inceptionYear>
@@ -41,9 +41,9 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/configuration/branches/RELEASE_1_10_BRANCH</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/configuration/branches/RELEASE_1_10_BRANCH</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/configuration/branches/RELEASE_1_10_BRANCH</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/configuration/tags/CONFIGURATION_1_10RC1</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/configuration/tags/CONFIGURATION_1_10RC1</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/configuration/tags/CONFIGURATION_1_10RC1</url>
   </scm>
 
   <distributionManagement>
@@ -147,7 +147,7 @@
     </developer>
 
     <developer>
-      <name>J&#xF6;rg Schaible</name>
+      <name>Jörg Schaible</name>
       <id>joehni</id>
       <email>joerg.schaible@gmx.de</email>
       <timezone>+1</timezone>
@@ -184,7 +184,7 @@
     <contributor>
       <name>Jorge Ferrer</name>
       <email>jorge.ferrer@gmail.com</email>
-      <organization></organization>
+      <organization />
     </contributor>
 
     <contributor>
@@ -556,7 +556,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore></ignore>
+                    <ignore />
                   </action>
                 </pluginExecution>
                 <pluginExecution>
@@ -575,7 +575,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore></ignore>
+                    <ignore />
                   </action>
                 </pluginExecution>
               </pluginExecutions>
