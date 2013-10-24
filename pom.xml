@@ -27,7 +27,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>commons-configuration</groupId>
   <artifactId>commons-configuration</artifactId>
-  <version>1.10</version>
+  <version>1.10-SNAPSHOT</version>
   <name>Apache Commons Configuration</name>
 
   <inceptionYear>2001</inceptionYear>
@@ -41,9 +41,9 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/configuration/tags/CONFIGURATION_1_10RC2</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/configuration/tags/CONFIGURATION_1_10RC2</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/configuration/tags/CONFIGURATION_1_10RC2</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/configuration/branches/RELEASE_1_10_BRANCH</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/configuration/branches/RELEASE_1_10_BRANCH</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/configuration/branches/RELEASE_1_10_BRANCH</url>
   </scm>
 
   <distributionManagement>
