@@ -147,7 +147,7 @@
     </developer>
 
     <developer>
-      <name>J&#xF6;rg Schaible</name>
+      <name>Jörg Schaible</name>
       <id>joehni</id>
       <email>joerg.schaible@gmx.de</email>
       <timezone>+1</timezone>
@@ -184,7 +184,7 @@
     <contributor>
       <name>Jorge Ferrer</name>
       <email>jorge.ferrer@gmail.com</email>
-      <organization></organization>
+      <organization />
     </contributor>
 
     <contributor>
@@ -556,7 +556,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore></ignore>
+                    <ignore />
                   </action>
                 </pluginExecution>
                 <pluginExecution>
@@ -575,7 +575,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore></ignore>
+                    <ignore />
                   </action>
                 </pluginExecution>
               </pluginExecutions>
@@ -638,6 +638,13 @@
           <enableRulesSummary>false</enableRulesSummary>
           <propertyExpansion>basedir=${basedir}</propertyExpansion>
         </configuration>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>checkstyle</report>
+            </reports>
+          </reportSet>
+        </reportSets>
       </plugin>
       <plugin>
         <groupId>org.apache.rat</groupId>
@@ -661,11 +668,6 @@
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <version>${commons.cobertura.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
         <artifactId>clirr-maven-plugin</artifactId>
         <version>${commons.clirr.version}</version>
         <configuration>
@@ -676,5 +678,4 @@
       </plugin>
     </plugins>
   </reporting>
-
 </project>

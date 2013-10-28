@@ -1711,7 +1711,7 @@ public class TestDataConfiguration
     @Test(expected = ConversionException.class)
     public void testGetInetAddressInvalidType()
     {
-        conf.setProperty("ip.unknownhost", "foo");
+        conf.setProperty("ip.unknownhost", "foo.invalid");
         conf.get(InetAddress.class, "ip.unknownhost");
     }
 
