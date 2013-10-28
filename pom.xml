@@ -27,7 +27,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>commons-configuration</groupId>
   <artifactId>commons-configuration</artifactId>
-  <version>1.10-SNAPSHOT</version>
+  <version>1.11-SNAPSHOT</version>
   <name>Apache Commons Configuration</name>
 
   <inceptionYear>2001</inceptionYear>
@@ -423,7 +423,7 @@
 
   <properties>
     <commons.componentid>configuration</commons.componentid>
-    <commons.release.version>1.10</commons.release.version>
+    <commons.release.version>1.11</commons.release.version>
     <commons.rc.version>RC1</commons.rc.version>
     <commons.jira.id>CONFIGURATION</commons.jira.id>
     <maven.compiler.source>1.5</maven.compiler.source>

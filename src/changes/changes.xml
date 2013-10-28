@@ -25,7 +25,7 @@
   </properties>
 
   <body>
-    <release version="1.10" date="in SVN"
+    <release version="1.10" date="2013-10-27"
       description="Minor bug fixes and improvements">
       <action dev="oheger" type="update" issue="CONFIGURATION-500">
         XMLConfiguration now adds attributes of elements defining a list to
