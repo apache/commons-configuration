@@ -108,6 +108,13 @@
         <revision>1.9</revision>
       </Version>
     </release>
+    <release>
+      <Version>
+        <name>Commons Configuration 1.10</name>
+        <created>2013-10-27</created>
+        <revision>1.10</revision>
+      </Version>
+    </release>
 
     <mailing-list rdf:resource="http://commons.apache.org/mail-lists.html"/>
   </Project>
