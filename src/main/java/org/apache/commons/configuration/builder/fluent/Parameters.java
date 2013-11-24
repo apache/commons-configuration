@@ -50,12 +50,13 @@ import org.apache.commons.configuration.builder.combined.MultiFileBuilderParamet
  * However, the inheritance structure of the parameter classes makes it
  * surprisingly difficult to provide such an API. This class comes to rescue by
  * defining a set of methods for the creation of interface-based parameter
- * objects offering a truely fluent API. The static methods provided can be
+ * objects offering a truly fluent API. The methods provided can be
  * called directly when setting up a configuration builder as shown in the
  * following example code fragment:
  *
  * <pre>
- * configurationBuilder.configure(Parameters.fileBased()
+ * Parameters params = new Parameters();
+ * configurationBuilder.configure(params.fileBased()
  *         .setThrowExceptionOnMissing(true).setEncoding(&quot;UTF-8&quot;)
  *         .setListDelimiter('#').setFileName(&quot;test.xml&quot;));
  * </pre>
@@ -68,19 +69,12 @@ import org.apache.commons.configuration.builder.combined.MultiFileBuilderParamet
 public final class Parameters
 {
     /**
-     * Private constructor. No instances can be created.
-     */
-    private Parameters()
-    {
-    }
-
-    /**
      * Creates a new instance of a parameters object for basic configuration
      * properties.
      *
      * @return the new parameters object
      */
-    public static BasicBuilderParameters basic()
+    public BasicBuilderParameters basic()
     {
         return new BasicBuilderParameters();
     }
@@ -91,7 +85,7 @@ public final class Parameters
      *
      * @return the new parameters object
      */
-    public static FileBasedBuilderParameters fileBased()
+    public FileBasedBuilderParameters fileBased()
     {
         return createParametersProxy(FileBasedBuilderParameters.class,
                 new FileBasedBuilderParametersImpl());
@@ -103,7 +97,7 @@ public final class Parameters
      *
      * @return the new parameters object
      */
-    public static CombinedBuilderParameters combined()
+    public CombinedBuilderParameters combined()
     {
         return createParametersProxy(CombinedBuilderParameters.class,
                 new CombinedBuilderParametersImpl());
@@ -114,7 +108,7 @@ public final class Parameters
      *
      * @return the new parameters object
      */
-    public static JndiBuilderParameters jndi()
+    public JndiBuilderParameters jndi()
     {
         return createParametersProxy(JndiBuilderParameters.class,
                 new JndiBuilderParametersImpl());
@@ -126,7 +120,7 @@ public final class Parameters
      *
      * @return the new parameters object
      */
-    public static HierarchicalBuilderParameters hierarchical()
+    public HierarchicalBuilderParameters hierarchical()
     {
         return createParametersProxy(HierarchicalBuilderParameters.class,
                 new HierarchicalBuilderParametersImpl());
@@ -137,7 +131,7 @@ public final class Parameters
      *
      * @return the new parameters object
      */
-    public static XMLBuilderParameters xml()
+    public XMLBuilderParameters xml()
     {
         return createParametersProxy(XMLBuilderParameters.class,
                 new XMLBuilderParametersImpl());
@@ -149,7 +143,7 @@ public final class Parameters
      *
      * @return the new parameters object
      */
-    public static PropertiesBuilderParameters properties()
+    public PropertiesBuilderParameters properties()
     {
         return createParametersProxy(PropertiesBuilderParameters.class,
                 new PropertiesBuilderParametersImpl());
@@ -161,7 +155,7 @@ public final class Parameters
      *
      * @return the new parameters object
      */
-    public static MultiFileBuilderParameters multiFile()
+    public MultiFileBuilderParameters multiFile()
     {
         return createParametersProxy(MultiFileBuilderParameters.class,
                 new MultiFileBuilderParametersImpl());
@@ -173,7 +167,7 @@ public final class Parameters
      *
      * @return the new parameters object
      */
-    public static DatabaseBuilderParameters database()
+    public DatabaseBuilderParameters database()
     {
         return createParametersProxy(DatabaseBuilderParameters.class,
                 new DatabaseBuilderParametersImpl());

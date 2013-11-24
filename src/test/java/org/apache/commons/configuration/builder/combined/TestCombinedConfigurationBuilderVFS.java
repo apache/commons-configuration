@@ -27,7 +27,7 @@ import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
-import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration.builder.fluent.FileBasedBuilderParameters;
 import org.apache.commons.configuration.io.VFSFileSystem;
 import org.junit.Test;
 
@@ -45,9 +45,9 @@ public class TestCombinedConfigurationBuilderVFS extends
      * the VFS file system.
      */
     @Override
-    protected FileBasedBuilderParametersImpl createParameters()
+    protected FileBasedBuilderParameters createParameters()
     {
-        FileBasedBuilderParametersImpl params = super.createParameters();
+        FileBasedBuilderParameters params = super.createParameters();
         return params.setFileSystem(new VFSFileSystem());
     }
 

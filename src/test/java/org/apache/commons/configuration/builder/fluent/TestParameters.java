@@ -32,6 +32,7 @@ import org.apache.commons.configuration.builder.combined.MultiFileBuilderParamet
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.easymock.EasyMock;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -45,10 +46,19 @@ public class TestParameters
     /** A test list delimiter handler. */
     private static ListDelimiterHandler listHandler;
 
+    /** The parameters object to be tested. */
+    private Parameters parameters;
+
     @BeforeClass
     public static void setUpBeforeClass() throws Exception
     {
         listHandler = EasyMock.createMock(ListDelimiterHandler.class);
+    }
+
+    @Before
+    public void setUp() throws Exception
+    {
+        parameters = new Parameters();
     }
 
     /**
@@ -57,7 +67,7 @@ public class TestParameters
     @Test
     public void testBasic()
     {
-        BasicBuilderParameters basic = Parameters.basic();
+        BasicBuilderParameters basic = parameters.basic();
         assertNotNull("No result object", basic);
     }
 
@@ -82,7 +92,7 @@ public class TestParameters
     public void testFileBased()
     {
         Map<String, Object> map =
-                Parameters.fileBased().setThrowExceptionOnMissing(true)
+                parameters.fileBased().setThrowExceptionOnMissing(true)
                         .setEncoding("UTF-8").setListDelimiterHandler(listHandler)
                         .setFileName("test.xml").getParameters();
         FileBasedBuilderParametersImpl fbparams =
@@ -101,7 +111,7 @@ public class TestParameters
     @Test
     public void testProxyObjectMethods()
     {
-        FileBasedBuilderParameters params = Parameters.fileBased();
+        FileBasedBuilderParameters params = parameters.fileBased();
         String s = params.toString();
         assertTrue(
                 "Wrong string: " + s,
@@ -116,7 +126,7 @@ public class TestParameters
     public void testCombined()
     {
         Map<String, Object> map =
-                Parameters.combined().setThrowExceptionOnMissing(true)
+                parameters.combined().setThrowExceptionOnMissing(true)
                         .setBasePath("test").setListDelimiterHandler(listHandler)
                         .getParameters();
         CombinedBuilderParametersImpl cparams =
@@ -132,7 +142,7 @@ public class TestParameters
     public void testJndi()
     {
         Map<String, Object> map =
-                Parameters.jndi().setThrowExceptionOnMissing(true)
+                parameters.jndi().setThrowExceptionOnMissing(true)
                         .setPrefix("test").setListDelimiterHandler(listHandler)
                         .getParameters();
         assertEquals("Wrong prefix", "test", map.get("prefix"));
@@ -148,7 +158,7 @@ public class TestParameters
     {
         ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
         Map<String, Object> map =
-                Parameters.hierarchical().setThrowExceptionOnMissing(true)
+                parameters.hierarchical().setThrowExceptionOnMissing(true)
                         .setExpressionEngine(engine).setFileName("test.xml")
                         .setListDelimiterHandler(listHandler).getParameters();
         checkBasicProperties(map);
@@ -169,7 +179,7 @@ public class TestParameters
     {
         ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
         Map<String, Object> map =
-                Parameters.xml().setThrowExceptionOnMissing(true)
+                parameters.xml().setThrowExceptionOnMissing(true)
                         .setFileName("test.xml").setValidating(true)
                         .setExpressionEngine(engine).setListDelimiterHandler(listHandler)
                         .setSchemaValidation(true).getParameters();
@@ -196,7 +206,7 @@ public class TestParameters
         PropertiesConfiguration.IOFactory factory =
                 EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
         Map<String, Object> map =
-                Parameters.properties().setThrowExceptionOnMissing(true)
+                parameters.properties().setThrowExceptionOnMissing(true)
                         .setFileName("test.properties").setIOFactory(factory)
                         .setListDelimiterHandler(listHandler).setIncludesAllowed(false)
                         .getParameters();
@@ -219,7 +229,7 @@ public class TestParameters
         BuilderParameters bp = EasyMock.createMock(BuilderParameters.class);
         String pattern = "a pattern";
         Map<String, Object> map =
-                Parameters.multiFile().setThrowExceptionOnMissing(true)
+                parameters.multiFile().setThrowExceptionOnMissing(true)
                         .setFilePattern(pattern).setListDelimiterHandler(listHandler)
                         .setManagedBuilderParameters(bp).getParameters();
         checkBasicProperties(map);
@@ -238,7 +248,7 @@ public class TestParameters
     public void testDatabase()
     {
         Map<String, Object> map =
-                Parameters.database().setThrowExceptionOnMissing(true)
+                parameters.database().setThrowExceptionOnMissing(true)
                         .setAutoCommit(true).setTable("table")
                         .setListDelimiterHandler(listHandler).setKeyColumn("keyColumn")
                         .getParameters();

@@ -47,6 +47,7 @@ import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.sync.ReadWriteSynchronizer;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class TestDynamicCombinedConfiguration
@@ -65,6 +66,15 @@ public class TestDynamicCombinedConfiguration
     /** Constant for the number of loops in the multi-thread tests. */
     private static final int LOOP_COUNT = 100;
 
+    /** A helper object for creating builder parameters. */
+    private static Parameters parameters;
+
+    @BeforeClass
+    public static void setUpOnce()
+    {
+        parameters = new Parameters();
+    }
+
     @Test
     public void testConfiguration() throws Exception
     {
@@ -76,14 +86,14 @@ public class TestDynamicCombinedConfiguration
         config.setKeyPattern(PATTERN);
         ConfigurationBuilder<XMLConfiguration> multiBuilder =
                 new MultiFileConfigurationBuilder<XMLConfiguration>(
-                        XMLConfiguration.class).configure(Parameters
+                        XMLConfiguration.class).configure(parameters
                         .multiFile()
                         .setFilePattern(PATTERN1)
                         .setPrefixLookups(
                                 ConfigurationInterpolator
                                         .getDefaultPrefixLookups())
                         .setManagedBuilderParameters(
-                                Parameters.xml().setExpressionEngine(engine)
+                                parameters.xml().setExpressionEngine(engine)
                                         .setListDelimiterHandler(listHandler)));
         BuilderConfigurationWrapperFactory wrapFactory =
                 new BuilderConfigurationWrapperFactory();
@@ -119,7 +129,7 @@ public class TestDynamicCombinedConfiguration
         System.getProperties().remove("Id");
         CombinedConfigurationBuilder builder =
                 new CombinedConfigurationBuilder();
-        builder.configure(Parameters.fileBased().setFile(MULTI_TENENT_FILE)
+        builder.configure(parameters.fileBased().setFile(MULTI_TENENT_FILE)
                 .setSynchronizer(new ReadWriteSynchronizer()));
         CombinedConfiguration config = builder.getConfiguration();
         config.getConfiguration(1).setProperty("rowsPerPage", "25");
@@ -230,7 +240,7 @@ public class TestDynamicCombinedConfiguration
     {
         System.getProperties().remove("Id");
         CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
-        builder.configure(Parameters.fileBased().setFile(MULTI_TENENT_FILE)
+        builder.configure(parameters.fileBased().setFile(MULTI_TENENT_FILE)
                 .setSynchronizer(new ReadWriteSynchronizer()));
         CombinedConfiguration config = builder.getConfiguration();
 
@@ -258,7 +268,7 @@ public class TestDynamicCombinedConfiguration
     {
         System.getProperties().remove("Id");
         CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
-        builder.configure(Parameters.fileBased().setFile(MULTI_TENENT_FILE)
+        builder.configure(parameters.fileBased().setFile(MULTI_TENENT_FILE)
                 .setSynchronizer(new ReadWriteSynchronizer()));
         CombinedConfiguration config = builder.getConfiguration();
 
@@ -289,7 +299,7 @@ public class TestDynamicCombinedConfiguration
     {
         System.getProperties().remove("Id");
         CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
-        builder.configure(Parameters.fileBased().setFile(MULTI_TENENT_FILE)
+        builder.configure(parameters.fileBased().setFile(MULTI_TENENT_FILE)
                 .setSynchronizer(new ReadWriteSynchronizer()));
         CombinedConfiguration config = builder.getConfiguration();
 
@@ -337,7 +347,7 @@ public class TestDynamicCombinedConfiguration
 
         ReloadingCombinedConfigurationBuilder builder =
                 new ReloadingCombinedConfigurationBuilder();
-        builder.configure(Parameters
+        builder.configure(parameters
                 .combined()
                 .setSynchronizer(new ReadWriteSynchronizer())
                 .setDefinitionBuilderParameters(

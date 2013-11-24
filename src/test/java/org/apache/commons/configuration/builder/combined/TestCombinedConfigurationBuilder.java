@@ -58,6 +58,7 @@ import org.apache.commons.configuration.builder.HierarchicalBuilderParametersImp
 import org.apache.commons.configuration.builder.PropertiesBuilderParametersImpl;
 import org.apache.commons.configuration.builder.ReloadingFileBasedConfigurationBuilder;
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
+import org.apache.commons.configuration.builder.fluent.FileBasedBuilderParameters;
 import org.apache.commons.configuration.builder.fluent.Parameters;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
@@ -102,6 +103,9 @@ public class TestCombinedConfigurationBuilder
      */
     private static final String MULTI_FILE_PROPERTY = "Id";
 
+    /** A helper object for creating builder parameters. */
+    protected Parameters parameters;
+
     /** Stores the object to be tested. */
     protected CombinedConfigurationBuilder builder;
 
@@ -112,6 +116,7 @@ public class TestCombinedConfigurationBuilder
                 "org.apache.commons.configuration.MockInitialContextFactory");
         System.setProperty("test_file_xml", TEST_SUB_XML);
         System.setProperty("test_file_combine", "testcombine1.xml");
+        parameters = new Parameters();
         builder = new CombinedConfigurationBuilder();
     }
 
@@ -162,9 +167,9 @@ public class TestCombinedConfigurationBuilder
      *
      * @return the parameters object
      */
-    protected FileBasedBuilderParametersImpl createParameters()
+    protected FileBasedBuilderParameters createParameters()
     {
-        return new FileBasedBuilderParametersImpl();
+        return parameters.fileBased();
     }
 
     /**
@@ -1016,12 +1021,12 @@ public class TestCombinedConfigurationBuilder
     {
         final Long defRefresh = 60000L;
         final Long xmlRefresh = 30000L;
-        builder.configure(Parameters
+        builder.configure(parameters
                 .combined()
                 .setDefinitionBuilderParameters(
-                        Parameters.fileBased().setFile(TEST_FILE))
+                        parameters.fileBased().setFile(TEST_FILE))
                 .addChildParameters(
-                        createParameters()
+                        new FileBasedBuilderParametersImpl()
                                 .setReloadingRefreshDelay(defRefresh)
                                 .setThrowExceptionOnMissing(true))
                 .addChildParameters(
@@ -1058,10 +1063,10 @@ public class TestCombinedConfigurationBuilder
     public void testInitChildBuilderParametersDefaultChildPropertiesEx()
             throws ConfigurationException
     {
-        builder.configure(Parameters
+        builder.configure(parameters
                 .combined()
                 .setDefinitionBuilderParameters(
-                        Parameters.fileBased().setFile(TEST_FILE))
+                        parameters.fileBased().setFile(TEST_FILE))
                 .addChildParameters(
                         new HierarchicalBuilderParametersImpl()
                                 .setExpressionEngine(new XPathExpressionEngine())));

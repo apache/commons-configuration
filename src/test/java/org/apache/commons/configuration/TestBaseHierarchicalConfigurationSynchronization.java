@@ -339,7 +339,7 @@ public class TestBaseHierarchicalConfigurationSynchronization
         FileBasedConfigurationBuilder<XMLConfiguration> builder =
                 new FileBasedConfigurationBuilder<XMLConfiguration>(
                         XMLConfiguration.class);
-        builder.configure(Parameters.fileBased().setFile(testFile));
+        builder.configure(new Parameters().fileBased().setFile(testFile));
         config = builder.getConfiguration();
 
         CountDownLatch startLatch = new CountDownLatch(1);

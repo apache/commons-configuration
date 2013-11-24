@@ -72,12 +72,16 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
+    /** A helper object for creating builder parameters. */
+    private Parameters parameters;
+
     /** The builder to be tested. */
     private ReloadingCombinedConfigurationBuilder builder;
 
     @Before
     public void setUp() throws Exception
     {
+        parameters = new Parameters();
         builder = new ReloadingCombinedConfigurationBuilder();
     }
 
@@ -186,7 +190,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
         HierarchicalConfiguration defConf = new BaseHierarchicalConfiguration();
         addReloadSource(defConf, xmlConf1.getAbsolutePath());
         addReloadSource(defConf, xmlConf2.getAbsolutePath());
-        builder.configure(Parameters
+        builder.configure(parameters
                 .combined()
                 .setDefinitionBuilder(new ConstantConfigurationBuilder(defConf))
                 .addChildParameters(
@@ -242,7 +246,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
         addReloadSource(defConf, "configA.xml");
         addReloadSource(defConf, "configB.xml");
         Synchronizer sync = new ReadWriteSynchronizer();
-        builder.configure(Parameters
+        builder.configure(parameters
                 .combined()
                 .setDefinitionBuilder(new ConstantConfigurationBuilder(defConf))
                 .setSynchronizer(sync)
@@ -318,9 +322,9 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
             throws ConfigurationException, IOException, InterruptedException
     {
         File defFile = folder.newFile();
-        builder.configure(Parameters.combined().setDefinitionBuilder(
+        builder.configure(parameters.combined().setDefinitionBuilder(
                 new ReloadingFileBasedConfigurationBuilder<XMLConfiguration>(
-                        XMLConfiguration.class).configure(Parameters.xml()
+                        XMLConfiguration.class).configure(parameters.xml()
                         .setReloadingRefreshDelay(0L).setFile(defFile))));
         checkReloadDefinitionFile(defFile);
     }
@@ -334,8 +338,8 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
             throws ConfigurationException, IOException, InterruptedException
     {
         File defFile = folder.newFile();
-        builder.configure(Parameters.combined().setDefinitionBuilderParameters(
-                Parameters.xml().setReloadingRefreshDelay(0L).setFile(defFile)));
+        builder.configure(parameters.combined().setDefinitionBuilderParameters(
+                parameters.xml().setReloadingRefreshDelay(0L).setFile(defFile)));
         checkReloadDefinitionFile(defFile);
     }
 

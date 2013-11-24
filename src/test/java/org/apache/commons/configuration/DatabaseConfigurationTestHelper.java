@@ -142,7 +142,7 @@ public class DatabaseConfigurationTestHelper
      */
     public DatabaseBuilderParameters setUpDefaultParameters()
     {
-        return Parameters.database().setDataSource(getDatasource())
+        return new Parameters().database().setDataSource(getDatasource())
                 .setTable(TABLE).setKeyColumn(COL_KEY)
                 .setValueColumn(COL_VALUE).setAutoCommit(isAutoCommit());
     }
