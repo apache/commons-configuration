@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
+import org.apache.commons.configuration.builder.BasicBuilderProperties;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.CombinedBuilderParametersImpl;
@@ -105,6 +106,43 @@ public class TestParameters
     }
 
     /**
+     * Helper method for testing whether the given object is an instance of the
+     * provided class.
+     *
+     * @param obj the object to be checked
+     * @param cls the class
+     */
+    private static void checkInstanceOf(Object obj, Class<?> cls)
+    {
+        assertTrue(obj + " is not an instance of " + cls, cls.isInstance(obj));
+    }
+
+    /**
+     * Checks whether a given parameters object implements all the specified
+     * interfaces.
+     *
+     * @param params the parameters object to check
+     * @param ifcClasses the interface classes to be implemented
+     */
+    private static void checkInheritance(Object params, Class<?>... ifcClasses)
+    {
+        checkInstanceOf(params, BasicBuilderProperties.class);
+        for (Class<?> c : ifcClasses)
+        {
+            checkInstanceOf(params, c);
+        }
+    }
+
+    /**
+     * Tests the inheritance structure of a fileBased parameters object.
+     */
+    @Test
+    public void testFileBasedInheritance()
+    {
+        checkInheritance(parameters.fileBased());
+    }
+
+    /**
      * Tests whether the proxy parameters object can deal with methods inherited
      * from Object.
      */
@@ -171,6 +209,16 @@ public class TestParameters
     }
 
     /**
+     * Tests the inheritance structure of a hierarchical parameters object.
+     */
+    @Test
+    public void testHierarchicalInheritance()
+    {
+        checkInheritance(parameters.hierarchical(),
+                FileBasedBuilderParameters.class);
+    }
+
+    /**
      * Tests whether a parameters object for an XML configuration can be
      * created.
      */
@@ -197,6 +245,16 @@ public class TestParameters
     }
 
     /**
+     * Tests the inheritance structure of an XML parameters object.
+     */
+    @Test
+    public void testXmlInheritance()
+    {
+        checkInheritance(parameters.xml(), HierarchicalBuilderParameters.class,
+                FileBasedBuilderParameters.class);
+    }
+
+    /**
      * Tests whether a parameters object for a properties configuration can be
      * created.
      */
@@ -218,6 +276,16 @@ public class TestParameters
         assertEquals("Wrong includes flag", Boolean.FALSE,
                 map.get("includesAllowed"));
         assertSame("Wrong factory", factory, map.get("iOFactory"));
+    }
+
+    /**
+     * Tests the inheritance structure of a properties parameters object.
+     */
+    @Test
+    public void testPropertiesInheritance()
+    {
+        checkInheritance(parameters.properties(),
+                FileBasedBuilderParameters.class);
     }
 
     /**
@@ -257,5 +325,29 @@ public class TestParameters
         assertEquals("Wrong key column name", "keyColumn", map.get("keyColumn"));
         assertEquals("Wrong auto commit flag", Boolean.TRUE,
                 map.get("autoCommit"));
+    }
+
+    /**
+     * Tests whether the parameters objects created by the Parameters instance
+     * have a logic inheritance hierarchy. This means that they also implement
+     * all base interfaces that make sense.
+     */
+    @Test
+    public void testInheritance()
+    {
+        Object params = parameters.xml();
+        assertTrue("No instance of base interface",
+                params instanceof FileBasedBuilderParameters);
+        assertTrue("No instance of base interface (dynamic)",
+                FileBasedBuilderParameters.class.isInstance(params));
+        FileBasedBuilderParameters fbParams =
+                (FileBasedBuilderParameters) params;
+        fbParams.setListDelimiterHandler(listHandler).setFileName("test.xml")
+                .setThrowExceptionOnMissing(true);
+        ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
+        ((HierarchicalBuilderParameters) params).setExpressionEngine(engine);
+        Map<String, Object> map = fbParams.getParameters();
+        checkBasicProperties(map);
+        assertSame("Wrong expression engine", engine, map.get("expressionEngine"));
     }
 }

@@ -87,8 +87,8 @@ public final class Parameters
      */
     public FileBasedBuilderParameters fileBased()
     {
-        return createParametersProxy(FileBasedBuilderParameters.class,
-                new FileBasedBuilderParametersImpl());
+        return createParametersProxy(new FileBasedBuilderParametersImpl(),
+                FileBasedBuilderParameters.class);
     }
 
     /**
@@ -99,8 +99,8 @@ public final class Parameters
      */
     public CombinedBuilderParameters combined()
     {
-        return createParametersProxy(CombinedBuilderParameters.class,
-                new CombinedBuilderParametersImpl());
+        return createParametersProxy(new CombinedBuilderParametersImpl(),
+                CombinedBuilderParameters.class);
     }
 
     /**
@@ -110,8 +110,8 @@ public final class Parameters
      */
     public JndiBuilderParameters jndi()
     {
-        return createParametersProxy(JndiBuilderParameters.class,
-                new JndiBuilderParametersImpl());
+        return createParametersProxy(new JndiBuilderParametersImpl(),
+                JndiBuilderParameters.class);
     }
 
     /**
@@ -122,8 +122,9 @@ public final class Parameters
      */
     public HierarchicalBuilderParameters hierarchical()
     {
-        return createParametersProxy(HierarchicalBuilderParameters.class,
-                new HierarchicalBuilderParametersImpl());
+        return createParametersProxy(new HierarchicalBuilderParametersImpl(),
+                HierarchicalBuilderParameters.class,
+                FileBasedBuilderParameters.class);
     }
 
     /**
@@ -133,8 +134,9 @@ public final class Parameters
      */
     public XMLBuilderParameters xml()
     {
-        return createParametersProxy(XMLBuilderParameters.class,
-                new XMLBuilderParametersImpl());
+        return createParametersProxy(new XMLBuilderParametersImpl(),
+                XMLBuilderParameters.class, FileBasedBuilderParameters.class,
+                HierarchicalBuilderParameters.class);
     }
 
     /**
@@ -145,8 +147,9 @@ public final class Parameters
      */
     public PropertiesBuilderParameters properties()
     {
-        return createParametersProxy(PropertiesBuilderParameters.class,
-                new PropertiesBuilderParametersImpl());
+        return createParametersProxy(new PropertiesBuilderParametersImpl(),
+                PropertiesBuilderParameters.class,
+                FileBasedBuilderParameters.class);
     }
 
     /**
@@ -157,8 +160,8 @@ public final class Parameters
      */
     public MultiFileBuilderParameters multiFile()
     {
-        return createParametersProxy(MultiFileBuilderParameters.class,
-                new MultiFileBuilderParametersImpl());
+        return createParametersProxy(new MultiFileBuilderParametersImpl(),
+                MultiFileBuilderParameters.class);
     }
 
     /**
@@ -169,8 +172,8 @@ public final class Parameters
      */
     public DatabaseBuilderParameters database()
     {
-        return createParametersProxy(DatabaseBuilderParameters.class,
-                new DatabaseBuilderParametersImpl());
+        return createParametersProxy(new DatabaseBuilderParametersImpl(),
+                DatabaseBuilderParameters.class);
     }
 
     /**
@@ -178,16 +181,21 @@ public final class Parameters
      * given implementation object.
      *
      * @param <T> the type of the parameters interface
-     * @param ifcClass the interface class
      * @param target the implementing target object
+     * @param ifcClass the interface class
+     * @param superIfcs an array with additional interface classes to be
+     *        implemented
      * @return the proxy object
      */
-    private static <T> T createParametersProxy(Class<T> ifcClass, Object target)
+    private static <T> T createParametersProxy(Object target,
+            Class<T> ifcClass, Class<?>... superIfcs)
     {
+        Class<?>[] ifcClasses = new Class<?>[1 + superIfcs.length];
+        ifcClasses[0] = ifcClass;
+        System.arraycopy(superIfcs, 0, ifcClasses, 1, superIfcs.length);
         return ifcClass.cast(Proxy.newProxyInstance(
-                Parameters.class.getClassLoader(), new Class<?>[] {
-                    ifcClass
-                }, new ParametersIfcInvocationHandler(target)));
+                Parameters.class.getClassLoader(), ifcClasses,
+                new ParametersIfcInvocationHandler(target)));
     }
 
     /**
