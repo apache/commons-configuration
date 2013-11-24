@@ -30,7 +30,7 @@ package org.apache.commons.configuration.builder.fluent;
  * to perform arbitrary initialization.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public interface DefaultParametersHandler<T>
