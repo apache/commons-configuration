@@ -14,7 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.configuration.builder.fluent;
+package org.apache.commons.configuration.builder;
+
+import org.apache.commons.configuration.builder.fluent.Parameters;
 
 /**
  * <p>

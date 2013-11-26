@@ -29,6 +29,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BasicBuilderProperties;
 import org.apache.commons.configuration.builder.BuilderParameters;
+import org.apache.commons.configuration.builder.DefaultParametersHandler;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.CombinedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.MultiFileBuilderParametersImpl;

@@ -26,6 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.DatabaseBuilderParametersImpl;
+import org.apache.commons.configuration.builder.DefaultParametersHandler;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.HierarchicalBuilderParametersImpl;
 import org.apache.commons.configuration.builder.JndiBuilderParametersImpl;
