@@ -17,12 +17,12 @@
 package org.apache.commons.configuration.builder.fluent;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -30,13 +30,14 @@ import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BasicBuilderProperties;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.DefaultParametersHandler;
+import org.apache.commons.configuration.builder.DefaultParametersManager;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.CombinedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.MultiFileBuilderParametersImpl;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.easymock.EasyMock;
-import org.junit.Before;
+import org.easymock.IAnswer;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -53,19 +54,22 @@ public class TestParameters
     /** A test list delimiter handler. */
     private static ListDelimiterHandler listHandler;
 
-    /** The parameters object to be tested. */
-    private Parameters parameters;
-
     @BeforeClass
     public static void setUpBeforeClass() throws Exception
     {
         listHandler = EasyMock.createMock(ListDelimiterHandler.class);
     }
 
-    @Before
-    public void setUp() throws Exception
+    /**
+     * Tests whether an uninitialized default parameters manager is created at
+     * construction time.
+     */
+    @Test
+    public void testDefaultParametersManager()
     {
-        parameters = new Parameters();
+        Parameters parameters = new Parameters();
+        assertNotNull("No default manager",
+                parameters.getDefaultParametersManager());
     }
 
     /**
@@ -74,7 +78,7 @@ public class TestParameters
     @Test
     public void testBasic()
     {
-        BasicBuilderParameters basic = parameters.basic();
+        BasicBuilderParameters basic = new Parameters().basic();
         assertNotNull("No result object", basic);
     }
 
@@ -99,7 +103,7 @@ public class TestParameters
     public void testFileBased()
     {
         Map<String, Object> map =
-                parameters.fileBased().setThrowExceptionOnMissing(true)
+                new Parameters().fileBased().setThrowExceptionOnMissing(true)
                         .setEncoding(DEF_ENCODING).setListDelimiterHandler(listHandler)
                         .setFileName("test.xml").getParameters();
         FileBasedBuilderParametersImpl fbparams =
@@ -145,7 +149,7 @@ public class TestParameters
     @Test
     public void testFileBasedInheritance()
     {
-        checkInheritance(parameters.fileBased());
+        checkInheritance(new Parameters().fileBased());
     }
 
     /**
@@ -155,7 +159,7 @@ public class TestParameters
     @Test
     public void testProxyObjectMethods()
     {
-        FileBasedBuilderParameters params = parameters.fileBased();
+        FileBasedBuilderParameters params = new Parameters().fileBased();
         String s = params.toString();
         assertTrue(
                 "Wrong string: " + s,
@@ -170,7 +174,7 @@ public class TestParameters
     public void testCombined()
     {
         Map<String, Object> map =
-                parameters.combined().setThrowExceptionOnMissing(true)
+                new Parameters().combined().setThrowExceptionOnMissing(true)
                         .setBasePath("test").setListDelimiterHandler(listHandler)
                         .getParameters();
         CombinedBuilderParametersImpl cparams =
@@ -186,7 +190,7 @@ public class TestParameters
     public void testJndi()
     {
         Map<String, Object> map =
-                parameters.jndi().setThrowExceptionOnMissing(true)
+                new Parameters().jndi().setThrowExceptionOnMissing(true)
                         .setPrefix("test").setListDelimiterHandler(listHandler)
                         .getParameters();
         assertEquals("Wrong prefix", "test", map.get("prefix"));
@@ -202,7 +206,7 @@ public class TestParameters
     {
         ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
         Map<String, Object> map =
-                parameters.hierarchical().setThrowExceptionOnMissing(true)
+                new Parameters().hierarchical().setThrowExceptionOnMissing(true)
                         .setExpressionEngine(engine).setFileName("test.xml")
                         .setListDelimiterHandler(listHandler).getParameters();
         checkBasicProperties(map);
@@ -220,7 +224,7 @@ public class TestParameters
     @Test
     public void testHierarchicalInheritance()
     {
-        checkInheritance(parameters.hierarchical(),
+        checkInheritance(new Parameters().hierarchical(),
                 FileBasedBuilderParameters.class);
     }
 
@@ -233,7 +237,7 @@ public class TestParameters
     {
         ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
         Map<String, Object> map =
-                parameters.xml().setThrowExceptionOnMissing(true)
+                new Parameters().xml().setThrowExceptionOnMissing(true)
                         .setFileName("test.xml").setValidating(true)
                         .setExpressionEngine(engine).setListDelimiterHandler(listHandler)
                         .setSchemaValidation(true).getParameters();
@@ -256,7 +260,7 @@ public class TestParameters
     @Test
     public void testXmlInheritance()
     {
-        checkInheritance(parameters.xml(), HierarchicalBuilderParameters.class,
+        checkInheritance(new Parameters().xml(), HierarchicalBuilderParameters.class,
                 FileBasedBuilderParameters.class);
     }
 
@@ -270,7 +274,7 @@ public class TestParameters
         PropertiesConfiguration.IOFactory factory =
                 EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
         Map<String, Object> map =
-                parameters.properties().setThrowExceptionOnMissing(true)
+                new Parameters().properties().setThrowExceptionOnMissing(true)
                         .setFileName("test.properties").setIOFactory(factory)
                         .setListDelimiterHandler(listHandler).setIncludesAllowed(false)
                         .getParameters();
@@ -290,7 +294,7 @@ public class TestParameters
     @Test
     public void testPropertiesInheritance()
     {
-        checkInheritance(parameters.properties(),
+        checkInheritance(new Parameters().properties(),
                 FileBasedBuilderParameters.class);
     }
 
@@ -303,7 +307,7 @@ public class TestParameters
         BuilderParameters bp = EasyMock.createMock(BuilderParameters.class);
         String pattern = "a pattern";
         Map<String, Object> map =
-                parameters.multiFile().setThrowExceptionOnMissing(true)
+                new Parameters().multiFile().setThrowExceptionOnMissing(true)
                         .setFilePattern(pattern).setListDelimiterHandler(listHandler)
                         .setManagedBuilderParameters(bp).getParameters();
         checkBasicProperties(map);
@@ -322,7 +326,7 @@ public class TestParameters
     public void testDatabase()
     {
         Map<String, Object> map =
-                parameters.database().setThrowExceptionOnMissing(true)
+                new Parameters().database().setThrowExceptionOnMissing(true)
                         .setAutoCommit(true).setTable("table")
                         .setListDelimiterHandler(listHandler).setKeyColumn("keyColumn")
                         .getParameters();
@@ -341,7 +345,7 @@ public class TestParameters
     @Test
     public void testInheritance()
     {
-        Object params = parameters.xml();
+        Object params = new Parameters().xml();
         assertTrue("No instance of base interface",
                 params instanceof FileBasedBuilderParameters);
         assertTrue("No instance of base interface (dynamic)",
@@ -358,196 +362,84 @@ public class TestParameters
     }
 
     /**
-     * Tries to register a default handler without a class.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRegisterDefaultsHandlerNoClass()
-    {
-        parameters
-                .registerDefaultsHandler(null, new FileBasedDefaultsHandler());
-    }
-
-    /**
-     * Tries to register a null default handler.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRegisterDefaultsHandlerNoHandler()
-    {
-        parameters.registerDefaultsHandler(BasicBuilderProperties.class, null);
-    }
-
-    /**
-     * Checks whether the expected default values have been set on a parameters
-     * object.
-     *
-     * @param map the map with parameters
-     */
-    private static void checkDefaultValues(Map<String, Object> map)
-    {
-        checkBasicProperties(map);
-        FileBasedBuilderParametersImpl fbparams =
-                FileBasedBuilderParametersImpl.fromParameters(map);
-        assertEquals("Wrong encoding", DEF_ENCODING, fbparams.getFileHandler()
-                .getEncoding());
-    }
-
-    /**
-     * Checks that no default values have been set on a parameters object.
-     *
-     * @param map the map with parameters
-     */
-    private static void checkNoDefaultValues(Map<String, Object> map)
-    {
-        assertFalse("Got base properties",
-                map.containsKey("throwExceptionOnMissing"));
-        FileBasedBuilderParametersImpl fbParams =
-                FileBasedBuilderParametersImpl.fromParameters(map, true);
-        assertNull("Got an encoding", fbParams.getFileHandler().getEncoding());
-    }
-
-    /**
      * Tests whether default values are set for newly created parameters
      * objects.
      */
     @Test
     public void testApplyDefaults()
     {
-        parameters.registerDefaultsHandler(FileBasedBuilderParameters.class,
-                new FileBasedDefaultsHandler());
-        Map<String, Object> map = parameters.fileBased().getParameters();
-        checkDefaultValues(map);
-    }
-
-    /**
-     * Tests whether default values are also applied when a sub parameters class
-     * is created.
-     */
-    @Test
-    public void testApplyDefaultsOnSubClass()
-    {
-        parameters.registerDefaultsHandler(FileBasedBuilderParameters.class,
-                new FileBasedDefaultsHandler());
-        Map<String, Object> map = parameters.xml().getParameters();
-        checkDefaultValues(map);
-    }
-
-    /**
-     * Tests that default values are only applied if the start class provided at
-     * registration time matches.
-     */
-    @Test
-    public void testApplyDefaultsStartClass()
-    {
-        parameters.registerDefaultsHandler(FileBasedBuilderParameters.class,
-                new FileBasedDefaultsHandler(), XMLBuilderParameters.class);
-        Map<String, Object> map = parameters.xml().getParameters();
-        checkDefaultValues(map);
-        map = parameters.properties().getParameters();
-        checkNoDefaultValues(map);
-    }
-
-    /**
-     * Tests whether multiple handlers can be registered for the same classes
-     * and whether they are called in the correct order.
-     */
-    @Test
-    public void testApplyDefaultsMultipleHandlers()
-    {
-        final ExpressionEngine engine =
-                EasyMock.createMock(ExpressionEngine.class);
-        parameters.registerDefaultsHandler(XMLBuilderParameters.class,
-                new DefaultParametersHandler<XMLBuilderParameters>()
-                {
-                    public void initializeDefaults(
-                            XMLBuilderParameters parameters)
-                    {
-                        parameters
-                                .setThrowExceptionOnMissing(false)
-                                .setListDelimiterHandler(
-                                        EasyMock.createMock(ListDelimiterHandler.class))
-                                .setExpressionEngine(engine);
-                    }
-                });
-        parameters.registerDefaultsHandler(FileBasedBuilderParameters.class,
-                new FileBasedDefaultsHandler());
-        Map<String, Object> map = parameters.xml().getParameters();
-        checkDefaultValues(map);
-        assertSame("Expression engine not set", engine,
-                map.get("expressionEngine"));
-    }
-
-    /**
-     * Tests whether initializeParameters() ignores null input. (We can only
-     * test that no exception is thrown.)
-     */
-    @Test
-    public void testInitializeParametersNull()
-    {
-        parameters.registerDefaultsHandler(FileBasedBuilderParameters.class,
-                new FileBasedDefaultsHandler());
-        parameters.initializeParameters(null);
-    }
-
-    /**
-     * Tests whether a parameters object created externally can be initialized.
-     */
-    @Test
-    public void testInitializeParameters()
-    {
-        parameters.registerDefaultsHandler(FileBasedBuilderParameters.class,
-                new FileBasedDefaultsHandler());
-        XMLBuilderParameters params = new Parameters().xml();
-        parameters.initializeParameters(params);
-        checkDefaultValues(params.getParameters());
-    }
-
-    /**
-     * Tests whether all occurrences of a given defaults handler can be removed.
-     */
-    @Test
-    public void testUnregisterDefaultsHandlerAll()
-    {
-        FileBasedDefaultsHandler handler = new FileBasedDefaultsHandler();
-        parameters.registerDefaultsHandler(FileBasedBuilderParameters.class,
-                handler, XMLBuilderParameters.class);
-        parameters.registerDefaultsHandler(FileBasedBuilderParameters.class,
-                handler, PropertiesBuilderParameters.class);
-        parameters.unregisterDefaultsHandler(handler);
-        checkNoDefaultValues(parameters.fileBased().getParameters());
-        checkNoDefaultValues(parameters.xml().getParameters());
-        checkNoDefaultValues(parameters.properties().getParameters());
-    }
-
-    /**
-     * Tests whether a specific occurrence of a defaults handler can be removed.
-     */
-    @Test
-    public void testUnregisterDefaultsHandlerSpecific()
-    {
-        FileBasedDefaultsHandler handler = new FileBasedDefaultsHandler();
-        parameters.registerDefaultsHandler(FileBasedBuilderParameters.class,
-                handler, XMLBuilderParameters.class);
-        parameters.registerDefaultsHandler(FileBasedBuilderParameters.class,
-                handler, PropertiesBuilderParameters.class);
-        parameters.unregisterDefaultsHandler(handler,
-                PropertiesBuilderParameters.class);
-        checkDefaultValues(parameters.xml().getParameters());
-        checkNoDefaultValues(parameters.properties().getParameters());
-    }
-
-    /**
-     * A test defaults handler implementation for testing the initialization of
-     * parameters objects with default values. This class sets some hard-coded
-     * default values.
-     */
-    private static class FileBasedDefaultsHandler implements
-            DefaultParametersHandler<FileBasedBuilderParameters>
-    {
-        public void initializeDefaults(FileBasedBuilderParameters parameters)
+        DefaultParametersManager manager =
+                EasyMock.createMock(DefaultParametersManager.class);
+        final List<Object> initializedParams = new ArrayList<Object>(1);
+        manager.initializeParameters(EasyMock
+                .anyObject(BuilderParameters.class));
+        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>()
         {
-            parameters.setThrowExceptionOnMissing(true)
-                    .setEncoding(DEF_ENCODING)
-                    .setListDelimiterHandler(listHandler);
-        }
+            public Object answer() throws Throwable
+            {
+                initializedParams.add(EasyMock.getCurrentArguments()[0]);
+                return null;
+            }
+        });
+        EasyMock.replay(manager);
+
+        Parameters params = new Parameters(manager);
+        XMLBuilderParameters xmlParams = params.xml();
+        assertEquals("Wrong number of initializations", 1,
+                initializedParams.size());
+        assertSame("Wrong initialized object", xmlParams,
+                initializedParams.get(0));
+    }
+
+    /**
+     * Creates a mock for a defaults parameter handler.
+     *
+     * @return the mock object
+     */
+    private static DefaultParametersHandler<XMLBuilderParameters> createHandlerMock()
+    {
+        @SuppressWarnings("unchecked")
+        DefaultParametersHandler<XMLBuilderParameters> handler =
+                EasyMock.createMock(DefaultParametersHandler.class);
+        return handler;
+    }
+
+    /**
+     * Tests whether a default handler with a start class can be registered.
+     */
+    @Test
+    public void testRegisterDefaultsHandlerWithStartClass()
+    {
+        DefaultParametersManager manager =
+                EasyMock.createMock(DefaultParametersManager.class);
+        DefaultParametersHandler<XMLBuilderParameters> handler =
+                createHandlerMock();
+        manager.registerDefaultsHandler(XMLBuilderParameters.class, handler,
+                FileBasedBuilderParameters.class);
+        EasyMock.replay(manager, handler);
+
+        Parameters params = new Parameters(manager);
+        params.registerDefaultsHandler(XMLBuilderParameters.class, handler,
+                FileBasedBuilderParameters.class);
+        EasyMock.verify(manager);
+    }
+
+    /**
+     * Tests the registration of a defaults handler if no start class is
+     * provided.
+     */
+    @Test
+    public void testRegisterDefaultsHandlerNoStartClass()
+    {
+        DefaultParametersManager manager =
+                EasyMock.createMock(DefaultParametersManager.class);
+        DefaultParametersHandler<XMLBuilderParameters> handler =
+                createHandlerMock();
+        manager.registerDefaultsHandler(XMLBuilderParameters.class, handler);
+        EasyMock.replay(manager, handler);
+
+        Parameters params = new Parameters(manager);
+        params.registerDefaultsHandler(XMLBuilderParameters.class, handler);
+        EasyMock.verify(manager);
     }
 }

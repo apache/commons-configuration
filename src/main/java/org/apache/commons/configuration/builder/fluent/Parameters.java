@@ -19,14 +19,12 @@ package org.apache.commons.configuration.builder.fluent;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.DatabaseBuilderParametersImpl;
 import org.apache.commons.configuration.builder.DefaultParametersHandler;
+import org.apache.commons.configuration.builder.DefaultParametersManager;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.HierarchicalBuilderParametersImpl;
 import org.apache.commons.configuration.builder.JndiBuilderParametersImpl;
@@ -69,13 +67,13 @@ import org.apache.commons.configuration.builder.combined.MultiFileBuilderParamet
  * <p>
  * Using this class it is not only possible to create new parameters objects but
  * also to initialize the newly created objects with default values. This is
- * achieved by registering objects implementing the
- * {@link DefaultParametersHandler} interface with the
- * {@code registerDefaultsHandler()} method. The handler object is then called
- * whenever a parameters object of the supported class (or one of its
- * subclasses) is created. This makes it easy to define default settings that
- * are applied for all parameters object created by this {@code Parameters}
- * instance.
+ * via the associated {@link DefaultParametersManager} object. Such an object
+ * can be passed to the constructor, or a new (uninitialized) instance is
+ * created. There are convenience methods for interacting with the associated
+ * {@code DefaultParametersManager}, namely to register or remove
+ * {@link DefaultParametersHandler} objects. On all newly created parameters
+ * objects the handlers registered at the associated {@code DefaultParametersHandler}
+ * are automatically applied.
  * </p>
  * <p>
  * Implementation note: This class is thread-safe.
@@ -86,27 +84,48 @@ import org.apache.commons.configuration.builder.combined.MultiFileBuilderParamet
  */
 public final class Parameters
 {
-    /** A collection with the registered default handlers. */
-    private final Collection<DefaultHandlerData> defaultHandlers;
+    /** The manager for default handlers. */
+    private final DefaultParametersManager defaultParametersManager;
 
     /**
-     * Creates a new instance of {@code Parameters}.
+     * Creates a new instance of {@code Parameters}. A new, uninitialized
+     * {@link DefaultParametersManager} is created.
      */
     public Parameters()
     {
-        defaultHandlers = new CopyOnWriteArrayList<DefaultHandlerData>();
+        this(null);
+    }
+
+    /**
+     * Creates a new instance of {@code Parameters} and initializes it with the
+     * given {@code DefaultParametersManager}. Because
+     * {@code DefaultParametersManager} is thread-safe, it makes sense to share
+     * a single instance between multiple {@code Parameters} objects; that way
+     * the same initialization is performed on newly created parameters objects.
+     *
+     * @param manager the {@code DefaultParametersHandler} (may be <b>null</b>,
+     *        then a new default instance is created)
+     */
+    public Parameters(DefaultParametersManager manager)
+    {
+        defaultParametersManager =
+                (manager != null) ? manager : new DefaultParametersManager();
+    }
+
+    /**
+     * Returns the {@code DefaultParametersManager} associated with this object.
+     *
+     * @return the {@code DefaultParametersManager}
+     */
+    public DefaultParametersManager getDefaultParametersManager()
+    {
+        return defaultParametersManager;
     }
 
     /**
      * Registers the specified {@code DefaultParametersHandler} object for the
-     * given parameters class. This means that this handler object is invoked
-     * every time a new parameters object of the specified class or one of its
-     * subclasses is created. The handler can set arbitrary default values for
-     * the properties supported by this parameters object. If there are multiple
-     * handlers registered supporting a specific parameters class, they are
-     * invoked in the order in which they were registered. So handlers
-     * registered later may override the values set by handlers registered
-     * earlier.
+     * given parameters class. This is a convenience method which just delegates
+     * to the associated {@code DefaultParametersManager}.
      *
      * @param <T> the type of the parameters supported by this handler
      * @param paramsClass the parameters class supported by this handler (must
@@ -114,43 +133,19 @@ public final class Parameters
      * @param handler the {@code DefaultParametersHandler} to be registered
      *        (must not be <b>null</b>)
      * @throws IllegalArgumentException if a required parameter is missing
+     * @see DefaultParametersManager
      */
     public <T> void registerDefaultsHandler(Class<T> paramsClass,
             DefaultParametersHandler<? super T> handler)
     {
-        registerDefaultsHandler(paramsClass, handler, null);
+        getDefaultParametersManager().registerDefaultsHandler(paramsClass, handler);
     }
 
     /**
      * Registers the specified {@code DefaultParametersHandler} object for the
      * given parameters class and start class in the inheritance hierarchy. This
-     * method works like
-     * {@link #registerDefaultsHandler(Class, DefaultParametersHandler)}, but
-     * the defaults handler is only executed on parameter objects that are
-     * instances of the specified start class. Parameter classes do not stand in
-     * a real inheritance hierarchy; however, there is a logic hierarchy defined
-     * by the methods supported by the different parameter objects. A properties
-     * parameter object for instance supports all methods defined for a
-     * file-based parameter object. So one can argue that
-     * {@link FileBasedBuilderParameters} is a base interface of
-     * {@link PropertiesBuilderParameters} (although, for technical reasons,
-     * this relation is not reflected in the Java classes). A
-     * {@link DefaultParametersHandler} object defined for a base interface can
-     * also deal with parameter objects "derived" from this base interface (i.e.
-     * supporting a super set of the methods defined by the base interface). Now
-     * there may be the use case that there is an implementation of
-     * {@code DefaultParametersHandler} for a base interface (e.g.
-     * {@code FileBasedBuilderParameters}), but it should only process specific
-     * derived interfaces (say {@code PropertiesBuilderParameters}, but not
-     * {@link XMLBuilderParameters}). This can be achieved by passing in
-     * {@code PropertiesBuilderParameters} as start class. In this case,
-     * {@code Parameters} ensures that the handler is only called on parameter
-     * objects having both the start class and the actual type supported by the
-     * handler as base interfaces. The passed in start class can be <b>null</b>;
-     * then the parameter class supported by the handler is used (which is the
-     * default behavior of the
-     * {@link #registerDefaultsHandler(Class, DefaultParametersHandler)}
-     * method).
+     * is a convenience method which just delegates to the associated
+     * {@code DefaultParametersManager}.
      *
      * @param <T> the type of the parameters supported by this handler
      * @param paramsClass the parameters class supported by this handler (must
@@ -164,57 +159,8 @@ public final class Parameters
     public <T> void registerDefaultsHandler(Class<T> paramsClass,
             DefaultParametersHandler<? super T> handler, Class<?> startClass)
     {
-        if (paramsClass == null)
-        {
-            throw new IllegalArgumentException(
-                    "Parameters class must not be null!");
-        }
-        if (handler == null)
-        {
-            throw new IllegalArgumentException(
-                    "DefaultParametersHandler must not be null!");
-        }
-        defaultHandlers.add(new DefaultHandlerData(handler, paramsClass,
-                startClass));
-    }
-
-    /**
-     * Removes the specified {@code DefaultParametersHandler} from this
-     * instance. If this handler has been registered multiple times for
-     * different start classes, all occurrences are removed.
-     *
-     * @param handler the {@code DefaultParametersHandler} to be removed
-     */
-    public void unregisterDefaultsHandler(DefaultParametersHandler<?> handler)
-    {
-        unregisterDefaultsHandler(handler, null);
-    }
-
-    /**
-     * Removes the specified {@code DefaultParametersHandler} from this instance
-     * if it is in combination with the given start class. If this handler has
-     * been registered multiple times for different start classes, only
-     * occurrences for the given start class are removed. The {@code startClass}
-     * parameter can be <b>null</b>, then all occurrences of the handler are
-     * removed.
-     *
-     * @param handler the {@code DefaultParametersHandler} to be removed
-     * @param startClass the start class for which this handler is to be removed
-     */
-    public void unregisterDefaultsHandler(DefaultParametersHandler<?> handler,
-            Class<?> startClass)
-    {
-        Collection<DefaultHandlerData> toRemove =
-                new LinkedList<DefaultHandlerData>();
-        for (DefaultHandlerData dhd : defaultHandlers)
-        {
-            if (dhd.isOccurrence(handler, startClass))
-            {
-                toRemove.add(dhd);
-            }
-        }
-
-        defaultHandlers.removeAll(toRemove);
+        getDefaultParametersManager().registerDefaultsHandler(paramsClass,
+                handler, startClass);
     }
 
     /**
@@ -326,31 +272,6 @@ public final class Parameters
     }
 
     /**
-     * Initializes the passed in {@code BuilderParameters} object by applying
-     * all matching {@link DefaultParametersHandler} objects registered at this
-     * instance. Using this method the passed in parameters object can be
-     * populated with default values. It is not necessary to call this method
-     * for parameter objects that have been created by this {@code Parameters}
-     * instance - in this case, it is called automatically. However, if a
-     * parameters object was created by another source, this method can be used
-     * to apply the {@code DefaultParametersHandler} objects which have been
-     * registered here.
-     *
-     * @param params the parameters object to be initialized (may be
-     *        <b>null</b>, then this method has no effect)
-     */
-    public void initializeParameters(BuilderParameters params)
-    {
-        if (params != null)
-        {
-            for (DefaultHandlerData dhd : defaultHandlers)
-            {
-                dhd.applyHandlerIfMatching(params);
-            }
-        }
-    }
-
-    /**
      * Creates a proxy object for a given parameters interface based on the
      * given implementation object. The newly created object is initialized
      * with default values if there are matching {@link DefaultParametersHandler}
@@ -372,7 +293,8 @@ public final class Parameters
         Object obj =
                 Proxy.newProxyInstance(Parameters.class.getClassLoader(),
                         ifcClasses, new ParametersIfcInvocationHandler(target));
-        initializeParameters((BuilderParameters) obj);
+        getDefaultParametersManager().initializeParameters(
+                (BuilderParameters) obj);
         return ifcClass.cast(obj);
     }
 
@@ -427,73 +349,6 @@ public final class Parameters
             Class<?> declaringClass = method.getDeclaringClass();
             return declaringClass.isInterface()
                     && !declaringClass.equals(BuilderParameters.class);
-        }
-    }
-
-    /**
-     * A data class storing information about {@code DefaultParametersHandler}
-     * objects added to a {@code Parameters} object. Using this class it is
-     * possible to find out which default handlers apply for a given parameters
-     * object and to invoke them.
-     */
-    private static class DefaultHandlerData
-    {
-        /** The handler object.*/
-        private final DefaultParametersHandler<?> handler;
-
-        /** The class supported by this handler.*/
-        private final Class<?> parameterClass;
-
-        /** The start class for applying this handler.*/
-        private final Class<?> startClass;
-
-        /**
-         *
-         * Creates a new instance of {@code DefaultHandlerData}.
-         * @param h the {@code DefaultParametersHandler}
-         * @param cls the handler's data class
-         * @param startCls the start class
-         */
-        public DefaultHandlerData(DefaultParametersHandler<?> h, Class<?> cls, Class<?> startCls)
-        {
-            handler = h;
-            parameterClass = cls;
-            startClass = startCls;
-        }
-
-        /**
-         * Checks whether the managed {@code DefaultParametersHandler} can be
-         * applied to the given parameters object. If this is the case, it is
-         * executed on this object and can initialize it with default values.
-         * @param obj the parameters object to be initialized
-         */
-        @SuppressWarnings("unchecked")
-        // There are explicit isInstance() checks, so there won't be
-        // ClassCastExceptions
-        public void applyHandlerIfMatching(BuilderParameters obj)
-        {
-            if(parameterClass.isInstance(obj) && (startClass == null || startClass.isInstance(obj)))
-            {
-                @SuppressWarnings("rawtypes")
-                DefaultParametersHandler handlerUntyped = handler;
-                handlerUntyped.initializeDefaults(obj);
-            }
-        }
-
-        /**
-         * Tests whether this instance refers to the specified occurrence of a
-         * {@code DefaultParametersHandler}.
-         *
-         * @param h the handler to be checked
-         * @param startCls the start class
-         * @return <b>true</b> if this instance refers to this occurrence,
-         *         <b>false</b> otherwise
-         */
-        public boolean isOccurrence(DefaultParametersHandler<?> h,
-                Class<?> startCls)
-        {
-            return h == handler
-                    && (startCls == null || startCls.equals(startClass));
         }
     }
 }
