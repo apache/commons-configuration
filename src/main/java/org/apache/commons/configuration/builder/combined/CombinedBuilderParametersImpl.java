@@ -28,6 +28,8 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
+import org.apache.commons.configuration.builder.DefaultParametersHandler;
+import org.apache.commons.configuration.builder.DefaultParametersManager;
 
 /**
  * <p>
@@ -66,6 +68,9 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
 
     /** A list with default parameters for child configuration sources. */
     private final Collection<BuilderParameters> childParameters;
+
+    /** The manager for default handlers. */
+    private DefaultParametersManager childDefaultParametersManager;
 
     /** The base path for configuration sources to be loaded. */
     private String basePath;
@@ -341,6 +346,64 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
     public Collection<? extends BuilderParameters> getDefaultChildParameters()
     {
         return new ArrayList<BuilderParameters>(childParameters);
+    }
+
+    /**
+     * Returns the {@code DefaultParametersManager} object for initializing
+     * parameter objects for child configuration sources. This method never
+     * returns <b>null</b>. If no manager was set, a new instance is created
+     * right now.
+     *
+     * @return the {@code DefaultParametersManager} for child configuration
+     *         sources
+     */
+    public DefaultParametersManager getChildDefaultParametersManager()
+    {
+        if (childDefaultParametersManager == null)
+        {
+            childDefaultParametersManager = new DefaultParametersManager();
+        }
+        return childDefaultParametersManager;
+    }
+
+    /**
+     * {@inheritDoc} This implementation stores the passed in manager object. An
+     * already existing manager object (either explicitly set or created on
+     * demand) is overridden. This also removes all default handlers registered
+     * before!
+     */
+    public CombinedBuilderParametersImpl setChildDefaultParametersManager(
+            DefaultParametersManager manager)
+    {
+        childDefaultParametersManager = manager;
+        return this;
+    }
+
+    /**
+     * {@inheritDoc} This implementation registers the passed in handler at an
+     * internal {@link DefaultParametersManager} instance. If none was set, a
+     * new instance is created now.
+     */
+    public <D> CombinedBuilderParametersImpl registerChildDefaultsHandler(
+            Class<D> paramClass, DefaultParametersHandler<? super D> handler)
+    {
+        getChildDefaultParametersManager().registerDefaultsHandler(paramClass,
+                handler);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc} This implementation registers the passed in handler at an
+     * internal {@link DefaultParametersManager} instance. If none was set, a
+     * new instance is created now.
+     */
+    public <D> CombinedBuilderParametersImpl registerChildDefaultsHandler(
+            Class<D> paramClass, DefaultParametersHandler<? super D> handler,
+            Class<?> startClass)
+    {
+        getChildDefaultParametersManager().registerDefaultsHandler(paramClass,
+                handler, startClass);
+        return this;
     }
 
     /**

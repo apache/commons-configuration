@@ -34,8 +34,11 @@ import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
+import org.apache.commons.configuration.builder.DefaultParametersHandler;
+import org.apache.commons.configuration.builder.DefaultParametersManager;
 import org.apache.commons.configuration.builder.PropertiesBuilderParametersImpl;
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
+import org.apache.commons.configuration.builder.fluent.FileBasedBuilderParameters;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -389,5 +392,72 @@ public class TestCombinedBuilderParametersImpl
         params.addChildParameters((BuilderParameters) null);
         assertTrue("Got child parameters", params.getDefaultChildParameters()
                 .isEmpty());
+    }
+
+    /**
+     * Tests whether a default parameters manager is dynamically created if it has not
+     * been set.
+     */
+    @Test
+    public void testGetChildDefaultParametersManagerUndefined() {
+        CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        assertNotNull("No default manager", params.getChildDefaultParametersManager());
+    }
+
+    /**
+     * Tests whether a default parameters manager can be set and queried.
+     */
+    @Test
+    public void testGetChildDefaultParametersManagerSpecific() {
+        DefaultParametersManager manager = EasyMock
+                .createMock(DefaultParametersManager.class);
+        EasyMock.replay(manager);
+        CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        assertSame("Wrong result", params,
+                params.setChildDefaultParametersManager(manager));
+        assertSame("Wrong manager", manager, params.getChildDefaultParametersManager());
+    }
+
+    /**
+     * Creates a mock for a defaults handler.
+     * @return the handler mock
+     */
+    private static DefaultParametersHandler<BuilderParameters> createDefaultsHandlerMock()
+    {
+        @SuppressWarnings("unchecked")
+        DefaultParametersHandler<BuilderParameters> mock = EasyMock.createMock(DefaultParametersHandler.class);
+        return mock;
+    }
+
+    /**
+     * Tests whether a defaults handler for a child source can be registered.
+     */
+    @Test
+    public void testRegisterChildDefaultsHandler()
+    {
+        DefaultParametersManager manager = EasyMock.createMock(DefaultParametersManager.class);
+        DefaultParametersHandler<BuilderParameters> handler = createDefaultsHandlerMock();
+        manager.registerDefaultsHandler(BuilderParameters.class, handler);
+        EasyMock.replay(manager, handler);
+        CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        params.setChildDefaultParametersManager(manager);
+        assertSame("Wrong result", params, params.registerChildDefaultsHandler(BuilderParameters.class, handler));
+        EasyMock.verify(manager);
+    }
+
+    /**
+     * Tests whether a defaults handler for a child source with a class restriction can be registered.
+     */
+    @Test
+    public void testRegisterChildDefaultsHandlerWithStartClass()
+    {
+        DefaultParametersManager manager = EasyMock.createMock(DefaultParametersManager.class);
+        DefaultParametersHandler<BuilderParameters> handler = createDefaultsHandlerMock();
+        manager.registerDefaultsHandler(BuilderParameters.class, handler, FileBasedBuilderParameters.class);
+        EasyMock.replay(manager, handler);
+        CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        params.setChildDefaultParametersManager(manager);
+        assertSame("Wrong result", params, params.registerChildDefaultsHandler(BuilderParameters.class, handler, FileBasedBuilderParameters.class));
+        EasyMock.verify(manager);
     }
 }

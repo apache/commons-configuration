@@ -19,6 +19,8 @@ package org.apache.commons.configuration.builder.combined;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
+import org.apache.commons.configuration.builder.DefaultParametersHandler;
+import org.apache.commons.configuration.builder.DefaultParametersManager;
 
 /**
  * <p>
@@ -111,4 +113,58 @@ public interface CombinedBuilderProperties<T>
      * @return a reference to this object for method chaining
      */
     T addChildParameters(BuilderParameters params);
+
+    /**
+     * Sets a {@code DefaultParametersManager} object responsible for managing the default
+     * parameter handlers to be applied on child configuration sources. When creating
+     * builders for child configuration sources their parameters are initialized using
+     * this {@code DefaultParametersManager} instance. This way, meaningful defaults can
+     * be set. Note that calling this method overrides all
+     * {@code DefaultParametersHandler} objects previously set by one of the
+     * {@code registerChildDefaultsHandler()} methods! So either use this method if a
+     * pre-configured manager object is to be set or call the
+     * {@code registerChildDefaultHandler()} methods with the handlers to be registered
+     * (in the latter case, it is not necessary to set a {@code DefaultParametersManager}
+     * explicitly; a default one is created behind the scenes).
+     *
+     * @param manager the {@code DefaultParametersManager}
+     * @return a reference to this object for method chaining
+     */
+    T setChildDefaultParametersManager(DefaultParametersManager manager);
+
+    /**
+     * Registers a {@code DefaultParametersHandler} for child configuration sources. With
+     * this method an arbitrary number of handler objects can be set. When creating
+     * builders for child configuration sources their parameters are initialized by
+     * invoking all matching {@code DefaultParametersHandler}s on them. So, basically the
+     * same mechanism is used for the initialization of parameters for child configuration
+     * sources as for normal parameter objects.
+     *
+     * @param <D> the type of the handler to be registered
+     * @param paramClass the parameter class supported by the handler
+     * @param handler the {@code DefaultParametersHandler} to be registered
+     * @return a reference to this object for method chaining
+     * @see DefaultParametersManager#registerDefaultsHandler(Class,
+     * DefaultParametersHandler)
+     */
+    <D> T registerChildDefaultsHandler(Class<D> paramClass,
+            DefaultParametersHandler<? super D> handler);
+
+    /**
+     * Registers a {@code DefaultParametersHandler} for child configuration sources
+     * derived from the given start class. This method works like the overloaded variant,
+     * but limits the application of the defaults handler to specific child configuration
+     * sources.
+     *
+     * @param <D> the type of the handler to be registered
+     * @param paramClass the parameter class supported by the handler
+     * @param handler the {@code DefaultParametersHandler} to be registered
+     * @param startClass an optional start class in the hierarchy of parameter objects for
+     * which this handler should be applied
+     * @return a reference to this object for method chaining
+     * @see DefaultParametersManager#registerDefaultsHandler(Class,
+     * DefaultParametersHandler, Class)
+     */
+    <D> T registerChildDefaultsHandler(Class<D> paramClass,
+            DefaultParametersHandler<? super D> handler, Class<?> startClass);
 }
