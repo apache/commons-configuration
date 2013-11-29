@@ -35,7 +35,9 @@ import java.util.Random;
 import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.builder.BuilderConfigurationWrapperFactory;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
+import org.apache.commons.configuration.builder.CopyObjectDefaultHandler;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration.builder.FileBasedBuilderProperties;
 import org.apache.commons.configuration.builder.combined.CombinedConfigurationBuilder;
 import org.apache.commons.configuration.builder.combined.MultiFileConfigurationBuilder;
 import org.apache.commons.configuration.builder.combined.ReloadingCombinedConfigurationBuilder;
@@ -353,9 +355,11 @@ public class TestDynamicCombinedConfiguration
                 .setDefinitionBuilderParameters(
                         new FileBasedBuilderParametersImpl()
                                 .setFile(MULTI_DYNAMIC_FILE))
-                .addChildParameters(
-                        new FileBasedBuilderParametersImpl()
-                                .setReloadingRefreshDelay(1L)));
+                .registerChildDefaultsHandler(
+                        FileBasedBuilderProperties.class,
+                        new CopyObjectDefaultHandler(
+                                new FileBasedBuilderParametersImpl()
+                                        .setReloadingRefreshDelay(1L))));
         CombinedConfiguration config = builder.getConfiguration();
         assertEquals("Wrong property value (1)", "ID0001",
                 config.getString("Product/FIIndex/FI[@id='123456781']"));

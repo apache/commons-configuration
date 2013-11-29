@@ -32,8 +32,11 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
+import org.apache.commons.configuration.builder.BasicBuilderProperties;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
+import org.apache.commons.configuration.builder.CopyObjectDefaultHandler;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration.builder.FileBasedBuilderProperties;
 import org.apache.commons.configuration.builder.ReloadingDetectorFactory;
 import org.apache.commons.configuration.builder.ReloadingFileBasedConfigurationBuilder;
 import org.apache.commons.configuration.builder.fluent.Parameters;
@@ -193,9 +196,11 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
         builder.configure(parameters
                 .combined()
                 .setDefinitionBuilder(new ConstantConfigurationBuilder(defConf))
-                .addChildParameters(
-                        new FileBasedBuilderParametersImpl()
-                                .setReloadingDetectorFactory(detectorFactory)));
+                .registerChildDefaultsHandler(
+                        FileBasedBuilderProperties.class,
+                        new CopyObjectDefaultHandler(
+                                new FileBasedBuilderParametersImpl()
+                                        .setReloadingDetectorFactory(detectorFactory))));
         CombinedConfiguration config = builder.getConfiguration();
         assertEquals("Wrong initial value (1)", 0,
                 config.getInt(testProperty(1)));
@@ -250,11 +255,16 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
                 .combined()
                 .setDefinitionBuilder(new ConstantConfigurationBuilder(defConf))
                 .setSynchronizer(sync)
-                .addChildParameters(
-                        new BasicBuilderParameters().setSynchronizer(sync))
-                .addChildParameters(
-                        new FileBasedBuilderParametersImpl()
-                                .setReloadingDetectorFactory(detectorFactory)));
+                .registerChildDefaultsHandler(
+                        BasicBuilderProperties.class,
+                        new CopyObjectDefaultHandler(
+                                new BasicBuilderParameters()
+                                        .setSynchronizer(sync)))
+                .registerChildDefaultsHandler(
+                        FileBasedBuilderProperties.class,
+                        new CopyObjectDefaultHandler(
+                                new FileBasedBuilderParametersImpl()
+                                        .setReloadingDetectorFactory(detectorFactory))));
 
         assertEquals("Wrong initial value", "100", builder.getConfiguration()
                 .getString("/property[@name='config']/@value"));
