@@ -43,7 +43,7 @@ import org.apache.commons.configuration.ConfigurationRuntimeException;
  * feature.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public class CopyObjectDefaultHandler implements

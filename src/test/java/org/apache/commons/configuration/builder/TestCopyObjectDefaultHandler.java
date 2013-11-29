@@ -28,7 +28,7 @@ import org.junit.Test;
 /**
  * Test class for {@code CopyObjectDefaultHandler}.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class TestCopyObjectDefaultHandler
 {

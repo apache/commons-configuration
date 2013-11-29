@@ -47,7 +47,7 @@ import org.apache.commons.configuration.builder.fluent.XMLBuilderParameters;
  * Implementation note: This class is thread-safe.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public class DefaultParametersManager
