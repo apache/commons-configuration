@@ -320,21 +320,6 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
     }
 
     /**
-     * {@inheritDoc} This implementation stores the passed in object in an
-     * internal collection. From there it can be queried later to perform
-     * initialization of a combined builder's child configuration sources.
-     */
-    public CombinedBuilderParametersImpl addChildParameters(
-            BuilderParameters params)
-    {
-        if (params != null)
-        {
-            childParameters.add(params);
-        }
-        return this;
-    }
-
-    /**
      * Returns a collection with default parameter objects for child
      * configuration sources. This collection contains the same objects (in the
      * same order) that were passed to {@code addChildParameters()}. The
