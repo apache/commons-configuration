@@ -296,6 +296,29 @@ public final class BeanHelper
     }
 
     /**
+     * Copies matching properties from the source bean to the destination bean
+     * using a specially configured {@code PropertyUtilsBean} instance. This
+     * method ensures that enhanced introspection is enabled when doing the copy
+     * operation.
+     *
+     * @param dest the destination bean
+     * @param orig the source bean
+     * @throws NoSuchMethodException exception thrown by
+     *         {@code PropertyUtilsBean}
+     * @throws InvocationTargetException exception thrown by
+     *         {@code PropertyUtilsBean}
+     * @throws IllegalAccessException exception thrown by
+     *         {@code PropertyUtilsBean}
+     * @since 2.0
+     */
+    public static void copyProperties(Object dest, Object orig)
+            throws IllegalAccessException, InvocationTargetException,
+            NoSuchMethodException
+    {
+        beanUtilsBean.getPropertyUtils().copyProperties(dest, orig);
+    }
+
+    /**
      * Return the Class of the property if it can be determined.
      * @param bean The bean containing the property.
      * @param propName The name of the property.

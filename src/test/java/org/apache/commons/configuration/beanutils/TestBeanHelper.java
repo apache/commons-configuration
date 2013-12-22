@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.DynaBean;
+import org.apache.commons.beanutils.LazyDynaBean;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.easymock.EasyMock;
@@ -387,6 +388,21 @@ public class TestBeanHelper
     public void testCreateWrapDynaBeanNull()
     {
         BeanHelper.createWrapDynaBean(null);
+    }
+
+    /**
+     * Tests whether properties from one bean to another can be copied.
+     */
+    @Test
+    public void testCopyProperties() throws Exception
+    {
+        PropertiesConfiguration src = new PropertiesConfiguration();
+        src.setHeader("TestHeader");
+        src.setFooter("TestFooter");
+        LazyDynaBean dest = new LazyDynaBean();
+        BeanHelper.copyProperties(dest, src);
+        assertEquals("Wrong footer property", "TestFooter", dest.get("footer"));
+        assertEquals("Wrong header property", "TestHeader", dest.get("header"));
     }
 
     /**
