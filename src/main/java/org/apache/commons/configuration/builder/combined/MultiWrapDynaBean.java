@@ -24,7 +24,7 @@ import java.util.Map;
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaClass;
 import org.apache.commons.beanutils.DynaProperty;
-import org.apache.commons.beanutils.WrapDynaBean;
+import org.apache.commons.configuration.beanutils.BeanHelper;
 
 /**
  * <p>
@@ -173,6 +173,6 @@ class MultiWrapDynaBean implements DynaBean
         {
             return (DynaBean) bean;
         }
-        return new WrapDynaBean(bean);
+        return BeanHelper.createWrapDynaBean(bean);
     }
 }
