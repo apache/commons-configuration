@@ -29,8 +29,11 @@ import java.util.TreeSet;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConvertUtilsBean;
+import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.FluentPropertyBeanIntrospector;
 import org.apache.commons.beanutils.PropertyUtilsBean;
+import org.apache.commons.beanutils.WrapDynaBean;
+import org.apache.commons.beanutils.WrapDynaClass;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.lang3.ClassUtils;
 
@@ -270,6 +273,26 @@ public final class BeanHelper
                 initProperty(bean, propName, e.getValue());
             }
         }
+    }
+
+    /**
+     * Creates a {@code DynaBean} instance which wraps the passed in bean.
+     *
+     * @param bean the bean to be wrapped (must not be <b>null</b>)
+     * @return a {@code DynaBean} wrapping the passed in bean
+     * @throws IllegalArgumentException if the bean is <b>null</b>
+     * @since 2.0
+     */
+    public static DynaBean createWrapDynaBean(Object bean)
+    {
+        if (bean == null)
+        {
+            throw new IllegalArgumentException("Bean must not be null!");
+        }
+        WrapDynaClass dynaClass =
+                WrapDynaClass.createDynaClass(bean.getClass(),
+                        beanUtilsBean.getPropertyUtils());
+        return new WrapDynaBean(bean, dynaClass);
     }
 
     /**

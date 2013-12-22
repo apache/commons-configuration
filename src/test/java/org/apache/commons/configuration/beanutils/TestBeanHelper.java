@@ -27,7 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -363,6 +365,28 @@ public class TestBeanHelper
         data.setBeanClassName(BeanCreationTestBean.class.getName());
         checkBean((BeanCreationTestBean) helper.createBean(data, null, param));
         assertSame("Wrong parameter", param, factory.parameter);
+    }
+
+    /**
+     * Tests whether a wrapper DynaBean for a Java bean can be created.
+     */
+    @Test
+    public void testCreateWrapDynaBean()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        DynaBean bean = BeanHelper.createWrapDynaBean(config);
+        String value = "TestFooter";
+        bean.set("footer", value);
+        assertEquals("Property not set", value, config.getFooter());
+    }
+
+    /**
+     * Tries to create a wrapper DynaBean for a null bean.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateWrapDynaBeanNull()
+    {
+        BeanHelper.createWrapDynaBean(null);
     }
 
     /**
