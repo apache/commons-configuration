@@ -16,8 +16,8 @@
  */
 package org.apache.commons.configuration.builder;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.configuration.beanutils.BeanHelper;
 
 /**
  * <p>
@@ -96,9 +96,9 @@ public class CopyObjectDefaultHandler implements
     {
         try
         {
-            PropertyUtils.copyProperties(parameters, getSource()
+            BeanHelper.copyProperties(parameters, getSource()
                     .getParameters());
-            PropertyUtils.copyProperties(parameters, getSource());
+            BeanHelper.copyProperties(parameters, getSource());
         }
         catch (Exception e)
         {
