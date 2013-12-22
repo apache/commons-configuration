@@ -26,9 +26,9 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
@@ -315,8 +315,8 @@ public class TestCombinedBuilderParametersImpl
         EasyMock.replay(defparams);
         CombinedBuilderParametersImpl params =
                 new CombinedBuilderParametersImpl();
-        PropertyUtils.setProperty(params, "basePath", "testPath");
-        PropertyUtils.setProperty(params, "definitionBuilderParameters",
+        BeanHelper.setProperty(params, "basePath", "testPath");
+        BeanHelper.setProperty(params, "definitionBuilderParameters",
                 defparams);
         assertEquals("Wrong path", "testPath", params.getBasePath());
         assertSame("Wrong def parameters", defparams,

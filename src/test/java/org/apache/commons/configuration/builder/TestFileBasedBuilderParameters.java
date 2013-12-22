@@ -28,8 +28,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.configuration.ConfigurationAssert;
+import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.io.FileBased;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.io.FileLocationStrategy;
@@ -270,9 +270,9 @@ public class TestFileBasedBuilderParameters
     {
         FileBasedBuilderParametersImpl params =
                 new FileBasedBuilderParametersImpl();
-        PropertyUtils.setProperty(params, "throwExceptionOnMissing",
+        BeanHelper.setProperty(params, "throwExceptionOnMissing",
                 Boolean.TRUE);
-        PropertyUtils.setProperty(params, "fileName", "test.xml");
+        BeanHelper.setProperty(params, "fileName", "test.xml");
         assertEquals("File name not set", "test.xml", params.getFileHandler()
                 .getFileName());
         Map<String, Object> map = params.getParameters();

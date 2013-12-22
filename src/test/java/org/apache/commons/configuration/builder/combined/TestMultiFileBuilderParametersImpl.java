@@ -25,7 +25,7 @@ import static org.junit.Assert.assertSame;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.easymock.EasyMock;
@@ -117,9 +117,9 @@ public class TestMultiFileBuilderParametersImpl
         BuilderParameters bp = EasyMock.createMock(BuilderParameters.class);
         EasyMock.replay(bp);
         String pattern = "testPattern";
-        PropertyUtils.setProperty(params, "filePattern", pattern);
-        PropertyUtils.setProperty(params, "managedBuilderParameters", bp);
-        PropertyUtils.setProperty(params, "throwExceptionOnMissing",
+        BeanHelper.setProperty(params, "filePattern", pattern);
+        BeanHelper.setProperty(params, "managedBuilderParameters", bp);
+        BeanHelper.setProperty(params, "throwExceptionOnMissing",
                 Boolean.TRUE);
         Map<String, Object> map = params.getParameters();
         assertEquals("Exception flag not set", Boolean.TRUE,

@@ -23,7 +23,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -136,8 +136,8 @@ public class TestDatabaseBuilderParametersImpl
     @Test
     public void testBeanProperties() throws Exception
     {
-        PropertyUtils.setProperty(params, "table", "testTable");
-        PropertyUtils.setProperty(params, "autoCommit", Boolean.FALSE);
+        BeanHelper.setProperty(params, "table", "testTable");
+        BeanHelper.setProperty(params, "autoCommit", Boolean.FALSE);
         Map<String, Object> map = params.getParameters();
         assertEquals("Wrong table name", "testTable", map.get("table"));
         assertEquals("Wrong auto commit", Boolean.FALSE, map.get("autoCommit"));

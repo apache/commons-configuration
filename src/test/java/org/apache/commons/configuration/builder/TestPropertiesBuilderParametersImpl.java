@@ -21,9 +21,9 @@ import static org.junit.Assert.assertSame;
 
 import java.util.Map;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.PropertiesConfigurationLayout;
+import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -91,10 +91,10 @@ public class TestPropertiesBuilderParametersImpl
         PropertiesConfiguration.IOFactory factory =
                 EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
         EasyMock.replay(factory);
-        PropertyUtils.setProperty(params, "iOFactory", factory);
-        PropertyUtils.setProperty(params, "throwExceptionOnMissing",
+        BeanHelper.setProperty(params, "iOFactory", factory);
+        BeanHelper.setProperty(params, "throwExceptionOnMissing",
                 Boolean.TRUE);
-        PropertyUtils.setProperty(params, "fileName", "test.properties");
+        BeanHelper.setProperty(params, "fileName", "test.properties");
         assertEquals("Wrong file name", "test.properties", params
                 .getFileHandler().getFileName());
         Map<String, Object> paramsMap = params.getParameters();

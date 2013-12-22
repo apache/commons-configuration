@@ -21,7 +21,7 @@ import static org.junit.Assert.assertSame;
 
 import java.util.Map;
 
-import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -63,8 +63,8 @@ public class TestHierarchicalBuilderParametersImpl
     public void testBeanPropertiesAccess() throws Exception
     {
         ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
-        PropertyUtils.setProperty(params, "expressionEngine", engine);
-        PropertyUtils.setProperty(params, "throwExceptionOnMissing",
+        BeanHelper.setProperty(params, "expressionEngine", engine);
+        BeanHelper.setProperty(params, "throwExceptionOnMissing",
                 Boolean.TRUE);
         Map<String, Object> map = params.getParameters();
         assertSame("Wrong expression engine", engine,

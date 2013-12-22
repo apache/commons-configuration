@@ -23,7 +23,7 @@ import java.util.Map;
 
 import javax.naming.Context;
 
-import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -91,8 +91,8 @@ public class TestJndiBuilderParametersImpl
         Context ctx = EasyMock.createMock(Context.class);
         EasyMock.replay(ctx);
         String prefix = "testJndiPrefix";
-        PropertyUtils.setProperty(params, "context", ctx);
-        PropertyUtils.setProperty(params, "prefix", prefix);
+        BeanHelper.setProperty(params, "context", ctx);
+        BeanHelper.setProperty(params, "prefix", prefix);
         Map<String, Object> paramsMap = params.getParameters();
         assertSame("Context not in map", ctx, paramsMap.get("context"));
         assertEquals("Prefix not in map", prefix, paramsMap.get("prefix"));

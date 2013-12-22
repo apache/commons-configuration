@@ -23,7 +23,7 @@ import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 
-import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -127,11 +127,11 @@ public class TestXMLBuilderParametersImpl
         EntityResolver resolver = EasyMock.createMock(EntityResolver.class);
         DocumentBuilder builder = EasyMock.createMock(DocumentBuilder.class);
         EasyMock.replay(resolver, builder);
-        PropertyUtils.setProperty(params, "throwExceptionOnMissing",
+        BeanHelper.setProperty(params, "throwExceptionOnMissing",
                 Boolean.TRUE);
-        PropertyUtils.setProperty(params, "fileName", "test.xml");
-        PropertyUtils.setProperty(params, "entityResolver", resolver);
-        PropertyUtils.setProperty(params, "documentBuilder", builder);
+        BeanHelper.setProperty(params, "fileName", "test.xml");
+        BeanHelper.setProperty(params, "entityResolver", resolver);
+        BeanHelper.setProperty(params, "documentBuilder", builder);
         assertEquals("Wrong file name", "test.xml", params.getFileHandler()
                 .getFileName());
         Map<String, Object> paramsMap = params.getParameters();
