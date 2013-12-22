@@ -27,8 +27,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.ConvertUtilsBean;
+import org.apache.commons.beanutils.FluentPropertyBeanIntrospector;
+import org.apache.commons.beanutils.PropertyUtilsBean;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.lang3.ClassUtils;
 
@@ -74,6 +76,14 @@ public final class BeanHelper
      * can be created with their own configuration.
      */
     public static final BeanHelper INSTANCE = new BeanHelper();
+
+    /**
+     * A special instance of {@code BeanUtilsBean} which is used for all
+     * property set and copy operations. This instance was initialized with
+     * {@code BeanIntrospector} objects which support fluent interfaces. This is
+     * required for handling builder parameter objects correctly.
+     */
+    private static final BeanUtilsBean beanUtilsBean = initBeanUtilsBean();
 
     /** Stores a map with the registered bean factories. */
     private final Map<String, BeanFactory> BEAN_FACTORIES = Collections
@@ -272,7 +282,9 @@ public final class BeanHelper
     {
         try
         {
-            PropertyDescriptor desc = PropertyUtils.getPropertyDescriptor(bean, propName);
+            PropertyDescriptor desc =
+                    beanUtilsBean.getPropertyUtils().getPropertyDescriptor(
+                            bean, propName);
             if (desc == null)
             {
                 return null;
@@ -296,7 +308,7 @@ public final class BeanHelper
      */
     private static void initProperty(Object bean, String propName, Object value)
     {
-        if (!PropertyUtils.isWriteable(bean, propName))
+        if (!isPropertyWriteable(bean, propName))
         {
             throw new ConfigurationRuntimeException("Property " + propName
                     + " cannot be set on " + bean.getClass().getName());
@@ -304,7 +316,7 @@ public final class BeanHelper
 
         try
         {
-            BeanUtils.setProperty(bean, propName, value);
+            beanUtilsBean.setProperty(bean, propName, value);
         }
         catch (IllegalAccessException iaex)
         {
@@ -360,7 +372,7 @@ public final class BeanHelper
      */
     public static void setProperty(Object bean, String propName, Object value)
     {
-        if (PropertyUtils.isWriteable(bean, propName))
+        if (isPropertyWriteable(bean, propName))
         {
             initProperty(bean, propName, value);
         }
@@ -449,6 +461,20 @@ public final class BeanHelper
             throws ClassNotFoundException
     {
         return ClassUtils.getClass(name);
+    }
+
+    /**
+     * Checks whether the specified property of the given bean instance supports
+     * write access.
+     *
+     * @param bean the bean instance
+     * @param propName the name of the property in question
+     * @return <b>true</b> if this property can be written, <b>false</b>
+     *         otherwise
+     */
+    private static boolean isPropertyWriteable(Object bean, String propName)
+    {
+        return beanUtilsBean.getPropertyUtils().isWriteable(bean, propName);
     }
 
     /**
@@ -545,6 +571,21 @@ public final class BeanHelper
     {
         final Class<?> beanClass = fetchBeanClass(data, defaultClass, factory);
         return new BeanCreationContextImpl(this, beanClass, data, param);
+    }
+
+    /**
+     * Initializes the shared {@code BeanUtilsBean} instance. This method sets
+     * up custom bean introspection in a way that fluent parameter interfaces
+     * are supported.
+     *
+     * @return the {@code BeanUtilsBean} instance to be used for all property
+     *         set operations
+     */
+    private static BeanUtilsBean initBeanUtilsBean()
+    {
+        PropertyUtilsBean propUtilsBean = new PropertyUtilsBean();
+        propUtilsBean.addBeanIntrospector(new FluentPropertyBeanIntrospector());
+        return new BeanUtilsBean(new ConvertUtilsBean(), propUtilsBean);
     }
 
     /**
