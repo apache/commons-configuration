@@ -18,7 +18,6 @@ package org.apache.commons.configuration.interpol;
 
 import java.util.ArrayList;
 
-import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.jexl2.Expression;
 import org.apache.commons.jexl2.JexlContext;
@@ -28,6 +27,7 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrLookup;
 import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.logging.Log;
 
 /**
  * Lookup that allows expressions to be evaluated.
@@ -75,11 +75,14 @@ public class ExprLookup implements Lookup
     /** The default suffix for subordinate lookup expressions */
     private static final String DEFAULT_SUFFIX = "]";
 
-    /** Configuration being operated on */
-    private AbstractConfiguration configuration;
+    /** The ConfigurationInterpolator used by this object. */
+    private ConfigurationInterpolator interpolator;
 
     /** The StrSubstitutor for performing replace operations. */
     private StrSubstitutor substitutor;
+
+    /** The logger used by this instance. */
+    private Log logger;
 
     /** The engine. */
     private final JexlEngine engine = new JexlEngine();
@@ -133,7 +136,6 @@ public class ExprLookup implements Lookup
         prefixMatcher = prefix;
     }
 
-
     /**
      * Set the suffix to use to identify subordinate expressions. This cannot be the
      * same as the suffix used for the primary expression.
@@ -163,13 +165,50 @@ public class ExprLookup implements Lookup
     }
 
     /**
-     * Set the configuration to be used to interpolate subordinate expressions.
-     * @param config The Configuration.
+     * Returns the logger used by this object.
+     *
+     * @return the {@code Log}
+     * @since 2.0
      */
-    public void setConfiguration(AbstractConfiguration config)
+    public Log getLogger()
     {
-        this.configuration = config;
-        installSubstitutor(config);
+        return logger;
+    }
+
+    /**
+     * Sets the logger to be used by this object. If no logger is passed in, no
+     * log output is generated.
+     *
+     * @param logger the {@code Log}
+     * @since 2.0
+     */
+    public void setLogger(Log logger)
+    {
+        this.logger = logger;
+    }
+
+    /**
+     * Returns the {@code ConfigurationInterpolator} used by this object.
+     *
+     * @return the {@code ConfigurationInterpolator}
+     * @since 2.0
+     */
+    public ConfigurationInterpolator getInterpolator()
+    {
+        return interpolator;
+    }
+
+    /**
+     * Sets the {@code ConfigurationInterpolator} to be used by this object.
+     *
+     * @param interpolator the {@code ConfigurationInterpolator} (may be
+     *        <b>null</b>)
+     * @since 2.0
+     */
+    public void setInterpolator(ConfigurationInterpolator interpolator)
+    {
+        this.interpolator = interpolator;
+        installSubstitutor(interpolator);
     }
 
     /**
@@ -192,24 +231,25 @@ public class ExprLookup implements Lookup
         }
         catch (Exception e)
         {
-            configuration.getLogger().debug("Error encountered evaluating " + result, e);
+            Log l = getLogger();
+            if (l != null)
+            {
+                l.debug("Error encountered evaluating " + result, e);
+            }
         }
 
         return result;
     }
 
     /**
-     * Creates a {@code StrSubstitutor} object which uses the
-     * {@code ConfigurationInterpolator} of the passed in configuration as
-     * lookup object.
+     * Creates a {@code StrSubstitutor} object which uses the passed in
+     * {@code ConfigurationInterpolator} as lookup object.
      *
-     * @param config the associated configuration
+     * @param ip the {@code ConfigurationInterpolator} to be used
      */
-    private void installSubstitutor(AbstractConfiguration config)
+    private void installSubstitutor(final ConfigurationInterpolator ip)
     {
-        final ConfigurationInterpolator interpolator =
-                (config == null) ? null : config.getInterpolator();
-        if (interpolator == null)
+        if (ip == null)
         {
             substitutor = null;
         }
@@ -220,7 +260,7 @@ public class ExprLookup implements Lookup
                 @Override
                 public String lookup(String key)
                 {
-                    Object value = interpolator.resolve(key);
+                    Object value = ip.resolve(key);
                     return (value != null) ? value.toString() : null;
                 }
             };

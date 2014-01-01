@@ -65,7 +65,8 @@ public class TestExprLookup
         handler.load(TEST_FILE);
         config.setLogger(log);
         ExprLookup lookup = new ExprLookup(vars);
-        lookup.setConfiguration(config);
+        lookup.setInterpolator(config.getInterpolator());
+        lookup.setLogger(log);
         String str = lookup.lookup(PATTERN1);
         assertTrue(str.startsWith("Goodbye"));
         str = lookup.lookup(PATTERN2);
@@ -74,10 +75,10 @@ public class TestExprLookup
     }
 
     /**
-     * Tests a lookup() operation if no configuration object has been set.
+     * Tests a lookup() operation if no ConfigurationInterpolator object has been set.
      */
     @Test
-    public void testLookupNoConfiguration()
+    public void testLookupNoConfigurationInterpolator()
     {
         ExprLookup.Variables vars = new ExprLookup.Variables();
         vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
