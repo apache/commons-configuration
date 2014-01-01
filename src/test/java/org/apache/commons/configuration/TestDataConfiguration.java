@@ -43,9 +43,9 @@ import java.util.NoSuchElementException;
 import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;
 
-import org.apache.commons.configuration.convert.ConversionException;
 import org.apache.commons.configuration.convert.DefaultConversionHandler;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
+import org.apache.commons.configuration.ex.ConversionException;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;

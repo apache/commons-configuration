@@ -18,6 +18,7 @@ package org.apache.commons.configuration.convert;
 
 import java.util.Collection;
 
+import org.apache.commons.configuration.ex.ConversionException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 
 /**

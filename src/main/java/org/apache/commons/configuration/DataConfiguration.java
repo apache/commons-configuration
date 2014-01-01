@@ -30,9 +30,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
-import org.apache.commons.configuration.convert.ConversionException;
 import org.apache.commons.configuration.convert.ConversionHandler;
 import org.apache.commons.configuration.convert.DefaultConversionHandler;
+import org.apache.commons.configuration.ex.ConversionException;
 import org.apache.commons.lang3.StringUtils;
 
 /**

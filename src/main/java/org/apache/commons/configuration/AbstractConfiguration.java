@@ -30,7 +30,6 @@ import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.apache.commons.configuration.convert.ConversionException;
 import org.apache.commons.configuration.convert.ConversionHandler;
 import org.apache.commons.configuration.convert.DefaultConversionHandler;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
@@ -40,6 +39,7 @@ import org.apache.commons.configuration.event.BaseEventSource;
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
+import org.apache.commons.configuration.ex.ConversionException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.InterpolatorSpecification;
 import org.apache.commons.configuration.interpol.Lookup;

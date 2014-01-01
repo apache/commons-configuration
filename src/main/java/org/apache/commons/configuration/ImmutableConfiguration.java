@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
-import org.apache.commons.configuration.convert.ConversionException;
+import org.apache.commons.configuration.ex.ConversionException;
 
 /**
  * <p>The main interface for accessing configuration data in a read-only fashion.</p>
