@@ -22,8 +22,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import org.apache.commons.configuration.ValueTransformer;
-
 /**
  * <p>
  * An abstract base class for concrete {@code ListDelimiterHandler}

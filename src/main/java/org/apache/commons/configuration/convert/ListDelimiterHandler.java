@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.configuration.ValueTransformer;
 
 /**
  * <p>

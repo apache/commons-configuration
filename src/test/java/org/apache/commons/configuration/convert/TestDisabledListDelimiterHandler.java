@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.apache.commons.configuration.ValueTransformer;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;

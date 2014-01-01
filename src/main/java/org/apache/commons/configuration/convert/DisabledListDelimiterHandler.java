@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.configuration.ValueTransformer;
-
 /**
  * <p>
  * A specialized implementation of the {@code ListDelimiterHandler} interface

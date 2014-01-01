@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.configuration.ValueTransformer;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.easymock.EasyMock;
 import org.junit.Before;
