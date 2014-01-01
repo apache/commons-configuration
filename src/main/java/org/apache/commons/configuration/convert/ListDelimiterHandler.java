@@ -20,23 +20,21 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.configuration.AbstractConfiguration;
-import org.apache.commons.configuration.PropertiesConfiguration;
-
 /**
  * <p>
  * Definition of an interface that controls the handling of list delimiters in
  * configuration properties.
  * </p>
  * <p>
- * {@link AbstractConfiguration} supports list delimiters in property values. If
- * such a delimiter is found, the value actually contains multiple values and
- * has to be split. This is useful for instance for
- * {@link PropertiesConfiguration}: properties files that have to be compatible
- * with the {@code java.util.Properties} class cannot have multiple occurrences
- * of a single property key, therefore a different storage scheme for
- * multi-valued properties is needed. A possible storage scheme could look as
- * follows:
+ * {@link org.apache.commons.configuration.AbstractConfiguration
+ * AbstractConfiguration} supports list delimiters in property values. If such a
+ * delimiter is found, the value actually contains multiple values and has to be
+ * split. This is useful for instance for
+ * {@link org.apache.commons.configuration.PropertiesConfiguration
+ * PropertiesConfiguration}: properties files that have to be compatible with
+ * the {@code java.util.Properties} class cannot have multiple occurrences of a
+ * single property key, therefore a different storage scheme for multi-valued
+ * properties is needed. A possible storage scheme could look as follows:
  *
  * <pre>
  * myProperty=value1,value2,value3
