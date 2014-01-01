@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 
-import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.ex.ConfigurationException;
 
 /**
  * <p>

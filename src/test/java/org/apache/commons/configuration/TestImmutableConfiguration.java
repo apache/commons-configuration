@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.junit.Test;
 
 /**

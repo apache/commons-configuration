@@ -22,8 +22,8 @@ import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.junit.Test;
 

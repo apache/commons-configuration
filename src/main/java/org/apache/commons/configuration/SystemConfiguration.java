@@ -19,6 +19,7 @@ package org.apache.commons.configuration;
 
 import java.util.Iterator;
 
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

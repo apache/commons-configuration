@@ -23,8 +23,8 @@ import java.io.File;
 
 import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.ConfigurationAssert;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Before;
 import org.junit.Test;

@@ -17,8 +17,8 @@
 package org.apache.commons.configuration.event;
 
 import org.apache.commons.configuration.AbstractConfiguration;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DatabaseConfigurationTestHelper;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.junit.After;
 import org.junit.Before;
 

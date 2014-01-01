@@ -24,6 +24,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
+
 /**
  * Basic configuration class. Stores the configuration data but does not
  * provide any load or save functions. If you want to load your Configuration

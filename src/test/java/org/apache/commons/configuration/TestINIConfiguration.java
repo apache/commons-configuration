@@ -38,6 +38,7 @@ import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.sync.ReadWriteSynchronizer;
 import org.junit.Rule;
 import org.junit.Test;

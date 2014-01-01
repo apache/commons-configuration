@@ -29,6 +29,7 @@ import java.util.Properties;
 
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileBased;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;

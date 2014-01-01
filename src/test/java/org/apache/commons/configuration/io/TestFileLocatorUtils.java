@@ -31,8 +31,8 @@ import java.net.URL;
 import java.util.Iterator;
 
 import org.apache.commons.configuration.ConfigurationAssert;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.easymock.EasyMock;
 import org.junit.BeforeClass;
 import org.junit.Test;

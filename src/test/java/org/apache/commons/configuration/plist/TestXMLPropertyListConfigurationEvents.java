@@ -20,8 +20,8 @@ import java.io.File;
 
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.ConfigurationAssert;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.configuration.ex.ConfigurationException;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.io.FileHandler;
 
 /**

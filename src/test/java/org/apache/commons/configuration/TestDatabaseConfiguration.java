@@ -31,6 +31,7 @@ import javax.sql.DataSource;
 
 import org.apache.commons.configuration.builder.fluent.DatabaseBuilderParameters;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;

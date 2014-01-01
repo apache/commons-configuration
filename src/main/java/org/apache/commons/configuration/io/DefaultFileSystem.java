@@ -27,7 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.ex.ConfigurationException;
 
 /**
  * FileSystem that uses java.io.File or HttpClient

@@ -17,8 +17,8 @@
 package org.apache.commons.configuration.builder;
 
 import org.apache.commons.configuration.AbstractConfiguration;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.easymock.EasyMock;
 import org.junit.Before;

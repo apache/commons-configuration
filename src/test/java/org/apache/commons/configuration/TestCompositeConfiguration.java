@@ -39,6 +39,7 @@ import org.apache.commons.configuration.convert.LegacyListDelimiterHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.easymock.EasyMock;
 import org.junit.Before;

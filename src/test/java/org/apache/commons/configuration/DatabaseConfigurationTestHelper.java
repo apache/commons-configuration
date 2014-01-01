@@ -25,6 +25,8 @@ import javax.sql.DataSource;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.fluent.DatabaseBuilderParameters;
 import org.apache.commons.configuration.builder.fluent.Parameters;
+import org.apache.commons.configuration.ex.ConfigurationException;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.test.HsqlDB;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.dbunit.database.DatabaseConnection;

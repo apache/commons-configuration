@@ -17,7 +17,7 @@
 
 package org.apache.commons.configuration.convert;
 
-import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 
 /**
  * Exception thrown when a property is incompatible with the type requested.

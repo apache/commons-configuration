@@ -21,9 +21,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.event.EventSource;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 
 /**
  * <p>

@@ -25,7 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 
 /**
  * <p>

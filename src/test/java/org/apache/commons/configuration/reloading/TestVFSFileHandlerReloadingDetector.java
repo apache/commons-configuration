@@ -25,7 +25,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import org.apache.commons.configuration.ConfigurationAssert;
-import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.io.VFSFileSystem;
 import org.apache.commons.vfs2.FileName;

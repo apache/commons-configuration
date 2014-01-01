@@ -24,8 +24,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.Initializable;
 import org.apache.commons.configuration.beanutils.BeanDeclaration;
@@ -34,6 +32,8 @@ import org.apache.commons.configuration.beanutils.ConstructorArg;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.event.EventSource;
+import org.apache.commons.configuration.ex.ConfigurationException;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.lang3.event.EventListenerSupport;
 
 /**

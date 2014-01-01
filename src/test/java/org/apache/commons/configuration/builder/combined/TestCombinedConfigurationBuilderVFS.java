@@ -24,10 +24,10 @@ import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationAssert;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.fluent.FileBasedBuilderParameters;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.VFSFileSystem;
 import org.junit.Test;
 

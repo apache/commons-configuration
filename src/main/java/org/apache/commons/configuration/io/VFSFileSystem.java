@@ -27,8 +27,8 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.util.Map;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.configuration.ex.ConfigurationException;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;

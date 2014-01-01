@@ -19,13 +19,13 @@ package org.apache.commons.configuration.builder.combined;
 import java.util.Arrays;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.builder.BuilderConfigurationWrapperFactory;
 import org.apache.commons.configuration.builder.BuilderConfigurationWrapperFactory.EventSourceSupport;
 import org.apache.commons.configuration.builder.BuilderListener;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.reloading.ReloadingController;
 import org.apache.commons.configuration.reloading.ReloadingControllerSupport;
 

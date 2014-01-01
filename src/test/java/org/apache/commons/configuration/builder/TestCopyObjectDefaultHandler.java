@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Map;
 
-import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.easymock.EasyMock;
 import org.junit.Test;

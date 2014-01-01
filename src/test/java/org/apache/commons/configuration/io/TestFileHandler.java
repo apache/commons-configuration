@@ -43,10 +43,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.configuration.ConfigurationAssert;
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SynchronizerTestImpl;
 import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.easymock.EasyMock;
 import org.junit.Rule;
 import org.junit.Test;

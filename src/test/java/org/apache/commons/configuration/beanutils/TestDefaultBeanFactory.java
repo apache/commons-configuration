@@ -30,10 +30,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.convert.ConversionHandler;
 import org.apache.commons.configuration.convert.DefaultConversionHandler;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;

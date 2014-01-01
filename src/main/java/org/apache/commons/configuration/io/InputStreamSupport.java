@@ -19,7 +19,7 @@ package org.apache.commons.configuration.io;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.ex.ConfigurationException;
 
 /**
  * <p>

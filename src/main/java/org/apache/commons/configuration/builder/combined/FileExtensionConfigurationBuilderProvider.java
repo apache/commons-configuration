@@ -18,9 +18,9 @@ package org.apache.commons.configuration.builder.combined;
 
 import java.util.Collection;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration.ex.ConfigurationException;
 
 /**
  * <p>

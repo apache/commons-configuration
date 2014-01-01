@@ -17,7 +17,7 @@
 package org.apache.commons.configuration.builder;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.ex.ConfigurationException;
 
 /**
  * <p>

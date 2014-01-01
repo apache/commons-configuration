@@ -29,8 +29,8 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.LazyDynaBean;
-import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;

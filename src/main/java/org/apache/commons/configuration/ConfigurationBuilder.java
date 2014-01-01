@@ -17,6 +17,8 @@
 
 package org.apache.commons.configuration;
 
+import org.apache.commons.configuration.ex.ConfigurationException;
+
 /**
  * <p>
  * Definition of an interface for objects that can create a configuration.

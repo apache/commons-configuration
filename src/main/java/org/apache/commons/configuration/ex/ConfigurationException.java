@@ -15,63 +15,62 @@
  * limitations under the License.
  */
 
-package org.apache.commons.configuration;
+package org.apache.commons.configuration.ex;
 
 
 /**
- * A configuration related runtime exception.
+ * Any exception that occurs while initializing a Configuration
+ * object.
  *
- * @since 1.0
- *
- * @author Emmanuel Bourg
+ * @author Eric Pugh
  * @version $Id$
  */
-public class ConfigurationRuntimeException extends RuntimeException
+public class ConfigurationException extends Exception
 {
     /**
      * The serial version ID.
      */
-    private static final long serialVersionUID = -7838702245512140996L;
+    private static final long serialVersionUID = -1316746661346991484L;
 
     /**
-     * Constructs a new {@code ConfigurationRuntimeException} without
-     * specified detail message.
+     * Constructs a new {@code ConfigurationException} without specified
+     * detail message.
      */
-    public ConfigurationRuntimeException()
+    public ConfigurationException()
     {
         super();
     }
 
     /**
-     * Constructs a new {@code ConfigurationRuntimeException} with
-     * specified detail message.
+     * Constructs a new {@code ConfigurationException} with specified
+     * detail message.
      *
      * @param message  the error message
      */
-    public ConfigurationRuntimeException(String message)
+    public ConfigurationException(String message)
     {
         super(message);
     }
 
     /**
-     * Constructs a new {@code ConfigurationRuntimeException} with
-     * specified nested {@code Throwable}.
+     * Constructs a new {@code ConfigurationException} with specified
+     * nested {@code Throwable}.
      *
      * @param cause  the exception or error that caused this exception to be thrown
      */
-    public ConfigurationRuntimeException(Throwable cause)
+    public ConfigurationException(Throwable cause)
     {
         super(cause);
     }
 
     /**
-     * Constructs a new {@code ConfigurationRuntimeException} with
-     * specified detail message and nested {@code Throwable}.
+     * Constructs a new {@code ConfigurationException} with specified
+     * detail message and nested {@code Throwable}.
      *
      * @param message  the error message
      * @param cause    the exception or error that caused this exception to be thrown
      */
-    public ConfigurationRuntimeException(String message, Throwable cause)
+    public ConfigurationException(String message, Throwable cause)
     {
         super(message, cause);
     }

@@ -26,6 +26,7 @@ import java.util.Properties;
 
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 
 /**
  * <p>

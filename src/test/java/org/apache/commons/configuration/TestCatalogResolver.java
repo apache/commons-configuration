@@ -20,6 +20,7 @@ package org.apache.commons.configuration;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.apache.commons.logging.Log;

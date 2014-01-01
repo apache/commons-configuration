@@ -16,7 +16,7 @@
  */
 package org.apache.commons.configuration.builder;
 
-import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.reloading.FileHandlerReloadingDetector;
 import org.apache.commons.configuration.reloading.ReloadingDetector;

@@ -25,6 +25,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
+
 /**
  * Assertions on configurations for the unit tests. This class also provides
  * access to test files.

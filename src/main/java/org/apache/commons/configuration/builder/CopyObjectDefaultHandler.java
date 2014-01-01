@@ -16,8 +16,8 @@
  */
 package org.apache.commons.configuration.builder;
 
-import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.beanutils.BeanHelper;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 
 /**
  * <p>

@@ -27,6 +27,7 @@ import java.util.ListIterator;
 import java.util.Set;
 
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 
 /**
  * <p>{@code CompositeConfiguration} allows you to add multiple {@code Configuration}

@@ -17,7 +17,7 @@
 
 package org.apache.commons.configuration.reloading;
 
-import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.io.FileSystem;
 import org.apache.commons.logging.Log;

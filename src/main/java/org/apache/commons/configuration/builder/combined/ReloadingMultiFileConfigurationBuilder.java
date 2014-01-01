@@ -22,10 +22,10 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.FileBasedConfiguration;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.builder.ReloadingFileBasedConfigurationBuilder;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.reloading.CombinedReloadingController;
 import org.apache.commons.configuration.reloading.ReloadingController;
 import org.apache.commons.configuration.reloading.ReloadingControllerSupport;

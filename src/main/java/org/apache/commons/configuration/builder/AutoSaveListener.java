@@ -16,9 +16,9 @@
  */
 package org.apache.commons.configuration.builder;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.io.FileHandlerListenerAdapter;
 import org.apache.commons.logging.Log;

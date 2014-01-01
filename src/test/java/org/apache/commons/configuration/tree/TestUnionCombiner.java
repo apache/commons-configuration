@@ -19,8 +19,8 @@ package org.apache.commons.configuration.tree;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.junit.Test;
 
 /**

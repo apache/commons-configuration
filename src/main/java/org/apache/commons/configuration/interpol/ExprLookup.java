@@ -19,7 +19,7 @@ package org.apache.commons.configuration.interpol;
 import java.util.ArrayList;
 
 import org.apache.commons.configuration.AbstractConfiguration;
-import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.jexl2.Expression;
 import org.apache.commons.jexl2.JexlContext;
 import org.apache.commons.jexl2.JexlEngine;
