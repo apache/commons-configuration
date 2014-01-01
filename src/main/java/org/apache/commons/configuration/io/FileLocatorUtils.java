@@ -22,7 +22,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
 
-import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -91,7 +90,7 @@ public final class FileLocatorUtils
     private static final String FILE_SCHEME = "file:";
 
     /** The logger.*/
-    private static final Log LOG = LogFactory.getLog(ConfigurationUtils.class);
+    private static final Log LOG = LogFactory.getLog(FileLocatorUtils.class);
 
     /**
      * Private constructor so that no instances can be created.
