@@ -27,6 +27,10 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-563">
+        The DefaultExpressionEngine class is now immutable. An instance can be
+        shared between multiple configuration objects.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-562">
         Improved the API of ExprLookup.
       </action>
