@@ -855,35 +855,11 @@ public class TestHierarchicalConfiguration
     {
         config.setExpressionEngine(null);
         assertNotNull("Expression engine is null", config.getExpressionEngine());
-        assertSame("Default engine is not used", BaseHierarchicalConfiguration
-                .getDefaultExpressionEngine(), config.getExpressionEngine());
+        assertSame("Default engine is not used",
+                DefaultExpressionEngine.INSTANCE, config.getExpressionEngine());
 
         config.setExpressionEngine(createAlternativeExpressionEngine());
         checkAlternativeSyntax();
-    }
-
-    /**
-     * Tests setting the default expression engine. This should impact all
-     * configuration instances that do not have their own engine.
-     */
-    @Test
-    public void testSetDefaultExpressionEngine()
-    {
-        ExpressionEngine engineOld = BaseHierarchicalConfiguration.getDefaultExpressionEngine();
-        BaseHierarchicalConfiguration
-                .setDefaultExpressionEngine(createAlternativeExpressionEngine());
-        checkAlternativeSyntax();
-        BaseHierarchicalConfiguration.setDefaultExpressionEngine(engineOld);
-    }
-
-    /**
-     * Tests setting the default expression engine to null. This should not be
-     * allowed.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testSetDefaultExpressionEngineNull()
-    {
-        BaseHierarchicalConfiguration.setDefaultExpressionEngine(null);
     }
 
     /**

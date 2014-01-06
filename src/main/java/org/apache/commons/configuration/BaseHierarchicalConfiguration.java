@@ -42,7 +42,6 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
-import org.apache.commons.configuration.tree.DefaultExpressionEngineSymbols;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.NodeAddData;
 
@@ -172,9 +171,6 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * The serial version UID.
      */
     private static final long serialVersionUID = 3373812230395363192L;
-
-    /** Stores the default expression engine to be used for new objects.*/
-    private static ExpressionEngine defaultExpressionEngine;
 
     /** Stores the root configuration node.*/
     private ConfigurationNode rootNode;
@@ -316,40 +312,6 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Returns the default expression engine.
-     *
-     * @return the default expression engine
-     * @since 1.3
-     */
-    public static synchronized ExpressionEngine getDefaultExpressionEngine()
-    {
-        if (defaultExpressionEngine == null)
-        {
-            defaultExpressionEngine = new DefaultExpressionEngine(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
-        }
-        return defaultExpressionEngine;
-    }
-
-    /**
-     * Sets the default expression engine. This expression engine will be used
-     * if no specific engine was set for an instance. It is shared between all
-     * hierarchical configuration instances. So modifying its properties will
-     * impact all instances, for which no specific engine is set.
-     *
-     * @param engine the new default expression engine
-     * @since 1.3
-     */
-    public static synchronized void setDefaultExpressionEngine(ExpressionEngine engine)
-    {
-        if (engine == null)
-        {
-            throw new IllegalArgumentException(
-                    "Default expression engine must not be null!");
-        }
-        defaultExpressionEngine = engine;
-    }
-
-    /**
      * Returns the expression engine used by this configuration. This method
      * will never return <b>null</b>; if no specific expression engine was set,
      * the default expression engine will be returned.
@@ -360,7 +322,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     public ExpressionEngine getExpressionEngine()
     {
         return (expressionEngine != null) ? expressionEngine
-                : getDefaultExpressionEngine();
+                : DefaultExpressionEngine.INSTANCE;
     }
 
     /**
