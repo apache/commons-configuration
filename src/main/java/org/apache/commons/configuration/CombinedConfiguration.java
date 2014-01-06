@@ -193,7 +193,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     private static final long serialVersionUID = 8338574525528692307L;
 
     /** Constant for the expression engine for parsing the at path. */
-    private static final DefaultExpressionEngine AT_ENGINE = new DefaultExpressionEngine();
+    private static final DefaultExpressionEngine AT_ENGINE = DefaultExpressionEngine.INSTANCE;
 
     /** Constant for the default node combiner. */
     private static final NodeCombiner DEFAULT_COMBINER = new UnionCombiner();

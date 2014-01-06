@@ -136,7 +136,7 @@ public class DefaultConfigurationKey
         if (keyBuffer.length() > 0 && !isAttributeKey(property)
                 && key.length() > 0)
         {
-            keyBuffer.append(getExpressionEngine().getPropertyDelimiter());
+            keyBuffer.append(getSymbols().getPropertyDelimiter());
         }
 
         keyBuffer.append(key);
@@ -164,9 +164,9 @@ public class DefaultConfigurationKey
      */
     public DefaultConfigurationKey appendIndex(int index)
     {
-        keyBuffer.append(getExpressionEngine().getIndexStart());
+        keyBuffer.append(getSymbols().getIndexStart());
         keyBuffer.append(index);
-        keyBuffer.append(getExpressionEngine().getIndexEnd());
+        keyBuffer.append(getSymbols().getIndexEnd());
         return this;
     }
 
@@ -263,7 +263,7 @@ public class DefaultConfigurationKey
             int i = 0;
             while (i < k.length()
                     && String.valueOf(k.charAt(i)).equals(
-                            getExpressionEngine().getPropertyDelimiter()))
+                            getSymbols().getPropertyDelimiter()))
             {
                 i++;
             }
@@ -339,9 +339,9 @@ public class DefaultConfigurationKey
             return false;
         }
 
-        return key.startsWith(getExpressionEngine().getAttributeStart())
-                && (getExpressionEngine().getAttributeEnd() == null || key
-                        .endsWith(getExpressionEngine().getAttributeEnd()));
+        return key.startsWith(getSymbols().getAttributeStart())
+                && (getSymbols().getAttributeEnd() == null || key
+                        .endsWith(getSymbols().getAttributeEnd()));
     }
 
     /**
@@ -365,10 +365,10 @@ public class DefaultConfigurationKey
         else
         {
             StringBuilder buf = new StringBuilder();
-            buf.append(getExpressionEngine().getAttributeStart()).append(key);
-            if (getExpressionEngine().getAttributeEnd() != null)
+            buf.append(getSymbols().getAttributeStart()).append(key);
+            if (getSymbols().getAttributeEnd() != null)
             {
-                buf.append(getExpressionEngine().getAttributeEnd());
+                buf.append(getSymbols().getAttributeEnd());
             }
             return buf.toString();
         }
@@ -403,7 +403,7 @@ public class DefaultConfigurationKey
             String result = key;
             while (hasLeadingDelimiter(result))
             {
-                result = result.substring(getExpressionEngine()
+                result = result.substring(getSymbols()
                         .getPropertyDelimiter().length());
             }
             return result;
@@ -429,7 +429,7 @@ public class DefaultConfigurationKey
             {
                 result = result
                         .substring(0, result.length()
-                                - getExpressionEngine().getPropertyDelimiter()
+                                - getSymbols().getPropertyDelimiter()
                                         .length());
             }
             return result;
@@ -467,9 +467,9 @@ public class DefaultConfigurationKey
      */
     private boolean hasTrailingDelimiter(String key)
     {
-        return key.endsWith(getExpressionEngine().getPropertyDelimiter())
-                && (getExpressionEngine().getEscapedDelimiter() == null || !key
-                        .endsWith(getExpressionEngine().getEscapedDelimiter()));
+        return key.endsWith(getSymbols().getPropertyDelimiter())
+                && (getSymbols().getEscapedDelimiter() == null || !key
+                        .endsWith(getSymbols().getEscapedDelimiter()));
     }
 
     /**
@@ -481,9 +481,9 @@ public class DefaultConfigurationKey
      */
     private boolean hasLeadingDelimiter(String key)
     {
-        return key.startsWith(getExpressionEngine().getPropertyDelimiter())
-                && (getExpressionEngine().getEscapedDelimiter() == null || !key
-                        .startsWith(getExpressionEngine().getEscapedDelimiter()));
+        return key.startsWith(getSymbols().getPropertyDelimiter())
+                && (getSymbols().getEscapedDelimiter() == null || !key
+                        .startsWith(getSymbols().getEscapedDelimiter()));
     }
 
     /**
@@ -496,9 +496,9 @@ public class DefaultConfigurationKey
     {
         return key
                 .substring(
-                        getExpressionEngine().getAttributeStart().length(),
+                        getSymbols().getAttributeStart().length(),
                         key.length()
-                                - ((getExpressionEngine().getAttributeEnd() != null) ? getExpressionEngine()
+                                - ((getSymbols().getAttributeEnd() != null) ? getSymbols()
                                         .getAttributeEnd().length()
                                         : 0));
     }
@@ -511,10 +511,20 @@ public class DefaultConfigurationKey
      */
     private String unescapeDelimiters(String key)
     {
-        return (getExpressionEngine().getEscapedDelimiter() == null) ? key
-                : StringUtils.replace(key, getExpressionEngine()
-                        .getEscapedDelimiter(), getExpressionEngine()
+        return (getSymbols().getEscapedDelimiter() == null) ? key
+                : StringUtils.replace(key, getSymbols()
+                        .getEscapedDelimiter(), getSymbols()
                         .getPropertyDelimiter());
+    }
+
+    /**
+     * Returns the symbols object from the associated expression engine.
+     *
+     * @return the {@code DefaultExpressionEngineSymbols}
+     */
+    private DefaultExpressionEngineSymbols getSymbols()
+    {
+        return getExpressionEngine().getSymbols();
     }
 
     /**
@@ -525,10 +535,10 @@ public class DefaultConfigurationKey
      */
     private String escapeDelimiters(String key)
     {
-        return (getExpressionEngine().getEscapedDelimiter() == null || key
-                .indexOf(getExpressionEngine().getPropertyDelimiter()) < 0) ? key
-                : StringUtils.replace(key, getExpressionEngine()
-                        .getPropertyDelimiter(), getExpressionEngine()
+        return (getSymbols().getEscapedDelimiter() == null || key
+                .indexOf(getSymbols().getPropertyDelimiter()) < 0) ? key
+                : StringUtils.replace(key, getSymbols()
+                        .getPropertyDelimiter(), getSymbols()
                         .getEscapedDelimiter());
     }
 
@@ -749,7 +759,7 @@ public class DefaultConfigurationKey
             while (startIndex < length()
                     && hasLeadingDelimiter(keyBuffer.substring(startIndex)))
             {
-                startIndex += getExpressionEngine().getPropertyDelimiter()
+                startIndex += getSymbols().getPropertyDelimiter()
                         .length();
             }
 
@@ -775,7 +785,7 @@ public class DefaultConfigurationKey
         private String nextKeyPart()
         {
             int attrIdx = keyBuffer.toString().indexOf(
-                    getExpressionEngine().getAttributeStart(), startIndex);
+                    getSymbols().getAttributeStart(), startIndex);
             if (attrIdx < 0 || attrIdx == startIndex)
             {
                 attrIdx = length();
@@ -807,7 +817,7 @@ public class DefaultConfigurationKey
 
             do
             {
-                delimiterPos = key.indexOf(getExpressionEngine()
+                delimiterPos = key.indexOf(getSymbols()
                         .getPropertyDelimiter(), delimiterPos);
                 if (delimiterPos < 0 || delimiterPos >= endPos)
                 {
@@ -839,7 +849,7 @@ public class DefaultConfigurationKey
          */
         private int escapedPosition(String key, int pos)
         {
-            if (getExpressionEngine().getEscapedDelimiter() == null)
+            if (getSymbols().getEscapedDelimiter() == null)
             {
                 // nothing to escape
                 return -1;
@@ -851,14 +861,14 @@ public class DefaultConfigurationKey
                 return -1;
             }
 
-            int escapePos = key.indexOf(getExpressionEngine()
+            int escapePos = key.indexOf(getSymbols()
                     .getEscapedDelimiter(), pos - escapeOffset);
             if (escapePos <= pos && escapePos >= 0)
             {
                 // The found delimiter is escaped. Next valid search position
                 // is behind the escaped delimiter.
                 return escapePos
-                        + getExpressionEngine().getEscapedDelimiter().length();
+                        + getSymbols().getEscapedDelimiter().length();
             }
             else
             {
@@ -885,8 +895,8 @@ public class DefaultConfigurationKey
          */
         private int escapeOffset()
         {
-            return getExpressionEngine().getEscapedDelimiter().indexOf(
-                    getExpressionEngine().getPropertyDelimiter());
+            return getSymbols().getEscapedDelimiter().indexOf(
+                    getSymbols().getPropertyDelimiter());
         }
 
         /**
@@ -922,10 +932,10 @@ public class DefaultConfigurationKey
 
             try
             {
-                int idx = key.lastIndexOf(getExpressionEngine().getIndexStart());
+                int idx = key.lastIndexOf(getSymbols().getIndexStart());
                 if (idx > 0)
                 {
-                    int endidx = key.indexOf(getExpressionEngine().getIndexEnd(),
+                    int endidx = key.indexOf(getSymbols().getIndexEnd(),
                             idx);
 
                     if (endidx > idx + 1)
@@ -958,9 +968,9 @@ public class DefaultConfigurationKey
          */
         private boolean isAttributeEmulatingMode()
         {
-            return getExpressionEngine().getAttributeEnd() == null
-                    && StringUtils.equals(getExpressionEngine()
-                            .getPropertyDelimiter(), getExpressionEngine()
+            return getSymbols().getAttributeEnd() == null
+                    && StringUtils.equals(getSymbols()
+                            .getPropertyDelimiter(), getSymbols()
                             .getAttributeStart());
         }
     }

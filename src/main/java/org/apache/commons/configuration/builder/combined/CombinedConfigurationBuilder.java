@@ -55,7 +55,7 @@ import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.io.FileSystem;
 import org.apache.commons.configuration.resolver.CatalogResolver;
-import org.apache.commons.configuration.tree.DefaultExpressionEngine;
+import org.apache.commons.configuration.tree.DefaultExpressionEngineSymbols;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
 import org.xml.sax.EntityResolver;
@@ -265,52 +265,52 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             + ".CONFIG_BEAN_FACTORY_NAME";
 
     /** Constant for the reserved name attribute. */
-    static final String ATTR_NAME = DefaultExpressionEngine.DEFAULT_ATTRIBUTE_START
+    static final String ATTR_NAME = DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_START
             + XMLBeanDeclaration.RESERVED_PREFIX
             + "name"
-            + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
+            + DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_END;
 
     /** Constant for the name of the at attribute. */
     static final String ATTR_ATNAME = "at";
 
     /** Constant for the reserved at attribute. */
-    static final String ATTR_AT_RES = DefaultExpressionEngine.DEFAULT_ATTRIBUTE_START
+    static final String ATTR_AT_RES = DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_START
             + XMLBeanDeclaration.RESERVED_PREFIX
             + ATTR_ATNAME
-            + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
+            + DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_END;
 
     /** Constant for the at attribute without the reserved prefix. */
-    static final String ATTR_AT = DefaultExpressionEngine.DEFAULT_ATTRIBUTE_START
-            + ATTR_ATNAME + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
+    static final String ATTR_AT = DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_START
+            + ATTR_ATNAME + DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_END;
 
     /** Constant for the name of the optional attribute. */
     static final String ATTR_OPTIONALNAME = "optional";
 
     /** Constant for the reserved optional attribute. */
-    static final String ATTR_OPTIONAL_RES = DefaultExpressionEngine.DEFAULT_ATTRIBUTE_START
+    static final String ATTR_OPTIONAL_RES = DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_START
             + XMLBeanDeclaration.RESERVED_PREFIX
             + ATTR_OPTIONALNAME
-            + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
+            + DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_END;
 
     /** Constant for the optional attribute without the reserved prefix. */
-    static final String ATTR_OPTIONAL = DefaultExpressionEngine.DEFAULT_ATTRIBUTE_START
-            + ATTR_OPTIONALNAME + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
+    static final String ATTR_OPTIONAL = DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_START
+            + ATTR_OPTIONALNAME + DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_END;
 
     /** Constant for the file name attribute. */
-    static final String ATTR_FILENAME = DefaultExpressionEngine.DEFAULT_ATTRIBUTE_START
-            + "fileName" + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
+    static final String ATTR_FILENAME = DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_START
+            + "fileName" + DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_END;
 
     /** Constant for the forceCreate attribute. */
-    static final String ATTR_FORCECREATE = DefaultExpressionEngine.DEFAULT_ATTRIBUTE_START
+    static final String ATTR_FORCECREATE = DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_START
             + XMLBeanDeclaration.RESERVED_PREFIX
             + "forceCreate"
-            + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
+            + DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_END;
 
     /** Constant for the reload attribute. */
-    static final String ATTR_RELOAD = DefaultExpressionEngine.DEFAULT_ATTRIBUTE_START
+    static final String ATTR_RELOAD = DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_START
             + XMLBeanDeclaration.RESERVED_PREFIX
             + "reload"
-            + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
+            + DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_END;
 
     /**
      * Constant for the tag attribute for providers.

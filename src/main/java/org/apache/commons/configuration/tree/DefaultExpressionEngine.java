@@ -99,6 +99,16 @@ import org.apache.commons.lang3.StringUtils;
  * It is also possible to set custom values for these properties so that you can
  * adapt a {@code DefaultExpressionEngine} to your personal needs.
  * </p>
+ * <p>
+ * The concrete symbols used by an instance are determined by a
+ * {@link DefaultExpressionEngineSymbols} object passed to the constructor.
+ * By providing a custom symbols object the syntax for querying properties in
+ * a hierarchical configuration can be altered.
+ * </p>
+ * <p>
+ * Instances of this class are thread-safe and can be shared between multiple
+ * hierarchical configuration objects.
+ * </p>
  *
  * @since 1.3
  * @author <a
@@ -108,169 +118,43 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class DefaultExpressionEngine implements ExpressionEngine
 {
-    /** Constant for the default property delimiter. */
-    public static final String DEFAULT_PROPERTY_DELIMITER = ".";
+    /**
+     * A default instance of this class that is used as expression engine for
+     * hierarchical configurations per default.
+     */
+    public static final DefaultExpressionEngine INSTANCE =
+            new DefaultExpressionEngine(
+                    DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
 
-    /** Constant for the default escaped property delimiter. */
-    public static final String DEFAULT_ESCAPED_DELIMITER = DEFAULT_PROPERTY_DELIMITER
-            + DEFAULT_PROPERTY_DELIMITER;
-
-    /** Constant for the default attribute start marker. */
-    public static final String DEFAULT_ATTRIBUTE_START = "[@";
-
-    /** Constant for the default attribute end marker. */
-    public static final String DEFAULT_ATTRIBUTE_END = "]";
-
-    /** Constant for the default index start marker. */
-    public static final String DEFAULT_INDEX_START = "(";
-
-    /** Constant for the default index end marker. */
-    public static final String DEFAULT_INDEX_END = ")";
-
-    /** Stores the property delimiter. */
-    private String propertyDelimiter = DEFAULT_PROPERTY_DELIMITER;
-
-    /** Stores the escaped property delimiter. */
-    private String escapedDelimiter = DEFAULT_ESCAPED_DELIMITER;
-
-    /** Stores the attribute start marker. */
-    private String attributeStart = DEFAULT_ATTRIBUTE_START;
-
-    /** Stores the attribute end marker. */
-    private String attributeEnd = DEFAULT_ATTRIBUTE_END;
-
-    /** Stores the index start marker. */
-    private String indexStart = DEFAULT_INDEX_START;
-
-    /** stores the index end marker. */
-    private String indexEnd = DEFAULT_INDEX_END;
+    /** The symbols used by this instance. */
+    private final DefaultExpressionEngineSymbols symbols;
 
     /**
-     * Sets the attribute end marker.
+     * Creates a new instance of {@code DefaultExpressionEngine} and initializes
+     * its symbols.
      *
-     * @return the attribute end marker
+     * @param syms the object with the symbols (must not be <b>null</b>)
+     * @throws IllegalArgumentException if the symbols are <b>null</b>
      */
-    public String getAttributeEnd()
+    public DefaultExpressionEngine(DefaultExpressionEngineSymbols syms)
     {
-        return attributeEnd;
+        if (syms == null)
+        {
+            throw new IllegalArgumentException("Symbols must not be null!");
+        }
+        symbols = syms;
     }
 
     /**
-     * Sets the attribute end marker.
+     * Returns the {@code DefaultExpressionEngineSymbols} object associated with
+     * this instance.
      *
-     * @param attributeEnd the attribute end marker; can be <b>null</b> if no
-     * end marker is needed
+     * @return the {@code DefaultExpressionEngineSymbols} used by this engine
+     * @since 2.0
      */
-    public void setAttributeEnd(String attributeEnd)
+    public DefaultExpressionEngineSymbols getSymbols()
     {
-        this.attributeEnd = attributeEnd;
-    }
-
-    /**
-     * Returns the attribute start marker.
-     *
-     * @return the attribute start marker
-     */
-    public String getAttributeStart()
-    {
-        return attributeStart;
-    }
-
-    /**
-     * Sets the attribute start marker. Attribute start and end marker are used
-     * together to detect attributes in a property key.
-     *
-     * @param attributeStart the attribute start marker
-     */
-    public void setAttributeStart(String attributeStart)
-    {
-        this.attributeStart = attributeStart;
-    }
-
-    /**
-     * Returns the escaped property delimiter string.
-     *
-     * @return the escaped property delimiter
-     */
-    public String getEscapedDelimiter()
-    {
-        return escapedDelimiter;
-    }
-
-    /**
-     * Sets the escaped property delimiter string. With this string a delimiter
-     * that belongs to the key of a property can be escaped. If for instance
-     * &quot;.&quot; is used as property delimiter, you can set the escaped
-     * delimiter to &quot;\.&quot; and can then escape the delimiter with a back
-     * slash.
-     *
-     * @param escapedDelimiter the escaped delimiter string
-     */
-    public void setEscapedDelimiter(String escapedDelimiter)
-    {
-        this.escapedDelimiter = escapedDelimiter;
-    }
-
-    /**
-     * Returns the index end marker.
-     *
-     * @return the index end marker
-     */
-    public String getIndexEnd()
-    {
-        return indexEnd;
-    }
-
-    /**
-     * Sets the index end marker.
-     *
-     * @param indexEnd the index end marker
-     */
-    public void setIndexEnd(String indexEnd)
-    {
-        this.indexEnd = indexEnd;
-    }
-
-    /**
-     * Returns the index start marker.
-     *
-     * @return the index start marker
-     */
-    public String getIndexStart()
-    {
-        return indexStart;
-    }
-
-    /**
-     * Sets the index start marker. Index start and end marker are used together
-     * to detect indices in a property key.
-     *
-     * @param indexStart the index start marker
-     */
-    public void setIndexStart(String indexStart)
-    {
-        this.indexStart = indexStart;
-    }
-
-    /**
-     * Returns the property delimiter.
-     *
-     * @return the property delimiter
-     */
-    public String getPropertyDelimiter()
-    {
-        return propertyDelimiter;
-    }
-
-    /**
-     * Sets the property delimiter. This string is used to split the parts of a
-     * property key.
-     *
-     * @param propertyDelimiter the property delimiter
-     */
-    public void setPropertyDelimiter(String propertyDelimiter)
-    {
-        this.propertyDelimiter = propertyDelimiter;
+        return symbols;
     }
 
     /**

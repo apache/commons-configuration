@@ -40,6 +40,7 @@ import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
+import org.apache.commons.configuration.tree.DefaultExpressionEngineSymbols;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.easymock.EasyMock;
 import org.junit.After;
@@ -216,9 +217,11 @@ public class TestConfigurationUtils
         Configuration conf = new BaseConfiguration();
         conf.addProperty("test(a)", Boolean.TRUE);
         conf.addProperty("test(b)", Boolean.FALSE);
-        DefaultExpressionEngine engine = new DefaultExpressionEngine();
-        engine.setIndexStart("[");
-        engine.setIndexEnd("]");
+        DefaultExpressionEngine engine =
+                new DefaultExpressionEngine(
+                        new DefaultExpressionEngineSymbols.Builder(
+                                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
+                                .setIndexStart("[").setIndexEnd("]").create());
         HierarchicalConfiguration hc = ConfigurationUtils
                 .convertToHierarchical(conf, engine);
         assertTrue("Wrong value for test(a)", hc.getBoolean("test(a)"));
@@ -233,7 +236,9 @@ public class TestConfigurationUtils
     public void testConvertHierarchicalToHierarchicalEngine()
     {
         BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
-        ExpressionEngine engine = new DefaultExpressionEngine();
+        ExpressionEngine engine =
+                new DefaultExpressionEngine(
+                        DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
         assertSame("Created new configuration", hc, ConfigurationUtils
                 .convertToHierarchical(hc, engine));
         assertSame("Engine was not set", engine, hc.getExpressionEngine());
@@ -248,7 +253,9 @@ public class TestConfigurationUtils
     public void testConvertHierarchicalToHierarchicalNullEngine()
     {
         BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
-        ExpressionEngine engine = new DefaultExpressionEngine();
+        ExpressionEngine engine =
+                new DefaultExpressionEngine(
+                        DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
         hc.setExpressionEngine(engine);
         assertSame("Created new configuration", hc, ConfigurationUtils
                 .convertToHierarchical(hc, null));

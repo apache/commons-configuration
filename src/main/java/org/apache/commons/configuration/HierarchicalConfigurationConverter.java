@@ -61,7 +61,7 @@ abstract class HierarchicalConfigurationConverter
     {
         if (config != null)
         {
-            DefaultExpressionEngine exprEngine = new DefaultExpressionEngine();
+            DefaultExpressionEngine exprEngine = DefaultExpressionEngine.INSTANCE;
             DefaultConfigurationKey keyEmpty =
                     new DefaultConfigurationKey(exprEngine);
             DefaultConfigurationKey keyLast = keyEmpty;

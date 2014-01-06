@@ -42,6 +42,7 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
+import org.apache.commons.configuration.tree.DefaultExpressionEngineSymbols;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.NodeAddData;
 
@@ -324,7 +325,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     {
         if (defaultExpressionEngine == null)
         {
-            defaultExpressionEngine = new DefaultExpressionEngine();
+            defaultExpressionEngine = new DefaultExpressionEngine(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
         }
         return defaultExpressionEngine;
     }

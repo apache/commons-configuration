@@ -52,16 +52,36 @@ public class TestDefaultExpressionEngine
     { "docid", "name", "creationDate", "authorID", "version"}};
 
     /** The object to be tested. */
-    DefaultExpressionEngine engine;
+    private DefaultExpressionEngine engine;
 
     /** The root of a hierarchy with configuration nodes. */
-    ConfigurationNode root;
+    private ConfigurationNode root;
 
     @Before
     public void setUp() throws Exception
     {
         root = setUpNodes();
-        engine = new DefaultExpressionEngine();
+        engine = DefaultExpressionEngine.INSTANCE;
+    }
+
+    /**
+     * Tests whether the default instance is initialized with default symbols.
+     */
+    @Test
+    public void testDefaultSymbols()
+    {
+        assertSame("Wrong default symbols",
+                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS,
+                engine.getSymbols());
+    }
+
+    /**
+     * Tries to create an instance without symbols.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testInitNoSymbols()
+    {
+        new DefaultExpressionEngine(null);
     }
 
     /**
@@ -129,8 +149,14 @@ public class TestDefaultExpressionEngine
     @Test
     public void testQueryAttributeEmulation()
     {
-        engine.setAttributeEnd(null);
-        engine.setAttributeStart(engine.getPropertyDelimiter());
+        DefaultExpressionEngineSymbols symbols =
+                new DefaultExpressionEngineSymbols.Builder(
+                        DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
+                        .setAttributeEnd(null)
+                        .setAttributeStart(
+                                DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER)
+                        .create();
+        engine = new DefaultExpressionEngine(symbols);
         checkKeyValue("tables.table(0).name", "name", tables[0]);
         checkKeyValue("tables.table(0).type", "type", tabTypes[0]);
         checkKey("tables.table.type", "type", 2);
@@ -219,7 +245,7 @@ public class TestDefaultExpressionEngine
     }
 
     /**
-     * Tests obtaining node keys when a different syntax is set.
+     * Tests obtaining node keys if a different syntax is set.
      */
     @Test
     public void testNodeKeyWithAlternativeSyntax()
@@ -229,10 +255,24 @@ public class TestDefaultExpressionEngine
                 .getChild(0).getChild(0), "tables"));
         assertEquals("Wrong attribute key", "@test", engine.nodeKey(root
                 .getAttribute(0), ""));
+    }
 
-        engine.setAttributeStart(engine.getPropertyDelimiter());
-        assertEquals("Wrong attribute key", "/test", engine.nodeKey(root
-                .getAttribute(0), ""));
+    /**
+     * Tests obtaining node keys if a different syntax is set and the same
+     * string is used as property delimiter and attribute start marker.
+     */
+    @Test
+    public void testNodeKeyWithAlternativeSyntaxAttributePropertyDelimiter()
+    {
+        setUpAlternativeSyntax();
+        DefaultExpressionEngineSymbols symbols =
+                new DefaultExpressionEngineSymbols.Builder(engine.getSymbols())
+                        .setAttributeStart(
+                                engine.getSymbols().getPropertyDelimiter())
+                        .create();
+        engine = new DefaultExpressionEngine(symbols);
+        assertEquals("Wrong attribute key", "/test",
+                engine.nodeKey(root.getAttribute(0), ""));
     }
 
     /**
@@ -330,14 +370,20 @@ public class TestDefaultExpressionEngine
     }
 
     /**
-     * Tests add operations when property and attribute delimiters are equal.
+     * Tests add operations if property and attribute delimiters are equal.
      * Then it is not possible to add new attribute nodes.
      */
     @Test
     public void testPrepareAddWithSameAttributeDelimiter()
     {
-        engine.setAttributeEnd(null);
-        engine.setAttributeStart(engine.getPropertyDelimiter());
+        DefaultExpressionEngineSymbols symbols =
+                new DefaultExpressionEngineSymbols.Builder(
+                        DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
+                        .setAttributeEnd(null)
+                        .setAttributeStart(
+                                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS
+                                        .getPropertyDelimiter()).create();
+        engine = new DefaultExpressionEngine(symbols);
 
         NodeAddData data = engine.prepareAdd(root, "tables.table(0).test");
         assertEquals("Wrong name of new node", "test", data.getNewNodeName());
@@ -459,12 +505,12 @@ public class TestDefaultExpressionEngine
      */
     private void setUpAlternativeSyntax()
     {
-        engine.setAttributeEnd(null);
-        engine.setAttributeStart("@");
-        engine.setPropertyDelimiter("/");
-        engine.setEscapedDelimiter(null);
-        engine.setIndexStart("[");
-        engine.setIndexEnd("]");
+        DefaultExpressionEngineSymbols symbols =
+                new DefaultExpressionEngineSymbols.Builder()
+                        .setAttributeEnd(null).setAttributeStart("@")
+                        .setPropertyDelimiter("/").setEscapedDelimiter(null)
+                        .setIndexStart("[").setIndexEnd("]").create();
+        engine = new DefaultExpressionEngine(symbols);
     }
 
     /**

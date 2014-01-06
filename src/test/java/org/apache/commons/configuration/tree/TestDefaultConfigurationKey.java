@@ -53,7 +53,7 @@ public class TestDefaultConfigurationKey
     @Before
     public void setUp() throws Exception
     {
-        expressionEngine = new DefaultExpressionEngine();
+        expressionEngine = DefaultExpressionEngine.INSTANCE;
         key = new DefaultConfigurationKey(expressionEngine);
     }
 
@@ -91,6 +91,17 @@ public class TestDefaultConfigurationKey
     }
 
     /**
+     * Returns a builder for symbols with default property settings.
+     *
+     * @return the initialized builder object
+     */
+    private DefaultExpressionEngineSymbols.Builder symbols()
+    {
+        return new DefaultExpressionEngineSymbols.Builder(
+                expressionEngine.getSymbols());
+    }
+
+    /**
      * Tests if attribute keys are correctly detected if no end markers are set.
      * (In this test case we use the same delimiter for attributes as for simple
      * properties.)
@@ -98,16 +109,20 @@ public class TestDefaultConfigurationKey
     @Test
     public void testIsAttributeKeyWithoutEndMarkers()
     {
-        expressionEngine.setAttributeEnd(null);
-        expressionEngine
-                .setAttributeStart(DefaultExpressionEngine.DEFAULT_PROPERTY_DELIMITER);
+        DefaultExpressionEngineSymbols symbols =
+                symbols()
+                        .setAttributeEnd(null)
+                        .setAttributeStart(
+                                DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER)
+                        .create();
+        expressionEngine = new DefaultExpressionEngine(symbols);
+        key = new DefaultConfigurationKey(expressionEngine);
         assertTrue(
                 "Attribute key not detected",
-                key
-                        .isAttributeKey(DefaultExpressionEngine.DEFAULT_PROPERTY_DELIMITER
-                                + "test"));
-        assertFalse("Property key considered as attribute key", key
-                .isAttributeKey(TESTATTR));
+                key.isAttributeKey(DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER
+                        + "test"));
+        assertFalse("Property key considered as attribute key",
+                key.isAttributeKey(TESTATTR));
     }
 
     /**
@@ -143,7 +158,7 @@ public class TestDefaultConfigurationKey
         assertEquals("Key was not trimmed", "test", key.trim(".test."));
         assertEquals("Null key could not be processed", "", key.trim(null));
         assertEquals("Delimiter could not be processed", "", key
-                .trim(DefaultExpressionEngine.DEFAULT_PROPERTY_DELIMITER));
+                .trim(DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER));
     }
 
     /**
@@ -170,13 +185,16 @@ public class TestDefaultConfigurationKey
     }
 
     /**
-     * Tests appending keys that contain delimiters when no escpaped delimiter
+     * Tests appending keys that contain delimiters when no escaped delimiter
      * is defined.
      */
     @Test
     public void testAppendDelimitersWithoutEscaping()
     {
-        expressionEngine.setEscapedDelimiter(null);
+        expressionEngine =
+                new DefaultExpressionEngine(symbols().setEscapedDelimiter(null)
+                        .create());
+        key = new DefaultConfigurationKey(expressionEngine);
         key.append("key.......").append("test").append(".");
         key.append(".more").append("..tests");
         assertEquals("Wrong constructed key", "key.test.more.tests", key
@@ -216,9 +234,14 @@ public class TestDefaultConfigurationKey
     @Test
     public void testConstructAttributeKeyWithoutEndMarkers()
     {
-        expressionEngine.setAttributeEnd(null);
-        expressionEngine.setAttributeStart(expressionEngine
-                .getPropertyDelimiter());
+        DefaultExpressionEngineSymbols symbols =
+                symbols()
+                        .setAttributeEnd(null)
+                        .setAttributeStart(
+                                expressionEngine.getSymbols()
+                                        .getPropertyDelimiter()).create();
+        expressionEngine = new DefaultExpressionEngine(symbols);
+        key = new DefaultConfigurationKey(expressionEngine);
         assertEquals("Wrong attribute key", ".test", key
                 .constructAttributeKey("test"));
         assertEquals("Attribute key was incorrectly converted", ".test", key
@@ -428,7 +451,10 @@ public class TestDefaultConfigurationKey
     @Test
     public void testIterateAlternativeEscapeDelimiter()
     {
-        expressionEngine.setEscapedDelimiter("\\.");
+        expressionEngine =
+                new DefaultExpressionEngine(symbols()
+                        .setEscapedDelimiter("\\.").create());
+        key = new DefaultConfigurationKey(expressionEngine);
         key.append("\\.my\\.elem");
         key.append("trailing\\.dot\\.");
         key.append(".strange");
@@ -446,7 +472,10 @@ public class TestDefaultConfigurationKey
     @Test
     public void testIterateWithoutEscapeDelimiter()
     {
-        expressionEngine.setEscapedDelimiter(null);
+        expressionEngine =
+                new DefaultExpressionEngine(symbols()
+                        .setEscapedDelimiter(null).create());
+        key = new DefaultConfigurationKey(expressionEngine);
         key.append("..my..elem.trailing..dot...strange");
         assertEquals("Wrong key", "my..elem.trailing..dot...strange", key
                 .toString());
@@ -507,9 +536,14 @@ public class TestDefaultConfigurationKey
     @Test
     public void testIterateAttributeEqualsPropertyDelimiter()
     {
-        expressionEngine.setAttributeEnd(null);
-        expressionEngine.setAttributeStart(expressionEngine
-                .getPropertyDelimiter());
+        expressionEngine =
+                new DefaultExpressionEngine(
+                        symbols()
+                                .setAttributeEnd(null)
+                                .setAttributeStart(
+                                        DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER)
+                                .create());
+        key = new DefaultConfigurationKey(expressionEngine);
         key.append("this.isa.key");
         DefaultConfigurationKey.KeyIterator kit = key.iterator();
         assertEquals("Wrong first key part", "this", kit.next());

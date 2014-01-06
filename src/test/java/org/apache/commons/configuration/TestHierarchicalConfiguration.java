@@ -40,6 +40,7 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationKey;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
+import org.apache.commons.configuration.tree.DefaultExpressionEngineSymbols;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.junit.Before;
 import org.junit.Test;
@@ -449,7 +450,7 @@ public class TestHierarchicalConfiguration
      */
     private static DefaultConfigurationKey createConfigurationKey()
     {
-        return new DefaultConfigurationKey(new DefaultExpressionEngine());
+        return new DefaultConfigurationKey(DefaultExpressionEngine.INSTANCE);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -473,7 +474,7 @@ public class TestHierarchicalConfiguration
         for(int i = 0; i <= maxIdx; i++)
         {
             DefaultConfigurationKey key =
-                    new DefaultConfigurationKey(new DefaultExpressionEngine(),
+                    new DefaultConfigurationKey(DefaultExpressionEngine.INSTANCE,
                             "tables.table(0).fields");
             key.append("field").appendIndex(i).append("name");
             assertNotNull(config.getProperty(key.toString()));
@@ -1275,10 +1276,12 @@ public class TestHierarchicalConfiguration
 
     private ExpressionEngine createAlternativeExpressionEngine()
     {
-        DefaultExpressionEngine engine = new DefaultExpressionEngine();
-        engine.setPropertyDelimiter("/");
-        engine.setIndexStart("[");
-        engine.setIndexEnd("]");
+        DefaultExpressionEngine engine =
+                new DefaultExpressionEngine(
+                        new DefaultExpressionEngineSymbols.Builder(
+                                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
+                                .setPropertyDelimiter("/").setIndexStart("[")
+                                .setIndexEnd("]").create());
         return engine;
     }
 

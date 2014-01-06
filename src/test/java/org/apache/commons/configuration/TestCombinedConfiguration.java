@@ -35,8 +35,6 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import junit.framework.Assert;
-
 import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationEvent;
@@ -49,6 +47,7 @@ import org.apache.commons.configuration.sync.ReadWriteSynchronizer;
 import org.apache.commons.configuration.sync.Synchronizer;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
+import org.apache.commons.configuration.tree.DefaultExpressionEngineSymbols;
 import org.apache.commons.configuration.tree.NodeCombiner;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
@@ -588,13 +587,17 @@ public class TestCombinedConfiguration
         child.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         child.addProperty("test(a)", "1,2,3");
         config.addConfiguration(child);
-        DefaultExpressionEngine engineQuery = new DefaultExpressionEngine();
-        engineQuery.setIndexStart("<");
-        engineQuery.setIndexEnd(">");
+        DefaultExpressionEngine engineQuery =
+                new DefaultExpressionEngine(
+                        new DefaultExpressionEngineSymbols.Builder(
+                                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
+                                .setIndexStart("<").setIndexEnd(">").create());
         config.setExpressionEngine(engineQuery);
-        DefaultExpressionEngine engineConvert = new DefaultExpressionEngine();
-        engineConvert.setIndexStart("[");
-        engineConvert.setIndexEnd("]");
+        DefaultExpressionEngine engineConvert =
+                new DefaultExpressionEngine(
+                        new DefaultExpressionEngineSymbols.Builder(
+                                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
+                                .setIndexStart("[").setIndexEnd("]").create());
         config.setConversionExpressionEngine(engineConvert);
         assertEquals("Wrong property 1", "1", config.getString("test(a)<0>"));
         assertEquals("Wrong property 2", "2", config.getString("test(a)<1>"));
@@ -801,7 +804,8 @@ public class TestCombinedConfiguration
     public void testSetConversionExpressionEngineSynchronized()
     {
         SynchronizerTestImpl sync = setUpSynchronizerTest();
-        config.setConversionExpressionEngine(new DefaultExpressionEngine());
+        config.setConversionExpressionEngine(new DefaultExpressionEngine(
+                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS));
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
         assertNull("Root node was constructed", config.getRootNode());
     }
@@ -1000,9 +1004,9 @@ public class TestCombinedConfiguration
          */
         public void checkEvent(int expectedInvalidate, int expectedOthers)
         {
-            Assert.assertEquals("Wrong number of invalidate events",
+            assertEquals("Wrong number of invalidate events",
                     expectedInvalidate, invalidateEvents);
-            Assert.assertEquals("Wrong number of other events", expectedOthers,
+            assertEquals("Wrong number of other events", expectedOthers,
                     otherEvents);
         }
     }
