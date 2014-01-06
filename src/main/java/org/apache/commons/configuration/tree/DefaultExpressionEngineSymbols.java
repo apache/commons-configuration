@@ -36,7 +36,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * immutable and can be shared between arbitrary components.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public final class DefaultExpressionEngineSymbols
