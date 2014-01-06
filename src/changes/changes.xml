@@ -196,6 +196,11 @@
         Concurrent access to configurations and reloading have been completely
         redesigned. This should reduce the amount of synchronization.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-486">
+        Removed some static fields for specifying global default values.
+        Using static fields in this way is thread-hostile. There are now
+        alternatives for setting default values.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-462">
         Updated dependency to Commons Lang from version 2.6 to 3.1.
       </action>
