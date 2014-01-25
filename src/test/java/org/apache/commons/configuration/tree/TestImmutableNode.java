@@ -17,16 +17,18 @@
 package org.apache.commons.configuration.tree;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.junit.Test;
 
@@ -38,10 +40,19 @@ import org.junit.Test;
 public class TestImmutableNode
 {
     /** Constant for a test node name. */
-    public static final String NAME = "testNode";
+    private static final String NAME = "testNode";
+
+    /** Constant for an attribute key. */
+    private static final String ATTR = "attr";
+
+    /** Constant for an attribute value. */
+    private static final String ATTR_VALUE = "attrValue";
 
     /** Constant for a test node value. */
-    public static final Integer VALUE = 42;
+    private static final Integer VALUE = 42;
+
+    /** A counter for generating unique child node names. */
+    private int childCounter;
 
     /**
      * Sets up a builder with default settings.
@@ -98,8 +109,25 @@ public class TestImmutableNode
     {
         assertEquals("Wrong number of child nodes", expChildren.size(), node
                 .getChildren().size());
-        assertTrue("Wrong children", node.getChildren()
-                .containsAll(expChildren));
+        Iterator<ImmutableNode> itExp = expChildren.iterator();
+        int idx = 0;
+        for(ImmutableNode c : node.getChildren())
+        {
+            assertEquals("Wrong child at " + idx, itExp.next(), c);
+            idx++;
+        }
+    }
+
+    /**
+     * Checks whether a node has exactly the specified children.
+     *
+     * @param parent the parent node to be checked
+     * @param children the expected children
+     */
+    private static void checkChildNodes(ImmutableNode parent,
+            ImmutableNode... children)
+    {
+        checkChildNodes(parent, Arrays.asList(children));
     }
 
     /**
@@ -108,8 +136,8 @@ public class TestImmutableNode
     @Test
     public void testNodeWithChildren()
     {
-        Set<ImmutableNode> childNodes = new HashSet<ImmutableNode>();
         final int childCount = 8;
+        List<ImmutableNode> childNodes = new ArrayList<ImmutableNode>(childCount);
         ImmutableNode.Builder builder = new ImmutableNode.Builder(childCount);
         for (int i = 0; i < childCount; i++)
         {
@@ -143,6 +171,18 @@ public class TestImmutableNode
     }
 
     /**
+     * Tests whether the builder ignores a null child node.
+     */
+    @Test
+    public void testNodeWithNullChild()
+    {
+        ImmutableNode.Builder builder = setUpBuilder();
+        builder.addChild(null);
+        ImmutableNode node = builder.create();
+        checkChildNodes(node);
+    }
+
+    /**
      * Tests that the list of children cannot be changed by a later manipulation
      * of the builder.
      */
@@ -171,6 +211,19 @@ public class TestImmutableNode
     }
 
     /**
+     * Tests whether null entries in a collection with new child nodes are ignored.
+     */
+    @Test
+    public void testAddChildrenNullElement()
+    {
+        ImmutableNode.Builder builder = setUpBuilder();
+        List<ImmutableNode> children = Arrays.asList(createChild(), null, createChild());
+        builder.addChildren(children);
+        ImmutableNode node = builder.create();
+        checkChildNodes(node, children.get(0), children.get(2));
+    }
+
+    /**
      * Tests whether a node with attributes can be created.
      */
     @Test
@@ -196,11 +249,11 @@ public class TestImmutableNode
      * @param expAttrs the expected attributes
      */
     private static void checkAttributes(ImmutableNode node,
-            Map<String, Object> expAttrs)
+            Map<String, ?> expAttrs)
     {
         assertEquals("Wrong number of attributes", expAttrs.size(), node
                 .getAttributes().size());
-        for (Map.Entry<String, Object> e : expAttrs.entrySet())
+        for (Map.Entry<String, ?> e : expAttrs.entrySet())
         {
             assertEquals("Wrong value for " + e.getKey(), e.getValue(), node
                     .getAttributes().get(e.getKey()));
@@ -215,12 +268,12 @@ public class TestImmutableNode
     public void testNodeWithAttributesManipulateLater()
     {
         ImmutableNode.Builder builder = setUpBuilder();
-        builder.addAttribute("attr", "a1");
+        builder.addAttribute(ATTR, ATTR_VALUE);
         ImmutableNode node = builder.create();
         builder.addAttribute("attr2", "a2");
         assertEquals("Wrong number of attributes", 1, node.getAttributes()
                 .size());
-        assertEquals("Wrong attribute", "a1", node.getAttributes().get("attr"));
+        assertEquals("Wrong attribute", ATTR_VALUE, node.getAttributes().get(ATTR));
     }
 
     /**
@@ -251,5 +304,213 @@ public class TestImmutableNode
         builder.addAttributes(null);
         ImmutableNode node = builder.create();
         assertTrue("Got attributes", node.getAttributes().isEmpty());
+    }
+
+    /**
+     * Creates a default node instance which can be used by tests for updating
+     * properties.
+     *
+     * @param value the value of the node
+     * @return the default node instance
+     */
+    private ImmutableNode createDefaultNode(Object value)
+    {
+        ImmutableNode.Builder builder = new ImmutableNode.Builder(1);
+        return builder.name(NAME).addChild(createChild())
+                .addAttribute("testAttr", "anotherTest").value(value).create();
+    }
+
+    /**
+     * Creates a default child node with a unique name.
+     *
+     * @return the new child node
+     */
+    private ImmutableNode createChild()
+    {
+        int idx = childCounter++;
+        return new ImmutableNode.Builder().name("Child" + idx)
+                .value("childValue" + idx).create();
+    }
+
+    /**
+     * Checks whether an updated node has the expected basic properties.
+     *
+     * @param org the original node
+     * @param updated the updated node
+     */
+    private static void checkUpdatedNode(ImmutableNode org,
+            ImmutableNode updated)
+    {
+        assertNotSame("Same instance", org, updated);
+        assertEquals("Wrong node name", NAME, updated.getNodeName());
+        assertEquals("Wrong value", VALUE, updated.getValue());
+    }
+
+    /**
+     * Tests whether a new node with a changed value can be created.
+     */
+    @Test
+    public void testSetValue()
+    {
+        ImmutableNode node = createDefaultNode("test");
+        ImmutableNode node2 = node.setValue(VALUE);
+        checkUpdatedNode(node, node2);
+        assertSame("Different children", node.getChildren(),
+                node2.getChildren());
+        assertSame("Different attributes", node.getAttributes(),
+                node2.getAttributes());
+    }
+
+    /**
+     * Tests whether a child node can be added.
+     */
+    @Test
+    public void testAddChild()
+    {
+        ImmutableNode node = createDefaultNode(VALUE);
+        ImmutableNode child2 =
+                new ImmutableNode.Builder().name("child2").create();
+        ImmutableNode node2 = node.addChild(child2);
+        checkUpdatedNode(node, node2);
+        checkChildNodes(node2, node.getChildren().get(0), child2);
+    }
+
+    /**
+     * Tests whether a new null child node is rejected.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddChildNull()
+    {
+        createDefaultNode(VALUE).addChild(null);
+    }
+
+    /**
+     * Tests whether a child node can be removed.
+     */
+    @Test
+    public void testRemoveChildExisting()
+    {
+        ImmutableNode node = createDefaultNode(VALUE);
+        ImmutableNode child = node.getChildren().get(0);
+        ImmutableNode node2 = node.removeChild(child);
+        checkUpdatedNode(node, node2);
+        checkChildNodes(node2);
+    }
+
+    /**
+     * Tests whether the correct child node is removed if there are multiple.
+     */
+    @Test
+    public void testRemoveChildMultiple()
+    {
+        ImmutableNode childRemove = createChild();
+        ImmutableNode node =
+                createDefaultNode(VALUE).addChild(createChild())
+                        .addChild(childRemove).addChild(createChild());
+        ImmutableNode node2 = node.removeChild(childRemove);
+        checkChildNodes(node2, node.getChildren().get(0), node.getChildren()
+                .get(1), node.getChildren().get(3));
+    }
+
+    /**
+     * Tests whether the behavior of removeChildNode() if the node in question
+     * is not found.
+     */
+    @Test
+    public void testRemoveChildNodeNotExisting()
+    {
+        ImmutableNode node = createDefaultNode(VALUE);
+        assertSame("Got different instance", node, node.removeChild(null));
+    }
+
+    /**
+     * Tests whether a child node can be replaced by another one.
+     */
+    @Test
+    public void testReplaceChildExisting()
+    {
+        ImmutableNode childRemove = createChild();
+        ImmutableNode childReplace = createChild();
+        ImmutableNode node = createDefaultNode(VALUE).addChild(childRemove);
+        ImmutableNode node2 = node.replaceChild(childRemove, childReplace);
+        checkUpdatedNode(node, node2);
+        checkChildNodes(node2, node.getChildren().get(0), childReplace);
+    }
+
+    /**
+     * Tests replaceChild() if the child node cannot be found.
+     */
+    @Test
+    public void testReplaceChildNotExisting()
+    {
+        ImmutableNode node = createDefaultNode(VALUE);
+        assertSame("Got different instance", node,
+                node.replaceChild(createChild(), createChild()));
+    }
+
+    /**
+     * Tries to replace a child node by null.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testReplaceChildNull()
+    {
+        createDefaultNode(VALUE).replaceChild(createChild(), null);
+    }
+
+    /**
+     * Tests whether attribute values can be set.
+     */
+    @Test
+    public void testSetAttribute()
+    {
+        ImmutableNode node = createDefaultNode(VALUE);
+        ImmutableNode node2 = node.setAttribute("attr", ATTR_VALUE);
+        checkUpdatedNode(node, node2);
+        assertSame("Wrong children", node.getChildren(), node2.getChildren());
+        Map<String, Object> newAttrs =
+                new HashMap<String, Object>(node.getAttributes());
+        newAttrs.put(ATTR, ATTR_VALUE);
+        checkAttributes(node2, newAttrs);
+    }
+
+    /**
+     * Tests whether an attribute can be overridden.
+     */
+    @Test
+    public void testSetAttributeOverride()
+    {
+        ImmutableNode.Builder builder = setUpBuilder();
+        final String attr2 = ATTR + "_other";
+        Map<String, Object> attrs = new HashMap<String, Object>();
+        attrs.put(ATTR, ATTR_VALUE);
+        attrs.put(attr2, "someValue");
+        ImmutableNode node = builder.addAttributes(attrs).create();
+        ImmutableNode node2 = node.setAttribute(attr2, VALUE);
+        attrs.put(attr2, VALUE);
+        checkAttributes(node2, attrs);
+    }
+
+    /**
+     * Tests whether an existing attribute can be removed.
+     */
+    @Test
+    public void testRemoveAttributeExisting()
+    {
+        ImmutableNode node = createDefaultNode(VALUE);
+        String attrName = node.getAttributes().keySet().iterator().next();
+        ImmutableNode node2 = node.removeAttribute(attrName);
+        checkUpdatedNode(node, node2);
+        assertSame("Wrong children", node.getChildren(), node2.getChildren());
+        assertTrue("Attribute not deleted", node2.getAttributes().isEmpty());
+    }
+
+    /**
+     * Tests removeAttribute() if the attribute does not exist.
+     */
+    @Test
+    public void testRemoveAttributeNotExisting()
+    {
+        ImmutableNode node = createDefaultNode(VALUE);
+        assertSame("Got different instance", node, node.removeAttribute(ATTR));
     }
 }

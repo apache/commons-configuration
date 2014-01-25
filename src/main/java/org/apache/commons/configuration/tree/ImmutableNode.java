@@ -112,6 +112,172 @@ public class ImmutableNode
     }
 
     /**
+     * Creates a new {@code ImmutableNode} instance which is a copy of this
+     * object with the value changed to the passed in value.
+     *
+     * @param newValue the value of the newly created node
+     * @return the new node with the changed value
+     */
+    public ImmutableNode setValue(Object newValue)
+    {
+        return new Builder(children, attributes).name(nodeName).value(newValue)
+                .create();
+    }
+
+    /**
+     * Creates a new {@code ImmutableNode} instance which is a copy of this
+     * object, but has the given child node added.
+     *
+     * @param child the child node to be added (must not be <b>null</b>)
+     * @return the new node with the child node added
+     * @throws IllegalArgumentException if the child node is <b>null</b>
+     */
+    public ImmutableNode addChild(ImmutableNode child)
+    {
+        checkChildNode(child);
+        Builder builder = new Builder(children.size() + 1, attributes);
+        builder.addChildren(children).addChild(child);
+        return createWithBasicProperties(builder);
+    }
+
+    /**
+     * Returns a new {@code ImmutableNode} instance which is a copy of this
+     * object, but with the given child node removed. If the child node does not
+     * belong to this node, the same node instance is returned.
+     *
+     * @param child the child node to be removed
+     * @return the new node with the child node removed
+     */
+    public ImmutableNode removeChild(ImmutableNode child)
+    {
+        // use same size of children in case the child does not exist
+        Builder builder = new Builder(children.size(), attributes);
+        boolean foundChild = false;
+        for (ImmutableNode c : children)
+        {
+            if (c == child)
+            {
+                foundChild = true;
+            }
+            else
+            {
+                builder.addChild(c);
+            }
+        }
+
+        return foundChild ? createWithBasicProperties(builder) : this;
+    }
+
+    /**
+     * Returns a new {@code ImmutableNode} instance which is a copy of this
+     * object, but with the given child replaced by the new one. If the child to
+     * be replaced cannot be found, the same node instance is returned.
+     *
+     * @param oldChild the child node to be replaced
+     * @param newChild the replacing child node (must not be <b>null</b>)
+     * @return the new node with the child replaced
+     * @throws IllegalArgumentException if the new child node is <b>null</b>
+     */
+    public ImmutableNode replaceChild(ImmutableNode oldChild,
+            ImmutableNode newChild)
+    {
+        checkChildNode(newChild);
+        Builder builder = new Builder(children.size(), attributes);
+        boolean foundChild = false;
+        for (ImmutableNode c : children)
+        {
+            if (c == oldChild)
+            {
+                builder.addChild(newChild);
+                foundChild = true;
+            }
+            else
+            {
+                builder.addChild(c);
+            }
+        }
+
+        return foundChild ? createWithBasicProperties(builder) : this;
+    }
+
+    /**
+     * Returns a new {@code ImmutableNode} instance which is a copy of this
+     * object, but with the specified attribute set to the given value. If an
+     * attribute with this name does not exist, it is created now. Otherwise,
+     * the new value overrides the old one.
+     *
+     * @param name the name of the attribute
+     * @param value the attribute value
+     * @return the new node with this attribute
+     */
+    public ImmutableNode setAttribute(String name, Object value)
+    {
+        Map<String, Object> newAttrs = new HashMap<String, Object>(attributes);
+        newAttrs.put(name, value);
+        return createWithNewAttributes(newAttrs);
+    }
+
+    /**
+     * Returns a new {@code ImmutableNode} instance which is a copy of this
+     * object, but with the specified attribute removed. If there is no
+     * attribute with the given name, the same node instance is returned.
+     *
+     * @param name the name of the attribute
+     * @return the new node without this attribute
+     */
+    public ImmutableNode removeAttribute(String name)
+    {
+        Map<String, Object> newAttrs = new HashMap<String, Object>(attributes);
+        if (newAttrs.remove(name) != null)
+        {
+            return createWithNewAttributes(newAttrs);
+        }
+        return this;
+    }
+
+    /**
+     * Initializes the given builder with basic properties (node name and value)
+     * and returns the newly created node. This is a helper method for updating
+     * a node when only children or attributes are affected.
+     *
+     * @param builder the already prepared builder
+     * @return the newly created node
+     */
+    private ImmutableNode createWithBasicProperties(Builder builder)
+    {
+        return builder.name(nodeName).value(value).create();
+    }
+
+    /**
+     * Creates a new {@code ImmutableNode} instance with the same properties as
+     * this object, but with the given new attributes.
+     *
+     * @param newAttrs the new attributes
+     * @return the new node instance
+     */
+    private ImmutableNode createWithNewAttributes(Map<String, Object> newAttrs)
+    {
+        return createWithBasicProperties(new Builder(children, null)
+                .addAttributes(newAttrs));
+    }
+
+    /**
+     * Checks whether the given child node is not null. This check is done at
+     * multiple places to ensure that newly added child nodes are always
+     * defined.
+     *
+     * @param child the child node to be checked
+     * @throws IllegalArgumentException if the child node is <b>null</b>
+     */
+    private static void checkChildNode(ImmutableNode child)
+    {
+        if (child == null)
+        {
+            throw new IllegalArgumentException("Child node must not be null!");
+        }
+    }
+
+    /**
      * <p>
      * A <em>builder</em> class for creating instances of {@code ImmutableNode}.
      * </p>
@@ -170,7 +336,7 @@ public class ImmutableNode
         public Builder(int childCount)
         {
             this();
-            children = new ArrayList<ImmutableNode>(childCount);
+            initChildrenCollection(childCount);
         }
 
         /**
@@ -190,6 +356,23 @@ public class ImmutableNode
         {
             directChildren = dirChildren;
             directAttributes = dirAttrs;
+        }
+
+        /**
+         * Creates a new instance of {@code Builder} and initializes the
+         * attributes of the new node and prepares the collection for the
+         * children. This constructor is used internally by methods of
+         * {@code ImmutableNode} which update the node and change the children.
+         * The new number of child nodes can be passed so that the collection
+         * for the new children can be created with an appropriate size.
+         *
+         * @param childCount the expected number of new children
+         * @param dirAttrs the attributes of the new node
+         */
+        private Builder(int childCount, Map<String, Object> dirAttrs)
+        {
+            this(null, dirAttrs);
+            initChildrenCollection(childCount);
         }
 
         /**
@@ -218,15 +401,18 @@ public class ImmutableNode
 
         /**
          * Adds a child node to this builder. The passed in node becomes a child
-         * of the newly created node.
+         * of the newly created node. If it is <b>null</b>, it is ignored.
          *
-         * @param c the child node
+         * @param c the child node (must not be <b>null</b>)
          * @return a reference to this object for method chaining
          */
         public Builder addChild(ImmutableNode c)
         {
-            ensureChildrenExist();
-            children.add(c);
+            if (c != null)
+            {
+                ensureChildrenExist();
+                children.add(c);
+            }
             return this;
         }
 
@@ -243,7 +429,7 @@ public class ImmutableNode
             if (children != null)
             {
                 ensureChildrenExist();
-                this.children.addAll(children);
+                this.children.addAll(filterNull(children));
             }
             return this;
         }
@@ -371,6 +557,41 @@ public class ImmutableNode
             {
                 attributes = new HashMap<String, Object>();
             }
+        }
+
+        /**
+         * Creates the collection for child nodes based on the expected number
+         * of children.
+         *
+         * @param childCount the expected number of new children
+         */
+        private void initChildrenCollection(int childCount)
+        {
+            if (childCount > 0)
+            {
+                children = new ArrayList<ImmutableNode>(childCount);
+            }
+        }
+
+        /**
+         * Filters null entries from the passed in collection with child nodes.
+         *
+         * @param children the collection to be filtered
+         * @return the collection with null entries removed
+         */
+        private static Collection<? extends ImmutableNode> filterNull(
+                Collection<ImmutableNode> children)
+        {
+            List<ImmutableNode> result =
+                    new ArrayList<ImmutableNode>(children.size());
+            for (ImmutableNode c : children)
+            {
+                if (c != null)
+                {
+                    result.add(c);
+                }
+            }
+            return result;
         }
     }
 }
