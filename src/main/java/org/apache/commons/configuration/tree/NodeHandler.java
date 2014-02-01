@@ -17,6 +17,7 @@
 package org.apache.commons.configuration.tree;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>
@@ -28,15 +29,15 @@ import java.util.List;
  * {@code NodeHandler} is used. The handler provides a number of methods for
  * querying the internal state of a node in a read-only way.
  * </p>
- * 
+ *
  * @version $Id$
- * @param T the type of the nodes this handler deals with
+ * @param <T> the type of the nodes this handler deals with
  */
 public interface NodeHandler<T>
 {
     /**
      * Returns the name of the specified node
-     * 
+     *
      * @param node the node
      * @return the name of this node
      */
@@ -44,7 +45,7 @@ public interface NodeHandler<T>
 
     /**
      * Returns the value of the specified node.
-     * 
+     *
      * @param node the node
      * @return the value of this node
      */
@@ -52,7 +53,7 @@ public interface NodeHandler<T>
 
     /**
      * Returns the parent of the specified node.
-     * 
+     *
      * @param node the node
      * @return the parent node
      */
@@ -60,7 +61,7 @@ public interface NodeHandler<T>
 
     /**
      * Returns an unmodifiable list with all children of the specified node.
-     * 
+     *
      * @param node the node
      * @return a list with the child nodes of this node
      */
@@ -69,7 +70,7 @@ public interface NodeHandler<T>
     /**
      * Returns an unmodifiable list of all children of the specified node with
      * the given name.
-     * 
+     *
      * @param node the node
      * @param name the name of the desired child nodes
      * @return a list with all children with the given name
@@ -78,7 +79,7 @@ public interface NodeHandler<T>
 
     /**
      * Returns the child with the given index of the specified node.
-     * 
+     *
      * @param node the node
      * @param index the index (0-based)
      * @return the child with the given index
@@ -86,18 +87,18 @@ public interface NodeHandler<T>
     T getChild(T node, int index);
 
     /**
-     * Returns the index of the given child node relative to its name. This
-     * method can be called when a unique identifier for a specific node is
-     * needed. The node name alone might not be sufficient because there may be
-     * multiple child nodes with the same name. This method returns 0 if the
-     * given node is the first child node with this name, 1 for the second child
-     * node and so on. If the node has no parent node or if it is an attribute,
-     * -1 is returned.
-     * 
-     * @param node a child node whose index is to be retrieved
+     * Returns the index of the given child node in the list of children of its
+     * parent. This method is the opposite operation of
+     * {@link #getChild(Object, int)}. This method returns 0 if the given node
+     * is the first child node with this name, 1 for the second child node and
+     * so on. If the node has no parent node or if it is an attribute, -1 is
+     * returned.
+     *
+     * @param parent the parent node
+     * @param child a child node whose index is to be retrieved
      * @return the index of this child node
      */
-    int indexOfChild(T node);
+    int indexOfChild(T parent, T child);
 
     /**
      * Returns the number of children of the specified node with the given name.
@@ -108,7 +109,7 @@ public interface NodeHandler<T>
      * a child name is passed in, only the children with this name are taken
      * into account. If the name <b>null</b> is passed, the total number of
      * children must be returned.
-     * 
+     *
      * @param node the node
      * @param name the name of the children in question (can be <b>null</b> for
      *        all children)
@@ -117,17 +118,17 @@ public interface NodeHandler<T>
     int getChildrenCount(T node, String name);
 
     /**
-     * Returns an unmodifiable list with the names of all attributes of the
+     * Returns an unmodifiable set with the names of all attributes of the
      * specified node.
-     * 
+     *
      * @param node the node
-     * @return a list with the names of all attributes of this node
+     * @return a set with the names of all attributes of this node
      */
-    List<String> getAttributes(T node);
+    Set<String> getAttributes(T node);
 
     /**
      * Returns a flag whether the passed in node has any attributes.
-     * 
+     *
      * @param node the node
      * @return a flag whether this node has any attributes
      */
@@ -137,7 +138,7 @@ public interface NodeHandler<T>
      * Returns the value of the specified attribute from the given node. If a
      * concrete {@code NodeHandler} supports attributes with multiple values,
      * result might be a collection.
-     * 
+     *
      * @param node the node
      * @param name the name of the attribute
      * @return the value of this attribute
@@ -148,7 +149,7 @@ public interface NodeHandler<T>
      * Checks whether the specified node is defined. Nodes are
      * &quot;defined&quot; if they contain any data, e.g. a value, or
      * attributes, or defined children.
-     * 
+     *
      * @param node the node to test
      * @return a flag whether the passed in node is defined
      */
