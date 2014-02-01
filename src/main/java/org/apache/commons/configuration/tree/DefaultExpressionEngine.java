@@ -158,26 +158,33 @@ public class DefaultExpressionEngine implements ExpressionEngine
     }
 
     /**
-     * {@inheritDoc} This method supports the syntax as described in the class
-     * comment.
+     * Evaluates the given key and returns all matching nodes. This method
+     * supports the syntax as described in the class comment.
+     *
+     * @param root the root node
+     * @param key the key
+     * @return a list with the matching nodes
      */
-    public <T> List<QueryResult<T>> query(T root, String key,
-            NodeHandler<T> handler)
+    public List<ConfigurationNode> query(ConfigurationNode root, String key)
     {
-        List<QueryResult<T>> results = new LinkedList<QueryResult<T>>();
+        List<ConfigurationNode> nodes = new LinkedList<ConfigurationNode>();
         findNodesForKey(new DefaultConfigurationKey(this, key).iterator(),
-                root, results, handler);
-        return results;
+                root, nodes);
+        return nodes;
     }
 
     /**
-     * {@inheritDoc} This implementation takes the
+     * Determines the key of the passed in node. This implementation takes the
      * given parent key, adds a property delimiter, and then adds the node's
-     * name.
-     * The name of the root node is a blank string. Note that no indices are
+     * name. (For attribute nodes the attribute delimiters are used instead.)
+     * The name of the root node is a blanc string. Note that no indices will be
      * returned.
+     *
+     * @param node the node whose key is to be determined
+     * @param parentKey the key of this node's parent
+     * @return the key for the given node
      */
-    public <T> String nodeKey(T node, String parentKey, NodeHandler<T> handler)
+    public String nodeKey(ConfigurationNode node, String parentKey)
     {
         if (parentKey == null)
         {
@@ -189,41 +196,16 @@ public class DefaultExpressionEngine implements ExpressionEngine
         {
             DefaultConfigurationKey key = new DefaultConfigurationKey(this,
                     parentKey);
-                key.append(handler.nodeName(node), true);
+            if (node.isAttribute())
+            {
+                key.appendAttribute(node.getName());
+            }
+            else
+            {
+                key.append(node.getName(), true);
+            }
             return key.toString();
         }
-    }
-
-    public String attributeKey(String parentKey, String attributeName)
-    {
-        DefaultConfigurationKey key =
-                new DefaultConfigurationKey(this, parentKey);
-        key.appendAttribute(attributeName);
-        return key.toString();
-    }
-
-    /**
-     * {@inheritDoc} This implementation works similar to {@code nodeKey()};
-     * however, each key returned by this method has an index (except for the
-     * root node). The parent key is prepended to the name of the current node
-     * in any case and without further checks. If it is <b>null</b>, only the
-     * name of the current node with its index is returned.
-     */
-    public <T> String canonicalKey(T node, String parentKey,
-            NodeHandler<T> handler)
-    {
-        String nodeName = handler.nodeName(node);
-        T parent = handler.getParent(node);
-        DefaultConfigurationKey key =
-                new DefaultConfigurationKey(this, parentKey);
-        key.append(StringUtils.defaultString(nodeName));
-
-        if (parent != null)
-        {
-            // this is not the root key
-            key.appendIndex(determineIndex(node, parent, nodeName, handler));
-        }
-        return key.toString();
     }
 
     /**
@@ -234,7 +216,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * To be able to deal with the structure supported by hierarchical
      * configuration implementations the passed in key is of importance,
      * especially the indices it might contain. The following example should
-     * clarify this: Suppose the current node structure looks like the
+     * clarify this: Suppose the actual node structure looks like the
      * following:
      * </p>
      * <p>
@@ -309,13 +291,11 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * so there cannot be any ambiguities.)
      * </p>
      *
-     * @param <T> the type of the nodes to be dealt with
      * @param root the root node of the nodes hierarchy
      * @param key the key of the new property
-     * @param handler the node handler
      * @return a data object with information needed for the add operation
      */
-    public <T> NodeAddData<T> prepareAdd(T root, String key, NodeHandler<T> handler)
+    public NodeAddData prepareAdd(ConfigurationNode root, String key)
     {
         DefaultConfigurationKey.KeyIterator it = new DefaultConfigurationKey(
                 this, key).iterator();
@@ -325,8 +305,8 @@ public class DefaultExpressionEngine implements ExpressionEngine
                     "Key for add operation must be defined!");
         }
 
-        T parent = findLastPathNode(it, root, handler);
-        List<String> pathNodes = new LinkedList<String>();
+        NodeAddData result = new NodeAddData();
+        result.setParent(findLastPathNode(it, root));
 
         while (it.hasNext())
         {
@@ -336,32 +316,30 @@ public class DefaultExpressionEngine implements ExpressionEngine
                         "Invalid key for add operation: " + key
                                 + " (Attribute key in the middle.)");
             }
-            pathNodes.add(it.currentKey());
+            result.addPathNode(it.currentKey());
             it.next();
         }
 
-        return new NodeAddData<T>(parent, it.currentKey(), !it.isPropertyKey(),
-                pathNodes);
+        result.setNewNodeName(it.currentKey());
+        result.setAttribute(!it.isPropertyKey());
+        return result;
     }
 
     /**
      * Recursive helper method for evaluating a key. This method processes all
      * facets of a configuration key, traverses the tree of properties and
-     * fetches the results of all matching properties.
+     * fetches the the nodes of all matching properties.
      *
-     * @param <T> the type of nodes to be dealt with
      * @param keyPart the configuration key iterator
-     * @param node the current node
-     * @param results here the found results are stored
-     * @param handler the node handler
+     * @param node the actual node
+     * @param nodes here the found nodes are stored
      */
-    protected <T> void findNodesForKey(
-            DefaultConfigurationKey.KeyIterator keyPart, T node,
-            Collection<QueryResult<T>> results, NodeHandler<T> handler)
+    protected void findNodesForKey(DefaultConfigurationKey.KeyIterator keyPart,
+            ConfigurationNode node, Collection<ConfigurationNode> nodes)
     {
         if (!keyPart.hasNext())
         {
-            results.add(QueryResult.createNodeResult(node));
+            nodes.add(node);
         }
 
         else
@@ -369,32 +347,26 @@ public class DefaultExpressionEngine implements ExpressionEngine
             String key = keyPart.nextKey(false);
             if (keyPart.isPropertyKey())
             {
-                processSubNodes(keyPart, handler.getChildren(node, key),
-                        results, handler);
+                processSubNodes(keyPart, node.getChildren(key), nodes);
             }
-            if (keyPart.isAttribute() && !keyPart.hasNext())
+            if (keyPart.isAttribute())
             {
-                if (handler.getAttributeValue(node, key) != null)
-                {
-                    results.add(QueryResult.createAttributeResult(node, key));
-                }
+                processSubNodes(keyPart, node.getAttributes(key), nodes);
             }
         }
     }
 
     /**
      * Finds the last existing node for an add operation. This method traverses
-     * the node tree along the specified key. The last existing node on this
-     * path is returned.
+     * the configuration node tree along the specified key. The last existing
+     * node on this path is returned.
      *
-     * @param <T> the type of the nodes to be dealt with
      * @param keyIt the key iterator
-     * @param node the current node
-     * @param handler the node handler
+     * @param node the actual node
      * @return the last existing node on the given path
      */
-    protected <T> T findLastPathNode(DefaultConfigurationKey.KeyIterator keyIt,
-            T node, NodeHandler<T> handler)
+    protected ConfigurationNode findLastPathNode(
+            DefaultConfigurationKey.KeyIterator keyIt, ConfigurationNode node)
     {
         String keyPart = keyIt.nextKey(false);
 
@@ -407,17 +379,15 @@ public class DefaultExpressionEngine implements ExpressionEngine
                         "Invalid path for add operation: "
                                 + "Attribute key in the middle!");
             }
-            int idx =
-                    keyIt.hasIndex() ? keyIt.getIndex() : handler
-                            .getChildrenCount(node, keyPart) - 1;
-            if (idx < 0 || idx >= handler.getChildrenCount(node, keyPart))
+            int idx = keyIt.hasIndex() ? keyIt.getIndex() : node
+                    .getChildrenCount(keyPart) - 1;
+            if (idx < 0 || idx >= node.getChildrenCount(keyPart))
             {
                 return node;
             }
             else
             {
-                return findLastPathNode(keyIt,
-                        handler.getChildren(node, keyPart).get(idx), handler);
+                return findLastPathNode(keyIt, node.getChildren(keyPart).get(idx));
             }
         }
 
@@ -432,46 +402,28 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * the current node depending on the type of the current key part (children,
      * attributes, or both).
      *
-     * @param <T> the type of the nodes to be dealt with
      * @param keyPart the key part
      * @param subNodes a list with the sub nodes to process
      * @param nodes the target collection
-     * @param handler the node handler
      */
-    private <T> void processSubNodes(DefaultConfigurationKey.KeyIterator keyPart,
-            List<T> subNodes, Collection<QueryResult<T>> nodes, NodeHandler<T> handler)
+    private void processSubNodes(DefaultConfigurationKey.KeyIterator keyPart,
+            List<ConfigurationNode> subNodes, Collection<ConfigurationNode> nodes)
     {
         if (keyPart.hasIndex())
         {
             if (keyPart.getIndex() >= 0 && keyPart.getIndex() < subNodes.size())
             {
                 findNodesForKey((DefaultConfigurationKey.KeyIterator) keyPart
-                        .clone(), subNodes.get(keyPart.getIndex()), nodes, handler);
+                        .clone(), subNodes.get(keyPart.getIndex()), nodes);
             }
         }
         else
         {
-            for (T node : subNodes)
+            for (ConfigurationNode node : subNodes)
             {
                 findNodesForKey((DefaultConfigurationKey.KeyIterator) keyPart
-                        .clone(), node, nodes, handler);
+                        .clone(), node, nodes);
             }
         }
-    }
-
-    /**
-     * Determines the index of the given node based on its parent node.
-     *
-     * @param node the current node
-     * @param parent the parent node
-     * @param nodeName the name of the current node
-     * @param handler the node handler
-     * @param <T> the type of the nodes to be dealt with
-     * @return the index of this node
-     */
-    private static <T> int determineIndex(T node, T parent, String nodeName,
-                                          NodeHandler<T> handler)
-    {
-        return handler.getChildren(parent, nodeName).indexOf(node);
     }
 }
