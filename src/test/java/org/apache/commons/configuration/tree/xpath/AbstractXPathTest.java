@@ -39,6 +39,9 @@ public abstract class AbstractXPathTest
     /** Constant for the name of the counter attribute. */
     protected static final String ATTR_NAME = "counter";
 
+    /** Constant for a name of an attribute of the root node. */
+    protected static final String ATTR_ROOT = "rootAttr";
+
     /** Constant for the name of the first child. */
     protected static final String CHILD_NAME1 = "subNode";
 
@@ -78,7 +81,8 @@ public abstract class AbstractXPathTest
      * child nodes having the names {@code CHILD_NAME1} or
      * {@code CHILD_NAME2}. Their values are named like their parent
      * node with an additional index. Each node has an attribute with a counter
-     * value.
+     * value. The root node has a special attribute named {@value #ATTR_ROOT}
+     * with the value {@code true}.
      *
      * @param levels the number of levels in the hierarchy
      * @return the root node of the hierarchy
@@ -87,6 +91,7 @@ public abstract class AbstractXPathTest
     {
         ImmutableNode.Builder resultBuilder = new ImmutableNode.Builder();
         createLevel(resultBuilder, null, levels);
+        resultBuilder.addAttribute(ATTR_ROOT, String.valueOf(true));
         return resultBuilder.create();
     }
 
