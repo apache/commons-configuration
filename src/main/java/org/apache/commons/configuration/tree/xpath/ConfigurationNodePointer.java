@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.NodeHandler;
 import org.apache.commons.jxpath.ri.Compiler;
 import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.compiler.NodeTest;
@@ -41,7 +42,7 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * Configuration team</a>
  * @version $Id$
  */
-class ConfigurationNodePointer extends NodePointer
+class ConfigurationNodePointer<T> extends NodePointer
 {
     /**
      * The serial version UID.
@@ -63,6 +64,13 @@ class ConfigurationNodePointer extends NodePointer
         this.node = node;
     }
 
+    public ConfigurationNodePointer(T node, Locale locale, NodeHandler<T> handler)
+    {
+        super(null, locale);
+        //TODO implementation
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
     /**
      * Creates a new instance of {@code ConfigurationNodePointer} and
      * initializes it with its parent pointer.
@@ -74,6 +82,14 @@ class ConfigurationNodePointer extends NodePointer
     {
         super(parent);
         this.node = node;
+    }
+
+    public ConfigurationNodePointer(ConfigurationNodePointer<T> parent, T node,
+            NodeHandler<T> handler)
+    {
+        super(parent);
+        // TODO implementation
+        throw new UnsupportedOperationException("Not yet implemented!");
     }
 
     /**
@@ -266,5 +282,20 @@ class ConfigurationNodePointer extends NodePointer
             return true;
         }
         return super.testNode(test);
+    }
+
+    public NodeHandler<T> getNodeHandler() {
+        //TODO implementation
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
+    /**
+     * Returns the wrapped configuration node.
+     * @return the wrapped configuration node
+     */
+    public T getConfigurationNode()
+    {
+        //TODO implementation
+        throw new UnsupportedOperationException("Not yet implemented!");
     }
 }
