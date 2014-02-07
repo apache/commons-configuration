@@ -17,59 +17,124 @@
 package org.apache.commons.configuration.tree.xpath;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.tree.DefaultConfigurationNode;
+import org.apache.commons.configuration.tree.ImmutableNode;
+import org.apache.commons.configuration.tree.InMemoryNodeModel;
 import org.apache.commons.configuration.tree.NodeAddData;
+import org.apache.commons.configuration.tree.NodeHandler;
+import org.apache.commons.configuration.tree.QueryResult;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.commons.jxpath.ri.model.NodePointerFactory;
-import org.junit.Before;
+import org.easymock.EasyMock;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * Test class for XPathExpressionEngine.
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  */
 public class TestXPathExpressionEngine
 {
-    /** Constant for the test root node. */
-    static final ConfigurationNode ROOT = new DefaultConfigurationNode(
-            "testRoot");
-
     /** Constant for the valid test key. */
-    static final String TEST_KEY = "TESTKEY";
+    private static final String TEST_KEY = "TESTKEY";
 
-    /** The expression engine to be tested. */
-    XPathExpressionEngine engine;
+    /** Constant for the name of the root node. */
+    private static final String ROOT_NAME = "testRoot";
 
-    @Before
-    public void setUp() throws Exception
+    /** The test root node. */
+    private static ImmutableNode root;
+
+    /** A test node handler. */
+    private static NodeHandler<ImmutableNode> handler;
+
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception
     {
-        engine = new MockJXPathContextExpressionEngine();
+        root = new ImmutableNode.Builder().name(ROOT_NAME).create();
+        handler = new InMemoryNodeModel(root);
     }
 
     /**
-     * Tests the query() method with a normal expression.
+     * Creates a mock for a context and prepares it to expect a select
+     * invocation yielding the provided results.
+     *
+     * @param results the results
+     * @return the mock context
+     */
+    private JXPathContext expectSelect(Object... results)
+    {
+        JXPathContext ctx = EasyMock.createMock(JXPathContext.class);
+        EasyMock.expect(ctx.selectNodes(TEST_KEY)).andReturn(
+                Arrays.asList(results));
+        EasyMock.replay(ctx);
+        return ctx;
+    }
+
+    /**
+     * Creates a test engine instance configured with a context factory which
+     * returns the given test context.
+     *
+     * @param ctx the context mock
+     * @return the test engine instance
+     */
+    private XPathExpressionEngine setUpEngine(JXPathContext ctx)
+    {
+        XPathContextFactory factory =
+                EasyMock.createMock(XPathContextFactory.class);
+        EasyMock.expect(factory.createContext(root, handler)).andReturn(ctx);
+        EasyMock.replay(factory);
+        return new XPathExpressionEngine(factory);
+    }
+
+    /**
+     * Tests whether a correct default context factory is created.
      */
     @Test
-    public void testQueryExpression()
+    public void testDefaultContextFactory()
     {
-        List<ConfigurationNode> nodes = engine.query(ROOT, TEST_KEY);
-        assertEquals("Incorrect number of results", 1, nodes.size());
-        assertSame("Wrong result node", ROOT, nodes.get(0));
-        checkSelectCalls(1);
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        assertNotNull("No context factory", engine.getContextFactory());
+    }
+
+    /**
+     * Tests the query() method with an expression yielding a node.
+     */
+    @Test
+    public void testQueryNodeExpression()
+    {
+        JXPathContext ctx = expectSelect(root);
+        XPathExpressionEngine engine = setUpEngine(ctx);
+        List<QueryResult<ImmutableNode>> result =
+                engine.query(root, TEST_KEY, handler);
+        assertEquals("Incorrect number of results", 1, result.size());
+        assertSame("Wrong result node", root, result.get(0).getNode());
+        assertFalse("No node result", result.get(0).isAttributeResult());
+    }
+
+    /**
+     * Tests a query which yields an attribute result.
+     */
+    @Test
+    public void testQueryAttributeExpression()
+    {
+        QueryResult<ImmutableNode> attrResult =
+                QueryResult.createAttributeResult(root, "attr");
+        JXPathContext ctx = expectSelect(attrResult);
+        XPathExpressionEngine engine = setUpEngine(ctx);
+        List<QueryResult<ImmutableNode>> result =
+                engine.query(root, TEST_KEY, handler);
+        assertEquals("Incorrect number of results", 1, result.size());
+        assertSame("Wrong result", attrResult, result.get(0));
     }
 
     /**
@@ -78,9 +143,10 @@ public class TestXPathExpressionEngine
     @Test
     public void testQueryWithoutResult()
     {
-        List<ConfigurationNode> nodes = engine.query(ROOT, "a non existing key");
-        assertTrue("Result list is not empty", nodes.isEmpty());
-        checkSelectCalls(1);
+        JXPathContext ctx = expectSelect();
+        XPathExpressionEngine engine = setUpEngine(ctx);
+        assertTrue("Got results", engine.query(root, TEST_KEY, handler)
+                .isEmpty());
     }
 
     /**
@@ -103,36 +169,36 @@ public class TestXPathExpressionEngine
     }
 
     /**
-     * Helper method for testing undefined keys.
+     * Helper method for testing queries with undefined keys.
      *
      * @param key the key
      */
     private void checkEmptyKey(String key)
     {
-        List<ConfigurationNode> nodes = engine.query(ROOT, key);
-        assertEquals("Incorrect number of results", 1, nodes.size());
-        assertSame("Wrong result node", ROOT, nodes.get(0));
-        checkSelectCalls(0);
+        XPathContextFactory factory =
+                EasyMock.createMock(XPathContextFactory.class);
+        EasyMock.replay(factory);
+        XPathExpressionEngine engine = new XPathExpressionEngine(factory);
+        List<QueryResult<ImmutableNode>> results =
+                engine.query(root, key, handler);
+        assertEquals("Incorrect number of results", 1, results.size());
+        assertSame("Wrong result node", root, results.get(0).getNode());
     }
 
     /**
-     * Tests if the used JXPathContext is correctly initialized.
+     * Tests if the JXPathContext is correctly initialized with the node pointer
+     * factory.
      */
     @Test
-    public void testCreateContext()
+    public void testNodePointerFactory()
     {
-        JXPathContext ctx = new XPathExpressionEngine().createContext(ROOT,
-                TEST_KEY);
-        assertNotNull("Context is null", ctx);
-        assertTrue("Lenient mode is not set", ctx.isLenient());
-        assertSame("Incorrect context bean set", ROOT, ctx.getContextBean());
-
-        NodePointerFactory[] factories = JXPathContextReferenceImpl
-                .getNodePointerFactories();
+        JXPathContext.newContext(this);
+        NodePointerFactory[] factories =
+                JXPathContextReferenceImpl.getNodePointerFactories();
         boolean found = false;
-        for (int i = 0; i < factories.length; i++)
+        for (NodePointerFactory factory : factories)
         {
-            if (factories[i] instanceof ConfigurationNodePointerFactory)
+            if (factory instanceof ConfigurationNodePointerFactory)
             {
                 found = true;
             }
@@ -146,20 +212,9 @@ public class TestXPathExpressionEngine
     @Test
     public void testNodeKeyNormal()
     {
-        assertEquals("Wrong node key", "parent/child", engine.nodeKey(
-                new DefaultConfigurationNode("child"), "parent"));
-    }
-
-    /**
-     * Tests nodeKey() for an attribute node.
-     */
-    @Test
-    public void testNodeKeyAttribute()
-    {
-        ConfigurationNode node = new DefaultConfigurationNode("attr");
-        node.setAttribute(true);
-        assertEquals("Wrong attribute key", "node/@attr", engine.nodeKey(node,
-                "node"));
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        assertEquals("Wrong node key", "parent/" + ROOT_NAME,
+                engine.nodeKey(root, "parent", handler));
     }
 
     /**
@@ -168,9 +223,20 @@ public class TestXPathExpressionEngine
     @Test
     public void testNodeKeyForRootNode()
     {
-        assertEquals("Wrong key for root node", "", engine.nodeKey(ROOT, null));
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        assertEquals("Wrong key for root node", "",
+                engine.nodeKey(root, null, handler));
+    }
+
+    /**
+     * Tests a node key if the node does not have a name.
+     */
+    @Test
+    public void testNodeKeyNoNodeName()
+    {
+        XPathExpressionEngine engine = new XPathExpressionEngine();
         assertEquals("Null name not detected", "test", engine.nodeKey(
-                new DefaultConfigurationNode(), "test"));
+                new ImmutableNode.Builder().create(), "test", handler));
     }
 
     /**
@@ -179,12 +245,31 @@ public class TestXPathExpressionEngine
     @Test
     public void testNodeKeyForRootChild()
     {
-        ConfigurationNode node = new DefaultConfigurationNode("child");
-        assertEquals("Wrong key for root child node", "child", engine.nodeKey(
-                node, ""));
-        node.setAttribute(true);
-        assertEquals("Wrong key for root attribute", "@child", engine.nodeKey(
-                node, ""));
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        assertEquals("Wrong key for root child node", ROOT_NAME,
+                engine.nodeKey(root, "", handler));
+    }
+
+    /**
+     * Tests whether the key of an attribute can be generated..
+     */
+    @Test
+    public void testNodeKeyAttribute()
+    {
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        assertEquals("Wrong attribute key", "node/@attr",
+                engine.attributeKey("node", "attr"));
+    }
+
+    /**
+     * Tests the key of an attribute which belongs to the root node.
+     */
+    @Test
+    public void testAttributeKeyOfRootNode()
+    {
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        assertEquals("Wrong key for root attribute", "@child",
+                engine.attributeKey(null, "child"));
     }
 
     /**
@@ -193,10 +278,11 @@ public class TestXPathExpressionEngine
     @Test
     public void testPrepareAddNode()
     {
-        NodeAddData data = engine.prepareAdd(ROOT, TEST_KEY + "  newNode");
-        checkAddPath(data, new String[]
-        { "newNode" }, false);
-        checkSelectCalls(1);
+        JXPathContext ctx = expectSelect(root);
+        XPathExpressionEngine engine = setUpEngine(ctx);
+        NodeAddData<ImmutableNode> data =
+                engine.prepareAdd(root, TEST_KEY + "  newNode", handler);
+        checkAddPath(data, false, "newNode");
     }
 
     /**
@@ -205,10 +291,11 @@ public class TestXPathExpressionEngine
     @Test
     public void testPrepareAddAttribute()
     {
-        NodeAddData data = engine.prepareAdd(ROOT, TEST_KEY + "\t@newAttr");
-        checkAddPath(data, new String[]
-        { "newAttr" }, true);
-        checkSelectCalls(1);
+        JXPathContext ctx = expectSelect(root);
+        XPathExpressionEngine engine = setUpEngine(ctx);
+        NodeAddData<ImmutableNode> data =
+                engine.prepareAdd(root, TEST_KEY + "\t@newAttr", handler);
+        checkAddPath(data, true, "newAttr");
     }
 
     /**
@@ -217,11 +304,12 @@ public class TestXPathExpressionEngine
     @Test
     public void testPrepareAddPath()
     {
-        NodeAddData data = engine.prepareAdd(ROOT, TEST_KEY
-                + " \t a/full/path/node");
-        checkAddPath(data, new String[]
-        { "a", "full", "path", "node" }, false);
-        checkSelectCalls(1);
+        JXPathContext ctx = expectSelect(root);
+        XPathExpressionEngine engine = setUpEngine(ctx);
+        NodeAddData<ImmutableNode> data =
+                engine.prepareAdd(root, TEST_KEY + " \t a/full/path/node",
+                        handler);
+        checkAddPath(data, false, "a", "full", "path", "node");
     }
 
     /**
@@ -230,11 +318,11 @@ public class TestXPathExpressionEngine
     @Test
     public void testPrepareAddAttributePath()
     {
-        NodeAddData data = engine.prepareAdd(ROOT, TEST_KEY
-                + " a/full/path@attr");
-        checkAddPath(data, new String[]
-        { "a", "full", "path", "attr" }, true);
-        checkSelectCalls(1);
+        JXPathContext ctx = expectSelect(root);
+        XPathExpressionEngine engine = setUpEngine(ctx);
+        NodeAddData<ImmutableNode> data =
+                engine.prepareAdd(root, TEST_KEY + " a/full/path@attr", handler);
+        checkAddPath(data, true, "a", "full", "path", "attr");
     }
 
     /**
@@ -243,10 +331,11 @@ public class TestXPathExpressionEngine
     @Test
     public void testPrepareAddRootChild()
     {
-        NodeAddData data = engine.prepareAdd(ROOT, " newNode");
-        checkAddPath(data, new String[]
-        { "newNode" }, false);
-        checkSelectCalls(0);
+        JXPathContext ctx = expectSelect(root);
+        XPathExpressionEngine engine = setUpEngine(ctx);
+        NodeAddData<ImmutableNode> data =
+                engine.prepareAdd(root, " newNode", handler);
+        checkAddPath(data, false, "newNode");
     }
 
     /**
@@ -255,10 +344,11 @@ public class TestXPathExpressionEngine
     @Test
     public void testPrepareAddRootAttribute()
     {
-        NodeAddData data = engine.prepareAdd(ROOT, " @attr");
-        checkAddPath(data, new String[]
-        { "attr" }, true);
-        checkSelectCalls(0);
+        JXPathContext ctx = expectSelect(root);
+        XPathExpressionEngine engine = setUpEngine(ctx);
+        NodeAddData<ImmutableNode> data =
+                engine.prepareAdd(root, " @attr", handler);
+        checkAddPath(data, true, "attr");
     }
 
     /**
@@ -267,7 +357,9 @@ public class TestXPathExpressionEngine
     @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddInvalidParent()
     {
-        engine.prepareAdd(ROOT, "invalidKey newNode");
+        JXPathContext ctx = expectSelect();
+        XPathExpressionEngine engine = setUpEngine(ctx);
+        engine.prepareAdd(root, TEST_KEY + " test", handler);
     }
 
     /**
@@ -276,7 +368,8 @@ public class TestXPathExpressionEngine
     @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddEmptyPath()
     {
-        engine.prepareAdd(ROOT, TEST_KEY + " ");
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        engine.prepareAdd(root, TEST_KEY + " ", handler);
     }
 
     /**
@@ -285,16 +378,32 @@ public class TestXPathExpressionEngine
     @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddNullKey()
     {
-        engine.prepareAdd(ROOT, null);
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        engine.prepareAdd(root, null, handler);
     }
 
     /**
-     * Tests an add operation where the key is null.
+     * Tests an add operation where the key is empty.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddEmptyKey()
     {
-        engine.prepareAdd(ROOT, "");
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        engine.prepareAdd(root, "", handler);
+    }
+
+    /**
+     * Helper method for checking whether an exception is thrown for an invalid
+     * path passed to prepareAdd().
+     *
+     * @param path the path to be tested
+     * @throws IllegalArgumentException if the test is successful
+     */
+    private void checkInvalidAddPath(String path)
+    {
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        QueryResult<ImmutableNode> res = QueryResult.createNodeResult(root);
+        engine.createNodeAddData(path, res);
     }
 
     /**
@@ -303,7 +412,7 @@ public class TestXPathExpressionEngine
     @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddInvalidPath()
     {
-        engine.prepareAdd(ROOT, TEST_KEY + " an/invalid//path");
+        checkInvalidAddPath("an/invalid//path");
     }
 
     /**
@@ -313,7 +422,7 @@ public class TestXPathExpressionEngine
     @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddInvalidAttributePath()
     {
-        engine.prepareAdd(ROOT, TEST_KEY + " a/path/with@an/attribute");
+        checkInvalidAddPath("a/path/with@an/attribute");
     }
 
     /**
@@ -323,7 +432,7 @@ public class TestXPathExpressionEngine
     @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddInvalidAttributePath2()
     {
-        engine.prepareAdd(ROOT, TEST_KEY + " a/path/with/@attribute");
+        checkInvalidAddPath("a/path/with/@attribute");
     }
 
     /**
@@ -332,7 +441,7 @@ public class TestXPathExpressionEngine
     @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddInvalidPathWithSlash()
     {
-        engine.prepareAdd(ROOT, TEST_KEY + " /a/path/node");
+        checkInvalidAddPath("/a/path/node");
     }
 
     /**
@@ -342,27 +451,40 @@ public class TestXPathExpressionEngine
     @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddInvalidPathMultipleAttributes()
     {
-        engine.prepareAdd(ROOT, TEST_KEY + " an@attribute@path");
+        checkInvalidAddPath("an@attribute@path");
+    }
+
+    /**
+     * Tests that it is not possible to add nodes to an attribute.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testPrepareAddToAttributeResult()
+    {
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        QueryResult<ImmutableNode> result =
+                QueryResult.createAttributeResult(root, TEST_KEY);
+        engine.createNodeAddData("path", result);
     }
 
     /**
      * Helper method for testing the path nodes in the given add data object.
      *
      * @param data the data object to check
-     * @param expected an array with the expected path elements
      * @param attr a flag if the new node is an attribute
+     * @param expected an array with the expected path elements
      */
-    private void checkAddPath(NodeAddData data, String[] expected, boolean attr)
+    private static void checkAddPath(NodeAddData<ImmutableNode> data,
+            boolean attr, String... expected)
     {
-        assertSame("Wrong parent node", ROOT, data.getParent());
+        assertSame("Wrong parent node", root, data.getParent());
         List<String> path = data.getPathNodes();
         assertEquals("Incorrect number of path nodes", expected.length - 1,
                 path.size());
         Iterator<String> it = path.iterator();
         for (int idx = 0; idx < expected.length - 1; idx++)
         {
-            assertEquals("Wrong node at position " + idx, expected[idx], it
-                    .next());
+            assertEquals("Wrong node at position " + idx, expected[idx],
+                    it.next());
         }
         assertEquals("Wrong name of new node", expected[expected.length - 1],
                 data.getNewNodeName());
@@ -370,80 +492,82 @@ public class TestXPathExpressionEngine
     }
 
     /**
-     * Checks if the JXPath context's selectNodes() method was called as often
-     * as expected.
-     *
-     * @param expected the number of expected calls
+     * Tests whether a canonical key can be queried if all child nodes have
+     * different names.
      */
-    protected void checkSelectCalls(int expected)
+    @Test
+    public void testCanonicalKeyNoDuplicates()
     {
-        MockJXPathContext ctx = ((MockJXPathContextExpressionEngine) engine).getContext();
-        int calls = (ctx == null) ? 0 : ctx.selectInvocations;
-        assertEquals("Incorrect number of select calls", expected, calls);
+        ImmutableNode.Builder parentBuilder = new ImmutableNode.Builder(2);
+        ImmutableNode c1 = new ImmutableNode.Builder().name("child").create();
+        ImmutableNode c2 =
+                new ImmutableNode.Builder().name("child_other").create();
+        parentBuilder.addChildren(Arrays.asList(c2, c1));
+        ImmutableNode parent = parentBuilder.create();
+        NodeHandler<ImmutableNode> testHandler = new InMemoryNodeModel(parent);
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        assertEquals("Wrong canonical key", "parent/child[1]",
+                engine.canonicalKey(c1, "parent", testHandler));
     }
 
     /**
-     * A mock implementation of the JXPathContext class. This implementation
-     * will overwrite the <code>selectNodes()</code> method that is used by
-     * <code>XPathExpressionEngine</code> to count the invocations of this
-     * method.
+     * Tests whether duplicates are correctly resolved when querying for
+     * canonical keys.
      */
-    static class MockJXPathContext extends JXPathContextReferenceImpl
+    @Test
+    public void testCanonicalKeyWithDuplicates()
     {
-        int selectInvocations;
-
-        public MockJXPathContext(Object bean)
-        {
-            super(null, bean);
-        }
-
-        /**
-         * Dummy implementation of this method. If the passed in string is the
-         * test key, the root node will be returned in the list. Otherwise the
-         * return value is <b>null</b>.
-         */
-        @Override
-        public List<?> selectNodes(String xpath)
-        {
-            selectInvocations++;
-            if (TEST_KEY.equals(xpath))
-            {
-                List<ConfigurationNode> result = new ArrayList<ConfigurationNode>(1);
-                result.add(ROOT);
-                return result;
-            }
-            else
-            {
-                return null;
-            }
-        }
+        ImmutableNode.Builder parentBuilder = new ImmutableNode.Builder(3);
+        ImmutableNode c1 = new ImmutableNode.Builder().name("child").create();
+        ImmutableNode c2 = new ImmutableNode.Builder().name("child").create();
+        ImmutableNode c3 =
+                new ImmutableNode.Builder().name("child_other").create();
+        parentBuilder.addChildren(Arrays.asList(c1, c2, c3));
+        ImmutableNode parent = parentBuilder.create();
+        NodeHandler<ImmutableNode> testHandler = new InMemoryNodeModel(parent);
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        assertEquals("Wrong key 1", "parent/child[1]",
+                engine.canonicalKey(c1, "parent", testHandler));
+        assertEquals("Wrong key 2", "parent/child[2]",
+                engine.canonicalKey(c2, "parent", testHandler));
     }
 
     /**
-     * A special implementation of XPathExpressionEngine that overrides
-     * createContext() to return a mock context object.
+     * Tests whether the parent key can be undefined when querying a canonical
+     * key.
      */
-    static class MockJXPathContextExpressionEngine extends
-            XPathExpressionEngine
+    @Test
+    public void testCanonicalKeyNoParentKey()
     {
-        /** Stores the context instance. */
-        private MockJXPathContext context;
+        ImmutableNode.Builder parentBuilder = new ImmutableNode.Builder(1);
+        ImmutableNode c1 = new ImmutableNode.Builder().name("child").create();
+        ImmutableNode parent = parentBuilder.addChild(c1).create();
+        NodeHandler<ImmutableNode> testHandler = new InMemoryNodeModel(parent);
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        assertEquals("Wrong key", "child[1]",
+                engine.canonicalKey(c1, null, testHandler));
+    }
 
-        @Override
-        protected JXPathContext createContext(ConfigurationNode root, String key)
-        {
-            context = new MockJXPathContext(root);
-            return context;
-        }
+    /**
+     * Tests whether a canonical key for the parent node can be queried if no
+     * parent key was passed in.
+     */
+    @Test
+    public void testCanonicalKeyRootNoParentKey()
+    {
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        assertEquals("Wrong key", "", engine.canonicalKey(root, null, handler));
+    }
 
-        /**
-         * Returns the context created by the last newContext() call.
-         *
-         * @return the current context
-         */
-        public MockJXPathContext getContext()
-        {
-            return context;
-        }
+    /**
+     * Tests whether a parent key is evaluated when determining the canonical
+     * key of the root node.
+     */
+    @Test
+    public void testCanonicalKeyRootWithParentKey()
+    {
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        assertEquals("Wrong key", "parent",
+                engine.canonicalKey(root, "parent", handler));
     }
 }
