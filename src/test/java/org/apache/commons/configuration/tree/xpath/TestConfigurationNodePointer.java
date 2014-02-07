@@ -22,8 +22,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Locale;
 
-import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.tree.DefaultConfigurationNode;
+import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.model.NodeIterator;
 import org.apache.commons.jxpath.ri.model.NodePointer;
@@ -31,24 +30,23 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test class for ConfigurationNodePointer.
+ * Test class for {@code ConfigurationNodePointer}.
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  */
 public class TestConfigurationNodePointer extends AbstractXPathTest
 {
     /** Stores the node pointer to be tested. */
-    NodePointer pointer;
+    private ConfigurationNodePointer<ImmutableNode> pointer;
 
     @Override
     @Before
     public void setUp() throws Exception
     {
         super.setUp();
-        pointer = new ConfigurationNodePointer(root, Locale.getDefault());
+        pointer =
+                new ConfigurationNodePointer<ImmutableNode>(root,
+                        Locale.getDefault(), handler);
     }
 
     /**
@@ -57,8 +55,10 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
     @Test
     public void testCompareChildNodePointersChildren()
     {
-        NodePointer p1 = new ConfigurationNodePointer(pointer, root.getChild(1));
-        NodePointer p2 = new ConfigurationNodePointer(pointer, root.getChild(3));
+        NodePointer p1 = new ConfigurationNodePointer<ImmutableNode>(
+                pointer, root.getChildren().get(1), handler);
+        NodePointer p2 = new ConfigurationNodePointer<ImmutableNode>(
+                pointer, root.getChildren().get(3), handler);
         assertEquals("Incorrect order", -1, pointer.compareChildNodePointers(
                 p1, p2));
         assertEquals("Incorrect symmetric order", 1, pointer
@@ -66,52 +66,23 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
     }
 
     /**
-     * Tests comparing child node pointers for attribute nodes.
+     * Tests whether a comparison of child node pointers handle the case that
+     * the child nodes are unknown. (This should not happen in practice.)
      */
     @Test
     public void testCompareChildNodePointersAttributes()
     {
-        root.addAttribute(new DefaultConfigurationNode("attr1", "test1"));
-        root.addAttribute(new DefaultConfigurationNode("attr2", "test2"));
-        NodePointer p1 = new ConfigurationNodePointer(pointer, root
-                .getAttribute(0));
-        NodePointer p2 = new ConfigurationNodePointer(pointer, root
-                .getAttribute(1));
-        assertEquals("Incorrect order", -1, pointer.compareChildNodePointers(
-                p1, p2));
-        assertEquals("Incorrect symmetric order", 1, pointer
-                .compareChildNodePointers(p2, p1));
-    }
-
-    /**
-     * tests comparing child node pointers for both child and attribute nodes.
-     */
-    @Test
-    public void testCompareChildNodePointersChildAndAttribute()
-    {
-        root.addAttribute(new DefaultConfigurationNode("attr1", "test1"));
-        NodePointer p1 = new ConfigurationNodePointer(pointer, root.getChild(2));
-        NodePointer p2 = new ConfigurationNodePointer(pointer, root
-                .getAttribute(0));
-        assertEquals("Incorrect order for attributes", 1, pointer
-                .compareChildNodePointers(p1, p2));
-        assertEquals("Incorrect symmetric order for attributes", -1, pointer
-                .compareChildNodePointers(p2, p1));
-    }
-
-    /**
-     * Tests comparing child node pointers for child nodes that do not belong to
-     * the parent node.
-     */
-    @Test
-    public void testCompareChildNodePointersInvalidChildren()
-    {
-        ConfigurationNode node = root.getChild(1);
-        NodePointer p1 = new ConfigurationNodePointer(pointer, node.getChild(1));
-        NodePointer p2 = new ConfigurationNodePointer(pointer, node.getChild(3));
-        assertEquals("Non child nodes could be sorted", 0, pointer
-                .compareChildNodePointers(p1, p2));
-        assertEquals("Non child nodes could be sorted symmetrically", 0,
+        ImmutableNode n1 = new ImmutableNode.Builder().name("n1").create();
+        ImmutableNode n2 = new ImmutableNode.Builder().name("n2").create();
+        NodePointer p1 =
+                new ConfigurationNodePointer<ImmutableNode>(pointer, n1,
+                        handler);
+        NodePointer p2 =
+                new ConfigurationNodePointer<ImmutableNode>(pointer, n2,
+                        handler);
+        assertEquals("Incorrect order", 0,
+                pointer.compareChildNodePointers(p1, p2));
+        assertEquals("Incorrect symmetric order", 0,
                 pointer.compareChildNodePointers(p2, p1));
     }
 
@@ -121,11 +92,7 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
     @Test
     public void testIsAttribute()
     {
-        ConfigurationNode node = new DefaultConfigurationNode("test", "testval");
-        NodePointer p = new ConfigurationNodePointer(pointer, node);
-        assertFalse("Node is an attribute", p.isAttribute());
-        node.setAttribute(true);
-        assertTrue("Node is no attribute", p.isAttribute());
+        assertFalse("Node is an attribute", pointer.isAttribute());
     }
 
     /**
@@ -135,16 +102,20 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
     public void testIsLeave()
     {
         assertFalse("Root node is leaf", pointer.isLeaf());
+    }
 
-        NodePointer p = pointer;
-        while (!p.isLeaf())
-        {
-            ConfigurationNode node = (ConfigurationNode) p.getNode();
-            assertTrue("Node has no children", node.getChildrenCount() > 0);
-            p = new ConfigurationNodePointer(p, node.getChild(0));
-        }
-        assertTrue("Node has children", ((ConfigurationNode) p.getNode())
-                .getChildrenCount() == 0);
+    /**
+     * Tests the leaf flag for a real leaf node.
+     */
+    @Test
+    public void testIsLeafTrue()
+    {
+        ImmutableNode leafNode =
+                new ImmutableNode.Builder().name("leafNode").create();
+        pointer =
+                new ConfigurationNodePointer<ImmutableNode>(pointer, leafNode,
+                        handler);
+        assertTrue("Not a leaf node", pointer.isLeaf());
     }
 
     /**
@@ -163,29 +134,37 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
      */
     private void checkIterators(NodePointer p)
     {
-        ConfigurationNode node = (ConfigurationNode) p.getNode();
+        ImmutableNode node = (ImmutableNode) p.getNode();
         NodeIterator it = p.childIterator(null, false, null);
         assertEquals("Iterator count differs from children count", node
-                .getChildrenCount(), iteratorSize(it));
+                .getChildren().size(), iteratorSize(it));
 
         for (int index = 1; it.setPosition(index); index++)
         {
             NodePointer pchild = it.getNodePointer();
-            assertEquals("Wrong child", node.getChild(index - 1), pchild
-                    .getNode());
+            assertEquals("Wrong child", node.getChildren().get(index - 1),
+                    pchild.getNode());
             checkIterators(pchild);
         }
 
         it = p.attributeIterator(new QName(null, "*"));
         assertEquals("Iterator count differs from attribute count", node
-                .getAttributeCount(), iteratorSize(it));
+                .getAttributes().size(), iteratorSize(it));
         for (int index = 1; it.setPosition(index); index++)
         {
             NodePointer pattr = it.getNodePointer();
             assertTrue("Node pointer is no attribute", pattr.isAttribute());
-            assertEquals("Wrong attribute", node.getAttribute(index - 1), pattr
-                    .getNode());
-            checkIterators(pattr);
+            assertTrue("Wrong attribute name", node.getAttributes()
+                    .containsKey(pattr.getName().getName()));
         }
+    }
+
+    /**
+     * Tests that no new value can be set.
+     */
+    @Test(expected = UnsupportedOperationException.class)
+    public void testSetValue()
+    {
+        pointer.setValue("newValue");
     }
 }
