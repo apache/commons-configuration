@@ -16,9 +16,7 @@
  */
 package org.apache.commons.configuration.tree.xpath;
 
-import java.util.List;
-
-import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.NodeHandler;
 import org.apache.commons.jxpath.ri.model.NodeIterator;
 import org.apache.commons.jxpath.ri.model.NodePointer;
 
@@ -33,18 +31,13 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * </p>
  *
  * @since 1.3
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
+ * @param <T> the type of the nodes this iterator deals with
  */
-abstract class ConfigurationNodeIteratorBase implements NodeIterator
+abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
 {
     /** Stores the parent node pointer. */
-    private NodePointer parent;
-
-    /** Stores the list with the sub nodes. */
-    private List<ConfigurationNode> subNodes;
+    private final ConfigurationNodePointer<T> parent;
 
     /** Stores the current position. */
     private int position;
@@ -53,7 +46,7 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
     private int startOffset;
 
     /** Stores the reverse flag. */
-    private boolean reverse;
+    private final boolean reverse;
 
     /**
      * Creates a new instance of {@code ConfigurationNodeIteratorBase}
@@ -62,7 +55,8 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
      * @param parent the parent pointer
      * @param reverse the reverse flag
      */
-    protected ConfigurationNodeIteratorBase(NodePointer parent, boolean reverse)
+    protected ConfigurationNodeIteratorBase(ConfigurationNodePointer<T> parent,
+            boolean reverse)
     {
         this.parent = parent;
         this.reverse = reverse;
@@ -102,7 +96,7 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
             return null;
         }
 
-        return createNodePointer(subNodes.get(positionToIndex(getPosition())));
+        return createNodePointer(positionToIndex(getPosition()));
     }
 
     /**
@@ -110,9 +104,20 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
      *
      * @return the parent node pointer
      */
-    protected NodePointer getParent()
+    protected ConfigurationNodePointer<T> getParent()
     {
         return parent;
+    }
+
+    /**
+     * Returns the node handler for the managed nodes. This is a convenience
+     * method.
+     *
+     * @return the node handler
+     */
+    protected NodeHandler<T> getNodeHandler()
+    {
+        return getParent().getNodeHandler();
     }
 
     /**
@@ -145,42 +150,13 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
     }
 
     /**
-     * Initializes the list of sub nodes for the iteration. This method must be
-     * called during initialization phase.
-     *
-     * @param nodes the list with the sub nodes
-     */
-    protected void initSubNodeList(List<ConfigurationNode> nodes)
-    {
-        subNodes = nodes;
-        if (reverse)
-        {
-            setStartOffset(subNodes.size());
-        }
-    }
-
-    /**
      * Returns the maximum position for this iterator.
      *
      * @return the maximum allowed position
      */
     protected int getMaxPosition()
     {
-        return reverse ? getStartOffset() + 1 : subNodes.size()
-                - getStartOffset();
-    }
-
-    /**
-     * Creates the configuration node pointer for the current position. This
-     * method is called by {@code getNodePointer()}. Derived classes
-     * must create the correct pointer object.
-     *
-     * @param node the current configuration node
-     * @return the node pointer
-     */
-    protected NodePointer createNodePointer(ConfigurationNode node)
-    {
-        return new ConfigurationNodePointer(getParent(), node);
+        return reverse ? getStartOffset() + 1 : size() - getStartOffset();
     }
 
     /**
@@ -194,4 +170,21 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
     {
         return (reverse ? 1 - pos : pos - 1) + getStartOffset();
     }
+
+    /**
+     * Creates the configuration node pointer for the current position. This
+     * method is called by {@code getNodePointer()}. Derived classes
+     * must create the correct pointer object.
+     *
+     * @param position the current position in the iteration
+     * @return the node pointer
+     */
+    protected abstract NodePointer createNodePointer(int position);
+
+    /**
+     * Returns the number of elements in this iteration.
+     *
+     * @return the number of elements
+     */
+    protected abstract int size();
 }
