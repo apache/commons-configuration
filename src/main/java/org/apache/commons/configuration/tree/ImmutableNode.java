@@ -202,6 +202,23 @@ public class ImmutableNode
 
     /**
      * Returns a new {@code ImmutableNode} instance which is a copy of this
+     * object, but with the children replaced by the ones in the passed in
+     * collection. With this method all children can be replaced in a single
+     * step. For the collection the same rules apply as for
+     * {@link Builder#addChildren(Collection)}.
+     *
+     * @param newChildren the collection with the new children (may be
+     *        <b>null</b>)
+     */
+    public ImmutableNode replaceChildren(Collection<ImmutableNode> newChildren)
+    {
+        Builder builder = new Builder(null, attributes);
+        builder.addChildren(newChildren);
+        return createWithBasicProperties(builder);
+    }
+
+    /**
+     * Returns a new {@code ImmutableNode} instance which is a copy of this
      * object, but with the specified attribute set to the given value. If an
      * attribute with this name does not exist, it is created now. Otherwise,
      * the new value overrides the old one.

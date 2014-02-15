@@ -513,4 +513,35 @@ public class TestImmutableNode
         ImmutableNode node = createDefaultNode(VALUE);
         assertSame("Got different instance", node, node.removeAttribute(ATTR));
     }
+
+    /**
+     * Tests whether all children can be replaced at once.
+     */
+    @Test
+    public void testReplaceChildren()
+    {
+        final int childCount = 8;
+        Collection<ImmutableNode> newChildren =
+                new ArrayList<ImmutableNode>(childCount);
+        for (int i = 0; i < childCount; i++)
+        {
+            newChildren.add(createChild());
+        }
+        ImmutableNode node = createDefaultNode(VALUE);
+        ImmutableNode node2 = node.replaceChildren(newChildren);
+        checkUpdatedNode(node, node2);
+        checkChildNodes(node2, newChildren);
+    }
+
+    /**
+     * Tests whether a node's children can be replaced by a null collection.
+     */
+    @Test
+    public void testReplaceChildrenNullCollection()
+    {
+        ImmutableNode node = createDefaultNode(VALUE);
+        ImmutableNode node2 = node.replaceChildren(null);
+        checkUpdatedNode(node, node2);
+        checkChildNodes(node2);
+    }
 }
