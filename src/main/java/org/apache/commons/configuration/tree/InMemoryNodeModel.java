@@ -198,17 +198,13 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
         ModelTransaction tx = new ModelTransaction(currentStructure);
         NodeAddData<ImmutableNode> addData =
                 resolver.resolveAddKey(currentStructure.getRoot(), key, this);
-        // TODO handle attributes
-        Collection<ImmutableNode> newNodes =
-                createNodesToAdd(addData.getNewNodeName(), values);
-        if (addData.getPathNodes().isEmpty())
+        if (addData.isAttribute())
         {
-            tx.addAddNodesOperation(addData.getParent(), newNodes);
+            addAttributeProperty(tx, addData, values);
         }
         else
         {
-            ImmutableNode newChild = createNodeToAddWithPath(addData, newNodes);
-            tx.addAddNodeOperation(addData.getParent(), newChild);
+            addNodeProperty(tx, addData, values);
         }
 
         // TODO handle concurrency
@@ -238,6 +234,63 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
                 pendingNodes.add(c);
                 parents.put(c, node);
             }
+        }
+    }
+
+    /**
+     * Handles an add property operation if the property to be added is a node.
+     *
+     * @param tx the transaction
+     * @param addData the {@code NodeAddData}
+     * @param values the collection with node values
+     */
+    private static void addNodeProperty(ModelTransaction tx,
+            NodeAddData<ImmutableNode> addData, Iterable<?> values)
+    {
+        Collection<ImmutableNode> newNodes =
+                createNodesToAdd(addData.getNewNodeName(), values);
+        if (addData.getPathNodes().isEmpty())
+        {
+            tx.addAddNodesOperation(addData.getParent(), newNodes);
+        }
+        else
+        {
+            ImmutableNode newChild = createNodeToAddWithPath(addData, newNodes);
+            tx.addAddNodeOperation(addData.getParent(), newChild);
+        }
+    }
+
+    /**
+     * Handles an add property operation if the property to be added is an
+     * attribute.
+     *
+     * @param tx the transaction
+     * @param addData the {@code NodeAddData}
+     * @param values the collection with node values
+     */
+    private static void addAttributeProperty(ModelTransaction tx,
+            NodeAddData<ImmutableNode> addData, Iterable<?> values)
+    {
+        if (addData.getPathNodes().isEmpty())
+        {
+            tx.addAttributeOperation(addData.getParent(),
+                    addData.getNewNodeName(), values.iterator().next());
+        }
+        else
+        {
+            int pathNodeCount = addData.getPathNodes().size();
+            ImmutableNode childWithAttribute =
+                    new ImmutableNode.Builder()
+                            .name(addData.getPathNodes().get(pathNodeCount - 1))
+                            .addAttribute(addData.getNewNodeName(),
+                                    values.iterator().next()).create();
+            ImmutableNode newChild =
+                    (pathNodeCount > 1) ? createNodeOnPath(addData
+                            .getPathNodes().subList(0, pathNodeCount - 1)
+                            .iterator(),
+                            Collections.singleton(childWithAttribute))
+                            : childWithAttribute;
+            tx.addAddNodeOperation(addData.getParent(), newChild);
         }
     }
 

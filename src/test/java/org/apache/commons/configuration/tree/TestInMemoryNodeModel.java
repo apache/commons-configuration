@@ -672,4 +672,70 @@ public class TestInMemoryNodeModel
         assertSame("Wrong root node", model.getRootNode(),
                 model.getParent(node));
     }
+
+    /**
+     * Tests whether an attribute can be added if there are some path nodes.
+     */
+    @Test
+    public void testAddPropertyAttributeWithPathNodes()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        NodeAddData<ImmutableNode> addData =
+                new NodeAddData<ImmutableNode>(nodeForKey(rootAuthorsTree,
+                        "Homer/Ilias"), "number", true, Arrays.asList("scenes",
+                        "scene"));
+        InMemoryNodeModel model = new InMemoryNodeModel(rootAuthorsTree);
+        EasyMock.expect(resolver.resolveAddKey(rootAuthorsTree, KEY, model))
+                .andReturn(addData);
+        EasyMock.replay(resolver);
+
+        model.addProperty(KEY, Collections.singleton(1), resolver);
+        ImmutableNode node = nodeForKey(model, "Homer/Ilias/scenes/scene");
+        assertEquals("Attribute not set", 1, node.getAttributes().get("number"));
+    }
+
+    /**
+     * Tests the special case that an attribute is added with a single path
+     * node.
+     */
+    @Test
+    public void testAddPropertyAttributeWithSinglePathNode()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        NodeAddData<ImmutableNode> addData =
+                new NodeAddData<ImmutableNode>(nodeForKey(rootAuthorsTree,
+                        AUTHORS[0]), "year", true, Arrays.asList("dateOfBirth"));
+        InMemoryNodeModel model = new InMemoryNodeModel(rootAuthorsTree);
+        EasyMock.expect(resolver.resolveAddKey(rootAuthorsTree, KEY, model))
+                .andReturn(addData);
+        EasyMock.replay(resolver);
+
+        final Integer year = 1564;
+        model.addProperty(KEY, Collections.singleton(year), resolver);
+        ImmutableNode node = nodeForKey(model, "Shakespeare/dateOfBirth");
+        assertEquals("Attribute not set", year, node.getAttributes()
+                .get("year"));
+    }
+
+    /**
+     * Tests whether an attribute property can be added if there are no path
+     * nodes.
+     */
+    @Test
+    public void testAddPropertyAttributeNoPathNodes()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        NodeAddData<ImmutableNode> addData =
+                new NodeAddData<ImmutableNode>(nodeForKey(rootAuthorsTree,
+                        "Shakespeare/The Tempest"), "year", true, null);
+        InMemoryNodeModel model = new InMemoryNodeModel(rootAuthorsTree);
+        EasyMock.expect(resolver.resolveAddKey(rootAuthorsTree, KEY, model))
+                .andReturn(addData);
+        EasyMock.replay(resolver);
+
+        model.addProperty(KEY, Collections.singleton(1611), resolver);
+        ImmutableNode node = nodeForKey(model, "Shakespeare/The Tempest");
+        assertEquals("Attribute not set", 1611, node.getAttributes()
+                .get("year"));
+    }
 }

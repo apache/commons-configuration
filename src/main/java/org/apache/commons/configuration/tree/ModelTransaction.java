@@ -132,6 +132,20 @@ class ModelTransaction
     }
 
     /**
+     * Adds an operation for adding an attribute to a target node.
+     *
+     * @param target the target node
+     * @param name the name of the attribute
+     * @param value the value of the attribute
+     */
+    public void addAttributeOperation(ImmutableNode target, String name,
+            Object value)
+    {
+        fetchOperations(target, LEVEL_UNKNOWN).addOperation(
+                new AddAttributeOperation(name, value));
+    }
+
+    /**
      * Executes this transaction resulting in a new {@code TreeData} object. The
      * object returned by this method serves as the definition of a new node
      * structure for the calling model.
@@ -436,6 +450,37 @@ class ModelTransaction
             concatenate(resultNodes, newNodes);
             operations.newNodesAdded(newNodes);
             return target.replaceChildren(resultNodes);
+        }
+    }
+
+    /**
+     * A specialized operation class for adding an attribute to a target node.
+     */
+    private class AddAttributeOperation extends Operation
+    {
+        /** The attribute name. */
+        private final String attributeName;
+
+        /** The attribute value. */
+        private final Object attributeValue;
+
+        /**
+         * Creates a new instance of {@code AddAttributeOperation}.
+         *
+         * @param name the name of the attribute
+         * @param value the value of the attribute
+         */
+        public AddAttributeOperation(String name, Object value)
+        {
+            attributeName = name;
+            attributeValue = value;
+        }
+
+        @Override
+        protected ImmutableNode apply(ImmutableNode target,
+                Operations operations)
+        {
+            return target.setAttribute(attributeName, attributeValue);
         }
     }
 
