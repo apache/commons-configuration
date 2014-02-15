@@ -18,10 +18,13 @@ package org.apache.commons.configuration.tree;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -29,6 +32,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
+import org.easymock.EasyMock;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -91,6 +96,9 @@ public class TestInMemoryNodeModel
 
     /** Constant for the author attribute. */
     private static final String ATTR_AUTHOR = "author";
+
+    /** Constant for a test key. */
+    private static final String KEY = "aTestKey";
 
     /** The root node of the authors tree. */
     private static ImmutableNode rootAuthorsTree;
@@ -567,5 +575,101 @@ public class TestInMemoryNodeModel
     {
         InMemoryNodeModel model = new InMemoryNodeModel(rootPersonaeTree);
         assertSame("Wrong node handler", model, model.getNodeHandler());
+    }
+
+    /**
+     * Tests whether a property can be added to the node model if there are some
+     * additional path nodes to be created.
+     */
+    @Test
+    public void testAddPropertyWithPathNodes()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        NodeAddData<ImmutableNode> addData =
+                new NodeAddData<ImmutableNode>(nodeForKey(rootAuthorsTree,
+                        "Homer/Ilias"), "location", false,
+                        Collections.singleton("locations"));
+        InMemoryNodeModel model = new InMemoryNodeModel(rootAuthorsTree);
+        EasyMock.expect(resolver.resolveAddKey(rootAuthorsTree, KEY, model))
+                .andReturn(addData);
+        EasyMock.replay(resolver);
+        String[] locations = {
+                "Troja", "Beach", "Olympos"
+        };
+
+        model.addProperty(KEY, Arrays.asList(locations), resolver);
+        ImmutableNode nodeLocs = nodeForKey(model, "Homer/Ilias/locations");
+        assertEquals("Wrong number of children", locations.length, nodeLocs
+                .getChildren().size());
+        int idx = 0;
+        for (ImmutableNode c : nodeLocs.getChildren())
+        {
+            assertEquals("Wrong node name", "location", c.getNodeName());
+            assertEquals("Wrong value", locations[idx], c.getValue());
+            assertTrue("Got children", c.getChildren().isEmpty());
+            assertTrue("Got attributes", c.getAttributes().isEmpty());
+            idx++;
+        }
+        assertNotNull("Could not find other nodes",
+                nodeForKey(model, "Homer/Ilias/Hektor"));
+    }
+
+    /**
+     * Tests whether a property can be added if there are no intermediate path
+     * nodes.
+     */
+    @Test
+    public void testAddPropertyNoPathNodes()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        NodeAddData<ImmutableNode> addData =
+                new NodeAddData<ImmutableNode>(nodeForKey(rootAuthorsTree,
+                        "Homer"), "work", false, null);
+        InMemoryNodeModel model = new InMemoryNodeModel(rootAuthorsTree);
+        EasyMock.expect(resolver.resolveAddKey(rootAuthorsTree, KEY, model))
+                .andReturn(addData);
+        EasyMock.replay(resolver);
+
+        model.addProperty(KEY, Collections.singleton("Odyssee"), resolver);
+        ImmutableNode node = nodeForKey(model, "Homer/work");
+        assertEquals("Wrong node value", "Odyssee", node.getValue());
+        assertNotNull("Could not find other nodes",
+                nodeForKey(model, "Homer/Ilias/Hektor"));
+    }
+
+    /**
+     * Tests whether the parent node references are updated when nodes are
+     * added.
+     */
+    @Test
+    public void testAddPropertyUpdateParentReferences()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        NodeAddData<ImmutableNode> addData =
+                new NodeAddData<ImmutableNode>(nodeForKey(rootAuthorsTree,
+                        "Homer/Ilias"), "location", false,
+                        Collections.singleton("locations"));
+        InMemoryNodeModel model = new InMemoryNodeModel(rootAuthorsTree);
+        EasyMock.expect(resolver.resolveAddKey(rootAuthorsTree, KEY, model))
+                .andReturn(addData);
+        EasyMock.replay(resolver);
+        String[] locations = {
+                "Troja", "Beach", "Olympos"
+        };
+
+        model.addProperty(KEY, Arrays.asList(locations), resolver);
+        String[] path = {
+                "Homer", "Ilias", "locations"
+        };
+        ImmutableNode node =
+                nodeForKey(model, StringUtils.join(path, PATH_SEPARATOR)
+                        + "/location(1)");
+        for (int i = path.length - 1; i >= 0; i--)
+        {
+            node = model.getParent(node);
+            assertEquals("Wrong node name", path[i], node.getNodeName());
+        }
+        assertSame("Wrong root node", model.getRootNode(),
+                model.getParent(node));
     }
 }
