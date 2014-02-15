@@ -194,21 +194,25 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
     public void addProperty(String key, Iterable<?> values,
             NodeKeyResolver resolver)
     {
-        TreeData currentStructure = structure.get();
-        ModelTransaction tx = new ModelTransaction(currentStructure);
-        NodeAddData<ImmutableNode> addData =
-                resolver.resolveAddKey(currentStructure.getRoot(), key, this);
-        if (addData.isAttribute())
+        if (valuesNotEmpty(values))
         {
-            addAttributeProperty(tx, addData, values);
-        }
-        else
-        {
-            addNodeProperty(tx, addData, values);
-        }
+            TreeData currentStructure = structure.get();
+            ModelTransaction tx = new ModelTransaction(currentStructure);
+            NodeAddData<ImmutableNode> addData =
+                    resolver.resolveAddKey(currentStructure.getRoot(), key,
+                            this);
+            if (addData.isAttribute())
+            {
+                addAttributeProperty(tx, addData, values);
+            }
+            else
+            {
+                addNodeProperty(tx, addData, values);
+            }
 
-        // TODO handle concurrency
-        structure.set(tx.execute());
+            // TODO handle concurrency
+            structure.set(tx.execute());
+        }
     }
 
     /**
@@ -397,6 +401,17 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
                 new HashMap<ImmutableNode, ImmutableNode>();
         updateParentMapping(parents, root);
         return parents;
+    }
+
+    /**
+     * Checks whether the specified collection with values is not empty.
+     *
+     * @param values the collection with node values
+     * @return <b>true</b> if values are provided, <b>false</b> otherwise
+     */
+    private static boolean valuesNotEmpty(Iterable<?> values)
+    {
+        return values.iterator().hasNext();
     }
 
     /**

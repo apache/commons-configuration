@@ -738,4 +738,19 @@ public class TestInMemoryNodeModel
         assertEquals("Attribute not set", 1611, node.getAttributes()
                 .get("year"));
     }
+
+    /**
+     * Tests an addProperty() operation if no values are provided.
+     */
+    @Test
+    public void testAddPropertyNoValues()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        EasyMock.replay(resolver);
+        InMemoryNodeModel model = new InMemoryNodeModel(rootAuthorsTree);
+
+        model.addProperty(KEY, Collections.<Object> emptySet(), resolver);
+        assertSame("Root node was changed", rootAuthorsTree,
+                model.getRootNode());
+    }
 }
