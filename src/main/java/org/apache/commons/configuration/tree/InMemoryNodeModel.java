@@ -178,8 +178,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
      */
     public boolean isDefined(ImmutableNode node)
     {
-        return node.getValue() != null || !node.getChildren().isEmpty()
-                || !node.getAttributes().isEmpty();
+        return checkIfNodeDefined(node);
     }
 
     /**
@@ -216,6 +215,31 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
     }
 
     /**
+     * Removes the sub trees defined by the given key from this model. All nodes
+     * selected by this key are retrieved and removed from the model. If this
+     * causes other nodes to become undefined, they are removed, too.
+     *
+     * @param key the key selecting the properties to be removed
+     * @param resolver the {@code NodeKeyResolver}
+     */
+    public void clearTree(String key, NodeKeyResolver resolver)
+    {
+        TreeData currentStructure = structure.get();
+        ModelTransaction tx = new ModelTransaction(currentStructure);
+        for (QueryResult<ImmutableNode> result : resolver.resolveKey(
+                currentStructure.getRoot(), key, this))
+        {
+            // TODO handle attributes
+            tx.addRemoveNodeOperation(
+                    currentStructure.getParent(result.getNode()),
+                    result.getNode());
+        }
+
+        // TODO handle concurrency
+        structure.set(tx.execute());
+    }
+
+    /**
      * Updates the mapping from nodes to their parents for the passed in
      * hierarchy of nodes. This method traverses all children and grand-children
      * of the passed in root node. For each node in the subtree the parent
@@ -239,6 +263,19 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
                 parents.put(c, node);
             }
         }
+    }
+
+    /**
+     * Checks if the passed in node is defined. Result is <b>true</b> if the
+     * node contains any data.
+     *
+     * @param node the node in question
+     * @return <b>true</b> if the node is defined, <b>false</b> otherwise
+     */
+    static boolean checkIfNodeDefined(ImmutableNode node)
+    {
+        return node.getValue() != null || !node.getChildren().isEmpty()
+                || !node.getAttributes().isEmpty();
     }
 
     /**

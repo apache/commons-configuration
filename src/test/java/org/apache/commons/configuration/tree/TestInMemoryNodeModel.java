@@ -18,11 +18,14 @@ package org.apache.commons.configuration.tree;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -662,8 +665,45 @@ public class TestInMemoryNodeModel
                 "Homer", "Ilias", "locations"
         };
         ImmutableNode node =
-                nodeForKey(model, StringUtils.join(path, PATH_SEPARATOR)
-                        + "/location(1)");
+                nodeForKey(model, nodePathWithEndNode("location(1)", path));
+        checkPathToRoot(model, node, path);
+    }
+
+    /**
+     * Convenience method for creating a path for accessing a node based on the
+     * node names.
+     *
+     * @param path an array with the expected node names on the path
+     * @return the resulting path as string
+     */
+    private static String nodePath(String... path)
+    {
+        return StringUtils.join(path, PATH_SEPARATOR);
+    }
+
+    /**
+     * Convenience method for creating a node path with a special end node.
+     *
+     * @param endNode the name of the last path component
+     * @param path an array with the expected node names on the path
+     * @return the resulting path as string
+     */
+    private static String nodePathWithEndNode(String endNode, String... path)
+    {
+        return nodePath(path) + PATH_SEPARATOR + endNode;
+    }
+
+    /**
+     * Helper method for checking whether the expected nodes are encountered on
+     * a path from a start node to the root node.
+     *
+     * @param model the node model
+     * @param node the start node in the path
+     * @param path an array with the expected node names on the path
+     */
+    private static void checkPathToRoot(InMemoryNodeModel model,
+            ImmutableNode node, String... path)
+    {
         for (int i = path.length - 1; i >= 0; i--)
         {
             node = model.getParent(node);
@@ -749,8 +789,163 @@ public class TestInMemoryNodeModel
         EasyMock.replay(resolver);
         InMemoryNodeModel model = new InMemoryNodeModel(rootAuthorsTree);
 
-        model.addProperty(KEY, Collections.<Object> emptySet(), resolver);
+        model.addProperty(KEY, Collections.emptySet(), resolver);
         assertSame("Root node was changed", rootAuthorsTree,
                 model.getRootNode());
+    }
+
+    /**
+     * Tests whether a clearTree() operation can be performed if only nodes are
+     * involved.
+     */
+    @Test
+    public void testClearTreeNodes()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        InMemoryNodeModel model = new InMemoryNodeModel(rootAuthorsTree);
+        QueryResult<ImmutableNode> result =
+                QueryResult.createNodeResult(nodeForKey(model,
+                        "Homer/Ilias/Achilles"));
+        EasyMock.expect(resolver.resolveKey(rootAuthorsTree, KEY, model))
+                .andReturn(Collections.singletonList(result));
+        EasyMock.replay(resolver);
+
+        model.clearTree(KEY, resolver);
+        ImmutableNode node = nodeForKey(model, "Homer/Ilias");
+        assertEquals("Wrong number of children", 2, node.getChildren().size());
+        for (ImmutableNode c : node.getChildren())
+        {
+            assertNotEquals("Node still found", result.getNode().getNodeName(),
+                    c.getNodeName());
+        }
+    }
+
+    /**
+     * Helper method for testing whether nodes removed from the model can no
+     * longer be looked up in the parent mapping.
+     *
+     * @param pathToRemove the path to the node to be removed
+     * @param nodeToCheck the node to check in the parent mapping
+     */
+    private void checkClearTreeUpdatedParentMapping(String pathToRemove,
+            ImmutableNode nodeToCheck)
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        InMemoryNodeModel model = new InMemoryNodeModel(rootAuthorsTree);
+        QueryResult<ImmutableNode> result =
+                QueryResult.createNodeResult(nodeForKey(model, pathToRemove));
+        EasyMock.expect(resolver.resolveKey(rootAuthorsTree, KEY, model))
+                .andReturn(Collections.singletonList(result));
+        EasyMock.replay(resolver);
+
+        model.clearTree(KEY, resolver);
+        try
+        {
+            model.getParent(nodeToCheck);
+            fail("Removed node still in parent mapping!");
+        }
+        catch (IllegalArgumentException iaex)
+        {
+            // expected result
+        }
+    }
+
+    /**
+     * Tests whether a removed node can no longer be passed to getParent().
+     */
+    @Test
+    public void testClearTreeNodeRemovedFromParentMapping()
+    {
+        String path = "Homer/Ilias/Achilles";
+        checkClearTreeUpdatedParentMapping(path,
+                nodeForKey(rootAuthorsTree, path));
+    }
+
+    /**
+     * Tests whether the children of removed nodes are also removed from the
+     * parent mapping.
+     */
+    @Test
+    public void testClearTreeChildrenRemovedFromParentMapping()
+    {
+        String path = "Homer/Ilias";
+        checkClearTreeUpdatedParentMapping(path,
+                nodeForKey(rootAuthorsTree, path + "/Achilles"));
+    }
+
+    /**
+     * Tests whether references to parent nodes are updated correctly when
+     * clearing properties.
+     */
+    @Test
+    public void testClearTreeUpdateParentReferences()
+    {
+        String[] path = {
+                "Homer", "Ilias"
+        };
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        InMemoryNodeModel model = new InMemoryNodeModel(rootAuthorsTree);
+        QueryResult<ImmutableNode> result =
+                QueryResult.createNodeResult(nodeForKey(model,
+                        nodePathWithEndNode("Achilles", path)));
+        EasyMock.expect(resolver.resolveKey(rootAuthorsTree, KEY, model))
+                .andReturn(Collections.singletonList(result));
+        EasyMock.replay(resolver);
+
+        model.clearTree(KEY, resolver);
+        checkPathToRoot(model,
+                nodeForKey(model, nodePathWithEndNode("Hektor", path)), path);
+    }
+
+    /**
+     * Tests whether undefined nodes are removed from the hierarchy when
+     * clearing properties.
+     */
+    @Test
+    public void testClearTreeRemoveUndefinedNodes()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        InMemoryNodeModel model = new InMemoryNodeModel(rootAuthorsTree);
+        ImmutableNode node = nodeForKey(model, "Homer/Ilias");
+        List<QueryResult<ImmutableNode>> results =
+                new ArrayList<QueryResult<ImmutableNode>>(node.getChildren()
+                        .size());
+        for (ImmutableNode child : node.getChildren())
+        {
+            results.add(QueryResult.createNodeResult(child));
+        }
+        EasyMock.expect(resolver.resolveKey(rootAuthorsTree, KEY, model))
+                .andReturn(results);
+        EasyMock.replay(resolver);
+
+        model.clearTree(KEY, resolver);
+        assertEquals("Child of root not removed", AUTHORS.length - 1, model
+                .getRootNode().getChildren().size());
+        for (ImmutableNode child : model.getRootNode().getChildren())
+        {
+            assertNotEquals("Child still found", "Homer", child.getNodeName());
+        }
+    }
+
+    /**
+     * Tests a clearTree() operation which should yield an empty tree structure.
+     */
+    @Test
+    public void testClearTreeResultIsEmpty()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        ImmutableNode child =
+                new ImmutableNode.Builder().name("child").value("test")
+                        .create();
+        ImmutableNode root =
+                new ImmutableNode.Builder(1).addChild(child).create();
+        InMemoryNodeModel model = new InMemoryNodeModel(root);
+        EasyMock.expect(resolver.resolveKey(root, KEY, model)).andReturn(
+                Collections.singletonList(QueryResult.createNodeResult(child)));
+        EasyMock.replay(resolver);
+
+        model.clearTree(KEY, resolver);
+        assertFalse("Root node still defined",
+                model.isDefined(model.getRootNode()));
     }
 }

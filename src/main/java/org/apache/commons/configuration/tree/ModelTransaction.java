@@ -20,9 +20,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -77,6 +79,9 @@ class ModelTransaction
     /** A collection with nodes which have been added. */
     private final Collection<ImmutableNode> addedNodes;
 
+    /** A collection with nodes which have been removed. */
+    private final Collection<ImmutableNode> removedNodes;
+
     /**
      * Stores the operations to be executed during this transaction. The map is
      * sorted by the levels of the nodes to be manipulated: Operations on nodes
@@ -101,6 +106,7 @@ class ModelTransaction
         parentMapping = data.copyParentMapping();
         operations = new TreeMap<Integer, Map<ImmutableNode, Operations>>();
         addedNodes = new LinkedList<ImmutableNode>();
+        removedNodes = new LinkedList<ImmutableNode>();
     }
 
     /**
@@ -143,6 +149,19 @@ class ModelTransaction
     {
         fetchOperations(target, LEVEL_UNKNOWN).addOperation(
                 new AddAttributeOperation(name, value));
+    }
+
+    /**
+     * Adds an operation for removing a child node of a given node.
+     *
+     * @param parent the parent node
+     * @param node the child node to be removed
+     */
+    public void addRemoveNodeOperation(ImmutableNode parent, ImmutableNode node)
+    {
+        ChildrenUpdateOperation op = new ChildrenUpdateOperation();
+        op.addNodeToRemove(node);
+        fetchOperations(parent, LEVEL_UNKNOWN).addChildrenOperation(op);
     }
 
     /**
@@ -240,15 +259,75 @@ class ModelTransaction
     /**
      * Updates the parent mapping for the resulting {@code TreeData} instance.
      * This method is called after all update operations have been executed. It
-     * ensures that the parent mapping is updated for newly added node
-     * structures.
+     * ensures that the parent mapping is updated for the changes on the nodes
+     * structure.
      */
     private void updateParentMapping()
+    {
+        updateParentMappingForAddedNodes();
+        updateParentMappingForRemovedNodes();
+    }
+
+    /**
+     * Adds newly added nodes and their children to the parent mapping.
+     */
+    private void updateParentMappingForAddedNodes()
     {
         for (ImmutableNode node : addedNodes)
         {
             InMemoryNodeModel.updateParentMapping(parentMapping, node);
         }
+    }
+
+    /**
+     * Removes nodes that have been removed during this transaction from the
+     * parent and replacement mappings.
+     */
+    private void updateParentMappingForRemovedNodes()
+    {
+        for (ImmutableNode node : removedNodes)
+        {
+            removeNodesFromParentAndReplacementMapping(node);
+        }
+    }
+
+    /**
+     * Removes a node and its children (recursively) from the parent and the
+     * replacement mappings.
+     *
+     * @param root the root of the subtree to be removed
+     */
+    private void removeNodesFromParentAndReplacementMapping(ImmutableNode root)
+    {
+        List<ImmutableNode> pendingNodes = new LinkedList<ImmutableNode>();
+        pendingNodes.add(root);
+
+        while (!pendingNodes.isEmpty())
+        {
+            ImmutableNode node = pendingNodes.remove(0);
+            parentMapping.remove(node);
+            removeNodeFromReplacementMapping(node);
+            for (ImmutableNode c : node.getChildren())
+            {
+                pendingNodes.add(c);
+            }
+        }
+
+    }
+
+    /**
+     * Removes the specified node completely from the replacement mapping. This
+     * also includes the nodes that replace the given one.
+     *
+     * @param node the node to be removed
+     */
+    private void removeNodeFromReplacementMapping(ImmutableNode node)
+    {
+        ImmutableNode replacement = node;
+        do
+        {
+            replacement = replacedNodes.remove(replacement);
+        } while (replacement != null);
     }
 
     /**
@@ -270,6 +349,26 @@ class ModelTransaction
         Collection<E> result =
                 (col1 != null) ? col1 : new ArrayList<E>(col2.size());
         result.addAll(col2);
+        return result;
+    }
+
+    /**
+     * Constructs the concatenation of two sets. Both can be null.
+     *
+     * @param set1 the first set
+     * @param set2 the second set
+     * @param <E> the type of the elements involved
+     * @return the resulting set
+     */
+    private static <E> Set<E> concatenate(Set<E> set1, Set<? extends E> set2)
+    {
+        if (set2 == null)
+        {
+            return set1;
+        }
+
+        Set<E> result = (set1 != null) ? set1 : new HashSet<E>();
+        result.addAll(set2);
         return result;
     }
 
@@ -308,6 +407,22 @@ class ModelTransaction
     {
         Collection<E> result = (col != null) ? col : new LinkedList<E>();
         result.add(node);
+        return result;
+    }
+
+    /**
+     * Appends a single element to a set. The set may be null then it is
+     * created.
+     *
+     * @param col the set
+     * @param elem the element to be added
+     * @param <E> the type of the elements involved
+     * @return the resulting set
+     */
+    private static <E> Set<E> append(Set<E> col, E elem)
+    {
+        Set<E> result = (col != null) ? col : new HashSet<E>();
+        result.add(elem);
         return result;
     }
 
@@ -361,6 +476,9 @@ class ModelTransaction
         /** A collection with new nodes to be added. */
         private Collection<ImmutableNode> newNodes;
 
+        /** A collection with nodes to be removed. */
+        private Set<ImmutableNode> nodesToRemove;
+
         /**
          * A map with nodes to be replaced by others. The keys are the nodes to
          * be replaced, the values the replacements.
@@ -376,6 +494,7 @@ class ModelTransaction
         {
             newNodes = concatenate(newNodes, op.newNodes);
             nodesToReplace = concatenate(nodesToReplace, op.nodesToReplace);
+            nodesToRemove = concatenate(nodesToRemove, op.nodesToRemove);
         }
 
         /**
@@ -413,6 +532,17 @@ class ModelTransaction
         }
 
         /**
+         * Adds a node for a remove operation. This child node is going to be
+         * removed from its parent.
+         *
+         * @param node the child node to be removed
+         */
+        public void addNodeToRemove(ImmutableNode node)
+        {
+            nodesToRemove = append(nodesToRemove, node);
+        }
+
+        /**
          * {@inheritDoc} This implementation applies changes on the children of
          * the passed in target node according to its configuration: new nodes
          * are added, replacements are performed, and nodes no longer needed are
@@ -422,15 +552,9 @@ class ModelTransaction
         protected ImmutableNode apply(ImmutableNode target,
                 Operations operations)
         {
-            Map<ImmutableNode, ImmutableNode> replacements;
-            if (nodesToReplace == null)
-            {
-                replacements = Collections.emptyMap();
-            }
-            else
-            {
-                replacements = nodesToReplace;
-            }
+            Map<ImmutableNode, ImmutableNode> replacements =
+                    fetchReplacementMap();
+            Set<ImmutableNode> removals = fetchRemovalSet();
             List<ImmutableNode> resultNodes = new LinkedList<ImmutableNode>();
 
             for (ImmutableNode nd : target.getChildren())
@@ -443,13 +567,44 @@ class ModelTransaction
                 }
                 else
                 {
-                    resultNodes.add(nd);
+                    if (removals.contains(nd))
+                    {
+                        removedNodes.add(nd);
+                    }
+                    else
+                    {
+                        resultNodes.add(nd);
+                    }
                 }
             }
 
             concatenate(resultNodes, newNodes);
             operations.newNodesAdded(newNodes);
             return target.replaceChildren(resultNodes);
+        }
+
+        /**
+         * Obtains the map with replacement nodes. If no replacements are
+         * defined, an empty map is returned.
+         *
+         * @return the map with replacement nodes
+         */
+        private Map<ImmutableNode, ImmutableNode> fetchReplacementMap()
+        {
+            return (nodesToReplace != null) ? nodesToReplace : Collections
+                    .<ImmutableNode, ImmutableNode> emptyMap();
+        }
+
+        /**
+         * Returns a set with nodes to be removed. If no remove operations are
+         * pending, an empty set is returned.
+         *
+         * @return the set with nodes to be removed
+         */
+        private Set<ImmutableNode> fetchRemovalSet()
+        {
+            return (nodesToRemove != null) ? nodesToRemove : Collections
+                    .<ImmutableNode> emptySet();
         }
     }
 
@@ -578,11 +733,33 @@ class ModelTransaction
             else
             {
                 // propagate change
-                ImmutableNode parent = getParent(target);
-                ChildrenUpdateOperation co = new ChildrenUpdateOperation();
-                co.addNodeToReplace(target, node);
-                fetchOperations(parent, level - 1).addChildrenOperation(co);
+                propagateChange(target, node, level);
             }
+        }
+
+        /**
+         * Propagates the changes on the target node to the next level above of
+         * the hierarchy. If the updated node is no longer defined, it can even
+         * be removed from its parent. Otherwise, it is just replaced.
+         *
+         * @param target the target node for this operation
+         * @param node the resulting node after applying all operations
+         * @param level the level of the target node
+         */
+        private void propagateChange(ImmutableNode target, ImmutableNode node,
+                int level)
+        {
+            ImmutableNode parent = getParent(target);
+            ChildrenUpdateOperation co = new ChildrenUpdateOperation();
+            if (InMemoryNodeModel.checkIfNodeDefined(node))
+            {
+                co.addNodeToReplace(target, node);
+            }
+            else
+            {
+                co.addNodeToRemove(target);
+            }
+            fetchOperations(parent, level - 1).addChildrenOperation(co);
         }
 
         /**
