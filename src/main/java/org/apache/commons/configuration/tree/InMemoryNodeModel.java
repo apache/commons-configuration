@@ -247,6 +247,22 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
     }
 
     /**
+     * Removes all data from this model. A new empty root node is created with
+     * the same name as the current root node. Implementation note: Because this
+     * is a hard reset the usual dance for dealing with concurrent updates is
+     * not required here.
+     */
+    public void clear()
+    {
+        ImmutableNode newRoot =
+                new ImmutableNode.Builder().name(getRootNode().getNodeName())
+                        .create();
+        structure.set(new TreeData(newRoot, Collections
+                .<ImmutableNode, ImmutableNode> emptyMap(), Collections
+                .<ImmutableNode, ImmutableNode> emptyMap()));
+    }
+
+    /**
      * Updates the mapping from nodes to their parents for the passed in
      * hierarchy of nodes. This method traverses all children and grand-children
      * of the passed in root node. For each node in the subtree the parent

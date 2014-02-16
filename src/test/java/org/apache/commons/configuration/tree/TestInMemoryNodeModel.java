@@ -144,7 +144,7 @@ public class TestInMemoryNodeModel
             }
             rootBuilder.addChild(authorBuilder.create());
         }
-        return rootBuilder.create();
+        return rootBuilder.name("authorTree").create();
     }
 
     /**
@@ -1001,5 +1001,18 @@ public class TestInMemoryNodeModel
         {
             // expected
         }
+    }
+
+    /**
+     * Tests whether the whole node structure can be cleared.
+     */
+    @Test
+    public void testClear()
+    {
+        InMemoryNodeModel model = new InMemoryNodeModel(rootAuthorsTree);
+        model.clear();
+        assertFalse("Got still data", model.isDefined(model.getRootNode()));
+        assertEquals("Root name was changed", rootAuthorsTree.getNodeName(),
+                model.getRootNode().getNodeName());
     }
 }
