@@ -64,6 +64,16 @@ import java.util.TreeMap;
  */
 class ModelTransaction
 {
+    /**
+     * Constant for the maximum number of entries in the replacement mapping. If
+     * this number is exceeded, the parent mapping is reconstructed. The number
+     * is a bit arbitrary. If it is too low, updates - especially on large node
+     * structures - are expensive because the parent mapping is often rebuild.
+     * If it is too big, read access to the model is slowed down because looking
+     * up the parent of a node is more complicated.
+     */
+    private static final int MAX_REPLACEMENTS = 200;
+
     /** Constant for an unknown level. */
     private static final int LEVEL_UNKNOWN = -1;
 
@@ -276,8 +286,27 @@ class ModelTransaction
      */
     private void updateParentMapping()
     {
-        updateParentMappingForAddedNodes();
-        updateParentMappingForRemovedNodes();
+        if (replacedNodes.size() > MAX_REPLACEMENTS)
+        {
+            rebuildParentMapping();
+        }
+        else
+        {
+            updateParentMappingForAddedNodes();
+            updateParentMappingForRemovedNodes();
+        }
+    }
+
+    /**
+     * Rebuilds the parent mapping from scratch. This method is called if the
+     * replacement mapping exceeds its maximum size. In this case, it is
+     * cleared, and a new parent mapping is constructed for the new root node.
+     */
+    private void rebuildParentMapping()
+    {
+        replacedNodes.clear();
+        parentMapping.clear();
+        InMemoryNodeModel.updateParentMapping(parentMapping, newRoot);
     }
 
     /**

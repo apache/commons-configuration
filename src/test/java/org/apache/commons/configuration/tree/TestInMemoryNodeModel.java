@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -37,6 +38,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.easymock.EasyMock;
+import org.easymock.IAnswer;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -1034,5 +1036,52 @@ public class TestInMemoryNodeModel
 
         model.clearTree(KEY, resolver);
         assertFalse("Got still data", model.isDefined(model.getRootNode()));
+    }
+
+    /**
+     * Tests whether the replacement mapping is automatically compacted if it
+     * gets too large.
+     */
+    @Test
+    public void testCompactReplacementMapping()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        final InMemoryNodeModel model = new InMemoryNodeModel(rootAuthorsTree);
+        final int numberOfOperations = 200;
+        final String key = "Homer/Ilias";
+        for (int i = 0; i < numberOfOperations; i++)
+        {
+            final int index = i;
+            EasyMock.expect(
+                    resolver.resolveAddKey(
+                            EasyMock.anyObject(ImmutableNode.class),
+                            EasyMock.eq(KEY), EasyMock.eq(model))).andAnswer(
+                    new IAnswer<NodeAddData<ImmutableNode>>()
+                    {
+                        public NodeAddData<ImmutableNode> answer()
+                                throws Throwable
+                        {
+                            assertSame("Wrong root node", model.getRootNode(),
+                                    EasyMock.getCurrentArguments()[0]);
+                            ImmutableNode addParent = nodeForKey(model, key);
+                            return new NodeAddData<ImmutableNode>(addParent,
+                                    "Warrior" + index, false, null);
+                        }
+                    });
+        }
+        EasyMock.replay(resolver);
+
+        for (int i = 0; i < numberOfOperations; i++)
+        {
+            model.addProperty(KEY, Collections.singleton(i), resolver);
+        }
+        ImmutableNode orgNode = nodeForKey(rootAuthorsTree, key);
+        ImmutableNode changedNode = nodeForKey(model, key);
+        assertEquals("Wrong number of children", orgNode.getChildren().size()
+                + numberOfOperations, changedNode.getChildren().size());
+        Map<ImmutableNode, ImmutableNode> replacementMapping =
+                model.getTreeData().copyReplacementMapping();
+        assertTrue("Replacement mapping too big: " + replacementMapping.size(),
+                replacementMapping.size() < numberOfOperations);
     }
 }

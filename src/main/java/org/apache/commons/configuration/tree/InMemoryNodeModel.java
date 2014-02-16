@@ -73,7 +73,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
      */
     public ImmutableNode getRootNode()
     {
-        return structure.get().getRoot();
+        return getTreeData().getRoot();
     }
 
     /**
@@ -109,7 +109,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
      */
     public ImmutableNode getParent(ImmutableNode node)
     {
-        return structure.get().getParent(node);
+        return getTreeData().getParent(node);
     }
 
     public List<ImmutableNode> getChildren(ImmutableNode node)
@@ -195,7 +195,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
     {
         if (valuesNotEmpty(values))
         {
-            TreeData currentStructure = structure.get();
+            TreeData currentStructure = getTreeData();
             ModelTransaction tx = new ModelTransaction(currentStructure);
             NodeAddData<ImmutableNode> addData =
                     resolver.resolveAddKey(currentStructure.getRoot(), key,
@@ -224,7 +224,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
      */
     public void clearTree(String key, NodeKeyResolver resolver)
     {
-        TreeData currentStructure = structure.get();
+        TreeData currentStructure = getTreeData();
         ModelTransaction tx = new ModelTransaction(currentStructure);
         for (QueryResult<ImmutableNode> result : resolver.resolveKey(
                 currentStructure.getRoot(), key, this))
@@ -266,6 +266,17 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
         structure.set(new TreeData(newRoot, Collections
                 .<ImmutableNode, ImmutableNode> emptyMap(), Collections
                 .<ImmutableNode, ImmutableNode> emptyMap()));
+    }
+
+    /**
+     * Returns the current {@code TreeData} object. This object contains all
+     * information about the current node structure.
+     *
+     * @return the current {@code TreeData} object
+     */
+    TreeData getTreeData()
+    {
+        return structure.get();
     }
 
     /**
