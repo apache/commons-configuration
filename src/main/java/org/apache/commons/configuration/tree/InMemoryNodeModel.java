@@ -229,10 +229,17 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
         for (QueryResult<ImmutableNode> result : resolver.resolveKey(
                 currentStructure.getRoot(), key, this))
         {
-            // TODO handle attributes
-            tx.addRemoveNodeOperation(
-                    currentStructure.getParent(result.getNode()),
-                    result.getNode());
+            if (result.isAttributeResult())
+            {
+                tx.addRemoveAttributeOperation(result.getNode(),
+                        result.getAttributeName());
+            }
+            else
+            {
+                tx.addRemoveNodeOperation(
+                        currentStructure.getParent(result.getNode()),
+                        result.getNode());
+            }
         }
 
         // TODO handle concurrency

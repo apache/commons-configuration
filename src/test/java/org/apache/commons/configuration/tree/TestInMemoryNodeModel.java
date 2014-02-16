@@ -948,4 +948,58 @@ public class TestInMemoryNodeModel
         assertFalse("Root node still defined",
                 model.isDefined(model.getRootNode()));
     }
+
+    /**
+     * Tests whether attributes can be cleared with clearTree().
+     */
+    @Test
+    public void testClearTreeAttribute()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        InMemoryNodeModel model = new InMemoryNodeModel(rootPersonaeTree);
+        final String nodeName = "Puck";
+        EasyMock.expect(resolver.resolveKey(rootPersonaeTree, KEY, model))
+                .andReturn(
+                        Collections.singletonList(QueryResult
+                                .createAttributeResult(
+                                        nodeForKey(model, nodeName),
+                                        ATTR_AUTHOR)));
+        EasyMock.replay(resolver);
+
+        model.clearTree(KEY, resolver);
+        ImmutableNode node = nodeForKey(model, nodeName);
+        assertTrue("Got still attributes", node.getAttributes().isEmpty());
+    }
+
+    /**
+     * Tests whether both nodes and attributes can be removed by a clearTree()
+     * operation. We remove all attributes and children from a node. The node
+     * becomes undefined and should be removed.
+     */
+    @Test
+    public void testClearTreeNodesAndAttributes()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        InMemoryNodeModel model = new InMemoryNodeModel(rootPersonaeTree);
+        final String nodeName = "Puck";
+        ImmutableNode orgNode = nodeForKey(model, nodeName);
+        List<QueryResult<ImmutableNode>> results =
+                new ArrayList<QueryResult<ImmutableNode>>(2);
+        results.add(QueryResult.createAttributeResult(orgNode, ATTR_AUTHOR));
+        results.add(QueryResult.createNodeResult(orgNode.getChildren().get(0)));
+        EasyMock.expect(resolver.resolveKey(rootPersonaeTree, KEY, model))
+                .andReturn(results);
+        EasyMock.replay(resolver);
+
+        model.clearTree(KEY, resolver);
+        try
+        {
+            nodeForKey(model, nodeName);
+            fail("Node still present!");
+        }
+        catch (NoSuchElementException nex)
+        {
+            // expected
+        }
+    }
 }

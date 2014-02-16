@@ -165,6 +165,18 @@ class ModelTransaction
     }
 
     /**
+     * Adds an operation for removing an attribute from a target node.
+     *
+     * @param target the target node
+     * @param name the name of the attribute
+     */
+    public void addRemoveAttributeOperation(ImmutableNode target, String name)
+    {
+        fetchOperations(target, LEVEL_UNKNOWN).addOperation(
+                new RemoveAttributeOperation(name));
+    }
+
+    /**
      * Executes this transaction resulting in a new {@code TreeData} object. The
      * object returned by this method serves as the definition of a new node
      * structure for the calling model.
@@ -636,6 +648,33 @@ class ModelTransaction
                 Operations operations)
         {
             return target.setAttribute(attributeName, attributeValue);
+        }
+    }
+
+    /**
+     * A specialized operation class for removing an attribute from a target
+     * node.
+     */
+    private class RemoveAttributeOperation extends Operation
+    {
+        /** The attribute name. */
+        private final String attributeName;
+
+        /**
+         * Creates a new instance of {@code RemoveAttributeOperation}.
+         *
+         * @param name the name of the attribute
+         */
+        public RemoveAttributeOperation(String name)
+        {
+            attributeName = name;
+        }
+
+        @Override
+        protected ImmutableNode apply(ImmutableNode target,
+                Operations operations)
+        {
+            return target.removeAttribute(attributeName);
         }
     }
 
