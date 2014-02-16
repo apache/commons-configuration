@@ -1015,4 +1015,24 @@ public class TestInMemoryNodeModel
         assertEquals("Root name was changed", rootAuthorsTree.getNodeName(),
                 model.getRootNode().getNodeName());
     }
+
+    /**
+     * Tests whether clearTree() handles the root node in a special way.
+     */
+    @Test
+    public void testClearTreeRootNode()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        InMemoryNodeModel model = new InMemoryNodeModel(rootAuthorsTree);
+        List<QueryResult<ImmutableNode>> results =
+                new ArrayList<QueryResult<ImmutableNode>>(2);
+        results.add(QueryResult.createNodeResult(nodeForKey(model, AUTHORS[0])));
+        results.add(QueryResult.createNodeResult(rootAuthorsTree));
+        EasyMock.expect(resolver.resolveKey(rootAuthorsTree, KEY, model))
+                .andReturn(results);
+        EasyMock.replay(resolver);
+
+        model.clearTree(KEY, resolver);
+        assertFalse("Got still data", model.isDefined(model.getRootNode()));
+    }
 }

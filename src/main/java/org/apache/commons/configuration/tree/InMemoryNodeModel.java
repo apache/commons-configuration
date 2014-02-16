@@ -236,6 +236,12 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
             }
             else
             {
+                if (result.getNode() == currentStructure.getRoot())
+                {
+                    // the whole model is to be cleared
+                    clear();
+                    return;
+                }
                 tx.addRemoveNodeOperation(
                         currentStructure.getParent(result.getNode()),
                         result.getNode());
