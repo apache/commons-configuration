@@ -406,7 +406,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @param visitor the visitor
      */
-    public void visit(ConfigurationNodeVisitor visitor)
+    public void visit(ConfigurationNodeVisitor<ConfigurationNode> visitor)
     {
         if (visitor == null)
         {
@@ -415,10 +415,10 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
 
         if (!visitor.terminate())
         {
-            visitor.visitBeforeChildren(this);
+            visitor.visitBeforeChildren(this, null);
             children.visit(visitor);
             attributes.visit(visitor);
-            visitor.visitAfterChildren(this);
+            visitor.visitAfterChildren(this, null);
         }
     }
 

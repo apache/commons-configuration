@@ -33,9 +33,6 @@ import org.junit.Test;
 /**
  * Test class for DefaultConfigurationNode.
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  */
 public class TestDefaultConfigurationNode
@@ -471,7 +468,7 @@ public class TestDefaultConfigurationNode
      * It also supports a maximum number of visits to be set; if this number is
      * reached, the <code>terminate()</code> method returns <b>true</b>.
      */
-    public static class CountNodeVisitor implements ConfigurationNodeVisitor
+    public static class CountNodeVisitor implements ConfigurationNodeVisitor<ConfigurationNode>
     {
         public int beforeCalls;
 
@@ -489,12 +486,14 @@ public class TestDefaultConfigurationNode
             maxCalls = maxNumberOfVisits;
         }
 
-        public void visitBeforeChildren(ConfigurationNode node)
+        public void visitBeforeChildren(ConfigurationNode node,
+                NodeHandler<ConfigurationNode> handler)
         {
             beforeCalls++;
         }
 
-        public void visitAfterChildren(ConfigurationNode node)
+        public void visitAfterChildren(ConfigurationNode node,
+                NodeHandler<ConfigurationNode> handler)
         {
             afterCalls++;
         }

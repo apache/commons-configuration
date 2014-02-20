@@ -259,7 +259,7 @@ public interface ConfigurationNode
      * @see ConfigurationNodeVisitor
      * @param visitor the visitor
      */
-    void visit(ConfigurationNodeVisitor visitor);
+    void visit(ConfigurationNodeVisitor<ConfigurationNode> visitor);
 
     /**
      * Returns a copy of this node.
