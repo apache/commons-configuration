@@ -344,20 +344,17 @@ class ModelTransaction
      */
     private void removeNodesFromParentAndReplacementMapping(ImmutableNode root)
     {
-        List<ImmutableNode> pendingNodes = new LinkedList<ImmutableNode>();
-        pendingNodes.add(root);
-
-        while (!pendingNodes.isEmpty())
-        {
-            ImmutableNode node = pendingNodes.remove(0);
-            parentMapping.remove(node);
-            removeNodeFromReplacementMapping(node);
-            for (ImmutableNode c : node.getChildren())
-            {
-                pendingNodes.add(c);
-            }
-        }
-
+        NodeTreeWalker.INSTANCE.walkBFS(root,
+                new ConfigurationNodeVisitorAdapter<ImmutableNode>()
+                {
+                    @Override
+                    public void visitBeforeChildren(ImmutableNode node,
+                            NodeHandler<ImmutableNode> handler)
+                    {
+                        parentMapping.remove(node);
+                        removeNodeFromReplacementMapping(node);
+                    }
+                }, model);
     }
 
     /**
