@@ -196,7 +196,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
         if (valuesNotEmpty(values))
         {
             TreeData currentStructure = getTreeData();
-            ModelTransaction tx = new ModelTransaction(currentStructure);
+            ModelTransaction tx = new ModelTransaction(this);
             NodeAddData<ImmutableNode> addData =
                     resolver.resolveAddKey(currentStructure.getRoot(), key,
                             this);
@@ -225,7 +225,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
     public void clearTree(String key, NodeKeyResolver resolver)
     {
         TreeData currentStructure = getTreeData();
-        ModelTransaction tx = new ModelTransaction(currentStructure);
+        ModelTransaction tx = new ModelTransaction(this);
         for (QueryResult<ImmutableNode> result : resolver.resolveKey(
                 currentStructure.getRoot(), key, this))
         {
@@ -288,21 +288,21 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
      * @param parents the map with parent nodes
      * @param root the root node of the current tree
      */
-    static void updateParentMapping(Map<ImmutableNode, ImmutableNode> parents,
+    void updateParentMapping(final Map<ImmutableNode, ImmutableNode> parents,
             ImmutableNode root)
     {
-        List<ImmutableNode> pendingNodes = new LinkedList<ImmutableNode>();
-        pendingNodes.add(root);
-
-        while (!pendingNodes.isEmpty())
-        {
-            ImmutableNode node = pendingNodes.remove(0);
-            for (ImmutableNode c : node.getChildren())
-            {
-                pendingNodes.add(c);
-                parents.put(c, node);
-            }
-        }
+        NodeTreeWalker.INSTANCE.walkBFS(root,
+                new ConfigurationNodeVisitorAdapter<ImmutableNode>()
+                {
+                    public void visitBeforeChildren(ImmutableNode node,
+                            NodeHandler<ImmutableNode> handler)
+                    {
+                        for (ImmutableNode c : node.getChildren())
+                        {
+                            parents.put(c, node);
+                        }
+                    }
+                }, this);
     }
 
     /**
@@ -316,6 +316,18 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
     {
         return node.getValue() != null || !node.getChildren().isEmpty()
                 || !node.getAttributes().isEmpty();
+    }
+
+    /**
+     * Creates a {@code TreeData} object for the specified root node.
+     *
+     * @param root the root node of the current tree
+     * @return the {@code TreeData} describing the current tree
+     */
+    private TreeData createTreeData(ImmutableNode root)
+    {
+        return new TreeData(root, createParentMapping(root),
+                new HashMap<ImmutableNode, ImmutableNode>());
     }
 
     /**
@@ -451,18 +463,6 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
     }
 
     /**
-     * Creates a {@code TreeData} object for the specified root node.
-     *
-     * @param root the root node of the current tree
-     * @return the {@code TreeData} describing the current tree
-     */
-    private static TreeData createTreeData(ImmutableNode root)
-    {
-        return new TreeData(root, createParentMapping(root),
-                new HashMap<ImmutableNode, ImmutableNode>());
-    }
-
-    /**
      * Creates the mapping to parent nodes for the nodes structured represented
      * by the passed in root node. Each node is assigned its parent node. Here
      * an iterative algorithm is used rather than a recursive one to avoid stack
@@ -471,7 +471,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
      * @param root the root node of the structure
      * @return the parent node mapping
      */
-    private static Map<ImmutableNode, ImmutableNode> createParentMapping(
+    private Map<ImmutableNode, ImmutableNode> createParentMapping(
             ImmutableNode root)
     {
         Map<ImmutableNode, ImmutableNode> parents =

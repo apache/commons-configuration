@@ -77,6 +77,9 @@ class ModelTransaction
     /** Constant for an unknown level. */
     private static final int LEVEL_UNKNOWN = -1;
 
+    /** The model owning this transaction. */
+    private final InMemoryNodeModel model;
+
     /** Stores the current tree data of the calling node model. */
     private final InMemoryNodeModel.TreeData currentData;
 
@@ -107,13 +110,14 @@ class ModelTransaction
      * Creates a new instance of {@code ModelTransaction} for the current tree
      * data.
      *
-     * @param data the current {@code TreeData} object
+     * @param nodeModel the owning {@code InMemoryNodeModel}
      */
-    public ModelTransaction(InMemoryNodeModel.TreeData data)
+    public ModelTransaction(InMemoryNodeModel nodeModel)
     {
-        currentData = data;
-        replacedNodes = data.copyReplacementMapping();
-        parentMapping = data.copyParentMapping();
+        model = nodeModel;
+        currentData = model.getTreeData();
+        replacedNodes = currentData.copyReplacementMapping();
+        parentMapping = currentData.copyParentMapping();
         operations = new TreeMap<Integer, Map<ImmutableNode, Operations>>();
         addedNodes = new LinkedList<ImmutableNode>();
         removedNodes = new LinkedList<ImmutableNode>();
@@ -306,7 +310,7 @@ class ModelTransaction
     {
         replacedNodes.clear();
         parentMapping.clear();
-        InMemoryNodeModel.updateParentMapping(parentMapping, newRoot);
+        model.updateParentMapping(parentMapping, newRoot);
     }
 
     /**
@@ -316,7 +320,7 @@ class ModelTransaction
     {
         for (ImmutableNode node : addedNodes)
         {
-            InMemoryNodeModel.updateParentMapping(parentMapping, node);
+            model.updateParentMapping(parentMapping, node);
         }
     }
 
