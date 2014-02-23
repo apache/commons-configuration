@@ -48,19 +48,33 @@ public class TestNodeUpdateData
     }
 
     /**
+     * Convenience method for creating a query result object.
+     *
+     * @param value the value of this result
+     * @return the result object
+     */
+    private static QueryResult<Object> result(Object value)
+    {
+        return QueryResult.createNodeResult(value);
+    }
+
+    /**
      * Tests whether a defensive copy is created from the changed values.
      */
     @Test
     public void testInitChangedValuesDefensiveCopy()
     {
-        Map<Object, Object> map = new HashMap<Object, Object>();
-        map.put("test", "value");
+        Map<QueryResult<Object>, Object> map =
+                new HashMap<QueryResult<Object>, Object>();
+        map.put(result("test"), "value");
         NodeUpdateData<Object> data =
                 new NodeUpdateData<Object>(map, null, null, null);
-        map.put("anotherTest", "anotherValue");
-        Map<Object, Object> changedValues = data.getChangedValues();
+        map.put(result("anotherTest"), "anotherValue");
+        Map<QueryResult<Object>, Object> changedValues =
+                data.getChangedValues();
         assertEquals("Wrong number of changed values", 1, changedValues.size());
-        assertEquals("Wrong changed value", "value", changedValues.get("test"));
+        assertEquals("Wrong changed value", "value",
+                changedValues.get(result("test")));
     }
 
     /**
@@ -85,14 +99,16 @@ public class TestNodeUpdateData
     @Test
     public void testInitRemovedNodesDefensiveCopy()
     {
-        Collection<Object> col = new LinkedList<Object>();
-        col.add("n1");
+        Collection<QueryResult<Object>> col =
+                new LinkedList<QueryResult<Object>>();
+        col.add(result("n1"));
         NodeUpdateData<Object> data =
                 new NodeUpdateData<Object>(null, null, col, null);
-        col.add("n2");
-        Collection<Object> removedNodes = data.getRemovedNodes();
+        col.add(result("n2"));
+        Collection<QueryResult<Object>> removedNodes = data.getRemovedNodes();
         assertEquals("Wrong number of new values", 1, removedNodes.size());
-        assertEquals("Wrong value", "n1", removedNodes.iterator().next());
+        assertEquals("Wrong value", result("n1"), removedNodes.iterator()
+                .next());
     }
 
     /**
@@ -101,11 +117,12 @@ public class TestNodeUpdateData
     @Test(expected = UnsupportedOperationException.class)
     public void testGetChangedValuesModify()
     {
-        Map<Object, Object> map = new HashMap<Object, Object>();
-        map.put("n1", 42);
+        Map<QueryResult<Object>, Object> map =
+                new HashMap<QueryResult<Object>, Object>();
+        map.put(result("n1"), 42);
         NodeUpdateData<Object> data =
                 new NodeUpdateData<Object>(map, null, null, null);
-        data.getChangedValues().put("n2", 43);
+        data.getChangedValues().put(result("n2"), 43);
     }
 
     /**
@@ -127,10 +144,11 @@ public class TestNodeUpdateData
     @Test(expected = UnsupportedOperationException.class)
     public void testGetRemovedNodesModify()
     {
-        Collection<String> col = new LinkedList<String>();
-        col.add("n1");
-        NodeUpdateData<String> data =
-                new NodeUpdateData<String>(null, null, col, null);
-        data.getRemovedNodes().add("newNode");
+        Collection<QueryResult<Object>> col =
+                new LinkedList<QueryResult<Object>>();
+        col.add(result("n1"));
+        NodeUpdateData<Object> data =
+                new NodeUpdateData<Object>(null, null, col, null);
+        data.getRemovedNodes().add(result("newNode"));
     }
 }

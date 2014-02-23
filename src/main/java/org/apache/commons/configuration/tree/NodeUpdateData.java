@@ -31,13 +31,13 @@ import java.util.Map;
  * The {@code Configuration} interface provides a method for setting the value
  * of a given key. The passed in value can be a single object or a collection of
  * values. This makes an update operation rather complicated because a
- * collection of nodes identified by the passed in key has to be matched to
- * another collection of values - and both collections can have different sizes.
- * Therefore, an update operation may involve changing of existing nodes, adding
- * new nodes (if there are more values than currently existing nodes), and
- * removing nodes (if there are more existing nodes than provided values). This
- * class collects all this information making it possible to actually perform
- * the update based on a passed in instance.
+ * collection of query results selected by the passed in key has to be matched
+ * to another collection of values - and both collections can have different
+ * sizes. Therefore, an update operation may involve changing of existing nodes,
+ * adding new nodes (if there are more values than currently existing nodes),
+ * and removing nodes (if there are more existing nodes than provided values).
+ * This class collects all this information making it possible to actually
+ * perform the update based on a passed in instance.
  * </p>
  *
  * @version $Id$
@@ -46,14 +46,14 @@ import java.util.Map;
  */
 public class NodeUpdateData<T>
 {
-    /** The map with the nodes whose value has to be changed. */
-    private final Map<T, Object> changedValues;
+    /** The map with the query results whose value has to be changed. */
+    private final Map<QueryResult<T>, Object> changedValues;
 
     /** The collection with the new values to be added. */
     private final Collection<Object> newValues;
 
-    /** The collection with the nodes to be removed. */
-    private final Collection<T> removedNodes;
+    /** The collection with query results about the nodes to be removed. */
+    private final Collection<QueryResult<T>> removedNodes;
 
     /** The key of the current update operation. */
     private final String key;
@@ -68,8 +68,9 @@ public class NodeUpdateData<T>
      * @param removedNodes the collection with the nodes to be removed
      * @param key the key of the update operation
      */
-    public NodeUpdateData(Map<T, Object> changedValues,
-            Collection<Object> newValues, Collection<T> removedNodes, String key)
+    public NodeUpdateData(Map<QueryResult<T>, Object> changedValues,
+            Collection<Object> newValues,
+            Collection<QueryResult<T>> removedNodes, String key)
     {
         this.changedValues = copyMap(changedValues);
         this.newValues = copyCollection(newValues);
@@ -79,12 +80,12 @@ public class NodeUpdateData<T>
 
     /**
      * Returns an unmodifiable map with the values to be changed. The keys of
-     * the map are the nodes affected, the values are the new values to be
-     * assigned to these nodes.
+     * the map are the query results for the nodes affected, the values are the
+     * new values to be assigned to these nodes.
      *
      * @return the map with values to be changed
      */
-    public Map<T, Object> getChangedValues()
+    public Map<QueryResult<T>, Object> getChangedValues()
     {
         return changedValues;
     }
@@ -108,7 +109,7 @@ public class NodeUpdateData<T>
      *
      * @return the collection with nodes to be removed
      */
-    public Collection<T> getRemovedNodes()
+    public Collection<QueryResult<T>> getRemovedNodes()
     {
         return removedNodes;
     }
