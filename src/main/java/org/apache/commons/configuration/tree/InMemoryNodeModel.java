@@ -213,6 +213,8 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
      * @param key the key
      * @param nodes the collection of nodes to be added
      * @param resolver the {@code NodeKeyResolver}
+     * @throws IllegalArgumentException if the key references an attribute (of
+     *         course, it is not possible to add something to an attribute)
      */
     public void addNodes(final String key,
             final Collection<ImmutableNode> nodes,
@@ -227,6 +229,12 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
                                 InMemoryNodeModel.this);
                 if (results.size() == 1)
                 {
+                    if (results.get(0).isAttributeResult())
+                    {
+                        throw new IllegalArgumentException(
+                                "New nodes cannot be added to an attribute key: "
+                                        + key);
+                    }
                     tx.addAddNodesOperation(results.get(0).getNode(), nodes);
                 }
                 else

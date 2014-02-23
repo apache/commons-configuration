@@ -1165,4 +1165,26 @@ public class TestInMemoryNodeModel
         assertSame("Wrong added node", personaNode,
                 nodeForKey(model, newAuthor + "/" + newWork + "/" + newPersona));
     }
+
+    /**
+     * Tries to add new nodes if the key references an attribute.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddNodesToAttribute()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        InMemoryNodeModel model =
+                new InMemoryNodeModel(NodeStructureHelper.ROOT_AUTHORS_TREE);
+        EasyMock.expect(
+                resolver.resolveKey(NodeStructureHelper.ROOT_AUTHORS_TREE, KEY,
+                        model)).andReturn(
+                Collections.singletonList(QueryResult.createAttributeResult(
+                        nodeForKey(model, NodeStructureHelper.author(1)),
+                        "test")));
+        EasyMock.replay(resolver);
+
+        ImmutableNode newNode =
+                new ImmutableNode.Builder().name("newNode").create();
+        model.addNodes(KEY, Collections.singleton(newNode), resolver);
+    }
 }
