@@ -224,6 +224,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
         {
             public boolean initTransaction(ModelTransaction tx)
             {
+                boolean added = false;
                 NodeUpdateData<ImmutableNode> updateData =
                         resolver.resolveUpdateKey(
                                 tx.getCurrentData().getRoot(), key, value,
@@ -232,10 +233,15 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
                 {
                     initializeAddTransaction(tx, key,
                             updateData.getNewValues(), resolver);
+                    added = true;
                 }
-                initializeClearTransaction(tx, updateData.getRemovedNodes());
-                initializeUpdateTransaction(tx, updateData.getChangedValues());
-                return true;
+                boolean cleared =
+                        initializeClearTransaction(tx,
+                                updateData.getRemovedNodes());
+                boolean updated =
+                        initializeUpdateTransaction(tx,
+                                updateData.getChangedValues());
+                return added || cleared || updated;
             }
         });
     }
@@ -534,8 +540,9 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
      * @param tx the transaction to be initialized
      * @param results a collection with results pointing to the nodes to be
      *        cleared
+     * @return a flag whether there are elements to be cleared
      */
-    private static void initializeClearTransaction(ModelTransaction tx,
+    private static boolean initializeClearTransaction(ModelTransaction tx,
             Collection<QueryResult<ImmutableNode>> results)
     {
         for (QueryResult<ImmutableNode> result : results)
@@ -550,6 +557,8 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
                 tx.addClearNodeValueOperation(result.getNode());
             }
         }
+
+        return !results.isEmpty();
     }
 
     /**
@@ -558,8 +567,9 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
      *
      * @param tx the transaction to be initialized
      * @param changedValues the map defining the elements to be changed
+     * @return a flag whether there are elements to be updated
      */
-    private static void initializeUpdateTransaction(ModelTransaction tx,
+    private static boolean initializeUpdateTransaction(ModelTransaction tx,
             Map<QueryResult<ImmutableNode>, Object> changedValues)
     {
         for (Map.Entry<QueryResult<ImmutableNode>, Object> e : changedValues
@@ -576,6 +586,8 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
                         e.getValue());
             }
         }
+
+        return !changedValues.isEmpty();
     }
 
     /**

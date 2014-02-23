@@ -1082,4 +1082,25 @@ public class TestInMemoryNodeModel
                 .getAttributes().get(NodeStructureHelper.ATTR_TESTED));
         assertEquals("Node value not changed", newValue, node.getValue());
     }
+
+    /**
+     * Tests a set property operation which is a no-op.
+     */
+    @Test
+    public void testSetPropertyNoChanges()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        InMemoryNodeModel model =
+                new InMemoryNodeModel(NodeStructureHelper.ROOT_PERSONAE_TREE);
+        EasyMock.expect(
+                resolver.resolveUpdateKey(
+                        NodeStructureHelper.ROOT_PERSONAE_TREE, KEY, this,
+                        model)).andReturn(
+                new NodeUpdateData<ImmutableNode>(null, null, null, null));
+        EasyMock.replay(resolver);
+
+        model.setProperty(KEY, this, resolver);
+        assertSame("Model was changed", NodeStructureHelper.ROOT_PERSONAE_TREE,
+                model.getRootNode());
+    }
 }
