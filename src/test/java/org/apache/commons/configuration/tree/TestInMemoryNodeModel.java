@@ -37,6 +37,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
@@ -866,5 +869,81 @@ public class TestInMemoryNodeModel
                 model.getTreeData().copyReplacementMapping();
         assertTrue("Replacement mapping too big: " + replacementMapping.size(),
                 replacementMapping.size() < numberOfOperations);
+    }
+
+    /**
+     * Tests whether concurrent updates of the model are handled correctly. This
+     * test adds a number of authors in parallel. Then it is checked whether all
+     * authors have been added correctly.
+     */
+    @Test
+    public void testConcurrentUpdate() throws InterruptedException
+    {
+        final NodeKeyResolver resolver =
+                EasyMock.createMock(NodeKeyResolver.class);
+        final InMemoryNodeModel model =
+                new InMemoryNodeModel(NodeStructureHelper.ROOT_AUTHORS_TREE);
+        EasyMock.expect(
+                resolver.resolveAddKey(EasyMock.anyObject(ImmutableNode.class),
+                        EasyMock.eq(KEY), EasyMock.eq(model)))
+                .andAnswer(new IAnswer<NodeAddData<ImmutableNode>>()
+                {
+                    public NodeAddData<ImmutableNode> answer() throws Throwable
+                    {
+                        ImmutableNode addParent =
+                                (ImmutableNode) EasyMock.getCurrentArguments()[0];
+                        return new NodeAddData<ImmutableNode>(addParent,
+                                "name", false, Collections.singleton("author"));
+                    }
+                }).anyTimes();
+        EasyMock.replay(resolver);
+
+        final CountDownLatch latch = new CountDownLatch(1);
+        final String authorPrefix = "newAuthor";
+        final int threadCount = 32;
+        Thread[] threads = new Thread[threadCount];
+        for (int i = 0; i < threadCount; i++)
+        {
+            final String authorName = authorPrefix + i;
+            threads[i] = new Thread()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        latch.await();
+                        model.addProperty(KEY,
+                                Collections.singleton(authorName), resolver);
+                    }
+                    catch (InterruptedException iex)
+                    {
+                        // ignore
+                    }
+                }
+            };
+            threads[i].start();
+        }
+        latch.countDown();
+        for (Thread t : threads)
+        {
+            t.join();
+        }
+
+        Pattern patternAuthorName =
+                Pattern.compile(Pattern.quote(authorPrefix) + "(\\d+)");
+        Set<Integer> indices = new HashSet<Integer>();
+        for (int i = 0; i < threadCount; i++)
+        {
+            ImmutableNode node = nodeForKey(model, "author(" + i + ")/name");
+            Matcher m =
+                    patternAuthorName.matcher(String.valueOf(node.getValue()));
+            assertTrue("Wrong value: " + node.getValue(), m.matches());
+            int idx = Integer.parseInt(m.group(1));
+            assertTrue("Invalid index: " + idx, idx >= 0 && idx < threadCount);
+            indices.add(idx);
+        }
+        assertEquals("Not all authors were created", threadCount,
+                indices.size());
     }
 }

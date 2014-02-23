@@ -116,8 +116,8 @@ class ModelTransaction
     {
         model = nodeModel;
         currentData = model.getTreeData();
-        replacedNodes = currentData.copyReplacementMapping();
-        parentMapping = currentData.copyParentMapping();
+        replacedNodes = getCurrentData().copyReplacementMapping();
+        parentMapping = getCurrentData().copyParentMapping();
         operations = new TreeMap<Integer, Map<ImmutableNode, Operations>>();
         addedNodes = new LinkedList<ImmutableNode>();
         removedNodes = new LinkedList<ImmutableNode>();
@@ -206,6 +206,14 @@ class ModelTransaction
     }
 
     /**
+     * Returns the current {@code TreeData} object this transaction operates on.
+     * @return the associated {@code TreeData} object
+     */
+    public InMemoryNodeModel.TreeData getCurrentData() {
+        return currentData;
+    }
+
+    /**
      * Returns the parent node of the given node.
      *
      * @param node the node in question
@@ -213,7 +221,7 @@ class ModelTransaction
      */
     ImmutableNode getParent(ImmutableNode node)
     {
-        return currentData.getParent(node);
+        return getCurrentData().getParent(node);
     }
 
     /**
@@ -256,12 +264,12 @@ class ModelTransaction
      */
     private int level(ImmutableNode node)
     {
-        ImmutableNode current = currentData.getParent(node);
+        ImmutableNode current = getCurrentData().getParent(node);
         int level = 0;
         while (current != null)
         {
             level++;
-            current = currentData.getParent(current);
+            current = getCurrentData().getParent(current);
         }
         return level;
     }

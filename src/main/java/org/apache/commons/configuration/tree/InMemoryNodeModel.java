@@ -190,27 +190,24 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
      * @param values the values to be added at the position defined by the key
      * @param resolver the {@code NodeKeyResolver}
      */
-    public void addProperty(String key, Iterable<?> values,
-            NodeKeyResolver resolver)
+    public void addProperty(final String key, final Iterable<?> values,
+            final NodeKeyResolver resolver)
     {
         if (valuesNotEmpty(values))
         {
-            TreeData currentStructure = getTreeData();
-            ModelTransaction tx = new ModelTransaction(this);
-            NodeAddData<ImmutableNode> addData =
-                    resolver.resolveAddKey(currentStructure.getRoot(), key,
-                            this);
-            if (addData.isAttribute())
-            {
-                addAttributeProperty(tx, addData, values);
-            }
-            else
-            {
-                addNodeProperty(tx, addData, values);
-            }
-
-            // TODO handle concurrency
-            structure.set(tx.execute());
+            updateModel(new TransactionInitializer() {
+                public boolean initTransaction(ModelTransaction tx) {
+                    NodeAddData<ImmutableNode> addData =
+                            resolver.resolveAddKey(tx.getCurrentData().getRoot(), key,
+                                    InMemoryNodeModel.this);
+                    if (addData.isAttribute()) {
+                        addAttributeProperty(tx, addData, values);
+                    } else {
+                        addNodeProperty(tx, addData, values);
+                    }
+                    return true;
+                }
+            });
         }
     }
 
@@ -222,34 +219,30 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
      * @param key the key selecting the properties to be removed
      * @param resolver the {@code NodeKeyResolver}
      */
-    public void clearTree(String key, NodeKeyResolver resolver)
+    public void clearTree(final String key, final NodeKeyResolver resolver)
     {
-        TreeData currentStructure = getTreeData();
-        ModelTransaction tx = new ModelTransaction(this);
-        for (QueryResult<ImmutableNode> result : resolver.resolveKey(
-                currentStructure.getRoot(), key, this))
-        {
-            if (result.isAttributeResult())
-            {
-                tx.addRemoveAttributeOperation(result.getNode(),
-                        result.getAttributeName());
-            }
-            else
-            {
-                if (result.getNode() == currentStructure.getRoot())
-                {
-                    // the whole model is to be cleared
-                    clear();
-                    return;
+        updateModel(new TransactionInitializer() {
+            public boolean initTransaction(ModelTransaction tx) {
+                TreeData currentStructure = tx.getCurrentData();
+                for (QueryResult<ImmutableNode> result : resolver.resolveKey(
+                        tx.getCurrentData().getRoot(), key, InMemoryNodeModel.this)) {
+                    if (result.isAttributeResult()) {
+                        tx.addRemoveAttributeOperation(result.getNode(),
+                                result.getAttributeName());
+                    } else {
+                        if (result.getNode() == currentStructure.getRoot()) {
+                            // the whole model is to be cleared
+                            clear();
+                            return false;
+                        }
+                        tx.addRemoveNodeOperation(
+                                currentStructure.getParent(result.getNode()),
+                                result.getNode());
+                    }
                 }
-                tx.addRemoveNodeOperation(
-                        currentStructure.getParent(result.getNode()),
-                        result.getNode());
+                return true;
             }
-        }
-
-        // TODO handle concurrency
-        structure.set(tx.execute());
+        });
     }
 
     /**
@@ -481,6 +474,33 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
     }
 
     /**
+     * Performs a non-blocking, thread-safe update of this model based on a
+     * transaction initialized by the passed in initializer. This method uses
+     * the atomic reference for the model's current data to ensure that an
+     * update was successful even if the model is concurrently accessed.
+     *
+     * @param txInit the {@code TransactionInitializer}
+     */
+    private void updateModel(TransactionInitializer txInit)
+    {
+        boolean done;
+
+        do
+        {
+            ModelTransaction tx = new ModelTransaction(this);
+            if (!txInit.initTransaction(tx))
+            {
+                done = true;
+            }
+            else
+            {
+                TreeData newData = tx.execute();
+                done = structure.compareAndSet(tx.getCurrentData(), newData);
+            }
+        } while (!done);
+    }
+
+    /**
      * Checks whether the specified collection with values is not empty.
      *
      * @param values the collection with node values
@@ -636,5 +656,26 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
             }
             return inverseMapping;
         }
+    }
+
+    /**
+     * An interface used internally for handling concurrent updates. An
+     * implementation has to populate the passed in {@code ModelTransaction}.
+     * The transaction is then executed, and an atomic update of the model's
+     * {@code TreeData} is attempted. If this fails - because another update
+     * came across -, the whole operation has to be tried anew.
+     */
+    private static interface TransactionInitializer
+    {
+        /**
+         * Initializes the specified transaction for an update operation. The
+         * return value indicates whether the transaction should be executed. A
+         * result of <b>false</b> means that the update is to be aborted (maybe
+         * another update method was called).
+         *
+         * @param tx the transaction to be initialized
+         * @return a flag whether the update should continue
+         */
+        boolean initTransaction(ModelTransaction tx);
     }
 }
