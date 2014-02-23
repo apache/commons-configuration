@@ -265,8 +265,15 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
                         .getCurrentData().getRoot(), key,
                         InMemoryNodeModel.this))
                 {
-                    // TODO handle attribute results
-                    tx.addClearNodeValueOperation(result.getNode());
+                    if (result.isAttributeResult())
+                    {
+                        tx.addRemoveAttributeOperation(result.getNode(),
+                                result.getAttributeName());
+                    }
+                    else
+                    {
+                        tx.addClearNodeValueOperation(result.getNode());
+                    }
                 }
                 return true;
             }

@@ -968,4 +968,28 @@ public class TestInMemoryNodeModel
         ImmutableNode node = nodeForKey(model, nodeKey);
         assertNull("Value not cleared", node.getValue());
     }
+
+    /**
+     * Tests whether a property value stored as an attribute can be cleared.
+     */
+    @Test
+    public void testClearPropertyAttribute()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        InMemoryNodeModel model =
+                new InMemoryNodeModel(NodeStructureHelper.ROOT_PERSONAE_TREE);
+        final String nodeKey =
+                "Prospero/The Tempest/" + NodeStructureHelper.ELEM_ORG_VALUE;
+        EasyMock.expect(resolver.resolveKey(model.getRootNode(), KEY, model))
+                .andReturn(
+                        Collections.singletonList(QueryResult
+                                .createAttributeResult(
+                                        nodeForKey(model, nodeKey),
+                                        NodeStructureHelper.ATTR_TESTED)));
+        EasyMock.replay(resolver);
+
+        model.clearProperty(KEY, resolver);
+        ImmutableNode node = nodeForKey(model, nodeKey);
+        assertTrue("Attribute not removed", node.getAttributes().isEmpty());
+    }
 }
