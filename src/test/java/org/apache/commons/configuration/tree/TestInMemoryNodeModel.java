@@ -1020,4 +1020,31 @@ public class TestInMemoryNodeModel
         assertNotNull("Could not find other nodes",
                 nodeForKey(model, "Homer/Ilias/Hektor"));
     }
+
+    /**
+     * Tests whether setProperty() can handle nodes to be cleared.
+     */
+    @Test
+    public void testSetPropertyClearValues()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        InMemoryNodeModel model =
+                new InMemoryNodeModel(NodeStructureHelper.ROOT_PERSONAE_TREE);
+        final String nodeKey =
+                "Ariel/The Tempest/" + NodeStructureHelper.ELEM_ORG_VALUE;
+        NodeUpdateData<ImmutableNode> updateData =
+                new NodeUpdateData<ImmutableNode>(null, null,
+                        Collections.singletonList(QueryResult
+                                .createNodeResult(nodeForKey(model, nodeKey))),
+                        null);
+        EasyMock.expect(
+                resolver.resolveUpdateKey(
+                        NodeStructureHelper.ROOT_PERSONAE_TREE, KEY, this,
+                        model)).andReturn(updateData);
+        EasyMock.replay(resolver);
+
+        model.setProperty(KEY, this, resolver);
+        ImmutableNode node = nodeForKey(model, nodeKey);
+        assertNull("Value not cleared", node.getValue());
+    }
 }

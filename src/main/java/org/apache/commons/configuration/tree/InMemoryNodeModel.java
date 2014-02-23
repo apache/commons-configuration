@@ -233,7 +233,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
                     initializeAddTransaction(tx, key,
                             updateData.getNewValues(), resolver);
                 }
-                // TODO handle removed nodes
+                initializeClearTransaction(tx, updateData.getRemovedNodes());
                 // TODO handle updated nodes
                 return true;
             }
@@ -298,20 +298,10 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
         {
             public boolean initTransaction(ModelTransaction tx)
             {
-                for (QueryResult<ImmutableNode> result : resolver.resolveKey(tx
-                        .getCurrentData().getRoot(), key,
-                        InMemoryNodeModel.this))
-                {
-                    if (result.isAttributeResult())
-                    {
-                        tx.addRemoveAttributeOperation(result.getNode(),
-                                result.getAttributeName());
-                    }
-                    else
-                    {
-                        tx.addClearNodeValueOperation(result.getNode());
-                    }
-                }
+                List<QueryResult<ImmutableNode>> results =
+                        resolver.resolveKey(tx.getCurrentData().getRoot(), key,
+                                InMemoryNodeModel.this);
+                initializeClearTransaction(tx, results);
                 return true;
             }
         });
@@ -535,6 +525,31 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
             builder.addChildren(newNodes);
         }
         return builder.name(nodeName).create();
+    }
+
+    /**
+     * Initializes a transaction to clear the values of a property based on the
+     * passed in collection of affected results.
+     *
+     * @param tx the transaction to be initialized
+     * @param results a collection with results pointing to the nodes to be
+     *        cleared
+     */
+    private static void initializeClearTransaction(ModelTransaction tx,
+            Collection<QueryResult<ImmutableNode>> results)
+    {
+        for (QueryResult<ImmutableNode> result : results)
+        {
+            if (result.isAttributeResult())
+            {
+                tx.addRemoveAttributeOperation(result.getNode(),
+                        result.getAttributeName());
+            }
+            else
+            {
+                tx.addClearNodeValueOperation(result.getNode());
+            }
+        }
     }
 
     /**
