@@ -197,8 +197,20 @@ class ModelTransaction
      */
     public void addClearNodeValueOperation(ImmutableNode target)
     {
+        addChangeNodeValueOperation(target, null);
+    }
+
+    /**
+     * Adds an operation for changing the value of a target node.
+     *
+     * @param target the target node
+     * @param newValue the new value for this node
+     */
+    public void addChangeNodeValueOperation(ImmutableNode target,
+            Object newValue)
+    {
         fetchOperations(target, LEVEL_UNKNOWN).addOperation(
-                new ClearNodeValueOperation());
+                new ChangeNodeValueOperation(newValue));
     }
 
     /**
@@ -728,15 +740,29 @@ class ModelTransaction
     }
 
     /**
-     * A specialized operation class which clears the value of a node.
+     * A specialized operation class which changes the value of a node.
      */
-    private class ClearNodeValueOperation extends Operation
+    private class ChangeNodeValueOperation extends Operation
     {
+        /** The new value for the affected node. */
+        private final Object newValue;
+
+        /**
+         * Creates a new instance of {@code ChangeNodeValueOperation} and
+         * initializes it with the new value to set for the node.
+         *
+         * @param value the new node value
+         */
+        public ChangeNodeValueOperation(Object value)
+        {
+            newValue = value;
+        }
+
         @Override
         protected ImmutableNode apply(ImmutableNode target,
                 Operations operations)
         {
-            return target.setValue(null);
+            return target.setValue(newValue);
         }
     }
 

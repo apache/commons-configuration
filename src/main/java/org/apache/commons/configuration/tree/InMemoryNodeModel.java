@@ -234,7 +234,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
                             updateData.getNewValues(), resolver);
                 }
                 initializeClearTransaction(tx, updateData.getRemovedNodes());
-                // TODO handle updated nodes
+                initializeUpdateTransaction(tx, updateData.getChangedValues());
                 return true;
             }
         });
@@ -548,6 +548,32 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
             else
             {
                 tx.addClearNodeValueOperation(result.getNode());
+            }
+        }
+    }
+
+    /**
+     * Initializes a transaction to change the values of some query results
+     * based on the passed in map.
+     *
+     * @param tx the transaction to be initialized
+     * @param changedValues the map defining the elements to be changed
+     */
+    private static void initializeUpdateTransaction(ModelTransaction tx,
+            Map<QueryResult<ImmutableNode>, Object> changedValues)
+    {
+        for (Map.Entry<QueryResult<ImmutableNode>, Object> e : changedValues
+                .entrySet())
+        {
+            if (e.getKey().isAttributeResult())
+            {
+                tx.addAttributeOperation(e.getKey().getNode(), e.getKey()
+                        .getAttributeName(), e.getValue());
+            }
+            else
+            {
+                tx.addChangeNodeValueOperation(e.getKey().getNode(),
+                        e.getValue());
             }
         }
     }

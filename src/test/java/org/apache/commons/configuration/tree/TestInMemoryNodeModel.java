@@ -32,6 +32,7 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -1046,5 +1047,39 @@ public class TestInMemoryNodeModel
         model.setProperty(KEY, this, resolver);
         ImmutableNode node = nodeForKey(model, nodeKey);
         assertNull("Value not cleared", node.getValue());
+    }
+
+    /**
+     * Tests whether setProperty() can handle changes in node values.
+     */
+    @Test
+    public void testSetPropertyChangedValues()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        InMemoryNodeModel model =
+                new InMemoryNodeModel(NodeStructureHelper.ROOT_PERSONAE_TREE);
+        final String nodeKey =
+                "Ariel/The Tempest/" + NodeStructureHelper.ELEM_ORG_VALUE;
+        Map<QueryResult<ImmutableNode>, Object> changedValues =
+                new HashMap<QueryResult<ImmutableNode>, Object>();
+        final String newValue = "of course";
+        ImmutableNode changedNode = nodeForKey(model, nodeKey);
+        changedValues.put(QueryResult.createAttributeResult(changedNode,
+                NodeStructureHelper.ATTR_TESTED), newValue);
+        changedValues.put(QueryResult.createNodeResult(changedNode), newValue);
+        NodeUpdateData<ImmutableNode> updateData =
+                new NodeUpdateData<ImmutableNode>(changedValues, null, null,
+                        null);
+        EasyMock.expect(
+                resolver.resolveUpdateKey(
+                        NodeStructureHelper.ROOT_PERSONAE_TREE, KEY, this,
+                        model)).andReturn(updateData);
+        EasyMock.replay(resolver);
+
+        model.setProperty(KEY, this, resolver);
+        ImmutableNode node = nodeForKey(model, nodeKey);
+        assertEquals("Attribute value not changed", newValue, node
+                .getAttributes().get(NodeStructureHelper.ATTR_TESTED));
+        assertEquals("Node value not changed", newValue, node.getValue());
     }
 }
