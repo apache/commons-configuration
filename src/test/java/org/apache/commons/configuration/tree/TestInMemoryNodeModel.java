@@ -992,4 +992,32 @@ public class TestInMemoryNodeModel
         ImmutableNode node = nodeForKey(model, nodeKey);
         assertTrue("Attribute not removed", node.getAttributes().isEmpty());
     }
+
+    /**
+     * Tests whether setProperty() can handle newly added values.
+     */
+    @Test
+    public void testSetPropertyNewValues()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        NodeAddData<ImmutableNode> addData =
+                new NodeAddData<ImmutableNode>(nodeForKey(ROOT_AUTHORS_TREE,
+                        "Homer"), "work", false, null);
+        NodeUpdateData<ImmutableNode> updateData =
+                new NodeUpdateData<ImmutableNode>(null,
+                        Collections.<Object> singleton("Odyssee"), null, KEY);
+        InMemoryNodeModel model = new InMemoryNodeModel(ROOT_AUTHORS_TREE);
+        EasyMock.expect(
+                resolver.resolveUpdateKey(ROOT_AUTHORS_TREE, KEY, this, model))
+                .andReturn(updateData);
+        EasyMock.expect(resolver.resolveAddKey(ROOT_AUTHORS_TREE, KEY, model))
+                .andReturn(addData);
+        EasyMock.replay(resolver);
+
+        model.setProperty(KEY, this, resolver);
+        ImmutableNode node = nodeForKey(model, "Homer/work");
+        assertEquals("Wrong node value", "Odyssee", node.getValue());
+        assertNotNull("Could not find other nodes",
+                nodeForKey(model, "Homer/Ilias/Hektor"));
+    }
 }

@@ -197,18 +197,47 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
         {
             updateModel(new TransactionInitializer() {
                 public boolean initTransaction(ModelTransaction tx) {
-                    NodeAddData<ImmutableNode> addData =
-                            resolver.resolveAddKey(tx.getCurrentData().getRoot(), key,
-                                    InMemoryNodeModel.this);
-                    if (addData.isAttribute()) {
-                        addAttributeProperty(tx, addData, values);
-                    } else {
-                        addNodeProperty(tx, addData, values);
-                    }
+                    initializeAddTransaction(tx, key, values, resolver);
                     return true;
                 }
             });
         }
+    }
+
+    /**
+     * Changes the value of a property. This is a more complex operation as it
+     * might involve adding, updating, or deleting nodes and attributes from the
+     * model. The object representing the new value is passed to the
+     * {@code NodeKeyResolver} which will produce a corresponding
+     * {@link NodeUpdateData} object. Based on the content of this object,
+     * update operations are performed.
+     *
+     * @param key the key
+     * @param value the new value for this property (to be evaluated by the
+     *        {@code NodeKeyResolver})
+     * @param resolver the {@code NodeKeyResolver}
+     */
+    public void setProperty(final String key, final Object value,
+            final NodeKeyResolver resolver)
+    {
+        updateModel(new TransactionInitializer()
+        {
+            public boolean initTransaction(ModelTransaction tx)
+            {
+                NodeUpdateData<ImmutableNode> updateData =
+                        resolver.resolveUpdateKey(
+                                tx.getCurrentData().getRoot(), key, value,
+                                InMemoryNodeModel.this);
+                if (!updateData.getNewValues().isEmpty())
+                {
+                    initializeAddTransaction(tx, key,
+                            updateData.getNewValues(), resolver);
+                }
+                // TODO handle removed nodes
+                // TODO handle updated nodes
+                return true;
+            }
+        });
     }
 
     /**
@@ -221,16 +250,24 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
      */
     public void clearTree(final String key, final NodeKeyResolver resolver)
     {
-        updateModel(new TransactionInitializer() {
-            public boolean initTransaction(ModelTransaction tx) {
+        updateModel(new TransactionInitializer()
+        {
+            public boolean initTransaction(ModelTransaction tx)
+            {
                 TreeData currentStructure = tx.getCurrentData();
-                for (QueryResult<ImmutableNode> result : resolver.resolveKey(
-                        currentStructure.getRoot(), key, InMemoryNodeModel.this)) {
-                    if (result.isAttributeResult()) {
+                for (QueryResult<ImmutableNode> result : resolver
+                        .resolveKey(currentStructure.getRoot(), key,
+                                InMemoryNodeModel.this))
+                {
+                    if (result.isAttributeResult())
+                    {
                         tx.addRemoveAttributeOperation(result.getNode(),
                                 result.getAttributeName());
-                    } else {
-                        if (result.getNode() == currentStructure.getRoot()) {
+                    }
+                    else
+                    {
+                        if (result.getNode() == currentStructure.getRoot())
+                        {
                             // the whole model is to be cleared
                             clear();
                             return false;
@@ -292,8 +329,8 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
                 new ImmutableNode.Builder().name(getRootNode().getNodeName())
                         .create();
         structure.set(new TreeData(newRoot, Collections
-                .<ImmutableNode, ImmutableNode> emptyMap(), Collections
-                .<ImmutableNode, ImmutableNode> emptyMap()));
+                .<ImmutableNode, ImmutableNode>emptyMap(), Collections
+                .<ImmutableNode, ImmutableNode>emptyMap()));
     }
 
     /**
@@ -344,6 +381,29 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
     {
         return node.getValue() != null || !node.getChildren().isEmpty()
                 || !node.getAttributes().isEmpty();
+    }
+
+    /**
+     * Initializes a transaction for an add operation.
+     *
+     * @param tx the transaction to be initialized
+     * @param key the key
+     * @param values the collection with node values
+     * @param resolver the {@code NodeKeyResolver}
+     */
+    private void initializeAddTransaction(ModelTransaction tx, String key,
+            Iterable<?> values, NodeKeyResolver resolver)
+    {
+        NodeAddData<ImmutableNode> addData =
+                resolver.resolveAddKey(tx.getCurrentData().getRoot(), key, this);
+        if (addData.isAttribute())
+        {
+            addAttributeProperty(tx, addData, values);
+        }
+        else
+        {
+            addNodeProperty(tx, addData, values);
+        }
     }
 
     /**
