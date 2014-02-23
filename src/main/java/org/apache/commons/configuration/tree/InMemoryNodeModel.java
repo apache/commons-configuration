@@ -211,7 +211,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
      * selects exactly one node) or to a newly created node.
      *
      * @param key the key
-     * @param nodes the collection of nodes to be added
+     * @param nodes the collection of nodes to be added (may be <b>null</b>)
      * @param resolver the {@code NodeKeyResolver}
      * @throws IllegalArgumentException if the key references an attribute (of
      *         course, it is not possible to add something to an attribute)
@@ -220,38 +220,41 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
             final Collection<ImmutableNode> nodes,
             final NodeKeyResolver resolver)
     {
-        updateModel(new TransactionInitializer()
+        if (nodes != null && !nodes.isEmpty())
         {
-            public boolean initTransaction(ModelTransaction tx)
+            updateModel(new TransactionInitializer()
             {
-                List<QueryResult<ImmutableNode>> results =
-                        resolver.resolveKey(tx.getCurrentData().getRoot(), key,
-                                InMemoryNodeModel.this);
-                if (results.size() == 1)
+                public boolean initTransaction(ModelTransaction tx)
                 {
-                    if (results.get(0).isAttributeResult())
+                    List<QueryResult<ImmutableNode>> results =
+                            resolver.resolveKey(tx.getCurrentData().getRoot(),
+                                    key, InMemoryNodeModel.this);
+                    if (results.size() == 1)
                     {
-                        throw new IllegalArgumentException(
-                                "New nodes cannot be added to an attribute key: "
-                                        + key);
+                        if (results.get(0).isAttributeResult())
+                        {
+                            throw new IllegalArgumentException(
+                                    "New nodes cannot be added to an attribute key: "
+                                            + key);
+                        }
+                        tx.addAddNodesOperation(results.get(0).getNode(), nodes);
                     }
-                    tx.addAddNodesOperation(results.get(0).getNode(), nodes);
+                    else
+                    {
+                        NodeAddData<ImmutableNode> addData =
+                                resolver.resolveAddKey(tx.getCurrentData()
+                                        .getRoot(), key, InMemoryNodeModel.this);
+                        ImmutableNode newNode =
+                                new ImmutableNode.Builder(nodes.size())
+                                        .name(addData.getNewNodeName())
+                                        .addChildren(nodes).create();
+                        addNodesByAddData(tx, addData,
+                                Collections.singleton(newNode));
+                    }
+                    return true;
                 }
-                else
-                {
-                    NodeAddData<ImmutableNode> addData =
-                            resolver.resolveAddKey(tx.getCurrentData()
-                                    .getRoot(), key, InMemoryNodeModel.this);
-                    ImmutableNode newNode =
-                            new ImmutableNode.Builder(nodes.size())
-                                    .name(addData.getNewNodeName())
-                                    .addChildren(nodes).create();
-                    addNodesByAddData(tx, addData,
-                            Collections.singleton(newNode));
-                }
-                return true;
-            }
-        });
+            });
+        }
     }
 
     /**

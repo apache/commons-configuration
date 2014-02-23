@@ -31,6 +31,7 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1186,5 +1187,41 @@ public class TestInMemoryNodeModel
         ImmutableNode newNode =
                 new ImmutableNode.Builder().name("newNode").create();
         model.addNodes(KEY, Collections.singleton(newNode), resolver);
+    }
+
+    /**
+     * Helper method for testing the behavior of addNodes() if no nodes to be
+     * added are provided.
+     *
+     * @param newNodes the collection with new nodes
+     */
+    private void checkAddNodesNoNodes(Collection<ImmutableNode> newNodes)
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        InMemoryNodeModel model =
+                new InMemoryNodeModel(NodeStructureHelper.ROOT_AUTHORS_TREE);
+        EasyMock.replay(resolver);
+
+        model.addNodes(KEY, newNodes, resolver);
+        assertSame("Model was changed", NodeStructureHelper.ROOT_AUTHORS_TREE,
+                model.getRootNode());
+    }
+
+    /**
+     * Tests an add nodes operation if a null collection is passed in.
+     */
+    @Test
+    public void testAddNodesNullCollection()
+    {
+        checkAddNodesNoNodes(null);
+    }
+
+    /**
+     * Tests an add nodes operation if an empty collection is passed in.
+     */
+    @Test
+    public void testAddNodesEmptyCollection()
+    {
+        checkAddNodesNoNodes(Collections.<ImmutableNode> emptySet());
     }
 }
