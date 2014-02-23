@@ -1134,4 +1134,35 @@ public class TestInMemoryNodeModel
         assertSame("New child 2 not added", newWork2,
                 node.getChildren().get(size - 1));
     }
+
+    /**
+     * Tests whether nodes can be added to a node which has to be created.
+     */
+    @Test
+    public void testAddNodesToNewNode()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        InMemoryNodeModel model =
+                new InMemoryNodeModel(NodeStructureHelper.ROOT_AUTHORS_TREE);
+        final String newAuthor = "Goethe";
+        final String newWork = "Faust";
+        final String newPersona = "Mephisto";
+        EasyMock.expect(
+                resolver.resolveKey(NodeStructureHelper.ROOT_AUTHORS_TREE, KEY,
+                        model)).andReturn(
+                new ArrayList<QueryResult<ImmutableNode>>(0));
+        EasyMock.expect(
+                resolver.resolveAddKey(NodeStructureHelper.ROOT_AUTHORS_TREE,
+                        KEY, model)).andReturn(
+                new NodeAddData<ImmutableNode>(
+                        NodeStructureHelper.ROOT_AUTHORS_TREE, newWork, false,
+                        Arrays.asList(newAuthor)));
+        EasyMock.replay(resolver);
+
+        ImmutableNode personaNode =
+                new ImmutableNode.Builder().name(newPersona).create();
+        model.addNodes(KEY, Collections.singleton(personaNode), resolver);
+        assertSame("Wrong added node", personaNode,
+                nodeForKey(model, newAuthor + "/" + newWork + "/" + newPersona));
+    }
 }

@@ -225,8 +225,22 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
                 List<QueryResult<ImmutableNode>> results =
                         resolver.resolveKey(tx.getCurrentData().getRoot(), key,
                                 InMemoryNodeModel.this);
-                // TODO handle other cases, e.g. empty or ambiguous result set
-                tx.addAddNodesOperation(results.get(0).getNode(), nodes);
+                if (results.size() == 1)
+                {
+                    tx.addAddNodesOperation(results.get(0).getNode(), nodes);
+                }
+                else
+                {
+                    NodeAddData<ImmutableNode> addData =
+                            resolver.resolveAddKey(tx.getCurrentData()
+                                    .getRoot(), key, InMemoryNodeModel.this);
+                    ImmutableNode newNode =
+                            new ImmutableNode.Builder(nodes.size())
+                                    .name(addData.getNewNodeName())
+                                    .addChildren(nodes).create();
+                    addNodesByAddData(tx, addData,
+                            Collections.singleton(newNode));
+                }
                 return true;
             }
         });
@@ -452,6 +466,23 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
     {
         Collection<ImmutableNode> newNodes =
                 createNodesToAdd(addData.getNewNodeName(), values);
+        addNodesByAddData(tx, addData, newNodes);
+    }
+
+    /**
+     * Initializes a transaction to add a collection of nodes as described by a
+     * {@code NodeAddData} object. If necessary, new path nodes are created.
+     * Eventually, the new nodes are added as children to the specified target
+     * node.
+     *
+     * @param tx the transaction
+     * @param addData the {@code NodeAddData}
+     * @param newNodes the collection of new child nodes
+     */
+    private static void addNodesByAddData(ModelTransaction tx,
+            NodeAddData<ImmutableNode> addData,
+            Collection<ImmutableNode> newNodes)
+    {
         if (addData.getPathNodes().isEmpty())
         {
             tx.addAddNodesOperation(addData.getParent(), newNodes);
