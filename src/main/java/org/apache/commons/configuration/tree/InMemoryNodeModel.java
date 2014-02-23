@@ -225,7 +225,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
             public boolean initTransaction(ModelTransaction tx) {
                 TreeData currentStructure = tx.getCurrentData();
                 for (QueryResult<ImmutableNode> result : resolver.resolveKey(
-                        tx.getCurrentData().getRoot(), key, InMemoryNodeModel.this)) {
+                        currentStructure.getRoot(), key, InMemoryNodeModel.this)) {
                     if (result.isAttributeResult()) {
                         tx.addRemoveAttributeOperation(result.getNode(),
                                 result.getAttributeName());
@@ -239,6 +239,34 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
                                 currentStructure.getParent(result.getNode()),
                                 result.getNode());
                     }
+                }
+                return true;
+            }
+        });
+    }
+
+    /**
+     * Clears the value of a property. This method is similar to
+     * {@link #clearTree(String, NodeKeyResolver)}: However, the nodes
+     * referenced by the passed in key are not removed completely, but only
+     * their value is set to <b>null</b>. (If this operation leaves the affected
+     * node in an undefined state, it is indeed removed.)
+     *
+     * @param key the key selecting the properties to be cleared
+     * @param resolver the {@code NodeKeyResolver}
+     */
+    public void clearProperty(final String key, final NodeKeyResolver resolver)
+    {
+        updateModel(new TransactionInitializer()
+        {
+            public boolean initTransaction(ModelTransaction tx)
+            {
+                for (QueryResult<ImmutableNode> result : resolver.resolveKey(tx
+                        .getCurrentData().getRoot(), key,
+                        InMemoryNodeModel.this))
+                {
+                    // TODO handle attribute results
+                    tx.addClearNodeValueOperation(result.getNode());
                 }
                 return true;
             }

@@ -946,4 +946,26 @@ public class TestInMemoryNodeModel
         assertEquals("Not all authors were created", threadCount,
                 indices.size());
     }
+
+    /**
+     * Tests whether a property value can be cleared on a node.
+     */
+    @Test
+    public void testClearPropertyNode()
+    {
+        NodeKeyResolver resolver = EasyMock.createMock(NodeKeyResolver.class);
+        InMemoryNodeModel model =
+                new InMemoryNodeModel(NodeStructureHelper.ROOT_PERSONAE_TREE);
+        final String nodeKey =
+                "Ariel/The Tempest/" + NodeStructureHelper.ELEM_ORG_VALUE;
+        EasyMock.expect(resolver.resolveKey(model.getRootNode(), KEY, model))
+                .andReturn(
+                        Collections.singletonList(QueryResult
+                                .createNodeResult(nodeForKey(model, nodeKey))));
+        EasyMock.replay(resolver);
+
+        model.clearProperty(KEY, resolver);
+        ImmutableNode node = nodeForKey(model, nodeKey);
+        assertNull("Value not cleared", node.getValue());
+    }
 }

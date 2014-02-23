@@ -191,6 +191,17 @@ class ModelTransaction
     }
 
     /**
+     * Adds an operation for clearing the value of a target node.
+     *
+     * @param target the target node
+     */
+    public void addClearNodeValueOperation(ImmutableNode target)
+    {
+        fetchOperations(target, LEVEL_UNKNOWN).addOperation(
+                new ClearNodeValueOperation());
+    }
+
+    /**
      * Executes this transaction resulting in a new {@code TreeData} object. The
      * object returned by this method serves as the definition of a new node
      * structure for the calling model.
@@ -713,6 +724,19 @@ class ModelTransaction
                 Operations operations)
         {
             return target.removeAttribute(attributeName);
+        }
+    }
+
+    /**
+     * A specialized operation class which clears the value of a node.
+     */
+    private class ClearNodeValueOperation extends Operation
+    {
+        @Override
+        protected ImmutableNode apply(ImmutableNode target,
+                Operations operations)
+        {
+            return target.setValue(null);
         }
     }
 
