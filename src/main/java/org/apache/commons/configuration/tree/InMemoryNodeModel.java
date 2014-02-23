@@ -205,6 +205,34 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
     }
 
     /**
+     * Adds a collection of new nodes to this model. This operation corresponds
+     * to the {@code addNodes()} method of the {@code Configuration} interface.
+     * The new nodes are either added to an existing node (if the passed in key
+     * selects exactly one node) or to a newly created node.
+     *
+     * @param key the key
+     * @param nodes the collection of nodes to be added
+     * @param resolver the {@code NodeKeyResolver}
+     */
+    public void addNodes(final String key,
+            final Collection<ImmutableNode> nodes,
+            final NodeKeyResolver resolver)
+    {
+        updateModel(new TransactionInitializer()
+        {
+            public boolean initTransaction(ModelTransaction tx)
+            {
+                List<QueryResult<ImmutableNode>> results =
+                        resolver.resolveKey(tx.getCurrentData().getRoot(), key,
+                                InMemoryNodeModel.this);
+                // TODO handle other cases, e.g. empty or ambiguous result set
+                tx.addAddNodesOperation(results.get(0).getNode(), nodes);
+                return true;
+            }
+        });
+    }
+
+    /**
      * Changes the value of a property. This is a more complex operation as it
      * might involve adding, updating, or deleting nodes and attributes from the
      * model. The object representing the new value is passed to the
@@ -300,10 +328,8 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
      */
     public void clearProperty(final String key, final NodeKeyResolver resolver)
     {
-        updateModel(new TransactionInitializer()
-        {
-            public boolean initTransaction(ModelTransaction tx)
-            {
+        updateModel(new TransactionInitializer() {
+            public boolean initTransaction(ModelTransaction tx) {
                 List<QueryResult<ImmutableNode>> results =
                         resolver.resolveKey(tx.getCurrentData().getRoot(), key,
                                 InMemoryNodeModel.this);
