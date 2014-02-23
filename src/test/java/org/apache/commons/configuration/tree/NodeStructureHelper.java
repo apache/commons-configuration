@@ -84,6 +84,12 @@ public class NodeStructureHelper
     /** Constant for the author attribute. */
     public static final String ATTR_AUTHOR = "author";
 
+    /** Constant for the original value element in the personae tree. */
+    public static final String ELEM_ORG_VALUE = "originalValue";
+
+    /** Constant for the tested attribute. */
+    public static final String ATTR_TESTED = "tested";
+
     /** The root node of the authors tree. */
     public static final ImmutableNode ROOT_AUTHORS_TREE = createAuthorsTree();
 
@@ -268,7 +274,7 @@ public class NodeStructureHelper
      * Creates a tree with a root node whose children are the test personae.
      * Each node represents a person and has an attribute pointing to the author
      * who invented this person. There is a single child node for the associated
-     * work.
+     * work which has again a child and an attribute.
      *
      * @return the root node of the personae tree
      */
@@ -281,9 +287,15 @@ public class NodeStructureHelper
             {
                 for (String person : PERSONAE[author][work])
                 {
+                    ImmutableNode orgValue =
+                            new ImmutableNode.Builder().name(ELEM_ORG_VALUE)
+                                    .value("yes")
+                                    .addAttribute(ATTR_TESTED, Boolean.FALSE)
+                                    .create();
                     ImmutableNode workNode =
-                            new ImmutableNode.Builder().name(
-                                    WORKS[author][work]).create();
+                            new ImmutableNode.Builder(1)
+                                    .name(WORKS[author][work])
+                                    .addChild(orgValue).create();
                     ImmutableNode personNode =
                             new ImmutableNode.Builder(1).name(person)
                                     .addAttribute(ATTR_AUTHOR, AUTHORS[author])
