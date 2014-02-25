@@ -130,9 +130,8 @@ public class TestXPathExpressionEngine
         NodePointerFactory[] factories = JXPathContextReferenceImpl
                 .getNodePointerFactories();
         boolean found = false;
-        for (int i = 0; i < factories.length; i++)
-        {
-            if (factories[i] instanceof ConfigurationNodePointerFactory)
+        for (NodePointerFactory factorie : factories) {
+            if (factorie instanceof ConfigurationNodePointerFactory)
             {
                 found = true;
             }

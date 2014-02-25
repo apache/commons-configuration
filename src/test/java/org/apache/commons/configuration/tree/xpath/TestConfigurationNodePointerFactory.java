@@ -63,9 +63,8 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest
     {
         List<?> nodes = context.selectNodes(CHILD_NAME1);
         assertEquals("Incorrect number of results", 2, nodes.size());
-        for (Iterator<?> it = nodes.iterator(); it.hasNext();)
-        {
-            ConfigurationNode node = (ConfigurationNode) it.next();
+        for (Object name : nodes) {
+            ConfigurationNode node = (ConfigurationNode) name;
             assertEquals("Incorrect node name", CHILD_NAME1, node.getName());
             assertEquals("Incorrect parent node", root, node.getParentNode());
         }

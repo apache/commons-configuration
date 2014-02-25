@@ -1174,9 +1174,8 @@ public class TestHierarchicalConfiguration
     private void checkKeys(String prefix, String[] expected)
     {
         Set<String> values = new HashSet<String>();
-        for(int i = 0; i < expected.length; i++)
-        {
-            values.add((expected[i].startsWith(prefix)) ? expected[i] :  prefix + "." + expected[i]);
+        for (String element : expected) {
+            values.add((element.startsWith(prefix)) ? element :  prefix + "." + element);
         }
 
         Iterator<String> itKeys = config.getKeys(prefix);

@@ -421,9 +421,8 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
     {
         StringBuilder buf = new StringBuilder();
 
-        for (int i = 0; i < DATE_PARSERS.length; i++)
-        {
-            DATE_PARSERS[i].formatComponent(buf, cal);
+        for (DateComponentParser element : DATE_PARSERS) {
+            element.formatComponent(buf, cal);
         }
 
         return buf.toString();

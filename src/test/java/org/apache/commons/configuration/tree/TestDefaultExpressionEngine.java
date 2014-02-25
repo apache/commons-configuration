@@ -527,10 +527,9 @@ public class TestDefaultExpressionEngine
         List<ConfigurationNode> nodes = engine.query(root, key);
         assertEquals("Wrong number of result nodes for key " + key, count,
                 nodes.size());
-        for (Iterator<ConfigurationNode> it = nodes.iterator(); it.hasNext();)
-        {
+        for (ConfigurationNode configurationNode : nodes) {
             assertEquals("Wrong result node for key " + key, name,
-                    it.next().getName());
+                    configurationNode.getName());
         }
         return nodes;
     }

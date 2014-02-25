@@ -115,14 +115,12 @@ public class TestConfigurationDynaBean
             configuration.setProperty(properties[i], values[i]);
         }
 
-        for (int a = 0; a < intArray.length; a++)
-        {
-            configuration.addProperty("intIndexed", new Integer(intArray[a]));
+        for (int element : intArray) {
+            configuration.addProperty("intIndexed", new Integer(element));
         }
 
-        for (int a = 0; a < stringArray.length; a++)
-        {
-            configuration.addProperty("stringIndexed", stringArray[a]);
+        for (String element : stringArray) {
+            configuration.addProperty("stringIndexed", element);
         }
 
         List<String> list = Arrays.asList(stringArray);
@@ -245,9 +243,8 @@ public class TestConfigurationDynaBean
         DynaProperty pd[] = bean.getDynaClass().getDynaProperties();
         assertNotNull("Got descriptors", pd);
         int count[] = new int[properties.length];
-        for (int i = 0; i < pd.length; i++)
-        {
-            String name = pd[i].getName();
+        for (DynaProperty element : pd) {
+            String name = element.getName();
             for (int j = 0; j < properties.length; j++)
             {
                 if (name.equals(properties[j]))

@@ -345,9 +345,8 @@ public class TestXMLBeanDeclaration
             }
         };
         Map<String, Object> nested = decl.getNestedBeanDeclarations();
-        for (int i = 0; i < COMPLEX_PROPS.length; i++)
-        {
-            Object d = nested.get(COMPLEX_PROPS[i]);
+        for (String element : COMPLEX_PROPS) {
+            Object d = nested.get(element);
             assertTrue("Wrong class for bean declaration: " + d,
                     d instanceof XMLBeanDeclarationTestImpl);
         }

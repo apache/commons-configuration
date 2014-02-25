@@ -923,9 +923,8 @@ public class TestPropertiesConfiguration
             String s;
             while ((s = in.readLine()) != null)
             {
-                for (int i = 0; i < separatorTests.length; i++)
-                {
-                    if (separatorTests[i].equals(s))
+                for (String separatorTest : separatorTests) {
+                    if (separatorTest.equals(s))
                     {
                         foundLines.add(s);
                     }

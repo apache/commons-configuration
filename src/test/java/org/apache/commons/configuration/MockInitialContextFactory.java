@@ -141,9 +141,8 @@ public class MockInitialContextFactory implements InitialContextFactory
                     + PROP_NAMES[i];
             bindError(mockCtx, errProp);
         }
-        for (int i = 0; i < MISSING_NAMES.length; i++)
-        {
-            bindError(mockCtx, MISSING_NAMES[i]);
+        for (String element : MISSING_NAMES) {
+            bindError(mockCtx, element);
         }
         mockCtx.matchAndReturn("hashCode", System.identityHashCode(mockCtx.proxy()));
 

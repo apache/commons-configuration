@@ -1540,9 +1540,8 @@ public class TestXMLConfiguration
             assertTrue("Property not found", config.getProperty("test.short") != null);
         }
 
-        for (int i = 0; i < testThreads.length; ++i)
-        {
-            testThreads[i].join();
+        for (Thread testThread : testThreads) {
+            testThread.join();
         }
     }
 
