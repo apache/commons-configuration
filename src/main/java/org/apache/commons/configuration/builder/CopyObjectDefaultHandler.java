@@ -92,6 +92,7 @@ public class CopyObjectDefaultHandler implements
      * @throws ConfigurationRuntimeException if an exception occurs
      * @see BuilderParameters#getParameters()
      */
+    @Override
     public void initializeDefaults(Object parameters)
     {
         try

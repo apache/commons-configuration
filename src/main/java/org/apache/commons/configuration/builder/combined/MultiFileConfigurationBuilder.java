@@ -109,6 +109,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
     private final BuilderListener managedBuilderDelegationListener =
             new BuilderListener()
             {
+                @Override
                 public void builderReset(
                         ConfigurationBuilder<? extends Configuration> builder)
                 {

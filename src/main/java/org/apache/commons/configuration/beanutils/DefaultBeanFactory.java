@@ -109,6 +109,7 @@ public class DefaultBeanFactory implements BeanFactory
      * @return the new bean instance
      * @throws Exception if an error occurs
      */
+    @Override
     public Object createBean(BeanCreationContext bcc) throws Exception
     {
         Object result = createBeanInstance(bcc);
@@ -122,6 +123,7 @@ public class DefaultBeanFactory implements BeanFactory
      *
      * @return the default bean class
      */
+    @Override
     public Class<?> getDefaultBeanClass()
     {
         return null;

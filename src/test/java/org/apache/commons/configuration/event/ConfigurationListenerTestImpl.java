@@ -53,6 +53,7 @@ public class ConfigurationListenerTestImpl implements ConfigurationListener
         events = new LinkedList<ConfigurationEvent>();
     }
 
+    @Override
     public void configurationChanged(ConfigurationEvent event)
     {
         events.add(event);

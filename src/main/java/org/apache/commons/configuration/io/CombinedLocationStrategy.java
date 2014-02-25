@@ -96,6 +96,7 @@ public class CombinedLocationStrategy implements FileLocationStrategy
      * {@inheritDoc} This implementation tries to locate the file by delegating
      * to the managed sub strategies.
      */
+    @Override
     public URL locate(FileSystem fileSystem, FileLocator locator)
     {
         for (FileLocationStrategy sub : getSubStrategies())

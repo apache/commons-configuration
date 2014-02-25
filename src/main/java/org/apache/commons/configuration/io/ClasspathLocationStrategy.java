@@ -40,6 +40,7 @@ public class ClasspathLocationStrategy implements FileLocationStrategy
      * {@inheritDoc} This implementation looks up the locator's file name as a
      * resource on the class path.
      */
+    @Override
     public URL locate(FileSystem fileSystem, FileLocator locator)
     {
         return StringUtils.isEmpty(locator.getFileName()) ? null

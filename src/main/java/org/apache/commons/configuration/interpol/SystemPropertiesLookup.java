@@ -48,6 +48,7 @@ public class SystemPropertiesLookup implements Lookup
     private final StrLookup<String> sysLookup = StrLookup
             .systemPropertiesLookup();
 
+    @Override
     public Object lookup(String variable)
     {
         return sysLookup.lookup(variable);

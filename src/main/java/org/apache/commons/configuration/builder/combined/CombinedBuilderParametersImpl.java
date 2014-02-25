@@ -142,6 +142,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      * @param builder the definition {@code ConfigurationBuilder}
      * @return a reference to this object for method chaining
      */
+    @Override
     public CombinedBuilderParametersImpl setDefinitionBuilder(
             ConfigurationBuilder<? extends HierarchicalConfiguration> builder)
     {
@@ -161,6 +162,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      * @return a reference to this object for method chaining
      * @throws IllegalArgumentException if a required parameter is missing
      */
+    @Override
     public CombinedBuilderParametersImpl registerProvider(String tagName,
             ConfigurationBuilderProvider provider)
     {
@@ -282,6 +284,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      * @param path the base path for resolving relative file names
      * @return a reference to this object for method chaining
      */
+    @Override
     public CombinedBuilderParametersImpl setBasePath(String path)
     {
         basePath = path;
@@ -312,6 +315,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      *        builder
      * @return a reference to this object for method chaining
      */
+    @Override
     public CombinedBuilderParametersImpl setDefinitionBuilderParameters(
             BuilderParameters params)
     {
@@ -357,6 +361,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      * demand) is overridden. This also removes all default handlers registered
      * before!
      */
+    @Override
     public CombinedBuilderParametersImpl setChildDefaultParametersManager(
             DefaultParametersManager manager)
     {
@@ -369,6 +374,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      * internal {@link DefaultParametersManager} instance. If none was set, a
      * new instance is created now.
      */
+    @Override
     public <D> CombinedBuilderParametersImpl registerChildDefaultsHandler(
             Class<D> paramClass, DefaultParametersHandler<? super D> handler)
     {
@@ -382,6 +388,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      * internal {@link DefaultParametersManager} instance. If none was set, a
      * new instance is created now.
      */
+    @Override
     public <D> CombinedBuilderParametersImpl registerChildDefaultsHandler(
             Class<D> paramClass, DefaultParametersHandler<? super D> handler,
             Class<?> startClass)

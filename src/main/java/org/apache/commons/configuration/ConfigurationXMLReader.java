@@ -79,6 +79,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @throws IOException if no configuration was specified
      * @throws SAXException if an error occurs during parsing
      */
+    @Override
     public void parse(String systemId) throws IOException, SAXException
     {
         parseConfiguration();
@@ -92,6 +93,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @throws IOException if no configuration was specified
      * @throws SAXException if an error occurs during parsing
      */
+    @Override
     public void parse(InputSource input) throws IOException, SAXException
     {
         parseConfiguration();
@@ -103,6 +105,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @param name the name of the feature
      * @return always <b>false</b> (no features are supported)
      */
+    @Override
     public boolean getFeature(String name)
     {
         return false;
@@ -114,6 +117,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @param name the name of the feature to be set
      * @param value the value of the feature
      */
+    @Override
     public void setFeature(String name, boolean value)
     {
     }
@@ -123,6 +127,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      *
      * @return the content handler
      */
+    @Override
     public ContentHandler getContentHandler()
     {
         return contentHandler;
@@ -134,6 +139,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      *
      * @param handler the content handler
      */
+    @Override
     public void setContentHandler(ContentHandler handler)
     {
         contentHandler = handler;
@@ -145,6 +151,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      *
      * @return the DTD handler
      */
+    @Override
     public DTDHandler getDTDHandler()
     {
         return null;
@@ -155,6 +162,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      *
      * @param handler the handler to be set
      */
+    @Override
     public void setDTDHandler(DTDHandler handler)
     {
     }
@@ -165,6 +173,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      *
      * @return the entity resolver
      */
+    @Override
     public EntityResolver getEntityResolver()
     {
         return null;
@@ -175,6 +184,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      *
      * @param resolver the entity resolver
      */
+    @Override
     public void setEntityResolver(EntityResolver resolver)
     {
     }
@@ -185,6 +195,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      *
      * @return the error handler
      */
+    @Override
     public ErrorHandler getErrorHandler()
     {
         return null;
@@ -195,6 +206,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      *
      * @param handler the error handler
      */
+    @Override
     public void setErrorHandler(ErrorHandler handler)
     {
     }
@@ -206,6 +218,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @param name the name of the requested property
      * @return the property value
      */
+    @Override
     public Object getProperty(String name)
     {
         return null;
@@ -218,6 +231,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @param name the property name
      * @param value the property value
      */
+    @Override
     public void setProperty(String name, Object value)
     {
     }

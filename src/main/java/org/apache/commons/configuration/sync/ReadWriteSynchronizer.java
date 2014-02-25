@@ -66,21 +66,25 @@ public class ReadWriteSynchronizer implements Synchronizer
         this(null);
     }
 
+    @Override
     public void beginRead()
     {
         lock.readLock().lock();
     }
 
+    @Override
     public void endRead()
     {
         lock.readLock().unlock();
     }
 
+    @Override
     public void beginWrite()
     {
         lock.writeLock().lock();
     }
 
+    @Override
     public void endWrite()
     {
         lock.writeLock().unlock();

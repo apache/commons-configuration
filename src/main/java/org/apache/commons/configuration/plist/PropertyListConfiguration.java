@@ -187,6 +187,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
         }
     }
 
+    @Override
     public void read(Reader in) throws ConfigurationException
     {
         PropertyListParser parser = new PropertyListParser(in);
@@ -201,6 +202,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
         }
     }
 
+    @Override
     public void write(Writer out) throws ConfigurationException
     {
         PrintWriter writer = new PrintWriter(out);

@@ -60,6 +60,7 @@ public class ConfigurationDynaClass implements DynaClass
         this.configuration = configuration;
     }
 
+    @Override
     public DynaProperty getDynaProperty(String name)
     {
         if (LOG.isTraceEnabled())
@@ -118,6 +119,7 @@ public class ConfigurationDynaClass implements DynaClass
         }
     }
 
+    @Override
     public DynaProperty[] getDynaProperties()
     {
         if (LOG.isTraceEnabled())
@@ -144,11 +146,13 @@ public class ConfigurationDynaClass implements DynaClass
         return propertyArray;
     }
 
+    @Override
     public String getName()
     {
         return ConfigurationDynaBean.class.getName();
     }
 
+    @Override
     public DynaBean newInstance() throws IllegalAccessException, InstantiationException
     {
         return new ConfigurationDynaBean(configuration);

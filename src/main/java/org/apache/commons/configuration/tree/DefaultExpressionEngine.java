@@ -165,6 +165,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param key the key
      * @return a list with the matching nodes
      */
+    @Override
     public List<ConfigurationNode> query(ConfigurationNode root, String key)
     {
         List<ConfigurationNode> nodes = new LinkedList<ConfigurationNode>();
@@ -184,6 +185,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param parentKey the key of this node's parent
      * @return the key for the given node
      */
+    @Override
     public String nodeKey(ConfigurationNode node, String parentKey)
     {
         if (parentKey == null)
@@ -295,6 +297,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param key the key of the new property
      * @return a data object with information needed for the add operation
      */
+    @Override
     public NodeAddData prepareAdd(ConfigurationNode root, String key)
     {
         DefaultConfigurationKey.KeyIterator it = new DefaultConfigurationKey(

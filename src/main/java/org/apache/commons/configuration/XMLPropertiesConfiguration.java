@@ -135,6 +135,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
         this.header = header;
     }
 
+    @Override
     public void read(Reader in) throws ConfigurationException
     {
         SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -148,6 +149,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
             XMLReader xmlReader = parser.getXMLReader();
             xmlReader.setEntityResolver(new EntityResolver()
             {
+                @Override
                 public InputSource resolveEntity(String publicId, String systemId)
                 {
                     return new InputSource(getClass().getClassLoader().getResourceAsStream("properties.dtd"));
@@ -202,6 +204,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
         }
     }
 
+    @Override
     public void write(Writer out) throws ConfigurationException
     {
         PrintWriter writer = new PrintWriter(out);
@@ -319,6 +322,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
      *
      * @param locator the associated {@code FileLocator}
      */
+    @Override
     public void initFileLocator(FileLocator locator)
     {
         this.locator = locator;

@@ -523,6 +523,7 @@ public class TestBeanHelper
         /** A counter for the created instances. */
         private int createBeanCount;
 
+        @Override
         public Object createBean(BeanCreationContext bcc) throws Exception
         {
             createBeanCount++;
@@ -552,6 +553,7 @@ public class TestBeanHelper
          * Returns the default class, but only if the supportsDefaultClass flag
          * is set.
          */
+        @Override
         public Class<?> getDefaultBeanClass()
         {
             return supportsDefaultClass ? BeanCreationTestBean.class : null;

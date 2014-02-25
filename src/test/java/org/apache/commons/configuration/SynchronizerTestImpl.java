@@ -35,6 +35,7 @@ public class SynchronizerTestImpl implements Synchronizer
     /**
      * {@inheritDoc} Registers this invocation.
      */
+    @Override
     public void beginRead()
     {
         append(Methods.BEGIN_READ);
@@ -43,6 +44,7 @@ public class SynchronizerTestImpl implements Synchronizer
     /**
      * {@inheritDoc} Registers this invocation.
      */
+    @Override
     public void endRead()
     {
         append(Methods.END_READ);
@@ -51,6 +53,7 @@ public class SynchronizerTestImpl implements Synchronizer
     /**
      * {@inheritDoc} Registers this invocation.
      */
+    @Override
     public void beginWrite()
     {
         append(Methods.BEGIN_WRITE);
@@ -59,6 +62,7 @@ public class SynchronizerTestImpl implements Synchronizer
     /**
      * {@inheritDoc} Registers this invocation.
      */
+    @Override
     public void endWrite()
     {
         append(Methods.END_WRITE);

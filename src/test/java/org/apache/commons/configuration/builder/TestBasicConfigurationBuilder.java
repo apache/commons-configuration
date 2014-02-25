@@ -658,6 +658,7 @@ public class TestBasicConfigurationBuilder
          * This tests whether the method is called after other properties have
          * been set.
          */
+        @Override
         public void initialize()
         {
             initProperty =

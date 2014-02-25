@@ -488,16 +488,19 @@ public class TestDefaultConfigurationNode
             maxCalls = maxNumberOfVisits;
         }
 
+        @Override
         public void visitBeforeChildren(ConfigurationNode node)
         {
             beforeCalls++;
         }
 
+        @Override
         public void visitAfterChildren(ConfigurationNode node)
         {
             afterCalls++;
         }
 
+        @Override
         public boolean terminate()
         {
             return beforeCalls >= maxCalls;

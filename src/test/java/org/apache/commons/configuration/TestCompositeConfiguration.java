@@ -920,6 +920,7 @@ public class TestCompositeConfiguration
         /** The number of received events.*/
         int eventCount;
 
+        @Override
         public void configurationChanged(ConfigurationEvent event)
         {
             eventCount++;

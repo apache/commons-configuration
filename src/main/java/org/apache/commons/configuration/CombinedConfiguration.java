@@ -634,6 +634,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      *
      * @param event the update event
      */
+    @Override
     public void configurationChanged(ConfigurationEvent event)
     {
         if (event.isBeforeUpdate())

@@ -168,6 +168,7 @@ public class XPathExpressionEngine implements ExpressionEngine
      * @param key the query to be executed
      * @return a list with the nodes that are selected by the query
      */
+    @Override
     public List<ConfigurationNode> query(ConfigurationNode root, String key)
     {
         if (StringUtils.isEmpty(key))
@@ -202,6 +203,7 @@ public class XPathExpressionEngine implements ExpressionEngine
      * @param parentKey the key of the parent node
      * @return the key for the given node
      */
+    @Override
     public String nodeKey(ConfigurationNode node, String parentKey)
     {
         if (parentKey == null)
@@ -242,6 +244,7 @@ public class XPathExpressionEngine implements ExpressionEngine
      * path of the new node
      * @return a data object to be evaluated by the calling configuration object
      */
+    @Override
     public NodeAddData prepareAdd(ConfigurationNode root, String key)
     {
         if (key == null)

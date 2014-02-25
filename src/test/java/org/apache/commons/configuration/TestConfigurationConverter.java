@@ -153,6 +153,7 @@ public class TestConfigurationConverter
         src.getList(EasyMock.anyObject(String.class));
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>()
         {
+            @Override
             public Object answer() throws Throwable
             {
                 String key = (String) EasyMock.getCurrentArguments()[0];

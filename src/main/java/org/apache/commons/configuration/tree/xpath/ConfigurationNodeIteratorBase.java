@@ -73,6 +73,7 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
      *
      * @return the position
      */
+    @Override
     public int getPosition()
     {
         return position;
@@ -84,6 +85,7 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
      * @param pos the new position
      * @return a flag if this is a valid position
      */
+    @Override
     public boolean setPosition(int pos)
     {
         position = pos;
@@ -95,6 +97,7 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
      *
      * @return the current pointer in this iteration
      */
+    @Override
     public NodePointer getNodePointer()
     {
         if (getPosition() < 1 && !setPosition(1))

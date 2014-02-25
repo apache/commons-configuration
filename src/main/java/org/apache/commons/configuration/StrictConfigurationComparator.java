@@ -46,6 +46,7 @@ public class StrictConfigurationComparator implements ConfigurationComparator
      *         found in a and for each key in a, the corresponding value
      *         is the sale in for the same key in b
      */
+    @Override
     public boolean compare(Configuration a, Configuration b)
     {
         if (a == null && b == null)

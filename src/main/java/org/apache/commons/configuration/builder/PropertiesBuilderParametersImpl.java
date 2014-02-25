@@ -52,12 +52,14 @@ public class PropertiesBuilderParametersImpl extends
     /** The key for the IO factory property. */
     private static final String PROP_IO_FACTORY = "iOFactory";
 
+    @Override
     public PropertiesBuilderParametersImpl setIncludesAllowed(boolean f)
     {
         storeProperty(PROP_INCLUDES_ALLOWED, Boolean.valueOf(f));
         return this;
     }
 
+    @Override
     public PropertiesBuilderParametersImpl setLayout(
             PropertiesConfigurationLayout layout)
     {
@@ -65,6 +67,7 @@ public class PropertiesBuilderParametersImpl extends
         return this;
     }
 
+    @Override
     public PropertiesBuilderParametersImpl setIOFactory(IOFactory factory)
     {
         storeProperty(PROP_IO_FACTORY, factory);

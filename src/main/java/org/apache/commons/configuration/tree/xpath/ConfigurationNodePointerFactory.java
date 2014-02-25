@@ -43,6 +43,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
      *
      * @return this order's factory
      */
+    @Override
     public int getOrder()
     {
         return CONFIGURATION_NODE_POINTER_FACTORY_ORDER;
@@ -57,6 +58,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
      * @param locale the locale
      * @return a pointer for a configuration node if the bean is such a node
      */
+    @Override
     public NodePointer createNodePointer(QName name, Object bean, Locale locale)
     {
         if (bean instanceof ConfigurationNode)
@@ -76,6 +78,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
      * @param bean the bean
      * @return a pointer for a configuration node if the bean is such a node
      */
+    @Override
     public NodePointer createNodePointer(NodePointer parent, QName name,
             Object bean)
     {

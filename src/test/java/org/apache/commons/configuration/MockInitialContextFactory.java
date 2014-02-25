@@ -82,6 +82,7 @@ public class MockInitialContextFactory implements InitialContextFactory
      * @param env the environment
      * @return the context mock
      */
+    @Override
     public Context getInitialContext(@SuppressWarnings("rawtypes") Hashtable env) throws NamingException
     {
         boolean useCycles = env.containsKey(PROP_CYCLES);

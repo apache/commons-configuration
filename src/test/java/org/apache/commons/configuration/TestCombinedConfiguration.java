@@ -984,6 +984,7 @@ public class TestCombinedConfiguration
 
         int otherEvents;
 
+        @Override
         public void configurationChanged(ConfigurationEvent event)
         {
             if (event.getType() == CombinedConfiguration.EVENT_COMBINED_INVALIDATE)

@@ -130,16 +130,19 @@ public class ConfigurationMap extends AbstractMap<Object, Object>
                 this.key = key;
             }
 
+            @Override
             public Object getKey()
             {
                 return key;
             }
 
+            @Override
             public Object getValue()
             {
                 return configuration.getProperty((String) key);
             }
 
+            @Override
             public Object setValue(Object value)
             {
                 Object old = getValue();
@@ -161,16 +164,19 @@ public class ConfigurationMap extends AbstractMap<Object, Object>
                 keys = configuration.getKeys();
             }
 
+            @Override
             public boolean hasNext()
             {
                 return keys.hasNext();
             }
 
+            @Override
             public Map.Entry<Object, Object> next()
             {
                 return new Entry(keys.next());
             }
 
+            @Override
             public void remove()
             {
                 keys.remove();

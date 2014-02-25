@@ -147,6 +147,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
      * refresh delay is taken into account, too; a check is only performed if at
      * least this time has passed since the last check.
      */
+    @Override
     public boolean isReloadingRequired()
     {
         long now = System.currentTimeMillis();
@@ -180,6 +181,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
      * modification date with the current modification date of the monitored
      * file. So the next change is detected when this file is changed again.
      */
+    @Override
     public void reloadingPerformed()
     {
         updateLastModified(getLastModificationDate());

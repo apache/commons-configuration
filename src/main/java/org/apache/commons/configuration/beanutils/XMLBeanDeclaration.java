@@ -330,6 +330,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      *
      * @return the name of the bean factory
      */
+    @Override
     public String getBeanFactoryName()
     {
         return getConfiguration().getString(ATTR_BEAN_FACTORY);
@@ -341,6 +342,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      *
      * @return the parameter for the bean factory
      */
+    @Override
     public Object getBeanFactoryParameter()
     {
         return getConfiguration().getProperty(ATTR_FACTORY_PARAM);
@@ -352,6 +354,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      *
      * @return the name of the bean's class
      */
+    @Override
     public String getBeanClassName()
     {
         return getConfiguration().getString(ATTR_BEAN_CLASS, getDefaultBeanClassName());
@@ -363,6 +366,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      *
      * @return a map with the bean's properties
      */
+    @Override
     public Map<String, Object> getBeanProperties()
     {
         Map<String, Object> props = new HashMap<String, Object>();
@@ -384,6 +388,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      *
      * @return a map with bean declarations for complex properties
      */
+    @Override
     public Map<String, Object> getNestedBeanDeclarations()
     {
         Map<String, Object> nested = new HashMap<String, Object>();
@@ -427,6 +432,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * interpreted as a simple value. If no nested constructor argument
      * declarations are found, result is an empty collection.
      */
+    @Override
     public Collection<ConstructorArg> getConstructorArgs()
     {
         Collection<ConstructorArg> args = new LinkedList<ConstructorArg>();

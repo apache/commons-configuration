@@ -225,6 +225,7 @@ public class InterpolationTestHelper
         ConfigurationInterpolator interpol = config.getInterpolator();
         interpol.registerLookup("echo", new Lookup()
         {
+            @Override
             public Object lookup(String varName)
             {
                 return "Value of variable " + varName;

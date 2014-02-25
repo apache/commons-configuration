@@ -78,26 +78,31 @@ public class TestDefaultBeanFactory
         {
             private final BeanHelper beanHelper = new BeanHelper();
 
+            @Override
             public void initBean(Object bean, BeanDeclaration data)
             {
                 beanHelper.initBean(bean, data);
             }
 
+            @Override
             public Object getParameter()
             {
                 return null;
             }
 
+            @Override
             public BeanDeclaration getBeanDeclaration()
             {
                 return decl;
             }
 
+            @Override
             public Class<?> getBeanClass()
             {
                 return cls;
             }
 
+            @Override
             public Object createBean(BeanDeclaration data)
             {
                 return beanHelper.createBean(data);

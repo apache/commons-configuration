@@ -95,6 +95,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration
         MapConfiguration config = (MapConfiguration) getConfiguration();
         config.addConfigurationListener(new ConfigurationListener()
         {
+            @Override
             public void configurationChanged(ConfigurationEvent event)
             {
                 // Just a dummy

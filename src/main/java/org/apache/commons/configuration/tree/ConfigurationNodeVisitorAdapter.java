@@ -40,6 +40,7 @@ public class ConfigurationNodeVisitorAdapter implements
      *
      * @param node the node
      */
+    @Override
     public void visitBeforeChildren(ConfigurationNode node)
     {
     }
@@ -49,6 +50,7 @@ public class ConfigurationNodeVisitorAdapter implements
      *
      * @param node the node
      */
+    @Override
     public void visitAfterChildren(ConfigurationNode node)
     {
     }
@@ -58,6 +60,7 @@ public class ConfigurationNodeVisitorAdapter implements
      *
      * @return the terminate flag
      */
+    @Override
     public boolean terminate()
     {
         return false;

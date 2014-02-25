@@ -99,6 +99,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @return the name of this node
      */
+    @Override
     public String getName()
     {
         return name;
@@ -109,6 +110,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @param name the new name
      */
+    @Override
     public void setName(String name)
     {
         checkState();
@@ -120,6 +122,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @return the value of this node
      */
+    @Override
     public Object getValue()
     {
         return value;
@@ -130,6 +133,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @param val the value of this node
      */
+    @Override
     public void setValue(Object val)
     {
         value = val;
@@ -140,6 +144,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @return the reference
      */
+    @Override
     public Object getReference()
     {
         return reference;
@@ -150,6 +155,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @param reference the reference object
      */
+    @Override
     public void setReference(Object reference)
     {
         this.reference = reference;
@@ -160,6 +166,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @return the parent node or <b>null </b> if this is the root
      */
+    @Override
     public ConfigurationNode getParentNode()
     {
         return parent;
@@ -170,6 +177,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @param parent the parent of this node
      */
+    @Override
     public void setParentNode(ConfigurationNode parent)
     {
         this.parent = parent;
@@ -180,6 +188,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @param child the new child
      */
+    @Override
     public void addChild(ConfigurationNode child)
     {
         children.addNode(child);
@@ -192,6 +201,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @return a list with all child nodes
      */
+    @Override
     public List<ConfigurationNode> getChildren()
     {
         return children.getSubNodes();
@@ -202,6 +212,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @return the number of all children
      */
+    @Override
     public int getChildrenCount()
     {
         return children.getSubNodes().size();
@@ -213,6 +224,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      * @param name the name; can be <b>null </b>, then all children are returned
      * @return a list of all children with the given name
      */
+    @Override
     public List<ConfigurationNode> getChildren(String name)
     {
         return children.getSubNodes(name);
@@ -225,6 +237,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      * children is returned
      * @return the number of child nodes with this name
      */
+    @Override
     public int getChildrenCount(String name)
     {
         return children.getSubNodes(name).size();
@@ -236,6 +249,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      * @param index the index (0-based)
      * @return the child with this index
      */
+    @Override
     public ConfigurationNode getChild(int index)
     {
         return children.getNode(index);
@@ -247,6 +261,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      * @param child the node to be removed
      * @return a flag if a node was removed
      */
+    @Override
     public boolean removeChild(ConfigurationNode child)
     {
         return children.removeNode(child);
@@ -258,6 +273,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      * @param childName the name of the children to be removed
      * @return a flag if at least one child node was removed
      */
+    @Override
     public boolean removeChild(String childName)
     {
         return children.removeNodes(childName);
@@ -266,6 +282,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
     /**
      * Removes all child nodes of this node.
      */
+    @Override
     public void removeChildren()
     {
         children.clear();
@@ -276,6 +293,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @return a flag if this is an attribute node
      */
+    @Override
     public boolean isAttribute()
     {
         return attribute;
@@ -287,6 +305,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @param f the attribute flag
      */
+    @Override
     public void setAttribute(boolean f)
     {
         checkState();
@@ -298,6 +317,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @param attr the attribute to be added
      */
+    @Override
     public void addAttribute(ConfigurationNode attr)
     {
         attributes.addNode(attr);
@@ -311,6 +331,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @return the attribute list, never <b>null </b>
      */
+    @Override
     public List<ConfigurationNode> getAttributes()
     {
         return attributes.getSubNodes();
@@ -321,6 +342,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @return the number of attributes
      */
+    @Override
     public int getAttributeCount()
     {
         return attributes.getSubNodes().size();
@@ -332,6 +354,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      * @param name the attribute's name
      * @return all attributes with this name
      */
+    @Override
     public List<ConfigurationNode> getAttributes(String name)
     {
         return attributes.getSubNodes(name);
@@ -343,6 +366,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      * @param name the name
      * @return the number of attributes with this name
      */
+    @Override
     public int getAttributeCount(String name)
     {
         return getAttributes(name).size();
@@ -354,6 +378,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      * @param node the attribute node to be removed
      * @return a flag if the attribute could be removed
      */
+    @Override
     public boolean removeAttribute(ConfigurationNode node)
     {
         return attributes.removeNode(node);
@@ -365,6 +390,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      * @param name the name
      * @return a flag if at least one attribute was removed
      */
+    @Override
     public boolean removeAttribute(String name)
     {
         return attributes.removeNodes(name);
@@ -376,6 +402,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      * @param index the index (0-based)
      * @return the attribute with this index
      */
+    @Override
     public ConfigurationNode getAttribute(int index)
     {
         return attributes.getNode(index);
@@ -384,6 +411,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
     /**
      * Removes all attributes of this node.
      */
+    @Override
     public void removeAttributes()
     {
         attributes.clear();
@@ -395,6 +423,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @return a flag whether this node is defined
      */
+    @Override
     public boolean isDefined()
     {
         return getValue() != null || getChildrenCount() > 0
@@ -406,6 +435,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @param visitor the visitor
      */
+    @Override
     public void visit(ConfigurationNodeVisitor visitor)
     {
         if (visitor == null)

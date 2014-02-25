@@ -441,11 +441,13 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
         getConfig().clearErrorListeners();
     }
 
+    @Override
     public void write(Writer writer) throws ConfigurationException, IOException
     {
         fetchFileBased().write(writer);
     }
 
+    @Override
     public void read(Reader reader) throws ConfigurationException, IOException
     {
         fetchFileBased().read(reader);

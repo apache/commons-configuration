@@ -352,6 +352,7 @@ public class TestSubnodeConfiguration
         ConfigurationInterpolator interpolator = parent.getInterpolator();
         interpolator.registerLookup("brackets", new Lookup(){
 
+            @Override
             public String lookup(String key) {
                 return "(" + key +")";
             }
@@ -611,6 +612,7 @@ public class TestSubnodeConfiguration
         /** Stores the events received.*/
         final List<ConfigurationEvent> events = new ArrayList<ConfigurationEvent>();
 
+        @Override
         public void configurationChanged(ConfigurationEvent event)
         {
             events.add(event);

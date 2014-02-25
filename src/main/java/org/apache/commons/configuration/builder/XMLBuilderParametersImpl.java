@@ -59,6 +59,7 @@ public class XMLBuilderParametersImpl extends HierarchicalBuilderParametersImpl
     /** The key for the schema validation flag. */
     private static final String PROP_SCHEMA_VALIDATION = "schemaValidation";
 
+    @Override
     public XMLBuilderParametersImpl setDocumentBuilder(
             DocumentBuilder docBuilder)
     {
@@ -66,6 +67,7 @@ public class XMLBuilderParametersImpl extends HierarchicalBuilderParametersImpl
         return this;
     }
 
+    @Override
     public XMLBuilderParametersImpl setEntityResolver(EntityResolver resolver)
     {
         storeProperty(PROP_ENTITY_RESOLVER, resolver);
@@ -83,24 +85,28 @@ public class XMLBuilderParametersImpl extends HierarchicalBuilderParametersImpl
         return (EntityResolver) fetchProperty(PROP_ENTITY_RESOLVER);
     }
 
+    @Override
     public XMLBuilderParametersImpl setPublicID(String pubID)
     {
         storeProperty(PROP_PUBLIC_ID, pubID);
         return this;
     }
 
+    @Override
     public XMLBuilderParametersImpl setSystemID(String sysID)
     {
         storeProperty(PROP_SYSTEM_ID, sysID);
         return this;
     }
 
+    @Override
     public XMLBuilderParametersImpl setValidating(boolean f)
     {
         storeProperty(PROP_VALIDATING, Boolean.valueOf(f));
         return this;
     }
 
+    @Override
     public XMLBuilderParametersImpl setSchemaValidation(boolean f)
     {
         storeProperty(PROP_SCHEMA_VALIDATION, Boolean.valueOf(f));

@@ -177,6 +177,7 @@ public class TestDefaultParametersManager
         manager.registerDefaultsHandler(XMLBuilderParameters.class,
                 new DefaultParametersHandler<XMLBuilderParameters>()
                 {
+                    @Override
                     public void initializeDefaults(
                             XMLBuilderParameters parameters)
                     {
@@ -259,6 +260,7 @@ public class TestDefaultParametersManager
     private static class FileBasedDefaultsHandler implements
             DefaultParametersHandler<FileBasedBuilderParameters>
     {
+        @Override
         public void initializeDefaults(FileBasedBuilderParameters parameters)
         {
             parameters.setThrowExceptionOnMissing(true)

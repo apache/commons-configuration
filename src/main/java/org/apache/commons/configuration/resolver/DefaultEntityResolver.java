@@ -62,6 +62,7 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry
      * @param entityURL The URL to use for reading this Entity
      * @throws IllegalArgumentException if the public ID is undefined
      */
+    @Override
     public void registerEntityId(String publicId, URL entityURL)
     {
         if (publicId == null)
@@ -82,6 +83,7 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry
      * @return an input source for the specified entity
      * @throws org.xml.sax.SAXException if a parsing exception occurs
      */
+    @Override
     public InputSource resolveEntity(String publicId, String systemId)
             throws SAXException
     {
@@ -123,6 +125,7 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry
      *
      * @return a map with the registered entity IDs
      */
+    @Override
     public Map<String, URL> getRegisteredEntities()
     {
         return registeredEntities;

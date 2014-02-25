@@ -52,6 +52,7 @@ public class EnvironmentLookup implements Lookup
      * @param key the key to lookup
      * @return the value of this key or <b>null</b> if it cannot be resolved
      */
+    @Override
     public String lookup(String key)
     {
         return System.getenv(key);

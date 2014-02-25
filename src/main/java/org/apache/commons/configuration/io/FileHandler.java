@@ -132,18 +132,22 @@ public class FileHandler
     private static final SynchronizerSupport DUMMY_SYNC_SUPPORT =
             new SynchronizerSupport()
             {
+                @Override
                 public void unlock(LockMode mode)
                 {
                 }
 
+                @Override
                 public void setSynchronizer(Synchronizer sync)
                 {
                 }
 
+                @Override
                 public void lock(LockMode mode)
                 {
                 }
 
+                @Override
                 public Synchronizer getSynchronizer()
                 {
                     return NoOpSynchronizer.INSTANCE;

@@ -71,6 +71,7 @@ public class ConfigurationLookup implements Lookup
      * associated configuration. The return value is directly returned. Note
      * that this may be a complex object, e.g. a collection or an array.
      */
+    @Override
     public Object lookup(String variable)
     {
         return getConfiguration().getProperty(variable);

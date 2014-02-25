@@ -60,21 +60,25 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration
     {
         private Properties parameters = new Properties();
 
+        @Override
         public String getFilterName()
         {
             return null;
         }
 
+        @Override
         public ServletContext getServletContext()
         {
             return null;
         }
 
+        @Override
         public String getInitParameter(String key)
         {
             return parameters.getProperty(key);
         }
 
+        @Override
         public Enumeration<?> getInitParameterNames()
         {
             return parameters.keys();

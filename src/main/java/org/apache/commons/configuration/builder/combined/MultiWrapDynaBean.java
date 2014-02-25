@@ -87,22 +87,26 @@ class MultiWrapDynaBean implements DynaBean
      * objects used internally by this class. Therefore, just an exception is
      * thrown.
      */
+    @Override
     public boolean contains(String name, String key)
     {
         throw new UnsupportedOperationException(
                 "contains() operation not supported!");
     }
 
+    @Override
     public Object get(String name)
     {
         return fetchBean(name).get(name);
     }
 
+    @Override
     public Object get(String name, int index)
     {
         return fetchBean(name).get(name, index);
     }
 
+    @Override
     public Object get(String name, String key)
     {
         return fetchBean(name).get(name, key);
@@ -112,6 +116,7 @@ class MultiWrapDynaBean implements DynaBean
      * {@inheritDoc} This implementation returns an instance of
      * {@code MultiWrapDynaClass}.
      */
+    @Override
     public DynaClass getDynaClass()
     {
         return dynaClass;
@@ -122,22 +127,26 @@ class MultiWrapDynaBean implements DynaBean
      * objects used internally by this class. Therefore, just an exception is
      * thrown.
      */
+    @Override
     public void remove(String name, String key)
     {
         throw new UnsupportedOperationException(
                 "remove() operation not supported!");
     }
 
+    @Override
     public void set(String name, Object value)
     {
         fetchBean(name).set(name, value);
     }
 
+    @Override
     public void set(String name, int index, Object value)
     {
         fetchBean(name).set(name, index, value);
     }
 
+    @Override
     public void set(String name, String key, Object value)
     {
         fetchBean(name).set(name, key, value);

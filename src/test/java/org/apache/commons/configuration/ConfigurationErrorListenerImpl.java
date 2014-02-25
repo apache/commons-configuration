@@ -47,6 +47,7 @@ public class ConfigurationErrorListenerImpl implements
      *
      * @param event the error event
      */
+    @Override
     public void configurationError(ConfigurationErrorEvent event)
     {
         this.event = event;

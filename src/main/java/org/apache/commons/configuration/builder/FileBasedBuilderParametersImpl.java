@@ -146,6 +146,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
         return reloadingRefreshDelay;
     }
 
+    @Override
     public FileBasedBuilderParametersImpl setReloadingRefreshDelay(
             Long reloadingRefreshDelay)
     {
@@ -164,6 +165,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
         return reloadingDetectorFactory;
     }
 
+    @Override
     public FileBasedBuilderParametersImpl setReloadingDetectorFactory(
             ReloadingDetectorFactory reloadingDetectorFactory)
     {
@@ -171,42 +173,49 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
         return this;
     }
 
+    @Override
     public FileBasedBuilderParametersImpl setFile(File file)
     {
         getFileHandler().setFile(file);
         return this;
     }
 
+    @Override
     public FileBasedBuilderParametersImpl setURL(URL url)
     {
         getFileHandler().setURL(url);
         return this;
     }
 
+    @Override
     public FileBasedBuilderParametersImpl setPath(String path)
     {
         getFileHandler().setPath(path);
         return this;
     }
 
+    @Override
     public FileBasedBuilderParametersImpl setFileName(String name)
     {
         getFileHandler().setFileName(name);
         return this;
     }
 
+    @Override
     public FileBasedBuilderParametersImpl setBasePath(String path)
     {
         getFileHandler().setBasePath(path);
         return this;
     }
 
+    @Override
     public FileBasedBuilderParametersImpl setFileSystem(FileSystem fs)
     {
         getFileHandler().setFileSystem(fs);
         return this;
     }
 
+    @Override
     public FileBasedBuilderParametersImpl setLocationStrategy(
             FileLocationStrategy strategy)
     {
@@ -214,6 +223,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
         return this;
     }
 
+    @Override
     public FileBasedBuilderParametersImpl setEncoding(String enc)
     {
         getFileHandler().setEncoding(enc);

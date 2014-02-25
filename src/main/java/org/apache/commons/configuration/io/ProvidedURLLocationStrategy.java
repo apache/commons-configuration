@@ -40,6 +40,7 @@ public class ProvidedURLLocationStrategy implements FileLocationStrategy
      * {@inheritDoc} This implementation just returns the URL stored in the
      * given {@code FileLocator}.
      */
+    @Override
     public URL locate(FileSystem fileSystem, FileLocator locator)
     {
         return locator.getSourceURL();

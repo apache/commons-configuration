@@ -486,6 +486,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @param locator the current {@code FileLocator}
      * @since 2.0
      */
+    @Override
     public void initFileLocator(FileLocator locator)
     {
         this.locator = locator;
@@ -500,6 +501,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      *
      * @since 2.0
      */
+    @Override
     public void read(Reader in) throws ConfigurationException, IOException
     {
         getLayout().load(this, in);
@@ -512,6 +514,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      *
      * @since 2.0
      */
+    @Override
     public void write(Writer out) throws ConfigurationException, IOException
     {
         getLayout().save(this, out);
@@ -901,6 +904,7 @@ public class PropertiesConfiguration extends BaseConfiguration
         private static final ValueTransformer TRANSFORMER =
                 new ValueTransformer()
                 {
+                    @Override
                     public Object transformValue(Object value)
                     {
                         String strVal = String.valueOf(value);
@@ -1249,11 +1253,13 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public static class DefaultIOFactory implements IOFactory
     {
+        @Override
         public PropertiesReader createPropertiesReader(Reader in)
         {
             return new PropertiesReader(in);
         }
 
+        @Override
         public PropertiesWriter createPropertiesWriter(Writer out,
                 ListDelimiterHandler handler)
         {

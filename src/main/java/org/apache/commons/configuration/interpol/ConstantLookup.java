@@ -74,6 +74,7 @@ public class ConstantLookup implements Lookup
      * @return the value of this variable or <b>null</b> if it cannot be
      * resolved
      */
+    @Override
     public Object lookup(String var)
     {
         if (var == null)

@@ -175,6 +175,7 @@ public class CombinedReloadingController extends ReloadingController
          * controllers. If one of them returns <b>true</b> from its check
          * method, iteration is aborted, and result is <b>true</b>.
          */
+        @Override
         public boolean isReloadingRequired()
         {
             for (ReloadingController rc : owner.getSubControllers())
@@ -191,6 +192,7 @@ public class CombinedReloadingController extends ReloadingController
          * {@inheritDoc} This implementation resets the reloading state on all
          * managed controllers.
          */
+        @Override
         public void reloadingPerformed()
         {
             for (ReloadingController rc : owner.getSubControllers())

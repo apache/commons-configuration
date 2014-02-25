@@ -847,12 +847,14 @@ public class TestPropertiesConfiguration
         conf.clear();
         conf.setIOFactory(new PropertiesConfiguration.IOFactory()
         {
+            @Override
             public PropertiesConfiguration.PropertiesReader createPropertiesReader(
                     Reader in)
             {
                 return new PropertiesReaderTestImpl(in, propertyCount);
             }
 
+            @Override
             public PropertiesConfiguration.PropertiesWriter createPropertiesWriter(
                     Writer out, ListDelimiterHandler handler)
             {
@@ -876,12 +878,14 @@ public class TestPropertiesConfiguration
         final MutableObject<Writer> propertiesWriter = new MutableObject<Writer>();
         conf.setIOFactory(new PropertiesConfiguration.IOFactory()
         {
+            @Override
             public PropertiesConfiguration.PropertiesReader createPropertiesReader(
                     Reader in)
             {
                 throw new UnsupportedOperationException("Unexpected call!");
             }
 
+            @Override
             public PropertiesConfiguration.PropertiesWriter createPropertiesWriter(
                     Writer out, ListDelimiterHandler handler)
             {

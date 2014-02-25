@@ -1287,6 +1287,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     {
         defBuilder.addBuilderListener(new BuilderListener()
         {
+            @Override
             public void builderReset(
                     ConfigurationBuilder<? extends Configuration> builder)
             {
@@ -1570,6 +1571,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         {
             changeListener = new BuilderListener()
             {
+                @Override
                 public void builderReset(
                         ConfigurationBuilder<? extends Configuration> builder)
                 {

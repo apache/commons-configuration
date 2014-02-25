@@ -106,6 +106,7 @@ public class TestDefaultListDelimiterHandler
     {
         ValueTransformer trans = new ValueTransformer()
         {
+            @Override
             public Object transformValue(Object value)
             {
                 return String.valueOf(value) + "_trans";

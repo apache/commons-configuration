@@ -228,6 +228,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * directly after the creation of an instance, this instance can be accessed
      * in a read-only manner without requiring a specific {@code Synchronizer}.
      */
+    @Override
     public void initialize()
     {
         ensureSubConfigManagementDataSetUp();
@@ -239,6 +240,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * @return the root node
      * @since 1.3
      */
+    @Override
     public ConfigurationNode getRootNode()
     {
         return rootNode;
@@ -250,6 +252,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * @param rootNode the root node
      * @since 1.3
      */
+    @Override
     public final void setRootNode(ConfigurationNode rootNode)
     {
         if (rootNode == null)
@@ -285,6 +288,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * {@inheritDoc} This implementation handles synchronization and delegates
      * to {@code getRootElementNameInternal()}.
      */
+    @Override
     public final String getRootElementName()
     {
         beginRead(false);
@@ -319,6 +323,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * @return the current expression engine
      * @since 1.3
      */
+    @Override
     public ExpressionEngine getExpressionEngine()
     {
         return (expressionEngine != null) ? expressionEngine
@@ -334,6 +339,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * then the default expression engine will be used
      * @since 1.3
      */
+    @Override
     public void setExpressionEngine(ExpressionEngine expressionEngine)
     {
         this.expressionEngine = expressionEngine;
@@ -415,6 +421,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * @param nodes a collection with the {@code Node} objects to be
      * added
      */
+    @Override
     public final void addNodes(String key, Collection<? extends ConfigurationNode> nodes)
     {
         if (nodes == null || nodes.isEmpty())
@@ -635,6 +642,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * @see SubnodeConfiguration
      * @since 1.5
      */
+    @Override
     public SubnodeConfiguration configurationAt(String key,
             boolean supportUpdates)
     {
@@ -661,6 +669,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * by delegating to {@code configurationAt()}. Then an immutable wrapper
      * is created and returned.
      */
+    @Override
     public ImmutableHierarchicalConfiguration immutableConfigurationAt(
             String key, boolean supportUpdates)
     {
@@ -678,6 +687,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * @see SubnodeConfiguration
      * @since 1.3
      */
+    @Override
     public SubnodeConfiguration configurationAt(String key)
     {
         return configurationAt(key, false);
@@ -688,6 +698,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * by delegating to {@code configurationAt()}. Then an immutable wrapper
      * is created and returned.
      */
+    @Override
     public ImmutableHierarchicalConfiguration immutableConfigurationAt(
             String key)
     {
@@ -722,6 +733,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * configuration represents one of the nodes selected by the passed in key
      * @since 1.3
      */
+    @Override
     public List<SubnodeConfiguration> configurationsAt(String key)
     {
         beginWrite(false);
@@ -749,6 +761,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * {@code SubnodeConfiguration} objects. Then for each element of this list
      * an unmodifiable wrapper is created.
      */
+    @Override
     public List<ImmutableHierarchicalConfiguration> immutableConfigurationsAt(
             String key)
     {
@@ -760,6 +773,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * given key. If not a single node is selected, an empty list is returned.
      * Otherwise, sub configurations for each child of the node are created.
      */
+    @Override
     public List<SubnodeConfiguration> childConfigurationsAt(String key)
     {
         beginWrite(false);
@@ -793,6 +807,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * configurations. Then a list with immutable wrapper configurations is
      * created.
      */
+    @Override
     public List<ImmutableHierarchicalConfiguration> immutableChildConfigurationsAt(
             String key)
     {
@@ -915,6 +930,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     {
         return new ConfigurationListener()
         {
+            @Override
             public void configurationChanged(ConfigurationEvent event)
             {
                 nodeStructureChanged(event);
@@ -1033,6 +1049,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      *
      * @param key the key of the property to be removed
      */
+    @Override
     public final void clearTree(String key)
     {
         beginWrite(false);
@@ -1151,6 +1168,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * @param key the key to be checked
      * @return the maximum defined index for this key
      */
+    @Override
     public final int getMaxIndex(String key)
     {
         beginRead(false);

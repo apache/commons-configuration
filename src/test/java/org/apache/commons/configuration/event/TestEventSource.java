@@ -210,6 +210,7 @@ public class TestEventSource
     {
         ConfigurationListener lstRemove = new ConfigurationListener()
         {
+            @Override
             public void configurationChanged(ConfigurationEvent event)
             {
                 source.removeConfigurationListener(this);
@@ -350,12 +351,14 @@ public class TestEventSource
 
         int numberOfErrors;
 
+        @Override
         public void configurationChanged(ConfigurationEvent event)
         {
             lastEvent = event;
             numberOfCalls++;
         }
 
+        @Override
         public void configurationError(ConfigurationErrorEvent event)
         {
             lastEvent = event;

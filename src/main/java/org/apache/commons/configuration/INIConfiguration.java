@@ -268,6 +268,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      *         configuration
      * @throws IOException if an I/O error occurs
      */
+    @Override
     public void write(Writer writer) throws ConfigurationException, IOException
     {
         PrintWriter out = new PrintWriter(writer);
@@ -331,6 +332,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      *         configuration
      * @throws IOException if an I/O error occurs
      */
+    @Override
     public void read(Reader in) throws ConfigurationException, IOException
     {
         BufferedReader bufferedReader = new BufferedReader(in);

@@ -718,6 +718,7 @@ public class TestBaseConfiguration
     {
         ConfigurationListener l = new ConfigurationListener()
         {
+            @Override
             public void configurationChanged(ConfigurationEvent event)
             {
                 // just a dummy

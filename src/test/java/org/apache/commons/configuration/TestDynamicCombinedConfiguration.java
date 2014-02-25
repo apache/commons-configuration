@@ -551,6 +551,7 @@ public class TestDynamicCombinedConfiguration
             id.set(value);
         }
 
+        @Override
         public String lookup(String key)
         {
             if (key == null || !key.equals("Id"))

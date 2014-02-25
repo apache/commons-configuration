@@ -27,6 +27,7 @@ public class AlwaysReloadingDetector implements ReloadingDetector
     /**
      * {@inheritDoc} This implementation always returns <b>true</b>.
      */
+    @Override
     public boolean isReloadingRequired()
     {
         return true;
@@ -35,6 +36,7 @@ public class AlwaysReloadingDetector implements ReloadingDetector
     /**
      * Empty dummy implementation of this interface method.
      */
+    @Override
     public void reloadingPerformed()
     {
     }

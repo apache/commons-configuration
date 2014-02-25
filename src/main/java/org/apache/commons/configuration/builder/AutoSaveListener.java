@@ -80,6 +80,7 @@ class AutoSaveListener extends FileHandlerListenerAdapter implements
      * update of the configuration has been performed and currently no load
      * operation is in progress.
      */
+    @Override
     public void configurationChanged(ConfigurationEvent event)
     {
         if (autoSaveRequired(event))

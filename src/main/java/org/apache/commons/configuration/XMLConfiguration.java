@@ -883,6 +883,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     /**
      * {@inheritDoc} Stores the passed in locator for the upcoming IO operation.
      */
+    @Override
     public void initFileLocator(FileLocator loc)
     {
         locator = loc;
@@ -898,6 +899,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @throws ConfigurationException if an error occurs
      * @throws IOException if an IO error occurs
      */
+    @Override
     public void read(Reader in) throws ConfigurationException, IOException
     {
         load(new InputSource(in));
@@ -914,6 +916,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @throws ConfigurationException if an error occurs
      * @throws IOException if an IO error occurs
      */
+    @Override
     public void read(InputStream in) throws ConfigurationException, IOException
     {
         load(new InputSource(in));
@@ -960,6 +963,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @throws ConfigurationException if an error occurs
      * @throws IOException if an IO error occurs
      */
+    @Override
     public void write(Writer writer) throws ConfigurationException, IOException
     {
         try
@@ -1170,6 +1174,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @throws IllegalArgumentException if the public ID is undefined
      * @since 1.5
      */
+    @Override
     public void registerEntityId(String publicId, URL entityURL)
     {
         if (entityResolver instanceof EntityRegistry)
@@ -1191,6 +1196,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @since 1.5
      * @deprecated Use getEntityResolver().resolveEntity()
      */
+    @Override
     @Deprecated
     public InputSource resolveEntity(String publicId, String systemId)
             throws SAXException
@@ -1211,6 +1217,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      *
      * @return a map with the registered entity IDs
      */
+    @Override
     public Map<String, URL> getRegisteredEntities()
     {
         if (entityResolver instanceof EntityRegistry)

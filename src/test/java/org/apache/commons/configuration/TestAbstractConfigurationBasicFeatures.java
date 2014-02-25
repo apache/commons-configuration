@@ -1110,6 +1110,7 @@ public class TestAbstractConfigurationBasicFeatures
     {
         List<ConfigurationEvent> events = new ArrayList<ConfigurationEvent>();
 
+        @Override
         public void configurationChanged(ConfigurationEvent event)
         {
             events.add(event);

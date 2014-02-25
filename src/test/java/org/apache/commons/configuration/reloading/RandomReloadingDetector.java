@@ -29,11 +29,13 @@ public class RandomReloadingDetector implements ReloadingDetector
     /** The random object.*/
     private final Random random = new Random();
 
+    @Override
     public boolean isReloadingRequired()
     {
         return random.nextBoolean();
     }
 
+    @Override
     public void reloadingPerformed()
     {
     }

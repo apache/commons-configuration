@@ -109,6 +109,7 @@ public class DefaultConversionHandler implements ConversionHandler
         this.dateFormat = dateFormat;
     }
 
+    @Override
     public <T> T to(Object src, Class<T> targetCls, ConfigurationInterpolator ci)
     {
         ConfigurationInterpolator interpolator = fetchInterpolator(ci);
@@ -122,6 +123,7 @@ public class DefaultConversionHandler implements ConversionHandler
      * supported. If the source object is <b>null</b>, result is <b>null</b>,
      * too.
      */
+    @Override
     public Object toArray(Object src, Class<?> elemClass,
             ConfigurationInterpolator ci)
     {
@@ -147,6 +149,7 @@ public class DefaultConversionHandler implements ConversionHandler
      *
      * @throws IllegalArgumentException if the target collection is <b>null</b>
      */
+    @Override
     public <T> void toCollection(Object src, Class<T> elemClass,
             ConfigurationInterpolator ci, Collection<T> dest)
     {

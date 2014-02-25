@@ -83,6 +83,7 @@ public class TestConfigurationInterpolator
         EasyMock.expect(lookup.lookup(EasyMock.anyObject(String.class)))
                 .andAnswer(new IAnswer<Object>()
                 {
+                    @Override
                     public Object answer() throws Throwable
                     {
                         if (var.equals(EasyMock.getCurrentArguments()[0]))

@@ -42,18 +42,22 @@ public enum NoOpSynchronizer implements Synchronizer
     /** The single shared instance of this class. */
     INSTANCE;
 
+    @Override
     public void beginRead()
     {
     }
 
+    @Override
     public void endRead()
     {
     }
 
+    @Override
     public void beginWrite()
     {
     }
 
+    @Override
     public void endWrite()
     {
     }
