@@ -47,6 +47,8 @@ import org.apache.commons.configuration.tree.ExpressionEngine;
 public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfiguration
     implements FileBasedConfiguration
 {
+    private static final long serialVersionUID = 7456061169617014189L;
+
     /** The wrapped configuration */
     private final HierarchicalConfiguration config;
 

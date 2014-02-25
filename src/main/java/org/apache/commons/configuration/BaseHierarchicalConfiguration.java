@@ -536,6 +536,8 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
             BaseHierarchicalConfiguration result =
                     new BaseHierarchicalConfiguration()
                     {
+                        private static final long serialVersionUID = -5244847315895116071L;
+
                         // Override interpolate to always interpolate on the parent
                         @Override
                         protected Object interpolate(Object value)
