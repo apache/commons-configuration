@@ -334,7 +334,7 @@
     <dependency>
       <groupId>commons-pool</groupId>
       <artifactId>commons-pool</artifactId>
-      <version>1.4</version>
+      <version>1.6</version>
       <scope>test</scope>
     </dependency>
 
