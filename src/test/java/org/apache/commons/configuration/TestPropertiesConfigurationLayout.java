@@ -715,7 +715,7 @@ public class TestPropertiesConfigurationLayout
     static class PropertiesBuilder
     {
         /** A buffer for storing the data. */
-        private StringBuilder buf = new StringBuilder();
+        private final StringBuilder buf = new StringBuilder();
 
         /** A counter for varying the comment character. */
         private int commentCounter;

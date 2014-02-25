@@ -47,9 +47,9 @@ public class TestNullCompositeConfiguration
     protected CompositeConfiguration cc;
 
     /** The File that we test with */
-    private String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
-    private String testProperties2 = ConfigurationAssert.getTestFile("test2.properties").getAbsolutePath();
-    private String testPropertiesXML = ConfigurationAssert.getTestFile("test.xml").getAbsolutePath();
+    private final String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
+    private final String testProperties2 = ConfigurationAssert.getTestFile("test2.properties").getAbsolutePath();
+    private final String testPropertiesXML = ConfigurationAssert.getTestFile("test.xml").getAbsolutePath();
 
     @Before
     public void setUp() throws Exception

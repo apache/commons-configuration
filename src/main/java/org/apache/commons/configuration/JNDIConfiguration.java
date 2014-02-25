@@ -56,7 +56,7 @@ public class JNDIConfiguration extends AbstractConfiguration
     private Context baseContext;
 
     /** The Set of keys that have been virtually cleared. */
-    private Set<String> clearedProperties = new HashSet<String>();
+    private final Set<String> clearedProperties = new HashSet<String>();
 
     /**
      * Creates a JNDIConfiguration using the default initial context as the

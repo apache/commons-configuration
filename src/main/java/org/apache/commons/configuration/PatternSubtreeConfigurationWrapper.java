@@ -59,7 +59,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     private final boolean trailing;
 
     /** True if the constructor has finished */
-    private boolean init;
+    private final boolean init;
 
     /**
      * Constructor

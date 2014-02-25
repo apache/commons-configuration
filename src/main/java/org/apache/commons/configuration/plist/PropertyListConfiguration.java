@@ -538,13 +538,13 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
     private static class DateFieldParser extends DateComponentParser
     {
         /** Stores the calendar field to be processed. */
-        private int calendarField;
+        private final int calendarField;
 
         /** Stores the length of this field. */
-        private int length;
+        private final int length;
 
         /** An optional offset to add to the calendar field. */
-        private int offset;
+        private final int offset;
 
         /**
          * Creates a new instance of {@code DateFieldParser}.
@@ -605,7 +605,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
     private static class DateSeparatorParser extends DateComponentParser
     {
         /** Stores the separator. */
-        private String separator;
+        private final String separator;
 
         /**
          * Creates a new instance of {@code DateSeparatorParser} and sets

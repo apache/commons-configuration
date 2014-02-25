@@ -83,16 +83,16 @@ public class ConfigurationEvent extends EventObject
     private static final long serialVersionUID = 3277238219073504136L;
 
     /** Stores the event type. */
-    private int type;
+    private final int type;
 
     /** Stores the property name. */
-    private String propertyName;
+    private final String propertyName;
 
     /** Stores the property value. */
-    private Object propertyValue;
+    private final Object propertyValue;
 
     /** Stores the before update flag. */
-    private boolean beforeUpdate;
+    private final boolean beforeUpdate;
 
     /**
      * Creates a new instance of {@code ConfigurationEvent} and

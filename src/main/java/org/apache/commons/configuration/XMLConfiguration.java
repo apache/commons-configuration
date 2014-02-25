@@ -1403,7 +1403,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     static class XMLBuilderVisitor extends BuilderVisitor
     {
         /** Stores the document to be constructed. */
-        private Document document;
+        private final Document document;
 
         /** Stores the list delimiter handler .*/
         private final ListDelimiterHandler listDelimiterHandler;

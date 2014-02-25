@@ -955,16 +955,16 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     private class ConfigData
     {
         /** Stores a reference to the configuration. */
-        private Configuration configuration;
+        private final Configuration configuration;
 
         /** Stores the name under which the configuration is stored. */
-        private String name;
+        private final String name;
 
         /** Stores the at information as path of nodes. */
-        private Collection<String> atPath;
+        private final Collection<String> atPath;
 
         /** Stores the at string.*/
-        private String at;
+        private final String at;
 
         /** Stores the root node for this child configuration.*/
         private ConfigurationNode rootNode;

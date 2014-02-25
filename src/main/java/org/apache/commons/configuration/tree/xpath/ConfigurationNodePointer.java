@@ -49,7 +49,7 @@ class ConfigurationNodePointer extends NodePointer
     private static final long serialVersionUID = -1087475639680007713L;
 
     /** Stores the associated configuration node. */
-    private ConfigurationNode node;
+    private final ConfigurationNode node;
 
     /**
      * Creates a new instance of {@code ConfigurationNodePointer}.

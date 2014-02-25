@@ -137,7 +137,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
     private static final long serialVersionUID = 3105734147019386480L;
 
     /** Stores the parent configuration. */
-    private BaseHierarchicalConfiguration parent;
+    private final BaseHierarchicalConfiguration parent;
 
     /** Stores the key that was used to construct this configuration.*/
     private String subnodeKey;

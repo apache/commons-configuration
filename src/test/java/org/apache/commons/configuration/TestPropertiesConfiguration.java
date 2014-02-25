@@ -1232,10 +1232,10 @@ public class TestPropertiesConfiguration
     static class MockHttpURLStreamHandler extends URLStreamHandler
     {
         /** Stores the response code.*/
-        private int responseCode;
+        private final int responseCode;
 
         /** Stores the output file.*/
-        private File outputFile;
+        private final File outputFile;
 
         /** Stores the connection.*/
         private MockHttpURLConnection connection;

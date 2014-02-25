@@ -41,7 +41,7 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
 abstract class ConfigurationNodeIteratorBase implements NodeIterator
 {
     /** Stores the parent node pointer. */
-    private NodePointer parent;
+    private final NodePointer parent;
 
     /** Stores the list with the sub nodes. */
     private List<ConfigurationNode> subNodes;
@@ -53,7 +53,7 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
     private int startOffset;
 
     /** Stores the reverse flag. */
-    private boolean reverse;
+    private final boolean reverse;
 
     /**
      * Creates a new instance of {@code ConfigurationNodeIteratorBase}

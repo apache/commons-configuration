@@ -1052,7 +1052,7 @@ public class TestAbstractConfigurationBasicFeatures
     static class TestConfigurationImpl extends AbstractConfiguration
     {
         /** Stores the underlying configuration. */
-        private AbstractConfiguration config;
+        private final AbstractConfiguration config;
 
         public AbstractConfiguration getUnderlyingConfiguration()
         {

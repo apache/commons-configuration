@@ -1489,10 +1489,10 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     class DefinedKeysVisitor extends ConfigurationNodeVisitorAdapter
     {
         /** Stores the list to be filled. */
-        private Set<String> keyList;
+        private final Set<String> keyList;
 
         /** A stack with the keys of the already processed nodes. */
-        private Stack<String> parentKeys;
+        private final Stack<String> parentKeys;
 
         /**
          * Default constructor.
@@ -1564,7 +1564,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     static class CloneVisitor extends ConfigurationNodeVisitorAdapter
     {
         /** A stack with the actual object to be copied. */
-        private Stack<ConfigurationNode> copyStack;
+        private final Stack<ConfigurationNode> copyStack;
 
         /** Stores the result of the clone process. */
         private ConfigurationNode result;

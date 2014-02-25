@@ -58,7 +58,7 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration
 
     private class MockFilterConfig implements FilterConfig
     {
-        private Properties parameters = new Properties();
+        private final Properties parameters = new Properties();
 
         @Override
         public String getFilterName()

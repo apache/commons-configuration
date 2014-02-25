@@ -123,7 +123,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object>
         private final class Entry implements Map.Entry<Object, Object>
         {
             /** The key of the map entry. */
-            private Object key;
+            private final Object key;
 
             private Entry(Object key)
             {

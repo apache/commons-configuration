@@ -31,7 +31,7 @@ public class ManagedReloadingDetector implements ReloadingDetector,
         ManagedReloadingDetectorMBean
 {
     /** The logger. */
-    private Log log = LogFactory.getLog(ManagedReloadingDetector.class);
+    private final Log log = LogFactory.getLog(ManagedReloadingDetector.class);
 
     /** A flag whether a reload is required. */
     private volatile boolean reloadingRequired;

@@ -445,10 +445,10 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
     private class XMLPropertyListHandler extends DefaultHandler
     {
         /** The buffer containing the text node being read */
-        private StringBuilder buffer = new StringBuilder();
+        private final StringBuilder buffer = new StringBuilder();
 
         /** The stack of configuration nodes */
-        private List<ConfigurationNode> stack = new ArrayList<ConfigurationNode>();
+        private final List<ConfigurationNode> stack = new ArrayList<ConfigurationNode>();
 
         public XMLPropertyListHandler(ConfigurationNode root)
         {
@@ -760,7 +760,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         private static final long serialVersionUID = 5586544306664205835L;
 
         /** The list of values in the array. */
-        private List<Object> list = new ArrayList<Object>();
+        private final List<Object> list = new ArrayList<Object>();
 
         /**
          * Add an object to the array.
