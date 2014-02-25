@@ -125,7 +125,7 @@ public class TestHierarchicalConfigurationEvents extends
         ConfigurationEvent evSub = (ConfigurationEvent) event
                 .getPropertyValue();
         assertEquals("Wrong event type",
-                BaseHierarchicalConfiguration.EVENT_ADD_PROPERTY, evSub.getType());
+                AbstractConfiguration.EVENT_ADD_PROPERTY, evSub.getType());
         assertEquals("Wrong property name", "newProp", evSub.getPropertyName());
         assertEquals("Wrong property value", "newValue", evSub
                 .getPropertyValue());
