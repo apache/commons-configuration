@@ -181,7 +181,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     public static final int EVENT_SUBNODE_CHANGED = 12;
 
     /** The model for managing the data stored in this configuration. */
-    private final NodeModel<T> model;
+    private NodeModel<T> model;
 
     /** Stores the expression engine for this instance.*/
     private ExpressionEngine expressionEngine;
@@ -700,8 +700,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
             copy.setSynchronizer(NoOpSynchronizer.INSTANCE);
             copy.cloneInterpolator(this);
             copy.setSynchronizer(ConfigurationUtils.cloneSynchronizer(getSynchronizer()));
-
-            //TODO clone node model
+            copy.model = cloneNodeModel();
 
             return copy;
         }

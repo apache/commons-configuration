@@ -509,7 +509,7 @@ public class TestAbstractHierarchicalConfiguration
     public void testClone()
     {
         Configuration copy = (Configuration) config.clone();
-        assertTrue(copy instanceof BaseHierarchicalConfiguration);
+        assertTrue("Wrong clone result", copy instanceof AbstractHierarchicalConfiguration);
         checkContent(copy);
     }
 
@@ -528,8 +528,8 @@ public class TestAbstractHierarchicalConfiguration
             }
         };
         config.addConfigurationListener(l);
-        BaseHierarchicalConfiguration copy = (BaseHierarchicalConfiguration) config
-                .clone();
+        AbstractHierarchicalConfiguration<?> copy =
+                (AbstractHierarchicalConfiguration<?>) config.clone();
         assertFalse("Event listener registered at clone", copy
                 .getConfigurationListeners().contains(l));
     }
@@ -544,8 +544,7 @@ public class TestAbstractHierarchicalConfiguration
         final String keyValue = "value";
         config.addProperty(keyAnswer, "The answer is ${" + keyValue + "}.");
         config.addProperty(keyValue, 42);
-        BaseHierarchicalConfiguration clone =
-                (BaseHierarchicalConfiguration) config.clone();
+        Configuration clone = (Configuration) config.clone();
         clone.setProperty(keyValue, 43);
         assertEquals("Wrong interpolation in original", "The answer is 42.",
                 config.getString(keyAnswer));
@@ -895,16 +894,21 @@ public class TestAbstractHierarchicalConfiguration
     }
 
     /**
-     * A concrete test implementation of {@code AbstractHierarchicalConfiguration}.
+     * A concrete test implementation of
+     * {@code AbstractHierarchicalConfiguration}.
      */
-    private static class AbstractHierarchicalConfigurationTestImpl extends AbstractHierarchicalConfiguration<ImmutableNode> {
-        public AbstractHierarchicalConfigurationTestImpl(InMemoryNodeModel model) {
+    private static class AbstractHierarchicalConfigurationTestImpl extends
+            AbstractHierarchicalConfiguration<ImmutableNode>
+    {
+        public AbstractHierarchicalConfigurationTestImpl(InMemoryNodeModel model)
+        {
             super(model);
         }
 
         @Override
-        protected NodeModel<ImmutableNode> cloneNodeModel() {
-            return null;
+        protected NodeModel<ImmutableNode> cloneNodeModel()
+        {
+            return new InMemoryNodeModel(getModel().getRootNode());
         }
     }
 }
