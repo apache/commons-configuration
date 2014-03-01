@@ -1224,4 +1224,33 @@ public class TestInMemoryNodeModel
     {
         checkAddNodesNoNodes(Collections.<ImmutableNode> emptySet());
     }
+
+    /**
+     * Tests whether a new root node can be set.
+     */
+    @Test
+    public void testSetRoot()
+    {
+        InMemoryNodeModel model =
+                new InMemoryNodeModel(NodeStructureHelper.ROOT_PERSONAE_TREE);
+        model.setRoot(NodeStructureHelper.ROOT_AUTHORS_TREE);
+        assertSame("Root node not changed",
+                NodeStructureHelper.ROOT_AUTHORS_TREE, model.getRootNode());
+        ImmutableNode node = nodeForKey(model, "Homer/Ilias");
+        assertEquals("Wrong parent mapping", nodeForKey(model, "Homer"),
+                model.getParent(node));
+    }
+
+    /**
+     * Tests whether the root node can be set to null.
+     */
+    @Test
+    public void testSetRootNull()
+    {
+        InMemoryNodeModel model =
+                new InMemoryNodeModel(NodeStructureHelper.ROOT_PERSONAE_TREE);
+        model.setRoot(null);
+        ImmutableNode rootNode = model.getRootNode();
+        assertTrue("Got children", rootNode.getChildren().isEmpty());
+    }
 }

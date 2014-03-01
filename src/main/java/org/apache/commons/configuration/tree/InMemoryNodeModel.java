@@ -381,6 +381,21 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
     }
 
     /**
+     * Sets a new root node for this model. The whole structure is replaced by
+     * the new node and its children. Care has to be taken when this method is
+     * used and the model is accessed by multiple threads. It is not
+     * deterministic which concurrent operations see the old root and which see
+     * the new root node.
+     *
+     * @param newRoot the new root node to be set (can be <b>null</b>, then an
+     *        empty root node is set)
+     */
+    public void setRoot(ImmutableNode newRoot)
+    {
+        structure.set(createTreeData(initialRootNode(newRoot)));
+    }
+
+    /**
      * Returns the current {@code TreeData} object. This object contains all
      * information about the current node structure.
      *
