@@ -626,15 +626,18 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
             visitor.getKeyList().add(prefix);
         }
 
-        List<QueryResult<T>> nodes = fetchNodeList(prefix);
+        List<QueryResult<T>> results = fetchNodeList(prefix);
         NodeHandler<T> handler = getModel().getNodeHandler();
 
-        for (QueryResult<T> node : nodes)
+        for (QueryResult<T> result : results)
         {
-            //TODO handle attributes
-            for (T c : handler.getChildren(node.getNode()))
+            if (!result.isAttributeResult())
             {
-                NodeTreeWalker.INSTANCE.walkDFS(c, visitor, handler);
+                for (T c : handler.getChildren(result.getNode()))
+                {
+                    NodeTreeWalker.INSTANCE.walkDFS(c, visitor, handler);
+                }
+                visitor.handleAttributeKeys(prefix, result.getNode(), handler);
             }
         }
 
@@ -877,19 +880,34 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         /**
          * {@inheritDoc} If this node has a value, its key is added
          * to the internal list.
-         *
-         * TODO handle attributes
          */
         @Override
         public void visitBeforeChildren(T node, NodeHandler<T> handler)
         {
             String parentKey = parentKeys.isEmpty() ? null
-                    : (String) parentKeys.peek();
+                    : parentKeys.peek();
             String key = getExpressionEngine().nodeKey(node, parentKey, handler);
             parentKeys.push(key);
             if (handler.getValue(node) != null)
             {
                 keyList.add(key);
+            }
+            handleAttributeKeys(key, node, handler);
+        }
+
+        /**
+         * Appends all attribute keys of the current node.
+         *
+         * @param parentKey the parent key
+         * @param node the current node
+         * @param handler the {@code NodeHandler}
+         */
+        public void handleAttributeKeys(String parentKey, T node,
+                NodeHandler<T> handler)
+        {
+            for (String attr : handler.getAttributes(node))
+            {
+                keyList.add(getExpressionEngine().attributeKey(parentKey, attr));
             }
         }
     }

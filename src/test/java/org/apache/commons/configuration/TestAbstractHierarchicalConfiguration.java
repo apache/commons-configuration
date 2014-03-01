@@ -326,8 +326,14 @@ public class TestAbstractHierarchicalConfiguration
         assertEquals(2, keys.size());
         assertTrue(keys.contains("tables.table.name"));
         assertTrue(keys.contains("tables.table.fields.field.name"));
+    }
 
-        // test the order of the keys returned
+    /**
+     * Tests whether keys are returned in a defined order.
+     */
+    @Test
+    public void testGetKeysOrder()
+    {
         config.addProperty("order.key1", "value1");
         config.addProperty("order.key2", "value2");
         config.addProperty("order.key3", "value3");
@@ -336,6 +342,33 @@ public class TestAbstractHierarchicalConfiguration
         assertEquals("1st key", "order.key1", it.next());
         assertEquals("2nd key", "order.key2", it.next());
         assertEquals("3rd key", "order.key3", it.next());
+    }
+
+    /**
+     * Tests whether attribute keys are contained in the iteration of keys.
+     */
+    @Test
+    public void testGetKeysAttribute()
+    {
+        config.addProperty("tables.table(0)[@type]", "system");
+        Set<String> keys = new HashSet<String>();
+        for (Iterator<String> it = config.getKeys(); it.hasNext();)
+        {
+            keys.add(it.next());
+        }
+        assertTrue("Attribute key not found: " + keys, keys.contains("tables.table[@type]"));
+    }
+
+    /**
+     * Tests whether a prefix that points to an attribute is correctly handled.
+     */
+    @Test
+    public void testGetKeysAttributePrefix()
+    {
+        config.addProperty("tables.table(0)[@type]", "system");
+        Iterator<String> itKeys = config.getKeys("tables.table[@type]");
+        assertEquals("Wrong key", "tables.table[@type]", itKeys.next());
+        assertFalse("Too many keys", itKeys.hasNext());
     }
 
     @Test
