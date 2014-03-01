@@ -218,9 +218,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
                     {
                         if (results.get(0).isAttributeResult())
                         {
-                            throw new IllegalArgumentException(
-                                    "New nodes cannot be added to an attribute key: "
-                                            + key);
+                            throw attributeKeyException(key);
                         }
                         tx.addAddNodesOperation(results.get(0).getNode(), nodes);
                     }
@@ -229,6 +227,10 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
                         NodeAddData<ImmutableNode> addData =
                                 resolver.resolveAddKey(tx.getCurrentData()
                                         .getRoot(), key, InMemoryNodeModel.this);
+                        if (addData.isAttribute())
+                        {
+                            throw attributeKeyException(key);
+                        }
                         ImmutableNode newNode =
                                 new ImmutableNode.Builder(nodes.size())
                                         .name(addData.getNewNodeName())
@@ -702,6 +704,20 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
     private static boolean valuesNotEmpty(Iterable<?> values)
     {
         return values.iterator().hasNext();
+    }
+
+    /**
+     * Creates an exception referring to an invalid key for adding properties.
+     * Such an exception is thrown when an operation tries to add something to
+     * an attribute.
+     *
+     * @param key the invalid key causing this exception
+     * @return the exception
+     */
+    private static RuntimeException attributeKeyException(String key)
+    {
+        return new IllegalArgumentException(
+                "New nodes cannot be added to an attribute key: " + key);
     }
 
     /**

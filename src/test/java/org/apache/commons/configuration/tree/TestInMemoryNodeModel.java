@@ -1202,6 +1202,32 @@ public class TestInMemoryNodeModel
     }
 
     /**
+     * Tries to add new nodes to an non-existing key pointing to an attribute.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddNodesToNewAttributeKey()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        InMemoryNodeModel model =
+                new InMemoryNodeModel(NodeStructureHelper.ROOT_AUTHORS_TREE);
+        EasyMock.expect(
+                resolver.resolveKey(NodeStructureHelper.ROOT_AUTHORS_TREE, KEY,
+                        model)).andReturn(
+                Collections.<QueryResult<ImmutableNode>> emptyList());
+        EasyMock.expect(
+                resolver.resolveAddKey(NodeStructureHelper.ROOT_AUTHORS_TREE,
+                        KEY, model)).andReturn(
+                new NodeAddData<ImmutableNode>(
+                        NodeStructureHelper.ROOT_AUTHORS_TREE, "test", true,
+                        null));
+        EasyMock.replay(resolver);
+
+        ImmutableNode newNode =
+                new ImmutableNode.Builder().name("newNode").create();
+        model.addNodes(KEY, Collections.singleton(newNode), resolver);
+    }
+
+    /**
      * Helper method for testing the behavior of addNodes() if no nodes to be
      * added are provided.
      *
