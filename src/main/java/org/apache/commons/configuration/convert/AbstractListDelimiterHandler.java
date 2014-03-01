@@ -58,9 +58,9 @@ public abstract class AbstractListDelimiterHandler implements
      * primitive objects.</li>
      * </ul>
      */
-    public Iterator<?> parse(Object value)
+    public Iterable<?> parse(Object value)
     {
-        return flatten(value).iterator();
+        return flatten(value);
     }
 
     /**

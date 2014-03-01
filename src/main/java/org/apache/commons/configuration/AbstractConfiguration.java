@@ -719,10 +719,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     protected void addPropertyInternal(String key, Object value)
     {
-        for (Iterator<?> it = getListDelimiterHandler().parse(value); it
-                .hasNext();)
+        for (Object obj : getListDelimiterHandler().parse(value))
         {
-            addPropertyDirect(key, it.next());
+            addPropertyDirect(key, obj);
         }
     }
 
