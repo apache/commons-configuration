@@ -32,8 +32,9 @@ import java.util.List;
  *
  * @version $Id$
  * @since 2.0
+ * @param <T> the type of the nodes supported by this resolver
  */
-public interface NodeKeyResolver
+public interface NodeKeyResolver<T>
 {
     /**
      * Performs a query for the specified key on the given root node. This is a
@@ -43,11 +44,9 @@ public interface NodeKeyResolver
      * @param root the root node
      * @param key the key to be resolved
      * @param handler the {@code NodeHandler}
-     * @param <T> the type of the nodes involved in this operation
      * @return a list with query results
      */
-    <T> List<QueryResult<T>> resolveKey(T root, String key,
-            NodeHandler<T> handler);
+    List<QueryResult<T>> resolveKey(T root, String key, NodeHandler<T> handler);
 
     /**
      * Resolves a key of an add operation. Result is a {@code NodeAddData}
@@ -57,10 +56,9 @@ public interface NodeKeyResolver
      * @param root the root node
      * @param key the key to be resolved
      * @param handler the {@code NodeHandler}
-     * @param <T> the type of the nodes involved in this operation
      * @return a {@code NodeAddData} object to be used for the add operation
      */
-    <T> NodeAddData<T> resolveAddKey(T root, String key, NodeHandler<T> handler);
+    NodeAddData<T> resolveAddKey(T root, String key, NodeHandler<T> handler);
 
     /**
      * Resolves a key for an update operation. Result is a
@@ -73,10 +71,9 @@ public interface NodeKeyResolver
      * @param newValue the new value for the key to be updated; this can be a
      *        single value or a container for multiple values
      * @param handler the {@code NodeHandler}
-     * @param <T> the type of the nodes involved in this operation
      * @return a {@code NodeUpdateData} object to be used for this update
      *         operation
      */
-    <T> NodeUpdateData<T> resolveUpdateKey(T root, String key, Object newValue,
+    NodeUpdateData<T> resolveUpdateKey(T root, String key, Object newValue,
             NodeHandler<T> handler);
 }

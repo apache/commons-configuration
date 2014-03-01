@@ -188,7 +188,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
     }
 
     public void addProperty(final String key, final Iterable<?> values,
-            final NodeKeyResolver resolver)
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         if (valuesNotEmpty(values))
         {
@@ -203,7 +203,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
 
     public void addNodes(final String key,
             final Collection<? extends ImmutableNode> nodes,
-            final NodeKeyResolver resolver)
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         if (nodes != null && !nodes.isEmpty())
         {
@@ -243,7 +243,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
     }
 
     public void setProperty(final String key, final Object value,
-            final NodeKeyResolver resolver)
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         updateModel(new TransactionInitializer()
         {
@@ -276,7 +276,8 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
      * after subtrees have been removed. If this is the case, such nodes are
      * removed, too.
      */
-    public void clearTree(final String key, final NodeKeyResolver resolver)
+    public void clearTree(final String key,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         updateModel(new TransactionInitializer()
         {
@@ -314,7 +315,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
      * {@inheritDoc} If this operation leaves an affected node in an undefined
      * state, it is removed from the model.
      */
-    public void clearProperty(final String key, final NodeKeyResolver resolver)
+    public void clearProperty(final String key, final NodeKeyResolver<ImmutableNode> resolver)
     {
         updateModel(new TransactionInitializer() {
             public boolean initTransaction(ModelTransaction tx) {
@@ -415,7 +416,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
      * @param resolver the {@code NodeKeyResolver}
      */
     private void initializeAddTransaction(ModelTransaction tx, String key,
-            Iterable<?> values, NodeKeyResolver resolver)
+            Iterable<?> values, NodeKeyResolver<ImmutableNode> resolver)
     {
         NodeAddData<ImmutableNode> addData =
                 resolver.resolveAddKey(tx.getCurrentData().getRoot(), key, this);

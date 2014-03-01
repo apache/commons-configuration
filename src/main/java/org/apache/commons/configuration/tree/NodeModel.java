@@ -79,7 +79,7 @@ public interface NodeModel<T>
      * @param values the values to be added at the position defined by the key
      * @param resolver the {@code NodeKeyResolver}
      */
-    void addProperty(String key, Iterable<?> values, NodeKeyResolver resolver);
+    void addProperty(String key, Iterable<?> values, NodeKeyResolver<T> resolver);
 
     /**
      * Adds a collection of new nodes to this model. This operation corresponds
@@ -95,7 +95,7 @@ public interface NodeModel<T>
      *         course, it is not possible to add something to an attribute)
      */
     void addNodes(String key, Collection<? extends T> nodes,
-            NodeKeyResolver resolver);
+            NodeKeyResolver<T> resolver);
 
     /**
      * Changes the value of a property. This is a more complex operation as it
@@ -110,7 +110,7 @@ public interface NodeModel<T>
      *        {@code NodeKeyResolver})
      * @param resolver the {@code NodeKeyResolver}
      */
-    void setProperty(String key, Object value, NodeKeyResolver resolver);
+    void setProperty(String key, Object value, NodeKeyResolver<T> resolver);
 
     /**
      * Removes the sub trees defined by the given key from this model. All nodes
@@ -120,7 +120,7 @@ public interface NodeModel<T>
      * @param key the key selecting the properties to be removed
      * @param resolver the {@code NodeKeyResolver}
      */
-    void clearTree(String key, NodeKeyResolver resolver);
+    void clearTree(String key, NodeKeyResolver<T> resolver);
 
     /**
      * Clears the value of a property. This method is similar to
@@ -131,7 +131,7 @@ public interface NodeModel<T>
      * @param key the key selecting the properties to be cleared
      * @param resolver the {@code NodeKeyResolver}
      */
-    void clearProperty(String key, NodeKeyResolver resolver);
+    void clearProperty(String key, NodeKeyResolver<T> resolver);
 
     /**
      * Removes all data from this model.
