@@ -131,7 +131,7 @@ class ModelTransaction
      * @param newNodes the collection of new child nodes
      */
     public void addAddNodesOperation(ImmutableNode parent,
-            Collection<ImmutableNode> newNodes)
+            Collection<? extends ImmutableNode> newNodes)
     {
         ChildrenUpdateOperation op = new ChildrenUpdateOperation();
         op.addNewNodes(newNodes);
@@ -586,7 +586,7 @@ class ModelTransaction
          *
          * @param nodes the collection with new nodes
          */
-        public void addNewNodes(Collection<ImmutableNode> nodes)
+        public void addNewNodes(Collection<? extends ImmutableNode> nodes)
         {
             newNodes = concatenate(newNodes, nodes);
         }

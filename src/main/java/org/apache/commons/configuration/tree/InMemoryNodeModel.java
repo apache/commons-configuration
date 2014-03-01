@@ -34,11 +34,23 @@ import org.apache.commons.lang3.StringUtils;
  * A specialized node model implementation which operates on
  * {@link ImmutableNode} structures.
  * </p>
+ * <p>
+ * This {@code NodeModel} implementation keeps all its data as a tree of
+ * {@link ImmutableNode} objects in memory. The managed structure can be
+ * manipulated in a thread-safe, non-blocking way. This is achieved by using
+ * atomic variables: The root of the tree is stored in an atomic reference
+ * variable. Each update operation causes a new structure to be constructed
+ * (which reuses as much from the original structure as possible). The old root
+ * node is then replaced by the new one using an atomic compare-and-set
+ * operation. If this fails, the manipulation has to be done anew on the updated
+ * structure.
+ * </p>
  *
  * @version $Id$
  * @since 2.0
  */
-public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
+public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
+        NodeModel<ImmutableNode>
 {
     /** Stores information about the current nodes structure. */
     private final AtomicReference<TreeData> structure;
@@ -66,21 +78,15 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
                         createTreeData(initialRootNode(root)));
     }
 
-    /**
-     * Returns the root node of this model.
-     *
-     * @return the root node
-     */
     public ImmutableNode getRootNode()
     {
         return getTreeData().getRoot();
     }
 
     /**
-     * Returns a {@code NodeHandler} for dealing with the nodes managed by this
-     * model.
-     *
-     * @return the {@code NodeHandler}
+     * {@inheritDoc} {@code InMemoryNodeModel} implements the
+     * {@code NodeHandler} interface itself. So this implementation just returns
+     * the <strong>this</strong> reference.
      */
     public NodeHandler<ImmutableNode> getNodeHandler()
     {
@@ -181,15 +187,6 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
         return checkIfNodeDefined(node);
     }
 
-    /**
-     * Adds a new property to this node model consisting of an arbitrary number
-     * of values. The key for the add operation is provided. For each value a
-     * new node has to be added.
-     *
-     * @param key the key
-     * @param values the values to be added at the position defined by the key
-     * @param resolver the {@code NodeKeyResolver}
-     */
     public void addProperty(final String key, final Iterable<?> values,
             final NodeKeyResolver resolver)
     {
@@ -204,20 +201,8 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
         }
     }
 
-    /**
-     * Adds a collection of new nodes to this model. This operation corresponds
-     * to the {@code addNodes()} method of the {@code Configuration} interface.
-     * The new nodes are either added to an existing node (if the passed in key
-     * selects exactly one node) or to a newly created node.
-     *
-     * @param key the key
-     * @param nodes the collection of nodes to be added (may be <b>null</b>)
-     * @param resolver the {@code NodeKeyResolver}
-     * @throws IllegalArgumentException if the key references an attribute (of
-     *         course, it is not possible to add something to an attribute)
-     */
     public void addNodes(final String key,
-            final Collection<ImmutableNode> nodes,
+            final Collection<? extends ImmutableNode> nodes,
             final NodeKeyResolver resolver)
     {
         if (nodes != null && !nodes.isEmpty())
@@ -257,19 +242,6 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
         }
     }
 
-    /**
-     * Changes the value of a property. This is a more complex operation as it
-     * might involve adding, updating, or deleting nodes and attributes from the
-     * model. The object representing the new value is passed to the
-     * {@code NodeKeyResolver} which will produce a corresponding
-     * {@link NodeUpdateData} object. Based on the content of this object,
-     * update operations are performed.
-     *
-     * @param key the key
-     * @param value the new value for this property (to be evaluated by the
-     *        {@code NodeKeyResolver})
-     * @param resolver the {@code NodeKeyResolver}
-     */
     public void setProperty(final String key, final Object value,
             final NodeKeyResolver resolver)
     {
@@ -300,12 +272,9 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
     }
 
     /**
-     * Removes the sub trees defined by the given key from this model. All nodes
-     * selected by this key are retrieved and removed from the model. If this
-     * causes other nodes to become undefined, they are removed, too.
-     *
-     * @param key the key selecting the properties to be removed
-     * @param resolver the {@code NodeKeyResolver}
+     * {@inheritDoc} This implementation checks whether nodes become undefined
+     * after subtrees have been removed. If this is the case, such nodes are
+     * removed, too.
      */
     public void clearTree(final String key, final NodeKeyResolver resolver)
     {
@@ -342,14 +311,8 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
     }
 
     /**
-     * Clears the value of a property. This method is similar to
-     * {@link #clearTree(String, NodeKeyResolver)}: However, the nodes
-     * referenced by the passed in key are not removed completely, but only
-     * their value is set to <b>null</b>. (If this operation leaves the affected
-     * node in an undefined state, it is indeed removed.)
-     *
-     * @param key the key selecting the properties to be cleared
-     * @param resolver the {@code NodeKeyResolver}
+     * {@inheritDoc} If this operation leaves an affected node in an undefined
+     * state, it is removed from the model.
      */
     public void clearProperty(final String key, final NodeKeyResolver resolver)
     {
@@ -365,7 +328,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
     }
 
     /**
-     * Removes all data from this model. A new empty root node is created with
+     * {@inheritDoc} A new empty root node is created with
      * the same name as the current root node. Implementation note: Because this
      * is a hard reset the usual dance for dealing with concurrent updates is
      * not required here.
@@ -381,16 +344,14 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>
     }
 
     /**
-     * Sets a new root node for this model. The whole structure is replaced by
-     * the new node and its children. Care has to be taken when this method is
-     * used and the model is accessed by multiple threads. It is not
-     * deterministic which concurrent operations see the old root and which see
-     * the new root node.
+     * {@inheritDoc} Care has to be taken when this method is used and the model
+     * is accessed by multiple threads. It is not deterministic which concurrent
+     * operations see the old root and which see the new root node.
      *
      * @param newRoot the new root node to be set (can be <b>null</b>, then an
      *        empty root node is set)
      */
-    public void setRoot(ImmutableNode newRoot)
+    public void setRootNode(ImmutableNode newRoot)
     {
         structure.set(createTreeData(initialRootNode(newRoot)));
     }

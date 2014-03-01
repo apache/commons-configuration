@@ -1233,7 +1233,7 @@ public class TestInMemoryNodeModel
     {
         InMemoryNodeModel model =
                 new InMemoryNodeModel(NodeStructureHelper.ROOT_PERSONAE_TREE);
-        model.setRoot(NodeStructureHelper.ROOT_AUTHORS_TREE);
+        model.setRootNode(NodeStructureHelper.ROOT_AUTHORS_TREE);
         assertSame("Root node not changed",
                 NodeStructureHelper.ROOT_AUTHORS_TREE, model.getRootNode());
         ImmutableNode node = nodeForKey(model, "Homer/Ilias");
@@ -1249,7 +1249,7 @@ public class TestInMemoryNodeModel
     {
         InMemoryNodeModel model =
                 new InMemoryNodeModel(NodeStructureHelper.ROOT_PERSONAE_TREE);
-        model.setRoot(null);
+        model.setRootNode(null);
         ImmutableNode rootNode = model.getRootNode();
         assertTrue("Got children", rootNode.getChildren().isEmpty());
     }

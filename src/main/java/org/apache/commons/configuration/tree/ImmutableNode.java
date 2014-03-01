@@ -438,10 +438,11 @@ public class ImmutableNode
          * {@link #addChild(ImmutableNode)}, but it allows setting a number of
          * child nodes at once.
          *
+         *
          * @param children a collection with the child nodes to be added
          * @return a reference to this object for method chaining
          */
-        public Builder addChildren(Collection<ImmutableNode> children)
+        public Builder addChildren(Collection<? extends ImmutableNode> children)
         {
             if (children != null)
             {
@@ -593,11 +594,12 @@ public class ImmutableNode
         /**
          * Filters null entries from the passed in collection with child nodes.
          *
+         *
          * @param children the collection to be filtered
          * @return the collection with null entries removed
          */
         private static Collection<? extends ImmutableNode> filterNull(
-                Collection<ImmutableNode> children)
+                Collection<? extends ImmutableNode> children)
         {
             List<ImmutableNode> result =
                     new ArrayList<ImmutableNode>(children.size());
