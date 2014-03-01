@@ -315,6 +315,21 @@ public class NodeStructureHelper
     }
 
     /**
+     * Helper method for creating a field node with its children. Nodes of this
+     * type are used within the tables tree. They define a single column of a
+     * table.
+     *
+     * @param name the name of the field
+     * @return the field node
+     */
+    public static ImmutableNode createFieldNode(String name)
+    {
+        ImmutableNode.Builder fldBuilder = new ImmutableNode.Builder(1);
+        fldBuilder.addChild(createNode("name", name));
+        return fldBuilder.name("field").create();
+    }
+
+    /**
      * Creates a tree with a root node whose children are the test authors. Each
      * other has his works as child nodes. Each work has its personae as
      * children.
@@ -415,19 +430,6 @@ public class NodeStructureHelper
             bldTables.addChild(bldTable.name("table").create());
         }
         return bldTables.create();
-    }
-
-    /**
-     * Helper method for creating a field node with its children.
-     *
-     * @param name the name of the field
-     * @return the field node
-     */
-    private static ImmutableNode createFieldNode(String name)
-    {
-        ImmutableNode.Builder fldBuilder = new ImmutableNode.Builder(1);
-        fldBuilder.addChild(createNode("name", name));
-        return fldBuilder.name("field").create();
     }
 
     /**

@@ -45,7 +45,6 @@ import org.apache.commons.configuration.tree.InMemoryNodeModel;
 import org.apache.commons.configuration.tree.NodeModel;
 import org.apache.commons.configuration.tree.NodeStructureHelper;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -554,37 +553,38 @@ public class TestAbstractHierarchicalConfiguration
                 clone.getString(keyAnswer));
     }
 
-    @Test @Ignore
+    @Test
     public void testAddNodes()
     {
-        //TODO rework
-//        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>();
-//        nodes.add(createFieldNode("birthDate"));
-//        nodes.add(createFieldNode("lastLogin"));
-//        nodes.add(createFieldNode("language"));
-//        config.addNodes("tables.table(0).fields", nodes);
-//        assertEquals(7, config.getMaxIndex("tables.table(0).fields.field"));
-//        assertEquals("birthDate", config.getString("tables.table(0).fields.field(5).name"));
-//        assertEquals("lastLogin", config.getString("tables.table(0).fields.field(6).name"));
-//        assertEquals("language", config.getString("tables.table(0).fields.field(7).name"));
+        Collection<ImmutableNode> nodes = new ArrayList<ImmutableNode>();
+        nodes.add(NodeStructureHelper.createFieldNode("birthDate"));
+        nodes.add(NodeStructureHelper.createFieldNode("lastLogin"));
+        nodes.add(NodeStructureHelper.createFieldNode("language"));
+        config.addNodes("tables.table(0).fields", nodes);
+        assertEquals(7, config.getMaxIndex("tables.table(0).fields.field"));
+        assertEquals("birthDate", config.getString("tables.table(0).fields.field(5).name"));
+        assertEquals("lastLogin", config.getString("tables.table(0).fields.field(6).name"));
+        assertEquals("language", config.getString("tables.table(0).fields.field(7).name"));
     }
 
     /**
-     * Tests the addNodes() method when the provided key does not exist. In
-     * this case, a new node (or even a complete new branch) will be created.
+     * Tests the addNodes() method if the provided key does not exist. In
+     * this case, a new node (or even a completely new branch) is created.
      */
-    @Test @Ignore
+    @Test
     public void testAddNodesForNonExistingKey()
     {
-//        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>();
-//        nodes.add(createNode("usr", "scott"));
-//        ConfigurationNode nd = createNode("pwd", "tiger");
-//        nd.setAttribute(true);
-//        nodes.add(nd);
-//        config.addNodes("database.connection.settings", nodes);
-//
-//        assertEquals("Usr node not found", "scott", config.getString("database.connection.settings.usr"));
-//        assertEquals("Pwd node not found", "tiger", config.getString("database.connection.settings[@pwd]"));
+        Collection<ImmutableNode> nodes = new ArrayList<ImmutableNode>();
+        ImmutableNode newNode =
+                new ImmutableNode.Builder().name("usr").value("scott")
+                        .addAttribute("pwd", "tiger").create();
+        nodes.add(newNode);
+        config.addNodes("database.connection.settings", nodes);
+
+        assertEquals("Usr node not found", "scott",
+                config.getString("database.connection.settings.usr"));
+        assertEquals("Pwd node not found", "tiger",
+                config.getString("database.connection.settings.usr[@pwd]"));
     }
 
     /**
@@ -602,41 +602,31 @@ public class TestAbstractHierarchicalConfiguration
     /**
      * Tests copying nodes from one configuration to another one.
      */
-    @Test @Ignore
+    @Test
     public void testAddNodesCopy()
     {
-//        BaseHierarchicalConfiguration configDest = new BaseHierarchicalConfiguration();
-//        configDest.addProperty("test", "TEST");
-//        Collection<ConfigurationNode> nodes = config.getRootNode().getChildren();
-//        assertEquals("Wrong number of children", 1, nodes.size());
-//        configDest.addNodes("newNodes", nodes);
-//        for (int i = 0; i < tables.length; i++)
-//        {
-//            String keyTab = "newNodes.tables.table(" + i + ").";
-//            assertEquals("Table " + i + " not found", tables[i], configDest
-//                    .getString(keyTab + "name"));
-//            for (int j = 0; j < fields[i].length; j++)
-//            {
-//                assertEquals("Invalid field " + j + " in table " + i,
-//                        fields[i][j], configDest.getString(keyTab
-//                                + "fields.field(" + j + ").name"));
-//            }
-//        }
-    }
-
-    /**
-     * Tests adding an attribute node with the addNodes() method.
-     */
-    @Test @Ignore
-    public void testAddNodesAttributeNode()
-    {
-//        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>();
-//        ConfigurationNode nd = createNode("length", "10");
-//        nd.setAttribute(true);
-//        nodes.add(nd);
-//        config.addNodes("tables.table(0).fields.field(1)", nodes);
-//        assertEquals("Attribute was not added", "10", config
-//                .getString("tables.table(0).fields.field(1)[@length]"));
+        AbstractHierarchicalConfigurationTestImpl configDest =
+                new AbstractHierarchicalConfigurationTestImpl(
+                        new InMemoryNodeModel());
+        configDest.addProperty("test", "TEST");
+        Collection<ImmutableNode> nodes = config.getRootNode().getChildren();
+        assertEquals("Wrong number of children", 1, nodes.size());
+        configDest.addNodes("newNodes", nodes);
+        for (int i = 0; i < NodeStructureHelper.tablesLength(); i++)
+        {
+            String keyTab = "newNodes.tables.table(" + i + ").";
+            assertEquals("Table " + i + " not found",
+                    NodeStructureHelper.table(i),
+                    configDest.getString(keyTab + "name"));
+            for (int j = 0; j < NodeStructureHelper.fieldsLength(i); j++)
+            {
+                assertEquals(
+                        "Invalid field " + j + " in table " + i,
+                        NodeStructureHelper.field(i, j),
+                        configDest.getString(keyTab + "fields.field(" + j
+                                + ").name"));
+            }
+        }
     }
 
     /**
@@ -665,7 +655,6 @@ public class TestAbstractHierarchicalConfiguration
         config.addProperty("test.absolute.dir.dir1", "${base.dir}/path1");
         config.addProperty("test.absolute.dir.dir2", "${base.dir}/path2");
         config.addProperty("test.absolute.dir.dir3", "${base.dir}/path3");
-        //TODO check
         Configuration sub = config.subset("test.absolute.dir");
         for (int i = 1; i < 4; i++)
         {
