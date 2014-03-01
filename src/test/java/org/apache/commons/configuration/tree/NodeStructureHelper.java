@@ -81,6 +81,22 @@ public class NodeStructureHelper
             }
     };
 
+    /** An array with table names used for the TABLES tree. */
+    private static final String[] TABLES = {
+            "users", "documents"
+    };
+
+    /**
+     * An array with the names of columns to be used for the TABLES tree.
+     */
+    private static final String[][] FIELDS = {
+            {
+                    "uid", "uname", "firstName", "lastName", "email"
+            }, {
+                    "docid", "name", "creationDate", "authorID", "version"
+            }
+    };
+
     /** Constant for the author attribute. */
     public static final String ATTR_AUTHOR = "author";
 
@@ -95,6 +111,9 @@ public class NodeStructureHelper
 
     /** The root node of the personae tree. */
     public static final ImmutableNode ROOT_PERSONAE_TREE = createPersonaeTree();
+
+    /** The root node of the TABLES tree. */
+    public static final ImmutableNode ROOT_TABLES_TREE = createTablesTree();
 
     /**
      * Returns the number of authors.
@@ -163,6 +182,50 @@ public class NodeStructureHelper
     public static String persona(int authorIdx, int workIdx, int personaIdx)
     {
         return PERSONAE[authorIdx][workIdx][personaIdx];
+    }
+
+    /**
+     * Returns the number of tables in the tables tree.
+     *
+     * @return the number of tables
+     */
+    public static int tablesLength()
+    {
+        return TABLES.length;
+    }
+
+    /**
+     * Returns the name of the test table with the given index.
+     *
+     * @param idx the index of the table
+     * @return the name of the test table with this index
+     */
+    public static String table(int idx)
+    {
+        return TABLES[idx];
+    }
+
+    /**
+     * Returns the number of fields in the test table with the given index.
+     *
+     * @param tabIdx the index of the table
+     * @return the number of fields in this table
+     */
+    public static int fieldsLength(int tabIdx)
+    {
+        return FIELDS[tabIdx].length;
+    }
+
+    /**
+     * Returns the name of the specified field in the tables tree.
+     *
+     * @param tabIdx the index of the table
+     * @param fldIdx the index of the field
+     * @return the name of this field
+     */
+    public static String field(int tabIdx, int fldIdx)
+    {
+        return FIELDS[tabIdx][fldIdx];
     }
 
     /**
@@ -240,6 +303,18 @@ public class NodeStructureHelper
     }
 
     /**
+     * Helper method for creating an immutable node with a name and a value.
+     *
+     * @param name the node's name
+     * @param value the node's value
+     * @return the new node
+     */
+    public static ImmutableNode createNode(String name, Object value)
+    {
+        return new ImmutableNode.Builder().name(name).value(value).create();
+    }
+
+    /**
      * Creates a tree with a root node whose children are the test authors. Each
      * other has his works as child nodes. Each work has its personae as
      * children.
@@ -305,6 +380,54 @@ public class NodeStructureHelper
             }
         }
         return rootBuilder.create();
+    }
+
+    /**
+     * Creates a tree with database table data with the following structure:
+     *
+     * tables
+     *      table
+     *         name
+     *         fields
+     *             field
+     *                 name
+     *             field
+     *                 name
+     */
+    private static ImmutableNode createTablesTree()
+    {
+        ImmutableNode.Builder bldTables =
+                new ImmutableNode.Builder(TABLES.length);
+        bldTables.name("tables");
+        for (int i = 0; i < TABLES.length; i++)
+        {
+            ImmutableNode.Builder bldTable = new ImmutableNode.Builder(2);
+            bldTable.addChild(createNode("name", TABLES[i]));
+            ImmutableNode.Builder bldFields =
+                    new ImmutableNode.Builder(FIELDS[i].length);
+            bldFields.name("fields");
+
+            for (int j = 0; j < FIELDS[i].length; j++)
+            {
+                bldFields.addChild(createFieldNode(FIELDS[i][j]));
+            }
+            bldTable.addChild(bldFields.create());
+            bldTables.addChild(bldTable.name("table").create());
+        }
+        return bldTables.create();
+    }
+
+    /**
+     * Helper method for creating a field node with its children.
+     *
+     * @param name the name of the field
+     * @return the field node
+     */
+    private static ImmutableNode createFieldNode(String name)
+    {
+        ImmutableNode.Builder fldBuilder = new ImmutableNode.Builder(1);
+        fldBuilder.addChild(createNode("name", name));
+        return fldBuilder.name("field").create();
     }
 
     /**
