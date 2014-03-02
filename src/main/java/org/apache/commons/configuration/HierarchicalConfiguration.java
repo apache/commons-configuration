@@ -19,7 +19,6 @@ package org.apache.commons.configuration;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 
 /**
@@ -28,14 +27,21 @@ import org.apache.commons.configuration.tree.ExpressionEngine;
  * </p>
  * <p>
  * This interface introduces methods for manipulating tree-like structured
- * configuration sources. Also, all methods defined by the
- * {@code Configuration} interface are available.
+ * configuration sources. Also, all methods defined by the {@code Configuration}
+ * interface are available.
+ * </p>
+ * <p>
+ * This interface does not make any assumptions about the concrete type of nodes
+ * used by an implementation; this is reflected by a generic type parameter.
+ * Concrete implementations may therefore define their own hierarchical
+ * structures.
  * </p>
  *
  * @version $Id$
  * @since 2.0
+ * @param <T> the type of the nodes used by this hierarchical configuration
  */
-public interface HierarchicalConfiguration
+public interface HierarchicalConfiguration<T>
     extends Configuration, ImmutableHierarchicalConfiguration
 {
     /**
@@ -43,14 +49,14 @@ public interface HierarchicalConfiguration
      *
      * @return the root node
      */
-    ConfigurationNode getRootNode();
+    T getRootNode();
 
     /**
      * Sets the root node of this hierarchical configuration.
      *
      * @param rootNode the root node
      */
-    void setRootNode(ConfigurationNode rootNode);
+    void setRootNode(T rootNode);
 
     /**
      * Sets the expression engine to be used by this configuration. All property
@@ -83,7 +89,7 @@ public interface HierarchicalConfiguration
      * @param nodes a collection with the {@code Node} objects to be
      * added
      */
-    void addNodes(String key, Collection<? extends ConfigurationNode> nodes);
+    void addNodes(String key, Collection<? extends T> nodes);
 
     /**
      * <p>
