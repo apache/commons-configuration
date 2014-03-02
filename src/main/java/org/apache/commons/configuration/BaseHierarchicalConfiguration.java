@@ -30,11 +30,13 @@ import java.util.WeakHashMap;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
 import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.InMemoryNodeModel;
 import org.apache.commons.configuration.tree.NodeModel;
+import org.apache.commons.configuration.tree.QueryResult;
 
 /**
  * <p>
@@ -128,75 +130,87 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         beginRead(false);
         try
         {
-//            Collection<ConfigurationNode> nodes = fetchNodeList(prefix);
-//            if (nodes.isEmpty())
-//            {
-//                return new BaseHierarchicalConfiguration();
-//            }
-//
-//            final BaseHierarchicalConfiguration parent = this;
-//            BaseHierarchicalConfiguration result =
-//                    new BaseHierarchicalConfiguration()
-//                    {
-//                        // Override interpolate to always interpolate on the parent
-//                        @Override
-//                        protected Object interpolate(Object value)
-//                        {
-//                            return parent.interpolate(value);
-//                        }
-//
-//                        @Override
-//                        public ConfigurationInterpolator getInterpolator()
-//                        {
-//                            return parent.getInterpolator();
-//                        }
-//                    };
-//            CloneVisitor visitor = new CloneVisitor();
-//
-//            // Initialize the new root node
-//            Object value = null;
-//            int valueCount = 0;
-//            for (ConfigurationNode nd : nodes)
-//            {
-//                if (nd.getValue() != null)
-//                {
-//                    value = nd.getValue();
-//                    valueCount++;
-//                }
-//                nd.visit(visitor);
-//
-//                for (ConfigurationNode c : visitor.getClone().getChildren())
-//                {
-//                    result.getRootNode().addChild(c);
-//                }
-//                for (ConfigurationNode attr : visitor.getClone()
-//                        .getAttributes())
-//                {
-//                    result.getRootNode().addAttribute(attr);
-//                }
-//            }
-//
-//            // Determine the value of the new root
-//            if (valueCount == 1)
-//            {
-//                result.getRootNode().setValue(value);
-//            }
-//            if (result.isEmpty())
-//            {
-//                return new BaseHierarchicalConfiguration();
-//            }
-//            else
-//            {
-//                result.setSynchronizer(getSynchronizer());
-//                return result;
-//            }
-            //TODO implementation
-            return null;
+            List<QueryResult<ImmutableNode>> results = fetchNodeList(prefix);
+            if (results.isEmpty())
+            {
+                return new BaseHierarchicalConfiguration();
+            }
+
+            final BaseHierarchicalConfiguration parent = this;
+            BaseHierarchicalConfiguration result =
+                    new BaseHierarchicalConfiguration()
+                    {
+                        // Override interpolate to always interpolate on the parent
+                        @Override
+                        protected Object interpolate(Object value)
+                        {
+                            return parent.interpolate(value);
+                        }
+
+                        @Override
+                        public ConfigurationInterpolator getInterpolator()
+                        {
+                            return parent.getInterpolator();
+                        }
+                    };
+            result.setRootNode(createSubsetRootNode(results));
+
+            if (result.isEmpty())
+            {
+                return new BaseHierarchicalConfiguration();
+            }
+            else
+            {
+                result.setSynchronizer(getSynchronizer());
+                return result;
+            }
         }
         finally
         {
             endRead();
         }
+    }
+
+    /**
+     * Creates a root node for a subset configuration based on the passed in
+     * query results. This method creates a new root node and adds the children
+     * and attributes of all result nodes to it. If only a single node value is
+     * defined, it is assigned as value of the new root node.
+     *
+     * @param results the collection of query results
+     * @return the root node for the subset configuration
+     */
+    private ImmutableNode createSubsetRootNode(
+            Collection<QueryResult<ImmutableNode>> results)
+    {
+        ImmutableNode.Builder builder = new ImmutableNode.Builder();
+        Object value = null;
+        int valueCount = 0;
+
+        for (QueryResult<ImmutableNode> result : results)
+        {
+            if (result.isAttributeResult())
+            {
+                builder.addAttribute(result.getAttributeName(),
+                        result.getAttributeValue(getModel().getNodeHandler()));
+            }
+            else
+            {
+                if (result.getNode().getValue() != null)
+                {
+                    value = result.getNode().getValue();
+                    valueCount++;
+                }
+                builder.addChildren(result.getNode().getChildren());
+                builder.addAttributes(result.getNode().getAttributes());
+            }
+        }
+
+        if (valueCount == 1)
+        {
+            builder.value(value);
+        }
+        return builder.create();
     }
 
     /**

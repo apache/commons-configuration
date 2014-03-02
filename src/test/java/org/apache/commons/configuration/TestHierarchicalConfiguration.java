@@ -100,7 +100,7 @@ public class TestHierarchicalConfiguration
     }
 
     /**
-     * Tests the subset() method when the specified node has a value. This value
+     * Tests the subset() method if the specified node has a value. This value
      * must be available in the subset, too. Related to CONFIGURATION-295.
      */
     @Test
@@ -114,7 +114,7 @@ public class TestHierarchicalConfiguration
     }
 
     /**
-     * Tests the subset() method when the specified key selects multiple keys.
+     * Tests the subset() method if the specified key selects multiple keys.
      * The resulting root node should have a value only if exactly one of the
      * selected nodes has a value. Related to CONFIGURATION-295.
      */
@@ -128,6 +128,22 @@ public class TestHierarchicalConfiguration
         subset = config.subset("tables.table.fields");
         assertNull("Root value is not null though there are multiple values",
                 subset.getString(""));
+    }
+
+    /**
+     * Tests subset() if the passed in key selects an attribute.
+     */
+    @Test
+    public void testSubsetAttributeResult()
+    {
+        String key = "tables.table(0)[@type]";
+        config.addProperty(key, "system");
+        BaseHierarchicalConfiguration subset =
+                (BaseHierarchicalConfiguration) config.subset(key);
+        assertTrue("Got children of root node", subset.getRootNode()
+                .getChildren().isEmpty());
+        assertEquals("Attribute not found", "system",
+                subset.getString("[@type]"));
     }
 
     /**
