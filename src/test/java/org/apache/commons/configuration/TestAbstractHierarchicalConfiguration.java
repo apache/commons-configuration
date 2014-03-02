@@ -910,5 +910,50 @@ public class TestAbstractHierarchicalConfiguration
         {
             return new InMemoryNodeModel(getModel().getRootNode());
         }
+
+        public SubnodeConfiguration configurationAt(String key,
+                boolean supportUpdates)
+        {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        public SubnodeConfiguration configurationAt(String key)
+        {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        public List<SubnodeConfiguration> configurationsAt(String key)
+        {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        public List<SubnodeConfiguration> childConfigurationsAt(String key)
+        {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        public ImmutableHierarchicalConfiguration immutableConfigurationAt(
+                String key, boolean supportUpdates)
+        {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        public ImmutableHierarchicalConfiguration immutableConfigurationAt(
+                String key)
+        {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        public List<ImmutableHierarchicalConfiguration> immutableConfigurationsAt(
+                String key)
+        {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        public List<ImmutableHierarchicalConfiguration> immutableChildConfigurationsAt(
+                String key)
+        {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
     }
 }

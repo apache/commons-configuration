@@ -160,7 +160,7 @@ import org.apache.commons.configuration.tree.QueryResult;
  * @param  <T> the type of the nodes managed by this hierarchical configuration
  */
 public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfiguration
-    implements Cloneable, NodeKeyResolver<T>
+    implements Cloneable, NodeKeyResolver<T>, HierarchicalConfiguration<T>
 {
     /**
      * Constant for the clear tree event.
