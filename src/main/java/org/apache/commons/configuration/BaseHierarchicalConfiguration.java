@@ -623,10 +623,16 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         return null;
     }
 
+    /**
+     * {@inheritDoc} This implementation creates a new instance of
+     * {@link InMemoryNodeModel}, initialized with this configuration's root
+     * node. This has the effect that although the same nodes are used, the
+     * original and copied configurations are independent on each other.
+     */
     @Override
-    protected NodeModel<ImmutableNode> cloneNodeModel() {
-        //TODO implementation
-        return null;
+    protected NodeModel<ImmutableNode> cloneNodeModel()
+    {
+        return new InMemoryNodeModel(getRootNode());
     }
 
     /**

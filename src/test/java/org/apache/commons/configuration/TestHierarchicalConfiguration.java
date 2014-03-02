@@ -322,6 +322,7 @@ public class TestHierarchicalConfiguration
     {
         Configuration copy = (Configuration) config.clone();
         assertTrue(copy instanceof BaseHierarchicalConfiguration);
+        config.setProperty("tables.table(0).name", "changed table name");
         checkContent(copy);
     }
 
