@@ -74,7 +74,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     public BaseHierarchicalConfiguration()
     {
-        super(new InMemoryNodeModel());
+        this(null);
     }
 
     /**
@@ -88,9 +88,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     public BaseHierarchicalConfiguration(HierarchicalConfiguration<ImmutableNode> c)
     {
-        this();
-        //TODO implementation
-        throw new UnsupportedOperationException("Not yet implemented!");
+        super(createNodeModel(c));
     }
 
     /**
@@ -651,6 +649,23 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
             res.add(ConfigurationUtils.unmodifiableConfiguration(sub));
         }
         return res;
+    }
+
+    /**
+     * Creates the {@code NodeModel} for this configuration based on a passed in
+     * source configuration. This implementation creates an
+     * {@link InMemoryNodeModel}. If the passed in source configuration is
+     * defined, its root node also becomes the root node of this configuration.
+     * Otherwise, a new, empty root node is used.
+     *
+     * @param c the configuration that is to be copied
+     * @return the {@code NodeModel} for the new configuration
+     */
+    private static NodeModel<ImmutableNode> createNodeModel(
+            HierarchicalConfiguration<ImmutableNode> c)
+    {
+        ImmutableNode root = (c != null) ? c.getRootNode() : null;
+        return new InMemoryNodeModel(root);
     }
 
     /**
