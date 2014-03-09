@@ -23,6 +23,9 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -290,6 +293,34 @@ public class TestInMemoryNodeModelTrackedNodes
     }
 
     /**
+     * Helper method for checking whether the expected field node was removed.
+     *
+     * @param nodeFields the fields node
+     * @param idx the index of the removed field
+     */
+    private static void checkForRemovedField(ImmutableNode nodeFields, int idx)
+    {
+        assertEquals("Field not removed",
+                NodeStructureHelper.fieldsLength(1) - 1, nodeFields
+                        .getChildren().size());
+        Set<String> expectedNames = new HashSet<String>();
+        Set<String> actualNames = new HashSet<String>();
+        for (int i = 0; i < NodeStructureHelper.fieldsLength(1); i++)
+        {
+            if (idx != i)
+            {
+                expectedNames.add(NodeStructureHelper.field(1, i));
+            }
+        }
+        for (ImmutableNode field : nodeFields.getChildren())
+        {
+            ImmutableNode nodeName = field.getChildren().get(0);
+            actualNames.add(String.valueOf(nodeName.getValue()));
+        }
+        assertEquals("Wrong field names", expectedNames, actualNames);
+    }
+
+    /**
      * Tests whether clearProperty() can operate on a tracked node.
      */
     @Test
@@ -300,17 +331,11 @@ public class TestInMemoryNodeModelTrackedNodes
         model.clearProperty("fields.field(0).name", selector, resolver);
         ImmutableNode nodeFields =
                 NodeStructureHelper.nodeForKey(model, "tables/table(1)/fields");
-        assertEquals("Field not removed",
-                NodeStructureHelper.fieldsLength(1) - 1, nodeFields
-                        .getChildren().size());
-        ImmutableNode nodeName =
-                NodeStructureHelper.nodeForKey(nodeFields, "field(0)/name");
-        assertEquals("Wrong node value cleared",
-                NodeStructureHelper.field(1, 1), nodeName.getValue());
+        checkForRemovedField(nodeFields, 0);
     }
 
     /**
-     * Tests a clearProperty() on a tracked node which is detached.
+     * Tests a clearProperty() operation on a tracked node which is detached.
      */
     @Test
     public void testClearPropertyOnDetachedNode()
@@ -323,12 +348,37 @@ public class TestInMemoryNodeModelTrackedNodes
         ImmutableNode nodeFields =
                 NodeStructureHelper.nodeForKey(model.getTrackedNode(selector),
                         "fields");
-        assertEquals("Field not removed",
-                NodeStructureHelper.fieldsLength(1) - 1, nodeFields
-                        .getChildren().size());
-        ImmutableNode nodeName =
-                NodeStructureHelper.nodeForKey(nodeFields, "field(0)/name");
-        assertEquals("Wrong node value cleared",
-                NodeStructureHelper.field(1, 1), nodeName.getValue());
+        checkForRemovedField(nodeFields, 0);
+    }
+
+    /**
+     * Tests whether clearTree() can operate on a tracked node.
+     */
+    @Test
+    public void testClearTreeOnTrackedNode()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        model.trackNode(selector, resolver);
+        model.clearTree("fields.field(1)", selector, resolver);
+        ImmutableNode nodeFields =
+                NodeStructureHelper.nodeForKey(model, "tables/table(1)/fields");
+        checkForRemovedField(nodeFields, 1);
+    }
+
+    /**
+     * Tests a clearTree() operation on a tracked node which is detached.
+     */
+    @Test
+    public void testClearTreeOnDetachedNode()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        initDetachedNode(resolver);
+        ImmutableNode rootNode = model.getRootNode();
+        model.clearTree("fields.field(1)", selector, resolver);
+        assertSame("Model root was changed", rootNode, model.getRootNode());
+        ImmutableNode nodeFields =
+                NodeStructureHelper.nodeForKey(model.getTrackedNode(selector),
+                        "fields");
+        checkForRemovedField(nodeFields, 1);
     }
 }

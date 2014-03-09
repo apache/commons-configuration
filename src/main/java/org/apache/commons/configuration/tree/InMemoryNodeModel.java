@@ -195,7 +195,24 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * after subtrees have been removed. If this is the case, such nodes are
      * removed, too.
      */
-    public void clearTree(final String key,
+    public void clearTree(String key, NodeKeyResolver<ImmutableNode> resolver)
+    {
+        clearTree(key, null, resolver);
+    }
+
+    /**
+     * Clears a whole sub tree using a tracked node as root node. This method
+     * works like the normal {@code clearTree()} method, but the origin of the
+     * operation (also for the interpretation of the passed in key) is a tracked
+     * node identified by the passed in {@code NodeSelector}. The selector can
+     * be <b>null</b>, then the root node is assumed.
+     *
+     * @param key the key
+     * @param selector the {@code NodeSelector} defining the root node (or
+     *        <b>null</b>)
+     * @param resolver the {@code NodeKeyResolver}
+     */
+    public void clearTree(final String key, NodeSelector selector,
             final NodeKeyResolver<ImmutableNode> resolver)
     {
         updateModel(new TransactionInitializer()
@@ -203,9 +220,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             public boolean initTransaction(ModelTransaction tx)
             {
                 TreeData currentStructure = tx.getCurrentData();
-                for (QueryResult<ImmutableNode> result : resolver
-                        .resolveKey(currentStructure.getRootNode(), key,
-                                tx.getCurrentData()))
+                for (QueryResult<ImmutableNode> result : resolver.resolveKey(
+                        tx.getQueryRoot(), key, currentStructure))
                 {
                     if (result.isAttributeResult())
                     {
@@ -227,7 +243,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                 }
                 return true;
             }
-        }, null, resolver);
+        }, selector, resolver);
     }
 
     /**
