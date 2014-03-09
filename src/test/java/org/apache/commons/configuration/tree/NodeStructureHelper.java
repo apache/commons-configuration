@@ -16,11 +16,15 @@
  */
 package org.apache.commons.configuration.tree;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.dbunit.dataset.csv.handlers.NoHandler;
+import org.easymock.EasyMock;
+import org.easymock.IAnswer;
 
 /**
  * A helper class for tests related to hierarchies of {@code ImmutableNode}
@@ -327,6 +331,49 @@ public class NodeStructureHelper
         ImmutableNode.Builder fldBuilder = new ImmutableNode.Builder(1);
         fldBuilder.addChild(createNode("name", name));
         return fldBuilder.name("field").create();
+    }
+
+    /**
+     * Creates a mock for a resolver.
+     *
+     * @return the resolver mock
+     */
+    public static NodeKeyResolver<ImmutableNode> createResolverMock()
+    {
+        @SuppressWarnings("unchecked")
+        NodeKeyResolver<ImmutableNode> mock =
+                EasyMock.createMock(NodeKeyResolver.class);
+        return mock;
+    }
+
+    /**
+     * Prepares a mock for a resolver to expect arbitrary resolve operations.
+     * These operations are implemented on top of a default expression engine.
+     *
+     * @param resolver the mock resolver
+     */
+    @SuppressWarnings("unchecked")
+    public static void expectResolveKeyForQueries(
+            NodeKeyResolver<ImmutableNode> resolver)
+    {
+        EasyMock.expect(
+                resolver.resolveKey(EasyMock.anyObject(ImmutableNode.class),
+                        EasyMock.anyObject(String.class),
+                        (NodeHandler<ImmutableNode>) EasyMock
+                                .anyObject(NoHandler.class)))
+                .andAnswer(new IAnswer<List<QueryResult<ImmutableNode>>>() {
+                    public List<QueryResult<ImmutableNode>> answer()
+                            throws Throwable {
+                        ImmutableNode root =
+                                (ImmutableNode) EasyMock.getCurrentArguments()[0];
+                        String key = (String) EasyMock.getCurrentArguments()[1];
+                        NodeHandler<ImmutableNode> handler =
+                                (NodeHandler<ImmutableNode>) EasyMock
+                                        .getCurrentArguments()[2];
+                        return DefaultExpressionEngine.INSTANCE.query(root,
+                                key, handler);
+                    }
+                }).anyTimes();
     }
 
     /**

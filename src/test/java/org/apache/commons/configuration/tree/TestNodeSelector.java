@@ -70,44 +70,11 @@ public class TestNodeSelector
      */
     private static NodeKeyResolver<ImmutableNode> createResolver()
     {
-        return new NodeKeyResolver<ImmutableNode>()
-        {
-            public List<QueryResult<ImmutableNode>> resolveKey(
-                    ImmutableNode root, String key,
-                    NodeHandler<ImmutableNode> handler)
-            {
-                return DefaultExpressionEngine.INSTANCE.query(root, key,
-                        handler);
-            }
-
-            public NodeAddData<ImmutableNode> resolveAddKey(ImmutableNode root,
-                    String key, NodeHandler<ImmutableNode> handler)
-            {
-                throw new UnsupportedOperationException(
-                        "Unexpected method call!");
-            }
-
-            public NodeUpdateData<ImmutableNode> resolveUpdateKey(
-                    ImmutableNode root, String key, Object newValue,
-                    NodeHandler<ImmutableNode> handler)
-            {
-                throw new UnsupportedOperationException(
-                        "Unexpected method call!");
-            }
-        };
-    }
-
-    /**
-     * Creates a mock for a resolver.
-     *
-     * @return the resolver mock
-     */
-    private static NodeKeyResolver<ImmutableNode> createResolverMock()
-    {
-        @SuppressWarnings("unchecked")
-        NodeKeyResolver<ImmutableNode> mock =
-                EasyMock.createMock(NodeKeyResolver.class);
-        return mock;
+        NodeKeyResolver<ImmutableNode> resolver =
+                NodeStructureHelper.createResolverMock();
+        NodeStructureHelper.expectResolveKeyForQueries(resolver);
+        EasyMock.replay(resolver);
+        return resolver;
     }
 
     /**
@@ -129,7 +96,8 @@ public class TestNodeSelector
     @Test
     public void testSelectSingleAttributeKey()
     {
-        NodeKeyResolver<ImmutableNode> resolverMock = createResolverMock();
+        NodeKeyResolver<ImmutableNode> resolverMock =
+                NodeStructureHelper.createResolverMock();
         EasyMock.expect(resolverMock.resolveKey(root, KEY, handler)).andReturn(
                 Collections.singletonList(QueryResult.createAttributeResult(
                         root, KEY)));
@@ -145,7 +113,8 @@ public class TestNodeSelector
     @Test
     public void testSelectIgnoreAttributeResults()
     {
-        NodeKeyResolver<ImmutableNode> resolverMock = createResolverMock();
+        NodeKeyResolver<ImmutableNode> resolverMock =
+                NodeStructureHelper.createResolverMock();
         List<QueryResult<ImmutableNode>> results =
                 new LinkedList<QueryResult<ImmutableNode>>();
         results.add(QueryResult.createAttributeResult(
