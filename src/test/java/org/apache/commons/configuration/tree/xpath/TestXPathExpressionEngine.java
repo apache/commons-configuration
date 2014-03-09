@@ -61,7 +61,7 @@ public class TestXPathExpressionEngine
     public static void setUpBeforeClass() throws Exception
     {
         root = new ImmutableNode.Builder().name(ROOT_NAME).create();
-        handler = new InMemoryNodeModel(root);
+        handler = new InMemoryNodeModel(root).getNodeHandler();
     }
 
     /**
@@ -504,7 +504,8 @@ public class TestXPathExpressionEngine
                 new ImmutableNode.Builder().name("child_other").create();
         parentBuilder.addChildren(Arrays.asList(c2, c1));
         ImmutableNode parent = parentBuilder.create();
-        NodeHandler<ImmutableNode> testHandler = new InMemoryNodeModel(parent);
+        NodeHandler<ImmutableNode> testHandler =
+                new InMemoryNodeModel(parent).getNodeHandler();
         XPathExpressionEngine engine = new XPathExpressionEngine();
         assertEquals("Wrong canonical key", "parent/child[1]",
                 engine.canonicalKey(c1, "parent", testHandler));
@@ -524,7 +525,8 @@ public class TestXPathExpressionEngine
                 new ImmutableNode.Builder().name("child_other").create();
         parentBuilder.addChildren(Arrays.asList(c1, c2, c3));
         ImmutableNode parent = parentBuilder.create();
-        NodeHandler<ImmutableNode> testHandler = new InMemoryNodeModel(parent);
+        NodeHandler<ImmutableNode> testHandler =
+                new InMemoryNodeModel(parent).getNodeHandler();
         XPathExpressionEngine engine = new XPathExpressionEngine();
         assertEquals("Wrong key 1", "parent/child[1]",
                 engine.canonicalKey(c1, "parent", testHandler));
@@ -542,7 +544,8 @@ public class TestXPathExpressionEngine
         ImmutableNode.Builder parentBuilder = new ImmutableNode.Builder(1);
         ImmutableNode c1 = new ImmutableNode.Builder().name("child").create();
         ImmutableNode parent = parentBuilder.addChild(c1).create();
-        NodeHandler<ImmutableNode> testHandler = new InMemoryNodeModel(parent);
+        NodeHandler<ImmutableNode> testHandler =
+                new InMemoryNodeModel(parent).getNodeHandler();
         XPathExpressionEngine engine = new XPathExpressionEngine();
         assertEquals("Wrong key", "child[1]",
                 engine.canonicalKey(c1, null, testHandler));

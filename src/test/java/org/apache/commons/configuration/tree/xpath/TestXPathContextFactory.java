@@ -50,7 +50,8 @@ public class TestXPathContextFactory
     {
         ImmutableNode node =
                 new ImmutableNode.Builder().name("testRoot").create();
-        NodeHandler<ImmutableNode> handler = new InMemoryNodeModel(node);
+        NodeHandler<ImmutableNode> handler =
+                new InMemoryNodeModel(node).getNodeHandler();
         JXPathContext context = factory.createContext(node, handler);
 
         assertTrue("No lenient mode", context.isLenient());

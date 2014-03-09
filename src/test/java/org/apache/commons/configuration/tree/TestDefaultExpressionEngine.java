@@ -65,7 +65,7 @@ public class TestDefaultExpressionEngine
     public static void setUpBeforeClass()
     {
         root = setUpNodes();
-        handler = new InMemoryNodeModel(root);
+        handler = new InMemoryNodeModel(root).getNodeHandler();
     }
 
     @Before

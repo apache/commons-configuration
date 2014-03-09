@@ -54,7 +54,7 @@ public class TestNodeSelector
     public static void setUpBeforeClass() throws Exception
     {
         resolver = createResolver();
-        handler = new InMemoryNodeModel();
+        handler = new InMemoryNodeModel().getNodeHandler();
         root =
                 new ImmutableNode.Builder(1).addChild(
                         NodeStructureHelper.ROOT_TABLES_TREE).create();

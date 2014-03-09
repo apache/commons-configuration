@@ -242,7 +242,7 @@ class ModelTransaction
         updateParentMapping();
         return new TreeData(newRoot, parentMapping,
                 replacedNodes, currentData.getNodeTracker().update(newRoot,
-                        getResolver(), model));
+                        getResolver(), getCurrentData()));
     }
 
     /**
@@ -402,7 +402,7 @@ class ModelTransaction
                         parentMapping.remove(node);
                         removeNodeFromReplacementMapping(node);
                     }
-                }, model);
+                }, getCurrentData());
     }
 
     /**

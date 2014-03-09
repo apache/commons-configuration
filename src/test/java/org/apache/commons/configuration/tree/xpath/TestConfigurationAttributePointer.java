@@ -61,7 +61,7 @@ public class TestConfigurationAttributePointer
         ImmutableNode nd = ndBuilder.create();
         parent =
                 new ConfigurationNodePointer<ImmutableNode>(nd, Locale.ENGLISH,
-                        new InMemoryNodeModel(nd));
+                        new InMemoryNodeModel(nd).getNodeHandler());
         pointer =
                 new ConfigurationAttributePointer<ImmutableNode>(parent,
                         ATTR_NAME);

@@ -64,7 +64,7 @@ public abstract class AbstractXPathTest
     public void setUp() throws Exception
     {
         root = constructHierarchy(LEVEL_COUNT);
-        handler = new InMemoryNodeModel(root);
+        handler = new InMemoryNodeModel(root).getNodeHandler();
     }
 
     /**

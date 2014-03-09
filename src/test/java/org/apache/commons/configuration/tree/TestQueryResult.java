@@ -87,7 +87,8 @@ public class TestQueryResult
         QueryResult<ImmutableNode> result =
                 QueryResult.createAttributeResult(attributeNode, ATTR);
         assertEquals("Wrong value", VALUE,
-                result.getAttributeValue(new InMemoryNodeModel()));
+                result.getAttributeValue(new InMemoryNodeModel()
+                        .getNodeHandler()));
     }
 
     /**
@@ -98,7 +99,7 @@ public class TestQueryResult
     {
         QueryResult<ImmutableNode> result =
                 QueryResult.createNodeResult(resultNode);
-        result.getAttributeValue(new InMemoryNodeModel());
+        result.getAttributeValue(new InMemoryNodeModel().getNodeHandler());
     }
 
     /**

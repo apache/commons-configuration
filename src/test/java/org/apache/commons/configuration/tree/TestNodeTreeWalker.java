@@ -70,6 +70,16 @@ public class TestNodeTreeWalker
     }
 
     /**
+     * Creates a dummy node handler.
+     *
+     * @return the node handler
+     */
+    private static NodeHandler<ImmutableNode> createHandler()
+    {
+        return new InMemoryNodeModel().getNodeHandler();
+    }
+
+    /**
      * Tries a walk() operation without a node handler.
      */
     @Test(expected = IllegalArgumentException.class)
@@ -86,7 +96,7 @@ public class TestNodeTreeWalker
     public void testWalkNoVisitor()
     {
         NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE,
-                null, new InMemoryNodeModel());
+                null, createHandler());
     }
 
     /**
@@ -110,7 +120,7 @@ public class TestNodeTreeWalker
         List<String> expected = expectDFS();
         TestVisitor visitor = new TestVisitor();
         NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE,
-                visitor, new InMemoryNodeModel());
+                visitor, createHandler());
         assertEquals("Wrong visited nodes", expected, visitor.getVisitedNodes());
     }
 
@@ -159,7 +169,7 @@ public class TestNodeTreeWalker
         final int nodeCount = 5;
         visitor.setMaxNodeCount(nodeCount);
         NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE,
-                visitor, new InMemoryNodeModel());
+                visitor, createHandler());
         assertEquals("Wrong number of visited nodes", nodeCount, visitor
                 .getVisitedNodes().size());
     }
@@ -185,7 +195,7 @@ public class TestNodeTreeWalker
         List<String> expected = expectBFS();
         TestVisitor visitor = new TestVisitor();
         NodeTreeWalker.INSTANCE.walkBFS(NodeStructureHelper.ROOT_AUTHORS_TREE,
-                visitor, new InMemoryNodeModel());
+                visitor, createHandler());
         assertEquals("Wrong visited nodes", expected, visitor.getVisitedNodes());
     }
 
@@ -230,7 +240,7 @@ public class TestNodeTreeWalker
         final int nodeCount = 9;
         visitor.setMaxNodeCount(nodeCount);
         NodeTreeWalker.INSTANCE.walkBFS(NodeStructureHelper.ROOT_AUTHORS_TREE,
-                visitor, new InMemoryNodeModel());
+                visitor, createHandler());
         assertEquals("Wrong number of visited nodes", nodeCount, visitor
                 .getVisitedNodes().size());
     }

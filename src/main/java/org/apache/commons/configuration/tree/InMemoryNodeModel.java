@@ -16,7 +16,6 @@
  */
 package org.apache.commons.configuration.tree;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,11 +23,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>
@@ -50,9 +47,17 @@ import org.apache.commons.lang3.StringUtils;
  * @version $Id$
  * @since 2.0
  */
-public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
-        NodeModel<ImmutableNode>
+public class InMemoryNodeModel implements NodeModel<ImmutableNode>
 {
+    /**
+     * A dummy node handler instance used in operations which require only a
+     * limited functionality.
+     */
+    private static final NodeHandler<ImmutableNode> DUMMY_HANDLER =
+            new TreeData(null,
+                    Collections.<ImmutableNode, ImmutableNode> emptyMap(),
+                    Collections.<ImmutableNode, ImmutableNode> emptyMap(), null);
+
     /** Stores information about the current nodes structure. */
     private final AtomicReference<TreeData> structure;
 
@@ -91,101 +96,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
      */
     public NodeHandler<ImmutableNode> getNodeHandler()
     {
-        return this;
-    }
-
-    public String nodeName(ImmutableNode node)
-    {
-        return node.getNodeName();
-    }
-
-    public Object getValue(ImmutableNode node)
-    {
-        return node.getValue();
-    }
-
-    /**
-     * {@inheritDoc} This implementation uses internal mapping information to
-     * determine the parent node of the given node. If the passed in node is the
-     * root node of this model, result is <b>null</b>. If the node is not part
-     * of this model, an exception is thrown. Otherwise, the parent node is
-     * returned.
-     *
-     * @throws IllegalArgumentException if the passed in node does not belong to
-     *         this model
-     */
-    public ImmutableNode getParent(ImmutableNode node)
-    {
-        return getTreeData().getParent(node);
-    }
-
-    public List<ImmutableNode> getChildren(ImmutableNode node)
-    {
-        return node.getChildren();
-    }
-
-    /**
-     * {@inheritDoc} This implementation returns an immutable list with all
-     * child nodes that have the specified name.
-     */
-    public List<ImmutableNode> getChildren(ImmutableNode node, String name)
-    {
-        List<ImmutableNode> result =
-                new ArrayList<ImmutableNode>(node.getChildren().size());
-        for (ImmutableNode c : node.getChildren())
-        {
-            if (StringUtils.equals(name, c.getNodeName()))
-            {
-                result.add(c);
-            }
-        }
-        return Collections.unmodifiableList(result);
-    }
-
-    public ImmutableNode getChild(ImmutableNode node, int index)
-    {
-        return node.getChildren().get(index);
-    }
-
-    public int indexOfChild(ImmutableNode parent, ImmutableNode child)
-    {
-        return parent.getChildren().indexOf(child);
-    }
-
-    public int getChildrenCount(ImmutableNode node, String name)
-    {
-        if (name == null)
-        {
-            return node.getChildren().size();
-        }
-        else
-        {
-            return getChildren(node, name).size();
-        }
-    }
-
-    public Set<String> getAttributes(ImmutableNode node)
-    {
-        return node.getAttributes().keySet();
-    }
-
-    public boolean hasAttributes(ImmutableNode node)
-    {
-        return !node.getAttributes().isEmpty();
-    }
-
-    public Object getAttributeValue(ImmutableNode node, String name)
-    {
-        return node.getAttributes().get(name);
-    }
-
-    /**
-     * {@inheritDoc} This implementation assumes that a node is defined if it
-     * has a value or has children or has attributes.
-     */
-    public boolean isDefined(ImmutableNode node)
-    {
-        return checkIfNodeDefined(node);
+        return getTreeData();
     }
 
     public void addProperty(final String key, final Iterable<?> values,
@@ -214,7 +125,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
                 {
                     List<QueryResult<ImmutableNode>> results =
                             resolver.resolveKey(tx.getCurrentData().getRoot(),
-                                    key, InMemoryNodeModel.this);
+                                    key, tx.getCurrentData());
                     if (results.size() == 1)
                     {
                         if (results.get(0).isAttributeResult())
@@ -227,7 +138,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
                     {
                         NodeAddData<ImmutableNode> addData =
                                 resolver.resolveAddKey(tx.getCurrentData()
-                                        .getRoot(), key, InMemoryNodeModel.this);
+                                        .getRoot(), key, tx.getCurrentData());
                         if (addData.isAttribute())
                         {
                             throw attributeKeyException(key);
@@ -256,7 +167,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
                 NodeUpdateData<ImmutableNode> updateData =
                         resolver.resolveUpdateKey(
                                 tx.getCurrentData().getRoot(), key, value,
-                                InMemoryNodeModel.this);
+                                tx.getCurrentData());
                 if (!updateData.getNewValues().isEmpty())
                 {
                     initializeAddTransaction(tx, key,
@@ -289,7 +200,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
                 TreeData currentStructure = tx.getCurrentData();
                 for (QueryResult<ImmutableNode> result : resolver
                         .resolveKey(currentStructure.getRoot(), key,
-                                InMemoryNodeModel.this))
+                                tx.getCurrentData()))
                 {
                     if (result.isAttributeResult())
                     {
@@ -318,13 +229,16 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
      * {@inheritDoc} If this operation leaves an affected node in an undefined
      * state, it is removed from the model.
      */
-    public void clearProperty(final String key, final NodeKeyResolver<ImmutableNode> resolver)
+    public void clearProperty(final String key,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
-        updateModel(new TransactionInitializer() {
-            public boolean initTransaction(ModelTransaction tx) {
+        updateModel(new TransactionInitializer()
+        {
+            public boolean initTransaction(ModelTransaction tx)
+            {
                 List<QueryResult<ImmutableNode>> results =
                         resolver.resolveKey(tx.getCurrentData().getRoot(), key,
-                                InMemoryNodeModel.this);
+                                tx.getCurrentData());
                 initializeClearTransaction(tx, results);
                 return true;
             }
@@ -382,7 +296,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
             TreeData current = structure.get();
             NodeTracker newTracker =
                     current.getNodeTracker().trackNode(current.getRoot(),
-                            selector, resolver, this);
+                            selector, resolver, current);
             done =
                     structure.compareAndSet(current,
                             current.updateNodeTracker(newTracker));
@@ -484,7 +398,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
                             parents.put(c, node);
                         }
                     }
-                }, this);
+                }, DUMMY_HANDLER);
     }
 
     /**
@@ -512,7 +426,8 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
             Iterable<?> values, NodeKeyResolver<ImmutableNode> resolver)
     {
         NodeAddData<ImmutableNode> addData =
-                resolver.resolveAddKey(tx.getCurrentData().getRoot(), key, this);
+                resolver.resolveAddKey(tx.getCurrentData().getRoot(), key,
+                        tx.getCurrentData());
         if (addData.isAttribute())
         {
             addAttributeProperty(tx, addData, values);
