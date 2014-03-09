@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -75,7 +76,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
     {
         structure =
                 new AtomicReference<TreeData>(
-                        createTreeData(initialRootNode(root)));
+                        createTreeData(initialRootNode(root), null));
     }
 
     public ImmutableNode getRootNode()
@@ -197,7 +198,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
                     initializeAddTransaction(tx, key, values, resolver);
                     return true;
                 }
-            });
+            }, resolver);
         }
     }
 
@@ -240,7 +241,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
                     }
                     return true;
                 }
-            });
+            }, resolver);
         }
     }
 
@@ -270,7 +271,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
                                 updateData.getChangedValues());
                 return added || cleared || updated;
             }
-        });
+        }, resolver);
     }
 
     /**
@@ -310,7 +311,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
                 }
                 return true;
             }
-        });
+        }, resolver);
     }
 
     /**
@@ -327,7 +328,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
                 initializeClearTransaction(tx, results);
                 return true;
             }
-        });
+        }, resolver);
     }
 
     /**
@@ -341,9 +342,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
         ImmutableNode newRoot =
                 new ImmutableNode.Builder().name(getRootNode().getNodeName())
                         .create();
-        structure.set(new TreeData(newRoot, Collections
-                .<ImmutableNode, ImmutableNode>emptyMap(), Collections
-                .<ImmutableNode, ImmutableNode>emptyMap()));
+        setRootNode(newRoot);
     }
 
     /**
@@ -356,7 +355,78 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
      */
     public void setRootNode(ImmutableNode newRoot)
     {
-        structure.set(createTreeData(initialRootNode(newRoot)));
+        structure.set(createTreeData(initialRootNode(newRoot), structure.get()));
+    }
+
+    /**
+     * Adds a node to be tracked. After this method has been called with a
+     * specific {@code NodeSelector}, the node associated with this key can be
+     * always obtained using {@link #getTrackedNode(NodeSelector)} with the same
+     * selector. This is useful because during updates of a model parts of the
+     * structure are replaced. Therefore, it is not a good idea to simply hold a
+     * reference to a node; this might become outdated soon. Rather, the node
+     * should be tracked. This mechanism ensures that always the correct node
+     * reference can be obtained.
+     *
+     * @param selector the {@code NodeSelector} defining the desired node
+     * @param resolver the {@code NodeKeyResolver}
+     * @throws ConfigurationRuntimeException if the selector does not select a
+     *         single node
+     */
+    public void trackNode(NodeSelector selector,
+            NodeKeyResolver<ImmutableNode> resolver)
+    {
+        boolean done;
+        do
+        {
+            TreeData current = structure.get();
+            NodeTracker newTracker =
+                    current.getNodeTracker().trackNode(current.getRoot(),
+                            selector, resolver, this);
+            done =
+                    structure.compareAndSet(current,
+                            current.updateNodeTracker(newTracker));
+        } while (!done);
+    }
+
+    /**
+     * Returns the current {@code ImmutableNode} instance associated with the
+     * given {@code NodeSelector}. The node must be a tracked node, i.e.
+     * {@link #trackNode(NodeSelector, NodeKeyResolver)} must have been called
+     * before with the given selector.
+     *
+     * @param selector the {@code NodeSelector} defining the desired node
+     * @return the current {@code ImmutableNode} associated with this selector
+     * @throws ConfigurationRuntimeException if the selector is unknown
+     */
+    public ImmutableNode getTrackedNode(NodeSelector selector)
+    {
+        return structure.get().getNodeTracker().getTrackedNode(selector);
+    }
+
+    /**
+     * Removes a tracked node. This method is the opposite of
+     * {@code trackNode()}. It has to be called if there is no longer the need
+     * to track a specific node. Note that for each call of {@code trackNode()}
+     * there has to be a corresponding {@code untrackNode()} call. This ensures
+     * that multiple observers can track the same node.
+     *
+     * @param selector the {@code NodeSelector} defining the desired node
+     * @throws ConfigurationRuntimeException if the specified node is not
+     *         tracked
+     */
+    public void untrackNode(NodeSelector selector)
+    {
+        boolean done;
+        do
+        {
+            TreeData current = structure.get();
+            NodeTracker newTracker =
+                    current.getNodeTracker().untrackNode(selector);
+            done =
+                    structure.compareAndSet(current,
+                            current.updateNodeTracker(newTracker));
+        } while (!done);
     }
 
     /**
@@ -436,12 +506,17 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
      * Creates a {@code TreeData} object for the specified root node.
      *
      * @param root the root node of the current tree
+     * @param current the current {@code TreeData} object (may be <b>null</b>)
      * @return the {@code TreeData} describing the current tree
      */
-    private TreeData createTreeData(ImmutableNode root)
+    private TreeData createTreeData(ImmutableNode root, TreeData current)
     {
+        NodeTracker newTracker =
+                (current != null) ? current.getNodeTracker()
+                        : new NodeTracker();
         return new TreeData(root, createParentMapping(root),
-                new HashMap<ImmutableNode, ImmutableNode>());
+                Collections.<ImmutableNode, ImmutableNode> emptyMap(),
+                newTracker);
     }
 
     /**
@@ -675,14 +750,16 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
      * update was successful even if the model is concurrently accessed.
      *
      * @param txInit the {@code TransactionInitializer}
+     * @param resolver the {@code NodeKeyResolver}
      */
-    private void updateModel(TransactionInitializer txInit)
+    private void updateModel(TransactionInitializer txInit,
+            NodeKeyResolver<ImmutableNode> resolver)
     {
         boolean done;
 
         do
         {
-            ModelTransaction tx = new ModelTransaction(this);
+            ModelTransaction tx = new ModelTransaction(this, resolver);
             if (!txInit.initTransaction(tx))
             {
                 done = true;
@@ -744,6 +821,9 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
         /** An inverse replacement mapping. */
         private final Map<ImmutableNode, ImmutableNode> inverseReplacementMapping;
 
+        /** The node tracker. */
+        private final NodeTracker nodeTracker;
+
         /**
          * Creates a new instance of {@code TreeData} and initializes it with
          * all data to be stored.
@@ -751,15 +831,17 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
          * @param root the root node of the current tree
          * @param parentMapping the mapping to parent nodes
          * @param replacements the map with the nodes that have been replaced
+         * @param tracker the {@code NodeTracker}
          */
         public TreeData(ImmutableNode root,
-                Map<ImmutableNode, ImmutableNode> parentMapping,
-                Map<ImmutableNode, ImmutableNode> replacements)
+                        Map<ImmutableNode, ImmutableNode> parentMapping,
+                        Map<ImmutableNode, ImmutableNode> replacements, NodeTracker tracker)
         {
             this.root = root;
             this.parentMapping = parentMapping;
             replacementMapping = replacements;
             inverseReplacementMapping = createInverseMapping(replacements);
+            nodeTracker = tracker;
         }
 
         /**
@@ -770,6 +852,16 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
         public ImmutableNode getRoot()
         {
             return root;
+        }
+
+        /**
+         * Returns the {@code NodeTracker}
+         *
+         * @return the {@code NodeTracker}
+         */
+        public NodeTracker getNodeTracker()
+        {
+            return nodeTracker;
         }
 
         /**
@@ -816,6 +908,20 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
         public Map<ImmutableNode, ImmutableNode> copyReplacementMapping()
         {
             return new HashMap<ImmutableNode, ImmutableNode>(replacementMapping);
+        }
+
+        /**
+         * Creates a new instance which uses the specified {@code NodeTracker}.
+         * This method is called when there are updates of the state of tracked
+         * nodes.
+         *
+         * @param newTracker the new {@code NodeTracker}
+         * @return the updated instance
+         */
+        public TreeData updateNodeTracker(NodeTracker newTracker)
+        {
+            return new TreeData(root, parentMapping, replacementMapping,
+                    newTracker);
         }
 
         /**

@@ -83,6 +83,9 @@ class ModelTransaction
     /** Stores the current tree data of the calling node model. */
     private final InMemoryNodeModel.TreeData currentData;
 
+    /** The {@code NodeKeyResolver} to be used for this transaction. */
+    private final NodeKeyResolver<ImmutableNode> resolver;
+
     /** A new replacement mapping. */
     private final Map<ImmutableNode, ImmutableNode> replacedNodes;
 
@@ -111,16 +114,29 @@ class ModelTransaction
      * data.
      *
      * @param nodeModel the owning {@code InMemoryNodeModel}
+     * @param resolver the {@code NodeKeyResolver}
      */
-    public ModelTransaction(InMemoryNodeModel nodeModel)
+    public ModelTransaction(InMemoryNodeModel nodeModel,
+            NodeKeyResolver<ImmutableNode> resolver)
     {
         model = nodeModel;
         currentData = model.getTreeData();
+        this.resolver = resolver;
         replacedNodes = getCurrentData().copyReplacementMapping();
         parentMapping = getCurrentData().copyParentMapping();
         operations = new TreeMap<Integer, Map<ImmutableNode, Operations>>();
         addedNodes = new LinkedList<ImmutableNode>();
         removedNodes = new LinkedList<ImmutableNode>();
+    }
+
+    /**
+     * Returns the {@code NodeKeyResolver} used by this transaction.
+     *
+     * @return the {@code NodeKeyResolver}
+     */
+    public NodeKeyResolver<ImmutableNode> getResolver()
+    {
+        return resolver;
     }
 
     /**
@@ -225,7 +241,8 @@ class ModelTransaction
         executeOperations();
         updateParentMapping();
         return new InMemoryNodeModel.TreeData(newRoot, parentMapping,
-                replacedNodes);
+                replacedNodes, currentData.getNodeTracker().update(newRoot,
+                        getResolver(), model));
     }
 
     /**
