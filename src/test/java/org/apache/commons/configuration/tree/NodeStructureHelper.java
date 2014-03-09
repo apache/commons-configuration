@@ -283,6 +283,22 @@ public class NodeStructureHelper
     }
 
     /**
+     * Evaluates the given key and finds the corresponding child node of the
+     * root node of the specified tree data object. This is a convenience method
+     * that works like the method with the same name, but obtains the root node
+     * from the given data object.
+     *
+     * @param td the {@code TreeData} instance
+     * @param key the key to the desired node
+     * @return the found target node
+     * @throws NoSuchElementException if the desired node cannot be found
+     */
+    public static ImmutableNode nodeForKey(TreeData td, String key)
+    {
+        return nodeForKey(td.getRoot(), key);
+    }
+
+    /**
      * Convenience method for creating a path for accessing a node based on the
      * node names.
      *
