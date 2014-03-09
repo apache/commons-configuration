@@ -203,17 +203,39 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         }
     }
 
-    public void setProperty(final String key, final Object value,
-            final NodeKeyResolver<ImmutableNode> resolver)
+    public void setProperty(String key, Object value,
+            NodeKeyResolver<ImmutableNode> resolver)
     {
-        updateModel(new TransactionInitializer() {
-            public boolean initTransaction(ModelTransaction tx) {
+        setProperty(key, null, value, resolver);
+    }
+
+    /**
+     * Sets the value of a property using a tracked node as root node. This
+     * method works like the normal {@code setProperty()} method, but the origin
+     * of the operation (also for the interpretation of the passed in key) is a
+     * tracked node identified by the passed in {@code NodeSelector}. The
+     * selector can be <b>null</b>, then the root node is assumed.
+     *
+     * @param key the key
+     * @param selector the {@code NodeSelector} defining the root node (or
+     *        <b>null</b>)
+     * @param value the new value for this property
+     * @param resolver the {@code NodeKeyResolver}
+     * @throws ConfigurationRuntimeException if the selector cannot be resolved
+     */
+    public void setProperty(final String key, NodeSelector selector,
+            final Object value, final NodeKeyResolver<ImmutableNode> resolver)
+    {
+        updateModel(new TransactionInitializer()
+        {
+            public boolean initTransaction(ModelTransaction tx)
+            {
                 boolean added = false;
                 NodeUpdateData<ImmutableNode> updateData =
-                        resolver.resolveUpdateKey(
-                                tx.getCurrentData().getRootNode(), key, value,
-                                tx.getCurrentData());
-                if (!updateData.getNewValues().isEmpty()) {
+                        resolver.resolveUpdateKey(tx.getQueryRoot(), key,
+                                value, tx.getCurrentData());
+                if (!updateData.getNewValues().isEmpty())
+                {
                     initializeAddTransaction(tx, key,
                             updateData.getNewValues(), resolver);
                     added = true;
@@ -226,7 +248,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                                 updateData.getChangedValues());
                 return added || cleared || updated;
             }
-        }, null, resolver);
+        }, selector, resolver);
     }
 
     /**

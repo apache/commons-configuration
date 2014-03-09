@@ -25,6 +25,7 @@ import static org.junit.Assert.fail;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
@@ -457,12 +458,23 @@ public class TestInMemoryNodeModelTrackedNodes
         ImmutableNode nodeField =
                 nodeFields.getChildren().get(
                         NodeStructureHelper.fieldsLength(1));
+        checkFieldNode(nodeField, NEW_FIELD);
+    }
+
+    /**
+     * Checks whether a field node has the expected content.
+     *
+     * @param nodeField the field node to be checked
+     * @param name the expected name of this field
+     */
+    private static void checkFieldNode(ImmutableNode nodeField, String name)
+    {
         assertEquals("Wrong node name", "field", nodeField.getNodeName());
         assertEquals("Wrong number of children of field node", 1, nodeField
                 .getChildren().size());
         ImmutableNode nodeName = nodeField.getChildren().get(0);
         assertEquals("Wrong name of name node", "name", nodeName.getNodeName());
-        assertEquals("Wrong node value", NEW_FIELD, nodeName.getValue());
+        assertEquals("Wrong node value", name, nodeName.getValue());
     }
 
     /**
@@ -533,5 +545,96 @@ public class TestInMemoryNodeModelTrackedNodes
                 resolver);
         assertSame("Root node was changed", rootNode, model.getRootNode());
         checkForAddedField(fieldsNodeFromTrackedNode());
+    }
+
+    /**
+     * Prepares a mock for a resolver to handle keys for update operations.
+     * Support is limited. It is expected that only a single value is changed.
+     *
+     * @param resolver the {@code NodeKeyResolver} mock
+     */
+    private static void prepareResolverForUpdateKeys(
+            NodeKeyResolver<ImmutableNode> resolver)
+    {
+        EasyMock.expect(
+                resolver.resolveUpdateKey(
+                        EasyMock.anyObject(ImmutableNode.class),
+                        EasyMock.anyString(), EasyMock.anyObject(),
+                        EasyMock.anyObject(TreeData.class)))
+                .andAnswer(new IAnswer<NodeUpdateData<ImmutableNode>>() {
+                    public NodeUpdateData<ImmutableNode> answer()
+                            throws Throwable {
+                        ImmutableNode root =
+                                (ImmutableNode) EasyMock.getCurrentArguments()[0];
+                        String key = (String) EasyMock.getCurrentArguments()[1];
+                        TreeData handler =
+                                (TreeData) EasyMock.getCurrentArguments()[3];
+                        List<QueryResult<ImmutableNode>> results =
+                                DefaultExpressionEngine.INSTANCE.query(root,
+                                        key, handler);
+                        assertEquals("Wrong number of query results", 1,
+                                results.size());
+                        return new NodeUpdateData<ImmutableNode>(Collections
+                                .singletonMap(results.get(0),
+                                        EasyMock.getCurrentArguments()[2]),
+                                null, null, null);
+                    }
+                }).anyTimes();
+    }
+
+    /**
+     * Checks whether a fields node was correctly changed by an update
+     * operation.
+     *
+     * @param nodeFields the fields node
+     * @param idx the index of the changed node
+     */
+    private static void checkedForChangedField(ImmutableNode nodeFields, int idx)
+    {
+        assertEquals("Wrong number of field nodes",
+                NodeStructureHelper.fieldsLength(1), nodeFields.getChildren()
+                        .size());
+        int childIndex = 0;
+        for (ImmutableNode field : nodeFields.getChildren())
+        {
+            String expName =
+                    (childIndex == idx) ? NEW_FIELD : NodeStructureHelper
+                            .field(1, childIndex);
+            checkFieldNode(field, expName);
+            childIndex++;
+        }
+    }
+
+    /**
+     * Tests whether a setProperty() operation works on a tracked node.
+     */
+    @Test
+    public void testSetPropertyOnTrackedNode()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        prepareResolverForUpdateKeys(resolver);
+        EasyMock.replay(resolver);
+        model.trackNode(selector, resolver);
+        model.setProperty("fields.field(0).name", selector, NEW_FIELD, resolver);
+        checkedForChangedField(fieldsNodeFromModel(), 0);
+        checkedForChangedField(fieldsNodeFromTrackedNode(), 0);
+    }
+
+    /**
+     * Tests a setProperty() operation on a tracked node that is detached.
+     */
+    @Test
+    public void testSetPropertyOnDetachedNode()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        prepareResolverForUpdateKeys(resolver);
+        EasyMock.replay(resolver);
+        model.trackNode(selector, resolver);
+        initDetachedNode(resolver);
+        ImmutableNode rootNode = model.getRootNode();
+        model.setProperty("fields.field(0).name", selector, NEW_FIELD, resolver);
+        assertSame("Root node of model was changed", rootNode,
+                model.getRootNode());
+        checkedForChangedField(fieldsNodeFromTrackedNode(), 0);
     }
 }
