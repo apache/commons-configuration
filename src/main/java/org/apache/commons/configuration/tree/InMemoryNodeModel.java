@@ -114,7 +114,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                     initializeAddTransaction(tx, key, values, resolver);
                     return true;
                 }
-            }, resolver);
+            }, null, resolver);
         }
     }
 
@@ -157,7 +157,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                     }
                     return true;
                 }
-            }, resolver);
+            }, null, resolver);
         }
     }
 
@@ -187,7 +187,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                                 updateData.getChangedValues());
                 return added || cleared || updated;
             }
-        }, resolver);
+        }, null, resolver);
     }
 
     /**
@@ -227,27 +227,44 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                 }
                 return true;
             }
-        }, resolver);
+        }, null, resolver);
     }
 
     /**
      * {@inheritDoc} If this operation leaves an affected node in an undefined
      * state, it is removed from the model.
      */
-    public void clearProperty(final String key,
+    public void clearProperty(String key,
+            NodeKeyResolver<ImmutableNode> resolver)
+    {
+        clearProperty(key, null, resolver);
+    }
+
+    /**
+     * Clears a property using a tracked node as root node. This method works
+     * like the normal {@code clearProperty()} method, but the origin of the
+     * operation (also for the interpretation of the passed in key) is a tracked
+     * node identified by the passed in {@code NodeSelector}. The selector can
+     * be <b>null</b>, then the root node is assumed.
+     *
+     * @param key the key
+     * @param selector the {@code NodeSelector} defining the root node (or
+     *        <b>null</b>)
+     * @param resolver the {@code NodeKeyResolver}
+     * @throws ConfigurationRuntimeException if the selector cannot be resolved
+     */
+    public void clearProperty(final String key, NodeSelector selector,
             final NodeKeyResolver<ImmutableNode> resolver)
     {
-        updateModel(new TransactionInitializer()
-        {
-            public boolean initTransaction(ModelTransaction tx)
-            {
+        updateModel(new TransactionInitializer() {
+            public boolean initTransaction(ModelTransaction tx) {
                 List<QueryResult<ImmutableNode>> results =
-                        resolver.resolveKey(tx.getCurrentData().getRootNode(), key,
+                        resolver.resolveKey(tx.getQueryRoot(), key,
                                 tx.getCurrentData());
                 initializeClearTransaction(tx, results);
                 return true;
             }
-        }, resolver);
+        }, selector, resolver);
     }
 
     /**
@@ -389,7 +406,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param parents the map with parent nodes
      * @param root the root node of the current tree
      */
-    void updateParentMapping(final Map<ImmutableNode, ImmutableNode> parents,
+    static void updateParentMapping(final Map<ImmutableNode, ImmutableNode> parents,
             ImmutableNode root)
     {
         NodeTreeWalker.INSTANCE.walkBFS(root,
@@ -691,26 +708,86 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * update was successful even if the model is concurrently accessed.
      *
      * @param txInit the {@code TransactionInitializer}
+     * @param selector an optional {@code NodeSelector} defining the target node
+     *        of the transaction
      * @param resolver the {@code NodeKeyResolver}
      */
     private void updateModel(TransactionInitializer txInit,
-            NodeKeyResolver<ImmutableNode> resolver)
+            NodeSelector selector, NodeKeyResolver<ImmutableNode> resolver)
     {
         boolean done;
 
         do
         {
-            ModelTransaction tx = new ModelTransaction(this, resolver);
-            if (!txInit.initTransaction(tx))
-            {
-                done = true;
-            }
-            else
-            {
-                TreeData newData = tx.execute();
-                done = structure.compareAndSet(tx.getCurrentData(), newData);
-            }
+            TreeData currentData = getTreeData();
+            done =
+                    executeTransactionOnDetachedTrackedNode(txInit, selector,
+                            currentData, resolver)
+                            || executeTransactionOnCurrentStructure(txInit,
+                                    selector, currentData, resolver);
         } while (!done);
+    }
+
+    /**
+     * Executes a transaction on the current data of this model. This method is
+     * called if an operation is to be executed on the model's root node or a
+     * tracked node which is not yet detached.
+     *
+     * @param txInit the {@code TransactionInitializer}
+     * @param selector an optional {@code NodeSelector} defining the target node
+     * @param currentData the current data of the model
+     * @param resolver the {@code NodeKeyResolver}
+     * @return a flag whether the operation has been completed successfully
+     */
+    private boolean executeTransactionOnCurrentStructure(
+            TransactionInitializer txInit, NodeSelector selector,
+            TreeData currentData, NodeKeyResolver<ImmutableNode> resolver)
+    {
+        boolean done;
+        ModelTransaction tx =
+                new ModelTransaction(currentData, selector, resolver);
+        if (!txInit.initTransaction(tx))
+        {
+            done = true;
+        }
+        else
+        {
+            TreeData newData = tx.execute();
+            done = structure.compareAndSet(tx.getCurrentData(), newData);
+        }
+        return done;
+    }
+
+    /**
+     * Tries to execute a transaction on the model of a detached tracked node.
+     * This method checks whether the target node of the transaction is a
+     * tracked node and if this node is already detached. If this is the case,
+     * the update operation is independent on this model and has to be executed
+     * on the specific model for the detached node.
+     *
+     * @param txInit the {@code TransactionInitializer}
+     * @param selector an optional {@code NodeSelector} defining the target node
+     * @param currentData the current data of the model
+     * @param resolver the {@code NodeKeyResolver} @return a flag whether the
+     *        transaction could be executed
+     * @throws ConfigurationRuntimeException if the selector cannot be resolved
+     */
+    private boolean executeTransactionOnDetachedTrackedNode(
+            TransactionInitializer txInit, NodeSelector selector,
+            TreeData currentData, NodeKeyResolver<ImmutableNode> resolver)
+    {
+        if (selector != null)
+        {
+            InMemoryNodeModel detachedNodeModel =
+                    currentData.getNodeTracker().getDetachedNodeModel(selector);
+            if (detachedNodeModel != null)
+            {
+                detachedNodeModel.updateModel(txInit, null, resolver);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

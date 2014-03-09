@@ -140,9 +140,20 @@ public class TestInMemoryNodeModelTrackedNodes
         ImmutableNode node =
                 NodeStructureHelper.nodeForKey(model, "tables/table(1)");
         NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        initDetachedNode(resolver);
+        assertSame("Wrong node", node, model.getTrackedNode(selector));
+    }
+
+    /**
+     * Produces a tracked node with the default selector and executes an
+     * operation which detaches this node.
+     *
+     * @param resolver the {@code NodeKeyResolver}
+     */
+    private void initDetachedNode(NodeKeyResolver<ImmutableNode> resolver)
+    {
         model.trackNode(selector, resolver);
         model.clearTree("tables.table(0)", resolver);
-        assertSame("Wrong node", node, model.getTrackedNode(selector));
     }
 
     /**
@@ -246,8 +257,7 @@ public class TestInMemoryNodeModelTrackedNodes
     public void testIsDetachedTrue()
     {
         NodeKeyResolver<ImmutableNode> resolver = createResolver();
-        model.trackNode(selector, resolver);
-        model.clearTree("tables.table(0)", resolver);
+        initDetachedNode(resolver);
         assertTrue("Node is not detached",
                 model.isTrackedNodeDetached(selector));
     }
@@ -277,5 +287,48 @@ public class TestInMemoryNodeModelTrackedNodes
         model.setRootNode(root);
         assertTrue("Node is not detached",
                 model.isTrackedNodeDetached(selector));
+    }
+
+    /**
+     * Tests whether clearProperty() can operate on a tracked node.
+     */
+    @Test
+    public void testClearPropertyOnTrackedNode()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        model.trackNode(selector, resolver);
+        model.clearProperty("fields.field(0).name", selector, resolver);
+        ImmutableNode nodeFields =
+                NodeStructureHelper.nodeForKey(model, "tables/table(1)/fields");
+        assertEquals("Field not removed",
+                NodeStructureHelper.fieldsLength(1) - 1, nodeFields
+                        .getChildren().size());
+        ImmutableNode nodeName =
+                NodeStructureHelper.nodeForKey(nodeFields, "field(0)/name");
+        assertEquals("Wrong node value cleared",
+                NodeStructureHelper.field(1, 1), nodeName.getValue());
+    }
+
+    /**
+     * Tests a clearProperty() on a tracked node which is detached.
+     */
+    @Test
+    public void testClearPropertyOnDetachedNode()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        initDetachedNode(resolver);
+        ImmutableNode rootNode = model.getRootNode();
+        model.clearProperty("fields.field(0).name", selector, resolver);
+        assertSame("Model root was changed", rootNode, model.getRootNode());
+        ImmutableNode nodeFields =
+                NodeStructureHelper.nodeForKey(model.getTrackedNode(selector),
+                        "fields");
+        assertEquals("Field not removed",
+                NodeStructureHelper.fieldsLength(1) - 1, nodeFields
+                        .getChildren().size());
+        ImmutableNode nodeName =
+                NodeStructureHelper.nodeForKey(nodeFields, "field(0)/name");
+        assertEquals("Wrong node value cleared",
+                NodeStructureHelper.field(1, 1), nodeName.getValue());
     }
 }

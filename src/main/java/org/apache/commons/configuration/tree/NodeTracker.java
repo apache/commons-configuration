@@ -168,6 +168,23 @@ class NodeTracker
     }
 
     /**
+     * Returns the detached node model for the specified tracked node. When a
+     * node becomes detached, operations on it are independent from the original
+     * model. To implement this, a separate node model is created wrapping this
+     * tracked node. This model can be queried by this method. If the node
+     * affected is not detached, result is <b>null</b>.
+     *
+     * @param selector the {@code NodeSelector}
+     * @return the detached node model for this node or <b>null</b>
+     * @throws ConfigurationRuntimeException if no data for this selector is
+     *         available
+     */
+    public InMemoryNodeModel getDetachedNodeModel(NodeSelector selector)
+    {
+        return getTrackedNodeData(selector).getDetachedModel();
+    }
+
+    /**
      * Updates tracking information after the node structure has been changed.
      * This method iterates over all tracked nodes. The selectors are evaluated
      * again to update the node reference. If this fails for a selector, the
@@ -317,8 +334,8 @@ class NodeTracker
         /** The number of observers of this tracked node. */
         private final int observerCount;
 
-        /** A flag whether the node is detached. */
-        private final boolean detached;
+        /** A node model to be used when the tracked node is detached. */
+        private final InMemoryNodeModel detachedModel;
 
         /**
          * Creates a new instance of {@code TrackedNodeData} and initializes it
@@ -328,7 +345,7 @@ class NodeTracker
          */
         public TrackedNodeData(ImmutableNode nd)
         {
-            this(nd, 1, false);
+            this(nd, 1, null);
         }
 
         /**
@@ -337,14 +354,14 @@ class NodeTracker
          *
          * @param nd the tracked node
          * @param obsCount the observer count
-         * @param isDetached a flag whether the node is detached
+         * @param detachedNodeModel a model to be used in detached mode
          */
         private TrackedNodeData(ImmutableNode nd, int obsCount,
-                boolean isDetached)
+                InMemoryNodeModel detachedNodeModel)
         {
             node = nd;
             observerCount = obsCount;
-            detached = isDetached;
+            detachedModel = detachedNodeModel;
         }
 
         /**
@@ -354,7 +371,19 @@ class NodeTracker
          */
         public ImmutableNode getNode()
         {
-            return node;
+            return (getDetachedModel() != null) ? getDetachedModel()
+                    .getRootNode() : node;
+        }
+
+        /**
+         * Returns the node model to be used in detached mode. This is
+         * <b>null</b> if the represented tracked node is not detached.
+         *
+         * @return the node model in detached mode
+         */
+        public InMemoryNodeModel getDetachedModel()
+        {
+            return detachedModel;
         }
 
         /**
@@ -364,7 +393,7 @@ class NodeTracker
          */
         public boolean isDetached()
         {
-            return detached;
+            return getDetachedModel() != null;
         }
 
         /**
@@ -375,7 +404,7 @@ class NodeTracker
          */
         public TrackedNodeData observerAdded()
         {
-            return new TrackedNodeData(node, observerCount + 1, isDetached());
+            return new TrackedNodeData(node, observerCount + 1, getDetachedModel());
         }
 
         /**
@@ -389,7 +418,7 @@ class NodeTracker
         public TrackedNodeData observerRemoved()
         {
             return (observerCount <= 1) ? null : new TrackedNodeData(node,
-                    observerCount - 1, isDetached());
+                    observerCount - 1, getDetachedModel());
         }
 
         /**
@@ -402,7 +431,7 @@ class NodeTracker
          */
         public TrackedNodeData updateNode(ImmutableNode newNode)
         {
-            return new TrackedNodeData(newNode, observerCount, isDetached());
+            return new TrackedNodeData(newNode, observerCount, getDetachedModel());
         }
 
         /**
@@ -414,7 +443,8 @@ class NodeTracker
          */
         public TrackedNodeData detach()
         {
-            return new TrackedNodeData(getNode(), observerCount, true);
+            return new TrackedNodeData(getNode(), observerCount,
+                    new InMemoryNodeModel(getNode()));
         }
     }
 }

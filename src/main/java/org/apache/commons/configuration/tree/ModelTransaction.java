@@ -77,11 +77,11 @@ class ModelTransaction
     /** Constant for an unknown level. */
     private static final int LEVEL_UNKNOWN = -1;
 
-    /** The model owning this transaction. */
-    private final InMemoryNodeModel model;
-
     /** Stores the current tree data of the calling node model. */
     private final TreeData currentData;
+
+    /** The root node for query operations. */
+    private final ImmutableNode queryRoot;
 
     /** The {@code NodeKeyResolver} to be used for this transaction. */
     private final NodeKeyResolver<ImmutableNode> resolver;
@@ -113,20 +113,23 @@ class ModelTransaction
      * Creates a new instance of {@code ModelTransaction} for the current tree
      * data.
      *
-     * @param nodeModel the owning {@code InMemoryNodeModel}
+     * @param treeData the current {@code TreeData} structure to operate on
+     * @param selector an optional {@code NodeSelector} defining the target root
+     *        node for this transaction; this can be used to perform operations
+     *        on tracked nodes
      * @param resolver the {@code NodeKeyResolver}
      */
-    public ModelTransaction(InMemoryNodeModel nodeModel,
+    public ModelTransaction(TreeData treeData, NodeSelector selector,
             NodeKeyResolver<ImmutableNode> resolver)
     {
-        model = nodeModel;
-        currentData = model.getTreeData();
+        currentData = treeData;
         this.resolver = resolver;
         replacedNodes = getCurrentData().copyReplacementMapping();
         parentMapping = getCurrentData().copyParentMapping();
         operations = new TreeMap<Integer, Map<ImmutableNode, Operations>>();
         addedNodes = new LinkedList<ImmutableNode>();
         removedNodes = new LinkedList<ImmutableNode>();
+        queryRoot = initQueryRoot(treeData, selector);
     }
 
     /**
@@ -137,6 +140,19 @@ class ModelTransaction
     public NodeKeyResolver<ImmutableNode> getResolver()
     {
         return resolver;
+    }
+
+    /**
+     * Returns the root node to be used within queries. This is not necessarily
+     * the current root node of the model. If the operation is executed on a
+     * tracked node, this node has to be passed as root nodes to the expression
+     * engine.
+     *
+     * @return the root node for queries and calls to the expression engine
+     */
+    public ImmutableNode getQueryRoot()
+    {
+        return queryRoot;
     }
 
     /**
@@ -295,6 +311,21 @@ class ModelTransaction
     }
 
     /**
+     * Initializes the root node to be used within queries. If a tracked node
+     * selector is provided, this node becomes the root node. Otherwise, the
+     * actual root node is used.
+     *
+     * @param treeData the current data of the model
+     * @param selector an optional {@code NodeSelector} defining the target root
+     * @return the query root node for this transaction
+     */
+    private ImmutableNode initQueryRoot(TreeData treeData, NodeSelector selector)
+    {
+        return (selector == null) ? treeData.getRootNode() : treeData
+                .getNodeTracker().getTrackedNode(selector);
+    }
+
+    /**
      * Determines the level of the specified node in the current hierarchy. The
      * level of the root node is 0, the children of the root have level 1 and so
      * on.
@@ -358,7 +389,7 @@ class ModelTransaction
     {
         replacedNodes.clear();
         parentMapping.clear();
-        model.updateParentMapping(parentMapping, newRoot);
+        InMemoryNodeModel.updateParentMapping(parentMapping, newRoot);
     }
 
     /**
@@ -368,7 +399,7 @@ class ModelTransaction
     {
         for (ImmutableNode node : addedNodes)
         {
-            model.updateParentMapping(parentMapping, node);
+            InMemoryNodeModel.updateParentMapping(parentMapping, node);
         }
     }
 
