@@ -140,7 +140,27 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         }
     }
 
-    public void addNodes(final String key,
+    public void addNodes(String key, Collection<? extends ImmutableNode> nodes,
+            NodeKeyResolver<ImmutableNode> resolver)
+    {
+        addNodes(key, null, nodes, resolver);
+    }
+
+    /**
+     * Adds new nodes using a tracked node as root node. This method works like
+     * the normal {@code addNodes()} method, but the origin of the operation
+     * (also for the interpretation of the passed in key) is a tracked node
+     * identified by the passed in {@code NodeSelector}. The selector can be
+     * <b>null</b>, then the root node is assumed.
+     *
+     * @param key the key
+     * @param selector the {@code NodeSelector} defining the root node (or
+     *        <b>null</b>)
+     * @param nodes the collection of new nodes to be added
+     * @param resolver the {@code NodeKeyResolver}
+     * @throws ConfigurationRuntimeException if the selector cannot be resolved
+     */
+    public void addNodes(final String key, NodeSelector selector,
             final Collection<? extends ImmutableNode> nodes,
             final NodeKeyResolver<ImmutableNode> resolver)
     {
@@ -151,8 +171,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                 public boolean initTransaction(ModelTransaction tx)
                 {
                     List<QueryResult<ImmutableNode>> results =
-                            resolver.resolveKey(tx.getCurrentData().getRootNode(),
-                                    key, tx.getCurrentData());
+                            resolver.resolveKey(tx.getQueryRoot(), key,
+                                    tx.getCurrentData());
                     if (results.size() == 1)
                     {
                         if (results.get(0).isAttributeResult())
@@ -164,8 +184,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                     else
                     {
                         NodeAddData<ImmutableNode> addData =
-                                resolver.resolveAddKey(tx.getCurrentData()
-                                        .getRootNode(), key, tx.getCurrentData());
+                                resolver.resolveAddKey(tx.getQueryRoot(), key,
+                                        tx.getCurrentData());
                         if (addData.isAttribute())
                         {
                             throw attributeKeyException(key);
@@ -179,7 +199,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                     }
                     return true;
                 }
-            }, null, resolver);
+            }, selector, resolver);
         }
     }
 

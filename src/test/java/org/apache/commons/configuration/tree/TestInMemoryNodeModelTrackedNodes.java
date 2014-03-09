@@ -498,4 +498,40 @@ public class TestInMemoryNodeModelTrackedNodes
         assertSame("Root node was changed", rootNode, model.getRootNode());
         checkForAddedField(fieldsNodeFromTrackedNode());
     }
+
+    /**
+     * Tests whether an addNodes() operation works on a tracked node.
+     */
+    @Test
+    public void testAddNodesOnTrackedNode()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        prepareResolverForAddKeys(resolver);
+        EasyMock.replay(resolver);
+        model.trackNode(selector, resolver);
+        model.addNodes("fields", selector, Collections
+                .singleton(NodeStructureHelper.createFieldNode(NEW_FIELD)),
+                resolver);
+        checkForAddedField(fieldsNodeFromModel());
+        checkForAddedField(fieldsNodeFromTrackedNode());
+    }
+
+    /**
+     * Tests an addNodes() operation on a tracked node that is detached.
+     */
+    @Test
+    public void testAddNodesOnDetachedNode()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        prepareResolverForAddKeys(resolver);
+        EasyMock.replay(resolver);
+        model.trackNode(selector, resolver);
+        initDetachedNode(resolver);
+        ImmutableNode rootNode = model.getRootNode();
+        model.addNodes("fields", selector, Collections
+                .singleton(NodeStructureHelper.createFieldNode(NEW_FIELD)),
+                resolver);
+        assertSame("Root node was changed", rootNode, model.getRootNode());
+        checkForAddedField(fieldsNodeFromTrackedNode());
+    }
 }
