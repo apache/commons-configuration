@@ -213,7 +213,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     public T getRootNode()
     {
-        return getModel().getRootNode();
+        return getModel().getNodeHandler().getRootNode();
     }
 
     /**
@@ -599,7 +599,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     protected Iterator<String> getKeysInternal()
     {
         DefinedKeysVisitor<T> visitor = new DefinedKeysVisitor<T>();
-        NodeTreeWalker.INSTANCE.walkDFS(getModel().getRootNode(), visitor,
+        NodeTreeWalker.INSTANCE.walkDFS(getRootNode(), visitor,
                 getModel().getNodeHandler());
 
         return visitor.getKeyList().iterator();

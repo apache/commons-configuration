@@ -46,13 +46,6 @@ import java.util.Collection;
 public interface NodeModel<T>
 {
     /**
-     * Returns the root node of this model.
-     *
-     * @return the root node
-     */
-    T getRootNode();
-
-    /**
      * Sets a new root node for this model. The whole structure is replaced by
      * the new node and its children.
      *

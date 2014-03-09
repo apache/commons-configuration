@@ -908,7 +908,7 @@ public class TestAbstractHierarchicalConfiguration
         @Override
         protected NodeModel<ImmutableNode> cloneNodeModel()
         {
-            return new InMemoryNodeModel(getModel().getRootNode());
+            return new InMemoryNodeModel(getModel().getNodeHandler().getRootNode());
         }
 
         public SubnodeConfiguration configurationAt(String key,

@@ -84,6 +84,11 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                         createTreeData(initialRootNode(root), null));
     }
 
+    /**
+     * Returns the root node of this mode.
+     *
+     * @return the current root node
+     */
     public ImmutableNode getRootNode()
     {
         return getTreeData().getRootNode();
