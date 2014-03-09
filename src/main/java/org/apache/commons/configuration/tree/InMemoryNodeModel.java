@@ -405,6 +405,27 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
     }
 
     /**
+     * Returns a flag whether the specified tracked node is detached. As long as
+     * the {@code NodeSelector} associated with that node returns a single
+     * instance, the tracked node is said to be <em>life</em>. If now an update
+     * of the model happens which invalidates the selector (maybe the target
+     * node was removed), the tracked node becomes detached. It is still
+     * possible to query the node; here the latest valid instance is returned.
+     * But further changes on the node model are no longer tracked for this
+     * node. So even if there are further changes which would make the
+     * {@code NodeSelector} valid again, the tracked node stays in detached
+     * state.
+     *
+     * @param selector the {@code NodeSelector} defining the desired node
+     * @return a flag whether this tracked node is in detached state
+     * @throws ConfigurationRuntimeException if the selector is unknown
+     */
+    public boolean isTrackedNodeDetached(NodeSelector selector)
+    {
+        return structure.get().getNodeTracker().isTrackedNodeDetached(selector);
+    }
+
+    /**
      * Removes a tracked node. This method is the opposite of
      * {@code trackNode()}. It has to be called if there is no longer the need
      * to track a specific node. Note that for each call of {@code trackNode()}
@@ -513,7 +534,7 @@ public class InMemoryNodeModel implements NodeHandler<ImmutableNode>,
     {
         NodeTracker newTracker =
                 (current != null) ? current.getNodeTracker()
-                        : new NodeTracker();
+                        .detachAllTrackedNodes() : new NodeTracker();
         return new TreeData(root, createParentMapping(root),
                 Collections.<ImmutableNode, ImmutableNode> emptyMap(),
                 newTracker);

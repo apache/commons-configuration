@@ -155,6 +155,19 @@ class NodeTracker
     }
 
     /**
+     * Returns a flag whether the specified tracked node is detached.
+     *
+     * @param selector the {@code NodeSelector}
+     * @return a flag whether this node is detached
+     * @throws ConfigurationRuntimeException if no data for this selector is
+     *         available
+     */
+    public boolean isTrackedNodeDetached(NodeSelector selector)
+    {
+        return getTrackedNodeData(selector).isDetached();
+    }
+
+    /**
      * Updates tracking information after the node structure has been changed.
      * This method iterates over all tracked nodes. The selectors are evaluated
      * again to update the node reference. If this fails for a selector, the
@@ -180,15 +193,64 @@ class NodeTracker
         for (Map.Entry<NodeSelector, TrackedNodeData> e : trackedNodes
                 .entrySet())
         {
-            ImmutableNode newTarget =
-                    e.getKey().select(root, resolver, handler);
-            TrackedNodeData newTrackData =
-                    (newTarget != null) ? e.getValue().updateNode(newTarget)
-                            : e.getValue();
-            newState.put(e.getKey(), newTrackData);
+            newState.put(e.getKey(), determineUpdatedTrackedNodeData(root, resolver, handler, e));
         }
 
         return new NodeTracker(newState);
+    }
+
+    /**
+     * Marks all tracked nodes as detached. This method is called if there are
+     * some drastic changes on the underlying node structure, e.g. if the root
+     * node was replaced.
+     *
+     * @return the updated instance
+     */
+    public NodeTracker detachAllTrackedNodes()
+    {
+        if (trackedNodes.isEmpty())
+        {
+            // there is not state to be updated
+            return this;
+        }
+
+        Map<NodeSelector, TrackedNodeData> newState =
+                new HashMap<NodeSelector, TrackedNodeData>();
+        for (Map.Entry<NodeSelector, TrackedNodeData> e : trackedNodes
+                .entrySet())
+        {
+            TrackedNodeData newData =
+                    e.getValue().isDetached() ? e.getValue() : e.getValue()
+                            .detach();
+            newState.put(e.getKey(), newData);
+        }
+
+        return new NodeTracker(newState);
+    }
+
+    /**
+     * Returns a {@code TrackedNodeData} object for an update operation. If the
+     * tracked node is still life, its selector is applied to the current root
+     * node. It may become detached if there is no match.
+     *
+     * @param root the root node
+     * @param resolver the {@code NodeKeyResolver}
+     * @param handler the {@code NodeHandler}
+     * @param e the current selector and {@code TrackedNodeData}
+     * @return the updated {@code TrackedNodeData}
+     */
+    private TrackedNodeData determineUpdatedTrackedNodeData(ImmutableNode root,
+            NodeKeyResolver<ImmutableNode> resolver,
+            NodeHandler<ImmutableNode> handler,
+            Map.Entry<NodeSelector, TrackedNodeData> e)
+    {
+        if (e.getValue().isDetached())
+        {
+            return e.getValue();
+        }
+        ImmutableNode newTarget = e.getKey().select(root, resolver, handler);
+        return (newTarget != null) ? e.getValue().updateNode(newTarget) : e
+                .getValue().detach();
     }
 
     /**
@@ -255,6 +317,9 @@ class NodeTracker
         /** The number of observers of this tracked node. */
         private final int observerCount;
 
+        /** A flag whether the node is detached. */
+        private final boolean detached;
+
         /**
          * Creates a new instance of {@code TrackedNodeData} and initializes it
          * with the current reference to the tracked node.
@@ -263,7 +328,7 @@ class NodeTracker
          */
         public TrackedNodeData(ImmutableNode nd)
         {
-            this(nd, 1);
+            this(nd, 1, false);
         }
 
         /**
@@ -272,11 +337,14 @@ class NodeTracker
          *
          * @param nd the tracked node
          * @param obsCount the observer count
+         * @param isDetached a flag whether the node is detached
          */
-        private TrackedNodeData(ImmutableNode nd, int obsCount)
+        private TrackedNodeData(ImmutableNode nd, int obsCount,
+                boolean isDetached)
         {
             node = nd;
             observerCount = obsCount;
+            detached = isDetached;
         }
 
         /**
@@ -290,6 +358,16 @@ class NodeTracker
         }
 
         /**
+         * Returns a flag whether the represented tracked node is detached.
+         *
+         * @return the detached flag
+         */
+        public boolean isDetached()
+        {
+            return detached;
+        }
+
+        /**
          * Another observer was added for this tracked node. This method returns
          * a new instance with an adjusted observer count.
          *
@@ -297,7 +375,7 @@ class NodeTracker
          */
         public TrackedNodeData observerAdded()
         {
-            return new TrackedNodeData(node, observerCount + 1);
+            return new TrackedNodeData(node, observerCount + 1, isDetached());
         }
 
         /**
@@ -311,7 +389,7 @@ class NodeTracker
         public TrackedNodeData observerRemoved()
         {
             return (observerCount <= 1) ? null : new TrackedNodeData(node,
-                    observerCount - 1);
+                    observerCount - 1, isDetached());
         }
 
         /**
@@ -324,7 +402,19 @@ class NodeTracker
          */
         public TrackedNodeData updateNode(ImmutableNode newNode)
         {
-            return new TrackedNodeData(newNode, observerCount);
+            return new TrackedNodeData(newNode, observerCount, isDetached());
+        }
+
+        /**
+         * Returns an instance with the detached flag set to true. This method
+         * is called if the selector of a tracked node does not match a single
+         * node any more.
+         *
+         * @return the updated instance
+         */
+        public TrackedNodeData detach()
+        {
+            return new TrackedNodeData(getNode(), observerCount, true);
         }
     }
 }

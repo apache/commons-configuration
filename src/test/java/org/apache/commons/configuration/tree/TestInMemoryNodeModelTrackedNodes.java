@@ -17,8 +17,10 @@
 package org.apache.commons.configuration.tree;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
@@ -212,5 +214,68 @@ public class TestInMemoryNodeModelTrackedNodes
         model.trackNode(selector, resolver);
         model.untrackNode(selector);
         assertNotNull("No tracked node", model.getTrackedNode(selector));
+    }
+
+    /**
+     * Tests isDetached() for a node which has just been tracked.
+     */
+    @Test
+    public void testIsDetachedFalseNoUpdates()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        model.trackNode(selector, resolver);
+        assertFalse("Node is detached", model.isTrackedNodeDetached(selector));
+    }
+
+    /**
+     * Tests isDetached() for a life node.
+     */
+    @Test
+    public void testIsDetachedFalseAfterUpdate()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        model.trackNode(selector, resolver);
+        model.clearProperty("tables.table(1).fields.field(1).name", resolver);
+        assertFalse("Node is detached", model.isTrackedNodeDetached(selector));
+    }
+
+    /**
+     * Tests isDetached() for an actually detached node.
+     */
+    @Test
+    public void testIsDetachedTrue()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        model.trackNode(selector, resolver);
+        model.clearTree("tables.table(0)", resolver);
+        assertTrue("Node is not detached",
+                model.isTrackedNodeDetached(selector));
+    }
+
+    /**
+     * Tests whether a clear() operation causes nodes to be detached.
+     */
+    @Test
+    public void testIsDetachedAfterClear()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        model.trackNode(selector, resolver);
+        model.clear();
+        assertTrue("Node is not detached",
+                model.isTrackedNodeDetached(selector));
+    }
+
+    /**
+     * Tests whether tracked nodes become detached when a new root node is set.
+     */
+    @Test
+    public void testIsDetachedAfterSetRoot()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        model.trackNode(selector, resolver);
+        model.clearProperty("tables.table(1).fields.field(1).name", resolver);
+        model.setRootNode(root);
+        assertTrue("Node is not detached",
+                model.isTrackedNodeDetached(selector));
     }
 }
