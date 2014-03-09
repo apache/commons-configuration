@@ -93,7 +93,7 @@ public class NodeStructureHelper
             {
                     "uid", "uname", "firstName", "lastName", "email"
             }, {
-                    "docid", "name", "creationDate", "authorID", "version"
+                    "docid", "name", "creationDate", "authorID", "version", "length"
             }
     };
 
