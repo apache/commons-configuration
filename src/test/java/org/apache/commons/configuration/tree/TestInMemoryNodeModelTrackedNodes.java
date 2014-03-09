@@ -23,11 +23,13 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.easymock.EasyMock;
+import org.easymock.IAnswer;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -40,6 +42,9 @@ import org.junit.Test;
  */
 public class TestInMemoryNodeModelTrackedNodes
 {
+    /** Constant for the name of a new table field. */
+    private static final String NEW_FIELD = "newTableField";
+
     /** The root node for the test hierarchy. */
     private static ImmutableNode root;
 
@@ -72,10 +77,26 @@ public class TestInMemoryNodeModelTrackedNodes
      */
     private static NodeKeyResolver<ImmutableNode> createResolver()
     {
+        return createResolver(true);
+    }
+
+    /**
+     * Creates a default resolver which supports arbitrary queries on a target
+     * node and allows specifying the replay flag. If the boolean parameter is
+     * false, the mock is not replayed; so additional behaviors can be defined.
+     *
+     * @param replay the replay flag
+     * @return the resolver mock
+     */
+    private static NodeKeyResolver<ImmutableNode> createResolver(boolean replay)
+    {
         NodeKeyResolver<ImmutableNode> resolver =
                 NodeStructureHelper.createResolverMock();
         NodeStructureHelper.expectResolveKeyForQueries(resolver);
-        EasyMock.replay(resolver);
+        if (replay)
+        {
+            EasyMock.replay(resolver);
+        }
         return resolver;
     }
 
@@ -293,6 +314,27 @@ public class TestInMemoryNodeModelTrackedNodes
     }
 
     /**
+     * Returns the fields node from the model.
+     *
+     * @return the fields node
+     */
+    private ImmutableNode fieldsNodeFromModel()
+    {
+        return NodeStructureHelper.nodeForKey(model, "tables/table(1)/fields");
+    }
+
+    /**
+     * Returns the fields node from a tracked node.
+     *
+     * @return the fields node
+     */
+    private ImmutableNode fieldsNodeFromTrackedNode()
+    {
+        return NodeStructureHelper.nodeForKey(model.getTrackedNode(selector),
+                "fields");
+    }
+
+    /**
      * Helper method for checking whether the expected field node was removed.
      *
      * @param nodeFields the fields node
@@ -329,8 +371,7 @@ public class TestInMemoryNodeModelTrackedNodes
         NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         model.clearProperty("fields.field(0).name", selector, resolver);
-        ImmutableNode nodeFields =
-                NodeStructureHelper.nodeForKey(model, "tables/table(1)/fields");
+        ImmutableNode nodeFields = fieldsNodeFromModel();
         checkForRemovedField(nodeFields, 0);
     }
 
@@ -345,9 +386,7 @@ public class TestInMemoryNodeModelTrackedNodes
         ImmutableNode rootNode = model.getRootNode();
         model.clearProperty("fields.field(0).name", selector, resolver);
         assertSame("Model root was changed", rootNode, model.getRootNode());
-        ImmutableNode nodeFields =
-                NodeStructureHelper.nodeForKey(model.getTrackedNode(selector),
-                        "fields");
+        ImmutableNode nodeFields = fieldsNodeFromTrackedNode();
         checkForRemovedField(nodeFields, 0);
     }
 
@@ -360,8 +399,7 @@ public class TestInMemoryNodeModelTrackedNodes
         NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         model.clearTree("fields.field(1)", selector, resolver);
-        ImmutableNode nodeFields =
-                NodeStructureHelper.nodeForKey(model, "tables/table(1)/fields");
+        ImmutableNode nodeFields = fieldsNodeFromModel();
         checkForRemovedField(nodeFields, 1);
     }
 
@@ -376,9 +414,88 @@ public class TestInMemoryNodeModelTrackedNodes
         ImmutableNode rootNode = model.getRootNode();
         model.clearTree("fields.field(1)", selector, resolver);
         assertSame("Model root was changed", rootNode, model.getRootNode());
-        ImmutableNode nodeFields =
-                NodeStructureHelper.nodeForKey(model.getTrackedNode(selector),
-                        "fields");
+        ImmutableNode nodeFields = fieldsNodeFromTrackedNode();
         checkForRemovedField(nodeFields, 1);
+    }
+
+    /**
+     * Prepares the passed in resolver mock to resolve add keys. They are
+     * interpreted on a default expression engine.
+     *
+     * @param resolver the {@code NodeKeyResolver} mock
+     */
+    private static void prepareResolverForAddKeys(
+            NodeKeyResolver<ImmutableNode> resolver)
+    {
+        EasyMock.expect(
+                resolver.resolveAddKey(EasyMock.anyObject(ImmutableNode.class),
+                        EasyMock.anyString(),
+                        EasyMock.anyObject(TreeData.class)))
+                .andAnswer(new IAnswer<NodeAddData<ImmutableNode>>() {
+                    public NodeAddData<ImmutableNode> answer() throws Throwable {
+                        ImmutableNode root =
+                                (ImmutableNode) EasyMock.getCurrentArguments()[0];
+                        String key = (String) EasyMock.getCurrentArguments()[1];
+                        TreeData handler =
+                                (TreeData) EasyMock.getCurrentArguments()[2];
+                        return DefaultExpressionEngine.INSTANCE.prepareAdd(
+                                root, key, handler);
+                    }
+                }).anyTimes();
+    }
+
+    /**
+     * Tests whether a field node was added.
+     *
+     * @param nodeFields the fields node
+     */
+    private static void checkForAddedField(ImmutableNode nodeFields)
+    {
+        assertEquals("Wrong number of children",
+                NodeStructureHelper.fieldsLength(1) + 1, nodeFields
+                        .getChildren().size());
+        ImmutableNode nodeField =
+                nodeFields.getChildren().get(
+                        NodeStructureHelper.fieldsLength(1));
+        assertEquals("Wrong node name", "field", nodeField.getNodeName());
+        assertEquals("Wrong number of children of field node", 1, nodeField
+                .getChildren().size());
+        ImmutableNode nodeName = nodeField.getChildren().get(0);
+        assertEquals("Wrong name of name node", "name", nodeName.getNodeName());
+        assertEquals("Wrong node value", NEW_FIELD, nodeName.getValue());
+    }
+
+    /**
+     * Tests whether an addProperty() operation works on a tracked node.
+     */
+    @Test
+    public void testAddPropertyOnTrackedNode()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        prepareResolverForAddKeys(resolver);
+        EasyMock.replay(resolver);
+        model.trackNode(selector, resolver);
+        model.addProperty("fields.field(-1).name", selector,
+                Collections.singleton(NEW_FIELD), resolver);
+        checkForAddedField(fieldsNodeFromModel());
+        checkForAddedField(fieldsNodeFromTrackedNode());
+    }
+
+    /**
+     * Tests an addProperty() operation on a tracked node that is detached.
+     */
+    @Test
+    public void testAddPropertyOnDetachedNode()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        prepareResolverForAddKeys(resolver);
+        EasyMock.replay(resolver);
+        model.trackNode(selector, resolver);
+        initDetachedNode(resolver);
+        ImmutableNode rootNode = model.getRootNode();
+        model.addProperty("fields.field(-1).name", selector,
+                Collections.singleton(NEW_FIELD), resolver);
+        assertSame("Root node was changed", rootNode, model.getRootNode());
+        checkForAddedField(fieldsNodeFromTrackedNode());
     }
 }

@@ -104,17 +104,39 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         return getTreeData();
     }
 
-    public void addProperty(final String key, final Iterable<?> values,
+    public void addProperty(String key, Iterable<?> values,
+            NodeKeyResolver<ImmutableNode> resolver)
+    {
+        addProperty(key, null, values, resolver);
+    }
+
+    /**
+     * Adds new property values using a tracked node as root node. This method
+     * works like the normal {@code addProperty()} method, but the origin of the
+     * operation (also for the interpretation of the passed in key) is a tracked
+     * node identified by the passed in {@code NodeSelector}. The selector can
+     * be <b>null</b>, then the root node is assumed.
+     *
+     * @param key the key
+     * @param selector the {@code NodeSelector} defining the root node (or
+     *        <b>null</b>)
+     * @param resolver the {@code NodeKeyResolver}
+     * @throws ConfigurationRuntimeException if the selector cannot be resolved
+     */
+    public void addProperty(final String key, NodeSelector selector,
+            final Iterable<?> values,
             final NodeKeyResolver<ImmutableNode> resolver)
     {
         if (valuesNotEmpty(values))
         {
-            updateModel(new TransactionInitializer() {
-                public boolean initTransaction(ModelTransaction tx) {
+            updateModel(new TransactionInitializer()
+            {
+                public boolean initTransaction(ModelTransaction tx)
+                {
                     initializeAddTransaction(tx, key, values, resolver);
                     return true;
                 }
-            }, null, resolver);
+            }, selector, resolver);
         }
     }
 
@@ -164,17 +186,14 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     public void setProperty(final String key, final Object value,
             final NodeKeyResolver<ImmutableNode> resolver)
     {
-        updateModel(new TransactionInitializer()
-        {
-            public boolean initTransaction(ModelTransaction tx)
-            {
+        updateModel(new TransactionInitializer() {
+            public boolean initTransaction(ModelTransaction tx) {
                 boolean added = false;
                 NodeUpdateData<ImmutableNode> updateData =
                         resolver.resolveUpdateKey(
                                 tx.getCurrentData().getRootNode(), key, value,
                                 tx.getCurrentData());
-                if (!updateData.getNewValues().isEmpty())
-                {
+                if (!updateData.getNewValues().isEmpty()) {
                     initializeAddTransaction(tx, key,
                             updateData.getNewValues(), resolver);
                     added = true;
@@ -211,27 +230,21 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param selector the {@code NodeSelector} defining the root node (or
      *        <b>null</b>)
      * @param resolver the {@code NodeKeyResolver}
+     * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
     public void clearTree(final String key, NodeSelector selector,
             final NodeKeyResolver<ImmutableNode> resolver)
     {
-        updateModel(new TransactionInitializer()
-        {
-            public boolean initTransaction(ModelTransaction tx)
-            {
+        updateModel(new TransactionInitializer() {
+            public boolean initTransaction(ModelTransaction tx) {
                 TreeData currentStructure = tx.getCurrentData();
                 for (QueryResult<ImmutableNode> result : resolver.resolveKey(
-                        tx.getQueryRoot(), key, currentStructure))
-                {
-                    if (result.isAttributeResult())
-                    {
+                        tx.getQueryRoot(), key, currentStructure)) {
+                    if (result.isAttributeResult()) {
                         tx.addRemoveAttributeOperation(result.getNode(),
                                 result.getAttributeName());
-                    }
-                    else
-                    {
-                        if (result.getNode() == currentStructure.getRootNode())
-                        {
+                    } else {
+                        if (result.getNode() == currentStructure.getRootNode()) {
                             // the whole model is to be cleared
                             clear();
                             return false;
@@ -464,7 +477,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             Iterable<?> values, NodeKeyResolver<ImmutableNode> resolver)
     {
         NodeAddData<ImmutableNode> addData =
-                resolver.resolveAddKey(tx.getCurrentData().getRootNode(), key,
+                resolver.resolveAddKey(tx.getQueryRoot(), key,
                         tx.getCurrentData());
         if (addData.isAttribute())
         {
