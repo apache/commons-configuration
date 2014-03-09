@@ -86,7 +86,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
 
     public ImmutableNode getRootNode()
     {
-        return getTreeData().getRoot();
+        return getTreeData().getRootNode();
     }
 
     /**
@@ -124,7 +124,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                 public boolean initTransaction(ModelTransaction tx)
                 {
                     List<QueryResult<ImmutableNode>> results =
-                            resolver.resolveKey(tx.getCurrentData().getRoot(),
+                            resolver.resolveKey(tx.getCurrentData().getRootNode(),
                                     key, tx.getCurrentData());
                     if (results.size() == 1)
                     {
@@ -138,7 +138,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                     {
                         NodeAddData<ImmutableNode> addData =
                                 resolver.resolveAddKey(tx.getCurrentData()
-                                        .getRoot(), key, tx.getCurrentData());
+                                        .getRootNode(), key, tx.getCurrentData());
                         if (addData.isAttribute())
                         {
                             throw attributeKeyException(key);
@@ -166,7 +166,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                 boolean added = false;
                 NodeUpdateData<ImmutableNode> updateData =
                         resolver.resolveUpdateKey(
-                                tx.getCurrentData().getRoot(), key, value,
+                                tx.getCurrentData().getRootNode(), key, value,
                                 tx.getCurrentData());
                 if (!updateData.getNewValues().isEmpty())
                 {
@@ -199,7 +199,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             {
                 TreeData currentStructure = tx.getCurrentData();
                 for (QueryResult<ImmutableNode> result : resolver
-                        .resolveKey(currentStructure.getRoot(), key,
+                        .resolveKey(currentStructure.getRootNode(), key,
                                 tx.getCurrentData()))
                 {
                     if (result.isAttributeResult())
@@ -209,7 +209,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                     }
                     else
                     {
-                        if (result.getNode() == currentStructure.getRoot())
+                        if (result.getNode() == currentStructure.getRootNode())
                         {
                             // the whole model is to be cleared
                             clear();
@@ -237,7 +237,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             public boolean initTransaction(ModelTransaction tx)
             {
                 List<QueryResult<ImmutableNode>> results =
-                        resolver.resolveKey(tx.getCurrentData().getRoot(), key,
+                        resolver.resolveKey(tx.getCurrentData().getRootNode(), key,
                                 tx.getCurrentData());
                 initializeClearTransaction(tx, results);
                 return true;
@@ -295,7 +295,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         {
             TreeData current = structure.get();
             NodeTracker newTracker =
-                    current.getNodeTracker().trackNode(current.getRoot(),
+                    current.getNodeTracker().trackNode(current.getRootNode(),
                             selector, resolver, current);
             done =
                     structure.compareAndSet(current,
@@ -426,7 +426,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             Iterable<?> values, NodeKeyResolver<ImmutableNode> resolver)
     {
         NodeAddData<ImmutableNode> addData =
-                resolver.resolveAddKey(tx.getCurrentData().getRoot(), key,
+                resolver.resolveAddKey(tx.getCurrentData().getRootNode(), key,
                         tx.getCurrentData());
         if (addData.isAttribute())
         {

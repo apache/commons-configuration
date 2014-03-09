@@ -80,7 +80,7 @@ class TreeData implements NodeHandler<ImmutableNode>
      *
      * @return the current root node
      */
-    public ImmutableNode getRoot()
+    public ImmutableNode getRootNode()
     {
         return root;
     }
@@ -185,7 +185,7 @@ class TreeData implements NodeHandler<ImmutableNode>
      */
     public ImmutableNode getParent(ImmutableNode node)
     {
-        if (node == getRoot())
+        if (node == getRootNode())
         {
             return null;
         }

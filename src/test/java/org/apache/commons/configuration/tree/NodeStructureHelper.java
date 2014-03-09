@@ -295,7 +295,7 @@ public class NodeStructureHelper
      */
     public static ImmutableNode nodeForKey(TreeData td, String key)
     {
-        return nodeForKey(td.getRoot(), key);
+        return nodeForKey(td.getRootNode(), key);
     }
 
     /**

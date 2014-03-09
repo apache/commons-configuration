@@ -61,11 +61,11 @@ public class TestTreeData
         for (int authorIdx = 0; authorIdx < NodeStructureHelper.authorsLength(); authorIdx++)
         {
             ImmutableNode authorNode =
-                    nodeForKey(treeData.getRoot(),
+                    nodeForKey(treeData.getRootNode(),
                             NodeStructureHelper.author(authorIdx));
             assertSame(
                     "Wrong parent for " + NodeStructureHelper.author(authorIdx),
-                    treeData.getRoot(), treeData.getParent(authorNode));
+                    treeData.getRootNode(), treeData.getParent(authorNode));
             for (int workIdx = 0; workIdx < NodeStructureHelper
                     .worksLength(authorIdx); workIdx++)
             {
@@ -74,7 +74,7 @@ public class TestTreeData
                                 NodeStructureHelper.author(authorIdx),
                                 NodeStructureHelper.work(authorIdx, workIdx));
                 ImmutableNode workNode =
-                        nodeForKey(treeData.getRoot(), workKey);
+                        nodeForKey(treeData.getRootNode(), workKey);
                 assertSame("Wrong parent for " + workKey, authorNode,
                         treeData.getParent(workNode));
                 for (int personaIdx = 0; personaIdx < NodeStructureHelper
@@ -85,7 +85,7 @@ public class TestTreeData
                                     NodeStructureHelper.persona(authorIdx,
                                             workIdx, personaIdx));
                     ImmutableNode personNode =
-                            nodeForKey(treeData.getRoot(), personKey);
+                            nodeForKey(treeData.getRootNode(), personKey);
                     assertSame("Wrong parent for " + personKey, workNode,
                             treeData.getParent(personNode));
                 }
