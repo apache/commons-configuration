@@ -75,11 +75,6 @@ class TreeData implements NodeHandler<ImmutableNode>
         nodeTracker = tracker;
     }
 
-    /**
-     * Returns the root node.
-     *
-     * @return the current root node
-     */
     public ImmutableNode getRootNode()
     {
         return root;

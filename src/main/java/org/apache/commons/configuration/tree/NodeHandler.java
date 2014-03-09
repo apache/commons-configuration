@@ -154,4 +154,11 @@ public interface NodeHandler<T>
      * @return a flag whether the passed in node is defined
      */
     boolean isDefined(T node);
+
+    /**
+     * Returns the root node of the underlying hierarchy.
+     *
+     * @return the current root node
+     */
+    T getRootNode();
 }
