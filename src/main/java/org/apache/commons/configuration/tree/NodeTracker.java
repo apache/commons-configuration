@@ -188,14 +188,23 @@ class NodeTracker
      * Updates tracking information after the node structure has been changed.
      * This method iterates over all tracked nodes. The selectors are evaluated
      * again to update the node reference. If this fails for a selector, the
-     * previous node is reused; this tracked node is then detached.
+     * previous node is reused; this tracked node is then detached. The passed
+     * in {@code NodeSelector} is the selector of the tracked node which is the
+     * target of the current transaction. (It is <b>null</b> if the transaction
+     * is not executed on a tracked node.) This is used to handle a special
+     * case: if the tracked node becomes detached by an operation targeting
+     * itself, this means that the node has been cleared by this operation. In
+     * this case, the previous node instance is not used, but an empty node is
+     * created.
      *
      * @param root the root node
+     * @param txTarget the {@code NodeSelector} referencing the target node of
+     *        the current transaction (may be <b>null</b>)
      * @param resolver the {@code NodeKeyResolver}
      * @param handler the {@code NodeHandler}
      * @return the updated instance
      */
-    public NodeTracker update(ImmutableNode root,
+    public NodeTracker update(ImmutableNode root, NodeSelector txTarget,
             NodeKeyResolver<ImmutableNode> resolver,
             NodeHandler<ImmutableNode> handler)
     {
@@ -210,7 +219,10 @@ class NodeTracker
         for (Map.Entry<NodeSelector, TrackedNodeData> e : trackedNodes
                 .entrySet())
         {
-            newState.put(e.getKey(), determineUpdatedTrackedNodeData(root, resolver, handler, e));
+            newState.put(
+                    e.getKey(),
+                    determineUpdatedTrackedNodeData(root, txTarget, resolver,
+                            handler, e));
         }
 
         return new NodeTracker(newState);
@@ -238,36 +250,11 @@ class NodeTracker
         {
             TrackedNodeData newData =
                     e.getValue().isDetached() ? e.getValue() : e.getValue()
-                            .detach();
+                            .detach(null);
             newState.put(e.getKey(), newData);
         }
 
         return new NodeTracker(newState);
-    }
-
-    /**
-     * Returns a {@code TrackedNodeData} object for an update operation. If the
-     * tracked node is still life, its selector is applied to the current root
-     * node. It may become detached if there is no match.
-     *
-     * @param root the root node
-     * @param resolver the {@code NodeKeyResolver}
-     * @param handler the {@code NodeHandler}
-     * @param e the current selector and {@code TrackedNodeData}
-     * @return the updated {@code TrackedNodeData}
-     */
-    private TrackedNodeData determineUpdatedTrackedNodeData(ImmutableNode root,
-            NodeKeyResolver<ImmutableNode> resolver,
-            NodeHandler<ImmutableNode> handler,
-            Map.Entry<NodeSelector, TrackedNodeData> e)
-    {
-        if (e.getValue().isDetached())
-        {
-            return e.getValue();
-        }
-        ImmutableNode newTarget = e.getKey().select(root, resolver, handler);
-        return (newTarget != null) ? e.getValue().updateNode(newTarget) : e
-                .getValue().detach();
     }
 
     /**
@@ -287,6 +274,72 @@ class NodeTracker
                     + selector);
         }
         return trackData;
+    }
+
+    /**
+     * Returns a {@code TrackedNodeData} object for an update operation. If the
+     * tracked node is still life, its selector is applied to the current root
+     * node. It may become detached if there is no match.
+     *
+     * @param root the root node
+     * @param txTarget the {@code NodeSelector} referencing the target node of
+     *        the current transaction (may be <b>null</b>)
+     * @param resolver the {@code NodeKeyResolver}
+     * @param handler the {@code NodeHandler}
+     * @param e the current selector and {@code TrackedNodeData}
+     * @return the updated {@code TrackedNodeData}
+     */
+    private static TrackedNodeData determineUpdatedTrackedNodeData(
+            ImmutableNode root, NodeSelector txTarget,
+            NodeKeyResolver<ImmutableNode> resolver,
+            NodeHandler<ImmutableNode> handler,
+            Map.Entry<NodeSelector, TrackedNodeData> e)
+    {
+        if (e.getValue().isDetached())
+        {
+            return e.getValue();
+        }
+        ImmutableNode newTarget = e.getKey().select(root, resolver, handler);
+        if (newTarget == null)
+        {
+            return detachedTrackedNodeData(txTarget, e);
+        }
+        return e.getValue().updateNode(newTarget);
+    }
+
+    /**
+     * Creates a new {@code TrackedNodeData} object for a tracked node which
+     * becomes detached within the current transaction. This method checks
+     * whether the affected node is the root node of the current transaction. If
+     * so, it is cleared.
+     *
+     * @param txTarget the {@code NodeSelector} referencing the target node of
+     *        the current transaction (may be <b>null</b>)
+     * @param e the current selector and {@code TrackedNodeData}
+     * @return the new {@code TrackedNodeData} object to be used for this
+     *         tracked node
+     */
+    private static TrackedNodeData detachedTrackedNodeData(
+            NodeSelector txTarget, Map.Entry<NodeSelector, TrackedNodeData> e)
+    {
+        ImmutableNode newNode =
+                e.getKey().equals(txTarget) ? createEmptyTrackedNode(e
+                        .getValue()) : null;
+        return e.getValue().detach(newNode);
+    }
+
+    /**
+     * Creates an empty node derived from the passed in {@code TrackedNodeData}
+     * object. This method is called if a tracked node got cleared by a
+     * transaction.
+     *
+     * @param data the {@code TrackedNodeData}
+     * @return the new node instance for this tracked node
+     */
+    private static ImmutableNode createEmptyTrackedNode(TrackedNodeData data)
+    {
+        return new ImmutableNode.Builder().name(data.getNode().getNodeName())
+                .create();
     }
 
     /**
@@ -437,14 +490,19 @@ class NodeTracker
         /**
          * Returns an instance with the detached flag set to true. This method
          * is called if the selector of a tracked node does not match a single
-         * node any more.
+         * node any more. It is possible to pass in a new node instance which
+         * becomes the current tracked node. If this is <b>null</b>, the
+         * previous node instance is used.
          *
+         * @param newNode the new tracked node instance (may be <b>null</b>)
          * @return the updated instance
          */
-        public TrackedNodeData detach()
+        public TrackedNodeData detach(ImmutableNode newNode)
         {
-            return new TrackedNodeData(getNode(), observerCount,
-                    new InMemoryNodeModel(getNode()));
+            ImmutableNode newTrackedNode =
+                    (newNode != null) ? newNode : getNode();
+            return new TrackedNodeData(newTrackedNode, observerCount,
+                    new InMemoryNodeModel(newTrackedNode));
         }
     }
 }

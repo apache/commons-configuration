@@ -637,4 +637,22 @@ public class TestInMemoryNodeModelTrackedNodes
                 model.getRootNode());
         checkedForChangedField(fieldsNodeFromTrackedNode(), 0);
     }
+
+    /**
+     * Tests whether a tracked node is handled correctly if an operation is
+     * executed on this node which causes the node to be detached. In this case,
+     * the node should be cleared (it makes no sense to use the last defined
+     * node instance).
+     */
+    @Test
+    public void testTrackedNodeClearedInOperation()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        model.trackNode(selector, resolver);
+        model.clearTree(null, selector, resolver);
+        assertTrue("Node not detached", model.isTrackedNodeDetached(selector));
+        ImmutableNode node = model.getTrackedNode(selector);
+        assertEquals("Name was changed", "table", node.getNodeName());
+        assertFalse("Node is defined", model.getNodeHandler().isDefined(node));
+    }
 }

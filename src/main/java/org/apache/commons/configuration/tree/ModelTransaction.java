@@ -83,6 +83,9 @@ class ModelTransaction
     /** The root node for query operations. */
     private final ImmutableNode queryRoot;
 
+    /** The selector to the root node of this transaction. */
+    private final NodeSelector rootNodeSelector;
+
     /** The {@code NodeKeyResolver} to be used for this transaction. */
     private final NodeKeyResolver<ImmutableNode> resolver;
 
@@ -130,6 +133,7 @@ class ModelTransaction
         addedNodes = new LinkedList<ImmutableNode>();
         removedNodes = new LinkedList<ImmutableNode>();
         queryRoot = initQueryRoot(treeData, selector);
+        rootNodeSelector = selector;
     }
 
     /**
@@ -258,7 +262,7 @@ class ModelTransaction
         updateParentMapping();
         return new TreeData(newRoot, parentMapping,
                 replacedNodes, currentData.getNodeTracker().update(newRoot,
-                        getResolver(), getCurrentData()));
+                rootNodeSelector, getResolver(), getCurrentData()));
     }
 
     /**
