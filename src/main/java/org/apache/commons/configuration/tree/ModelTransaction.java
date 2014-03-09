@@ -81,7 +81,7 @@ class ModelTransaction
     private final InMemoryNodeModel model;
 
     /** Stores the current tree data of the calling node model. */
-    private final InMemoryNodeModel.TreeData currentData;
+    private final TreeData currentData;
 
     /** The {@code NodeKeyResolver} to be used for this transaction. */
     private final NodeKeyResolver<ImmutableNode> resolver;
@@ -236,11 +236,11 @@ class ModelTransaction
      *
      * @return the updated {@code TreeData}
      */
-    public InMemoryNodeModel.TreeData execute()
+    public TreeData execute()
     {
         executeOperations();
         updateParentMapping();
-        return new InMemoryNodeModel.TreeData(newRoot, parentMapping,
+        return new TreeData(newRoot, parentMapping,
                 replacedNodes, currentData.getNodeTracker().update(newRoot,
                         getResolver(), model));
     }
@@ -249,7 +249,7 @@ class ModelTransaction
      * Returns the current {@code TreeData} object this transaction operates on.
      * @return the associated {@code TreeData} object
      */
-    public InMemoryNodeModel.TreeData getCurrentData() {
+    public TreeData getCurrentData() {
         return currentData;
     }
 
