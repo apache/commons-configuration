@@ -45,11 +45,11 @@ limitations under the License.
 -->
 <document>
   <properties>
-    <title>Download Commons Configuration</title>
+    <title>Download Apache Commons Configuration</title>
     <author email="dev@commons.apache.org">Commons Documentation Team</author>
   </properties>
   <body>
-    <section name="Download Commons Configuration">
+    <section name="Download Apache Commons Configuration">
     <subsection name="Using a Mirror">
       <p>
         We recommend you use a mirror to download our release
@@ -95,7 +95,7 @@ limitations under the License.
       </p>
     </subsection>
     </section>
-    <section name="Commons Configuration 1.10 ">
+    <section name="Apache Commons Configuration 1.10 ">
       <subsection name="Binaries">
         <table>
           <tr>
