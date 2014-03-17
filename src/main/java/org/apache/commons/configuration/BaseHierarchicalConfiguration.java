@@ -28,13 +28,16 @@ import java.util.WeakHashMap;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
 import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.InMemoryNodeModel;
 import org.apache.commons.configuration.tree.NodeModel;
+import org.apache.commons.configuration.tree.NodeSelector;
 import org.apache.commons.configuration.tree.QueryResult;
+import org.apache.commons.configuration.tree.TrackedNodeModel;
 
 /**
  * <p>
@@ -221,73 +224,90 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     }
 
     /**
-     * <p>
-     * Returns a hierarchical subnode configuration object that wraps the
-     * configuration node specified by the given key. This method provides an
-     * easy means of accessing sub trees of a hierarchical configuration. In the
-     * returned configuration the sub tree can directly be accessed, it becomes
-     * the root node of this configuration. Because of this the passed in key
-     * must select exactly one configuration node; otherwise an
-     * {@code IllegalArgumentException} will be thrown.
-     * </p>
-     * <p>
-     * The difference between this method and the
-     * {@link #subset(String)} method is that
-     * {@code subset()} supports arbitrary subsets of configuration nodes
-     * while {@code configurationAt()} only returns a single sub tree.
-     * Please refer to the documentation of the
-     * {@code SubnodeConfiguration} class to obtain further information
-     * about subnode configurations and when they should be used.
-     * </p>
-     * <p>
-     * With the {@code supportUpdate} flag the behavior of the returned
-     * {@code SubnodeConfiguration} regarding updates of its parent
-     * configuration can be determined. A subnode configuration operates on the
-     * same nodes as its parent, so changes at one configuration are normally
-     * directly visible for the other configuration. There are however changes
-     * of the parent configuration, which are not recognized by the subnode
-     * configuration per default. An example for this is a reload operation (for
-     * file-based configurations): Here the complete node set of the parent
-     * configuration is replaced, but the subnode configuration still references
-     * the old nodes. If such changes should be detected by the subnode
-     * configuration, the {@code supportUpdates} flag must be set to
-     * <b>true</b>. This causes the subnode configuration to reevaluate the key
-     * used for its creation each time it is accessed. This guarantees that the
-     * subnode configuration always stays in sync with its key, even if the
-     * parent configuration's data significantly changes. If such a change
-     * makes the key invalid - because it now no longer points to exactly one
-     * node -, the subnode configuration is not reconstructed, but keeps its
-     * old data. It is then quasi detached from its parent.
-     * </p>
+     * {@inheritDoc} The result of this implementation depends on the
+     * {@code supportUpdates} flag: If it is <b>false</b>, a plain
+     * {@code BaseHierarchicalConfiguration} is returned using the selected node
+     * as root node. This is suitable for read-only access to properties.
+     * Because the configuration returned in this case is not connected to the
+     * parent configuration, updates on properties made by one configuration are
+     * not reflected by the other one. A value of <b>true</b> for this parameter
+     * causes a tracked node to be created, and result is a
+     * {@link SubnodeConfiguration} based on this tracked node. This
+     * configuration is really connected to its parent, so that updated
+     * properties are visible on both.
      *
-     * @param key the key that selects the sub tree
-     * @param supportUpdates a flag whether the returned subnode configuration
-     * should be able to handle updates of its parent
-     * @return a hierarchical configuration that contains this sub tree
      * @see SubnodeConfiguration
-     * @since 1.5
+     * @throws ConfigurationRuntimeException if the key does not select a single
+     *         node
      */
-    public SubnodeConfiguration configurationAt(String key,
+    public HierarchicalConfiguration<ImmutableNode> configurationAt(String key,
             boolean supportUpdates)
     {
-        beginWrite(false);
-        try
+        BaseHierarchicalConfiguration sub =
+                supportUpdates ? createConnectedSubConfiguration(key)
+                        : createIndependentSubConfiguration(key);
+        initSubConfiguration(sub);
+        return sub;
+    }
+
+    /**
+     * Creates a sub configuration from the specified key which is connected to
+     * this configuration. This implementation creates a
+     * {@link SubnodeConfiguration} with a tracked node identified by the passed
+     * in key.
+     *
+     * @param key the key of the sub configuration
+     * @return the new sub configuration
+     */
+    private BaseHierarchicalConfiguration createConnectedSubConfiguration(
+            String key)
+    {
+        InMemoryNodeModel myModel = (InMemoryNodeModel) getModel();
+        NodeSelector selector = new NodeSelector(key);
+        myModel.trackNode(selector, this);
+        return new SubnodeConfiguration(this, new TrackedNodeModel(myModel,
+                selector, true), selector);
+    }
+
+    /**
+     * Creates a sub configuration from the specified key which is independent
+     * on this configuration. This means that the sub configuration operates on
+     * a separate node model (although the nodes are initially shared).
+     *
+     * @param key the key of the sub configuration
+     * @return the new sub configuration
+     */
+    private BaseHierarchicalConfiguration createIndependentSubConfiguration(
+            String key)
+    {
+        List<ImmutableNode> targetNodes = fetchFilteredNodeResults(key);
+        if (targetNodes.size() != 1)
         {
-//            List<ConfigurationNode> nodes = fetchNodeList(key);
-//            if (nodes.size() != 1)
-//            {
-//                throw new IllegalArgumentException(
-//                        "Passed in key must select exactly one node: " + key);
-//            }
-//            return createAndInitializeSubnodeConfiguration(nodes.get(0), key,
-//                    supportUpdates);
-            //TODO implementation
-            return null;
+            throw new ConfigurationRuntimeException(
+                    "Passed in key must select exactly one node: " + key);
         }
-        finally
+        return new BaseHierarchicalConfiguration(new InMemoryNodeModel(
+                targetNodes.get(0)));
+    }
+
+    /**
+     * Executes a query on the specified key and filters it for node results.
+     *
+     * @param key the key
+     * @return the filtered list with result nodes
+     */
+    private List<ImmutableNode> fetchFilteredNodeResults(String key)
+    {
+        List<QueryResult<ImmutableNode>> results = fetchNodeList(key);
+        List<ImmutableNode> targetNodes = new LinkedList<ImmutableNode>();
+        for (QueryResult<ImmutableNode> result : results)
         {
-            endWrite();
+            if (!result.isAttributeResult())
+            {
+                targetNodes.add(result.getNode());
+            }
         }
+        return targetNodes;
     }
 
     /**
@@ -303,16 +323,11 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     }
 
     /**
-     * Returns a hierarchical subnode configuration for the node specified by
-     * the given key. This is a short form for {@code configurationAt(key,
+     * {@inheritDoc} This is a short form for {@code configurationAt(key,
      * <b>false</b>)}.
-     *
-     * @param key the key that selects the sub tree
-     * @return a hierarchical configuration that contains this sub tree
-     * @see SubnodeConfiguration
-     * @since 1.3
+     * @throws ConfigurationRuntimeException if the key does not select a single node
      */
-    public SubnodeConfiguration configurationAt(String key)
+    public HierarchicalConfiguration<ImmutableNode> configurationAt(String key)
     {
         return configurationAt(key, false);
     }
@@ -321,6 +336,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * {@inheritDoc} This implementation creates a {@code SubnodeConfiguration}
      * by delegating to {@code configurationAt()}. Then an immutable wrapper
      * is created and returned.
+     * @throws ConfigurationRuntimeException if the key does not select a single node
      */
     public ImmutableHierarchicalConfiguration immutableConfigurationAt(
             String key)
@@ -330,31 +346,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     }
 
     /**
-     * Returns a list of sub configurations for all configuration nodes selected
-     * by the given key. This method will evaluate the passed in key (using the
-     * current {@code ExpressionEngine}) and then create a subnode
-     * configuration for each returned node (like
-     * {@link #configurationAt(String)}}). This is especially
-     * useful when dealing with list-like structures. As an example consider the
-     * configuration that contains data about database tables and their fields.
-     * If you need access to all fields of a certain table, you can simply do
-     *
-     * <pre>
-     * List fields = config.configurationsAt("tables.table(0).fields.field");
-     * for(Iterator it = fields.iterator(); it.hasNext();)
-     * {
-     *     BaseHierarchicalConfiguration sub = (BaseHierarchicalConfiguration) it.next();
-     *     // now the children and attributes of the field node can be
-     *     // directly accessed
-     *     String fieldName = sub.getString("name");
-     *     String fieldType = sub.getString("type");
-     *     ...
-     * </pre>
-     *
-     * @param key the key for selecting the desired nodes
-     * @return a list with hierarchical configuration objects; each
-     * configuration represents one of the nodes selected by the passed in key
-     * @since 1.3
+     * {@inheritDoc} This implementation creates sub configurations in the same way as
+     * described for {@link #configurationAt(String)}.
      */
     public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(String key)
     {
@@ -502,6 +495,22 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
             subConfigs.put(sub, Boolean.TRUE);
         }
         return sub;
+    }
+
+    /**
+     * Initializes properties of a sub configuration. A sub configuration
+     * inherits some settings from its parent, e.g. the expression engine or the
+     * synchronizer. The corresponding values are copied by this method.
+     *
+     * @param sub the sub configuration to be initialized
+     */
+    private void initSubConfiguration(BaseHierarchicalConfiguration sub)
+    {
+        sub.setSynchronizer(getSynchronizer());
+        sub.setExpressionEngine(getExpressionEngine());
+        sub.setListDelimiterHandler(getListDelimiterHandler());
+        sub.setThrowExceptionOnMissing(isThrowExceptionOnMissing());
+        sub.getInterpolator().setParentInterpolator(getInterpolator());
     }
 
     /**

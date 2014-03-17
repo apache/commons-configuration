@@ -149,8 +149,6 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
 
         this.parent = parent;
         rootSelector = selector;
-        initFromParent(parent);
-        initInterpolator();
     }
 
     /**
@@ -214,29 +212,5 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
 //        return new SubnodeConfiguration(getParent(), node, key);
         //TODO implementation
         throw new UnsupportedOperationException("Not yet implemented!");
-    }
-
-    /**
-     * Initializes this subnode configuration from the given parent
-     * configuration. This method is called by the constructor. It will copy
-     * many settings from the parent.
-     *
-     * @param parentConfig the parent configuration
-     */
-    private void initFromParent(BaseHierarchicalConfiguration parentConfig)
-    {
-        setExpressionEngine(parentConfig.getExpressionEngine());
-        setListDelimiterHandler(parentConfig.getListDelimiterHandler());
-        setThrowExceptionOnMissing(parentConfig.isThrowExceptionOnMissing());
-    }
-
-    /**
-     * Initializes the {@code ConfigurationInterpolator} for this sub configuration.
-     * This is a standard {@code ConfigurationInterpolator} which also references
-     * the {@code ConfigurationInterpolator} of the parent configuration.
-     */
-    private void initInterpolator()
-    {
-        getInterpolator().setParentInterpolator(getParent().getInterpolator());
     }
 }

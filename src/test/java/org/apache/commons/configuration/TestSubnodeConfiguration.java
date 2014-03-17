@@ -106,18 +106,17 @@ public class TestSubnodeConfiguration
      */
     private void setUpSubnodeConfig()
     {
-        setUpSubnodeConfig(SELECTOR);
+        setUpSubnodeConfig(SUB_KEY);
     }
 
     /**
-     * Initializes the test configuration using the specified selector.
+     * Initializes the test configuration using the specified key.
      *
-     * @param selector the selector
+     * @param key the key
      */
-    private void setUpSubnodeConfig(NodeSelector selector)
+    private void setUpSubnodeConfig(String key)
     {
-        TrackedNodeModel subModel = setUpTrackedModel(selector);
-        config = new SubnodeConfiguration(parent, subModel, selector);
+        config = (SubnodeConfiguration) parent.configurationAt(key, true);
     }
 
     /**
@@ -314,7 +313,7 @@ public class TestSubnodeConfiguration
     public void testSetExpressionEngine()
     {
         parent.setExpressionEngine(new XPathExpressionEngine());
-        setUpSubnodeConfig(new NodeSelector("tables/table[1]"));
+        setUpSubnodeConfig("tables/table[1]");
         assertEquals("Wrong field name", NodeStructureHelper.field(0, 1),
                 config.getString("fields/field[2]/name"));
         Set<String> keys = new HashSet<String>();
@@ -328,13 +327,30 @@ public class TestSubnodeConfiguration
     }
 
     /**
-     * Tests the configurationAt() method.
+     * Tests the configurationAt() method if updates are not supported.
      */
     @Test
-    public void testConfiguarationAt()
+    public void testConfiguarationAtNoUpdates()
     {
         setUpSubnodeConfig();
-        SubnodeConfiguration sub2 = config.configurationAt("fields.field(1)");
+        HierarchicalConfiguration<ImmutableNode> sub2 =
+                config.configurationAt("fields.field(1)");
+        assertEquals("Wrong value of property",
+                NodeStructureHelper.field(0, 1), sub2.getString("name"));
+        parent.setProperty("tables.table(0).fields.field(1).name", "otherName");
+        assertEquals("Change of parent is visible",
+                NodeStructureHelper.field(0, 1), sub2.getString("name"));
+    }
+
+    /**
+     * Tests configurationAt() if updates are supported.
+     */
+    @Test
+    public void testConfigurationAtWithUpdateSupport()
+    {
+        setUpSubnodeConfig();
+        SubnodeConfiguration sub2 =
+                (SubnodeConfiguration) config.configurationAt("fields.field(1)", true);
         assertEquals("Wrong value of property",
                 NodeStructureHelper.field(0, 1), sub2.getString("name"));
         assertEquals("Wrong parent", config.getParent(), sub2.getParent());
@@ -360,25 +376,47 @@ public class TestSubnodeConfiguration
     }
 
     /**
-     * An additional test for interpolation when the configurationAt() method is
-     * involved.
+     * Helper method for testing interpolation facilities between a sub and its
+     * parent configuration.
+     *
+     * @param withUpdates the supports updates flag
      */
-    @Test
-    public void testInterpolationFromConfigurationAt()
+    private void checkInterpolationFromConfigurationAt(boolean withUpdates)
     {
         parent.addProperty("base.dir", "/home/foo");
         parent.addProperty("test.absolute.dir.dir1", "${base.dir}/path1");
         parent.addProperty("test.absolute.dir.dir2", "${base.dir}/path2");
         parent.addProperty("test.absolute.dir.dir3", "${base.dir}/path3");
 
-        Configuration sub = parent.configurationAt("test.absolute.dir");
+        Configuration sub =
+                parent.configurationAt("test.absolute.dir", withUpdates);
         for (int i = 1; i < 4; i++)
         {
             assertEquals("Wrong interpolation in parent", "/home/foo/path" + i,
                     parent.getString("test.absolute.dir.dir" + i));
-            assertEquals("Wrong interpolation in subnode",
-                    "/home/foo/path" + i, sub.getString("dir" + i));
+            assertEquals("Wrong interpolation in sub", "/home/foo/path" + i,
+                    sub.getString("dir" + i));
         }
+    }
+
+    /**
+     * Tests whether interpolation works for a sub configuration obtained via
+     * configurationAt() if updates are not supported.
+     */
+    @Test
+    public void testInterpolationFromConfigurationAtNoUpdateSupport()
+    {
+        checkInterpolationFromConfigurationAt(false);
+    }
+
+    /**
+     * Tests whether interpolation works for a sub configuration obtained via
+     * configurationAt() if updates are supported.
+     */
+    @Test
+    public void testInterpolationFromConfigurationAtWithUpdateSupport()
+    {
+        checkInterpolationFromConfigurationAt(true);
     }
 
     /**
@@ -440,7 +478,9 @@ public class TestSubnodeConfiguration
     @Test
     public void testUpdateEvents() throws ConfigurationException
     {
-        config = parent.configurationAt(SUB_KEY, true);
+        BaseHierarchicalConfiguration config =
+                (BaseHierarchicalConfiguration) parent.configurationAt(SUB_KEY,
+                        true);
         ConfigurationListenerTestImpl l = new ConfigurationListenerTestImpl();
         config.addConfigurationListener(l);
         updateParent();
