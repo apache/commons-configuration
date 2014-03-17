@@ -412,6 +412,30 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     }
 
     /**
+     * Returns a {@code NodeHandler} for a tracked node. Such a handler may be
+     * required for operations on a sub tree of the model. The handler to be
+     * returned depends on the current state of the tracked node. If it is still
+     * active, a handler is used which shares some data (especially the parent
+     * mapping) with this model. Detached track nodes in contrast have their own
+     * separate model; in this case a handler associated with this model is
+     * returned.
+     *
+     * @param selector the {@code NodeSelector} defining the tracked node
+     * @return a {@code NodeHandler} for this tracked node
+     * @throws ConfigurationRuntimeException if the selector is unknown
+     */
+    public NodeHandler<ImmutableNode> getTrackedNodeHandler(
+            NodeSelector selector)
+    {
+        TreeData currentData = structure.get();
+        InMemoryNodeModel detachedNodeModel =
+                currentData.getNodeTracker().getDetachedNodeModel(selector);
+        return (detachedNodeModel != null) ? detachedNodeModel.getNodeHandler()
+                : new TrackedNodeHandler(currentData.getNodeTracker()
+                        .getTrackedNode(selector), currentData);
+    }
+
+    /**
      * Returns a flag whether the specified tracked node is detached. As long as
      * the {@code NodeSelector} associated with that node returns a single
      * instance, the tracked node is said to be <em>life</em>. If now an update

@@ -19,6 +19,7 @@ package org.apache.commons.configuration.tree;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -654,5 +655,42 @@ public class TestInMemoryNodeModelTrackedNodes
         ImmutableNode node = model.getTrackedNode(selector);
         assertEquals("Name was changed", "table", node.getNodeName());
         assertFalse("Node is defined", model.getNodeHandler().isDefined(node));
+    }
+
+    /**
+     * Tests whether a node handler for a tracked node can be queried which is
+     * still active.
+     */
+    @Test
+    public void testGetTrackedNodeHandlerActive()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        model.trackNode(selector, resolver);
+        NodeHandler<ImmutableNode> handler =
+                model.getTrackedNodeHandler(selector);
+        assertTrue("Wrong node handler: " + handler,
+                handler instanceof TrackedNodeHandler);
+        assertSame("Wrong root node", model.getTrackedNode(selector),
+                handler.getRootNode());
+        TrackedNodeHandler tnh = (TrackedNodeHandler) handler;
+        assertSame("Wrong parent handler", model.getTreeData(),
+                tnh.getParentHandler());
+    }
+
+    /**
+     * Tests whether a node handler for a detached tracked node can be queried.
+     */
+    @Test
+    public void testGetTrackedNodeHandlerDetached()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        model.trackNode(selector, resolver);
+        initDetachedNode(resolver);
+        NodeHandler<ImmutableNode> handler =
+                model.getTrackedNodeHandler(selector);
+        assertSame("Wrong root node", model.getTrackedNode(selector),
+                handler.getRootNode());
+        assertTrue("Wrong handler: " + handler, handler instanceof TreeData);
+        assertNotSame("Shared handler", model.getNodeHandler(), handler);
     }
 }
