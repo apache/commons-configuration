@@ -18,11 +18,9 @@ package org.apache.commons.configuration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -33,9 +31,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
-import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
-import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.tree.ImmutableNode;
@@ -54,9 +49,6 @@ import org.junit.Test;
  */
 public class TestSubnodeConfiguration
 {
-    /** Constant for an updated table name. */
-    private static final String NEW_TABLE_NAME = "newTable";
-
     /** The key used for the SubnodeConfiguration. */
     private static final String SUB_KEY = "tables.table(0)";
 
@@ -449,11 +441,9 @@ public class TestSubnodeConfiguration
         parent.addProperty("tables.table(0).var", "${brackets:x}");
 
         ConfigurationInterpolator interpolator = parent.getInterpolator();
-        interpolator.registerLookup("brackets", new Lookup()
-        {
+        interpolator.registerLookup("brackets", new Lookup() {
 
-            public String lookup(String key)
-            {
+            public String lookup(String key) {
                 return "(" + key + ")";
             }
 
@@ -461,47 +451,6 @@ public class TestSubnodeConfiguration
         setUpSubnodeConfig();
         assertEquals("Local lookup was not inherited", "(x)",
                 config.getString("var", ""));
-    }
-
-    /**
-     * Tests whether events are fired if a change of the parent is detected.
-     */
-    @Test
-    public void testUpdateEvents() throws ConfigurationException
-    {
-        BaseHierarchicalConfiguration config =
-                (BaseHierarchicalConfiguration) parent.configurationAt(SUB_KEY,
-                        true);
-        ConfigurationListenerTestImpl l = new ConfigurationListenerTestImpl();
-        config.addConfigurationListener(l);
-        updateParent();
-        assertEquals("Wrong number of events", 4, l.events.size());
-        boolean before = true;
-        for (ConfigurationEvent e : l.events)
-        {
-            assertEquals("Wrong configuration", config, e.getSource());
-            assertEquals("Wrong event type",
-                    BaseHierarchicalConfiguration.EVENT_SUBNODE_CHANGED,
-                    e.getType());
-            assertNull("Got a property name", e.getPropertyName());
-            assertNull("Got a property value", e.getPropertyValue());
-            assertEquals("Wrong before flag", before, e.isBeforeUpdate());
-            before = !before;
-        }
-    }
-
-    /**
-     * Updates the parent configuration. Replaces the complete node structure.
-     */
-    private void updateParent()
-    {
-        String[] tableNamesNew = NodeStructureHelper.getClonedTables();
-        String[][] fieldNamesNew = NodeStructureHelper.getClonedFields();
-        tableNamesNew[0] = NEW_TABLE_NAME;
-        fieldNamesNew[0][0] = "newField";
-        parent.clear();
-        appendTree(parent, NodeStructureHelper.createTablesTree(tableNamesNew,
-                fieldNamesNew));
     }
 
     /**
@@ -551,22 +500,5 @@ public class TestSubnodeConfiguration
         parentModel.untrackNode(SELECTOR);
         assertTrue("Wrong finalize flag",
                 subModel.isReleaseTrackedNodeOnFinalize());
-    }
-
-    /**
-     * A specialized configuration listener for testing whether the expected
-     * events are fired.
-     */
-    private static class ConfigurationListenerTestImpl implements
-            ConfigurationListener
-    {
-        /** Stores the events received. */
-        final List<ConfigurationEvent> events =
-                new ArrayList<ConfigurationEvent>();
-
-        public void configurationChanged(ConfigurationEvent event)
-        {
-            events.add(event);
-        }
     }
 }

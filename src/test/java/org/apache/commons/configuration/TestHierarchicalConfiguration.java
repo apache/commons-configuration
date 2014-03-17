@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
-import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.tree.DefaultConfigurationKey;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
@@ -557,35 +556,6 @@ public class TestHierarchicalConfiguration
     {
         assertTrue("Got children",
                 config.childConfigurationsAt("not.existing.key").isEmpty());
-    }
-
-    /**
-     * Tests the initialize() method. We can only test that a new configuration
-     * listener was added.
-     */
-    @Test
-    public void testInitialize()
-    {
-        Collection<ConfigurationListener> listeners =
-                config.getConfigurationListeners();
-        config.initialize();
-        assertEquals("No new listener added", listeners.size() + 1, config
-                .getConfigurationListeners().size());
-    }
-
-    /**
-     * Tests that calling initialize() multiple times does not initialize
-     * internal structures more than once.
-     */
-    @Test
-    public void testInitializeTwice()
-    {
-        Collection<ConfigurationListener> listeners =
-                config.getConfigurationListeners();
-        config.initialize();
-        config.initialize();
-        assertEquals("Too many listener added", listeners.size() + 1, config
-                .getConfigurationListeners().size());
     }
 
     /**

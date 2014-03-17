@@ -25,9 +25,8 @@ import java.util.Collection;
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.SubnodeConfiguration;
-import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.tree.DefaultConfigurationNode;
+import org.apache.commons.configuration.tree.ImmutableNode;
+import org.apache.commons.configuration.tree.NodeStructureHelper;
 import org.junit.Test;
 
 /**
@@ -50,14 +49,14 @@ public class TestHierarchicalConfigurationEvents extends
     @Test
     public void testClearTreeEvent()
     {
-        HierarchicalConfiguration hc = (HierarchicalConfiguration) config;
+        BaseHierarchicalConfiguration hc = (BaseHierarchicalConfiguration) config;
         String key = EXIST_PROPERTY.substring(0, EXIST_PROPERTY.indexOf('.'));
-        Collection<ConfigurationNode> nodes = hc.getExpressionEngine()
-                .query(hc.getRootNode(), key);
+//        Collection<ImmutableNode> nodes = hc.getExpressionEngine()
+//                .query(hc.getRootNode(), key, hc.getModel().getNodeHandler());
         hc.clearTree(key);
         l.checkEvent(BaseHierarchicalConfiguration.EVENT_CLEAR_TREE, key, null,
                 true);
-        l.checkEvent(BaseHierarchicalConfiguration.EVENT_CLEAR_TREE, key, nodes,
+        l.checkEvent(BaseHierarchicalConfiguration.EVENT_CLEAR_TREE, key, null /* nodes*/,
                 false);
         l.done();
     }
@@ -68,9 +67,9 @@ public class TestHierarchicalConfigurationEvents extends
     @Test
     public void testAddNodesEvent()
     {
-        HierarchicalConfiguration hc = (HierarchicalConfiguration) config;
-        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>(1);
-        nodes.add(new DefaultConfigurationNode("a_key", TEST_PROPVALUE));
+        BaseHierarchicalConfiguration hc = (BaseHierarchicalConfiguration) config;
+        Collection<ImmutableNode> nodes = new ArrayList<ImmutableNode>(1);
+        nodes.add(NodeStructureHelper.createNode("a_key", TEST_PROPVALUE));
         hc.addNodes(TEST_PROPNAME, nodes);
         l.checkEvent(BaseHierarchicalConfiguration.EVENT_ADD_NODES, TEST_PROPNAME,
                 nodes, true);
@@ -86,27 +85,41 @@ public class TestHierarchicalConfigurationEvents extends
     @Test
     public void testAddNodesEmptyEvent()
     {
-        ((HierarchicalConfiguration) config).addNodes(TEST_PROPNAME,
-                new ArrayList<ConfigurationNode>());
+        ((BaseHierarchicalConfiguration) config).addNodes(TEST_PROPNAME,
+                new ArrayList<ImmutableNode>());
         l.done();
     }
 
     /**
-     * Tests whether manipulations of a subnode configuration trigger correct
+     * Tests whether manipulations of a connected sub configuration trigger correct
      * events.
      */
     @Test
-    public void testSubnodeChangedEvent()
+    public void testSubConfigurationChangedEventConnected()
     {
-        SubnodeConfiguration sub = ((HierarchicalConfiguration) config)
-                .configurationAt(EXIST_PROPERTY);
+        HierarchicalConfiguration<ImmutableNode> sub =
+                ((BaseHierarchicalConfiguration) config)
+                        .configurationAt(EXIST_PROPERTY, true);
         sub.addProperty("newProp", "newValue");
-        checkSubnodeEvent(l
-                .nextEvent(BaseHierarchicalConfiguration.EVENT_SUBNODE_CHANGED),
+        checkSubnodeEvent(
+                l.nextEvent(BaseHierarchicalConfiguration.EVENT_SUBNODE_CHANGED),
                 true);
-        checkSubnodeEvent(l
-                .nextEvent(BaseHierarchicalConfiguration.EVENT_SUBNODE_CHANGED),
+        checkSubnodeEvent(
+                l.nextEvent(BaseHierarchicalConfiguration.EVENT_SUBNODE_CHANGED),
                 false);
+        l.done();
+    }
+
+    /**
+     * Tests that no events are generated for a disconnected sub configuration.
+     */
+    @Test
+    public void testSubConfigurationChangedEventNotConnected()
+    {
+        HierarchicalConfiguration<ImmutableNode> sub =
+                ((BaseHierarchicalConfiguration) config)
+                        .configurationAt(EXIST_PROPERTY);
+        sub.addProperty("newProp", "newValue");
         l.done();
     }
 

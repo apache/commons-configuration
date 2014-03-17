@@ -24,8 +24,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
@@ -49,7 +47,7 @@ import org.apache.commons.configuration.tree.TrackedNodeModel;
  * @version $Id$
  */
 public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfiguration<ImmutableNode>
-    implements Serializable, Cloneable, Initializable
+    implements Serializable, Cloneable
 {
     /**
      * Constant for the subnode configuration modified event.
@@ -62,14 +60,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     private static final long serialVersionUID = 3373812230395363192L;
 
-    /**
-     * A map for managing the {@code SubnodeConfiguration} instances created
-     * from this configuration.
-     */
-    private Map<SubnodeConfiguration, Object> subConfigs;
-
-    /** A listener for reacting on changes to update sub configurations. */
-    private ConfigurationListener changeListener;
+    /** A listener for reacting on changes caused by sub configurations. */
+    private final ConfigurationListener changeListener;
 
     /**
      * Creates a new instance of {@code BaseHierarchicalConfiguration}.
@@ -102,18 +94,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     protected BaseHierarchicalConfiguration(NodeModel<ImmutableNode> model)
     {
         super(model);
-    }
-
-    /**
-     * Performs special initialization of this configuration. This
-     * implementation ensures that internal data structures for managing
-     * {@code SubnodeConfiguration} objects are initialized. If this is done
-     * directly after the creation of an instance, this instance can be accessed
-     * in a read-only manner without requiring a specific {@code Synchronizer}.
-     */
-    public void initialize()
-    {
-        ensureSubConfigManagementDataSetUp();
+        changeListener = createChangeListener();
     }
 
     /**
@@ -296,8 +277,11 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         InMemoryNodeModel myModel = getSubConfigurationParentModel();
         NodeSelector selector = getSubConfigurationNodeSelector(key);
         myModel.trackNode(selector, this);
-        return new SubnodeConfiguration(this, new TrackedNodeModel(myModel,
-                selector, true));
+        SubnodeConfiguration subConfig =
+                new SubnodeConfiguration(this, new TrackedNodeModel(myModel,
+                        selector, true));
+        subConfig.addConfigurationListener(changeListener);
+        return subConfig;
     }
 
     /**
@@ -515,20 +499,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     protected final SubnodeConfiguration createAndInitializeSubnodeConfiguration(
             ConfigurationNode node, String key, boolean supportUpdates)
     {
-        String subnodeKey = supportUpdates ? key : null;
-        SubnodeConfiguration sub = createSubnodeConfiguration(node, subnodeKey);
-
-        ensureSubConfigManagementDataSetUp();
-        sub.addConfigurationListener(changeListener);
-        sub.initSubConfigManagementData(subConfigs, changeListener);
-        sub.setSynchronizer(getSynchronizer());
-
-        if (supportUpdates)
-        {
-            // store this configuration so it can later be validated
-            subConfigs.put(sub, Boolean.TRUE);
-        }
-        return sub;
+        //TODO adapt clients
+        return null;
     }
 
     /**
@@ -548,45 +520,6 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     }
 
     /**
-     * Initializes the data related to the management of
-     * {@code SubnodeConfiguration} instances. This method is called each time a
-     * new {@code SubnodeConfiguration} was created. A configuration and its
-     * {@code SubnodeConfiguration} instances operate on the same set of data.
-     *
-     * @param subMap the map with all {@code SubnodeConfiguration} instances
-     * @param listener the listener for reacting on changes
-     */
-    void initSubConfigManagementData(Map<SubnodeConfiguration, Object> subMap,
-            ConfigurationListener listener)
-    {
-        subConfigs = subMap;
-        changeListener = listener;
-    }
-
-    /**
-     * Ensures that internal data structures for managing associated
-     * {@code SubnodeConfiguration} objects are initialized.
-     */
-    private void ensureSubConfigManagementDataSetUp()
-    {
-        if (changeListener == null)
-        {
-            setUpSubConfigManagementData();
-        }
-    }
-
-    /**
-     * Initializes internal data structures for managing associated
-     * {@code SubnodeConfiguration} objects.
-     */
-    private void setUpSubConfigManagementData()
-    {
-        changeListener = createChangeListener();
-        subConfigs = new WeakHashMap<SubnodeConfiguration, Object>();
-        addConfigurationListener(changeListener);
-    }
-
-    /**
      * Creates a listener which reacts on all changes on this configuration or
      * one of its {@code SubnodeConfiguration} instances. If such a change is
      * detected, some updates have to be performed.
@@ -599,52 +532,9 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         {
             public void configurationChanged(ConfigurationEvent event)
             {
-                nodeStructureChanged(event);
+                subnodeConfigurationChanged(event);
             }
         };
-    }
-
-    /**
-     * A change on the node structure of this configuration has been detected.
-     * This can be caused either by an update of this configuration or by one if
-     * its {@code SubnodeConfiguration} instances. This method calls
-     * {@link #subnodeConfigurationChanged(ConfigurationEvent)} if necessary and
-     * ensures that all {@code SubnodeConfiguration} instances are validated.
-     * Note: when this method is called, a write lock is held on this
-     * configuration.
-     *
-     * @param event the change event
-     */
-    private void nodeStructureChanged(ConfigurationEvent event)
-    {
-        if (this != event.getSource())
-        {
-            subnodeConfigurationChanged(event);
-        }
-
-        if (!event.isBeforeUpdate() && EVENT_SUBNODE_CHANGED != event.getType())
-        {
-            validSubnodeConfigurations(event);
-        }
-    }
-
-    /**
-     * Triggers validation on all {@code SubnodeConfiguration} instances created
-     * by this configuration.
-     *
-     * @param event the change event
-     */
-    private void validSubnodeConfigurations(ConfigurationEvent event)
-    {
-//        Set<SubnodeConfiguration> subs =
-//                new HashSet<SubnodeConfiguration>(subConfigs.keySet());
-//        for (SubnodeConfiguration sub : subs)
-//        {
-//            if (sub != event.getSource())
-//            {
-//                sub.validateRootNode();
-//            }
-//        }
     }
 
     /**
