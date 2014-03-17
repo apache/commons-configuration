@@ -272,7 +272,7 @@ public class TestBaseHierarchicalConfigurationSynchronization
                     protected SubnodeConfiguration createSubnodeConfiguration(
                             ConfigurationNode node, String subnodeKey)
                     {
-                        return new SubnodeConfiguration(this, node, subnodeKey)
+                        return new SubnodeConfiguration(this, node)
                         {
                             private static final long serialVersionUID = 1L;
 

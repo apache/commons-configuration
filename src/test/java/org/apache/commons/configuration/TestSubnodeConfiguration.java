@@ -153,8 +153,8 @@ public class TestSubnodeConfiguration
     public void testInitSubNodeConfigWithNullParent()
     {
         config =
-                new SubnodeConfiguration(null, setUpTrackedModel(SELECTOR),
-                        SELECTOR);
+                new SubnodeConfiguration(null, setUpTrackedModel(SELECTOR)
+                );
     }
 
     /**
@@ -164,16 +164,7 @@ public class TestSubnodeConfiguration
     @Test(expected = IllegalArgumentException.class)
     public void testInitSubNodeConfigWithNullNode()
     {
-        config = new SubnodeConfiguration(parent, null, SELECTOR);
-    }
-
-    /**
-     * Tries to create an instance without a selector.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testInitSubNodeConfigWithNullSelector()
-    {
-        new SubnodeConfiguration(parent, setUpTrackedModel(SELECTOR), null);
+        config = new SubnodeConfiguration(parent, null);
     }
 
     /**

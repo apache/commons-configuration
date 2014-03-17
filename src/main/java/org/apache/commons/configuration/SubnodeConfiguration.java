@@ -16,7 +16,6 @@
  */
 package org.apache.commons.configuration;
 
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.InMemoryNodeModel;
 import org.apache.commons.configuration.tree.NodeModel;
@@ -124,13 +123,13 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
      * Creates a new instance of {@code SubnodeConfiguration} and initializes it
      * with all relevant properties.
      *
+     *
      * @param parent the parent configuration
      * @param model the {@code TrackedNodeModel} to be used for this configuration
-     * @param selector the {@code NodeSelector} selecting the root node
-     *                 @throws IllegalArgumentException if a required argument is missing
+     * @throws IllegalArgumentException if a required argument is missing
      */
     public SubnodeConfiguration(BaseHierarchicalConfiguration parent,
-            TrackedNodeModel model, NodeSelector selector)
+                                TrackedNodeModel model)
     {
         super(model);
         if (parent == null)
@@ -142,13 +141,9 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
         {
             throw new IllegalArgumentException("Node model must not be null!");
         }
-        if(selector == null)
-        {
-            throw new IllegalArgumentException("Node selector must not be null!");
-        }
 
         this.parent = parent;
-        rootSelector = selector;
+        rootSelector = model.getSelector();
     }
 
     /**
@@ -185,32 +180,5 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
                 (InMemoryNodeModel) getParent().getModel();
         parentModel.trackNode(getRootSelector(), getParent());
         return new TrackedNodeModel(parentModel, getRootSelector(), true);
-    }
-
-    /**
-     * Returns a hierarchical configuration object for the given sub node that
-     * is aware of structural changes of its parent. Works like the method with
-     * the same name, but also sets the subnode key for the new subnode
-     * configuration, so it can check whether the parent has been changed. This
-     * only works if this subnode configuration has itself a valid subnode key.
-     * So if a subnode configuration that should be aware of structural changes
-     * is created from an already existing subnode configuration, this subnode
-     * configuration must also be aware of such changes.
-     *
-     * @param node the sub node, for which the configuration is to be created
-     * @param subKey the construction key
-     * @return a hierarchical configuration for this sub node
-     * @since 1.5
-     */
-    @Override
-    protected SubnodeConfiguration createSubnodeConfiguration(
-            ConfigurationNode node, String subKey)
-    {
-//        String key =
-//                (subKey != null && subnodeKey != null) ? constructSubKeyForSubnodeConfig(node)
-//                        : null;
-//        return new SubnodeConfiguration(getParent(), node, key);
-        //TODO implementation
-        throw new UnsupportedOperationException("Not yet implemented!");
     }
 }

@@ -297,7 +297,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         NodeSelector selector = getSubConfigurationNodeSelector(key);
         myModel.trackNode(selector, this);
         return new SubnodeConfiguration(this, new TrackedNodeModel(myModel,
-                selector, true), selector);
+                selector, true));
     }
 
     /**
