@@ -252,6 +252,36 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     }
 
     /**
+     * Returns the {@code InMemoryNodeModel} to be used as parent model for a
+     * new sub configuration. This method is called whenever a sub configuration
+     * is to be created. This base implementation returns the model of this
+     * configuration. Sub classes with different requirements for the parent
+     * models of sub configurations have to override it.
+     *
+     * @return the parent model for a new sub configuration
+     */
+    protected InMemoryNodeModel getSubConfigurationParentModel()
+    {
+        return (InMemoryNodeModel) getModel();
+    }
+
+    /**
+     * Returns the {@code NodeSelector} to be used for a sub configuration based
+     * on the passed in key. This method is called whenever a sub configuration
+     * is to be created. This base implementation returns a new
+     * {@code NodeSelector} initialized with the passed in key. Sub classes may
+     * override this method if they have a different strategy for creating a
+     * selector.
+     *
+     * @param key the key of the sub configuration
+     * @return a {@code NodeSelector} for initializing a sub configuration
+     */
+    protected NodeSelector getSubConfigurationNodeSelector(String key)
+    {
+        return new NodeSelector(key);
+    }
+
+    /**
      * Creates a sub configuration from the specified key which is connected to
      * this configuration. This implementation creates a
      * {@link SubnodeConfiguration} with a tracked node identified by the passed
@@ -263,8 +293,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     private BaseHierarchicalConfiguration createConnectedSubConfiguration(
             String key)
     {
-        InMemoryNodeModel myModel = (InMemoryNodeModel) getModel();
-        NodeSelector selector = new NodeSelector(key);
+        InMemoryNodeModel myModel = getSubConfigurationParentModel();
+        NodeSelector selector = getSubConfigurationNodeSelector(key);
         myModel.trackNode(selector, this);
         return new SubnodeConfiguration(this, new TrackedNodeModel(myModel,
                 selector, true), selector);
