@@ -20,6 +20,7 @@ package org.apache.commons.configuration;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -291,6 +292,23 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     }
 
     /**
+     * Returns an initialized sub configuration for this configuration that is
+     * based on another {@code BaseHierarchicalConfiguration}. Thus, it is
+     * independent from this configuration.
+     *
+     * @param node the root node for the sub configuration
+     * @return the initialized sub configuration
+     */
+    private BaseHierarchicalConfiguration createIndependentSubConfigurationForNode(
+            ImmutableNode node)
+    {
+        BaseHierarchicalConfiguration sub =
+                new BaseHierarchicalConfiguration(new InMemoryNodeModel(node));
+        initSubConfiguration(sub);
+        return sub;
+    }
+
+    /**
      * Executes a query on the specified key and filters it for node results.
      *
      * @param key the key
@@ -359,9 +377,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         for (ImmutableNode node : nodes)
         {
             BaseHierarchicalConfiguration sub =
-                    new BaseHierarchicalConfiguration(new InMemoryNodeModel(
-                            node));
-            initSubConfiguration(sub);
+                    createIndependentSubConfigurationForNode(node);
             results.add(sub);
         }
 
@@ -385,33 +401,25 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * given key. If not a single node is selected, an empty list is returned.
      * Otherwise, sub configurations for each child of the node are created.
      */
-    public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(String key)
+    public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(
+            String key)
     {
-        beginWrite(false);
-        try
+        List<ImmutableNode> nodes = fetchFilteredNodeResults(key);
+        if (nodes.size() != 1)
         {
-//            List<ConfigurationNode> nodes = fetchNodeList(key);
-//            if (nodes.size() != 1)
-//            {
-//                return Collections.emptyList();
-//            }
-//
-//            ConfigurationNode parent = nodes.get(0);
-//            List<SubnodeConfiguration> subs =
-//                    new ArrayList<SubnodeConfiguration>(
-//                            parent.getChildrenCount());
-//            for (ConfigurationNode c : parent.getChildren())
-//            {
-//                subs.add(createAndInitializeSubnodeConfiguration(c, null, false));
-//            }
-//            return subs;
-            //TODO implementation
-            return null;
+            return Collections.emptyList();
         }
-        finally
+
+        ImmutableNode parent = nodes.get(0);
+        List<HierarchicalConfiguration<ImmutableNode>> subs =
+                new ArrayList<HierarchicalConfiguration<ImmutableNode>>(parent
+                        .getChildren().size());
+        for (ImmutableNode node : parent.getChildren())
         {
-            endWrite();
+            subs.add(createIndependentSubConfigurationForNode(node));
         }
+
+        return subs;
     }
 
     /**

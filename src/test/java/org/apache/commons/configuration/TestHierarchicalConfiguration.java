@@ -407,6 +407,17 @@ public class TestHierarchicalConfiguration
                 .isEmpty());
     }
 
+    /**
+     * Tests configurationsAt() if an attribute key is passed in.
+     */
+    @Test
+    public void testConfigurationsAtAttributeKey()
+    {
+        String attrKey = "tables.table(0)[@type]";
+        config.addProperty(attrKey, "user");
+        assertTrue("Got configurations", config.configurationsAt(attrKey).isEmpty());
+    }
+
     @Test
     public void testClone()
     {
@@ -522,7 +533,7 @@ public class TestHierarchicalConfiguration
         HierarchicalConfiguration<ImmutableNode> sub = children.get(0);
         String newTabName = "otherTabe";
         sub.setProperty(null, newTabName);
-        assertEquals("Table name not changed", newTabName,
+        assertEquals("Table name changed in parent", NodeStructureHelper.table(0),
                 config.getString("tables.table(0).name"));
     }
 
