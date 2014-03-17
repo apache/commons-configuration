@@ -356,7 +356,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * configuration represents one of the nodes selected by the passed in key
      * @since 1.3
      */
-    public List<SubnodeConfiguration> configurationsAt(String key)
+    public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(String key)
     {
         beginWrite(false);
         try
@@ -396,7 +396,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * given key. If not a single node is selected, an empty list is returned.
      * Otherwise, sub configurations for each child of the node are created.
      */
-    public List<SubnodeConfiguration> childConfigurationsAt(String key)
+    public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(String key)
     {
         beginWrite(false);
         try
