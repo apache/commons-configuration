@@ -317,7 +317,21 @@ class NodeTracker
         {
             return e.getValue();
         }
-        ImmutableNode newTarget = e.getKey().select(root, resolver, handler);
+
+        ImmutableNode newTarget;
+        try
+        {
+            newTarget = e.getKey().select(root, resolver, handler);
+        }
+        catch (Exception ex)
+        {
+            /*
+            Evaluation of the key caused an exception. This can happen for
+            instance if the expression engine was changed. In this case,
+            the node becomes detached.
+            */
+            newTarget = null;
+        }
         if (newTarget == null)
         {
             return detachedTrackedNodeData(txTarget, e);
