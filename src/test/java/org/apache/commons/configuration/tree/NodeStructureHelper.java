@@ -393,6 +393,66 @@ public class NodeStructureHelper
     }
 
     /**
+     * Creates as tree with database table data based on the passed in arrays of
+     * table names and fields for tables. Works like the method without
+     * parameters, but allows defining the data of the structure.
+     *
+     * @param tables an array with the names of the tables
+     * @param fields an array with the fields of the single tables
+     * @return the resulting nodes structure
+     */
+    public static ImmutableNode createTablesTree(String[] tables,
+                                                 String[][] fields)
+    {
+        ImmutableNode.Builder bldTables =
+                new ImmutableNode.Builder(tables.length);
+        bldTables.name("tables");
+        for (int i = 0; i < tables.length; i++)
+        {
+            ImmutableNode.Builder bldTable = new ImmutableNode.Builder(2);
+            bldTable.addChild(createNode("name", tables[i]));
+            ImmutableNode.Builder bldFields =
+                    new ImmutableNode.Builder(fields[i].length);
+            bldFields.name("fields");
+
+            for (int j = 0; j < fields[i].length; j++)
+            {
+                bldFields.addChild(createFieldNode(fields[i][j]));
+            }
+            bldTable.addChild(bldFields.create());
+            bldTables.addChild(bldTable.name("table").create());
+        }
+        return bldTables.create();
+    }
+
+    /**
+     * Returns a clone of the array with the table names. This is useful if a
+     * slightly different tree structure should be created.
+     *
+     * @return the cloned table names
+     */
+    public static String[] getClonedTables()
+    {
+        return TABLES.clone();
+    }
+
+    /**
+     * Returns a clone of the array with the table fields. This is useful if a
+     * slightly different tree structure should be created.
+     *
+     * @return the cloned field names
+     */
+    public static String[][] getClonedFields()
+    {
+        String[][] fieldNamesNew = new String[FIELDS.length][];
+        for (int i = 0; i < FIELDS.length; i++)
+        {
+            fieldNamesNew[i] = FIELDS[i].clone();
+        }
+        return fieldNamesNew;
+    }
+
+    /**
      * Creates a tree with a root node whose children are the test authors. Each
      * other has his works as child nodes. Each work has its personae as
      * children.
@@ -471,28 +531,11 @@ public class NodeStructureHelper
      *                 name
      *             field
      *                 name
+     * @return the resulting nodes structure
      */
     private static ImmutableNode createTablesTree()
     {
-        ImmutableNode.Builder bldTables =
-                new ImmutableNode.Builder(TABLES.length);
-        bldTables.name("tables");
-        for (int i = 0; i < TABLES.length; i++)
-        {
-            ImmutableNode.Builder bldTable = new ImmutableNode.Builder(2);
-            bldTable.addChild(createNode("name", TABLES[i]));
-            ImmutableNode.Builder bldFields =
-                    new ImmutableNode.Builder(FIELDS[i].length);
-            bldFields.name("fields");
-
-            for (int j = 0; j < FIELDS[i].length; j++)
-            {
-                bldFields.addChild(createFieldNode(FIELDS[i][j]));
-            }
-            bldTable.addChild(bldFields.create());
-            bldTables.addChild(bldTable.name("table").create());
-        }
-        return bldTables.create();
+        return createTablesTree(TABLES, FIELDS);
     }
 
     /**
