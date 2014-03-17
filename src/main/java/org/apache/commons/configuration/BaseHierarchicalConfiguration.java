@@ -20,12 +20,10 @@ package org.apache.commons.configuration;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.WeakHashMap;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
@@ -74,7 +72,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     public BaseHierarchicalConfiguration()
     {
-        this(null);
+        this((HierarchicalConfiguration<ImmutableNode>) null);
     }
 
     /**
@@ -88,7 +86,18 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     public BaseHierarchicalConfiguration(HierarchicalConfiguration<ImmutableNode> c)
     {
-        super(createNodeModel(c));
+        this(createNodeModel(c));
+    }
+
+    /**
+     * Creates a new instance of {@code BaseHierarchicalConfiguration} and
+     * initializes it with the given {@code NodeModel}.
+     *
+     * @param model the {@code NodeModel}
+     */
+    protected BaseHierarchicalConfiguration(NodeModel<ImmutableNode> model)
+    {
+        super(model);
     }
 
     /**
@@ -443,7 +452,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     protected SubnodeConfiguration createSubnodeConfiguration(
             ConfigurationNode node, String subnodeKey)
     {
-        return new SubnodeConfiguration(this, node, subnodeKey);
+        //TODO implementation
+        return null; //new SubnodeConfiguration(this, node, subnodeKey);
     }
 
     /**
@@ -583,15 +593,15 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     private void validSubnodeConfigurations(ConfigurationEvent event)
     {
-        Set<SubnodeConfiguration> subs =
-                new HashSet<SubnodeConfiguration>(subConfigs.keySet());
-        for (SubnodeConfiguration sub : subs)
-        {
-            if (sub != event.getSource())
-            {
-                sub.validateRootNode();
-            }
-        }
+//        Set<SubnodeConfiguration> subs =
+//                new HashSet<SubnodeConfiguration>(subConfigs.keySet());
+//        for (SubnodeConfiguration sub : subs)
+//        {
+//            if (sub != event.getSource())
+//            {
+//                sub.validateRootNode();
+//            }
+//        }
     }
 
     /**

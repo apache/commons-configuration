@@ -530,7 +530,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     @Override
     protected void clearInternal()
     {
-        getModel().clear();
+        getModel().clear(this);
     }
 
     /**
