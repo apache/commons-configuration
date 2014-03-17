@@ -344,7 +344,7 @@ public class TestSubnodeConfiguration
                 (SubnodeConfiguration) config.configurationAt("fields.field(1)", true);
         assertEquals("Wrong value of property",
                 NodeStructureHelper.field(0, 1), sub2.getString("name"));
-        assertEquals("Wrong parent", config.getParent(), sub2.getParent());
+        assertEquals("Wrong parent", config, sub2.getParent());
     }
 
     /**

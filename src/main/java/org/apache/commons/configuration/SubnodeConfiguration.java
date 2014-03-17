@@ -181,4 +181,24 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
         parentModel.trackNode(getRootSelector(), getParent());
         return new TrackedNodeModel(parentModel, getRootSelector(), true);
     }
+
+    /**
+     * {@inheritDoc} This implementation returns a sub selector of the selector
+     * of this configuration.
+     */
+    @Override
+    protected NodeSelector getSubConfigurationNodeSelector(String key)
+    {
+        return getRootSelector().subSelector(key);
+    }
+
+    /**
+     * {@inheritDoc} This implementation returns the parent model of the
+     * {@link TrackedNodeModel} used by this configuration.
+     */
+    @Override
+    protected InMemoryNodeModel getSubConfigurationParentModel()
+    {
+        return ((TrackedNodeModel) getModel()).getParentModel();
+    }
 }
