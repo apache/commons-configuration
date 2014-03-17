@@ -346,30 +346,26 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     }
 
     /**
-     * {@inheritDoc} This implementation creates sub configurations in the same way as
-     * described for {@link #configurationAt(String)}.
+     * {@inheritDoc} This implementation creates sub configurations in the same
+     * way as described for {@link #configurationAt(String)}.
      */
-    public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(String key)
+    public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(
+            String key)
     {
-        beginWrite(false);
-        try
+        List<ImmutableNode> nodes = fetchFilteredNodeResults(key);
+        List<HierarchicalConfiguration<ImmutableNode>> results =
+                new ArrayList<HierarchicalConfiguration<ImmutableNode>>(
+                        nodes.size());
+        for (ImmutableNode node : nodes)
         {
-//            List<ConfigurationNode> nodes = fetchNodeList(key);
-//            List<SubnodeConfiguration> configs =
-//                    new ArrayList<SubnodeConfiguration>(nodes.size());
-//            for (ConfigurationNode node : nodes)
-//            {
-//                configs.add(createAndInitializeSubnodeConfiguration(node, null,
-//                        false));
-//            }
-//            return configs;
-            //TODO implementation
-            return null;
+            BaseHierarchicalConfiguration sub =
+                    new BaseHierarchicalConfiguration(new InMemoryNodeModel(
+                            node));
+            initSubConfiguration(sub);
+            results.add(sub);
         }
-        finally
-        {
-            endWrite();
-        }
+
+        return results;
     }
 
     /**
