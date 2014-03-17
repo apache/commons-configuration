@@ -16,14 +16,8 @@
  */
 package org.apache.commons.configuration.tree;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * An internally used helper class for storing information about the managed
@@ -34,7 +28,7 @@ import org.apache.commons.lang3.StringUtils;
  * @version $Id$
  * @since 2.0
  */
-class TreeData implements NodeHandler<ImmutableNode>
+class TreeData extends AbstractImmutableNodeHandler
 {
     /** The root node of the tree. */
     private final ImmutableNode root;
@@ -88,85 +82,6 @@ class TreeData implements NodeHandler<ImmutableNode>
     public NodeTracker getNodeTracker()
     {
         return nodeTracker;
-    }
-
-    public String nodeName(ImmutableNode node)
-    {
-        return node.getNodeName();
-    }
-
-    public Object getValue(ImmutableNode node)
-    {
-        return node.getValue();
-    }
-
-    public List<ImmutableNode> getChildren(ImmutableNode node)
-    {
-        return node.getChildren();
-    }
-
-    /**
-     * {@inheritDoc} This implementation returns an immutable list with all
-     * child nodes that have the specified name.
-     */
-    public List<ImmutableNode> getChildren(ImmutableNode node, String name)
-    {
-        List<ImmutableNode> result =
-                new ArrayList<ImmutableNode>(node.getChildren().size());
-        for (ImmutableNode c : node.getChildren())
-        {
-            if (StringUtils.equals(name, c.getNodeName()))
-            {
-                result.add(c);
-            }
-        }
-        return Collections.unmodifiableList(result);
-    }
-
-    public ImmutableNode getChild(ImmutableNode node, int index)
-    {
-        return node.getChildren().get(index);
-    }
-
-    public int indexOfChild(ImmutableNode parent, ImmutableNode child)
-    {
-        return parent.getChildren().indexOf(child);
-    }
-
-    public int getChildrenCount(ImmutableNode node, String name)
-    {
-        if (name == null)
-        {
-            return node.getChildren().size();
-        }
-        else
-        {
-            return getChildren(node, name).size();
-        }
-    }
-
-    public Set<String> getAttributes(ImmutableNode node)
-    {
-        return node.getAttributes().keySet();
-    }
-
-    public boolean hasAttributes(ImmutableNode node)
-    {
-        return !node.getAttributes().isEmpty();
-    }
-
-    public Object getAttributeValue(ImmutableNode node, String name)
-    {
-        return node.getAttributes().get(name);
-    }
-
-    /**
-     * {@inheritDoc} This implementation assumes that a node is defined if it
-     * has a value or has children or has attributes.
-     */
-    public boolean isDefined(ImmutableNode node)
-    {
-        return checkIfNodeDefined(node);
     }
 
     /**
@@ -227,19 +142,6 @@ class TreeData implements NodeHandler<ImmutableNode>
     {
         return new TreeData(root, parentMapping, replacementMapping,
                 newTracker);
-    }
-
-    /**
-     * Checks if the passed in node is defined. Result is <b>true</b> if the
-     * node contains any data.
-     *
-     * @param node the node in question
-     * @return <b>true</b> if the node is defined, <b>false</b> otherwise
-     */
-    static boolean checkIfNodeDefined(ImmutableNode node)
-    {
-        return node.getValue() != null || !node.getChildren().isEmpty()
-                || !node.getAttributes().isEmpty();
     }
 
     /**
