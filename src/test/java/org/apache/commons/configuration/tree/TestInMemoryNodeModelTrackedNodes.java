@@ -594,7 +594,7 @@ public class TestInMemoryNodeModelTrackedNodes
     {
         assertEquals("Wrong number of field nodes",
                 NodeStructureHelper.fieldsLength(1), nodeFields.getChildren()
-                        .size());
+                .size());
         int childIndex = 0;
         for (ImmutableNode field : nodeFields.getChildren())
         {
@@ -692,5 +692,50 @@ public class TestInMemoryNodeModelTrackedNodes
                 handler.getRootNode());
         assertTrue("Wrong handler: " + handler, handler instanceof TreeData);
         assertNotSame("Shared handler", model.getNodeHandler(), handler);
+    }
+
+    /**
+     * Helper method for testing whether a tracked node can be replaced.
+     */
+    private void checkReplaceTrackedNode()
+    {
+        ImmutableNode newNode =
+                new ImmutableNode.Builder().name("newNode").create();
+        model.replaceTrackedNode(selector, newNode);
+        assertSame("Node not changed", newNode, model.getTrackedNode(selector));
+        assertTrue("Node not detached", model.isTrackedNodeDetached(selector));
+    }
+
+    /**
+     * Tests whether an active tracked node can be replaced.
+     */
+    @Test
+    public void testReplaceTrackedNodeForActiveTrackedNode()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        model.trackNode(selector, resolver);
+        checkReplaceTrackedNode();
+    }
+
+    /**
+     * Tests whether a detached tracked node can be replaced.
+     */
+    @Test
+    public void testReplaceTrackedNodeForDetachedNode()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        model.trackNode(selector, resolver);
+        initDetachedNode(resolver);
+        checkReplaceTrackedNode();
+    }
+
+    /**
+     * Tries to replace a tracked node with a null node.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testReplaceTrackedNodeNull()
+    {
+        model.trackNode(selector, createResolver());
+        model.replaceTrackedNode(selector, null);
     }
 }

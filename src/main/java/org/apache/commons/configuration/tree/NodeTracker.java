@@ -258,6 +258,24 @@ class NodeTracker
     }
 
     /**
+     * Replaces a tracked node by another one. This operation causes the tracked
+     * node to become detached.
+     *
+     * @param selector the {@code NodeSelector}
+     * @param newNode the replacement node
+     * @return the updated instance
+     * @throws ConfigurationRuntimeException if the selector cannot be resolved
+     */
+    public NodeTracker replaceAndDetachTrackedNode(NodeSelector selector,
+            ImmutableNode newNode)
+    {
+        Map<NodeSelector, TrackedNodeData> newState =
+                new HashMap<NodeSelector, TrackedNodeData>(trackedNodes);
+        newState.put(selector, getTrackedNodeData(selector).detach(newNode));
+        return new NodeTracker(newState);
+    }
+
+    /**
      * Obtains the {@code TrackedNodeData} object for the specified selector. If
      * the selector cannot be resolved, an exception is thrown.
      *

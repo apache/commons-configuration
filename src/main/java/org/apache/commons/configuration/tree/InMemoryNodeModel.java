@@ -412,6 +412,38 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     }
 
     /**
+     * Replaces a tracked node by another node. If the tracked node is not yet
+     * detached, it becomes now detached. The passed in node (which must not be
+     * <b>null</b>) becomes the new root node of an independent model for this
+     * tracked node. Further updates of this model do not affect the tracked
+     * node's model and vice versa.
+     *
+     * @param selector the {@code NodeSelector} defining the tracked node
+     * @param newNode the node replacing the tracked node (must not be
+     *        <b>null</b>)
+     * @throws ConfigurationRuntimeException if the selector cannot be resolved
+     * @throws IllegalArgumentException if the replacement node is <b>null</b>
+     */
+    public void replaceTrackedNode(NodeSelector selector, ImmutableNode newNode)
+    {
+        if (newNode == null)
+        {
+            throw new IllegalArgumentException(
+                    "Replacement node must not be null!");
+        }
+
+        boolean done;
+        do
+        {
+            TreeData currentData = structure.get();
+            done =
+                    replaceDetachedTrackedNode(currentData, selector, newNode)
+                            || replaceActiveTrackedNode(currentData, selector,
+                                    newNode);
+        } while (!done);
+    }
+
+    /**
      * Returns a {@code NodeHandler} for a tracked node. Such a handler may be
      * required for operations on a sub tree of the model. The handler to be
      * returned depends on the current state of the tracked node. If it is still
@@ -883,6 +915,46 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         }
 
         return false;
+    }
+
+    /**
+     * Replaces a tracked node if it is already detached.
+     *
+     * @param currentData the current data of the model
+     * @param selector the {@code NodeSelector} defining the tracked node
+     * @param newNode the node replacing the tracked node
+     * @return a flag whether the operation was successful
+     */
+    private boolean replaceDetachedTrackedNode(TreeData currentData,
+            NodeSelector selector, ImmutableNode newNode)
+    {
+        InMemoryNodeModel detachedNodeModel =
+                currentData.getNodeTracker().getDetachedNodeModel(selector);
+        if (detachedNodeModel != null)
+        {
+            detachedNodeModel.setRootNode(newNode);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Replaces an active tracked node. The node then becomes detached.
+     *
+     * @param currentData the current data of the model
+     * @param selector the {@code NodeSelector} defining the tracked node
+     * @param newNode the node replacing the tracked node
+     * @return a flag whether the operation was successful
+     */
+    private boolean replaceActiveTrackedNode(TreeData currentData,
+            NodeSelector selector, ImmutableNode newNode)
+    {
+        NodeTracker newTracker =
+                currentData.getNodeTracker().replaceAndDetachTrackedNode(
+                        selector, newNode);
+        return structure.compareAndSet(currentData,
+                currentData.updateNodeTracker(newTracker));
     }
 
     /**
