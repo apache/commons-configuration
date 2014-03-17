@@ -193,7 +193,7 @@ public class TestInMemoryNodeModelTrackedNodes
                 NodeStructureHelper.nodeForKey(model, "tables/table(1)");
         NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
-        model.clear();
+        model.clear(resolver);
         assertSame("Wrong node", node, model.getTrackedNode(selector));
     }
 
@@ -296,7 +296,7 @@ public class TestInMemoryNodeModelTrackedNodes
     {
         NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
-        model.clear();
+        model.clear(resolver);
         assertTrue("Node is not detached",
                 model.isTrackedNodeDetached(selector));
     }

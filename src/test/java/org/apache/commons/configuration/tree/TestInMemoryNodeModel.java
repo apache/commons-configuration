@@ -531,7 +531,7 @@ public class TestInMemoryNodeModel
     public void testClear()
     {
         InMemoryNodeModel model = new InMemoryNodeModel(ROOT_AUTHORS_TREE);
-        model.clear();
+        model.clear(createResolver());
         assertFalse("Got still data",
                 model.getNodeHandler().isDefined(model.getRootNode()));
         assertEquals("Root name was changed", ROOT_AUTHORS_TREE.getNodeName(),

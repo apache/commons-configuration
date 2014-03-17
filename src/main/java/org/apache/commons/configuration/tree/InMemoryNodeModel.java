@@ -278,17 +278,23 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             final NodeKeyResolver<ImmutableNode> resolver)
     {
         updateModel(new TransactionInitializer() {
-            public boolean initTransaction(ModelTransaction tx) {
+            public boolean initTransaction(ModelTransaction tx)
+            {
                 TreeData currentStructure = tx.getCurrentData();
                 for (QueryResult<ImmutableNode> result : resolver.resolveKey(
-                        tx.getQueryRoot(), key, currentStructure)) {
-                    if (result.isAttributeResult()) {
+                        tx.getQueryRoot(), key, currentStructure))
+                {
+                    if (result.isAttributeResult())
+                    {
                         tx.addRemoveAttributeOperation(result.getNode(),
                                 result.getAttributeName());
-                    } else {
-                        if (result.getNode() == currentStructure.getRootNode()) {
+                    }
+                    else
+                    {
+                        if (result.getNode() == currentStructure.getRootNode())
+                        {
                             // the whole model is to be cleared
-                            clear();
+                            clear(resolver);
                             return false;
                         }
                         tx.addRemoveNodeOperation(
@@ -339,12 +345,13 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     }
 
     /**
-     * {@inheritDoc} A new empty root node is created with
-     * the same name as the current root node. Implementation note: Because this
-     * is a hard reset the usual dance for dealing with concurrent updates is
-     * not required here.
+     * {@inheritDoc} A new empty root node is created with the same name as the
+     * current root node. Implementation note: Because this is a hard reset the
+     * usual dance for dealing with concurrent updates is not required here.
+     *
+     * @param resolver the {@code NodeKeyResolver}
      */
-    public void clear()
+    public void clear(NodeKeyResolver<ImmutableNode> resolver)
     {
         ImmutableNode newRoot =
                 new ImmutableNode.Builder().name(getRootNode().getNodeName())

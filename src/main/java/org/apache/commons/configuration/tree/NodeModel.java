@@ -128,6 +128,8 @@ public interface NodeModel<T>
 
     /**
      * Removes all data from this model.
+     *
+     * @param resolver the {@code NodeKeyResolver}
      */
-    void clear();
+    void clear(NodeKeyResolver<T> resolver);
 }
