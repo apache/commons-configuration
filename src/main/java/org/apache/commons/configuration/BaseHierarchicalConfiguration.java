@@ -300,6 +300,28 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     }
 
     /**
+     * Creates a list of connected sub configurations based on a passed in list
+     * of node selectors.
+     *
+     * @param parentModel the parent node model
+     * @param selectors the list of {@code NodeSelector} objects
+     * @return the list with sub configurations
+     */
+    private List<HierarchicalConfiguration<ImmutableNode>> createConnectedSubConfigurations(
+            InMemoryNodeModel parentModel, Collection<NodeSelector> selectors)
+    {
+        List<HierarchicalConfiguration<ImmutableNode>> configs =
+                new ArrayList<HierarchicalConfiguration<ImmutableNode>>(
+                        selectors.size());
+        for (NodeSelector selector : selectors)
+        {
+            configs.add(createSubConfigurationForTrackedNode(selector,
+                    parentModel));
+        }
+        return configs;
+    }
+
+    /**
      * Creates a sub configuration from the specified key which is independent
      * on this configuration. This means that the sub configuration operates on
      * a separate node model (although the nodes are initially shared).
@@ -420,15 +442,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         InMemoryNodeModel parentModel = getSubConfigurationParentModel();
         Collection<NodeSelector> selectors =
                 parentModel.selectAndTrackNodes(key, this);
-        List<HierarchicalConfiguration<ImmutableNode>> configs =
-                new ArrayList<HierarchicalConfiguration<ImmutableNode>>(
-                        selectors.size());
-        for (NodeSelector selector : selectors)
-        {
-            configs.add(createSubConfigurationForTrackedNode(selector,
-                    parentModel));
-        }
-        return configs;
+        return createConnectedSubConfigurations(parentModel, selectors);
     }
 
     /**
@@ -469,8 +483,23 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         return subs;
     }
 
-    public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(String key, boolean supportUpdates) {
-        return null;
+    /**
+     * {@inheritDoc} This method works like
+     * {@link #childConfigurationsAt(String)}; however, depending on the value
+     * of the {@code supportUpdates} flag, connected sub configurations may be
+     * created.
+     */
+    public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(
+            String key, boolean supportUpdates)
+    {
+        if (!supportUpdates)
+        {
+            return childConfigurationsAt(key);
+        }
+
+        InMemoryNodeModel parentModel = getSubConfigurationParentModel();
+        return createConnectedSubConfigurations(parentModel,
+                parentModel.trackChildNodes(key, this));
     }
 
     /**

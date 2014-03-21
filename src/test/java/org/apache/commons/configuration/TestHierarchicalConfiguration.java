@@ -551,20 +551,44 @@ public class TestHierarchicalConfiguration
     }
 
     /**
-     * Tests whether sub configurations for the children of a given node can be
-     * queried.
+     * Tests access to sub configurations as children of a defined node.
+     *
+     * @param withUpdates the updates flag
+     * @param expectedName the expected table name when reading a property
      */
-    @Test
-    public void testChildConfigurationsAt()
+    private void checkChildConfigurationsAtWithUpdates(boolean withUpdates,
+            String expectedName)
     {
+        String key = "tables.table(0)";
         List<HierarchicalConfiguration<ImmutableNode>> children =
-                config.childConfigurationsAt("tables.table(0)");
+                withUpdates ? config.childConfigurationsAt(key, true) : config
+                        .childConfigurationsAt(key);
         assertEquals("Wrong number of elements", 2, children.size());
         HierarchicalConfiguration<ImmutableNode> sub = children.get(0);
-        String newTabName = "otherTabe";
-        sub.setProperty(null, newTabName);
-        assertEquals("Table name changed in parent", NodeStructureHelper.table(0),
-                config.getString("tables.table(0).name"));
+        sub.setProperty(null, NEW_NAME);
+        assertEquals("Wrong value in parent", expectedName,
+                config.getString(key + ".name"));
+    }
+
+    /**
+     * Tests whether sub configurations for the children of a given node can be
+     * queried if no updates are propagated.
+     */
+    @Test
+    public void testChildConfigurationsAtNoUpdates()
+    {
+        checkChildConfigurationsAtWithUpdates(false,
+                NodeStructureHelper.table(0));
+    }
+
+    /**
+     * Tests whether sub configurations for the children of a given node can be
+     * queried that support updates.
+     */
+    @Test
+    public void testChildConfigurationsAtWithUpdates()
+    {
+        checkChildConfigurationsAtWithUpdates(true, NEW_NAME);
     }
 
     /**
