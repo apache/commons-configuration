@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
@@ -185,15 +184,6 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
 
     /** Stores the expression engine for this instance.*/
     private ExpressionEngine expressionEngine;
-
-    /**
-     * A map for managing the {@code SubnodeConfiguration} instances created
-     * from this configuration.
-     */
-    private Map<SubnodeConfiguration, Object> subConfigs;
-
-    /** A listener for reacting on changes to update sub configurations. */
-    private ConfigurationListener changeListener;
 
     /**
      * Creates a new instance of {@code AbstractHierarchicalConfiguration} and
