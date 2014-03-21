@@ -541,9 +541,31 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
                 removedItems, key);
     }
 
+    /**
+     * {@inheritDoc} This implementation uses the expression engine to generate a
+     * canonical key for the passed in node. For this purpose, the path to the
+     * root node has to be traversed. The cache is used to store and access keys
+     * for nodes encountered on the path.
+     */
     public String nodeKey(T node, Map<T, String> cache, NodeHandler<T> handler) {
-        //TODO implementation
-        return null;
+        List<T> path = new LinkedList<T>();
+        T currentNode = node;
+        String key = cache.get(node);
+        while (key == null && currentNode != null)
+        {
+            path.add(0, currentNode);
+            currentNode = handler.getParent(currentNode);
+            key = cache.get(currentNode);
+        }
+
+        for (T n : path)
+        {
+            String currentKey = getExpressionEngine().canonicalKey(n, key, handler);
+            cache.put(n, currentKey);
+            key = currentKey;
+        }
+
+        return key;
     }
 
     /**

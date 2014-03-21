@@ -27,9 +27,11 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -42,6 +44,7 @@ import org.apache.commons.configuration.tree.DefaultExpressionEngineSymbols;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.InMemoryNodeModel;
+import org.apache.commons.configuration.tree.NodeHandler;
 import org.apache.commons.configuration.tree.NodeModel;
 import org.apache.commons.configuration.tree.NodeStructureHelper;
 import org.junit.Before;
@@ -829,6 +832,92 @@ public class TestAbstractHierarchicalConfiguration
                 "Got attribute results",
                 config.resolveNodeKey(config.getRootNode(), attrKey,
                         config.getModel().getNodeHandler()).isEmpty());
+    }
+
+    /**
+     * Tests whether a correct node key is generated if no data is contained in
+     * the cache.
+     */
+    @Test
+    public void testNodeKeyEmptyCache()
+    {
+        Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
+        ImmutableNode nodeTabName =
+                NodeStructureHelper.nodeForKey(config.getRootNode(),
+                        "tables/table(0)/name");
+        ImmutableNode nodeFldName =
+                NodeStructureHelper.nodeForKey(config.getRootNode(),
+                        "tables/table(0)/fields/field(1)/name");
+        assertEquals("Wrong key (1)", "tables(0).table(0).name(0)",
+                config.nodeKey(nodeTabName, cache, config.getModel()
+                        .getNodeHandler()));
+        assertEquals("Wrong key (2)",
+                "tables(0).table(0).fields(0).field(1).name(0)",
+                config.nodeKey(nodeFldName, cache, config.getModel()
+                        .getNodeHandler()));
+    }
+
+    /**
+     * Tests whether the cache map is filled while generating node keys.
+     */
+    @Test
+    public void testNodeKeyCachePopulated()
+    {
+        Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
+        ImmutableNode nodeTabName =
+                NodeStructureHelper.nodeForKey(config.getRootNode(),
+                        "tables/table(0)/name");
+        NodeHandler<ImmutableNode> handler = config.getModel().getNodeHandler();
+        config.nodeKey(nodeTabName, cache, handler);
+        assertEquals("Wrong number of elements", 4, cache.size());
+        assertEquals("Wrong entry (1)", "tables(0).table(0).name(0)",
+                cache.get(nodeTabName));
+        assertEquals("Wrong entry (2)", "tables(0).table(0)",
+                cache.get(handler.getParent(nodeTabName)));
+        assertEquals("Wrong entry (3)", "tables(0)",
+                cache.get(handler.getParent(handler.getParent(nodeTabName))));
+        assertEquals("Wrong root entry", "", cache.get(config.getRootNode()));
+    }
+
+    /**
+     * Tests whether the cache is used by nodeKey().
+     */
+    @Test
+    public void testNodeKeyCacheUsage()
+    {
+        Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
+        ImmutableNode nodeTabName =
+                NodeStructureHelper.nodeForKey(config.getRootNode(),
+                        "tables/table(0)/name");
+        NodeHandler<ImmutableNode> handler = config.getModel().getNodeHandler();
+        cache.put(handler.getParent(nodeTabName), "somePrefix");
+        assertEquals("Wrong key", "somePrefix.name(0)",
+                config.nodeKey(nodeTabName, cache, handler));
+    }
+
+    /**
+     * Tests whether a node key for the root node can be generated.
+     */
+    @Test
+    public void testNodeKeyRootNode()
+    {
+        Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
+        assertEquals("Wrong root node key", "",
+                config.nodeKey(config.getRootNode(), cache, config.getModel()
+                        .getNodeHandler()));
+    }
+
+    /**
+     * Tests nodeKey() if the key is directly found in the cache.
+     */
+    @Test
+    public void testNodeKeyCacheHit()
+    {
+        Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
+        final String key = "someResultKey";
+        cache.put(config.getRootNode(), key);
+        assertEquals("Wrong result", key, config.nodeKey(config.getRootNode(),
+                cache, config.getModel().getNodeHandler()));
     }
 
     /**
