@@ -804,7 +804,7 @@ public class TestInMemoryNodeModelTrackedNodes
         NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
         EasyMock.expect(
                 resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler()))
-                .andReturn(Collections.<ImmutableNode> emptyList());
+                .andReturn(Collections.<ImmutableNode>emptyList());
         EasyMock.replay(resolver);
 
         assertTrue("Got selectors",
@@ -834,5 +834,92 @@ public class TestInMemoryNodeModelTrackedNodes
         assertEquals("Wrong selector", selector, selectors.iterator().next());
         model.untrackNode(selector);
         assertSame("Node not tracked", node, model.getTrackedNode(selector));
+    }
+
+    /**
+     * Tests whether all children of a node can be tracked at once.
+     */
+    @Test
+    public void testTrackChildNodes()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        ImmutableNode node = NodeStructureHelper.nodeForKey(root, "tables");
+        String[] keys = new String[node.getChildren().size()];
+        for (int i = 0; i < keys.length; i++)
+        {
+            ImmutableNode child = node.getChildren().get(i);
+            keys[i] =
+                    String.format("%s.%s(%d)", node.getNodeName(),
+                            child.getNodeName(), i);
+            expectNodeKey(resolver, child, keys[i]);
+        }
+        EasyMock.expect(
+                resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler()))
+                .andReturn(Collections.singletonList(node));
+        EasyMock.replay(resolver);
+
+        Collection<NodeSelector> selectors =
+                model.trackChildNodes(TEST_KEY, resolver);
+        assertEquals("Wrong number of selectors", node.getChildren().size(),
+                selectors.size());
+        int idx = 0;
+        for (NodeSelector sel : selectors)
+        {
+            assertEquals("Wrong selector", new NodeSelector(keys[idx]), sel);
+            assertEquals("Wrong tracked node for " + sel, node.getChildren()
+                    .get(idx), model.getTrackedNode(sel));
+            idx++;
+        }
+    }
+
+    /**
+     * Checks trackChildNodes() if the passed in key has a result set which
+     * causes the operation to be aborted.
+     *
+     * @param queryResult the result set of the key
+     */
+    private void checkTrackChildNodesNoResult(List<ImmutableNode> queryResult)
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        EasyMock.expect(
+                resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler()))
+                .andReturn(queryResult);
+        EasyMock.replay(resolver);
+        TreeData oldData = model.getTreeData();
+
+        assertTrue("Got selectors", model.trackChildNodes(TEST_KEY, resolver)
+                .isEmpty());
+        assertSame("Model was changed", oldData, model.getTreeData());
+    }
+
+    /**
+     * Tests trackChildNodes() for a key that does not return any results.
+     */
+    @Test
+    public void testTrackChildNodesNoResults()
+    {
+        checkTrackChildNodesNoResult(Collections.<ImmutableNode> emptyList());
+    }
+
+    /**
+     * Tests trackChildNodes() for a key that returns more than a single result.
+     */
+    @Test
+    public void testTrackChildNodesMultipleResults()
+    {
+        checkTrackChildNodesNoResult(Arrays.asList(
+                NodeStructureHelper.nodeForKey(root, "tables/table(0)"),
+                NodeStructureHelper.nodeForKey(root, "tables/table(1)")));
+    }
+
+    /**
+     * Tests trackChildNodes() for a key pointing to a node with no children.
+     */
+    @Test
+    public void testTrackChildNodesNodeWithNoChildren()
+    {
+        checkTrackChildNodesNoResult(Collections
+                .singletonList(NodeStructureHelper.nodeForKey(root,
+                        "tables/table(0)/name")));
     }
 }

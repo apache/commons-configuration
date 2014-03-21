@@ -444,6 +444,51 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     }
 
     /**
+     * Tracks all nodes which are children of the node selected by the passed in
+     * key. If the key selects exactly one node, for all children of this node
+     * {@code NodeSelector} objects are created, and they become tracked nodes.
+     * The returned collection of {@code NodeSelector} objects can be used for
+     * interacting with the selected nodes.
+     *
+     * @param key the key for selecting the parent node whose children are to be
+     *        tracked
+     * @param resolver the {@code NodeKeyResolver}
+     * @return a collection with the {@code NodeSelector} objects for the new
+     *         tracked nodes
+     */
+    public Collection<NodeSelector> trackChildNodes(String key,
+            NodeKeyResolver<ImmutableNode> resolver)
+    {
+        Mutable<Collection<NodeSelector>> refSelectors =
+                new MutableObject<Collection<NodeSelector>>();
+        boolean done;
+        do
+        {
+            refSelectors.setValue(Collections.<NodeSelector> emptyList());
+            TreeData current = structure.get();
+            List<ImmutableNode> nodes =
+                    resolver.resolveNodeKey(current.getRootNode(), key, current);
+            if (nodes.size() == 1)
+            {
+                ImmutableNode node = nodes.get(0);
+                done =
+                        node.getChildren().isEmpty()
+                                || structure.compareAndSet(
+                                        current,
+                                        createSelectorsForTrackedNodes(
+                                                refSelectors,
+                                                node.getChildren(), current,
+                                                resolver));
+            }
+            else
+            {
+                done = true;
+            }
+        } while (!done);
+        return refSelectors.getValue();
+    }
+
+    /**
      * Returns the current {@code ImmutableNode} instance associated with the
      * given {@code NodeSelector}. The node must be a tracked node, i.e.
      * {@link #trackNode(NodeSelector, NodeKeyResolver)} must have been called
