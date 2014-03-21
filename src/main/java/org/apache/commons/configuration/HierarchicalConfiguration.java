@@ -148,12 +148,12 @@ public interface HierarchicalConfiguration<T>
     /**
      * Returns a list of sub configurations for all configuration nodes selected
      * by the given key. This method will evaluate the passed in key (using the
-     * current {@code ExpressionEngine}) and then create a sub
-     * configuration for each returned node (like
-     * {@link #configurationAt(String)}}). This is especially
-     * useful when dealing with list-like structures. As an example consider the
-     * configuration that contains data about database tables and their fields.
-     * If you need access to all fields of a certain table, you can simply do
+     * current {@code ExpressionEngine}) and then create a sub configuration for
+     * each returned node (like {@link #configurationAt(String)} ). This is
+     * especially useful when dealing with list-like structures. As an example
+     * consider the configuration that contains data about database tables and
+     * their fields. If you need access to all fields of a certain table, you
+     * can simply do
      *
      * <pre>
      * List fields = config.configurationsAt("tables.table(0).fields.field");
@@ -167,23 +167,61 @@ public interface HierarchicalConfiguration<T>
      *     ...
      * </pre>
      *
+     * The configuration objects returned are <strong>not</strong> connected to
+     * the parent configuration.
+     *
      * @param key the key for selecting the desired nodes
      * @return a list with hierarchical configuration objects; each
-     * configuration represents one of the nodes selected by the passed in key
+     *         configuration represents one of the nodes selected by the passed
+     *         in key
      */
     List<HierarchicalConfiguration<T>> configurationsAt(String key);
+
+    /**
+     * Returns a list of sub configurations for all configuration nodes selected
+     * by the given key allowing the caller to specify the
+     * {@code supportUpdates} flag. This method works like
+     * {@link #configurationsAt(String)}, but with the additional boolean
+     * parameter it can be specified whether the returned configurations react
+     * on updates of the parent configuration.
+     *
+     * @param key the key for selecting the desired nodes
+     * @param supportUpdates a flag whether the returned sub configuration
+     *        should be directly connected to its parent
+     * @return a list with hierarchical configuration objects; each
+     *         configuration represents one of the nodes selected by the passed
+     *         in key
+     * @see #configurationsAt(String, boolean)
+     */
+    List<HierarchicalConfiguration<T>> configurationsAt(String key,
+            boolean supportUpdates);
 
     /**
      * Returns a list with sub configurations for all child nodes of the node
      * selected by the given key. This method works like
      * {@link #immutableChildConfigurationsAt(String)}, but returns a list with
-     * {@code SubnodeConfiguration} objects.
+     * mutable configuration objects. The configuration objects returned are
+     * <strong>not</strong> connected to the parent configuration.
      *
      * @param key the key for selecting the desired parent node
-     * @return a collection with {@code SubnodeConfiguration} objects for all
+     * @return a collection with {@code HierarchicalConfiguration} objects for all
      *         child nodes of the selected parent node
      */
     List<HierarchicalConfiguration<T>> childConfigurationsAt(String key);
+
+    /**
+     * Returns a list with sub configurations for all child nodes of the node
+     * selected by the given key allowing the caller to specify the
+     * {@code supportUpdates} flag.
+     *
+     * @param key the key for selecting the desired parent node
+     * @param supportUpdates a flag whether the returned sub configuration
+     *        should be directly connected to its parent
+     * @return a collection with {@code HierarchicalConfiguration} objects for
+     *         all child nodes of the selected parent node
+     */
+    List<HierarchicalConfiguration<T>> childConfigurationsAt(String key,
+            boolean supportUpdates);
 
     /**
      * Removes all values of the property with the given name and of keys that

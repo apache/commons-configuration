@@ -1065,8 +1065,16 @@ public class TestAbstractHierarchicalConfiguration
             throw new UnsupportedOperationException("Unexpected method call!");
         }
 
+        public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(String key, boolean supportUpdates) {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
         public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(String key)
         {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(String key, boolean supportUpdates) {
             throw new UnsupportedOperationException("Unexpected method call!");
         }
 
