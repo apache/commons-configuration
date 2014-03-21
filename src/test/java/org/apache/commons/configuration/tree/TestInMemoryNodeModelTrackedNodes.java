@@ -24,9 +24,14 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
@@ -47,6 +52,12 @@ public class TestInMemoryNodeModelTrackedNodes
     /** Constant for the name of a new table field. */
     private static final String NEW_FIELD = "newTableField";
 
+    /** Constant for a test key. */
+    private static final String TEST_KEY = "someTestKey";
+
+    /** Constant for the key used by the test selector. */
+    private static final String SELECTOR_KEY = "tables.table(1)";
+
     /** The root node for the test hierarchy. */
     private static ImmutableNode root;
 
@@ -62,7 +73,7 @@ public class TestInMemoryNodeModelTrackedNodes
         root =
                 new ImmutableNode.Builder(1).addChild(
                         NodeStructureHelper.ROOT_TABLES_TREE).create();
-        selector = new NodeSelector("tables.table(1)");
+        selector = new NodeSelector(SELECTOR_KEY);
     }
 
     @Before
@@ -737,5 +748,91 @@ public class TestInMemoryNodeModelTrackedNodes
     {
         model.trackNode(selector, createResolver());
         model.replaceTrackedNode(selector, null);
+    }
+
+    /**
+     * Prepares the resolver mock to expect a nodeKey() request.
+     *
+     * @param resolver the {@code NodeKeyResolver}
+     * @param node the node whose name is to be resolved
+     * @param key the key to be returned for this node
+     */
+    private void expectNodeKey(NodeKeyResolver<ImmutableNode> resolver,
+            ImmutableNode node, String key)
+    {
+        Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
+        EasyMock.expect(resolver.nodeKey(node, cache, model.getNodeHandler()))
+                .andReturn(key);
+    }
+
+    /**
+     * Tests whether tracked nodes can be created from a key.
+     */
+    @Test
+    public void testSelectAndTrackNodes()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        String nodeKey1 = "tables/table(0)";
+        String nodeKey2 = "tables/table(1)";
+        ImmutableNode node1 = NodeStructureHelper.nodeForKey(root, nodeKey1);
+        ImmutableNode node2 = NodeStructureHelper.nodeForKey(root, nodeKey2);
+        EasyMock.expect(
+                resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler()))
+                .andReturn(Arrays.asList(node1, node2));
+        expectNodeKey(resolver, node1, nodeKey1);
+        expectNodeKey(resolver, node2, nodeKey2);
+        EasyMock.replay(resolver);
+
+        Collection<NodeSelector> selectors =
+                model.selectAndTrackNodes(TEST_KEY, resolver);
+        Iterator<NodeSelector> it = selectors.iterator();
+        NodeSelector sel = it.next();
+        assertEquals("Wrong selector 1", new NodeSelector(nodeKey1), sel);
+        assertSame("Wrong tracked node 1", node1, model.getTrackedNode(sel));
+        sel = it.next();
+        assertEquals("Wrong selector 2", new NodeSelector(nodeKey2), sel);
+        assertSame("Wrong tracked node 2", node2, model.getTrackedNode(sel));
+        assertFalse("Too many selectors", it.hasNext());
+    }
+
+    /**
+     * Tests selectAndTrackNodes() if the key does not select any nodes.
+     */
+    @Test
+    public void testSelectAndTrackNodesNoSelection()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        EasyMock.expect(
+                resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler()))
+                .andReturn(Collections.<ImmutableNode> emptyList());
+        EasyMock.replay(resolver);
+
+        assertTrue("Got selectors",
+                model.selectAndTrackNodes(TEST_KEY, resolver).isEmpty());
+    }
+
+    /**
+     * Tests whether selectAndTrackNodes() works for nodes that are already
+     * tracked.
+     */
+    @Test
+    public void testSelectAndTrackNodesNodeAlreadyTracked()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        model.trackNode(selector, resolver);
+        resolver = createResolver(false);
+        ImmutableNode node = model.getTrackedNode(selector);
+        EasyMock.expect(
+                resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler()))
+                .andReturn(Collections.singletonList(node));
+        expectNodeKey(resolver, node, SELECTOR_KEY);
+        EasyMock.replay(resolver);
+
+        Collection<NodeSelector> selectors =
+                model.selectAndTrackNodes(TEST_KEY, resolver);
+        assertEquals("Wrong number of selectors", 1, selectors.size());
+        assertEquals("Wrong selector", selector, selectors.iterator().next());
+        model.untrackNode(selector);
+        assertSame("Node not tracked", node, model.getTrackedNode(selector));
     }
 }

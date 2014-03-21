@@ -16,8 +16,10 @@
  */
 package org.apache.commons.configuration.tree;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
@@ -109,6 +111,38 @@ class NodeTracker
                 selector,
                 trackDataForAddedObserver(root, selector, resolver, handler,
                         trackData));
+        return new NodeTracker(newState);
+    }
+
+    /**
+     * Adds a number of nodes to be tracked. For each node in the passed in
+     * collection, a tracked node entry is created unless already one exists.
+     *
+     * @param selectors a collection with the {@code NodeSelector} objects
+     * @param nodes a collection with the nodes to be tracked
+     * @return the updated instance
+     */
+    public NodeTracker trackNodes(Collection<NodeSelector> selectors,
+            Collection<ImmutableNode> nodes)
+    {
+        Map<NodeSelector, TrackedNodeData> newState =
+                new HashMap<NodeSelector, TrackedNodeData>(trackedNodes);
+        Iterator<ImmutableNode> itNodes = nodes.iterator();
+        for (NodeSelector selector : selectors)
+        {
+            ImmutableNode node = itNodes.next();
+            TrackedNodeData trackData = newState.get(selector);
+            if (trackData == null)
+            {
+                trackData = new TrackedNodeData(node);
+            }
+            else
+            {
+                trackData = trackData.observerAdded();
+            }
+            newState.put(selector, trackData);
+        }
+
         return new NodeTracker(newState);
     }
 

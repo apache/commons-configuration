@@ -16,6 +16,7 @@
  */
 package org.apache.commons.configuration.tree;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,6 +27,8 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
+import org.apache.commons.lang3.mutable.Mutable;
+import org.apache.commons.lang3.mutable.MutableObject;
 
 /**
  * <p>
@@ -277,7 +280,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     public void clearTree(final String key, NodeSelector selector,
             final NodeKeyResolver<ImmutableNode> resolver)
     {
-        updateModel(new TransactionInitializer() {
+        updateModel(new TransactionInitializer()
+        {
             public boolean initTransaction(ModelTransaction tx)
             {
                 TreeData currentStructure = tx.getCurrentData();
@@ -401,6 +405,42 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                     structure.compareAndSet(current,
                             current.updateNodeTracker(newTracker));
         } while (!done);
+    }
+
+    /**
+     * Allows tracking all nodes selected by a key. This method evaluates the
+     * specified key on the current nodes structure. For all selected nodes
+     * corresponding {@code NodeSelector} objects are created, and they are
+     * tracked. The returned collection of {@code NodeSelector} objects can be
+     * used for interacting with the selected nodes.
+     *
+     * @param key the key for selecting the nodes to track
+     * @param resolver the {@code NodeKeyResolver}
+     * @return a collection with the {@code NodeSelector} objects for the new
+     *         tracked nodes
+     */
+    public Collection<NodeSelector> selectAndTrackNodes(String key,
+            NodeKeyResolver<ImmutableNode> resolver)
+    {
+        Mutable<Collection<NodeSelector>> refSelectors =
+                new MutableObject<Collection<NodeSelector>>();
+        boolean done;
+        do
+        {
+            TreeData current = structure.get();
+            List<ImmutableNode> nodes =
+                    resolver.resolveNodeKey(current.getRootNode(), key, current);
+            if (nodes.isEmpty())
+            {
+                return Collections.emptyList();
+            }
+            done =
+                    structure.compareAndSet(
+                            current,
+                            createSelectorsForTrackedNodes(refSelectors, nodes,
+                                    current, resolver));
+        } while (!done);
+        return refSelectors.getValue();
     }
 
     /**
@@ -962,6 +1002,35 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                         selector, newNode);
         return structure.compareAndSet(currentData,
                 currentData.updateNodeTracker(newTracker));
+    }
+
+    /**
+     * Creates tracked node entries for the specified nodes and creates the
+     * corresponding selectors.
+     *
+     * @param refSelectors the reference where to store the selectors
+     * @param nodes the nodes to be tracked
+     * @param current the current {@code TreeData} object
+     * @param resolver the {@code NodeKeyResolver}
+     * @return the updated {@code TreeData} object
+     */
+    private static TreeData createSelectorsForTrackedNodes(
+            Mutable<Collection<NodeSelector>> refSelectors,
+            List<ImmutableNode> nodes, TreeData current,
+            NodeKeyResolver<ImmutableNode> resolver)
+    {
+        List<NodeSelector> selectors =
+                new ArrayList<NodeSelector>(nodes.size());
+        Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
+        for (ImmutableNode node : nodes)
+        {
+            selectors.add(new NodeSelector(resolver.nodeKey(node, cache,
+                    current)));
+        }
+        refSelectors.setValue(selectors);
+        NodeTracker newTracker =
+                current.getNodeTracker().trackNodes(selectors, nodes);
+        return current.updateNodeTracker(newTracker);
     }
 
     /**
