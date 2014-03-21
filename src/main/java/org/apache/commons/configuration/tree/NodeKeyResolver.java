@@ -17,6 +17,7 @@
 package org.apache.commons.configuration.tree;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -49,6 +50,20 @@ public interface NodeKeyResolver<T>
     List<QueryResult<T>> resolveKey(T root, String key, NodeHandler<T> handler);
 
     /**
+     * Performs a query for the specified key on the given root node returning
+     * only node results. Some operations require results of type node and do
+     * not support attributes (e.g. for tracking nodes). This operation can be
+     * used in such cases. It works like {@code resolveKey()}, but filters only
+     * for results of type node.
+     *
+     * @param root the root node
+     * @param key the key to be resolved
+     * @param handler the {@code NodeHandler}
+     * @return a list with the resolved nodes
+     */
+    List<T> resolveNodeKey(T root, String key, NodeHandler<T> handler);
+
+    /**
      * Resolves a key of an add operation. Result is a {@code NodeAddData}
      * object containing all information for actually performing the add
      * operation at the specified key.
@@ -76,4 +91,20 @@ public interface NodeKeyResolver<T>
      */
     NodeUpdateData<T> resolveUpdateKey(T root, String key, Object newValue,
             NodeHandler<T> handler);
+
+    /**
+     * Generates a unique key for the specified node. This method is used if
+     * keys have to be generated for nodes received as query results. An
+     * implementation must generate a canonical key which is compatible with the
+     * current expression engine. The passed in map can be used by an
+     * implementation as cache. It is created initially by the caller and then
+     * passed in subsequent calls. An implementation may use this to avoid that
+     * keys for nodes already encountered have to be generated again.
+     *
+     * @param node the node in question
+     * @param cache a map serving as cache
+     * @param handler the {@code NodeHandler}
+     * @return a key for the specified node
+     */
+    String nodeKey(T node, Map<T, String> cache, NodeHandler<T> handler);
 }

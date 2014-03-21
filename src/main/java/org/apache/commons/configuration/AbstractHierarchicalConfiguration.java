@@ -469,6 +469,11 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         return getExpressionEngine().query(root, key, handler);
     }
 
+    public List<T> resolveNodeKey(T root, String key, NodeHandler<T> handler) {
+        //TODO implementation
+        return null;
+    }
+
     /**
      * {@inheritDoc} This implementation delegates to the expression engine.
      */
@@ -521,6 +526,11 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
 
         return new NodeUpdateData<T>(changedValues, additionalValues,
                 removedItems, key);
+    }
+
+    public String nodeKey(T node, Map<T, String> cache, NodeHandler<T> handler) {
+        //TODO implementation
+        return null;
     }
 
     /**
