@@ -800,6 +800,38 @@ public class TestAbstractHierarchicalConfiguration
     }
 
     /**
+     * Tests whether node keys can be resolved.
+     */
+    @Test
+    public void testResolveNodeKey()
+    {
+        List<ImmutableNode> nodes =
+                config.resolveNodeKey(config.getRootNode(),
+                        "tables.table.name", config.getModel().getNodeHandler());
+        assertEquals("Wrong number of nodes",
+                NodeStructureHelper.tablesLength(), nodes.size());
+        for (int i = 0; i < NodeStructureHelper.tablesLength(); i++)
+        {
+            assertEquals("Wrong node value at " + i,
+                    NodeStructureHelper.table(i), nodes.get(i).getValue());
+        }
+    }
+
+    /**
+     * Tests whether attribute keys are filtered out when resolving node keys.
+     */
+    @Test
+    public void testResolveNodeKeyAttribute()
+    {
+        String attrKey = "tables.table(0)[@type]";
+        config.addProperty(attrKey, "system");
+        assertTrue(
+                "Got attribute results",
+                config.resolveNodeKey(config.getRootNode(), attrKey,
+                        config.getModel().getNodeHandler()).isEmpty());
+    }
+
+    /**
      * Helper method for testing the getKeys(String) method.
      *
      * @param prefix the key to pass into getKeys()

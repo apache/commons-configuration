@@ -33,6 +33,7 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
 import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.InMemoryNodeModel;
+import org.apache.commons.configuration.tree.NodeHandler;
 import org.apache.commons.configuration.tree.NodeModel;
 import org.apache.commons.configuration.tree.NodeSelector;
 import org.apache.commons.configuration.tree.QueryResult;
@@ -330,16 +331,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     private List<ImmutableNode> fetchFilteredNodeResults(String key)
     {
-        List<QueryResult<ImmutableNode>> results = fetchNodeList(key);
-        List<ImmutableNode> targetNodes = new LinkedList<ImmutableNode>();
-        for (QueryResult<ImmutableNode> result : results)
-        {
-            if (!result.isAttributeResult())
-            {
-                targetNodes.add(result.getNode());
-            }
-        }
-        return targetNodes;
+        NodeHandler<ImmutableNode> handler = getModel().getNodeHandler();
+        return resolveNodeKey(handler.getRootNode(), key, handler);
     }
 
     /**

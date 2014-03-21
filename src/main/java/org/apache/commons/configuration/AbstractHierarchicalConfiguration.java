@@ -469,9 +469,22 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         return getExpressionEngine().query(root, key, handler);
     }
 
-    public List<T> resolveNodeKey(T root, String key, NodeHandler<T> handler) {
-        //TODO implementation
-        return null;
+    /**
+     * {@inheritDoc} This implementation delegates to {@code resolveKey()} and
+     * then filters out attribute results.
+     */
+    public List<T> resolveNodeKey(T root, String key, NodeHandler<T> handler)
+    {
+        List<QueryResult<T>> results = resolveKey(root, key, handler);
+        List<T> targetNodes = new LinkedList<T>();
+        for (QueryResult<T> result : results)
+        {
+            if (!result.isAttributeResult())
+            {
+                targetNodes.add(result.getNode());
+            }
+        }
+        return targetNodes;
     }
 
     /**
@@ -742,8 +755,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     protected List<QueryResult<T>> fetchNodeList(String key)
     {
-        return getExpressionEngine().query(getRootNode(), key,
-                getModel().getNodeHandler());
+        return resolveKey(getRootNode(), key, getModel().getNodeHandler());
     }
 
     /**
