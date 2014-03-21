@@ -124,12 +124,12 @@ public class TestAbstractHierarchicalConfiguration
         Object prop = testConfig.getProperty("tables.table(0).fields.field.name");
         assertNotNull(prop);
         assertTrue(prop instanceof Collection);
-        assertEquals(5, ((Collection<?>) prop).size());
+        assertEquals(NodeStructureHelper.fieldsLength(0), ((Collection<?>) prop).size());
 
         prop = testConfig.getProperty("tables.table.fields.field.name");
         assertNotNull(prop);
         assertTrue(prop instanceof Collection);
-        assertEquals(10, ((Collection<?>) prop).size());
+        assertEquals(totalFieldCount(), ((Collection<?>) prop).size());
 
         prop = testConfig.getProperty("tables.table.fields.field(3).name");
         assertNotNull(prop);
@@ -220,7 +220,7 @@ public class TestAbstractHierarchicalConfiguration
         prop = config.getProperty("tables.table.fields.field.name");
         assertNotNull(prop);
         assertTrue(prop instanceof Collection);
-        assertEquals(5, ((Collection<?>) prop).size());
+        assertEquals(NodeStructureHelper.fieldsLength(1), ((Collection<?>) prop).size());
 
         config.clearTree("tables.table(1)");
         assertNull(config.getProperty("tables.table.fields.field.name"));
@@ -486,8 +486,10 @@ public class TestAbstractHierarchicalConfiguration
     @Test
     public void testGetMaxIndex()
     {
-        assertEquals(4, config.getMaxIndex("tables.table(0).fields.field"));
-        assertEquals(4, config.getMaxIndex("tables.table(1).fields.field"));
+        assertEquals(NodeStructureHelper.fieldsLength(0) - 1,
+                config.getMaxIndex("tables.table(0).fields.field"));
+        assertEquals(NodeStructureHelper.fieldsLength(1) - 1,
+                config.getMaxIndex("tables.table(1).fields.field"));
         assertEquals(1, config.getMaxIndex("tables.table"));
         assertEquals(1, config.getMaxIndex("tables.table.name"));
         assertEquals(0, config.getMaxIndex("tables.table(0).name"));
@@ -782,7 +784,7 @@ public class TestAbstractHierarchicalConfiguration
     {
         BaseHierarchicalConfiguration copy =
                 new BaseHierarchicalConfiguration(
-                        (HierarchicalConfiguration) null);
+                        (BaseHierarchicalConfiguration) null);
         assertTrue("Configuration not empty", copy.isEmpty());
     }
 
@@ -838,12 +840,12 @@ public class TestAbstractHierarchicalConfiguration
         Object prop = config.getProperty("tables/table[0]/fields/field/name");
         assertNotNull(prop);
         assertTrue(prop instanceof Collection);
-        assertEquals(5, ((Collection<?>) prop).size());
+        assertEquals(NodeStructureHelper.fieldsLength(0), ((Collection<?>) prop).size());
 
         prop = config.getProperty("tables/table/fields/field/name");
         assertNotNull(prop);
         assertTrue(prop instanceof Collection);
-        assertEquals(10, ((Collection<?>) prop).size());
+        assertEquals(totalFieldCount(), ((Collection<?>) prop).size());
 
         prop = config.getProperty("tables/table/fields/field[3]/name");
         assertNotNull(prop);
@@ -860,6 +862,21 @@ public class TestAbstractHierarchicalConfiguration
         assertTrue("Key not found", keys.contains("tables/table/name"));
         assertTrue("Key not found", keys
                 .contains("tables/table/fields/field/name"));
+    }
+
+    /**
+     * Returns the total number of fields in the test data structure.
+     *
+     * @return the total number of fields
+     */
+    private static int totalFieldCount()
+    {
+        int fieldCount = 0;
+        for (int i = 0; i < NodeStructureHelper.tablesLength(); i++)
+        {
+            fieldCount += NodeStructureHelper.fieldsLength(i);
+        }
+        return fieldCount;
     }
 
     /**
@@ -922,12 +939,12 @@ public class TestAbstractHierarchicalConfiguration
             throw new UnsupportedOperationException("Unexpected method call!");
         }
 
-        public List<SubnodeConfiguration> configurationsAt(String key)
+        public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(String key)
         {
             throw new UnsupportedOperationException("Unexpected method call!");
         }
 
-        public List<SubnodeConfiguration> childConfigurationsAt(String key)
+        public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(String key)
         {
             throw new UnsupportedOperationException("Unexpected method call!");
         }
