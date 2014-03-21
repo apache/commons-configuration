@@ -40,6 +40,9 @@ import org.junit.Test;
  */
 public class TestHierarchicalConfiguration
 {
+    /** Constant for a changed name. */
+    private static final String NEW_NAME = "alteredName";
+
     /** The configuration to be tested. */
     private BaseHierarchicalConfiguration config;
 
@@ -374,14 +377,42 @@ public class TestHierarchicalConfiguration
     }
 
     /**
-     * Tests the configurationsAt() method.
+     * Helper method for checking a configurationsAt() method. It is also tested
+     * whether the configuration is connected to its parent.
+     *
+     * @param withUpdates the updates flag
+     * @param expName the expected name in the parent configuration
+     */
+    private void checkConfigurationsAtWithUpdate(boolean withUpdates,
+            String expName)
+    {
+        String key = "tables.table(1).fields.field";
+        List<HierarchicalConfiguration<ImmutableNode>> lstFlds =
+                withUpdates ? config.configurationsAt(key, true) : config
+                        .configurationsAt(key);
+        checkSubConfigurations(lstFlds);
+        lstFlds.get(0).setProperty("name", NEW_NAME);
+        assertEquals("Wrong name in parent", expName,
+                config.getString("tables.table(1).fields.field(0).name"));
+    }
+
+    /**
+     * Tests the configurationsAt() method if the sub configurations are not
+     * connected..
      */
     @Test
-    public void testConfigurationsAt()
+    public void testConfigurationsAtNoUpdate()
     {
-        List<HierarchicalConfiguration<ImmutableNode>> lstFlds =
-                config.configurationsAt("tables.table(1).fields.field");
-        checkSubConfigurations(lstFlds);
+        checkConfigurationsAtWithUpdate(false, NodeStructureHelper.field(1, 0));
+    }
+
+    /**
+     * Tests configurationsAt() if the sub configurations are connected.
+     */
+    @Test
+    public void testConfigurationsAtWithUpdates()
+    {
+        checkConfigurationsAtWithUpdate(true, NEW_NAME);
     }
 
     /**

@@ -278,9 +278,23 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         InMemoryNodeModel myModel = getSubConfigurationParentModel();
         NodeSelector selector = getSubConfigurationNodeSelector(key);
         myModel.trackNode(selector, this);
+        return createSubConfigurationForTrackedNode(selector, myModel);
+    }
+
+    /**
+     * Creates a connected sub configuration based on a selector for a tracked
+     * node.
+     *
+     * @param selector the {@code NodeSelector}
+     * @param parentModel the parent node model
+     * @return the newly created sub configuration
+     */
+    private SubnodeConfiguration createSubConfigurationForTrackedNode(
+            NodeSelector selector, InMemoryNodeModel parentModel)
+    {
         SubnodeConfiguration subConfig =
-                new SubnodeConfiguration(this, new TrackedNodeModel(myModel,
-                        selector, true));
+                new SubnodeConfiguration(this, new TrackedNodeModel(
+                        parentModel, selector, true));
         subConfig.addConfigurationListener(changeListener);
         return subConfig;
     }
@@ -392,6 +406,32 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     }
 
     /**
+     * {@inheritDoc} This implementation creates tracked nodes for the specified
+     * key. Then sub configurations for these nodes are created and returned.
+     */
+    public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(
+            String key, boolean supportUpdates)
+    {
+        if (!supportUpdates)
+        {
+            return configurationsAt(key);
+        }
+
+        InMemoryNodeModel parentModel = getSubConfigurationParentModel();
+        Collection<NodeSelector> selectors =
+                parentModel.selectAndTrackNodes(key, this);
+        List<HierarchicalConfiguration<ImmutableNode>> configs =
+                new ArrayList<HierarchicalConfiguration<ImmutableNode>>(
+                        selectors.size());
+        for (NodeSelector selector : selectors)
+        {
+            configs.add(createSubConfigurationForTrackedNode(selector,
+                    parentModel));
+        }
+        return configs;
+    }
+
+    /**
      * {@inheritDoc} This implementation first delegates to
      * {@code configurationsAt()} to create a list of
      * {@code SubnodeConfiguration} objects. Then for each element of this list
@@ -427,6 +467,10 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         }
 
         return subs;
+    }
+
+    public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(String key, boolean supportUpdates) {
+        return null;
     }
 
     /**
