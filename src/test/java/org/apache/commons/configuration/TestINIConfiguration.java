@@ -890,9 +890,11 @@ public class TestINIConfiguration
     {
         final String data = "[section]\ntest = failed\n";
         INIConfiguration config = setUpConfig(data);
-        HierarchicalConfiguration<ImmutableNode> sub = config.getSection("section");
+        SubnodeConfiguration sub = config.getSection("section");
         assertFalse("No content", sub.isEmpty());
         sub.clear();
+        sub.close();
+        sub = config.getSection("section");
         sub.setProperty("test", "success");
         StringWriter writer = new StringWriter();
         config.write(writer);
