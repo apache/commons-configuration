@@ -226,11 +226,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     public HierarchicalConfiguration<ImmutableNode> configurationAt(String key,
             boolean supportUpdates)
     {
-        BaseHierarchicalConfiguration sub =
-                supportUpdates ? createConnectedSubConfiguration(key)
-                        : createIndependentSubConfiguration(key);
-        initSubConfiguration(sub);
-        return sub;
+        return supportUpdates ? createConnectedSubConfiguration(key)
+                : createIndependentSubConfiguration(key);
     }
 
     /**
@@ -264,6 +261,40 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     }
 
     /**
+     * Creates a connected sub configuration based on a selector for a tracked
+     * node.
+     *
+     * @param selector the {@code NodeSelector}
+     * @param parentModel the parent node model
+     * @return the newly created sub configuration
+     * @since 2.0
+     */
+    protected SubnodeConfiguration createSubConfigurationForTrackedNode(
+            NodeSelector selector, InMemoryNodeModel parentModel)
+    {
+        SubnodeConfiguration subConfig =
+                new SubnodeConfiguration(this, new TrackedNodeModel(
+                        parentModel, selector, true));
+        initSubConfigurationForThisParent(subConfig);
+        return subConfig;
+    }
+
+    /**
+     * Initializes a {@code SubnodeConfiguration} object. This method should be
+     * called for each sub configuration created for this configuration. It
+     * ensures that the sub configuration is correctly connected to its parent
+     * instance and that update events are correctly propagated.
+     *
+     * @param subConfig the sub configuration to be initialized
+     * @since 2.0
+     */
+    protected void initSubConfigurationForThisParent(SubnodeConfiguration subConfig)
+    {
+        initSubConfiguration(subConfig);
+        subConfig.addConfigurationListener(changeListener);
+    }
+
+    /**
      * Creates a sub configuration from the specified key which is connected to
      * this configuration. This implementation creates a
      * {@link SubnodeConfiguration} with a tracked node identified by the passed
@@ -279,24 +310,6 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         NodeSelector selector = getSubConfigurationNodeSelector(key);
         myModel.trackNode(selector, this);
         return createSubConfigurationForTrackedNode(selector, myModel);
-    }
-
-    /**
-     * Creates a connected sub configuration based on a selector for a tracked
-     * node.
-     *
-     * @param selector the {@code NodeSelector}
-     * @param parentModel the parent node model
-     * @return the newly created sub configuration
-     */
-    private SubnodeConfiguration createSubConfigurationForTrackedNode(
-            NodeSelector selector, InMemoryNodeModel parentModel)
-    {
-        SubnodeConfiguration subConfig =
-                new SubnodeConfiguration(this, new TrackedNodeModel(
-                        parentModel, selector, true));
-        subConfig.addConfigurationListener(changeListener);
-        return subConfig;
     }
 
     /**
@@ -338,8 +351,11 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
             throw new ConfigurationRuntimeException(
                     "Passed in key must select exactly one node: " + key);
         }
-        return new BaseHierarchicalConfiguration(new InMemoryNodeModel(
-                targetNodes.get(0)));
+        BaseHierarchicalConfiguration sub =
+                new BaseHierarchicalConfiguration(new InMemoryNodeModel(
+                        targetNodes.get(0)));
+        initSubConfiguration(sub);
+        return sub;
     }
 
     /**
@@ -515,25 +531,6 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     }
 
     /**
-     * Creates a new {@code SubnodeConfiguration} for the specified node and
-     * sets its construction key. If the key is not <b>null</b>, a
-     * {@code SubnodeConfiguration} created this way will be aware of structural
-     * changes of its parent.
-     *
-     * @param node the node, for which a {@code SubnodeConfiguration} is to be
-     *        created
-     * @param subnodeKey the key used to construct the configuration
-     * @return the configuration for the given node
-     * @since 1.5
-     */
-    protected SubnodeConfiguration createSubnodeConfiguration(
-            ConfigurationNode node, String subnodeKey)
-    {
-        //TODO implementation
-        return null; //new SubnodeConfiguration(this, node, subnodeKey);
-    }
-
-    /**
      * This method is always called when a subnode configuration created from
      * this configuration has been modified. This implementation transforms the
      * received event into an event of type {@code EVENT_SUBNODE_CHANGED}
@@ -545,28 +542,6 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     protected void subnodeConfigurationChanged(ConfigurationEvent event)
     {
         fireEvent(EVENT_SUBNODE_CHANGED, null, event, event.isBeforeUpdate());
-    }
-
-    /**
-     * Creates a new {@code SubnodeConfiguration} instance from this
-     * configuration and initializes it. This method also takes care that data
-     * structures are created to manage all {@code SubnodeConfiguration}
-     * instances with support for updates. They are stored, so that they can be
-     * triggered when this configuration is changed. <strong>Important
-     * note:</strong> This method expects that a write lock is held on this
-     * configuration!
-     *
-     * @param node the root node of the new {@code SubnodeConfiguration}
-     * @param key the key to this node
-     * @param supportUpdates a flag whether updates are supported
-     * @return the newly created and initialized {@code SubnodeConfiguration}
-     * @since 2.0
-     */
-    protected final SubnodeConfiguration createAndInitializeSubnodeConfiguration(
-            ConfigurationNode node, String key, boolean supportUpdates)
-    {
-        //TODO adapt clients
-        return null;
     }
 
     /**

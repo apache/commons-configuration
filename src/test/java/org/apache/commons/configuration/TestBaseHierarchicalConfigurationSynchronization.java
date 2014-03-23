@@ -38,7 +38,6 @@ import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.builder.fluent.Parameters;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileHandler;
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.junit.Before;
 import org.junit.Test;
@@ -268,22 +267,6 @@ public class TestBaseHierarchicalConfigurationSynchronization
                 {
                     private static final long serialVersionUID = 1L;
 
-                    @Override
-                    protected SubnodeConfiguration createSubnodeConfiguration(
-                            ConfigurationNode node, String subnodeKey)
-                    {
-                        return new SubnodeConfiguration(this, node)
-                        {
-                            private static final long serialVersionUID = 1L;
-
-                            @Override
-                            void validateRootNode()
-                            {
-                                super.validateRootNode();
-                                validatedConfigs.add(this);
-                            }
-                        };
-                    }
                 };
 
         SubnodeConfiguration sub =

@@ -416,6 +416,25 @@ public class TestHierarchicalConfiguration
     }
 
     /**
+     * Tests whether a connected configuration is correctly initialized with
+     * properties of its parent.
+     */
+    @Test
+    public void testConfigurationAtWithUpdateInitialized()
+    {
+        String key = "tables.table";
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(';'));
+        config.setThrowExceptionOnMissing(true);
+        List<HierarchicalConfiguration<ImmutableNode>> subs =
+                config.configurationsAt(key, true);
+        BaseHierarchicalConfiguration sub =
+                (BaseHierarchicalConfiguration) subs.get(0);
+        assertEquals("Wrong delimiter handler",
+                config.getListDelimiterHandler(), sub.getListDelimiterHandler());
+        assertTrue("Wrong exception flag", sub.isThrowExceptionOnMissing());
+    }
+
+    /**
      * Tests whether a list of immutable sub configurations can be queried.
      */
     @Test
