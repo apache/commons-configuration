@@ -19,7 +19,6 @@ package org.apache.commons.configuration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -969,72 +968,6 @@ public class TestINIConfiguration
         config.setSynchronizer(sync);
         assertFalse("No sections", config.getSections().isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-    }
-
-    /**
-     * Helper method for testing whether the access to a section is
-     * synchronized. This method delegates to the method with the same name
-     * passing in default methods.
-     *
-     * @param sectionName the name of the section to be queried
-     * @throws ConfigurationException if an error occurs
-     */
-    private void checkGetSectionSynchronized(String sectionName)
-            throws ConfigurationException
-    {
-        checkGetSectionSynchronized(sectionName, Methods.BEGIN_WRITE,
-                Methods.END_WRITE);
-    }
-
-    /**
-     * Helper method for testing whether the access to a section causes the
-     * specified methods to be called on the synchronizer.
-     *
-     * @param sectionName the name of the section to be queried
-     * @param expMethods the expected methods
-     * @throws ConfigurationException if an error occurs
-     */
-    private void checkGetSectionSynchronized(String sectionName,
-            Methods... expMethods) throws ConfigurationException
-    {
-        INIConfiguration config = setUpConfig(INI_DATA);
-        SynchronizerTestImpl sync = new SynchronizerTestImpl();
-        config.setSynchronizer(sync);
-        assertNotNull("No global section", config.getSection(sectionName));
-        sync.verify(expMethods);
-    }
-
-    /**
-     * Tests whether access to the global section is synchronized.
-     */
-    @Test
-    public void testGetSectionGlobalSynchronized()
-            throws ConfigurationException
-    {
-        checkGetSectionSynchronized(null);
-    }
-
-    /**
-     * Tests whether access to an existing section is synchronized.
-     */
-    @Test
-    public void testGetSectionExistingSynchronized()
-            throws ConfigurationException
-    {
-        // 1 x configurationAt(), then direct access to root node
-        checkGetSectionSynchronized("section1");
-    }
-
-    /**
-     * Tests whether access to a non-existing section is synchronized.
-     */
-    @Test
-    public void testGetSectionNonExistingSynchronized()
-            throws ConfigurationException
-    {
-        checkGetSectionSynchronized("Non-existing-section?",
-                Methods.BEGIN_WRITE, Methods.END_WRITE, Methods.BEGIN_WRITE,
-                Methods.END_WRITE);
     }
 
     /**

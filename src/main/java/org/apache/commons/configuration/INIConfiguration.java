@@ -21,10 +21,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,7 +35,10 @@ import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.InMemoryNodeModel;
+import org.apache.commons.configuration.tree.NodeHandler;
+import org.apache.commons.configuration.tree.NodeHandlerDecorator;
 import org.apache.commons.configuration.tree.NodeSelector;
+import org.apache.commons.configuration.tree.TrackedNodeModel;
 
 /**
  * <p>
@@ -859,26 +864,13 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      */
     private SubnodeConfiguration getGlobalSection()
     {
-//        ViewNode parent = new ViewNode();
-//
-//        beginWrite(false);
-//        try
-//        {
-//            for (ConfigurationNode node : getRootNode().getChildren())
-//            {
-//                if (!isSectionNode(node))
-//                {
-//                    parent.addChild(node);
-//                }
-//            }
-//
-//            return createAndInitializeSubnodeConfiguration(parent, null, false);
-//        }
-//        finally
-//        {
-//            endWrite();
-//        }
-        return null;
+        InMemoryNodeModel parentModel = getSubConfigurationParentModel();
+        NodeSelector selector = new NodeSelector(null); // selects parent
+        parentModel.trackNode(selector, this);
+        GlobalSectionNodeModel model = new GlobalSectionNodeModel(parentModel, selector);
+        SubnodeConfiguration sub = new SubnodeConfiguration(this, model);
+        initSubConfigurationForThisParent(sub);
+        return sub;
     }
 
     /**
@@ -890,5 +882,82 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
     private static boolean isSectionNode(ImmutableNode node)
     {
         return !node.getChildren().isEmpty();
+    }
+
+    /**
+     * A specialized node model implementation for the sub configuration
+     * representing the global section of the INI file. This is a regular
+     * {@code TrackedNodeModel} with one exception: The {@code NodeHandler} used
+     * by this model applies a filter on the children of the root node so that
+     * only nodes are visible that are no sub sections.
+     */
+    private static class GlobalSectionNodeModel extends TrackedNodeModel
+    {
+        /**
+         * Creates a new instance of {@code GlobalSectionNodeModel} and
+         * initializes it with the given underlying model.
+         *
+         * @param model the underlying {@code InMemoryNodeModel}
+         * @param selector the {@code NodeSelector}
+         */
+        public GlobalSectionNodeModel(InMemoryNodeModel model,
+                NodeSelector selector)
+        {
+            super(model, selector, true);
+        }
+
+        @Override
+        public NodeHandler<ImmutableNode> getNodeHandler()
+        {
+            return new NodeHandlerDecorator<ImmutableNode>()
+            {
+                @Override
+                public List<ImmutableNode> getChildren(ImmutableNode node)
+                {
+                    List<ImmutableNode> children = super.getChildren(node);
+                    return filterChildrenOfGlobalSection(node, children);
+                }
+
+                @Override
+                protected NodeHandler<ImmutableNode> getDecoratedNodeHandler()
+                {
+                    return GlobalSectionNodeModel.super.getNodeHandler();
+                }
+
+                /**
+                 * Filters the child nodes of the global section. This method
+                 * checks whether the passed in node is the root node of the
+                 * configuration. If so, from the list of children all nodes are
+                 * filtered which are section nodes.
+                 *
+                 * @param node the node in question
+                 * @param children the children of this node
+                 * @return a list with the filtered children
+                 */
+                private List<ImmutableNode> filterChildrenOfGlobalSection(
+                        ImmutableNode node, List<ImmutableNode> children)
+                {
+                    List<ImmutableNode> filteredList;
+                    if (node == getRootNode())
+                    {
+                        filteredList =
+                                new ArrayList<ImmutableNode>(children.size());
+                        for (ImmutableNode child : children)
+                        {
+                            if (!isSectionNode(child))
+                            {
+                                filteredList.add(child);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        filteredList = children;
+                    }
+
+                    return filteredList;
+                }
+            };
+        }
     }
 }
