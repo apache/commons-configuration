@@ -39,6 +39,7 @@ import org.apache.commons.configuration.tree.NodeSelector;
 import org.apache.commons.configuration.tree.NodeStructureHelper;
 import org.apache.commons.configuration.tree.TrackedNodeModel;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -500,5 +501,21 @@ public class TestSubnodeConfiguration
         parentModel.untrackNode(SELECTOR);
         assertTrue("Wrong finalize flag",
                 subModel.isReleaseTrackedNodeOnFinalize());
+    }
+
+    /**
+     * Tests whether the configuration can be closed.
+     */
+    @Test
+    public void testClose()
+    {
+        TrackedNodeModel model = EasyMock.createMock(TrackedNodeModel.class);
+        EasyMock.expect(model.getSelector()).andReturn(SELECTOR).anyTimes();
+        model.close();
+        EasyMock.replay(model);
+
+        SubnodeConfiguration config = new SubnodeConfiguration(parent, model);
+        config.close();
+        EasyMock.verify(model);
     }
 }

@@ -123,7 +123,6 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
      * Creates a new instance of {@code SubnodeConfiguration} and initializes it
      * with all relevant properties.
      *
-     *
      * @param parent the parent configuration
      * @param model the {@code TrackedNodeModel} to be used for this configuration
      * @throws IllegalArgumentException if a required argument is missing
@@ -167,6 +166,19 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
     }
 
     /**
+     * Closes this sub configuration. This method closes the underlying
+     * {@link TrackedNodeModel}, thus causing the tracked node acting as root
+     * node to be released. Per default, this happens automatically when the
+     * model is claimed by the garbage collector. By calling this method
+     * explicitly, it can be indicated that this configuration is no longer used
+     * and that resources used by it can be freed immediately.
+     */
+    public void close()
+    {
+        (getTrackedModel()).close();
+    }
+
+    /**
      * {@inheritDoc} This implementation returns a copy of the current node
      * model with the same settings. However, it has to be ensured that the
      * track count for the node selector is increased.
@@ -199,6 +211,17 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
     @Override
     protected InMemoryNodeModel getSubConfigurationParentModel()
     {
-        return ((TrackedNodeModel) getModel()).getParentModel();
+        return getTrackedModel().getParentModel();
+    }
+
+    /**
+     * Convenience method that returns the tracked model used by this sub
+     * configuration.
+     *
+     * @return the {@code TrackedNodeModel}
+     */
+    private TrackedNodeModel getTrackedModel()
+    {
+        return (TrackedNodeModel) getModel();
     }
 }
