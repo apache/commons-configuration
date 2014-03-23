@@ -348,9 +348,14 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param obj the value of the new property
      */
     @Override
-    protected void addPropertyDirect(String key, Object obj)
+    protected void addPropertyInternal(String key, Object obj)
     {
         getModel().addProperty(key, getListDelimiterHandler().parse(obj), this);
+    }
+
+    @Override
+    protected void addPropertyDirect(String key, Object value) {
+        // will not be called
     }
 
     /**

@@ -803,6 +803,20 @@ public class TestAbstractHierarchicalConfiguration
     }
 
     /**
+     * Tests whether list handling works correctly when adding properties.
+     */
+    @Test
+    public void testAddPropertyWithListHandling()
+    {
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        final String key = "list.delimiter.value";
+        config.addProperty(key + ".escaped", "3\\,1415");
+        config.addProperty(key + ".elements", "3,1415");
+        assertEquals("Wrong escaped property", "3,1415", config.getString(key + ".escaped"));
+        assertEquals("Wrong list property", "3", config.getString(key + ".elements"));
+    }
+
+    /**
      * Tests whether node keys can be resolved.
      */
     @Test
