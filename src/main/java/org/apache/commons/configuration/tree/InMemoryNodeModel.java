@@ -489,6 +489,48 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     }
 
     /**
+     * Tracks a node which is a child of another node selected by the passed in
+     * key. If the selected node has a child node with this name, it is tracked
+     * and its selector is returned. Otherwise, a new child node with this name
+     * is created first.
+     *
+     * @param key the key for selecting the parent node
+     * @param childName the name of the child node
+     * @param resolver the {@code NodeKeyResolver}
+     * @return the {@code NodeSelector} for the tracked child node
+     * @throws ConfigurationRuntimeException if the passed in key does not
+     *         select a single node
+     */
+    public NodeSelector trackChildNodeWithCreation(String key,
+            String childName, NodeKeyResolver<ImmutableNode> resolver)
+    {
+        MutableObject<NodeSelector> refSelector =
+                new MutableObject<NodeSelector>();
+        boolean done;
+
+        do
+        {
+            TreeData current = structure.get();
+            List<ImmutableNode> nodes =
+                    resolver.resolveNodeKey(current.getRootNode(), key, current);
+            if (nodes.size() != 1)
+            {
+                throw new ConfigurationRuntimeException(
+                        "Key does not select a single node: " + key);
+            }
+
+            ImmutableNode parent = nodes.get(0);
+            TreeData newData =
+                    createDataWithTrackedChildNode(current, parent, childName,
+                            resolver, refSelector);
+
+            done = structure.compareAndSet(current, newData);
+        } while (!done);
+
+        return refSelector.getValue();
+    }
+
+    /**
      * Returns the current {@code ImmutableNode} instance associated with the
      * given {@code NodeSelector}. The node must be a tracked node, i.e.
      * {@link #trackNode(NodeSelector, NodeKeyResolver)} must have been called
@@ -1076,6 +1118,72 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         NodeTracker newTracker =
                 current.getNodeTracker().trackNodes(selectors, nodes);
         return current.updateNodeTracker(newTracker);
+    }
+
+    /**
+     * Adds a tracked node that has already been resolved to the specified data
+     * object.
+     *
+     * @param current the current {@code TreeData} object
+     * @param node the node in question
+     * @param resolver the {@code NodeKeyResolver}
+     * @param refSelector here the newly created {@code NodeSelector} is
+     *        returned
+     * @return the new {@code TreeData} instance
+     */
+    private static TreeData updateDataWithNewTrackedNode(TreeData current,
+            ImmutableNode node, NodeKeyResolver<ImmutableNode> resolver,
+            MutableObject<NodeSelector> refSelector)
+    {
+        NodeSelector selector =
+                new NodeSelector(resolver.nodeKey(node,
+                        new HashMap<ImmutableNode, String>(), current));
+        refSelector.setValue(selector);
+        NodeTracker newTracker =
+                current.getNodeTracker().trackNodes(
+                        Collections.singleton(selector),
+                        Collections.singleton(node));
+        return current.updateNodeTracker(newTracker);
+    }
+
+    /**
+     * Creates a new data object with a tracked child node of the given parent
+     * node. If such a child node already exists, it is used. Otherwise, a new
+     * one is created.
+     *
+     * @param current the current {@code TreeData} object
+     * @param parent the parent node
+     * @param childName the name of the child node
+     * @param resolver the {@code NodeKeyResolver}
+     * @param refSelector here the newly created {@code NodeSelector} is
+     *        returned
+     * @return the new {@code TreeData} instance
+     */
+    private static TreeData createDataWithTrackedChildNode(TreeData current,
+            ImmutableNode parent, String childName,
+            NodeKeyResolver<ImmutableNode> resolver,
+            MutableObject<NodeSelector> refSelector)
+    {
+        TreeData newData;
+        List<ImmutableNode> namedChildren =
+                current.getChildren(parent, childName);
+        if (!namedChildren.isEmpty())
+        {
+            newData =
+                    updateDataWithNewTrackedNode(current, namedChildren.get(0),
+                            resolver, refSelector);
+        }
+        else
+        {
+            ImmutableNode child =
+                    new ImmutableNode.Builder().name(childName).create();
+            ModelTransaction tx = new ModelTransaction(current, null, resolver);
+            tx.addAddNodeOperation(parent, child);
+            newData =
+                    updateDataWithNewTrackedNode(tx.execute(), child, resolver,
+                            refSelector);
+        }
+        return newData;
     }
 
     /**

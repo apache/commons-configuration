@@ -20,10 +20,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -921,5 +923,106 @@ public class TestInMemoryNodeModelTrackedNodes
         checkTrackChildNodesNoResult(Collections
                 .singletonList(NodeStructureHelper.nodeForKey(root,
                         "tables/table(0)/name")));
+    }
+
+    /**
+     * Tests whether an existing child of a selected node can be tracked.
+     */
+    @Test
+    public void testTrackChildNodeWithCreationExisting()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        String childName = "name";
+        String parentKey = "tables/table(0)";
+        String childKey = parentKey + "/" + childName;
+        ImmutableNode node = NodeStructureHelper.nodeForKey(model, parentKey);
+        ImmutableNode child = NodeStructureHelper.nodeForKey(node, childName);
+        EasyMock.expect(
+                resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler()))
+                .andReturn(Collections.singletonList(node));
+        expectNodeKey(resolver, child, childKey);
+        EasyMock.replay(resolver);
+
+        NodeSelector childSelector =
+                model.trackChildNodeWithCreation(TEST_KEY, childName, resolver);
+        assertEquals("Wrong selector", new NodeSelector(childKey),
+                childSelector);
+        assertSame("Wrong tracked node", child,
+                model.getTrackedNode(childSelector));
+    }
+
+    /**
+     * Tests whether a child node to be tracked is created if necessary.
+     */
+    @Test
+    public void testTrackChildNodeWithCreationNonExisting()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        String childName = "space";
+        String parentKey = "tables/table(0)";
+        String childKey = parentKey + "/" + childName;
+        ImmutableNode node = NodeStructureHelper.nodeForKey(model, parentKey);
+        EasyMock.expect(
+                resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler()))
+                .andReturn(Collections.singletonList(node));
+        EasyMock.expect(
+                resolver.nodeKey(EasyMock.anyObject(ImmutableNode.class),
+                        EasyMock.eq(new HashMap<ImmutableNode, String>()),
+                        EasyMock.anyObject(TreeData.class)))
+                .andReturn(childKey);
+        EasyMock.replay(resolver);
+
+        NodeSelector childSelector =
+                model.trackChildNodeWithCreation(TEST_KEY, childName, resolver);
+        assertEquals("Wrong selector", new NodeSelector(childKey),
+                childSelector);
+        ImmutableNode child = model.getTrackedNode(childSelector);
+        assertEquals("Wrong child name", childName, child.getNodeName());
+        assertNull("Got a value", child.getValue());
+        ImmutableNode parent = model.getNodeHandler().getParent(child);
+        assertEquals("Wrong parent node", "table", parent.getNodeName());
+        assertEquals("Wrong node path", child,
+                NodeStructureHelper.nodeForKey(model, childKey));
+    }
+
+    /**
+     * Helper method for testing trackChildNodeWithCreation() if invalid query
+     * results are generated.
+     *
+     * @param queryResult the result set of the key
+     */
+    private void checkTrackChildNodeWithCreationInvalidKey(
+            List<ImmutableNode> queryResult)
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        EasyMock.expect(
+                resolver.resolveNodeKey(model.getRootNode(), TEST_KEY,
+                        model.getNodeHandler())).andReturn(queryResult);
+        EasyMock.replay(resolver);
+        model.trackChildNodeWithCreation(TEST_KEY, "someChild", resolver);
+    }
+
+    /**
+     * Tests trackChildNodeWithCreation() if the passed in key does not select a
+     * node.
+     */
+    @Test(expected = ConfigurationRuntimeException.class)
+    public void testTrackChildNodeWithCreationNoResults()
+    {
+        checkTrackChildNodeWithCreationInvalidKey(new ArrayList<ImmutableNode>());
+    }
+
+    /**
+     * Tests trackChildNodeWithCreation() if the passed in key selects multiple
+     * nodes.
+     */
+    @Test(expected = ConfigurationRuntimeException.class)
+    public void testTrackChildNodeWithCreationMultipleResults()
+    {
+        List<ImmutableNode> nodes =
+                Arrays.asList(
+                        NodeStructureHelper.nodeForKey(root, "tables/table(0)"),
+                        NodeStructureHelper.nodeForKey(root, "tables/table(1)"));
+        checkTrackChildNodeWithCreationInvalidKey(nodes);
     }
 }
