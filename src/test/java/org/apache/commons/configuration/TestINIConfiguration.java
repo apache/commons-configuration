@@ -504,6 +504,20 @@ public class TestINIConfiguration
     }
 
     /**
+     * Tests whether the sub configuration for the global section is connected
+     * to its parent.
+     */
+    @Test
+    public void testGlobalSectionConnected() throws ConfigurationException
+    {
+        INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
+        HierarchicalConfiguration<ImmutableNode> sub = config.getSection(null);
+        config.setProperty("globalVar", "changed");
+        assertEquals("Wrong value in sub", "changed",
+                sub.getString("globalVar"));
+    }
+
+    /**
      * Tests whether the specified configuration contains exactly the expected
      * sections.
      *
@@ -607,9 +621,25 @@ public class TestINIConfiguration
     public void testGetSectionExisting() throws ConfigurationException
     {
         INIConfiguration config = setUpConfig(INI_DATA);
-        HierarchicalConfiguration<ImmutableNode> section = config.getSection("section1");
+        HierarchicalConfiguration<ImmutableNode> section =
+                config.getSection("section1");
         assertEquals("Wrong value of var1", "foo", section.getString("var1"));
         assertEquals("Wrong value of var2", "451", section.getString("var2"));
+    }
+
+    /**
+     * Tests whether the sub configuration returned by getSection() is connected
+     * to the parent.
+     */
+    @Test
+    public void testGetSectionConnected() throws ConfigurationException
+    {
+        INIConfiguration config = setUpConfig(INI_DATA);
+        HierarchicalConfiguration<ImmutableNode> section =
+                config.getSection("section1");
+        section.setProperty("var1", "foo2");
+        assertEquals("Not connected to parent", "foo2",
+                config.getString("section1.var1"));
     }
 
     /**
@@ -1039,8 +1069,7 @@ public class TestINIConfiguration
             throws ConfigurationException
     {
         INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
-        SubnodeConfiguration sub =
-                (SubnodeConfiguration) config.getSection(null);
+        SubnodeConfiguration sub = config.getSection(null);
         NodeHandler<ImmutableNode> handler = sub.getModel().getNodeHandler();
         assertTrue("Sections not filtered",
                 handler.getChildren(sub.getRootNode(), "section1").isEmpty());
@@ -1055,8 +1084,7 @@ public class TestINIConfiguration
             throws ConfigurationException
     {
         INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
-        SubnodeConfiguration sub =
-                (SubnodeConfiguration) config.getSection(null);
+        SubnodeConfiguration sub = config.getSection(null);
         NodeHandler<ImmutableNode> handler = sub.getModel().getNodeHandler();
         assertEquals("Wrong number of children", 1,
                 handler.getChildrenCount(handler.getRootNode(), null));
@@ -1071,8 +1099,7 @@ public class TestINIConfiguration
             throws ConfigurationException
     {
         INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
-        SubnodeConfiguration sub =
-                (SubnodeConfiguration) config.getSection(null);
+        SubnodeConfiguration sub = config.getSection(null);
         NodeHandler<ImmutableNode> handler = sub.getModel().getNodeHandler();
         ImmutableNode child = handler.getChild(handler.getRootNode(), 0);
         assertEquals("Wrong child", "globalVar", child.getNodeName());
@@ -1096,8 +1123,7 @@ public class TestINIConfiguration
             throws ConfigurationException
     {
         INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
-        SubnodeConfiguration sub =
-                (SubnodeConfiguration) config.getSection(null);
+        SubnodeConfiguration sub = config.getSection(null);
         NodeHandler<ImmutableNode> handler = sub.getModel().getNodeHandler();
         List<ImmutableNode> children = handler.getRootNode().getChildren();
         assertEquals("Wrong index", 0,

@@ -832,7 +832,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @return a configuration containing only the properties of the specified
      *         section
      */
-    public HierarchicalConfiguration<ImmutableNode> getSection(String name)
+    public SubnodeConfiguration getSection(String name)
     {
         if (name == null)
         {
@@ -843,7 +843,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
         {
             try
             {
-                return configurationAt(name);
+                return (SubnodeConfiguration) configurationAt(name, true);
             }
             catch (ConfigurationRuntimeException iex)
             {
