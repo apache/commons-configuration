@@ -204,4 +204,32 @@ public class TestTrackedNodeModel
         setUpModel().clear(resolver);
         EasyMock.verify(parentModel);
     }
+
+    /**
+     * Tests whether the model can be closed.
+     */
+    @Test
+    public void testClose()
+    {
+        parentModel.untrackNode(selector);
+        EasyMock.replay(parentModel);
+
+        setUpModel().close();
+        EasyMock.verify(parentModel);
+    }
+
+    /**
+     * Tests whether close can be called multiple times.
+     */
+    @Test
+    public void testCloseMultipleTimes()
+    {
+        parentModel.untrackNode(selector);
+        EasyMock.replay(parentModel);
+
+        TrackedNodeModel model = setUpModel();
+        model.close();
+        model.close();
+        EasyMock.verify(parentModel);
+    }
 }

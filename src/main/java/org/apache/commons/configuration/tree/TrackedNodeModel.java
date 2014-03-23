@@ -17,6 +17,7 @@
 package org.apache.commons.configuration.tree;
 
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * <p>
@@ -38,6 +39,14 @@ import java.util.Collection;
  * the implementation of {@code InMemoryNodeModel}.
  * </p>
  * <p>
+ * If the tracked node acting as root node is exclusively used by this model, it
+ * should be released when this model is no longer needed. This can be done
+ * manually by calling the {@link #close()} method. It is also possible to pass
+ * a value of <strong>true</strong> to the {@code untrackOnFinalize} argument of
+ * the constructor. This causes {@code close()} to be called automatically if
+ * this object gets claimed by the garbage collector.
+ * </p>
+ * <p>
  * As {@code InMemoryNodeModel}, this class is thread-safe.
  * </p>
  *
@@ -57,6 +66,9 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode>
      * finalized.
      */
     private final boolean releaseTrackedNodeOnFinalize;
+
+    /** A flag whether this model has already been closed. */
+    private final AtomicBoolean closed;
 
     /**
      * Creates a new instance of {@code TrackedNodeModel} and initializes it
@@ -92,6 +104,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode>
         parentModel = model;
         selector = sel;
         releaseTrackedNodeOnFinalize = untrackOnFinalize;
+        closed = new AtomicBoolean();
     }
 
     /**
@@ -184,18 +197,39 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode>
     }
 
     /**
-     * {@inheritDoc} This implementation calls
-     * {@link InMemoryNodeModel#untrackNode(NodeSelector)} on the underlying
-     * model if the corresponding flag has been set at construction time. While
-     * this is not 100 percent reliable, it is better than keeping the tracked
-     * node hanging around.
+     * Closes this model. This causes the tracked node this model is based upon
+     * to be released (i.e. {@link InMemoryNodeModel#untrackNode(NodeSelector)}
+     * is called). This method should be called when this model is no longer
+     * needed. This implementation is idempotent; it is safe to call
+     * {@code close()} multiple times - only the first invocation has an effect.
+     * After this method has been called this model can no longer be used
+     * because there is no guarantee that the node can still be accessed from
+     * the parent model.
+     */
+    public void close()
+    {
+        if (closed.compareAndSet(false, true))
+        {
+            getParentModel().untrackNode(getSelector());
+        }
+    }
+
+    /**
+     * {@inheritDoc} This implementation calls {@code close()} if the
+     * {@code untrackOnFinalize} flag was set when this instance was
+     * constructed. While this is not 100 percent reliable, it is better than
+     * keeping the tracked node hanging around. Note that it is not a problem if
+     * {@code close()} already had been invoked manually because this method is
+     * idempotent.
+     *
+     * @see #close()
      */
     @Override
     protected void finalize() throws Throwable
     {
         if (isReleaseTrackedNodeOnFinalize())
         {
-            getParentModel().untrackNode(getSelector());
+            close();
         }
         super.finalize();
     }
