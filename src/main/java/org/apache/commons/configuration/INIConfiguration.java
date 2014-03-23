@@ -919,6 +919,41 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
                 }
 
                 @Override
+                public List<ImmutableNode> getChildren(ImmutableNode node,
+                        String name)
+                {
+                    List<ImmutableNode> children =
+                            super.getChildren(node, name);
+                    return filterChildrenOfGlobalSection(node, children);
+                }
+
+                @Override
+                public int getChildrenCount(ImmutableNode node, String name)
+                {
+                    List<ImmutableNode> children =
+                            (name != null) ? super.getChildren(node, name)
+                                    : super.getChildren(node);
+                    return filterChildrenOfGlobalSection(node, children).size();
+                }
+
+                @Override
+                public ImmutableNode getChild(ImmutableNode node, int index)
+                {
+                    List<ImmutableNode> children = super.getChildren(node);
+                    return filterChildrenOfGlobalSection(node, children).get(
+                            index);
+                }
+
+                @Override
+                public int indexOfChild(ImmutableNode parent,
+                        ImmutableNode child)
+                {
+                    List<ImmutableNode> children = super.getChildren(parent);
+                    return filterChildrenOfGlobalSection(parent, children)
+                            .indexOf(child);
+                }
+
+                @Override
                 protected NodeHandler<ImmutableNode> getDecoratedNodeHandler()
                 {
                     return GlobalSectionNodeModel.super.getNodeHandler();
