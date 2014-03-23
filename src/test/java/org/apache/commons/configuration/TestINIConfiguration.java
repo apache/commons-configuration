@@ -40,16 +40,14 @@ import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.sync.ReadWriteSynchronizer;
+import org.apache.commons.configuration.tree.ImmutableNode;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * Test class for INIConfiguration.
+ * Test class for {@code INIConfiguration}.
  *
- * @author <a
- *         href="http://commons.apache.org/configuration/team-list.html">Commons
- *         Configuration team</a>
  * @version $Id$
  */
 public class TestINIConfiguration
@@ -608,7 +606,7 @@ public class TestINIConfiguration
     public void testGetSectionExisting() throws ConfigurationException
     {
         INIConfiguration config = setUpConfig(INI_DATA);
-        SubnodeConfiguration section = config.getSection("section1");
+        HierarchicalConfiguration<ImmutableNode> section = config.getSection("section1");
         assertEquals("Wrong value of var1", "foo", section.getString("var1"));
         assertEquals("Wrong value of var2", "451", section.getString("var2"));
     }
@@ -623,7 +621,7 @@ public class TestINIConfiguration
         final String data = INI_DATA + "[section1]" + LINE_SEPARATOR
                 + "var3 = merged" + LINE_SEPARATOR;
         INIConfiguration config = setUpConfig(data);
-        SubnodeConfiguration section = config.getSection("section1");
+        HierarchicalConfiguration<ImmutableNode> section = config.getSection("section1");
         assertEquals("Wrong value of var1", "foo", section.getString("var1"));
         assertEquals("Wrong value of var2", "451", section.getString("var2"));
         assertEquals("Wrong value of var3", "merged", section.getString("var3"));
@@ -636,7 +634,7 @@ public class TestINIConfiguration
     public void testGetSectionGlobal() throws ConfigurationException
     {
         INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
-        SubnodeConfiguration section = config.getSection(null);
+        HierarchicalConfiguration<ImmutableNode> section = config.getSection(null);
         assertEquals("Wrong value of global variable", "testGlobal", section
                 .getString("globalVar"));
     }
@@ -671,7 +669,7 @@ public class TestINIConfiguration
     public void testGetSectionGlobalNonExisting() throws ConfigurationException
     {
         INIConfiguration config = setUpConfig(INI_DATA);
-        SubnodeConfiguration section = config.getSection(null);
+        HierarchicalConfiguration<ImmutableNode> section = config.getSection(null);
         assertTrue("Sub config not empty", section.isEmpty());
     }
 
@@ -682,7 +680,7 @@ public class TestINIConfiguration
     public void testGetSectionNonExisting() throws ConfigurationException
     {
         INIConfiguration config = setUpConfig(INI_DATA);
-        SubnodeConfiguration section = config
+        HierarchicalConfiguration<ImmutableNode> section = config
                 .getSection("Non existing section");
         assertTrue("Sub config not empty", section.isEmpty());
     }
@@ -861,7 +859,7 @@ public class TestINIConfiguration
     {
         final String data = "[section]\ntest = failed\n";
         INIConfiguration config = setUpConfig(data);
-        SubnodeConfiguration sub = config.getSection("section");
+        HierarchicalConfiguration<ImmutableNode> sub = config.getSection("section");
         assertFalse("No content", sub.isEmpty());
         sub.clear();
         sub.setProperty("test", "success");
@@ -883,7 +881,7 @@ public class TestINIConfiguration
         INIConfiguration config = setUpConfig(data);
         assertEquals("Wrong value 1", "sec1", config.getString("section.var1"));
         assertEquals("Wrong value 2", "sec2", config.getString("section.var2"));
-        SubnodeConfiguration sub = config.getSection("section");
+        HierarchicalConfiguration<ImmutableNode> sub = config.getSection("section");
         assertEquals("Wrong sub value 1", "sec1", sub.getString("var1"));
         assertEquals("Wrong sub value 2", "sec2", sub.getString("var2"));
         StringWriter writer = new StringWriter();
@@ -904,7 +902,7 @@ public class TestINIConfiguration
             throws ConfigurationException, IOException
     {
         INIConfiguration config = setUpConfig(INI_DATA);
-        SubnodeConfiguration section = config.getSection("newSection");
+        HierarchicalConfiguration<ImmutableNode> section = config.getSection("newSection");
         section.addProperty("test", "success");
         assertEquals("Main config not updated", "success",
                 config.getString("newSection.test"));
@@ -925,7 +923,7 @@ public class TestINIConfiguration
                 new INIConfiguration();
         config.addProperty("section.var1", "value1");
         config.addProperty("section(-1).var2", "value2");
-        SubnodeConfiguration section = config.getSection("section");
+        HierarchicalConfiguration<ImmutableNode> section = config.getSection("section");
         Iterator<String> keys = section.getKeys();
         assertEquals("Wrong key", "var1", keys.next());
         assertFalse("Too many keys", keys.hasNext());
