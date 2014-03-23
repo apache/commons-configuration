@@ -284,18 +284,19 @@ public class NodeStructureHelper
 
     /**
      * Evaluates the given key and finds the corresponding child node of the
-     * root node of the specified tree data object. This is a convenience method
-     * that works like the method with the same name, but obtains the root node
-     * from the given data object.
+     * root node of the specified {@code NodeHandler} object. This is a
+     * convenience method that works like the method with the same name, but
+     * obtains the root node from the given handler object.
      *
-     * @param td the {@code TreeData} instance
+     * @param handler the {@code NodeHandler} object
      * @param key the key to the desired node
      * @return the found target node
      * @throws NoSuchElementException if the desired node cannot be found
      */
-    public static ImmutableNode nodeForKey(TreeData td, String key)
+    public static ImmutableNode nodeForKey(NodeHandler<ImmutableNode> handler,
+            String key)
     {
-        return nodeForKey(td.getRootNode(), key);
+        return nodeForKey(handler.getRootNode(), key);
     }
 
     /**
