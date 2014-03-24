@@ -216,6 +216,7 @@ public class ExprLookup implements Lookup
      * @param var The expression.
      * @return The String result of the expression.
      */
+    @Override
     public String lookup(String var)
     {
         if(substitutor == null)

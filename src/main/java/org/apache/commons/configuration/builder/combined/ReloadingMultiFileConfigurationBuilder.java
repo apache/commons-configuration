@@ -118,6 +118,7 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
      * {@code ReloadingController} that delegates to the reloading controllers
      * of the managed builders created so far.
      */
+    @Override
     public ReloadingController getReloadingController()
     {
         return reloadingController;

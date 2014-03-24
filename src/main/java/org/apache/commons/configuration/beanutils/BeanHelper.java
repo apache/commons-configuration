@@ -665,26 +665,31 @@ public final class BeanHelper
             this.data = data;
         }
 
+        @Override
         public void initBean(Object bean, BeanDeclaration data)
         {
             beanHelper.initBean(bean, data);
         }
 
+        @Override
         public Object getParameter()
         {
             return param;
         }
 
+        @Override
         public BeanDeclaration getBeanDeclaration()
         {
             return data;
         }
 
+        @Override
         public Class<?> getBeanClass()
         {
             return beanClass;
         }
 
+        @Override
         public Object createBean(BeanDeclaration data)
         {
             return beanHelper.createBean(data);

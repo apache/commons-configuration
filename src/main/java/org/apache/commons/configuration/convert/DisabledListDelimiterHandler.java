@@ -55,6 +55,7 @@ public class DisabledListDelimiterHandler extends AbstractListDelimiterHandler
      * {@inheritDoc} This implementation always throws an
      * {@code UnsupportedOperationException} exception.
      */
+    @Override
     public Object escapeList(List<?> values, ValueTransformer transformer)
     {
         throw new UnsupportedOperationException(

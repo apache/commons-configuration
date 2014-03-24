@@ -201,11 +201,13 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
      *
      * @param locator the current {@code FileLocator}
      */
+    @Override
     public void initFileLocator(FileLocator locator)
     {
         this.locator = locator;
     }
 
+    @Override
     public void read(Reader in) throws ConfigurationException
     {
         // We have to make sure that the root node is actually a PListNode.
@@ -219,6 +221,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         // set up the DTD validation
         EntityResolver resolver = new EntityResolver()
         {
+            @Override
             public InputSource resolveEntity(String publicId, String systemId)
             {
                 return new InputSource(getClass().getClassLoader().getResourceAsStream("PropertyList-1.0.dtd"));
@@ -243,6 +246,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         }
     }
 
+    @Override
     public void write(Writer out) throws ConfigurationException
     {
         PrintWriter writer = new PrintWriter(out);
@@ -441,10 +445,10 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
     private class XMLPropertyListHandler extends DefaultHandler
     {
         /** The buffer containing the text node being read */
-        private StringBuilder buffer = new StringBuilder();
+        private final StringBuilder buffer = new StringBuilder();
 
         /** The stack of configuration nodes */
-        private List<ConfigurationNode> stack = new ArrayList<ConfigurationNode>();
+        private final List<ConfigurationNode> stack = new ArrayList<ConfigurationNode>();
 
         public XMLPropertyListHandler(ConfigurationNode root)
         {
@@ -756,7 +760,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         private static final long serialVersionUID = 5586544306664205835L;
 
         /** The list of values in the array. */
-        private List<Object> list = new ArrayList<Object>();
+        private final List<Object> list = new ArrayList<Object>();
 
         /**
          * Add an object to the array.

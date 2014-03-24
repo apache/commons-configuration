@@ -72,6 +72,7 @@ public class CombinedBeanDeclaration implements BeanDeclaration
      * non-<b>null</b> value is returned. If none of the child declarations have
      * a defined bean factory name, result is <b>null</b>.
      */
+    @Override
     public String getBeanFactoryName()
     {
         for (BeanDeclaration d : childDeclarations)
@@ -91,6 +92,7 @@ public class CombinedBeanDeclaration implements BeanDeclaration
      * non-<b>null</b> value is returned. If none of the child declarations have
      * a defined bean factory parameter, result is <b>null</b>.
      */
+    @Override
     public Object getBeanFactoryParameter()
     {
         for (BeanDeclaration d : childDeclarations)
@@ -110,6 +112,7 @@ public class CombinedBeanDeclaration implements BeanDeclaration
      * non-<b>null</b> value is returned. If none of the child declarations have
      * a defined bean class, result is <b>null</b>.
      */
+    @Override
     public String getBeanClassName()
     {
         for (BeanDeclaration d : childDeclarations)
@@ -129,6 +132,7 @@ public class CombinedBeanDeclaration implements BeanDeclaration
      * child declarations, the declaration that comes before in the list of
      * children takes precedence.
      */
+    @Override
     public Map<String, Object> getBeanProperties()
     {
         Map<String, Object> result = new HashMap<String, Object>();
@@ -150,6 +154,7 @@ public class CombinedBeanDeclaration implements BeanDeclaration
      * defined in multiple child declarations, the declaration that comes before
      * in the list of children takes precedence.
      */
+    @Override
     public Map<String, Object> getNestedBeanDeclarations()
     {
         Map<String, Object> result = new HashMap<String, Object>();
@@ -172,6 +177,7 @@ public class CombinedBeanDeclaration implements BeanDeclaration
      * child declarations provide constructor arguments, result is an empty
      * collection.
      */
+    @Override
     public Collection<ConstructorArg> getConstructorArgs()
     {
         for (BeanDeclaration d : childDeclarations)

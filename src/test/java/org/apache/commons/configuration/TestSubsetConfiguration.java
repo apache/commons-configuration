@@ -350,6 +350,7 @@ public class TestSubsetConfiguration
         ConfigurationInterpolator interpolator = config.getInterpolator();
         interpolator.registerLookup("brackets", new Lookup(){
 
+            @Override
             public String lookup(String key) {
                 return "(" + key +")";
             }

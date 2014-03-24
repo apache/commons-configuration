@@ -33,7 +33,7 @@ import org.junit.Test;
  */
 public class TestPropertyListParser
 {
-    private PropertyListParser parser = new PropertyListParser((Reader) null);
+    private final PropertyListParser parser = new PropertyListParser((Reader) null);
 
     @Test
     public void testRemoveQuotes()

@@ -449,8 +449,7 @@ public class TestDefaultConfigurationNode
      */
     private void checkFieldNodes(Iterator<ConfigurationNode> itFields)
     {
-        for (int i = 0; i < FIELD_NAMES.length; i++)
-        {
+        for (String element : FIELD_NAMES) {
             DefaultConfigurationNode child = (DefaultConfigurationNode) itFields
                     .next();
             assertEquals("Wrong node", "field", child.getName());
@@ -458,7 +457,7 @@ public class TestDefaultConfigurationNode
             assertEquals("Wrong number of name nodes", 1, nameNodes.size());
             DefaultConfigurationNode nameNode = (DefaultConfigurationNode) nameNodes
                     .get(0);
-            assertEquals("Wrong field name", FIELD_NAMES[i], nameNode
+            assertEquals("Wrong field name", element, nameNode
                     .getValue());
         }
     }
@@ -486,18 +485,21 @@ public class TestDefaultConfigurationNode
             maxCalls = maxNumberOfVisits;
         }
 
+        @Override
         public void visitBeforeChildren(ConfigurationNode node,
                 NodeHandler<ConfigurationNode> handler)
         {
             beforeCalls++;
         }
 
+        @Override
         public void visitAfterChildren(ConfigurationNode node,
                 NodeHandler<ConfigurationNode> handler)
         {
             afterCalls++;
         }
 
+        @Override
         public boolean terminate()
         {
             return beforeCalls >= maxCalls;

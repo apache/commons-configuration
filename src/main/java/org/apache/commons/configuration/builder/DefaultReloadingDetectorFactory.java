@@ -36,6 +36,7 @@ import org.apache.commons.configuration.reloading.ReloadingDetector;
 public class DefaultReloadingDetectorFactory implements
         ReloadingDetectorFactory
 {
+    @Override
     public ReloadingDetector createReloadingDetector(FileHandler handler,
             FileBasedBuilderParametersImpl params)
             throws ConfigurationException

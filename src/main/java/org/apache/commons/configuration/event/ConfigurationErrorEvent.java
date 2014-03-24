@@ -62,7 +62,7 @@ public class ConfigurationErrorEvent extends ConfigurationEvent
     private static final long serialVersionUID = -7433184493062648409L;
 
     /** Stores the exception that caused this event. */
-    private Throwable cause;
+    private final Throwable cause;
 
     /**
      * Creates a new instance of {@code ConfigurationErrorEvent} and

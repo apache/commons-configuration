@@ -41,6 +41,7 @@ class BeanDeclarationTestImpl implements BeanDeclaration
 
     private Collection<ConstructorArg> constructorArgs;
 
+    @Override
     public String getBeanClassName()
     {
         return beanClassName;
@@ -51,6 +52,7 @@ class BeanDeclarationTestImpl implements BeanDeclaration
         this.beanClassName = beanClassName;
     }
 
+    @Override
     public String getBeanFactoryName()
     {
         return beanFactoryName;
@@ -61,6 +63,7 @@ class BeanDeclarationTestImpl implements BeanDeclaration
         this.beanFactoryName = beanFactoryName;
     }
 
+    @Override
     public Object getBeanFactoryParameter()
     {
         return beanFactoryParameter;
@@ -71,6 +74,7 @@ class BeanDeclarationTestImpl implements BeanDeclaration
         this.beanFactoryParameter = beanFactoryParameter;
     }
 
+    @Override
     public Map<String, Object> getBeanProperties()
     {
         return beanProperties;
@@ -81,6 +85,7 @@ class BeanDeclarationTestImpl implements BeanDeclaration
         this.beanProperties = beanProperties;
     }
 
+    @Override
     public Map<String, Object> getNestedBeanDeclarations()
     {
         return nestedBeanDeclarations;
@@ -92,6 +97,7 @@ class BeanDeclarationTestImpl implements BeanDeclaration
         this.nestedBeanDeclarations = nestedBeanDeclarations;
     }
 
+    @Override
     public Collection<ConstructorArg> getConstructorArgs()
     {
         return constructorArgs;

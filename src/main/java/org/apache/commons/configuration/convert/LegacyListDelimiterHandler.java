@@ -102,6 +102,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler
      * backslashes at the end of a string so that they are not interpreted as
      * escape character for a following list delimiter.
      */
+    @Override
     public Object escapeList(List<?> values, ValueTransformer transformer)
     {
         if (!values.isEmpty())

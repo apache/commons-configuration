@@ -36,6 +36,7 @@ public class ConfigurationNodeVisitorAdapter<T> implements
     /**
      * {@inheritDoc} Empty dummy implementation of this interface method.
      */
+    @Override
     public void visitBeforeChildren(T node, NodeHandler<T> handler)
     {
     }
@@ -43,6 +44,7 @@ public class ConfigurationNodeVisitorAdapter<T> implements
     /**
      * {@inheritDoc} Empty dummy implementation of this interface method.
      */
+    @Override
     public void visitAfterChildren(T node, NodeHandler<T> handler)
     {
     }
@@ -51,6 +53,7 @@ public class ConfigurationNodeVisitorAdapter<T> implements
      * {@inheritDoc} This implementation returns always <b>false</b>; this means
      * that all nodes in the current hierarchy are traversed.
      */
+    @Override
     public boolean terminate()
     {
         return false;

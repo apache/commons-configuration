@@ -605,6 +605,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      *
      * @param event the event object
      */
+    @Override
     public void configurationChanged(ConfigurationEvent event)
     {
         if (!event.isBeforeUpdate())

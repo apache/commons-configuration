@@ -44,6 +44,7 @@ public class BasePathLocationStrategy implements FileLocationStrategy
      * base path and file name. If this {@code File} exists, its URL is
      * returned.
      */
+    @Override
     public URL locate(FileSystem fileSystem, FileLocator locator)
     {
         if (StringUtils.isNotEmpty(locator.getFileName()))

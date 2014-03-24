@@ -30,7 +30,7 @@ import org.junit.Test;
 public class TestEqualsProperty
 {
     /** The File that we test with */
-    private String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
+    private final String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
 
     @Test
     public void testEquals() throws Exception

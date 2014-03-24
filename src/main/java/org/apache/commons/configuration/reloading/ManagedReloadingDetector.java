@@ -31,7 +31,7 @@ public class ManagedReloadingDetector implements ReloadingDetector,
         ManagedReloadingDetectorMBean
 {
     /** The logger. */
-    private Log log = LogFactory.getLog(ManagedReloadingDetector.class);
+    private final Log log = LogFactory.getLog(ManagedReloadingDetector.class);
 
     /** A flag whether a reload is required. */
     private volatile boolean reloadingRequired;
@@ -40,6 +40,7 @@ public class ManagedReloadingDetector implements ReloadingDetector,
      * {@inheritDoc} This implementation resets the internal flag indicating
      * that a reload should be performed.
      */
+    @Override
     public void reloadingPerformed()
     {
         reloadingRequired = false;
@@ -51,6 +52,7 @@ public class ManagedReloadingDetector implements ReloadingDetector,
      *
      * @return a flag whether reloading is required
      */
+    @Override
     public boolean isReloadingRequired()
     {
         return reloadingRequired;
@@ -63,6 +65,7 @@ public class ManagedReloadingDetector implements ReloadingDetector,
      *
      * @see org.apache.commons.configuration.reloading.ManagedReloadingDetectorMBean#refresh()
      */
+    @Override
     public void refresh()
     {
         log.info("Reloading configuration.");

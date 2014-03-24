@@ -89,12 +89,14 @@ public class BaseEventSource implements EventSource
         initListeners();
     }
 
+    @Override
     public void addConfigurationListener(ConfigurationListener l)
     {
         checkListener(l);
         listeners.add(l);
     }
 
+    @Override
     public boolean removeConfigurationListener(ConfigurationListener l)
     {
         return listeners.remove(l);
@@ -156,12 +158,14 @@ public class BaseEventSource implements EventSource
         }
     }
 
+    @Override
     public void addErrorListener(ConfigurationErrorListener l)
     {
         checkListener(l);
         errorListeners.add(l);
     }
 
+    @Override
     public boolean removeErrorListener(ConfigurationErrorListener l)
     {
         return errorListeners.remove(l);

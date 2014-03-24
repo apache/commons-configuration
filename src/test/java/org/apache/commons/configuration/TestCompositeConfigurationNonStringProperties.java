@@ -29,7 +29,7 @@ import org.junit.Before;
 public class TestCompositeConfigurationNonStringProperties extends BaseNonStringProperties
 {
     /** The File that we test with */
-    private String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
+    private final String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
 
     @Before
     public void setUp() throws Exception

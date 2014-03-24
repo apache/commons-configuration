@@ -106,6 +106,7 @@ public class ReloadingCombinedConfigurationBuilder extends
      * for the first time). So this method does not return a meaningful result
      * before.
      */
+    @Override
     public synchronized ReloadingController getReloadingController()
     {
         return reloadingController;

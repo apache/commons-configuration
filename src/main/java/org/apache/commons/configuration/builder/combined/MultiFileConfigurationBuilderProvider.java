@@ -174,16 +174,19 @@ public class MultiFileConfigurationBuilderProvider extends
             builder = bldr;
         }
 
+        @Override
         public Configuration getConfiguration() throws ConfigurationException
         {
             return configuration;
         }
 
+        @Override
         public void addBuilderListener(BuilderListener l)
         {
             builder.addBuilderListener(l);
         }
 
+        @Override
         public void removeBuilderListener(BuilderListener l)
         {
             builder.removeBuilderListener(l);
@@ -216,6 +219,7 @@ public class MultiFileConfigurationBuilderProvider extends
             ctrlSupport = (ReloadingControllerSupport) bldr;
         }
 
+        @Override
         public ReloadingController getReloadingController()
         {
             return ctrlSupport.getReloadingController();

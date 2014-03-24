@@ -58,7 +58,7 @@ public class TestPropertyListConfiguration
 
     private PropertyListConfiguration config;
 
-    private File testProperties = ConfigurationAssert.getTestFile("test.plist");
+    private final File testProperties = ConfigurationAssert.getTestFile("test.plist");
 
     @Before
     public void setUp() throws Exception

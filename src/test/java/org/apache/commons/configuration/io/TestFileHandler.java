@@ -1541,11 +1541,13 @@ public class TestFileHandler
             this.content = content;
         }
 
+        @Override
         public void read(Reader in) throws ConfigurationException, IOException
         {
             content = readReader(in);
         }
 
+        @Override
         public void write(Writer out) throws ConfigurationException,
                 IOException
         {
@@ -1561,6 +1563,7 @@ public class TestFileHandler
     private static class FileBasedInputStreamSupportTestImpl extends
             FileBasedTestImpl implements InputStreamSupport
     {
+        @Override
         public void read(InputStream in) throws ConfigurationException,
                 IOException
         {
@@ -1595,6 +1598,7 @@ public class TestFileHandler
             return locator;
         }
 
+        @Override
         public void initFileLocator(FileLocator loc)
         {
             this.locator = loc;

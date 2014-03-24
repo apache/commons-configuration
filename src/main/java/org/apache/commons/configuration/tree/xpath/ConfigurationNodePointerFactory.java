@@ -53,6 +53,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
      *
      * @return this order's factory
      */
+    @Override
     public int getOrder()
     {
         return CONFIGURATION_NODE_POINTER_FACTORY_ORDER;
@@ -68,6 +69,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
      * @param locale the locale
      * @return a pointer for a configuration node if the bean is such a node
      */
+    @Override
     @SuppressWarnings("unchecked")
     /* Type casts are safe here; because of the way the NodeWrapper was
        constructed the node handler must be compatible with the node.
@@ -92,6 +94,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
      * @param bean the bean
      * @return a pointer for a configuration node if the bean is such a node
      */
+    @Override
     @SuppressWarnings("unchecked")
     /* Type casts are safe here, see above. Also, the hierarchy of node
        pointers is consistent, so a parent is compatible to a child.

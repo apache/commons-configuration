@@ -1052,7 +1052,7 @@ public class TestAbstractConfigurationBasicFeatures
     static class TestConfigurationImpl extends AbstractConfiguration
     {
         /** Stores the underlying configuration. */
-        private AbstractConfiguration config;
+        private final AbstractConfiguration config;
 
         public AbstractConfiguration getUnderlyingConfiguration()
         {
@@ -1110,6 +1110,7 @@ public class TestAbstractConfigurationBasicFeatures
     {
         List<ConfigurationEvent> events = new ArrayList<ConfigurationEvent>();
 
+        @Override
         public void configurationChanged(ConfigurationEvent event)
         {
             events.add(event);

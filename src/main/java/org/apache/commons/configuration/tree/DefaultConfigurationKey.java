@@ -625,6 +625,7 @@ public class DefaultConfigurationKey
          *
          * @return a flag if there is a next element
          */
+        @Override
         public boolean hasNext()
         {
             return endIndex < keyBuffer.length();
@@ -635,6 +636,7 @@ public class DefaultConfigurationKey
          *
          * @return the next object
          */
+        @Override
         public Object next()
         {
             return nextKey();
@@ -644,6 +646,7 @@ public class DefaultConfigurationKey
          * Removes the current object in the iteration. This method is not
          * supported by this iterator type, so an exception is thrown.
          */
+        @Override
         public void remove()
         {
             throw new UnsupportedOperationException("Remove not supported!");

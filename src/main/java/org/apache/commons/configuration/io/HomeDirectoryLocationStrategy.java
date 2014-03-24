@@ -120,6 +120,7 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy
      * defines a base path and the {@code evaluateBasePath} property is
      * <b>true</b>, a sub directory of the home directory is searched.
      */
+    @Override
     public URL locate(FileSystem fileSystem, FileLocator locator)
     {
         if (StringUtils.isNotEmpty(locator.getFileName()))

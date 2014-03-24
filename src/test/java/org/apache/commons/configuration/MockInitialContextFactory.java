@@ -82,6 +82,7 @@ public class MockInitialContextFactory implements InitialContextFactory
      * @param env the environment
      * @return the context mock
      */
+    @Override
     public Context getInitialContext(@SuppressWarnings("rawtypes") Hashtable env) throws NamingException
     {
         boolean useCycles = env.containsKey(PROP_CYCLES);
@@ -141,9 +142,8 @@ public class MockInitialContextFactory implements InitialContextFactory
                     + PROP_NAMES[i];
             bindError(mockCtx, errProp);
         }
-        for (int i = 0; i < MISSING_NAMES.length; i++)
-        {
-            bindError(mockCtx, MISSING_NAMES[i]);
+        for (String element : MISSING_NAMES) {
+            bindError(mockCtx, element);
         }
         mockCtx.matchAndReturn("hashCode", System.identityHashCode(mockCtx.proxy()));
 

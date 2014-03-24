@@ -51,7 +51,7 @@ import org.apache.commons.vfs2.VFS;
 public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetector
 {
     /** Stores the logger.*/
-    private Log log = LogFactory.getLog(getClass());
+    private final Log log = LogFactory.getLog(getClass());
 
     /**
      * Creates a new instance of {@code VFSFileHandlerReloadingDetector} and

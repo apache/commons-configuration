@@ -375,6 +375,7 @@ public class TestParameters
                 .anyObject(BuilderParameters.class));
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>()
         {
+            @Override
             public Object answer() throws Throwable
             {
                 initializedParams.add(EasyMock.getCurrentArguments()[0]);

@@ -135,6 +135,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      *
      * @return the {@code ReloadingController}
      */
+    @Override
     public ReloadingController getReloadingController()
     {
         return reloadingController;
@@ -214,6 +215,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
     {
         return new ReloadingListener()
         {
+            @Override
             public void reloadingRequired(ReloadingEvent event)
             {
                 resetResult();
@@ -232,6 +234,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
     {
         return new ReloadingDetector()
         {
+            @Override
             public void reloadingPerformed()
             {
                 ReloadingDetector detector = resultReloadingDetector;
@@ -241,6 +244,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
                 }
             }
 
+            @Override
             public boolean isReloadingRequired()
             {
                 ReloadingDetector detector = resultReloadingDetector;

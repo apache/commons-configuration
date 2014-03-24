@@ -48,6 +48,8 @@ import org.apache.commons.configuration.tree.ImmutableNode;
 public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfiguration
     implements FileBasedConfiguration
 {
+    private static final long serialVersionUID = 7456061169617014189L;
+
     /** The wrapped configuration */
     private final HierarchicalConfiguration<ImmutableNode> config;
 
@@ -58,7 +60,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     private final boolean trailing;
 
     /** True if the constructor has finished */
-    private boolean init;
+    private final boolean init;
 
     /**
      * Constructor
@@ -443,11 +445,13 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
         getConfig().clearErrorListeners();
     }
 
+    @Override
     public void write(Writer writer) throws ConfigurationException, IOException
     {
         fetchFileBased().write(writer);
     }
 
+    @Override
     public void read(Reader reader) throws ConfigurationException, IOException
     {
         fetchFileBased().read(reader);

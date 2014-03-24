@@ -101,6 +101,7 @@ public class DefaultListDelimiterHandler extends AbstractListDelimiterHandler
         return delimiter;
     }
 
+    @Override
     public Object escapeList(List<?> values, ValueTransformer transformer)
     {
         Object[] escapedValues = new String[values.size()];

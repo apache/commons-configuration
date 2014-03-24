@@ -62,6 +62,7 @@ class PrefixedKeysIterator implements Iterator<String>
      *
      * @return a flag if there is a next element
      */
+    @Override
     public boolean hasNext()
     {
         return nextElementSet || setNextElement();
@@ -74,6 +75,7 @@ class PrefixedKeysIterator implements Iterator<String>
      * @return the next element in the iteration
      * @throws NoSuchElementException if there is no next element
      */
+    @Override
     public String next()
     {
         if (!nextElementSet && !setNextElement())
@@ -93,6 +95,7 @@ class PrefixedKeysIterator implements Iterator<String>
      * @throws IllegalStateException if {@code hasNext()} has already
      *         been called.
      */
+    @Override
     public void remove()
     {
         if (nextElementSet)

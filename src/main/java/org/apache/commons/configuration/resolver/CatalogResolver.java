@@ -65,7 +65,7 @@ public class CatalogResolver implements EntityResolver
     /**
      * The CatalogManager
      */
-    private CatalogManager manager = new CatalogManager();
+    private final CatalogManager manager = new CatalogManager();
 
     /**
      * The FileSystem in use.
@@ -173,6 +173,7 @@ public class CatalogResolver implements EntityResolver
      * @return An InputSource for the mapped identifier, or null.
      * @throws SAXException if an error occurs.
      */
+    @Override
     public InputSource resolveEntity(String publicId, String systemId)
             throws SAXException
     {
@@ -389,7 +390,7 @@ public class CatalogResolver implements EntityResolver
         private FileSystem fs;
 
         /** FileNameMap to determine the mime type */
-        private FileNameMap fileNameMap = URLConnection.getFileNameMap();
+        private final FileNameMap fileNameMap = URLConnection.getFileNameMap();
 
         /**
          * Load the catalogs.

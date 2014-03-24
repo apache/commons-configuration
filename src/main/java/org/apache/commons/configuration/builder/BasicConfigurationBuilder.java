@@ -341,6 +341,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      * is reset. The double-check idiom for lazy initialization is used (Bloch,
      * Effective Java, item 71).
      */
+    @Override
     public T getConfiguration() throws ConfigurationException
     {
         T resObj = result;
@@ -364,6 +365,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      *
      * @throws IllegalArgumentException if the listener is <b>null</b>
      */
+    @Override
     public void addBuilderListener(BuilderListener l)
     {
         if (l == null)
@@ -378,6 +380,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      * {@inheritDoc} If the specified listener is not registered at this object,
      * this method has no effect.
      */
+    @Override
     public void removeBuilderListener(BuilderListener l)
     {
         builderListeners.removeListener(l);
@@ -561,34 +564,40 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     {
         return new BeanDeclaration()
         {
+            @Override
             public Map<String, Object> getNestedBeanDeclarations()
             {
                 // no nested beans
                 return Collections.emptyMap();
             }
 
+            @Override
             public Collection<ConstructorArg> getConstructorArgs()
             {
                 // no constructor arguments
                 return Collections.emptySet();
             }
 
+            @Override
             public Map<String, Object> getBeanProperties()
             {
                 // the properties are equivalent to the parameters
                 return params;
             }
 
+            @Override
             public Object getBeanFactoryParameter()
             {
                 return null;
             }
 
+            @Override
             public String getBeanFactoryName()
             {
                 return null;
             }
 
+            @Override
             public String getBeanClassName()
             {
                 return getResultClass().getName();

@@ -847,12 +847,14 @@ public class TestPropertiesConfiguration
         conf.clear();
         conf.setIOFactory(new PropertiesConfiguration.IOFactory()
         {
+            @Override
             public PropertiesConfiguration.PropertiesReader createPropertiesReader(
                     Reader in)
             {
                 return new PropertiesReaderTestImpl(in, propertyCount);
             }
 
+            @Override
             public PropertiesConfiguration.PropertiesWriter createPropertiesWriter(
                     Writer out, ListDelimiterHandler handler)
             {
@@ -876,12 +878,14 @@ public class TestPropertiesConfiguration
         final MutableObject<Writer> propertiesWriter = new MutableObject<Writer>();
         conf.setIOFactory(new PropertiesConfiguration.IOFactory()
         {
+            @Override
             public PropertiesConfiguration.PropertiesReader createPropertiesReader(
                     Reader in)
             {
                 throw new UnsupportedOperationException("Unexpected call!");
             }
 
+            @Override
             public PropertiesConfiguration.PropertiesWriter createPropertiesWriter(
                     Writer out, ListDelimiterHandler handler)
             {
@@ -923,9 +927,8 @@ public class TestPropertiesConfiguration
             String s;
             while ((s = in.readLine()) != null)
             {
-                for (int i = 0; i < separatorTests.length; i++)
-                {
-                    if (separatorTests[i].equals(s))
+                for (String separatorTest : separatorTests) {
+                    if (separatorTest.equals(s))
                     {
                         foundLines.add(s);
                     }
@@ -1229,10 +1232,10 @@ public class TestPropertiesConfiguration
     static class MockHttpURLStreamHandler extends URLStreamHandler
     {
         /** Stores the response code.*/
-        private int responseCode;
+        private final int responseCode;
 
         /** Stores the output file.*/
-        private File outputFile;
+        private final File outputFile;
 
         /** Stores the connection.*/
         private MockHttpURLConnection connection;

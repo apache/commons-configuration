@@ -139,6 +139,7 @@ public class TestPeriodicReloadingTrigger
         EasyMock.expectLastCall().andAnswer(
                 new IAnswer<ScheduledFuture<Void>>()
                 {
+                    @Override
                     public ScheduledFuture<Void> answer() throws Throwable
                     {
                         refTask.setValue((Runnable) EasyMock

@@ -387,14 +387,12 @@ public class TestDynamicCombinedConfiguration
         String rows = config.getString("rowsPerPage");
         assertEquals("Incorrect value for rowsPerPage", "25", rows);
 
-        for (int i = 0; i < testThreads.length; ++i)
-        {
-            testThreads[i].shutdown();
-            testThreads[i].join();
+        for (ReaderThread testThread : testThreads) {
+            testThread.shutdown();
+            testThread.join();
         }
-        for (int i = 0; i < testThreads.length; ++i)
-        {
-            assertFalse(testThreads[i].failed());
+        for (ReaderThread testThread : testThreads) {
+            assertFalse(testThread.failed());
         }
         assertEquals("ID0002", config.getString("Product/FIIndex/FI[@id='123456782']"));
         output.delete();
@@ -553,6 +551,7 @@ public class TestDynamicCombinedConfiguration
             id.set(value);
         }
 
+        @Override
         public String lookup(String key)
         {
             if (key == null || !key.equals("Id"))

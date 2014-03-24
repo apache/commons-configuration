@@ -187,6 +187,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
         }
     }
 
+    @Override
     public void read(Reader in) throws ConfigurationException
     {
         PropertyListParser parser = new PropertyListParser(in);
@@ -201,6 +202,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
         }
     }
 
+    @Override
     public void write(Writer out) throws ConfigurationException
     {
         PrintWriter writer = new PrintWriter(out);
@@ -421,9 +423,8 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
     {
         StringBuilder buf = new StringBuilder();
 
-        for (int i = 0; i < DATE_PARSERS.length; i++)
-        {
-            DATE_PARSERS[i].formatComponent(buf, cal);
+        for (DateComponentParser element : DATE_PARSERS) {
+            element.formatComponent(buf, cal);
         }
 
         return buf.toString();
@@ -537,13 +538,13 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
     private static class DateFieldParser extends DateComponentParser
     {
         /** Stores the calendar field to be processed. */
-        private int calendarField;
+        private final int calendarField;
 
         /** Stores the length of this field. */
-        private int length;
+        private final int length;
 
         /** An optional offset to add to the calendar field. */
-        private int offset;
+        private final int offset;
 
         /**
          * Creates a new instance of {@code DateFieldParser}.
@@ -604,7 +605,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
     private static class DateSeparatorParser extends DateComponentParser
     {
         /** Stores the separator. */
-        private String separator;
+        private final String separator;
 
         /**
          * Creates a new instance of {@code DateSeparatorParser} and sets

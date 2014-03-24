@@ -72,6 +72,7 @@ class ImmutableConfigurationInvocationHandler implements InvocationHandler
      * {@inheritDoc} This implementation delegates to the wrapped configuration
      * object. Result objects are wrapped if necessary.
      */
+    @Override
     public Object invoke(Object proxy, Method method, Object[] args)
             throws Throwable
     {
@@ -119,6 +120,7 @@ class ImmutableConfigurationInvocationHandler implements InvocationHandler
          * {@inheritDoc} This implementation just delegates to the underlying
          * iterator.
          */
+        @Override
         public boolean hasNext()
         {
             return wrappedIterator.hasNext();
@@ -128,6 +130,7 @@ class ImmutableConfigurationInvocationHandler implements InvocationHandler
          * {@inheritDoc} This implementation just delegates to the underlying
          * iterator.
          */
+        @Override
         public Object next()
         {
             return wrappedIterator.next();
@@ -137,6 +140,7 @@ class ImmutableConfigurationInvocationHandler implements InvocationHandler
          * {@inheritDoc} This implementation just throws an exception: removing
          * objects is not supported.
          */
+        @Override
         public void remove()
         {
             throw new UnsupportedOperationException(

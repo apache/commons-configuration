@@ -182,6 +182,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
         ReloadingDetectorFactory detectorFactory =
                 new ReloadingDetectorFactory()
                 {
+                    @Override
                     public ReloadingDetector createReloadingDetector(
                             FileHandler handler,
                             FileBasedBuilderParametersImpl params)
@@ -235,6 +236,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
         ReloadingDetectorFactory detectorFactory =
                 new ReloadingDetectorFactory()
                 {
+                    @Override
                     public ReloadingDetector createReloadingDetector(
                             FileHandler handler,
                             FileBasedBuilderParametersImpl params)

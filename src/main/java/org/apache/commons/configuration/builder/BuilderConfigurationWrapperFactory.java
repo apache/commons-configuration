@@ -269,6 +269,7 @@ public class BuilderConfigurationWrapperFactory
          * @return the return value of the method
          * @throws Throwable if an error occurs
          */
+        @Override
         public Object invoke(Object proxy, Method method, Object[] args)
                 throws Throwable
         {

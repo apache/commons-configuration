@@ -167,6 +167,7 @@ public class BaseConfigurationBuilderProvider implements
      * create a new builder instance using reflection and to configure it with
      * parameter values defined by the passed in {@code BeanDeclaration}.
      */
+    @Override
     public ConfigurationBuilder<? extends Configuration> getConfigurationBuilder(
             ConfigurationDeclaration decl) throws ConfigurationException
     {

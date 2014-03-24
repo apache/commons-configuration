@@ -628,6 +628,7 @@ public class TestCombinedConfigurationBuilder
                                 attrs))).registerProvider(tagName,
                         new ConfigurationBuilderProvider()
                         {
+                            @Override
                             public ConfigurationBuilder<? extends Configuration> getConfigurationBuilder(
                                     ConfigurationDeclaration decl)
                                     throws ConfigurationException
@@ -1322,6 +1323,7 @@ public class TestCombinedConfigurationBuilder
             this.propertyKey = propertyKey;
         }
 
+        @Override
         public ConfigurationBuilder<? extends Configuration> getConfigurationBuilder(
                 ConfigurationDeclaration decl) throws ConfigurationException
         {
@@ -1444,6 +1446,7 @@ public class TestCombinedConfigurationBuilder
             map.put("test_key", "test.value");
         }
 
+        @Override
         public String lookup(String key)
         {
             return map.get(key);
@@ -1459,6 +1462,7 @@ public class TestCombinedConfigurationBuilder
         private final List<ConfigurationBuilder<? extends Configuration>> builders =
                 new LinkedList<ConfigurationBuilder<? extends Configuration>>();
 
+        @Override
         public void builderReset(
                 ConfigurationBuilder<? extends Configuration> builder)
         {

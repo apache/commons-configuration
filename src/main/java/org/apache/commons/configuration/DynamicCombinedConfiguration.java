@@ -65,6 +65,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DynamicCombinedConfiguration extends CombinedConfiguration
 {
+    private static final long serialVersionUID = 680097981171908142L;
+
     /**
      * Stores the current configuration for each involved thread. This value is
      * set at the beginning of an operation and removed at the end.
@@ -77,10 +79,10 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             new ConcurrentHashMap<String, CombinedConfiguration>();
 
     /** Stores a list with the contained configurations. */
-    private List<ConfigData> configurations = new ArrayList<ConfigData>();
+    private final List<ConfigData> configurations = new ArrayList<ConfigData>();
 
     /** Stores a map with the named configurations. */
-    private Map<String, Configuration> namedConfigurations =
+    private final Map<String, Configuration> namedConfigurations =
             new HashMap<String, Configuration>();
 
     /** The key pattern for the CombinedConfiguration map */
@@ -1049,13 +1051,13 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     static class ConfigData
     {
         /** Stores a reference to the configuration. */
-        private Configuration configuration;
+        private final Configuration configuration;
 
         /** Stores the name under which the configuration is stored. */
-        private String name;
+        private final String name;
 
         /** Stores the at string.*/
-        private String at;
+        private final String at;
 
         /**
          * Creates a new instance of {@code ConfigData} and initializes

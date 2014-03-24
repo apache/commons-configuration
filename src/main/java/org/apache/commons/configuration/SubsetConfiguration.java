@@ -310,6 +310,7 @@ public class SubsetConfiguration extends AbstractConfiguration
          *
          * @return a flag whether there are more elements
          */
+        @Override
         public boolean hasNext()
         {
             return parentIterator.hasNext();
@@ -322,6 +323,7 @@ public class SubsetConfiguration extends AbstractConfiguration
          *
          * @return the next element
          */
+        @Override
         public String next()
         {
             return getChildKey(parentIterator.next());
@@ -331,6 +333,7 @@ public class SubsetConfiguration extends AbstractConfiguration
          * Removes the current element from the iteration. Delegates to the
          * parent iterator.
          */
+        @Override
         public void remove()
         {
             parentIterator.remove();

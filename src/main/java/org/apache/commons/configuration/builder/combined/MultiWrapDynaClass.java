@@ -61,16 +61,19 @@ class MultiWrapDynaClass implements DynaClass
     /**
      * {@inheritDoc} The name of this class is not relevant.
      */
+    @Override
     public String getName()
     {
         return null;
     }
 
+    @Override
     public DynaProperty getDynaProperty(String name)
     {
         return namedProperties.get(name);
     }
 
+    @Override
     public DynaProperty[] getDynaProperties()
     {
         return properties.toArray(EMPTY_PROPS);
@@ -80,6 +83,7 @@ class MultiWrapDynaClass implements DynaClass
      * {@inheritDoc} This implementation always throws an exception because it
      * is not possible to instantiate a bean of multiple classes.
      */
+    @Override
     public DynaBean newInstance() throws IllegalAccessException,
             InstantiationException
     {

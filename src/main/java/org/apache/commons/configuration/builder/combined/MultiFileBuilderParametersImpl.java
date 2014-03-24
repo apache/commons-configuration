@@ -119,6 +119,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters
         return filePattern;
     }
 
+    @Override
     public MultiFileBuilderParametersImpl setFilePattern(String p)
     {
         filePattern = p;
@@ -135,6 +136,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters
         return managedBuilderParameters;
     }
 
+    @Override
     public MultiFileBuilderParametersImpl setManagedBuilderParameters(
             BuilderParameters p)
     {

@@ -103,6 +103,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * (e.g. for lookup objects) are stored as defensive copies, so the
      * original data cannot be modified.
      */
+    @Override
     public Map<String, Object> getParameters()
     {
         HashMap<String, Object> result =
@@ -127,6 +128,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @param log the {@code Log} for the configuration produced by this builder
      * @return a reference to this object for method chaining
      */
+    @Override
     public BasicBuilderParameters setLogger(Log log)
     {
         return setProperty(PROP_LOGGER, log);
@@ -143,6 +145,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @param b the value of the property
      * @return a reference to this object for method chaining
      */
+    @Override
     public BasicBuilderParameters setThrowExceptionOnMissing(boolean b)
     {
         return setProperty(PROP_THROW_EXCEPTION_ON_MISSING, Boolean.valueOf(b));
@@ -159,6 +162,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @return a reference to this object for method chaining
      * @see AbstractConfiguration#setListDelimiterHandler(ListDelimiterHandler)
      */
+    @Override
     public BasicBuilderParameters setListDelimiterHandler(
             ListDelimiterHandler handler)
     {
@@ -169,6 +173,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * {@inheritDoc} The passed in {@code ConfigurationInterpolator} is set
      * without modifications.
      */
+    @Override
     public BasicBuilderParameters setInterpolator(ConfigurationInterpolator ci)
     {
         return setProperty(PROP_INTERPOLATOR, ci);
@@ -179,6 +184,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * <b>null</b> argument causes all prefix lookups to be removed from the
      * internal parameters map.
      */
+    @Override
     public BasicBuilderParameters setPrefixLookups(
             Map<String, ? extends Lookup> lookups)
     {
@@ -199,6 +205,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * <b>null</b> argument causes all default lookups to be removed from the
      * internal parameters map.
      */
+    @Override
     public BasicBuilderParameters setDefaultLookups(
             Collection<? extends Lookup> lookups)
     {
@@ -218,6 +225,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * {@inheritDoc} This implementation stores the passed in
      * {@code ConfigurationInterpolator} object in the internal parameters map.
      */
+    @Override
     public BasicBuilderParameters setParentInterpolator(
             ConfigurationInterpolator parent)
     {
@@ -228,6 +236,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * {@inheritDoc} This implementation stores the passed in
      * {@code Synchronizer} object in the internal parameters map.
      */
+    @Override
     public BasicBuilderParameters setSynchronizer(Synchronizer sync)
     {
         return setProperty(PROP_SYNCHRONIZER, sync);
@@ -237,6 +246,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * {@inheritDoc} This implementation stores the passed in
      * {@code ConversionHandler} object in the internal parameters map.
      */
+    @Override
     public BasicBuilderParameters setConversionHandler(ConversionHandler handler)
     {
         return setProperty(PROP_CONVERSION_HANDLER, handler);
@@ -249,6 +259,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * configuration object. The {@code fetchBeanHelper()} method can be used to
      * obtain the {@code BeanHelper} instance from a parameters map.
      */
+    @Override
     public BasicBuilderParameters setBeanHelper(BeanHelper beanHelper)
     {
         return setProperty(PROP_BEAN_HELPER, beanHelper);

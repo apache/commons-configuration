@@ -17,91 +17,91 @@
 package org.apache.commons.configuration.tree;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Test class for NodeAddData.
  *
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public class TestNodeAddData
 {
+    /** Constant for the default parent node used for testing. */
+    private static final ConfigurationNode TEST_PARENT = new DefaultConfigurationNode(
+            "parent");
+
     /** Constant for the name of the new node. */
     private static final String TEST_NODENAME = "testNewNode";
 
     /** Constant for the name of a path node. */
     private static final String PATH_NODE_NAME = "PATHNODE";
 
-    /** A default parent node. */
-    private static ImmutableNode parentNode;
+    /** Constant for the number of path nodes to be added. */
+    private static final int PATH_NODE_COUNT = 10;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception
+    /** The object to be tested. */
+    NodeAddData addData;
+
+    @Before
+    public void setUp() throws Exception
     {
-        parentNode = new ImmutableNode.Builder().name("testParent").create();
+        addData = new NodeAddData(TEST_PARENT, TEST_NODENAME);
     }
 
     /**
-     * Tests whether the constructor can handle a null collection of path nodes.
+     * Tests the default values of an uninitialized instance.
      */
     @Test
-    public void testPathNodesNull()
+    public void testUninitialized()
     {
-        NodeAddData<ImmutableNode> data =
-                new NodeAddData<ImmutableNode>(parentNode, TEST_NODENAME,
-                        false, null);
-        assertTrue("Got path nodes", data.getPathNodes().isEmpty());
+        addData = new NodeAddData();
+        assertNull("A parent is set", addData.getParent());
+        assertNull("Node has a name", addData.getNewNodeName());
+        assertFalse("Attribute flag is set", addData.isAttribute());
+        assertTrue("Path nodes are not empty", addData.getPathNodes().isEmpty());
     }
 
     /**
-     * Tests whether the collection with path nodes cannot be modified if no
-     * data is available.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testPathNodesNullModify()
-    {
-        NodeAddData<ImmutableNode> data =
-                new NodeAddData<ImmutableNode>(parentNode, TEST_NODENAME,
-                        false, null);
-        data.getPathNodes().add("test");
-    }
-
-    /**
-     * Tests whether a defensive copy of the collection with path nodes is
-     * created.
+     * Tests the constructor that initializes the most important fields.
      */
     @Test
-    public void testInitPathNodesDefensiveCopy()
+    public void testInitialized()
     {
-        List<String> pathNodes = new ArrayList<String>();
-        pathNodes.add(PATH_NODE_NAME);
-        NodeAddData<ImmutableNode> data =
-                new NodeAddData<ImmutableNode>(parentNode, TEST_NODENAME,
-                        false, pathNodes);
-        pathNodes.add("anotherNode");
-        assertEquals("Wrong number of path nodes", 1, data.getPathNodes()
+        assertSame("Wrong parent", TEST_PARENT, addData.getParent());
+        assertEquals("Wrong node name", TEST_NODENAME, addData.getNewNodeName());
+        assertFalse("Attribute flag is set", addData.isAttribute());
+        assertTrue("Path nodes are not empty", addData.getPathNodes().isEmpty());
+    }
+
+    /**
+     * Tests adding path nodes.
+     */
+    @Test
+    public void testAddPathNode()
+    {
+        for (int i = 0; i < PATH_NODE_COUNT; i++)
+        {
+            addData.addPathNode(PATH_NODE_NAME + i);
+        }
+
+        List<String> nodes = addData.getPathNodes();
+        assertEquals("Incorrect number of path nodes", PATH_NODE_COUNT, nodes
                 .size());
-        assertEquals("Wrong path node", PATH_NODE_NAME, data.getPathNodes()
-                .get(0));
-    }
-
-    /**
-     * Tests that the collection with path nodes cannot be modified if data is
-     * available.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testPathNodesDefinedModify()
-    {
-        NodeAddData<ImmutableNode> data =
-                new NodeAddData<ImmutableNode>(parentNode, TEST_NODENAME,
-                        false, Collections.singleton(PATH_NODE_NAME));
-        data.getPathNodes().add("anotherNode");
+        for (int i = 0; i < PATH_NODE_COUNT; i++)
+        {
+            assertEquals("Wrong path node at position" + i, PATH_NODE_NAME + i,
+                    nodes.get(i));
+        }
     }
 }

@@ -59,8 +59,9 @@ public class TestConfigurationMap
     public void setUp() throws Exception
     {
         BaseConfiguration configuration = new BaseConfiguration();
-        for(int i = 0; i < properties.length ; i++)
+        for(int i = 0; i < properties.length ; i++) {
             configuration.setProperty(properties[i], values[i]);
+        }
         map = new ConfigurationMap(configuration);
     }
 

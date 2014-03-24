@@ -42,6 +42,7 @@ public enum DummyLookup implements Lookup
     /**
      * {@inheritDoc} This implementation always returns <b>null</b>.
      */
+    @Override
     public Object lookup(String variable)
     {
         return null;

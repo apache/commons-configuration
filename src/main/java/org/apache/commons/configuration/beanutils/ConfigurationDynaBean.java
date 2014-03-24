@@ -76,6 +76,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         }
     }
 
+    @Override
     public void set(String name, Object value)
     {
         if (LOG.isTraceEnabled())
@@ -110,6 +111,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         }
     }
 
+    @Override
     public Object get(String name)
     {
         if (LOG.isTraceEnabled())
@@ -141,6 +143,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         return result;
     }
 
+    @Override
     public boolean contains(String name, String key)
     {
         Configuration subset = getConfiguration().subset(name);
@@ -152,6 +155,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         return subset.containsKey(key);
     }
 
+    @Override
     public Object get(String name, int index)
     {
         if (!checkIndexedProperty(name))
@@ -164,6 +168,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         return list.get(index);
     }
 
+    @Override
     public Object get(String name, String key)
     {
         Configuration subset = getConfiguration().subset(name);
@@ -175,17 +180,20 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         return subset.getProperty(key);
     }
 
+    @Override
     public DynaClass getDynaClass()
     {
         return new ConfigurationDynaClass(getConfiguration());
     }
 
+    @Override
     public void remove(String name, String key)
     {
         Configuration subset = new SubsetConfiguration(getConfiguration(), name, PROPERTY_DELIMITER);
         subset.setProperty(key, null);
     }
 
+    @Override
     public void set(String name, int index, Object value)
     {
         if (!checkIndexedProperty(name) && index > 0)
@@ -215,6 +223,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         }
     }
 
+    @Override
     public void set(String name, String key, Object value)
     {
         getConfiguration().setProperty(name + "." + key, value);

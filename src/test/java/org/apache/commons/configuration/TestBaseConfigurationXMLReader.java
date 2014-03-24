@@ -134,10 +134,9 @@ public class TestBaseConfigurationXMLReader
     private void check(JXPathContext ctx, String path, String[] values)
     {
         Iterator<?> it = ctx.iterate(path);
-        for (int i = 0; i < values.length; i++)
-        {
+        for (String value : values) {
             assertTrue("Too few values", it.hasNext());
-            assertEquals("Wrong property value", values[i], it.next());
+            assertEquals("Wrong property value", value, it.next());
         }
         assertFalse("Too many values", it.hasNext());
     }

@@ -85,6 +85,7 @@ public class TestReloadingController
         l.reloadingRequired(EasyMock.anyObject(ReloadingEvent.class));
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>()
         {
+            @Override
             public Object answer() throws Throwable
             {
                 evRef.setValue((ReloadingEvent) EasyMock.getCurrentArguments()[0]);

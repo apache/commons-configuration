@@ -31,6 +31,8 @@ import org.apache.log4j.ConsoleAppender;
  */
 public class Logging extends Log4JLogger
 {
+    private static final long serialVersionUID = 8619242753795694874L;
+
     /**
      * The fully qualified name of the Log4JLogger class.
      */

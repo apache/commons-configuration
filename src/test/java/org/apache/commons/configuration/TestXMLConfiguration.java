@@ -88,11 +88,11 @@ public class TestXMLConfiguration
     static final String PROP_FACTORY = "javax.xml.transform.TransformerFactory";
 
     /** The File that we test with */
-    private String testProperties = ConfigurationAssert.getTestFile("test.xml").getAbsolutePath();
-    private String testProperties2 = ConfigurationAssert.getTestFile("testDigesterConfigurationInclude1.xml").getAbsolutePath();
-    private File testSaveConf = ConfigurationAssert.getOutFile("testsave.xml");
-    private File testSaveFile = ConfigurationAssert.getOutFile("testsample2.xml");
-    private String testFile2 = ConfigurationAssert.getTestFile("sample.xml").getAbsolutePath();
+    private final String testProperties = ConfigurationAssert.getTestFile("test.xml").getAbsolutePath();
+    private final String testProperties2 = ConfigurationAssert.getTestFile("testDigesterConfigurationInclude1.xml").getAbsolutePath();
+    private final File testSaveConf = ConfigurationAssert.getOutFile("testsave.xml");
+    private final File testSaveFile = ConfigurationAssert.getOutFile("testsample2.xml");
+    private final String testFile2 = ConfigurationAssert.getTestFile("sample.xml").getAbsolutePath();
 
     /** Constant for the number of test threads. */
     private static final int THREAD_COUNT = 5;
@@ -1540,9 +1540,8 @@ public class TestXMLConfiguration
             assertTrue("Property not found", config.getProperty("test.short") != null);
         }
 
-        for (int i = 0; i < testThreads.length; ++i)
-        {
-            testThreads[i].join();
+        for (Thread testThread : testThreads) {
+            testThread.join();
         }
     }
 

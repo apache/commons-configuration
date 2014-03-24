@@ -1287,6 +1287,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     {
         defBuilder.addBuilderListener(new BuilderListener()
         {
+            @Override
             public void builderReset(
                     ConfigurationBuilder<? extends Configuration> builder)
             {
@@ -1570,6 +1571,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         {
             changeListener = new BuilderListener()
             {
+                @Override
                 public void builderReset(
                         ConfigurationBuilder<? extends Configuration> builder)
                 {
@@ -1598,9 +1600,8 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                     .hasNext();)
             {
                 String nodeName = it.next().getRootElementName();
-                for (int i = 0; i < CONFIG_SECTIONS.length; i++)
-                {
-                    if (CONFIG_SECTIONS[i].equals(nodeName))
+                for (String element : CONFIG_SECTIONS) {
+                    if (element.equals(nodeName))
                     {
                         it.remove();
                         break;

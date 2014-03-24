@@ -60,7 +60,7 @@ public class ConstantLookup implements Lookup
     private static Map<String, Object> constantCache = new HashMap<String, Object>();
 
     /** The logger. */
-    private Log log = LogFactory.getLog(getClass());
+    private final Log log = LogFactory.getLog(getClass());
 
     /**
      * Tries to resolve the specified variable. The passed in variable name is
@@ -74,6 +74,7 @@ public class ConstantLookup implements Lookup
      * @return the value of this variable or <b>null</b> if it cannot be
      * resolved
      */
+    @Override
     public Object lookup(String var)
     {
         if (var == null)
