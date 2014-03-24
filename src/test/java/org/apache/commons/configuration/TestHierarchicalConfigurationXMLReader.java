@@ -25,6 +25,7 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXSource;
 
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.jxpath.JXPathContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +43,7 @@ public class TestHierarchicalConfigurationXMLReader
     private static final String TEST_FILE = ConfigurationAssert.getTestFile(
             "testHierarchicalXMLConfiguration.xml").getAbsolutePath();
 
-    private HierarchicalConfigurationXMLReader parser;
+    private HierarchicalConfigurationXMLReader<ImmutableNode> parser;
 
     @Before
     public void setUp() throws Exception
@@ -50,7 +51,7 @@ public class TestHierarchicalConfigurationXMLReader
         XMLConfiguration config = new XMLConfiguration();
         FileHandler handler = new FileHandler(config);
         handler.load(TEST_FILE);
-        parser = new HierarchicalConfigurationXMLReader(config);
+        parser = new HierarchicalConfigurationXMLReader<ImmutableNode>(config);
     }
 
     @Test
