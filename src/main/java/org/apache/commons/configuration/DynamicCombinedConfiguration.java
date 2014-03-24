@@ -36,6 +36,7 @@ import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
+import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.NodeCombiner;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -60,9 +61,6 @@ import org.apache.commons.logging.LogFactory;
  * </p>
  *
  * @since 1.6
- * @author <a
- *         href="http://commons.apache.org/configuration/team-list.html">Commons
- *         Configuration team</a>
  * @version $Id$
  */
 public class DynamicCombinedConfiguration extends CombinedConfiguration
@@ -386,7 +384,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    protected void setRootNodeInternal(ConfigurationNode rootNode)
+    protected void setRootNodeInternal(ImmutableNode rootNode)
     {
         if (configs != null)
         {
@@ -663,25 +661,25 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    protected void addNodesInternal(String key, Collection<? extends ConfigurationNode> nodes)
+    protected void addNodesInternal(String key, Collection<? extends ImmutableNode> nodes)
     {
         this.getCurrentConfig().addNodes(key, nodes);
     }
 
     @Override
-    public SubnodeConfiguration configurationAt(String key, boolean supportUpdates)
+    public HierarchicalConfiguration<ImmutableNode> configurationAt(String key, boolean supportUpdates)
     {
         return this.getCurrentConfig().configurationAt(key, supportUpdates);
     }
 
     @Override
-    public SubnodeConfiguration configurationAt(String key)
+    public HierarchicalConfiguration<ImmutableNode> configurationAt(String key)
     {
         return this.getCurrentConfig().configurationAt(key);
     }
 
     @Override
-    public List<SubnodeConfiguration> configurationsAt(String key)
+    public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(String key)
     {
         return this.getCurrentConfig().configurationsAt(key);
     }
