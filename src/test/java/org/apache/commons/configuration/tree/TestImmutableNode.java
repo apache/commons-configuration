@@ -315,8 +315,21 @@ public class TestImmutableNode
      */
     private ImmutableNode createDefaultNode(Object value)
     {
+        return createDefaultNode(NAME, value);
+    }
+
+    /**
+     * Creates a default node instance with a variable name and value that can
+     * be used by tests for updating properties.
+     *
+     * @param name the name of the node
+     * @param value the value of the node
+     * @return the default node instance
+     */
+    private ImmutableNode createDefaultNode(String name, Object value)
+    {
         ImmutableNode.Builder builder = new ImmutableNode.Builder(1);
-        return builder.name(NAME).addChild(createChild())
+        return builder.name(name).addChild(createChild())
                 .addAttribute("testAttr", "anotherTest").value(value).create();
     }
 
@@ -354,6 +367,21 @@ public class TestImmutableNode
     {
         ImmutableNode node = createDefaultNode("test");
         ImmutableNode node2 = node.setValue(VALUE);
+        checkUpdatedNode(node, node2);
+        assertSame("Different children", node.getChildren(),
+                node2.getChildren());
+        assertSame("Different attributes", node.getAttributes(),
+                node2.getAttributes());
+    }
+
+    /**
+     * Tests whether the name of a node can be changed for a new instance.
+     */
+    @Test
+    public void testSetName()
+    {
+        ImmutableNode node = createDefaultNode("anotherName", VALUE);
+        ImmutableNode node2 = node.setName(NAME);
         checkUpdatedNode(node, node2);
         assertSame("Different children", node.getChildren(),
                 node2.getChildren());

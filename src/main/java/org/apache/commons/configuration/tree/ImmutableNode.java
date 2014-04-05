@@ -40,6 +40,7 @@ import java.util.Map;
  * </p>
  *
  * @version $Id$
+ * @since 2.0
  */
 public class ImmutableNode
 {
@@ -109,6 +110,19 @@ public class ImmutableNode
     public Map<String, Object> getAttributes()
     {
         return attributes;
+    }
+
+    /**
+     * Creates a new {@code ImmutableNode} instance which is a copy of this
+     * object with the name changed to the passed in value.
+     *
+     * @param name the name of the newly created node
+     * @return the new node with the changed name
+     */
+    public ImmutableNode setName(String name)
+    {
+        return new Builder(children, attributes).name(name).value(value)
+                .create();
     }
 
     /**
