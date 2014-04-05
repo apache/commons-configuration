@@ -258,7 +258,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     public XMLConfiguration(HierarchicalConfiguration<ImmutableNode> c)
     {
         super(c);
-        rootElementName = getRootNode().getNodeName();
+        rootElementName =
+                (c != null) ? c.getRootElementName() : getRootNode()
+                        .getNodeName();
         setLogger(LogFactory.getLog(XMLConfiguration.class));
     }
 
@@ -556,18 +558,16 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         MutableObject<String> rootValue = new MutableObject<String>();
         Map<ImmutableNode, Object> elemRefMap =
                 elemRefs ? new HashMap<ImmutableNode, Object>() : null;
-        constructHierarchy(rootBuilder, rootValue,
-                document.getDocumentElement(), elemRefMap, true, 0);
-        ImmutableNode top = rootBuilder.value(rootValue.getValue()).create();
-        // TODO handle merge of root node
-        getModel().addNodes(null, top.getChildren(), this);
-
-        if (elemRefs)
-        {
-            // TODO set references in atomic operation
-            elemRefMap.put(getRootNode(), docHelper);
-            getSubConfigurationParentModel().addReferences(elemRefMap);
-        }
+        Map<String, String> attributes =
+                constructHierarchy(rootBuilder, rootValue,
+                        document.getDocumentElement(), elemRefMap, true, 0);
+        attributes.remove(ATTR_SPACE_INTERNAL);
+        ImmutableNode top =
+                rootBuilder.value(rootValue.getValue())
+                        .addAttributes(attributes).create();
+        getSubConfigurationParentModel().mergeRoot(top,
+                document.getDocumentElement().getTagName(), elemRefMap,
+                elemRefs ? docHelper : null, this);
     }
 
     /**

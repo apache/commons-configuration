@@ -344,8 +344,8 @@ public class TestXMLConfiguration
         conf.setProperty("foo[@bar]", "value");
         assertEquals("foo[@bar]", "value", conf.getProperty("foo[@bar]"));
 
-        conf.setProperty("name1","value1");
-        assertEquals("value1",conf.getProperty("name1"));
+        conf.setProperty("name1", "value1");
+        assertEquals("value1", conf.getProperty("name1"));
     }
 
     /**
@@ -924,8 +924,8 @@ public class TestXMLConfiguration
 
         StringWriter out = new StringWriter();
         handler.save(out);
-        assertTrue("Encoding was not written to file", out.toString().indexOf(
-                "encoding=\"" + ENCODING + "\"") >= 0);
+        assertThat("Encoding was not written to file", out.toString(),
+                containsString("encoding=\"" + ENCODING + "\""));
     }
 
     /**
@@ -942,8 +942,8 @@ public class TestXMLConfiguration
 
         StringWriter out = new StringWriter();
         handler.save(out);
-        assertTrue("Encoding was written to file", out.toString().indexOf(
-                "encoding=\"UTF-") >= 0);
+        assertThat("Encoding was written to file", out.toString(),
+                containsString("encoding=\"UTF-"));
     }
 
     /**
@@ -959,7 +959,8 @@ public class TestXMLConfiguration
         assertEquals("Wrong system ID", SYSTEM_ID, conf.getSystemID());
         StringWriter out = new StringWriter();
         new FileHandler(conf).save(out);
-        assertTrue("Did not find DOCTYPE", out.toString().indexOf(DOCTYPE) >= 0);
+        assertThat("Did not find DOCTYPE", out.toString(),
+                containsString(DOCTYPE));
     }
 
     /**
@@ -1336,7 +1337,8 @@ public class TestXMLConfiguration
     public void testSaveAfterCreateWithCopyConstructor()
             throws ConfigurationException
     {
-        HierarchicalConfiguration hc = conf.configurationAt("element2");
+        HierarchicalConfiguration<ImmutableNode> hc =
+                conf.configurationAt("element2");
         conf = new XMLConfiguration(hc);
         saveTestConfig();
         XMLConfiguration checkConfig = checkSavedConfig();
@@ -1384,6 +1386,18 @@ public class TestXMLConfiguration
         load(copy, testSaveConf.getAbsolutePath());
         assertEquals("Wrong name of root element after save", rootName, copy
                 .getRootElementName());
+    }
+
+    /**
+     * Tests the copy constructor for null input.
+     */
+    @Test
+    public void testCopyNull()
+    {
+        conf = new XMLConfiguration(null);
+        assertTrue("Not empty", conf.isEmpty());
+        assertEquals("Wrong root element name", "configuration",
+                conf.getRootElementName());
     }
 
     /**
@@ -1522,8 +1536,8 @@ public class TestXMLConfiguration
         StringWriter writer = new StringWriter();
         new FileHandler(conf).save(writer);
         String content = writer.toString();
-        assertTrue("Path not found: " + content,
-                content.indexOf("<path>C:\\Temp</path>") >= 0);
+        assertThat("Path not found: ", content,
+                containsString("<path>C:\\Temp</path>"));
         saveTestConfig();
         XMLConfiguration conf2 = new XMLConfiguration();
         load(conf2, testSaveConf.getAbsolutePath());
@@ -1625,18 +1639,6 @@ public class TestXMLConfiguration
         assertEquals("PublicID not set", PUBLIC_ID, conf.getPublicID());
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE, Methods.BEGIN_READ,
                 Methods.END_READ);
-    }
-
-    /**
-     * Tests whether access to the document is synchronized.
-     */
-    @Test
-    public void testGetDocumentSynchronized()
-    {
-        SynchronizerTestImpl sync = new SynchronizerTestImpl();
-        conf.setSynchronizer(sync);
-        assertNotNull("No document", conf.getDocument());
-        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
     /**
