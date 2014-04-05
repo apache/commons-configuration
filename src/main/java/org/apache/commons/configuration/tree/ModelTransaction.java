@@ -118,6 +118,9 @@ class ModelTransaction
      */
     private final SortedMap<Integer, Map<ImmutableNode, Operations>> operations;
 
+    /** A map with reference objects to be added during this transaction. */
+    private Map<ImmutableNode, Object> newReferences;
+
     /** The new root node. */
     private ImmutableNode newRoot;
 
@@ -213,6 +216,19 @@ class ModelTransaction
     }
 
     /**
+     * Adds an operation for adding multiple attributes to a target node.
+     *
+     * @param target the target node
+     * @param attributes the map with attributes to be set
+     */
+    public void addAttributesOperation(ImmutableNode target,
+            Map<String, Object> attributes)
+    {
+        fetchOperations(target, LEVEL_UNKNOWN).addOperation(
+                new AddAttributesOperation(attributes));
+    }
+
+    /**
      * Adds an operation for removing a child node of a given node.
      *
      * @param parent the parent node
@@ -261,6 +277,40 @@ class ModelTransaction
     }
 
     /**
+     * Adds an operation for changing the name of a target node.
+     *
+     * @param target the target node
+     * @param newName the new name for this node
+     */
+    public void addChangeNodeNameOperation(ImmutableNode target, String newName)
+    {
+        fetchOperations(target, LEVEL_UNKNOWN).addOperation(
+                new ChangeNodeNameOperation(newName));
+    }
+
+    /**
+     * Adds a map with new reference objects. The entries in this map are passed
+     * to the {@code ReferenceTracker} during execution of this transaction.
+     *
+     * @param refs the map with new reference objects
+     */
+    public void addNewReferences(Map<ImmutableNode, ?> refs)
+    {
+        fetchReferenceMap().putAll(refs);
+    }
+
+    /**
+     * Adds a new reference object for the given node.
+     *
+     * @param node the affected node
+     * @param ref the reference object for this node
+     */
+    public void addNewReference(ImmutableNode node, Object ref)
+    {
+        fetchReferenceMap().put(node, ref);
+    }
+
+    /**
      * Executes this transaction resulting in a new {@code TreeData} object. The
      * object returned by this method serves as the definition of a new node
      * structure for the calling model.
@@ -273,9 +323,8 @@ class ModelTransaction
         updateParentMapping();
         return new TreeData(newRoot, parentMapping, replacementMapping,
                 currentData.getNodeTracker().update(newRoot, rootNodeSelector,
-                        getResolver(), getCurrentData()), currentData
-                        .getReferenceTracker().updateReferences(replacedNodes,
-                                allRemovedNodes));
+                        getResolver(), getCurrentData()), updateReferenceTracker()
+        );
     }
 
     /**
@@ -468,6 +517,36 @@ class ModelTransaction
         {
             replacement = replacementMapping.remove(replacement);
         } while (replacement != null);
+    }
+
+    /**
+     * Returns an updated {@code ReferenceTracker} instance. The changes
+     * performed during this transaction are applied to the tracker.
+     *
+     * @return the updated tracker instance
+     */
+    private ReferenceTracker updateReferenceTracker()
+    {
+        ReferenceTracker tracker = currentData.getReferenceTracker();
+        if (newReferences != null)
+        {
+            tracker = tracker.addReferences(newReferences);
+        }
+        return tracker.updateReferences(replacedNodes, allRemovedNodes);
+    }
+
+    /**
+     * Returns the map with new reference objects. It is created if necessary.
+     *
+     * @return the map with reference objects
+     */
+    private Map<ImmutableNode, Object> fetchReferenceMap()
+    {
+        if (newReferences == null)
+        {
+            newReferences = new HashMap<ImmutableNode, Object>();
+        }
+        return newReferences;
     }
 
     /**
@@ -780,6 +859,33 @@ class ModelTransaction
     }
 
     /**
+     * A specialized operation class for adding multiple attributes to a target
+     * node.
+     */
+    private class AddAttributesOperation extends Operation
+    {
+        /** The map with attributes. */
+        private final Map<String, Object> attributes;
+
+        /**
+         * Creates a new instance of {@code AddAttributesOperation}.
+         *
+         * @param attrs the map with attributes
+         */
+        public AddAttributesOperation(Map<String, Object> attrs)
+        {
+            attributes = attrs;
+        }
+
+        @Override
+        protected ImmutableNode apply(ImmutableNode target,
+                Operations operations)
+        {
+            return target.setAttributes(attributes);
+        }
+    }
+
+    /**
      * A specialized operation class for removing an attribute from a target
      * node.
      */
@@ -830,6 +936,33 @@ class ModelTransaction
                 Operations operations)
         {
             return target.setValue(newValue);
+        }
+    }
+
+    /**
+     * A specialized operation class which changes the name of a node.
+     */
+    private class ChangeNodeNameOperation extends Operation
+    {
+        /** The new node name. */
+        private final String newName;
+
+        /**
+         * Creates a new instance of {@code ChangeNodeNameOperation} and sets
+         * the new node name.
+         *
+         * @param name the new node name
+         */
+        public ChangeNodeNameOperation(String name)
+        {
+            newName = name;
+        }
+
+        @Override
+        protected ImmutableNode apply(ImmutableNode target,
+                Operations operations)
+        {
+            return target.setName(newName);
         }
     }
 

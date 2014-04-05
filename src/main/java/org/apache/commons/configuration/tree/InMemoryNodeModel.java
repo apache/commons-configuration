@@ -378,6 +378,59 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     }
 
     /**
+     * Merges the root node of this model with the specified node. This method
+     * is typically caused by configuration implementations when a configuration
+     * source is loaded, and its data has to be added to the model. It is
+     * possible to define the new name of the root node and to pass in a map
+     * with reference objects.
+     *
+     * @param node the node to be merged with the root node
+     * @param rootName the new name of the root node; can be <b>null</b>, then
+     *        the name of the root node is not changed unless it is <b>null</b>
+     * @param references an optional map with reference objects
+     * @param rootRef an optional reference object for the new root node
+     * @param resolver the {@code NodeKeyResolver}
+     */
+    public void mergeRoot(final ImmutableNode node, final String rootName,
+            final Map<ImmutableNode, ?> references, final Object rootRef,
+            NodeKeyResolver<ImmutableNode> resolver)
+    {
+        updateModel(new TransactionInitializer()
+        {
+            @Override
+            public boolean initTransaction(ModelTransaction tx)
+            {
+                TreeData current = tx.getCurrentData();
+                String newRootName =
+                        determineRootName(current.getRootNode(), node, rootName);
+                if (newRootName != null)
+                {
+                    tx.addChangeNodeNameOperation(current.getRootNode(),
+                            newRootName);
+                }
+                tx.addAddNodesOperation(current.getRootNode(),
+                        node.getChildren());
+                tx.addAttributesOperation(current.getRootNode(),
+                        node.getAttributes());
+                if (node.getValue() != null)
+                {
+                    tx.addChangeNodeValueOperation(current.getRootNode(),
+                            node.getValue());
+                }
+                if (references != null)
+                {
+                    tx.addNewReferences(references);
+                }
+                if (rootRef != null)
+                {
+                    tx.addNewReference(current.getRootNode(), rootRef);
+                }
+                return true;
+            }
+        }, null, resolver);
+    }
+
+    /**
      * Adds a node to be tracked. After this method has been called with a
      * specific {@code NodeSelector}, the node associated with this key can be
      * always obtained using {@link #getTrackedNode(NodeSelector)} with the same
@@ -981,6 +1034,31 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     {
         return (providedRoot != null) ? providedRoot
                 : new ImmutableNode.Builder().create();
+    }
+
+    /**
+     * Determines the name of the root node for a merge operation. If a root
+     * name is provided, it is used. Otherwise, if the current root node has no
+     * name, the name of the node to be merged is used. A result of <b>null</b>
+     * means that no node name has to be set.
+     *
+     * @param rootNode the current root node
+     * @param node the node to be merged with the root node
+     * @param rootName the name of the resulting node
+     * @return the new name of the root node
+     */
+    private static String determineRootName(ImmutableNode rootNode,
+            ImmutableNode node, String rootName)
+    {
+        if (rootName != null)
+        {
+            return rootName;
+        }
+        if (rootNode.getNodeName() == null)
+        {
+            return node.getNodeName();
+        }
+        return null;
     }
 
     /**
