@@ -434,32 +434,6 @@ public class TestInMemoryNodeModelTrackedNodes
     }
 
     /**
-     * Prepares the passed in resolver mock to resolve add keys. They are
-     * interpreted on a default expression engine.
-     *
-     * @param resolver the {@code NodeKeyResolver} mock
-     */
-    private static void prepareResolverForAddKeys(
-            NodeKeyResolver<ImmutableNode> resolver)
-    {
-        EasyMock.expect(
-                resolver.resolveAddKey(EasyMock.anyObject(ImmutableNode.class),
-                        EasyMock.anyString(),
-                        EasyMock.anyObject(TreeData.class)))
-                .andAnswer(new IAnswer<NodeAddData<ImmutableNode>>() {
-                    public NodeAddData<ImmutableNode> answer() throws Throwable {
-                        ImmutableNode root =
-                                (ImmutableNode) EasyMock.getCurrentArguments()[0];
-                        String key = (String) EasyMock.getCurrentArguments()[1];
-                        TreeData handler =
-                                (TreeData) EasyMock.getCurrentArguments()[2];
-                        return DefaultExpressionEngine.INSTANCE.prepareAdd(
-                                root, key, handler);
-                    }
-                }).anyTimes();
-    }
-
-    /**
      * Tests whether a field node was added.
      *
      * @param nodeFields the fields node
@@ -498,7 +472,7 @@ public class TestInMemoryNodeModelTrackedNodes
     public void testAddPropertyOnTrackedNode()
     {
         NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
-        prepareResolverForAddKeys(resolver);
+        NodeStructureHelper.expectResolveAddKeys(resolver);
         EasyMock.replay(resolver);
         model.trackNode(selector, resolver);
         model.addProperty("fields.field(-1).name", selector,
@@ -514,7 +488,7 @@ public class TestInMemoryNodeModelTrackedNodes
     public void testAddPropertyOnDetachedNode()
     {
         NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
-        prepareResolverForAddKeys(resolver);
+        NodeStructureHelper.expectResolveAddKeys(resolver);
         EasyMock.replay(resolver);
         model.trackNode(selector, resolver);
         initDetachedNode(resolver);
@@ -532,7 +506,7 @@ public class TestInMemoryNodeModelTrackedNodes
     public void testAddNodesOnTrackedNode()
     {
         NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
-        prepareResolverForAddKeys(resolver);
+        NodeStructureHelper.expectResolveAddKeys(resolver);
         EasyMock.replay(resolver);
         model.trackNode(selector, resolver);
         model.addNodes("fields", selector, Collections
@@ -549,7 +523,7 @@ public class TestInMemoryNodeModelTrackedNodes
     public void testAddNodesOnDetachedNode()
     {
         NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
-        prepareResolverForAddKeys(resolver);
+        NodeStructureHelper.expectResolveAddKeys(resolver);
         EasyMock.replay(resolver);
         model.trackNode(selector, resolver);
         initDetachedNode(resolver);

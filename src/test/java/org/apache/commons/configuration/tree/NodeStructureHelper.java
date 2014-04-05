@@ -394,6 +394,32 @@ public class NodeStructureHelper
     }
 
     /**
+     * Prepares the passed in resolver mock to resolve add keys. They are
+     * interpreted on a default expression engine.
+     *
+     * @param resolver the {@code NodeKeyResolver} mock
+     */
+    public static void expectResolveAddKeys(
+            NodeKeyResolver<ImmutableNode> resolver)
+    {
+        EasyMock.expect(
+                resolver.resolveAddKey(EasyMock.anyObject(ImmutableNode.class),
+                        EasyMock.anyString(),
+                        EasyMock.anyObject(TreeData.class)))
+                .andAnswer(new IAnswer<NodeAddData<ImmutableNode>>() {
+                    public NodeAddData<ImmutableNode> answer() throws Throwable {
+                        ImmutableNode root =
+                                (ImmutableNode) EasyMock.getCurrentArguments()[0];
+                        String key = (String) EasyMock.getCurrentArguments()[1];
+                        TreeData handler =
+                                (TreeData) EasyMock.getCurrentArguments()[2];
+                        return DefaultExpressionEngine.INSTANCE.prepareAdd(
+                                root, key, handler);
+                    }
+                }).anyTimes();
+    }
+
+    /**
      * Creates as tree with database table data based on the passed in arrays of
      * table names and fields for tables. Works like the method without
      * parameters, but allows defining the data of the structure.
