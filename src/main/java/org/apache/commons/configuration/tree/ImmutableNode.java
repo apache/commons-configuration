@@ -250,6 +250,28 @@ public class ImmutableNode
 
     /**
      * Returns a new {@code ImmutableNode} instance which is a copy of this
+     * object, but with all attributes added defined by the given map. This
+     * method is analogous to {@link #setAttribute(String, Object)}, but all
+     * attributes in the given map are added. If the map is <b>null</b> or
+     * empty, this method has no effect.
+     *
+     * @param newAttributes the map with attributes to be added
+     * @return the new node with these attributes
+     */
+    public ImmutableNode setAttributes(Map<String, ?> newAttributes)
+    {
+        if (newAttributes == null || newAttributes.isEmpty())
+        {
+            return this;
+        }
+
+        Map<String, Object> newAttrs = new HashMap<String, Object>(attributes);
+        newAttrs.putAll(newAttributes);
+        return createWithNewAttributes(newAttrs);
+    }
+
+    /**
+     * Returns a new {@code ImmutableNode} instance which is a copy of this
      * object, but with the specified attribute removed. If there is no
      * attribute with the given name, the same node instance is returned.
      *

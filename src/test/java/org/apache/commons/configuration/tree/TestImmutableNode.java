@@ -519,6 +519,70 @@ public class TestImmutableNode
     }
 
     /**
+     * Tests whether multiple attributes can be set.
+     */
+    @Test
+    public void testSetAttributes()
+    {
+        ImmutableNode node = createDefaultNode(VALUE);
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        attributes.put("newAttribute1", "value1");
+        attributes.put("newAttribute2", "value2");
+        ImmutableNode node2 = node.setAttributes(attributes);
+        assertEquals("Wrong number of attributes", attributes.size()
+                + node.getAttributes().size(), node2.getAttributes().size());
+        checkAttributesContained(node2, attributes);
+        checkAttributesContained(node2, node.getAttributes());
+    }
+
+    /**
+     * Helper method for testing whether a node contains all the attributes in
+     * the specified map.
+     *
+     * @param node the node to be checked
+     * @param attributes the map with expected attributes
+     */
+    private static void checkAttributesContained(ImmutableNode node,
+            Map<String, Object> attributes)
+    {
+        for (Map.Entry<String, Object> e : attributes.entrySet())
+        {
+            assertEquals("Wrong attribute value", e.getValue(), node
+                    .getAttributes().get(e.getKey()));
+        }
+    }
+
+    /**
+     * Helper method for testing a setAttributes() operation which has no
+     * effect.
+     *
+     * @param attributes the map with attributes
+     */
+    private void checkSetAttributesNoOp(Map<String, Object> attributes)
+    {
+        ImmutableNode node = createDefaultNode(VALUE);
+        assertSame("Node was changed", node, node.setAttributes(attributes));
+    }
+
+    /**
+     * Tests setAttributes() if an empty map is passed in.
+     */
+    @Test
+    public void testSetAttributesEmpty()
+    {
+        checkSetAttributesNoOp(new HashMap<String, Object>());
+    }
+
+    /**
+     * Tests setAttributes() for null input.
+     */
+    @Test
+    public void testSetAttributesNull()
+    {
+        checkSetAttributesNoOp(null);
+    }
+
+    /**
      * Tests whether an existing attribute can be removed.
      */
     @Test
