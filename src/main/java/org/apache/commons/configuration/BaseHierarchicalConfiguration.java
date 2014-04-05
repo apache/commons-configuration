@@ -29,7 +29,6 @@ import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
 import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.InMemoryNodeModel;
@@ -37,6 +36,7 @@ import org.apache.commons.configuration.tree.NodeHandler;
 import org.apache.commons.configuration.tree.NodeModel;
 import org.apache.commons.configuration.tree.NodeSelector;
 import org.apache.commons.configuration.tree.QueryResult;
+import org.apache.commons.configuration.tree.ReferenceNodeHandler;
 import org.apache.commons.configuration.tree.TrackedNodeModel;
 
 /**
@@ -665,22 +665,84 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * method is called, which must be defined in concrete sub classes. This
      * method can perform all steps to integrate the new node into the original
      * structure.
-     *
      */
-    protected abstract static class BuilderVisitor extends ConfigurationNodeVisitorAdapter
+    protected abstract static class BuilderVisitor extends
+            ConfigurationNodeVisitorAdapter<ImmutableNode>
     {
-        /**
-         * Visits the specified node before its children have been traversed.
-         *
-         * @param node the node to visit
-         */
-        public void visitBeforeChildren(ConfigurationNode node)
+        @Override
+        public void visitBeforeChildren(ImmutableNode node, NodeHandler<ImmutableNode> handler)
         {
-            Collection<ConfigurationNode> subNodes = new LinkedList<ConfigurationNode>(node.getChildren());
-            subNodes.addAll(node.getAttributes());
-            Iterator<ConfigurationNode> children = subNodes.iterator();
-            ConfigurationNode sibling1 = null;
-            ConfigurationNode nd = null;
+            ReferenceNodeHandler refHandler = (ReferenceNodeHandler) handler;
+            updateNode(node, refHandler);
+            insertNewChildNodes(node, refHandler);
+        }
+
+        /**
+         * Inserts a new node into the structure constructed by this builder.
+         * This method is called for each node that has been added to the
+         * configuration tree after the configuration has been loaded from its
+         * source. These new nodes have to be inserted into the original
+         * structure. The passed in nodes define the position of the node to be
+         * inserted: its parent and the siblings between to insert.
+         *
+         * @param newNode the node to be inserted
+         * @param parent the parent node
+         * @param sibling1 the sibling after which the node is to be inserted;
+         *        can be <b>null</b> if the new node is going to be the first
+         *        child node
+         * @param sibling2 the sibling before which the node is to be inserted;
+         *        can be <b>null</b> if the new node is going to be the last
+         *        child node
+         * @param refHandler the {@code ReferenceNodeHandler}
+         */
+        protected abstract void insert(ImmutableNode newNode,
+                ImmutableNode parent, ImmutableNode sibling1,
+                ImmutableNode sibling2, ReferenceNodeHandler refHandler);
+
+        /**
+         * Updates a node that already existed in the original hierarchy. This
+         * method is called for each node that has an assigned reference object.
+         * A concrete implementation should update the reference according to
+         * the node's current value.
+         *
+         * @param node the current node to be processed
+         * @param reference the reference object for this node
+         * @param refHandler the {@code ReferenceNodeHandler}
+         */
+        protected abstract void update(ImmutableNode node, Object reference,
+                ReferenceNodeHandler refHandler);
+
+        /**
+         * Updates the value of a node. If this node is associated with a
+         * reference object, the {@code update()} method is called.
+         *
+         * @param node the current node to be processed
+         * @param refHandler the {@code ReferenceNodeHandler}
+         */
+        private void updateNode(ImmutableNode node,
+                ReferenceNodeHandler refHandler)
+        {
+            Object reference = refHandler.getReference(node);
+            if (reference != null)
+            {
+                update(node, reference, refHandler);
+            }
+        }
+
+        /**
+         * Inserts new children that have been added to the specified node.
+         *
+         * @param node the current node to be processed
+         * @param refHandler the {@code ReferenceNodeHandler}
+         */
+        private void insertNewChildNodes(ImmutableNode node,
+                ReferenceNodeHandler refHandler)
+        {
+            Collection<ImmutableNode> subNodes =
+                    new LinkedList<ImmutableNode>(refHandler.getChildren(node));
+            Iterator<ImmutableNode> children = subNodes.iterator();
+            ImmutableNode sibling1;
+            ImmutableNode nd = null;
 
             while (children.hasNext())
             {
@@ -689,17 +751,19 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
                 {
                     sibling1 = nd;
                     nd = children.next();
-                } while (nd.getReference() != null && children.hasNext());
+                } while (refHandler.getReference(nd) != null
+                        && children.hasNext());
 
-                if (nd.getReference() == null)
+                if (refHandler.getReference(nd) == null)
                 {
                     // find all following new nodes
-                    List<ConfigurationNode> newNodes = new LinkedList<ConfigurationNode>();
+                    List<ImmutableNode> newNodes =
+                            new LinkedList<ImmutableNode>();
                     newNodes.add(nd);
                     while (children.hasNext())
                     {
                         nd = children.next();
-                        if (nd.getReference() == null)
+                        if (refHandler.getReference(nd) == null)
                         {
                             newNodes.add(nd);
                         }
@@ -710,46 +774,19 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
                     }
 
                     // Insert all new nodes
-                    ConfigurationNode sibling2 = (nd.getReference() == null) ? null : nd;
-                    for (ConfigurationNode insertNode : newNodes)
+                    ImmutableNode sibling2 =
+                            (refHandler.getReference(nd) == null) ? null : nd;
+                    for (ImmutableNode insertNode : newNodes)
                     {
-                        if (insertNode.getReference() == null)
+                        if (refHandler.getReference(insertNode) == null)
                         {
-                            Object ref = insert(insertNode, node, sibling1, sibling2);
-                            if (ref != null)
-                            {
-                                insertNode.setReference(ref);
-                            }
+                            insert(insertNode, node, sibling1, sibling2,
+                                    refHandler);
                             sibling1 = insertNode;
                         }
                     }
                 }
             }
         }
-
-        /**
-         * Inserts a new node into the structure constructed by this builder.
-         * This method is called for each node that has been added to the
-         * configuration tree after the configuration has been loaded from its
-         * source. These new nodes have to be inserted into the original
-         * structure. The passed in nodes define the position of the node to be
-         * inserted: its parent and the siblings between to insert. The return
-         * value is interpreted as the new reference of the affected
-         * {@code Node} object; if it is not <b>null </b>, it is passed
-         * to the node's {@code setReference()} method.
-         *
-         * @param newNode the node to be inserted
-         * @param parent the parent node
-         * @param sibling1 the sibling after which the node is to be inserted;
-         * can be <b>null </b> if the new node is going to be the first child
-         * node
-         * @param sibling2 the sibling before which the node is to be inserted;
-         * can be <b>null </b> if the new node is going to be the last child
-         * node
-         * @return the reference object for the node to be inserted
-         */
-        protected abstract Object insert(ConfigurationNode newNode,
-                ConfigurationNode parent, ConfigurationNode sibling1,
-                ConfigurationNode sibling2);
     }
 }

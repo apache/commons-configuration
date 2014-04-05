@@ -24,6 +24,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,10 +39,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
@@ -49,8 +48,8 @@ import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.resolver.CatalogResolver;
-import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.tree.DefaultConfigurationNode;
+import org.apache.commons.configuration.tree.ImmutableNode;
+import org.apache.commons.configuration.tree.NodeStructureHelper;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.junit.Before;
 import org.junit.Test;
@@ -385,17 +384,6 @@ public class TestXMLConfiguration
         checkConf = checkSavedConfig();
         assertEquals("Attribute not modified after save", "newValue", checkConf
                 .getString("[@test]"));
-    }
-
-    /**
-     * Tests whether the configuration's root node is initialized with a
-     * reference to the corresponding XML element.
-     */
-    @Test
-    public void testGetRootReference()
-    {
-        assertNotNull("Root node has no reference", conf.getRootNode()
-                .getReference());
     }
 
     @Test
@@ -1034,11 +1022,6 @@ public class TestXMLConfiguration
         copy.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         assertEquals("value", copy.getProperty("element"));
         assertNull("Document was copied, too", copy.getDocument());
-        ConfigurationNode root = copy.getRootNode();
-        for (ConfigurationNode node : root.getChildren())
-        {
-            assertNull("Reference was not cleared", node.getReference());
-        }
 
         new FileHandler(copy).save(testSaveConf);
         checkSavedConfig();
@@ -1172,8 +1155,8 @@ public class TestXMLConfiguration
         builder.getFileHandler().setFile(testSaveConf);
         builder.setAutoSave(true);
         final String newValue = "I am autosaved";
-        SubnodeConfiguration sub1 = conf.configurationAt("element2");
-        SubnodeConfiguration sub2 = sub1.configurationAt("subelement");
+        HierarchicalConfiguration<?> sub1 = conf.configurationAt("element2");
+        HierarchicalConfiguration<?> sub2 = sub1.configurationAt("subelement");
         sub2.setProperty("subsubelement", newValue);
         assertEquals("Change not visible to parent", newValue, conf
                 .getString("element2.subelement.subsubelement"));
@@ -1268,9 +1251,9 @@ public class TestXMLConfiguration
         conf = builder.getConfiguration();
         builder.getFileHandler().setFile(testSaveConf);
         builder.setAutoSave(true);
-        ConfigurationNode node = new DefaultConfigurationNode(
+        ImmutableNode node = NodeStructureHelper.createNode(
                 "addNodesTest", Boolean.TRUE);
-        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>(1);
+        Collection<ImmutableNode> nodes = new ArrayList<ImmutableNode>(1);
         nodes.add(node);
         conf.addNodes("test.autosave", nodes);
         XMLConfiguration c2 = new XMLConfiguration();
@@ -1286,16 +1269,12 @@ public class TestXMLConfiguration
     @Test
     public void testAddNodesAndSave() throws ConfigurationException
     {
-        ConfigurationNode node = new DefaultConfigurationNode("test");
-        ConfigurationNode child = new DefaultConfigurationNode("child");
-        node.addChild(child);
-        ConfigurationNode attr = new DefaultConfigurationNode("attr");
-        node.addAttribute(attr);
-        ConfigurationNode node2 = conf.createNode("test2");
-        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>(2);
-        nodes.add(node);
-        nodes.add(node2);
-        conf.addNodes("add.nodes", nodes);
+        ImmutableNode.Builder bldrNode = new ImmutableNode.Builder(1);
+        bldrNode.addChild(NodeStructureHelper.createNode("child", null));
+        bldrNode.addAttribute("attr", "");
+        ImmutableNode node2 = NodeStructureHelper.createNode("test2", null);
+        conf.addNodes("add.nodes",
+                Arrays.asList(bldrNode.name("test").create(), node2));
         saveTestConfig();
         conf.setProperty("add.nodes.test", "true");
         conf.setProperty("add.nodes.test.child", "yes");
@@ -1398,28 +1377,6 @@ public class TestXMLConfiguration
         load(copy, testSaveConf.getAbsolutePath());
         assertEquals("Wrong name of root element after save", rootName, copy
                 .getRootElementName());
-    }
-
-    /**
-     * Tests adding an attribute node using the addNodes() method.
-     */
-    @Test
-    public void testAddNodesAttributeNode()
-    {
-        conf.addProperty("testAddNodes.property[@name]", "prop1");
-        conf.addProperty("testAddNodes.property(0).value", "value1");
-        conf.addProperty("testAddNodes.property(-1)[@name]", "prop2");
-        conf.addProperty("testAddNodes.property(1).value", "value2");
-        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>();
-        nodes.add(new DefaultConfigurationNode("property"));
-        conf.addNodes("testAddNodes", nodes);
-        nodes.clear();
-        ConfigurationNode nd = new DefaultConfigurationNode("name", "prop3");
-        nd.setAttribute(true);
-        nodes.add(nd);
-        conf.addNodes("testAddNodes.property(2)", nodes);
-        assertEquals("Attribute not added", "prop3", conf
-                .getString("testAddNodes.property(2)[@name]"));
     }
 
     /**
@@ -1593,13 +1550,11 @@ public class TestXMLConfiguration
     @Test
     public void testAddNodesToSubnodeConfiguration() throws Exception
     {
-        SubnodeConfiguration sub = conf.configurationAt("element2");
+        HierarchicalConfiguration<ImmutableNode> sub =
+                conf.configurationAt("element2", true);
         sub.addProperty("newKey", "newvalue");
-        ConfigurationNode root = conf.getRootNode();
-        ConfigurationNode elem = root.getChildren("element2").get(0);
-        ConfigurationNode newNode = elem.getChildren("newKey").get(0);
-        assertTrue("Wrong node type: " + newNode,
-                newNode instanceof XMLConfiguration.XMLNode);
+        assertEquals("Property not added", "newvalue",
+                conf.getString("element2.newKey"));
     }
 
     /**
