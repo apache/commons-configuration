@@ -90,6 +90,9 @@ class ModelTransaction
     private final NodeKeyResolver<ImmutableNode> resolver;
 
     /** A new replacement mapping. */
+    private final Map<ImmutableNode, ImmutableNode> replacementMapping;
+
+    /** The nodes replaced in this transaction. */
     private final Map<ImmutableNode, ImmutableNode> replacedNodes;
 
     /** A new parent mapping. */
@@ -100,6 +103,12 @@ class ModelTransaction
 
     /** A collection with nodes which have been removed. */
     private final Collection<ImmutableNode> removedNodes;
+
+    /**
+     * Stores all nodes which have been removed in this transaction (not only
+     * the root nodes of removed trees).
+     */
+    private final Collection<ImmutableNode> allRemovedNodes;
 
     /**
      * Stores the operations to be executed during this transaction. The map is
@@ -127,11 +136,13 @@ class ModelTransaction
     {
         currentData = treeData;
         this.resolver = resolver;
-        replacedNodes = getCurrentData().copyReplacementMapping();
+        replacementMapping = getCurrentData().copyReplacementMapping();
+        replacedNodes = new HashMap<ImmutableNode, ImmutableNode>();
         parentMapping = getCurrentData().copyParentMapping();
         operations = new TreeMap<Integer, Map<ImmutableNode, Operations>>();
         addedNodes = new LinkedList<ImmutableNode>();
         removedNodes = new LinkedList<ImmutableNode>();
+        allRemovedNodes = new LinkedList<ImmutableNode>();
         queryRoot = initQueryRoot(treeData, selector);
         rootNodeSelector = selector;
     }
@@ -260,9 +271,11 @@ class ModelTransaction
     {
         executeOperations();
         updateParentMapping();
-        return new TreeData(newRoot, parentMapping,
-                replacedNodes, currentData.getNodeTracker().update(newRoot,
-                rootNodeSelector, getResolver(), getCurrentData()));
+        return new TreeData(newRoot, parentMapping, replacementMapping,
+                currentData.getNodeTracker().update(newRoot, rootNodeSelector,
+                        getResolver(), getCurrentData()), currentData
+                        .getReferenceTracker().updateReferences(replacedNodes,
+                                allRemovedNodes));
     }
 
     /**
@@ -373,7 +386,8 @@ class ModelTransaction
      */
     private void updateParentMapping()
     {
-        if (replacedNodes.size() > MAX_REPLACEMENTS)
+        replacementMapping.putAll(replacedNodes);
+        if (replacementMapping.size() > MAX_REPLACEMENTS)
         {
             rebuildParentMapping();
         }
@@ -391,7 +405,7 @@ class ModelTransaction
      */
     private void rebuildParentMapping()
     {
-        replacedNodes.clear();
+        replacementMapping.clear();
         parentMapping.clear();
         InMemoryNodeModel.updateParentMapping(parentMapping, newRoot);
     }
@@ -434,6 +448,7 @@ class ModelTransaction
                     public void visitBeforeChildren(ImmutableNode node,
                             NodeHandler<ImmutableNode> handler)
                     {
+                        allRemovedNodes.add(node);
                         parentMapping.remove(node);
                         removeNodeFromReplacementMapping(node);
                     }
@@ -451,7 +466,7 @@ class ModelTransaction
         ImmutableNode replacement = node;
         do
         {
-            replacement = replacedNodes.remove(replacement);
+            replacement = replacementMapping.remove(replacement);
         } while (replacement != null);
     }
 

@@ -59,7 +59,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     private static final NodeHandler<ImmutableNode> DUMMY_HANDLER =
             new TreeData(null,
                     Collections.<ImmutableNode, ImmutableNode> emptyMap(),
-                    Collections.<ImmutableNode, ImmutableNode> emptyMap(), null);
+                    Collections.<ImmutableNode, ImmutableNode> emptyMap(), null, new ReferenceTracker());
 
     /** Stores information about the current nodes structure. */
     private final AtomicReference<TreeData> structure;
@@ -104,7 +104,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      */
     public NodeHandler<ImmutableNode> getNodeHandler()
     {
-        return getTreeData();
+        return getReferenceNodeHandler();
     }
 
     public void addProperty(String key, Iterable<?> values,
@@ -648,6 +648,44 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     }
 
     /**
+     * Returns a {@code ReferenceNodeHandler} object for this model. This
+     * extended node handler can be used to query references objects stored for
+     * this model.
+     *
+     * @return the {@code ReferenceNodeHandler}
+     */
+    public ReferenceNodeHandler getReferenceNodeHandler()
+    {
+        return getTreeData();
+    }
+
+    /**
+     * Adds the specified reference information to this model. Calling this
+     * method associates all nodes in the passed in map with the corresponding
+     * reference data. The nodes stay connected to these references, even if
+     * they are replaced by update operations.
+     *
+     * @param references the map with reference information (can be <b>null</b>,
+     *        then this method has no effect)
+     */
+    public void addReferences(Map<ImmutableNode, ?> references)
+    {
+        if (references != null && !references.isEmpty())
+        {
+            boolean done;
+            do
+            {
+                TreeData current = structure.get();
+                ReferenceTracker newTracker =
+                        current.getReferenceTracker().addReferences(references);
+                done =
+                        structure.compareAndSet(current,
+                                current.updateReferenceTracker(newTracker));
+            } while (!done);
+        }
+    }
+
+    /**
      * Returns the current {@code TreeData} object. This object contains all
      * information about the current node structure.
      *
@@ -735,7 +773,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                         .detachAllTrackedNodes() : new NodeTracker();
         return new TreeData(root, createParentMapping(root),
                 Collections.<ImmutableNode, ImmutableNode> emptyMap(),
-                newTracker);
+                newTracker, new ReferenceTracker());
     }
 
     /**

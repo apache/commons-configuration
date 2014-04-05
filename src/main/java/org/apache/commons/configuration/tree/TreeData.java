@@ -17,6 +17,7 @@
 package org.apache.commons.configuration.tree;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +29,7 @@ import java.util.Map;
  * @version $Id$
  * @since 2.0
  */
-class TreeData extends AbstractImmutableNodeHandler
+class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHandler
 {
     /** The root node of the tree. */
     private final ImmutableNode root;
@@ -49,24 +50,30 @@ class TreeData extends AbstractImmutableNodeHandler
     /** The node tracker. */
     private final NodeTracker nodeTracker;
 
+    /** The reference tracker. */
+    private final ReferenceTracker referenceTracker;
+
     /**
-     * Creates a new instance of {@code TreeData} and initializes it with
-     * all data to be stored.
+     * Creates a new instance of {@code TreeData} and initializes it with all
+     * data to be stored.
      *
      * @param root the root node of the current tree
      * @param parentMapping the mapping to parent nodes
      * @param replacements the map with the nodes that have been replaced
      * @param tracker the {@code NodeTracker}
+     * @param refTracker the {@code ReferenceTracker}
      */
     public TreeData(ImmutableNode root,
-                    Map<ImmutableNode, ImmutableNode> parentMapping,
-                    Map<ImmutableNode, ImmutableNode> replacements, NodeTracker tracker)
+            Map<ImmutableNode, ImmutableNode> parentMapping,
+            Map<ImmutableNode, ImmutableNode> replacements,
+            NodeTracker tracker, ReferenceTracker refTracker)
     {
         this.root = root;
         this.parentMapping = parentMapping;
         replacementMapping = replacements;
         inverseReplacementMapping = createInverseMapping(replacements);
         nodeTracker = tracker;
+        referenceTracker = refTracker;
     }
 
     public ImmutableNode getRootNode()
@@ -82,6 +89,16 @@ class TreeData extends AbstractImmutableNodeHandler
     public NodeTracker getNodeTracker()
     {
         return nodeTracker;
+    }
+
+    /**
+     * Returns the {@code ReferenceTracker}.
+     *
+     * @return the {@code ReferenceTracker}
+     */
+    public ReferenceTracker getReferenceTracker()
+    {
+        return referenceTracker;
     }
 
     /**
@@ -141,7 +158,39 @@ class TreeData extends AbstractImmutableNodeHandler
     public TreeData updateNodeTracker(NodeTracker newTracker)
     {
         return new TreeData(root, parentMapping, replacementMapping,
-                newTracker);
+                newTracker, referenceTracker);
+    }
+
+    /**
+     * Creates a new instance which uses the specified {@code ReferenceTracker}.
+     * All other information are unchanged. This method is called when there
+     * updates for references.
+     *
+     * @param newTracker the new {@code ReferenceTracker}
+     * @return the updated instance
+     */
+    public TreeData updateReferenceTracker(ReferenceTracker newTracker)
+    {
+        return new TreeData(root, parentMapping, replacementMapping,
+                nodeTracker, newTracker);
+    }
+
+    /**
+     * {@inheritDoc} This implementation delegates to the reference tracker.
+     */
+    @Override
+    public Object getReference(ImmutableNode node)
+    {
+        return getReferenceTracker().getReference(node);
+    }
+
+    /**
+     * {@inheritDoc} This implementation delegates to the reference tracker.
+     */
+    @Override
+    public List<Object> removedReferences()
+    {
+        return getReferenceTracker().getRemovedReferences();
     }
 
     /**
