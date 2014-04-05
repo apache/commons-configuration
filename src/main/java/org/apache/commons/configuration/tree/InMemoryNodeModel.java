@@ -284,6 +284,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         {
             public boolean initTransaction(ModelTransaction tx)
             {
+                boolean changes = false;
                 TreeData currentStructure = tx.getCurrentData();
                 for (QueryResult<ImmutableNode> result : resolver.resolveKey(
                         tx.getQueryRoot(), key, currentStructure))
@@ -305,8 +306,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                                 currentStructure.getParent(result.getNode()),
                                 result.getNode());
                     }
+                    changes = true;
                 }
-                return true;
+                return changes;
             }
         }, selector, resolver);
     }
@@ -342,8 +344,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                 List<QueryResult<ImmutableNode>> results =
                         resolver.resolveKey(tx.getQueryRoot(), key,
                                 tx.getCurrentData());
-                initializeClearTransaction(tx, results);
-                return true;
+                return initializeClearTransaction(tx, results);
             }
         }, selector, resolver);
     }

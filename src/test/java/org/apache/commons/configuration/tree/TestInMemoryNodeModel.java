@@ -525,6 +525,26 @@ public class TestInMemoryNodeModel
     }
 
     /**
+     * Tests clearTree() if the passed in key does not exist.
+     */
+    @Test
+    public void testClearTreeNonExistingKey()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        InMemoryNodeModel model = new InMemoryNodeModel(ROOT_PERSONAE_TREE);
+        EasyMock.expect(
+                resolver.resolveKey(ROOT_PERSONAE_TREE, KEY,
+                        model.getNodeHandler())).andReturn(
+                Collections.<QueryResult<ImmutableNode>> emptyList());
+        EasyMock.replay(resolver);
+
+        TreeData treeDataOld = model.getTreeData();
+        model.clearTree(KEY, resolver);
+        assertNotNull("No root node", model.getNodeHandler().getRootNode());
+        assertSame("Data was changed", treeDataOld, model.getTreeData());
+    }
+
+    /**
      * Tests whether the whole node structure can be cleared.
      */
     @Test
@@ -727,6 +747,27 @@ public class TestInMemoryNodeModel
         model.clearProperty(KEY, resolver);
         ImmutableNode node = nodeForKey(model, nodeKey);
         assertTrue("Attribute not removed", node.getAttributes().isEmpty());
+    }
+
+    /**
+     * Tests clearProperty() for a non existing property.
+     */
+    @Test
+    public void testClearPropertyNonExisting()
+    {
+        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        InMemoryNodeModel model =
+                new InMemoryNodeModel(NodeStructureHelper.ROOT_PERSONAE_TREE);
+        EasyMock.expect(
+                resolver.resolveKey(model.getRootNode(), KEY,
+                        model.getNodeHandler())).andReturn(
+                Collections.<QueryResult<ImmutableNode>> emptyList());
+        EasyMock.replay(resolver);
+
+        TreeData treeDataOld = model.getTreeData();
+        model.clearProperty(KEY, resolver);
+        assertNotNull("No root node", model.getNodeHandler().getRootNode());
+        assertSame("Data was changed", treeDataOld, model.getTreeData());
     }
 
     /**
