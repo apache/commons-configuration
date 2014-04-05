@@ -29,6 +29,7 @@ import static org.junit.Assert.fail;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,7 +48,6 @@ import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration.ex.ConfigurationException;
-import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.apache.commons.configuration.tree.ImmutableNode;
@@ -301,7 +301,7 @@ public class TestXMLConfiguration
     }
 
     @Test
-    public void testClearAttributenonExisting()
+    public void testClearAttributeNonExisting()
     {
         String key = "clear[@id]";
         conf.clearProperty(key);
@@ -348,16 +348,18 @@ public class TestXMLConfiguration
         assertEquals("value1",conf.getProperty("name1"));
     }
 
+    /**
+     * Tests whether an attribute value can be overridden.
+     */
     @Test
-    public void testAddAttribute()
+    public void testOverrideAttribute()
     {
         conf.addProperty("element3[@name]", "bar");
 
         List<Object> list = conf.getList("element3[@name]");
         assertNotNull("null list", list);
-        assertTrue("'foo' element missing", list.contains("foo"));
         assertTrue("'bar' element missing", list.contains("bar"));
-        assertEquals("list size", 2, list.size());
+        assertEquals("list size", 1, list.size());
     }
 
     @Test
@@ -978,20 +980,19 @@ public class TestXMLConfiguration
     }
 
     /**
-     * Tests saving a configuration when an invalid transformer factory is
-     * specified. In this case the error thrown by the TransformerFactory class
-     * should be caught and re-thrown as a ConfigurationException.
+     * Tests saving a configuration if an invalid transformer factory is
+     * specified. In this case an error is thrown by the transformer factory.
+     * XMLConfiguration should not catch this error.
      */
     @Test
-    public void testSaveWithInvalidTransformerFactory()
-    {
+    public void testSaveWithInvalidTransformerFactory() throws ConfigurationException {
         System.setProperty(PROP_FACTORY, "an.invalid.Class");
         try
         {
             saveTestConfig();
             fail("Could save with invalid TransformerFactory!");
         }
-        catch (ConfigurationException cex)
+        catch (TransformerFactoryConfigurationError cex)
         {
             // ok
         }
@@ -1131,7 +1132,7 @@ public class TestXMLConfiguration
         builder.getFileHandler().setFile(testSaveConf);
         builder.setAutoSave(true);
         final String newValue = "I am autosaved";
-        Configuration sub = conf.configurationAt("element2.subelement");
+        Configuration sub = conf.configurationAt("element2.subelement", true);
         sub.setProperty("subsubelement", newValue);
         assertEquals("Change not visible to parent", newValue,
                 conf.getString("element2.subelement.subsubelement"));
@@ -1157,8 +1158,8 @@ public class TestXMLConfiguration
         builder.getFileHandler().setFile(testSaveConf);
         builder.setAutoSave(true);
         final String newValue = "I am autosaved";
-        HierarchicalConfiguration<?> sub1 = conf.configurationAt("element2");
-        HierarchicalConfiguration<?> sub2 = sub1.configurationAt("subelement");
+        HierarchicalConfiguration<?> sub1 = conf.configurationAt("element2", true);
+        HierarchicalConfiguration<?> sub2 = sub1.configurationAt("subelement", true);
         sub2.setProperty("subsubelement", newValue);
         assertEquals("Change not visible to parent", newValue, conf
                 .getString("element2.subelement.subsubelement"));
@@ -1215,15 +1216,19 @@ public class TestXMLConfiguration
     }
 
     /**
-     * Tries to create an attribute with multiple values.
+     * Tries to create an attribute with multiple values. Only the first value
+     * is taken into account.
      */
-    @Test(expected = ConfigurationRuntimeException.class)
+    @Test
     public void testAttributeKeyWithMultipleValues()
             throws ConfigurationException
     {
         conf.addProperty("errorTest[@multiAttr]", Arrays.asList("v1", "v2"));
-        StringWriter out = new StringWriter();
-        new FileHandler(conf).save(out);
+        saveTestConfig();
+        XMLConfiguration checkConfig = new XMLConfiguration();
+        load(checkConfig, testSaveConf.getAbsolutePath());
+        assertEquals("Wrong attribute value", "v1",
+                checkConfig.getString("errorTest[@multiAttr]"));
     }
 
     /**

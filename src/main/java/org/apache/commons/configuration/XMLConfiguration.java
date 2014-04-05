@@ -1010,7 +1010,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         beginWrite(false);
         try
         {
-            Transformer transformer = XMLDocumentHelper.createTransformer();
+            Transformer transformer = createTransformer();
             Source source = new DOMSource(createDocument());
             StringWriter writer = new StringWriter();
             Result result = new StreamResult(writer);
