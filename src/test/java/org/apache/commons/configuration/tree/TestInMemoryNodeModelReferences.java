@@ -18,7 +18,6 @@ package org.apache.commons.configuration.tree;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
@@ -128,38 +127,6 @@ public class TestInMemoryNodeModelReferences
         ReferenceNodeHandler handler = model.getReferenceNodeHandler();
         assertNull("Got a reference",
                 handler.getReference(new ImmutableNode.Builder().create()));
-    }
-
-    /**
-     * Helper method for checking addReferences() if no action should be
-     * performed.
-     *
-     * @param refs the map with references
-     */
-    private void checkAddReferencesNoOp(Map<ImmutableNode, ?> refs)
-    {
-        ReferenceNodeHandler handler = model.getReferenceNodeHandler();
-        model.addReferences(refs);
-        assertSame("Model was changed", handler,
-                model.getReferenceNodeHandler());
-    }
-
-    /**
-     * Tests whether addReferences() can handle null input.
-     */
-    @Test
-    public void testAddReferencesNull()
-    {
-        checkAddReferencesNoOp(null);
-    }
-
-    /**
-     * Tests addReferences() for an empty map.
-     */
-    @Test
-    public void testAddReferencesEmpty()
-    {
-        checkAddReferencesNoOp(new HashMap<ImmutableNode, Object>());
     }
 
     /**
