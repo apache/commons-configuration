@@ -20,6 +20,7 @@ package org.apache.commons.configuration;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -548,11 +549,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     private void initProperties(XMLDocumentHelper docHelper, boolean elemRefs)
     {
         Document document = docHelper.getDocument();
-        if (document.getDoctype() != null)
-        {
-            setPublicID(document.getDoctype().getPublicId());
-            setSystemID(document.getDoctype().getSystemId());
-        }
+        setPublicID(docHelper.getSourcePublicID());
+        setSystemID(docHelper.getSourceSystemID());
 
         ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
         MutableObject<String> rootValue = new MutableObject<String>();
@@ -828,6 +826,39 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     }
 
     /**
+     * Creates and initializes the transformer used for save operations. This
+     * base implementation initializes all of the default settings like
+     * indention mode and the DOCTYPE. Derived classes may overload this method
+     * if they have specific needs.
+     *
+     * @return the transformer to use for a save operation
+     * @throws ConfigurationException if an error occurs
+     * @since 1.3
+     */
+    protected Transformer createTransformer() throws ConfigurationException
+    {
+        Transformer transformer = XMLDocumentHelper.createTransformer();
+
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        if (locator.getEncoding() != null)
+        {
+            transformer.setOutputProperty(OutputKeys.ENCODING, locator.getEncoding());
+        }
+        if (publicID != null)
+        {
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC,
+                    publicID);
+        }
+        if (systemID != null)
+        {
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
+                    systemID);
+        }
+
+        return transformer;
+    }
+
+    /**
      * Creates a DOM document from the internal tree of configuration nodes.
      *
      * @return the new document
@@ -964,7 +995,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     @Override
     public void write(Writer writer) throws ConfigurationException, IOException
     {
-        Transformer transformer = XMLDocumentHelper.createTransformer();
+        Transformer transformer = createTransformer();
         Source source = new DOMSource(createDocument());
         Result result = new StreamResult(writer);
         XMLDocumentHelper.transform(transformer, source, result);

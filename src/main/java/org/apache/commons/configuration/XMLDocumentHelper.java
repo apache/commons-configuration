@@ -71,6 +71,12 @@ class XMLDocumentHelper
     /** The element mapping to the source document. */
     private final Map<Node, Node> elementMapping;
 
+    /** Stores the public ID of the source document. */
+    private final String sourcePublicID;
+
+    /** Stores the system ID of the source document. */
+    private final String sourceSystemID;
+
     /**
      * Creates a new instance of {@code XMLDocumentHelper} and initializes it
      * with the given XML document. Note: This constructor is package private
@@ -79,11 +85,16 @@ class XMLDocumentHelper
      *
      * @param doc the {@code Document}
      * @param elemMap the element mapping
+     * @param pubID the public ID of the source document
+     * @param sysID the system ID of the source document
      */
-    XMLDocumentHelper(Document doc, Map<Node, Node> elemMap)
+    XMLDocumentHelper(Document doc, Map<Node, Node> elemMap, String pubID,
+            String sysID)
     {
         document = doc;
         elementMapping = elemMap;
+        sourcePublicID = pubID;
+        sourceSystemID = sysID;
     }
 
     /**
@@ -105,7 +116,7 @@ class XMLDocumentHelper
                         .newDocument();
         Element rootElem = doc.createElement(rootElementName);
         doc.appendChild(rootElem);
-        return new XMLDocumentHelper(doc, emptyElementMapping());
+        return new XMLDocumentHelper(doc, emptyElementMapping(), null, null);
     }
 
     /**
@@ -129,8 +140,20 @@ class XMLDocumentHelper
     public static XMLDocumentHelper forSourceDocument(Document srcDoc)
             throws ConfigurationException
     {
+        String pubID;
+        String sysID;
+        if (srcDoc.getDoctype() != null)
+        {
+            pubID = srcDoc.getDoctype().getPublicId();
+            sysID = srcDoc.getDoctype().getSystemId();
+        }
+        else
+        {
+            pubID = sysID = null;
+        }
+
         return new XMLDocumentHelper(copyDocument(srcDoc),
-                emptyElementMapping());
+                emptyElementMapping(), pubID, sysID);
     }
 
     /**
@@ -154,6 +177,26 @@ class XMLDocumentHelper
     public Map<Node, Node> getElementMapping()
     {
         return elementMapping;
+    }
+
+    /**
+     * Returns the public ID of the source document.
+     *
+     * @return the public ID of the source document
+     */
+    public String getSourcePublicID()
+    {
+        return sourcePublicID;
+    }
+
+    /**
+     * Returns the system ID of the source document.
+     *
+     * @return the system ID of the source document
+     */
+    public String getSourceSystemID()
+    {
+        return sourceSystemID;
     }
 
     /**
@@ -204,7 +247,8 @@ class XMLDocumentHelper
     {
         Document docCopy = copyDocument(getDocument());
         return new XMLDocumentHelper(docCopy, createElementMapping(
-                getDocument(), docCopy));
+                getDocument(), docCopy), getSourcePublicID(),
+                getSourceSystemID());
     }
 
     /**

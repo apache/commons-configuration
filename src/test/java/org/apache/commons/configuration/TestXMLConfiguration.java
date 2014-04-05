@@ -17,10 +17,12 @@
 
 package org.apache.commons.configuration;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -971,8 +973,8 @@ public class TestXMLConfiguration
         conf.setSystemID(SYSTEM_ID);
         StringWriter out = new StringWriter();
         new FileHandler(conf).save(out);
-        assertTrue("Did not find DOCTYPE", out.toString().indexOf(
-                DOCTYPE + "testconfig" + DOCTYPE_DECL) >= 0);
+        assertThat("Did not find DOCTYPE", out.toString(), containsString(
+                DOCTYPE + "testconfig" + DOCTYPE_DECL));
     }
 
     /**
