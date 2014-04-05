@@ -197,6 +197,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     /** Constant for the name of the space attribute.*/
     private static final String ATTR_SPACE = "xml:space";
 
+    /** Constant for an internally used space attribute. */
+    private static final String ATTR_SPACE_INTERNAL = "config-xml:space";
+
     /** Constant for the xml:space value for preserving whitespace.*/
     private static final String VALUE_PRESERVE = "preserve";
 
@@ -591,7 +594,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     {
         boolean trimFlag = shouldTrim(element, trim);
         Map<String, String> attributes = processAttributes(element);
-        attributes.put(ATTR_SPACE, String.valueOf(trimFlag));
+        attributes.put(ATTR_SPACE_INTERNAL, String.valueOf(trimFlag));
         StringBuilder buffer = new StringBuilder();
         NodeList list = element.getChildNodes();
         boolean hasChildren = false;
@@ -609,7 +612,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
                 Map<String, String> attrmap =
                         constructHierarchy(childNode, refChildValue, child,
                                 elemRefs, trimFlag, level + 1);
-                Boolean childTrim = Boolean.valueOf(attrmap.remove(ATTR_SPACE));
+                Boolean childTrim = Boolean.valueOf(attrmap.remove(ATTR_SPACE_INTERNAL));
                 childNode.addAttributes(attrmap);
                 ImmutableNode newChild =
                         createChildNodeWithValue(node, childNode,
