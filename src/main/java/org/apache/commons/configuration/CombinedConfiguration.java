@@ -33,13 +33,11 @@ import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationKey;
-import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
+import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.NodeCombiner;
-import org.apache.commons.configuration.tree.TreeUtils;
 import org.apache.commons.configuration.tree.UnionCombiner;
-import org.apache.commons.configuration.tree.ViewNode;
 
 /**
  * <p>
@@ -172,9 +170,6 @@ import org.apache.commons.configuration.tree.ViewNode;
  * configuration itself). However, this is not enforced.
  * </p>
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @since 1.3
  * @version $Id$
  */
@@ -198,11 +193,12 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     /** Constant for the default node combiner. */
     private static final NodeCombiner DEFAULT_COMBINER = new UnionCombiner();
 
+    /** Constant for a root node for an empty configuration. */
+    private static final ImmutableNode EMPTY_ROOT = new ImmutableNode.Builder()
+            .create();
+
     /** Stores the combiner. */
     private NodeCombiner nodeCombiner;
-
-    /** Stores the combined root node. */
-    private ConfigurationNode combinedRoot;
 
     /** Stores a list with the contained configurations. */
     private List<ConfigData> configurations;
@@ -215,6 +211,9 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * hierarchical ones.
      */
     private ExpressionEngine conversionExpressionEngine;
+
+    /** A flag whether this configuration is up-to-date. */
+    private boolean upToDate;
 
     /**
      * Creates a new instance of {@code CombinedConfiguration} and
@@ -644,22 +643,6 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Returns the configuration root node of this combined configuration. When
-     * starting a read or write operation (by obtaining a corresponding lock for
-     * this configuration) a combined node structure is constructed if necessary
-     * using the current node combiner. This method just returns this combined
-     * node. Note that this method should only be called with a lock held!
-     * Otherwise, result may be <b>null</b> under certain circumstances.
-     *
-     * @return the combined root node
-     */
-    @Override
-    public ConfigurationNode getRootNode()
-    {
-        return combinedRoot;
-    }
-
-    /**
      * Clears this configuration. All contained configurations will be removed.
      */
     @Override
@@ -692,7 +675,6 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
                         .getConfiguration()), cd.getName(), cd.getAt());
             }
 
-            copy.setRootNode(new DefaultConfigurationNode());
             return copy;
         }
         finally
@@ -734,25 +716,27 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         beginRead(false);
         try
         {
-            List<ConfigurationNode> nodes = fetchNodeList(key);
-            if (nodes.isEmpty())
-            {
-                return null;
-            }
-
-            Iterator<ConfigurationNode> it = nodes.iterator();
-            Configuration source = findSourceConfiguration(it.next());
-            while (it.hasNext())
-            {
-                Configuration src = findSourceConfiguration(it.next());
-                if (src != source)
-                {
-                    throw new IllegalArgumentException("The key " + key
-                            + " is defined by multiple sources!");
-                }
-            }
-
-            return source;
+//            List<ConfigurationNode> nodes = fetchNodeList(key);
+//            if (nodes.isEmpty())
+//            {
+//                return null;
+//            }
+//
+//            Iterator<ConfigurationNode> it = nodes.iterator();
+//            Configuration source = findSourceConfiguration(it.next());
+//            while (it.hasNext())
+//            {
+//                Configuration src = findSourceConfiguration(it.next());
+//                if (src != source)
+//                {
+//                    throw new IllegalArgumentException("The key " + key
+//                            + " is defined by multiple sources!");
+//                }
+//            }
+//
+//            return source;
+            //TODO implementation
+            return null;
         }
         finally
         {
@@ -777,8 +761,8 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         boolean lockObtained = false;
         do
         {
-            super.beginRead(optimize);
-            if (combinedRoot != null)
+            super.beginRead(false);
+            if (isUpToDate())
             {
                 lockObtained = true;
             }
@@ -808,9 +792,11 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
 
         try
         {
-            if (combinedRoot == null)
+            if (!isUpToDate())
             {
-                combinedRoot = constructCombinedNode();
+                getSubConfigurationParentModel().replaceRoot(
+                        constructCombinedNode(), this);
+                upToDate = true;
             }
         }
         catch (RuntimeException rex)
@@ -821,6 +807,18 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
+     * Returns a flag whether this configuration has been invalidated. This
+     * means that the combined nodes structure has to be rebuilt before the
+     * configuration can be accessed.
+     *
+     * @return a flag whether this configuration is invalid
+     */
+    private boolean isUpToDate()
+    {
+        return upToDate;
+    }
+
+    /**
      * Marks this configuration as invalid. This means that the next access
      * re-creates the root node. An invalidate event is also fired. Note:
      * This implementation expects that an exclusive (write) lock is held on
@@ -828,7 +826,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     private void invalidateInternal()
     {
-        combinedRoot = null;
+        upToDate = false;
         fireEvent(EVENT_COMBINED_INVALIDATE, null, null, false);
     }
 
@@ -847,7 +845,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      *
      * @return the combined root node
      */
-    private ConfigurationNode constructCombinedNode()
+    private ImmutableNode constructCombinedNode()
     {
         if (getNumberOfConfigurationsInternal() < 1)
         {
@@ -855,13 +853,13 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             {
                 getLogger().debug("No configurations defined for " + this);
             }
-            return new ViewNode();
+            return EMPTY_ROOT;
         }
 
         else
         {
             Iterator<ConfigData> it = configurations.iterator();
-            ConfigurationNode node = it.next().getTransformedRoot();
+            ImmutableNode node = it.next().getTransformedRoot();
             while (it.hasNext())
             {
                 node = nodeCombiner.combine(node,
@@ -871,7 +869,8 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             {
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
                 PrintStream stream = new PrintStream(os);
-                TreeUtils.printTree(stream, node);
+                //TODO rework TreeUtils
+                //TreeUtils.printTree(stream, node);
                 getLogger().debug(os.toString());
             }
             return node;
@@ -967,7 +966,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         private final String at;
 
         /** Stores the root node for this child configuration.*/
-        private ConfigurationNode rootNode;
+        private ImmutableNode rootNode;
 
         /**
          * Creates a new instance of {@code ConfigData} and initializes
@@ -1021,7 +1020,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
          * @return the root node of this child configuration
          * @since 1.5
          */
-        public ConfigurationNode getRootNode()
+        public ImmutableNode getRootNode()
         {
             return rootNode;
         }
@@ -1033,41 +1032,83 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
          *
          * @return the transformed root node
          */
-        public ConfigurationNode getTransformedRoot()
+        public ImmutableNode getTransformedRoot()
         {
-            ViewNode result = new ViewNode();
-            ViewNode atParent = result;
+            ImmutableNode configRoot = getRootNodeOfConfiguration();
+            return (atPath == null) ? configRoot : prependAtPath(configRoot);
+        }
 
-            if (atPath != null)
+        /**
+         * Prepends the at path to the given node.
+         *
+         * @param node the root node of the represented configuration
+         * @return the new root node including the at path
+         */
+        private ImmutableNode prependAtPath(ImmutableNode node)
+        {
+            ImmutableNode.Builder pathBuilder = new ImmutableNode.Builder();
+            Iterator<String> pathIterator = atPath.iterator();
+            prependAtPathComponent(pathBuilder, pathIterator.next(),
+                    pathIterator, node);
+            return new ImmutableNode.Builder(1).addChild(pathBuilder.create())
+                    .create();
+        }
+
+        /**
+         * Handles a single component of the at path. A corresponding node is
+         * created and added to the hierarchical path to the original root node
+         * of the configuration.
+         *
+         * @param builder the current node builder object
+         * @param currentComponent the name of the current path component
+         * @param components an iterator with all components of the at path
+         * @param orgRoot the original root node of the wrapped configuration
+         */
+        private void prependAtPathComponent(ImmutableNode.Builder builder,
+                String currentComponent, Iterator<String> components,
+                ImmutableNode orgRoot)
+        {
+            builder.name(currentComponent);
+            if (components.hasNext())
             {
-                // Build the complete path
-                for (String p : atPath)
-                {
-                    ViewNode node = new ViewNode();
-                    node.setName(p);
-                    atParent.addChild(node);
-                    atParent = node;
-                }
+                ImmutableNode.Builder childBuilder =
+                        new ImmutableNode.Builder();
+                prependAtPathComponent(childBuilder, components.next(),
+                        components, orgRoot);
+                builder.addChild(childBuilder.create());
             }
+            else
+            {
+                builder.addChildren(orgRoot.getChildren());
+                builder.addAttributes(orgRoot.getAttributes());
+                builder.value(orgRoot.getValue());
+            }
+        }
 
-            // Copy data of the root node to the new path
+        /**
+         * Obtains the root node of the wrapped configuration. If necessary, a
+         * hierarchical representation of the configuration has to be created
+         * first.
+         *
+         * @return the root node of the associated configuration
+         */
+        private ImmutableNode getRootNodeOfConfiguration()
+        {
             getConfiguration().lock(LockMode.READ);
             try
             {
-                ConfigurationNode root =
-                        ConfigurationUtils.convertToHierarchical(
-                                getConfiguration(), conversionExpressionEngine)
-                                .getRootNode();
-                atParent.appendChildren(root);
-                atParent.appendAttributes(root);
+                ImmutableNode root =
+                        ConfigurationUtils
+                                .convertToHierarchical(getConfiguration(),
+                                        conversionExpressionEngine).getModel()
+                                .getInMemoryRepresentation();
                 rootNode = root;
+                return root;
             }
             finally
             {
                 getConfiguration().unlock(LockMode.READ);
             }
-
-            return result;
         }
 
         /**

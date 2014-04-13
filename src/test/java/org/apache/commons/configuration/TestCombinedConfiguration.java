@@ -45,10 +45,11 @@ import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.sync.ReadWriteSynchronizer;
 import org.apache.commons.configuration.sync.Synchronizer;
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.DefaultExpressionEngineSymbols;
+import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.NodeCombiner;
+import org.apache.commons.configuration.tree.NodeModel;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
 import org.junit.Before;
@@ -689,7 +690,7 @@ public class TestCombinedConfiguration
         SynchronizerTestImpl sync = setUpSynchronizerTest();
         config.addConfiguration(new BaseHierarchicalConfiguration());
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
-        assertNull("Root node not reset", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -713,7 +714,7 @@ public class TestCombinedConfiguration
         SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertNotNull("No node combiner", config.getNodeCombiner());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -726,7 +727,7 @@ public class TestCombinedConfiguration
         SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertNotNull("No configuration", config.getConfiguration(0));
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -739,7 +740,7 @@ public class TestCombinedConfiguration
         SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertNotNull("No configuration", config.getConfiguration(CHILD1));
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -752,7 +753,7 @@ public class TestCombinedConfiguration
         SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertFalse("No child names", config.getConfigurationNames().isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -766,7 +767,17 @@ public class TestCombinedConfiguration
         assertFalse("No child names", config.getConfigurationNameList()
                 .isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
+    }
+
+    /**
+     * Helper method for testing that the combined root node has not yet been
+     * constructed.
+     */
+    private void checkCombinedRootNotConstructed()
+    {
+        assertTrue("Root node was constructed", config.getRootNode()
+                .getChildren().isEmpty());
     }
 
     /**
@@ -779,7 +790,7 @@ public class TestCombinedConfiguration
         assertFalse("No child configurations", config.getConfigurations()
                 .isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -793,7 +804,7 @@ public class TestCombinedConfiguration
         assertNull("Got a conversion engine",
                 config.getConversionExpressionEngine());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -807,7 +818,7 @@ public class TestCombinedConfiguration
         config.setConversionExpressionEngine(new DefaultExpressionEngine(
                 DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS));
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -844,7 +855,7 @@ public class TestCombinedConfiguration
         assertEquals("Wrong number of configurations", 2,
                 config.getNumberOfConfigurations());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -880,10 +891,9 @@ public class TestCombinedConfiguration
                     private static final long serialVersionUID = 1L;
 
                     @Override
-                    public ConfigurationNode getRootNode()
-                    {
+                    public NodeModel<ImmutableNode> getModel() {
                         throw testEx;
-                    };
+                    }
                 };
         config.addConfiguration(childEx);
         try
