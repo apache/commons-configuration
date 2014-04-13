@@ -21,6 +21,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -31,12 +32,13 @@ import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.sync.LockMode;
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationKey;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.NodeCombiner;
+import org.apache.commons.configuration.tree.NodeTreeWalker;
+import org.apache.commons.configuration.tree.QueryResult;
 import org.apache.commons.configuration.tree.UnionCombiner;
 
 /**
@@ -713,30 +715,63 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             throw new IllegalArgumentException("Key must not be null!");
         }
 
+        Set<Configuration> sources = getSources(key);
+        if (sources.isEmpty())
+        {
+            return null;
+        }
+        Iterator<Configuration> iterator = sources.iterator();
+        Configuration source = iterator.next();
+        if (iterator.hasNext())
+        {
+            throw new IllegalArgumentException("The key " + key
+                    + " is defined by multiple sources!");
+        }
+        return source;
+    }
+
+    /**
+     * Returns a set with the configuration sources, in which the specified key
+     * is defined. This method determines the configuration nodes that are
+     * identified by the given key. It then determines the configuration sources
+     * to which these nodes belong and adds them to the result set. Note the
+     * following points:
+     * <ul>
+     * <li>If no node object is found for this key, an empty set is returned.</li>
+     * <li>For keys that have been added directly to this combined configuration
+     * and that do not belong to the namespaces defined by existing child
+     * configurations this combined configuration is contained in the result
+     * set.</li>
+     * </ul>
+     *
+     * @param key the key of a configuration property
+     * @return a set with the configuration sources, which contain this property
+     * @since 2.0
+     */
+    public Set<Configuration> getSources(String key)
+    {
         beginRead(false);
         try
         {
-//            List<ConfigurationNode> nodes = fetchNodeList(key);
-//            if (nodes.isEmpty())
-//            {
-//                return null;
-//            }
-//
-//            Iterator<ConfigurationNode> it = nodes.iterator();
-//            Configuration source = findSourceConfiguration(it.next());
-//            while (it.hasNext())
-//            {
-//                Configuration src = findSourceConfiguration(it.next());
-//                if (src != source)
-//                {
-//                    throw new IllegalArgumentException("The key " + key
-//                            + " is defined by multiple sources!");
-//                }
-//            }
-//
-//            return source;
-            //TODO implementation
-            return null;
+            List<QueryResult<ImmutableNode>> results = fetchNodeList(key);
+            Set<Configuration> sources = new HashSet<Configuration>();
+
+            for (QueryResult<ImmutableNode> result : results)
+            {
+                Set<Configuration> resultSources =
+                        findSourceConfigurations(result.getNode());
+                if (resultSources.isEmpty())
+                {
+                    // key must be defined in combined configuration
+                    sources.add(this);
+                }
+                else
+                {
+                    sources.addAll(resultSources);
+                }
+            }
+
+            return sources;
         }
         finally
         {
@@ -878,33 +913,30 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
-     * Determines the configuration that owns the specified node.
+     * Determines the configurations to which the specified node belongs. This
+     * is done by inspecting the nodes structures of all child configurations.
      *
      * @param node the node
-     * @return the owning configuration
+     * @return a set with the owning configurations
      */
-    private Configuration findSourceConfiguration(ConfigurationNode node)
+    private Set<Configuration> findSourceConfigurations(ImmutableNode node)
     {
-        ConfigurationNode root = null;
-        ConfigurationNode current = node;
+        Set<Configuration> result = new HashSet<Configuration>();
+        FindNodeVisitor<ImmutableNode> visitor =
+                new FindNodeVisitor<ImmutableNode>(node);
 
-        // find the root node in this hierarchy
-        while (current != null)
-        {
-            root = current;
-            current = current.getParentNode();
-        }
-
-        // Check with the root nodes of the child configurations
         for (ConfigData cd : configurations)
         {
-            if (root == cd.getRootNode())
+            NodeTreeWalker.INSTANCE.walkBFS(cd.getRootNode(), visitor,
+                    getModel().getNodeHandler());
+            if (visitor.isFound())
             {
-                return cd.getConfiguration();
+                result.add(cd.getConfiguration());
+                visitor.reset();
             }
         }
 
-        return this;
+        return result;
     }
 
     /**

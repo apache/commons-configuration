@@ -551,6 +551,35 @@ public class TestCombinedConfiguration
     }
 
     /**
+     * Tests whether multiple sources of a key can be retrieved.
+     */
+    @Test
+    public void testGetSourcesMultiSources()
+    {
+        setUpSourceTest();
+        final String key = "list.key";
+        config.getConfiguration(CHILD1).addProperty(key, "1,2,3");
+        config.getConfiguration(CHILD2).addProperty(key, "a,b,c");
+        Set<Configuration> sources = config.getSources(key);
+        assertEquals("Wrong number of sources", 2, sources.size());
+        assertTrue("Source 1 not found",
+                sources.contains(config.getConfiguration(CHILD1)));
+        assertTrue("Source 2 not found",
+                sources.contains(config.getConfiguration(CHILD2)));
+    }
+
+    /**
+     * Tests getSources() for a non existing key.
+     */
+    @Test
+    public void testGetSourcesUnknownKey()
+    {
+        setUpSourceTest();
+        assertTrue("Got sources", config.getSources("non.existing,key")
+                .isEmpty());
+    }
+
+    /**
      * Tests whether escaped list delimiters are treated correctly.
      */
     @Test
