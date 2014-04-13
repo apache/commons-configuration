@@ -648,8 +648,36 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     private static NodeModel<ImmutableNode> createNodeModel(
             HierarchicalConfiguration<ImmutableNode> c)
     {
-        ImmutableNode root = (c != null) ? c.getRootNode() : null;
+        ImmutableNode root = (c != null) ? obtainRootNode(c) : null;
         return new InMemoryNodeModel(root);
+    }
+
+    /**
+     * Obtains the root node from a configuration whose data is to be copied. It
+     * has to be ensured that the synchronizer is called correctly.
+     *
+     * @param c the configuration that is to be copied
+     * @return the root node of this configuration
+     */
+    private static ImmutableNode obtainRootNode(
+            HierarchicalConfiguration<ImmutableNode> c)
+    {
+        boolean needSynchronization = c instanceof AbstractConfiguration;
+        if (needSynchronization)
+        {
+            ((AbstractConfiguration) c).beginRead(false);
+        }
+        try
+        {
+            return c.getRootNode();
+        }
+        finally
+        {
+            if (needSynchronization)
+            {
+                ((AbstractConfiguration) c).endRead();
+            }
+        }
     }
 
     /**
