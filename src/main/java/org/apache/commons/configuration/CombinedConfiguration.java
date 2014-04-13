@@ -39,6 +39,7 @@ import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.NodeCombiner;
 import org.apache.commons.configuration.tree.NodeTreeWalker;
 import org.apache.commons.configuration.tree.QueryResult;
+import org.apache.commons.configuration.tree.TreeUtils;
 import org.apache.commons.configuration.tree.UnionCombiner;
 
 /**
@@ -908,8 +909,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             {
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
                 PrintStream stream = new PrintStream(os);
-                //TODO rework TreeUtils
-                //TreeUtils.printTree(stream, node);
+                TreeUtils.printTree(stream, node);
                 getLogger().debug(os.toString());
             }
             return node;

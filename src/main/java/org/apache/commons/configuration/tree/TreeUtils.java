@@ -17,13 +17,11 @@
 package org.apache.commons.configuration.tree;
 
 import java.io.PrintStream;
-import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Utility methods.
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
+ *
  * @version $Id$
  * @since 1.7
  */
@@ -39,7 +37,7 @@ public final class TreeUtils
      * @param stream The OutputStream.
      * @param result The root node of the tree.
      */
-    public static void printTree(PrintStream stream, ConfigurationNode result)
+    public static void printTree(PrintStream stream, ImmutableNode result)
     {
         if (stream != null)
         {
@@ -47,14 +45,12 @@ public final class TreeUtils
         }
     }
 
-    private static void printTree(PrintStream stream, String indent, ConfigurationNode result)
+    private static void printTree(PrintStream stream, String indent, ImmutableNode result)
     {
-        StringBuffer buffer = new StringBuffer(indent).append("<").append(result.getName());
-        Iterator<ConfigurationNode> iter = result.getAttributes().iterator();
-        while (iter.hasNext())
+        StringBuilder buffer = new StringBuilder(indent).append("<").append(result.getNodeName());
+        for (Map.Entry<String, Object> e : result.getAttributes().entrySet())
         {
-            ConfigurationNode node = iter.next();
-            buffer.append(" ").append(node.getName()).append("='").append(node.getValue()).append("'");
+            buffer.append(' ').append(e.getKey()).append("='").append(e.getValue()).append("'");
         }
         buffer.append(">");
         stream.print(buffer.toString());
@@ -63,13 +59,12 @@ public final class TreeUtils
             stream.print(result.getValue());
         }
         boolean newline = false;
-        if (result.getChildrenCount() > 0)
+        if (!result.getChildren().isEmpty())
         {
             stream.print("\n");
-            iter = result.getChildren().iterator();
-            while (iter.hasNext())
+            for (ImmutableNode child : result.getChildren())
             {
-                printTree(stream, indent + "  ", iter.next());
+                printTree(stream, indent + "  ", child);
             }
             newline = true;
         }
@@ -77,6 +72,6 @@ public final class TreeUtils
         {
             stream.print(indent);
         }
-        stream.println("</" + result.getName() + ">");
+        stream.println("</" + result.getNodeName() + ">");
     }
 }
