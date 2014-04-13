@@ -196,11 +196,14 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode>
         getParentModel().clearTree(null, getSelector(), resolver);
     }
 
+    /**
+     * {@inheritDoc} This implementation returns the tracked node instance
+     * acting as root node of this model.
+     */
     @Override
     public ImmutableNode getInMemoryRepresentation()
     {
-        // TODO implementation
-        throw new UnsupportedOperationException("Not yet implemented!");
+        return getNodeHandler().getRootNode();
     }
 
     /**

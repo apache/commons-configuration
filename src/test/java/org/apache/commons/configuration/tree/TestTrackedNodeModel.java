@@ -106,16 +106,28 @@ public class TestTrackedNodeModel
     }
 
     /**
-     * Tests whether a node handler can be queried.
+     * Creates a mock for a node handler and prepares the parent model to expect
+     * a request for the tracked node handler.
+     *
+     * @return the mock for the node handler
      */
-    @Test
-    public void testGetNodeHandler()
+    private NodeHandler<ImmutableNode> expectGetNodeHandler()
     {
         @SuppressWarnings("unchecked")
         NodeHandler<ImmutableNode> handler =
                 EasyMock.createMock(NodeHandler.class);
         EasyMock.expect(parentModel.getTrackedNodeHandler(selector)).andReturn(
                 handler);
+        return handler;
+    }
+
+    /**
+     * Tests whether a node handler can be queried.
+     */
+    @Test
+    public void testGetNodeHandler()
+    {
+        NodeHandler<ImmutableNode> handler = expectGetNodeHandler();
         EasyMock.replay(handler, parentModel);
 
         assertSame("Wrong node handler", handler, setUpModel().getNodeHandler());
@@ -231,5 +243,20 @@ public class TestTrackedNodeModel
         model.close();
         model.close();
         EasyMock.verify(parentModel);
+    }
+
+    /**
+     * Tests whether the correct in-memory representation can be queried.
+     */
+    @Test
+    public void testGetInMemoryRepresentation()
+    {
+        NodeHandler<ImmutableNode> handler = expectGetNodeHandler();
+        ImmutableNode root = NodeStructureHelper.createNode("Root", null);
+        EasyMock.expect(handler.getRootNode()).andReturn(root);
+        EasyMock.replay(handler, parentModel);
+
+        TrackedNodeModel model = setUpModel();
+        assertSame("Wrong root node", root, model.getInMemoryRepresentation());
     }
 }
