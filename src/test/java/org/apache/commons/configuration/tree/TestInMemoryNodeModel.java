@@ -1055,4 +1055,18 @@ public class TestInMemoryNodeModel
         ImmutableNode rootNode = model.getRootNode();
         assertTrue("Got children", rootNode.getChildren().isEmpty());
     }
+
+    /**
+     * Tests whether the model's data can be represented as immutable node
+     * objects (which is trivial in this case).
+     */
+    @Test
+    public void testGetInMemoryRepresentation()
+    {
+        InMemoryNodeModel model =
+                new InMemoryNodeModel(NodeStructureHelper.ROOT_AUTHORS_TREE);
+        assertSame("Wrong in-memory representation",
+                NodeStructureHelper.ROOT_AUTHORS_TREE,
+                model.getInMemoryRepresentation());
+    }
 }

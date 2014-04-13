@@ -364,11 +364,14 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         setRootNode(newRoot);
     }
 
+    /**
+     * {@inheritDoc} This implementation simply returns the current root node of this
+     * model.
+     */
     @Override
     public ImmutableNode getInMemoryRepresentation()
     {
-        // TODO implementation
-        throw new UnsupportedOperationException("Not yet implemented!");
+        return getTreeData().getRootNode();
     }
 
     /**
