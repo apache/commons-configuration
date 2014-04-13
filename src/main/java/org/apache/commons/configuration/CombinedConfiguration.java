@@ -71,21 +71,20 @@ import org.apache.commons.configuration.tree.UnionCombiner;
  * {@code NodeCombiner}, this may be a complex operation.
  * </p>
  * <p>
- * Because of the way a {@code CombinedConfiguration} is working it has
- * more or less view character: it provides a logic view on the configurations
- * it contains. In this constellation not all methods defined for hierarchical
+ * Because of the way a {@code CombinedConfiguration} is working it has more or
+ * less view character: it provides a logic view on the configurations it
+ * contains. In this constellation not all methods defined for hierarchical
  * configurations - especially methods that update the stored properties - can
  * be implemented in a consistent manner. Using such methods (like
  * {@code addProperty()}, or {@code clearProperty()} on a
- * {@code CombinedConfiguration} is not strictly forbidden, however,
- * depending on the current {@link NodeCombiner} and the involved
- * properties, the results may be different than expected. Some examples may
- * illustrate this:
+ * {@code CombinedConfiguration} is not strictly forbidden, however, depending
+ * on the current {@link NodeCombiner} and the involved properties, the results
+ * may be different than expected. Some examples may illustrate this:
  * </p>
  * <p>
  * <ul>
- * <li>Imagine a {@code CombinedConfiguration} <em>cc</em> containing
- * two child configurations with the following content:
+ * <li>Imagine a {@code CombinedConfiguration} <em>cc</em> containing two child
+ * configurations with the following content:
  * <dl>
  * <dt>user.properties</dt>
  * <dd>
@@ -108,46 +107,47 @@ import org.apache.commons.configuration.tree.UnionCombiner;
  * </dd>
  * </dl>
  * As a {@code NodeCombiner} a
- * {@link org.apache.commons.configuration.tree.OverrideCombiner OverrideCombiner}
- * is used. This combiner will ensure that defined user settings take precedence
- * over the default values. If the resulting {@code CombinedConfiguration}
- * is queried for the background color, {@code blue} will be returned
- * because this value is defined in {@code user.properties}. Now
- * consider what happens if the key {@code gui.background} is removed
- * from the {@code CombinedConfiguration}:
- *
- * <pre>cc.clearProperty("gui.background");</pre>
- *
- * Will a {@code cc.containsKey("gui.background")} now return <b>false</b>?
- * No, it won't! The {@code clearProperty()} operation is executed on the
- * node set of the combined configuration, which was constructed from the nodes
- * of the two child configurations. It causes the value of the
- * <em>background</em> node to be cleared, which is also part of the first
- * child configuration. This modification of one of its child configurations
- * causes the {@code CombinedConfiguration} to be re-constructed. This
- * time the {@code OverrideCombiner} cannot find a
- * {@code gui.background} property in the first child configuration, but
- * it finds one in the second, and adds it to the resulting combined
- * configuration. So the property is still present (with a different value now).</li>
- * <li>{@code addProperty()} can also be problematic: Most node
- * combiners use special view nodes for linking parts of the original
- * configurations' data together. If new properties are added to such a special
- * node, they do not belong to any of the managed configurations and thus hang
- * in the air. Using the same configurations as in the last example, the
- * statement
+ * {@link org.apache.commons.configuration.tree.OverrideCombiner
+ * OverrideCombiner} is used. This combiner will ensure that defined user
+ * settings take precedence over the default values. If the resulting
+ * {@code CombinedConfiguration} is queried for the background color,
+ * {@code blue} will be returned because this value is defined in
+ * {@code user.properties}. Now consider what happens if the key
+ * {@code gui.background} is removed from the {@code CombinedConfiguration}:
  *
  * <pre>
- * addProperty("database.user", "scott");
+ * cc.clearProperty(&quot;gui.background&quot;);
+ * </pre>
+ *
+ * Will a {@code cc.containsKey("gui.background")} now return <b>false</b>? No,
+ * it won't! The {@code clearProperty()} operation is executed on the node set
+ * of the combined configuration, which was constructed from the nodes of the
+ * two child configurations. It causes the value of the <em>background</em> node
+ * to be cleared, which is also part of the first child configuration. This
+ * modification of one of its child configurations causes the
+ * {@code CombinedConfiguration} to be re-constructed. This time the
+ * {@code OverrideCombiner} cannot find a {@code gui.background} property in the
+ * first child configuration, but it finds one in the second, and adds it to the
+ * resulting combined configuration. So the property is still present (with a
+ * different value now).</li>
+ * <li>{@code addProperty()} can also be problematic: Most node combiners use
+ * special view nodes for linking parts of the original configurations' data
+ * together. If new properties are added to such a special node, they do not
+ * belong to any of the managed configurations and thus hang in the air. Using
+ * the same configurations as in the last example, the statement
+ *
+ * <pre>
+ * addProperty(&quot;database.user&quot;, &quot;scott&quot;);
  * </pre>
  *
  * would cause such a hanging property. If now one of the child configurations
- * is changed and the {@code CombinedConfiguration} is re-constructed,
- * this property will disappear! (Add operations are not problematic if they
- * result in a child configuration being updated. For instance an
- * {@code addProperty("home.url", "localhost");} will alter the second
- * child configuration - because the prefix <em>home</em> is here already
- * present; when the {@code CombinedConfiguration} is re-constructed,
- * this change is taken into account.)</li>
+ * is changed and the {@code CombinedConfiguration} is re-constructed, this
+ * property will disappear! (Add operations are not problematic if they result
+ * in a child configuration being updated. For instance an
+ * {@code addProperty("home.url", "localhost");} will alter the second child
+ * configuration - because the prefix <em>home</em> is here already present;
+ * when the {@code CombinedConfiguration} is re-constructed, this change is
+ * taken into account.)</li>
  * </ul>
  * Because of such problems it is recommended to perform updates only on the
  * managed child configurations.
@@ -155,21 +155,25 @@ import org.apache.commons.configuration.tree.UnionCombiner;
  * <p>
  * Whenever the node structure of a {@code CombinedConfiguration} becomes
  * invalid (either because one of the contained configurations was modified or
- * because the {@code invalidate()} method was directly called) an event
- * is generated. So this can be detected by interested event listeners. This
- * also makes it possible to add a combined configuration into another one.
+ * because the {@code invalidate()} method was directly called) an event is
+ * generated. So this can be detected by interested event listeners. This also
+ * makes it possible to add a combined configuration into another one.
  * </p>
  * <p>
  * Notes about thread-safety: This configuration implementation uses a
  * {@code Synchronizer} object to protect instances against concurrent access.
  * The concrete {@code Synchronizer} implementation used determines whether an
- * instance of this class is thread-safe or not. All methods accessing
- * configuration data or querying or altering this configuration's child
- * configurations are guarded by the {@code Synchronizer}. Because a combined
- * configuration operates on node structures partly owned by its child
- * configurations it makes sense that a single {@code Synchronizer} object is
- * used and shared between all involved configurations (including the combined
- * configuration itself). However, this is not enforced.
+ * instance of this class is thread-safe or not. In contrast to other
+ * implementations derived from {@link BaseHierarchicalConfiguration},
+ * thread-safety is an issue here because the nodes structure used by this
+ * configuration has to be constructed dynamically when a child configuration is
+ * changed. Therefore, when multiple threads are involved which also manipulate
+ * one of the child configurations, a proper {@code Synchronizer} object should
+ * be set. Note that the {@code Synchronizer} objects used by the child
+ * configurations do not really matter. Because immutable in-memory nodes
+ * structures are used for them there is no danger that updates on child
+ * configurations could interfere with read operations on the combined
+ * configuration.
  * </p>
  *
  * @since 1.3
