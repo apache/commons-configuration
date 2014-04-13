@@ -47,9 +47,6 @@ package org.apache.commons.configuration.tree;
  * will never be combined.
  * </p>
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  * @since 1.3
  */
@@ -63,16 +60,16 @@ public class OverrideCombiner extends NodeCombiner
      * @return the resulting combined node structure
      */
     @Override
-    public ConfigurationNode combine(ConfigurationNode node1,
-            ConfigurationNode node2)
+    public ImmutableNode combine(ImmutableNode node1,
+            ImmutableNode node2)
     {
-        ViewNode result = createViewNode();
-        result.setName(node1.getName());
+        ImmutableNode.Builder result = new ImmutableNode.Builder();
+        result.name(node1.getNodeName());
 
         // Process nodes from the first structure, which override the second
-        for (ConfigurationNode child : node1.getChildren())
+        for (ImmutableNode child : node1.getChildren())
         {
-            ConfigurationNode child2 = canCombine(node1, node2, child);
+            ImmutableNode child2 = canCombine(node1, node2, child);
             if (child2 != null)
             {
                 result.addChild(combine(child, child2));
@@ -85,9 +82,9 @@ public class OverrideCombiner extends NodeCombiner
 
         // Process nodes from the second structure, which are not contained
         // in the first structure
-        for (ConfigurationNode child : node2.getChildren())
+        for (ImmutableNode child : node2.getChildren())
         {
-            if (node1.getChildrenCount(child.getName()) < 1)
+            if (HANDLER.getChildrenCount(node1, child.getNodeName()) < 1)
             {
                 result.addChild(child);
             }
@@ -95,31 +92,31 @@ public class OverrideCombiner extends NodeCombiner
 
         // Handle attributes and value
         addAttributes(result, node1, node2);
-        result.setValue((node1.getValue() != null) ? node1.getValue() : node2
+        result.value((node1.getValue() != null) ? node1.getValue() : node2
                 .getValue());
 
-        return result;
+        return result.create();
     }
 
     /**
      * Handles the attributes during a combination process. First all attributes
-     * of the first node will be added to the result. Then all attributes of the
-     * second node, which are not contained in the first node, will also be
-     * added.
+     * of the first node are added to the result. Then all attributes of the
+     * second node, which are not contained in the first node, are also added.
      *
      * @param result the resulting node
      * @param node1 the first node
      * @param node2 the second node
      */
-    protected void addAttributes(ViewNode result, ConfigurationNode node1,
-            ConfigurationNode node2)
+    protected void addAttributes(ImmutableNode.Builder result,
+            ImmutableNode node1, ImmutableNode node2)
     {
-        result.appendAttributes(node1);
-        for (ConfigurationNode attr : node2.getAttributes())
+        result.addAttributes(node1.getAttributes());
+        for (String attr : node2.getAttributes().keySet())
         {
-            if (node1.getAttributeCount(attr.getName()) == 0)
+            if (!node1.getAttributes().containsKey(attr))
             {
-                result.addAttribute(attr);
+                result.addAttribute(attr,
+                        HANDLER.getAttributeValue(node2, attr));
             }
         }
     }
@@ -136,14 +133,14 @@ public class OverrideCombiner extends NodeCombiner
      * @param child the child node (of the first node)
      * @return a child of the second node, with which a combination is possible
      */
-    protected ConfigurationNode canCombine(ConfigurationNode node1,
-            ConfigurationNode node2, ConfigurationNode child)
+    protected ImmutableNode canCombine(ImmutableNode node1,
+            ImmutableNode node2, ImmutableNode child)
     {
-        if (node2.getChildrenCount(child.getName()) == 1
-                && node1.getChildrenCount(child.getName()) == 1
+        if (HANDLER.getChildrenCount(node2, child.getNodeName()) == 1
+                && HANDLER.getChildrenCount(node1, child.getNodeName()) == 1
                 && !isListNode(child))
         {
-            return node2.getChildren(child.getName()).get(0);
+            return HANDLER.getChildren(node2, child.getNodeName()).get(0);
         }
         else
         {
