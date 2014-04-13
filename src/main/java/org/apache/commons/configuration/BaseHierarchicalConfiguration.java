@@ -226,8 +226,16 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     public HierarchicalConfiguration<ImmutableNode> configurationAt(String key,
             boolean supportUpdates)
     {
-        return supportUpdates ? createConnectedSubConfiguration(key)
-                : createIndependentSubConfiguration(key);
+        beginRead(false);
+        try
+        {
+            return supportUpdates ? createConnectedSubConfiguration(key)
+                    : createIndependentSubConfiguration(key);
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -429,7 +437,17 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(
             String key)
     {
-        List<ImmutableNode> nodes = fetchFilteredNodeResults(key);
+        List<ImmutableNode> nodes;
+        beginRead(false);
+        try
+        {
+            nodes = fetchFilteredNodeResults(key);
+        }
+        finally
+        {
+            endRead();
+        }
+
         List<HierarchicalConfiguration<ImmutableNode>> results =
                 new ArrayList<HierarchicalConfiguration<ImmutableNode>>(
                         nodes.size());
@@ -455,7 +473,17 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
             return configurationsAt(key);
         }
 
-        InMemoryNodeModel parentModel = getSubConfigurationParentModel();
+        InMemoryNodeModel parentModel;
+        beginRead(false);
+        try
+        {
+            parentModel = getSubConfigurationParentModel();
+        }
+        finally
+        {
+            endRead();
+        }
+
         Collection<NodeSelector> selectors =
                 parentModel.selectAndTrackNodes(key, this);
         return createConnectedSubConfigurations(parentModel, selectors);

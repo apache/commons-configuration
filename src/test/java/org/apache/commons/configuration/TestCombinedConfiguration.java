@@ -79,6 +79,9 @@ public class TestCombinedConfiguration
     /** Constant for the name of the second child configuration.*/
     private static final String CHILD2 = TEST_NAME + "2";
 
+    /** Constant for the key for a sub configuration. */
+    private static final String SUB_KEY = "test.sub.config";
+
     /** Helper object for managing temporary files. */
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
@@ -971,12 +974,76 @@ public class TestCombinedConfiguration
     }
 
     /**
+     * Prepares the test configuration for a test for sub configurations. Some
+     * child configurations are added.
+     *
+     * @return the sub configuration at the test sub key
+     */
+    private AbstractConfiguration setUpSubConfigTest()
+    {
+        AbstractConfiguration srcConfig = setUpTestConfiguration();
+        config.addConfiguration(srcConfig, "source", SUB_KEY);
+        config.addConfiguration(setUpTestConfiguration());
+        config.addConfiguration(setUpTestConfiguration(), "otherTest",
+                "other.prefix");
+        return srcConfig;
+    }
+
+    /**
+     * Tests whether a sub configuration survives updates of its parent.
+     */
+    @Test
+    public void testSubConfigurationWithUpdates()
+    {
+        AbstractConfiguration srcConfig = setUpSubConfigTest();
+        HierarchicalConfiguration<ImmutableNode> sub =
+                config.configurationAt(SUB_KEY, true);
+        assertTrue("Wrong value before update", sub.getBoolean(TEST_KEY));
+        srcConfig.setProperty(TEST_KEY, Boolean.FALSE);
+        assertFalse("Wrong value from combined configuration",
+                config.getBoolean(SUB_KEY + '.' + TEST_KEY));
+        assertFalse("Wrong value after update", sub.getBoolean(TEST_KEY));
+    }
+
+    /**
+     * Checks the configurationsAt() method.
+     * @param withUpdates flag whether updates are supported
+     */
+    private void checkConfigurationsAt(boolean withUpdates)
+    {
+        setUpSubConfigTest();
+        List<HierarchicalConfiguration<ImmutableNode>> subs =
+                config.configurationsAt(SUB_KEY, withUpdates);
+        assertEquals("Wrong number of sub configurations", 1, subs.size());
+        assertTrue("Wrong value in sub configuration",
+                subs.get(0).getBoolean(TEST_KEY));
+    }
+
+    /**
+     * Tests whether sub configurations can be created from a key.
+     */
+    @Test
+    public void testConfigurationsAt()
+    {
+        checkConfigurationsAt(false);
+    }
+
+    /**
+     * Tests whether sub configurations can be created which are attached.
+     */
+    @Test
+    public void testConfigurationsAtWithUpdates()
+    {
+        checkConfigurationsAt(true);
+    }
+
+    /**
      * Helper method for creating a test configuration to be added to the
      * combined configuration.
      *
      * @return the test configuration
      */
-    private AbstractConfiguration setUpTestConfiguration()
+    private static AbstractConfiguration setUpTestConfiguration()
     {
         BaseHierarchicalConfiguration config = new BaseHierarchicalConfiguration();
         config.addProperty(TEST_KEY, Boolean.TRUE);
