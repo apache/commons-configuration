@@ -170,7 +170,7 @@ public class TestOverrideCombiner extends AbstractCombinerTest
         List<QueryResult<ImmutableNode>> nds =
                 config.getExpressionEngine().query(config.getRootNode(),
                         "database.tables.table",
-                        config.getModel().getNodeHandler());
+                        config.getNodeModel().getNodeHandler());
         assertFalse("No node found", nds.isEmpty());
         assertFalse("An attribute result", nds.get(0).isAttributeResult());
         return nds.get(0).getNode();

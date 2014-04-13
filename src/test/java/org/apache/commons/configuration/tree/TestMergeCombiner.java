@@ -181,7 +181,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
         List<QueryResult<ImmutableNode>> nds =
                 config.getExpressionEngine().query(config.getRootNode(),
                         "database.tables.table",
-                        config.getModel().getNodeHandler());
+                        config.getNodeModel().getNodeHandler());
         assertFalse("No node found", nds.isEmpty());
         assertFalse("Not a node result", nds.get(0).isAttributeResult());
         return nds.get(0).getNode();

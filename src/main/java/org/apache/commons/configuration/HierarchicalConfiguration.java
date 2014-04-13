@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.configuration.tree.ExpressionEngine;
-import org.apache.commons.configuration.tree.NodeModel;
+import org.apache.commons.configuration.tree.NodeModelSupport;
 
 /**
  * <p>
@@ -43,15 +43,8 @@ import org.apache.commons.configuration.tree.NodeModel;
  * @param <T> the type of the nodes used by this hierarchical configuration
  */
 public interface HierarchicalConfiguration<T>
-    extends Configuration, ImmutableHierarchicalConfiguration
+    extends Configuration, ImmutableHierarchicalConfiguration, NodeModelSupport<T>
 {
-    /**
-     * Returns the {@code NodeModel} used by this hierarchical configuration.
-     *
-     * @return the {@code NodeModel}
-     */
-    NodeModel<T> getModel();
-
     /**
      * Returns the root node of this hierarchical configuration.
      *

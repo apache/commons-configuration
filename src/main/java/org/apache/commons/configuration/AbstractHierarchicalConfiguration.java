@@ -272,6 +272,24 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
+     * {@inheritDoc} This implementation returns the configuration's
+     * {@code NodeModel}. It is guarded by the current {@code Synchronizer}.
+     */
+    @Override
+    public NodeModel<T> getNodeModel()
+    {
+        beginRead(false);
+        try
+        {
+            return getModel();
+        }
+        finally
+        {
+            endRead();
+        }
+    }
+
+    /**
      * Returns the expression engine used by this configuration. This method
      * will never return <b>null</b>; if no specific expression engine was set,
      * the default expression engine will be returned.
@@ -789,11 +807,15 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
-     * Returns the model used by this configuration.
+     * Returns the {@code NodeModel} used by this configuration. This method is
+     * intended for internal use only. Access to the model is granted without
+     * any synchronization. This is in contrast to the &quot;official&quot;
+     * {@code getNodeModel()} method which is guarded by the configuration's
+     * {@code Synchronizer}.
      *
      * @return the node model
      */
-    public NodeModel<T> getModel()
+    protected NodeModel<T> getModel()
     {
         return model;
     }

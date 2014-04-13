@@ -935,6 +935,27 @@ public class TestAbstractHierarchicalConfiguration
     }
 
     /**
+     * Tests whether the configuration's node model can be correctly accessed.
+     */
+    @Test
+    public void testGetNodeModel()
+    {
+        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        config.setSynchronizer(sync);
+        NodeModel<ImmutableNode> model = config.getNodeModel();
+
+        assertTrue("Wrong node model: " + model,
+                model instanceof InMemoryNodeModel);
+        ImmutableNode rootNode = model.getNodeHandler().getRootNode();
+        assertEquals("Wrong number of children of root node", 1, rootNode
+                .getChildren().size());
+        assertTrue("Wrong children of root node", rootNode.getChildren()
+                .contains(NodeStructureHelper.ROOT_TABLES_TREE));
+        sync.verify(SynchronizerTestImpl.Methods.BEGIN_READ,
+                SynchronizerTestImpl.Methods.END_READ);
+    }
+
+    /**
      * Helper method for testing the getKeys(String) method.
      *
      * @param prefix the key to pass into getKeys()

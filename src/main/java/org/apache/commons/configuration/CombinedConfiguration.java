@@ -1132,7 +1132,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
                 ImmutableNode root =
                         ConfigurationUtils
                                 .convertToHierarchical(getConfiguration(),
-                                        conversionExpressionEngine).getModel()
+                                        conversionExpressionEngine).getNodeModel()
                                 .getInMemoryRepresentation();
                 rootNode = root;
                 return root;
