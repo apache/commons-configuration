@@ -391,7 +391,6 @@ public class TestCombinedConfiguration
 
         CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
         assertNotNull("No root node", cc2.getRootNode());
-        assertNotSame("Root node not copied", config.getRootNode(), cc2.getRootNode());
         assertEquals("Wrong number of contained configurations", config
                 .getNumberOfConfigurations(), cc2.getNumberOfConfigurations());
         assertSame("Wrong node combiner", config.getNodeCombiner(), cc2
@@ -734,7 +733,7 @@ public class TestCombinedConfiguration
         SynchronizerTestImpl sync = setUpSynchronizerTest();
         config.setNodeCombiner(new UnionCombiner());
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
-        assertNull("Root node not reset", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
