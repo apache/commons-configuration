@@ -365,9 +365,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     }
 
     /**
-     * {@inheritDoc} Care has to be taken when this method is used and the model
-     * is accessed by multiple threads. It is not deterministic which concurrent
-     * operations see the old root and which see the new root node.
+     * {@inheritDoc} All tracked nodes and reference objects managed by this
+     * model are cleared.Care has to be taken when this method is used and the
+     * model is accessed by multiple threads. It is not deterministic which
+     * concurrent operations see the old root and which see the new root node.
      *
      * @param newRoot the new root node to be set (can be <b>null</b>, then an
      *        empty root node is set)
@@ -375,6 +376,38 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     public void setRootNode(ImmutableNode newRoot)
     {
         structure.set(createTreeData(initialRootNode(newRoot), structure.get()));
+    }
+
+    /**
+     * Replaces the root node of this model. This method is similar to
+     * {@link #setRootNode(ImmutableNode)}; however, tracked nodes will not get
+     * lost. The model applies the selectors of all tracked nodes on the new
+     * nodes hierarchy, so that corresponding nodes are selected (this may cause
+     * nodes to become detached if a select operation fails). This operation is
+     * useful if the new nodes hierarchy to be set is known to be similar to the
+     * old one. Note that reference objects are lost; there is no way to
+     * automatically match nodes between the old and the new nodes hierarchy.
+     *
+     * @param newRoot the new root node to be set (must not be <b>null</b>)
+     * @param resolver the {@code NodeKeyResolver}
+     * @throws IllegalArgumentException if the new root node is <b>null</b>
+     */
+    public void replaceRoot(ImmutableNode newRoot,
+            NodeKeyResolver<ImmutableNode> resolver)
+    {
+        if (newRoot == null)
+        {
+            throw new IllegalArgumentException(
+                    "Replaced root node must not be null!");
+        }
+
+        TreeData current = structure.get();
+        // this step is needed to get a valid NodeHandler
+        TreeData temp =
+                createTreeDataForRootAndTracker(newRoot,
+                        current.getNodeTracker());
+        structure.set(temp.updateNodeTracker(temp.getNodeTracker().update(
+                newRoot, null, resolver, temp)));
     }
 
     /**
@@ -799,6 +832,20 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         NodeTracker newTracker =
                 (current != null) ? current.getNodeTracker()
                         .detachAllTrackedNodes() : new NodeTracker();
+        return createTreeDataForRootAndTracker(root, newTracker);
+    }
+
+    /**
+     * Creates a {@code TreeData} object for the specified root node and
+     * {@code NodeTracker}. Other parameters are set to default values.
+     *
+     * @param root the new root node for this model
+     * @param newTracker the new {@code NodeTracker}
+     * @return the new {@code TreeData} object
+     */
+    private TreeData createTreeDataForRootAndTracker(ImmutableNode root,
+            NodeTracker newTracker)
+    {
         return new TreeData(root, createParentMapping(root),
                 Collections.<ImmutableNode, ImmutableNode> emptyMap(),
                 newTracker, new ReferenceTracker());

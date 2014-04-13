@@ -17,6 +17,7 @@
 package org.apache.commons.configuration.tree;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -259,5 +260,34 @@ public class TestInMemoryNodeModelReferences
                 refHandler.getReference(checkNode));
         assertEquals("Wrong root reference", rootRef,
                 refHandler.getReference(refHandler.getRootNode()));
+    }
+
+    /**
+     * Tests whether the root node of the model can be replaced.
+     */
+    @Test
+    public void testReplaceRoot()
+    {
+        NodeSelector selector = new NodeSelector("Simmons.Hyperion");
+        model.trackNode(selector, resolver);
+        ImmutableNode trackedNode = model.getTrackedNode(selector);
+        model.addProperty("Simmons.Hyperion.Lamia",
+                Collections.singleton("new person"), resolver);
+
+        model.replaceRoot(NodeStructureHelper.ROOT_AUTHORS_TREE, resolver);
+        ImmutableNode node = model.getTrackedNode(selector);
+        assertEquals("Wrong tracked node", trackedNode, node);
+        assertFalse("Node is detached", model.isTrackedNodeDetached(selector));
+        assertNull("Reference not cleared", model.getReferenceNodeHandler()
+                .getReference(trackedNode));
+    }
+
+    /**
+     * Tries to call replaceRoot() with a null node.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testReplaceRootNull()
+    {
+        model.replaceRoot(null, resolver);
     }
 }
