@@ -32,6 +32,7 @@ import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
 import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.InMemoryNodeModel;
+import org.apache.commons.configuration.tree.InMemoryNodeModelSupport;
 import org.apache.commons.configuration.tree.NodeHandler;
 import org.apache.commons.configuration.tree.NodeModel;
 import org.apache.commons.configuration.tree.NodeSelector;
@@ -48,7 +49,7 @@ import org.apache.commons.configuration.tree.TrackedNodeModel;
  * @version $Id$
  */
 public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfiguration<ImmutableNode>
-    implements Serializable, Cloneable
+    implements Serializable, Cloneable, InMemoryNodeModelSupport
 {
     /**
      * Constant for the subnode configuration modified event.
@@ -96,6 +97,16 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     {
         super(model);
         changeListener = createChangeListener();
+    }
+
+    /**
+     * {@inheritDoc} This implementation returns the {@code InMemoryNodeModel}
+     * used by this configuration.
+     */
+    @Override
+    public InMemoryNodeModel getNodeModel()
+    {
+        return (InMemoryNodeModel) super.getNodeModel();
     }
 
     /**
@@ -262,6 +273,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      *
      * @param key the key of the sub configuration
      * @return a {@code NodeSelector} for initializing a sub configuration
+     * @since 2.0
      */
     protected NodeSelector getSubConfigurationNodeSelector(String key)
     {
@@ -273,16 +285,17 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * node.
      *
      * @param selector the {@code NodeSelector}
-     * @param parentModel the parent node model
+     * @param parentModelSupport the {@code InMemoryNodeModelSupport} object for
+     *        the parent node model
      * @return the newly created sub configuration
      * @since 2.0
      */
     protected SubnodeConfiguration createSubConfigurationForTrackedNode(
-            NodeSelector selector, InMemoryNodeModel parentModel)
+            NodeSelector selector, InMemoryNodeModelSupport parentModelSupport)
     {
         SubnodeConfiguration subConfig =
                 new SubnodeConfiguration(this, new TrackedNodeModel(
-                        parentModel, selector, true));
+                        parentModelSupport, selector, true));
         initSubConfigurationForThisParent(subConfig);
         return subConfig;
     }
@@ -314,22 +327,22 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     private BaseHierarchicalConfiguration createConnectedSubConfiguration(
             String key)
     {
-        InMemoryNodeModel myModel = getSubConfigurationParentModel();
         NodeSelector selector = getSubConfigurationNodeSelector(key);
-        myModel.trackNode(selector, this);
-        return createSubConfigurationForTrackedNode(selector, myModel);
+        getSubConfigurationParentModel().trackNode(selector, this);
+        return createSubConfigurationForTrackedNode(selector, this);
     }
 
     /**
      * Creates a list of connected sub configurations based on a passed in list
      * of node selectors.
      *
-     * @param parentModel the parent node model
+     * @param parentModelSupport the parent node model support object
      * @param selectors the list of {@code NodeSelector} objects
      * @return the list with sub configurations
      */
     private List<HierarchicalConfiguration<ImmutableNode>> createConnectedSubConfigurations(
-            InMemoryNodeModel parentModel, Collection<NodeSelector> selectors)
+            InMemoryNodeModelSupport parentModelSupport,
+            Collection<NodeSelector> selectors)
     {
         List<HierarchicalConfiguration<ImmutableNode>> configs =
                 new ArrayList<HierarchicalConfiguration<ImmutableNode>>(
@@ -337,7 +350,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         for (NodeSelector selector : selectors)
         {
             configs.add(createSubConfigurationForTrackedNode(selector,
-                    parentModel));
+                    parentModelSupport));
         }
         return configs;
     }
@@ -486,7 +499,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
 
         Collection<NodeSelector> selectors =
                 parentModel.selectAndTrackNodes(key, this);
-        return createConnectedSubConfigurations(parentModel, selectors);
+        return createConnectedSubConfigurations(this, selectors);
     }
 
     /**
@@ -542,7 +555,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         }
 
         InMemoryNodeModel parentModel = getSubConfigurationParentModel();
-        return createConnectedSubConfigurations(parentModel,
+        return createConnectedSubConfigurations(this,
                 parentModel.trackChildNodes(key, this));
     }
 

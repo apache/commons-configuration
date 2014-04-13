@@ -29,14 +29,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * structure. This is the case for instance for a {@code SubnodeConfiguration}.
  * </p>
  * <p>
- * An instance of this class is constructed with a reference to the underlying
- * {@code InMemoryNodeModel} and the {@link NodeSelector} pointing to the
- * tracked node acting as this model's root node. The {@code NodeModel}
+ * An instance of this class is constructed with an
+ * {@link InMemoryNodeModelSupport} object providing a reference to the
+ * underlying {@code InMemoryNodeModel} and the {@link NodeSelector} pointing to
+ * the tracked node acting as this model's root node. The {@code NodeModel}
  * operations are implemented by delegating to the wrapped
  * {@code InMemoryNodeModel} object specifying the selector to the tracked node
  * as target root node for the update transaction. Note that the tracked node
  * can become detached at any time. This situation is handled transparently by
- * the implementation of {@code InMemoryNodeModel}.
+ * the implementation of {@code InMemoryNodeModel}. The reason for using an
+ * {@code InMemoryNodeModelSupport} object rather than an
+ * {@code InMemoryNodeModel} directly is that this additional layer of
+ * indirection can be used for performing special initializations on the model
+ * before it is returned to the {@code TrackedNodeModel} object. This is needed
+ * by some dynamic configuration implementations, e.g. by
+ * {@code CombinedConfiguration}.
  * </p>
  * <p>
  * If the tracked node acting as root node is exclusively used by this model, it
@@ -56,7 +63,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class TrackedNodeModel implements NodeModel<ImmutableNode>
 {
     /** Stores the underlying parent model. */
-    private final InMemoryNodeModel parentModel;
+    private final InMemoryNodeModelSupport parentModelSupport;
 
     /** The selector for the managed tracked node. */
     private final NodeSelector selector;
@@ -80,7 +87,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode>
      * model explicitly. Therefore, it makes sense to do this automatically on
      * finalization.
      *
-     * @param model the underlying {@code InMemoryNodeModel} (must not be
+     * @param modelSupport the underlying {@code InMemoryNodeModelSupport} (must not be
      *        <b>null</b>)
      * @param sel the selector to the root node of this model (must not be
      *        <b>null</b>)
@@ -88,23 +95,34 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode>
      *        released on finalization
      * @throws IllegalArgumentException if a required parameter is missing
      */
-    public TrackedNodeModel(InMemoryNodeModel model, NodeSelector sel,
+    public TrackedNodeModel(InMemoryNodeModelSupport modelSupport, NodeSelector sel,
             boolean untrackOnFinalize)
     {
-        if (model == null)
+        if (modelSupport == null)
         {
             throw new IllegalArgumentException(
-                    "Underlying model must not be null!");
+                    "Underlying model support must not be null!");
         }
         if (sel == null)
         {
             throw new IllegalArgumentException("Selector must not be null!");
         }
 
-        parentModel = model;
+        parentModelSupport = modelSupport;
         selector = sel;
         releaseTrackedNodeOnFinalize = untrackOnFinalize;
         closed = new AtomicBoolean();
+    }
+
+    /**
+     * Returns the {@code InMemoryNodeModelSupport} object which is used to gain
+     * access to the underlying node model.
+     *
+     * @return the associated {@code InMemoryNodeModelSupport} object
+     */
+    public InMemoryNodeModelSupport getParentModelSupport()
+    {
+        return parentModelSupport;
     }
 
     /**
@@ -115,7 +133,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode>
      */
     public InMemoryNodeModel getParentModel()
     {
-        return parentModel;
+        return getParentModelSupport().getNodeModel();
     }
 
     /**

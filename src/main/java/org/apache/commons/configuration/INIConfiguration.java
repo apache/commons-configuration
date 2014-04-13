@@ -35,6 +35,7 @@ import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.InMemoryNodeModel;
+import org.apache.commons.configuration.tree.InMemoryNodeModelSupport;
 import org.apache.commons.configuration.tree.NodeHandler;
 import org.apache.commons.configuration.tree.NodeHandlerDecorator;
 import org.apache.commons.configuration.tree.NodeSelector;
@@ -853,7 +854,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
                 // obtain the node for the section, create it on demand
                 InMemoryNodeModel parentModel = getSubConfigurationParentModel();
                 NodeSelector selector = parentModel.trackChildNodeWithCreation(null, name, this);
-                return createSubConfigurationForTrackedNode(selector, parentModel);
+                return createSubConfigurationForTrackedNode(selector, this);
             }
         }
     }
@@ -869,7 +870,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
         InMemoryNodeModel parentModel = getSubConfigurationParentModel();
         NodeSelector selector = new NodeSelector(null); // selects parent
         parentModel.trackNode(selector, this);
-        GlobalSectionNodeModel model = new GlobalSectionNodeModel(parentModel, selector);
+        GlobalSectionNodeModel model =
+                new GlobalSectionNodeModel(this, selector);
         SubnodeConfiguration sub = new SubnodeConfiguration(this, model);
         initSubConfigurationForThisParent(sub);
         return sub;
@@ -899,13 +901,13 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
          * Creates a new instance of {@code GlobalSectionNodeModel} and
          * initializes it with the given underlying model.
          *
-         * @param model the underlying {@code InMemoryNodeModel}
+         * @param modelSupport the underlying {@code InMemoryNodeModel}
          * @param selector the {@code NodeSelector}
          */
-        public GlobalSectionNodeModel(InMemoryNodeModel model,
+        public GlobalSectionNodeModel(InMemoryNodeModelSupport modelSupport,
                 NodeSelector selector)
         {
-            super(model, selector, true);
+            super(modelSupport, selector, true);
         }
 
         @Override

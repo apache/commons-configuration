@@ -45,6 +45,9 @@ public class TestTrackedNodeModel
     /** A mock for the underlying node model. */
     private InMemoryNodeModel parentModel;
 
+    /** A mock for the support object that provides the model. */
+    private InMemoryNodeModelSupport modelSupport;
+
     @BeforeClass
     public static void setUpBeforeClass() throws Exception
     {
@@ -60,6 +63,10 @@ public class TestTrackedNodeModel
     public void setUp() throws Exception
     {
         parentModel = EasyMock.createMock(InMemoryNodeModel.class);
+        modelSupport = EasyMock.createMock(InMemoryNodeModelSupport.class);
+        EasyMock.expect(modelSupport.getNodeModel()).andReturn(parentModel)
+                .anyTimes();
+        EasyMock.replay(modelSupport);
     }
 
     /**
@@ -69,7 +76,7 @@ public class TestTrackedNodeModel
      */
     private TrackedNodeModel setUpModel()
     {
-        return new TrackedNodeModel(parentModel, selector, true);
+        return new TrackedNodeModel(modelSupport, selector, true);
     }
 
     /**
@@ -78,7 +85,7 @@ public class TestTrackedNodeModel
     @Test(expected = IllegalArgumentException.class)
     public void testInitNoSelector()
     {
-        new TrackedNodeModel(parentModel, null, true);
+        new TrackedNodeModel(modelSupport, null, true);
     }
 
     /**

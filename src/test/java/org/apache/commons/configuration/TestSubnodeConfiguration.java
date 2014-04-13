@@ -122,7 +122,7 @@ public class TestSubnodeConfiguration
     {
         InMemoryNodeModel parentModel = (InMemoryNodeModel) parent.getModel();
         parentModel.trackNode(selector, parent);
-        return new TrackedNodeModel(parentModel, selector, true);
+        return new TrackedNodeModel(parent, selector, true);
     }
 
     /**

@@ -179,6 +179,17 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
     }
 
     /**
+     * {@inheritDoc} This implementation returns the node model of the parent
+     * configuration. This is necessary because this sub configuration does not
+     * have an {@code InMemoryNodeModel} object.
+     */
+    @Override
+    public InMemoryNodeModel getNodeModel()
+    {
+        return getParent().getNodeModel();
+    }
+
+    /**
      * {@inheritDoc} This implementation returns a copy of the current node
      * model with the same settings. However, it has to be ensured that the
      * track count for the node selector is increased.
@@ -191,7 +202,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
         InMemoryNodeModel parentModel =
                 (InMemoryNodeModel) getParent().getModel();
         parentModel.trackNode(getRootSelector(), getParent());
-        return new TrackedNodeModel(parentModel, getRootSelector(), true);
+        return new TrackedNodeModel(getParent(), getRootSelector(), true);
     }
 
     /**
