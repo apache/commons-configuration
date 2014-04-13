@@ -550,6 +550,18 @@ public class TestCombinedConfiguration
     }
 
     /**
+     * Tests getSource() if a child configuration is again a combined configuration.
+     */
+    @Test
+    public void testGetSourceWithCombinedChildConfiguration()
+    {
+        setUpSourceTest();
+        CombinedConfiguration cc = new CombinedConfiguration();
+        cc.addConfiguration(config);
+        assertEquals("Wrong source", config, cc.getSource(TEST_KEY));
+    }
+
+    /**
      * Tests whether multiple sources of a key can be retrieved.
      */
     @Test
@@ -1028,9 +1040,9 @@ public class TestCombinedConfiguration
                 config.configurationAt(SUB_KEY, true);
         assertTrue("Wrong value before update", sub.getBoolean(TEST_KEY));
         srcConfig.setProperty(TEST_KEY, Boolean.FALSE);
+        assertFalse("Wrong value after update", sub.getBoolean(TEST_KEY));
         assertFalse("Wrong value from combined configuration",
                 config.getBoolean(SUB_KEY + '.' + TEST_KEY));
-        assertFalse("Wrong value after update", sub.getBoolean(TEST_KEY));
     }
 
     /**
