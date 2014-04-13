@@ -364,6 +364,13 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         setRootNode(newRoot);
     }
 
+    @Override
+    public ImmutableNode getInMemoryRepresentation()
+    {
+        // TODO implementation
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
     /**
      * {@inheritDoc} All tracked nodes and reference objects managed by this
      * model are cleared.Care has to be taken when this method is used and the

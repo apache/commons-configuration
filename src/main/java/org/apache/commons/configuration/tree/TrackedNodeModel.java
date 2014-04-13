@@ -196,6 +196,13 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode>
         getParentModel().clearTree(null, getSelector(), resolver);
     }
 
+    @Override
+    public ImmutableNode getInMemoryRepresentation()
+    {
+        // TODO implementation
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
     /**
      * Closes this model. This causes the tracked node this model is based upon
      * to be released (i.e. {@link InMemoryNodeModel#untrackNode(NodeSelector)}

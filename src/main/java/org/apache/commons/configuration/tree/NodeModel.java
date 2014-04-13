@@ -132,4 +132,20 @@ public interface NodeModel<T>
      * @param resolver the {@code NodeKeyResolver}
      */
     void clear(NodeKeyResolver<T> resolver);
+
+    /**
+     * Returns a representation of the data stored in this model in form of a
+     * nodes hierarchy of {@code ImmutableNode} objects. A concrete model
+     * implementation can use an arbitrary means to store its data. When a
+     * model's data is to be used together with other functionality of the
+     * <em>Configuration</em> library (e.g. when combining multiple
+     * configuration sources) it has to be transformed into a common format.
+     * This is done by this method. {@code ImmutableNode} is a generic
+     * representation of a hierarchical structure. Thus, it should be possible
+     * to generate a corresponding structure from arbitrary model data.
+     *
+     * @return the root node of an in-memory hierarchy representing the data
+     *         stored in this model
+     */
+    ImmutableNode getInMemoryRepresentation();
 }
