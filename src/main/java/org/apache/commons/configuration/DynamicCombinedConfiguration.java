@@ -380,7 +380,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @return the combined root node
      */
     @Override
-    public ConfigurationNode getRootNode()
+    public ImmutableNode getRootNode()
     {
         return getCurrentConfig().getRootNode();
     }

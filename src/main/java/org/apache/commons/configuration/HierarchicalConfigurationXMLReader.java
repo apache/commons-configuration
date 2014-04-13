@@ -109,7 +109,7 @@ public class HierarchicalConfigurationXMLReader<T> extends
     protected void processKeys()
     {
         NodeHandler<T> nodeHandler =
-                getConfiguration().getModel().getNodeHandler();
+                getConfiguration().getNodeModel().getNodeHandler();
         NodeTreeWalker.INSTANCE.walkDFS(nodeHandler.getRootNode(),
                 new SAXVisitor(), nodeHandler);
     }
