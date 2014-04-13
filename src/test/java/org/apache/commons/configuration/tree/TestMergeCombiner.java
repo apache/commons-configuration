@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
+import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
@@ -51,7 +52,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
     @Test
     public void testSimpleValues() throws ConfigurationException
     {
-        HierarchicalConfiguration config = createCombinedConfiguration();
+        BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong number of bgcolors", 0, config
                 .getMaxIndex("gui.bgcolor"));
         assertEquals("Wrong bgcolor", "green", config.getString("gui.bgcolor"));
@@ -67,7 +68,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
     @Test
     public void testAttributes() throws ConfigurationException
     {
-        HierarchicalConfiguration config = createCombinedConfiguration();
+        BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong value of min attribute", 1, config
                 .getInt("gui.level[@min]"));
         assertEquals("Wrong value of default attribute", 2, config
@@ -84,7 +85,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
     @Test
     public void testOverrideValues() throws ConfigurationException
     {
-        HierarchicalConfiguration config = createCombinedConfiguration();
+        BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong user", "Admin", config
                 .getString("base.services.security.login.user"));
         assertEquals("Wrong user type", "default", config
@@ -101,7 +102,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
     @Test
     public void testListFromFirstStructure() throws ConfigurationException
     {
-        HierarchicalConfiguration config = createCombinedConfiguration();
+        BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong number of services", 0, config
                 .getMaxIndex("net.service.url"));
         assertEquals("Wrong service", "http://service1.org", config
@@ -117,7 +118,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
     @Test
     public void testListFromSecondStructure() throws ConfigurationException
     {
-        HierarchicalConfiguration config = createCombinedConfiguration();
+        BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong number of servers", 3, config
                 .getMaxIndex("net.server.url"));
         assertEquals("Wrong server", "http://testsvr.com", config
@@ -138,7 +139,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
     public void testMerge() throws ConfigurationException
     {
         //combiner.setDebugStream(System.out);
-        HierarchicalConfiguration config = createCombinedConfiguration();
+        BaseHierarchicalConfiguration config = createCombinedConfiguration();
         config.setExpressionEngine(new XPathExpressionEngine());
         assertEquals("Wrong number of Channels", 3, config.getMaxIndex("Channels/Channel"));
         assertEquals("Bad Channel 1 Name", "My Channel",
@@ -164,21 +165,25 @@ public class TestMergeCombiner extends AbstractCombinerTest
      * @param config the config
      * @return the node for the table element
      */
-    private ConfigurationNode checkTable(HierarchicalConfiguration config)
+    private ImmutableNode checkTable(
+            HierarchicalConfiguration<ImmutableNode> config)
     {
-        assertEquals("Wrong number of tables", 1, config
-                .getMaxIndex("database.tables.table"));
-        HierarchicalConfiguration c = config
-                .configurationAt("database.tables.table(0)");
+        assertEquals("Wrong number of tables", 1,
+                config.getMaxIndex("database.tables.table"));
+        HierarchicalConfiguration<ImmutableNode> c =
+                config.configurationAt("database.tables.table(0)");
         assertEquals("Wrong table name", "documents", c.getString("name"));
-        assertEquals("Wrong number of fields", 2, c
-                .getMaxIndex("fields.field.name"));
-        assertEquals("Wrong field", "docname", c
-                .getString("fields.field(1).name"));
+        assertEquals("Wrong number of fields", 2,
+                c.getMaxIndex("fields.field.name"));
+        assertEquals("Wrong field", "docname",
+                c.getString("fields.field(1).name"));
 
-        List<ConfigurationNode> nds = config.getExpressionEngine().query(config.getRootNode(),
-                "database.tables.table");
+        List<QueryResult<ImmutableNode>> nds =
+                config.getExpressionEngine().query(config.getRootNode(),
+                        "database.tables.table",
+                        config.getModel().getNodeHandler());
         assertFalse("No node found", nds.isEmpty());
-        return nds.get(0);
-    }
+        assertFalse("Not a node result", nds.get(0).isAttributeResult());
+        return nds.get(0).getNode();
+   }
 }

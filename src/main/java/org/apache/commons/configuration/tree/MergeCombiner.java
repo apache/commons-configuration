@@ -17,9 +17,12 @@
 package org.apache.commons.configuration.tree;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * <p>
@@ -36,9 +39,6 @@ import java.util.List;
  * </ol>
  * </p>
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  * @since 1.7
  */
@@ -53,18 +53,18 @@ public class MergeCombiner extends NodeCombiner
      */
 
     @Override
-    public ConfigurationNode combine(ConfigurationNode node1, ConfigurationNode node2)
+    public ImmutableNode combine(ImmutableNode node1, ImmutableNode node2)
     {
-        ViewNode result = createViewNode();
-        result.setName(node1.getName());
-        result.setValue(node1.getValue());
+        ImmutableNode.Builder result = new ImmutableNode.Builder();
+        result.name(node1.getNodeName());
+        result.value(node1.getValue());
         addAttributes(result, node1, node2);
 
         // Check if nodes can be combined
-        List<ConfigurationNode> children2 = new LinkedList<ConfigurationNode>(node2.getChildren());
-        for (ConfigurationNode child1 : node1.getChildren())
+        List<ImmutableNode> children2 = new LinkedList<ImmutableNode>(node2.getChildren());
+        for (ImmutableNode child1 : node1.getChildren())
         {
-            ConfigurationNode child2 = canCombine(node1, node2, child1, children2);
+            ImmutableNode child2 = canCombine(node2, child1, children2);
             if (child2 != null)
             {
                 result.addChild(combine(child1, child2));
@@ -77,11 +77,11 @@ public class MergeCombiner extends NodeCombiner
         }
 
         // Add remaining children of node 2
-        for (ConfigurationNode c : children2)
+        for (ImmutableNode c : children2)
         {
             result.addChild(c);
         }
-        return result;
+        return result.create();
     }
 
     /**
@@ -90,21 +90,23 @@ public class MergeCombiner extends NodeCombiner
      * second node, which are not contained in the first node, will also be
      * added.
      *
-     * @param result the resulting node
+     * @param result the builder for the resulting node
      * @param node1 the first node
      * @param node2 the second node
      */
-    protected void addAttributes(ViewNode result, ConfigurationNode node1,
-            ConfigurationNode node2)
+    protected void addAttributes(ImmutableNode.Builder result, ImmutableNode node1,
+            ImmutableNode node2)
     {
-        result.appendAttributes(node1);
-        for (ConfigurationNode attr : node2.getAttributes())
+        Map<String, Object> attributes = new HashMap<String, Object>();
+        attributes.putAll(node1.getAttributes());
+        for (Map.Entry<String, Object> e : node2.getAttributes().entrySet())
         {
-            if (node1.getAttributeCount(attr.getName()) == 0)
+            if (!attributes.containsKey(e.getKey()))
             {
-                result.addAttribute(attr);
+                attributes.put(e.getKey(), e.getValue());
             }
         }
+        result.addAttributes(attributes);
     }
 
     /**
@@ -112,35 +114,22 @@ public class MergeCombiner extends NodeCombiner
      * only be combined if its attributes are all present in the second node and
      * they all have the same value.
      *
-     * @param node1 the first node
      * @param node2 the second node
      * @param child the child node (of the first node)
+     * @param children2 the children of the 2nd node
      * @return a child of the second node, with which a combination is possible
      */
-    protected ConfigurationNode canCombine(ConfigurationNode node1,
-            ConfigurationNode node2, ConfigurationNode child, List<ConfigurationNode> children2)
+    protected ImmutableNode canCombine(ImmutableNode node2,
+            ImmutableNode child, List<ImmutableNode> children2)
     {
-        List<ConfigurationNode> attrs1 = child.getAttributes();
-        List<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>();
+        Map<String, Object> attrs1 = child.getAttributes();
+        List<ImmutableNode> nodes = new ArrayList<ImmutableNode>();
 
-        List<ConfigurationNode> children = node2.getChildren(child.getName());
-        Iterator<ConfigurationNode> it = children.iterator();
-        while (it.hasNext())
+        List<ImmutableNode> children =
+                HANDLER.getChildren(node2, child.getNodeName());
+        for (ImmutableNode node : children)
         {
-            ConfigurationNode node = it.next();
-            Iterator<ConfigurationNode> iter = attrs1.iterator();
-            while (iter.hasNext())
-            {
-                ConfigurationNode attr1 = iter.next();
-                List<ConfigurationNode> list2 = node.getAttributes(attr1.getName());
-                if (list2.size() == 1
-                    && !attr1.getValue().equals(list2.get(0).getValue()))
-                {
-                    node = null;
-                    break;
-                }
-            }
-            if (node != null)
+            if (matchAttributes(attrs1, node))
             {
                 nodes.add(node);
             }
@@ -152,13 +141,36 @@ public class MergeCombiner extends NodeCombiner
         }
         if (nodes.size() > 1 && !isListNode(child))
         {
-            Iterator<ConfigurationNode> iter = nodes.iterator();
-            while (iter.hasNext())
+            for (ImmutableNode node : nodes)
             {
-                children2.remove(iter.next());
+                children2.remove(node);
             }
         }
 
         return null;
+    }
+
+    /**
+     * Checks whether the attributes of the passed in node are compatible.
+     *
+     * @param attrs1 the attributes of the first node
+     * @param node the 2nd node
+     * @return a flag whether these nodes can be combined regarding their
+     *         attributes
+     */
+    private static boolean matchAttributes(Map<String, Object> attrs1,
+            ImmutableNode node)
+    {
+        Map<String, Object> attrs2 = node.getAttributes();
+        for (Map.Entry<String, Object> e : attrs1.entrySet())
+        {
+            if (attrs2.containsKey(e.getKey())
+                    && !ObjectUtils
+                            .equals(e.getValue(), attrs2.get(e.getKey())))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }
