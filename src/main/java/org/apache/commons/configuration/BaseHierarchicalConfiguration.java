@@ -703,22 +703,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     private static ImmutableNode obtainRootNode(
             HierarchicalConfiguration<ImmutableNode> c)
     {
-        boolean needSynchronization = c instanceof AbstractConfiguration;
-        if (needSynchronization)
-        {
-            ((AbstractConfiguration) c).beginRead(false);
-        }
-        try
-        {
-            return c.getRootNode();
-        }
-        finally
-        {
-            if (needSynchronization)
-            {
-                ((AbstractConfiguration) c).endRead();
-            }
-        }
+        return c.getNodeModel().getNodeHandler().getRootNode();
     }
 
     /**
