@@ -112,9 +112,6 @@ import org.apache.commons.configuration.tree.DefaultConfigurationNode;
  * </p>
  *
  * @since 1.3
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  */
 public class XMLBeanDeclaration implements BeanDeclaration

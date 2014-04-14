@@ -522,7 +522,17 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(
             String key)
     {
-        List<ImmutableNode> nodes = fetchFilteredNodeResults(key);
+        List<ImmutableNode> nodes;
+        beginRead(false);
+        try
+        {
+            nodes = fetchFilteredNodeResults(key);
+        }
+        finally
+        {
+            endRead();
+        }
+
         if (nodes.size() != 1)
         {
             return Collections.emptyList();
