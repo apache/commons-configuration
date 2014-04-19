@@ -343,9 +343,9 @@ public class XMLBeanDeclaration implements BeanDeclaration
     public Map<String, Object> getBeanProperties()
     {
         Map<String, Object> props = new HashMap<String, Object>();
-        for (String key : getNode().getAttributes())
+        for (String key : getAttributeNames())
         {
-            if (!isReservedName(key))
+            if (!isReservedAttributeName(key))
             {
                 props.put(key, interpolate(getNode().getAttribute(key)));
             }
@@ -367,7 +367,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
         Map<String, Object> nested = new HashMap<String, Object>();
         for (NodeData<?> child : getNode().getChildren())
         {
-            if (!isReservedName(child.nodeName()))
+            if (!isReservedChildName(child.nodeName()))
             {
                 if (nested.containsKey(child.nodeName()))
                 {
@@ -433,18 +433,60 @@ public class XMLBeanDeclaration implements BeanDeclaration
     }
 
     /**
-     * Checks if the specified name of a node or attribute is reserved and thus should be ignored. This
-     * method is called when the maps for the bean's properties and complex
-     * properties are collected. It checks whether the passed in name
-     * starts with the reserved prefix.
+     * Checks if the specified child node name is reserved and thus should be
+     * ignored. This method is called when processing child nodes of this bean
+     * declaration. It is then possible to ignore some nodes with a specific
+     * meaning. This implementation delegates to {@link #isReservedName(String)}
+     * .
+     *
+     * @param name the name of the child node to be checked
+     * @return a flag whether this name is reserved
+     * @since 2.0
+     */
+    protected boolean isReservedChildName(String name)
+    {
+        return isReservedName(name);
+    }
+
+    /**
+     * Checks if the specified attribute name is reserved and thus does not
+     * point to a property of the bean to be created. This method is called when
+     * processing the attributes of this bean declaration. It is then possible
+     * to ignore some attributes with a specific meaning. This implementation
+     * delegates to {@link #isReservedName(String)}.
+     *
+     * @param name the name of the attribute to be checked
+     * @return a flag whether this name is reserved
+     * @since 2.0
+     */
+    protected boolean isReservedAttributeName(String name)
+    {
+        return isReservedName(name);
+    }
+
+    /**
+     * Checks if the specified name of a node or attribute is reserved and thus
+     * should be ignored. This method is called per default by the methods for
+     * checking attribute and child node names. It checks whether the passed in
+     * name starts with the reserved prefix.
      *
      * @param name the name to be checked
-     * @return a flag whether this name is reserved (and does not point to a
-     *         property)
+     * @return a flag whether this name is reserved
      */
     protected boolean isReservedName(String name)
     {
         return name == null || name.startsWith(RESERVED_PREFIX);
+    }
+
+    /**
+     * Returns a set with the names of the attributes of the configuration node
+     * holding the data of this bean declaration.
+     *
+     * @return the attribute names of the underlying configuration node
+     */
+    protected Set<String> getAttributeNames()
+    {
+        return getNode().getAttributes();
     }
 
     /**
