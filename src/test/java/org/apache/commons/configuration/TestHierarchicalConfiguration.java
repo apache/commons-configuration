@@ -533,9 +533,17 @@ public class TestHierarchicalConfiguration
                 .testInterpolatedConfiguration(config);
 
         // tests whether the hierarchical structure has been maintained
-        config = c;
-        //testGetProperty();
-        //TODO check content
+        checkContent(c);
+    }
+
+    /**
+     * Tests whether interpolation works on an empty configuration.
+     */
+    @Test
+    public void testInterpolatedConfigurationEmpty()
+    {
+        config = new BaseHierarchicalConfiguration();
+        assertTrue("Got content", config.interpolatedConfiguration().isEmpty());
     }
 
     /**

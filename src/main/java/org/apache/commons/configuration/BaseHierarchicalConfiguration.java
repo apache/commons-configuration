@@ -21,9 +21,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
@@ -36,9 +38,11 @@ import org.apache.commons.configuration.tree.InMemoryNodeModelSupport;
 import org.apache.commons.configuration.tree.NodeHandler;
 import org.apache.commons.configuration.tree.NodeModel;
 import org.apache.commons.configuration.tree.NodeSelector;
+import org.apache.commons.configuration.tree.NodeTreeWalker;
 import org.apache.commons.configuration.tree.QueryResult;
 import org.apache.commons.configuration.tree.ReferenceNodeHandler;
 import org.apache.commons.configuration.tree.TrackedNodeModel;
+import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * <p>
@@ -642,18 +646,15 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     @Override
     public Configuration interpolatedConfiguration()
     {
-//        BaseHierarchicalConfiguration c = (BaseHierarchicalConfiguration) clone();
-//        c.getRootNode().visit(new ConfigurationNodeVisitorAdapter()
-//        {
-//            @Override
-//            public void visitAfterChildren(ConfigurationNode node)
-//            {
-//                node.setValue(interpolate(node.getValue()));
-//            }
-//        });
-//        return c;
-        //TODO implementation
-        return null;
+        InterpolatedVisitor visitor = new InterpolatedVisitor();
+        NodeHandler<ImmutableNode> handler = getModel().getNodeHandler();
+        NodeTreeWalker.INSTANCE
+                .walkDFS(handler.getRootNode(), visitor, handler);
+
+        BaseHierarchicalConfiguration c =
+                (BaseHierarchicalConfiguration) clone();
+        c.getNodeModel().setRootNode(visitor.getInterpolatedRoot());
+        return c;
     }
 
     /**
@@ -851,6 +852,214 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * A specialized visitor implementation which constructs the root node of a
+     * configuration with all variables replaced by their interpolated values.
+     */
+    private class InterpolatedVisitor extends
+            ConfigurationNodeVisitorAdapter<ImmutableNode>
+    {
+        /** A stack for managing node builder instances. */
+        private final List<ImmutableNode.Builder> builderStack;
+
+        /** The resulting root node. */
+        private ImmutableNode interpolatedRoot;
+
+        /**
+         * Creates a new instance of {@code InterpolatedVisitor}.
+         */
+        public InterpolatedVisitor()
+        {
+            builderStack = new LinkedList<ImmutableNode.Builder>();
+        }
+
+        /**
+         * Returns the result of this builder: the root node of the interpolated
+         * nodes hierarchy.
+         *
+         * @return the resulting root node
+         */
+        public ImmutableNode getInterpolatedRoot()
+        {
+            return interpolatedRoot;
+        }
+
+        @Override
+        public void visitBeforeChildren(ImmutableNode node,
+                NodeHandler<ImmutableNode> handler)
+        {
+            if (isLeafNode(node, handler))
+            {
+                handleLeafNode(node, handler);
+            }
+            else
+            {
+                ImmutableNode.Builder builder =
+                        new ImmutableNode.Builder(handler.getChildrenCount(
+                                node, null))
+                                .name(handler.nodeName(node))
+                                .value(interpolate(handler.getValue(node)))
+                                .addAttributes(
+                                        interpolateAttributes(node, handler));
+                push(builder);
+            }
+        }
+
+        @Override
+        public void visitAfterChildren(ImmutableNode node,
+                NodeHandler<ImmutableNode> handler)
+        {
+            if (!isLeafNode(node, handler))
+            {
+                ImmutableNode newNode = pop().create();
+                storeInterpolatedNode(newNode);
+            }
+        }
+
+        /**
+         * Pushes a new builder on the stack.
+         *
+         * @param builder the builder
+         */
+        private void push(ImmutableNode.Builder builder)
+        {
+            builderStack.add(0, builder);
+        }
+
+        /**
+         * Pops the top-level element from the stack.
+         *
+         * @return the element popped from the stack
+         */
+        private ImmutableNode.Builder pop()
+        {
+            return builderStack.remove(0);
+        }
+
+        /**
+         * Returns the top-level element from the stack without removing it.
+         *
+         * @return the top-level element from the stack
+         */
+        private ImmutableNode.Builder peek()
+        {
+            return builderStack.get(0);
+        }
+
+        /**
+         * Returns a flag whether the given node is a leaf. This is the case if
+         * it does not have children.
+         *
+         * @param node the node in question
+         * @param handler the {@code NodeHandler}
+         * @return a flag whether this is a leaf node
+         */
+        private boolean isLeafNode(ImmutableNode node,
+                NodeHandler<ImmutableNode> handler)
+        {
+            return handler.getChildren(node).isEmpty();
+        }
+
+        /**
+         * Handles interpolation for a node with no children. If interpolation
+         * does not change this node, it is copied as is to the resulting
+         * structure. Otherwise, a new node is created with the interpolated
+         * values.
+         *
+         * @param node the current node to be processed
+         * @param handler the {@code NodeHandler}
+         */
+        private void handleLeafNode(ImmutableNode node,
+                NodeHandler<ImmutableNode> handler)
+        {
+            Object value = interpolate(node.getValue());
+            Map<String, Object> interpolatedAttributes =
+                    new HashMap<String, Object>();
+            boolean attributeChanged =
+                    interpolateAttributes(node, handler, interpolatedAttributes);
+            ImmutableNode newNode =
+                    (valueChanged(value, handler.getValue(node)) || attributeChanged) ? new ImmutableNode.Builder()
+                            .name(handler.nodeName(node)).value(value)
+                            .addAttributes(interpolatedAttributes).create()
+                            : node;
+            storeInterpolatedNode(newNode);
+        }
+
+        /**
+         * Stores a processed node. Per default, the node is added to the
+         * current builder on the stack. If no such builder exists, this is the
+         * result node.
+         *
+         * @param node the node to be stored
+         */
+        private void storeInterpolatedNode(ImmutableNode node)
+        {
+            if (builderStack.isEmpty())
+            {
+                interpolatedRoot = node;
+            }
+            else
+            {
+                peek().addChild(node);
+            }
+        }
+
+        /**
+         * Populates a map with interpolated attributes of the passed in node.
+         *
+         * @param node the current node to be processed
+         * @param handler the {@code NodeHandler}
+         * @param interpolatedAttributes a map for storing the results
+         * @return a flag whether an attribute value was changed by
+         *         interpolation
+         */
+        private boolean interpolateAttributes(ImmutableNode node,
+                NodeHandler<ImmutableNode> handler,
+                Map<String, Object> interpolatedAttributes)
+        {
+            boolean attributeChanged = false;
+            for (String attr : handler.getAttributes(node))
+            {
+                Object attrValue =
+                        interpolate(handler.getAttributeValue(node, attr));
+                if (valueChanged(attrValue,
+                        handler.getAttributeValue(node, attr)))
+                {
+                    attributeChanged = true;
+                }
+                interpolatedAttributes.put(attr, attrValue);
+            }
+            return attributeChanged;
+        }
+
+        /**
+         * Returns a map with interpolated attributes of the passed in node.
+         *
+         * @param node the current node to be processed
+         * @param handler the {@code NodeHandler}
+         * @return the map with interpolated attributes
+         */
+        private Map<String, Object> interpolateAttributes(ImmutableNode node,
+                NodeHandler<ImmutableNode> handler)
+        {
+            Map<String, Object> attributes = new HashMap<String, Object>();
+            interpolateAttributes(node, handler, attributes);
+            return attributes;
+        }
+
+        /**
+         * Tests whether a value is changed because of interpolation.
+         *
+         * @param interpolatedValue the interpolated value
+         * @param value the original value
+         * @return a flag whether the value was changed
+         */
+        private boolean valueChanged(Object interpolatedValue, Object value)
+        {
+            return ObjectUtils.notEqual(interpolatedValue, value);
         }
     }
 }
