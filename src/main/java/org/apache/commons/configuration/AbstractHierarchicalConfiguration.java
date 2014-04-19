@@ -19,6 +19,7 @@ package org.apache.commons.configuration;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -368,12 +369,32 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     @Override
     protected void addPropertyInternal(String key, Object obj)
     {
-        getModel().addProperty(key, getListDelimiterHandler().parse(obj), this);
+        addPropertyToModel(key, getListDelimiterHandler().parse(obj));
     }
 
+    /**
+     * {@inheritDoc} This method is not called in the normal way (via
+     * {@code addProperty()} for hierarchical configurations because all values
+     * to be added for the property have to be passed to the model in a single
+     * step. However, to allow derived classes to add an arbitrary value as an
+     * object, a special implementation is provided here. The passed in object
+     * is not parsed as a list, but passed directly as only value to the model.
+     */
     @Override
-    protected void addPropertyDirect(String key, Object value) {
-        // will not be called
+    protected void addPropertyDirect(String key, Object value)
+    {
+        addPropertyToModel(key, Collections.singleton(value));
+    }
+
+    /**
+     * Helper method for executing an add property operation on the model.
+     *
+     * @param key the key of the new property
+     * @param values the values to be added for this property
+     */
+    private void addPropertyToModel(String key, Iterable<?> values)
+    {
+        getModel().addProperty(key, values, this);
     }
 
     /**
