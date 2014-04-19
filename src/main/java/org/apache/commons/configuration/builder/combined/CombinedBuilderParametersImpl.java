@@ -58,7 +58,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
             + CombinedBuilderParametersImpl.class.getName();
 
     /** The definition configuration builder. */
-    private ConfigurationBuilder<? extends HierarchicalConfiguration> definitionBuilder;
+    private ConfigurationBuilder<? extends HierarchicalConfiguration<?>> definitionBuilder;
 
     /** A parameters object for the definition configuration builder. */
     private BuilderParameters definitionBuilderParameters;
@@ -86,7 +86,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
 
     /**
      * Looks up an instance of this class in the specified parameters map. This
-     * is equivalent to {@code fromParameters(params, false};}
+     * is equivalent to {@code fromParameters(params, false);}
      *
      * @param params the map with parameters (must not be <b>null</b>
      * @return the instance obtained from the map or <b>null</b>
@@ -129,7 +129,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      *
      * @return the definition {@code ConfigurationBuilder}
      */
-    public ConfigurationBuilder<? extends HierarchicalConfiguration> getDefinitionBuilder()
+    public ConfigurationBuilder<? extends HierarchicalConfiguration<?>> getDefinitionBuilder()
     {
         return definitionBuilder;
     }
@@ -144,7 +144,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      */
     @Override
     public CombinedBuilderParametersImpl setDefinitionBuilder(
-            ConfigurationBuilder<? extends HierarchicalConfiguration> builder)
+            ConfigurationBuilder<? extends HierarchicalConfiguration<?>> builder)
     {
         definitionBuilder = builder;
         return this;
