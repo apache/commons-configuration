@@ -29,8 +29,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.tree.DefaultConfigurationNode;
+import org.apache.commons.configuration.tree.ImmutableNode;
 
 import org.apache.commons.codec.binary.Hex;
 
@@ -38,7 +37,7 @@ import org.apache.commons.codec.binary.Hex;
  * JavaCC based parser for the PropertyList format.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 class PropertyListParser {
 
@@ -119,12 +118,12 @@ SKIP : { " " | "\t" | "\n" | "\r" }
 // Handle comments
 MORE : { "/*": IN_COMMENT }
 < IN_COMMENT > MORE : { <  ~[] > }
-< IN_COMMENT > SKIP : { "*/": DEFAULT } 
+< IN_COMMENT > SKIP : { "*/": DEFAULT }
 
 MORE : { "//": IN_SINGLE_LINE_COMMENT }
 < IN_SINGLE_LINE_COMMENT > SPECIAL_TOKEN : {
     < SINGLE_LINE_COMMENT: "\n"|"\r"|"\r\n" > : DEFAULT }
-< IN_SINGLE_LINE_COMMENT > MORE : { <  ~[] > } 
+< IN_SINGLE_LINE_COMMENT > MORE : { <  ~[] > }
 
 TOKEN : { <ARRAY_BEGIN     : "(" > }
 TOKEN : { <ARRAY_END       : ")" > }
@@ -166,9 +165,8 @@ PropertyListConfiguration parse() :
 
 PropertyListConfiguration Dictionary() :
 {
-    PropertyListConfiguration configuration = new PropertyListConfiguration();
-    List<ConfigurationNode> children = new ArrayList<ConfigurationNode>();
-    ConfigurationNode child = null;
+    ImmutableNode.Builder builder = new ImmutableNode.Builder();
+    ImmutableNode child = null;
 }
 {
     <DICT_BEGIN>
@@ -178,43 +176,41 @@ PropertyListConfiguration Dictionary() :
             if (child.getValue() instanceof HierarchicalConfiguration)
             {
                 // prune & graft the nested configuration to the parent configuration
-                HierarchicalConfiguration conf = (HierarchicalConfiguration) child.getValue();
-                ConfigurationNode root = conf.getRootNode();
-                root.setName(child.getName());
-                children.add(root);
+                @SuppressWarnings("unchecked") // we created this configuration
+                HierarchicalConfiguration<ImmutableNode> conf =
+                    (HierarchicalConfiguration<ImmutableNode>) child.getValue();
+                ImmutableNode root = conf.getNodeModel().getNodeHandler().getRootNode();
+                ImmutableNode.Builder childBuilder = new ImmutableNode.Builder();
+                childBuilder.name(child.getNodeName()).value(root.getValue())
+                  .addChildren(root.getChildren());
+                builder.addChild(childBuilder.create());
             }
             else
             {
-                children.add(child);
+                builder.addChild(child);
             }
         }
     )*
     <DICT_END>
     {
-        for (int i = 0; i < children.size(); i++)
-        {
-            child = children.get(i);
-            configuration.getRootNode().addChild(child);
-        }
-
-        return configuration;
+        return new PropertyListConfiguration(builder.create());
     }
 }
 
-ConfigurationNode Property() :
+ImmutableNode Property() :
 {
     String key = null;
     Object value = null;
-    ConfigurationNode node = new DefaultConfigurationNode();
+    ImmutableNode.Builder node = new ImmutableNode.Builder();
 }
 {
     key = String()
-    { node.setName(key); }
+    { node.name(key); }
     <EQUAL>
     value = Element()
-    { node.setValue(value); }
+    { node.value(value); }
     (<DICT_SEPARATOR>)?
-    { return node; }
+    { return node.create(); }
 }
 
 Object Element() :
@@ -223,7 +219,7 @@ Object Element() :
 }
 {
     LOOKAHEAD(2)
-    
+
     value = Array()
     { return value; }
     |
