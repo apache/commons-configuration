@@ -38,9 +38,12 @@ import junitx.framework.ObjectAssert;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationComparator;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.StrictConfigurationComparator;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.tree.ImmutableNode;
+import org.apache.commons.configuration.tree.NodeHandler;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -222,7 +225,7 @@ public class TestPropertyListConfiguration
     {
         Calendar cal = Calendar.getInstance();
         cal.clear();
-        cal.set(2002, 2, 22, 11, 30, 0);
+        cal.set(2002, Calendar.MARCH, 22, 11, 30, 0);
         cal.setTimeZone(TimeZone.getTimeZone("GMT+0100"));
         Date date = cal.getTime();
 
@@ -311,8 +314,24 @@ public class TestPropertyListConfiguration
         PropertyListConfiguration checkConfig = new PropertyListConfiguration();
         load(checkConfig, savedFile);
 
-        assertFalse(config.getRootNode().getChildren("empty-dictionary").isEmpty());
-        assertFalse(checkConfig.getRootNode().getChildren("empty-dictionary").isEmpty());
+        assertFalse(getNamedChildren(config, "empty-dictionary").isEmpty());
+        assertFalse(getNamedChildren(checkConfig, "empty-dictionary").isEmpty());
+    }
+
+    /**
+     * Returns a list with the children of the given configuration's root note
+     * with the specified name.
+     *
+     * @param config the configuration
+     * @param name the name of the desired children
+     * @return the list with the corresponding child nodes
+     */
+    private static List<ImmutableNode> getNamedChildren(
+            HierarchicalConfiguration<ImmutableNode> config, String name)
+    {
+        NodeHandler<ImmutableNode> handler =
+                config.getNodeModel().getNodeHandler();
+        return handler.getChildren(handler.getRootNode(), name);
     }
 
     @Test
@@ -421,12 +440,12 @@ public class TestPropertyListConfiguration
     {
         Calendar cal = Calendar.getInstance();
         cal.clear();
-        cal.set(2007, 9, 29, 23, 4, 30);
+        cal.set(2007, Calendar.OCTOBER, 29, 23, 4, 30);
         cal.setTimeZone(TimeZone.getTimeZone("GMT-0230"));
         assertEquals("Wrong date literal (1)", "<*D2007-10-29 23:04:30 -0230>",
                 PropertyListConfiguration.formatDate(cal));
         cal.clear();
-        cal.set(2007, 9, 30, 22, 2, 15);
+        cal.set(2007, Calendar.OCTOBER, 30, 22, 2, 15);
         cal.setTimeZone(TimeZone.getTimeZone("GMT+1111"));
         assertEquals("Wrong date literal (2)", "<*D2007-10-30 22:02:15 +1111>",
                 PropertyListConfiguration.formatDate(cal));
