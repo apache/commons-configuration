@@ -28,7 +28,6 @@ import java.text.MessageFormat;
 import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BasicBuilderProperties;
@@ -155,9 +154,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
             throws IOException
     {
         return writeReloadFile(f,
-                MessageFormat.format(RELOAD_CONTENT, new Object[] {
-                        value, tagIdx
-                }));
+                MessageFormat.format(RELOAD_CONTENT, value, tagIdx));
     }
 
     /**
@@ -191,7 +188,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
                         return new AlwaysReloadingDetector();
                     }
                 };
-        HierarchicalConfiguration defConf = new BaseHierarchicalConfiguration();
+        BaseHierarchicalConfiguration defConf = new BaseHierarchicalConfiguration();
         addReloadSource(defConf, xmlConf1.getAbsolutePath());
         addReloadSource(defConf, xmlConf2.getAbsolutePath());
         builder.configure(parameters
@@ -245,7 +242,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
                         return new RandomReloadingDetector();
                     }
                 };
-        HierarchicalConfiguration defConf = new BaseHierarchicalConfiguration();
+        BaseHierarchicalConfiguration defConf = new BaseHierarchicalConfiguration();
         defConf.addProperty("header.result.nodeCombiner[@config-class]",
                 MergeCombiner.class.getName());
         defConf.addProperty("header.result.expressionEngine[@config-class]",
@@ -375,18 +372,18 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
      * A test builder class which always returns the same configuration.
      */
     private static class ConstantConfigurationBuilder extends
-            BasicConfigurationBuilder<HierarchicalConfiguration>
+            BasicConfigurationBuilder<BaseHierarchicalConfiguration>
     {
-        private final HierarchicalConfiguration configuration;
+        private final BaseHierarchicalConfiguration configuration;
 
-        public ConstantConfigurationBuilder(HierarchicalConfiguration conf)
+        public ConstantConfigurationBuilder(BaseHierarchicalConfiguration conf)
         {
-            super(HierarchicalConfiguration.class);
+            super(BaseHierarchicalConfiguration.class);
             configuration = conf;
         }
 
         @Override
-        public HierarchicalConfiguration getConfiguration()
+        public BaseHierarchicalConfiguration getConfiguration()
                 throws ConfigurationException
         {
             return configuration;
