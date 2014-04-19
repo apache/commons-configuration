@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.HierarchicalConfiguration;
@@ -29,6 +30,7 @@ import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.fluent.FileBasedBuilderParameters;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.VFSFileSystem;
+import org.apache.commons.configuration.tree.ImmutableNode;
 import org.junit.Test;
 
 /**
@@ -60,11 +62,11 @@ public class TestCombinedConfigurationBuilderVFS extends
         File deepDir = new File(ConfigurationAssert.TEST_DIR, "config/deep");
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("fileName", "test.properties");
-        HierarchicalConfiguration defConfig =
+        BaseHierarchicalConfiguration defConfig =
                 createDefinitionConfig("properties", params);
         defConfig.addProperty("override.properties.fileSystem[@config-class]",
                 VFSFileSystem.class.getName());
-        BasicConfigurationBuilder<? extends HierarchicalConfiguration> defBuilder =
+        BasicConfigurationBuilder<? extends HierarchicalConfiguration<ImmutableNode>> defBuilder =
                 createDefinitionBuilder(defConfig);
         builder.configure(new CombinedBuilderParametersImpl()
                 .setDefinitionBuilder(defBuilder).setBasePath(
