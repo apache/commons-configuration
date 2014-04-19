@@ -16,9 +16,10 @@
  */
 package org.apache.commons.configuration.builder.combined;
 
+import java.util.Set;
+
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
-import org.apache.commons.configuration.tree.ConfigurationNode;
 
 /**
  * <p>
@@ -50,7 +51,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration
      * @param config the configuration this declaration is based onto
      */
     public ConfigurationDeclaration(CombinedConfigurationBuilder builder,
-            HierarchicalConfiguration config)
+            HierarchicalConfiguration<?> config)
     {
         super(config);
         configurationBuilder = builder;
@@ -168,43 +169,28 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration
     }
 
     /**
-     * Checks whether the given node is reserved. This method will take further
-     * reserved attributes into account
-     *
-     * @param nd the node
-     * @return a flag whether this node is reserved
+     * {@inheritDoc} This implementation checks for additional reserved
+     * attribute names. Note that in some cases the presence of other attribute
+     * names determine whether a name is reserved or not. For instance, per
+     * default the attribute {@code config-at} is reserved. However, if this
+     * attribute is not present, the attribute {@code at} is also considered as
+     * a reserved attribute. (This is mainly done for dealing with legacy
+     * configuration files supported by earlier versions of this library.)
      */
     @Override
-    protected boolean isReservedNode(ConfigurationNode nd)
+    protected boolean isReservedAttributeName(String name)
     {
-        if (super.isReservedNode(nd))
+        if (super.isReservedAttributeName(name))
         {
             return true;
         }
 
-        return nd.isAttribute()
-                && ((CombinedConfigurationBuilder.ATTR_ATNAME.equals(nd
-                        .getName()) && nd.getParentNode().getAttributeCount(
-                        RESERVED_PREFIX
-                                + CombinedConfigurationBuilder.ATTR_ATNAME) == 0) || (CombinedConfigurationBuilder.ATTR_OPTIONALNAME
-                        .equals(nd.getName()) && nd
-                        .getParentNode()
-                        .getAttributeCount(
-                                RESERVED_PREFIX
-                                        + CombinedConfigurationBuilder.ATTR_OPTIONALNAME) == 0));
+        Set<String> attributes = getAttributeNames();
+        return (CombinedConfigurationBuilder.ATTR_ATNAME.equals(name) && !attributes
+                .contains(RESERVED_PREFIX
+                        + CombinedConfigurationBuilder.ATTR_ATNAME))
+                || (CombinedConfigurationBuilder.ATTR_OPTIONALNAME.equals(name) && !attributes
+                        .contains(RESERVED_PREFIX
+                                + CombinedConfigurationBuilder.ATTR_OPTIONALNAME));
     }
-
-//    /**
-//     * Performs interpolation. This implementation will delegate interpolation
-//     * to the configuration builder, which takes care that the currently
-//     * constructed configuration is taken into account, too.
-//     *
-//     * @param value the value to be interpolated
-//     * @return the interpolated value
-//     */
-//    @Override
-//    protected Object interpolate(Object value)
-//    {
-//        return getConfigurationBuilder().interpolate(value);
-//    }
 }
