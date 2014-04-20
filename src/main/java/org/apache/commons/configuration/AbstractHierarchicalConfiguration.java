@@ -670,7 +670,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     @Override
     protected Iterator<String> getKeysInternal()
     {
-        DefinedKeysVisitor<T> visitor = new DefinedKeysVisitor<T>();
+        DefinedKeysVisitor visitor = new DefinedKeysVisitor();
         NodeTreeWalker.INSTANCE.walkDFS(getRootNode(), visitor,
                 getModel().getNodeHandler());
 
@@ -691,7 +691,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     @Override
     protected Iterator<String> getKeysInternal(String prefix)
     {
-        DefinedKeysVisitor<T> visitor = new DefinedKeysVisitor<T>(prefix);
+        DefinedKeysVisitor visitor = new DefinedKeysVisitor(prefix);
         if (containsKey(prefix))
         {
             // explicitly add the prefix
@@ -767,8 +767,9 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         beginRead(false);
         try
         {
-            AbstractHierarchicalConfiguration copy = (AbstractHierarchicalConfiguration) super
-                    .clone();
+            @SuppressWarnings("unchecked") // clone returns the same type
+            AbstractHierarchicalConfiguration<T> copy =
+                    (AbstractHierarchicalConfiguration<T>) super.clone();
             copy.setSynchronizer(NoOpSynchronizer.INSTANCE);
             copy.cloneInterpolator(this);
             copy.setSynchronizer(ConfigurationUtils.cloneSynchronizer(getSynchronizer()));
@@ -898,10 +899,8 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * A specialized visitor that fills a list with keys that are defined in a
      * node hierarchy.
-     *
-     * @param <T> the type of the nodes to be visited
      */
-    private class DefinedKeysVisitor<T> extends
+    private class DefinedKeysVisitor extends
             ConfigurationNodeVisitorAdapter<T>
     {
         /** Stores the list to be filled. */
