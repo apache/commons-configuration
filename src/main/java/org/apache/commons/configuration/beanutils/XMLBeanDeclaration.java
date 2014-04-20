@@ -19,17 +19,16 @@ package org.apache.commons.configuration.beanutils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
-import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.tree.DefaultConfigurationNode;
+import org.apache.commons.configuration.tree.NodeHandler;
 
 /**
  * <p>
@@ -112,9 +111,6 @@ import org.apache.commons.configuration.tree.DefaultConfigurationNode;
  * </p>
  *
  * @since 1.3
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  */
 public class XMLBeanDeclaration implements BeanDeclaration
@@ -154,10 +150,10 @@ public class XMLBeanDeclaration implements BeanDeclaration
     private static final String ATTR_CTOR_TYPE = RESERVED_PREFIX + "type";
 
     /** Stores the associated configuration. */
-    private final SubnodeConfiguration configuration;
+    private final HierarchicalConfiguration<?> configuration;
 
     /** Stores the configuration node that contains the bean declaration. */
-    private final ConfigurationNode node;
+    private final NodeData<?> node;
 
     /** The name of the default bean class. */
     private final String defaultBeanClassName;
@@ -174,7 +170,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @throws IllegalArgumentException if required information is missing to
      *         construct the bean declaration
      */
-    public XMLBeanDeclaration(HierarchicalConfiguration config, String key)
+    public <T> XMLBeanDeclaration(HierarchicalConfiguration<T> config, String key)
     {
         this(config, key, false);
     }
@@ -191,7 +187,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @throws IllegalArgumentException if required information is missing to
      *         construct the bean declaration
      */
-    public XMLBeanDeclaration(HierarchicalConfiguration config, String key,
+    public <T> XMLBeanDeclaration(HierarchicalConfiguration<T> config, String key,
             boolean optional)
     {
         this(config, key, optional, null);
@@ -220,7 +216,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      *         construct the bean declaration
      * @since 2.0
      */
-    public XMLBeanDeclaration(HierarchicalConfiguration config, String key,
+    public <T> XMLBeanDeclaration(HierarchicalConfiguration<T> config, String key,
             boolean optional, String defBeanClsName)
     {
         if (config == null)
@@ -229,24 +225,21 @@ public class XMLBeanDeclaration implements BeanDeclaration
                     "Configuration must not be null!");
         }
 
-        SubnodeConfiguration tmpconfiguration = null;
-        ConfigurationNode tmpnode = null;
+        HierarchicalConfiguration<?> tmpconfiguration;
         try
         {
             tmpconfiguration = config.configurationAt(key);
-            tmpnode = tmpconfiguration.getRootNode();
         }
-        catch (IllegalArgumentException iex)
+        catch (ConfigurationRuntimeException iex)
         {
             // If we reach this block, the key does not have exactly one value
             if (!optional || config.getMaxIndex(key) > 0)
             {
                 throw iex;
             }
-            tmpconfiguration = config.configurationAt(null);
-            tmpnode = new DefaultConfigurationNode();
+            tmpconfiguration = new BaseHierarchicalConfiguration();
         }
-        this.node = tmpnode;
+        this.node = createNodeDataFromConfiguration(tmpconfiguration);
         this.configuration = tmpconfiguration;
         defaultBeanClassName = defBeanClsName;
         initSubnodeConfiguration(getConfiguration());
@@ -259,7 +252,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      *
      * @param config the configuration with the bean declaration
      */
-    public XMLBeanDeclaration(HierarchicalConfiguration config)
+    public <T> XMLBeanDeclaration(HierarchicalConfiguration<T> config)
     {
         this(config, (String) null);
     }
@@ -267,24 +260,14 @@ public class XMLBeanDeclaration implements BeanDeclaration
     /**
      * Creates a new instance of {@code XMLBeanDeclaration} and
      * initializes it with the configuration node that contains the bean
-     * declaration.
+     * declaration. This constructor is used internally.
      *
      * @param config the configuration
      * @param node the node with the bean declaration.
      */
-    public XMLBeanDeclaration(SubnodeConfiguration config,
-            ConfigurationNode node)
+    XMLBeanDeclaration(HierarchicalConfiguration<?> config,
+            NodeData<?> node)
     {
-        if (config == null)
-        {
-            throw new IllegalArgumentException(
-                    "Configuration must not be null!");
-        }
-        if (node == null)
-        {
-            throw new IllegalArgumentException("Node must not be null!");
-        }
-
         this.node = node;
         configuration = config;
         defaultBeanClassName = null;
@@ -296,7 +279,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      *
      * @return the associated configuration
      */
-    public SubnodeConfiguration getConfiguration()
+    public HierarchicalConfiguration<?> getConfiguration()
     {
         return configuration;
     }
@@ -315,16 +298,6 @@ public class XMLBeanDeclaration implements BeanDeclaration
     }
 
     /**
-     * Returns the node that contains the bean declaration.
-     *
-     * @return the configuration node this bean declaration is based on
-     */
-    public ConfigurationNode getNode()
-    {
-        return node;
-    }
-
-    /**
      * Returns the name of the bean factory. This information is fetched from
      * the {@code config-factory} attribute.
      *
@@ -333,7 +306,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
     @Override
     public String getBeanFactoryName()
     {
-        return getConfiguration().getString(ATTR_BEAN_FACTORY);
+        return getConfiguration().getString(ATTR_BEAN_FACTORY, null);
     }
 
     /**
@@ -370,11 +343,11 @@ public class XMLBeanDeclaration implements BeanDeclaration
     public Map<String, Object> getBeanProperties()
     {
         Map<String, Object> props = new HashMap<String, Object>();
-        for (ConfigurationNode attr : getNode().getAttributes())
+        for (String key : getAttributeNames())
         {
-            if (!isReservedNode(attr))
+            if (!isReservedAttributeName(key))
             {
-                props.put(attr.getName(), interpolate(attr .getValue()));
+                props.put(key, interpolate(getNode().getAttribute(key)));
             }
         }
 
@@ -392,13 +365,13 @@ public class XMLBeanDeclaration implements BeanDeclaration
     public Map<String, Object> getNestedBeanDeclarations()
     {
         Map<String, Object> nested = new HashMap<String, Object>();
-        for (ConfigurationNode child : getNode().getChildren())
+        for (NodeData<?> child : getNode().getChildren())
         {
-            if (!isReservedNode(child))
+            if (!isReservedChildName(child.nodeName()))
             {
-                if (nested.containsKey(child.getName()))
+                if (nested.containsKey(child.nodeName()))
                 {
-                    Object obj = nested.get(child.getName());
+                    Object obj = nested.get(child.nodeName());
                     List<BeanDeclaration> list;
                     if (obj instanceof List)
                     {
@@ -411,13 +384,13 @@ public class XMLBeanDeclaration implements BeanDeclaration
                     {
                         list = new ArrayList<BeanDeclaration>();
                         list.add((BeanDeclaration) obj);
-                        nested.put(child.getName(), list);
+                        nested.put(child.nodeName(), list);
                     }
                     list.add(createBeanDeclaration(child));
                 }
                 else
                 {
-                    nested.put(child.getName(), createBeanDeclaration(child));
+                    nested.put(child.nodeName(), createBeanDeclaration(child));
                 }
             }
         }
@@ -436,7 +409,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
     public Collection<ConstructorArg> getConstructorArgs()
     {
         Collection<ConstructorArg> args = new LinkedList<ConstructorArg>();
-        for (ConfigurationNode child : getNode().getChildren(ELEM_CTOR_ARG))
+        for (NodeData<?> child : getNode().getChildren(ELEM_CTOR_ARG))
         {
             args.add(createConstructorArg(child));
         }
@@ -455,23 +428,75 @@ public class XMLBeanDeclaration implements BeanDeclaration
     protected Object interpolate(Object value)
     {
         ConfigurationInterpolator interpolator =
-                getConfiguration().getParent().getInterpolator();
+                getConfiguration().getInterpolator();
         return (interpolator != null) ? interpolator.interpolate(value) : value;
     }
 
     /**
-     * Checks if the specified node is reserved and thus should be ignored. This
-     * method is called when the maps for the bean's properties and complex
-     * properties are collected. It checks whether the name of the given node
-     * starts with the reserved prefix.
+     * Checks if the specified child node name is reserved and thus should be
+     * ignored. This method is called when processing child nodes of this bean
+     * declaration. It is then possible to ignore some nodes with a specific
+     * meaning. This implementation delegates to {@link #isReservedName(String)}
+     * .
      *
-     * @param nd the node to be checked
-     * @return a flag whether this node is reserved (and does not point to a
-     *         property)
+     * @param name the name of the child node to be checked
+     * @return a flag whether this name is reserved
+     * @since 2.0
      */
-    protected boolean isReservedNode(ConfigurationNode nd)
+    protected boolean isReservedChildName(String name)
     {
-        return nd.getName() == null || nd.getName().startsWith(RESERVED_PREFIX);
+        return isReservedName(name);
+    }
+
+    /**
+     * Checks if the specified attribute name is reserved and thus does not
+     * point to a property of the bean to be created. This method is called when
+     * processing the attributes of this bean declaration. It is then possible
+     * to ignore some attributes with a specific meaning. This implementation
+     * delegates to {@link #isReservedName(String)}.
+     *
+     * @param name the name of the attribute to be checked
+     * @return a flag whether this name is reserved
+     * @since 2.0
+     */
+    protected boolean isReservedAttributeName(String name)
+    {
+        return isReservedName(name);
+    }
+
+    /**
+     * Checks if the specified name of a node or attribute is reserved and thus
+     * should be ignored. This method is called per default by the methods for
+     * checking attribute and child node names. It checks whether the passed in
+     * name starts with the reserved prefix.
+     *
+     * @param name the name to be checked
+     * @return a flag whether this name is reserved
+     */
+    protected boolean isReservedName(String name)
+    {
+        return name == null || name.startsWith(RESERVED_PREFIX);
+    }
+
+    /**
+     * Returns a set with the names of the attributes of the configuration node
+     * holding the data of this bean declaration.
+     *
+     * @return the attribute names of the underlying configuration node
+     */
+    protected Set<String> getAttributeNames()
+    {
+        return getNode().getAttributes();
+    }
+
+    /**
+     * Returns the data about the associated node.
+     *
+     * @return the node with the bean declaration
+     */
+    NodeData<?> getNode()
+    {
+        return node;
     }
 
     /**
@@ -486,39 +511,29 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @param node the child node, for which a {@code BeanDeclaration} is
      *        to be created
      * @return the {@code BeanDeclaration} for this child node
-     * @since 1.6
      */
-    protected BeanDeclaration createBeanDeclaration(ConfigurationNode node)
+    BeanDeclaration createBeanDeclaration(NodeData<?> node)
     {
-        List<SubnodeConfiguration> list = getConfiguration().configurationsAt(node.getName());
-        if (list.size() == 1)
+        for (HierarchicalConfiguration<?> config : getConfiguration()
+                .configurationsAt(node.nodeName()))
         {
-            return new XMLBeanDeclaration(list.get(0), node);
-        }
-        else
-        {
-            Iterator<SubnodeConfiguration> iter = list.iterator();
-            while (iter.hasNext())
+            if (node.matchesConfigRootNode(config))
             {
-                SubnodeConfiguration config = iter.next();
-                if (config.getRootNode().equals(node))
-                {
-                    return new XMLBeanDeclaration(config, node);
-                }
+                return new XMLBeanDeclaration(config, node);
             }
-            throw new ConfigurationRuntimeException("Unable to match node for " + node.getName());
         }
+        throw new ConfigurationRuntimeException("Unable to match node for "
+                + node.nodeName());
     }
 
     /**
-     * Initializes the internally managed subnode configuration. This method
+     * Initializes the internally managed sub configuration. This method
      * will set some default values for some properties.
      *
      * @param conf the configuration to initialize
      */
-    private void initSubnodeConfiguration(SubnodeConfiguration conf)
+    private void initSubnodeConfiguration(HierarchicalConfiguration<?> conf)
     {
-        conf.setThrowExceptionOnMissing(false);
         conf.setExpressionEngine(null);
     }
 
@@ -529,7 +544,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @param child the configuration node
      * @return the corresponding {@code ConstructorArg} object
      */
-    private ConstructorArg createConstructorArg(ConfigurationNode child)
+    private ConstructorArg createConstructorArg(NodeData<?> child)
     {
         String type = getAttribute(child, ATTR_CTOR_TYPE);
         if (isBeanDeclarationArgument(child))
@@ -546,16 +561,16 @@ public class XMLBeanDeclaration implements BeanDeclaration
 
     /**
      * Helper method for obtaining an attribute of a configuration node.
+     * This method also takes interpolation into account.
      *
      * @param nd the node
      * @param attr the name of the attribute
      * @return the string value of this attribute (can be <b>null</b>)
      */
-    private String getAttribute(ConfigurationNode nd, String attr)
+    private String getAttribute(NodeData<?> nd, String attr)
     {
-        List<ConfigurationNode> attributes = nd.getAttributes(attr);
-        return attributes.isEmpty() ? null : String
-                .valueOf(interpolate(attributes.get(0).getValue()));
+        Object value = nd.getAttribute(attr);
+        return (value == null) ? null : String.valueOf(interpolate(value));
     }
 
     /**
@@ -565,8 +580,134 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @param nd the configuration node in question
      * @return a flag whether this constructor argument is a bean declaration
      */
-    private static boolean isBeanDeclarationArgument(ConfigurationNode nd)
+    private static boolean isBeanDeclarationArgument(NodeData<?> nd)
     {
-        return nd.getAttributes(ATTR_BEAN_CLASS_NAME).isEmpty();
+        return !nd.getAttributes().contains(ATTR_BEAN_CLASS_NAME);
+    }
+
+    /**
+     * Creates a {@code NodeData} object from the root node of the given
+     * configuration.
+     *
+     * @param config the configuration
+     * @param <T> the type of the nodes
+     * @return the {@code NodeData} object
+     */
+    private static <T> NodeData<T> createNodeDataFromConfiguration(
+            HierarchicalConfiguration<T> config)
+    {
+        NodeHandler<T> handler = config.getNodeModel().getNodeHandler();
+        return new NodeData<T>(handler.getRootNode(), handler);
+    }
+
+    /**
+     * An internally used helper class which wraps the node with the bean
+     * declaration and the corresponding node handler.
+     *
+     * @param <T> the type of the node
+     */
+    static class NodeData<T>
+    {
+        /** The wrapped node. */
+        private final T node;
+
+        /** The node handler for interacting with this node. */
+        private final NodeHandler<T> handler;
+
+        /**
+         * Creates a new instance of {@code NodeData}.
+         *
+         * @param nd the node
+         * @param hndlr the handler
+         */
+        public NodeData(T nd, NodeHandler<T> hndlr)
+        {
+            node = nd;
+            handler = hndlr;
+        }
+
+        /**
+         * Returns the name of the wrapped node.
+         *
+         * @return the node name
+         */
+        public String nodeName()
+        {
+            return handler.nodeName(node);
+        }
+
+        /**
+         * Returns a list with the children of the wrapped node, again wrapped
+         * into {@code NodeData} objects.
+         *
+         * @return a list with the children
+         */
+        public List<NodeData<T>> getChildren()
+        {
+            return wrapInNodeData(handler.getChildren(node));
+        }
+
+        /**
+         * Returns a list with the children of the wrapped node with the given
+         * name, again wrapped into {@code NodeData} objects.
+         *
+         * @param name the name of the desired child nodes
+         * @return a list with the children with this name
+         */
+        public List<NodeData<T>> getChildren(String name)
+        {
+            return wrapInNodeData(handler.getChildren(node, name));
+        }
+
+        /**
+         * Returns a set with the names of the attributes of the wrapped node.
+         *
+         * @return the attribute names of this node
+         */
+        public Set<String> getAttributes()
+        {
+            return handler.getAttributes(node);
+        }
+
+        /**
+         * Returns the value of the attribute with the given name of the wrapped
+         * node.
+         *
+         * @param key the key of the attribute
+         * @return the value of this attribute
+         */
+        public Object getAttribute(String key)
+        {
+            return handler.getAttributeValue(node, key);
+        }
+
+        /**
+         * Returns a flag whether the wrapped node is the root node of the
+         * passed in configuration.
+         *
+         * @param config the configuration
+         * @return a flag whether this node is the configuration's root node
+         */
+        public boolean matchesConfigRootNode(HierarchicalConfiguration<?> config)
+        {
+            return config.getNodeModel().getNodeHandler().getRootNode()
+                    .equals(node);
+        }
+
+        /**
+         * Wraps the passed in list of nodes in {@code NodeData} objects.
+         *
+         * @param nodes the list with nodes
+         * @return the wrapped nodes
+         */
+        private List<NodeData<T>> wrapInNodeData(List<T> nodes)
+        {
+            List<NodeData<T>> result = new ArrayList<NodeData<T>>(nodes.size());
+            for (T node : nodes)
+            {
+                result.add(new NodeData<T>(node, handler));
+            }
+            return result;
+        }
     }
 }

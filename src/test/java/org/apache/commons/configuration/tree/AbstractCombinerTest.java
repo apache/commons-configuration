@@ -40,10 +40,10 @@ import org.junit.Test;
 public abstract class AbstractCombinerTest
 {
     /** Constant for the first test configuration. */
-    static File CONF1 = ConfigurationAssert.getTestFile("testcombine1.xml");
+    private static final File CONF1 = ConfigurationAssert.getTestFile("testcombine1.xml");
 
     /** Constant for the second test configuration. */
-    static File CONF2 = ConfigurationAssert.getTestFile("testcombine2.xml");
+    private static final File CONF2 = ConfigurationAssert.getTestFile("testcombine2.xml");
 
     /** The combiner to be tested. */
     protected NodeCombiner combiner;
@@ -56,7 +56,7 @@ public abstract class AbstractCombinerTest
 
     /**
      * Creates the combiner to be tested. This method is called by
-     * <code>setUp()</code>. It must be implemented in concrete sub classes.
+     * {@code setUp()}. It must be implemented in concrete sub classes.
      *
      * @return the combiner to be tested
      */
@@ -75,7 +75,7 @@ public abstract class AbstractCombinerTest
         new FileHandler(conf1).load(CONF1);
         XMLConfiguration conf2 = new XMLConfiguration();
         new FileHandler(conf2).load(CONF2);
-        ConfigurationNode cn = combiner.combine(conf1.getRootNode(), conf2
+        ImmutableNode cn = combiner.combine(conf1.getRootNode(), conf2
                 .getRootNode());
 
         BaseHierarchicalConfiguration result = new BaseHierarchicalConfiguration();
@@ -92,7 +92,6 @@ public abstract class AbstractCombinerTest
     {
         assertTrue("Combiner has list nodes", combiner.getListNodes().isEmpty());
         assertFalse("Node is list node", combiner
-                .isListNode(new DefaultConfigurationNode("test")));
+                .isListNode(NodeStructureHelper.createNode("test", null)));
     }
-
 }

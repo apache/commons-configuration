@@ -21,146 +21,40 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
-import java.util.WeakHashMap;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
-import org.apache.commons.configuration.sync.LockMode;
-import org.apache.commons.configuration.sync.NoOpSynchronizer;
-import org.apache.commons.configuration.sync.Synchronizer;
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
-import org.apache.commons.configuration.tree.DefaultConfigurationNode;
-import org.apache.commons.configuration.tree.DefaultExpressionEngine;
-import org.apache.commons.configuration.tree.ExpressionEngine;
-import org.apache.commons.configuration.tree.NodeAddData;
+import org.apache.commons.configuration.tree.ImmutableNode;
+import org.apache.commons.configuration.tree.InMemoryNodeModel;
+import org.apache.commons.configuration.tree.InMemoryNodeModelSupport;
+import org.apache.commons.configuration.tree.NodeHandler;
+import org.apache.commons.configuration.tree.NodeModel;
+import org.apache.commons.configuration.tree.NodeSelector;
+import org.apache.commons.configuration.tree.NodeTreeWalker;
+import org.apache.commons.configuration.tree.QueryResult;
+import org.apache.commons.configuration.tree.ReferenceNodeHandler;
+import org.apache.commons.configuration.tree.TrackedNodeModel;
+import org.apache.commons.lang3.ObjectUtils;
 
 /**
- * <p>A specialized configuration class that extends its base class by the
- * ability of keeping more structure in the stored properties.</p><p>There
- * are some sources of configuration data that cannot be stored very well in a
- * {@code BaseConfiguration} object because then their structure is lost.
- * This is especially true for XML documents. This class can deal with such
- * structured configuration sources by storing the properties in a tree-like
- * organization.</p><p>The internal used storage form allows for a more
- * sophisticated access to single properties. As an example consider the
- * following XML document:</p><p>
- *
- * <pre>
- * &lt;database&gt;
- *   &lt;tables&gt;
- *     &lt;table&gt;
- *       &lt;name&gt;users&lt;/name&gt;
- *       &lt;fields&gt;
- *         &lt;field&gt;
- *           &lt;name&gt;lid&lt;/name&gt;
- *           &lt;type&gt;long&lt;/name&gt;
- *         &lt;/field&gt;
- *         &lt;field&gt;
- *           &lt;name&gt;usrName&lt;/name&gt;
- *           &lt;type&gt;java.lang.String&lt;/type&gt;
- *         &lt;/field&gt;
- *        ...
- *       &lt;/fields&gt;
- *     &lt;/table&gt;
- *     &lt;table&gt;
- *       &lt;name&gt;documents&lt;/name&gt;
- *       &lt;fields&gt;
- *         &lt;field&gt;
- *           &lt;name&gt;docid&lt;/name&gt;
- *           &lt;type&gt;long&lt;/type&gt;
- *         &lt;/field&gt;
- *         ...
- *       &lt;/fields&gt;
- *     &lt;/table&gt;
- *     ...
- *   &lt;/tables&gt;
- * &lt;/database&gt;
- * </pre>
- *
- * </p><p>If this document is parsed and stored in a
- * {@code BaseHierarchicalConfiguration} object (which can be done by one of
- * the sub classes), there are enhanced possibilities of accessing properties.
- * The keys for querying information can contain indices that select a certain
- * element if there are multiple hits.</p><p>For instance the key
- * {@code tables.table(0).name} can be used to find out the name of the
- * first table. In opposite {@code tables.table.name} would return a
- * collection with the names of all available tables. Similarly the key
- * {@code tables.table(1).fields.field.name} returns a collection with
- * the names of all fields of the second table. If another index is added after
- * the {@code field} element, a single field can be accessed:
- * {@code tables.table(1).fields.field(0).name}.</p><p>There is a
- * {@code getMaxIndex()} method that returns the maximum allowed index
- * that can be added to a given property key. This method can be used to iterate
- * over all values defined for a certain property.</p>
- * <p>Since the 1.3 release of <em>Commons Configuration</em> hierarchical
- * configurations support an <em>expression engine</em>. This expression engine
- * is responsible for evaluating the passed in configuration keys and map them
- * to the stored properties. The examples above are valid for the default
- * expression engine, which is used when a new {@code BaseHierarchicalConfiguration}
- * instance is created. With the {@code setExpressionEngine()} method a
- * different expression engine can be set. For instance with
- * {@link org.apache.commons.configuration.tree.xpath.XPathExpressionEngine}
- * there is an expression engine available that supports configuration keys in
- * XPATH syntax.</p>
- * <p>In addition to the events common for all configuration classes hierarchical
- * configurations support some more events that correspond to some specific
- * methods and features:
- * <dl><dt><em>EVENT_ADD_NODES</em></dt><dd>The {@code addNodes()} method
- * was called; the event object contains the key, to which the nodes were added,
- * and a collection with the new nodes as value.</dd>
- * <dt><em>EVENT_CLEAR_TREE</em></dt><dd>The {@code clearTree()} method was
- * called; the event object stores the key of the removed sub tree.</dd>
- * <dt><em>EVENT_SUBNODE_CHANGED</em></dt><dd>A {@code SubnodeConfiguration}
- * that was created from this configuration has been changed. The value property
- * of the event object contains the original event object as it was sent by the
- * subnode configuration.</dd></dl></p>
  * <p>
- * Whether a {@code BaseHierarchicalConfiguration} object is thread-safe or not
- * depends on the {@link Synchronizer} it is associated with. (Per default, a
- * dummy {@code Synchronizer} is used which is not thread-safe!) The methods
- * for querying or updating configuration data invoke this {@code Synchronizer}
- * accordingly. There is one exception to this rule: The {@link #getRootNode()}
- * method is not guarded using the {@code Synchronizer}. This is due to the
- * fact that the caller can do anything with this root node, so it is not
- * clear which kind of synchronization should be performed. So when accessing
- * the configuration's root node directly, the client application is responsible
- * for proper synchronization. This is achieved by calling the methods
- * {@link #lock(LockMode)}, and {@link #unlock(LockMode)} with a proper
- * {@link LockMode} argument. In any case, it is recommended to not access the
- * root node directly, but to use corresponding methods for querying or
- * updating configuration data instead. Direct manipulations of a
- * configuration's node structure circumvent many internal mechanisms and thus
- * can cause undesired effects.
+ * A specialized hierarchical configuration implementation that is based on a
+ * structure of {@link ImmutableNode} objects.
  * </p>
  *
  * @version $Id$
  */
-public class BaseHierarchicalConfiguration extends AbstractConfiguration
-    implements Serializable, Cloneable, HierarchicalConfiguration, Initializable
+public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfiguration<ImmutableNode>
+    implements Serializable, Cloneable, InMemoryNodeModelSupport
 {
-    /**
-     * Constant for the clear tree event.
-     * @since 1.3
-     */
-    public static final int EVENT_CLEAR_TREE = 10;
-
-    /**
-     * Constant for the add nodes event.
-     * @since 1.3
-     */
-    public static final int EVENT_ADD_NODES = 11;
-
     /**
      * Constant for the subnode configuration modified event.
      * @since 1.5
@@ -172,27 +66,15 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      */
     private static final long serialVersionUID = 3373812230395363192L;
 
-    /** Stores the root configuration node.*/
-    private ConfigurationNode rootNode;
-
-    /** Stores the expression engine for this instance.*/
-    private transient ExpressionEngine expressionEngine;
-
-    /**
-     * A map for managing the {@code SubnodeConfiguration} instances created
-     * from this configuration.
-     */
-    private Map<SubnodeConfiguration, Object> subConfigs;
-
-    /** A listener for reacting on changes to update sub configurations. */
-    private ConfigurationListener changeListener;
+    /** A listener for reacting on changes caused by sub configurations. */
+    private final ConfigurationListener changeListener;
 
     /**
      * Creates a new instance of {@code BaseHierarchicalConfiguration}.
      */
     public BaseHierarchicalConfiguration()
     {
-        this(new DefaultConfigurationNode());
+        this((HierarchicalConfiguration<ImmutableNode>) null);
     }
 
     /**
@@ -204,301 +86,31 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * constructor will behave like the standard constructor)
      * @since 1.4
      */
-    public BaseHierarchicalConfiguration(HierarchicalConfiguration c)
+    public BaseHierarchicalConfiguration(HierarchicalConfiguration<ImmutableNode> c)
     {
-        this(copyRootNode(c));
+        this(createNodeModel(c));
     }
 
     /**
-     * Creates a new instance of {@code BaseHierarchicalConfiguration} with the
-     * passed in node as root node.
+     * Creates a new instance of {@code BaseHierarchicalConfiguration} and
+     * initializes it with the given {@code NodeModel}.
      *
-     * @param root the root node (not <b>null</b>)
-     * @since 2.0
+     * @param model the {@code NodeModel}
      */
-    protected BaseHierarchicalConfiguration(ConfigurationNode root)
+    protected BaseHierarchicalConfiguration(NodeModel<ImmutableNode> model)
     {
-        rootNode = root;
+        super(model);
+        changeListener = createChangeListener();
     }
 
     /**
-     * Performs special initialization of this configuration. This
-     * implementation ensures that internal data structures for managing
-     * {@code SubnodeConfiguration} objects are initialized. If this is done
-     * directly after the creation of an instance, this instance can be accessed
-     * in a read-only manner without requiring a specific {@code Synchronizer}.
+     * {@inheritDoc} This implementation returns the {@code InMemoryNodeModel}
+     * used by this configuration.
      */
     @Override
-    public void initialize()
+    public InMemoryNodeModel getNodeModel()
     {
-        ensureSubConfigManagementDataSetUp();
-    }
-
-    /**
-     * Returns the root node of this hierarchical configuration.
-     *
-     * @return the root node
-     * @since 1.3
-     */
-    @Override
-    public ConfigurationNode getRootNode()
-    {
-        return rootNode;
-    }
-
-    /**
-     * Sets the root node of this hierarchical configuration.
-     *
-     * @param rootNode the root node
-     * @since 1.3
-     */
-    @Override
-    public final void setRootNode(ConfigurationNode rootNode)
-    {
-        if (rootNode == null)
-        {
-            throw new IllegalArgumentException("Root node must not be null!");
-        }
-
-        beginWrite(false);
-        try
-        {
-            setRootNodeInternal(rootNode);
-        }
-        finally
-        {
-            endWrite();
-        }
-    }
-
-    /**
-     * Actually sets the root node of this configuration. This method is called
-     * by {@code setRootNode()}. Subclasses that need to adapt this operation
-     * can override it.
-     *
-     * @param rootNode the new root node of this configuration
-     * @since 2.0
-     */
-    protected void setRootNodeInternal(ConfigurationNode rootNode)
-    {
-        this.rootNode = rootNode;
-    }
-
-    /**
-     * {@inheritDoc} This implementation handles synchronization and delegates
-     * to {@code getRootElementNameInternal()}.
-     */
-    @Override
-    public final String getRootElementName()
-    {
-        beginRead(false);
-        try
-        {
-            return getRootElementNameInternal();
-        }
-        finally
-        {
-            endRead();
-        }
-    }
-
-    /**
-     * Actually obtains the name of the root element. This method is called by
-     * {@code getRootElementName()}. It just returns the name of the root node.
-     * Subclasses that treat the root element name differently can override this
-     * method.
-     * @return the name of this configuration's root element
-     * @since 2.0
-     */
-    protected String getRootElementNameInternal()
-    {
-        return getRootNode().getName();
-    }
-
-    /**
-     * Returns the expression engine used by this configuration. This method
-     * will never return <b>null</b>; if no specific expression engine was set,
-     * the default expression engine will be returned.
-     *
-     * @return the current expression engine
-     * @since 1.3
-     */
-    @Override
-    public ExpressionEngine getExpressionEngine()
-    {
-        return (expressionEngine != null) ? expressionEngine
-                : DefaultExpressionEngine.INSTANCE;
-    }
-
-    /**
-     * Sets the expression engine to be used by this configuration. All property
-     * keys this configuration has to deal with will be interpreted by this
-     * engine.
-     *
-     * @param expressionEngine the new expression engine; can be <b>null</b>,
-     * then the default expression engine will be used
-     * @since 1.3
-     */
-    @Override
-    public void setExpressionEngine(ExpressionEngine expressionEngine)
-    {
-        this.expressionEngine = expressionEngine;
-    }
-
-    /**
-     * Fetches the specified property. This task is delegated to the associated
-     * expression engine.
-     *
-     * @param key the key to be looked up
-     * @return the found value
-     */
-    @Override
-    protected Object getPropertyInternal(String key)
-    {
-        List<ConfigurationNode> nodes = fetchNodeList(key);
-
-        if (nodes.size() == 0)
-        {
-            return null;
-        }
-        else
-        {
-            List<Object> list = new ArrayList<Object>();
-            for (ConfigurationNode node : nodes)
-            {
-                if (node.getValue() != null)
-                {
-                    list.add(node.getValue());
-                }
-            }
-
-            if (list.size() < 1)
-            {
-                return null;
-            }
-            else
-            {
-                return (list.size() == 1) ? list.get(0) : list;
-            }
-        }
-    }
-
-    /**
-     * Adds the property with the specified key. This task will be delegated to
-     * the associated {@code ExpressionEngine}, so the passed in key
-     * must match the requirements of this implementation.
-     *
-     * @param key the key of the new property
-     * @param obj the value of the new property
-     */
-    @Override
-    protected void addPropertyDirect(String key, Object obj)
-    {
-        NodeAddData data = getExpressionEngine().prepareAdd(getRootNode(), key);
-        ConfigurationNode node = processNodeAddData(data);
-        node.setValue(obj);
-    }
-
-    /**
-     * Adds a collection of nodes at the specified position of the configuration
-     * tree. This method works similar to {@code addProperty()}, but
-     * instead of a single property a whole collection of nodes can be added -
-     * and thus complete configuration sub trees. E.g. with this method it is
-     * possible to add parts of another {@code BaseHierarchicalConfiguration}
-     * object to this object. (However be aware that a
-     * {@code ConfigurationNode} object can only belong to a single
-     * configuration. So if nodes from one configuration are directly added to
-     * another one using this method, the structure of the source configuration
-     * will be broken. In this case you should clone the nodes to be added
-     * before calling {@code addNodes()}.) If the passed in key refers to
-     * an existing and unique node, the new nodes are added to this node.
-     * Otherwise a new node will be created at the specified position in the
-     * hierarchy. Implementation node: This method performs some book-keeping
-     * and then delegates to {@code addNodesInternal()}.
-     *
-     * @param key the key where the nodes are to be added; can be <b>null</b>,
-     * then they are added to the root node
-     * @param nodes a collection with the {@code Node} objects to be
-     * added
-     */
-    @Override
-    public final void addNodes(String key, Collection<? extends ConfigurationNode> nodes)
-    {
-        if (nodes == null || nodes.isEmpty())
-        {
-            return;
-        }
-
-        beginWrite(false);
-        try
-        {
-            fireEvent(EVENT_ADD_NODES, key, nodes, true);
-            addNodesInternal(key, nodes);
-            fireEvent(EVENT_ADD_NODES, key, nodes, false);
-        }
-        finally
-        {
-            endWrite();
-        }
-    }
-
-    /**
-     * Actually adds a collection of new nodes to this configuration. This
-     * method is called by {@code addNodes()}. It can be overridden by subclasses
-     * that need to adapt this operation.
-     * @param key the key where the nodes are to be added; can be <b>null</b>,
-     * then they are added to the root node
-     * @param nodes a collection with the {@code Node} objects to be
-     * added
-     * @since 2.0
-     */
-    protected void addNodesInternal(String key,
-            Collection<? extends ConfigurationNode> nodes)
-    {
-        ConfigurationNode parent;
-        List<ConfigurationNode> target = fetchNodeList(key);
-        if (target.size() == 1)
-        {
-            // existing unique key
-            parent = target.get(0);
-        }
-        else
-        {
-            // otherwise perform an add operation
-            parent = processNodeAddData(getExpressionEngine().prepareAdd(
-                    getRootNode(), key));
-        }
-
-        if (parent.isAttribute())
-        {
-            throw new IllegalArgumentException(
-                    "Cannot add nodes to an attribute node!");
-        }
-
-        for (ConfigurationNode child : nodes)
-        {
-            if (child.isAttribute())
-            {
-                parent.addAttribute(child);
-            }
-            else
-            {
-                parent.addChild(child);
-            }
-            clearReferences(child);
-        }
-    }
-
-    /**
-     * Checks if this configuration is empty. Empty means that there are no keys
-     * with any values, though there can be some (empty) nodes.
-     *
-     * @return a flag if this configuration is empty
-     */
-    @Override
-    protected boolean isEmptyInternal()
-    {
-        return !nodeDefined(getRootNode());
+        return (InMemoryNodeModel) super.getNodeModel();
     }
 
     /**
@@ -508,7 +120,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * the keys will be saved. The nodes selected by the prefix (it is possible
      * that multiple nodes are selected) are mapped to the root node of the
      * returned configuration, i.e. their children and attributes will become
-     * children and attributes of the new root node. However a value of the root
+     * children and attributes of the new root node. However, a value of the root
      * node is only set if exactly one of the selected nodes contain a value (if
      * multiple nodes have a value, there is simply no way to decide how these
      * values are merged together). Note that the returned
@@ -526,8 +138,8 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
         beginRead(false);
         try
         {
-            Collection<ConfigurationNode> nodes = fetchNodeList(prefix);
-            if (nodes.isEmpty())
+            List<QueryResult<ImmutableNode>> results = fetchNodeList(prefix);
+            if (results.isEmpty())
             {
                 return new BaseHierarchicalConfiguration();
             }
@@ -536,8 +148,6 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
             BaseHierarchicalConfiguration result =
                     new BaseHierarchicalConfiguration()
                     {
-                        private static final long serialVersionUID = -5244847315895116071L;
-
                         // Override interpolate to always interpolate on the parent
                         @Override
                         protected Object interpolate(Object value)
@@ -551,36 +161,8 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
                             return parent.getInterpolator();
                         }
                     };
-            CloneVisitor visitor = new CloneVisitor();
+            result.setRootNode(createSubsetRootNode(results));
 
-            // Initialize the new root node
-            Object value = null;
-            int valueCount = 0;
-            for (ConfigurationNode nd : nodes)
-            {
-                if (nd.getValue() != null)
-                {
-                    value = nd.getValue();
-                    valueCount++;
-                }
-                nd.visit(visitor);
-
-                for (ConfigurationNode c : visitor.getClone().getChildren())
-                {
-                    result.getRootNode().addChild(c);
-                }
-                for (ConfigurationNode attr : visitor.getClone()
-                        .getAttributes())
-                {
-                    result.getRootNode().addAttribute(attr);
-                }
-            }
-
-            // Determine the value of the new root
-            if (valueCount == 1)
-            {
-                result.getRootNode().setValue(value);
-            }
             if (result.isEmpty())
             {
                 return new BaseHierarchicalConfiguration();
@@ -598,72 +180,236 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     }
 
     /**
-     * <p>
-     * Returns a hierarchical subnode configuration object that wraps the
-     * configuration node specified by the given key. This method provides an
-     * easy means of accessing sub trees of a hierarchical configuration. In the
-     * returned configuration the sub tree can directly be accessed, it becomes
-     * the root node of this configuration. Because of this the passed in key
-     * must select exactly one configuration node; otherwise an
-     * {@code IllegalArgumentException} will be thrown.
-     * </p>
-     * <p>
-     * The difference between this method and the
-     * {@link #subset(String)} method is that
-     * {@code subset()} supports arbitrary subsets of configuration nodes
-     * while {@code configurationAt()} only returns a single sub tree.
-     * Please refer to the documentation of the
-     * {@code SubnodeConfiguration} class to obtain further information
-     * about subnode configurations and when they should be used.
-     * </p>
-     * <p>
-     * With the {@code supportUpdate} flag the behavior of the returned
-     * {@code SubnodeConfiguration} regarding updates of its parent
-     * configuration can be determined. A subnode configuration operates on the
-     * same nodes as its parent, so changes at one configuration are normally
-     * directly visible for the other configuration. There are however changes
-     * of the parent configuration, which are not recognized by the subnode
-     * configuration per default. An example for this is a reload operation (for
-     * file-based configurations): Here the complete node set of the parent
-     * configuration is replaced, but the subnode configuration still references
-     * the old nodes. If such changes should be detected by the subnode
-     * configuration, the {@code supportUpdates} flag must be set to
-     * <b>true</b>. This causes the subnode configuration to reevaluate the key
-     * used for its creation each time it is accessed. This guarantees that the
-     * subnode configuration always stays in sync with its key, even if the
-     * parent configuration's data significantly changes. If such a change
-     * makes the key invalid - because it now no longer points to exactly one
-     * node -, the subnode configuration is not reconstructed, but keeps its
-     * old data. It is then quasi detached from its parent.
-     * </p>
+     * Creates a root node for a subset configuration based on the passed in
+     * query results. This method creates a new root node and adds the children
+     * and attributes of all result nodes to it. If only a single node value is
+     * defined, it is assigned as value of the new root node.
      *
-     * @param key the key that selects the sub tree
-     * @param supportUpdates a flag whether the returned subnode configuration
-     * should be able to handle updates of its parent
-     * @return a hierarchical configuration that contains this sub tree
-     * @see SubnodeConfiguration
-     * @since 1.5
+     * @param results the collection of query results
+     * @return the root node for the subset configuration
      */
-    @Override
-    public SubnodeConfiguration configurationAt(String key,
+    private ImmutableNode createSubsetRootNode(
+            Collection<QueryResult<ImmutableNode>> results)
+    {
+        ImmutableNode.Builder builder = new ImmutableNode.Builder();
+        Object value = null;
+        int valueCount = 0;
+
+        for (QueryResult<ImmutableNode> result : results)
+        {
+            if (result.isAttributeResult())
+            {
+                builder.addAttribute(result.getAttributeName(),
+                        result.getAttributeValue(getModel().getNodeHandler()));
+            }
+            else
+            {
+                if (result.getNode().getValue() != null)
+                {
+                    value = result.getNode().getValue();
+                    valueCount++;
+                }
+                builder.addChildren(result.getNode().getChildren());
+                builder.addAttributes(result.getNode().getAttributes());
+            }
+        }
+
+        if (valueCount == 1)
+        {
+            builder.value(value);
+        }
+        return builder.create();
+    }
+
+    /**
+     * {@inheritDoc} The result of this implementation depends on the
+     * {@code supportUpdates} flag: If it is <b>false</b>, a plain
+     * {@code BaseHierarchicalConfiguration} is returned using the selected node
+     * as root node. This is suitable for read-only access to properties.
+     * Because the configuration returned in this case is not connected to the
+     * parent configuration, updates on properties made by one configuration are
+     * not reflected by the other one. A value of <b>true</b> for this parameter
+     * causes a tracked node to be created, and result is a
+     * {@link SubnodeConfiguration} based on this tracked node. This
+     * configuration is really connected to its parent, so that updated
+     * properties are visible on both.
+     *
+     * @see SubnodeConfiguration
+     * @throws ConfigurationRuntimeException if the key does not select a single
+     *         node
+     */
+    public HierarchicalConfiguration<ImmutableNode> configurationAt(String key,
             boolean supportUpdates)
     {
-        beginWrite(false);
+        beginRead(false);
         try
         {
-            List<ConfigurationNode> nodes = fetchNodeList(key);
-            if (nodes.size() != 1)
-            {
-                throw new IllegalArgumentException(
-                        "Passed in key must select exactly one node: " + key);
-            }
-            return createAndInitializeSubnodeConfiguration(nodes.get(0), key,
-                    supportUpdates);
+            return supportUpdates ? createConnectedSubConfiguration(key)
+                    : createIndependentSubConfiguration(key);
         }
         finally
         {
-            endWrite();
+            endRead();
         }
+    }
+
+    /**
+     * Returns the {@code InMemoryNodeModel} to be used as parent model for a
+     * new sub configuration. This method is called whenever a sub configuration
+     * is to be created. This base implementation returns the model of this
+     * configuration. Sub classes with different requirements for the parent
+     * models of sub configurations have to override it.
+     *
+     * @return the parent model for a new sub configuration
+     */
+    protected InMemoryNodeModel getSubConfigurationParentModel()
+    {
+        return (InMemoryNodeModel) getModel();
+    }
+
+    /**
+     * Returns the {@code NodeSelector} to be used for a sub configuration based
+     * on the passed in key. This method is called whenever a sub configuration
+     * is to be created. This base implementation returns a new
+     * {@code NodeSelector} initialized with the passed in key. Sub classes may
+     * override this method if they have a different strategy for creating a
+     * selector.
+     *
+     * @param key the key of the sub configuration
+     * @return a {@code NodeSelector} for initializing a sub configuration
+     * @since 2.0
+     */
+    protected NodeSelector getSubConfigurationNodeSelector(String key)
+    {
+        return new NodeSelector(key);
+    }
+
+    /**
+     * Creates a connected sub configuration based on a selector for a tracked
+     * node.
+     *
+     * @param selector the {@code NodeSelector}
+     * @param parentModelSupport the {@code InMemoryNodeModelSupport} object for
+     *        the parent node model
+     * @return the newly created sub configuration
+     * @since 2.0
+     */
+    protected SubnodeConfiguration createSubConfigurationForTrackedNode(
+            NodeSelector selector, InMemoryNodeModelSupport parentModelSupport)
+    {
+        SubnodeConfiguration subConfig =
+                new SubnodeConfiguration(this, new TrackedNodeModel(
+                        parentModelSupport, selector, true));
+        initSubConfigurationForThisParent(subConfig);
+        return subConfig;
+    }
+
+    /**
+     * Initializes a {@code SubnodeConfiguration} object. This method should be
+     * called for each sub configuration created for this configuration. It
+     * ensures that the sub configuration is correctly connected to its parent
+     * instance and that update events are correctly propagated.
+     *
+     * @param subConfig the sub configuration to be initialized
+     * @since 2.0
+     */
+    protected void initSubConfigurationForThisParent(SubnodeConfiguration subConfig)
+    {
+        initSubConfiguration(subConfig);
+        subConfig.addConfigurationListener(changeListener);
+    }
+
+    /**
+     * Creates a sub configuration from the specified key which is connected to
+     * this configuration. This implementation creates a
+     * {@link SubnodeConfiguration} with a tracked node identified by the passed
+     * in key.
+     *
+     * @param key the key of the sub configuration
+     * @return the new sub configuration
+     */
+    private BaseHierarchicalConfiguration createConnectedSubConfiguration(
+            String key)
+    {
+        NodeSelector selector = getSubConfigurationNodeSelector(key);
+        getSubConfigurationParentModel().trackNode(selector, this);
+        return createSubConfigurationForTrackedNode(selector, this);
+    }
+
+    /**
+     * Creates a list of connected sub configurations based on a passed in list
+     * of node selectors.
+     *
+     * @param parentModelSupport the parent node model support object
+     * @param selectors the list of {@code NodeSelector} objects
+     * @return the list with sub configurations
+     */
+    private List<HierarchicalConfiguration<ImmutableNode>> createConnectedSubConfigurations(
+            InMemoryNodeModelSupport parentModelSupport,
+            Collection<NodeSelector> selectors)
+    {
+        List<HierarchicalConfiguration<ImmutableNode>> configs =
+                new ArrayList<HierarchicalConfiguration<ImmutableNode>>(
+                        selectors.size());
+        for (NodeSelector selector : selectors)
+        {
+            configs.add(createSubConfigurationForTrackedNode(selector,
+                    parentModelSupport));
+        }
+        return configs;
+    }
+
+    /**
+     * Creates a sub configuration from the specified key which is independent
+     * on this configuration. This means that the sub configuration operates on
+     * a separate node model (although the nodes are initially shared).
+     *
+     * @param key the key of the sub configuration
+     * @return the new sub configuration
+     */
+    private BaseHierarchicalConfiguration createIndependentSubConfiguration(
+            String key)
+    {
+        List<ImmutableNode> targetNodes = fetchFilteredNodeResults(key);
+        if (targetNodes.size() != 1)
+        {
+            throw new ConfigurationRuntimeException(
+                    "Passed in key must select exactly one node: " + key);
+        }
+        BaseHierarchicalConfiguration sub =
+                new BaseHierarchicalConfiguration(new InMemoryNodeModel(
+                        targetNodes.get(0)));
+        initSubConfiguration(sub);
+        return sub;
+    }
+
+    /**
+     * Returns an initialized sub configuration for this configuration that is
+     * based on another {@code BaseHierarchicalConfiguration}. Thus, it is
+     * independent from this configuration.
+     *
+     * @param node the root node for the sub configuration
+     * @return the initialized sub configuration
+     */
+    private BaseHierarchicalConfiguration createIndependentSubConfigurationForNode(
+            ImmutableNode node)
+    {
+        BaseHierarchicalConfiguration sub =
+                new BaseHierarchicalConfiguration(new InMemoryNodeModel(node));
+        initSubConfiguration(sub);
+        return sub;
+    }
+
+    /**
+     * Executes a query on the specified key and filters it for node results.
+     *
+     * @param key the key
+     * @return the filtered list with result nodes
+     */
+    private List<ImmutableNode> fetchFilteredNodeResults(String key)
+    {
+        NodeHandler<ImmutableNode> handler = getModel().getNodeHandler();
+        return resolveNodeKey(handler.getRootNode(), key, handler);
     }
 
     /**
@@ -671,7 +417,6 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * by delegating to {@code configurationAt()}. Then an immutable wrapper
      * is created and returned.
      */
-    @Override
     public ImmutableHierarchicalConfiguration immutableConfigurationAt(
             String key, boolean supportUpdates)
     {
@@ -680,17 +425,11 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Returns a hierarchical subnode configuration for the node specified by
-     * the given key. This is a short form for {@code configurationAt(key,
+     * {@inheritDoc} This is a short form for {@code configurationAt(key,
      * <b>false</b>)}.
-     *
-     * @param key the key that selects the sub tree
-     * @return a hierarchical configuration that contains this sub tree
-     * @see SubnodeConfiguration
-     * @since 1.3
+     * @throws ConfigurationRuntimeException if the key does not select a single node
      */
-    @Override
-    public SubnodeConfiguration configurationAt(String key)
+    public HierarchicalConfiguration<ImmutableNode> configurationAt(String key)
     {
         return configurationAt(key, false);
     }
@@ -699,8 +438,8 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * {@inheritDoc} This implementation creates a {@code SubnodeConfiguration}
      * by delegating to {@code configurationAt()}. Then an immutable wrapper
      * is created and returned.
+     * @throws ConfigurationRuntimeException if the key does not select a single node
      */
-    @Override
     public ImmutableHierarchicalConfiguration immutableConfigurationAt(
             String key)
     {
@@ -709,52 +448,62 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Returns a list of sub configurations for all configuration nodes selected
-     * by the given key. This method will evaluate the passed in key (using the
-     * current {@code ExpressionEngine}) and then create a subnode
-     * configuration for each returned node (like
-     * {@link #configurationAt(String)}}). This is especially
-     * useful when dealing with list-like structures. As an example consider the
-     * configuration that contains data about database tables and their fields.
-     * If you need access to all fields of a certain table, you can simply do
-     *
-     * <pre>
-     * List fields = config.configurationsAt("tables.table(0).fields.field");
-     * for(Iterator it = fields.iterator(); it.hasNext();)
-     * {
-     *     BaseHierarchicalConfiguration sub = (BaseHierarchicalConfiguration) it.next();
-     *     // now the children and attributes of the field node can be
-     *     // directly accessed
-     *     String fieldName = sub.getString("name");
-     *     String fieldType = sub.getString("type");
-     *     ...
-     * </pre>
-     *
-     * @param key the key for selecting the desired nodes
-     * @return a list with hierarchical configuration objects; each
-     * configuration represents one of the nodes selected by the passed in key
-     * @since 1.3
+     * {@inheritDoc} This implementation creates sub configurations in the same
+     * way as described for {@link #configurationAt(String)}.
      */
-    @Override
-    public List<SubnodeConfiguration> configurationsAt(String key)
+    public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(
+            String key)
     {
-        beginWrite(false);
+        List<ImmutableNode> nodes;
+        beginRead(false);
         try
         {
-            List<ConfigurationNode> nodes = fetchNodeList(key);
-            List<SubnodeConfiguration> configs =
-                    new ArrayList<SubnodeConfiguration>(nodes.size());
-            for (ConfigurationNode node : nodes)
-            {
-                configs.add(createAndInitializeSubnodeConfiguration(node, null,
-                        false));
-            }
-            return configs;
+            nodes = fetchFilteredNodeResults(key);
         }
         finally
         {
-            endWrite();
+            endRead();
         }
+
+        List<HierarchicalConfiguration<ImmutableNode>> results =
+                new ArrayList<HierarchicalConfiguration<ImmutableNode>>(
+                        nodes.size());
+        for (ImmutableNode node : nodes)
+        {
+            BaseHierarchicalConfiguration sub =
+                    createIndependentSubConfigurationForNode(node);
+            results.add(sub);
+        }
+
+        return results;
+    }
+
+    /**
+     * {@inheritDoc} This implementation creates tracked nodes for the specified
+     * key. Then sub configurations for these nodes are created and returned.
+     */
+    public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(
+            String key, boolean supportUpdates)
+    {
+        if (!supportUpdates)
+        {
+            return configurationsAt(key);
+        }
+
+        InMemoryNodeModel parentModel;
+        beginRead(false);
+        try
+        {
+            parentModel = getSubConfigurationParentModel();
+        }
+        finally
+        {
+            endRead();
+        }
+
+        Collection<NodeSelector> selectors =
+                parentModel.selectAndTrackNodes(key, this);
+        return createConnectedSubConfigurations(this, selectors);
     }
 
     /**
@@ -763,7 +512,6 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * {@code SubnodeConfiguration} objects. Then for each element of this list
      * an unmodifiable wrapper is created.
      */
-    @Override
     public List<ImmutableHierarchicalConfiguration> immutableConfigurationsAt(
             String key)
     {
@@ -775,32 +523,54 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * given key. If not a single node is selected, an empty list is returned.
      * Otherwise, sub configurations for each child of the node are created.
      */
-    @Override
-    public List<SubnodeConfiguration> childConfigurationsAt(String key)
+    public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(
+            String key)
     {
-        beginWrite(false);
+        List<ImmutableNode> nodes;
+        beginRead(false);
         try
         {
-            List<ConfigurationNode> nodes = fetchNodeList(key);
-            if (nodes.size() != 1)
-            {
-                return Collections.emptyList();
-            }
-
-            ConfigurationNode parent = nodes.get(0);
-            List<SubnodeConfiguration> subs =
-                    new ArrayList<SubnodeConfiguration>(
-                            parent.getChildrenCount());
-            for (ConfigurationNode c : parent.getChildren())
-            {
-                subs.add(createAndInitializeSubnodeConfiguration(c, null, false));
-            }
-            return subs;
+            nodes = fetchFilteredNodeResults(key);
         }
         finally
         {
-            endWrite();
+            endRead();
         }
+
+        if (nodes.size() != 1)
+        {
+            return Collections.emptyList();
+        }
+
+        ImmutableNode parent = nodes.get(0);
+        List<HierarchicalConfiguration<ImmutableNode>> subs =
+                new ArrayList<HierarchicalConfiguration<ImmutableNode>>(parent
+                        .getChildren().size());
+        for (ImmutableNode node : parent.getChildren())
+        {
+            subs.add(createIndependentSubConfigurationForNode(node));
+        }
+
+        return subs;
+    }
+
+    /**
+     * {@inheritDoc} This method works like
+     * {@link #childConfigurationsAt(String)}; however, depending on the value
+     * of the {@code supportUpdates} flag, connected sub configurations may be
+     * created.
+     */
+    public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(
+            String key, boolean supportUpdates)
+    {
+        if (!supportUpdates)
+        {
+            return childConfigurationsAt(key);
+        }
+
+        InMemoryNodeModel parentModel = getSubConfigurationParentModel();
+        return createConnectedSubConfigurations(this,
+                parentModel.trackChildNodes(key, this));
     }
 
     /**
@@ -809,29 +579,10 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * configurations. Then a list with immutable wrapper configurations is
      * created.
      */
-    @Override
     public List<ImmutableHierarchicalConfiguration> immutableChildConfigurationsAt(
             String key)
     {
         return toImmutable(childConfigurationsAt(key));
-    }
-
-    /**
-     * Creates a new {@code SubnodeConfiguration} for the specified node and
-     * sets its construction key. If the key is not <b>null</b>, a
-     * {@code SubnodeConfiguration} created this way will be aware of structural
-     * changes of its parent.
-     *
-     * @param node the node, for which a {@code SubnodeConfiguration} is to be
-     *        created
-     * @param subnodeKey the key used to construct the configuration
-     * @return the configuration for the given node
-     * @since 1.5
-     */
-    protected SubnodeConfiguration createSubnodeConfiguration(
-            ConfigurationNode node, String subnodeKey)
-    {
-        return new SubnodeConfiguration(this, node, subnodeKey);
     }
 
     /**
@@ -849,76 +600,19 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Creates a new {@code SubnodeConfiguration} instance from this
-     * configuration and initializes it. This method also takes care that data
-     * structures are created to manage all {@code SubnodeConfiguration}
-     * instances with support for updates. They are stored, so that they can be
-     * triggered when this configuration is changed. <strong>Important
-     * note:</strong> This method expects that a write lock is held on this
-     * configuration!
+     * Initializes properties of a sub configuration. A sub configuration
+     * inherits some settings from its parent, e.g. the expression engine or the
+     * synchronizer. The corresponding values are copied by this method.
      *
-     * @param node the root node of the new {@code SubnodeConfiguration}
-     * @param key the key to this node
-     * @param supportUpdates a flag whether updates are supported
-     * @return the newly created and initialized {@code SubnodeConfiguration}
-     * @since 2.0
+     * @param sub the sub configuration to be initialized
      */
-    protected final SubnodeConfiguration createAndInitializeSubnodeConfiguration(
-            ConfigurationNode node, String key, boolean supportUpdates)
+    private void initSubConfiguration(BaseHierarchicalConfiguration sub)
     {
-        String subnodeKey = supportUpdates ? key : null;
-        SubnodeConfiguration sub = createSubnodeConfiguration(node, subnodeKey);
-
-        ensureSubConfigManagementDataSetUp();
-        sub.addConfigurationListener(changeListener);
-        sub.initSubConfigManagementData(subConfigs, changeListener);
         sub.setSynchronizer(getSynchronizer());
-
-        if (supportUpdates)
-        {
-            // store this configuration so it can later be validated
-            subConfigs.put(sub, Boolean.TRUE);
-        }
-        return sub;
-    }
-
-    /**
-     * Initializes the data related to the management of
-     * {@code SubnodeConfiguration} instances. This method is called each time a
-     * new {@code SubnodeConfiguration} was created. A configuration and its
-     * {@code SubnodeConfiguration} instances operate on the same set of data.
-     *
-     * @param subMap the map with all {@code SubnodeConfiguration} instances
-     * @param listener the listener for reacting on changes
-     */
-    void initSubConfigManagementData(Map<SubnodeConfiguration, Object> subMap,
-            ConfigurationListener listener)
-    {
-        subConfigs = subMap;
-        changeListener = listener;
-    }
-
-    /**
-     * Ensures that internal data structures for managing associated
-     * {@code SubnodeConfiguration} objects are initialized.
-     */
-    private void ensureSubConfigManagementDataSetUp()
-    {
-        if (changeListener == null)
-        {
-            setUpSubConfigManagementData();
-        }
-    }
-
-    /**
-     * Initializes internal data structures for managing associated
-     * {@code SubnodeConfiguration} objects.
-     */
-    private void setUpSubConfigManagementData()
-    {
-        changeListener = createChangeListener();
-        subConfigs = new WeakHashMap<SubnodeConfiguration, Object>();
-        addConfigurationListener(changeListener);
+        sub.setExpressionEngine(getExpressionEngine());
+        sub.setListDelimiterHandler(getListDelimiterHandler());
+        sub.setThrowExceptionOnMissing(isThrowExceptionOnMissing());
+        sub.getInterpolator().setParentInterpolator(getInterpolator());
     }
 
     /**
@@ -932,309 +626,11 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     {
         return new ConfigurationListener()
         {
-            @Override
             public void configurationChanged(ConfigurationEvent event)
             {
-                nodeStructureChanged(event);
+                subnodeConfigurationChanged(event);
             }
         };
-    }
-
-    /**
-     * A change on the node structure of this configuration has been detected.
-     * This can be caused either by an update of this configuration or by one if
-     * its {@code SubnodeConfiguration} instances. This method calls
-     * {@link #subnodeConfigurationChanged(ConfigurationEvent)} if necessary and
-     * ensures that all {@code SubnodeConfiguration} instances are validated.
-     * Note: when this method is called, a write lock is held on this
-     * configuration.
-     *
-     * @param event the change event
-     */
-    private void nodeStructureChanged(ConfigurationEvent event)
-    {
-        if (this != event.getSource())
-        {
-            subnodeConfigurationChanged(event);
-        }
-
-        if (!event.isBeforeUpdate() && EVENT_SUBNODE_CHANGED != event.getType())
-        {
-            validSubnodeConfigurations(event);
-        }
-    }
-
-    /**
-     * Triggers validation on all {@code SubnodeConfiguration} instances created
-     * by this configuration.
-     *
-     * @param event the change event
-     */
-    private void validSubnodeConfigurations(ConfigurationEvent event)
-    {
-        Set<SubnodeConfiguration> subs =
-                new HashSet<SubnodeConfiguration>(subConfigs.keySet());
-        for (SubnodeConfiguration sub : subs)
-        {
-            if (sub != event.getSource())
-            {
-                sub.validateRootNode();
-            }
-        }
-    }
-
-    /**
-     * Checks if the specified key is contained in this configuration. Note that
-     * for this configuration the term &quot;contained&quot; means that the key
-     * has an associated value. If there is a node for this key that has no
-     * value but children (either defined or undefined), this method will still
-     * return <b>false </b>.
-     *
-     * @param key the key to be checked
-     * @return a flag if this key is contained in this configuration
-     */
-    @Override
-    protected boolean containsKeyInternal(String key)
-    {
-        return getPropertyInternal(key) != null;
-    }
-
-    /**
-     * Sets the value of the specified property.
-     *
-     * @param key the key of the property to set
-     * @param value the new value of this property
-     */
-    @Override
-    protected void setPropertyInternal(String key, Object value)
-    {
-        // Update the existing nodes for this property
-        Iterator<ConfigurationNode> itNodes = fetchNodeList(key).iterator();
-        Iterator<?> itValues = getListDelimiterHandler().parse(value);
-
-        while (itNodes.hasNext() && itValues.hasNext())
-        {
-            itNodes.next().setValue(itValues.next());
-        }
-
-        // Add additional nodes if necessary
-        while (itValues.hasNext())
-        {
-            addPropertyDirect(key, itValues.next());
-        }
-
-        // Remove remaining nodes
-        while (itNodes.hasNext())
-        {
-            clearNode(itNodes.next());
-        }
-    }
-
-    /**
-     * Clears this configuration. This is a more efficient implementation than
-     * the one inherited from the base class. It directly removes all data from
-     * the root node.
-     */
-    @Override
-    protected void clearInternal()
-    {
-        getRootNode().removeAttributes();
-        getRootNode().removeChildren();
-        getRootNode().setValue(null);
-    }
-
-    /**
-     * Removes all values of the property with the given name and of keys that
-     * start with this name. So if there is a property with the key
-     * &quot;foo&quot; and a property with the key &quot;foo.bar&quot;, a call
-     * of {@code clearTree("foo")} would remove both properties.
-     *
-     * @param key the key of the property to be removed
-     */
-    @Override
-    public final void clearTree(String key)
-    {
-        beginWrite(false);
-        try
-        {
-            fireEvent(EVENT_CLEAR_TREE, key, null, true);
-            List<ConfigurationNode> nodes = clearTreeInternal(key);
-            fireEvent(EVENT_CLEAR_TREE, key, nodes, false);
-        }
-        finally
-        {
-            endWrite();
-        }
-    }
-
-    /**
-     * Actually clears the tree of elements referenced by the given key. This
-     * method is called by {@code clearTree()}. Subclasses that need to adapt
-     * this operation can override this method.
-     *
-     * @param key the key of the property to be removed
-     * @return a collection with the nodes that have been removed (this is
-     *         needed for firing a meaningful event of type EVENT_CLEAR_TREE)
-     * @since 2.0
-     */
-    protected List<ConfigurationNode> clearTreeInternal(String key)
-    {
-        List<ConfigurationNode> nodes = fetchNodeList(key);
-
-        for (ConfigurationNode node : nodes)
-        {
-            removeNode(node);
-        }
-        return nodes;
-    }
-
-    /**
-     * Removes the property with the given key. Properties with names that start
-     * with the given key (i.e. properties below the specified key in the
-     * hierarchy) won't be affected.
-     *
-     * @param key the key of the property to be removed
-     */
-    @Override
-    protected void clearPropertyDirect(String key)
-    {
-        List<ConfigurationNode> nodes = fetchNodeList(key);
-
-        for (ConfigurationNode node : nodes)
-        {
-            clearNode(node);
-        }
-    }
-
-    /**
-     * Returns an iterator with all keys defined in this configuration.
-     * Note that the keys returned by this method will not contain any
-     * indices. This means that some structure will be lost.</p>
-     *
-     * @return an iterator with the defined keys in this configuration
-     */
-    @Override
-    protected Iterator<String> getKeysInternal()
-    {
-        DefinedKeysVisitor visitor = new DefinedKeysVisitor();
-        getRootNode().visit(visitor);
-
-        return visitor.getKeyList().iterator();
-    }
-
-    /**
-     * Returns an iterator with all keys defined in this configuration that
-     * start with the given prefix. The returned keys will not contain any
-     * indices. This implementation tries to locate a node whose key is the same
-     * as the passed in prefix. Then the subtree of this node is traversed, and
-     * the keys of all nodes encountered (including attributes) are added to the
-     * result set.
-     *
-     * @param prefix the prefix of the keys to start with
-     * @return an iterator with the found keys
-     */
-    @Override
-    protected Iterator<String> getKeysInternal(String prefix)
-    {
-        DefinedKeysVisitor visitor = new DefinedKeysVisitor(prefix);
-        if (containsKey(prefix))
-        {
-            // explicitly add the prefix
-            visitor.getKeyList().add(prefix);
-        }
-
-        List<ConfigurationNode> nodes = fetchNodeList(prefix);
-
-        for (ConfigurationNode node : nodes)
-        {
-            for (ConfigurationNode c : node.getChildren())
-            {
-                c.visit(visitor);
-            }
-            for (ConfigurationNode attr : node.getAttributes())
-            {
-                attr.visit(visitor);
-            }
-        }
-
-        return visitor.getKeyList().iterator();
-    }
-
-    /**
-     * Returns the maximum defined index for the given key. This is useful if
-     * there are multiple values for this key. They can then be addressed
-     * separately by specifying indices from 0 to the return value of this
-     * method. If the passed in key is not contained in this configuration,
-     * result is -1.
-     *
-     * @param key the key to be checked
-     * @return the maximum defined index for this key
-     */
-    @Override
-    public final int getMaxIndex(String key)
-    {
-        beginRead(false);
-        try
-        {
-            return getMaxIndexInternal(key);
-        }
-        finally
-        {
-            endRead();
-        }
-    }
-
-    /**
-     * Actually retrieves the maximum defined index for the given key. This
-     * method is called by {@code getMaxIndex()}. Subclasses that need to adapt
-     * this operation have to override this method.
-     *
-     * @param key the key to be checked
-     * @return the maximum defined index for this key
-     * @since 2.0
-     */
-    protected int getMaxIndexInternal(String key)
-    {
-        return fetchNodeList(key).size() - 1;
-    }
-
-    /**
-     * Creates a copy of this object. This new configuration object will contain
-     * copies of all nodes in the same structure. Registered event listeners
-     * won't be cloned; so they are not registered at the returned copy.
-     *
-     * @return the copy
-     * @since 1.2
-     */
-    @Override
-    public Object clone()
-    {
-        beginRead(false);
-        try
-        {
-            BaseHierarchicalConfiguration copy = (BaseHierarchicalConfiguration) super
-                    .clone();
-            copy.setSynchronizer(NoOpSynchronizer.INSTANCE);
-
-            // clone the nodes, too
-            CloneVisitor v = new CloneVisitor();
-            getRootNode().visit(v);
-            copy.setRootNode(v.getClone());
-            copy.cloneInterpolator(this);
-            copy.setUpSubConfigManagementData();
-            copy.setSynchronizer(ConfigurationUtils.cloneSynchronizer(getSynchronizer()));
-
-            return copy;
-        }
-        catch (CloneNotSupportedException cex)
-        {
-            // should not happen
-            throw new ConfigurationRuntimeException(cex);
-        }
-        finally
-        {
-            endRead();
-        }
     }
 
     /**
@@ -1250,146 +646,27 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     @Override
     public Configuration interpolatedConfiguration()
     {
-        BaseHierarchicalConfiguration c = (BaseHierarchicalConfiguration) clone();
-        c.getRootNode().visit(new ConfigurationNodeVisitorAdapter()
-        {
-            @Override
-            public void visitAfterChildren(ConfigurationNode node)
-            {
-                node.setValue(interpolate(node.getValue()));
-            }
-        });
+        InterpolatedVisitor visitor = new InterpolatedVisitor();
+        NodeHandler<ImmutableNode> handler = getModel().getNodeHandler();
+        NodeTreeWalker.INSTANCE
+                .walkDFS(handler.getRootNode(), visitor, handler);
+
+        BaseHierarchicalConfiguration c =
+                (BaseHierarchicalConfiguration) clone();
+        c.getNodeModel().setRootNode(visitor.getInterpolatedRoot());
         return c;
     }
 
     /**
-     * Helper method for fetching a list of all nodes that are addressed by the
-     * specified key.
-     *
-     * @param key the key
-     * @return a list with all affected nodes (never <b>null </b>)
+     * {@inheritDoc} This implementation creates a new instance of
+     * {@link InMemoryNodeModel}, initialized with this configuration's root
+     * node. This has the effect that although the same nodes are used, the
+     * original and copied configurations are independent on each other.
      */
-    protected List<ConfigurationNode> fetchNodeList(String key)
+    @Override
+    protected NodeModel<ImmutableNode> cloneNodeModel()
     {
-        return getExpressionEngine().query(getRootNode(), key);
-    }
-
-    /**
-     * Checks if the specified node is defined.
-     *
-     * @param node the node to be checked
-     * @return a flag if this node is defined
-     */
-    protected boolean nodeDefined(ConfigurationNode node)
-    {
-        DefinedVisitor visitor = new DefinedVisitor();
-        node.visit(visitor);
-        return visitor.isDefined();
-    }
-
-    /**
-     * Removes the specified node from this configuration. This method ensures
-     * that parent nodes that become undefined by this operation are also
-     * removed.
-     *
-     * @param node the node to be removed
-     */
-    protected void removeNode(ConfigurationNode node)
-    {
-        ConfigurationNode parent = node.getParentNode();
-        if (parent != null)
-        {
-            parent.removeChild(node);
-            if (!nodeDefined(parent))
-            {
-                removeNode(parent);
-            }
-        }
-    }
-
-    /**
-     * Clears the value of the specified node. If the node becomes undefined by
-     * this operation, it is removed from the hierarchy.
-     *
-     * @param node the node to be cleared
-     */
-    protected void clearNode(ConfigurationNode node)
-    {
-        node.setValue(null);
-        if (!nodeDefined(node))
-        {
-            removeNode(node);
-        }
-    }
-
-    /**
-     * Creates a new {@code Node} object with the specified name. This
-     * method can be overloaded in derived classes if a specific node type is
-     * needed. This base implementation always returns a new object of the
-     * {@code DefaultConfigurationNode} class.
-     *
-     * @param name the name of the new node
-     * @return the new node
-     */
-    protected ConfigurationNode createNode(String name)
-    {
-        return new DefaultConfigurationNode(name);
-    }
-
-    /**
-     * Helper method for processing a node add data object obtained from the
-     * expression engine. This method will create all new nodes.
-     *
-     * @param data the data object
-     * @return the new node
-     * @since 1.3
-     */
-    private ConfigurationNode processNodeAddData(NodeAddData data)
-    {
-        ConfigurationNode node = data.getParent();
-
-        // Create missing nodes on the path
-        for (String name : data.getPathNodes())
-        {
-            ConfigurationNode child = createNode(name);
-            node.addChild(child);
-            node = child;
-        }
-
-        // Add new target node
-        ConfigurationNode child = createNode(data.getNewNodeName());
-        if (data.isAttribute())
-        {
-            node.addAttribute(child);
-        }
-        else
-        {
-            node.addChild(child);
-        }
-        return child;
-    }
-
-    /**
-     * Clears all reference fields in a node structure. A configuration node can
-     * store a so-called &quot;reference&quot;. The meaning of this data is
-     * determined by a concrete sub class. Typically such references are
-     * specific for a configuration instance. If this instance is cloned or
-     * copied, they must be cleared. This can be done using this method.
-     *
-     * @param node the root node of the node hierarchy, in which the references
-     * are to be cleared
-     * @since 1.4
-     */
-    protected static void clearReferences(ConfigurationNode node)
-    {
-        node.visit(new ConfigurationNodeVisitorAdapter()
-        {
-            @Override
-            public void visitBeforeChildren(ConfigurationNode node)
-            {
-                node.setReference(null);
-            }
-        });
+        return new InMemoryNodeModel(getRootNode());
     }
 
     /**
@@ -1411,223 +688,33 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Creates a copy of the node structure of the passed in configuration.
+     * Creates the {@code NodeModel} for this configuration based on a passed in
+     * source configuration. This implementation creates an
+     * {@link InMemoryNodeModel}. If the passed in source configuration is
+     * defined, its root node also becomes the root node of this configuration.
+     * Otherwise, a new, empty root node is used.
      *
-     * @param c the configuration whose nodes are to be copied (may be <b>null</b>)
-     * @return the copied root node
+     * @param c the configuration that is to be copied
+     * @return the {@code NodeModel} for the new configuration
      */
-    private static ConfigurationNode copyRootNode(HierarchicalConfiguration c)
+    private static NodeModel<ImmutableNode> createNodeModel(
+            HierarchicalConfiguration<ImmutableNode> c)
     {
-        if (c == null)
-        {
-            return new DefaultConfigurationNode();
-        }
-
-        CloneVisitor visitor = new CloneVisitor();
-        c.lock(LockMode.READ);
-        try
-        {
-            c.getRootNode().visit(visitor);
-        }
-        finally
-        {
-            c.unlock(LockMode.READ);
-        }
-        ConfigurationNode nd = visitor.getClone();
-        return nd;
+        ImmutableNode root = (c != null) ? obtainRootNode(c) : null;
+        return new InMemoryNodeModel(root);
     }
 
     /**
-     * A specialized visitor that checks if a node is defined.
-     * &quot;Defined&quot; in this terms means that the node or at least one of
-     * its sub nodes is associated with a value.
+     * Obtains the root node from a configuration whose data is to be copied. It
+     * has to be ensured that the synchronizer is called correctly.
      *
+     * @param c the configuration that is to be copied
+     * @return the root node of this configuration
      */
-    static class DefinedVisitor extends ConfigurationNodeVisitorAdapter
+    private static ImmutableNode obtainRootNode(
+            HierarchicalConfiguration<ImmutableNode> c)
     {
-        /** Stores the defined flag. */
-        private boolean defined;
-
-        /**
-         * Checks if iteration should be stopped. This can be done if the first
-         * defined node is found.
-         *
-         * @return a flag if iteration should be stopped
-         */
-        @Override
-        public boolean terminate()
-        {
-            return isDefined();
-        }
-
-        /**
-         * Visits the node. Checks if a value is defined.
-         *
-         * @param node the actual node
-         */
-        @Override
-        public void visitBeforeChildren(ConfigurationNode node)
-        {
-            defined = node.getValue() != null;
-        }
-
-        /**
-         * Returns the defined flag.
-         *
-         * @return the defined flag
-         */
-        public boolean isDefined()
-        {
-            return defined;
-        }
-    }
-
-    /**
-     * A specialized visitor that fills a list with keys that are defined in a
-     * node hierarchy.
-     */
-    class DefinedKeysVisitor extends ConfigurationNodeVisitorAdapter
-    {
-        /** Stores the list to be filled. */
-        private final Set<String> keyList;
-
-        /** A stack with the keys of the already processed nodes. */
-        private final Stack<String> parentKeys;
-
-        /**
-         * Default constructor.
-         */
-        public DefinedKeysVisitor()
-        {
-            keyList = new LinkedHashSet<String>();
-            parentKeys = new Stack<String>();
-        }
-
-        /**
-         * Creates a new {@code DefinedKeysVisitor} instance and sets the
-         * prefix for the keys to fetch.
-         *
-         * @param prefix the prefix
-         */
-        public DefinedKeysVisitor(String prefix)
-        {
-            this();
-            parentKeys.push(prefix);
-        }
-
-        /**
-         * Returns the list with all defined keys.
-         *
-         * @return the list with the defined keys
-         */
-        public Set<String> getKeyList()
-        {
-            return keyList;
-        }
-
-        /**
-         * Visits the node after its children has been processed. Removes this
-         * node's key from the stack.
-         *
-         * @param node the node
-         */
-        @Override
-        public void visitAfterChildren(ConfigurationNode node)
-        {
-            parentKeys.pop();
-        }
-
-        /**
-         * Visits the specified node. If this node has a value, its key is added
-         * to the internal list.
-         *
-         * @param node the node to be visited
-         */
-        @Override
-        public void visitBeforeChildren(ConfigurationNode node)
-        {
-            String parentKey = parentKeys.isEmpty() ? null
-                    : (String) parentKeys.peek();
-            String key = getExpressionEngine().nodeKey(node, parentKey);
-            parentKeys.push(key);
-            if (node.getValue() != null)
-            {
-                keyList.add(key);
-            }
-        }
-    }
-
-    /**
-     * A specialized visitor that is able to create a deep copy of a node
-     * hierarchy.
-     */
-    static class CloneVisitor extends ConfigurationNodeVisitorAdapter
-    {
-        /** A stack with the actual object to be copied. */
-        private final Stack<ConfigurationNode> copyStack;
-
-        /** Stores the result of the clone process. */
-        private ConfigurationNode result;
-
-        /**
-         * Creates a new instance of {@code CloneVisitor}.
-         */
-        public CloneVisitor()
-        {
-            copyStack = new Stack<ConfigurationNode>();
-        }
-
-        /**
-         * Visits the specified node after its children have been processed.
-         *
-         * @param node the node
-         */
-        @Override
-        public void visitAfterChildren(ConfigurationNode node)
-        {
-            ConfigurationNode copy = copyStack.pop();
-            if (copyStack.isEmpty())
-            {
-                result = copy;
-            }
-        }
-
-        /**
-         * Visits and copies the specified node.
-         *
-         * @param node the node
-         */
-        @Override
-        public void visitBeforeChildren(ConfigurationNode node)
-        {
-            ConfigurationNode copy = (ConfigurationNode) node.clone();
-            copy.setParentNode(null);
-
-            if (!copyStack.isEmpty())
-            {
-                if (node.isAttribute())
-                {
-                    copyStack.peek().addAttribute(copy);
-                }
-                else
-                {
-                    copyStack.peek().addChild(copy);
-                }
-            }
-
-            copyStack.push(copy);
-        }
-
-        /**
-         * Returns the result of the clone process. This is the root node of the
-         * cloned node hierarchy.
-         *
-         * @return the cloned root node
-         */
-        public ConfigurationNode getClone()
-        {
-            return result;
-        }
+        return c.getNodeModel().getNodeHandler().getRootNode();
     }
 
     /**
@@ -1643,24 +730,84 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * method is called, which must be defined in concrete sub classes. This
      * method can perform all steps to integrate the new node into the original
      * structure.
-     *
      */
-    protected abstract static class BuilderVisitor extends ConfigurationNodeVisitorAdapter
+    protected abstract static class BuilderVisitor extends
+            ConfigurationNodeVisitorAdapter<ImmutableNode>
     {
-        /**
-         * Visits the specified node before its children have been traversed.
-         *
-         * @param node the node to visit
-         * @param key the current key
-         */
         @Override
-        public void visitBeforeChildren(ConfigurationNode node)
+        public void visitBeforeChildren(ImmutableNode node, NodeHandler<ImmutableNode> handler)
         {
-            Collection<ConfigurationNode> subNodes = new LinkedList<ConfigurationNode>(node.getChildren());
-            subNodes.addAll(node.getAttributes());
-            Iterator<ConfigurationNode> children = subNodes.iterator();
-            ConfigurationNode sibling1 = null;
-            ConfigurationNode nd = null;
+            ReferenceNodeHandler refHandler = (ReferenceNodeHandler) handler;
+            updateNode(node, refHandler);
+            insertNewChildNodes(node, refHandler);
+        }
+
+        /**
+         * Inserts a new node into the structure constructed by this builder.
+         * This method is called for each node that has been added to the
+         * configuration tree after the configuration has been loaded from its
+         * source. These new nodes have to be inserted into the original
+         * structure. The passed in nodes define the position of the node to be
+         * inserted: its parent and the siblings between to insert.
+         *
+         * @param newNode the node to be inserted
+         * @param parent the parent node
+         * @param sibling1 the sibling after which the node is to be inserted;
+         *        can be <b>null</b> if the new node is going to be the first
+         *        child node
+         * @param sibling2 the sibling before which the node is to be inserted;
+         *        can be <b>null</b> if the new node is going to be the last
+         *        child node
+         * @param refHandler the {@code ReferenceNodeHandler}
+         */
+        protected abstract void insert(ImmutableNode newNode,
+                ImmutableNode parent, ImmutableNode sibling1,
+                ImmutableNode sibling2, ReferenceNodeHandler refHandler);
+
+        /**
+         * Updates a node that already existed in the original hierarchy. This
+         * method is called for each node that has an assigned reference object.
+         * A concrete implementation should update the reference according to
+         * the node's current value.
+         *
+         * @param node the current node to be processed
+         * @param reference the reference object for this node
+         * @param refHandler the {@code ReferenceNodeHandler}
+         */
+        protected abstract void update(ImmutableNode node, Object reference,
+                ReferenceNodeHandler refHandler);
+
+        /**
+         * Updates the value of a node. If this node is associated with a
+         * reference object, the {@code update()} method is called.
+         *
+         * @param node the current node to be processed
+         * @param refHandler the {@code ReferenceNodeHandler}
+         */
+        private void updateNode(ImmutableNode node,
+                ReferenceNodeHandler refHandler)
+        {
+            Object reference = refHandler.getReference(node);
+            if (reference != null)
+            {
+                update(node, reference, refHandler);
+            }
+        }
+
+        /**
+         * Inserts new children that have been added to the specified node.
+         *
+         * @param node the current node to be processed
+         * @param refHandler the {@code ReferenceNodeHandler}
+         */
+        private void insertNewChildNodes(ImmutableNode node,
+                ReferenceNodeHandler refHandler)
+        {
+            Collection<ImmutableNode> subNodes =
+                    new LinkedList<ImmutableNode>(refHandler.getChildren(node));
+            Iterator<ImmutableNode> children = subNodes.iterator();
+            ImmutableNode sibling1;
+            ImmutableNode nd = null;
 
             while (children.hasNext())
             {
@@ -1669,17 +816,19 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
                 {
                     sibling1 = nd;
                     nd = children.next();
-                } while (nd.getReference() != null && children.hasNext());
+                } while (refHandler.getReference(nd) != null
+                        && children.hasNext());
 
-                if (nd.getReference() == null)
+                if (refHandler.getReference(nd) == null)
                 {
                     // find all following new nodes
-                    List<ConfigurationNode> newNodes = new LinkedList<ConfigurationNode>();
+                    List<ImmutableNode> newNodes =
+                            new LinkedList<ImmutableNode>();
                     newNodes.add(nd);
                     while (children.hasNext())
                     {
                         nd = children.next();
-                        if (nd.getReference() == null)
+                        if (refHandler.getReference(nd) == null)
                         {
                             newNodes.add(nd);
                         }
@@ -1690,46 +839,227 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
                     }
 
                     // Insert all new nodes
-                    ConfigurationNode sibling2 = (nd.getReference() == null) ? null : nd;
-                    for (ConfigurationNode insertNode : newNodes)
+                    ImmutableNode sibling2 =
+                            (refHandler.getReference(nd) == null) ? null : nd;
+                    for (ImmutableNode insertNode : newNodes)
                     {
-                        if (insertNode.getReference() == null)
+                        if (refHandler.getReference(insertNode) == null)
                         {
-                            Object ref = insert(insertNode, node, sibling1, sibling2);
-                            if (ref != null)
-                            {
-                                insertNode.setReference(ref);
-                            }
+                            insert(insertNode, node, sibling1, sibling2,
+                                    refHandler);
                             sibling1 = insertNode;
                         }
                     }
                 }
             }
         }
+    }
+
+    /**
+     * A specialized visitor implementation which constructs the root node of a
+     * configuration with all variables replaced by their interpolated values.
+     */
+    private class InterpolatedVisitor extends
+            ConfigurationNodeVisitorAdapter<ImmutableNode>
+    {
+        /** A stack for managing node builder instances. */
+        private final List<ImmutableNode.Builder> builderStack;
+
+        /** The resulting root node. */
+        private ImmutableNode interpolatedRoot;
 
         /**
-         * Inserts a new node into the structure constructed by this builder.
-         * This method is called for each node that has been added to the
-         * configuration tree after the configuration has been loaded from its
-         * source. These new nodes have to be inserted into the original
-         * structure. The passed in nodes define the position of the node to be
-         * inserted: its parent and the siblings between to insert. The return
-         * value is interpreted as the new reference of the affected
-         * {@code Node} object; if it is not <b>null </b>, it is passed
-         * to the node's {@code setReference()} method.
-         *
-         * @param newNode the node to be inserted
-         * @param parent the parent node
-         * @param sibling1 the sibling after which the node is to be inserted;
-         * can be <b>null </b> if the new node is going to be the first child
-         * node
-         * @param sibling2 the sibling before which the node is to be inserted;
-         * can be <b>null </b> if the new node is going to be the last child
-         * node
-         * @return the reference object for the node to be inserted
+         * Creates a new instance of {@code InterpolatedVisitor}.
          */
-        protected abstract Object insert(ConfigurationNode newNode,
-                ConfigurationNode parent, ConfigurationNode sibling1,
-                ConfigurationNode sibling2);
+        public InterpolatedVisitor()
+        {
+            builderStack = new LinkedList<ImmutableNode.Builder>();
+        }
+
+        /**
+         * Returns the result of this builder: the root node of the interpolated
+         * nodes hierarchy.
+         *
+         * @return the resulting root node
+         */
+        public ImmutableNode getInterpolatedRoot()
+        {
+            return interpolatedRoot;
+        }
+
+        @Override
+        public void visitBeforeChildren(ImmutableNode node,
+                NodeHandler<ImmutableNode> handler)
+        {
+            if (isLeafNode(node, handler))
+            {
+                handleLeafNode(node, handler);
+            }
+            else
+            {
+                ImmutableNode.Builder builder =
+                        new ImmutableNode.Builder(handler.getChildrenCount(
+                                node, null))
+                                .name(handler.nodeName(node))
+                                .value(interpolate(handler.getValue(node)))
+                                .addAttributes(
+                                        interpolateAttributes(node, handler));
+                push(builder);
+            }
+        }
+
+        @Override
+        public void visitAfterChildren(ImmutableNode node,
+                NodeHandler<ImmutableNode> handler)
+        {
+            if (!isLeafNode(node, handler))
+            {
+                ImmutableNode newNode = pop().create();
+                storeInterpolatedNode(newNode);
+            }
+        }
+
+        /**
+         * Pushes a new builder on the stack.
+         *
+         * @param builder the builder
+         */
+        private void push(ImmutableNode.Builder builder)
+        {
+            builderStack.add(0, builder);
+        }
+
+        /**
+         * Pops the top-level element from the stack.
+         *
+         * @return the element popped from the stack
+         */
+        private ImmutableNode.Builder pop()
+        {
+            return builderStack.remove(0);
+        }
+
+        /**
+         * Returns the top-level element from the stack without removing it.
+         *
+         * @return the top-level element from the stack
+         */
+        private ImmutableNode.Builder peek()
+        {
+            return builderStack.get(0);
+        }
+
+        /**
+         * Returns a flag whether the given node is a leaf. This is the case if
+         * it does not have children.
+         *
+         * @param node the node in question
+         * @param handler the {@code NodeHandler}
+         * @return a flag whether this is a leaf node
+         */
+        private boolean isLeafNode(ImmutableNode node,
+                NodeHandler<ImmutableNode> handler)
+        {
+            return handler.getChildren(node).isEmpty();
+        }
+
+        /**
+         * Handles interpolation for a node with no children. If interpolation
+         * does not change this node, it is copied as is to the resulting
+         * structure. Otherwise, a new node is created with the interpolated
+         * values.
+         *
+         * @param node the current node to be processed
+         * @param handler the {@code NodeHandler}
+         */
+        private void handleLeafNode(ImmutableNode node,
+                NodeHandler<ImmutableNode> handler)
+        {
+            Object value = interpolate(node.getValue());
+            Map<String, Object> interpolatedAttributes =
+                    new HashMap<String, Object>();
+            boolean attributeChanged =
+                    interpolateAttributes(node, handler, interpolatedAttributes);
+            ImmutableNode newNode =
+                    (valueChanged(value, handler.getValue(node)) || attributeChanged) ? new ImmutableNode.Builder()
+                            .name(handler.nodeName(node)).value(value)
+                            .addAttributes(interpolatedAttributes).create()
+                            : node;
+            storeInterpolatedNode(newNode);
+        }
+
+        /**
+         * Stores a processed node. Per default, the node is added to the
+         * current builder on the stack. If no such builder exists, this is the
+         * result node.
+         *
+         * @param node the node to be stored
+         */
+        private void storeInterpolatedNode(ImmutableNode node)
+        {
+            if (builderStack.isEmpty())
+            {
+                interpolatedRoot = node;
+            }
+            else
+            {
+                peek().addChild(node);
+            }
+        }
+
+        /**
+         * Populates a map with interpolated attributes of the passed in node.
+         *
+         * @param node the current node to be processed
+         * @param handler the {@code NodeHandler}
+         * @param interpolatedAttributes a map for storing the results
+         * @return a flag whether an attribute value was changed by
+         *         interpolation
+         */
+        private boolean interpolateAttributes(ImmutableNode node,
+                NodeHandler<ImmutableNode> handler,
+                Map<String, Object> interpolatedAttributes)
+        {
+            boolean attributeChanged = false;
+            for (String attr : handler.getAttributes(node))
+            {
+                Object attrValue =
+                        interpolate(handler.getAttributeValue(node, attr));
+                if (valueChanged(attrValue,
+                        handler.getAttributeValue(node, attr)))
+                {
+                    attributeChanged = true;
+                }
+                interpolatedAttributes.put(attr, attrValue);
+            }
+            return attributeChanged;
+        }
+
+        /**
+         * Returns a map with interpolated attributes of the passed in node.
+         *
+         * @param node the current node to be processed
+         * @param handler the {@code NodeHandler}
+         * @return the map with interpolated attributes
+         */
+        private Map<String, Object> interpolateAttributes(ImmutableNode node,
+                NodeHandler<ImmutableNode> handler)
+        {
+            Map<String, Object> attributes = new HashMap<String, Object>();
+            interpolateAttributes(node, handler, attributes);
+            return attributes;
+        }
+
+        /**
+         * Tests whether a value is changed because of interpolation.
+         *
+         * @param interpolatedValue the interpolated value
+         * @param value the original value
+         * @return a flag whether the value was changed
+         */
+        private boolean valueChanged(Object interpolatedValue, Object value)
+        {
+            return ObjectUtils.notEqual(interpolatedValue, value);
+        }
     }
 }

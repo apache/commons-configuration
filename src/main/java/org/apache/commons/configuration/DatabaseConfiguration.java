@@ -17,6 +17,7 @@
 
 package org.apache.commons.configuration;
 
+import javax.sql.DataSource;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,8 +28,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.sql.DataSource;
 
 import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
@@ -329,10 +328,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 {
                     Object value = extractPropertyValue(rs);
                     // Split value if it contains the list delimiter
-                    Iterator<?> it = getListDelimiterHandler().parse(value);
-                    while (it.hasNext())
+                    for (Object o : getListDelimiterHandler().parse(value))
                     {
-                        results.add(it.next());
+                        results.add(o);
                     }
                 }
 

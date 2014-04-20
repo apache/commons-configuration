@@ -58,10 +58,9 @@ public abstract class AbstractListDelimiterHandler implements
      * primitive objects.</li>
      * </ul>
      */
-    @Override
-    public Iterator<?> parse(Object value)
+    public Iterable<?> parse(Object value)
     {
-        return flatten(value).iterator();
+        return flatten(value);
     }
 
     /**
@@ -69,7 +68,6 @@ public abstract class AbstractListDelimiterHandler implements
      * string is <b>null</b>. In this case, an empty collection is returned.
      * Otherwise, this method delegates to {@link #splitString(String, boolean)}.
      */
-    @Override
     public Collection<String> split(String s, boolean trim)
     {
         if (s == null)
@@ -85,7 +83,6 @@ public abstract class AbstractListDelimiterHandler implements
      * otherwise no escaping is performed. Eventually, the passed in transformer
      * is invoked so that additional encoding can be performed.
      */
-    @Override
     public Object escape(Object value, ValueTransformer transformer)
     {
         Object escValue =

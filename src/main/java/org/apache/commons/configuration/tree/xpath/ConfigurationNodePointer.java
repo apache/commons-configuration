@@ -16,10 +16,9 @@
  */
 package org.apache.commons.configuration.tree.xpath;
 
-import java.util.List;
 import java.util.Locale;
 
-import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.NodeHandler;
 import org.apache.commons.jxpath.ri.Compiler;
 import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.compiler.NodeTest;
@@ -36,31 +35,36 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * </p>
  *
  * @since 1.3
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
+ * @param <T> the type of the nodes this pointer deals with
  */
-class ConfigurationNodePointer extends NodePointer
+class ConfigurationNodePointer<T> extends NodePointer
 {
     /**
      * The serial version UID.
      */
     private static final long serialVersionUID = -1087475639680007713L;
 
-    /** Stores the associated configuration node. */
-    private final ConfigurationNode node;
+    /** The node handler. */
+    private final NodeHandler<T> handler;
+
+    /** Stores the associated node. */
+    private final T node;
 
     /**
-     * Creates a new instance of {@code ConfigurationNodePointer}.
+     * Creates a new instance of {@code ConfigurationNodePointer} pointing to
+     * the specified node.
      *
-     * @param node the node
+     * @param node the wrapped node
      * @param locale the locale
+     * @param handler the {@code NodeHandler}
      */
-    public ConfigurationNodePointer(ConfigurationNode node, Locale locale)
+    public ConfigurationNodePointer(T node, Locale locale,
+            NodeHandler<T> handler)
     {
         super(null, locale);
         this.node = node;
+        this.handler = handler;
     }
 
     /**
@@ -69,11 +73,14 @@ class ConfigurationNodePointer extends NodePointer
      *
      * @param parent the parent pointer
      * @param node the associated node
+     * @param handler the {@code NodeHandler}
      */
-    public ConfigurationNodePointer(NodePointer parent, ConfigurationNode node)
+    public ConfigurationNodePointer(ConfigurationNodePointer<T> parent, T node,
+            NodeHandler<T> handler)
     {
         super(parent);
         this.node = node;
+        this.handler = handler;
     }
 
     /**
@@ -85,7 +92,7 @@ class ConfigurationNodePointer extends NodePointer
     @Override
     public boolean isLeaf()
     {
-        return node.getChildrenCount() < 1;
+        return getNodeHandler().getChildrenCount(node, null) < 1;
     }
 
     /**
@@ -111,15 +118,15 @@ class ConfigurationNodePointer extends NodePointer
     }
 
     /**
-     * Checks whether this node pointer refers to an attribute node. This method
-     * checks the attribute flag of the associated configuration node.
+     * Checks whether this node pointer refers to an attribute node. This is
+     * not the case.
      *
      * @return the attribute flag
      */
     @Override
     public boolean isAttribute()
     {
-        return node.isAttribute();
+        return false;
     }
 
     /**
@@ -130,7 +137,7 @@ class ConfigurationNodePointer extends NodePointer
     @Override
     public QName getName()
     {
-        return new QName(null, node.getName());
+        return new QName(null, getNodeHandler().nodeName(node));
     }
 
     /**
@@ -164,18 +171,19 @@ class ConfigurationNodePointer extends NodePointer
     @Override
     public Object getValue()
     {
-        return node.getValue();
+        return getNodeHandler().getValue(node);
     }
 
     /**
-     * Sets the value of this node.
+     * Sets the value of this node. This is not supported, so always an
+     * exception is thrown.
      *
      * @param value the new value
      */
     @Override
     public void setValue(Object value)
     {
-        node.setValue(value);
+        throw new UnsupportedOperationException("Node value cannot be set!");
     }
 
     /**
@@ -189,37 +197,22 @@ class ConfigurationNodePointer extends NodePointer
     public int compareChildNodePointers(NodePointer pointer1,
             NodePointer pointer2)
     {
-        ConfigurationNode node1 = (ConfigurationNode) pointer1.getBaseValue();
-        ConfigurationNode node2 = (ConfigurationNode) pointer2.getBaseValue();
+        Object node1 = pointer1.getBaseValue();
+        Object node2 = pointer2.getBaseValue();
 
-        // attributes will be sorted before child nodes
-        if (node1.isAttribute() && !node2.isAttribute())
+        // sort based on the occurrence in the sub node list
+        for (T child : getNodeHandler().getChildren(node))
         {
-            return -1;
-        }
-        else if (node2.isAttribute() && !node1.isAttribute())
-        {
-            return 1;
-        }
-
-        else
-        {
-            // sort based on the occurrence in the sub node list
-            List<ConfigurationNode> subNodes = node1.isAttribute() ? node.getAttributes() : node
-                    .getChildren();
-            for (ConfigurationNode child : subNodes)
+            if (child == node1)
             {
-                if (child == node1)
-                {
-                    return -1;
-                }
-                else if (child == node2)
-                {
-                    return 1;
-                }
+                return -1;
             }
-            return 0; // should not happen
+            else if (child == node2)
+            {
+                return 1;
+            }
         }
+        return 0; // should not happen
     }
 
     /**
@@ -231,7 +224,7 @@ class ConfigurationNodePointer extends NodePointer
     @Override
     public NodeIterator attributeIterator(QName name)
     {
-        return new ConfigurationNodeIteratorAttribute(this, name);
+        return new ConfigurationNodeIteratorAttribute<T>(this, name);
     }
 
     /**
@@ -246,8 +239,8 @@ class ConfigurationNodePointer extends NodePointer
     public NodeIterator childIterator(NodeTest test, boolean reverse,
             NodePointer startWith)
     {
-        return new ConfigurationNodeIteratorChildren(this, test, reverse,
-                startWith);
+        return new ConfigurationNodeIteratorChildren<T>(this, test, reverse,
+                castPointer(startWith));
     }
 
     /**
@@ -266,5 +259,41 @@ class ConfigurationNodePointer extends NodePointer
             return true;
         }
         return super.testNode(test);
+    }
+
+    /**
+     * Returns the {@code NodeHandler} used by this instance.
+     *
+     * @return the {@code NodeHandler}
+     */
+    public NodeHandler<T> getNodeHandler()
+    {
+        return handler;
+    }
+
+    /**
+     * Returns the wrapped configuration node.
+     *
+     * @return the wrapped node
+     */
+    public T getConfigurationNode()
+    {
+        return node;
+    }
+
+    /**
+     * Casts the given child pointer to a node pointer of this type. This is a
+     * bit dangerous. However, in a typical setup, child node pointers can only
+     * be created by this instance which ensures that they are of the correct
+     * type. Therefore, this cast is safe.
+     *
+     * @param p the {@code NodePointer} to cast
+     * @return the resulting {@code ConfigurationNodePointer}
+     */
+    private ConfigurationNodePointer<T> castPointer(NodePointer p)
+    {
+        @SuppressWarnings("unchecked") // see method comment
+        ConfigurationNodePointer<T> result = (ConfigurationNodePointer<T>) p;
+        return result;
     }
 }

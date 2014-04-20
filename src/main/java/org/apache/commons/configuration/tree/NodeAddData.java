@@ -16,8 +16,9 @@
  */
 package org.apache.commons.configuration.tree;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -46,47 +47,41 @@ import java.util.List;
  * </p>
  *
  * @since 1.3
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
+ * @param <T> the type of nodes this class can handle
  */
-public class NodeAddData
+public class NodeAddData<T>
 {
     /** Stores the parent node of the add operation. */
-    private ConfigurationNode parent;
+    private final T parent;
 
     /**
-     * Stores a list with nodes that are on the path between the parent node and
-     * the new node.
+     * Stores a list with the names of nodes that are on the path between the
+     * parent node and the new node.
      */
-    private List<String> pathNodes;
+    private final List<String> pathNodes;
 
     /** Stores the name of the new node. */
-    private String newNodeName;
+    private final String newNodeName;
 
     /** Stores the attribute flag. */
-    private boolean attribute;
+    private final boolean attribute;
 
     /**
-     * Creates a new, uninitialized instance of {@code NodeAddData}.
-     */
-    public NodeAddData()
-    {
-        this(null, null);
-    }
-
-    /**
-     * Creates a new instance of {@code NodeAddData} and sets the most
-     * important data fields.
+     * Creates a new instance of {@code NodeAddData} and initializes it.
      *
-     * @param parent the parent node
-     * @param nodeName the name of the new node
+     * @param parentNode the parent node of the add operation
+     * @param newName the name of the new node
+     * @param isAttr flag whether the new node is an attribute
+     * @param intermediateNodes an optional collection with path nodes
      */
-    public NodeAddData(ConfigurationNode parent, String nodeName)
+    public NodeAddData(T parentNode, String newName, boolean isAttr,
+            Collection<String> intermediateNodes)
     {
-        setParent(parent);
-        setNewNodeName(nodeName);
+        parent = parentNode;
+        newNodeName = newName;
+        attribute = isAttr;
+        pathNodes = createPathNodes(intermediateNodes);
     }
 
     /**
@@ -101,17 +96,6 @@ public class NodeAddData
     }
 
     /**
-     * Sets the attribute flag. This flag determines whether an attribute or a
-     * child node will be added.
-     *
-     * @param attribute the attribute flag
-     */
-    public void setAttribute(boolean attribute)
-    {
-        this.attribute = attribute;
-    }
-
-    /**
      * Returns the name of the new node.
      *
      * @return the new node's name
@@ -122,39 +106,18 @@ public class NodeAddData
     }
 
     /**
-     * Sets the name of the new node. A node with this name will be added to the
-     * configuration's node hierarchy.
-     *
-     * @param newNodeName the name of the new node
-     */
-    public void setNewNodeName(String newNodeName)
-    {
-        this.newNodeName = newNodeName;
-    }
-
-    /**
      * Returns the parent node.
      *
      * @return the parent node
      */
-    public ConfigurationNode getParent()
+    public T getParent()
     {
         return parent;
     }
 
     /**
-     * Sets the parent node. New nodes will be added to this node.
-     *
-     * @param parent the parent node
-     */
-    public void setParent(ConfigurationNode parent)
-    {
-        this.parent = parent;
-    }
-
-    /**
      * Returns a list with further nodes that must be added. This is needed if a
-     * complete branch is to be added at once. For instance imagine that there
+     * complete branch is to be added at once. For instance, imagine that there
      * exists only a node {@code database}. Now the key
      * {@code database.connection.settings.username} (assuming the syntax
      * of the default expression engine) is to be added. Then
@@ -168,29 +131,26 @@ public class NodeAddData
      */
     public List<String> getPathNodes()
     {
-        if (pathNodes != null)
-        {
-            return Collections.unmodifiableList(pathNodes);
-        }
-        else
-        {
-            return Collections.emptyList();
-        }
+        return pathNodes;
     }
 
     /**
-     * Adds the name of a path node. With this method an additional node to be
-     * added can be defined.
+     * Creates the list with path nodes. Handles null input.
      *
-     * @param nodeName the name of the node
-     * @see #getPathNodes()
+     * @param intermediateNodes the nodes passed to the constructor
+     * @return an unmodifiable list of path nodes
      */
-    public void addPathNode(String nodeName)
+    private static List<String> createPathNodes(
+            Collection<String> intermediateNodes)
     {
-        if (pathNodes == null)
+        if (intermediateNodes == null)
         {
-            pathNodes = new LinkedList<String>();
+            return Collections.emptyList();
         }
-        pathNodes.add(nodeName);
+        else
+        {
+            return Collections.unmodifiableList(new ArrayList<String>(
+                    intermediateNodes));
+        }
     }
 }

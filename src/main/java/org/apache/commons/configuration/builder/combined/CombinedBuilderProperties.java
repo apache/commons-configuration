@@ -48,7 +48,7 @@ public interface CombinedBuilderProperties<T>
      * @return a reference to this object for method chaining
      */
     T setDefinitionBuilder(
-            ConfigurationBuilder<? extends HierarchicalConfiguration> builder);
+            ConfigurationBuilder<? extends HierarchicalConfiguration<?>> builder);
 
     /**
      * Registers the given {@code ConfigurationBuilderProvider} for the

@@ -22,44 +22,49 @@ package org.apache.commons.configuration.tree;
  * structure.
  * </p>
  * <p>
- * The {@code ConfigurationNode} interface defines a {@code visit()},
- * which simplifies traversal of a complex node hierarchy. A configuration node
- * implementation must provide a way of visiting all nodes in the current
- * hierarchy. This is a typical application of the GoF <em>Visitor</em>
- * pattern.
+ * This is a typical application of the GoF <em>Visitor</em> pattern. An object
+ * implementing this interface can be used to traverse a hierarchical structure
+ * of nodes in various ways. The type of the nodes in the structure is generic;
+ * a corresponding {@link NodeHandler} implementation must be available for
+ * navigating through the structure.
+ * </p>
+ * <p>
+ * Note that the exact way the methods of a {@code ConfigurationNodeVisitor} are
+ * invoked is dependent on a specific traversal process.
  * </p>
  *
  * @since 1.3
- * @see ConfigurationNode
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
+ * @param <T> the type of the nodes processed by this visitor
  */
-public interface ConfigurationNodeVisitor
+public interface ConfigurationNodeVisitor<T>
 {
     /**
-     * Visits the specified node. This method is called before eventually
-     * existing children of this node are processed.
+     * Visits the specified node before the children of this node - if existing
+     * - are processed.
      *
      * @param node the node to be visited
+     * @param handler the {@code NodeHandler}
      */
-    void visitBeforeChildren(ConfigurationNode node);
+    void visitBeforeChildren(T node, NodeHandler<T> handler);
 
     /**
-     * Visits the specified node. This method is called after eventually
-     * existing children of this node have been processed.
+     * Visits the specified node after after its children - if existing - have
+     * been processed.
      *
      * @param node the node to be visited
+     * @param handler the {@code NodeHandler}
      */
-    void visitAfterChildren(ConfigurationNode node);
+    void visitAfterChildren(T node, NodeHandler<T> handler);
 
     /**
-     * Returns a flag whether the actual visit process should be aborted. This
+     * Returns a flag whether the current visit process should be aborted. This
      * method allows a visitor implementation to state that it does not need any
      * further data. It may be used e.g. by visitors that search for a certain
      * node in the hierarchy. After that node was found, there is no need to
-     * process the remaining nodes, too.
+     * process the remaining nodes, too. This method is called after each
+     * visited node. A result of <strong>true</strong> indicates that the
+     * current iteration is to be aborted.
      *
      * @return a flag if the visit process should be stopped
      */

@@ -17,31 +17,38 @@
 
 package org.apache.commons.configuration;
 
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
+import org.apache.commons.configuration.tree.NodeHandler;
+import org.apache.commons.configuration.tree.NodeTreeWalker;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * <p>A specialized SAX2 XML parser that "parses" hierarchical
- * configuration objects.</p>
- * <p>This class mimics to be a SAX conform XML parser. Instead of parsing
- * XML documents it processes a {@code Configuration} object and
- * generates SAX events for the single properties defined there. This enables
- * the whole world of XML processing for configuration objects.</p>
- * <p>The {@code HierarchicalConfiguration} object to be parsed can be
- * specified using a constructor or the {@code setConfiguration()} method.
- * This object will be processed by the {@code parse()} methods. Note
- * that these methods ignore their argument.</p>
+ * <p>
+ * A specialized SAX2 XML parser that "parses" hierarchical configuration
+ * objects.
+ * </p>
+ * <p>
+ * This class mimics to be a SAX conform XML parser. Instead of parsing XML
+ * documents it processes a {@code Configuration} object and generates SAX
+ * events for the single properties defined there. This enables the whole world
+ * of XML processing for configuration objects.
+ * </p>
+ * <p>
+ * The {@code HierarchicalConfiguration} object to be parsed can be specified
+ * using a constructor or the {@code setConfiguration()} method. This object
+ * will be processed by the {@code parse()} methods. Note that these methods
+ * ignore their argument.
+ * </p>
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  * @version $Id$
+ * @param <T> the type of the nodes supported by this reader
  */
-public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
+public class HierarchicalConfigurationXMLReader<T> extends
+        ConfigurationXMLReader
 {
-    /** Stores the configuration object to be parsed.*/
-    private HierarchicalConfiguration configuration;
+    /** Stores the configuration object to be parsed. */
+    private HierarchicalConfiguration<T> configuration;
 
     /**
      * Creates a new instance of {@code HierarchicalConfigurationXMLReader}.
@@ -57,7 +64,8 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
      *
      * @param config the configuration object
      */
-    public HierarchicalConfigurationXMLReader(HierarchicalConfiguration config)
+    public HierarchicalConfigurationXMLReader(
+            HierarchicalConfiguration<T> config)
     {
         this();
         setConfiguration(config);
@@ -68,7 +76,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
      *
      * @return the configuration object to be parsed
      */
-    public HierarchicalConfiguration getConfiguration()
+    public HierarchicalConfiguration<T> getConfiguration()
     {
         return configuration;
     }
@@ -78,7 +86,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
      *
      * @param config the configuration object to be parsed
      */
-    public void setConfiguration(HierarchicalConfiguration config)
+    public void setConfiguration(HierarchicalConfiguration<T> config)
     {
         configuration = config;
     }
@@ -100,50 +108,49 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
     @Override
     protected void processKeys()
     {
-        getConfiguration().getRootNode().visit(new SAXVisitor());
+        NodeHandler<T> nodeHandler =
+                getConfiguration().getNodeModel().getNodeHandler();
+        NodeTreeWalker.INSTANCE.walkDFS(nodeHandler.getRootNode(),
+                new SAXVisitor(), nodeHandler);
     }
 
     /**
-     * A specialized visitor class for generating SAX events for a
-     * hierarchical node structure.
-     *
+     * A specialized visitor class for generating SAX events for a hierarchical
+     * node structure.
      */
-    class SAXVisitor extends ConfigurationNodeVisitorAdapter
+    private class SAXVisitor extends ConfigurationNodeVisitorAdapter<T>
     {
-        /** Constant for the attribute type.*/
+        /** Constant for the attribute type. */
         private static final String ATTR_TYPE = "CDATA";
 
         /**
          * Visits the specified node after its children have been processed.
          *
          * @param node the actual node
+         * @param handler the node handler
          */
         @Override
-        public void visitAfterChildren(ConfigurationNode node)
+        public void visitAfterChildren(T node, NodeHandler<T> handler)
         {
-            if (!isAttributeNode(node))
-            {
-                fireElementEnd(nodeName(node));
-            }
+            fireElementEnd(nodeName(node, handler));
         }
 
         /**
          * Visits the specified node.
          *
          * @param node the actual node
-         * @param key the key of this node
+         * @param handler the node handler
          */
         @Override
-        public void visitBeforeChildren(ConfigurationNode node)
+        public void visitBeforeChildren(T node, NodeHandler<T> handler)
         {
-            if (!isAttributeNode(node))
-            {
-                fireElementStart(nodeName(node), fetchAttributes(node));
+            fireElementStart(nodeName(node, handler),
+                    fetchAttributes(node, handler));
 
-                if (node.getValue() != null)
-                {
-                    fireCharacters(node.getValue().toString());
-                }
+            Object value = handler.getValue(node);
+            if (value != null)
+            {
+                fireCharacters(value.toString());
             }
         }
 
@@ -162,19 +169,21 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
         /**
          * Returns an object with all attributes for the specified node.
          *
-         * @param node the actual node
+         * @param node the current node
+         * @param handler the node handler
          * @return an object with all attributes of this node
          */
-        protected Attributes fetchAttributes(ConfigurationNode node)
+        protected Attributes fetchAttributes(T node, NodeHandler<T> handler)
         {
             AttributesImpl attrs = new AttributesImpl();
 
-            for (ConfigurationNode child : node.getAttributes())
+            for (String attr : handler.getAttributes(node))
             {
-                if (child.getValue() != null)
+                Object value = handler.getAttributeValue(node, attr);
+                if (value != null)
                 {
-                    String attr = child.getName();
-                    attrs.addAttribute(NS_URI, attr, attr, ATTR_TYPE, child.getValue().toString());
+                    attrs.addAttribute(NS_URI, attr, attr, ATTR_TYPE,
+                            value.toString());
                 }
             }
 
@@ -187,24 +196,13 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
          * will be used.
          *
          * @param node the node to be checked
+         * @param handler the node handler
          * @return the name for this node
          */
-        private String nodeName(ConfigurationNode node)
+        private String nodeName(T node, NodeHandler<T> handler)
         {
-            return (node.getName() == null) ? getRootName() : node.getName();
-        }
-
-        /**
-         * Checks if the specified node is an attribute node. In the node
-         * hierarchy attributes are stored as normal child nodes, but with
-         * special names.
-         *
-         * @param node the node to be checked
-         * @return a flag if this is an attribute node
-         */
-        private boolean isAttributeNode(ConfigurationNode node)
-        {
-            return node.isAttribute();
+            String nodeName = handler.nodeName(node);
+            return (nodeName == null) ? getRootName() : nodeName;
         }
     }
 }

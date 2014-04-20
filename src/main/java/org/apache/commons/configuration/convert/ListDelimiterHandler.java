@@ -17,7 +17,6 @@
 package org.apache.commons.configuration.convert;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -74,13 +73,13 @@ public interface ListDelimiterHandler
      * Parses the specified value for list delimiters and splits it if
      * necessary. The passed in object can be either a single value or a complex
      * one, e.g. a collection, an array, or an {@code Iterable}. It is the
-     * responsibility of this method to return an {@code Iterator} which
+     * responsibility of this method to return an {@code Iterable} which
      * contains all extracted values.
      *
      * @param value the value to be parsed
-     * @return an {@code Iterator} allowing access to all extracted values
+     * @return an {@code Iterable} allowing access to all extracted values
      */
-    Iterator<?> parse(Object value);
+    Iterable<?> parse(Object value);
 
     /**
      * Splits the specified string at the list delimiter and returns a

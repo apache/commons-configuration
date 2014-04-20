@@ -45,10 +45,11 @@ import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.sync.ReadWriteSynchronizer;
 import org.apache.commons.configuration.sync.Synchronizer;
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.DefaultExpressionEngineSymbols;
+import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.NodeCombiner;
+import org.apache.commons.configuration.tree.NodeModel;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
 import org.junit.Before;
@@ -77,6 +78,9 @@ public class TestCombinedConfiguration
 
     /** Constant for the name of the second child configuration.*/
     private static final String CHILD2 = TEST_NAME + "2";
+
+    /** Constant for the key for a sub configuration. */
+    private static final String SUB_KEY = "test.sub.config";
 
     /** Helper object for managing temporary files. */
     @Rule
@@ -387,7 +391,6 @@ public class TestCombinedConfiguration
 
         CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
         assertNotNull("No root node", cc2.getRootNode());
-        assertNotSame("Root node not copied", config.getRootNode(), cc2.getRootNode());
         assertEquals("Wrong number of contained configurations", config
                 .getNumberOfConfigurations(), cc2.getNumberOfConfigurations());
         assertSame("Wrong node combiner", config.getNodeCombiner(), cc2
@@ -547,6 +550,47 @@ public class TestCombinedConfiguration
     }
 
     /**
+     * Tests getSource() if a child configuration is again a combined configuration.
+     */
+    @Test
+    public void testGetSourceWithCombinedChildConfiguration()
+    {
+        setUpSourceTest();
+        CombinedConfiguration cc = new CombinedConfiguration();
+        cc.addConfiguration(config);
+        assertEquals("Wrong source", config, cc.getSource(TEST_KEY));
+    }
+
+    /**
+     * Tests whether multiple sources of a key can be retrieved.
+     */
+    @Test
+    public void testGetSourcesMultiSources()
+    {
+        setUpSourceTest();
+        final String key = "list.key";
+        config.getConfiguration(CHILD1).addProperty(key, "1,2,3");
+        config.getConfiguration(CHILD2).addProperty(key, "a,b,c");
+        Set<Configuration> sources = config.getSources(key);
+        assertEquals("Wrong number of sources", 2, sources.size());
+        assertTrue("Source 1 not found",
+                sources.contains(config.getConfiguration(CHILD1)));
+        assertTrue("Source 2 not found",
+                sources.contains(config.getConfiguration(CHILD2)));
+    }
+
+    /**
+     * Tests getSources() for a non existing key.
+     */
+    @Test
+    public void testGetSourcesUnknownKey()
+    {
+        setUpSourceTest();
+        assertTrue("Got sources", config.getSources("non.existing,key")
+                .isEmpty());
+    }
+
+    /**
      * Tests whether escaped list delimiters are treated correctly.
      */
     @Test
@@ -689,7 +733,7 @@ public class TestCombinedConfiguration
         SynchronizerTestImpl sync = setUpSynchronizerTest();
         config.addConfiguration(new BaseHierarchicalConfiguration());
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
-        assertNull("Root node not reset", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -701,7 +745,7 @@ public class TestCombinedConfiguration
         SynchronizerTestImpl sync = setUpSynchronizerTest();
         config.setNodeCombiner(new UnionCombiner());
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
-        assertNull("Root node not reset", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -713,7 +757,7 @@ public class TestCombinedConfiguration
         SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertNotNull("No node combiner", config.getNodeCombiner());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -726,7 +770,7 @@ public class TestCombinedConfiguration
         SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertNotNull("No configuration", config.getConfiguration(0));
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -739,7 +783,7 @@ public class TestCombinedConfiguration
         SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertNotNull("No configuration", config.getConfiguration(CHILD1));
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -752,7 +796,7 @@ public class TestCombinedConfiguration
         SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertFalse("No child names", config.getConfigurationNames().isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -766,7 +810,17 @@ public class TestCombinedConfiguration
         assertFalse("No child names", config.getConfigurationNameList()
                 .isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
+    }
+
+    /**
+     * Helper method for testing that the combined root node has not yet been
+     * constructed.
+     */
+    private void checkCombinedRootNotConstructed()
+    {
+        assertTrue("Root node was constructed", config.getRootNode()
+                .getChildren().isEmpty());
     }
 
     /**
@@ -779,7 +833,7 @@ public class TestCombinedConfiguration
         assertFalse("No child configurations", config.getConfigurations()
                 .isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -793,7 +847,7 @@ public class TestCombinedConfiguration
         assertNull("Got a conversion engine",
                 config.getConversionExpressionEngine());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -807,7 +861,7 @@ public class TestCombinedConfiguration
         config.setConversionExpressionEngine(new DefaultExpressionEngine(
                 DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS));
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -844,7 +898,7 @@ public class TestCombinedConfiguration
         assertEquals("Wrong number of configurations", 2,
                 config.getNumberOfConfigurations());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNull("Root node was constructed", config.getRootNode());
+        checkCombinedRootNotConstructed();
     }
 
     /**
@@ -880,10 +934,9 @@ public class TestCombinedConfiguration
                     private static final long serialVersionUID = 1L;
 
                     @Override
-                    public ConfigurationNode getRootNode()
-                    {
+                    public NodeModel<ImmutableNode> getModel() {
                         throw testEx;
-                    };
+                    }
                 };
         config.addConfiguration(childEx);
         try
@@ -961,12 +1014,76 @@ public class TestCombinedConfiguration
     }
 
     /**
+     * Prepares the test configuration for a test for sub configurations. Some
+     * child configurations are added.
+     *
+     * @return the sub configuration at the test sub key
+     */
+    private AbstractConfiguration setUpSubConfigTest()
+    {
+        AbstractConfiguration srcConfig = setUpTestConfiguration();
+        config.addConfiguration(srcConfig, "source", SUB_KEY);
+        config.addConfiguration(setUpTestConfiguration());
+        config.addConfiguration(setUpTestConfiguration(), "otherTest",
+                "other.prefix");
+        return srcConfig;
+    }
+
+    /**
+     * Tests whether a sub configuration survives updates of its parent.
+     */
+    @Test
+    public void testSubConfigurationWithUpdates()
+    {
+        AbstractConfiguration srcConfig = setUpSubConfigTest();
+        HierarchicalConfiguration<ImmutableNode> sub =
+                config.configurationAt(SUB_KEY, true);
+        assertTrue("Wrong value before update", sub.getBoolean(TEST_KEY));
+        srcConfig.setProperty(TEST_KEY, Boolean.FALSE);
+        assertFalse("Wrong value after update", sub.getBoolean(TEST_KEY));
+        assertFalse("Wrong value from combined configuration",
+                config.getBoolean(SUB_KEY + '.' + TEST_KEY));
+    }
+
+    /**
+     * Checks the configurationsAt() method.
+     * @param withUpdates flag whether updates are supported
+     */
+    private void checkConfigurationsAt(boolean withUpdates)
+    {
+        setUpSubConfigTest();
+        List<HierarchicalConfiguration<ImmutableNode>> subs =
+                config.configurationsAt(SUB_KEY, withUpdates);
+        assertEquals("Wrong number of sub configurations", 1, subs.size());
+        assertTrue("Wrong value in sub configuration",
+                subs.get(0).getBoolean(TEST_KEY));
+    }
+
+    /**
+     * Tests whether sub configurations can be created from a key.
+     */
+    @Test
+    public void testConfigurationsAt()
+    {
+        checkConfigurationsAt(false);
+    }
+
+    /**
+     * Tests whether sub configurations can be created which are attached.
+     */
+    @Test
+    public void testConfigurationsAtWithUpdates()
+    {
+        checkConfigurationsAt(true);
+    }
+
+    /**
      * Helper method for creating a test configuration to be added to the
      * combined configuration.
      *
      * @return the test configuration
      */
-    private AbstractConfiguration setUpTestConfiguration()
+    private static AbstractConfiguration setUpTestConfiguration()
     {
         BaseHierarchicalConfiguration config = new BaseHierarchicalConfiguration();
         config.addProperty(TEST_KEY, Boolean.TRUE);

@@ -54,12 +54,13 @@ public class TestDisabledListDelimiterHandler
     }
 
     /**
-     * Checks whether the passed in iterator contains the expected values.
+     * Checks whether the passed in container contains the expected values.
      *
-     * @param it the iterator to test
+     * @param container the iterator to test
      */
-    private static void checkIterator(Iterator<?> it)
+    private static void checkIterator(Iterable<?> container)
     {
+        Iterator<?> it = container.iterator();
         for (Object o : VALUES)
         {
             assertEquals("Wrong value", o, it.next());
@@ -100,7 +101,7 @@ public class TestDisabledListDelimiterHandler
     @Test
     public void testParseSimpleValue()
     {
-        Iterator<?> it = handler.parse(STR_VALUE);
+        Iterator<?> it = handler.parse(STR_VALUE).iterator();
         assertEquals("Wrong value", STR_VALUE, it.next());
         assertFalse("Too many values", it.hasNext());
     }
@@ -111,7 +112,7 @@ public class TestDisabledListDelimiterHandler
     @Test
     public void testParseNull()
     {
-        assertFalse("Got a value", handler.parse(null).hasNext());
+        assertFalse("Got a value", handler.parse(null).iterator().hasNext());
     }
 
     /**

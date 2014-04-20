@@ -31,8 +31,8 @@ import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileBased;
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
+import org.apache.commons.configuration.tree.ImmutableNode;
 
 /**
  * Wraps a BaseHierarchicalConfiguration and allows subtrees to be accessed via a configured path with
@@ -50,7 +50,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     private static final long serialVersionUID = 7456061169617014189L;
 
     /** The wrapped configuration */
-    private final HierarchicalConfiguration config;
+    private final HierarchicalConfiguration<ImmutableNode> config;
 
     /** The path to the subtree */
     private final String path;
@@ -66,7 +66,8 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
      * @param config The Configuration to be wrapped.
      * @param path The base path pattern.
      */
-    public PatternSubtreeConfigurationWrapper(HierarchicalConfiguration config, String path)
+    public PatternSubtreeConfigurationWrapper(
+            HierarchicalConfiguration<ImmutableNode> config, String path)
     {
         this.config = config;
         this.path = path;
@@ -321,13 +322,13 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public ConfigurationNode getRootNode()
+    public ImmutableNode getRootNode()
     {
         return getConfig().getRootNode();
     }
 
     @Override
-    protected void setRootNodeInternal(ConfigurationNode rootNode)
+    protected void setRootNodeInternal(ImmutableNode rootNode)
     {
         if (init)
         {
@@ -359,31 +360,31 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    protected void addNodesInternal(String key, Collection<? extends ConfigurationNode> nodes)
+    protected void addNodesInternal(String key, Collection<? extends ImmutableNode> nodes)
     {
         getConfig().addNodes(key, nodes);
     }
 
     @Override
-    public SubnodeConfiguration configurationAt(String key, boolean supportUpdates)
+    public HierarchicalConfiguration<ImmutableNode> configurationAt(String key, boolean supportUpdates)
     {
         return config.configurationAt(makePath(key), supportUpdates);
     }
 
     @Override
-    public SubnodeConfiguration configurationAt(String key)
+    public HierarchicalConfiguration<ImmutableNode> configurationAt(String key)
     {
         return config.configurationAt(makePath(key));
     }
 
     @Override
-    public List<SubnodeConfiguration> configurationsAt(String key)
+    public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(String key)
     {
         return config.configurationsAt(makePath(key));
     }
 
     @Override
-    protected List<ConfigurationNode> clearTreeInternal(String key)
+    protected Object clearTreeInternal(String key)
     {
         config.clearTree(makePath(key));
         return Collections.emptyList();
@@ -463,7 +464,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
 
     private BaseHierarchicalConfiguration getConfig()
     {
-        return config.configurationAt(makePath());
+        return (BaseHierarchicalConfiguration) config.configurationAt(makePath());
     }
 
     private String makePath()

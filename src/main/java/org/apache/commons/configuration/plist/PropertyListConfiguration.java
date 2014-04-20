@@ -36,8 +36,9 @@ import org.apache.commons.configuration.FileBasedConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.ex.ConfigurationException;
-import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.tree.DefaultConfigurationNode;
+import org.apache.commons.configuration.tree.ImmutableNode;
+import org.apache.commons.configuration.tree.InMemoryNodeModel;
+import org.apache.commons.configuration.tree.NodeHandler;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -146,9 +147,20 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
      * @param c the configuration to copy
      * @since 1.4
      */
-    public PropertyListConfiguration(HierarchicalConfiguration c)
+    public PropertyListConfiguration(HierarchicalConfiguration<ImmutableNode> c)
     {
         super(c);
+    }
+
+    /**
+     * Creates a new instance of {@code PropertyListConfiguration} with the
+     * given root node.
+     *
+     * @param root the root node
+     */
+    PropertyListConfiguration(ImmutableNode root)
+    {
+        super(new InMemoryNodeModel(root));
     }
 
     @Override
@@ -193,7 +205,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
         PropertyListParser parser = new PropertyListParser(in);
         try
         {
-            HierarchicalConfiguration config = parser.parse();
+            PropertyListConfiguration config = parser.parse();
             setRootNode(config.getRootNode());
         }
         catch (ParseException e)
@@ -206,23 +218,25 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
     public void write(Writer out) throws ConfigurationException
     {
         PrintWriter writer = new PrintWriter(out);
-        printNode(writer, 0, getRootNode());
+        NodeHandler<ImmutableNode> handler = getModel().getNodeHandler();
+        printNode(writer, 0, handler.getRootNode(), handler);
         writer.flush();
     }
 
     /**
      * Append a node to the writer, indented according to a specific level.
      */
-    private void printNode(PrintWriter out, int indentLevel, ConfigurationNode node)
+    private void printNode(PrintWriter out, int indentLevel,
+            ImmutableNode node, NodeHandler<ImmutableNode> handler)
     {
         String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
 
-        if (node.getName() != null)
+        if (node.getNodeName() != null)
         {
-            out.print(padding + quoteString(node.getName()) + " = ");
+            out.print(padding + quoteString(node.getNodeName()) + " = ");
         }
 
-        List<ConfigurationNode> children = new ArrayList<ConfigurationNode>(node.getChildren());
+        List<ImmutableNode> children = new ArrayList<ImmutableNode>(node.getChildren());
         if (!children.isEmpty())
         {
             // skip a line, except for the root dictionary
@@ -234,12 +248,12 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
             out.println(padding + "{");
 
             // display the children
-            Iterator<ConfigurationNode> it = children.iterator();
+            Iterator<ImmutableNode> it = children.iterator();
             while (it.hasNext())
             {
-                ConfigurationNode child = it.next();
+                ImmutableNode child = it.next();
 
-                printNode(out, indentLevel + 1, child);
+                printNode(out, indentLevel + 1, child, handler);
 
                 // add a semi colon for elements that are not dictionaries
                 Object value = child.getValue();
@@ -258,7 +272,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
             out.print(padding + "}");
 
             // line feed if the dictionary is not in an array
-            if (node.getParentNode() != null)
+            if (handler.getParent(node) != null)
             {
                 out.println();
             }
@@ -269,7 +283,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
             out.print(padding + "{ };");
 
             // line feed if the dictionary is not in an array
-            if (node.getParentNode() != null)
+            if (handler.getParent(node) != null)
             {
                 out.println();
             }
@@ -303,9 +317,12 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
             }
             out.print(" )");
         }
-        else if (value instanceof HierarchicalConfiguration)
+        else if (value instanceof PropertyListConfiguration)
         {
-            printNode(out, indentLevel, ((HierarchicalConfiguration) value).getRootNode());
+            NodeHandler<ImmutableNode> handler =
+                    ((PropertyListConfiguration) value).getModel()
+                            .getNodeHandler();
+            printNode(out, indentLevel, handler.getRootNode(), handler);
         }
         else if (value instanceof Configuration)
         {
@@ -318,10 +335,11 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
             while (it.hasNext())
             {
                 String key = it.next();
-                ConfigurationNode node = new DefaultConfigurationNode(key);
-                node.setValue(config.getProperty(key));
-
-                printNode(out, indentLevel + 1, node);
+                ImmutableNode node =
+                        new ImmutableNode.Builder().name(key)
+                                .value(config.getProperty(key)).create();
+                InMemoryNodeModel tempModel = new InMemoryNodeModel(node);
+                printNode(out, indentLevel + 1, node, tempModel.getNodeHandler());
                 out.println(";");
             }
             out.println(padding + "}");

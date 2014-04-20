@@ -16,21 +16,24 @@
  */
 package org.apache.commons.configuration.tree.xpath;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.NodeAddData;
+import org.apache.commons.configuration.tree.NodeHandler;
+import org.apache.commons.configuration.tree.QueryResult;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>
- * A specialized implementation of the {@code ExpressionEngine} interface
- * that is able to evaluate XPATH expressions.
+ * A specialized implementation of the {@code ExpressionEngine} interface that
+ * is able to evaluate XPATH expressions.
  * </p>
  * <p>
  * This class makes use of <a href="http://commons.apache.org/jxpath/"> Commons
@@ -41,9 +44,9 @@ import org.apache.commons.lang3.StringUtils;
  * <p>
  * For selecting properties arbitrary XPATH expressions can be used, which
  * select single or multiple configuration nodes. The associated
- * {@code Configuration} instance will directly pass the specified property
- * keys into this engine. If a key is not syntactically correct, an exception
- * will be thrown.
+ * {@code Configuration} instance will directly pass the specified property keys
+ * into this engine. If a key is not syntactically correct, an exception will be
+ * thrown.
  * </p>
  * <p>
  * For adding new properties, this expression engine uses a specific syntax: the
@@ -68,8 +71,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  * </p>
  * <p>
- * This will add a new {@code type} node as a child of the first
- * {@code table} element.
+ * This will add a new {@code type} node as a child of the first {@code table}
+ * element.
  * </p>
  * <p>
  *
@@ -92,8 +95,7 @@ import org.apache.commons.lang3.StringUtils;
  * <p>
  * This example shows how a complex path can be added. Parent node is the
  * {@code tables} element. Here a new branch consisting of the nodes
- * {@code table}, {@code fields}, {@code field}, and
- * {@code name} will be added.
+ * {@code table}, {@code fields}, {@code field}, and {@code name} will be added.
  * </p>
  * <p>
  *
@@ -108,15 +110,15 @@ import org.apache.commons.lang3.StringUtils;
  * </p>
  * <p>
  * <strong>Note:</strong> This extended syntax for adding properties only works
- * with the {@code addProperty()} method. {@code setProperty()} does
- * not support creating new nodes this way.
+ * with the {@code addProperty()} method. {@code setProperty()} does not support
+ * creating new nodes this way.
  * </p>
  * <p>
  * From version 1.7 on, it is possible to use regular keys in calls to
- * {@code addProperty()} (i.e. keys that do not have to contain a
- * whitespace as delimiter). In this case the key is evaluated, and the biggest
- * part pointing to an existing node is determined. The remaining part is then
- * added as new path. As an example consider the key
+ * {@code addProperty()} (i.e. keys that do not have to contain a whitespace as
+ * delimiter). In this case the key is evaluated, and the biggest part pointing
+ * to an existing node is determined. The remaining part is then added as new
+ * path. As an example consider the key
  *
  * <pre>
  * &quot;tables/table[last()]/fields/field/name&quot;
@@ -124,22 +126,19 @@ import org.apache.commons.lang3.StringUtils;
  *
  * If the key does not point to an existing node, the engine will check the
  * paths {@code "tables/table[last()]/fields/field"},
- * {@code "tables/table[last()]/fields"},
- * {@code "tables/table[last()]"}, and so on, until a key is
- * found which points to a node. Let's assume that the last key listed above can
- * be resolved in this way. Then from this key the following key is derived:
- * {@code "tables/table[last()] fields/field/name"} by appending
- * the remaining part after a whitespace. This key can now be processed using
- * the original algorithm. Keys of this form can also be used with the
- * {@code setProperty()} method. However, it is still recommended to use
- * the old format because it makes explicit at which position new nodes should
- * be added. For keys without a whitespace delimiter there may be ambiguities.
+ * {@code "tables/table[last()]/fields"}, {@code "tables/table[last()]"}, and so
+ * on, until a key is found which points to a node. Let's assume that the last
+ * key listed above can be resolved in this way. Then from this key the
+ * following key is derived: {@code "tables/table[last()] fields/field/name"} by
+ * appending the remaining part after a whitespace. This key can now be
+ * processed using the original algorithm. Keys of this form can also be used
+ * with the {@code setProperty()} method. However, it is still recommended to
+ * use the old format because it makes explicit at which position new nodes
+ * should be added. For keys without a whitespace delimiter there may be
+ * ambiguities.
  * </p>
  *
  * @since 1.3
- * @author <a
- *         href="http://commons.apache.org/configuration/team-list.html">Commons
- *         Configuration team</a>
  * @version $Id$
  */
 public class XPathExpressionEngine implements ExpressionEngine
@@ -160,6 +159,38 @@ public class XPathExpressionEngine implements ExpressionEngine
      */
     private static final String SPACE = " ";
 
+    /** Constant for a default size of a key buffer. */
+    private static final int BUF_SIZE = 128;
+
+    /** Constant for the start of an index expression. */
+    private static final char START_INDEX = '[';
+
+    /** Constant for the end of an index expression. */
+    private static final char END_INDEX = ']';
+
+    /** The internally used context factory. */
+    private final XPathContextFactory contextFactory;
+
+    /**
+     * Creates a new instance of {@code XPathExpressionEngine} with default
+     * settings.
+     */
+    public XPathExpressionEngine()
+    {
+        this(new XPathContextFactory());
+    }
+
+    /**
+     * Creates a new instance of {@code XPathExpressionEngine} and sets the
+     * context factory. This constructor is mainly used for testing purposes.
+     *
+     * @param factory the {@code XPathContextFactory}
+     */
+    XPathExpressionEngine(XPathContextFactory factory)
+    {
+        contextFactory = factory;
+    }
+
     /**
      * Executes a query. The passed in property key is directly passed to a
      * JXPath context.
@@ -168,50 +199,43 @@ public class XPathExpressionEngine implements ExpressionEngine
      * @param key the query to be executed
      * @return a list with the nodes that are selected by the query
      */
-    @Override
-    public List<ConfigurationNode> query(ConfigurationNode root, String key)
+    public <T> List<QueryResult<T>> query(T root, String key,
+            NodeHandler<T> handler)
     {
         if (StringUtils.isEmpty(key))
         {
-            return Collections.singletonList(root);
+            QueryResult<T> result = createResult(root);
+            return Collections.singletonList(result);
         }
         else
         {
-            JXPathContext context = createContext(root, key);
-            // This is safe because our node pointer implementations will return
-            // a list of configuration nodes.
-            @SuppressWarnings("unchecked")
-            List<ConfigurationNode> result = context.selectNodes(key);
-            if (result == null)
+            JXPathContext context = createContext(root, handler);
+            List<?> results = context.selectNodes(key);
+            if (results == null)
             {
-                result = Collections.emptyList();
+                results = Collections.emptyList();
             }
-            return result;
+            return convertResults(results);
         }
     }
 
     /**
-     * Returns a (canonical) key for the given node based on the parent's key.
-     * This implementation will create an XPATH expression that selects the
-     * given node (under the assumption that the passed in parent key is valid).
-     * As the {@code nodeKey()} implementation of
-     * {@link org.apache.commons.configuration.tree.DefaultExpressionEngine DefaultExpressionEngine}
-     * this method will not return indices for nodes. So all child nodes of a
-     * given parent with the same name will have the same key.
-     *
-     * @param node the node for which a key is to be constructed
-     * @param parentKey the key of the parent node
-     * @return the key for the given node
+     * {@inheritDoc} This implementation creates an XPATH expression that
+     * selects the given node (under the assumption that the passed in parent
+     * key is valid). As the {@code nodeKey()} implementation of
+     * {@link org.apache.commons.configuration.tree.DefaultExpressionEngine
+     * DefaultExpressionEngine} this method does not return indices for nodes.
+     * So all child nodes of a given parent with the same name have the same
+     * key.
      */
-    @Override
-    public String nodeKey(ConfigurationNode node, String parentKey)
+    public <T> String nodeKey(T node, String parentKey, NodeHandler<T> handler)
     {
         if (parentKey == null)
         {
             // name of the root node
             return StringUtils.EMPTY;
         }
-        else if (node.getName() == null)
+        else if (handler.nodeName(node) == null)
         {
             // paranoia check for undefined node names
             return parentKey;
@@ -219,33 +243,66 @@ public class XPathExpressionEngine implements ExpressionEngine
 
         else
         {
-            StringBuilder buf = new StringBuilder(parentKey.length()
-                    + node.getName().length() + PATH_DELIMITER.length());
+            StringBuilder buf =
+                    new StringBuilder(parentKey.length()
+                            + handler.nodeName(node).length()
+                            + PATH_DELIMITER.length());
             if (parentKey.length() > 0)
             {
                 buf.append(parentKey);
                 buf.append(PATH_DELIMITER);
             }
-            if (node.isAttribute())
-            {
-                buf.append(ATTR_DELIMITER);
-            }
-            buf.append(node.getName());
+            buf.append(handler.nodeName(node));
             return buf.toString();
         }
     }
 
+    public String attributeKey(String parentKey, String attributeName)
+    {
+        StringBuilder buf =
+                new StringBuilder(StringUtils.length(parentKey)
+                        + StringUtils.length(attributeName)
+                        + PATH_DELIMITER.length() + ATTR_DELIMITER.length());
+        if (StringUtils.isNotEmpty(parentKey))
+        {
+            buf.append(parentKey).append(PATH_DELIMITER);
+        }
+        buf.append(ATTR_DELIMITER).append(attributeName);
+        return buf.toString();
+    }
+
     /**
-     * Prepares an add operation for a configuration property. The expected
-     * format of the passed in key is explained in the class comment.
-     *
-     * @param root the configuration's root node
-     * @param key the key describing the target of the add operation and the
-     * path of the new node
-     * @return a data object to be evaluated by the calling configuration object
+     * {@inheritDoc} This implementation works similar to {@code nodeKey()}, but
+     * always adds an index expression to the resulting key.
      */
-    @Override
-    public NodeAddData prepareAdd(ConfigurationNode root, String key)
+    public <T> String canonicalKey(T node, String parentKey,
+            NodeHandler<T> handler)
+    {
+        T parent = handler.getParent(node);
+        if (parent == null)
+        {
+            // this is the root node
+            return StringUtils.defaultString(parentKey);
+        }
+
+        StringBuilder buf = new StringBuilder(BUF_SIZE);
+        if (StringUtils.isNotEmpty(parentKey))
+        {
+            buf.append(parentKey).append(PATH_DELIMITER);
+        }
+        buf.append(handler.nodeName(node));
+        buf.append(START_INDEX);
+        buf.append(determineIndex(parent, node, handler));
+        buf.append(END_INDEX);
+        return buf.toString();
+    }
+
+    /**
+     * {@inheritDoc} The expected format of the passed in key is explained in
+     * the class comment.
+     */
+    public <T> NodeAddData<T> prepareAdd(T root, String key,
+            NodeHandler<T> handler)
     {
         if (key == null)
         {
@@ -257,55 +314,61 @@ public class XPathExpressionEngine implements ExpressionEngine
         int index = findKeySeparator(addKey);
         if (index < 0)
         {
-            addKey = generateKeyForAdd(root, addKey);
+            addKey = generateKeyForAdd(root, addKey, handler);
             index = findKeySeparator(addKey);
         }
-
-        List<ConfigurationNode> nodes = query(root, addKey.substring(0, index).trim());
-        if (nodes.size() != 1)
+        else if (index >= addKey.length() - 1)
         {
-            throw new IllegalArgumentException(
-                    "prepareAdd: key must select exactly one target node!");
+            invalidPath(addKey, " new node path must not be empty.");
         }
 
-        NodeAddData data = new NodeAddData();
-        data.setParent(nodes.get(0));
-        initNodeAddData(data, addKey.substring(index).trim());
-        return data;
+        List<QueryResult<T>> nodes =
+                query(root, addKey.substring(0, index).trim(), handler);
+        if (nodes.size() != 1)
+        {
+            throw new IllegalArgumentException("prepareAdd: key '" + key
+                    + "' must select exactly one target node!");
+        }
+
+        return createNodeAddData(addKey.substring(index).trim(), nodes.get(0));
     }
 
     /**
-     * Creates the {@code JXPathContext} used for executing a query. This
-     * method will create a new context and ensure that it is correctly
-     * initialized.
+     * Creates the {@code JXPathContext} to be used for executing a query. This
+     * method delegates to the context factory.
      *
      * @param root the configuration root node
-     * @param key the key to be queried
+     * @param handler the node handler
      * @return the new context
      */
-    protected JXPathContext createContext(ConfigurationNode root, String key)
+    private <T> JXPathContext createContext(T root, NodeHandler<T> handler)
     {
-        JXPathContext context = JXPathContext.newContext(root);
-        context.setLenient(true);
-        return context;
+        return getContextFactory().createContext(root, handler);
     }
 
     /**
-     * Initializes most properties of a {@code NodeAddData} object. This
-     * method is called by {@code prepareAdd()} after the parent node has
-     * been found. Its task is to interpret the passed in path of the new node.
+     * Creates a {@code NodeAddData} object as a result of a
+     * {@code prepareAdd()} operation. This method interprets the passed in path
+     * of the new node.
      *
-     * @param data the data object to initialize
      * @param path the path of the new node
+     * @param parentNodeResult the parent node
+     * @param <T> the type of the nodes involved
      */
-    protected void initNodeAddData(NodeAddData data, String path)
+    <T> NodeAddData<T> createNodeAddData(String path,
+            QueryResult<T> parentNodeResult)
     {
+        if (parentNodeResult.isAttributeResult())
+        {
+            invalidPath(path, " cannot add properties to an attribute.");
+        }
+        List<String> pathNodes = new LinkedList<String>();
         String lastComponent = null;
         boolean attr = false;
         boolean first = true;
 
-        StringTokenizer tok = new StringTokenizer(path, NODE_PATH_DELIMITERS,
-                true);
+        StringTokenizer tok =
+                new StringTokenizer(path, NODE_PATH_DELIMITERS, true);
         while (tok.hasMoreTokens())
         {
             String token = tok.nextToken();
@@ -314,14 +377,14 @@ public class XPathExpressionEngine implements ExpressionEngine
                 if (attr)
                 {
                     invalidPath(path, " contains an attribute"
-                            + " delimiter at an unallowed position.");
+                            + " delimiter at a disallowed position.");
                 }
                 if (lastComponent == null)
                 {
                     invalidPath(path,
-                            " contains a '/' at an unallowed position.");
+                            " contains a '/' at a disallowed position.");
                 }
-                data.addPathNode(lastComponent);
+                pathNodes.add(lastComponent);
                 lastComponent = null;
             }
 
@@ -335,11 +398,11 @@ public class XPathExpressionEngine implements ExpressionEngine
                 if (lastComponent == null && !first)
                 {
                     invalidPath(path,
-                            " contains an attribute delimiter at an unallowed position.");
+                            " contains an attribute delimiter at a disallowed position.");
                 }
                 if (lastComponent != null)
                 {
-                    data.addPathNode(lastComponent);
+                    pathNodes.add(lastComponent);
                 }
                 attr = true;
                 lastComponent = null;
@@ -356,29 +419,42 @@ public class XPathExpressionEngine implements ExpressionEngine
         {
             invalidPath(path, "contains no components.");
         }
-        data.setNewNodeName(lastComponent);
-        data.setAttribute(attr);
+
+        return new NodeAddData<T>(parentNodeResult.getNode(), lastComponent,
+                attr, pathNodes);
+    }
+
+    /**
+     * Returns the {@code XPathContextFactory} used by this instance.
+     *
+     * @return the {@code XPathContextFactory}
+     */
+    XPathContextFactory getContextFactory()
+    {
+        return contextFactory;
     }
 
     /**
      * Tries to generate a key for adding a property. This method is called if a
      * key was used for adding properties which does not contain a space
      * character. It splits the key at its single components and searches for
-     * the last existing component. Then a key compatible for adding properties
-     * is generated.
+     * the last existing component. Then a key compatible key for adding
+     * properties is generated.
      *
      * @param root the root node of the configuration
      * @param key the key in question
+     * @param handler the node handler
      * @return the key to be used for adding the property
      */
-    private String generateKeyForAdd(ConfigurationNode root, String key)
+    private <T> String generateKeyForAdd(T root, String key,
+            NodeHandler<T> handler)
     {
         int pos = key.lastIndexOf(PATH_DELIMITER, key.length());
 
         while (pos >= 0)
         {
             String keyExisting = key.substring(0, pos);
-            if (!query(root, keyExisting).isEmpty())
+            if (!query(root, keyExisting, handler).isEmpty())
             {
                 StringBuilder buf = new StringBuilder(key.length() + 1);
                 buf.append(keyExisting).append(SPACE);
@@ -392,12 +468,29 @@ public class XPathExpressionEngine implements ExpressionEngine
     }
 
     /**
+     * Determines the index of the given child node in the node list of its
+     * parent.
+     *
+     * @param parent the parent node
+     * @param child the child node
+     * @param handler the node handler
+     * @param <T> the type of the nodes involved
+     * @return the index of this child node
+     */
+    private static <T> int determineIndex(T parent, T child,
+            NodeHandler<T> handler)
+    {
+        return handler.getChildren(parent, handler.nodeName(child)).indexOf(
+                child) + 1;
+    }
+
+    /**
      * Helper method for throwing an exception about an invalid path.
      *
      * @param path the invalid path
      * @param msg the exception message
      */
-    private void invalidPath(String path, String msg)
+    private static void invalidPath(String path, String msg)
     {
         throw new IllegalArgumentException("Invalid node path: \"" + path
                 + "\" " + msg);
@@ -418,6 +511,54 @@ public class XPathExpressionEngine implements ExpressionEngine
             index--;
         }
         return index;
+    }
+
+    /**
+     * Converts the objects returned as query result from the JXPathContext to
+     * query result objects.
+     *
+     * @param results the list with results from the context
+     * @param <T> the type of results to be produced
+     * @return the result list
+     */
+    private static <T> List<QueryResult<T>> convertResults(List<?> results)
+    {
+        List<QueryResult<T>> queryResults =
+                new ArrayList<QueryResult<T>>(results.size());
+        for (Object res : results)
+        {
+            QueryResult<T> queryResult = createResult(res);
+            queryResults.add(queryResult);
+        }
+        return queryResults;
+    }
+
+    /**
+     * Creates a {@code QueryResult} object from the given result object of a
+     * query. Because of the node pointers involved result objects can only be
+     * of two types:
+     * <ul>
+     * <li>nodes of type T</li>
+     * <li>attribute results already wrapped in {@code QueryResult} objects</li>
+     * </ul>
+     * This method performs a corresponding cast. Warnings can be suppressed
+     * because of the implementation of the query functionality.
+     *
+     * @param resObj the query result object
+     * @param <T> the type of the result to be produced
+     * @return the {@code QueryResult}
+     */
+    @SuppressWarnings("unchecked")
+    private static <T> QueryResult<T> createResult(Object resObj)
+    {
+        if (resObj instanceof QueryResult)
+        {
+            return (QueryResult<T>) resObj;
+        }
+        else
+        {
+            return QueryResult.createNodeResult((T) resObj);
+        }
     }
 
     // static initializer: registers the configuration node pointer factory

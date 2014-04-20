@@ -40,6 +40,7 @@ import java.util.Map;
  * </p>
  *
  * @version $Id$
+ * @since 2.0
  */
 public class ImmutableNode
 {
@@ -109,6 +110,19 @@ public class ImmutableNode
     public Map<String, Object> getAttributes()
     {
         return attributes;
+    }
+
+    /**
+     * Creates a new {@code ImmutableNode} instance which is a copy of this
+     * object with the name changed to the passed in value.
+     *
+     * @param name the name of the newly created node
+     * @return the new node with the changed name
+     */
+    public ImmutableNode setName(String name)
+    {
+        return new Builder(children, attributes).name(name).value(value)
+                .create();
     }
 
     /**
@@ -202,6 +216,23 @@ public class ImmutableNode
 
     /**
      * Returns a new {@code ImmutableNode} instance which is a copy of this
+     * object, but with the children replaced by the ones in the passed in
+     * collection. With this method all children can be replaced in a single
+     * step. For the collection the same rules apply as for
+     * {@link Builder#addChildren(Collection)}.
+     *
+     * @param newChildren the collection with the new children (may be
+     *        <b>null</b>)
+     */
+    public ImmutableNode replaceChildren(Collection<ImmutableNode> newChildren)
+    {
+        Builder builder = new Builder(null, attributes);
+        builder.addChildren(newChildren);
+        return createWithBasicProperties(builder);
+    }
+
+    /**
+     * Returns a new {@code ImmutableNode} instance which is a copy of this
      * object, but with the specified attribute set to the given value. If an
      * attribute with this name does not exist, it is created now. Otherwise,
      * the new value overrides the old one.
@@ -214,6 +245,28 @@ public class ImmutableNode
     {
         Map<String, Object> newAttrs = new HashMap<String, Object>(attributes);
         newAttrs.put(name, value);
+        return createWithNewAttributes(newAttrs);
+    }
+
+    /**
+     * Returns a new {@code ImmutableNode} instance which is a copy of this
+     * object, but with all attributes added defined by the given map. This
+     * method is analogous to {@link #setAttribute(String, Object)}, but all
+     * attributes in the given map are added. If the map is <b>null</b> or
+     * empty, this method has no effect.
+     *
+     * @param newAttributes the map with attributes to be added
+     * @return the new node with these attributes
+     */
+    public ImmutableNode setAttributes(Map<String, ?> newAttributes)
+    {
+        if (newAttributes == null || newAttributes.isEmpty())
+        {
+            return this;
+        }
+
+        Map<String, Object> newAttrs = new HashMap<String, Object>(attributes);
+        newAttrs.putAll(newAttributes);
         return createWithNewAttributes(newAttrs);
     }
 
@@ -421,10 +474,11 @@ public class ImmutableNode
          * {@link #addChild(ImmutableNode)}, but it allows setting a number of
          * child nodes at once.
          *
+         *
          * @param children a collection with the child nodes to be added
          * @return a reference to this object for method chaining
          */
-        public Builder addChildren(Collection<ImmutableNode> children)
+        public Builder addChildren(Collection<? extends ImmutableNode> children)
         {
             if (children != null)
             {
@@ -576,11 +630,12 @@ public class ImmutableNode
         /**
          * Filters null entries from the passed in collection with child nodes.
          *
+         *
          * @param children the collection to be filtered
          * @return the collection with null entries removed
          */
         private static Collection<? extends ImmutableNode> filterNull(
-                Collection<ImmutableNode> children)
+                Collection<? extends ImmutableNode> children)
         {
             List<ImmutableNode> result =
                     new ArrayList<ImmutableNode>(children.size());

@@ -117,7 +117,7 @@ public class ReloadingCombinedConfigurationBuilder extends
      * configurations with reloading support.
      */
     @Override
-    protected ConfigurationBuilder<? extends HierarchicalConfiguration> createXMLDefinitionBuilder(
+    protected ConfigurationBuilder<? extends HierarchicalConfiguration<?>> createXMLDefinitionBuilder(
             BuilderParameters builderParams)
     {
         return new ReloadingFileBasedConfigurationBuilder<XMLConfiguration>(
@@ -152,7 +152,7 @@ public class ReloadingCombinedConfigurationBuilder extends
     {
         Collection<ReloadingController> subControllers =
                 new LinkedList<ReloadingController>();
-        ConfigurationBuilder<? extends HierarchicalConfiguration> defBuilder =
+        ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder =
                 getDefinitionBuilder();
         obtainReloadingController(subControllers, defBuilder);
 

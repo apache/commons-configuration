@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
-import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.junit.Test;
 
 /**
@@ -42,9 +41,9 @@ public class TestConfigurationDeclaration
      * @return the test object
      */
     private static ConfigurationDeclaration createDeclaration(
-            HierarchicalConfiguration conf)
+            HierarchicalConfiguration<?> conf)
     {
-        HierarchicalConfiguration config =
+        HierarchicalConfiguration<?> config =
                 (conf != null) ? conf : new BaseHierarchicalConfiguration();
         return new ConfigurationDeclaration(null, config);
     }
@@ -56,23 +55,11 @@ public class TestConfigurationDeclaration
     public void testConfigurationDeclarationIsReserved()
     {
         ConfigurationDeclaration decl = createDeclaration(null);
-        DefaultConfigurationNode parent = new DefaultConfigurationNode();
-        DefaultConfigurationNode nd = new DefaultConfigurationNode("at");
-        parent.addAttribute(nd);
-        assertTrue("Attribute at not recognized", decl.isReservedNode(nd));
-        nd = new DefaultConfigurationNode("optional");
-        parent.addAttribute(nd);
-        assertTrue("Attribute optional not recognized", decl.isReservedNode(nd));
-        nd = new DefaultConfigurationNode("config-class");
-        parent.addAttribute(nd);
+        assertTrue("Attribute at not recognized", decl.isReservedAttributeName("at"));
+        assertTrue("Attribute optional not recognized", decl.isReservedAttributeName("optional"));
         assertTrue("Inherited attribute not recognized",
-                decl.isReservedNode(nd));
-        nd = new DefaultConfigurationNode("different");
-        parent.addAttribute(nd);
-        assertFalse("Wrong reserved attribute", decl.isReservedNode(nd));
-        nd = new DefaultConfigurationNode("at");
-        parent.addChild(nd);
-        assertFalse("Node type not evaluated", decl.isReservedNode(nd));
+                decl.isReservedAttributeName("config-class"));
+        assertFalse("Wrong reserved attribute", decl.isReservedAttributeName("different"));
     }
 
     /**
@@ -104,19 +91,17 @@ public class TestConfigurationDeclaration
      */
     private void checkOldReservedAttribute(String name)
     {
-        ConfigurationDeclaration decl = createDeclaration(null);
-        DefaultConfigurationNode parent = new DefaultConfigurationNode();
-        DefaultConfigurationNode nd =
-                new DefaultConfigurationNode("config-" + name);
-        parent.addAttribute(nd);
-        assertTrue("config-" + name + " attribute not recognized",
-                decl.isReservedNode(nd));
-        DefaultConfigurationNode nd2 = new DefaultConfigurationNode(name);
-        parent.addAttribute(nd2);
+        String prefixName = "config-" + name;
+        BaseHierarchicalConfiguration config = new BaseHierarchicalConfiguration();
+        config.addProperty(String.format("[@%s]", prefixName), Boolean.TRUE);
+        ConfigurationDeclaration decl = createDeclaration(config);
+        assertTrue(prefixName + " attribute not recognized",
+                decl.isReservedAttributeName(prefixName));
+        config.addProperty(String.format("[@%s]", name), Boolean.TRUE);
         assertFalse(name + " is reserved though config- exists",
-                decl.isReservedNode(nd2));
+                decl.isReservedAttributeName(name));
         assertTrue("config- attribute not recognized when " + name + " exists",
-                decl.isReservedNode(nd));
+                decl.isReservedAttributeName(prefixName));
     }
 
     /**
@@ -126,26 +111,32 @@ public class TestConfigurationDeclaration
     @Test
     public void testConfigurationDeclarationGetAttributes()
     {
-        HierarchicalConfiguration config = new BaseHierarchicalConfiguration();
+        HierarchicalConfiguration<?> config = new BaseHierarchicalConfiguration();
         config.addProperty("xml.fileName", "test.xml");
         ConfigurationDeclaration decl =
                 createDeclaration(config.configurationAt("xml"));
         assertNull("Found an at attribute", decl.getAt());
         assertFalse("Found an optional attribute", decl.isOptional());
         config.addProperty("xml[@config-at]", "test1");
+        decl = createDeclaration(config.configurationAt("xml"));
         assertEquals("Wrong value of at attribute", "test1", decl.getAt());
         config.addProperty("xml[@at]", "test2");
+        decl = createDeclaration(config.configurationAt("xml"));
         assertEquals("Wrong value of config-at attribute", "test1",
                 decl.getAt());
         config.clearProperty("xml[@config-at]");
+        decl = createDeclaration(config.configurationAt("xml"));
         assertEquals("Old at attribute not detected", "test2", decl.getAt());
         config.addProperty("xml[@config-optional]", "true");
+        decl = createDeclaration(config.configurationAt("xml"));
         assertTrue("Wrong value of optional attribute", decl.isOptional());
         config.addProperty("xml[@optional]", "false");
+        decl = createDeclaration(config.configurationAt("xml"));
         assertTrue("Wrong value of config-optional attribute",
                 decl.isOptional());
         config.clearProperty("xml[@config-optional]");
         config.setProperty("xml[@optional]", Boolean.TRUE);
+        decl = createDeclaration(config.configurationAt("xml"));
         assertTrue("Old optional attribute not detected", decl.isOptional());
     }
 
@@ -155,11 +146,11 @@ public class TestConfigurationDeclaration
     @Test(expected = ConfigurationRuntimeException.class)
     public void testConfigurationDeclarationOptionalAttributeInvalid()
     {
-        HierarchicalConfiguration factory = new BaseHierarchicalConfiguration();
+        HierarchicalConfiguration<?> factory = new BaseHierarchicalConfiguration();
         factory.addProperty("xml.fileName", "test.xml");
+        factory.setProperty("xml[@optional]", "invalid value");
         ConfigurationDeclaration decl =
                 createDeclaration(factory.configurationAt("xml"));
-        factory.setProperty("xml[@optional]", "invalid value");
         decl.isOptional();
     }
 }

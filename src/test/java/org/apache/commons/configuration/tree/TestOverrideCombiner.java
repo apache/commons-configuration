@@ -18,10 +18,10 @@ package org.apache.commons.configuration.tree;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.junit.Test;
@@ -50,7 +50,7 @@ public class TestOverrideCombiner extends AbstractCombinerTest
     @Test
     public void testSimpleValues() throws ConfigurationException
     {
-        HierarchicalConfiguration config = createCombinedConfiguration();
+        BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong number of bgcolors", 0, config
                 .getMaxIndex("gui.bgcolor"));
         assertEquals("Wrong bgcolor", "green", config.getString("gui.bgcolor"));
@@ -66,7 +66,7 @@ public class TestOverrideCombiner extends AbstractCombinerTest
     @Test
     public void testAttributes() throws ConfigurationException
     {
-        HierarchicalConfiguration config = createCombinedConfiguration();
+        BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong value of min attribute", 1, config
                 .getInt("gui.level[@min]"));
         assertEquals("Wrong value of default attribute", 2, config
@@ -83,7 +83,7 @@ public class TestOverrideCombiner extends AbstractCombinerTest
     @Test
     public void testOverrideValues() throws ConfigurationException
     {
-        HierarchicalConfiguration config = createCombinedConfiguration();
+        BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong user", "Admin", config
                 .getString("base.services.security.login.user"));
         assertEquals("Wrong user type", "default", config
@@ -101,7 +101,7 @@ public class TestOverrideCombiner extends AbstractCombinerTest
     @Test
     public void testListFromFirstStructure() throws ConfigurationException
     {
-        HierarchicalConfiguration config = createCombinedConfiguration();
+        BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong number of services", 0, config
                 .getMaxIndex("net.service.url"));
         assertEquals("Wrong service", "http://service1.org", config
@@ -117,7 +117,7 @@ public class TestOverrideCombiner extends AbstractCombinerTest
     @Test
     public void testListFromSecondStructure() throws ConfigurationException
     {
-        HierarchicalConfiguration config = createCombinedConfiguration();
+        BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong number of servers", 3, config
                 .getMaxIndex("net.server.url"));
         assertEquals("Wrong server", "http://testsvr.com", config
@@ -128,18 +128,16 @@ public class TestOverrideCombiner extends AbstractCombinerTest
      * Tests the combination of the table structure. Because the table node is
      * not declared as a list node the structures will be combined. But this
      * won't make any difference because the values in the first table override
-     * the values in the second table. Only the node for the table element will
-     * be a ViewNode.
+     * the values in the second table.
      */
     @Test
     public void testCombinedTableNoList() throws ConfigurationException
     {
-        ConfigurationNode tabNode = checkTable(createCombinedConfiguration());
-        assertTrue("Node is not a view node", tabNode instanceof ViewNode);
+        checkTable(createCombinedConfiguration());
     }
 
     /**
-     * Tests the combination of the table structure when the table node is
+     * Tests the combination of the table structure if the table node is
      * declared as a list node. In this case the first table structure
      * completely overrides the second and will be directly added to the
      * resulting structure.
@@ -148,8 +146,7 @@ public class TestOverrideCombiner extends AbstractCombinerTest
     public void testCombinedTableList() throws ConfigurationException
     {
         combiner.addListNode("table");
-        ConfigurationNode tabNode = checkTable(createCombinedConfiguration());
-        assertFalse("Node is a view node", tabNode instanceof ViewNode);
+        checkTable(createCombinedConfiguration());
     }
 
     /**
@@ -158,11 +155,11 @@ public class TestOverrideCombiner extends AbstractCombinerTest
      * @param config the config
      * @return the node for the table element
      */
-    private ConfigurationNode checkTable(HierarchicalConfiguration config)
+    private ImmutableNode checkTable(BaseHierarchicalConfiguration config)
     {
         assertEquals("Wrong number of tables", 0, config
                 .getMaxIndex("database.tables.table"));
-        HierarchicalConfiguration c = config
+        HierarchicalConfiguration<ImmutableNode> c = config
                 .configurationAt("database.tables.table");
         assertEquals("Wrong table name", "documents", c.getString("name"));
         assertEquals("Wrong number of fields", 2, c
@@ -170,9 +167,12 @@ public class TestOverrideCombiner extends AbstractCombinerTest
         assertEquals("Wrong field", "docname", c
                 .getString("fields.field(1).name"));
 
-        List<ConfigurationNode> nds = config.getExpressionEngine().query(config.getRootNode(),
-                "database.tables.table");
+        List<QueryResult<ImmutableNode>> nds =
+                config.getExpressionEngine().query(config.getRootNode(),
+                        "database.tables.table",
+                        config.getNodeModel().getNodeHandler());
         assertFalse("No node found", nds.isEmpty());
-        return nds.get(0);
+        assertFalse("An attribute result", nds.get(0).isAttributeResult());
+        return nds.get(0).getNode();
     }
 }

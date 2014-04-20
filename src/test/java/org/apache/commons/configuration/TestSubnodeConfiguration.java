@@ -17,11 +17,11 @@
 package org.apache.commons.configuration;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -31,41 +31,30 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
-import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
-import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
-import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.ImmutableNode;
+import org.apache.commons.configuration.tree.InMemoryNodeModel;
+import org.apache.commons.configuration.tree.NodeSelector;
+import org.apache.commons.configuration.tree.NodeStructureHelper;
+import org.apache.commons.configuration.tree.TrackedNodeModel;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Test case for SubnodeConfiguration.
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  */
 public class TestSubnodeConfiguration
 {
-    /** An array with names of tables (test data). */
-    private static final String[] TABLE_NAMES =
-    { "documents", "users" };
-
-    /** An array with the fields of the test tables (test data). */
-    private static final String[][] TABLE_FIELDS =
-    {
-    { "docid", "docname", "author", "dateOfCreation", "version", "size" },
-    { "userid", "uname", "firstName", "lastName" } };
-
-    /** Constant for an updated table name.*/
-    private static final String NEW_TABLE_NAME = "newTable";
-
     /** The key used for the SubnodeConfiguration. */
-    private static final String SUB_KEY = "tables.table(1)";
+    private static final String SUB_KEY = "tables.table(0)";
+
+    /** The selector used by the test configuration. */
+    private static final NodeSelector SELECTOR = new NodeSelector(SUB_KEY);
 
     /** The parent configuration. */
     private BaseHierarchicalConfiguration parent;
@@ -73,14 +62,67 @@ public class TestSubnodeConfiguration
     /** The subnode configuration to be tested. */
     private SubnodeConfiguration config;
 
-    /** Stores a counter for the created nodes. */
-    private int nodeCounter;
-
     @Before
     public void setUp() throws Exception
     {
         parent = setUpParentConfig();
-        nodeCounter = 0;
+    }
+
+    /**
+     * Initializes the parent configuration. This method creates the typical
+     * structure of tables and fields nodes.
+     *
+     * @return the parent configuration
+     */
+    private static BaseHierarchicalConfiguration setUpParentConfig()
+    {
+        BaseHierarchicalConfiguration conf =
+                new BaseHierarchicalConfiguration();
+        appendTree(conf, NodeStructureHelper.ROOT_TABLES_TREE);
+        return conf;
+    }
+
+    /**
+     * Adds a tree structure to the root node of the given configuration.
+     *
+     * @param configuration the configuration
+     * @param root the root of the tree structure to be added
+     */
+    private static void appendTree(BaseHierarchicalConfiguration configuration,
+            ImmutableNode root)
+    {
+        configuration.addNodes(null, Collections.singleton(root));
+    }
+
+    /**
+     * Performs a standard initialization of the subnode config to test.
+     */
+    private void setUpSubnodeConfig()
+    {
+        setUpSubnodeConfig(SUB_KEY);
+    }
+
+    /**
+     * Initializes the test configuration using the specified key.
+     *
+     * @param key the key
+     */
+    private void setUpSubnodeConfig(String key)
+    {
+        config = (SubnodeConfiguration) parent.configurationAt(key, true);
+    }
+
+    /**
+     * Sets up the tracked model for the sub configuration.
+     *
+     * @param selector the selector
+     * @return the tracked model
+     */
+    private TrackedNodeModel setUpTrackedModel(NodeSelector selector)
+    {
+        InMemoryNodeModel parentModel = (InMemoryNodeModel) parent.getModel();
+        parentModel.trackNode(selector, parent);
+        return new TrackedNodeModel(parent, selector, true);
     }
 
     /**
@@ -90,8 +132,9 @@ public class TestSubnodeConfiguration
     public void testInitSubNodeConfig()
     {
         setUpSubnodeConfig();
-        assertSame("Wrong root node in subnode", getSubnodeRoot(parent), config
-                .getRootNode());
+        assertSame("Wrong root node in subnode",
+                NodeStructureHelper.nodeForKey(parent.getRootNode(),
+                        "tables/table(0)"), config.getRootNode());
         assertSame("Wrong parent config", parent, config.getParent());
     }
 
@@ -102,17 +145,19 @@ public class TestSubnodeConfiguration
     @Test(expected = IllegalArgumentException.class)
     public void testInitSubNodeConfigWithNullParent()
     {
-        config = new SubnodeConfiguration(null, getSubnodeRoot(parent), null);
+        config =
+                new SubnodeConfiguration(null, setUpTrackedModel(SELECTOR)
+                );
     }
 
     /**
-     * Tests constructing a subnode configuration with a null root node. This
+     * Tests constructing a subnode configuration with a null node model. This
      * should cause an exception.
      */
     @Test(expected = IllegalArgumentException.class)
     public void testInitSubNodeConfigWithNullNode()
     {
-        config = new SubnodeConfiguration(parent, null, null);
+        config = new SubnodeConfiguration(parent, null);
     }
 
     /**
@@ -122,15 +167,23 @@ public class TestSubnodeConfiguration
     public void testGetProperties()
     {
         setUpSubnodeConfig();
-        assertEquals("Wrong table name", TABLE_NAMES[0], config
-                .getString("name"));
+        checkSubConfigContent();
+    }
+
+    /**
+     * Checks whether the sub configuration has the expected content.
+     */
+    private void checkSubConfigContent()
+    {
+        assertEquals("Wrong table name", NodeStructureHelper.table(0),
+                config.getString("name"));
         List<Object> fields = config.getList("fields.field.name");
-        assertEquals("Wrong number of fields", TABLE_FIELDS[0].length, fields
-                .size());
-        for (int i = 0; i < TABLE_FIELDS[0].length; i++)
+        assertEquals("Wrong number of fields",
+                NodeStructureHelper.fieldsLength(0), fields.size());
+        for (int i = 0; i < NodeStructureHelper.fieldsLength(0); i++)
         {
-            assertEquals("Wrong field at position " + i, TABLE_FIELDS[0][i],
-                    fields.get(i));
+            assertEquals("Wrong field at position " + i,
+                    NodeStructureHelper.field(0, i), fields.get(i));
         }
     }
 
@@ -143,15 +196,15 @@ public class TestSubnodeConfiguration
     {
         setUpSubnodeConfig();
         config.setProperty(null, "testTable");
-        config.setProperty("name", TABLE_NAMES[0] + "_tested");
-        assertEquals("Root value was not set", "testTable", parent
-                .getString("tables.table(0)"));
-        assertEquals("Table name was not changed", TABLE_NAMES[0] + "_tested",
-                parent.getString("tables.table(0).name"));
+        config.setProperty("name", NodeStructureHelper.table(0) + "_tested");
+        assertEquals("Root value was not set", "testTable",
+                parent.getString("tables.table(0)"));
+        assertEquals("Table name was not changed", NodeStructureHelper.table(0)
+                + "_tested", parent.getString("tables.table(0).name"));
 
         parent.setProperty("tables.table(0).fields.field(1).name", "testField");
-        assertEquals("Field name was not changed", "testField", config
-                .getString("fields.field(1).name"));
+        assertEquals("Field name was not changed", "testField",
+                config.getString("fields.field(1).name"));
     }
 
     /**
@@ -162,16 +215,15 @@ public class TestSubnodeConfiguration
     {
         setUpSubnodeConfig();
         config.addProperty("[@table-type]", "test");
-        assertEquals("parent.createNode() was not called", 1, nodeCounter);
-        assertEquals("Attribute not set", "test", parent
-                .getString("tables.table(0)[@table-type]"));
+        assertEquals("Attribute not set", "test",
+                parent.getString("tables.table(0)[@table-type]"));
 
         parent.addProperty("tables.table(0).fields.field(-1).name", "newField");
         List<Object> fields = config.getList("fields.field.name");
-        assertEquals("New field was not added", TABLE_FIELDS[0].length + 1,
-                fields.size());
-        assertEquals("Wrong last field", "newField", fields
-                .get(fields.size() - 1));
+        assertEquals("New field was not added",
+                NodeStructureHelper.fieldsLength(0) + 1, fields.size());
+        assertEquals("Wrong last field", "newField",
+                fields.get(fields.size() - 1));
     }
 
     /**
@@ -197,13 +249,14 @@ public class TestSubnodeConfiguration
     {
         parent.setThrowExceptionOnMissing(true);
         setUpSubnodeConfig();
-        assertTrue("Exception flag not fetchted from parent", config
-                .isThrowExceptionOnMissing());
+        assertTrue("Exception flag not fetchted from parent",
+                config.isThrowExceptionOnMissing());
         config.getString("non existing key");
     }
 
     /**
-     * Tests whether the exception flag can be set independently from the parent.
+     * Tests whether the exception flag can be set independently from the
+     * parent.
      */
     @Test
     public void testSetThrowExceptionOnMissingAffectsParent()
@@ -211,8 +264,8 @@ public class TestSubnodeConfiguration
         parent.setThrowExceptionOnMissing(true);
         setUpSubnodeConfig();
         config.setThrowExceptionOnMissing(false);
-        assertTrue("Exception flag reset on parent", parent
-                .isThrowExceptionOnMissing());
+        assertTrue("Exception flag reset on parent",
+                parent.isThrowExceptionOnMissing());
     }
 
     /**
@@ -244,31 +297,47 @@ public class TestSubnodeConfiguration
     public void testSetExpressionEngine()
     {
         parent.setExpressionEngine(new XPathExpressionEngine());
-        setUpSubnodeConfig();
-        assertEquals("Wrong field name", TABLE_FIELDS[0][1], config
-                .getString("fields/field[2]/name"));
+        setUpSubnodeConfig("tables/table[1]");
+        assertEquals("Wrong field name", NodeStructureHelper.field(0, 1),
+                config.getString("fields/field[2]/name"));
         Set<String> keys = new HashSet<String>();
         CollectionUtils.addAll(keys, config.getKeys());
         assertEquals("Wrong number of keys", 2, keys.size());
         assertTrue("Key 1 not contained", keys.contains("name"));
         assertTrue("Key 2 not contained", keys.contains("fields/field/name"));
         config.setExpressionEngine(null);
-        assertTrue("Expression engine reset on parent", parent
-                .getExpressionEngine() instanceof XPathExpressionEngine);
+        assertTrue("Expression engine reset on parent",
+                parent.getExpressionEngine() instanceof XPathExpressionEngine);
     }
 
     /**
-     * Tests the configurationAt() method.
+     * Tests the configurationAt() method if updates are not supported.
      */
     @Test
-    public void testConfiguarationAt()
+    public void testConfiguarationAtNoUpdates()
     {
         setUpSubnodeConfig();
-        SubnodeConfiguration sub2 = config
-                .configurationAt("fields.field(1)");
-        assertEquals("Wrong value of property", TABLE_FIELDS[0][1], sub2
-                .getString("name"));
-        assertEquals("Wrong parent", config.getParent(), sub2.getParent());
+        HierarchicalConfiguration<ImmutableNode> sub2 =
+                config.configurationAt("fields.field(1)");
+        assertEquals("Wrong value of property",
+                NodeStructureHelper.field(0, 1), sub2.getString("name"));
+        parent.setProperty("tables.table(0).fields.field(1).name", "otherName");
+        assertEquals("Change of parent is visible",
+                NodeStructureHelper.field(0, 1), sub2.getString("name"));
+    }
+
+    /**
+     * Tests configurationAt() if updates are supported.
+     */
+    @Test
+    public void testConfigurationAtWithUpdateSupport()
+    {
+        setUpSubnodeConfig();
+        SubnodeConfiguration sub2 =
+                (SubnodeConfiguration) config.configurationAt("fields.field(1)", true);
+        assertEquals("Wrong value of property",
+                NodeStructureHelper.field(0, 1), sub2.getString("name"));
+        assertEquals("Wrong parent", config, sub2.getParent());
     }
 
     /**
@@ -282,8 +351,8 @@ public class TestSubnodeConfiguration
         parent.addProperty("tablespaces.tablespace(-1).name", "test");
         parent.addProperty("tables.table(0).tablespace",
                 "${tablespaces.tablespace(0).name}");
-        assertEquals("Wrong interpolated tablespace", "default", parent
-                .getString("tables.table(0).tablespace"));
+        assertEquals("Wrong interpolated tablespace", "default",
+                parent.getString("tables.table(0).tablespace"));
 
         setUpSubnodeConfig();
         assertEquals("Wrong interpolated tablespace in subnode", "default",
@@ -291,25 +360,47 @@ public class TestSubnodeConfiguration
     }
 
     /**
-     * An additional test for interpolation when the configurationAt() method is
-     * involved.
+     * Helper method for testing interpolation facilities between a sub and its
+     * parent configuration.
+     *
+     * @param withUpdates the supports updates flag
      */
-    @Test
-    public void testInterpolationFromConfigurationAt()
+    private void checkInterpolationFromConfigurationAt(boolean withUpdates)
     {
         parent.addProperty("base.dir", "/home/foo");
         parent.addProperty("test.absolute.dir.dir1", "${base.dir}/path1");
         parent.addProperty("test.absolute.dir.dir2", "${base.dir}/path2");
         parent.addProperty("test.absolute.dir.dir3", "${base.dir}/path3");
 
-        Configuration sub = parent.configurationAt("test.absolute.dir");
+        Configuration sub =
+                parent.configurationAt("test.absolute.dir", withUpdates);
         for (int i = 1; i < 4; i++)
         {
             assertEquals("Wrong interpolation in parent", "/home/foo/path" + i,
                     parent.getString("test.absolute.dir.dir" + i));
-            assertEquals("Wrong interpolation in subnode",
-                    "/home/foo/path" + i, sub.getString("dir" + i));
+            assertEquals("Wrong interpolation in sub", "/home/foo/path" + i,
+                    sub.getString("dir" + i));
         }
+    }
+
+    /**
+     * Tests whether interpolation works for a sub configuration obtained via
+     * configurationAt() if updates are not supported.
+     */
+    @Test
+    public void testInterpolationFromConfigurationAtNoUpdateSupport()
+    {
+        checkInterpolationFromConfigurationAt(false);
+    }
+
+    /**
+     * Tests whether interpolation works for a sub configuration obtained via
+     * configurationAt() if updates are supported.
+     */
+    @Test
+    public void testInterpolationFromConfigurationAtWithUpdateSupport()
+    {
+        checkInterpolationFromConfigurationAt(true);
     }
 
     /**
@@ -324,10 +415,10 @@ public class TestSubnodeConfiguration
         parent.addProperty("test.absolute.dir.dir2", "${dir1}");
 
         Configuration sub = parent.configurationAt("test.absolute.dir");
-        assertEquals("Wrong interpolation in subnode",
-            "/home/foo/path1", sub.getString("dir1"));
-        assertEquals("Wrong local interpolation in subnode",
-            "/home/foo/path1", sub.getString("dir2"));
+        assertEquals("Wrong interpolation in subnode", "/home/foo/path1",
+                sub.getString("dir1"));
+        assertEquals("Wrong local interpolation in subnode", "/home/foo/path1",
+                sub.getString("dir2"));
     }
 
     /**
@@ -344,157 +435,23 @@ public class TestSubnodeConfiguration
     }
 
     @Test
-    public void testLocalLookupsInInterpolatorAreInherited() {
+    public void testLocalLookupsInInterpolatorAreInherited()
+    {
         parent.addProperty("tablespaces.tablespace.name", "default");
         parent.addProperty("tablespaces.tablespace(-1).name", "test");
         parent.addProperty("tables.table(0).var", "${brackets:x}");
 
         ConfigurationInterpolator interpolator = parent.getInterpolator();
-        interpolator.registerLookup("brackets", new Lookup(){
+        interpolator.registerLookup("brackets", new Lookup() {
 
-            @Override
             public String lookup(String key) {
-                return "(" + key +")";
+                return "(" + key + ")";
             }
 
         });
         setUpSubnodeConfig();
-        assertEquals("Local lookup was not inherited", "(x)", config.getString("var", ""));
-    }
-
-    /**
-     * Tests a reload operation for the parent configuration when the subnode
-     * configuration does not support reloads. Then the new value should not be
-     * detected.
-     */
-    @Test
-    public void testParentReloadNotSupported() throws ConfigurationException
-    {
-        Configuration c = setUpLiveUpdateTest(false);
-        assertEquals("Name changed in sub config", TABLE_NAMES[1], config
-                .getString("name"));
-        assertEquals("Name not changed in parent", NEW_TABLE_NAME, c
-                .getString("tables.table(1).name"));
-    }
-
-    /**
-     * Tests a reload operation for the parent configuration when the subnode
-     * configuration does support reloads. The new value should be returned.
-     */
-    @Test
-    public void testParentReloadSupported() throws ConfigurationException
-    {
-        Configuration c = setUpLiveUpdateTest(true);
-        assertEquals("Name not changed in sub config", NEW_TABLE_NAME, config
-                .getString("name"));
-        assertEquals("Name not changed in parent", NEW_TABLE_NAME, c
-                .getString("tables.table(1).name"));
-    }
-
-    /**
-     * Tests whether events are fired if a change of the parent is detected.
-     */
-    @Test
-    public void testParentReloadEvents() throws ConfigurationException
-    {
-        config = parent.configurationAt(SUB_KEY, true);
-        ConfigurationListenerTestImpl l = new ConfigurationListenerTestImpl();
-        config.addConfigurationListener(l);
-        updateParent();
-        assertEquals("Wrong number of events", 4, l.events.size());
-        boolean before = true;
-        for (ConfigurationEvent e : l.events)
-        {
-            assertEquals("Wrong configuration", config, e.getSource());
-            assertEquals("Wrong event type",
-                    BaseHierarchicalConfiguration.EVENT_SUBNODE_CHANGED, e
-                            .getType());
-            assertNull("Got a property name", e.getPropertyName());
-            assertNull("Got a property value", e.getPropertyValue());
-            assertEquals("Wrong before flag", before, e.isBeforeUpdate());
-            before = !before;
-        }
-    }
-
-    /**
-     * Tests a reload operation for the parent configuration when the subnode
-     * configuration is aware of reloads, and the parent configuration is
-     * accessed first. The new value should be returned.
-     */
-    @Test
-    public void testParentReloadSupportAccessParent()
-            throws ConfigurationException
-    {
-        Configuration c = setUpLiveUpdateTest(true);
-        assertEquals("Name not changed in parent", NEW_TABLE_NAME, c
-                .getString("tables.table(1).name"));
-        assertEquals("Name not changed in sub config", NEW_TABLE_NAME, config
-                .getString("name"));
-    }
-
-    /**
-     * Tests whether reloads work with sub subnode configurations.
-     */
-    @Test
-    public void testParentReloadSubSubnode() throws ConfigurationException
-    {
-        setUpLiveUpdateTest(true);
-        SubnodeConfiguration sub = config.configurationAt("fields", true);
-        assertEquals("Wrong subnode key", "tables.table(1).fields", sub
-                .getSubnodeKey());
-        assertEquals("Changed field not detected", "newField", sub
-                .getString("field(0).name"));
-    }
-
-    /**
-     * Tests creating a sub sub config when the sub config is not aware of
-     * changes. Then the sub sub config shouldn't be either.
-     */
-    @Test
-    public void testParentReloadSubSubnodeNoChangeSupport()
-            throws ConfigurationException
-    {
-        setUpLiveUpdateTest(false);
-        SubnodeConfiguration sub = config.configurationAt("fields", true);
-        assertNull("Sub sub config is attached to parent", sub.getSubnodeKey());
-        assertEquals("Changed field name returned", TABLE_FIELDS[1][0], sub
-                .getString("field(0).name"));
-    }
-
-    /**
-     * Prepares a test for updates of a SubnodeConfiguration if the node
-     * structure of the parent changes. This method replaces the nodes for the
-     * tables with new ones.
-     *
-     * @param supportReload a flag whether the SubnodeConfiguration should
-     *        support reload operations
-     * @return the parent configuration that can be used for testing
-     */
-    private HierarchicalConfiguration setUpLiveUpdateTest(boolean supportReload)
-    {
-        config = parent.configurationAt(SUB_KEY, supportReload);
-        updateParent();
-        return parent;
-    }
-
-    /**
-     * Updates the parent configuration. Replaces the node structure so that
-     * an attached SubnodeConfiguration should be removed now.
-     */
-    private void updateParent()
-    {
-        String[] tableNamesNew = TABLE_NAMES.clone();
-        String[][] fieldNamesNew = new String[TABLE_FIELDS.length][];
-        for(int i = 0; i < TABLE_FIELDS.length; i++)
-        {
-            fieldNamesNew[i] = TABLE_FIELDS[i].clone();
-        }
-        tableNamesNew[1] = NEW_TABLE_NAME;
-        fieldNamesNew[1][0] = "newField";
-        addTableData(parent, tableNamesNew, fieldNamesNew);
-        String keyClear = "tables.table(0)";
-        parent.clearTree(keyClear);
-        parent.clearTree(keyClear);
+        assertEquals("Local lookup was not inherited", "(x)",
+                config.getString("var", ""));
     }
 
     /**
@@ -505,117 +462,60 @@ public class TestSubnodeConfiguration
     @Test
     public void testParentChangeDetach()
     {
-        final String key = SUB_KEY;
-        config = parent.configurationAt(key, true);
-        assertEquals("Wrong subnode key", key, config.getSubnodeKey());
-        assertEquals("Wrong table name", TABLE_NAMES[1], config
-                .getString("name"));
-        parent.clearTree(key);
-        assertEquals("Wrong table name after change", TABLE_NAMES[1], config
-                .getString("name"));
-        assertNull("Sub config was not detached", config.getSubnodeKey());
+        setUpSubnodeConfig();
+        parent.clear();
+        checkSubConfigContent();
     }
 
     /**
-     * Tests detaching a subnode configuration when an exception is thrown
-     * during reconstruction. This can happen e.g. if the expression engine is
-     * changed for the parent.
+     * Tests detaching a subnode configuration if an exception is thrown during
+     * reconstruction. This can happen e.g. if the expression engine is changed
+     * for the parent.
      */
     @Test
     public void testParentChangeDetatchException()
     {
-        config = parent.configurationAt(SUB_KEY, true);
+        setUpSubnodeConfig();
         parent.setExpressionEngine(new XPathExpressionEngine());
         parent.addProperty("newProp", "value");
-        assertEquals("Wrong name of table", TABLE_NAMES[1], config
-                .getString("name"));
-        assertNull("Sub config was not detached", config.getSubnodeKey());
+        checkSubConfigContent();
     }
 
     /**
-     * Initializes the parent configuration. This method creates the typical
-     * structure of tables and fields nodes.
-     *
-     * @return the parent configuration
+     * Tests whether a clone of a sub configuration can be created.
      */
-    protected BaseHierarchicalConfiguration setUpParentConfig()
+    @Test
+    public void testClone()
     {
-        BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration()
-        {
-            /**
-             * Serial version UID.
-             */
-            private static final long serialVersionUID = 1L;
+        setUpSubnodeConfig();
+        SubnodeConfiguration copy = (SubnodeConfiguration) config.clone();
+        assertNotSame("Same model", config.getModel(), copy.getModel());
+        TrackedNodeModel subModel = (TrackedNodeModel) copy.getModel();
+        assertEquals("Wrong selector", SELECTOR, subModel.getSelector());
+        InMemoryNodeModel parentModel = (InMemoryNodeModel) parent.getModel();
+        assertEquals("Wrong parent model", parentModel,
+                subModel.getParentModel());
 
-            // Provide a special implementation of createNode() to check
-            // if it is called by the subnode config
-            @Override
-            protected ConfigurationNode createNode(String name)
-            {
-                nodeCounter++;
-                return super.createNode(name);
-            }
-        };
-        addTableData(conf, TABLE_NAMES, TABLE_FIELDS);
-        return conf;
+        // Check whether the track count was increased
+        parentModel.untrackNode(SELECTOR);
+        parentModel.untrackNode(SELECTOR);
+        assertTrue("Wrong finalize flag",
+                subModel.isReleaseTrackedNodeOnFinalize());
     }
 
     /**
-     * Appends properties for table names and their fields to the given
-     * configuration.
-     *
-     * @param conf the configuration to be filled
-     * @param tableNames an array with the names of the tables to add
-     * @param fields and array with the field names per table
+     * Tests whether the configuration can be closed.
      */
-    private static void addTableData(Configuration conf, String[] tableNames,
-            String[][] fields)
+    @Test
+    public void testClose()
     {
-        for (int i = 0; i < tableNames.length; i++)
-        {
-            conf.addProperty("tables.table(-1).name", tableNames[i]);
-            for (int j = 0; j < fields[i].length; j++)
-            {
-                conf.addProperty("tables.table.fields.field(-1).name",
-                        fields[i][j]);
-            }
-        }
-    }
+        TrackedNodeModel model = EasyMock.createMock(TrackedNodeModel.class);
+        EasyMock.expect(model.getSelector()).andReturn(SELECTOR).anyTimes();
+        model.close();
+        EasyMock.replay(model);
 
-    /**
-     * Returns the root node for the subnode config. This method returns the
-     * first table node.
-     *
-     * @param conf the parent config
-     * @return the root node for the subnode config
-     */
-    protected ConfigurationNode getSubnodeRoot(HierarchicalConfiguration conf)
-    {
-        ConfigurationNode root = conf.getRootNode();
-        return root.getChild(0).getChild(0);
-    }
-
-    /**
-     * Performs a standard initialization of the subnode config to test.
-     */
-    protected void setUpSubnodeConfig()
-    {
-        config = new SubnodeConfiguration(parent, getSubnodeRoot(parent), null);
-    }
-
-    /**
-     * A specialized configuration listener for testing whether the expected
-     * events are fired.
-     */
-    private static class ConfigurationListenerTestImpl implements ConfigurationListener
-    {
-        /** Stores the events received.*/
-        final List<ConfigurationEvent> events = new ArrayList<ConfigurationEvent>();
-
-        @Override
-        public void configurationChanged(ConfigurationEvent event)
-        {
-            events.add(event);
-        }
+        SubnodeConfiguration config = new SubnodeConfiguration(parent, model);
+        config.close();
+        EasyMock.verify(model);
     }
 }

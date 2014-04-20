@@ -25,7 +25,7 @@ import java.util.List;
  * that constructs a union from two passed in node hierarchies.
  * </p>
  * <p>
- * The given source hierarchies are traversed and their nodes are added to the
+ * The given source hierarchies are traversed, and their nodes are added to the
  * resulting structure. Under some circumstances two nodes can be combined
  * rather than adding both. This is the case if both nodes are single children
  * (no lists) of their parents and do not have values. The corresponding check
@@ -108,10 +108,14 @@ import java.util.List;
  * must not combine the {@code Table} nodes, but add it both to the
  * resulting tree.
  * </p>
+ * <p>
+ * Another limitation is the handling of attributes: Attributes can only
+ * have a single value. So if two nodes are to be combined which both have
+ * an attribute with the same name, it is not possible to construct a
+ * proper union attribute. In this case, the attribute value from the
+ * first node is used.
+ * </p>
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  * @since 1.3
  */
@@ -125,20 +129,22 @@ public class UnionCombiner extends NodeCombiner
      * @return the union node
      */
     @Override
-    public ConfigurationNode combine(ConfigurationNode node1,
-            ConfigurationNode node2)
+    public ImmutableNode combine(ImmutableNode node1,
+            ImmutableNode node2)
     {
-        ViewNode result = createViewNode();
-        result.setName(node1.getName());
-        result.appendAttributes(node1);
-        result.appendAttributes(node2);
+        ImmutableNode.Builder result = new ImmutableNode.Builder();
+        result.name(node1.getNodeName());
+
+        // attributes of the first node take precedence
+        result.addAttributes(node2.getAttributes());
+        result.addAttributes(node1.getAttributes());
 
         // Check if nodes can be combined
-        List<ConfigurationNode> children2 = new LinkedList<ConfigurationNode>(node2.getChildren());
-        for (ConfigurationNode child1 : node1.getChildren())
+        List<ImmutableNode> children2 = new LinkedList<ImmutableNode>(node2.getChildren());
+        for (ImmutableNode child1 : node1.getChildren())
         {
-            ConfigurationNode child2 = findCombineNode(node1, node2, child1,
-                    children2);
+            ImmutableNode child2 = findCombineNode(node1, node2, child1
+            );
             if (child2 != null)
             {
                 result.addChild(combine(child1, child2));
@@ -151,12 +157,12 @@ public class UnionCombiner extends NodeCombiner
         }
 
         // Add remaining children of node 2
-        for (ConfigurationNode c : children2)
+        for (ImmutableNode c : children2)
         {
             result.addChild(c);
         }
 
-        return result;
+        return result.create();
     }
 
     /**
@@ -188,19 +194,18 @@ public class UnionCombiner extends NodeCombiner
      * @param node1 the first source node
      * @param node2 the second source node
      * @param child the child node of the first source node to be checked
-     * @param children a list with all children of the second source node
      * @return the matching child node of the second source node or <b>null</b>
      * if there is none
      */
-    protected ConfigurationNode findCombineNode(ConfigurationNode node1,
-            ConfigurationNode node2, ConfigurationNode child, List<ConfigurationNode> children)
+    protected ImmutableNode findCombineNode(ImmutableNode node1,
+            ImmutableNode node2, ImmutableNode child)
     {
         if (child.getValue() == null && !isListNode(child)
-                && node1.getChildrenCount(child.getName()) == 1
-                && node2.getChildrenCount(child.getName()) == 1)
+                && HANDLER.getChildrenCount(node1, child.getNodeName()) == 1
+                && HANDLER.getChildrenCount(node2, child.getNodeName()) == 1)
         {
-            ConfigurationNode child2 = node2.getChildren(
-                    child.getName()).iterator().next();
+            ImmutableNode child2 =
+                    HANDLER.getChildren(node2, child.getNodeName()).get(0);
             if (child2.getValue() == null)
             {
                 return child2;

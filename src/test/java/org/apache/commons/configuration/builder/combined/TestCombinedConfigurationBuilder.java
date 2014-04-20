@@ -44,7 +44,6 @@ import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.DynamicCombinedConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.XMLPropertiesConfiguration;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
@@ -74,6 +73,7 @@ import org.apache.commons.configuration.io.FileSystem;
 import org.apache.commons.configuration.reloading.ReloadingController;
 import org.apache.commons.configuration.reloading.ReloadingControllerSupport;
 import org.apache.commons.configuration.resolver.CatalogResolver;
+import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.easymock.EasyMock;
 import org.junit.After;
@@ -133,8 +133,8 @@ public class TestCombinedConfigurationBuilder
      * @param defConfig the definition configuration
      * @return the definition builder
      */
-    protected static BasicConfigurationBuilder<? extends HierarchicalConfiguration> createDefinitionBuilder(
-            HierarchicalConfiguration defConfig)
+    protected static BasicConfigurationBuilder<? extends BaseHierarchicalConfiguration> createDefinitionBuilder(
+            BaseHierarchicalConfiguration defConfig)
     {
         return new ConstantConfigurationBuilder(defConfig);
     }
@@ -148,10 +148,10 @@ public class TestCombinedConfigurationBuilder
      * @param attrs the attributes of this tag
      * @return the definition configuration
      */
-    protected static HierarchicalConfiguration createDefinitionConfig(String tag,
+    protected static BaseHierarchicalConfiguration createDefinitionConfig(String tag,
             Map<String, Object> attrs)
     {
-        HierarchicalConfiguration defConfig =
+        BaseHierarchicalConfiguration defConfig =
                 new BaseHierarchicalConfiguration();
         String prefix = "override." + tag;
         for (Map.Entry<String, Object> e : attrs.entrySet())
@@ -332,9 +332,9 @@ public class TestCombinedConfigurationBuilder
         attrs.put("config-name", name);
         attrs.put("config-optional", Boolean.TRUE);
         attrs.put("config-forceCreate", Boolean.TRUE);
-        HierarchicalConfiguration defConfig =
+        BaseHierarchicalConfiguration defConfig =
                 createDefinitionConfig("xml", attrs);
-        BasicConfigurationBuilder<? extends HierarchicalConfiguration> defBuilder =
+        BasicConfigurationBuilder<? extends BaseHierarchicalConfiguration> defBuilder =
                 createDefinitionBuilder(defConfig);
         builder.configure(new CombinedBuilderParametersImpl()
                 .setDefinitionBuilder(defBuilder));
@@ -439,14 +439,14 @@ public class TestCombinedConfigurationBuilder
      * @param attrs the map with attributes
      * @return the definition builder
      */
-    private BasicConfigurationBuilder<? extends HierarchicalConfiguration> prepareSubBuilderTest(
+    private BasicConfigurationBuilder<? extends HierarchicalConfiguration<ImmutableNode>> prepareSubBuilderTest(
             Map<String, Object> attrs)
     {
         attrs.put("fileName", TEST_SUB_XML);
         attrs.put("config-name", BUILDER_NAME);
-        HierarchicalConfiguration defConfig =
+        BaseHierarchicalConfiguration defConfig =
                 createDefinitionConfig("xml", attrs);
-        BasicConfigurationBuilder<? extends HierarchicalConfiguration> defBuilder =
+        BasicConfigurationBuilder<? extends HierarchicalConfiguration<ImmutableNode>> defBuilder =
                 createDefinitionBuilder(defConfig);
         builder.configure(new CombinedBuilderParametersImpl()
                 .setDefinitionBuilder(defBuilder));
@@ -461,7 +461,7 @@ public class TestCombinedConfigurationBuilder
     public void testResetBuilder() throws ConfigurationException
     {
         Map<String, Object> attrs = new HashMap<String, Object>();
-        BasicConfigurationBuilder<? extends HierarchicalConfiguration> defBuilder =
+        BasicConfigurationBuilder<? extends HierarchicalConfiguration<ImmutableNode>> defBuilder =
                 prepareSubBuilderTest(attrs);
         CombinedConfiguration cc = builder.getConfiguration();
         ConfigurationBuilder<? extends Configuration> subBuilder =
@@ -616,7 +616,7 @@ public class TestCombinedConfigurationBuilder
     public void testCustomBuilderProvider() throws ConfigurationException
     {
         String tagName = "myTestTag";
-        final HierarchicalConfiguration dataConf =
+        final BaseHierarchicalConfiguration dataConf =
                 new BaseHierarchicalConfiguration();
         dataConf.addProperty(tagName, Boolean.TRUE);
         Map<String, Object> attrs = new HashMap<String, Object>();
@@ -757,7 +757,7 @@ public class TestCombinedConfigurationBuilder
     public void testConfigureEntityResolverWithProperties()
             throws ConfigurationException
     {
-        HierarchicalConfiguration config = new BaseHierarchicalConfiguration();
+        HierarchicalConfiguration<ImmutableNode> config = new BaseHierarchicalConfiguration();
         config.addProperty("header.entity-resolver[@config-class]",
                 EntityResolverWithPropertiesTestImpl.class.getName());
         XMLBuilderParametersImpl xmlParams = new XMLBuilderParametersImpl();
@@ -784,6 +784,7 @@ public class TestCombinedConfigurationBuilder
     {
         builder.configure(createParameters().setFile(fsFile));
         builder.getConfiguration();
+        @SuppressWarnings("unchecked") // this is the minimum bound for type arguments
         FileBasedConfigurationBuilder<? extends Configuration> xmlBuilder =
                 (FileBasedConfigurationBuilder<? extends Configuration>) builder
                         .getNamedBuilder("xml");
@@ -866,7 +867,7 @@ public class TestCombinedConfigurationBuilder
     public void testBasePathForChildConfigurations()
             throws ConfigurationException
     {
-        HierarchicalConfiguration defConfig =
+        BaseHierarchicalConfiguration defConfig =
                 new BaseHierarchicalConfiguration();
         defConfig.addProperty("properties[@fileName]", "test.properties");
         File deepDir = new File(ConfigurationAssert.TEST_DIR, "config/deep");
@@ -908,7 +909,7 @@ public class TestCombinedConfigurationBuilder
     public void testConfigurationBuilderProvider()
             throws ConfigurationException
     {
-        HierarchicalConfiguration defConfig =
+        BaseHierarchicalConfiguration defConfig =
                 new BaseHierarchicalConfiguration();
         defConfig.addProperty("override.configuration[@fileName]",
                 TEST_FILE.getAbsolutePath());
@@ -1096,7 +1097,7 @@ public class TestCombinedConfigurationBuilder
                 (XMLConfiguration) combConfig.getConfiguration("test");
         assertEquals("Wrong value from XML config", "abc-product",
                 xmlConfig.getString("products/product/desc"));
-        SubnodeConfiguration subConfig =
+        HierarchicalConfiguration<ImmutableNode> subConfig =
                 xmlConfig
                         .configurationAt("products/product[@name='abc']", true);
         assertEquals("Wrong value from sub config", "abc-product",
@@ -1161,8 +1162,8 @@ public class TestCombinedConfigurationBuilder
     {
         CombinedConfiguration config = createMultiFileConfig("testCCMultiTenent.xml");
         switchToMultiFile("1001");
-        HierarchicalConfiguration multiConf =
-                (HierarchicalConfiguration) config
+        HierarchicalConfiguration<?> multiConf =
+                (HierarchicalConfiguration<?>) config
                         .getConfiguration("clientConfig");
         assertTrue(
                 "Expression engine not configured",
@@ -1327,7 +1328,7 @@ public class TestCombinedConfigurationBuilder
         public ConfigurationBuilder<? extends Configuration> getConfigurationBuilder(
                 ConfigurationDeclaration decl) throws ConfigurationException
         {
-            HierarchicalConfiguration config =
+            BaseHierarchicalConfiguration config =
                     new BaseHierarchicalConfiguration();
             config.addProperty(getPropertyKey(), Boolean.TRUE);
             return new ConstantConfigurationBuilder(config);
@@ -1338,18 +1339,18 @@ public class TestCombinedConfigurationBuilder
      * A test builder class which always returns the same configuration.
      */
     private static class ConstantConfigurationBuilder extends
-            BasicConfigurationBuilder<HierarchicalConfiguration>
+            BasicConfigurationBuilder<BaseHierarchicalConfiguration>
     {
-        private final HierarchicalConfiguration configuration;
+        private final BaseHierarchicalConfiguration configuration;
 
-        public ConstantConfigurationBuilder(HierarchicalConfiguration conf)
+        public ConstantConfigurationBuilder(BaseHierarchicalConfiguration conf)
         {
-            super(HierarchicalConfiguration.class);
+            super(BaseHierarchicalConfiguration.class);
             configuration = conf;
         }
 
         @Override
-        public HierarchicalConfiguration getConfiguration()
+        public BaseHierarchicalConfiguration getConfiguration()
                 throws ConfigurationException
         {
             return configuration;

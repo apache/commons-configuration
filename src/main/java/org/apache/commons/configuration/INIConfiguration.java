@@ -21,16 +21,25 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.ex.ConfigurationException;
-import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.tree.ViewNode;
+import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
+import org.apache.commons.configuration.tree.ImmutableNode;
+import org.apache.commons.configuration.tree.InMemoryNodeModel;
+import org.apache.commons.configuration.tree.InMemoryNodeModelSupport;
+import org.apache.commons.configuration.tree.NodeHandler;
+import org.apache.commons.configuration.tree.NodeHandlerDecorator;
+import org.apache.commons.configuration.tree.NodeSelector;
+import org.apache.commons.configuration.tree.TrackedNodeModel;
 
 /**
  * <p>
@@ -255,7 +264,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param c the configuration to be copied
      * @since 2.0
      */
-    public INIConfiguration(HierarchicalConfiguration c)
+    public INIConfiguration(HierarchicalConfiguration<ImmutableNode> c)
     {
         super(c);
     }
@@ -272,23 +281,16 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
     public void write(Writer writer) throws ConfigurationException, IOException
     {
         PrintWriter out = new PrintWriter(writer);
-        Iterator<String> it = getSections().iterator();
-        while (it.hasNext())
+        for (String section : getSections())
         {
-            String section = it.next();
-            Configuration subset;
             if (section != null)
             {
                 out.print("[");
                 out.print(section);
                 out.print("]");
                 out.println();
-                subset = createSubnodeConfiguration(getSectionNode(section), null);
             }
-            else
-            {
-                subset = getSection(null);
-            }
+            Configuration subset = getSection(section);
 
             Iterator<String> keys = subset.getKeys();
             while (keys.hasNext())
@@ -327,7 +329,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * {@code clear()} method is not called so the configuration read in will
      * be merged with the current configuration.
      *
-     * @param reader The reader to read the configuration from.
+     * @param in the reader to read the configuration from.
      * @throws ConfigurationException If an error occurs while reading the
      *         configuration
      * @throws IOException if an I/O error occurs
@@ -336,9 +338,51 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
     public void read(Reader in) throws ConfigurationException, IOException
     {
         BufferedReader bufferedReader = new BufferedReader(in);
-        ConfigurationNode sectionNode = getRootNode();
+        Map<String, ImmutableNode.Builder> sectionBuilders = new LinkedHashMap<String, ImmutableNode.Builder>();
+        ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
 
-        String line = bufferedReader.readLine();
+        createNodeBuilders(bufferedReader, rootBuilder, sectionBuilders);
+        ImmutableNode rootNode = createNewRootNode(rootBuilder, sectionBuilders);
+        addNodes(null, rootNode.getChildren());
+    }
+
+    /**
+     * Creates a new root node from the builders constructed while reading the
+     * configuration file.
+     *
+     * @param rootBuilder the builder for the top-level section
+     * @param sectionBuilders a map storing the section builders
+     * @return the root node of the newly created hierarchy
+     */
+    private static ImmutableNode createNewRootNode(
+            ImmutableNode.Builder rootBuilder,
+            Map<String, ImmutableNode.Builder> sectionBuilders)
+    {
+        for (Map.Entry<String, ImmutableNode.Builder> e : sectionBuilders
+                .entrySet())
+        {
+            rootBuilder.addChild(e.getValue().name(e.getKey()).create());
+        }
+        return rootBuilder.create();
+    }
+
+    /**
+     * Reads the content of an INI file from the passed in reader and creates a
+     * structure of builders for constructing the {@code ImmutableNode} objects
+     * representing the data.
+     *
+     * @param in the reader
+     * @param rootBuilder the builder for the top-level section
+     * @param sectionBuilders a map storing the section builders
+     * @throws IOException if an I/O error occurs
+     */
+    private void createNodeBuilders(BufferedReader in,
+            ImmutableNode.Builder rootBuilder,
+            Map<String, ImmutableNode.Builder> sectionBuilders)
+            throws IOException
+    {
+        ImmutableNode.Builder sectionBuilder = rootBuilder;
+        String line = in.readLine();
         while (line != null)
         {
             line = line.trim();
@@ -347,20 +391,23 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
                 if (isSectionLine(line))
                 {
                     String section = line.substring(1, line.length() - 1);
-                    sectionNode = getSectionNode(section);
+                    sectionBuilder = sectionBuilders.get(section);
+                    if (sectionBuilder == null)
+                    {
+                        sectionBuilder = new ImmutableNode.Builder();
+                        sectionBuilders.put(section, sectionBuilder);
+                    }
                 }
 
                 else
                 {
-                    String key = "";
+                    String key;
                     String value = "";
                     int index = findSeparator(line);
                     if (index >= 0)
                     {
                         key = line.substring(0, index);
-                        value =
-                                parseValue(line.substring(index + 1),
-                                        bufferedReader);
+                        value = parseValue(line.substring(index + 1), in);
                     }
                     else
                     {
@@ -372,11 +419,11 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
                         // use space for properties with no key
                         key = " ";
                     }
-                    createValueNodes(sectionNode, key, value);
+                    createValueNodes(sectionBuilder, key, value);
                 }
             }
 
-            line = bufferedReader.readLine();
+            line = in.readLine();
         }
     }
 
@@ -385,20 +432,20 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * enabled, the value string is split if possible, and for each single value
      * a node is created. Otherwise only a single node is added to the section.
      *
-     * @param sectionNode the section node new nodes have to be added
+     * @param sectionBuilder the section builder for adding new nodes
      * @param key the key
      * @param value the value string
      */
-    private void createValueNodes(ConfigurationNode sectionNode, String key,
-            String value)
+    private void createValueNodes(ImmutableNode.Builder sectionBuilder,
+            String key, String value)
     {
-        Collection<String> values = getListDelimiterHandler().split(value, false);
+        Collection<String> values =
+                getListDelimiterHandler().split(value, false);
 
         for (String v : values)
         {
-            ConfigurationNode node = createNode(key);
-            node.setValue(v);
-            sectionNode.addChild(node);
+            sectionBuilder.addChild(new ImmutableNode.Builder().name(key)
+                    .value(v).create());
         }
     }
 
@@ -737,12 +784,12 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
         beginRead(false);
         try
         {
-            for (ConfigurationNode node : getRootNode().getChildren())
+            for (ImmutableNode node : getRootNode().getChildren())
             {
                 if (isSectionNode(node))
                 {
                     inSection = true;
-                    sections.add(node.getName());
+                    sections.add(node.getNodeName());
                 }
                 else
                 {
@@ -799,47 +846,17 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
         {
             try
             {
-                return configurationAt(name);
+                return (SubnodeConfiguration) configurationAt(name, true);
             }
-            catch (IllegalArgumentException iex)
+            catch (ConfigurationRuntimeException iex)
             {
                 // the passed in key does not map to exactly one node
                 // obtain the node for the section, create it on demand
-                // (creation of a SubnodeConfiguration has to be synchronized)
-                beginWrite(false);
-                try
-                {
-                    return createAndInitializeSubnodeConfiguration(
-                            getSectionNode(name), null, false);
-                }
-                finally
-                {
-                    endWrite();
-                }
+                InMemoryNodeModel parentModel = getSubConfigurationParentModel();
+                NodeSelector selector = parentModel.trackChildNodeWithCreation(null, name, this);
+                return createSubConfigurationForTrackedNode(selector, this);
             }
         }
-    }
-
-    /**
-     * Obtains the node representing the specified section. This method is
-     * called while the configuration is loaded. If a node for this section
-     * already exists, it is returned. Otherwise a new node is created.
-     *
-     * @param sectionName the name of the section
-     * @return the node for this section
-     */
-    private ConfigurationNode getSectionNode(String sectionName)
-    {
-        List<ConfigurationNode> nodes = getRootNode().getChildren(sectionName);
-        if (!nodes.isEmpty())
-        {
-            return nodes.get(0);
-        }
-
-        ConfigurationNode node = createNode(sectionName);
-        markSectionNode(node);
-        getRootNode().addChild(node);
-        return node;
     }
 
     /**
@@ -850,37 +867,14 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      */
     private SubnodeConfiguration getGlobalSection()
     {
-        ViewNode parent = new ViewNode();
-
-        beginWrite(false);
-        try
-        {
-            for (ConfigurationNode node : getRootNode().getChildren())
-            {
-                if (!isSectionNode(node))
-                {
-                    parent.addChild(node);
-                }
-            }
-
-            return createAndInitializeSubnodeConfiguration(parent, null, false);
-        }
-        finally
-        {
-            endWrite();
-        }
-    }
-
-    /**
-     * Marks a configuration node as a section node. This means that this node
-     * represents a section header. This implementation uses the node's
-     * reference property to store a flag.
-     *
-     * @param node the node to be marked
-     */
-    private static void markSectionNode(ConfigurationNode node)
-    {
-        node.setReference(Boolean.TRUE);
+        InMemoryNodeModel parentModel = getSubConfigurationParentModel();
+        NodeSelector selector = new NodeSelector(null); // selects parent
+        parentModel.trackNode(selector, this);
+        GlobalSectionNodeModel model =
+                new GlobalSectionNodeModel(this, selector);
+        SubnodeConfiguration sub = new SubnodeConfiguration(this, model);
+        initSubConfigurationForThisParent(sub);
+        return sub;
     }
 
     /**
@@ -889,8 +883,120 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param node the node in question
      * @return a flag whether this node represents a section
      */
-    private static boolean isSectionNode(ConfigurationNode node)
+    private static boolean isSectionNode(ImmutableNode node)
     {
-        return node.getReference() != null || node.getChildrenCount() > 0;
+        return !node.getChildren().isEmpty();
+    }
+
+    /**
+     * A specialized node model implementation for the sub configuration
+     * representing the global section of the INI file. This is a regular
+     * {@code TrackedNodeModel} with one exception: The {@code NodeHandler} used
+     * by this model applies a filter on the children of the root node so that
+     * only nodes are visible that are no sub sections.
+     */
+    private static class GlobalSectionNodeModel extends TrackedNodeModel
+    {
+        /**
+         * Creates a new instance of {@code GlobalSectionNodeModel} and
+         * initializes it with the given underlying model.
+         *
+         * @param modelSupport the underlying {@code InMemoryNodeModel}
+         * @param selector the {@code NodeSelector}
+         */
+        public GlobalSectionNodeModel(InMemoryNodeModelSupport modelSupport,
+                NodeSelector selector)
+        {
+            super(modelSupport, selector, true);
+        }
+
+        @Override
+        public NodeHandler<ImmutableNode> getNodeHandler()
+        {
+            return new NodeHandlerDecorator<ImmutableNode>()
+            {
+                @Override
+                public List<ImmutableNode> getChildren(ImmutableNode node)
+                {
+                    List<ImmutableNode> children = super.getChildren(node);
+                    return filterChildrenOfGlobalSection(node, children);
+                }
+
+                @Override
+                public List<ImmutableNode> getChildren(ImmutableNode node,
+                        String name)
+                {
+                    List<ImmutableNode> children =
+                            super.getChildren(node, name);
+                    return filterChildrenOfGlobalSection(node, children);
+                }
+
+                @Override
+                public int getChildrenCount(ImmutableNode node, String name)
+                {
+                    List<ImmutableNode> children =
+                            (name != null) ? super.getChildren(node, name)
+                                    : super.getChildren(node);
+                    return filterChildrenOfGlobalSection(node, children).size();
+                }
+
+                @Override
+                public ImmutableNode getChild(ImmutableNode node, int index)
+                {
+                    List<ImmutableNode> children = super.getChildren(node);
+                    return filterChildrenOfGlobalSection(node, children).get(
+                            index);
+                }
+
+                @Override
+                public int indexOfChild(ImmutableNode parent,
+                        ImmutableNode child)
+                {
+                    List<ImmutableNode> children = super.getChildren(parent);
+                    return filterChildrenOfGlobalSection(parent, children)
+                            .indexOf(child);
+                }
+
+                @Override
+                protected NodeHandler<ImmutableNode> getDecoratedNodeHandler()
+                {
+                    return GlobalSectionNodeModel.super.getNodeHandler();
+                }
+
+                /**
+                 * Filters the child nodes of the global section. This method
+                 * checks whether the passed in node is the root node of the
+                 * configuration. If so, from the list of children all nodes are
+                 * filtered which are section nodes.
+                 *
+                 * @param node the node in question
+                 * @param children the children of this node
+                 * @return a list with the filtered children
+                 */
+                private List<ImmutableNode> filterChildrenOfGlobalSection(
+                        ImmutableNode node, List<ImmutableNode> children)
+                {
+                    List<ImmutableNode> filteredList;
+                    if (node == getRootNode())
+                    {
+                        filteredList =
+                                new ArrayList<ImmutableNode>(children.size());
+                        for (ImmutableNode child : children)
+                        {
+                            if (!isSectionNode(child))
+                            {
+                                filteredList.add(child);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        filteredList = children;
+                    }
+
+                    return filteredList;
+                }
+            };
+        }
     }
 }

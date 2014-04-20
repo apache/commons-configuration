@@ -44,16 +44,22 @@ import java.util.Set;
  * can be passed the name of a node, which should be considered a list node.
  * </p>
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  * @since 1.3
  */
 public abstract class NodeCombiner
 {
+    /**
+     * A default handler object for immutable nodes. This object can be used by
+     * derived classes for dealing with nodes. However, it provides only limited
+     * functionality; it supports only operations on child nodes, but no
+     * references to parent nodes.
+     */
+    protected static final NodeHandler<ImmutableNode> HANDLER =
+            createNodeHandler();
+
     /** Stores a list with node names that are known to be list nodes. */
-    protected Set<String> listNodes;
+    private final Set<String> listNodes;
 
     /**
      * Creates a new instance of {@code NodeCombiner}.
@@ -92,9 +98,9 @@ public abstract class NodeCombiner
      * @param node the node to be tested
      * @return a flag whether this is a list node
      */
-    public boolean isListNode(ConfigurationNode node)
+    public boolean isListNode(ImmutableNode node)
     {
-        return listNodes.contains(node.getName());
+        return listNodes.contains(node.getNodeName());
     }
 
     /**
@@ -104,21 +110,32 @@ public abstract class NodeCombiner
      *
      * @param node1 the first root node
      * @param node2 the second root node
-     * @return the resulting combined node structure
+     * @return the root node of the resulting combined node structure
      */
-    public abstract ConfigurationNode combine(ConfigurationNode node1,
-            ConfigurationNode node2);
+    public abstract ImmutableNode combine(ImmutableNode node1,
+            ImmutableNode node2);
 
     /**
-     * Creates a new view node. This method will be called whenever a new view
-     * node is to be created. It can be overridden to create special view nodes.
-     * This base implementation returns a new instance of
-     * {@link ViewNode}.
+     * Creates a node handler object for immutable nodes which can be used by
+     * sub classes to perform advanced operations on nodes.
      *
-     * @return the new view node
+     * @return the node handler implementation
      */
-    protected ViewNode createViewNode()
+    private static NodeHandler<ImmutableNode> createNodeHandler()
     {
-        return new ViewNode();
+        return new AbstractImmutableNodeHandler()
+        {
+            @Override
+            public ImmutableNode getParent(ImmutableNode node)
+            {
+                return null;
+            }
+
+            @Override
+            public ImmutableNode getRootNode()
+            {
+                return null;
+            }
+        };
     }
 }

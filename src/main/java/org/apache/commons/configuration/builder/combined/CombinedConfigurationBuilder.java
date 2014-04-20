@@ -31,7 +31,6 @@ import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationLookup;
 import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.beanutils.BeanDeclaration;
@@ -490,10 +489,10 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     private static final Map<String, ConfigurationBuilderProvider> DEFAULT_PROVIDERS_MAP;
 
     /** The builder for the definition configuration. */
-    private ConfigurationBuilder<? extends HierarchicalConfiguration> definitionBuilder;
+    private ConfigurationBuilder<? extends HierarchicalConfiguration<?>> definitionBuilder;
 
     /** Stores temporarily the configuration with the builder definitions. */
-    private HierarchicalConfiguration definitionConfiguration;
+    private HierarchicalConfiguration<?> definitionConfiguration;
 
     /** The object with data about configuration sources. */
     private ConfigurationSourceData sourceData;
@@ -552,7 +551,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @return the builder for the definition configuration
      * @throws ConfigurationException if an error occurs
      */
-    public synchronized ConfigurationBuilder<? extends HierarchicalConfiguration> getDefinitionBuilder()
+    public synchronized ConfigurationBuilder<? extends HierarchicalConfiguration<?>> getDefinitionBuilder()
             throws ConfigurationException
     {
         if (definitionBuilder == null)
@@ -665,14 +664,14 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @return the builder for the definition configuration
      * @throws ConfigurationException if an error occurs
      */
-    protected ConfigurationBuilder<? extends HierarchicalConfiguration> setupDefinitionBuilder(
+    protected ConfigurationBuilder<? extends HierarchicalConfiguration<?>> setupDefinitionBuilder(
             Map<String, Object> params) throws ConfigurationException
     {
         CombinedBuilderParametersImpl cbParams =
                 CombinedBuilderParametersImpl.fromParameters(params);
         if (cbParams != null)
         {
-            ConfigurationBuilder<? extends HierarchicalConfiguration> defBuilder =
+            ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder =
                     cbParams.getDefinitionBuilder();
             if (defBuilder != null)
             {
@@ -708,7 +707,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @param builderParams the parameters object for the builder
      * @return the standard builder for the definition configuration
      */
-    protected ConfigurationBuilder<? extends HierarchicalConfiguration> createXMLDefinitionBuilder(
+    protected ConfigurationBuilder<? extends HierarchicalConfiguration<?>> createXMLDefinitionBuilder(
             BuilderParameters builderParams)
     {
         return new FileBasedConfigurationBuilder<XMLConfiguration>(
@@ -728,7 +727,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @return the definition configuration
      * @throws ConfigurationException if an error occurs
      */
-    protected HierarchicalConfiguration getDefinitionConfiguration()
+    protected HierarchicalConfiguration<?> getDefinitionConfiguration()
             throws ConfigurationException
     {
         if (definitionConfiguration == null)
@@ -785,7 +784,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         super.initResultInstance(result);
 
         currentConfiguration = result;
-        HierarchicalConfiguration config = getDefinitionConfiguration();
+        HierarchicalConfiguration<?> config = getDefinitionConfiguration();
         if (config.getMaxIndex(KEY_COMBINER) < 0)
         {
             // No combiner defined => set default
@@ -850,13 +849,14 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @throws ConfigurationException if an error occurs
      */
     protected void registerConfiguredLookups(
-            HierarchicalConfiguration defConfig, Configuration resultConfig)
+            HierarchicalConfiguration<?> defConfig, Configuration resultConfig)
             throws ConfigurationException
     {
         Map<String, Lookup> lookups = new HashMap<String, Lookup>();
-        List<SubnodeConfiguration> nodes =
+
+        List<? extends HierarchicalConfiguration<?>> nodes =
                 defConfig.configurationsAt(KEY_CONFIGURATION_LOOKUPS);
-        for (SubnodeConfiguration config : nodes)
+        for (HierarchicalConfiguration<?> config : nodes)
         {
             XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
             String key = config.getString(KEY_LOOKUP_KEY);
@@ -885,7 +885,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @return the default {@code FileSystem} (may be <b>null</b>)
      * @throws ConfigurationException if an error occurs
      */
-    protected FileSystem initFileSystem(HierarchicalConfiguration config)
+    protected FileSystem initFileSystem(HierarchicalConfiguration<?> config)
             throws ConfigurationException
     {
         if (config.getMaxIndex(FILE_SYSTEM) == 0)
@@ -907,7 +907,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      *        <b>null</b>)
      * @throws ConfigurationException if an error occurs.
      */
-    protected void initSystemProperties(HierarchicalConfiguration config,
+    protected void initSystemProperties(HierarchicalConfiguration<?> config,
             String basePath) throws ConfigurationException
     {
         String fileName = config.getString(KEY_SYSTEM_PROPS);
@@ -934,7 +934,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      *        parameters; here the new resolver is to be stored
      * @throws ConfigurationException if an error occurs
      */
-    protected void configureEntityResolver(HierarchicalConfiguration config,
+    protected void configureEntityResolver(HierarchicalConfiguration<?> config,
             XMLBuilderParametersImpl xmlParams) throws ConfigurationException
     {
         if (config.getMaxIndex(KEY_ENTITY_RESOLVER) == 0)
@@ -1048,7 +1048,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     void initBean(Object bean, BeanDeclaration decl)
     {
         fetchBeanHelper().initBean(bean, decl);
-        ;
     }
 
     /**
@@ -1116,7 +1115,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         }
         else
         {
-            ConfigurationBuilder<? extends HierarchicalConfiguration> defBuilder =
+            ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder =
                     getDefinitionBuilder();
             if (defBuilder instanceof FileBasedConfigurationBuilder)
             {
@@ -1260,12 +1259,12 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @param defConfig the definition configuration
      * @throws ConfigurationException if an error occurs
      */
-    private void registerConfiguredProviders(HierarchicalConfiguration defConfig)
+    private void registerConfiguredProviders(HierarchicalConfiguration<?> defConfig)
             throws ConfigurationException
     {
-        List<SubnodeConfiguration> nodes =
+        List<? extends HierarchicalConfiguration<?>> nodes =
                 defConfig.configurationsAt(KEY_CONFIGURATION_PROVIDERS);
-        for (SubnodeConfiguration config : nodes)
+        for (HierarchicalConfiguration<?> config : nodes)
         {
             XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
             String key = config.getString(KEY_PROVIDER_KEY);
@@ -1283,7 +1282,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @param defBuilder the definition builder
      */
     private void addDefinitionBuilderChangeListener(
-            final ConfigurationBuilder<? extends HierarchicalConfiguration> defBuilder)
+            final ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder)
     {
         defBuilder.addBuilderListener(new BuilderListener()
         {
@@ -1324,7 +1323,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @param key the key for the list nodes
      */
     private static void initNodeCombinerListNodes(CombinedConfiguration cc,
-            HierarchicalConfiguration defConfig, String key)
+            HierarchicalConfiguration<?> defConfig, String key)
     {
         List<Object> listNodes = defConfig.getList(key);
         for (Object listNode : listNodes)
@@ -1361,10 +1360,10 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     private class ConfigurationSourceData
     {
         /** A list with all builders for override configurations. */
-        private final Collection<SubnodeConfiguration> overrideBuilders;
+        private final Collection<HierarchicalConfiguration<?>> overrideBuilders;
 
         /** A list with all builders for union configurations. */
-        private final Collection<SubnodeConfiguration> unionBuilders;
+        private final Collection<HierarchicalConfiguration<?>> unionBuilders;
 
         /** A map for direct access to a builder by its name. */
         private final Map<String, ConfigurationBuilder<? extends Configuration>> namedBuilders;
@@ -1381,9 +1380,9 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         public ConfigurationSourceData()
         {
             overrideBuilders =
-                    new LinkedList<SubnodeConfiguration>();
+                    new LinkedList<HierarchicalConfiguration<?>>();
             unionBuilders =
-                    new LinkedList<SubnodeConfiguration>();
+                    new LinkedList<HierarchicalConfiguration<?>>();
             namedBuilders =
                     new HashMap<String, ConfigurationBuilder<? extends Configuration>>();
             allBuilders =
@@ -1397,7 +1396,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          * @throws ConfigurationException if an error occurs
          */
         public void initFromDefinitionConfiguration(
-                HierarchicalConfiguration config) throws ConfigurationException
+                HierarchicalConfiguration<?> config) throws ConfigurationException
         {
             overrideBuilders.addAll(fetchTopLevelOverrideConfigs(config));
             overrideBuilders.addAll(config.childConfigurationsAt(KEY_OVERRIDE));
@@ -1415,11 +1414,11 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          * @throws ConfigurationException if an error occurs
          */
         public void createAndAddConfigurations(CombinedConfiguration ccResult,
-                Collection<SubnodeConfiguration> srcDecl)
+                Collection<HierarchicalConfiguration<?>> srcDecl)
                 throws ConfigurationException
         {
             createBuilderChangeListener();
-            for (HierarchicalConfiguration src : srcDecl)
+            for (HierarchicalConfiguration<?> src : srcDecl)
             {
                 ConfigurationDeclaration decl =
                         new ConfigurationDeclaration(
@@ -1460,7 +1459,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          *
          * @return the override configuration builders
          */
-        public Collection<SubnodeConfiguration> getOverrideSources()
+        public Collection<HierarchicalConfiguration<?>> getOverrideSources()
         {
             return overrideBuilders;
         }
@@ -1471,7 +1470,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          *
          * @return the union configuration builders
          */
-        public Collection<SubnodeConfiguration> getUnionSources()
+        public Collection<HierarchicalConfiguration<?>> getUnionSources()
         {
             return unionBuilders;
         }
@@ -1510,7 +1509,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          * @throws ConfigurationException if an error occurs
          */
         private ConfigurationBuilder<? extends Configuration> createConfigurationBuilder(
-                HierarchicalConfiguration src, ConfigurationDeclaration decl)
+                HierarchicalConfiguration<?> src, ConfigurationDeclaration decl)
                 throws ConfigurationException
         {
             ConfigurationBuilderProvider provider =
@@ -1591,16 +1590,18 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          * @return a list with sub configurations for the top level override
          *         configurations
          */
-        private List<SubnodeConfiguration> fetchTopLevelOverrideConfigs(
-                HierarchicalConfiguration config)
+        private List<? extends HierarchicalConfiguration<?>> fetchTopLevelOverrideConfigs(
+                HierarchicalConfiguration<?> config)
         {
-            List<SubnodeConfiguration> configs =
+
+            List<? extends HierarchicalConfiguration<?>> configs =
                     config.childConfigurationsAt(null);
-            for (Iterator<SubnodeConfiguration> it = configs.iterator(); it
-                    .hasNext();)
+            for (Iterator<? extends HierarchicalConfiguration<?>> it =
+                    configs.iterator(); it.hasNext();)
             {
                 String nodeName = it.next().getRootElementName();
-                for (String element : CONFIG_SECTIONS) {
+                for (String element : CONFIG_SECTIONS)
+                {
                     if (element.equals(nodeName))
                     {
                         it.remove();

@@ -17,13 +17,19 @@
 
 package org.apache.commons.configuration;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,21 +42,16 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration.ex.ConfigurationException;
-import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.resolver.CatalogResolver;
-import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.tree.DefaultConfigurationNode;
+import org.apache.commons.configuration.tree.ImmutableNode;
+import org.apache.commons.configuration.tree.NodeStructureHelper;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.junit.Before;
 import org.junit.Test;
@@ -300,7 +301,7 @@ public class TestXMLConfiguration
     }
 
     @Test
-    public void testClearAttributenonExisting()
+    public void testClearAttributeNonExisting()
     {
         String key = "clear[@id]";
         conf.clearProperty(key);
@@ -343,20 +344,22 @@ public class TestXMLConfiguration
         conf.setProperty("foo[@bar]", "value");
         assertEquals("foo[@bar]", "value", conf.getProperty("foo[@bar]"));
 
-        conf.setProperty("name1","value1");
-        assertEquals("value1",conf.getProperty("name1"));
+        conf.setProperty("name1", "value1");
+        assertEquals("value1", conf.getProperty("name1"));
     }
 
+    /**
+     * Tests whether an attribute value can be overridden.
+     */
     @Test
-    public void testAddAttribute()
+    public void testOverrideAttribute()
     {
         conf.addProperty("element3[@name]", "bar");
 
         List<Object> list = conf.getList("element3[@name]");
         assertNotNull("null list", list);
-        assertTrue("'foo' element missing", list.contains("foo"));
         assertTrue("'bar' element missing", list.contains("bar"));
-        assertEquals("list size", 2, list.size());
+        assertEquals("list size", 1, list.size());
     }
 
     @Test
@@ -385,17 +388,6 @@ public class TestXMLConfiguration
         checkConf = checkSavedConfig();
         assertEquals("Attribute not modified after save", "newValue", checkConf
                 .getString("[@test]"));
-    }
-
-    /**
-     * Tests whether the configuration's root node is initialized with a
-     * reference to the corresponding XML element.
-     */
-    @Test
-    public void testGetRootReference()
-    {
-        assertNotNull("Root node has no reference", conf.getRootNode()
-                .getReference());
     }
 
     @Test
@@ -932,8 +924,8 @@ public class TestXMLConfiguration
 
         StringWriter out = new StringWriter();
         handler.save(out);
-        assertTrue("Encoding was not written to file", out.toString().indexOf(
-                "encoding=\"" + ENCODING + "\"") >= 0);
+        assertThat("Encoding was not written to file", out.toString(),
+                containsString("encoding=\"" + ENCODING + "\""));
     }
 
     /**
@@ -950,8 +942,8 @@ public class TestXMLConfiguration
 
         StringWriter out = new StringWriter();
         handler.save(out);
-        assertTrue("Encoding was written to file", out.toString().indexOf(
-                "encoding=\"UTF-") >= 0);
+        assertThat("Encoding was written to file", out.toString(),
+                containsString("encoding=\"UTF-"));
     }
 
     /**
@@ -967,7 +959,8 @@ public class TestXMLConfiguration
         assertEquals("Wrong system ID", SYSTEM_ID, conf.getSystemID());
         StringWriter out = new StringWriter();
         new FileHandler(conf).save(out);
-        assertTrue("Did not find DOCTYPE", out.toString().indexOf(DOCTYPE) >= 0);
+        assertThat("Did not find DOCTYPE", out.toString(),
+                containsString(DOCTYPE));
     }
 
     /**
@@ -983,25 +976,24 @@ public class TestXMLConfiguration
         conf.setSystemID(SYSTEM_ID);
         StringWriter out = new StringWriter();
         new FileHandler(conf).save(out);
-        assertTrue("Did not find DOCTYPE", out.toString().indexOf(
-                DOCTYPE + "testconfig" + DOCTYPE_DECL) >= 0);
+        assertThat("Did not find DOCTYPE", out.toString(), containsString(
+                DOCTYPE + "testconfig" + DOCTYPE_DECL));
     }
 
     /**
-     * Tests saving a configuration when an invalid transformer factory is
-     * specified. In this case the error thrown by the TransformerFactory class
-     * should be caught and re-thrown as a ConfigurationException.
+     * Tests saving a configuration if an invalid transformer factory is
+     * specified. In this case an error is thrown by the transformer factory.
+     * XMLConfiguration should not catch this error.
      */
     @Test
-    public void testSaveWithInvalidTransformerFactory()
-    {
+    public void testSaveWithInvalidTransformerFactory() throws ConfigurationException {
         System.setProperty(PROP_FACTORY, "an.invalid.Class");
         try
         {
             saveTestConfig();
             fail("Could save with invalid TransformerFactory!");
         }
-        catch (ConfigurationException cex)
+        catch (TransformerFactoryConfigurationError cex)
         {
             // ok
         }
@@ -1034,11 +1026,6 @@ public class TestXMLConfiguration
         copy.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         assertEquals("value", copy.getProperty("element"));
         assertNull("Document was copied, too", copy.getDocument());
-        ConfigurationNode root = copy.getRootNode();
-        for (ConfigurationNode node : root.getChildren())
-        {
-            assertNull("Reference was not cleared", node.getReference());
-        }
 
         new FileHandler(copy).save(testSaveConf);
         checkSavedConfig();
@@ -1146,7 +1133,7 @@ public class TestXMLConfiguration
         builder.getFileHandler().setFile(testSaveConf);
         builder.setAutoSave(true);
         final String newValue = "I am autosaved";
-        Configuration sub = conf.configurationAt("element2.subelement");
+        Configuration sub = conf.configurationAt("element2.subelement", true);
         sub.setProperty("subsubelement", newValue);
         assertEquals("Change not visible to parent", newValue,
                 conf.getString("element2.subelement.subsubelement"));
@@ -1172,8 +1159,8 @@ public class TestXMLConfiguration
         builder.getFileHandler().setFile(testSaveConf);
         builder.setAutoSave(true);
         final String newValue = "I am autosaved";
-        SubnodeConfiguration sub1 = conf.configurationAt("element2");
-        SubnodeConfiguration sub2 = sub1.configurationAt("subelement");
+        HierarchicalConfiguration<?> sub1 = conf.configurationAt("element2", true);
+        HierarchicalConfiguration<?> sub2 = sub1.configurationAt("subelement", true);
         sub2.setProperty("subsubelement", newValue);
         assertEquals("Change not visible to parent", newValue, conf
                 .getString("element2.subelement.subsubelement"));
@@ -1230,15 +1217,19 @@ public class TestXMLConfiguration
     }
 
     /**
-     * Tries to create an attribute with multiple values.
+     * Tries to create an attribute with multiple values. Only the first value
+     * is taken into account.
      */
-    @Test(expected = ConfigurationRuntimeException.class)
+    @Test
     public void testAttributeKeyWithMultipleValues()
             throws ConfigurationException
     {
         conf.addProperty("errorTest[@multiAttr]", Arrays.asList("v1", "v2"));
-        StringWriter out = new StringWriter();
-        new FileHandler(conf).save(out);
+        saveTestConfig();
+        XMLConfiguration checkConfig = new XMLConfiguration();
+        load(checkConfig, testSaveConf.getAbsolutePath());
+        assertEquals("Wrong attribute value", "v1",
+                checkConfig.getString("errorTest[@multiAttr]"));
     }
 
     /**
@@ -1268,9 +1259,9 @@ public class TestXMLConfiguration
         conf = builder.getConfiguration();
         builder.getFileHandler().setFile(testSaveConf);
         builder.setAutoSave(true);
-        ConfigurationNode node = new DefaultConfigurationNode(
+        ImmutableNode node = NodeStructureHelper.createNode(
                 "addNodesTest", Boolean.TRUE);
-        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>(1);
+        Collection<ImmutableNode> nodes = new ArrayList<ImmutableNode>(1);
         nodes.add(node);
         conf.addNodes("test.autosave", nodes);
         XMLConfiguration c2 = new XMLConfiguration();
@@ -1286,16 +1277,12 @@ public class TestXMLConfiguration
     @Test
     public void testAddNodesAndSave() throws ConfigurationException
     {
-        ConfigurationNode node = new DefaultConfigurationNode("test");
-        ConfigurationNode child = new DefaultConfigurationNode("child");
-        node.addChild(child);
-        ConfigurationNode attr = new DefaultConfigurationNode("attr");
-        node.addAttribute(attr);
-        ConfigurationNode node2 = conf.createNode("test2");
-        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>(2);
-        nodes.add(node);
-        nodes.add(node2);
-        conf.addNodes("add.nodes", nodes);
+        ImmutableNode.Builder bldrNode = new ImmutableNode.Builder(1);
+        bldrNode.addChild(NodeStructureHelper.createNode("child", null));
+        bldrNode.addAttribute("attr", "");
+        ImmutableNode node2 = NodeStructureHelper.createNode("test2", null);
+        conf.addNodes("add.nodes",
+                Arrays.asList(bldrNode.name("test").create(), node2));
         saveTestConfig();
         conf.setProperty("add.nodes.test", "true");
         conf.setProperty("add.nodes.test.child", "yes");
@@ -1350,7 +1337,8 @@ public class TestXMLConfiguration
     public void testSaveAfterCreateWithCopyConstructor()
             throws ConfigurationException
     {
-        HierarchicalConfiguration hc = conf.configurationAt("element2");
+        HierarchicalConfiguration<ImmutableNode> hc =
+                conf.configurationAt("element2");
         conf = new XMLConfiguration(hc);
         saveTestConfig();
         XMLConfiguration checkConfig = checkSavedConfig();
@@ -1401,25 +1389,15 @@ public class TestXMLConfiguration
     }
 
     /**
-     * Tests adding an attribute node using the addNodes() method.
+     * Tests the copy constructor for null input.
      */
     @Test
-    public void testAddNodesAttributeNode()
+    public void testCopyNull()
     {
-        conf.addProperty("testAddNodes.property[@name]", "prop1");
-        conf.addProperty("testAddNodes.property(0).value", "value1");
-        conf.addProperty("testAddNodes.property(-1)[@name]", "prop2");
-        conf.addProperty("testAddNodes.property(1).value", "value2");
-        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>();
-        nodes.add(new DefaultConfigurationNode("property"));
-        conf.addNodes("testAddNodes", nodes);
-        nodes.clear();
-        ConfigurationNode nd = new DefaultConfigurationNode("name", "prop3");
-        nd.setAttribute(true);
-        nodes.add(nd);
-        conf.addNodes("testAddNodes.property(2)", nodes);
-        assertEquals("Attribute not added", "prop3", conf
-                .getString("testAddNodes.property(2)[@name]"));
+        conf = new XMLConfiguration(null);
+        assertTrue("Not empty", conf.isEmpty());
+        assertEquals("Wrong root element name", "configuration",
+                conf.getRootElementName());
     }
 
     /**
@@ -1558,8 +1536,8 @@ public class TestXMLConfiguration
         StringWriter writer = new StringWriter();
         new FileHandler(conf).save(writer);
         String content = writer.toString();
-        assertTrue("Path not found: " + content,
-                content.indexOf("<path>C:\\Temp</path>") >= 0);
+        assertThat("Path not found: ", content,
+                containsString("<path>C:\\Temp</path>"));
         saveTestConfig();
         XMLConfiguration conf2 = new XMLConfiguration();
         load(conf2, testSaveConf.getAbsolutePath());
@@ -1593,13 +1571,11 @@ public class TestXMLConfiguration
     @Test
     public void testAddNodesToSubnodeConfiguration() throws Exception
     {
-        SubnodeConfiguration sub = conf.configurationAt("element2");
+        HierarchicalConfiguration<ImmutableNode> sub =
+                conf.configurationAt("element2", true);
         sub.addProperty("newKey", "newvalue");
-        ConfigurationNode root = conf.getRootNode();
-        ConfigurationNode elem = root.getChildren("element2").get(0);
-        ConfigurationNode newNode = elem.getChildren("newKey").get(0);
-        assertTrue("Wrong node type: " + newNode,
-                newNode instanceof XMLConfiguration.XMLNode);
+        assertEquals("Property not added", "newvalue",
+                conf.getString("element2.newKey"));
     }
 
     /**
@@ -1663,18 +1639,6 @@ public class TestXMLConfiguration
         assertEquals("PublicID not set", PUBLIC_ID, conf.getPublicID());
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE, Methods.BEGIN_READ,
                 Methods.END_READ);
-    }
-
-    /**
-     * Tests whether access to the document is synchronized.
-     */
-    @Test
-    public void testGetDocumentSynchronized()
-    {
-        SynchronizerTestImpl sync = new SynchronizerTestImpl();
-        conf.setSynchronizer(sync);
-        assertNotNull("No document", conf.getDocument());
-        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
     /**

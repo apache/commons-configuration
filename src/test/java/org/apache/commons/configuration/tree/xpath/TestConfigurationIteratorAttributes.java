@@ -17,23 +17,22 @@
 package org.apache.commons.configuration.tree.xpath;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
-import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.tree.DefaultConfigurationNode;
+import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.model.NodePointer;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test class for ConfigurationIteratorAttributes.
+ * Test class for {@code ConfigurationNodeIteratorAttributes}.
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  */
 public class TestConfigurationIteratorAttributes extends AbstractXPathTest
@@ -42,7 +41,7 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
     private static final String TEST_ATTR = "test";
 
     /** Stores the node pointer of the test node.*/
-    NodePointer pointer;
+    private ConfigurationNodePointer<ImmutableNode> pointer;
 
     @Override
     @Before
@@ -51,9 +50,11 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
         super.setUp();
 
         // Adds further attributes to the test node
-        ConfigurationNode testNode = root.getChild(1);
-        testNode.addAttribute(new DefaultConfigurationNode(TEST_ATTR, "yes"));
-        pointer = new ConfigurationNodePointer(testNode, Locale.getDefault());
+        ImmutableNode orgNode = root.getChildren().get(1);
+        ImmutableNode testNode = orgNode.setAttribute(TEST_ATTR, "yes");
+        pointer =
+                new ConfigurationNodePointer<ImmutableNode>(testNode,
+                        Locale.getDefault(), handler);
     }
 
     /**
@@ -62,11 +63,18 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
     @Test
     public void testIterateAllAttributes()
     {
-        ConfigurationNodeIteratorAttribute it = new ConfigurationNodeIteratorAttribute(pointer, new QName(null, "*"));
+        ConfigurationNodeIteratorAttribute<ImmutableNode> it =
+                new ConfigurationNodeIteratorAttribute<ImmutableNode>(pointer,
+                        new QName(null, "*"));
         assertEquals("Wrong number of attributes", 2, iteratorSize(it));
-        List<ConfigurationNode> attrs = iterationElements(it);
-        assertEquals("Wrong first attribute", ATTR_NAME, attrs.get(0).getName());
-        assertEquals("Wrong first attribute", TEST_ATTR, attrs.get(1).getName());
+        List<NodePointer> attrs = iterationElements(it);
+        Set<String> attrNames = new HashSet<String>();
+        for (NodePointer np : attrs)
+        {
+            attrNames.add(np.getName().getName());
+        }
+        assertTrue("First attribute not found", attrNames.contains(ATTR_NAME));
+        assertTrue("Second attribute not found", attrNames.contains(TEST_ATTR));
     }
 
     /**
@@ -75,9 +83,12 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
     @Test
     public void testIterateSpecificAttribute()
     {
-        ConfigurationNodeIteratorAttribute it = new ConfigurationNodeIteratorAttribute(pointer, new QName(null, TEST_ATTR));
+        ConfigurationNodeIteratorAttribute<ImmutableNode> it =
+                new ConfigurationNodeIteratorAttribute<ImmutableNode>(pointer,
+                        new QName(null, TEST_ATTR));
         assertEquals("Wrong number of attributes", 1, iteratorSize(it));
-        assertEquals("Wrong attribute", TEST_ATTR, iterationElements(it).get(0).getName());
+        assertEquals("Wrong attribute", TEST_ATTR, iterationElements(it).get(0)
+                .getName().getName());
     }
 
     /**
@@ -86,18 +97,22 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
     @Test
     public void testIterateUnknownAttribute()
     {
-        ConfigurationNodeIteratorAttribute it = new ConfigurationNodeIteratorAttribute(pointer, new QName(null, "unknown"));
+        ConfigurationNodeIteratorAttribute<ImmutableNode> it =
+                new ConfigurationNodeIteratorAttribute<ImmutableNode>(pointer,
+                        new QName(null, "unknown"));
         assertEquals("Found attributes", 0, iteratorSize(it));
     }
 
     /**
-     * Tests iteration when a namespace is specified. This is not supported, so
+     * Tests iteration if a namespace is specified. This is not supported, so
      * the iteration should be empty.
      */
     @Test
     public void testIterateNamespace()
     {
-        ConfigurationNodeIteratorAttribute it = new ConfigurationNodeIteratorAttribute(pointer, new QName("test", "*"));
+        ConfigurationNodeIteratorAttribute<ImmutableNode> it =
+                new ConfigurationNodeIteratorAttribute<ImmutableNode>(pointer,
+                        new QName("test", "*"));
         assertEquals("Found attributes", 0, iteratorSize(it));
     }
 }

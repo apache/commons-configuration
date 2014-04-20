@@ -17,16 +17,15 @@
 package org.apache.commons.configuration.tree.xpath;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.tree.DefaultConfigurationNode;
+import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -34,25 +33,26 @@ import org.junit.Test;
  * call the factory's methods, but rather checks if it can be installed in a
  * {@code JXPathContext} and if XPath expressions can be evaluated.
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  */
 public class TestConfigurationNodePointerFactory extends AbstractXPathTest
 {
     /** Stores the JXPathContext used for testing. */
-    JXPathContext context;
+    private JXPathContext context;
+
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception
+    {
+        JXPathContextReferenceImpl
+                .addNodePointerFactory(new ConfigurationNodePointerFactory());
+    }
 
     @Override
     @Before
     public void setUp() throws Exception
     {
         super.setUp();
-        JXPathContextReferenceImpl
-                .addNodePointerFactory(new ConfigurationNodePointerFactory());
-        context = JXPathContext.newContext(root);
-        context.setLenient(true);
+        context = new XPathContextFactory().createContext(root, handler);
     }
 
     /**
@@ -61,20 +61,19 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest
     @Test
     public void testSimpleXPath()
     {
-        List<?> nodes = context.selectNodes(CHILD_NAME1);
-        assertEquals("Incorrect number of results", 2, nodes.size());
-        for (Object name : nodes) {
-            ConfigurationNode node = (ConfigurationNode) name;
-            assertEquals("Incorrect node name", CHILD_NAME1, node.getName());
-            assertEquals("Incorrect parent node", root, node.getParentNode());
+        List<?> results = context.selectNodes(CHILD_NAME1);
+        assertEquals("Incorrect number of results", 2, results.size());
+        for (Object result : results) {
+            ImmutableNode node = (ImmutableNode) result;
+            assertEquals("Incorrect node name", CHILD_NAME1, node.getNodeName());
         }
 
-        nodes = context.selectNodes("/" + CHILD_NAME1);
-        assertEquals("Incorrect number of results", 2, nodes.size());
+        results = context.selectNodes("/" + CHILD_NAME1);
+        assertEquals("Incorrect number of results", 2, results.size());
 
-        nodes = context.selectNodes(CHILD_NAME2 + "/" + CHILD_NAME1 + "/"
+        results = context.selectNodes(CHILD_NAME2 + "/" + CHILD_NAME1 + "/"
                 + CHILD_NAME2);
-        assertEquals("Incorrect number of results", 18, nodes.size());
+        assertEquals("Incorrect number of results", 18, results.size());
     }
 
     /**
@@ -95,32 +94,30 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest
         int index = 1;
         for (Iterator<?> it = nodes.iterator(); it.hasNext(); index++)
         {
-            ConfigurationNode node = (ConfigurationNode) it.next();
+            ImmutableNode node = (ImmutableNode) it.next();
             assertEquals("Wrong node value for child " + index, "2." + index,
                     node.getValue());
         }
     }
 
     /**
-     * Tests accessing attributes.
+     * Tests whether the attribute of a node can be queried.
      */
     @Test
-    public void testAttributes()
+    public void testQueryAttribute()
     {
-        root.addAttribute(new DefaultConfigurationNode("testAttr", "true"));
-        assertEquals("Did not find attribute of root node", "true", context
-                .getValue("@testAttr"));
         assertEquals("Incorrect attribute value", "1", context.getValue("/"
                 + CHILD_NAME2 + "[1]/@" + ATTR_NAME));
+    }
 
-        assertTrue("Found elements with name attribute", context.selectNodes(
-                "//" + CHILD_NAME2 + "[@name]").isEmpty());
-        ConfigurationNode node = root.getChild(2).getChild(
-                1).getChildren(CHILD_NAME2).get(1);
-        node.addAttribute(new DefaultConfigurationNode("name", "testValue"));
-        List<?> nodes = context.selectNodes("//" + CHILD_NAME2 + "[@name]");
-        assertEquals("Name attribute not found", 1, nodes.size());
-        assertEquals("Wrong node returned", node, nodes.get(0));
+    /**
+     * Tests whether an attribute of the root node can be queried.
+     */
+    @Test
+    public void testQueryRootAttribute()
+    {
+        assertEquals("Did not find attribute of root node", "true", context
+                .getValue("@" + ATTR_ROOT));
     }
 
     /**
@@ -153,8 +150,8 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest
         List<?> nodes = context.selectNodes("/" + CHILD_NAME1
                 + "[2]/following-sibling::*");
         assertEquals("Wrong number of following siblings", 1, nodes.size());
-        ConfigurationNode node = (ConfigurationNode) nodes.get(0);
-        assertEquals("Wrong node type", CHILD_NAME2, node.getName());
+        ImmutableNode node = (ImmutableNode) nodes.get(0);
+        assertEquals("Wrong node type", CHILD_NAME2, node.getNodeName());
         assertEquals("Wrong index", String.valueOf(CHILD_COUNT), node
                 .getValue());
     }
@@ -171,7 +168,7 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest
         for (int index = 0, value = 3; index < nodes.size(); index++, value--)
         {
             assertEquals("Wrong node index", String.valueOf(value),
-                    ((ConfigurationNode) nodes.get(index)).getValue());
+                    ((ImmutableNode) nodes.get(index)).getValue());
         }
     }
 }

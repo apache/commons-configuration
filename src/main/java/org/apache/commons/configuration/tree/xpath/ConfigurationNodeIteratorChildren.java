@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.jxpath.ri.Compiler;
 import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.compiler.NodeNameTest;
@@ -34,34 +33,68 @@ import org.apache.commons.lang3.StringUtils;
  * node.
  *
  * @since 1.3
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  */
-class ConfigurationNodeIteratorChildren extends ConfigurationNodeIteratorBase
+class ConfigurationNodeIteratorChildren<T> extends
+        ConfigurationNodeIteratorBase<T>
 {
+    /** The list with the sub nodes to iterate over. */
+    private final List<T> subNodes;
+
     /**
-     * Creates a new instance of {@code ConfigurationNodeIteratorChildren}
-     * and initializes it.
+     * Creates a new instance of {@code ConfigurationNodeIteratorChildren} and
+     * initializes it.
      *
      * @param parent the parent pointer
      * @param nodeTest the test selecting the sub nodes
      * @param reverse the reverse flag
      * @param startsWith the first element of the iteration
      */
-    public ConfigurationNodeIteratorChildren(NodePointer parent,
-            NodeTest nodeTest, boolean reverse, NodePointer startsWith)
+    public ConfigurationNodeIteratorChildren(
+            ConfigurationNodePointer<T> parent, NodeTest nodeTest,
+            boolean reverse, ConfigurationNodePointer<T> startsWith)
     {
         super(parent, reverse);
-        ConfigurationNode root = (ConfigurationNode) parent.getNode();
-        List<ConfigurationNode> childNodes = createSubNodeList(root, nodeTest);
-        initSubNodeList(childNodes);
+        T root = parent.getConfigurationNode();
+        subNodes = createSubNodeList(root, nodeTest);
+
         if (startsWith != null)
         {
-            setStartOffset(findStartIndex(root,
-                    (ConfigurationNode) startsWith.getNode()));
+            setStartOffset(findStartIndex(subNodes,
+                    startsWith.getConfigurationNode()));
         }
+        else
+        {
+            if (reverse)
+            {
+                setStartOffset(size());
+            }
+        }
+    }
+
+    /**
+     * Creates the configuration node pointer for the current position.
+     *
+     * @param position the current position in the iteration
+     * @return the node pointer
+     */
+    @Override
+    protected NodePointer createNodePointer(int position)
+    {
+        return new ConfigurationNodePointer<T>(getParent(), subNodes
+                .get(position), getNodeHandler());
+    }
+
+    /**
+     * Returns the number of elements in this iteration. This is the number of
+     * elements in the children list.
+     *
+     * @return the number of elements
+     */
+    @Override
+    protected int size()
+    {
+        return subNodes.size();
     }
 
     /**
@@ -73,9 +106,9 @@ class ConfigurationNodeIteratorChildren extends ConfigurationNodeIteratorBase
      * @param test the test object
      * @return a list with the matching nodes
      */
-    protected List<ConfigurationNode> createSubNodeList(ConfigurationNode node, NodeTest test)
+    private List<T> createSubNodeList(T node, NodeTest test)
     {
-        List<ConfigurationNode> children = node.getChildren();
+        List<T> children = getNodeHandler().getChildren(node);
 
         if (test == null)
         {
@@ -94,10 +127,11 @@ class ConfigurationNodeIteratorChildren extends ConfigurationNodeIteratorBase
                         return children;
                     }
 
-                    List<ConfigurationNode> result = new ArrayList<ConfigurationNode>();
-                    for (ConfigurationNode child : children)
+                    List<T> result = new ArrayList<T>();
+                    for (T child : children)
                     {
-                        if (StringUtils.equals(name.getName(), child.getName()))
+                        if (StringUtils.equals(name.getName(), getNodeHandler()
+                                .nodeName(child)))
                         {
                             result.add(child);
                         }
@@ -124,19 +158,20 @@ class ConfigurationNodeIteratorChildren extends ConfigurationNodeIteratorBase
      * Determines the start position of the iteration. Finds the index of the
      * given start node in the children of the root node.
      *
-     * @param node the root node
+     * @param children the children of the root node
      * @param startNode the start node
      * @return the start node's index
      */
-    protected int findStartIndex(ConfigurationNode node,
-            ConfigurationNode startNode)
+    private int findStartIndex(List<T> children, T startNode)
     {
-        for (int index = 0; index < node.getChildrenCount(); index++)
+        int index = 0;
+        for(T child : children)
         {
-            if (node.getChild(index) == startNode)
+            if(child == startNode)
             {
                 return index;
             }
+            index++;
         }
 
         return -1;

@@ -27,38 +27,31 @@ package org.apache.commons.configuration.tree;
  * to override the methods they really need.
  * </p>
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
+ * @param  <T> the type of the nodes processed by this visitor
  */
-public class ConfigurationNodeVisitorAdapter implements
-        ConfigurationNodeVisitor
+public class ConfigurationNodeVisitorAdapter<T> implements
+        ConfigurationNodeVisitor<T>
 {
     /**
-     * Empty dummy implementation of this interface method.
-     *
-     * @param node the node
+     * {@inheritDoc} Empty dummy implementation of this interface method.
      */
     @Override
-    public void visitBeforeChildren(ConfigurationNode node)
+    public void visitBeforeChildren(T node, NodeHandler<T> handler)
     {
     }
 
     /**
-     * Empty dummy implementation of this interface method.
-     *
-     * @param node the node
+     * {@inheritDoc} Empty dummy implementation of this interface method.
      */
     @Override
-    public void visitAfterChildren(ConfigurationNode node)
+    public void visitAfterChildren(T node, NodeHandler<T> handler)
     {
     }
 
     /**
-     * Dummy implementation of this interface method. Returns always <b>false</b>.
-     *
-     * @return the terminate flag
+     * {@inheritDoc} This implementation returns always <b>false</b>; this means
+     * that all nodes in the current hierarchy are traversed.
      */
     @Override
     public boolean terminate()

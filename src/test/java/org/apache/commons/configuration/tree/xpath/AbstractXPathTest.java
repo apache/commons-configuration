@@ -19,9 +19,11 @@ package org.apache.commons.configuration.tree.xpath;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.tree.DefaultConfigurationNode;
+import org.apache.commons.configuration.tree.ImmutableNode;
+import org.apache.commons.configuration.tree.InMemoryNodeModel;
+import org.apache.commons.configuration.tree.NodeHandler;
 import org.apache.commons.jxpath.ri.model.NodeIterator;
+import org.apache.commons.jxpath.ri.model.NodePointer;
 import org.junit.After;
 import org.junit.Before;
 
@@ -30,15 +32,15 @@ import org.junit.Before;
  * creates a hierarchy of nodes in its setUp() method that can be used for test
  * cases.
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  */
 public abstract class AbstractXPathTest
 {
     /** Constant for the name of the counter attribute. */
     protected static final String ATTR_NAME = "counter";
+
+    /** Constant for a name of an attribute of the root node. */
+    protected static final String ATTR_ROOT = "rootAttr";
 
     /** Constant for the name of the first child. */
     protected static final String CHILD_NAME1 = "subNode";
@@ -53,12 +55,16 @@ public abstract class AbstractXPathTest
     protected static final int LEVEL_COUNT = 3;
 
     /** Stores the root node of the hierarchy. */
-    protected ConfigurationNode root;
+    protected ImmutableNode root;
+
+    /** The node handler. */
+    protected NodeHandler<ImmutableNode> handler;
 
     @Before
     public void setUp() throws Exception
     {
         root = constructHierarchy(LEVEL_COUNT);
+        handler = new InMemoryNodeModel(root).getNodeHandler();
     }
 
     /**
@@ -75,16 +81,18 @@ public abstract class AbstractXPathTest
      * child nodes having the names {@code CHILD_NAME1} or
      * {@code CHILD_NAME2}. Their values are named like their parent
      * node with an additional index. Each node has an attribute with a counter
-     * value.
+     * value. The root node has a special attribute named {@value #ATTR_ROOT}
+     * with the value {@code true}.
      *
      * @param levels the number of levels in the hierarchy
      * @return the root node of the hierarchy
      */
-    protected ConfigurationNode constructHierarchy(int levels)
+    protected ImmutableNode constructHierarchy(int levels)
     {
-        ConfigurationNode result = new DefaultConfigurationNode();
-        createLevel(result, levels);
-        return result;
+        ImmutableNode.Builder resultBuilder = new ImmutableNode.Builder();
+        createLevel(resultBuilder, null, levels);
+        resultBuilder.addAttribute(ATTR_ROOT, String.valueOf(true));
+        return resultBuilder.create();
     }
 
     /**
@@ -111,19 +119,18 @@ public abstract class AbstractXPathTest
     }
 
     /**
-     * Returns a list with all configuration nodes contained in the specified
-     * iteration. It is assumed that the iteration contains only elements of
-     * this type.
+     * Returns a list with all node pointers contained in the specified
+     * iteration.
      *
      * @param iterator the iterator
-     * @return a list with configuration nodes obtained from the iterator
+     * @return a list with the node pointers obtained from the iterator
      */
-    protected List<ConfigurationNode> iterationElements(NodeIterator iterator)
+    protected List<NodePointer> iterationElements(NodeIterator iterator)
     {
-        List<ConfigurationNode> result = new ArrayList<ConfigurationNode>();
+        List<NodePointer> result = new ArrayList<NodePointer>();
         for (int pos = 1; iterator.setPosition(pos); pos++)
         {
-            result.add((ConfigurationNode) iterator.getNodePointer().getNode());
+            result.add(iterator.getNodePointer());
         }
         return result;
     }
@@ -131,25 +138,26 @@ public abstract class AbstractXPathTest
     /**
      * Recursive helper method for creating a level of the node hierarchy.
      *
-     * @param parent the parent node
+     * @param parentBuilder the builder for the parent node
+     * @param value the value of the parent node
      * @param level the level counter
      */
-    private void createLevel(ConfigurationNode parent, int level)
+    private void createLevel(ImmutableNode.Builder parentBuilder, String value,
+            int level)
     {
         if (level >= 0)
         {
-            String prefix = (parent.getValue() == null) ? "" : parent
-                    .getValue()
-                    + ".";
+            String prefix = (value == null) ? "" : value + ".";
             for (int i = 1; i <= CHILD_COUNT; i++)
             {
-                ConfigurationNode child = new DefaultConfigurationNode(
-                        (i % 2 == 0) ? CHILD_NAME1 : CHILD_NAME2, prefix + i);
-                parent.addChild(child);
-                child.addAttribute(new DefaultConfigurationNode(ATTR_NAME,
-                        String.valueOf(i)));
-
-                createLevel(child, level - 1);
+                ImmutableNode.Builder childBuilder =
+                        new ImmutableNode.Builder();
+                childBuilder.name((i % 2 == 0) ? CHILD_NAME1 : CHILD_NAME2);
+                String currentValue = prefix + i;
+                childBuilder.value(currentValue);
+                createLevel(childBuilder, currentValue, level - 1);
+                childBuilder.addAttribute(ATTR_NAME, String.valueOf(i));
+                parentBuilder.addChild(childBuilder.create());
             }
         }
     }
