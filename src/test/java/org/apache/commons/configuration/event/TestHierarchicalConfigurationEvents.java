@@ -27,6 +27,7 @@ import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.NodeStructureHelper;
+import org.apache.commons.configuration.tree.QueryResult;
 import org.junit.Test;
 
 /**
@@ -51,12 +52,12 @@ public class TestHierarchicalConfigurationEvents extends
     {
         BaseHierarchicalConfiguration hc = (BaseHierarchicalConfiguration) config;
         String key = EXIST_PROPERTY.substring(0, EXIST_PROPERTY.indexOf('.'));
-//        Collection<ImmutableNode> nodes = hc.getExpressionEngine()
-//                .query(hc.getRootNode(), key, hc.getModel().getNodeHandler());
+        Collection<QueryResult<ImmutableNode>> nodes = hc.getExpressionEngine()
+                .query(hc.getRootNode(), key, hc.getNodeModel().getNodeHandler());
         hc.clearTree(key);
         l.checkEvent(BaseHierarchicalConfiguration.EVENT_CLEAR_TREE, key, null,
                 true);
-        l.checkEvent(BaseHierarchicalConfiguration.EVENT_CLEAR_TREE, key, null /* nodes*/,
+        l.checkEvent(BaseHierarchicalConfiguration.EVENT_CLEAR_TREE, key, nodes,
                 false);
         l.done();
     }

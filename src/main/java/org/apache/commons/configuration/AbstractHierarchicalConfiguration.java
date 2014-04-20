@@ -33,7 +33,6 @@ import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
 import org.apache.commons.configuration.sync.Synchronizer;
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
@@ -626,7 +625,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         try
         {
             fireEvent(EVENT_CLEAR_TREE, key, null, true);
-            List<ConfigurationNode> nodes = clearTreeInternal(key);
+            Object nodes = clearTreeInternal(key);
             fireEvent(EVENT_CLEAR_TREE, key, nodes, false);
         }
         finally
@@ -642,15 +641,14 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * delegates to the node model.
      *
      * @param key the key of the property to be removed
-     * @return a collection with the nodes that have been removed (this is
-     *         needed for firing a meaningful event of type EVENT_CLEAR_TREE)
+     * @return an object with information about the nodes that have been removed
+     *         (this is needed for firing a meaningful event of type
+     *         EVENT_CLEAR_TREE)
      * @since 2.0
      */
-    protected List<ConfigurationNode> clearTreeInternal(String key)
+    protected Object clearTreeInternal(String key)
     {
-        getModel().clearTree(key, this);
-        //TODO return something meaningful
-        return null;
+        return getModel().clearTree(key, this);
     }
 
     /**
