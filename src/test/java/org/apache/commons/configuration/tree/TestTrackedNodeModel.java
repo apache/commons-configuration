@@ -19,6 +19,7 @@ package org.apache.commons.configuration.tree;
 import static org.junit.Assert.assertSame;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.easymock.EasyMock;
@@ -191,10 +192,17 @@ public class TestTrackedNodeModel
     @Test
     public void testClearTree()
     {
-        parentModel.clearTree(KEY, selector, resolver);
+        QueryResult<ImmutableNode> result =
+                QueryResult.createNodeResult(NodeStructureHelper.createNode(
+                        "test", null));
+        List<QueryResult<ImmutableNode>> removed =
+                Collections.singletonList(result);
+        EasyMock.expect(parentModel.clearTree(KEY, selector, resolver))
+                .andReturn(removed);
         EasyMock.replay(parentModel);
 
-        setUpModel().clearTree(KEY, resolver);
+        assertSame("Wrong removed elements", removed,
+                setUpModel().clearTree(KEY, resolver));
         EasyMock.verify(parentModel);
     }
 
@@ -217,7 +225,8 @@ public class TestTrackedNodeModel
     @Test
     public void testClear()
     {
-        parentModel.clearTree(null, selector, resolver);
+        EasyMock.expect(parentModel.clearTree(null, selector, resolver))
+                .andReturn(null);
         EasyMock.replay(parentModel);
 
         setUpModel().clear(resolver);

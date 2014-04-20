@@ -17,6 +17,7 @@
 package org.apache.commons.configuration.tree;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -191,9 +192,10 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode>
         getParentModel().setProperty(key, getSelector(), value, resolver);
     }
 
-    public void clearTree(String key, NodeKeyResolver<ImmutableNode> resolver)
+    public List<QueryResult<ImmutableNode>> clearTree(String key,
+            NodeKeyResolver<ImmutableNode> resolver)
     {
-        getParentModel().clearTree(key, getSelector(), resolver);
+        return getParentModel().clearTree(key, getSelector(), resolver);
     }
 
     public void clearProperty(String key,
