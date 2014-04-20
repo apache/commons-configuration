@@ -112,8 +112,9 @@ public interface NodeModel<T>
      *
      * @param key the key selecting the properties to be removed
      * @param resolver the {@code NodeKeyResolver}
+     * @return an object with information about the data removed
      */
-    void clearTree(String key, NodeKeyResolver<T> resolver);
+    Object clearTree(String key, NodeKeyResolver<T> resolver);
 
     /**
      * Clears the value of a property. This method is similar to

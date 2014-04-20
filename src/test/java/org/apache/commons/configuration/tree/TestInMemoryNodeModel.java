@@ -321,7 +321,7 @@ public class TestInMemoryNodeModel
                 Collections.singletonList(result));
         EasyMock.replay(resolver);
 
-        model.clearTree(KEY, resolver);
+        List<QueryResult<ImmutableNode>> removed = model.clearTree(KEY, resolver);
         ImmutableNode node = nodeForKey(model, "Homer/Ilias");
         assertEquals("Wrong number of children", 2, node.getChildren().size());
         for (ImmutableNode c : node.getChildren())
@@ -329,6 +329,8 @@ public class TestInMemoryNodeModel
             assertNotEquals("Node still found", result.getNode().getNodeName(),
                     c.getNodeName());
         }
+        assertEquals("Wrong number of removed elements", 1, removed.size());
+        assertTrue("Wrong removed element", removed.contains(result));
     }
 
     /**
@@ -477,17 +479,20 @@ public class TestInMemoryNodeModel
         NodeKeyResolver<ImmutableNode> resolver = createResolver();
         InMemoryNodeModel model = new InMemoryNodeModel(ROOT_PERSONAE_TREE);
         final String nodeName = "Puck";
+        QueryResult<ImmutableNode> result = QueryResult.createAttributeResult(
+                nodeForKey(model, nodeName),
+                NodeStructureHelper.ATTR_AUTHOR);
         EasyMock.expect(
                 resolver.resolveKey(ROOT_PERSONAE_TREE, KEY,
                         model.getNodeHandler())).andReturn(
-                Collections.singletonList(QueryResult.createAttributeResult(
-                        nodeForKey(model, nodeName),
-                        NodeStructureHelper.ATTR_AUTHOR)));
+                Collections.singletonList(result));
         EasyMock.replay(resolver);
 
-        model.clearTree(KEY, resolver);
+        List<QueryResult<ImmutableNode>> removed = model.clearTree(KEY, resolver);
         ImmutableNode node = nodeForKey(model, nodeName);
         assertTrue("Got still attributes", node.getAttributes().isEmpty());
+        assertEquals("Wrong number of removed elements", 1, removed.size());
+        assertTrue("Wrong removed element", removed.contains(result));
     }
 
     /**
@@ -539,7 +544,7 @@ public class TestInMemoryNodeModel
         EasyMock.replay(resolver);
 
         TreeData treeDataOld = model.getTreeData();
-        model.clearTree(KEY, resolver);
+        assertTrue("Elements removed", model.clearTree(KEY, resolver).isEmpty());
         assertNotNull("No root node", model.getNodeHandler().getRootNode());
         assertSame("Data was changed", treeDataOld, model.getTreeData());
     }

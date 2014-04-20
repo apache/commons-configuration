@@ -257,11 +257,13 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     /**
      * {@inheritDoc} This implementation checks whether nodes become undefined
      * after subtrees have been removed. If this is the case, such nodes are
-     * removed, too.
+     * removed, too. Return value is a collection with {@code QueryResult}
+     * objects for the elements to be removed from the model.
      */
-    public void clearTree(String key, NodeKeyResolver<ImmutableNode> resolver)
+    public List<QueryResult<ImmutableNode>> clearTree(String key,
+            NodeKeyResolver<ImmutableNode> resolver)
     {
-        clearTree(key, null, resolver);
+        return clearTree(key, null, resolver);
     }
 
     /**
@@ -275,19 +277,25 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param selector the {@code NodeSelector} defining the root node (or
      *        <b>null</b>)
      * @param resolver the {@code NodeKeyResolver}
+     * @return a list with the results to be removed
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
-    public void clearTree(final String key, NodeSelector selector,
-            final NodeKeyResolver<ImmutableNode> resolver)
+    public List<QueryResult<ImmutableNode>> clearTree(final String key,
+            NodeSelector selector, final NodeKeyResolver<ImmutableNode> resolver)
     {
+        final List<QueryResult<ImmutableNode>> removedElements =
+                new LinkedList<QueryResult<ImmutableNode>>();
         updateModel(new TransactionInitializer()
         {
             public boolean initTransaction(ModelTransaction tx)
             {
                 boolean changes = false;
                 TreeData currentStructure = tx.getCurrentData();
-                for (QueryResult<ImmutableNode> result : resolver.resolveKey(
-                        tx.getQueryRoot(), key, currentStructure))
+                List<QueryResult<ImmutableNode>> results = resolver.resolveKey(
+                        tx.getQueryRoot(), key, currentStructure);
+                removedElements.clear();
+                removedElements.addAll(results);
+                for (QueryResult<ImmutableNode> result : results)
                 {
                     if (result.isAttributeResult())
                     {
@@ -311,6 +319,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                 return changes;
             }
         }, selector, resolver);
+
+        return removedElements;
     }
 
     /**
