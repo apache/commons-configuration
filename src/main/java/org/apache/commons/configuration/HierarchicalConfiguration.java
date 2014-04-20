@@ -75,12 +75,7 @@ public interface HierarchicalConfiguration<T>
      * instead of a single property a whole collection of nodes can be added -
      * and thus complete configuration sub trees. E.g. with this method it is
      * possible to add parts of another {@code BaseHierarchicalConfiguration}
-     * object to this object. (However be aware that a
-     * {@code ConfigurationNode} object can only belong to a single
-     * configuration. So if nodes from one configuration are directly added to
-     * another one using this method, the structure of the source configuration
-     * will be broken. In this case you should clone the nodes to be added
-     * before calling {@code addNodes()}.) If the passed in key refers to
+     * object to this object. If the passed in key refers to
      * an existing and unique node, the new nodes are added to this node.
      * Otherwise a new node will be created at the specified position in the
      * hierarchy.
