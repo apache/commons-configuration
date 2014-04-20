@@ -31,7 +31,6 @@ import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileBased;
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.ImmutableNode;
 
@@ -385,7 +384,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    protected List<ConfigurationNode> clearTreeInternal(String key)
+    protected Object clearTreeInternal(String key)
     {
         config.clearTree(makePath(key));
         return Collections.emptyList();
