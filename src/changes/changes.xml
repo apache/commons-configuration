@@ -27,6 +27,13 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-576">
+        A new abstract base class for hierarchical configurations was introduced
+        which supports arbitrary hierarchical data structures. The type of the
+        nodes used by the configuration can now be specified as a generic type
+        argument. This makes the integration of other hierarchical structures
+        easier.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-575">
         Hierarchical configurations now operate on immutable structures.
         Data is no longer represented by ConfigurationNode objects. The
