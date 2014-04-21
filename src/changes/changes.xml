@@ -27,6 +27,11 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-575">
+        Hierarchical configurations now operate on immutable structures.
+        Data is no longer represented by ConfigurationNode objects. The
+        ImmutableNode class now serves as data container.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-563">
         The DefaultExpressionEngine class is now immutable. An instance can be
         shared between multiple configuration objects.
