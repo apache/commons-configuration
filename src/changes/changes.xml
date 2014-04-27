@@ -27,6 +27,9 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-577">
+        The dependency to Commons Collections is no longer needed.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-576">
         A new abstract base class for hierarchical configurations was introduced
         which supports arbitrary hierarchical data structures. The type of the
