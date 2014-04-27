@@ -29,6 +29,7 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.tree.NodeHandler;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>
@@ -515,7 +516,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
     BeanDeclaration createBeanDeclaration(NodeData<?> node)
     {
         for (HierarchicalConfiguration<?> config : getConfiguration()
-                .configurationsAt(node.nodeName()))
+                .configurationsAt(node.escapedNodeName(getConfiguration())))
         {
             if (node.matchesConfigRootNode(config))
             {
@@ -634,6 +635,21 @@ public class XMLBeanDeclaration implements BeanDeclaration
         public String nodeName()
         {
             return handler.nodeName(node);
+        }
+
+        /**
+         * Returns the unescaped name of the node stored in this data object.
+         * This method handles the case that the node name may contain reserved
+         * characters with a special meaning for the current expression engine.
+         * In this case, the characters affected have to be escaped accordingly.
+         *
+         * @param config the configuration
+         * @return the escaped node name
+         */
+        public String escapedNodeName(HierarchicalConfiguration<?> config)
+        {
+            return config.getExpressionEngine().nodeKey(node,
+                    StringUtils.EMPTY, handler);
         }
 
         /**

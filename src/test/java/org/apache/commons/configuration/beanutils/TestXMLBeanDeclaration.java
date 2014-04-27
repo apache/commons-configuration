@@ -341,6 +341,22 @@ public class TestXMLBeanDeclaration
     }
 
     /**
+     * Tests whether reserved characters in the node names of nested bean declarations
+     * are handled correctly. This is related to CONFIGURATION-567.
+     */
+    @Test
+    public void testGetNestedBeanDeclarationsReservedCharacter()
+    {
+        BaseHierarchicalConfiguration config = new BaseHierarchicalConfiguration();
+        String key = KEY + ".address..private";
+        setupBeanDeclaration(config, key, COMPLEX_ATTRIBUTES[0], COMPLEX_VALUES[0]);
+        XMLBeanDeclaration decl = new XMLBeanDeclaration(config, KEY);
+
+        Map<String, Object> nested = decl.getNestedBeanDeclarations();
+        assertTrue("Key not found", nested.containsKey("address.private"));
+    }
+
+    /**
      * Tests whether the factory method for creating nested bean declarations
      * gets called.
      */
@@ -522,7 +538,7 @@ public class TestXMLBeanDeclaration
      * @param names an array with the names of the properties
      * @param values an array with the corresponding values
      */
-    private static void setupBeanDeclaration(HierarchicalConfiguration config,
+    private static void setupBeanDeclaration(HierarchicalConfiguration<?> config,
             String key, String[] names, String[] values)
     {
         for (int i = 0; i < names.length; i++)
