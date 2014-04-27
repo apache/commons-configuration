@@ -39,6 +39,11 @@
         Data is no longer represented by ConfigurationNode objects. The
         ImmutableNode class now serves as data container.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-572">
+        When a CombinedConfiguration is cleared it removes itself as change
+        listener from all child configurations. This fixes a possible memory
+        leak.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-563">
         The DefaultExpressionEngine class is now immutable. An instance can be
         shared between multiple configuration objects.
