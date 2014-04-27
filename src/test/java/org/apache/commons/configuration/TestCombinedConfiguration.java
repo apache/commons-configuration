@@ -18,6 +18,7 @@ package org.apache.commons.configuration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
@@ -447,6 +448,24 @@ public class TestCombinedConfiguration
         assertTrue("Config is not empty", config.isEmpty());
 
         listener.checkEvent(3, 2);
+    }
+
+    /**
+     * Tests whether the combined configuration removes itself as change
+     * listener from the child configurations on a clear operation. This test is
+     * related to CONFIGURATION-572.
+     */
+    @Test
+    public void testClearRemoveChildListener()
+    {
+        AbstractConfiguration child = setUpTestConfiguration();
+        config.addConfiguration(child);
+
+        config.clear();
+        for (ConfigurationListener listener : child.getConfigurationListeners())
+        {
+            assertNotEquals("Still registered", config, listener);
+        }
     }
 
     /**

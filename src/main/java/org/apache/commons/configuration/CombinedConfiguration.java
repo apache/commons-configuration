@@ -655,6 +655,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     @Override
     protected void clearInternal()
     {
+        unregisterListenerAtChildren();
         initChildCollections();
         invalidateInternal();
     }
@@ -968,6 +969,21 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         if (configuration instanceof EventSource)
         {
             ((EventSource) configuration).removeConfigurationListener(this);
+        }
+    }
+
+    /**
+     * Removes this combined configuration as listener from all child
+     * configurations. This method is called on a clear() operation.
+     */
+    private void unregisterListenerAtChildren()
+    {
+        if (configurations != null)
+        {
+            for (ConfigData child : configurations)
+            {
+                unregisterListenerAt(child.getConfiguration());
+            }
         }
     }
 
