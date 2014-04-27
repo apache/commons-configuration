@@ -387,7 +387,7 @@ public final class BeanHelper
     private static Collection<Object> createPropertyCollection(String propName,
             Class<?> propertyClass)
     {
-        Collection<Object> beanCollection = null;
+        Collection<Object> beanCollection;
 
         if (List.class.isAssignableFrom(propertyClass))
         {
@@ -499,12 +499,10 @@ public final class BeanHelper
      * if changes are necessary, they can be made at a single place.
      *
      * @param name the name of the class to be loaded
-     * @param callingClass the calling class
      * @return the class object for the specified name
      * @throws ClassNotFoundException if the class cannot be loaded
      */
-    static Class<?> loadClass(String name, Class<?> callingClass)
-            throws ClassNotFoundException
+    static Class<?> loadClass(String name) throws ClassNotFoundException
     {
         return ClassUtils.getClass(name);
     }
@@ -544,7 +542,7 @@ public final class BeanHelper
         {
             try
             {
-                return loadClass(clsName, factory.getClass());
+                return loadClass(clsName);
             }
             catch (ClassNotFoundException cex)
             {
