@@ -17,8 +17,14 @@
 package org.apache.commons.configuration.tree.xpath;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.io.StringReader;
+import java.util.Iterator;
 
 import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration.ex.ConfigurationException;
+import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,9 +32,6 @@ import org.junit.Test;
  * A test class for XPathExpressionEngine that tests the engine integrated into
  * a hierarchical configuration.
  *
- * @author <a
- *         href="http://commons.apache.org/configuration/team-list.html">Commons
- *         Configuration team</a>
  * @version $Id$
  */
 public class TestXPathExpressionEngineInConfig
@@ -114,5 +117,29 @@ public class TestXPathExpressionEngineInConfig
                 config.getString("tables/table[2]/name"));
         assertEquals("Wrong field type", "int",
                 config.getString("tables/table[1]/fields/field[1]/@type"));
+    }
+
+    /**
+     * Tests whether configuration properties with a namespace can be handled.
+     */
+    @Test
+    public void testPropertiesWithNamespace() throws ConfigurationException
+    {
+        String xml =
+                "<Config>\n"
+                        + "<dsig:Transforms xmlns:dsig=\"http://www.w3.org/2000/09/xmldsig#\">\n"
+                        + "  <dsig:Transform Algorithm=\"http://www.w3.org/TR/1999/REC-xpath-19991116\">\n"
+                        + "    <dsig:XPath xmlns:ietf=\"http://www.ietf.org\" xmlns:pl=\"http://test.test\">self::pl:policy1</dsig:XPath>\n"
+                        + "  </dsig:Transform>\n"
+                        + "  <dsig:Transform Algorithm=\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\"/>\n"
+                        + "</dsig:Transforms>" + "</Config>";
+        FileHandler handler = new FileHandler(config);
+        handler.load(new StringReader(xml));
+
+        for (Iterator<String> it = config.getKeys(); it.hasNext();)
+        {
+            String key = it.next();
+            assertNotNull("No value for " + key, config.getString(key));
+        }
     }
 }
