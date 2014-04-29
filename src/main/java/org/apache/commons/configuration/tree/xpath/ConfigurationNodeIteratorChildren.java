@@ -38,6 +38,12 @@ import org.apache.commons.lang3.StringUtils;
 class ConfigurationNodeIteratorChildren<T> extends
         ConfigurationNodeIteratorBase<T>
 {
+    /** Constant for the prefix separator. */
+    private static final String PREFIX_SEPARATOR = ":";
+
+    /** A format for constructing a node name with a namespace prefix. */
+    private static final String FMT_NAMESPACE = "%s" + PREFIX_SEPARATOR + "%s";
+
     /** The list with the sub nodes to iterate over. */
     private final List<T> subNodes;
 
@@ -108,11 +114,9 @@ class ConfigurationNodeIteratorChildren<T> extends
      */
     private List<T> createSubNodeList(T node, NodeTest test)
     {
-        List<T> children = getNodeHandler().getChildren(node);
-
         if (test == null)
         {
-            return children;
+            return getNodeHandler().getChildren(node);
         }
         else
         {
@@ -120,24 +124,8 @@ class ConfigurationNodeIteratorChildren<T> extends
             {
                 NodeNameTest nameTest = (NodeNameTest) test;
                 QName name = nameTest.getNodeName();
-                if (name.getPrefix() == null)
-                {
-                    if (nameTest.isWildcard())
-                    {
-                        return children;
-                    }
-
-                    List<T> result = new ArrayList<T>();
-                    for (T child : children)
-                    {
-                        if (StringUtils.equals(name.getName(), getNodeHandler()
-                                .nodeName(child)))
-                        {
-                            result.add(child);
-                        }
-                    }
-                    return result;
-                }
+                return nameTest.isWildcard() ? createSubNodeListForWildcardName(
+                        node, name) : createSubNodeListForName(node, name);
             }
 
             else if (test instanceof NodeTypeTest)
@@ -146,12 +134,68 @@ class ConfigurationNodeIteratorChildren<T> extends
                 if (typeTest.getNodeType() == Compiler.NODE_TYPE_NODE
                         || typeTest.getNodeType() == Compiler.NODE_TYPE_TEXT)
                 {
-                    return children;
+                    return getNodeHandler().getChildren(node);
                 }
             }
         }
 
         return Collections.emptyList();
+    }
+
+    /**
+     * Obtains the list of selected nodes for a {@code NodeNameTest} with either
+     * a simple or a qualified name.
+     *
+     * @param node the current node
+     * @param name the name to be selected
+     * @return the list with selected sub nodes
+     */
+    private List<T> createSubNodeListForName(T node, QName name)
+    {
+        String compareName =
+                (name.getPrefix() == null) ? name.getName() : prefixName(
+                        name.getPrefix(), name.getName());
+        List<T> result = new ArrayList<T>();
+        for (T child : getNodeHandler().getChildren(node))
+        {
+            if (StringUtils.equals(compareName, getNodeHandler()
+                    .nodeName(child)))
+            {
+                result.add(child);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Obtains the list of selected sub nodes for a {@code NodeNameTest} with a
+     * wildcard name.
+     *
+     * @param node the current node
+     * @param name the name to be selected
+     * @return the list with selected sub nodes
+     */
+    private List<T> createSubNodeListForWildcardName(T node, QName name)
+    {
+        List<T> children = getNodeHandler().getChildren(node);
+        if (name.getPrefix() == null)
+        {
+            return children;
+        }
+        else
+        {
+            List<T> prefixChildren = new ArrayList<T>(children.size());
+            String prefix = prefixName(name.getPrefix(), null);
+            for (T child : children)
+            {
+                if (StringUtils.startsWith(getNodeHandler().nodeName(child),
+                        prefix))
+                {
+                    prefixChildren.add(child);
+                }
+            }
+            return prefixChildren;
+        }
     }
 
     /**
@@ -175,5 +219,18 @@ class ConfigurationNodeIteratorChildren<T> extends
         }
 
         return -1;
+    }
+
+    /**
+     * Generates a qualified name with a namespace prefix.
+     *
+     * @param prefix the prefix
+     * @param name the name
+     * @return the qualified name
+     */
+    private static String prefixName(String prefix, String name)
+    {
+        return String.format(FMT_NAMESPACE, prefix,
+                StringUtils.defaultString(name));
     }
 }

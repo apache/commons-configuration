@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.commons.configuration.tree.ImmutableNode;
+import org.apache.commons.configuration.tree.NodeStructureHelper;
 import org.apache.commons.jxpath.ri.Compiler;
 import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.compiler.NodeNameTest;
@@ -42,6 +43,12 @@ import org.junit.Test;
  */
 public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
 {
+    /** Constant for a namespace prefix. */
+    private static final String PREFIX = "commons";
+
+    /** Constant for the name of a node with a namespace. */
+    private static final String PREFIX_NODE = "configuration";
+
     /** Stores the node pointer to the root node. */
     private ConfigurationNodePointer<ImmutableNode> rootPointer;
 
@@ -50,9 +57,20 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
     public void setUp() throws Exception
     {
         super.setUp();
-        rootPointer =
-                new ConfigurationNodePointer<ImmutableNode>(root,
-                        Locale.getDefault(), handler);
+        rootPointer = createPointer(root);
+    }
+
+    /**
+     * Helper method for creating a node pointer for a given node.
+     *
+     * @param node the node the pointer points to
+     * @return the node pointer
+     */
+    private ConfigurationNodePointer<ImmutableNode> createPointer(
+            ImmutableNode node)
+    {
+        return new ConfigurationNodePointer<ImmutableNode>(node,
+                Locale.getDefault(), handler);
     }
 
     /**
@@ -232,6 +250,60 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
         it.setPosition(1);
         ImmutableNode node = (ImmutableNode) it.getNodePointer().getNode();
         assertEquals("Wrong start node", "1", node.getValue());
+    }
+
+    /**
+     * Creates a node pointer to a node which also contains a child node with a
+     * namespace prefix.
+     *
+     * @return the node pointer
+     */
+    private ConfigurationNodePointer<ImmutableNode> createPointerWithNamespace()
+    {
+        ImmutableNode node =
+                new ImmutableNode.Builder(2)
+                        .addChild(root)
+                        .addChild(
+                                NodeStructureHelper.createNode(PREFIX + ':'
+                                        + PREFIX_NODE, "test")
+                        ).create();
+        return createPointer(node);
+    }
+
+    /**
+     * Tests whether all nodes with a specific prefix can be obtained.
+     */
+    @Test
+    public void testIterateWithWildcardTestPrefix()
+    {
+        NodeNameTest test = new NodeNameTest(new QName(PREFIX, "*"));
+        ConfigurationNodeIteratorChildren<ImmutableNode> it =
+                new ConfigurationNodeIteratorChildren<ImmutableNode>(
+                        createPointerWithNamespace(), test, false, null);
+        assertEquals("Wrong number of elements", 1, iteratorSize(it));
+        for (NodePointer p : iterationElements(it))
+        {
+            assertEquals("Wrong element", PREFIX + ':' + PREFIX_NODE, p
+                    .getName().getName());
+        }
+    }
+
+    /**
+     * Tests whether nodes with a matching namespace prefix can be obtained.
+     */
+    @Test
+    public void testIterateWithMatchingPrefixTest()
+    {
+        NodeNameTest test = new NodeNameTest(new QName(PREFIX, PREFIX_NODE));
+        ConfigurationNodeIteratorChildren<ImmutableNode> it =
+                new ConfigurationNodeIteratorChildren<ImmutableNode>(
+                        createPointerWithNamespace(), test, false, null);
+        assertEquals("Wrong number of elements", 1, iteratorSize(it));
+        for (NodePointer p : iterationElements(it))
+        {
+            assertEquals("Wrong element", PREFIX + ':' + PREFIX_NODE, p
+                    .getName().getName());
+        }
     }
 
     /**
