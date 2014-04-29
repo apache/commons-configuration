@@ -17,13 +17,13 @@
 package org.apache.commons.configuration.tree.xpath;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * A specialized node iterator implementation that deals with attribute nodes.
@@ -91,25 +91,25 @@ class ConfigurationNodeIteratorAttribute<T> extends
     private List<String> createAttributeDataList(
             ConfigurationNodePointer<T> parent, QName name)
     {
-        if (name.getPrefix() != null)
-        {
-            // namespace prefixes are not supported
-            return Collections.emptyList();
-        }
-
         List<String> result = new ArrayList<String>();
         if (!WILDCARD.equals(name.getName()))
         {
-            addAttributeData(parent, result, name.getName());
+            addAttributeData(parent, result, qualifiedName(name));
         }
         else
         {
             Set<String> names =
                     new LinkedHashSet<String>(parent.getNodeHandler()
                             .getAttributes(parent.getConfigurationNode()));
+            String prefix =
+                    (name.getPrefix() != null) ? prefixName(name.getPrefix(),
+                            null) : null;
             for (String n : names)
             {
-                addAttributeData(parent, result, n);
+                if (prefix == null || StringUtils.startsWith(n, prefix))
+                {
+                    addAttributeData(parent, result, n);
+                }
             }
         }
 

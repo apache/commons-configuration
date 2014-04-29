@@ -17,8 +17,10 @@
 package org.apache.commons.configuration.tree.xpath;
 
 import org.apache.commons.configuration.tree.NodeHandler;
+import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.model.NodeIterator;
 import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>
@@ -36,6 +38,12 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  */
 abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
 {
+    /** Constant for the prefix separator. */
+    private static final String PREFIX_SEPARATOR = ":";
+
+    /** A format for constructing a node name with a namespace prefix. */
+    private static final String FMT_NAMESPACE = "%s" + PREFIX_SEPARATOR + "%s";
+
     /** Stores the parent node pointer. */
     private final ConfigurationNodePointer<T> parent;
 
@@ -187,4 +195,31 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
      * @return the number of elements
      */
     protected abstract int size();
+
+    /**
+     * Generates a qualified name with a namespace prefix.
+     *
+     * @param prefix the prefix
+     * @param name the name (may be <b>null</b>)
+     * @return the qualified name
+     */
+    protected static String prefixName(String prefix, String name)
+    {
+        return String.format(FMT_NAMESPACE, prefix,
+                StringUtils.defaultString(name));
+    }
+
+    /**
+     * Returns the qualified name from the given {@code QName}. If the name has
+     * no namespace, result is the simple name. Otherwise, the namespace prefix
+     * is added.
+     *
+     * @param name the {@code QName}
+     * @return the qualified name
+     */
+    protected static String qualifiedName(QName name)
+    {
+        return (name.getPrefix() == null) ? name.getName() : prefixName(
+                name.getPrefix(), name.getName());
+    }
 }

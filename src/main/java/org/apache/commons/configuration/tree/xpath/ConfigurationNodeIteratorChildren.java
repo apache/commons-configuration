@@ -38,11 +38,6 @@ import org.apache.commons.lang3.StringUtils;
 class ConfigurationNodeIteratorChildren<T> extends
         ConfigurationNodeIteratorBase<T>
 {
-    /** Constant for the prefix separator. */
-    private static final String PREFIX_SEPARATOR = ":";
-
-    /** A format for constructing a node name with a namespace prefix. */
-    private static final String FMT_NAMESPACE = "%s" + PREFIX_SEPARATOR + "%s";
 
     /** The list with the sub nodes to iterate over. */
     private final List<T> subNodes;
@@ -152,9 +147,7 @@ class ConfigurationNodeIteratorChildren<T> extends
      */
     private List<T> createSubNodeListForName(T node, QName name)
     {
-        String compareName =
-                (name.getPrefix() == null) ? name.getName() : prefixName(
-                        name.getPrefix(), name.getName());
+        String compareName = qualifiedName(name);
         List<T> result = new ArrayList<T>();
         for (T child : getNodeHandler().getChildren(node))
         {
@@ -221,16 +214,4 @@ class ConfigurationNodeIteratorChildren<T> extends
         return -1;
     }
 
-    /**
-     * Generates a qualified name with a namespace prefix.
-     *
-     * @param prefix the prefix
-     * @param name the name
-     * @return the qualified name
-     */
-    private static String prefixName(String prefix, String name)
-    {
-        return String.format(FMT_NAMESPACE, prefix,
-                StringUtils.defaultString(name));
-    }
 }

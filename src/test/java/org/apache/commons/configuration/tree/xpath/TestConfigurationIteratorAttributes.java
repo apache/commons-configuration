@@ -40,6 +40,12 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
     /** Constant for the name of another test attribute.*/
     private static final String TEST_ATTR = "test";
 
+    /** Constant for a namespace prefix. */
+    private static final String NAMESPACE = "commons";
+
+    /** Constant for an attribute with a namespace prefix. */
+    private static final String NS_ATTR = NAMESPACE + ":attr";
+
     /** Stores the node pointer of the test node.*/
     private ConfigurationNodePointer<ImmutableNode> pointer;
 
@@ -51,7 +57,9 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
 
         // Adds further attributes to the test node
         ImmutableNode orgNode = root.getChildren().get(1);
-        ImmutableNode testNode = orgNode.setAttribute(TEST_ATTR, "yes");
+        ImmutableNode testNode =
+                orgNode.setAttribute(TEST_ATTR, "yes").setAttribute(NS_ATTR,
+                        "configuration");
         pointer =
                 new ConfigurationNodePointer<ImmutableNode>(testNode,
                         Locale.getDefault(), handler);
@@ -66,7 +74,7 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
         ConfigurationNodeIteratorAttribute<ImmutableNode> it =
                 new ConfigurationNodeIteratorAttribute<ImmutableNode>(pointer,
                         new QName(null, "*"));
-        assertEquals("Wrong number of attributes", 2, iteratorSize(it));
+        assertEquals("Wrong number of attributes", 3, iteratorSize(it));
         List<NodePointer> attrs = iterationElements(it);
         Set<String> attrNames = new HashSet<String>();
         for (NodePointer np : attrs)
@@ -75,6 +83,7 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
         }
         assertTrue("First attribute not found", attrNames.contains(ATTR_NAME));
         assertTrue("Second attribute not found", attrNames.contains(TEST_ATTR));
+        assertTrue("Namespace attribute not found", attrNames.contains(NS_ATTR));
     }
 
     /**
@@ -104,15 +113,42 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
     }
 
     /**
-     * Tests iteration if a namespace is specified. This is not supported, so
-     * the iteration should be empty.
+     * Tests iteration if an unknown namespace is specified.
      */
     @Test
-    public void testIterateNamespace()
+    public void testIterateNamespaceUnknown()
     {
         ConfigurationNodeIteratorAttribute<ImmutableNode> it =
                 new ConfigurationNodeIteratorAttribute<ImmutableNode>(pointer,
                         new QName("test", "*"));
         assertEquals("Found attributes", 0, iteratorSize(it));
+    }
+
+    /**
+     * Tests whether a specific attribute with a namespace can be selected.
+     */
+    @Test
+    public void testIterateNamespaceAttribute()
+    {
+        ConfigurationNodeIteratorAttribute<ImmutableNode> it =
+                new ConfigurationNodeIteratorAttribute<ImmutableNode>(pointer,
+                        new QName(NAMESPACE, "attr"));
+        assertEquals("Wrong number of attributes", 1, iteratorSize(it));
+        assertEquals("Wrong attribute", NS_ATTR, iterationElements(it).get(0)
+                .getName().getName());
+    }
+
+    /**
+     * Tests whether a wildcard can be used together with a namespace.
+     */
+    @Test
+    public void testIterateNamespaceWildcard()
+    {
+        ConfigurationNodeIteratorAttribute<ImmutableNode> it =
+                new ConfigurationNodeIteratorAttribute<ImmutableNode>(pointer,
+                        new QName(NAMESPACE, "*"));
+        assertEquals("Wrong number of attributes", 1, iteratorSize(it));
+        assertEquals("Wrong attribute", NS_ATTR, iterationElements(it).get(0)
+                .getName().getName());
     }
 }
