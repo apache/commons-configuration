@@ -198,52 +198,6 @@
       </p>
       </subsection>
 
-      <subsection name="Mixing Configuration Sources">
-      <p>
-        Often you want to provide a base set of configuration values, but allow the user to easily
-        override them for their specific environment.  Well one way is to hard code the default
-        values into your code, and have then provide a property file that overrides this.  However,
-        this is a very rigid way of doing things. Instead, with the <code>CompositeConfiguration</code>
-        you can provide many different ways of setting up a configuration. You can either do it
-        manually:
-      </p>
-
-<source>
-CompositeConfiguration config = new CompositeConfiguration();
-config.addConfiguration(new SystemConfiguration());
-config.addConfiguration(new PropertiesConfiguration("application.properties"));
-</source>
-
-      <p>or via the <code>ConfigurationFactory</code> class:</p>
-
-<source>
-ConfigurationFactory factory = new ConfigurationFactory("config.xml");
-Configuration config = factory.getConfiguration();
-</source>
-
-      <p>
-        The <code>config.xml</code> file used in the example above is a configuration descriptor,
-        it specifies the Configuration objects to load. Here is an example of descriptor:
-      </p>
-
-<source><![CDATA[
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-
-<configuration>
-  <system/>
-  <properties fileName="application.properties"/>
-</configuration>
-]]></source>
-
-      <p>
-        What this says is that we are loading up all system properties, as well as the properties
-        file <code>application.properties</code>. The order of precedence is first to last. So in
-        the above example, if a property is not found in the system properties, it'll be searched
-        in the properties file. This allows you to set up default values in a properties file, and
-        override them with the system properties.
-      </p>
-      </subsection>
-
       <subsection name="Threading issues">
       <p>
         The most concrete implementations of the <code>Configuration</code>
