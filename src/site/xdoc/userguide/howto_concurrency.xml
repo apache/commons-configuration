@@ -173,8 +173,8 @@ finally
     </p>
     </subsection>
 
-	<subsection name="Other flags">
-	<p>
+    <subsection name="Other flags">
+    <p>
       In addition to the actual configuration data, each <code>Configuration</code>
       object has some flags controlling its behavior. One example for such a
       flag is the boolean <code>throwExceptionOnMissing</code> property. Other
@@ -213,35 +213,44 @@ finally
     </p>
     <p>
       <ul>
-        <li>All hierarchical configurations support methods for creating
-        <code><a href="../apidocs/org/apache/commons/configuration/SubnodeConfiguration.html">
-        SubnodeConfiguration</a></code> objects. The <code>SubnodeConfiguration</code>
-        operates on the same nodes as its parent configuration. Therefore, it
-        uses the same <code>Synchronizer</code> per default. Actually, the
-        relation between a configuration and its subconfigurations is pretty
-        complex because under certain circumstances updates have to be
-        propagated between all parties (also refer to the Javadocs of the
-        <code>configurationAt(String, boolean)</code> method of
+        <li>All hierarchical configurations derived from
         <code><a href="../apidocs/org/apache/commons/configuration/BaseHierarchicalConfiguration.html">
-        BaseHierarchicalConfiguration</a></code>). To achieve this, the creation
-        of a <code>SubnodeConfiguration</code> requires updating of some internal
-        data structures to keep track of all involved <code>Configuration</code>
-        objects. Therefore, this operation is run with a write lock held which
-        may not be obvious.</li>
+        BaseHierarchicalConfiguration</a></code> internally operate on a nodes
+        structure implemented by immutable nodes. This is beneficial for
+        concurrent access. It is even possible to share (sub) trees of
+        configuration nodes between multiple configuration objects.
+        Updates of these structures are implemented in a thread-safe and
+        non-blocking way - even when using the default <code>NoOpSynchronizer</code>.
+        So the point to take is that when using hierarchical configurations
+        it is not required to set a special synchronizer because safe
+        concurrent access is already a basic feature of these classes.
+        The only exception is that change events caused by updates of a
+        configuration's data are not guaranteed to be delivered in a
+        specific order. For instance, if one thread clears a configuration
+        and immediately afterwards another thread adds a property, it may be
+        the case that the clear event arrives after the add property event at
+        an event listener. If the listener relies on the fact that the
+        configuration is empty now, it may be up for a surprise. In cases in
+        which the sequence of generated configuration events is important, a
+        fully functional synchronizer object should be set.</li>
         <li><code><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
-        CombinedConfiguration</a></code> is also a bit special regarding lock
-        handling. An instance manages a node tree which is constructed
+        CombinedConfiguration</a></code> is a bit special regarding lock
+        handling. Although derived from <code>BaseHierarchicalConfiguration</code>,
+        this class is not thread-safe per default. So if accessed by multiple
+        threads, a suitable synchronizer has to be set.
+        An instance manages a node tree which is constructed
         dynamically from the nodes of all contained configurations using the
         current <em>node combiner</em>. When one of the child configurations is
-        changed the node tree is reset so that is has to be re-constructed on
+        changed the node tree is reset so that it has to be re-constructed on
         next access. Because this operation changes the configuration's internal
         state it is performed with a write lock held. So even if only data is
         read from a <code>CombinedConfiguration</code>, it may be the case that
         temporarily a write lock is obtained for constructing the combined node
-        tree. Because the combined tree is built up from the nodes of the child
-        configurations it is recommended that child configurations share the
-        same <code>Synchronizer</code> with their parent
-        <code>CombinedConfiguration</code>.</li>
+        tree. Note that the synchronizers used for the children of a combined
+        configuration are independent. For instance, if configuration objects
+        derived from <code>BaseHierarchicalConfiguration</code> are added as
+        children to a <code>CombinedConfiguration</code>, they can continue
+        using a <code>NoOpSynchronizer</code>.</li>
         <li>Derived from <code>CombinedConfiguration</code> is
         <code><a href="../apidocs/org/apache/commons/configuration/DynamicCombinedConfiguration.html">
         DynamicCombinedConfiguration</a></code> which extends its base class by
@@ -266,7 +275,7 @@ finally
       Objects that are not changed typically play well in an environment with
       multiple threads - provided that they are initialized in a safe way.
       For the safe initialization of <code>Configuration</code> objects
-      specialized builders are responsible. These are classes derived from
+      specialized <a href="howto_builders.html">builders</a> are responsible. These are classes derived from
       <code><a href="../apidocs/org/apache/commons/configuration/builder/BasicConfigurationBuilder.html">
       BasicConfigurationBuilder</a></code>. Configuration builders are designed
       to be thread-safe: their <code>getConfiguration()</code> method is
@@ -319,7 +328,7 @@ finally
       by an immutable configuration.
     </p>
     </subsection>
-	</section>
+  </section>
 </body>
 
 </document>
