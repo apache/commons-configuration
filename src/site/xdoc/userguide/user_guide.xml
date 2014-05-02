@@ -60,6 +60,8 @@
         <li><a href="howto_builders.html#Configuration_Builders">Configuration Builders</a></li>
         <li><a href="howto_builders.html#BasicConfigurationBuilder">BasicConfigurationBuilder</a></li>
         <li><a href="howto_builders.html#Initialization_Parameters">Initialization Parameters</a></li>
+        <li><a href="howto_builders.html#Default_Initialization_Parameters">Default Initialization Parameters</a></li>
+        <li><a href="howto_builders.html#Defining_Default_Parameters_Handlers">Defining Default Parameters Handlers</a></li>
       </ul>
       <li><a href="howto_properties.html#Properties_files">Properties files</a></li>
       <ul>

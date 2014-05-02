@@ -66,8 +66,8 @@
       the builder is asked for its <code>Configuration</code> object; from
       there the actual configuration settings can be obtained. While this
       approach introduces another level of indirection, it enables the
-      application to add new functionality by replacing the builder
-      implementation transparently. For instance, if at a later stage the
+      application to add new functionality transparently by replacing the builder
+      implementation. For instance, if at a later stage the
       requirement occurs to react on external changes of configuration data,
       the builder object can be replaced by a reloading-aware builder. This
       enables support for reloading all over in the application immediately
@@ -116,7 +116,7 @@
       object. At this stage of the discussion, the details of this example will
       not yet be understandable; they will be explained in the following
       sections. This is just to get a feeling how the usage of configuration
-      builders looks in practice:
+      builders looks like in practice:
     </p>
     <source><![CDATA[
 Parameters params = new Parameters();
@@ -127,6 +127,7 @@ BasicConfigurationBuilder<PropertiesConfiguration> builder =
                         .setListDelimiterHandler(
                             new DefaultListDelimiterHandler(','))
                         .setThrowExceptionOnMissing(true));
+PropertiesConfiguration config = builder.getConfiguration();
 ]]></source>
     </subsection>
 
@@ -182,10 +183,11 @@ XMLBuilderParams xmlParams = params.xml()
       of the basic initialization parameters common to all configuration
       classes, the encoding and the file name parameters are common to all
       file-based configurations, the expression engine parameter is supported
-      by all hierarchical configurations, and the <code>validating</code> is
+      by all hierarchical configurations, and the <code>validating</code> flag is
       specific to XML configurations. We will not describe all available
       initialization parameters in detail now; they are explained in the
-      sections dealing with specific <code>Configuration</code> classes. For
+      sections dealing with specific <code>Configuration</code> classes (and
+      of course, the Javadoc is the ultimate reference). For
       now a short overview over the existing parameter objects and the
       corresponding methods in the <code>Parameters</code> class should be
       sufficient:
@@ -262,15 +264,15 @@ XMLBuilderParams xmlParams = params.xml()
     </p>
     <p>
       After a parameters object has been created and initialized via its fluent
-      <code>set()</code> methods it can be passed to a configuration builder's
+      <code>set()</code> methods, it can be passed to a configuration builder's
       <code>configure()</code> method. This method extracts all properties from
       the passed in object and stores them internally. They are then used to
       initialize a newly created <code>Configuration</code> object. Calling
       <code>configure()</code> another time with a different parameters object
-      overrides all properties set so far; in fact, the existing properties are
+      overrides all properties set so far; more precise, the existing properties are
       cleared, and the new ones are copied over. However, it is possible to
-      pass multiple parameters at once to the <code>configure()</code> method
-      (it has a varargs parameter). In this case, the union of all parameters
+      pass multiple parameters objects at once to the <code>configure()</code> method
+      (it has a varargs argument). In this case, the union of all parameters
       is constructed.
     </p>
     <p>
@@ -288,6 +290,199 @@ XMLBuilderParams xmlParams = params.xml()
       ensured that the configuration object to be constructed supports all of
       these parameters; otherwise, an exception is thrown when the instance is
       created.
+    </p>
+    </subsection>
+
+    <subsection name="Default Initialization Parameters">
+    <p>
+      Big applications may use configuration data from multiple files or
+      sources. If they need special settings for all their configuration
+      objects, there is the issue that these settings have to be repeated
+      again and again for each configuration source to be created. For instance,
+      all files to be read may have a specific encoding, or hierarchical
+      configurations should use a special expression engine. In a naive
+      approach, all these settings have to be set on each configuration builder
+      used by the application.
+    </p>
+    <p>
+      To make life of developers easier and in compliance with the DRY (don't
+      repeat yourself) principle, <em>Commons Configuration</em> supports
+      default initialization parameters for configuration sources. It was
+      already shown how an instance of the
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Parameters.html">
+      Parameters</a></code> class is used to create initialization parameter
+      objects for various types of configuration sources. In addtion to the
+      methods for creating these objects, <code>Parameters</code> also deals
+      with default values for them. The mechanisms are as follows:
+    </p>
+    <p>
+      <code>Parameters</code> defines methods for registering so-called
+      <em>defaults handler</em> objects. A defaults handler is an object
+      implementing the
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/DefaultParametersHandler.html">
+      DefaultParametersHandler</a></code> interface. This interface defines a
+      single method which accepts a parameters object of a generic type and
+      populates it according to its logic. Such handlers can be registered for
+      specific initialization parameter interfaces.
+    </p>
+    <p>
+      When an initialization parameters object of a specific class is to be
+      created the <code>Parameters</code> instance checks whether
+      <code>DefaultParameterHandler</code> objects have been registered for this
+      class or its base classes. If this is the case, the matching handler
+      objects are invoked on the newly created parameters object - they can now
+      initialize it as they like.
+    </p>
+    <p>
+      Note that the inheritance hierarchy of parameters objects is implicitly
+      taken into account: A defaults handler registered for file-based
+      parameters is also invoked for XML parameters because XML parameters are
+      derived from file-based parameters and thus contain all the properties
+      the handler may initialize. When registering a defaults handler it is
+      also supported to specify the start class in the inheritance hierarchy of
+      parameters objects on which the handler should be executed. This makes it
+      possible for instance to register a handler for file-based parameters,
+      but define that it should be invoked only for XML parameters. That way
+      special file-related properties can be set for XML configurations, but
+      they will not apply to, say, properties configurations although they are
+      file-based, too. When registering default handlers the registration order
+      matters. Defaults handlers are invoked in the order they have been
+      registered; so a handler registered later can override initializations
+      made by a handler registered before. With these options a very
+      fine-grained control of initialization parameters is possible;
+      especially, different initialization parameters can be set for specific
+      configuration classes even if the parameters are of the same (base) type.
+    </p>
+    <p>
+      After all this theory let's come to some concrete examples. For now we
+      assume that we already have some <code>DefaultParametersHandler</code>
+      implementations in place that we want to register on a <code>Parameters</code>
+      object. (The next section will focus on the implementation of handlers.)
+      In this example the following is to be achieved:
+      <ul>
+        <li>There is a <code>CommonDefaultsHandler</code> class setting
+        default initialization parameters to be applied for all configuration
+        sources.</li>
+        <li>There is a defaults handler for file-based parameters which sets
+        the expected encoding of the file: <code>EncodingDefaultsHandler</code>.
+        We want this handler to be applied on XML configurations only.</li>
+        <li>Our application will also load some properties files. For these
+        configuration sources we want an alternative setting of some basic
+        properties. This is implemented by a handler class called
+        <code>PropertiesDefaultHandler</code>.</li>
+      </ul>
+      The code for this initialization could look as follows:
+    </p>
+    <source><![CDATA[
+// Create the defaults handler objects.
+DefaultParametersHandler<BasicBuilderParameters> basicHandler =
+    new CommonDefaultsHandler();
+DefaultParametersHandler<FileBasedBuilderParameters> encodingHandler =
+    new EncodingDefaultsHandler("iso-8859-1");
+DefaultParametersHandler<PropertiesBuilderParameters> propsHandler =
+    new PropertiesDefaultHandler();
+
+// Register the handlers
+Parameters params = new Parameters();
+params.registerDefaultsHandler(BasicBuilderParameters.class, basicHandler);
+params.registerDefaultsHandler(FileBasedBuilderParameters.class,
+    encodingHandler, XMLBuilderParameters.class);
+params.registerDefaultsHandler(PropertiesBuilderParameters.class, propsHandler);
+]]></source>
+    <p>
+      Now every time this <code>Parameters</code> instance is used for the
+      creation of specific initialization parameters objects, the defaults
+      handlers registered are applied. So the produced parameters objects are
+      already initialized (at least partly).
+      This registration of defaults handlers could be done in the startup phase
+      of an application. The <code>Parameters</code> class is thread-safe, so
+      an application can create and configure a single instance and use it
+      accross all modules to create parameter objects. The actual functionality
+      of managing and invoking <code>DefaultParametersHandler</code> objects is
+      implememented by the
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/DefaultParametersHandler.html">
+      DefaultParametersManager</a></code> class - <code>Parameters</code> just
+      delegates to a wrapped instance. In some usage scenarios it may make sense
+      to use <code>DefaultParametersManager</code> directly.
+    </p>
+    </subsection>
+
+    <subsection name="Defining Default Parameters Handlers">
+    <p>
+      After the registration of default handlers has been discussed, it is still
+      open how such handlers can be created. Because the
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/DefaultParametersHandler.html">
+      DefaultParametersHandler</a></code> interface is very simple, it is easy
+      to create a specialized implementation. The following listing shows how
+      the <code>EncodingDefaultsHandler</code> from the previous example could
+      be implemented:
+    </p>
+    <source><![CDATA[
+public class EncodingDefaultsHandler
+    implements DefaultParametersHandler<FileBasedBuilderParameters>
+{
+    /** The encoding to be set. */
+    private final String encoding;
+
+    /**
+     * Creates a new instance and sets the encoding.
+     * @param enc the encoding to be set on the parameters objects
+     */
+    public EncodingDefaultsHandler(String enc)
+    {
+        encoding = enc;
+    }
+
+    @Override
+    public void initializeDefaults(FileBasedBuilderParameters parameters)
+    {
+        parameters.setEncoding(encoding);
+    }
+}
+]]></source>
+    <p>
+      The point to take is that in the <code>initializeDefaults()</code> method
+      arbitrary initializations can be performed. In many scenarios the
+      implementation of a specialized <code>DefaultParametersHandler</code> is
+      not necessary because <em>Commons Configuration</em> provides a pretty
+      generic default implementation:
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/CopyObjectDefaultHandler.html">
+      CopyObjectDefaultHandler</a></code>. The name stems from the fact that a
+      handler is constructed from a parameters object to be used as reference.
+      In the <code>initializeDefaults()</code> method the handler copies all
+      properties of this reference object onto the object to be initialized.
+      So all a developer needs to do is creating a parameters object of the
+      correct type, initializing all desired properties, and passing this object to
+      a newly created <code>CopyObjectDefaultHandler</code> object. Let's
+      explore how the <code>EncodingDefaultsHandler</code> class discussed
+      previously class can be replaced by <code>CopyObjectDefaultHandler</code>:
+    </p>
+    <source><![CDATA[
+Parameters params = new Parameters();
+
+// Create a file-based parameters object to be used as copy source
+FileBasedBuilderParameters encParams =
+    params.fileBased().setEncoding("iso-8859-1");
+
+// Perform handler registration with a copy handler
+params.registerDefaultsHandler(FileBasedBuilderParameters.class,
+    new CopyObjectDefaultHandler(encParams), XMLBuilderParameters.class);
+]]></source>
+    <p>
+      So this fragment has the same effect (regarding the initialization of the
+      <em>encoding</em> property) as the example using the custom
+      <code>EncodingDefaultsHandler</code> class - but without the need to
+      provide a custom <code>DefaultParametersHandler</code> implementation.
+      Because of the flexibility of <code>CopyObjectDefaultHandler</code>
+      custom implementations are probably only required for initializations
+      that depend on conditional logic.
+    </p>
+    <p>
+      This completes the description of the builder concept in <em>Commons
+      Configuration</em> and the <code>BasicConfigurationBuilder</code> base
+      class. Following chapters will deal with specialized builders and
+      explain the extended functionality they provide to the user of this
+      library.
     </p>
     </subsection>
   </section>
