@@ -89,6 +89,114 @@
 
       </p>
       </subsection>
+      
+      <subsection name="The Configuration interface">
+      <p>
+        All the classes in this package that represent different kinds of configuration
+        sources share a single interface:
+        <code><a href="../apidocs/org/apache/commons/configuration/Configuration.html">Configuration</a></code>.
+        This interface allows you to access and manipulate configuration properties
+        in a generic way.
+      </p>
+      <p>
+        The methods defined in the <code>Configuration</code> interface can be
+        divided into methods which query data from the configuration and
+        methods which alter the configuration object. In fact, the
+        <code>Configuration</code> interface extends a base interface called
+        <code><a href="../apidocs/org/apache/commons/configuration/ImmutableConfiguration.html">
+        ImmutableConfiguration</a></code>. <code>ImmutableConfiguration</code>
+        defines all methods which read data from a configuration object without
+        changing its state. <code>Configuration</code> adds methods for
+        manipulating the configuration.
+      </p>
+      <p>
+        A major part of the methods defined in the <code>ImmutableConfiguration</code>
+        interface deals with retrieving properties of different data types. All
+        these methods take a key as an argument that points to the desired
+        property. This is a string value whose exact meaning depends on the
+        concrete <code>Configuration</code> implementation used. They try to
+        find the property specified by the passed in key and convert it to their
+        target type; this converted value will be returned. There are also
+        overloaded variants of all methods that allow to specify a default value,
+        which will be returned if the property cannot be found. The following
+        data types are supported out of the box:
+        <ul>
+          <li>BigDecimal</li>
+          <li>BigInteger</li>
+          <li>boolean</li>
+          <li>byte</li>
+          <li>double</li>
+          <li>float</li>
+          <li>int</li>
+          <li>long</li>
+          <li>short</li>
+          <li>String</li>
+        </ul>
+        The names of these methods start with <code>get</code> followed by their
+        data type. The <code>getString()</code> method for instance will return
+        String values, <code>getInt()</code> will operate on integers.
+      </p>
+      <p>
+        Properties can have multiple values, so it is also possible to query a
+        list or an array containing all of the available values. This is done
+        using the <code>getList()</code> or <code>getArray()</code> methods.
+      </p>
+      <p>
+        In addition, there are a couple of generic get methods which try to
+        convert the requested property value to a specified data type. Such
+        conversions are also supported for the elements of collections or arrays.
+        More details about conversions can be found in the section
+        <a href="howto_basicfeatures.html#Data_type_conversions">
+        Data type conversions</a>.
+      </p>
+      <p>
+        The <code>subset()</code> method is useful if configuration settings
+        are organized in a specific structure and a module of an
+        application is only interested in a part of this structure.
+        <code>subset()</code> is passed a String with a key prefix and returns
+        a <code>Configuration</code> object that contains only the keys starting
+        with this prefix.
+      </p>
+      <p>
+        For manipulating properties or their values the following methods can
+        be used:
+        <dl>
+          <dt><code>addProperty()</code></dt>
+          <dd>Adds a new property to the configuration. If this property already
+          exists, another value is added to it (so it becomes a multi-valued
+          property).</dd>
+          <dt><code>clearProperty()</code></dt>
+          <dd>Removes the specified property from the configuration.</dd>
+          <dt><code>setProperty()</code></dt>
+          <dd>Overwrites the value of the specified property. This is the same
+          as removing the property and then calling <code>addProperty()</code>
+          with the new property value.</dd>
+          <dt><code>clear()</code></dt>
+          <dd>Wipes out the whole configuration</dd>
+        </dl>
+      </p>
+      </subsection>
+
+      <subsection name="Immutable Configurations">
+      <p>
+        Most of the classes provided by the <em>Commons Configuration</em>
+        library implement the <code>Configuration</code> interface, i.e. they
+        allow client code to change their internal state. For some use cases,
+        this may not be desired. For instance, an application may want to
+        protect a central configuration object against uncontrolled modifications
+        done by sub modules.
+      </p>
+      <p>
+        There is an easy way to convert a normal <code>Configuration</code>
+        object into an <code>ImmutableConfiguration</code>: just pass the
+        configuration in question to the <code>unmodifiableConfiguration()</code>
+        method of the
+        <code><a href="../apidocs/org/apache/commons/configuration/ConfigurationUtils.html">
+        ConfigurationUtils</a></code> utility class. This results in an
+        immutable configuration containing the same data as the original
+        configuration.
+      </p>
+      </subsection>
 
       <subsection name="Mixing Configuration Sources">
       <p>
@@ -133,68 +241,6 @@ Configuration config = factory.getConfiguration();
         the above example, if a property is not found in the system properties, it'll be searched
         in the properties file. This allows you to set up default values in a properties file, and
         override them with the system properties.
-      </p>
-      </subsection>
-      
-      <subsection name="The Configuration interface">
-      <p>
-        All the classes in this package that represent different kinds of configuration
-        sources share a single interface:
-        <code><a href="../apidocs/org/apache/commons/configuration/Configuration.html">Configuration</a></code>.
-        This interface allows you to access and manipulate configuration properties
-        in a generic way.
-      </p>
-      <p>
-        A major part of the methods defined in the <code>Configuration</code>
-        interface deals with retrieving properties of different data types. All
-        these methods take a key as an argument that points to the desired
-        property. This is a string value whose exact meaning depends on the
-        concrete <code>Configuration</code> implementation used. They try to
-        find the property specified by the passed in key and convert it to their
-        target type; this converted value will be returned. There are also
-        overloaded variants of all methods that allow to specify a default value,
-        which will be returned if the property cannot be found. The following
-        data types are supported:
-        <ul>
-          <li>BigDecimal</li>
-          <li>BigInteger</li>
-          <li>boolean</li>
-          <li>byte</li>
-          <li>double</li>
-          <li>float</li>
-          <li>int</li>
-          <li>long</li>
-          <li>short</li>
-          <li>String</li>
-        </ul>
-        The names of these methods start with <code>get</code> followed by their
-        data type. The <code>getString()</code> method for instance will return
-        String values, <code>getInt()</code> will operate on integers. In
-        addition, there is a generic <code>get()</code> method which tries to
-        convert the value of a property to a specified target class.
-      </p>
-      <p>
-        Properties can have multiple values, so it is also possible to query a
-        list or an array containing all of the available values. This is done
-        using the <code>getList()</code> or <code>getArray()</code> methods.
-      </p>
-      <p>
-        For manipulating properties or their values the following methods can
-        be used:
-        <dl>
-          <dt><code>addProperty()</code></dt>
-          <dd>Adds a new property to the configuration. If this property already
-          exists, another value is added to it (so it becomes a multi-valued
-          property).</dd>
-          <dt><code>clearProperty()</code></dt>
-          <dd>Removes the specified property from the configuration.</dd>
-          <dt><code>setProperty()</code></dt>
-          <dd>Overwrites the value of the specified property. This is the same
-          as removing the property and then calling <code>addProperty()</code>
-          with the new property value.</dd>
-          <dt><code>clear()</code></dt>
-          <dd>Wipes out the whole configuration</dd>
-        </dl>
       </p>
       </subsection>
 
