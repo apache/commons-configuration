@@ -41,8 +41,8 @@
       <li><a href="overview.html#Using_Configuration">Using Configuration</a></li>
       <ul>
         <li><a href="overview.html#Configuration_Sources">Configuration Sources</a></li>
-        <li><a href="overview.html#Mixing_Configuration_Sources">Mixing Configuration Sources</a></li>
         <li><a href="overview.html#The_Configuration_interface">The Configuration interface</a></li>
+        <li><a href="overview.html#Immutable_Configurations">Immutable Configurations</a></li>
         <li><a href="overview.html#Threading_issues">Threading issues</a></li>
       </ul>
       <li><a href="howto_basicfeatures.html#Basic_features_and_AbstractConfiguration">Basic features and AbstractConfiguration</a></li>

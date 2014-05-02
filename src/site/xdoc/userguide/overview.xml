@@ -200,13 +200,21 @@
 
       <subsection name="Threading issues">
       <p>
-        The most concrete implementations of the <code>Configuration</code>
-        interface that are shipped with this library are not thread-safe.
-        They can be accessed concurrently in a read-only manner. However if one
-        thread modifies a configuration object, manual synchronization has to be
-        performed to ensure correctness of data. Notes about the thread
-        safety of conrete implementation classes can be found in the Javadocs
-        for these classes.
+        When accessing configurations from multiple threads - be it in a
+        read-only or in a manipulating manner - the question arises whether
+        <code>Configuration</code> implementations are thread-safe. When
+        using immutable configurations as described in the previous section
+        you are typically on the safe side because immutable objects can
+        safely be shared between multiple threads. However, the
+        <code>ImmutableConfiguration</code> objects created by
+        <code>ConfigurationUtils</code> are just wrappers around a mutable
+        <code>Configuration</code> object. So if code holds a reference to the
+        underlying <code>Configuration</code>, it can still be changed.
+      </p>
+      <p>
+        Because concurrency is a complex topic this user's guide contains a
+        dedicated section to this topic: <a href="howto_concurrency.html">
+        Configurations and Concurrent Access</a>.
       </p>
       </subsection>
     </section>
