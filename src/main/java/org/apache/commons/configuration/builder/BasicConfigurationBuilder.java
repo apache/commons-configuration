@@ -108,7 +108,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
         ConfigurationBuilder<T>
 {
     /** The class of the objects produced by this builder instance. */
-    private final Class<T> resultClass;
+    private final Class<? extends T> resultClass;
 
     /**
      * A collection with configuration listeners to be registered at newly
@@ -145,7 +145,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      * @param resCls the result class (must not be <b>null</b>
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public BasicConfigurationBuilder(Class<T> resCls)
+    public BasicConfigurationBuilder(Class<? extends T> resCls)
     {
         this(resCls, null);
     }
@@ -160,7 +160,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      * @param params a map with initialization parameters
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public BasicConfigurationBuilder(Class<T> resCls, Map<String, Object> params)
+    public BasicConfigurationBuilder(Class<? extends T> resCls, Map<String, Object> params)
     {
         this(resCls, params, false);
     }
@@ -178,7 +178,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      *        created {@code Configuration} object are allowed
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public BasicConfigurationBuilder(Class<T> resCls,
+    public BasicConfigurationBuilder(Class<? extends T> resCls,
             Map<String, Object> params, boolean allowFailOnInit)
     {
         if (resCls == null)
@@ -200,7 +200,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      *
      * @return the result class of this builder
      */
-    public Class<T> getResultClass()
+    public Class<? extends T> getResultClass()
     {
         return resultClass;
     }

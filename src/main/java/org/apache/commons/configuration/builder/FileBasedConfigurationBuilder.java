@@ -79,7 +79,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      * @param resCls the result class (must not be <b>null</b>
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public FileBasedConfigurationBuilder(Class<T> resCls)
+    public FileBasedConfigurationBuilder(Class<? extends T> resCls)
     {
         super(resCls);
     }
@@ -93,7 +93,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      * @param params a map with initialization parameters
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public FileBasedConfigurationBuilder(Class<T> resCls,
+    public FileBasedConfigurationBuilder(Class<? extends T> resCls,
             Map<String, Object> params)
     {
         super(resCls, params);
@@ -109,7 +109,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      * @param allowFailOnInit the <em>allowFailOnInit</em> flag
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public FileBasedConfigurationBuilder(Class<T> resCls,
+    public FileBasedConfigurationBuilder(Class<? extends T> resCls,
             Map<String, Object> params, boolean allowFailOnInit)
     {
         super(resCls, params, allowFailOnInit);
