@@ -55,6 +55,12 @@
         <li><a href="howto_basicfeatures.html#Data_type_conversions">Data type conversions</a></li>
         <li><a href="howto_basicfeatures.html#Customizing_data_type_conversions">Customizing data type conversions</a></li>
       </ul>
+      <li><a href="howto_builders.html">Creating Configurations</a></li>
+      <ul>
+        <li><a href="howto_builders.html#Configuration_Builders">Configuration Builders</a></li>
+        <li><a href="howto_builders.html#BasicConfigurationBuilder">BasicConfigurationBuilder</a></li>
+        <li><a href="howto_builders.html#Initialization_Parameters">Initialization Parameters</a></li>
+      </ul>
       <li><a href="howto_properties.html#Properties_files">Properties files</a></li>
       <ul>
         <li><a href="howto_properties.html#Using_PropertiesConfiguration">Using PropertiesConfiguration</a></li>

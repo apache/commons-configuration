@@ -1,0 +1,296 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Creating Configurations</title>
+ </properties>
+
+<body>
+    <section name="Creating Configurations">
+    <p>
+      Before a configuration and the data it contains can be accessed it has
+      to be created and initialized first. Although the concrete
+      <code>Configuration</code> implementations provided by <em>Commons
+      Configuration</em> typically have a public default constructor,
+      instances should only be created directly in exceptional cases. The
+      recommended way is to use a <em>configuration builder</em>.
+    </p>
+
+    <subsection name="Configuration Builders">
+    <p>
+      <em>Commons Configuration</em> defines the generic
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/ConfigurationBuilder.html">
+      ConfigurationBuilder</a></code> interface which is used for creating
+      initialized configuration objects. The interface defines a
+      <code>getConfiguration()</code> method returning a generic type
+      derived from <code>Configuration</code>. Here a specific 
+      <code>Configuration</code> implementation class can be inserted.
+    </p>
+    <p>
+      Note that the name of this method is <code>getConfiguration()</code> and
+      not <code>createConfiguration()</code>. This is because a builder is not
+      required to create a new instance on each invocation. Rather, a builder
+      is also responsible for managing the instance it has created. A basic
+      implementation may create its managed configuration once on first
+      access and will then always return the same instance in its
+      <code>getConfiguration()</code> method. A builder which is aware of
+      reloading in contrast may invalidate its managed configuration when it
+      detects that the content of the configuration has changed on disk; then
+      the next invocation of <code>getConfiguration()</code> returns an updated
+      configuration object. (Reloading is discussed in more detail in a later
+      section of this user's guide.) Builder implementations must be
+      thread-safe so that it is guaranteed that they behave correctly even if
+      accessed concurrently by multiple threads.
+    </p>
+    <p>
+      The recommended usage for accessing configuration data from multiple
+      parts of an application is to create a builder object initially and keep
+      a reference to it centrally. Whenever configuration information is needed
+      the builder is asked for its <code>Configuration</code> object; from
+      there the actual configuration settings can be obtained. While this
+      approach introduces another level of indirection, it enables the
+      application to add new functionality by replacing the builder
+      implementation transparently. For instance, if at a later stage the
+      requirement occurs to react on external changes of configuration data,
+      the builder object can be replaced by a reloading-aware builder. This
+      enables support for reloading all over in the application immediately
+      without having to change anything.
+    </p>
+    </subsection>
+
+    <subsection name="BasicConfigurationBuilder">
+    <p>
+      <em>Commons Configuration</em> provides multiple concrete
+      <code>ConfigurationBuilder</code> implementations supporting different
+      features. The most basic implementation is
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/BasicConfigurationBuilder.html">
+      BasicConfigurationBuilder</a></code>. It is the base class for all other
+      builder implementations and defines a framework for creating and
+      initializing configuration objects. The functionality provided is as
+      follows:
+      <ul>
+        <li>When an instance of <code>BasicConfigurationBuilder</code> is
+        constructed the class of the <code>Configuration</code> implementation
+        to be created has to be passed. This class must be compatible with
+        the generic type parameter of the builder.</li>
+        <li>It is possible to set arbitrary initialization parameters for
+        the configuration object to be created. Such parameters correspond to
+        the special properties offered by the configuration class (e.g. the
+        <code>throwExceptionOnMissing</code> flag, the object for handling
+        lists, helper objects for variable interpolation, and so on).</li>
+        <li>The <code>getConfiguration()</code> method checks whether the managed
+        configuration instance has already been created. If so, it can be
+        directly returned.</li>
+        <li>If this is the first access to <code>getConfiguration()</code>,
+        the managed configuration object is created. This is done via
+        reflection: the configuration object is created, and all initialization
+        parameters which have been set are applied.</li>
+        <li>There is also a <code>reset()</code> method which removes the
+        managed configuration instance. Calling this method causes a new
+        instance to be created the next time <code>getConfiguration()</code>
+        is invoked.</li>
+      </ul>
+      Note that these methods are all properly synchronized so that the builder
+      class is thread-safe.
+    </p>
+    <p>
+      The following code fragment shows how a <code>BasicConfigurationBuilder</code>
+      can be used to create an empty <code>PropertiesConfiguration</code>
+      object. At this stage of the discussion, the details of this example will
+      not yet be understandable; they will be explained in the following
+      sections. This is just to get a feeling how the usage of configuration
+      builders looks in practice:
+    </p>
+    <source><![CDATA[
+Parameters params = new Parameters();
+BasicConfigurationBuilder<PropertiesConfiguration> builder =
+        new BasicConfigurationBuilder<PropertiesConfiguration>(
+                PropertiesConfiguration.class)
+                .configure(params.basic()
+                        .setListDelimiterHandler(
+                            new DefaultListDelimiterHandler(','))
+                        .setThrowExceptionOnMissing(true));
+]]></source>
+    </subsection>
+
+    <subsection name="Initialization Parameters">
+    <p>
+      Depending on the concrete <code>Configuration</code> class to be
+      instantiated, it can be necessary to set a bunch of initialization
+      parameters. In order to simplify this and make the code somewhat
+      concise, a fluent API is provided for setting initialization parameters.
+      Basically, initialization parameters are defined by POJOs (plain old
+      Java objects) with properties corresponding to the special properties
+      supported by the configuration object to be created. In the package
+      <code>org.apache.commons.configuration.builder.fluent</code> a number
+      of interfaces is contained defining the possible initialization
+      parameters for the standard <code>Configuration</code> implementations
+      shipped with <em>Commons Configuration</em>. These interfaces form a
+      natural inheritance hierarchy corresponding to the inheritance graph
+      used by concrete <code>Configuration</code> implementations. So there is
+      a fundamental set of initialization parameters supported by all classes
+      derived from
+      <code><a href="../apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
+      AbstractConfiguration</a></code>. Configurations loaded from a file
+      also support these parameters plus additional ones for defining the file
+      to be loaded. An XML-based configuration supports all basic and
+      file-related parameters plus specific parameters defining its specific
+      properties, and so on.
+    </p>
+    <p>
+      Exposing such parameter objects via a fluent interface becomes tricky in
+      Java if inheritance is involved. In <em>Commons Configuration</em> the
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Parameters.html">
+      Parameters</a></code> class is responsible for the creation of parameters
+      objects. It serves as a type-safe factory for parameter objects with
+      support for inheritance. It defines a set of methods for creating
+      parameter objects for special <code>Configuration</code> classes. On
+      the objects returned by these methods fluent <code>set</code> methods can
+      be invoked in order to set the single properties. As an example consider
+      the following code fragement which defines some properties for an
+      <code>XMLConfiguration</code>:
+    </p>
+    <source><![CDATA[
+Parameters params = new Parameters();
+XMLBuilderParams xmlParams = params.xml()
+    .setThrowExceptionOnMissing(true)
+    .setValidating(true)
+    .setEncoding("UTF-8")
+    .setFileName("config.xml")
+    .setExpressionEngine(new XPathExpressionEngine());
+]]></source>
+    <p>
+      Note how properties from different parameter interfaces can be set in an
+      arbitrary order: the <code>throwExceptionOnMissing</code> flag is part
+      of the basic initialization parameters common to all configuration
+      classes, the encoding and the file name parameters are common to all
+      file-based configurations, the expression engine parameter is supported
+      by all hierarchical configurations, and the <code>validating</code> is
+      specific to XML configurations. We will not describe all available
+      initialization parameters in detail now; they are explained in the
+      sections dealing with specific <code>Configuration</code> classes. For
+      now a short overview over the existing parameter objects and the
+      corresponding methods in the <code>Parameters</code> class should be
+      sufficient:
+      <table>
+      <tr>
+        <th><code>Parameters</code> method</th>
+        <th>Interface</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td><code>basic()</code></td>
+        <td><code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/BasicBuilderParameters.html">
+        BasicBuilderParameters</a></code></td>
+        <td>Defines fundamental properties common to all <code>Configuration</code>
+        implementations derived from <code>AbstractConfiguration</code>.</td>
+      </tr>
+      <tr>
+        <td><code>fileBased()</code></td>
+        <td><code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/FileBasedBuilderParameters.html">
+        FileBasedBuilderParameters</a></code></td>
+        <td>Properties related to file-based configurations. For instance,
+        multiple ways for defining the file to be loaded are provided.</td>
+      </tr>
+      <tr>
+        <td><code>combined()</code></td>
+        <td><code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/CombinedBuilderParameters.html">
+        CombinedBuilderParameters</a></code></td>
+        <td>This object is used by the specialized builder for combined
+        configurations. Here properties can be set which define the content
+        of the resulting combined configuration.</td>
+      </tr>
+      <tr>
+        <td><code>jndi()</code></td>
+        <td><code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/JndiBuilderParameters.html">
+        JndiBuilderParameters</a></code></td>
+        <td>A parameters object for initializing JNDI configurations.</td>
+      </tr>
+      <tr>
+        <td><code>hierarchical()</code></td>
+        <td><code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/HierarchicalBuilderParameters.html">
+        HierarchicalBuilderParameters</a></code></td>
+        <td>Here special parameters common to all hierarchical configuratios are
+        defined, for instance the expression engine.</td>
+      </tr>
+      <tr>
+        <td><code>xml()</code></td>
+        <td><code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/XMLBuilderParameters.html">
+        XMLBuilderParameters</a></code></td>
+        <td>The parameters for XML configurations.</td>
+      </tr>
+      <tr>
+        <td><code>properties()</code></td>
+        <td><code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/PropertiesBuilderParameters.html">
+        PropertiesBuilderParameters</a></code></td>
+        <td>The parameters for <a href="howto_properties.html">properties
+        configurations</a>.</td>
+      </tr>
+      <tr>
+        <td><code>multiFile()</code></td>
+        <td><code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/MultiFileBuilderParameters.html">
+        MultiFileBuilderParameters</a></code></td>
+        <td>This parameters class is used by the builder for 
+        <a href="howto_multitenant.html#MultiFileHierarchicalConfiguration">multi
+        file configurations</a>.</td>
+      </tr>
+      <tr>
+        <td><code>database()</code></td>
+        <td><code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/DatabaseBuilderParameters.html">
+        DatabaseBuilderParameters</a></code></td>
+        <td>The parameters for <code><a href="../apidocs/org/apache/commons/configuration/DatabaseConfiguration.html">
+        DatabaseConfiguration</a></code>.</td>
+      </tr>
+      </table>
+    </p>
+    <p>
+      After a parameters object has been created and initialized via its fluent
+      <code>set()</code> methods it can be passed to a configuration builder's
+      <code>configure()</code> method. This method extracts all properties from
+      the passed in object and stores them internally. They are then used to
+      initialize a newly created <code>Configuration</code> object. Calling
+      <code>configure()</code> another time with a different parameters object
+      overrides all properties set so far; in fact, the existing properties are
+      cleared, and the new ones are copied over. However, it is possible to
+      pass multiple parameters at once to the <code>configure()</code> method
+      (it has a varargs parameter). In this case, the union of all parameters
+      is constructed.
+    </p>
+    <p>
+      Configuring a configuration builder with parameters objects is an
+      expressive and type-safe way. For initialization parameters constructed
+      more dynamically there is an alternative based on maps. Some
+      constructors of <code>BasicConfigurationBuilder</code> accept a
+      <code>Map&lt;String, Object&gt;</code>. Here arbitrary initialization
+      parameters can be passed. The keys of the map are strings corresponding
+      to the names of the initialization parameters (they are equivalent to
+      the property names in the associated <code>Configuration</code>
+      implementations; for instance <code>throwExceptionOnMissing</code>);
+      the map's values are the values of the parameters. No matter which
+      mechanism is used to define initialization parameters, it has to be
+      ensured that the configuration object to be constructed supports all of
+      these parameters; otherwise, an exception is thrown when the instance is
+      created.
+    </p>
+    </subsection>
+  </section>
+</body>
+
+</document>
