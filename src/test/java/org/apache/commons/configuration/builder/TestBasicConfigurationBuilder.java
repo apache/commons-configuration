@@ -98,8 +98,8 @@ public class TestBasicConfigurationBuilder
     public void testInitWithParameters()
     {
         Map<String, Object> params = createTestParameters();
-        BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+        BasicConfigurationBuilder<Configuration> builder =
+                new BasicConfigurationBuilder<Configuration>(
                         PropertiesConfiguration.class, params);
         Map<String, Object> params2 =
                 new HashMap<String, Object>(builder.getParameters());
