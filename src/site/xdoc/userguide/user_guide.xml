@@ -63,6 +63,14 @@
         <li><a href="howto_builders.html#Default_Initialization_Parameters">Default Initialization Parameters</a></li>
         <li><a href="howto_builders.html#Defining_Default_Parameters_Handlers">Defining Default Parameters Handlers</a></li>
       </ul>
+      <li><a href="howto_filebased.html#File-based_Configurations">File-based Configurations</a></li>
+      <ul>
+        <li><a href="howto_filebased.html#FileBasedConfigurationBuilder">FileBasedConfigurationBuilder</a></li>
+        <li><a href="howto_filebased.html#File_Operations_on_Configurations">File Operations on Configurations</a></li>
+        <li><a href="howto_filebased.html#Customizing_File_Access">Customizing File Access</a></li>
+        <li><a href="howto_filebased.html#File_Systems">File Systems</a></li>
+        <li><a href="howto_filebased.html#File_Location_Strategies">File Location Strategies</a></li>
+      </ul>
       <li><a href="howto_properties.html#Properties_files">Properties files</a></li>
       <ul>
         <li><a href="howto_properties.html#Using_PropertiesConfiguration">Using PropertiesConfiguration</a></li>
@@ -72,14 +80,6 @@
         <li><a href="howto_properties.html#Special_Characters_and_Escaping">Special Characters and Escaping</a></li>
         <li><a href="howto_properties.html#Layout_Objects">Layout Objects</a></li>
         <li><a href="howto_properties.html#Custom_properties_readers_and_writers">Custom properties readers and writers</a></li>
-      </ul>
-      <li><a href="howto_filebased.html#File-based_Configurations">File-based Configurations</a></li>
-      <ul>
-        <li><a href="howto_filebased.html#Specifying_the_file">Specifying the file</a></li>
-        <li><a href="howto_filebased.html#Loading">Loading</a></li>
-        <li><a href="howto_filebased.html#Saving">Saving</a></li>
-        <li><a href="howto_filebased.html#Automatic_Saving">Automatic Saving</a></li>
-        <li><a href="howto_filebased.html#Automatic_Reloading">Automatic Reloading</a></li>
       </ul>
       <li><a href="howto_xml.html#Hierarchical_properties">Hierarchical properties</a></li>
       <ul>
@@ -145,12 +145,6 @@
         <li><a href="howto_utilities.html#Converting_between_properties_and_configurations">Converting between properties and configurations</a></li>
         <li><a href="howto_utilities.html#Interpolation_of_all_variables">Interpolation of all variables</a></li>
         <li><a href="howto_utilities.html#Handling_of_runtime_exceptions">Handling of runtime exceptions</a></li>
-      </ul>
-      <li><a href="howto_filesystems.html">Access to Files</a></li>
-      <ul>
-        <li><a href="howto_filesystems.html#File_Systems#FileHandler_and_FileLocator">FileHandler and FileLocator</a></li>
-        <li><a href="howto_filesystems.html#File_Systems#File_Systems">File Systems</a></li>
-        <li><a href="howto_filesystems.html#File_Systems#File_Location_Strategies">File Location Strategies</a></li>
       </ul>
       <li><a href="howto_concurrency.html">Configurations and Concurrent Access</a></li>
       <ul>
