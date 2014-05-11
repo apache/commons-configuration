@@ -186,6 +186,17 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
     }
 
     /**
+     * {@inheritDoc} This method is overridden here to change the result type.
+     */
+    @Override
+    public FileBasedConfigurationBuilder<T> configure(
+            BuilderParameters... params)
+    {
+        super.configure(params);
+        return this;
+    }
+
+    /**
      * Returns the {@code FileHandler} associated with this builder. If already
      * a result object has been created, this {@code FileHandler} can be used to
      * save it. Otherwise, the {@code FileHandler} from the initialization

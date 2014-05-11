@@ -122,8 +122,9 @@ public class TestFileBasedConfigurationBuilder
         File file = createTestFile(1);
         FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<PropertiesConfiguration>(
-                        PropertiesConfiguration.class);
-        builder.configure(new FileBasedBuilderParametersImpl().setFile(file));
+                        PropertiesConfiguration.class)
+                        .configure(new FileBasedBuilderParametersImpl()
+                                .setFile(file));
         PropertiesConfiguration config = builder.getConfiguration();
         assertEquals("Not read from file", 1, config.getInt(PROP));
         assertSame("FileHandler not initialized", config, builder
@@ -140,8 +141,9 @@ public class TestFileBasedConfigurationBuilder
         File file = createTestFile(1);
         FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<PropertiesConfiguration>(
-                        PropertiesConfiguration.class);
-        builder.configure(new FileBasedBuilderParametersImpl().setFile(file));
+                        PropertiesConfiguration.class)
+                        .configure(new FileBasedBuilderParametersImpl()
+                                .setFile(file));
         PropertiesConfiguration config = builder.getConfiguration();
         builder.resetResult();
         PropertiesConfiguration config2 = builder.getConfiguration();
@@ -159,8 +161,9 @@ public class TestFileBasedConfigurationBuilder
         File file = createTestFile(1);
         FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<PropertiesConfiguration>(
-                        PropertiesConfiguration.class);
-        builder.configure(new FileBasedBuilderParametersImpl().setFile(file));
+                        PropertiesConfiguration.class)
+                        .configure(new FileBasedBuilderParametersImpl()
+                                .setFile(file));
         builder.getConfiguration();
         FileLocator locator = builder.getFileHandler().getFileLocator();
         assertTrue("Not fully defined: " + locator,
@@ -178,8 +181,9 @@ public class TestFileBasedConfigurationBuilder
         File file2 = createTestFile(2);
         FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<PropertiesConfiguration>(
-                        PropertiesConfiguration.class);
-        builder.configure(new FileBasedBuilderParametersImpl().setFile(file1));
+                        PropertiesConfiguration.class)
+                        .configure(new FileBasedBuilderParametersImpl()
+                                .setFile(file1));
         builder.getConfiguration();
         builder.getFileHandler().setFile(file2);
         builder.resetResult();
@@ -197,8 +201,9 @@ public class TestFileBasedConfigurationBuilder
         File file = createTestFile(1);
         FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<PropertiesConfiguration>(
-                        PropertiesConfiguration.class);
-        builder.configure(new FileBasedBuilderParametersImpl().setFile(file));
+                        PropertiesConfiguration.class)
+                        .configure(new FileBasedBuilderParametersImpl()
+                                .setFile(file));
         builder.getConfiguration();
         builder.reset();
         PropertiesConfiguration config = builder.getConfiguration();
@@ -218,8 +223,9 @@ public class TestFileBasedConfigurationBuilder
         File file2 = createTestFile(2);
         FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<PropertiesConfiguration>(
-                        PropertiesConfiguration.class);
-        builder.configure(new FileBasedBuilderParametersImpl().setFile(file1));
+                        PropertiesConfiguration.class)
+                        .configure(new FileBasedBuilderParametersImpl()
+                                .setFile(file1));
         builder.getConfiguration();
         builder.getFileHandler().setFile(file2);
         builder.reset();
@@ -286,8 +292,9 @@ public class TestFileBasedConfigurationBuilder
         File file = createTestFile(1);
         FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<PropertiesConfiguration>(
-                        PropertiesConfiguration.class);
-        builder.configure(new FileBasedBuilderParametersImpl().setFile(file));
+                        PropertiesConfiguration.class)
+                        .configure(new FileBasedBuilderParametersImpl()
+                                .setFile(file));
         PropertiesConfiguration config = builder.getConfiguration();
         config.setProperty(PROP, 5);
         builder.save();
@@ -320,8 +327,9 @@ public class TestFileBasedConfigurationBuilder
         File file = createTestFile(0);
         FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<PropertiesConfiguration>(
-                        PropertiesConfiguration.class);
-        builder.configure(new FileBasedBuilderParametersImpl().setFile(file));
+                        PropertiesConfiguration.class)
+                        .configure(new FileBasedBuilderParametersImpl()
+                                .setFile(file));
         assertFalse("Wrong auto save flag", builder.isAutoSave());
         builder.setAutoSave(true);
         assertTrue("Auto save not enabled", builder.isAutoSave());
@@ -341,8 +349,9 @@ public class TestFileBasedConfigurationBuilder
         File file = createTestFile(0);
         FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<PropertiesConfiguration>(
-                        PropertiesConfiguration.class);
-        builder.configure(new FileBasedBuilderParametersImpl().setFile(file));
+                        PropertiesConfiguration.class)
+                        .configure(new FileBasedBuilderParametersImpl()
+                                .setFile(file));
         PropertiesConfiguration config1 = builder.getConfiguration();
         builder.setAutoSave(true);
         builder.resetResult();
@@ -362,8 +371,9 @@ public class TestFileBasedConfigurationBuilder
         File file = createTestFile(0);
         FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<PropertiesConfiguration>(
-                        PropertiesConfiguration.class);
-        builder.configure(new FileBasedBuilderParametersImpl().setFile(file));
+                        PropertiesConfiguration.class)
+                        .configure(new FileBasedBuilderParametersImpl()
+                                .setFile(file));
         PropertiesConfiguration config = builder.getConfiguration();
         builder.setAutoSave(true);
         config.setProperty(PROP, 1);
