@@ -26,216 +26,258 @@
 <body>
     <section name="File-based Configurations">
         <p>
-            Often configuration properties are stored in files on the user's hard
-          disk, e.g. in .properties files or as XML documents. Configuration
-          classes that deal with such properties need to provide typical operations
-          like loading or saving files. The files to be processed can be specified
-          in several different flavors like <code>java.io.File</code> objects,
-          relative or absolute path names, or URLs.
+          Often configuration properties are stored in files on the user's hard
+          disk, e.g. in .properties files or as XML documents. In order to
+          access this data, functionality is needed to select the configuration
+          files, load them into memory, and write changes back to disk. The
+          following sections describe how this can be done.
+        </p>
+
+        <subsection name="FileBasedConfigurationBuilder">
+        <p>
+          In <em>Commons Configuration</em> a specialized
+          <a href="howto_builders.html#Configuration_Builders">configuration
+          builder</a> implementation is responsible for the creation of
+          file-based configuration objects and the management of their
+          associated data files:
+          <code><a href="../apidocs/org/apache/commons/configuration/builder/FileBasedConfigurationBuilder.html">
+          FileBasedConfigurationBuilder</a></code>. Usage of this class follows
+          the typical pattern for configuration builders, i.e. a builder
+          instance is created providing the class of the <code>Configuration</code>
+          object to be created, the <code>configure()</code> method is called
+          with initialization parameters, and finally <code>getConfiguration()</code>
+          returns an initialized instance of the configuration class. When
+          configuring the builder the file to be loaded can be specified; if this
+          was done, the <code>Configuration</code> object returned by the
+          builder contains all properties read from the underlying file.
         </p>
         <p>
-          To provide a consistent way of dealing with configuration files in
-          Commons Configuration the <code><a href="../apidocs/org/apache/commons/configuration/FileConfiguration.html">FileConfiguration</a></code>
-          interface exists. <code>FileConfiguration</code> defines a standard
-          API for accessing files and is implemented by many configuration
-          implementations, including <code>PropertiesConfiguration</code> and
-          <code>XMLConfiguration</code>.
+          In order to define the file to be loaded, a parameters object
+          implementing the
+          <code><a href="../apidocs/org/apache/commons/configuration/builder/FileBasedBuilderProperties.html">
+          FileBasedBuilderProperties</a></code> interface can be passed to the
+          builder's <code>configure()</code> method. Using this interface the
+          location of the file to be loaded can be provided in multiple ways:
+          <ul>
+            <li>With the <code>setFile()</code> method the data file can be
+            specified as a <code>java.io.File</code> object.</li>
+            <li>The <code>setURL()</code> method takes a <code>java.net.URL</code>
+            as argument; the file will be loaded from this URL.</li>
+            <li>The methods <code>setFileName()</code> and <code>setBasePath()</code>
+            allow specifying the path of the data file. The base path is
+            important if relative paths are to be resolved based on this file.</li>
+            <li>With <code>setPath()</code> an absolute path to the file to be
+            loaded can be provided.</li>
+          </ul>
+          As an example, the following code fragment shows how a properties
+          file can be read whose location is specified using a <code>File</code>
+          object:
         </p>
+        <source><![CDATA[
+Parameters params = new Parameters();
+// Read data from this file
+File propertiesFile = new File("config.properties");
+
+FileBasedConfigurationBuilder<Configuration> builder =
+    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+    .configure(params.fileBased()
+        .setFile(propertiesFile));
+try
+{
+    Configuration config = builder.getConfiguration();
+    // config contains all properties read from the file
+}
+catch(ConfigurationException cex)
+{
+    // loading of the configuration file failed
+}]]></source>
         <p>
-          In the following sections we take a closer look at the methods of the
-          <code>FileConfiguration</code> interface and how they are used.
+          In this example a parameters object for file-based configurations
+          is obtained from a <code>Parameters</code> instance. We could of
+          course also have used a derived parameters class - when loading a
+          properties file a parameters object for properties configurations
+          would have been a logic choice. Here only a single parameter, the
+          file to be loaded, is set; but remember that all other initialization
+          parameters common to all configuration classes are available as well.
         </p>
+	<p>
+	  A configuration instance created this way stays connected to its
+	  builder. Especially, the builder stores the location of the
+	  underlying configuration file. This comes in handy if changes on
+	  the configuration object are to be written back to disk. For this
+	  purpose, <code>FileBasedConfigurationBuilder</code> provides a
+	  convenient <code>save()</code> method. Calling this method stores
+	  the current content of the associated configuration into its original
+	  configuration file, overwriting the existing file on disk. This is
+	  demonstrated in the following code fragment which continues from the
+	  previous example:
+	</p>
+        <source><![CDATA[
+// Some manipulations on the configuration object
+config.addProperty("newProperty", "new");
+config.setProperty("updateProperty", "changedValue");
 
-        <subsection name="Specifying the file">
-          <p>
-            The <code>FileConfiguration</code> interface contains several
-            methods for specifying the file to be loaded. The following variants
-            are supported:
-            <ul>
-              <li>With the <code>setFile()</code> method the data file can be
-              specified as a <code>java.io.File</code> object.</li>
-              <li>The <code>setURL()</code> takes a <code>java.net.URL</code>
-              as argument; the file will be loaded from this URL.</li>
-              <li>The methods <code>setFileName()</code> and <code>setBasePath()</code>
-              allows to specify the path of the data file. The base path is
-              important if relative paths are to be resolved based on this file.</li>
-            </ul>
-          </p>
-          <p>
-            While a <code>File</code> or a URL uniquely identify a file, the
-            situation is a bit ambigous when only a base path and a file name are
-            set. These can be arbitrary strings (even full URLs) whose exact
-            meaning must be detected when the file is loaded. For this purpose
-            file-based configurations perform the following checks (in this
-            order):
-            <ul>
-              <li>If the combination from base path and file name is a full URL
-              that points to an existing file, this URL will be used to load
-              the file.</li>
-              <li>If the combination from base path and file name is an absolute
-              file name and this file exists, it will be loaded.</li>
-              <li>If the combination from base path and file name is a relative
-              file path that points to an existing file, this file will be loaded.</li>
-              <li>If a file with the specified name exists in the user's home
-              directory, this file will be loaded.</li>
-              <li>Otherwise the file name is interpreted as a resource name, and
-              it is checked whether the data file can be loaded from the classpath.</li>
-            </ul>
-            If all these checks fail, a <code>ConfigurationException</code> will
-            be thrown.
-          </p>
-        </subsection>
+// Make changes persistent
+try
+{
+    builder.save();
+}
+catch(ConfigurationException cex)
+{
+    // saving of the configuration file failed
+}]]></source>
+	<p>
+	  Note that the <code>save()</code> method of the builder does not
+	  expect a configuration object as parameter. It always operates on
+	  the instance managed by this builder. Because of this relationship
+	  it is typically better to store the builder object rather than the
+	  configuration. The configuration can always be obtained via the
+	  builder's <code>getConfiguration()</code> method, but operations
+	  related to the configuration file are only available through the
+	  builder.
+	</p>
+	<p>
+	  In addition to the <code>save()</code> method,
+	  <code>FileBasedConfigurationBuilder</code> offers functionality for
+	  automatically saving changes on its managed configuration. This can
+	  be used to ensure that every modification of a configuration object is
+	  immideately written to disk. This feature is enabled via the
+	  <code>setAutoSave()</code> method as shown in the following example:
+	</p>
+        <source><![CDATA[
+FileBasedConfigurationBuilder<Configuration> builder =
+    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+    .configure(params.fileBased()
+        .setFile(new File("config.properties")));
+// enable auto save mode
+builder.setAutoSave(true);
 
-        <subsection name="Loading">
-          <p>
-            After the file name has been defined using one of the methods mentioned
-            above, the <code>load()</code> method can be called. This method tries
-            to locate the file and open it. If this fails, a <code>ConfigurationException</code>
-            is thrown.
-          </p>
-          <p>
-            The <code>FileConfiguration</code> interface defines multiple overloaded
-            <code>load()</code> methods. The one that takes no argument will
-            always operate on the file name that has been set earlier. All
-            other methods allow to specify the source to be loaded. This can be
-            done as <code>java.io.File</code>, <code>java.net.URL</code>, string
-            (containing either an absolute or relative path), input stream, or
-            reader. When using these variants of the <code>load()</code> method
-            be aware of two things:
-            <ol>
-              <li>They do not change the configuration's file name. To do this
-              you have to explicitely call one of the setter methods.</li>
-              <li>The <code>load()</code> methods do not empty the
-              configuration before new data is loaded. This makes it easy to
-              construct union configurations by simply calling <code>load()</code>
-              multiple times. But if you want to reuse a <code>Configuration</code>
-              object and load a different file, remember to call the
-              <code>clear()</code> method first to ensure that old properties are
-              wiped out.</li>
-            </ol>
-          </p>
-          <p>
-            File-based configurations typically define a set of constructors that
-            correspond to the various setter methods for defining the data file.
-            These constructors will set the file and then invoke the <code>load()</code>
-            method. So creating a file-based configuration object and loading its
-            content can be done in a single step.
-          </p>
-        </subsection>
-
-        <subsection name="Saving">
-          <p>
-            Saving is implemented analogously to loading: There is a no argument
-            <code>save()</code> method that will use the internal file name. Then
-            for each <code>load()</code> method a corresponding <code>save()</code>
-            method exists that will write the data contained in the configuration
-            to different targets.
-          </p>
-          <p>
-            An example for loading, manipulating, and saving a configuration
-            (based on a <a href="howto_properties.html"><code>PropertiesConfiguration</code></a>)
-            could look as follows:
-          </p>
-<source>
-PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
-config.setProperty("colors.background", "#000000");
-config.save();
-</source>
-          <p>
-            You can also save a copy of the configuration to another file:
-          </p>
-<source>
-PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
-config.setProperty("colors.background", "#000000");
-config.save("usergui.backup.properties);
-</source>
-        </subsection>
-
-        <subsection name="Automatic Saving">
-          <p>
-            If you want to ensure that every modification of a configuration
-            object is immideately written to disk, you can enable the automatic
-            saving mode. This is done through the <code>setAutoSave()</code>
-            method as shown in the following example:
-          </p>
-<source>
-PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
-config.setAutoSave(true);
+Configuration config = builder.getConfiguration();
 config.setProperty("colors.background", "#000000"); // the configuration is saved after this call
-</source>
-          <p>
-            Be careful with this mode when you have many updates on your
-            configuration. This will lead to many I/O operations, too.
-          </p>
+]]></source>
+	<p>
+	  Be careful with this mode when you have many updates on your
+          configuration. This will lead to many I/O operations, too. Behind
+          the scenes, automatic saving is implemented via the
+          <a href="howto_events.html">event notification mechanism</a> available
+          for all configuration objects. A specialized event listener is
+          registered at the builder's managed configuration object which triggers
+          the <code>save()</code> method every time an update event is received.
+	</p>
         </subsection>
 
-        <subsection name="Automatic Reloading">
+        <subsection name="File Operations on Configurations">
         <p>
-          A common issue with file-based configurations is to handle the
-          reloading of the data file when it changes. This is especially important
-          if you have long running applications and do not want to restart them
-          when a configuration file was updated. Commons Configuration has the
-          concept of so called <em>reloading strategies</em> that can be
-          associated with a file-based configuration. Such a strategy monitors
-          a configuration file and is able to detect changes. A default reloading
-          strategy is <code><a href="../apidocs/org/apache/commons/configuration/reloading/FileChangedReloadingStrategy.html">FileChangedReloadingStrategy</a></code>.
-          It can be set on a file-based configuration as follows:
+          With <code>FileBasedConfigurationBuilder</code> a single configuration
+          file is assigned to a configuration instance. For some use cases a
+          more flexible approach is required. For instance, a modified
+          configuration is to be stored in another file, or multiple configuration
+          files should be loaded into the same instance. To achieve this, the
+          underlying mechanisms for dealing with files have to be used.
         </p>
-<source>
-PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
-config.setReloadingStrategy(new FileChangedReloadingStrategy());
-</source>
         <p>
-          <code>FileChangedReloadingStrategy</code> works as follows: On every
-          property access the configuration checks its associated reloading
-          strategy. <code>FileChangedReloadingStrategy</code> will then obtain
-          the last modification date of the configuration file and check whether
-          it has changed since the last access. If this is the case, a reload is
-          triggered. To avoid often disk access when multiple properties are
-          queried from the configuration, a <em>refresh delay</em> can be set on
-          the reloading strategy. This is a time in milli seconds with the meaning
-          that the reloading strategy will only once check the file's last
-          modification time in the period specified here.
+          I/O operations on files are controlled by the
+          <code><a href="../apidocs/org/apache/commons/configuration/io/FileHandler.html">
+          FileHandler</a></code> class. Basically, this class connects a location
+          of a configuration file (and some other meta information like the
+          file's encoding) with an object which can read data from or write data
+          to this location. <code>FileHandler</code> defines the typical
+          properties for defining the file to be loaded, i.e. the location can be
+          specified as a URL, a File, an absolute path, etc.
         </p>
-        </subsection>
+        <p>
+          The object which actually reads and writes the data is represented by the
+          <code><a href="../apidocs/org/apache/commons/configuration/io/FileBased.html">
+          FileBased</a></code> interface. This is a pretty lean interface
+          consisting of only two methods for reading data from a Reader and
+          writing data to a Writer. All configuration implementations that can
+          be initialized from configuration files implement this interface; but
+          in theory the <code>FileHandler</code> could interact with other
+          objects implementing <code>FileBased</code> as well.
+        </p>
+        <p>
+          <code>FileHandler</code> has the two methods <code>load()</code> and
+          <code>save()</code>. They work as follows:
+          <ul>
+            <li>The location of the managed file is evaluated, and a corresponding
+            stream is opened. Depending on the way the location was specified,
+            this could mean opening a connection on a URL, opening a stream to
+            a <code>File</code> or an absolute path name, resolving relative
+            file names, etc.</li>
+            <li>The resulting stream is then passed to the associated
+            <code>FileBased</code>'s <code>read()</code> or <code>write()</code>
+            method.</li>
+          </ul>
+        </p>
+        <p>
+          Next to these simple <code>load()</code> and <code>save()</code>
+          methods a number of overloaded methods exists which expect additional
+          parameters defining the source or target of the operation. For
+          instance, there is a <code>load(URL)</code> method which reads data
+          directly from the passed in URL ignoring the location stored in the
+          <code>FileHandler</code> instance. In fact, there are overloaded
+          methods for all the supported variants for defining a file. When
+          making use of these methods the following points have to be kept in
+          mind:
+          <ul>
+            <li>The location stored in the <code>FileHandler</code> instance is
+            not changed; it is completely by-passed bythese methods. Only
+            explicite calls to thevarious  setter methods modify the location.</li>
+            <li>The <code>load()</code> methods eventually call the target
+            object's <code>read()</code> method, no matter if it has already been
+            called before. For configuration objects as target this means that
+            the configuration is not cleared before new data is loaded.
+            (Actually a <code>FileHandler</code> is not aware which kind of
+            target object it is serving; so it has no chance to clear it first.)
+            This behavior makes it easy to construct union configurations by
+            simply executing multiple load operations. But if you want to reuse
+            a configuration object and load a different file, remember to call the
+            <code>clear()</code> method first to ensure that old properties are
+            wiped out.</li>
+          </ul>
+        </p>
+        <p>
+          When constructing a <code>FileHandler</code> instance the
+          <code>FileBased</code> object it operates on has to be passed to the
+          constructor. With this information we are now able to look at a
+          concrete example. The goal is to create a configuration for a
+          properties file, read in another properties file (so that a union of
+          the properties is constructed), and finally write the resulting
+          configuration to a new file. The code can look as follows (the
+          handling of exceptions has been omitted):
+        </p>
+        <source><![CDATA[
+// Read first file directly via the builder
+FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+    .configure(params.fileBased()
+        .setFile(new File("config.properties")));
+PropertiesConfiguration config = builder.getConfiguration();
 
-        <subsection name="Managed Reloading">
-        <p>
-          <code>ManagedReloadingStrategy</code> is an alternative to automatic
-          reloading. It allows to hot-reload properties on a running application
-          but only when requested by admin. The <code>refresh()</code> method
-          will force a reload of the configuration source.
-        </p>
-        <p>
-          A typical use of this feature is to setup ManagedReloadingStrategy as
-          a JMX MBean. The following code sample uses Springframework
-          MBeanExporter to expose the ManagedReloadingStrategy to the JMX
-          console :
-<source>
-<![CDATA[
-<!-- A file based configuration bean -->
-<bean id="configuration" class="(...).PropertiesConfiguration">
-    <constructor-arg type="java.net.URL" value="file:${user.home}/custom.properties"/>
-    <property name="reloadingStrategy" ref="reloadingStrategy"/>
-</bean>
+// Create a file handler and associate it with the configuration
+FileHandler handler = new FileHandler(config);
 
-<!-- The managed reloading strategy for the configuration bean -->
-<bean id="reloadingStrategy" class="...ManagedReloadingStrategy"/>
+// Load another configuration source, for instance from a relative path
+handler.load("user.properties");
 
-<!-- The MBeanExporter that exposes reloadingStrategy to the JMX console -->
-<bean id="mbeanMetadataExporter" class="org.springframework.jmx.export.MBeanExporter">
-    <property name="server" ref="mbeanServer"/>
-    <property name="beans">
-        <map>
-            <entry key="myApp:bean=configuration" value-ref="reloadingStrategy"/>
-        </map>
-    </property>
-</bean>
-]]>
-</source>
-          With this configuration, the JMX console will expose the
-          "myApp:bean=configuration" MBean and it's refresh operation.
-        </p>
+// Store the resulting configuguration in a new file
+File out = new File("union.properties");
+handler.save(out);
+]]></source>
+	<p>
+	  The <code>FileHandler</code> class is thread-safe; it is no problem
+	  for instance to define a file location in one thread and then call
+	  <code>load()</code> on another thread. It is also possible to have
+	  multiple <code>FileHandler</code> objects associated with the same
+	  target object. Here concurrent I/O operations could cause problems.
+	  Therefore, <code>FileHandler</code> checks whether the target object
+	  implements the
+	  <code><a href="../apidocs/org/apache/commons/configuration/sync/SynchronizerSupport.html">
+          SynchronizerSupport</a></code> interface. If this is the case, proper
+          synchronization for load and save operations can be performed. Because
+          all configuration implementations implement <code>SynchronizerSupport</code>
+          they can safely be used together with <code>FileHandler</code>.
+	</p>
         </subsection>
     </section>
 
