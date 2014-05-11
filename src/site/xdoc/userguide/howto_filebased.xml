@@ -69,9 +69,20 @@
             <li>With <code>setPath()</code> an absolute path to the file to be
             loaded can be provided.</li>
           </ul>
-          As an example, the following code fragment shows how a properties
-          file can be read whose location is specified using a <code>File</code>
-          object:
+          A parameters object for file-based configurations is typically obtained
+          from a <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Parameters.html">
+          Parameters</a></code> instance. Here the <code>fileBased()</code> method
+          or one of the methods returning parameter objects derived from
+          <code>FileBasedBuilderProperties</code> can be used. In addition to
+          the properties that define the location of the file to be loaded, the
+          parameters object support a couple of other properties, too, which
+          are mainly related to way how the file is resolved. This is described
+          later on in this chapter.
+        </p>
+        <p>
+          As an example for using a file-based configuration builder, the
+          following code fragment shows how a properties file can be read whose
+          location is specified using a <code>File</code> object:
         </p>
         <source><![CDATA[
 Parameters params = new Parameters();
@@ -221,8 +232,8 @@ config.setProperty("colors.background", "#000000"); // the configuration is save
           mind:
           <ul>
             <li>The location stored in the <code>FileHandler</code> instance is
-            not changed; it is completely by-passed bythese methods. Only
-            explicite calls to thevarious  setter methods modify the location.</li>
+            not changed; it is completely by-passed by these methods. Only
+            explicit calls to the various setter methods modify the location.</li>
             <li>The <code>load()</code> methods eventually call the target
             object's <code>read()</code> method, no matter if it has already been
             called before. For configuration objects as target this means that
@@ -249,7 +260,7 @@ config.setProperty("colors.background", "#000000"); // the configuration is save
         <source><![CDATA[
 // Read first file directly via the builder
 FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+    new FileBasedConfigurationBuilder<PropertiesConfiguration>(PropertiesConfiguration.class)
     .configure(params.fileBased()
         .setFile(new File("config.properties")));
 PropertiesConfiguration config = builder.getConfiguration();
@@ -278,7 +289,262 @@ handler.save(out);
           all configuration implementations implement <code>SynchronizerSupport</code>
           they can safely be used together with <code>FileHandler</code>.
 	</p>
+        <p>
+          Another important class related to file access is
+          <code><a href="../apidocs/org/apache/commons/configuration/io/FileLocator.html">
+          FileLocator</a></code>. An instance stores all information
+          required for resolving a file to be accessed. <code>FileHandler</code>
+          uses a <code>FileLocator</code> instance to maintain this part of
+          file-related information. If you need to customize the access to
+          configuration files, you sometimes have to deal with
+          <code>FileLocator</code> objects because the files to be operated on are
+          described in terms of such objects.
+        </p>
         </subsection>
+
+        <subsection name="Customizing File Access">
+        <p>
+          When working with file-based configurations application code has multiple
+          ways to specify the location of the file to be loaded. If a URL
+          is provided, the source file to be loaded is defined in a pretty
+          unambiguous way. If relative file names or paths are used, situation
+          is less obvious.
+        </p>
+        <p>
+          <em>Commons Configuration</em> provides two mechanisms to customize the
+          way configuration files are accessed:
+          <ul>
+            <li>File systems</li>
+            <li>File location strategies</li>
+          </ul>
+          They are described in the following sub sections.
+        </p>
+        </subsection>
+
+      <subsection name="File Systems">
+      <p>
+        In its default mode of operation <em>Commons Configuration</em> supports retrieving and storing
+        configuration files either on a local file system or via http. However, <em>Commons
+        Configuration</em> provides support for allowing other File System adapters. All file
+        access is accomplished through the <code><a href="../apidocs/org/apache/commons/configuration/io/FileSystem.html">
+        FileSystem</a></code> class so accessing files using other mechanisms is possible.
+      </p>
+      <p>
+        <em>Commons Configuration</em> also provides a second <code>FileSystem</code> implementation which allows retrieval using
+        <a href="http://commons.apache.org/vfs">Apache Commons VFS</a>. As of this writing
+        Commons VFS supports 18 protocols for manipulating files.
+      </p>
+      <p>
+        The <code>FileSystem</code> used by <em>Commons Configuration</em> can be set in
+        the builder's parameter object, together with other properties defining
+        the file to be loaded. When working with
+        <a href="howto_combinedconfiguration.html">CombinedConfigurationBuilder</a>
+        it is also possible to
+        define the file system in the configuration definition file to be
+        processed by the builder - in both a global way and for each referenced
+        sub configuration. The following listing shows a configuration definition
+        file for a combined builder making use of this functionality. Per
+        default, the <code><a href="../apidocs/org/apache/commons/configuration/io/VFSFileSystem.html">
+        VFSFileSystem</a></code> is used, but the included XML
+        configuration is loaded via a
+        <code><a href="../apidocs/org/apache/commons/configuration/io/DefaultFileSystem.html">
+        DefaultFileSystem</a></code> instance:
+      </p>
+     <source><![CDATA[
+<configuration>
+  <header>
+    <fileSystem config-class="org.apache.commons.configuration.io.VFSFileSystem"/>
+  </header>
+  <override>
+    <xml fileName="settings.xml" config-name="xml">
+      <fileSystem config-class="org.apache.commons.configuration.io.DefaultFileSystem"/>
+    </xml>
+
+    <!-- Other sources omitted -->
+  </override>
+</configuration>
+]]></source>
+      <p>
+        Commons VFS allows options to the underlying file systems being used. <em>Commons Configuration</em>
+        allows applications to provide these by implementing the
+        <code><a href="../apidocs/org/apache/commons/configuration/io/FileOptionsProvider.html">
+        FileOptionsProvider</a></code> interface
+        and registering the provider with the <code>FileSystem</code>. <code>FileOptionsProvider</code>
+        has a single method that must be implemented, <code>getOptions()</code>, which returns a Map
+        containing the keys and values that the <code>FileSystem</code> might use. The <code>getOptions()</code>
+        method is called as each configuration uses VFS to create a <code>FileOjbect</code> to
+        access the file. The map returned does not have to contain the same keys and/or values
+        each time it is called. For example, the value of the <code>currentUser</code> key can be
+        set to the id of the currently logged in user to allow a WebDAV save to record the userid
+        as a file attribute.
+      </p>
+      </subsection>
+
+      <subsection name="File Location Strategies">
+      <p>
+        Before a file can be accessed it has to be located first. In the 1.x
+        versions of <em>Commons Configuration</em>, there was a hard-coded
+        algorithm for looking up configuration files defined by a file name
+        and an optional base path in various places. Starting with version 2.0,
+        it is now possible to adapt this algorithm. The key to this is the
+        <code><a href="../apidocs/org/apache/commons/configuration/io/FileLocationStrategy.html">
+        FileLocationStrategy</a></code> interface. The interface defines
+        a single method:
+      </p>
+     <source><![CDATA[
+URL locate(FileSystem fileSystem, FileLocator locator);
+]]></source>
+      <p>
+        The purpose of this method is to resolve a file described by the passed
+        in <code><a href="../apidocs/org/apache/commons/configuration/io/FileLocator.html">
+        FileLocator</a></code> object and return a URL for it. If
+        required, the provided <code>FileSystem</code> can be used. The URL
+        yielded by a successful locate operation is directly used to access
+        the affected file. If the file could not be resolved, a
+        <code>FileLocationStrategy</code> implementation should not throw an
+        exception, but return <b>null</b> instead. This allows multiple
+        strategies to be chained so that different locations can be searched for
+        the file one after the other.
+      </p>
+      <p>
+        <em>Commons Configuration</em> ships with a set of standard
+        <code>FileLocationStrategy</code> implementations. They are pretty
+        specialized, meaning that a single implementation focuses on a very
+        specific search algorithm. The true power lies in combining these
+        strategies in a way suitable for an application or use case. The
+        following table describes the available <code>FileLocationStrategy</code>
+        implementations:
+      </p>
+      <p>
+        <table>
+          <tr>
+            <th>Location Strategy class</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td valign="top">
+              <code><a href="../apidocs/org/apache/commons/configuration/io/ProvidedURLLocationStrategy.html">
+              ProvidedURLLocationStrategy</a></code>
+            </td>
+            <td>
+              Directly returns the URL stored in the passed in
+              <code>FileLocator</code>. Unless an application needs some
+              special URL transformation, a file locator's URL - if defined -
+              can typically be used directly to access a file. So it makes
+              sense to use this strategy at the very beginning of your chain
+              of strategies.
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">
+              <code><a href="../apidocs/org/apache/commons/configuration/io/FileSystemLocationStrategy.html">
+              FileSystemLocationStrategy</a></code>
+            </td>
+            <td>
+              Passes the base path and the file name stored in the passed in
+              <code>FileLocator</code> to the <code>locateFromURL()</code>
+              method of the current <code>FileSystem</code>. This gives the file
+              system the opportunity to perform a special resolution.
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">
+              <code><a href="../apidocs/org/apache/commons/configuration/io/AbsoluteNameLocationStrategy.html">
+              AbsoluteNameLocationStrategy</a></code>
+            </td>
+            <td>
+              Checks whether the file name stored in the passed in
+              <code>FileLocator</code> is actually an absolute path name
+              pointing to an existing file. If this is the case, the URL to
+              this file is returned.
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">
+              <code><a href="../apidocs/org/apache/commons/configuration/io/BasePathLocationStrategy.html">
+              BasePathLocationStrategy</a></code>
+            </td>
+            <td>
+              This strategy creates a concatenation of the base path and file
+              name stored in the passed in <code>FileLocator</code> (of course,
+              only if both are defined). If this results in a path pointing to
+              an existing file, this file's URL is returned.
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">
+              <code><a href="../apidocs/org/apache/commons/configuration/io/HomeDirectoryLocationStrategy.html">
+              HomeDirectoryLocationStrategy</a></code>
+            </td>
+            <td>
+              Searches for the referenced file in the current system user's home
+              directory. It is also possible to specify a different directory
+              in which the strategy should search; the path to the target
+              directory can be passed to the constructor.
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">
+              <code><a href="../apidocs/org/apache/commons/configuration/io/ClasspathLocationStrategy.html">
+              ClasspathLocationStrategy</a></code>
+            </td>
+            <td>
+              Interprets the file name stored in the passed in
+              <code>FileLocator</code> as a resource name and tries to look it
+              up on the current classpath.
+            </td>
+          </tr>
+          <tr>
+            <td valign="top">
+              <code><a href="../apidocs/org/apache/commons/configuration/io/CombinedLocationStrategy.html">
+              CombinedLocationStrategy</a></code>
+            </td>
+            <td>
+              This is a kind of meta strategy which allows combining an arbitrary
+              number of other <code>FileLocationStrategy</code> objects. At
+              construction time a collection with sub strategies has to be
+              passed in. In its implementation of the <code>locate()</code>
+              method, the strategy iterates over all its sub strategies (in the
+              order they were passed to the constructor) until one returns a
+              non <b>null</b> URL. This URL is returned.
+            </td>
+          </tr>
+        </table>
+      </p>
+      <p>
+        As an example, consider that an application wants configuration files
+        to be looked up (in this order)
+        <ul>
+          <li>by their URL</li>
+          <li>by the file system (which will evaluate base path and file name)</li>
+          <li>on the classpath</li>
+        </ul>
+        Then a concrete location strategy could be constructed as follows:
+      </p>
+     <source><![CDATA[
+List<FileLocationStrategy> subs = Arrays.asList(
+  new ProvidedURLLocationStrategy(),
+  new FileSystemLocationStrategy(),
+  new ClasspathLocationStrategy());
+FileLocationStrategy strategy = new CombinedLocationStrategy(subs);
+]]></source>
+      <p>
+        This strategy can now be passed to a file-based configuration builder.
+        If no strategy is passed to a builder, a default one is used. This
+        default strategy is almost identical to the hard-coded search algorithm
+        that was used in earlier versions of <em>Commons Configuration</em>.
+        In fact, the pre-defined basic <code>FileLocationStrategy</code>
+        implementations were extracted from this algorithm.
+      </p>
+      <p>
+        Because the <code>FileLocationStrategy</code> interface is very simple
+        it should be easy to create a custom implementation. The specific
+        search algorithm just has to be coded into the <code>locate()</code>
+        method. Then this custom strategy implementation can be combined with
+        other standard strategies by making use of a
+        <code>CombinedLocationStrategy</code>.
+      </p>
+      </subsection>
     </section>
 
 </body>
