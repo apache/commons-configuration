@@ -142,6 +142,17 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
     }
 
     /**
+     * {@inheritDoc} This method is overridden here to change the result type.
+     */
+    @Override
+    public FileBasedConfigurationBuilder<T> configure(
+            BuilderParameters... params)
+    {
+        super.configure(params);
+        return this;
+    }
+
+    /**
      * Creates a {@code ReloadingDetector} which monitors the passed in
      * {@code FileHandler}. This method is called each time a new result object
      * is created with the current {@code FileHandler}. This implementation
