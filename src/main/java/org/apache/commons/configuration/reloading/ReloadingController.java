@@ -115,7 +115,7 @@ public class ReloadingController
     /**
      * Removes the specified {@code ReloadingListener} from this controller.
      *
-     * @param l
+     * @param l the listener to be removed
      */
     public void removeReloadingListener(ReloadingListener l)
     {
