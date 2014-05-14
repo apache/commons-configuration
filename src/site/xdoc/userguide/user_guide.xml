@@ -95,6 +95,11 @@
         </ul>
         <li><a href="howto_xml.html#Validation_of_XML_configuration_files">Validation of XML configuration files</a></li>
       </ul>
+      <li><a href="howto_reloading.html#Composite_Configuration_Details">Automatic Reloading of Configuration Sources</a></li>
+      <ul>
+        <li><a href="howto_reloading.html#Components_for_Reloading">Components for Reloading</a></li>
+        <li><a href="howto_reloading.html#Reloading_File-based_Configurations">Reloading File-based Configurations</a></li>
+      </ul>
       <li><a href="howto_compositeconfiguration.html#Composite_Configuration_Details">Composite Configuration Details</a></li>
       <ul>
         <li><a href="howto_compositeconfiguration.html#Setting_Up_Defaults">Setting Up Defaults</a></li>
