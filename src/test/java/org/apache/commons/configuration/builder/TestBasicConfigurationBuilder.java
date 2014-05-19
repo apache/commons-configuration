@@ -74,8 +74,7 @@ public class TestBasicConfigurationBuilder
     @Test(expected = IllegalArgumentException.class)
     public void testInitNoClass()
     {
-        Class<Configuration> cls = null;
-        new BasicConfigurationBuilder<Configuration>(cls);
+        new BasicConfigurationBuilder<Configuration>(null);
     }
 
     /**
@@ -421,41 +420,6 @@ public class TestBasicConfigurationBuilder
         builder.removeErrorListener(l1);
         assertFalse("Listener still registered", config
                 .getErrorListeners().contains(l1));
-    }
-
-    /**
-     * Tries to add a null builder listener.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddBuilderListenerNull()
-    {
-        BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
-                        PropertiesConfiguration.class);
-        builder.addBuilderListener(null);
-    }
-
-    /**
-     * Tests whether builder listeners can be added and removed.
-     */
-    @Test
-    public void testAddAndRemoveBuilderListener()
-    {
-        BuilderListener l1 = EasyMock.createMock(BuilderListener.class);
-        BuilderListener l2 = EasyMock.createMock(BuilderListener.class);
-        BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
-                        PropertiesConfiguration.class);
-        builder.addBuilderListener(l1);
-        builder.addBuilderListener(l2);
-        l1.builderReset(builder);
-        EasyMock.expectLastCall().times(2);
-        l2.builderReset(builder);
-        EasyMock.replay(l1, l2);
-        builder.reset();
-        builder.removeBuilderListener(l2);
-        builder.resetResult();
-        EasyMock.verify(l1, l2);
     }
 
     /**

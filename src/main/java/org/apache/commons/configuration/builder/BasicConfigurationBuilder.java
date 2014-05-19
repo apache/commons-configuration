@@ -32,6 +32,7 @@ import org.apache.commons.configuration.beanutils.ConstructorArg;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.event.EventListener;
+import org.apache.commons.configuration.event.EventListenerList;
 import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.event.EventType;
 import org.apache.commons.configuration.ex.ConfigurationException;
@@ -127,6 +128,9 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     /** An object managing the builder listeners registered at this builder. */
     private final EventListenerSupport<BuilderListener> builderListeners;
 
+    /** An object managing the builder listeners registered at this builder. */
+    private final EventListenerList eventListeners;
+
     /** A flag whether exceptions on initializing configurations are allowed. */
     private final boolean allowFailOnInit;
 
@@ -193,6 +197,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
         configListeners = new ArrayList<ConfigurationListener>();
         errorListeners = new ArrayList<ConfigurationErrorListener>();
         builderListeners = EventListenerSupport.create(BuilderListener.class);
+        eventListeners = new EventListenerList();
         updateParameters(params);
     }
 
@@ -386,14 +391,24 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
         builderListeners.removeListener(l);
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * @throws IllegalArgumentException if the event type or the listener is
+     *         <b>null</b>
+     */
     @Override
-    public <T1 extends ConfigurationBuilderEvent> void addEventListener(EventType<T1> eventType, EventListener<? super T1> listener) {
-        //TODO implementation
+    public <T1 extends ConfigurationBuilderEvent> void addEventListener(
+            EventType<T1> eventType, EventListener<? super T1> listener)
+    {
+        eventListeners.addEventListener(eventType, listener);
     }
 
     @Override
-    public <T1 extends ConfigurationBuilderEvent> void removeEventListener(EventType<T1> eventType, EventListener<? super T1> listener) {
-        //TODO implementation
+    public <T1 extends ConfigurationBuilderEvent> void removeEventListener(
+            EventType<T1> eventType, EventListener<? super T1> listener)
+    {
+        eventListeners.removeEventListener(eventType, listener);
     }
 
     /**
@@ -410,6 +425,8 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
         }
 
         builderListeners.fire().builderReset(this);
+        eventListeners.fire(new ConfigurationBuilderEvent(this,
+                ConfigurationBuilderEvent.RESET));
     }
 
     /**

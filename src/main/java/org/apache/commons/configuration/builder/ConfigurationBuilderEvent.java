@@ -40,6 +40,13 @@ public class ConfigurationBuilderEvent extends Event
             new EventType<ConfigurationBuilderEvent>(Event.ANY, "BUILDER");
 
     /**
+     * The specific event type for builder reset events. Events of this type are
+     * generated each time the builder's {@code resetResult()} method is called.
+     */
+    public static final EventType<ConfigurationBuilderEvent> RESET =
+            new EventType<ConfigurationBuilderEvent>(ANY, "RESET");
+
+    /**
      * Creates a new instance of {@code ConfigurationBuilderEvent} and sets
      * basic properties.
      *
