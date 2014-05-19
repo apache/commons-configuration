@@ -31,7 +31,9 @@ import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.beanutils.ConstructorArg;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.event.EventSource;
+import org.apache.commons.configuration.event.EventType;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.lang3.event.EventListenerSupport;
@@ -365,7 +367,6 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      *
      * @throws IllegalArgumentException if the listener is <b>null</b>
      */
-    @Override
     public void addBuilderListener(BuilderListener l)
     {
         if (l == null)
@@ -380,10 +381,19 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      * {@inheritDoc} If the specified listener is not registered at this object,
      * this method has no effect.
      */
-    @Override
     public void removeBuilderListener(BuilderListener l)
     {
         builderListeners.removeListener(l);
+    }
+
+    @Override
+    public <T1 extends ConfigurationBuilderEvent> void addEventListener(EventType<T1> eventType, EventListener<? super T1> listener) {
+        //TODO implementation
+    }
+
+    @Override
+    public <T1 extends ConfigurationBuilderEvent> void removeEventListener(EventType<T1> eventType, EventListener<? super T1> listener) {
+        //TODO implementation
     }
 
     /**
