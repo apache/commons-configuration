@@ -34,8 +34,9 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BuilderConfigurationWrapperFactory;
-import org.apache.commons.configuration.builder.BuilderListener;
+import org.apache.commons.configuration.builder.BuilderEventListenerImpl;
 import org.apache.commons.configuration.builder.BuilderParameters;
+import org.apache.commons.configuration.builder.ConfigurationBuilderEvent;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
@@ -380,18 +381,18 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test
     public void testBuilderListener() throws ConfigurationException
     {
-        BuilderListener listener = EasyMock.createMock(BuilderListener.class);
+        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
         Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders =
                 new ArrayList<FileBasedConfigurationBuilder<XMLConfiguration>>();
         MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createBuilderWithAccessToManagedBuilders(managedBuilders);
-        listener.builderReset(builder);
-        EasyMock.replay(listener);
         switchToConfig(1);
-        builder.addBuilderListener(listener);
+        builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
         builder.getConfiguration();
         managedBuilders.iterator().next().resetResult();
-        EasyMock.verify(listener);
+        ConfigurationBuilderEvent event =
+                listener.nextEvent(ConfigurationBuilderEvent.RESET);
+        assertSame("Wrong event source", builder, event.getSource());
     }
 
     /**
@@ -402,18 +403,17 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     public void testRemoveBuilderListenerOnReset()
             throws ConfigurationException
     {
-        BuilderListener listener = EasyMock.createMock(BuilderListener.class);
+        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
         Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders =
                 new ArrayList<FileBasedConfigurationBuilder<XMLConfiguration>>();
         MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createBuilderWithAccessToManagedBuilders(managedBuilders);
-        EasyMock.replay(listener);
         switchToConfig(1);
-        builder.addBuilderListener(listener);
+        builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
         builder.getConfiguration();
         builder.resetParameters();
         managedBuilders.iterator().next().resetResult();
-        EasyMock.verify(listener);
+        listener.assertNoMoreEvents();
     }
 
     /**
