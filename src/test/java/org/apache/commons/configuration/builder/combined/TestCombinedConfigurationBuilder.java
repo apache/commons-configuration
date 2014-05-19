@@ -31,7 +31,6 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,8 +46,9 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.XMLPropertiesConfiguration;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
-import org.apache.commons.configuration.builder.BuilderListener;
+import org.apache.commons.configuration.builder.BuilderEventListenerImpl;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
+import org.apache.commons.configuration.builder.ConfigurationBuilderEvent;
 import org.apache.commons.configuration.builder.CopyObjectDefaultHandler;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedBuilderProperties;
@@ -1229,8 +1229,8 @@ public class TestCombinedConfigurationBuilder
                     ((ReloadingControllerSupport) childBuilder)
                             .getReloadingController();
             ctrl.checkForReloading(null); // initialize reloading
-            BuilderListenerTestImpl l = new BuilderListenerTestImpl();
-            childBuilder.addBuilderListener(l);
+            BuilderEventListenerImpl l = new BuilderEventListenerImpl();
+            childBuilder.addEventListener(ConfigurationBuilderEvent.RESET, l);
             reloadConfig.setProperty(key, "yes");
             handler.save();
 
@@ -1248,18 +1248,17 @@ public class TestCombinedConfigurationBuilder
             assertTrue("No change detected", changeDetected);
             assertEquals("Wrong updated property", "yes", builder
                     .getConfiguration().getString(key));
-            assertEquals("No change event received", 1, l.getBuilders().size());
+            ConfigurationBuilderEvent event = l.nextEvent(ConfigurationBuilderEvent.RESET);
+            l.assertNoMoreEvents();
             BasicConfigurationBuilder<? extends Configuration> multiBuilder =
-                    (BasicConfigurationBuilder<? extends Configuration>) l
-                            .getBuilders().get(0);
-            childBuilder.removeBuilderListener(l);
+                    (BasicConfigurationBuilder<? extends Configuration>) event.getSource();
+            childBuilder.removeEventListener(ConfigurationBuilderEvent.RESET, l);
             multiBuilder.resetResult();
-            assertEquals("Got another change event received", 1, l
-                    .getBuilders().size());
+            l.assertNoMoreEvents();
         }
         finally
         {
-            outFile.delete();
+            assertTrue("Output file could not be deleted", outFile.delete());
         }
     }
 
@@ -1451,34 +1450,6 @@ public class TestCombinedConfigurationBuilder
         public String lookup(String key)
         {
             return map.get(key);
-        }
-    }
-
-    /**
-     * A test implementation of the BuilderListener interface.
-     */
-    private static class BuilderListenerTestImpl implements BuilderListener
-    {
-        /** A list for the notified builders. */
-        private final List<ConfigurationBuilder<? extends Configuration>> builders =
-                new LinkedList<ConfigurationBuilder<? extends Configuration>>();
-
-        @Override
-        public void builderReset(
-                ConfigurationBuilder<? extends Configuration> builder)
-        {
-            builders.add(builder);
-        }
-
-        /**
-         * Returns a list with builders for which a reset notification was
-         * received.
-         *
-         * @return the list with builders
-         */
-        public List<ConfigurationBuilder<? extends Configuration>> getBuilders()
-        {
-            return builders;
         }
     }
 

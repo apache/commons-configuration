@@ -39,15 +39,16 @@ import org.apache.commons.configuration.beanutils.CombinedBeanDeclaration;
 import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
-import org.apache.commons.configuration.builder.BuilderListener;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
+import org.apache.commons.configuration.builder.ConfigurationBuilderEvent;
 import org.apache.commons.configuration.builder.DefaultParametersManager;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedBuilderProperties;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.builder.XMLBuilderProperties;
+import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
@@ -1284,14 +1285,12 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     private void addDefinitionBuilderChangeListener(
             final ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder)
     {
-        defBuilder.addBuilderListener(new BuilderListener()
-        {
-            @Override
-            public void builderReset(
-                    ConfigurationBuilder<? extends Configuration> builder)
-            {
-                synchronized (CombinedConfigurationBuilder.this)
+        defBuilder.addEventListener(ConfigurationBuilderEvent.RESET,
+                new EventListener<ConfigurationBuilderEvent>()
                 {
+            @Override
+            public void onEvent(ConfigurationBuilderEvent event) {
+                synchronized (CombinedConfigurationBuilder.this) {
                     reset();
                     definitionBuilder = defBuilder;
                 }
@@ -1372,7 +1371,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         private final Collection<ConfigurationBuilder<? extends Configuration>> allBuilders;
 
         /** A listener for reacting on changes of sub builders. */
-        private BuilderListener changeListener;
+        private EventListener<ConfigurationBuilderEvent> changeListener;
 
         /**
          * Creates a new instance of {@code ConfigurationSourceData}.
@@ -1437,7 +1436,8 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         {
             for (ConfigurationBuilder<?> b : getChildBuilders())
             {
-                b.removeBuilderListener(changeListener);
+                b.removeEventListener(ConfigurationBuilderEvent.RESET,
+                        changeListener);
             }
             namedBuilders.clear();
         }
@@ -1528,7 +1528,8 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                 namedBuilders.put(decl.getName(), builder);
             }
             allBuilders.add(builder);
-            builder.addBuilderListener(changeListener);
+            builder.addEventListener(ConfigurationBuilderEvent.RESET,
+                    changeListener);
             return builder;
         }
 
@@ -1568,12 +1569,10 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          */
         private void createBuilderChangeListener()
         {
-            changeListener = new BuilderListener()
+            changeListener = new EventListener<ConfigurationBuilderEvent>()
             {
                 @Override
-                public void builderReset(
-                        ConfigurationBuilder<? extends Configuration> builder)
-                {
+                public void onEvent(ConfigurationBuilderEvent event) {
                     resetResult();
                 }
             };
