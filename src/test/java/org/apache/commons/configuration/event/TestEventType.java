@@ -18,8 +18,6 @@ package org.apache.commons.configuration.event;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.EventObject;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,12 +29,12 @@ import org.junit.Test;
 public class TestEventType
 {
     /** The event type to be tested. */
-    private EventType<EventObject> eventType;
+    private EventType<Event> eventType;
 
     @Before
     public void setUp() throws Exception
     {
-        eventType = new EventType<EventObject>(null, "TEST");
+        eventType = new EventType<Event>(null, "TEST");
     }
 
     /**

@@ -40,7 +40,7 @@ package org.apache.commons.configuration.event;
  * @since 2.0
  * @param <T> the event associated with this type
  */
-public class EventType<T>
+public class EventType<T extends Event>
 {
     /** Constant for the format used by toString(). */
     private static final String FMT_TO_STRING = "%s [ %s ]";
