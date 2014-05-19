@@ -22,17 +22,16 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.FileBasedConfiguration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
-import org.apache.commons.configuration.builder.BuilderListener;
 import org.apache.commons.configuration.builder.BuilderParameters;
-import org.apache.commons.configuration.builder.ConfigurationBuilder;
+import org.apache.commons.configuration.builder.ConfigurationBuilderEvent;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.InterpolatorSpecification;
@@ -101,18 +100,16 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
             new ThreadLocal<Boolean>();
 
     /**
-     * A specialized builder listener which gets registered at all managed
+     * A specialized event listener which gets registered at all managed
      * builders. This listener just propagates notifications from managed
      * builders to the listeners registered at this
      * {@code MultiFileConfigurationBuilder}.
      */
-    private final BuilderListener managedBuilderDelegationListener =
-            new BuilderListener()
+    private final EventListener<ConfigurationBuilderEvent> managedBuilderDelegationListener =
+            new EventListener<ConfigurationBuilderEvent>()
             {
                 @Override
-                public void builderReset(
-                        ConfigurationBuilder<? extends Configuration> builder)
-                {
+                public void onEvent(ConfigurationBuilderEvent event) {
                     resetResult();
                 }
             };
@@ -291,7 +288,8 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
     {
         for (FileBasedConfigurationBuilder<T> b : getManagedBuilders().values())
         {
-            b.removeBuilderListener(managedBuilderDelegationListener);
+            b.removeEventListener(ConfigurationBuilderEvent.RESET,
+                    managedBuilderDelegationListener);
         }
         getManagedBuilders().clear();
         interpolator.set(null);
@@ -423,7 +421,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
 
     /**
      * Registers event listeners at the passed in newly created managed builder.
-     * This method registers a special {@code BuilderListener} which propagates
+     * This method registers a special {@code EventListener} which propagates
      * builder events to listeners registered at this builder. In addition,
      * {@code ConfigurationListener} and {@code ConfigurationErrorListener}
      * objects are registered at the new builder.
@@ -433,7 +431,8 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
     private void initListeners(FileBasedConfigurationBuilder<T> newBuilder)
     {
         copyEventListeners(newBuilder);
-        newBuilder.addBuilderListener(managedBuilderDelegationListener);
+        newBuilder.addEventListener(ConfigurationBuilderEvent.RESET,
+                managedBuilderDelegationListener);
     }
 
     /**
