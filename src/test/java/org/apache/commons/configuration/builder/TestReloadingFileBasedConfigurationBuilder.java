@@ -201,16 +201,17 @@ public class TestReloadingFileBasedConfigurationBuilder
     {
         ReloadingDetector detector =
                 EasyMock.createMock(ReloadingDetector.class);
-        BuilderListener listener = EasyMock.createMock(BuilderListener.class);
         EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
         ReloadingFileBasedConfigurationBuilderTestImpl builder =
                 new ReloadingFileBasedConfigurationBuilderTestImpl(detector);
-        listener.builderReset(builder);
-        EasyMock.replay(detector, listener);
-        builder.addBuilderListener(listener);
+        EasyMock.replay(detector);
+        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
         builder.getConfiguration();
         builder.getReloadingController().checkForReloading(null);
-        EasyMock.verify(detector, listener);
+        listener.nextEvent(ConfigurationBuilderEvent.RESET);
+        listener.assertNoMoreEvents();
+        EasyMock.verify(detector);
     }
 
     /**
