@@ -37,7 +37,6 @@ import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.event.EventType;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
-import org.apache.commons.lang3.event.EventListenerSupport;
 
 /**
  * <p>
@@ -126,9 +125,6 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     private final Collection<ConfigurationErrorListener> errorListeners;
 
     /** An object managing the builder listeners registered at this builder. */
-    private final EventListenerSupport<BuilderListener> builderListeners;
-
-    /** An object managing the builder listeners registered at this builder. */
     private final EventListenerList eventListeners;
 
     /** A flag whether exceptions on initializing configurations are allowed. */
@@ -196,7 +192,6 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
         this.allowFailOnInit = allowFailOnInit;
         configListeners = new ArrayList<ConfigurationListener>();
         errorListeners = new ArrayList<ConfigurationErrorListener>();
-        builderListeners = EventListenerSupport.create(BuilderListener.class);
         eventListeners = new EventListenerList();
         updateParameters(params);
     }
@@ -367,31 +362,6 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     }
 
     /**
-     * {@inheritDoc} The listener must not be <b>null</b>, otherwise an
-     * exception is thrown.
-     *
-     * @throws IllegalArgumentException if the listener is <b>null</b>
-     */
-    public void addBuilderListener(BuilderListener l)
-    {
-        if (l == null)
-        {
-            throw new IllegalArgumentException(
-                    "Builder listener must not be null!");
-        }
-        builderListeners.addListener(l);
-    }
-
-    /**
-     * {@inheritDoc} If the specified listener is not registered at this object,
-     * this method has no effect.
-     */
-    public void removeBuilderListener(BuilderListener l)
-    {
-        builderListeners.removeListener(l);
-    }
-
-    /**
      * {@inheritDoc}
      *
      * @throws IllegalArgumentException if the event type or the listener is
@@ -424,7 +394,6 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
             resultDeclaration = null;
         }
 
-        builderListeners.fire().builderReset(this);
         eventListeners.fire(new ConfigurationBuilderEvent(this,
                 ConfigurationBuilderEvent.RESET));
     }
