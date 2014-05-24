@@ -382,14 +382,14 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      *         <b>null</b>
      */
     @Override
-    public <T1 extends ConfigurationBuilderEvent> void addEventListener(
+    public final  <T1 extends ConfigurationBuilderEvent> void addEventListener(
             EventType<T1> eventType, EventListener<? super T1> listener)
     {
         eventListeners.addEventListener(eventType, listener);
     }
 
     @Override
-    public <T1 extends ConfigurationBuilderEvent> void removeEventListener(
+    public final  <T1 extends ConfigurationBuilderEvent> void removeEventListener(
             EventType<T1> eventType, EventListener<? super T1> listener)
     {
         eventListeners.removeEventListener(eventType, listener);
