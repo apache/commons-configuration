@@ -37,6 +37,7 @@ import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.event.EventType;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
+import org.apache.commons.configuration.reloading.ReloadingController;
 
 /**
  * <p>
@@ -429,6 +430,34 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     {
         resetParameters();
         resetResult();
+    }
+
+    /**
+     * Connects this builder with a {@code ReloadingController}. With this
+     * method support for reloading can be added to an arbitrary builder object.
+     * Event listeners are registered at the reloading controller and this
+     * builder with connect both objects:
+     * <ul>
+     * <li>When the reloading controller detects that a reload is required, the
+     * builder's {@link #resetResult()} method is called; so the managed result
+     * object is invalidated.</li>
+     * <li>When a new result object has been created the controller's reloading
+     * state is reset, so that new changes can be detected again.</li>
+     * </ul>
+     *
+     * @param controller the {@code ReloadingController} to connect to (must not
+     *        be <b>null</b>)
+     * @throws IllegalArgumentException if the controller is <b>null</b>
+     */
+    public final void connectToReloadingController(
+            ReloadingController controller)
+    {
+        if (controller == null)
+        {
+            throw new IllegalArgumentException(
+                    "ReloadingController must not be null!");
+        }
+        ReloadingBuilderSupportListener.connect(this, controller);
     }
 
     /**

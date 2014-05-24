@@ -48,6 +48,8 @@ import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
+import org.apache.commons.configuration.reloading.ReloadingController;
+import org.apache.commons.configuration.reloading.ReloadingDetector;
 import org.easymock.EasyMock;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -531,6 +533,43 @@ public class TestBasicConfigurationBuilder
         PropertiesConfiguration config = builder.getConfiguration();
         assertTrue("BeanFactory was not used correctly",
                 classesPassedToFactory.contains(config.getClass()));
+    }
+
+    /**
+     * Tests whether a builder can be connected to a reloading controller.
+     */
+    @Test
+    public void testConnectToReloadingController()
+            throws ConfigurationException
+    {
+        ReloadingDetector detector =
+                EasyMock.createNiceMock(ReloadingDetector.class);
+        EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
+        EasyMock.replay(detector);
+        ReloadingController controller = new ReloadingController(detector);
+        BasicConfigurationBuilder<Configuration> builder =
+                new BasicConfigurationBuilder<Configuration>(
+                        PropertiesConfiguration.class);
+        Configuration configuration = builder.getConfiguration();
+
+        builder.connectToReloadingController(controller);
+        controller.checkForReloading(null);
+        assertTrue("Not in reloading state", controller.isInReloadingState());
+        assertNotSame("No new configuration created", configuration,
+                builder.getConfiguration());
+        assertFalse("Still in reloading state", controller.isInReloadingState());
+    }
+
+    /**
+     * Tries to connect to a null reloading controller.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testConnectToReloadingControllerNull()
+    {
+        BasicConfigurationBuilder<Configuration> builder =
+                new BasicConfigurationBuilder<Configuration>(
+                        PropertiesConfiguration.class);
+        builder.connectToReloadingController(null);
     }
 
     /**
