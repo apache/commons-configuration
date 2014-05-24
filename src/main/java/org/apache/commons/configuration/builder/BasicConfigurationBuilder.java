@@ -350,6 +350,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
                 ConfigurationBuilderEvent.CONFIGURATION_REQUEST));
 
         T resObj = result;
+        boolean created = false;
         if (resObj == null)
         {
             synchronized (this)
@@ -358,8 +359,17 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
                 if (resObj == null)
                 {
                     result = resObj = createResult();
+                    created = true;
                 }
             }
+        }
+
+        if (created)
+        {
+            eventListeners.fire(new ConfigurationBuilderResultCreatedEvent(
+                    this,
+                    ConfigurationBuilderResultCreatedEvent.RESULT_CREATED,
+                    resObj));
         }
         return resObj;
     }

@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.event.Event;
 import org.apache.commons.configuration.event.EventListener;
@@ -162,5 +163,50 @@ public class TestBasicConfigurationBuilderEvents
         assertNotSame("Configuration not reset", configuration, configuration2);
         listener.nextEvent(ConfigurationBuilderEvent.RESET);
         listener.assertNoMoreEvents();
+    }
+
+    /**
+     * Tries to create an event about a newly created configuration without a
+     * configuration instance.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testResultCreatedEventNoConfiguration()
+    {
+        new ConfigurationBuilderResultCreatedEvent(
+                new BasicConfigurationBuilder<Configuration>(
+                        Configuration.class),
+                ConfigurationBuilderResultCreatedEvent.RESULT_CREATED, null);
+    }
+
+    /**
+     * Tests whether the type of a result created event is correctly configured.
+     */
+    @Test
+    public void testResultCreatedEventType()
+    {
+        assertEquals("Wrong super type", ConfigurationBuilderEvent.ANY,
+                ConfigurationBuilderResultCreatedEvent.RESULT_CREATED
+                        .getSuperType());
+    }
+
+    /**
+     * Tests whether a result created event is correctly generated.
+     */
+    @Test
+    public void testResultCreatedEvent() throws ConfigurationException
+    {
+        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        builder.addEventListener(ConfigurationBuilderEvent.ANY, listener);
+
+        PropertiesConfiguration configuration = builder.getConfiguration();
+        listener.nextEvent(ConfigurationBuilderEvent.CONFIGURATION_REQUEST);
+        ConfigurationBuilderResultCreatedEvent event =
+                listener.nextEvent(ConfigurationBuilderResultCreatedEvent.RESULT_CREATED);
+        assertSame("Wrong builder", builder, event.getSource());
+        assertSame("Wrong configuration", configuration,
+                event.getConfiguration());
     }
 }
