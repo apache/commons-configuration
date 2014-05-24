@@ -62,6 +62,10 @@
       <action dev="oheger" type="update" issue="CONFIGURATION-562">
         Improved the API of ExprLookup.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-559">
+        It is now possible to define default values for initialization
+        properties of configurations.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-555">
         Fixed a bug in the handling of the xml:space attribute in
         XMLConfiguration. The attribute is now also applied to the current
