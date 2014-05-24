@@ -101,6 +101,7 @@
         <li><a href="howto_reloading.html#Reloading_File-based_Configurations">Reloading File-based Configurations</a></li>
         <li><a href="howto_reloading.html#Generic_Reloading_Support">Generic Reloading Support</a></li>
         <li><a href="howto_reloading.html#Reloading_Checks_on_Builder_Access">Reloading Checks on Builder Access</a></li>
+        <li><a href="howto_reloading.html#Managed_Reloading">Managed Reloading</a></li>
       </ul>
       <li><a href="howto_compositeconfiguration.html#Composite_Configuration_Details">Composite Configuration Details</a></li>
       <ul>

@@ -339,6 +339,42 @@ builder.addEventListener(ConfigurationBuilderEvent.CONFIGURATION_REQUEST,
     });
 ]]></source>
     </subsection>
+
+    <subsection name="Managed Reloading">
+    <p>
+      <code><a href="../apidocs/org/apache/commons/configuration/reloading/ManagedReloadingDetector.html">
+      ManagedReloadingDetector</a></code> is an alternative to automatic
+      reloading. It allows to hot-reload properties on a running application,
+      but only when requested by an administrator. The detector class defines a
+      <code>refresh()</code> method which forces a reload of the configuration
+      source the next time a reloading check on the associated
+      <code>ReloadingController</code> is triggered.
+    </p>
+    <p>
+      A typical use of this feature is to setup <code>ManagedReloadingDetector</code>
+      as a JMX MBean. The following code sample uses Spring framework's
+      <code>MBeanExporter</code> to expose the managed reloading detector to the
+      JMX console:
+<source>
+<![CDATA[
+<!-- The managed reloading detector for the configuration builder -->
+<bean id="reloadingDetector" class="...ManagedReloadingDetector"/>
+
+<!-- The MBeanExporter that exposes reloadingDetector to the JMX console -->
+<bean id="mbeanMetadataExporter" class="org.springframework.jmx.export.MBeanExporter">
+    <property name="server" ref="mbeanServer"/>
+    <property name="beans">
+        <map>
+            <entry key="myApp:bean=configuration" value-ref="reloadingStrategy"/>
+        </map>
+    </property>
+</bean>
+]]>
+</source>
+      With this configuration, the JMX console will expose the
+      "myApp:bean=configuration" MBean and it's refresh operation.
+    </p>
+    </subsection>
     </section>
 </body>
 </document>
