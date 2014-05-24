@@ -206,7 +206,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
     {
         ReloadingDetector ctrlDetector = createReloadingDetectorForController();
         ReloadingController ctrl = new ReloadingController(ctrlDetector);
-        ReloadingBuilderSupportListener.connect(this, ctrl);
+        connectToReloadingController(ctrl);
         return ctrl;
     }
 
