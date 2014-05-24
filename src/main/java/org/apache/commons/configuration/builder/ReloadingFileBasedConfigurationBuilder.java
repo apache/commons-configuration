@@ -25,8 +25,6 @@ import org.apache.commons.configuration.reloading.FileHandlerReloadingDetector;
 import org.apache.commons.configuration.reloading.ReloadingController;
 import org.apache.commons.configuration.reloading.ReloadingControllerSupport;
 import org.apache.commons.configuration.reloading.ReloadingDetector;
-import org.apache.commons.configuration.reloading.ReloadingEvent;
-import org.apache.commons.configuration.reloading.ReloadingListener;
 
 /**
  * <p>
@@ -191,7 +189,6 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
                 createReloadingDetector(handler,
                         FileBasedBuilderParametersImpl.fromParameters(
                                 getParameters(), true));
-        getReloadingController().resetReloadingState();
     }
 
     /**
@@ -209,29 +206,8 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
     {
         ReloadingDetector ctrlDetector = createReloadingDetectorForController();
         ReloadingController ctrl = new ReloadingController(ctrlDetector);
-        ctrl.addReloadingListener(createReloadingListener());
+        ReloadingBuilderSupportListener.connect(this, ctrl);
         return ctrl;
-    }
-
-    /**
-     * Creates a listener object to be registered at the associated reloading
-     * controller. This listener resets the builder's result object whenever a
-     * change in the monitored file is detected. This will trigger a builder
-     * reset event, and the next time {@code getConfiguration()} is called, a
-     * new result object is created.
-     *
-     * @return the listener for the associated {@code ReloadingController}
-     */
-    private ReloadingListener createReloadingListener()
-    {
-        return new ReloadingListener()
-        {
-            @Override
-            public void reloadingRequired(ReloadingEvent event)
-            {
-                resetResult();
-            }
-        };
     }
 
     /**
@@ -259,8 +235,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
             public boolean isReloadingRequired()
             {
                 ReloadingDetector detector = resultReloadingDetector;
-                return (detector != null) ? detector.isReloadingRequired()
-                        : false;
+                return (detector != null) && detector.isReloadingRequired();
             }
         };
     }
