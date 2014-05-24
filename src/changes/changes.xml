@@ -170,6 +170,10 @@
       <action dev="oheger" type="update" issue="CONFIGURATION-520">
         Support for reloading of configuration data has been reworked.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-519">
+        Configuration objects are now created via configuration builders. A new
+        API for configuration builders has been added.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-518">
         Classes and interfaces related to interpolation have been slightly
         reworked. ConfigurationInterpolator is now thread-safe. There are
