@@ -47,6 +47,22 @@ public class ConfigurationBuilderEvent extends Event
             new EventType<ConfigurationBuilderEvent>(ANY, "RESET");
 
     /**
+     * The specific event type for configuration request events. Events of this
+     * type are generated each time the builder's {@code getConfiguration()}
+     * method is called (before the managed configuration is actually accessed
+     * and the lock is acquired). This gives listeners the opportunity to
+     * perform some checks which may invalidate the configuration, e.g. trigger
+     * a reload check. <strong>Note:</strong> A listener must not call the
+     * builder's {@code getConfiguration()} method - this will cause an
+     * infinite loop!
+     *
+     * @see ConfigurationBuilder#getConfiguration()
+     */
+    public static final EventType<ConfigurationBuilderEvent> CONFIGURATION_REQUEST =
+            new EventType<ConfigurationBuilderEvent>(ANY,
+                    "CONFIGURATION_REQUEST");
+
+    /**
      * Creates a new instance of {@code ConfigurationBuilderEvent} and sets
      * basic properties.
      *

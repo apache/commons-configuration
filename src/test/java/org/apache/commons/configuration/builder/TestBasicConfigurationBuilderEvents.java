@@ -17,11 +17,14 @@
 package org.apache.commons.configuration.builder;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.event.Event;
+import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.event.EventType;
+import org.apache.commons.configuration.ex.ConfigurationException;
 import org.junit.Test;
 
 /**
@@ -93,6 +96,70 @@ public class TestBasicConfigurationBuilderEvents
         builder.reset();
         builder.removeEventListener(ConfigurationBuilderEvent.RESET, listener);
         builder.resetResult();
+        listener.nextEvent(ConfigurationBuilderEvent.RESET);
+        listener.assertNoMoreEvents();
+    }
+
+    /**
+     * Tests whether the configuration request event type is correctly
+     * configured.
+     */
+    @Test
+    public void testConfigurationRequestEventType()
+    {
+        EventType<ConfigurationBuilderEvent> eventType =
+                ConfigurationBuilderEvent.CONFIGURATION_REQUEST;
+        assertEquals("Wrong super type", ConfigurationBuilderEvent.ANY,
+                eventType.getSuperType());
+    }
+
+    /**
+     * Tests whether a configuration request event is generated.
+     */
+    @Test
+    public void testConfigurationRequestEvent() throws ConfigurationException
+    {
+        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        builder.getConfiguration();
+        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        builder.addEventListener(ConfigurationBuilderEvent.ANY, listener);
+
+        builder.getConfiguration();
+        ConfigurationBuilderEvent event =
+                listener.nextEvent(ConfigurationBuilderEvent.CONFIGURATION_REQUEST);
+        assertSame("Wrong builder", builder, event.getSource());
+        listener.assertNoMoreEvents();
+    }
+
+    /**
+     * Tests the use case that a listener on the request event triggers a reset
+     * of the builder.
+     */
+    @Test
+    public void testResetOnConfigurationRequestEvent()
+            throws ConfigurationException
+    {
+        final BasicConfigurationBuilder<PropertiesConfiguration> builder =
+                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        PropertiesConfiguration configuration = builder.getConfiguration();
+        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
+        builder.addEventListener(
+                ConfigurationBuilderEvent.CONFIGURATION_REQUEST,
+                new EventListener<ConfigurationBuilderEvent>()
+                {
+                    @Override
+                    public void onEvent(ConfigurationBuilderEvent event)
+                    {
+                        builder.resetResult();
+                    }
+                });
+
+        PropertiesConfiguration configuration2 = builder.getConfiguration();
+        assertNotSame("Configuration not reset", configuration, configuration2);
         listener.nextEvent(ConfigurationBuilderEvent.RESET);
         listener.assertNoMoreEvents();
     }

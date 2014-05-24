@@ -346,6 +346,9 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     @Override
     public T getConfiguration() throws ConfigurationException
     {
+        eventListeners.fire(new ConfigurationBuilderEvent(this,
+                ConfigurationBuilderEvent.CONFIGURATION_REQUEST));
+
         T resObj = result;
         if (resObj == null)
         {
