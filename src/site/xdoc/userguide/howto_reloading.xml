@@ -233,6 +233,112 @@ trigger.start();
       configuration data a kind of &quot;transactional&quot; behavior.
     </p>
     </subsection>
+
+    <subsection name="Generic Reloading Support">
+    <p>
+      In fact, <code><a href="../apidocs/org/apache/commons/configuration/builder/ReloadingFileBasedConfigurationBuilder.html">
+      ReloadingFileBasedConfigurationBuilder</a></code> is a pretty thin
+      implementation around a generic reloading mechanism already supported by
+      the <code><a href="../apidocs/org/apache/commons/configuration/builder/BasicConfigurationBuilder.html">
+      BasicConfigurationBuilder</a></code> base class. What it does is mainly
+      specific to file-based configurations: It ensures that a suitable
+      <code>ReloadingDetector</code> is used which is connected to the file
+      managed by the builder, and that this detector is used by a
+      <code><a href="../apidocs/org/apache/commons/configuration/reloading/ReloadingController.html">
+      ReloadingController</a></code> object also created by the builder.
+    </p>
+    <p>
+      It is pretty easy to make use of the same generic reloading support to
+      enable reloading functionality for other types of configuration builders
+      as well. The key to this lies in the method
+      <code>connectToReloadingController()</code> provided by
+      <code>BasicConfigurationBuilder</code>. This method expects a
+      <code>ReloadingController</code> object as argument. It performs some
+      event listener registrations to ensure that reloading events fired by
+      the controller cause the builder's result object to be invalidated, and
+      that the creation of a new result object causes the controller's
+      reloading state to be reset. In a nutshell, this is a full implementation
+      of the reloading protocol.
+    </p>
+    <p>
+      So the recipe to activate reloading for a builder instance is as follows:
+      <ul>
+      <li>Create and initialize the builder instance as usual.</li>
+      <li>Create a <code>ReloadingDetector</code> which is able to monitor
+      the configuration source in question and to find out whether a reload
+      action has to be performed. For this probably a custom implementation is
+      required (as <em>Commons Configuration</em> currently supports only
+      reloading detector implementations dealing with file handlers).</li>
+      <li>Create a <code>ReloadingController</code> object and initialize it
+      with the <code>ReloadingDetector</code> created in the previous step.</li>
+      <li>Pass this reloading controllers to the builder's
+      <code>connectToReloadingController()</code> method.</li>
+      <li>Now reloading facilities are set up for this builder. In order to
+      actually trigger reload checks ensure that the reloading controller's
+      <code>checkForReloading()</code> method is called at appropriate points
+      of time (e.g. initiate a corresponding trigger as described earlier in
+      this chapter.</li>
+      </ul>
+    </p>
+    </subsection>
+
+    <subsection name="Reloading Checks on Builder Access">
+    <p>
+      For some applications it may not be necessary to react on external
+      changes on their configuration immediately. It just has to be ensured
+      that when an access to configuration data is performed, the most recent
+      settings are read. This is in principle similar to the mechanism
+      implemented in <em>Commons Configuration 1.x</em>; here checks for reloads
+      were triggered by each access to a configuration property - and only by
+      that.
+    </p>
+    <p>
+      It is possible to set up a configuration builder in a way that each time
+      the <code>getConfiguration()</code> method is called a reloading check
+      is performed. If the reloading controller detects that the monitored
+      source has changed, the managed configuration is replaced by an updated
+      one. So the builder returns the fresh configuration instance. If used
+      this way, no special reloading trigger has to be installed; reloading
+      can only happen when the builder is queried for its managed configuration.
+      But then it is guaranteed that an up-to-date configuration instance is
+      returned. Note the main difference to the old model as used in
+      <em>Commons Configuration 1.x</em>: Only invocations of a builder's
+      <code>getConfiguration()</code> method trigger a reloading check, not
+      access to the managed configuration's properties.
+    </p>
+    <p>
+      In order to configure a configuration builder to trigger reloading checks
+      each time its managed configuration is accessed, a special event generated
+      by the builder can be used: the <em>configuration request</em> event.
+      This event is passed to registered event listeners before the managed
+      configuration is accessed. (More information about event listeners can
+      be found in the chapter about <a href="howto_events.html">events</a>.)
+      A listener for this event just has to trigger a reloading controller.
+      This will cause the managed configuration to be invalidated and replaced
+      before it is returned to the caller. The following example shows how this
+      can be achieved. It makes use of a <code>ReloadingFileBasedConfigurationBuilder</code>
+      because this class provides easy access to its associated reloading
+      controller. However, the same principle also works for other builders
+      connected to a reloading controller (as described in the previous section):
+    </p>
+    <source><![CDATA[
+// Create and initialize the builder
+final ReloadingFileBasedConfigurationBuilder<Configuration> builder =
+    new ReloadingFileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+    .configure(...);
+
+// Register an event listener for triggering reloading checks
+builder.addEventListener(ConfigurationBuilderEvent.CONFIGURATION_REQUEST,
+    new EventListener()
+    {
+        @Override
+        public void onEvent(ConfigurationBuilderEvent event)
+        {
+            builder.getReloadingController().checkForReloading(null);
+        }
+    });
+]]></source>
+    </subsection>
     </section>
 </body>
 </document>
