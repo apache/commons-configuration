@@ -24,7 +24,7 @@
  </properties>
 
 <body>
-	<section name="Basic features and AbstractConfiguration">
+    <section name="Basic features and AbstractConfiguration">
     <p>
       The <code>Configuration</code> interface defines a whole bunch of methods.
       Implementing these methods all from scratch can be quite hard. Because of
@@ -47,7 +47,7 @@
     </p>
 
     <subsection name="Handling of missing properties">
-	<p>
+    <p>
       What is a configuration object supposed to do if you pass in a key to one
       of its get methods that does not map to an existing property? Well, the
       default behavior as implemented in <code>AbstractConfiguration</code> is
