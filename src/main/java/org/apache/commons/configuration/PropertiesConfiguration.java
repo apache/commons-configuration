@@ -91,7 +91,8 @@ import org.apache.commons.lang3.text.translate.UnicodeEscaper;
  *  key = This property, has multiple, values
  * </pre>
  *   will result in a property with three values. You can change the handling
- *   of delimiters using the {@link AbstractConfiguration#setListDelimiterHandler(char)}
+ *   of delimiters using the
+ *   {@link AbstractConfiguration#setListDelimiterHandler(ListDelimiterHandler)}
  *   method. Per default, list splitting is disabled.
  *  </li>
  *  <li>
