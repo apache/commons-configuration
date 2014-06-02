@@ -27,18 +27,18 @@
 
     <section name="Properties files">
       <p>
-        Properties files are a popular mean of configuring applications. Of course Commons Configuration
+        Properties files are a popular means of configuring applications. Of course, <em>Commons Configuration</em>
         supports this format and enhances significantly the basic <code>java.util.Properties</code> class.
         This section introduces the features of the 
         <code><a href="../apidocs/org/apache/commons/configuration/PropertiesConfiguration.html">PropertiesConfiguration</a></code> class.
         Note that <code>PropertiesConfiguration</code> is a very typical example
-        for an implementation of the <code>Configuration</code> interface and
-        many of the features described in this section (e.g. list handling or
-        interpolation) are supported by other configuration classes as well.
-        This is because most configuration implementations that ship with
-        Commons Configuration are derived from the common base class
+        for an implementation of the <code>Configuration</code> interface; it
+        extends
         <code><a href="../apidocs/org/apache/commons/configuration/AbstractConfiguration.html">AbstractConfiguration</a></code>,
-        which implements these features.
+        thus all the features provided by this base class are available here as
+        well. More information about functionality common to all standard
+        <code>Configuration</code> implementations can be found in the section
+        <a href="howto_basicfeatures.html">Basic features and AbstractConfiguration</a>.
       </p>
 
       <subsection name="Using PropertiesConfiguration">
@@ -56,26 +56,28 @@ window.height = 300
 ]]></source>
 
         <p>
-          To load this file, you'll write:
+          To load this file, you'll write something like:
         </p>
-<source>
-Configuration config = new PropertiesConfiguration("usergui.properties");
-</source>
+        <source><![CDATA[
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<Configuration> builder =
+    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+    .configure(params.properties()
+        .setFileName("usergui.properties"));
+try
+{
+    Configuration config = builder.getConfiguration();
+    ...
+}
+catch(ConfigurationException cex)
+{
+    // loading of the configuration file failed
+}]]></source>
         <p>
-          If you do not specify an absolute path, the file will be searched automatically
-          in the following locations:
-          <ul>
-            <li>in the current directory</li>
-            <li>in the user home directory</li>
-            <li>in the classpath</li>
-          </ul>
-        </p>
-        <p>
-          Instead of using a constructor that takes a file name you can also
-          invoke one of the <code>load()</code> methods. There are several
-          overloaded variants that allow you to load properties from various
-          sources. More information about loading properties files (and file-based
-          configurations in general) can be found in the section about
+          As is demonstrated by this example, a configuration object for a
+          properties file is obtained via a
+          <code><a href="../apidocs/org/apache/commons/configuration/builder/FileBasedConfigurationBuilder.html">
+          FileBasedConfigurationBuilder</a></code> as described in the section
           <a href="howto_filebased.html">File-based Configurations</a>.
         </p>
         <p>
@@ -91,7 +93,7 @@ Dimension size = new Dimension(config.getInt("window.width"),
 
       <subsection name="Includes">
         <p>
-          If a property is named "<code>include</code>" and the value of that property is the
+          If a property is named "<code>include</code>", and the value of that property is the
           name of a file on the disk, that file will be included into the configuration. Here is
           an example:
         </p>
@@ -114,8 +116,8 @@ colors.background = #FFFFFF
         <p>
           As was already pointed out in the section
           <a href="howto_basicfeatures.html#List_handling">List handling</a>
-          of <em>Basic features</em>, Commons Configuration has the ability to
-          return easily a list of values. For example a properties file can
+          of <em>Basic features</em>, <em>Commons Configuration</em> has the ability to
+          return easily a list of values. For example, a properties file can
           contain a list of comma separated values:
         </p>
 <source>
@@ -123,16 +125,36 @@ colors.background = #FFFFFF
 colors.pie = #FF0000, #00FF00, #0000FF
 </source>
         <p>
-          You don't have to split the value manually, you can retrieve an array
-          or a <code>java.util.List</code> directly with:
+          Provided that an appropriate
+          <code><a href="../apidocs/org/apache/commons/configuration/convert/ListDelimiterHandler.html">
+          ListDelimiterHandler</a></code> object was set for the
+          configuration instance, the value is split automatically, and
+          you can retrieve an array or a <code>java.util.List</code> directly with:
         </p>
 <source>
 String[] colors = config.getStringArray("colors.pie");
 List&lt;Object&gt; colorList = config.getList("colors.pie");
 </source>
         <p>
+          Splitting of string values at list delimiter characters is disabled
+          by default. It can be enabled by specifying an instance of
+          <code><a href="../apidocs/org/apache/commons/configuration/convert/DefaultListDelimiterHandler.html">
+          DefaultListDelimiterHandler</a></code>. This can be done when loading
+          the configuration via the builder:
+        </p>
+        <source><![CDATA[
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<Configuration> builder =
+    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+    .configure(params.properties()
+        .setFileName("usergui.properties")
+        .setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+Configuration config = builder.getConfiguration();
+]]></source>
+        <p>
           Alternatively, you can specify a list of values in your properties file by using
-          the same key on several lines:
+          the same key on several lines as shown in the following example. This is an
+          example of a feature not provided by <code>java.util.Properties</code>:
         </p>
 <source>
 # chart colors
@@ -150,21 +172,20 @@ colors.pie = #0000FF;
 
       <subsection name="Saving">
         <p>
-          To save your configuration, just call the <code>save()</code> method:
+          To save your configuration, just call the <code>save()</code> method
+          on the associated configuration builder.
         </p>
-<source>
-PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
+        <source><![CDATA[
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<Configuration> builder =
+    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+    .configure(params.properties()
+        .setFileName("usergui.properties")
+        .setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+Configuration config = builder.getConfiguration();
 config.setProperty("colors.background", "#000000);
-config.save();
-</source>
-        <p>
-          You can also save a copy of the configuration to another file:
-        </p>
-<source>
-PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
-config.setProperty("colors.background", "#000000);
-config.save("usergui.backup.properties);
-</source>
+builder.save();
+]]></source>
         <p>
           More information about saving properties files (and file-based
           configurations in general) can be found in the section about
@@ -191,7 +212,7 @@ key = This \n string \t contains \, escaped \\ characters \u0020
 config.dir = C:\\Temp\\
       ]]></source>
       <p>
-        This issue is not specific to Commons Configuration, but is related to
+        This issue is not specific to <em>Commons Configuration</em>, but is related to
         the standard format for properties files. Refer to the Javadocs of the
         <code>load()</code> method of <code>java.util.Properties</code> for more
         information. Now if you want to define a list with file paths, you may
@@ -251,6 +272,12 @@ config.dirs = \\\\\\\\share1,\\\\\\\\share2
 config.dirs = \\\\share1
 config.dirs = \\\\share2
       ]]></source>
+      <p>
+        Please also refer to the Javadocs of the
+        <code><a href="../apidocs/org/apache/commons/configuration/convert/DefaultListDelimiterHandler.html">
+        DefaultListDelimiterHandler</a></code> class; it describes the
+        escaping rules to be applied in detail.
+      </p>
       </subsection>
 
       <subsection name="Layout Objects">
@@ -282,6 +309,9 @@ config.dirs = \\\\share2
         With <code>setHeaderComment()</code> a global comment can be set for the
         properties file. This comment is written at the very start of the file,
         followed by an empty line.</li>
+        <li><code>setFooterComment()</code><br/>
+        Analogous to <code>setHeaderComment()</code>, but the comment defined by
+        this method is written at the very end of the properties file.</li>
         <li><code>setBlancLinesBefore()</code><br/>
         This methods allows defining the number of empty lines to be written
         before the specified property. It can be used, for instance, to
@@ -325,7 +355,7 @@ config.dirs = \\\\share2
       <subsection name="Custom properties readers and writers">
       <p>
         There are situations when more control over the process of reading and
-        writing properties file is needed. For instance, an application might
+        writing properties files is needed. For instance, an application might
         have to deal with some legacy properties file in a specific format,
         which is not supported out of the box by
         <code>PropertiesConfiguration</code>, but must not be modified. In these
@@ -389,6 +419,7 @@ public class WhitespacePropertiesReader extends PropertiesConfiguration.Properti
      * method is called for each non-comment line read from the properties
      * file.
      */
+    @Override
     protected void parseProperty(String line)
     {
         // simply split the line at the first '=' character
@@ -419,6 +450,7 @@ public class WhitespaceIOFactory extends PropertiesConfiguration.DefaultIOFactor
     /**
      * Return our special properties reader.
      */
+     @Override
     public PropertiesReader createPropertiesReader(Reader in, char delimiter)
     {
         return new WhitespacePropertiesReader(in, delimiter);
@@ -428,16 +460,46 @@ public class WhitespaceIOFactory extends PropertiesConfiguration.DefaultIOFactor
       <p>
         Finally an instance of our new <code>IOFactory</code> implementation
         has to be created and passed to the <code>PropertiesConfiguration</code>
-        object. This must be done before the <code>load()</code> method is
-        called. So we cannot use one of the constructors that load the data.
-        The code for setting up the configuration object could look as follows:
+        object. This can be done via the initialization parameters passed to
+        the configuration builder:
       </p>
         <source><![CDATA[
-PropertiesConfiguration config = new PropertiesConfiguration();
-config.setIOFactory(new WhitespaceIOFactory());
-config.setFile(...);  // set the file to be loaded
-config.load();
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<Configuration> builder =
+    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+    .configure(params.properties()
+        .setFileName("myfile.properties")
+        .setIOFactory(new WhitespaceIOFactory());
+Configuration config = builder.getConfiguration();
 ]]></source>
+      </subsection>
+
+      <subsection name="Builder Configuration Related to Properties Files">
+      <p>
+        When setting up a configuration builder to produce a
+        <code>PropertiesConfiguration</code> instance typically an object
+        implementing the
+        <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/PropertiesBuilderParameters.html">
+        PropertiesBuilderParameters</a></code> interface is used. In addition
+        to the parameters common to all file-based configurations, there are
+        settings specific to properties files which are defined by the
+        <code><a href="../apidocs/org/apache/commons/configuration/builder/PropertiesBuilderProperties.html">
+        PropertiesBuilderProperties</a></code> interface. These include
+        <ul>
+          <li>A flag whether <a href="#Includes">include files</a> are supported.
+          This is <strong>true</strong> by default, but can be switched off if
+          properties named <em>include</em> should not have a special meaning.</li>
+          <li>A custom <a href="#Layout_Objects">layout object</a>.</li>
+          <li>A custom <a href="#Custom_properties_readers_and_writers">I/O
+          factory</a>.</li>
+        </ul>
+      </p>
+      <p>
+        A parameters object for a properties configuration can be obtained using
+        the <code>properties()</code> method of a
+        <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Parameter.html">
+        Parameters</a></code> instance
+      </p>
       </subsection>
     </section>
 
