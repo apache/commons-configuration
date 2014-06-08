@@ -36,7 +36,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1299,34 +1298,6 @@ public class TestXMLConfiguration
                 .getString("add.nodes.test[@attr]"));
         assertEquals("Node2 not saved", "anotherValue", c2
                 .getString("add.nodes.test2"));
-    }
-
-    /**
-     * Tests registering the publicId of a DTD.
-     */
-    @Test
-    public void testRegisterEntityId() throws Exception
-    {
-        URL dtdURL = getClass().getResource("/properties.dtd");
-        final String publicId = "http://commons.apache.org/test/properties.dtd";
-        conf = new XMLConfiguration();
-        load(conf, "testDtd.xml");
-        conf.setPublicID(publicId);
-        saveTestConfig();
-        XMLConfiguration checkConfig = new XMLConfiguration();
-        checkConfig.registerEntityId(publicId, dtdURL);
-        checkConfig.setValidating(true);
-        load(checkConfig, testSaveConf.getAbsolutePath());
-        ConfigurationAssert.assertConfigurationEquals(conf, checkConfig);
-    }
-
-    /**
-     * Tries to register a null public ID. This should cause an exception.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRegisterEntityIdNull() throws IOException
-    {
-        conf.registerEntityId(null, new URL("http://commons.apache.org"));
     }
 
     /**

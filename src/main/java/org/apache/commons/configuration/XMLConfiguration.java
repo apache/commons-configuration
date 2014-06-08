@@ -46,7 +46,6 @@ import org.apache.commons.configuration.io.FileLocator;
 import org.apache.commons.configuration.io.FileLocatorAware;
 import org.apache.commons.configuration.io.InputStreamSupport;
 import org.apache.commons.configuration.resolver.DefaultEntityResolver;
-import org.apache.commons.configuration.resolver.EntityRegistry;
 import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.NodeTreeWalker;
 import org.apache.commons.configuration.tree.ReferenceNodeHandler;
@@ -184,8 +183,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @version $Id$
  */
 public class XMLConfiguration extends BaseHierarchicalConfiguration implements
-        EntityRegistry, FileBasedConfiguration, FileLocatorAware,
-        InputStreamSupport {
+        FileBasedConfiguration, FileLocatorAware, InputStreamSupport {
     /**
      * The serial version UID.
      */
@@ -1034,67 +1032,6 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         {
             endWrite();
         }
-    }
-
-    /**
-     * <p>
-     * Registers the specified DTD URL for the specified public identifier.
-     * </p>
-     * <p>
-     * {@code XMLConfiguration} contains an internal
-     * {@code EntityResolver} implementation. This maps
-     * {@code PUBLICID}'s to URLs (from which the resource will be
-     * loaded). A common use case for this method is to register local URLs
-     * (possibly computed at runtime by a class loader) for DTDs. This allows
-     * the performance advantage of using a local version without having to
-     * ensure every {@code SYSTEM} URI on every processed XML document is
-     * local. This implementation provides only basic functionality. If more
-     * sophisticated features are required, using
-     * {@link #setDocumentBuilder(DocumentBuilder)} to set a custom
-     * {@code DocumentBuilder} (which also can be initialized with a
-     * custom {@code EntityResolver}) is recommended.
-     * </p>
-     * <p>
-     * <strong>Note:</strong> This method will have no effect when a custom
-     * {@code DocumentBuilder} has been set. (Setting a custom
-     * {@code DocumentBuilder} overrides the internal implementation.)
-     * </p>
-     * <p>
-     * <strong>Note:</strong> This method must be called before the
-     * configuration is loaded. So the default constructor of
-     * {@code XMLConfiguration} should be used, the location of the
-     * configuration file set, {@code registerEntityId()} called, and
-     * finally the {@code load()} method can be invoked.
-     * </p>
-     *
-     * @param publicId Public identifier of the DTD to be resolved
-     * @param entityURL The URL to use for reading this DTD
-     * @throws IllegalArgumentException if the public ID is undefined
-     * @since 1.5
-     */
-    @Override
-    public void registerEntityId(String publicId, URL entityURL)
-    {
-        if (entityResolver instanceof EntityRegistry)
-        {
-            ((EntityRegistry) entityResolver).registerEntityId(publicId, entityURL);
-        }
-    }
-
-    /**
-     * Returns a map with the entity IDs that have been registered using the
-     * {@code registerEntityId()} method.
-     *
-     * @return a map with the registered entity IDs
-     */
-    @Override
-    public Map<String, URL> getRegisteredEntities()
-    {
-        if (entityResolver instanceof EntityRegistry)
-        {
-            return ((EntityRegistry) entityResolver).getRegisteredEntities();
-        }
-        return new HashMap<String, URL>();
     }
 
     /**
