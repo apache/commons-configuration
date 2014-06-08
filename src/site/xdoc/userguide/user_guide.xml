@@ -97,6 +97,9 @@
           <li><a href="howto_hierarchical.html#The_XPATH_expression_engine">The XPATH expression engine</a></li>
         </ul>
         <li><a href="howto_hierarchical.html#Builder_Configuration_Related_to_Hierarchical_Configurations">Builder Configuration Related to Hierarchical Configurations</a></li>
+      </ul>
+      <li><a href="howto_xml.html">XML Configurations</a></li>
+      <ul>
         <li><a href="howto_xml.html#Validation_of_XML_configuration_files">Validation of XML configuration files</a></li>
       </ul>
       <li><a href="howto_reloading.html#Composite_Configuration_Details">Automatic Reloading of Configuration Sources</a></li>
