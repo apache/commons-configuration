@@ -82,18 +82,18 @@
         <li><a href="howto_properties.html#Custom_properties_readers_and_writers">Custom properties readers and writers</a></li>
         <li><a href="howto_properties.html#Builder_Configuration_Related_to_Properties_Files">Builder Configuration Related to Properties Files</a></li>
       </ul>
-      <li><a href="howto_xml.html#Hierarchical_Configurations">Hierarchical Configurations</a></li>
+      <li><a href="howto_hierarchical.html#Hierarchical_Configurations">Hierarchical Configurations</a></li>
       <ul>
-        <li><a href="howto_xml.html#Accessing_properties_in_hierarchical_configurations">Accessing properties in hierarchical configurations</a></li>
-        <li><a href="howto_xml.html#Complex_hierarchical_structures">Complex hierarchical structures</a></li>
-        <li><a href="howto_xml.html#Accessing_structured_properties">Accessing structured properties</a></li>
-        <li><a href="howto_xml.html#Sub_Configurations">Sub Configurations</a></li>
-        <li><a href="howto_xml.html#Adding_new_properties">Adding new properties</a></li>
-        <li><a href="howto_xml.html#Escaping_special_characters">Escaping dot characters in property names</a></li>
-        <li><a href="howto_xml.html#Expression_engines">Expression engines</a></li>
+        <li><a href="howto_hierarchical.html#Accessing_properties_in_hierarchical_configurations">Accessing properties in hierarchical configurations</a></li>
+        <li><a href="howto_hierarchical.html#Complex_hierarchical_structures">Complex hierarchical structures</a></li>
+        <li><a href="howto_hierarchical.html#Accessing_structured_properties">Accessing structured properties</a></li>
+        <li><a href="howto_hierarchical.html#Sub_Configurations">Sub Configurations</a></li>
+        <li><a href="howto_hierarchical.html#Adding_new_properties">Adding new properties</a></li>
+        <li><a href="howto_hierarchical.html#Escaping_special_characters">Escaping dot characters in property names</a></li>
+        <li><a href="howto_hierarchical.html#Expression_engines">Expression engines</a></li>
         <ul>
-          <li><a href="howto_xml.html#The_default_expression_engine">The default expression engine</a></li>
-          <li><a href="howto_xml.html#The_XPATH_expression_engine">The XPATH expression engine</a></li>
+          <li><a href="howto_hierarchical.html#The_default_expression_engine">The default expression engine</a></li>
+          <li><a href="howto_hierarchical.html#The_XPATH_expression_engine">The XPATH expression engine</a></li>
         </ul>
         <li><a href="howto_xml.html#Validation_of_XML_configuration_files">Validation of XML configuration files</a></li>
       </ul>
