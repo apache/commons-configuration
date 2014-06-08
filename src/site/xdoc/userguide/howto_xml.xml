@@ -24,48 +24,47 @@
  </properties>
 
 <body>
-	<section name="Using Hierarchical Configurations">
-		<p>
- 	 		This section explains how to use hierarchical
-    		and structured XML datasets.
-    	</p>
-    </section>
-
-	<section name="Hierarchical properties">
-		<p>
-            Many sources of configuration data have a hierarchical or tree-like
-            nature. They can represent data that is structured in many ways.
-            Such configuration sources are represented by classes derived from
-            <a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
-            <code>HierarchicalConfiguration</code></a>.
-        </p>
-        <p>
-            Prominent examples of hierarchical configuration sources are XML
-            documents. They can be read and written using the
-            <a href="../apidocs/org/apache/commons/configuration/XMLConfiguration.html">
-            <code>XMLConfiguration</code></a> class. This section explains how
-            to deal with such structured data and demonstrates the enhanced query
-            facilities supported by <code>HierarchicalConfiguration</code>. We
-            use XML documents as examples for structured configuration sources,
-            but the information provided here (especially the rules for accessing
-            properties) applies to other hierarchical configurations as well.
-            Examples for other hierarchical configuration classes are
-            <ul>
-            <li><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
-            <code>CombinedConfiguration</code></a></li>
-            <li><a href="../apidocs/org/apache/commons/configuration/HierarchicalINIConfiguration.html">
-            <code>HierarchicalINIConfiguration</code></a></li>
-            <li><a href="../apidocs/org/apache/commons/configuration/plist/PropertyListConfiguration.html">
-            <code>PropertyListConfiguration</code></a></li>
-            </ul>
-		</p>
-        <subsection name="Accessing properties in hierarchical configurations">
-            <p>
-                We will start with a simple XML document to show some basics
-                about accessing properties. The following file named
-                <code>gui.xml</code> is used as example document:
-            </p>
-   			<source><![CDATA[
+    <section name="Hierarchical Configurations">
+    <p>
+      Many sources of configuration data have a hierarchical or tree-like
+      nature. They can represent data that is structured in many ways.
+      Such configuration sources are represented by classes implementing the
+      <code><a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+      HierarchicalConfiguration</a></code> interface. With
+      <code><a href="../apidocs/org/apache/commons/configuration/BaseHierarchicalConfiguration.html">
+      BaseHierarchicalConfiguration</a></code> there is a fully functional
+      implementation of the interface from which most of the hierarchical
+      configuration classes shipped with <em>Commons Configuration</em> are
+      derived.
+    </p>
+    <p>
+      Prominent examples of hierarchical configuration sources are XML
+      documents. They can be read and written using the
+      <code><a href="../apidocs/org/apache/commons/configuration/XMLConfiguration.html">
+      XMLConfiguration</a></code> class. This section explains how
+      to deal with such structured data and demonstrates the enhanced query
+      facilities supported by <code>HierarchicalConfiguration</code>. We
+      use XML documents as examples for structured configuration sources,
+      but the information provided here (especially the rules for accessing
+      properties) applies to other hierarchical configurations as well.
+      Examples for other hierarchical configuration classes are
+      <ul>
+        <li><code><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
+        CombinedConfiguration</a></code></li>
+        <li><code><a href="../apidocs/org/apache/commons/configuration/INIConfiguration.html">
+        INIConfiguration</a></code></li>
+        <li><code><a href="../apidocs/org/apache/commons/configuration/plist/PropertyListConfiguration.html">
+        PropertyListConfiguration</a></code></li>
+      </ul>
+    </p>
+        
+    <subsection name="Accessing properties in hierarchical configurations">
+    <p>
+      We will start with a simple XML document to show some basics
+      about accessing properties. The following file named
+      <code>gui.xml</code> is used as example document:
+    </p>
+<source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <gui-definition>
   <colors>
@@ -77,42 +76,49 @@
   </colors>
   <rowsPerPage>15</rowsPerPage>
   <buttons>
-    <name>OK,Cancel,Help</name>
+    <name>OK</name>
+    <name>Cancel</name>
+    <name>Help</name>
   </buttons>
-  <numberFormat pattern="###\,###.##"/>
+  <numberFormat pattern="###,###.##"/>
 </gui-definition>
 ]]></source>
-			<p>
-				(As becomes obvious, this tutorial does not bother with good
-				design of XML documents, the example file should rather 
-				demonstrate the different ways of accessing properties.)
-				To access the data stored in this document it must be loaded
-                by <code>XMLConfiguration</code>. Like other 
-                <a href="howto_filebased.html">file based</a>
-                configuration classes <code>XMLConfiguration</code> supports
-                many ways of specifying the file to process. One way is to
-                pass the file name to the constructor as shown in the following
-                code fragment:
-			</p>
-   			<source><![CDATA[
+    <p>
+      (As becomes obvious, this tutorial does not bother with good
+      design of XML documents, the example file should rather 
+      demonstrate the different ways of accessing properties.)
+      To access the data stored in this document it must be loaded
+      by <code><a href="../apidocs/org/apache/commons/configuration/XMLConfiguration.html">
+      XMLConfiguration</a></code>. Like for other 
+      <a href="howto_filebased.html">file-based</a>  configuration classes
+      a <code><a href="../apidocs/org/apache/commons/configuration/builder/FileBasedConfigurationBuilder.html">
+      FileBasedConfigurationBuilder</a></code> is used for reading the source
+      file as shown in the following code fragement:
+    </p>
+<source><![CDATA[
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<XMLConfiguration> builder =
+    new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class)
+    .configure(params.xml()
+        .setFileName("gui.xml"));
 try
 {
-    XMLConfiguration config = new XMLConfiguration("tables.xml");
-    // do something with config
+    XMLConfiguration config = builder.getConfiguration();
+    ...
 }
 catch(ConfigurationException cex)
 {
-    // something went wrong, e.g. the file was not found
+    // loading of the configuration file failed
 }
 ]]></source>
-			<p>
-				If no exception was thrown, the properties defined in the
-                XML document are now available in the configuration object.
-                Other hierarchical configuration classes that operate on files
-                have corresponding constructors and methods for loading their data.
-                The following fragment shows how the properties can be accessed:
-			</p>
-   			<source><![CDATA[
+    <p>
+      If no exception was thrown, the properties defined in the
+      XML document are now available in the configuration object.
+      Other hierarchical configuration classes that operate on files can be
+      loaded in an analogous way. The following fragment shows how the
+      properties in the configuration object can be accessed:
+    </p>
+<source><![CDATA[
 String backColor = config.getString("colors.background");
 String textColor = config.getString("colors.text");
 String linkNormal = config.getString("colors.link[@normal]");
@@ -120,56 +126,65 @@ String defColor = config.getString("colors.default");
 int rowsPerPage = config.getInt("rowsPerPage");
 List<Object> buttons = config.getList("buttons.name");
 ]]></source>
-			<p>
-				This listing demonstrates some important points about constructing
-				keys for accessing properties in hierarchical configuration sources and about
-                features of <code>HierarchicalConfiguration</code> in general:
-				<ul>
-					<li>
-						Nested elements are accessed using a dot notation. In
-						the example document there is an element
-						<code>&lt;text&gt;</code> in the body of the
-						<code>&lt;color&gt;</code> element. The corresponding
-						key is <code>color.text</code>.
-					</li>
-					<li>
-						The root element is ignored when constructing keys. In
-						the example you do not write
-						<code>gui-definition.color.text</code>, but only
-						<code>color.text</code>.
-					</li>
-					<li>
-						Attributes of XML elements are accessed in a XPath like
-						notation.
-					</li>
-                    <li>
-                        Interpolation can be used as in <code>PropertiesConfiguration</code>.
-                        Here the <code>&lt;default&gt;</code> element in the
-                        <code>colors</code> section refers to another color.
-                    </li>
-                    <li>
-                        Lists of properties can be defined in a short form using
-                        the delimiter character (which is the comma by default).
-                        In this example the <code>buttons.name</code> property
-                        has the three values <em>OK</em>, <em>Cancel</em>, and
-                        <em>Help</em>, so it is queried using the <code>getList()</code>
-                        method. This works in attributes, too. Using the static
-                        <code>setDefaultDelimiter()</code> method of
-                        <code>AbstractConfiguration</code> you can globally
-                        define a different delimiter character or -
-                        by setting the delimiter to 0 - disabling this mechanism
-                        completely. Placing a backslash before a delimiter
-                        character will escape it. This is demonstrated in the
-                        <code>pattern</code> attribute of the <code>numberFormat</code>
-                        element.
-                    </li>
-				</ul>
-			</p>
-            <p>
-                In the next section will show how data in a more complex XML
-                document can be processed.
-            </p>
-        </subsection>
+    <p>
+      This listing demonstrates some important points about constructing the
+      keys for accessing properties in hierarchical configuration sources and about
+      features of <code>HierarchicalConfiguration</code> in general:
+      <ul>
+        <li>
+          Nested elements are accessed using a dot notation. In
+          the example document there is an element <code>&lt;text&gt;</code>
+          in the body of the <code>&lt;color&gt;</code> element. The
+          corresponding key is <code>color.text</code>.
+        </li>
+        <li>
+          The root element is ignored when constructing keys. In
+          the example you do not write <code>gui-definition.color.text</code>,
+          but only <code>color.text</code>.
+        </li>
+        <li>
+          Attributes of XML elements are accessed in a XPath like notation.
+        </li>
+        <li>
+          <a href="howto_basicfeatures.html#Variable_Interpolation">Interpolation</a>
+          can be used in the same way as for all other standard configuration
+          implementations. Here the <code>&lt;default&gt;</code> element in the
+          <code>colors</code> section refers to another color.
+        </li>
+        <li>
+          Lists of properties can be defined by just repeating elements.
+          In this example the <code>buttons.name</code> property
+          has the three values <em>OK</em>, <em>Cancel</em>, and
+          <em>Help</em>, so it is queried using the <code>getList()</code>
+          method. This works with attributes, too. In addition, a special
+          <code><a href="../apidocs/org/apache/commons/configuration/convert/ListDelimiterHandler.html">
+          ListDelimiterHandler</a></code> implementation can be set which
+          supports splitting texts at a specific list delimiter character. This
+          works in the same way as described in the section about
+          <a href="howto_properties.html#Lists_and_arrays">properties
+          configuration</a>. If this mode was used, the three button names could
+          be defined in a single XML element. However, then the <em>pattern</em>
+          attribute of the <code>&lt;numberFormat&gt;</code> element needs to
+          escape the list delimiter which occurs in its content using a
+          backslash character. With these changes the affected part of the XML
+          document would look as follows:
+<source><![CDATA[
+  <buttons>
+    <name>OK, Cancel, Help</name>
+  </buttons>
+  <numberFormat pattern="###\,###.##"/>
+]]></source>
+          Because repeating elements is a natural pattern for XML documents
+          using list splitting is rather untypical for this format.
+        </li>
+      </ul>
+    </p>
+    <p>
+      The next section will show how data in a more complex XML
+      document can be processed.
+    </p>
+    </subsection>
+
 		<subsection name="Complex hierarchical structures">
 			<p>
 				Consider the following scenario: An application operates on
@@ -356,6 +371,9 @@ if(prop instanceof Collection)
 				of indices it is possible to navigate through complex structures of
 				hierarchical configurations; each property can be uniquely identified.
 			</p>
+            </subsection>
+
+            <subsection name="Sub Configurations">
             <p>
                 Sometimes dealing with long property keys may become inconvenient,
                 especially if always the same properties are accessed. For this
@@ -369,8 +387,8 @@ if(prop instanceof Collection)
                 instance, if we are only interested in information about the
                 first database table, we could do something like that:
             </p>
-   			<source><![CDATA[
-HierarchicalConfiguration sub = config.configurationAt("tables.table(0)");
+<source><![CDATA[
+HierarchicalConfiguration<ImmutableNode> sub = config.configurationAt("tables.table(0)");
 String tableName = sub.getString("name");  // only need to provide relative path
 List<Object> fieldNames = sub.getList("fields.field.name");
 ]]></source>
@@ -385,7 +403,7 @@ List<Object> fieldNames = sub.getList("fields.field.name");
                 the <code>getList()</code> method to fetch the required data one
                 by one:
             </p>
-   			<source><![CDATA[
+<source><![CDATA[
 List<Object> fieldNames = config.getList("tables.table(0).fields.field.name");
 List<Object> fieldTypes = config.getList("tables.table(0).fields.field.type");
 List<Object> ... // further calls for other data that might be stored in the config
@@ -404,8 +422,8 @@ List<Object> ... // further calls for other data that might be stored in the con
                 objects is returned. As the following example shows this comes in
                 very handy when processing list-like structures:
             </p>
-   			<source><![CDATA[
-List<HierarchicalConfiguration> fields = 
+<source><![CDATA[
+List<HierarchicalConfiguration<ImmutableNode>> fields = 
     config.configurationsAt("tables.table(0).fields.field");
 for(HierarchicalConfiguration sub : fields)
 {
@@ -415,15 +433,69 @@ for(HierarchicalConfiguration sub : fields)
     ...
 ]]></source>
         <p>
-          The configurations returned by the <code>configurationAt()</code> and
-          <code>configurationsAt()</code> method are in fact instances of the
-          <a href="../apidocs/org/apache/commons/configuration/SubnodeConfiguration.html">
-          <code>SubnodeConfiguration</code></a> class. The API documentation of
-          this class contains more information about its features and
-          limitations.
+          Per default, the configurations returned by the <code>configurationAt()</code> and
+          <code>configurationsAt()</code> methods are a kind of snapshots of
+          the data stored in the original configuration. If the original
+          configuration is later changed, these changes are not visible in the
+          sub configuration and vice versa. If configuration settings just need
+          to be read, this is fine.
         </p>
-		</subsection>
-		<subsection name="Adding new properties">
+        <p>
+          It is also possible to connect a sub configuration more directly to
+          its original configuration. This is done by using overloaded versions
+          of <code>configurationAt()</code> and <code>configurationsAt()</code>
+          which accept an additional <strong>boolean</strong> parameter. If
+          here the value <strong>true</strong> is passed, a special
+          configuration implementation is returned (in fact, an instance of the
+          <code><a href="../apidocs/org/apache/commons/configuration/SubnodeConfiguration.html">
+          SubnodeConfiguration</a></code> class) that operates on the same
+          data structures as the original configuration. Therefore, changes made
+          on one configuration are directly reflected by the other one.
+        </p>
+        <p>
+          Connecting a sub configuration with its parent configuration in the
+          described way is useful in use cases in which configurations are
+          updated. However, there can be pretty drastic updates which break
+          such a connection. As an example, consider the case that a sub
+          configuration is created for a certain sub tree of an original
+          configuration. Now this sub tree gets removed from the original
+          configuration. In this case, the sub configuration becomes detached
+          from its parent. Its content is not changed, but it is now again like
+          a snapshot or a copy of the original. This is demonstrated again in
+          the following example:
+<source><![CDATA[
+// sub points to the 2nd table
+HierarchicalConfiguration<ImmutableNode> sub = config.configurationAt("tables.table(1)", true);
+assertEquals("documents", sub.getString("name"));
+
+// Now change name in parent configuration => should be visible in sub config
+config.setProperty("tables.table(1).name", "tasks");
+assertEquals("tasks", sub.getString("name"));
+
+// Clear the whole content of the 2nd table
+config.clearTree("tables.table(1)");
+// The key used to create the sub configuration is no longer valid,
+// so it is now detacted; it contains the recent data.
+assertEquals("tasks", sub.getString("name"));
+]]></source>
+        </p>
+        <p>
+          This example uses the <code>clearTree()</code> method of
+          <code>HierarchicalConfiguration</code> to remove all information
+          about the second database table from the configuration data. While
+          <code>clearProperty()</code> only removes the value of a property,
+          <code>clearTree()</code> also removes all child elements and their
+          children recursively. After this operation the key
+          <em>tables.table(1)</em> specified when the sub configuration was
+          created no longer points to an existing element; therefore, the
+          sub configuration gets detached. Once detached, a sub configuration
+          cannot be reconnected to its parent again. Even if another table
+          element was added (making the sub key valid again), the sub
+          configuration remains detached.
+        </p>
+        </subsection>
+
+        <subsection name="Adding new properties">
 			<p>
 				So far we have learned how to use indices to avoid ambiguities when
 				querying properties. The same problem occurs when adding new
@@ -560,7 +632,8 @@ config.addProperty("tables.table.fields.field.type", "java.sql.Date");
 			<p>
 				For more information about adding properties to a hierarchical
 				configuration also have a look at the javadocs for
-				<code>HierarchicalConfiguration</code>.
+				<code><a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+				HierarchicalConfiguration</a></code>.
 			</p>
 		</subsection>
 		<subsection name="Escaping special characters">
@@ -619,55 +692,6 @@ String complex = config.getString("test..complex.test..sub..element");
                 you should avoid dots in the tag names of your XML configuration
                 files or other configuration sources.
             </p>
-            <p>
-                Another source of problems is related to list delimiter characters
-                in the values of properties. Like other configuration classes
-                <code>XMLConfiguration</code> implements
-                <a href="howto_basicfeatures.html#List_handling">list handling</a>.
-                This means that the values of XML elements and attributes are
-                checked whether they contain a list delimiter character. If this
-                is the case, the value is split, and a list property is created.
-                Per default this feature is enabled. Have a look at the
-                following example:
-            </p>
-   			<source><![CDATA[
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-
-<configuration>
-  <pi>3,1415</pi>
-</configuration>
-]]></source>
-            <p>
-                Here we use the comma as delimiter for fraction digits (as is
-                standard for some languages). However, the configuration will
-                interpret the comma as list delimiter character and assign the
-                property <em>pi</em> the two values 3 and 1415. This was not
-                desired.
-            </p>
-            <p>
-                XML has a natural way of defining list properties by simply
-                repeating elements. So defining multiple values of a property in
-                a single element or attribute is a rather untypical use case.
-                Unfortunately, early versions of Commons Configuration had list
-                delimiter splitting enabled per default. Later it became obvious
-                that this feature can cause serious problems related to the
-                interpretation of property values and the escaping of delimiter
-                characters. For reasons of backwards compatibility we have to
-                stick to this approach in the 1.x series though.
-            </p>
-            <p>
-                In the next major release the handling of lists will propably be
-                reworked. Therefore it is recommended not to use this feature.
-                You are save if you disable it immediately after the creation of
-                an <code>XMLConfiguration</code> object (and before a file is
-                loaded). This can be achieved as follows:
-            </p>
-   			<source><![CDATA[
-XMLConfiguration config = new XMLConfiguration();
-config.setDelimiterParsingDisabled(true);
-config.setAttributeSplittingDisabled(true);
-config.load("config.xml");
-]]></source>
         </subsection>
 	</section>
 
@@ -676,7 +700,7 @@ config.load("config.xml");
             In the previous chapters we saw many examples about how properties
             in a <code>XMLConfiguration</code> object (or more general in a
             <code>HierarchicalConfiguration</code> object, because this is the
-            base class, which implements this functionality) can be queried or
+            base interface, which defines this functionality) can be queried or
             modified using a special syntax for the property keys. Well, this
             was not the full truth. Actually, property keys are not processed
             by the configuration object itself, but are delegated to a helper
@@ -689,8 +713,8 @@ config.load("config.xml");
             becomes possible to plug in different expression engines into a
             <code>HierarchicalConfiguration</code> object. So by providing
             different implementations of the
-            <a href="../apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
-            <code>ExpressionEngine</code></a>
+            <code><a href="../apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
+            ExpressionEngine</a></code>
             interface hierarchical configurations can support alternative
             expression languages for accessing their data.
         </p>
@@ -698,8 +722,8 @@ config.load("config.xml");
             Before we discuss the available expression engines that ship
             with Commons Configuration, it should be explained how an
             expression engine can be associated with a configuration object.
-            <a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
-            <code>HierarchicalConfiguration</code></a> and all derived classes
+            <code><a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+            HierarchicalConfiguration</a></code> and all implementing classes
             provide a <code>setExpressionEngine()</code> method, which expects
             an implementation of the <code>ExpressionEngine</code> interface as
             argument. After this method was called, the configuration object will
@@ -711,68 +735,102 @@ config.load("config.xml");
             syntax, too.
         </p>
         <p>
-            In addition to instance specific expression engines that change the
-            behavior of single configuration objects it is also possible to set
-            a global expression engine. This engine is shared between all
-            hierarchical configuration objects, for which no specific expression
-            engine was set. The global expression engine can be set using the
-            static <code>setDefaultExpressionEngine()</code> method of
-            <code>HierarchicalConfiguration</code>. By invoking this method with
-            a custom expression engine the syntax of all hierarchical configuration
-            objects can be altered at once.
+            The recommended approach is that a configuration object is fully
+            initialized by the <a href="howto_builders.html">configuration
+            builder</a> which creates it. The initialization parameters for
+            hierarchical configurations allow setting the expression engine as
+            shown in the following code fragment (more information about
+            initialization parameters for hierarchical and XML configurations
+            is provided in a later section in this chapter):
+        </p>
+<source><![CDATA[
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<XMLConfiguration> builder =
+    new FileBasedConfigurationBuilder<BaseHierarchicalConfiguration>(BaseHierarchicalConfiguration.class)
+    .configure(params.hierarchical()
+        .setExpressionEngine(new MyExpressionEngine()));
+]]></source>
+        <p>
+            Remember that it is possible to define
+            <a href="howto_builders.html#Default_Initialization_Parameters">Default
+            Initialization Parameters</a> for specific configuration classes.
+            Using this mechanism, it is possible to instance to set a special
+            expression engine for all XML configurations used by an
+            application.
         </p>
         
         <subsection name="The default expression engine">
             <p>
                 The syntax described so far for property keys of hierarchical
                 configurations is implemented by a specific implementation of the
-                <a href="../apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
-                <code>ExpressionEngine</code></a> interface called
-                <a href="../apidocs/org/apache/commons/configuration/tree/DefaultExpressionEngine.html">
-                <code>DefaultExpressionEngine</code></a>. An instance of this class
-                is installed as the global expression engine in
-                <code>HierarchicalConfiguration</code>. So all newly created
-                instances of this class will make use of this engine (which is
-                the reason that our examples above worked).
+                <code><a href="../apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
+                ExpressionEngine</a></code> interface called
+                <code><a href="../apidocs/org/apache/commons/configuration/tree/DefaultExpressionEngine.html">
+                DefaultExpressionEngine</a></code>. An instance of this class
+                is used by the base implementation of
+                <code>HierarchicalConfiguration</code> if no specific expression
+                engine was set (which is the reason why our examples above worked).
             </p>
             <p>
                 After reading the examples of property keys provided so far in
                 this document you should have a sound understanding regarding
                 the features and the syntax supported by the
                 <code>DefaultExpressionEngine</code> class. But it can do a
-                little bit more for you: it defines a bunch of properties,
+                little bit more for you: it defines a bunch of settings,
                 which can be used to customize most tokens that can appear in a
                 valid property key. You prefer curly brackets over paranthesis
                 as index markers? You find the duplicated dot as escaped
                 property delimiter counter-intuitive? Well, simply go ahead and
                 change it! The following example shows how the syntax of a
-                <code>DefaultExpressionEngine</code> object is modified. Then
-                this object is set as the global expression engine, so that from
-                now on all hierarchical configuration objects will take up this
-                new syntax:
+                <code>DefaultExpressionEngine</code> object is modified. The
+                key is to create an instance of the
+                <code><a href="../apidocs/org/apache/commons/configuration/tree/DefaultExpressionEngineSymbols.html">
+                DefaultExpressionEngineSymbols</a></code> class and to
+                initialize it with the desired syntax elements. This is done
+                using a builder approach:
             </p>
             <source><![CDATA[
-DefaultExpressionEngine engine = new DefaultExpressionEngine();
-
-// Use a slash as property delimiter
-engine.setPropertyDelimiter("/");
-// Indices should be provided in curly brackets
-engine.setIndexStart("{");
-engine.setIndexEnd("}");
-// For attributes use simply a @
-engine.setAttributeStart("@");
-engine.setAttributeEnd(null);
-// A Backslash is used for escaping property delimiters
-engine.setEscapedDelimiter("\\/");
-
-// Now install this engine as the global engine
-HierarchicalConfiguration.setDefaultExpressionEngine(engine);
+DefaultExpressionEngineSymbols symbols =
+    new DefaultExpressionEngineSymbols.Builder(
+        DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
+        // Use a slash as property delimiter
+        .setPropertyDelimiter("/")
+        // Indices should be specified in curly brackets
+        .setIndexStart("{")
+        .setIndexEnd("}")
+        // For attributes use simply a @
+        .setAttributeStart("@")
+        .setAttributeEnd(null)
+        // A Backslash is used for escaping property delimiters
+        .setEscapedDelimiter("\\/")
+        .create();
+        
+// Now create a configuration using this expression engine
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<XMLConfiguration> builder =
+    new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class)
+    .configure(params.xml()
+        .setFileName("tables.xml")
+        .setExpressionEngine(engine));
+XMLConfiguration config = builder.getConfiguration();
 
 // Access properties using the new syntax
-HierarchicalConfiguration config = ...
 String tableName = config.getString("tables/table{0}/name");
 String tableType = config.getString("tables/table{0}@type");
          ]]></source>
+            <p>
+              <code>DefaultExpressionEngineSymbol</code> objects are
+              immutable; the same is true for <code>DefaultExpressionEngine</code>.
+              Thus a single expression engine instance can be shared between
+              multiple configuration instances. The example fragment shows the
+              typical usage pattern for constructing new
+              <code>DefaultExpressionEngine</code> instances with an alternative
+              syntax: A builder for a symbols object is constructed passing in
+              an instance that serves as starting point - here the constant
+              <code>DEFAULT_SYMBOLS</code> is used which defines the standard
+              syntax. Then methods of the builder are used to modify only the
+              settings which are to be adapted.
+            </p>
             <p>
                 <em>Tip:</em> Sometimes when processing an XML document you
                 don't want to distinguish between attributes and &quot;normal&quot;
@@ -784,9 +842,14 @@ String tableType = config.getString("tables/table{0}@type");
                 properties:
             </p>
             <source><![CDATA[
-DefaultExpressionEngine engine = new DefaultExpressionEngine();
-engine.setAttributeEnd(null);
-engine.setAttributeStart(engine.getPropertyDelimiter());
+DefaultExpressionEngineSymbols symbolsNoAttributes =
+    new DefaultExpressionEngineSymbols.Builder(
+        DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
+        .setAttributeStart(
+            DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getPropertyDelimiter())
+        .setAttributeEnd(null)
+        .create();
+DefaultExpressionEngine engine = new DefaultExpressionEngine(symbolsNoAttributes);
 ...
 Object value = config.getProperty("tables.table(0).name");
 // name can either be a child node of table or an attribute
@@ -827,25 +890,34 @@ Object value = config.getProperty("tables.table(0).name");
             </p>
             <p>
                 Given the power of XPATH it is no wonder that we got many
-                user requests to add XPATH support to Commons Configuration.
+                user requests to add XPATH support to <em>Commons Configuration</em>.
                 Well, here is it!
             </p>
             <p>
                 For enabling XPATH syntax for property keys you need the
-                <a href="../apidocs/org/apache/commons/configuration/tree/xpath/XPathExpressionEngine.html">
-                <code>XPathExpressionEngine</code></a> class. This class
+                <code><a href="../apidocs/org/apache/commons/configuration/tree/xpath/XPathExpressionEngine.html">
+                XPathExpressionEngine</a></code> class. This class
                 implements the <code>ExpressionEngine</code> interface and can
                 be plugged into a <code>HierarchicalConfiguration</code> object
-                using the <code>setExpressionEngine()</code> method. It is also
-                possible to set an instance of this class as the global
-                expression engine, so that all hierarchical configuration
+                in the same way as described above. Because instances of
+                <code>XPathExpressionEngine</code> are thread-safe and can be
+                shared between multiple configuration objects it is also
+                possible to set an instance as the default expression engine
+                in the <a href="howto_builders.html#Default_Initialization_Parameters">
+                default initialization parameters</a> for configuration
+                builders, so that all hierarchical configuration
                 objects make use of XPATH syntax. The following code fragment
                 shows how XPATH support can be enabled for a configuration
                 object:
             </p>
             <source><![CDATA[
-HierarchicalConfiguration config = ...
-config.setExpressionEngine(new XPathExpressionEngine());
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<XMLConfiguration> builder =
+    new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class)
+    .configure(params.xml()
+        .setFileName("tables.xml")
+        .setExpressionEngine(new XPathExpressionEngine()));
+XMLConfiguration config = builder.getConfiguration();
 
 // Now we can use XPATH queries:
 List<Object> fields = config.getList("tables/table[1]/fields/name");
@@ -988,20 +1060,24 @@ config.addProperty("tables table/name", "documents");
         <subsection name="Validation using a DTD">
         <p>
             The easiest way to turn on validation is to simply set the
-            <code>validating</code> property to true as shown in the
-            following example:
+            <code>validating</code> property to <strong>true</strong> in the
+            initialization parameters of the configuration builder as shown in
+            the following example:
         </p>
         <source><![CDATA[
-XMLConfiguration config = new XMLConfiguration();
-config.setFileName("myconfig.xml");
-config.setValidating(true);
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<XMLConfiguration> builder =
+    new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class)
+    .configure(params.xml()
+        .setFileName("myconfig.xml")
+        .setValidating(true));
 
 // This will throw a ConfigurationException if the XML document does not
 // conform to its DTD.
-config.load();
+XMLConfiguration config = builder.getConfiguration();
 ]]></source>
         <p>
-            Setting the <code>validating</code> flag to true will cause
+            Setting the <code>validating</code> flag to <strong>true</strong> will cause
             <code>XMLConfiguration</code> to use a validating XML parser. At this parser
             a custom <code>ErrorHandler</code> will be registered, which throws
             exceptions on simple and fatal parsing errors.
