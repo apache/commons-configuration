@@ -89,12 +89,14 @@
         <li><a href="howto_hierarchical.html#Accessing_structured_properties">Accessing structured properties</a></li>
         <li><a href="howto_hierarchical.html#Sub_Configurations">Sub Configurations</a></li>
         <li><a href="howto_hierarchical.html#Adding_new_properties">Adding new properties</a></li>
-        <li><a href="howto_hierarchical.html#Escaping_special_characters">Escaping dot characters in property names</a></li>
+        <li><a href="howto_hierarchical.html#Escaping_special_characters">Escaping special characters</a></li>
+        <li><a href="howto_hierarchical.html#Internal_Representation">Internal Representation</a></li>
         <li><a href="howto_hierarchical.html#Expression_engines">Expression engines</a></li>
         <ul>
           <li><a href="howto_hierarchical.html#The_default_expression_engine">The default expression engine</a></li>
           <li><a href="howto_hierarchical.html#The_XPATH_expression_engine">The XPATH expression engine</a></li>
         </ul>
+        <li><a href="howto_hierarchical.html#Builder_Configuration_Related_to_Hierarchical_Configurations">Builder Configuration Related to Hierarchical Configurations</a></li>
         <li><a href="howto_xml.html#Validation_of_XML_configuration_files">Validation of XML configuration files</a></li>
       </ul>
       <li><a href="howto_reloading.html#Composite_Configuration_Details">Automatic Reloading of Configuration Sources</a></li>

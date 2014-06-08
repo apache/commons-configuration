@@ -694,9 +694,49 @@ String complex = config.getString("test..complex.test..sub..element");
       files or other configuration sources.
     </p>
     </subsection>
-    </section>
 
-    <section name="Expression engines">
+    <subsection name="Internal Representation">
+    <p>
+      You might have noted that the
+      <code><a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+      HierarchicalConfiguration</a></code> interface has a type parameter
+      defining the type of nodes it operates on. Internally, the nodes build up
+      a tree structure on which queries or manipulating operations can be
+      executed. There is an abstract base class
+      <code><a href="../apidocs/org/apache/commons/configuration/AbstractHierarchicalConfiguration.html">
+      AbstractHierarchicalConfiguration</a></code> implementing a major part of
+      the provided functionality in terms of abstract node objects. These nodes
+      are not directly accessed, but via a so-called
+      <code><a href="../apidocs/org/apache/commons/configuration/tree/NodeHandler.html">
+      NodeHandler</a></code>. The <code>NodeHandler</code> interface defines a
+      number of methods for accessing properties of a node like its name, its
+      value, or its children in a generic way.
+    </p>
+    <p>
+      This constellation makes it possible to integrate hierarchical configurations
+      with different hierarchical data structures, e.g. file systems, JNDI, etc.
+      The standard configurations shipped with <em>Commons Configuration</em>
+      mainly use an in-memory representation of their data based on the
+      <code><a href="../apidocs/org/apache/commons/configuration/tree/ImmutableNode.html">
+      ImmutableNode</a></code> class. There is a special base class for
+      configurations of this type called
+      <code><a href="../apidocs/org/apache/commons/configuration/BaseHierarchicalConfiguration.html">
+      BaseHierarchicalConfiguration</a></code>. As the name implies, the nodes
+      used by these configurations are immutable; this is beneficial especially
+      when it comes to <a href="howto_concurrency.html#Special_cases">concurrent
+      access</a>. It is possible to obtain the root node of a
+      <code>BaseHierarchicalConfiguration</code> object as shown in the
+      following example, but this is necessary for very special use cases only
+      because the most typical queries and manipulations can be done via the
+      <code>HierarchicalConfiguration</code> interface.
+    </p>
+   <source><![CDATA[
+// config is of type BaseHierarchicalConfiguration
+ImmutableNode root = config.getNodeModel().getNodeHandler().getRootNode();
+]]></source>
+    </subsection>
+
+    <subsection name="Expression engines">
         <p>
             In the previous chapters we saw many examples about how properties
             in a <code>XMLConfiguration</code> object (or more general in a
@@ -759,8 +799,9 @@ FileBasedConfigurationBuilder<XMLConfiguration> builder =
             expression engine for all XML configurations used by an
             application.
         </p>
-        
-        <subsection name="The default expression engine">
+
+        <a name="The_default_expression_engine"></a>
+        <strong>The default expression engine</strong>
             <p>
                 The syntax described so far for property keys of hierarchical
                 configurations is implemented by a specific implementation of the
@@ -855,9 +896,9 @@ DefaultExpressionEngine engine = new DefaultExpressionEngine(symbolsNoAttributes
 Object value = config.getProperty("tables.table(0).name");
 // name can either be a child node of table or an attribute
          ]]></source>
-        </subsection>
         
-        <subsection name="The XPATH expression engine">
+        <a name="The_XPATH_expression_engine"></a>
+        <strong>The XPATH expression engine</strong>
             <p>
                 The expression language provided by the <code>DefaultExpressionEngine</code>
                 class is powerful enough to address all properties in a
@@ -1049,6 +1090,27 @@ config.addProperty("tables table/name", "documents");
                 property keys.
             </p>
         </subsection>
+
+      <subsection name="Builder Configuration Related to Hierarchical Configurations">
+      <p>
+        There is special support for the initialization parameters of
+        configuration builders for hierarchical configurations. The
+        <code><a href="../apidocs/org/apache/commons/configuration/builder/HierarchicalBuilderProperties.html">
+        HierarchicalBuilderProperties</a></code> interface defines additional
+        settings applicable to hierarchical configurations. Currently, the
+        <a href="#Expression_engines">expression engine</a> can be set.
+      </p>
+      <p>
+        A parameters object for a hierarchical configuration can be obtained using
+        the <code>hierarchical()</code> method of a
+        <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Parameter.html">
+        Parameters</a></code> instance. It returns an object implementing the
+        <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/HierarchicalBuilderParameters.html">
+        HierarchicalBuilderParameters</a></code> interface which contains set
+        methods for all the available properties, including the ones inherited
+        from base interfaces.
+      </p>
+      </subsection>
     </section>
 </body>
 
