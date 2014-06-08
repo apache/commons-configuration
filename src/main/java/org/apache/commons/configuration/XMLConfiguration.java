@@ -184,9 +184,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * @version $Id$
  */
 public class XMLConfiguration extends BaseHierarchicalConfiguration implements
-        EntityResolver, EntityRegistry, FileBasedConfiguration,
-        FileLocatorAware, InputStreamSupport
-{
+        EntityRegistry, FileBasedConfiguration, FileLocatorAware,
+        InputStreamSupport {
     /**
      * The serial version UID.
      */
@@ -1079,34 +1078,6 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         if (entityResolver instanceof EntityRegistry)
         {
             ((EntityRegistry) entityResolver).registerEntityId(publicId, entityURL);
-        }
-    }
-
-    /**
-     * Resolves the requested external entity. This is the default
-     * implementation of the {@code EntityResolver} interface. It checks
-     * the passed in public ID against the registered entity IDs and uses a
-     * local URL if possible.
-     *
-     * @param publicId the public identifier of the entity being referenced
-     * @param systemId the system identifier of the entity being referenced
-     * @return an input source for the specified entity
-     * @throws SAXException if a parsing exception occurs
-     * @since 1.5
-     * @deprecated Use getEntityResolver().resolveEntity()
-     */
-    @Override
-    @Deprecated
-    public InputSource resolveEntity(String publicId, String systemId)
-            throws SAXException
-    {
-        try
-        {
-            return entityResolver.resolveEntity(publicId, systemId);
-        }
-        catch (IOException e)
-        {
-            throw new SAXException(e);
         }
     }
 
