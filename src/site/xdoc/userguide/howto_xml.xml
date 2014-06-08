@@ -250,6 +250,34 @@ FileBasedConfigurationBuilder<XMLConfiguration> builder =
 XMLConfiguration config = builder.getConfiguration();
 ]]></source>
         </subsection>
+
+      <subsection name="Builder Configuration Related to XML Configurations">
+      <p>
+        XML configurations are created in the typical way: via configuration
+        builders. The initialization parameters supported for them include all
+        the settings available for hierarchical configurations and file-based
+        configurations. In addition, the
+        <code><a href="../apidocs/org/apache/commons/configuration/builder/XMLBuilderProperties.html">
+        XMLBuilderProperties</a></code> interface defines settings specific to
+        XML configurations. This includes
+        <ul>
+          <li>a custom <code>DocumentBuilder</code></li>
+          <li>a custom <code>EntityResolver</code></li>
+          <li>flags whether the XML document is to be validated and how this
+          validation is to be performed</li>
+          <li>the public and the system ID of the document when it is written</li>
+        </ul>
+      </p>
+      <p>
+        A parameters object for an XML configuration can be obtained using
+        the <code>xml()</code> method of a
+        <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Parameter.html">
+        Parameters</a></code> instance. It returns an object implementing the
+        <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/XMLBuilderParameters.html">
+        XMLBuilderParameters</a></code> interface which defines set
+        methods for all the available properties.
+      </p>
+      </subsection>
     </section>
 </body>
 

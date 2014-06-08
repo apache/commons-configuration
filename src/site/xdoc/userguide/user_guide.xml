@@ -104,6 +104,7 @@
         <li><a href="howto_xml.html#Default_Entity_Resolution">Default Entity Resolution</a></li>
         <li><a href="howto_xml.html#Enhanced_Entity_Resolution">Enhanced Entity Resolution</a></li>
         <li><a href="howto_xml.html#Extending_Validation_and_Entity_Resolution">Extending Validation and Entity Resolution</a></li>
+        <li><a href="howto_xml.html#Builder_Configuration_Related_to_XML_Configurations">Builder Configuration Related to XML Configurations</a></li>
       </ul>
       <li><a href="howto_reloading.html#Composite_Configuration_Details">Automatic Reloading of Configuration Sources</a></li>
       <ul>
