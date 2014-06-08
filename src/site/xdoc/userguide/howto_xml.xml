@@ -35,16 +35,16 @@
       functionality offered by the <code>XMLConfiguration</code> class is
       discussed.
     </p>
-    </section>
 
-    <section name="Validation of XML configuration files">
+    <subsection name="Validation of XML configuration files">
         <p>
             XML parsers provide support for validation of XML documents to ensure that they
             conform to a certain DTD or XML Schema. This feature can be useful for
             configuration files, too. <code>XMLConfiguration</code> allows this feature
             to be enabled when files are loaded.
         </p>
-        <subsection name="Validation using a DTD">
+
+        <strong>Validation using a DTD</strong>
         <p>
             The easiest way to turn on validation is to simply set the
             <code>validating</code> property to <strong>true</strong> in the
@@ -69,29 +69,33 @@ XMLConfiguration config = builder.getConfiguration();
             a custom <code>ErrorHandler</code> will be registered, which throws
             exceptions on simple and fatal parsing errors.
         </p>
-        </subsection>
-        <subsection name="Validation using a Schema">
+
+        <strong>Validation using a Schema</strong>
         <p>
             XML Parsers also provide support for validating XML documents using an
-            XML Schema. XMLConfiguration provides a simple mechanism for enabling
-            this by setting the <code>schemaValidation</code> flag to true. This
-            will also set the <code>validating</code> flag to true so both do not
+            XML Schema. <code>XMLConfiguration</code> provides a simple mechanism for enabling
+            this by setting the <code>schemaValidation</code> flag to <strong>true</strong>. This
+            will also set the <code>validating</code> flag to <strong>true</strong> so both do not
             need to be set. The XML Parser will then use the schema defined in the
             XML document to validate it. Enabling schema validation will also
             enable the parser's namespace support.
         </p>
         <p>
         <source><![CDATA[
-XMLConfiguration config = new XMLConfiguration();
-config.setFileName("myconfig.xml");
-config.setSchemaValidation(true);
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<XMLConfiguration> builder =
+    new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class)
+    .configure(params.xml()
+        .setFileName("myconfig.xml")
+        .setSchemaValidation(true));
 
 // This will throw a ConfigurationException if the XML document does not
 // conform to its Schema.
-config.load();
+XMLConfiguration config = builder.getConfiguration();
 ]]></source>
         </p>
         </subsection>
+
         <subsection name="Default Entity Resolution">
         <p>
             There is also some support for dealing with DTD files. Often the
@@ -115,38 +119,45 @@ config.load();
         </p>
         <p>
             <code>XMLConfiguration</code> provides a simple default implementation of
-            an <code>EntityResolver</code>. This implementation is initialized
+            an <code>EntityResolver</code> in form of the
+            <code><a href="../apidocs/org/apache/commons/configuration/resolver/DefaultEntityResolver.html">
+            DefaultEntityResolver</a></code> class. This implementation is initialized
             by calling the <code>registerEntityId()</code> method with the
             public IDs of the entities to be retrieved and their corresponding
-            local URLs. This method has to be called before the configuration
-            is loaded. To continue our example, consider that the DTD file for
+            local URLs. Then the instance is passed to the configuation builder's
+            initialization parameters. As an example, consider that the DTD file for
             our example document is stored on the class path. We can register it
             at <code>XMLConfiguration</code> using the following code:
         </p>
         <source><![CDATA[
-XMLConfiguration config = new XMLConfiguration();
+Parameters params = new Parameters();
+DefaultEntityResolver resolver = new DefaultEntityResolver();
 // load the URL to the DTD file from class path
 URL dtdURL = getClass().getResource("web-app_2.2.dtd");
-// register it at the configuration
-config.registerEntityId("-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN",
+// register it at the resolver
+resolver.registerEntityId("-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN",
     dtdURL);
-config.setValidating(true);  // enable validation
-config.setFileName("web.xml");
-config.load();
+
+FileBasedConfigurationBuilder<XMLConfiguration> builder =
+    new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class)
+    .configure(params.xml()
+        .setFileName("web.xml")
+        .setEntityResolver(resolver)
+        .setValidating(true));
+
+XMLConfiguration config = builder.getConfiguration();
 ]]></source>
         <p>
             This basically tells the XML configuration to use the specified
-            URL when it encounters the given public ID. Note that the call to
-            <code>registerEntityId()</code> has to be performed before the
-            configuration is loaded. So you cannot use one of the constructors
-            that directly load the configuration.
+            URL when it encounters the given public ID.
         </p>
         </subsection>
+
         <subsection name="Enhanced Entity Resolution">
         <p>
             While the default entity resolver can be used under certain circumstances,
-            it does not work well when using the DefaultConfigurationBuilder.
-            Furthermore, in many circumstances the programmatic nature of
+            it does not work well when using combined configurations from
+            multiple sources. Furthermore, in many circumstances the programmatic nature of
             registering entities will tie the application tightly to the
             XML content. In addition, because it only works with the public id it
             cannot support XML documents using an XML Schema.
@@ -154,8 +165,10 @@ config.load();
         <p>
             <a href="http://xml.apache.org/commons/components/resolver/resolver-article.html#s.whats.wrong">XML
             Entity and URI Resolvers</a> describes using a set of catalog files to
-            resolve enitities. Commons Configuration provides support for
-            this Catalog Resolver through its own CatalogResolver class.
+            resolve enitities. <em>Commons Configuration</em> provides support for
+            this Catalog Resolver through its own
+            <code><a href="../apidocs/org/apache/commons/configuration/resolver/CatalogResolver.html">
+            CatalogResolver</a></code> class.
         </p>
          <source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1"?>
@@ -180,45 +193,62 @@ config.load();
             at <a href="http://www.w3.org/TR/xmlschema-0/#schemaLocation">schemaLocation</a>.
         </p>
         <p>
-            The example that follows shows how to use the CatalogResolver when
-            processing an XMLConfiguration. It should be noted that by using the
-            setEntityResolver method any EntityResolver may be used, not just those
-            provided by Commons Configuration.
+            The example that follows shows how to use the <code>CatalogResolver</code> class when
+            creating an <code>XMLConfiguration</code>. It should be noted that by using the
+            <code>setEntityResolver()</code> method any EntityResolver may be used, not just those
+            provided by <em>Commons Configuration</em>.
         </p>
         <source><![CDATA[
+Parameters params = new Parameters();
 CatalogResolver resolver = new CatalogResolver();
 resolver.setCatalogFiles("local/catalog.xml","http://test.org/catalogs/catalog1.xml");
-XMLConfiguration config = new XMLConfiguration();
-config.setEntityResolver(resolver);
-config.setSchemaValidation(true);  // enable schema validation
-config.setFileName("config.xml");
-config.load();
+
+FileBasedConfigurationBuilder<XMLConfiguration> builder =
+    new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class)
+    .configure(params.xml()
+        .setFileName("config.xml")
+        .setEntityResolver(resolver)
+        .setSchemaValidation(true));  // enable schema validation
+
+XMLConfiguration config = builder.getConfiguration();
 ]]></source>
         </subsection>
+
         <subsection name="Extending Validation and Entity Resolution">
         <p>
-            The mechanisms provided with Commons Configuration will hopefully be
-            sufficient in most cases, however there will certainly be circumstances
-            where they are not. XMLConfiguration provides two extension mechanisms
+            The mechanisms provided with <em>Commons Configuration</em> will hopefully be
+            sufficient in most cases; however, there will certainly be circumstances
+            where they are not. <code>XMLConfiguration</code> provides two extension mechanisms
             that should provide applications with all the flexibility they may
             need. The first, registering a custom Entity Resolver has already been
-            discussed in the preceeding section. The second is that XMLConfiguration
+            discussed in the preceeding section. The second is that <code>XMLConfiguration</code>
             provides a generic way of setting up the XML parser to use: A preconfigured
             <code>DocumentBuilder</code> object can be passed to the
-            <code>setDocumentBuilder()</code> method.
+            initialization parameters of the configuration builder.
         </p>
         <p>
             So an application can create a <code>DocumentBuilder</code> object
             and initialize it according to its special needs. Then this
-            object must be passed to the <code>XMLConfiguration</code> instance
-            before invocation of the <code>load()</code> method. When loading
+            object must be passed to the configuration builder when it is initialized. When loading
             a configuration file, the passed in <code>DocumentBuilder</code> will
             be used instead of the default one. <em>Note:</em> If a custom
-            <code>DocumentBuilder</code> is used, the default implementation of
-            the <code>EntityResolver</code> interface is disabled. This means
-            that the <code>registerEntityId()</code> method has no effect in
-            this mode.
+            <code>DocumentBuilder</code> is used, the mechanisms for entity
+            resolution described in the previous sub sections are disabled. The
+            following example shows how a custom <code>DocumentBuilder</code>
+            can be set:
         </p>
+        <source><![CDATA[
+Parameters params = new Parameters();
+DocumentBuilder docBuilder = ... // set up a custom document builder
+
+FileBasedConfigurationBuilder<XMLConfiguration> builder =
+    new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class)
+    .configure(params.xml()
+        .setFileName("config.xml")
+        .setDocumentBuilder(docBuilder);
+
+XMLConfiguration config = builder.getConfiguration();
+]]></source>
         </subsection>
     </section>
 </body>
