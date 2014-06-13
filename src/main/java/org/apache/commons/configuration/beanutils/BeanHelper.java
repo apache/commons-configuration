@@ -86,10 +86,10 @@ public final class BeanHelper
      * {@code BeanIntrospector} objects which support fluent interfaces. This is
      * required for handling builder parameter objects correctly.
      */
-    private static final BeanUtilsBean beanUtilsBean = initBeanUtilsBean();
+    private static final BeanUtilsBean BEAN_UTILS_BEAN = initBeanUtilsBean();
 
     /** Stores a map with the registered bean factories. */
-    private final Map<String, BeanFactory> BEAN_FACTORIES = Collections
+    private final Map<String, BeanFactory> beanFactories = Collections
             .synchronizedMap(new HashMap<String, BeanFactory>());
 
     /**
@@ -141,7 +141,7 @@ public final class BeanHelper
             throw new IllegalArgumentException("Bean factory must not be null!");
         }
 
-        BEAN_FACTORIES.put(name, factory);
+        beanFactories.put(name, factory);
     }
 
     /**
@@ -154,7 +154,7 @@ public final class BeanHelper
      */
     public BeanFactory deregisterBeanFactory(String name)
     {
-        return BEAN_FACTORIES.remove(name);
+        return beanFactories.remove(name);
     }
 
     /**
@@ -164,7 +164,7 @@ public final class BeanHelper
      */
     public Set<String> registeredFactoryNames()
     {
-        return BEAN_FACTORIES.keySet();
+        return beanFactories.keySet();
     }
 
     /**
@@ -291,7 +291,7 @@ public final class BeanHelper
         }
         WrapDynaClass dynaClass =
                 WrapDynaClass.createDynaClass(bean.getClass(),
-                        beanUtilsBean.getPropertyUtils());
+                        BEAN_UTILS_BEAN.getPropertyUtils());
         return new WrapDynaBean(bean, dynaClass);
     }
 
@@ -315,7 +315,7 @@ public final class BeanHelper
             throws IllegalAccessException, InvocationTargetException,
             NoSuchMethodException
     {
-        beanUtilsBean.getPropertyUtils().copyProperties(dest, orig);
+        BEAN_UTILS_BEAN.getPropertyUtils().copyProperties(dest, orig);
     }
 
     /**
@@ -329,7 +329,7 @@ public final class BeanHelper
         try
         {
             PropertyDescriptor desc =
-                    beanUtilsBean.getPropertyUtils().getPropertyDescriptor(
+                    BEAN_UTILS_BEAN.getPropertyUtils().getPropertyDescriptor(
                             bean, propName);
             if (desc == null)
             {
@@ -362,7 +362,7 @@ public final class BeanHelper
 
         try
         {
-            beanUtilsBean.setProperty(bean, propName, value);
+            BEAN_UTILS_BEAN.setProperty(bean, propName, value);
         }
         catch (IllegalAccessException iaex)
         {
@@ -518,7 +518,7 @@ public final class BeanHelper
      */
     private static boolean isPropertyWriteable(Object bean, String propName)
     {
-        return beanUtilsBean.getPropertyUtils().isWriteable(bean, propName);
+        return BEAN_UTILS_BEAN.getPropertyUtils().isWriteable(bean, propName);
     }
 
     /**
@@ -578,7 +578,7 @@ public final class BeanHelper
         String factoryName = data.getBeanFactoryName();
         if (factoryName != null)
         {
-            BeanFactory factory = BEAN_FACTORIES.get(factoryName);
+            BeanFactory factory = beanFactories.get(factoryName);
             if (factory == null)
             {
                 throw new ConfigurationRuntimeException(
