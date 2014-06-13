@@ -24,12 +24,12 @@
  </properties>
 
 <body>
-	<section name="Declaring and Creating Beans">
+    <section name="Declaring and Creating Beans">
     <p>
       Often it is good practice to make heavy use of Java interfaces and program
       an application or components against these interfaces rather than concrete
       implementation classes. This makes it possible to switch to different implementations
-      without having to modify calling code. However the problem remains how a
+      without having to modify calling code. However, the problem remains how a
       concrete implementation of an interface is obtained. Simply using the
       <b>new</b> operator on a specific implementation class would somehow break
       the interface concept because then the code would have an explicit reference
@@ -48,8 +48,7 @@
     <p>
       <em>Note: The concept of defining service objects in configuration files
       and let them be created by a special container has grown popular these
-      days. Especially IoC containers like <a href="http://jakarta.apache.org/hivemind/">HiveMind</a>
-      or <a href="http://www.springframework.org/">Spring</a> offer wide
+      days. Especially IoC containers like <a href="http://www.springframework.org/">Spring</a> offer wide
       functionality related to this topic. Commons Configuration is not and has
       no ambitions to become an IoC container. The provided functionality for
       declaring and creating beans is very basic and limited compared to the
@@ -65,9 +64,9 @@
         Beans (we use the term <em>bean</em> here to name any plain old Java
         object that is defined in a configuration file and can be instantiated
         by Commons Configuration) are defined in configuration files in a specific
-        format, a so called <em>Bean declaration</em>. Such a declaration contains
+        format, a so-called <em>Bean declaration</em>. Such a declaration contains
         all information needed to create an instance of this bean class, e.g.
-        the full qualified name of the class and initialization parameters. We will
+        the fully-qualified name of the class and initialization parameters. We will
         explain how a bean declaration looks like in short.
       </p>
       <p>
@@ -160,7 +159,7 @@ public class DefaultWindowManager implements WindowManager
         <code>windowManager</code> element and including its sub elements. Note
         the following points:
         <ul>
-          <li>The (fully qualified) class of the bean is specified using the
+          <li>The (fully-qualified) class of the bean is specified using the
           <code>config-class</code> attribute. (Attributes starting with the
           prefix &quot;config-&quot; are reserved; they contain special meta
           data for the bean creation process.)</li>
@@ -181,7 +180,12 @@ public class DefaultWindowManager implements WindowManager
         This is demonstrated in the code fragment below:
       </p>
 <source><![CDATA[
-XMLConfiguration config = new XMLConfiguration("windowconfig.xml");
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<XMLConfiguration> builder =
+    new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class)
+    .configure(params.xml()
+        .setFileName("windowconfig.xml"));
+XMLConfiguration config = builder.getConfiguration();
 BeanDeclaration decl = new XMLBeanDeclaration(config, "gui.windowManager");
 WindowManager wm = (WindowManager) BeanHelper.INSTANCE.createBean(decl);
 ]]></source>
@@ -241,7 +245,7 @@ WindowManager wm = (WindowManager) BeanHelper.INSTANCE.createBean(decl);
         In the examples so far we assumed that beans are created using their
         standard constructor. This is appropriate for classes conforming to the
         Java Beans specification which requires bean classes to have such a
-        no-argument constructor. Commons Configuration also supports invoking
+        no-argument constructor. <em>Commons Configuration</em> also supports invoking
         an arbitrary constructor passing in the corresponding constructor
         arguments. Let's extend the example from the previous section and assume
         that the <code>WindowStyleDefinition</code> class is now an immutable
@@ -307,7 +311,7 @@ public class WindowStyleDefinition
         the constructor.
       </p>
       <p>
-        Commons Configuration uses a pretty simple algorithm to determine the
+        <em>Commons Configuration</em> uses a pretty simple algorithm to determine the
         constructor to be invoked: it is mainly based on the number of
         constructor arguments. This works as expected as long as there are not
         multiple constructors with the same number of arguments. If this is
@@ -375,7 +379,7 @@ public class MyBean
 
       <subsection name="Extending the Basic Mechanism">
       <p>
-        As was pointed out in the introduction of this chapter support for creating
+        As was pointed out in the introduction of this chapter, support for creating
         beans is focused on the basics. But there are some possibilities of hooking
         in and add custom extensions. This can be done in the following ways:
         <ul>
@@ -456,12 +460,12 @@ public class MyBean
 public class SingletonBeanFactory extends DefaultBeanFactory
 {
     /** A map for the so far created instances.*/
-    private final Map beans;
+    private final Map<String, Object> beans;
     
     public SingletonBeanFactory()
     {
         super();
-        beans = new HashMap();
+        beans = new HashMap<String, Object>();
     }
     
     // Creates the bean. Checks if already an instance exists.
@@ -530,7 +534,7 @@ BeanHelper.INSTANCE.registerBeanFactory("SINGLETON", new SingletonBeanFactory())
       <p>
         Alternatively, a separate <code>BeanHelper</code> instance can be
         created passing in the new factory object as its default bean factory.
-        In the bean declarations, it is then no longer necessary to refer to a
+        In the bean declarations, it is then no longer necessary to refer to
         a specific bean factory. Below is an example showing this approach:
       </p>
 <source><![CDATA[
