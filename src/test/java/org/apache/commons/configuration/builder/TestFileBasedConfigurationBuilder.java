@@ -32,9 +32,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.XMLPropertiesConfiguration;
+import org.apache.commons.configuration.builder.fluent.Parameters;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.io.FileLocator;
@@ -316,6 +318,25 @@ public class TestFileBasedConfigurationBuilder
         builder.getFileHandler().setFile(file);
         builder.save();
         checkSavedConfig(file, 2);
+    }
+
+    /**
+     * Tests whether a configuration can be created and associated with a file that does
+     * not yet exist. Later the configuration is saved to this file.
+     */
+    @Test
+    public void testCreateConfigurationNonExistingFileAndThenSave()
+            throws ConfigurationException {
+        File outFile = ConfigurationAssert.getOutFile("save.properties");
+        Parameters parameters = new Parameters();
+        FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+                PropertiesConfiguration.class, null, true).configure(parameters
+                .properties().setFile(outFile));
+        Configuration config = builder.getConfiguration();
+        config.setProperty(PROP, 1);
+        builder.save();
+        checkSavedConfig(outFile, 1);
+        assertTrue("Could not remove test file", outFile.delete());
     }
 
     /**
