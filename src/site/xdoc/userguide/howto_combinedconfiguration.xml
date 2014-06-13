@@ -29,8 +29,9 @@
       The <code><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
       CombinedConfiguration</a></code> class provides an alternative for handling
       multiple configuration sources. Its API is very similar to the
-      <code>CompositeConfiguration</code> class, which was discussed in the
-      <a href="howto_compositeconfiguration.html#Composite Configuration Details">last
+      <code><a href="../apidocs/org/apache/commons/configuration/CompositeConfiguration.html">
+      CompositeConfiguration</a></code> class, which was discussed in the
+      <a href="howto_compositeconfiguration.html#Composite Configuration Details">previous
       section</a>. There are the following differences however:
     </p>
     <p>
@@ -52,10 +53,9 @@
         <li>Each contained configuration can have an optional prefix. Its
         properties are then added under this prefix to the combined
         configuration.</li>
-        <li>There is no concept of an <em>in memory configuration</em>. Changes
-        to a combined configuration are handled in a different way.</li>
+        <li>There is no concept of an <em>in memory configuration</em>.</li>
       </ul>
-   	</p>
+    </p>
 
     <subsection name="How it works">
     <p>
@@ -84,8 +84,8 @@
       class. This class defines an abstract <code>combine()</code> method, which
       takes the root nodes of two hierarchical configurations and returns the
       root node of the combined node structure. It is up to a concrete
-      implementation how this combined structure will look like. Commons
-      Configuration ships with three concrete implementations
+      implementation how this combined structure will look like. <em>Commons
+      Configuration</em> ships with three concrete implementations
       <code><a href="../apidocs/org/apache/commons/configuration/tree/OverrideCombiner.html">OverrideCombiner</a></code>,
       <code><a href="../apidocs/org/apache/commons/configuration/tree/MergeCombiner.html">MergeCombiner</a></code>
       and <code><a href="../apidocs/org/apache/commons/configuration/tree/UnionCombiner.html">UnionCombiner</a></code>,
@@ -218,8 +218,8 @@
       node and would have acted correspondigly.
     </p>
     <p>
-      The examples the follow are provided to further illustrate the differences
-      between the combiners that are delivered with Commons Configuration. The first
+      The examples that follow are provided to further illustrate the differences
+      between the combiners that are delivered with <em>Commons Configuration</em>. The first
       two files are the files that will be combined.
     </p>
     <table border='0'>
@@ -687,8 +687,8 @@
       </p></td></tr></table>
     </subsection>
 
-	<subsection name="Constructing a CombinedConfiguration">
-	<p>
+    <subsection name="Constructing a CombinedConfiguration">
+    <p>
       To create a <code>CombinedConfiguration</code> object you specify the node
       combiner to use and then add an arbitrary number of configurations. We will
       show how to construct a union configuration from the two example sources
@@ -696,8 +696,15 @@
     </p>
 <source><![CDATA[
 // Load the source configurations
-XMLConfiguration conf1 = new XMLConfiguration("table1.xml");
-XMLConfiguration conf2 = new XMLConfiguration("table2.xml");
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<XMLConfiguration> builder1 =
+    new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class)
+    .configure(params.xml()
+        .setFileName("table1.xml"));
+FileBasedConfigurationBuilder<XMLConfiguration> builder2 =
+    new FileBasedConfigurationBuilder<XMLConfiguration>(XMLConfiguration.class)
+    .configure(params.xml()
+        .setFileName("table2.xml"));
 
 // Create and initialize the node combiner
 NodeCombiner combiner = new UnionCombiner();
@@ -706,53 +713,72 @@ combiner.addListNode("table");  // mark table as list node
 
 // Construct the combined configuration
 CombinedConfiguration cc = new CombinedConfiguration(combiner);
-cc.addConfiguration(conf1, "tab1");
-cc.addConfiguration(conf2);
+cc.addConfiguration(builder1.getConfiguration(), "tab1");
+cc.addConfiguration(builder2.getConfiguration());
 ]]></source>
     <p>
       Here we also specified a name for one of the configurations, so it can
       later be accessed by <code>cc.getConfiguration("tab1");</code>. Access by
       index is also supported. After that the properties in the combined
       configuration can be accessed as if it were a normal hierarchical
-      configuration
+      configuration.
     </p>
     </subsection>
-    
+
     <subsection name="Dealing with changes">
     <p>
       There is nothing that prevents you from updating a combined configuration,
       e.g. by calling methods like <code>addProperty()</code> or
-      <code>removeProperty()</code>. The problem is that depending on the used
-      node combiner it might no be clear, which of the contained configurations
-      will be modified or whether one is modified at all.
+      <code>clearProperty()</code>. However, this will not have the expected
+      effect!
     </p>
     <p>
-      Typical node combiners work by copying parts of the node structures of
-      the source configurations into the target structure and linking them
-      togehter using special link nodes. So updates of the combined node structure
-      will either effect nodes from one of the contained configuration (then
-      the changes are directly visible in this configuration) or one of the link
-      nodes (then they cannot really be saved).
+      Remember that a <code>CombinedConfiguration</code> is just a view over a
+      set of other configurations processed by a <code>NodeCombiner</code>. The
+      combiner sets up a nodes structure consisting of
+      <code><a href="../apidocs/org/apache/commons/configuration/tree/ImmutableNode.html">
+      ImmutableNode</a></code> objects. Some of these nodes are likely to be
+      shared with the child configurations. Because the nodes are immutable
+      updates on the combined configuration cause nodes to be replaced in the
+      hierarchy, but this does not affect any of the child configurations. When now
+      one of the child configurations is changed, the combined configuration
+      is re-constructed, and all the changes made before on it are lost! With
+      other words, changes on a combined configuration are only temporary.
     </p>
     <p>
-      It is also possible that a change is done at the combined node structure,
-      which is not compatible with the current node combiner. Imagine that an
-      <code>OverrideCombiner</code> is used and that a
-      property should be removed. This property will then be removed from one
-      of the contained configurations. Now it may happen that this removed
-      property had hidden property values of other contained configurations.
-      Their values won't become visible automatically, but only after the
-      combined view was re-constructed.
+      The recommended approach is to treat a combined configuration as
+      immutable and to perform updates on selected child configurations only.
+      It is in the responsibility of an application anyway to decide which
+      child configuration is affected by a change; there is no easy way to
+      determine the target configuration of a change automatically.
     </p>
     <p>
-      Because of that it is recommended that changes are not done at the
-      combined configuration, but only at contained configurations. This way
-      the correct configuration to be updated can unambigously be identified.
-      Obtaining the configuration to be updated from the combined configuration
-      is easy when it was given a name.
+      If an editable combined configuration is really needed, a possible
+      solution is to create a <code>CombinedConfiguration</code> as usual,
+      and then copy it into another hierarchical configuration. Hierarchical
+      configuration classes typically have constructors that copy the content
+      of another configuration. The following example shows how a combined
+      configuration is copied into a <code>XMLConfiguration</code>; it is
+      then even possible to save the content of the original configuration as
+      an XML document:
+    </p>
+<source><![CDATA[
+// Set up the combined configuration, e.g. like in the example before
+CombinedConfiguration cc = ...;
+
+// Create an XMLConfiguration with the content of the combined configuration
+XMLConfiguration config = new XMLConfiguration(cc);
+]]></source>
+    <p>
+      In this scenario, the <code>CombinedConfiguration</code> object is used
+      only temporarily to apply the node combiner to the data contained in the
+      child configurations. The resulting nodes structure is then passed to the
+      <code>XMLConfiguration</code>. This is now a full-blown, editable
+      configuration. However, the connection to the child configurations does
+      no longer exist.
     </p>
     </subsection>
-	</section>
+  </section>
 </body>
 
 </document>
