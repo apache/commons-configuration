@@ -48,20 +48,27 @@
     		Composite Configuration as well as save changes made to your
     		Composite Configuration.
     	</p>
-    	<subsection name="Setting Up Defaults">
-    		<p>
-    			Defaults are very simple.  You can just add them as your last configuration object, 
-    			either through the ConfigurationFactory or manually:
+        <subsection name="Setting Up Defaults">
+        <p>
+          Defaults are very simple. You can just add them as your last configuration object:
     		</p>
     			<source><![CDATA[
-Configuration defaults = new PropertiesConfiguration(fileToDefaults);
-Configuration otherProperties = new PropertiesConfiguration(fileToOtherProperties);
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<Configuration> builderDefaults =
+    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+    .configure(params.properties()
+        .setFile(fileToDefaults));
+FileBasedConfigurationBuilder<Configuration> builderOther =
+    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+    .configure(params.properties()
+        .setFile(fileToOtherProperties));
+
 CompositeConfiguration cc = new CompositeConfiguration();
-cc.addConfiguration(otherProperties);
-cc.addConfiguration(fileToDefaults);
+cc.addConfiguration(builderOther.getConfiguration());
+cc.addConfiguration(builderDefaults.getConfiguration());
 ]]></source>
 		</subsection>
-		
+
 		<subsection name="Saving Changes">
 			<p>
 				If you have a non static Configuration where you want to 
@@ -71,25 +78,32 @@ cc.addConfiguration(fileToDefaults);
 				to save the changes via.
 			</p>
     			<source><![CDATA[
-PropertiesConfiguration saveConfiguration = new PropertiesConfiguration(fileToSaveChangesIn);
-Configuration cc = new CompositeConfiguration(saveConfiguration);
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<Configuration> builder =
+    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class, null, true)
+    .configure(params.properties()
+        .setFile(fileToSaveChangesIn));
+
+Configuration cc = new CompositeConfiguration(builder.getConfiguration());
 cc.setProperty("newProperty","new value");
 
-saveConfiguration.save();
+builder.save();
 ]]></source>
 			<p>
 				Alternatively, you can just request the
 				in-memory configuration that stores the changes. The following
                 example fragment copies all properties from the in-memory
-                configuration into a <code>DatabaseConfiguration</code>, so
-                that they are made persistent:
+                configuration into a <code>PropertiesConfiguration</code>, which
+                can be saved later:
     			<source><![CDATA[
 Configuration changes = myCompositeConfiguration.getInMemoryConfiguration();
-DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
+FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+    new FileBasedConfigurationBuilder<PropertiesConfiguration>(PropertiesConfiguration.class);
+PropertiesConfiguration config = builder.getConfiguration();
 for (Iterator<String> i = changes.getKeys(); i.hasNext()){
-	String key = i.next();
-	Object value = changes.get(key);
-	config.setProperty(key,value);
+    String key = i.next();
+    Object value = changes.get(key);
+    config.setProperty(key,value);
 }
 ]]></source>
 			</p>
