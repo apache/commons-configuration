@@ -229,6 +229,17 @@ public class TestCombinedConfigurationBuilder
     }
 
     /**
+     * Tests that the return value of configure() is overloaded.
+     */
+    @Test
+    public void testConfigureResult()
+    {
+        CombinedConfigurationBuilder configuredBuilder =
+                builder.configure(createParameters().setFile(TEST_FILE));
+        assertSame("Wrong instance returned", builder, configuredBuilder);
+    }
+
+    /**
      * Tests loading a simple configuration definition file.
      */
     @Test

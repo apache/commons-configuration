@@ -564,6 +564,16 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
+     * {@inheritDoc} This method is overridden to adapt the return type.
+     */
+    @Override
+    public CombinedConfigurationBuilder configure(BuilderParameters... params)
+    {
+        super.configure(params);
+        return this;
+    }
+
+    /**
      * <p>
      * Returns the configuration builder with the given name. With this method a
      * builder of a child configuration which was given a name in the
