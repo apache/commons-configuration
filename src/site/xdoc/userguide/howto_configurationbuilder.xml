@@ -863,6 +863,78 @@ CombinedConfiguration config = builder.getConfiguration();
     </p>
     </subsection>
 
+    <subsection name="Reloading Support">
+    <p>
+      The chapter <a href="howto_reloading.html">Automatic
+      Reloading of Configuration Sources</a> explains how reloading facilities
+      can be enabled for single configuration sources. This feature is also
+      useful when working with combined configuration sources. Here you might
+      want to support reloading for some or all of the configuration sources
+      referenced in the configuration definition file. And - to be really
+      flexible - external changes in the configuration definition file itself
+      should also be detected and cause a re-construction of the whole
+      combined configuration.
+    </p>
+    <p>
+      To enable reloading support for combined configurations, <em>Commons
+      Configuration</em> provides a special extension of
+      <code>CombinedConfigurationBuilder</code>:
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/combined/ReloadingCombinedConfigurationBuilder.html">
+      ReloadingCombinedConfigurationBuilder</a></code>. The relation between the
+      two is analogous to the relation between
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/FileBasedConfigurationBuilder.html">
+      FileBasedConfigurationBuilder</a></code> and
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/ReloadingFileBasedConfigurationBuilder.html">
+      ReloadingFileBasedConfigurationBuilder</a></code>. The reloading-enabled
+      variant of combined configuration builder manages and exposes a special
+      <code><a href="../apidocs/org/apache/commons/configuration/reloading/ReloadingController.html">
+      ReloadingController</a></code> that can be used to trigger reloading
+      checks. (Please refer to the chapter about <a href="howto_reloading.html">reloading</a>
+      for a detailed describtion of the reloading implementation in <em>Commons
+      Configuration</em> and the components involved.)
+    </p>
+    <p>
+      The reloading controller exposed by a <code>ReloadingCombinedConfigurationBuilder</code>
+      is special because it is also a combined reloading controller. It manages
+      the specific reloading controllers of all configuration sources with
+      reloading support. So when the reloading controller of the combined
+      builder is triggered, in fact all reloading-aware configuration sources
+      perform a reload check; sources that have actually been changed generate
+      a reloading event causing the invalidation of the combined builder's
+      managed configuration - it has to be re-constructed the next time it is
+      accessed making the reloaded changes visible.
+    </p>
+    <p>
+      The configuration builder providing access to the configuration definition
+      file is treated in the same way as a configuration source in respect to
+      reloading, i.e. if this builder supports reloading, it becomes part of the
+      combined reloading controller. <code>ReloadingCombinedConfigurationBuilder</code>
+      per default creates a reloading-aware builder for its definition configuration
+      when no specific builder was defined in the initialization parameters. (If
+      a builder for the definition configuration is explicitly passed in the
+      initialization parameters, it lies in the responsibility of the caller to
+      use a builder with reloading support.)
+    </p>
+    <p>
+      With a <code>ReloadingCombinedConfigurationBuilder</code> in place, enabling
+      reload support for specific configuration sources is as simple as adding
+      another attribute to the source declaration: <code>config-reload</code>.
+      Remember that a combined configuration builder internally creates child
+      configuration builders for each of the configuration sources to be loaded.
+      For sources having a <code>config-reload</code> attribute with a value of
+      <strong>true</strong> a builder with reloading support is created if
+      possible. This may not be supported by all types of configuration
+      sources, but it is for instance for file-based configuration sources; in
+      this case the builder created for a source with enabled reloading support
+      is of type <code><a href="../apidocs/org/apache/commons/configuration/builder/ReloadingFileBasedConfigurationBuilder.html">
+      ReloadingFileBasedConfigurationBuilder</a></code>.
+    </p>
+    <p>
+      A more complex example of a combined configuration populated from multiple
+      sources with reloading support is presented below.
+    </p>
+    </subsection>
+
     <subsection name="An example">
     <p>
       After all that theory let's go through a more complex example! We start
@@ -873,8 +945,12 @@ CombinedConfiguration config = builder.getConfiguration();
 <!-- Test configuration definition file that demonstrates complex initialization -->
 <configuration>
   <header>
-    <result delimiterParsingDisabled="true" forceReloadCheck="true">
+    <result>
       <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+      <listDelimiterHandler
+        config-class="org.apache.commons.configuration.convert.DefaultListDelimiterHandler">
+        <config-constrarg config-value=","/>
+      </listDelimiterHandler>
     </result>
     <combiner>
       <additional>
@@ -886,10 +962,8 @@ CombinedConfiguration config = builder.getConfiguration();
   </header>
   <override>
     <properties fileName="user.properties" throwExceptionOnMissing="true"
-      config-name="properties" config-optional="true">
-      <reloadingStrategy refreshDelay="10000"
-      config-class="org.apache.commons.configuration.reloading.FileChangedReloadingStrategy"/>
-    </properties>
+      reloadingRefreshDelay="10000" config-name="properties"
+      config-reload="true" config-optional="true"/>
     <xml fileName="settings.xml" config-name="xml"/>
   </override>
   <additional>
@@ -902,53 +976,43 @@ CombinedConfiguration config = builder.getConfiguration();
     <p>
       This configuration definition file includes four configuration sources and
       sets some properties for the resulting <code>CombinedConfiguration</code>.
-      Of special interest is the <code>forceReloadCheck</code> property, which
-      enables a special check for detecting property changes in the contained
-      configuration sources. If this property is not set, reloading won't work.
-      Because we have configured a reloading strategy for one of the included
-      configuration sources we have to set this flag so that this reloading
-      strategy can function properly. More details about this topic can be
-      found in the Javadocs for
-      <code><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
-      CombinedConfiguration</a></code>. We also set some properties for the
-      configurations to be loaded; for instance we declare that one of the XML
-      configurations should be validated.
+      We also set some properties for the configurations to be loaded; for
+      instance we declare that one of the XML configurations should be validated.
     </p>
     <p>
-      With the following code we can create a <code>DefaultConfigurationBuilder</code>
-      and load this file:
+      With the following code we can create a <code>CombinedConfigurationBuilder</code>
+      and load this file; because one of the configuration sources supports
+      reloading we use the reloading-aware variant of a combined configuration
+      builder:
     </p>
     <source><![CDATA[
-DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-builder.setFile(new File("configuration.xml"));
-CombinedConfiguration cc = builder.getConfiguration(true);
+Parameters params = new Parameters();
+ReloadingCombinedConfigurationBuilder builder = new ReloadingCombinedConfigurationBuilder()
+    .configure(params.fileBased().setFile(new File("configuration.xml")));
+CombinedConfiguration cc = builder.getConfiguration();
 ]]></source>
     <p>
-      It would have been possible to specify the location of the configuration
-      definition file in multiple other ways, e.g. as a URL. The boolean argument
-      in the call to <code>getConfiguration()</code> determines whether the
-      configuration definition file should be loaded. For our simple example we
-      want this to happen, but it would also be possible to load the file
-      manually (by calling the <code>load()</code> method), and after that
-      updating the configuration. (Remember that <code>DefaultConfigurationBuilder</code>
-      is derived from <code>XMLConfiguration</code>, that means you can use all methods
-      provided by this class to alter its data, e.g. to add further configuration
-      sources.) If the configuration's data was manually changed, you should
-      call <code>getConfiguration()</code> with the argument <b>false</b>.
-      <code>XMLConfiguration</code> also provides the <code>registerEntityId()</code>
-      method that can be used to define the location of DTD files (refer to the
-      section <a href="howto_xml.html#Validation_of_XML_configuration_files">
-      Validation of XML configuration files</a> for more details). This method
-      is available for <code>DefaultConfigurationBuilder</code>, too. The
-      entities registered here will be passed to the loaded child XML
-      configurations. So you can register the DTDs of all child XML configurations
-      globally at the configuration builder.
+      Here the easiest way to specify the configuration definition file was used:
+      a parameters object for a file-based configuration. This is sufficient for
+      this example because no other properties for the builder have to be set.
+      As described under <a href="#Setting_up_a_CombinedConfigurationBuilder">Setting
+      up a CombinedConfigurationBuilder</a>, other options are available. If we
+      wanted a special processing of the XML document with the configuration
+      definition - e.g. enabling validation to a schema -, we could have passed
+      a correspondingly initialized XML parameters object in the
+      <code>definitionBuilderParameters</code> property of a combined parameters
+      object or even use a specially configured builder for the definition
+      configuration.
     </p>
     <p>
       In the <code>header</code> section we have chosen an XPATH expression
       engine for the resulting configuration. So we can query our properties
-      using the convenient XPATH syntax. By providing the <code>config-name</code>
-      attribute we have given all configuration sources a name. This name can
+      using the convenient XPATH syntax. We also enabled list delimiter parsing
+      by specifying a
+      <code><a href="../apidocs/org/apache/commons/configuration/convert/DefaultListDelimiterHandler.html">
+      DefaultListDelimiterHandler</a></code> object. (Note the syntax for
+      creating a bean instance via its constructor.) By providing the <code>config-name</code>
+      attribute we have given all configuration sources a name. These names can
       be used to obtain the corresponding sources from the combined
       configuration. For configurations in the override section this is
       directly possible:
@@ -965,18 +1029,31 @@ Configuration xmlConfig = cc.getConfiguration("xml");
       the two configurations from the override section, and the combined
       configuration with the <code>additional</code> configurations. The latter
       is stored under a name determined by the <code>ADDITIONAL_NAME</code>
-      constant of <code>DefaultConfigurationBuilder</code>. The following
+      constant of <code>CombinedConfigurationBuilder</code>. The following
       code shows how the configurations of the <code>additional</code> section
       can be accessed:
     </p>
     <source><![CDATA[
 CombinedConfiguration ccAdd = (CombinedConfiguration)
-  cc.getConfiguration(DefaultConfigurationBuilder.ADDITIONAL_NAME);
+  cc.getConfiguration(CombinedConfigurationBuilder.ADDITIONAL_NAME);
 Configuration tab1Config = ccAdd.getConfiguration("tab1");
 Configuration tab2Config = ccAdd.getConfiguration("tab2");
 ]]></source>
+    <p>
+      To make sure that reloading checks are periodically performed, a suitable
+      trigger has to be used to ensure that the reloading controller managed by
+      the builder is called in regular intervals. This can be done in the same
+      way as for simple configuration sources, for instance by setting up a
+      <code><a href="../apidocs/org/apache/commons/configuration/reloading/PeriodicReloadingTrigger.html">
+      PeriodicReloadingTrigger</a></code> object:
+    </p>
+    <source><![CDATA[
+PeriodicReloadingTrigger trigger = new PeriodicReloadingTrigger(builder.getReloadingController(),
+    null, 1, TimeUnit.MINUTES);
+trigger.start();
+]]></source>
     </subsection>
-    
+
     <subsection name="Extending the configuration definition file format">
     <p>
       If you have written a custom configuration class, you might want to

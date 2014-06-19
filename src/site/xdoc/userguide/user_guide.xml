@@ -106,7 +106,7 @@
         <li><a href="howto_xml.html#Extending_Validation_and_Entity_Resolution">Extending Validation and Entity Resolution</a></li>
         <li><a href="howto_xml.html#Builder_Configuration_Related_to_XML_Configurations">Builder Configuration Related to XML Configurations</a></li>
       </ul>
-      <li><a href="howto_reloading.html#Composite_Configuration_Details">Automatic Reloading of Configuration Sources</a></li>
+      <li><a href="howto_reloading.html">Automatic Reloading of Configuration Sources</a></li>
       <ul>
         <li><a href="howto_reloading.html#Components_for_Reloading">Components for Reloading</a></li>
         <li><a href="howto_reloading.html#Reloading_File-based_Configurations">Reloading File-based Configurations</a></li>
@@ -142,6 +142,7 @@
         <li><a href="howto_configurationbuilder.html#Optional_configuration_sources">Optional configuration sources</a></li>
         <li><a href="howto_configurationbuilder.html#Union_configuration">Union configuration</a></li>
         <li><a href="howto_configurationbuilder.html#Configuration_definition_file_reference">Configuration definition file reference</a></li>
+        <li><a href="howto_configurationbuilder.html#Reloading_Support">Reloading Support</a></li>
         <li><a href="howto_configurationbuilder.html#An_example">An example</a></li>
         <li><a href="howto_configurationbuilder.html#Extending_the_configuration_definition_file_format">Extending the configuration definition file format</a></li>
       </ul>
