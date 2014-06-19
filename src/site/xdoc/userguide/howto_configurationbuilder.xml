@@ -1221,6 +1221,43 @@ CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder()
 CombinedConfiguration config = builder.getConfiguration();
 ]]></source>
     </subsection>
+
+    <subsection name="Builder Configuration Related to Combined Configurations">
+    <p>
+      The special parameters object for <code>CombinedConfigurationBuilder</code>
+      has already been mentioned and used within examples before. It can be obtained
+      from the <code>combined()</code> method of a
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Parameter.html">
+      Parameters</a></code> instance. Its type is
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/CombinedBuilderParameters.html">
+      CombinedBuilderParameters</a></code>.
+    </p>
+    <p>
+      This type supports the settings common to all configurations. Additional
+      settings specific to <code>CombinedConfigurationBuilder</code> are
+      defined by the
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/CombinedBuilderProperties.html">
+      CombinedBuilderProperties</a></code> interface. This includes
+      <ul>
+        <li>the configuration builder for obtaining the definition configuration</li>
+        <li>the parameters object for the configuration builder for obtaining the
+        definition configuration</li>
+        <li>a base path for file-based configuration sources; sources with a
+        relative file name are searched in this path.</li>
+        <li>information about
+        <a href="#Extending_the_configuration_definition_file_format">custom
+        configuration builder providers</a></li>
+        <li>default handlers for initialization parameters of configuration
+        sources. They work in the same way as global
+        <a href="howto_builders.html#Default_Initialization_Parameters">default
+        initialization parameters</a> for configuration builders,
+        but only impact the configuration sources defined in the current
+        definition file. For instance, it is possible to define default settings
+        for all XML configuration sources. These are applied for every XML
+        source defined in the definition file unless they are overridden there.</li>
+      </ul>
+    </p>
+    </subsection>
     </section>
 </body>
 

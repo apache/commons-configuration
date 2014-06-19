@@ -26,17 +26,17 @@
 <body>
 
     <section name="About this document">
-		<p>
- 	 		This document describes the features of the Commons Configuration
+    <p>
+            This document describes the features of the Commons Configuration
             component starting with the very basics and up to the more advanced
             topics. If you read it in a linear way, you should get a sound
             understanding of the provided classes and the possibilities they
             offer. But you can also skip sections and jump directly to the topics
             you are most interested in.
-    	</p>
+    </p>
     </section>
 
-	<section name="Table of contents">
+    <section name="Table of contents">
     <ul>
       <li><a href="overview.html#Using_Configuration">Using Configuration</a></li>
       <ul>
@@ -145,6 +145,7 @@
         <li><a href="howto_configurationbuilder.html#Reloading_Support">Reloading Support</a></li>
         <li><a href="howto_configurationbuilder.html#An_example">An example</a></li>
         <li><a href="howto_configurationbuilder.html#Extending_the_configuration_definition_file_format">Extending the configuration definition file format</a></li>
+        <li><a href="howto_configurationbuilder.html#Builder_Configuration_Related_to_Combined_Configurations">Builder Configuration Related to Combined Configurations</a></li>
       </ul>
       <li><a href="howto_multitenant.html#Multi-tenant Configurations">Multi-tenant Configurations</a></li>
       <ul>
