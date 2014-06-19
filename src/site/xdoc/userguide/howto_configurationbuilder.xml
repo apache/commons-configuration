@@ -475,7 +475,7 @@ CombinedConfiguration config = builder.getConfiguration();
    <subsection name="Configuration definition file reference">
     <p>
       Configuration definition files are XML documents telling
-      <code>DefaultConfigurationBuilder</code> which configuration sources to
+      <code>CombinedConfigurationBuilder</code> which configuration sources to
       load and how to process them in order to create the resulting combined
       configuration.
     </p>
@@ -483,7 +483,7 @@ CombinedConfiguration config = builder.getConfiguration();
       <strong>Overall structure of a configuration definition file</strong>
     </p>
     <p>
-      A configuration definition file for <code>DefaultConfigurationBuilder</code>
+      A configuration definition file for <code>CombinedConfigurationBuilder</code>
       can contain three sections, all of which are optional. A skeleton looks as
       follows:
     </p>
@@ -507,7 +507,7 @@ CombinedConfiguration config = builder.getConfiguration();
     </p>
     <p>
       The <code>override</code> and <code>additional</code> sections have already
-      been introduced when the basics of <code>DefaultConfigurationBuilder</code>
+      been introduced when the basics of <code>CombinedConfigurationBuilder</code>
       were discussed. They contain declarations for the configuration sources to be
       embedded. For convenience reasons it is also possible to declare
       configuration sources outside these sections; they are then treated as if
@@ -518,7 +518,7 @@ CombinedConfiguration config = builder.getConfiguration();
       element whose name determines the type of the configuration source.
       Attributes or nested elements can be used to provide additional
       configuration options for the sources to be included (e.g. a name of a
-      file to be loaded or a reloading strategy). Below is a list of all
+      file to be loaded or further flags). Below is a list of all
       tags which can be used out of the box:
     </p>
     <p>
@@ -528,50 +528,72 @@ CombinedConfiguration config = builder.getConfiguration();
         the file to load is specified using the <code>fileName</code>
         attribute. Which configuration class is created by this tag
         depends on the extension of the file to load: If the extension
-        is ".xml", a <code>XMLPropertiesConfiguration</code> object is
+        is ".xml", a
+        <code><a href="../apidocs/org/apache/commons/configuration/XMLPropertiesConfiguration.html">
+        XMLPropertiesConfiguration</a></code> object is
         created, which is able to process the XML properties format
-        introduced in Java 5.0. Otherwise a <code>PropertiesConfiguration</code>
-        object is created, the default reader for properties files.</dd>
+        introduced in Java 5.0. Otherwise a
+        <code><a href="../apidocs/org/apache/commons/configuration/PropertiesConfiguration.html">
+        PropertiesConfiguration</a></code> object is created, the default reader
+        for properties files.</dd>
         <dt>xml</dt>
         <dd>The <code>xml</code> element can be used to load XML configuration
         files. It also uses the <code>fileName</code> attribute to
         determine the name of the file to load and creates an instance
-        of <code>XMLConfiguration</code>.</dd>
+        of <code><a href="../apidocs/org/apache/commons/configuration/XMLConfiguration.html">
+        XMLConfiguration</a></code>.</dd>
         <dt>jndi</dt>
         <dd>As the name implies, with this element JNDI resources can be
         included in the resulting configuration. Under the hood this is
-        done by an instance of the <code>JNDIConfiguration</code>
-        class. The <code>prefix</code> attribute can be used to
-        select a subset of the JNDI tree.</dd>
+        done by an instance of the
+        <code><a href="../apidocs/org/apache/commons/configuration/JndiConfiguration.html">
+        JndiConfiguration</a></code> class. The <code>prefix</code> attribute
+        can be used to select a subset of the JNDI tree.</dd>
         <dt>plist</dt>
-        <dd>The <code>plist</code> element allows to embedd configuration
+        <dd>The <code>plist</code> element allows embedding configuration
         files in the NeXT / OpenStep or Mac OS X format. Again the
         name of the file to load is specified through the
         <code>fileName</code> attribute. If a XML file is specified,
-        a <code>XMLPropertyListConfiguration</code> object is created
-        to process the file. Otherwise this task is delegated to a
-        <code>PropertyListConfiguration</code> instance.</dd>
+        a <code><a href="../apidocs/org/apache/commons/configuration/plist/XMLPropertyListConfiguration.html">
+        XMLPropertyListConfiguration</a></code> object is created
+        to process the file. Otherwise, this task is delegated to a
+        <code><a href="../apidocs/org/apache/commons/configuration/plist/PropertyListConfiguration.html">
+        PropertyListConfiguration</a></code> instance.</dd>
         <dt>system</dt>
-        <dd>With this element an instance of <code>SystemConfiguration</code>
-        is added to the resulting configuration allowing access to
-        system properties. <em>Note:</em> Using this element system properties
-        are directly made available. Alternatively the
-        interpolation features introduced in version 1.4 (see
-        <a href="howto_basicfeatures.html#Variable_Interpolation">
+        <dd>With this element an instance of
+        <code><a href="../apidocs/org/apache/commons/configuration/SystemConfiguration.html">
+        SystemConfiguration</a></code> is added to the resulting configuration
+        allowing access to system properties. <em>Note:</em> Using this element
+        system properties are directly made available. Alternatively the
+        interpolation features (see <a href="howto_basicfeatures.html#Variable_Interpolation">
         Variable Interpolation</a> for more details) can be used for referencing
         system properties.</dd>
+        <dt>ini</dt>
+        <dd>This tag can be used to include an ini file into the resulting
+        combined configuration. Behind the scenes an instance of
+        <code><a href="../apidocs/org/apache/commons/configuration/INIConfiguration.html">
+        INIConfiguration</a></code> is used to load the ini file.</dd>
+        <dt>env</dt>
+        <dd>With this tag direct access to environment properties can be enabled.
+        This works in the same way as the <code>&lt;system&gt;</code> tag for
+        Java system properties.</dd>
+        <dt>multFile</dt>
+        <dd>Using this tag, a builder for a multi-file configuration can be
+        integrated into the resulting combined configuration. This is described in a
+        <a href="howto_multitenant.html#MultiFileHierarchicalConfiguration">later
+        chapter</a>.</dd>
         <dt>configuration</dt>
         <dd>The <code>configuration</code> tag allows other configuration
         definition files to be included. This makes it possible to nest these
         definition files up to an arbitrary depth. In fact, this tag will
-        create another <code>DefaultConfigurationBuilder</code> object,
+        create another <code>CombinedConfigurationBuilder</code> object,
         initialize it, and obtain the <code>CombinedConfiguation</code> from it.
         This combined configuration will then be added to the resulting
         combined configuration. Like all file-based configurations the
         <code>fileName</code> attribute can be used to specify the configuration
         definition file to be loaded. This file must be an XML document that
         conforms to the format described here. Some of the most important
-        settings are copied from the original <code>DefaultConfigurationBuilder</code>
+        settings are copied from the original <code>CombinedConfigurationBuilder</code>
         object to the newly created builder:
         <ul>
         <li>the base path under which configuration files are searched</li>
@@ -581,35 +603,24 @@ CombinedConfiguration config = builder.getConfiguration();
         <li>the configuration and error listeners</li>
         </ul>
         </dd>
-        <dt>ini</dt>
-        <dd>This tag can be used to include an ini file into the resulting
-        combined configuration. Behind the scenes an instance of
-        <code><a href="../apidocs/org/apache/commons/configuration/HierarchicalINIConfiguration.html">
-        HierarchicalINIConfiguration</a></code> is used to load the ini file.</dd>
-        <dt>env</dt>
-        <dd>With this tag direct access to environment properties can be enabled.
-        This works in the same way as the <code>&lt;system&gt;</code> tag for
-        Java system properties.</dd>
       </dl>
     </p>
     <p>
       In the declaration of a configuration source it is possible to set
       properties on the corresponding configuration objects. Configuration
       declarations are indeed
-      <a href="howto_beans.html#Declaring and Creating Beans">Bean
-      declarations</a>. That means they can have attributes matching simple
+      <a href="howto_beans.html">Bean declarations</a>. That means they can have attributes matching simple
       properties of the configuration object to create, and sub elements
       matching complex properties. The following example fragment shows how
       complex initialization can be performed in a configuration declaration:
     </p>
     <source><![CDATA[
   <properties fileName="test.properties" throwExceptionOnMissing="true">
-    <reloadingStrategy refreshDelay="10000"
-    config-class="org.apache.commons.configuration.reloading.FileChangedReloadingStrategy"/>
+    <reloadingDetectorFactory
+    config-class="com.foo.MyReloadingDetector" strict=true"/>
   </properties>
-  <xml fileName="test.xml" delimiterParsingDisabled="true">
-    <expressionEngine config-class="org.apache.commons.configuration.tree.DefaultExpressionEngine"
-      propertyDelimiter="/" indexStart="[" indexEnd="]"/>
+  <xml fileName="test.xml" validating="true">
+    <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
   </xml>
 ]]></source>
     <p>
@@ -617,19 +628,26 @@ CombinedConfiguration config = builder.getConfiguration();
       an XML document are defined. For the properties source the
       <code>throwExceptionOnMissing</code> property is set to <b>true</b>,
       which means that it should throw an exception if a requested property is
-      not found. In addition it is assigned a reloading strategy, which is
+      not found. In addition, it is assigned a custom reloading detector, which is
       declared and configured in a sub element. The XML configuration source is
       initialized in a similar way: a simple property is set, and an expression
-      engine is assigned. More information about the format for declaring objects
-      and initializing their properties can be found in the section about
-      <a href="howto_beans.html#Declaring and Creating Beans">bean
-      declarations</a>.
+      engine is assigned. In fact, the properties defined in these declarations
+      are not directly set on configuration instances, but on
+      <a href="howto_builders.html#Initialization_Parameters">initialization 
+      parameters objects</a> for configuration builders. These builders are
+      created for the declared configuration sources and configured with the
+      defined properties. Then their managed configurations are obtained and
+      combined into the resulting configuration. Nevertheless, the declarations
+      share the same syntax as other bean declarations supported by
+      <em>Commons Configuration</em>. More information about the format for
+      declaring beans and initializing their properties can be found in the
+      section about <a href="howto_beans.html">bean declarations</a>.
     </p>
     <p>
       In addition to the attributes that correspond to properties of the
-      configuration object to be created, a configuration declaration can have a
+      configuration sources to be created, a configuration declaration can have a
       set of special attributes that are evaluated by
-      <code>DefaultConfigurationBuilder</code> when it creates the objects.
+      <code>CombinedConfigurationBuilder</code> when it creates the objects.
       These attributes are listed in the following table:
     </p>
     <p>
@@ -665,7 +683,7 @@ CombinedConfiguration config = builder.getConfiguration();
     <tr>
       <td valign="top"><code>config-forceCreate</code></td>
       <td>This boolean attribute is only evaluated for configurations declared as
-      optional. It determines the behavior of the configuration builder when
+      optional. It determines the behavior of the combined configuration builder when
       the optional configuration could not be created. If set to <b>true</b>,
       the builder tries to create an empty, uninitialized configuration of the
       correct type and add it to the resulting combined configuration. This is
@@ -729,7 +747,7 @@ CombinedConfiguration config = builder.getConfiguration();
 ]]></source>
     <p>
       This example differs from the previous one by the <code>systemProperties</code>
-      attribute added to the root element. It causes the specified to be read
+      attribute added to the root element. It causes the specified properties file to be read
       and all properties defined therein to be added to the system properties.
       So properties like <em>CONFIG_FILE</em> can be defined in a properties
       file and are then treated as if they were system properties.
@@ -742,13 +760,13 @@ CombinedConfiguration config = builder.getConfiguration();
       object can be set. The main part of this section is a bean declaration
       that is used for creating the resulting configuration object. Other
       elements can be used for customizing the
-      <a href="howto_combinedconfiguration.html#Node combiners">Node combiners</a>
+      <a href="howto_combinedconfiguration.html#Node_combiners">Node combiners</a>
       used by the override and the union combined configuration. The following
-      example shows a header section that uses all supported properties:
+      example shows a header section that uses some of the supported properties:
     </p>
     <source><![CDATA[
   <header>
-    <result delimiterParsingDisabled="true" forceReloadCheck="true">
+    <result throwExceptionOnMissing="true">
       <nodeCombiner config-class="org.apache.commons.configuration.tree.OverrideCombiner"/>
       <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
     </result>
@@ -780,14 +798,67 @@ CombinedConfiguration config = builder.getConfiguration();
       The <code>combiner</code> section allows nodes to be defined as list nodes.
       This can be necessary for certain node combiner implementations to work
       correctly. More information can be found in the section about
-      <a href="howto_combinedconfiguration.html#Node combiners">Node combiners</a>.
+      <a href="howto_combinedconfiguration.html#Node_combiners">Node combiners</a>.
+    </p>
+    <p>
+      There are some more tags for specific use cases which can occur in the
+      header section of a configuration declaration:
+      <dl>
+        <dt>providers</dt>
+        <dd>This tag can be used to define new tags for including custom
+        configuration sources. An example is provided later in this document.</dd>
+        <dt>fileSystem</dt>
+        <dd>Allows defining the <a href="howto_filebased.html#File_Systems">File
+        System</a> to be used for file-based configuration sources:
+    <source><![CDATA[
+<configuration>
+  <header>
+    <fileSystem
+      config-class="org.apache.commons.configuration.io.VFSFileSystem"/>
+  </header>
+  <xml fileName="test.xml" config-name="xml"/>
+</configuration>
+]]></source>
+        </dd>
+        <dt>lookups</dt>
+        <dd>In the sub section
+        <a href="howto_basicfeatures.html#Customizing_interpolation">Customizing
+        interpolation</a> it was described how variable interpolation can be
+        extended by defining custom lookup objects. In the configuration
+        definition file of <code>CombinedConfigurationBuilder</code> it is
+        possible to declare such lookup objects and make them available for
+        the processing of this definition file and the resulting combined
+        configuration. For this purpose, the header section of the definition
+        file can contain a <code>&lt;lookup&gt;</code> element in which an
+        arbitrary number of lookups can be defined. Have a look at the
+        following example:
+    <source><![CDATA[
+<configuration>
+  <header>
+    <lookups>
+      <lookup config-prefix="file"
+              config-class="com.foo.FileLookup"/>
+    </lookups>
+  </header>
+  <!-- Fetch the file name from a variable -->
+  <xml fileName="${file:config_file}" config-name="xml"/>
+</configuration>
+]]></source>
+        Here a custom lookup class is declared and registered under the prefix
+        <em>file</em> (as defined by the <code>config-prefix</code> attribute).
+        The lookup is immediately active. It is then used to obtain the concrete
+        file name for the embedded XML configuration. Note that the variable
+        prefix matches the prefix provided in the lookup declaration. The
+        variable name is passed to the lookup object, and the custom implementation
+        can compute a suitable value.</dd>
+      </dl>
     </p>
     <p>
       <em>Note:</em> From time to time the question is raised whether there is a
       document type definition or a schema defining exactly the structure of a
       configuration definition file. Frankly, the answer is no. This is due to
       the fact that the format is extensible. As will be shown below, it is
-      possible to register yout own tags in order to embedd custom configuration
+      possible to register your own tags in order to embedd custom configuration
       sources.
     </p>
     </subsection>
