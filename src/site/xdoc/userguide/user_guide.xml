@@ -110,6 +110,7 @@
       <ul>
         <li><a href="howto_reloading.html#Components_for_Reloading">Components for Reloading</a></li>
         <li><a href="howto_reloading.html#Reloading_File-based_Configurations">Reloading File-based Configurations</a></li>
+        <li><a href="howto_reloading.html#Builder_Configuration_Related_to_Reloading">Builder Configuration Related to Reloading</a></li>
         <li><a href="howto_reloading.html#Generic_Reloading_Support">Generic Reloading Support</a></li>
         <li><a href="howto_reloading.html#Reloading_Checks_on_Builder_Access">Reloading Checks on Builder Access</a></li>
         <li><a href="howto_reloading.html#Managed_Reloading">Managed Reloading</a></li>
