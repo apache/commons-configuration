@@ -530,19 +530,18 @@ public interface ImmutableConfiguration
     /**
      * Get an object of the specified type associated with the given
      * configuration key. If the key doesn't map to an existing object, the
-     * method returns null unless {@link #isThrowExceptionOnMissing()} is set
-     * to <tt>true</tt>.
+     * method returns null unless
+     * {@link AbstractConfiguration#isThrowExceptionOnMissing()} is set to
+     * <tt>true</tt>.
      *
      * @param <T> the target type of the value
      * @param cls the target class of the value
      * @param key the key of the value
-     *
      * @return the value of the requested type for the key
-     *
      * @throws NoSuchElementException if the key doesn't map to an existing
-     *     object and <tt>throwExceptionOnMissing=true</tt>
-     * @throws ConversionException if the value is not compatible with the requested type
-     *
+     *         object and <tt>throwExceptionOnMissing=true</tt>
+     * @throws ConversionException if the value is not compatible with the
+     *         requested type
      * @since 2.0
      */
     <T> T get(Class<T> cls, String key);
