@@ -476,7 +476,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     /** An array with the names of the default tags. */
     private static final String[] DEFAULT_TAGS = {
             "properties", "xml", "hierarchicalXml", "plist",
-            "ini", "system", "env", "jndi", "configuration", "multiXml"
+            "ini", "system", "env", "jndi", "configuration", "multiFile"
     };
 
     /** An array with the providers for the default tags. */

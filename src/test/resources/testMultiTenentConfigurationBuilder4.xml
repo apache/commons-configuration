@@ -34,13 +34,13 @@
     <entity-resolver catalogFiles="catalog.xml"/>
   </header>
   <override>
-    <multiXml filePattern="testMultiConfiguration_$${test:Id}.xml"
+    <multiFile filePattern="testMultiConfiguration_$${test:Id}.xml"
                config-name="clientConfig" config-optional="true"
                config-forceCreate="true"
                schemaValidation="true">
        <expressionEngine
           config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
-    </multiXml>
+    </multiFile>
     <xml fileName="testMultiConfiguration_default.xml"
          config-name="defaultConfig" schemaValidation="true">
       <expressionEngine

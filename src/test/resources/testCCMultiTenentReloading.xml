@@ -26,7 +26,7 @@
     </result>
   </header>
   <override>
-    <multiXml filePattern="$${sys:Id}"
+    <multiFile filePattern="$${sys:Id}"
                config-name="clientConfig" config-reload="true"
                config-optional="true" config-forceCreate="true"/>
   </override>
