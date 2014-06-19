@@ -134,10 +134,10 @@
         <li><a href="howto_beans.html#Constructor_arguments">Constructor arguments</a></li>
         <li><a href="howto_beans.html#Extending_the_Basic_Mechanism">Extending the Basic Mechanism</a></li>
       </ul>
-      <li><a href="howto_configurationbuilder.html#Using_DefaultConfigurationBuilder">Using DefaultConfigurationBuilder</a></li>
+      <li><a href="howto_configurationbuilder.html#Combining_Configuration_Sources">Combining Configuration Sources</a></li>
       <ul>
         <li><a href="howto_configurationbuilder.html#The_configuration_definition_file">The configuration definition file</a></li>
-        <li><a href="howto_configurationbuilder.html#Setting_up_a_DefaultConfigurationBuilder">Setting up a ConfigurationFactory</a></li>
+        <li><a href="howto_configurationbuilder.html#Setting_up_a_CombinedConfigurationBuilder">Setting up a CombinedConfigurationBuilder</a></li>
         <li><a href="howto_configurationbuilder.html#Overriding_properties">Overriding properties</a></li>
         <li><a href="howto_configurationbuilder.html#Optional_configuration_sources">Optional configuration sources</a></li>
         <li><a href="howto_configurationbuilder.html#Union_configuration">Union configuration</a></li>
