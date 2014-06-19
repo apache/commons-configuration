@@ -126,7 +126,7 @@ public interface ImmutableConfiguration
     /**
      * Get a list of properties associated with the given configuration key.
      * This method expects the given key to have an arbitrary number of String
-     * values, each of which is of the form {code key=value}. These
+     * values, each of which is of the form {@code key=value}. These
      * strings are split at the equals sign, and the key parts will become
      * keys of the returned {@code Properties} object, the value parts
      * become values.
