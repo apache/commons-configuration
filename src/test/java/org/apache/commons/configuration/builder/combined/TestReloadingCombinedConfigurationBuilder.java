@@ -84,8 +84,10 @@ public class TestReloadingCombinedConfigurationBuilder
         File testFile =
                 ConfigurationAssert
                         .getTestFile("testDigesterConfiguration.xml");
-        builder.configure(new FileBasedBuilderParametersImpl()
-                .setFile(testFile));
+        ReloadingCombinedConfigurationBuilder confBuilder =
+                builder.configure(new FileBasedBuilderParametersImpl()
+                        .setFile(testFile));
+        assertSame("Wrong configured builder instance", builder, confBuilder);
         builder.getConfiguration();
         CombinedReloadingController rc =
                 (CombinedReloadingController) builder.getReloadingController();

@@ -97,6 +97,16 @@ public class ReloadingCombinedConfigurationBuilder extends
     }
 
     /**
+     * {@inheritDoc} This method is overridden to adapt the return type.
+     */
+    @Override
+    public ReloadingCombinedConfigurationBuilder configure(BuilderParameters... params)
+    {
+        super.configure(params);
+        return this;
+    }
+
+    /**
      * {@inheritDoc} This implementation returns a
      * {@link CombinedReloadingController} which contains sub controllers for
      * all child configuration sources with reloading support. If the definition
