@@ -1058,44 +1058,98 @@ trigger.start();
     <p>
       If you have written a custom configuration class, you might want to
       declare instances of this class in a configuration definition file, too.
-      With <code>DefaultConfigurationBuilder</code> this is now possible by
-      registering a <em>ConfigurationProvider</em>.
+      <code>CombinedConfigurationBuilder</code> supports this use case by
+      registering a
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/combined/ConfigurationBuilderProvider.html">
+      ConfigurationBuilderProvider</a></code> object.
     </p>
     <p>
-      <code>ConfigurationProvider</code> is an inner class defined in
-      <code>DefaultConfigurationBuilder</code>. Its task is to create and
-      initialize a configuration object. Whenever <code>DefaultConfigurationBuilder</code>
+      The task of a <code>ConfigurationBuilderProvider</code> is to create and
+      initialize a configuration builder object which can then be used to obtain
+      a configuration source. Whenever <code>CombinedConfigurationBuilder</code>
       encounters a tag in the <code>override</code> or the <code>additional</code>
-      section it checks whether for this tag a <code>ConfigurationProvider</code>
-      was registered. If this is the case, the provider is asked to create a
-      new configuration instance; otherwise an exception will be thrown.
+      section it checks whether for this tag a <code>ConfigurationBuilderProvider</code>
+      has been registered. If this is the case, the provider is asked to create a
+      new configuration builder instance; otherwise an exception is thrown.
     </p>
     <p>
       So for adding support for a new configuration class you have to create an
-      instance of <code>ConfigurationProvider</code> (or a derived class) and
-      register it at the configuration builder using the
-      <code>addConfigurationProvider()</code> method. This method expects the
+      implementation of <code>ConfigurationBuilderProvider</code> and
+      register an instance of it. Registration can be done via the combined
+      parameters object passed to the builder which offers a
+      <code>registerProvider()</code> method. This method expects the
       name of the associated tag and the provider instance as arguments.
     </p>
     <p>
-      If your custom configuration class does not need any special initialization,
-      you can use the <code>ConfigurationProvider</code> class directly. It is
-      able of creating an instance of a specified class (which must be derived
-      from <code>AbstractConfiguration</code>). Let's take a look at an example
+      There is already a fully functional implementation of the
+      <code>ConfigurationBuilderProvider</code> interface available in the class
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/combined/BaseConfigurationBuilderProvider.html">
+      BaseConfigurationBuilderProvider</a></code> class. When creating an
+      instance the following information has to be passed:
+      <ul>
+        <li>The fully-qualified name of the configuration builder class to be
+        used for the associated configuration source.</li>
+        <li>The fully-qualified name of the configuration builder class to be
+        used if reloading is enabled for this source. This is optional; if a
+        configuration source does not support reloading, <strong>null</strong>
+        can be passed here. Then an exception is thrown if a configuration
+        source of this type is declared with the <code>config-reload</code>
+        attribute set to <strong>true</strong>.</li>
+        <li>The fully-qualified name of the configuration class created by
+        this builder.</li>
+        <li>A collection with parameter object classes supported by this
+        builder.</li>
+      </ul>
+      With this information, <code>BaseConfigurationBuilderProvider</code> can
+      create and configure a correct configuration builder object for a specific
+      configuration source. In detail, it performs the following steps:
+      <ul>
+        <li>It determines the builder class to be used based on the presence and
+        value of the <code>config-reload</code> attribute; this means that either
+        the normal or the reloading builder - if defined - is used.</li>
+        <li>An instance of the builder class is created via reflection.</li>
+        <li>Instances of all of the parameter object classes are created.</li>
+        <li>The parameter objects are initialized from the properties defined
+        for the current configuration source.</li>
+        <li>The initialized parameter objects are passed to the configuration
+        builder's <code>configure()</code> method.</li>
+      </ul>
+    </p>
+    <p>
+      For most cases, the functionality provided by
+      <code>BaseConfigurationBuilderProvider</code> should be sufficient. So
+      a properly initialized instance can be directly used for the registration
+      of a new builder provider. Let's take a look at an example
       where we want to add support for a configuration class called
-      <code>MyConfiguration</code>. The corresponding tag in the configuration
-      definition file should have the name <code>myconfig</code>. The code for
-      registering the new provider and loading the configuration definition file
-      looks as follows:
+      <code>com.foo.MyConfiguration</code>. The class is a file-based configuration;
+      therefore, already existing standard builder classes can be used to
+      construct instances. (Otherwise, a custom builder implementation has to be
+      created, and its name has to be passed to the provider instance.) The
+      corresponding tag in the configuration definition file should have the
+      name <code>myconfig</code>. The code for registering the new provider and
+      loading the configuration definition file looks as follows:
     </p>
     <source><![CDATA[
-DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-DefaultConfigurationBuilder.ConfigurationProvider provider = new
-  DefaultConfigurationBuilder.ConfigurationProvider(MyConfiguration.class);
-builder.addConfigurationProvider("myconfig", provider);
+ConfigurationProvider provider = new BaseConfigurationProvider(
+    /* normal builder */
+    "org.apache.commons.configuration.builder.FileBasedConfigurationBuilder",
+    /* reloading builder */
+    "org.apache.commons.configuration.builder.ReloadingFileBasedConfigurationBuilder",
+    /* configuration class */
+    "com.foo.MyConfig",
+    /* Parameters; here we assume that we have a custom parameters class
+       derived from FileBasedBuilderParametersImpl */
+    Collections.singleton(MyConfigParams.class.getName()));
 
-builder.setFileName("configuration.xml");
-Configuration config = builder.getConfiguration();
+Parameters params = new Parameters();
+CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder()
+    .configure(
+        params.combined()
+            .setDefinitionBuilderParameters(
+                params.fileBased().setFileName("definition.xml"))
+            .registerProvider("myconfig", provider)
+    );
+CombinedConfiguration config = builder.getConfiguration();
 ]]></source>
     <p>
       If your configuration provider is registered this way, your configuration
@@ -1106,37 +1160,66 @@ Configuration config = builder.getConfiguration();
 <configuration>
   <additional>
     <xml fileName="settings.xml"/>
-    <myconfig delimiterParsingDisabled="true"/>
+    <myconfig fileName="special.cfg" throwExceptionOnMissing="false"/>
   </additional>
 </configuration>
 ]]></source>
     <p>
-      As is demonstrated in this example, it is possible to specify attributes
-      for initializing properties of your configuration object. In this example
-      we set the default <code>delimiterParsingDisabled</code> property
-      inherited from <code>AbstractConfiguration</code>. Of course you can set
-      custom properties of your configuration class, too.
+      Alternatively, it is also possible to declare and register custom
+      configuration builder providers directly in the configuration definition
+      file. This is an interesting option because it makes the definition
+      file self-contained; no special initialization is required on the
+      configuration builder in order to load them. The registration of builder
+      providers is done in the <code>&lt;providers&gt;</code> section in the
+      header of the definition file. Each builder provider to be added has to
+      be defined by specifying the tag name and the fully-qualified provider
+      class. To make use of this mechanism for the custom configuration class
+      used in this example, a specialized provider class has to be created
+      (before <code>BaseConfigurationBuilderProvider</code> was instantiated
+      directly):
     </p>
+    <source><![CDATA[
+package com.foo;
+
+public class MyConfigurationBuilderProvider extends BaseConfigurationBuilderProvider
+{
+    public MyConfigurationBuilderProvider()
+    {
+        super("org.apache.commons.configuration.builder.FileBasedConfigurationBuilder",
+            "org.apache.commons.configuration.builder.ReloadingFileBasedConfigurationBuilder",
+            "com.foo.MyConfig",
+            Collections.singleton(MyConfigParams.class.getName()));
+    }
+}
+]]></source>
     <p>
-      If your custom configuration class is a file-based configuration, you
-      should use the <code>FileConfigurationProvider</code> class instead of
-      <code>ConfigurationProvider</code>. <code>FileConfigurationProvider</code>
-      is another inner class of <code>DefaultConfigurationBuilder</code> that
-      knows how to deal with file-based configurations: it ensures that the
-      correct base path is set and takes care of invoking the <code>load()</code>
-      method.
+      Now this class can be referenced in the configuration definition file.
     </p>
+    <source><![CDATA[
+<configuration>
+  <header>
+    <providers>
+      <provider config-tag="myconfig"
+                config-class="com.foo.MyConfigurationBuilderProvider"/>
+    </providers>
+  </header>
+  <additional>
+    <xml fileName="settings.xml"/>
+    <myconfig fileName="special.cfg" throwExceptionOnMissing="false"/>
+  </additional>
+</configuration>
+]]></source>
     <p>
-      If your custom configuration class requires special initialization, you
-      need to create your own provider class that extends
-      <code>ConfigurationProvider</code>. Here you will have to override the
-      <code>getConfiguration(ConfigurationDeclaration)</code> method, which is
-      responsible for creating the configuration instance (all information
-      necessary for this purpose can be obtained from the passed in declaration
-      object). It is recommended that you call the inherited method first,
-      which will instantiate and initialize the new configuration object. Then
-      you can perform your specific initialization.
+      Now this file can be processed by a default <code>CombinedConfigurationBuilder</code>
+      instance. No special configuration related to builder providers is
+      necessary any more:
     </p>
+    <source><![CDATA[
+Parameters params = new Parameters();
+CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder()
+    .configure(params.fileBased().setFileName("definition.xml"));
+CombinedConfiguration config = builder.getConfiguration();
+]]></source>
     </subsection>
     </section>
 </body>
