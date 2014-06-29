@@ -178,24 +178,35 @@
           a single configuration file. However, this either means the subcomponent
           has to be aware of the surrounding configuration and navigate past it or the
           application must be provided just the portion of the configuration it
-          can process. PatternSubtreeConfigurationWrapper can be used for this purpose.
+          can process. <code><a href="../apidocs/org/apache/commons/configuration/PatternSubtreeConfigurationWrapper.html">
+          PatternSubtreeConfigurationWrapper</a></code> can be used for this purpose.
         </p>
         <p>
           Normal practice when using dependency injection frameworks is to have the
           attributes needed to make components work correctly injected into them.
           When working with Commons Configuration this works very well. Components
-          simply need to have a HierarchicalConfiguration attribute along with
+          simply need to have a
+          <code><a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+          HierarchicalConfiguration</a></code> attribute along with
           a corresponding setter and getter. The injection framework can then be
           used to provide the component with the correct configuration using
-          PatternSubtreeConfigurationWrapper as shown in the next example.
+          <code>PatternSubtreeConfigurationWrapper</code> as shown in the next example.
         </p>
         <p>
         <source><![CDATA[
   <bean id="configurationBuilder"
-        class="org.apache.commons.configuration.DefaultConfigurationBuilder">
-    <property name="fileName">
-      <value>configuration.xml</value>
-    </property>
+        class="org.apache.commons.configuration.builder.FileBasedConfigurationBuilder">
+    <constructor-arg index="0"
+      value="org.apache.commons.configuration.XMLConfiguration"/>
+    <constructor-arg index="1">
+        <map>
+            <entry key="config-fileBased">
+                <map>
+                    <entry key="fileName" value="configuration.xml"/>
+                </map>
+            </entry>
+        </map>
+    </constructor-arg>
   </bean>
   <bean id="applicationConfig" factory-bean="configurationBuilder"
         factory-method="getConfiguration">
@@ -206,7 +217,7 @@
     <constructor-arg index="0">
       <ref bean="applicationConfig"/>
     </constructor-arg>
-    <constructor-arg index="1" value="/Components/MyComponent"
+    <constructor-arg index="1" value="/Components/MyComponent"/>
   </bean>
   <bean id='MyComponent' class='org.test.MyComponent' autowire='autodetect'>
     <property name="configuration">
@@ -214,6 +225,36 @@
     </property>
   </bean>
 ]]></source>
+        </p>
+        <p>
+          This example shows a <a href="https://spring.io/">Spring</a>
+          configuration defining beans to be used in an application. The bean
+          named &quot;MyComponent&quot; is a component with its own
+          configuration which is injected into the <em>configuration</em>
+          property. Here an instance of <code>PatternSubtreeConfigurationWrapper</code>
+          is passed (defined by the &quot;subcomponentConfig&quot; bean) that
+          selects a subtree in the configuration data specific to this component;
+          the corresponding prefix is defined as second constructor argument.
+        </p>
+        <p>
+          It is also of interest how the global configuration of the
+          application is defined. It is loaded by a configuration builder
+          declared by the &quot;configurationBuilder&quot; bean. The fluent
+          API offered by configuration builders does not work very well here.
+          Therefore, the builder is initialized via a map with settings passed
+          to its constructor. Simple properties to be propagated to the
+          managed configuration instance can be declared directly as keys of
+          this map. The configuration of the file to be loaded is an
+          exceptional case: This information is stored internally as a
+          <code><a href="../apidocs/org/apache/commons/configuration/io/FileHandler.html">
+          FileHandler</a></code> object, and the properties of this object are
+          contained in a sub map under the key <em>config-fileBased</em>.
+        </p>
+        <p>
+          With the declaration of the configuration builder in place, the actual
+          configuration object can now be defined as bean using the builder's
+          <code>getConfiguration()</code> method as factory method. From
+          there it can be injected into arbitrary other beans.
         </p>
       </subsection>
     </section>
