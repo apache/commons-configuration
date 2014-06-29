@@ -113,6 +113,10 @@
         changing a property through SystemConfiguration immediately affects
         the corresponding system property.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-541">
+        Multi-file configurations are no longer restricted to XML configuration
+        files. Arbitrary file-based configurations are now supported.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-539">
         The deprectated INIConfiguration class was removed.
         HierarchicalINIConfiguration was renamed to INIConfiguration.
