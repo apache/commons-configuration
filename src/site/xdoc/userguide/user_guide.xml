@@ -134,25 +134,25 @@
         <li><a href="howto_beans.html#Constructor_arguments">Constructor arguments</a></li>
         <li><a href="howto_beans.html#Extending_the_Basic_Mechanism">Extending the Basic Mechanism</a></li>
       </ul>
-      <li><a href="howto_configurationbuilder.html#Combining_Configuration_Sources">Combining Configuration Sources</a></li>
+      <li><a href="howto_combinedbuilder.html#Combining_Configuration_Sources">Combining Configuration Sources</a></li>
       <ul>
-        <li><a href="howto_configurationbuilder.html#The_configuration_definition_file">The configuration definition file</a></li>
-        <li><a href="howto_configurationbuilder.html#Setting_up_a_CombinedConfigurationBuilder">Setting up a CombinedConfigurationBuilder</a></li>
-        <li><a href="howto_configurationbuilder.html#Overriding_properties">Overriding properties</a></li>
-        <li><a href="howto_configurationbuilder.html#Optional_configuration_sources">Optional configuration sources</a></li>
-        <li><a href="howto_configurationbuilder.html#Union_configuration">Union configuration</a></li>
-        <li><a href="howto_configurationbuilder.html#Configuration_definition_file_reference">Configuration definition file reference</a></li>
-        <li><a href="howto_configurationbuilder.html#Reloading_Support">Reloading Support</a></li>
-        <li><a href="howto_configurationbuilder.html#An_example">An example</a></li>
-        <li><a href="howto_configurationbuilder.html#Extending_the_configuration_definition_file_format">Extending the configuration definition file format</a></li>
-        <li><a href="howto_configurationbuilder.html#Builder_Configuration_Related_to_Combined_Configurations">Builder Configuration Related to Combined Configurations</a></li>
+        <li><a href="howto_combinedbuilder.html#The_configuration_definition_file">The configuration definition file</a></li>
+        <li><a href="howto_combinedbuilder.html#Setting_up_a_CombinedConfigurationBuilder">Setting up a CombinedConfigurationBuilder</a></li>
+        <li><a href="howto_combinedbuilder.html#Overriding_properties">Overriding properties</a></li>
+        <li><a href="howto_combinedbuilder.html#Optional_configuration_sources">Optional configuration sources</a></li>
+        <li><a href="howto_combinedbuilder.html#Union_configuration">Union configuration</a></li>
+        <li><a href="howto_combinedbuilder.html#Configuration_definition_file_reference">Configuration definition file reference</a></li>
+        <li><a href="howto_combinedbuilder.html#Reloading_Support">Reloading Support</a></li>
+        <li><a href="howto_combinedbuilder.html#An_example">An example</a></li>
+        <li><a href="howto_combinedbuilder.html#Extending_the_configuration_definition_file_format">Extending the configuration definition file format</a></li>
+        <li><a href="howto_combinedbuilder.html#Builder_Configuration_Related_to_Combined_Configurations">Builder Configuration Related to Combined Configurations</a></li>
       </ul>
       <li><a href="howto_multitenant.html#Multi-tenant Configurations">Multi-tenant Configurations</a></li>
       <ul>
         <li><a href="howto_multitenant.html#MultiFileConfigurationBuilder">MultiFileConfigurationBuilder</a></li>
         <li><a href="howto_multitenant.html#DynamicCombinedConfiguration">DynamicCombinedConfiguration</a></li>
         <li><a href="howto_multitenant.html#Sample Configuration">Sample Configuration</a></li>
-        <li><a href="howto_configurationbuilder.html#Builder_Configuration_Related_to_Multi-file_Configurations">Builder Configuration Related to Multi-file Configurations</a></li>
+        <li><a href="howto_multitenant.html#Builder_Configuration_Related_to_Multi-file_Configurations">Builder Configuration Related to Multi-file Configurations</a></li>
         <li><a href="howto_multitenant.html#PatternSubtreeConfigurationWrapper">PatternSubtreeConfigurationWrapper</a></li>
       </ul>
       <li><a href="howto_events.html#Configuration_Events">Configuration Events</a></li>
