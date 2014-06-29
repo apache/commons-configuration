@@ -98,7 +98,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
      *
      * @param params the map with parameters (must not be <b>null</b>
      * @return the instance obtained from the map or <b>null</b>
-     * @throws NullPointerException if the map is <b>null</b>
+     * @throws IllegalArgumentException if the map is <b>null</b>
      */
     public static FileBasedBuilderParametersImpl fromParameters(
             Map<String, Object> params)
@@ -117,11 +117,17 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
      *        the map; if <b>true</b>, a new instance with default settings is
      *        created; if <b>false</b>, <b>null</b> is returned
      * @return the instance obtained from the map or <b>null</b>
-     * @throws NullPointerException if the map is <b>null</b>
+     * @throws IllegalArgumentException if the map is <b>null</b>
      */
     public static FileBasedBuilderParametersImpl fromParameters(
             Map<String, Object> params, boolean createIfMissing)
     {
+        if (params == null)
+        {
+            throw new IllegalArgumentException(
+                    "Parameters map must not be null!");
+        }
+
         FileBasedBuilderParametersImpl instance =
                 (FileBasedBuilderParametersImpl) params.get(PARAM_KEY);
         if (instance == null && createIfMissing)

@@ -262,6 +262,15 @@ public class TestFileBasedBuilderParameters
     }
 
     /**
+     * Tries to obtain an instance from a null parameters map.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testFromParametersNull()
+    {
+        FileBasedBuilderParametersImpl.fromParameters(null);
+    }
+
+    /**
      * Tests whether reflection-based property access through BeanUtils is
      * possible.
      */
