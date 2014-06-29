@@ -67,11 +67,9 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     private static MultiFileConfigurationBuilder<XMLConfiguration> createTestBuilder(
             BuilderParameters managedParams)
     {
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
-                new MultiFileConfigurationBuilder<XMLConfiguration>(
-                        XMLConfiguration.class);
-        builder.configure(createTestBuilderParameters(managedParams));
-        return builder;
+        return new MultiFileConfigurationBuilder<XMLConfiguration>(
+                XMLConfiguration.class)
+                .configure(createTestBuilderParameters(managedParams));
     }
 
     /**
@@ -205,8 +203,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
             {
                 cause = cause.getCause();
             }
-            assertTrue("SAXParseException was not thrown",
-                    cause instanceof SAXParseException);
+            assertTrue("SAXParseException was not thrown", cause != null);
         }
     }
 

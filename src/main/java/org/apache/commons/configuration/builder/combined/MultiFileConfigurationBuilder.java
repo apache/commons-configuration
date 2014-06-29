@@ -158,6 +158,16 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
     }
 
     /**
+     * {@inheritDoc} This method is overridden to adapt the return type.
+     */
+    @Override
+    public MultiFileConfigurationBuilder<T> configure(BuilderParameters... params)
+    {
+        super.configure(params);
+        return this;
+    }
+
+    /**
      * {@inheritDoc} This implementation evaluates the file name pattern using
      * the configured {@code ConfigurationInterpolator}. If this file has
      * already been loaded, the corresponding builder is accessed. Otherwise, a
