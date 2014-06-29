@@ -303,4 +303,46 @@ public class TestFileBasedBuilderParameters
         assertNotSame("No copy of file handler", params.getFileHandler(),
                 clone.getFileHandler());
     }
+
+    /**
+     * Tests whether an instance can be created from a map.
+     */
+    @Test
+    public void testFromMap()
+    {
+        ReloadingDetectorFactory factory =
+                EasyMock.createMock(ReloadingDetectorFactory.class);
+        EasyMock.replay(factory);
+        Map<String, Object> map = new HashMap<String, Object>();
+        final String fileName = "someFileName";
+        final String basePath = "someBasePath";
+        final Long refreshDelay = 20140628222302L;
+        map.put("basePath", basePath);
+        map.put("fileName", fileName);
+        map.put("reloadingDetectorFactory", factory);
+        map.put("reloadingRefreshDelay", refreshDelay);
+
+        FileBasedBuilderParametersImpl params =
+                FileBasedBuilderParametersImpl.fromMap(map);
+        assertEquals("Wrong base path", basePath, params.getFileHandler()
+                .getBasePath());
+        assertEquals("Wrong file name", fileName, params.getFileHandler()
+                .getFileName());
+        assertEquals("Wrong detector factory", factory,
+                params.getReloadingDetectorFactory());
+        assertEquals("Wrong refresh delay", refreshDelay,
+                params.getReloadingRefreshDelay());
+    }
+
+    /**
+     * Tests fromMap() for null input.
+     */
+    @Test
+    public void testFromMapNull()
+    {
+        FileBasedBuilderParametersImpl params =
+                FileBasedBuilderParametersImpl.fromMap(null);
+        assertNull("Got refresh delay", params.getReloadingRefreshDelay());
+        assertNull("Got a file name", params.getFileHandler().getFileName());
+    }
 }

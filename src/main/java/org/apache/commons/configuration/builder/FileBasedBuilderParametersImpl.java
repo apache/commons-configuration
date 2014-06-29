@@ -53,6 +53,13 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
     private static final String PARAM_KEY = RESERVED_PARAMETER_PREFIX
             + FileBasedBuilderParametersImpl.class.getName();
 
+    /** Property name for the reloading refresh delay. */
+    private static final String PROP_REFRESH_DELAY = "reloadingRefreshDelay";
+
+    /** Property name of the reloading detector factory. */
+    private static final String PROP_DETECTOR_FACTORY =
+            "reloadingDetectorFactory";
+
     /**
      * Stores the associated file handler for the location of the configuration.
      */
@@ -122,6 +129,32 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
             instance = new FileBasedBuilderParametersImpl();
         }
         return instance;
+    }
+
+    /**
+     * Creates a new {@code FileBasedBuilderParametersImpl} object from the
+     * content of the given map. While {@code fromParameters()} expects that an
+     * object already exists and is stored in the given map, this method creates
+     * a new instance based on the content of the map. The map can contain
+     * properties of a {@code FileHandler} and some additional settings which
+     * are stored directly in the newly created object. If the map is
+     * <b>null</b>, an uninitialized instance is returned.
+     *
+     * @param map the map with properties (must not be <b>null</b>)
+     * @return the newly created instance
+     * @throws ClassCastException if the map contains invalid data
+     */
+    public static FileBasedBuilderParametersImpl fromMap(Map<String, Object> map)
+    {
+        FileBasedBuilderParametersImpl params =
+                new FileBasedBuilderParametersImpl(FileHandler.fromMap(map));
+        if (map != null)
+        {
+            params.setReloadingRefreshDelay((Long) map.get(PROP_REFRESH_DELAY));
+            params.setReloadingDetectorFactory((ReloadingDetectorFactory) map
+                    .get(PROP_DETECTOR_FACTORY));
+        }
+        return params;
     }
 
     /**
