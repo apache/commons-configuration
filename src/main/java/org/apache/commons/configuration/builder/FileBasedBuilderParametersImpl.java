@@ -51,7 +51,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
 {
     /** Constant for the key in the parameters map used by this class. */
     private static final String PARAM_KEY = RESERVED_PARAMETER_PREFIX
-            + FileBasedBuilderParametersImpl.class.getName();
+            + "fileBased";
 
     /** Property name for the reloading refresh delay. */
     private static final String PROP_REFRESH_DELAY = "reloadingRefreshDelay";
