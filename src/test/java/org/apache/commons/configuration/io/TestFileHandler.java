@@ -40,7 +40,9 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -1511,6 +1513,23 @@ public class TestFileHandler
         FileLocator locator = handler.getFileLocator();
         assertFalse("Wrong result", handler.locate());
         assertSame("Locator was changed", locator, handler.getFileLocator());
+    }
+
+    /**
+     * Tests whether an instance can be created from a map with the properties
+     * of a FileLocator.
+     */
+    @Test
+    public void testInitFromMap()
+    {
+        FileLocator locator =
+                FileLocatorUtils.fileLocator().fileName(TEST_FILENAME)
+                        .basePath("someBasePath").encoding("someEncoding")
+                        .create();
+        Map<String, Object> map = new HashMap<String, Object>();
+        FileLocatorUtils.put(locator, map);
+        FileHandler handler = FileHandler.fromMap(map);
+        assertEquals("Wrong locator", locator, handler.getFileLocator());
     }
 
     /**

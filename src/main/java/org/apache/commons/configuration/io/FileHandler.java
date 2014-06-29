@@ -29,6 +29,7 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -183,8 +184,7 @@ public class FileHandler
      */
     public FileHandler(FileBased obj)
     {
-        content = obj;
-        fileLocator = initFileLocator();
+        this(obj, emptyFileLocator());
     }
 
     /**
@@ -202,14 +202,34 @@ public class FileHandler
      */
     public FileHandler(FileBased obj, FileHandler c)
     {
-        if (c == null)
-        {
-            throw new IllegalArgumentException(
-                    "FileHandler to assign must not be null!");
-        }
+        this(obj, checkSourceHandler(c).getFileLocator());
+    }
 
+    /**
+     * Creates a new instance of {@code FileHandler} based on the given
+     * {@code FileBased} and {@code FileLocator} objects.
+     *
+     * @param obj the {@code FileBased} object to manage
+     * @param locator the {@code FileLocator}
+     */
+    private FileHandler(FileBased obj, FileLocator locator)
+    {
         content = obj;
-        fileLocator = new AtomicReference<FileLocator>(c.getFileLocator());
+        fileLocator = new AtomicReference<FileLocator>(locator);
+    }
+
+    /**
+     * Creates a new {@code FileHandler} instance from properties stored in a
+     * map. This method tries to extract a {@link FileLocator} from the map. A
+     * new {@code FileHandler} is created based on this {@code FileLocator}.
+     *
+     * @param map the map (may be <b>null</b>)
+     * @return the newly created {@code FileHandler}
+     * @see FileLocatorUtils#fromMap(Map)
+     */
+    public static FileHandler fromMap(Map<String, Object> map)
+    {
+        return new FileHandler(null, FileLocatorUtils.fromMap(map));
     }
 
     /**
@@ -636,7 +656,7 @@ public class FileHandler
      */
     public boolean locate()
     {
-        boolean result = false;
+        boolean result;
         boolean done;
 
         do
@@ -1477,15 +1497,30 @@ public class FileHandler
     }
 
     /**
-     * Initializes the reference to the {@code FileLocator}. Sets an undefined
-     * locator object.
+     * Creates an uninitialized file locator.
      *
-     * @return the reference to the file locator
+     * @return the locator
      */
-    private static AtomicReference<FileLocator> initFileLocator()
+    private static FileLocator emptyFileLocator()
     {
-        return new AtomicReference<FileLocator>(FileLocatorUtils.fileLocator()
-                .create());
+        return FileLocatorUtils.fileLocator().create();
+    }
+
+    /**
+     * Helper method for checking a file handler which is to be copied. Throws
+     * an exception if the handler is <b>null</b>.
+     *
+     * @param c the {@code FileHandler} from which to copy the location
+     * @return the same {@code FileHandler}
+     */
+    private static FileHandler checkSourceHandler(FileHandler c)
+    {
+        if (c == null)
+        {
+            throw new IllegalArgumentException(
+                    "FileHandler to assign must not be null!");
+        }
+        return c;
     }
 
     /**
