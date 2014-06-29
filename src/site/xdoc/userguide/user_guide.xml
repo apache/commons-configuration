@@ -149,7 +149,7 @@
       </ul>
       <li><a href="howto_multitenant.html#Multi-tenant Configurations">Multi-tenant Configurations</a></li>
       <ul>
-        <li><a href="howto_multitenant.html#MultiFileHierarchicalConfiguration">MultiFileHierarchicalConfiguration</a></li>
+        <li><a href="howto_multitenant.html#MultiFileConfigurationBuilder">MultiFileConfigurationBuilder</a></li>
         <li><a href="howto_multitenant.html#DynamicCombinedConfiguration">DynamicCombinedConfiguration</a></li>
         <li><a href="howto_multitenant.html#Sample Configuration">Sample Configuration</a></li>
         <li><a href="howto_multitenant.html#PatternSubtreeConfigurationWrapper">PatternSubtreeConfigurationWrapper</a></li>

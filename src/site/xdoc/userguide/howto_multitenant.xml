@@ -27,11 +27,11 @@
     <section name="Multi-tenant Configurations">
       <p>
         In a multi-tenant environment a single instance of the application
-        while run on behalf of many clients. Typically, this will require
-        that each client have its own unique configuration. The simplest
+        will run on behalf of many clients. Typically, this will require
+        that each client has its own unique configuration. The easiest
         approach to enable an application to be multi-tenant is for it
         to not really be aware of it at all. This requires that the
-        configuration framework take on some of the responsility for
+        configuration framework takes on some of the responsility for
         making the application work correctly.
       </p>
       <p>
@@ -44,23 +44,39 @@
         for the clients.
       </p>
 
-      <subsection name="MultiFileHierarchicalConfiguration">
+      <subsection name="MultiFileConfigurationBuilder">
         <p>
-          The constructor for this class accepts a pattern. The pattern can
-          contain keys that will be resolved using the ConfigurationInterpolator
-          on each call to a method in the class. The configuration file will then
-          be located using the resolved pattern and a new XMLConfiguration
-          will be created and cached for subsequent requests. The ExpressionEngine,
-          ReloadingStrategy and listeners will be propogated to each of the
-          created configurations.
+          <code><a href="../apidocs/org/apache/commons/configuration/builder/combined/MultiFileConfigurationBuilder.html">
+          MultiFileConfigurationBuilder</a></code> is a specialized configuration
+          builder implementation which internally manages a set of builders for
+          <a href="howto_filebased.html">file-based configurations</a>. In the
+          initialization parameters of this builder a file name pattern has to
+          be passed. The pattern can contain keys that will be resolved using the
+          <code><a href="../apidocs/org/apache/commons/configuration/interpol/ConfigurationInterpolator.html">
+          ConfigurationInterpolator</a></code> every time the builder's
+          <code>getConfiguration()</code> method is called. The resolved pattern
+          is then interpreted as the name of a configuration file to be loaded
+          by a newly created <code><a href="../apidocs/org/apache/commons/configuration/builder/FileBasedConfigurationBuilder.html">
+          FileBasedConfigurationBuilder</a></code>.
         </p>
         <p>
-          When used in a combined configuration it is often acceptable for a file
-          matching a particular pattern to be missing so, by default, most exceptions
-          encountered when loading files are ignored. To change this behavior
-          call setIgnoreException(false) or configure the attribute to false in
-          DefaultConfigurationBuilder's configuration file. If schema validation
-          is enabled validation exceptions will always cause a failure.
+          The file-based configuration builder is stored in an internal map
+          together with the naming pattern. The next time the same pattern is
+          accessed, it can be retrieved from the map and used directly. If the
+          evaluation of the pattern changes, a new file-based configuration
+          builder is created, and a new configuration file is loaded.
+        </p>
+        <p>
+          When used in a <a href="howto_configurationbuilder.html">combined
+          configuration</a> it is often acceptable for a file
+          matching a particular pattern to be missing. The behavior of
+          <code>MultiFileConfigurationBuilder</code> regarding exceptions
+          thrown for missing configuration files can be controlled using the
+          boolean <em>allowFailOnInit</em> argument accepted by the most generic
+          constructor. If here the value <strong>true</strong> is passed,
+          exceptions while loading a configuration file are ignored. Instead,
+          an empty configuration of the configured type is created for this
+          pattern.
         </p>
       </subsection>
       <subsection name="DynamicCombinedConfiguration">
