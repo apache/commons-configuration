@@ -28,7 +28,9 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -557,5 +559,57 @@ public class TestFileLocatorUtils
                 FileLocatorUtils.fileLocator().locationStrategy(strategy)
                         .create();
         FileLocatorUtils.locateOrThrow(locator);
+    }
+
+    /**
+     * Tests whether a file locator can be stored in a map and read again from
+     * there.
+     */
+    @Test
+    public void testStoreFileLocatorInMap()
+    {
+        FileLocationStrategy strategy =
+                EasyMock.createMock(FileLocationStrategy.class);
+        EasyMock.replay(strategy);
+        FileLocator locator =
+                FileLocatorUtils.fileLocator().basePath(BASE_PATH)
+                        .encoding(ENCODING).fileName(FILE_NAME)
+                        .fileSystem(fileSystem).locationStrategy(strategy)
+                        .sourceURL(sourceURL).create();
+        Map<String, Object> map = new HashMap<String, Object>();
+        FileLocatorUtils.put(locator, map);
+        FileLocator locator2 = FileLocatorUtils.fromMap(map);
+        assertEquals("Different locators", locator, locator2);
+    }
+
+    /**
+     * Tests whether put() deals with a null locator.
+     */
+    @Test
+    public void testPutNoLocator()
+    {
+        Map<String, Object> map = new HashMap<String, Object>();
+        FileLocatorUtils.put(null, map);
+        assertTrue("Got properties", map.isEmpty());
+    }
+
+    /**
+     * Tries to call put() without a map.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testPutNoMap()
+    {
+        FileLocatorUtils.put(FileLocatorUtils.fileLocator().create(), null);
+    }
+
+    /**
+     * Tests whether fromMap() can handle a null map.
+     */
+    @Test
+    public void testFromMapNoMap()
+    {
+        FileLocator fileLocator = FileLocatorUtils.fromMap(null);
+        assertEquals("Locator is initialized", FileLocatorUtils.fileLocator()
+                .create(), fileLocator);
     }
 }
