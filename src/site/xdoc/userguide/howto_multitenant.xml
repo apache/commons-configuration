@@ -169,6 +169,52 @@
           accessed instead of when the configuration file is processed to behave as desired.
         </p>
       </subsection>
+      <subsection name="Builder Configuration Related to Multi-file Configurations">
+        <p>
+          When setting up a
+          <code><a href="../apidocs/org/apache/commons/configuration/builder/combined/MultiFileConfigurationBuilder.html">
+          MultiFileConfigurationBuilder</a></code> a special object with
+          initialization parameters can be used as argument to the
+          <code>configure()</code> method. It is of type
+          <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/MultiFileBuilderParameters.html">
+          MultiFileBuilderParameters</a></code> and can be obtained via the
+          <code>multiFile()</code> method of a
+          <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Parameter.html">
+          Parameters</a></code> object. The properties specific to this
+          configuration type are defined by the
+          <code><a href="../apidocs/org/apache/commons/configuration/builder/MultiFileBuilderProperties.html">
+          MultiFileBuilderProperties</a></code> interface. They include
+          <ul>
+            <li>The pattern string for determining the name of the
+            configuration file to be loaded. This is of course the most
+            important setting as it tells the builder how to perform interpolation
+            in order to resolve the correct configuration file.</li>
+            <li>A parameters object for the file-based configuration builder
+            used behind the scenes to load the configuration file. Here some
+            additional settings can be provided. For instance, if the
+            configuration files to be loaded are XML documents, validation
+            could be enabled via these parameters.</li>
+          </ul>
+        </p>
+        <p>
+          Below is a code fragment demonstrating the set up of a
+          <code>MultiFileConfigurationBuilder</code> which loads configuration
+          files of type XML:
+        </p>
+        <source><![CDATA[
+Parameters params = new Parameters();
+MultiFileConfigurationBuilder<XMLConfiguration> builder =
+    new MultiFileConfigurationBuilder(XMLConfiguration.class)
+    .configure(params.multiFile()
+        .setFilePattern("configuration_${sys:Id}.xml")
+        .setManagedBuilderParameters(params.xml()
+            .setValidating(true)
+        )
+    );
+
+XMLConfiguration config = builder.getConfiguration();
+]]></source>
+      </subsection>
       <subsection name="PatternSubtreeConfigurationWrapper">
         <p>
           Applications are often composed of many components each of which need their
