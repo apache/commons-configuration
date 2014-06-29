@@ -81,52 +81,88 @@
       </subsection>
       <subsection name="DynamicCombinedConfiguration">
         <p>
-          The CombinedConfiguration class allows multiple configuration files to be
-          merged together. However, it will not merge a MultiFileHierarchicalConfiguration
-          properly since the underlying configuration file will be different depending
-          on the resolution of the location pattern. DynamicCombinedConfiguration
-          solves this by creating a new CombinedConfiguration for each pattern.
+          The <code><a href="../apidocs/org/apache/commons/configuration/builder/combined/CombinedConfigurationBuilder.html">
+          CombinedConfigurationBuilder</a></code> class allows multiple configuration files to be
+          merged together. However, it will not collaborate with a <code>MultiFileConfiguration</code>
+          properly since the underlying managed configuration will be different depending
+          on the resolution of the location pattern.
+          <code><a href="../apidocs/org/apache/commons/configuration/DynamicCombinedConfiguration.html">
+          DynamicCombinedConfiguration</a></code> solves this by creating a new
+          <code>CombinedConfiguration</code> for each pattern.
         </p>
       </subsection>
       <subsection name="Sample Configuration">
         <p>
-           This sample configuration illustrates how to use DynamicCombinedConfiguration
-           in combination with MultiFileHierarchicalConfiguration to create a multi-tenant
+           This sample configuration illustrates how to use
+           <code><a href="../apidocs/org/apache/commons/configuration/builder/combined/CombinedConfigurationBuilder.html">
+           CombinedConfigurationBuilder</a></code>
+           in combination with
+           <code><a href="../apidocs/org/apache/commons/configuration/builder/combined/MultiFileConfigurationBuilder.html">
+           MultiFileConfigurationBuilder</a></code> to create a multi-tenant
            configuration.
         </p>
         <source><![CDATA[
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-<!-- Test configuration definition file that demonstrates complex initialization -->
 <configuration>
   <header>
-    <result delimiterParsingDisabled="true" forceReloadCheck="true"
+    <result loggerName="TestLogger"
             config-class="org.apache.commons.configuration.DynamicCombinedConfiguration"
             keyPattern="$${sys:Id}">
+      <nodeCombiner config-class="org.apache.commons.configuration.tree.MergeCombiner"/>
       <expressionEngine
           config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
     </result>
-    <providers>
-      <provider config-tag="multifile"
-         config-class="org.apache.commons.configuration.DefaultConfigurationBuilder$FileConfigurationProvider"
-         configurationClass="org.apache.commons.configuration.MultiFileHierarchicalConfiguration"/>
-    </providers>
   </header>
   <override>
-    <multifile filePattern="/opt/configs/$$${sys:Id}/config.xml" config-name="clientConfig"/>
-    <xml fileName="/opt/configs/default/config.xml" config-name="defaultConfig"/>
+    <multiFile filePattern="testMultiConfiguration_$${sys:Id}.xml"
+               config-name="clientConfig" config-optional="true"
+               config-forceCreate="true"
+               schemaValidation="true">
+       <expressionEngine
+          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+    </multiFile>
+    <xml fileName="testMultiConfiguration_default.xml"
+         config-name="defaultConfig" schemaValidation="true">
+      <expressionEngine
+          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+    </xml>
   </override>
 </configuration>
 ]]></source>
+        <p>
+          In this example configuration definition file for a
+          <code>CombinedConfigurationBuilder</code> two configuration sources
+          are declared:
+          <ul>
+            <li>A multi-file source with a file pattern containing a system
+            property. This means that depending on the current value of this
+            system property a different configuration file is loaded. Because
+            this source is declared as optional it is legal that for certain
+            values of the property no configuration file exists.</li>
+            <li>An XML configuration source with common setting independent on
+            the value of a system property. This source may also contain
+            default values in case no configuration file could be loaded by the
+            multi-file source.</li>
+          </ul>
+        </p>
+        <p>
+          Of special importance is the declaration of the result configuration
+          in form of the <code>&lt;result&gt;</code> element in the <em>header</em>
+          section. Here the <code>config-class</code> attribute specifies that
+          an instance of <code>DynamicCombinedConfiguration</code> is created
+          rather than a default <code>CombinedConfiguration</code> object. Also,
+          the value of the <em>keyPattern</em> property is set which has to
+          conform to the pattern used by the multi-file source.
+        </p>
         <p>
           Note how the variables have multiple '$'. This is how variables are escaped and
           is necessary because the variables will be interpolated multiple times. Each
           attempt will remove the leading '$'. When there is only a single '$' in front
           of the '{' the interpolator will then resolve the variable. The first extra '$'
-          is necessary because DefaultConfigurationBuilder will interpolate any variables
-          in the configuration. In the case of the multifile configuration item two
+          is necessary because <code>CombinedConfigurationBuilder</code> will interpolate any variables
+          in the configuration. In the case of the multi-file configuration item two
           leading '$' characters are necessary before the variable because it will be
-          interpolated by both DefaultConfigurationBuilder and DynamicCombinedConfiguration
-          before MultiFileHierarchicalConfiguration gets the chance to evaluate it.
+          interpolated by both <code>CombinedConfigurationBuilder</code> and <code>DynamicCombinedConfiguration</code>
+          before <code>MultiFileConfigurationBuilder</code> gets the chance to evaluate it.
           Although in this example one would not expect system properties to change
           at runtime, other types of lookups such as the MDCStrLookup provided with
           SLF4J require that the variables be evaluated as the configuration is being
