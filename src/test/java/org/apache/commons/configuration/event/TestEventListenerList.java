@@ -461,6 +461,19 @@ public class TestEventListenerList
     }
 
     /**
+     * Tests whether the list can be cleared.
+     */
+    @Test
+    public void testClear()
+    {
+        list.addEventListener(typeSub1, new ListenerTestImpl());
+        list.addEventListener(typeSub2, new ListenerTestImpl());
+
+        list.clear();
+        assertTrue("Got listeners", list.getRegistrations().isEmpty());
+    }
+
+    /**
      * Test event class. For testing purposes, a small hierarchy of test event
      * class is created. This way it can be checked whether event types are
      * correctly evaluated and take the event hierarchy into account.

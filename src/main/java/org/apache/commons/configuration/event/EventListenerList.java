@@ -206,6 +206,14 @@ public class EventListenerList
     }
 
     /**
+     * Removes all event listeners registered at this object.
+     */
+    public void clear()
+    {
+        listeners.clear();
+    }
+
+    /**
      * Helper method for calling an event listener with an event. We have to
      * operate on raw types to make this code compile. However, this is safe
      * because of the way the listeners have been registered and associated with
