@@ -28,8 +28,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.event.EventSource;
+import org.apache.commons.configuration.event.EventType;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.tree.DefaultConfigurationKey;
@@ -181,13 +182,17 @@ import org.apache.commons.configuration.tree.UnionCombiner;
  * @version $Id$
  */
 public class CombinedConfiguration extends BaseHierarchicalConfiguration implements
-        ConfigurationListener, Cloneable
+        EventListener<ConfigurationEvent>, Cloneable
 {
     /**
-     * Constant for the invalidate event that is fired when the internal node
-     * structure becomes invalid.
+     * Constant for the event type fired when the internal node structure of a
+     * combined configuration becomes invalid.
+     *
+     * @since 2.0
      */
-    public static final int EVENT_COMBINED_INVALIDATE = 40;
+    public static final EventType<ConfigurationEvent> COMBINED_INVALIDATE =
+            new EventType<ConfigurationEvent>(ConfigurationEvent.ANY,
+                    "COMBINED_INVALIDATE");
 
     /**
      * The serial version ID.
@@ -641,7 +646,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * @param event the update event
      */
     @Override
-    public void configurationChanged(ConfigurationEvent event)
+    public void onEvent(ConfigurationEvent event)
     {
         if (event.isBeforeUpdate())
         {
@@ -868,7 +873,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     private void invalidateInternal()
     {
         upToDate = false;
-        fireEvent(EVENT_COMBINED_INVALIDATE, null, null, false);
+        fireEvent(COMBINED_INVALIDATE, null, null, false);
     }
 
     /**
@@ -954,7 +959,8 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     {
         if (configuration instanceof EventSource)
         {
-            ((EventSource) configuration).addConfigurationListener(this);
+            ((EventSource) configuration).addEventListener(
+                    ConfigurationEvent.ANY, this);
         }
     }
 
@@ -968,7 +974,8 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     {
         if (configuration instanceof EventSource)
         {
-            ((EventSource) configuration).removeConfigurationListener(this);
+            ((EventSource) configuration).removeEventListener(
+                    ConfigurationEvent.ANY, this);
         }
     }
 

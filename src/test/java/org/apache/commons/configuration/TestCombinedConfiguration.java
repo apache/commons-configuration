@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.io.FileHandler;
@@ -98,7 +98,7 @@ public class TestCombinedConfiguration
     {
         config = new CombinedConfiguration();
         listener = new CombinedListener();
-        config.addConfigurationListener(listener);
+        config.addEventListener(ConfigurationEvent.ANY, listener);
     }
 
     /**
@@ -200,7 +200,8 @@ public class TestCombinedConfiguration
      */
     private void checkAddConfig(AbstractConfiguration c)
     {
-        Collection<ConfigurationListener> listeners = c.getConfigurationListeners();
+        Collection<EventListener<? super ConfigurationEvent>> listeners =
+                c.getEventListeners(ConfigurationEvent.ANY);
         assertEquals("Wrong number of configuration listeners", 1, listeners
                 .size());
         assertTrue("Combined config is no listener", listeners.contains(config));
@@ -334,8 +335,8 @@ public class TestCombinedConfiguration
      */
     private void checkRemoveConfig(AbstractConfiguration c)
     {
-        assertTrue("Listener was not removed", c.getConfigurationListeners()
-                .isEmpty());
+        assertTrue("Listener was not removed",
+                c.getEventListeners(ConfigurationEvent.ANY).isEmpty());
         assertEquals("Wrong number of contained configs", 0, config
                 .getNumberOfConfigurations());
         assertTrue("Name was not removed", config.getConfigurationNames()
@@ -398,8 +399,11 @@ public class TestCombinedConfiguration
                 .getNodeCombiner());
         assertEquals("Wrong number of names", config.getConfigurationNames()
                 .size(), cc2.getConfigurationNames().size());
-        assertTrue("Found duplicate event listeners", Collections.disjoint(cc2
-                .getConfigurationListeners(), config.getConfigurationListeners()));
+        assertTrue(
+                "Found duplicate event listeners",
+                Collections.disjoint(
+                        cc2.getEventListeners(ConfigurationEvent.ANY),
+                        config.getEventListeners(ConfigurationEvent.ANY)));
 
         StrictConfigurationComparator comp = new StrictConfigurationComparator();
         for (int i = 0; i < config.getNumberOfConfigurations(); i++)
@@ -462,7 +466,8 @@ public class TestCombinedConfiguration
         config.addConfiguration(child);
 
         config.clear();
-        for (ConfigurationListener listener : child.getConfigurationListeners())
+        for (EventListener<?> listener : child
+                .getEventListeners(ConfigurationEvent.ANY))
         {
             assertNotEquals("Still registered", config, listener);
         }
@@ -630,11 +635,11 @@ public class TestCombinedConfiguration
     public void testInvalidateEventBeforeAndAfterChange()
     {
         ConfigurationEvent event =
-                new ConfigurationEvent(config, 0, null, null, true);
-        config.configurationChanged(event);
+                new ConfigurationEvent(config, ConfigurationEvent.ANY, null, null, true);
+        config.onEvent(event);
         assertEquals("No invalidate event fired", 1, listener.invalidateEvents);
-        event = new ConfigurationEvent(config, 0, null, null, false);
-        config.configurationChanged(event);
+        event = new ConfigurationEvent(config, ConfigurationEvent.ANY, null, null, false);
+        config.onEvent(event);
         assertEquals("Another invalidate event fired", 1,
                 listener.invalidateEvents);
     }
@@ -1114,16 +1119,16 @@ public class TestCombinedConfiguration
      * Test event listener class for checking if the expected invalidate events
      * are fired.
      */
-    private static class CombinedListener implements ConfigurationListener
+    private static class CombinedListener implements EventListener<ConfigurationEvent>
     {
         int invalidateEvents;
 
         int otherEvents;
 
         @Override
-        public void configurationChanged(ConfigurationEvent event)
+        public void onEvent(ConfigurationEvent event)
         {
-            if (event.getType() == CombinedConfiguration.EVENT_COMBINED_INVALIDATE)
+            if (event.getEventType() == CombinedConfiguration.COMBINED_INVALIDATE)
             {
                 invalidateEvents++;
             }
