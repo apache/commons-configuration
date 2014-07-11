@@ -16,8 +16,8 @@
  */
 package org.apache.commons.configuration.plist;
 
-import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.event.AbstractTestConfigurationEvents;
+import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.junit.Test;
 
 /**
@@ -44,11 +44,11 @@ public abstract class AbstractTestPListEvents extends
     public void testAddByteArrayPropertyEvent()
     {
         config.addProperty(TEST_PROPBYTE, TEST_DATA);
-        l.checkEvent(AbstractConfiguration.EVENT_ADD_PROPERTY, TEST_PROPBYTE,
+        listener.checkEvent(ConfigurationEvent.ADD_PROPERTY, TEST_PROPBYTE,
                 TEST_DATA, true);
-        l.checkEvent(AbstractConfiguration.EVENT_ADD_PROPERTY, TEST_PROPBYTE,
+        listener.checkEvent(ConfigurationEvent.ADD_PROPERTY, TEST_PROPBYTE,
                 TEST_DATA, false);
-        l.done();
+        listener.done();
     }
 
     /**
@@ -58,10 +58,10 @@ public abstract class AbstractTestPListEvents extends
     public void testSetByteArrayPropertyEvent()
     {
         config.setProperty(TEST_PROPBYTE, TEST_DATA);
-        l.checkEvent(AbstractConfiguration.EVENT_SET_PROPERTY, TEST_PROPBYTE,
+        listener.checkEvent(ConfigurationEvent.SET_PROPERTY, TEST_PROPBYTE,
                 TEST_DATA, true);
-        l.checkEvent(AbstractConfiguration.EVENT_SET_PROPERTY, TEST_PROPBYTE,
+        listener.checkEvent(ConfigurationEvent.SET_PROPERTY, TEST_PROPBYTE,
                 TEST_DATA, false);
-        l.done();
+        listener.done();
     }
 }
