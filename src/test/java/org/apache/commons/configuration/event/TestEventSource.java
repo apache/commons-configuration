@@ -361,6 +361,38 @@ public class TestEventSource
     }
 
     /**
+     * Tests whether event listeners can be copied to another source.
+     */
+    @Test
+    public void testCopyEventListeners()
+    {
+        EventListenerTestImpl l1 = new EventListenerTestImpl(source);
+        EventListenerTestImpl l2 = new EventListenerTestImpl(source);
+        source.addEventListener(ConfigurationEvent.ANY, l1);
+        source.addEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2);
+
+        BaseEventSource source2 = new BaseEventSource();
+        source.copyEventListeners(source2);
+        Collection<EventListener<? super ConfigurationEvent>> listeners =
+                source2.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL);
+        assertEquals("Wrong number of listeners (1)", 2, listeners.size());
+        assertTrue("l1 not found", listeners.contains(l1));
+        assertTrue("l2 not found", listeners.contains(l2));
+        listeners = source2.getEventListeners(ConfigurationEvent.ANY);
+        assertEquals("Wrong number of listeners (2)", 1, listeners.size());
+        assertTrue("Wrong listener", listeners.contains(l1));
+    }
+
+    /**
+     * Tries to copy event listeners to a null source.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testCopyEventListenersNullSource()
+    {
+        source.copyEventListeners(null);
+    }
+
+    /**
      * A test event listener implementation.
      */
     static class TestListener implements ConfigurationListener,

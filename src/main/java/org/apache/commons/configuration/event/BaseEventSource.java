@@ -249,6 +249,25 @@ public class BaseEventSource implements EventSource
     }
 
     /**
+     * Copies all event listener registrations maintained by this object to the
+     * specified {@code BaseEventSource} object.
+     *
+     * @param source the target source for the copy operation (must not be
+     *        <b>null</b>)
+     * @throws IllegalArgumentException if the target source is <b>null</b>
+     * @since 2.0
+     */
+    public void copyEventListeners(BaseEventSource source)
+    {
+        if (source == null)
+        {
+            throw new IllegalArgumentException(
+                    "Target event source must not be null!");
+        }
+        source.eventListeners.addAll(eventListeners);
+    }
+
+    /**
      * Creates an event object and delivers it to all registered event
      * listeners. The method will check first if sending an event is allowed
      * (making use of the {@code detailEvents} property), and if
