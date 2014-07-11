@@ -25,7 +25,7 @@ import org.apache.commons.configuration.XMLConfiguration;
  * @version $Id$
  */
 public class TestXMLConfigurationEvents extends
-        AbstractTestConfigurationEvents
+        TestHierarchicalConfigurationEvents
 {
     @Override
     protected AbstractConfiguration createConfiguration()
