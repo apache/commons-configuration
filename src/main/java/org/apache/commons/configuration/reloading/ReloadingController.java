@@ -36,8 +36,8 @@ import org.apache.commons.configuration.event.EventType;
  * <ul>
  * <li>A {@code ReloadingController} instance is created and initialized with a
  * {@link ReloadingDetector} object.</li>
- * <li>A number of {@link ReloadingListener} objects can be registered at the
- * controller.</li>
+ * <li>A number of {@link EventListener} objects for reloading events can be
+ * registered at the controller.</li>
  * <li>Now the controller's {@code checkForReloading()} method is called
  * whenever a check is to be performed. This could be done for instance by a
  * timer in regular intervals or by any other means appropriate for a specific
