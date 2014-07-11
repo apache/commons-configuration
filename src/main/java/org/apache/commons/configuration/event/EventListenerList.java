@@ -17,7 +17,9 @@
 package org.apache.commons.configuration.event;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -147,34 +149,65 @@ public class EventListenerList
             throw new IllegalArgumentException(
                     "Event to be fired must not be null!");
         }
-        Set<EventType<?>> matchingTypes =
-                fetchSuperEventTypes(event.getEventType());
 
-        for (EventListenerRegistrationData<?> listenerData : listeners)
+        for (EventListenerIterator<? extends Event> iterator =
+                getEventListenerIterator(event.getEventType()); iterator
+                .hasNext();)
         {
-            if (matchingTypes.contains(listenerData.getEventType()))
-            {
-                callListener(listenerData, event);
-            }
+            iterator.invokeNextListenerUnchecked(event);
         }
     }
 
     /**
-     * Helper method for calling an event listener from a listener registration
-     * data. We have to operate on raw types to make this code compile. However,
-     * this is safe because of the way the listeners have been registered and
-     * associated with event types - so it is ensured that the event is
-     * compatible with the listener.
+     * Returns an {@code Iterable} allowing access to all event listeners stored
+     * in this list which are compatible with the specified event type.
      *
-     * @param listenerData the event listener data
+     * @param eventType the event type object
+     * @param <T> the event type
+     * @return an {@code Iterable} with the selected event listeners
+     */
+    public <T extends Event> Iterable<EventListener<? super T>> getEventListeners(
+            final EventType<T> eventType)
+    {
+        return new Iterable<EventListener<? super T>>()
+        {
+            @Override
+            public Iterator<EventListener<? super T>> iterator()
+            {
+                return getEventListenerIterator(eventType);
+            }
+        };
+    }
+
+    /**
+     * Returns a specialized iterator for obtaining all event listeners stored
+     * in this list which are compatible with the specified event type.
+     *
+     * @param eventType the event type object
+     * @param <T> the event type
+     * @return an {@code Iterator} with the selected event listeners
+     */
+    public <T extends Event> EventListenerIterator<T> getEventListenerIterator(
+            EventType<T> eventType)
+    {
+        return new EventListenerIterator<T>(listeners.iterator(), eventType);
+    }
+
+    /**
+     * Helper method for calling an event listener with an event. We have to
+     * operate on raw types to make this code compile. However, this is safe
+     * because of the way the listeners have been registered and associated with
+     * event types - so it is ensured that the event is compatible with the
+     * listener.
+     *
+     * @param listener the event listener to be called
      * @param event the event to be fired
      */
     @SuppressWarnings("unchecked, rawtypes")
-    private static void callListener(
-            EventListenerRegistrationData<?> listenerData, Event event)
+    private static void callListener(EventListener<?> listener, Event event)
     {
-        EventListener listener = listenerData.getListener();
-        listener.onEvent(event);
+        EventListener rowListener = listener;
+        rowListener.onEvent(event);
     }
 
     /**
@@ -195,5 +228,146 @@ public class EventListenerList
             currentType = currentType.getSuperType();
         }
         return types;
+    }
+
+    /**
+     * A special {@code Iterator} implementation used by the
+     * {@code getEventListenerIterator()} method. This iterator returns only
+     * listeners compatible with a specified event type. It has a convenience
+     * method for invoking the current listener in the iteration with an event.
+     *
+     * @param <T> the event type
+     */
+    public static class EventListenerIterator<T extends Event> implements
+            Iterator<EventListener<? super T>>
+    {
+        /** The underlying iterator. */
+        private final Iterator<EventListenerRegistrationData<?>> underlyingIterator;
+
+        /** The base event type. */
+        private final EventType<T> baseEventType;
+
+        /** The set with accepted event types. */
+        private final Set<EventType<?>> acceptedTypes;
+
+        /** The next element in the iteration. */
+        private EventListener<? super T> nextElement;
+
+        private EventListenerIterator(
+                Iterator<EventListenerRegistrationData<?>> it, EventType<T> base)
+        {
+            underlyingIterator = it;
+            baseEventType = base;
+            acceptedTypes = fetchSuperEventTypes(base);
+            initNextElement();
+        }
+
+        @Override
+        public boolean hasNext()
+        {
+            return nextElement != null;
+        }
+
+        @Override
+        public EventListener<? super T> next()
+        {
+            if (nextElement == null)
+            {
+                throw new NoSuchElementException("No more event listeners!");
+            }
+
+            EventListener<? super T> result = nextElement;
+            initNextElement();
+            return result;
+        }
+
+        /**
+         * Obtains the next event listener in this iteration and invokes it with
+         * the given event object.
+         *
+         * @param event the event object
+         * @throws NoSuchElementException if iteration is at its end
+         */
+        public void invokeNext(Event event)
+        {
+            validateEvent(event);
+            invokeNextListenerUnchecked(event);
+        }
+
+        /**
+         * {@inheritDoc} This implementation always throws an exception.
+         * Removing elements is not supported.
+         */
+        @Override
+        public void remove()
+        {
+            throw new UnsupportedOperationException(
+                    "Removing elements is not supported!");
+        }
+
+        /**
+         * Determines the next element in the iteration.
+         */
+        private void initNextElement()
+        {
+            nextElement = null;
+            while (underlyingIterator.hasNext() && nextElement == null)
+            {
+                EventListenerRegistrationData<?> regData =
+                        underlyingIterator.next();
+                if (acceptedTypes.contains(regData.getEventType()))
+                {
+                    nextElement = castListener(regData);
+                }
+            }
+        }
+
+        /**
+         * Checks whether the specified event can be passed to an event listener
+         * in this iteration. This check is done via the hierarchy of event
+         * types.
+         *
+         * @param event the event object
+         * @throws IllegalArgumentException if the event is invalid
+         */
+        private void validateEvent(Event event)
+        {
+            if (event == null
+                    || !fetchSuperEventTypes(event.getEventType()).contains(
+                            baseEventType))
+            {
+                throw new IllegalArgumentException(
+                        "Event incompatible with listener iteration: " + event);
+            }
+        }
+
+        /**
+         * Invokes the next event listener in the iteration without doing a
+         * validity check on the event. This method is called internally to
+         * avoid duplicate event checks.
+         *
+         * @param event the event object
+         */
+        private void invokeNextListenerUnchecked(Event event)
+        {
+            EventListener<? super T> listener = next();
+            callListener(listener, event);
+        }
+
+        /**
+         * Extracts the listener from the given data object and performs a cast
+         * to the target type. This is safe because it has been checked before
+         * that the type is compatible.
+         *
+         * @param regData the data object
+         * @return the extracted listener
+         */
+        @SuppressWarnings("unchecked, rawtypes")
+        private EventListener<? super T> castListener(
+                EventListenerRegistrationData<?> regData)
+        {
+            EventListener listener = regData.getListener();
+            return listener;
+        }
     }
 }
