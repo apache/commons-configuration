@@ -33,15 +33,6 @@ package org.apache.commons.configuration.event;
 public interface EventSource
 {
     /**
-     * Adds a configuration listener to this object.
-     *
-     * @param l the listener to add
-     * @deprecated Use {@code addEventListener()}
-     */
-    @Deprecated
-    void addConfigurationListener(ConfigurationListener l);
-
-    /**
      * Adds a new configuration error listener to this object. This listener
      * will then be notified about internal problems.
      *

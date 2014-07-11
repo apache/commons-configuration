@@ -19,12 +19,19 @@ package org.apache.commons.configuration.builder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.util.Collection;
 
 import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.builder.BuilderConfigurationWrapperFactory.EventSourceSupport;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.EventListener;
+import org.apache.commons.configuration.event.EventListenerTestImpl;
 import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
@@ -90,7 +97,7 @@ public class TestBuilderConfigurationWrapperFactory
         conf.addProperty("test2", "42");
         BuilderConfigurationWrapperFactory factory =
                 new BuilderConfigurationWrapperFactory();
-        HierarchicalConfiguration wrapper =
+        HierarchicalConfiguration<?> wrapper =
                 factory.createBuilderConfigurationWrapper(
                         HierarchicalConfiguration.class, builder);
         assertEquals("Wrong value (1)", "value1", wrapper.getString("test1"));
@@ -111,7 +118,7 @@ public class TestBuilderConfigurationWrapperFactory
         EasyMock.replay(builder);
         BuilderConfigurationWrapperFactory factory =
                 new BuilderConfigurationWrapperFactory();
-        HierarchicalConfiguration wrapper =
+        HierarchicalConfiguration<?> wrapper =
                 factory.createBuilderConfigurationWrapper(
                         HierarchicalConfiguration.class, builder);
         assertFalse("EventSource support", wrapper instanceof EventSource);
@@ -133,7 +140,7 @@ public class TestBuilderConfigurationWrapperFactory
         EventSource src =
                 (EventSource) factory.createBuilderConfigurationWrapper(
                         HierarchicalConfiguration.class, builder);
-        src.addConfigurationListener(null);
+        src.addEventListener(ConfigurationEvent.ANY, null);
     }
 
     /**
@@ -153,7 +160,7 @@ public class TestBuilderConfigurationWrapperFactory
         EventSource src =
                 (EventSource) factory.createBuilderConfigurationWrapper(
                         HierarchicalConfiguration.class, builder);
-        src.addConfigurationListener(null);
+        src.addEventListener(ConfigurationEvent.ANY, null);
     }
 
     /**
@@ -161,25 +168,28 @@ public class TestBuilderConfigurationWrapperFactory
      */
     @Test
     public void testEventSourceSupportBuilderOptionalSupported()
+            throws ConfigurationException
     {
-        //TODO enable after code compiles again
-//        BuilderWithEventSource builder =
-//                EasyMock.createMock(BuilderWithEventSource.class);
-//        ConfigurationListener l =
-//                EasyMock.createMock(ConfigurationListener.class);
-//        builder.addConfigurationListener(l);
-//        EasyMock.expect(builder.removeConfigurationListener(l)).andReturn(
-//                Boolean.TRUE);
-//        EasyMock.replay(builder, l);
-//        BuilderConfigurationWrapperFactory factory =
-//                new BuilderConfigurationWrapperFactory(
-//                        EventSourceSupport.BUILDER_OPTIONAL);
-//        EventSource src =
-//                (EventSource) factory.createBuilderConfigurationWrapper(
-//                        Configuration.class, builder);
-//        src.addConfigurationListener(l);
-//        assertTrue("Wrong result", src.removeConfigurationListener(l));
-//        EasyMock.verify(builder);
+        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        EventListener<ConfigurationEvent> l1 = new EventListenerTestImpl(null);
+        EventListener<ConfigurationEvent> l2 = new EventListenerTestImpl(null);
+        BuilderConfigurationWrapperFactory factory =
+                new BuilderConfigurationWrapperFactory(
+                        EventSourceSupport.BUILDER_OPTIONAL);
+        EventSource src =
+                (EventSource) factory.createBuilderConfigurationWrapper(
+                        Configuration.class, builder);
+
+        src.addEventListener(ConfigurationEvent.ANY, l1);
+        src.addEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2);
+        src.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2);
+        PropertiesConfiguration config = builder.getConfiguration();
+        Collection<EventListener<? super ConfigurationEvent>> listeners =
+                config.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL);
+        assertTrue("Registered listener not found", listeners.contains(l1));
+        assertFalse("Removed listener still found", listeners.contains(l2));
     }
 
     /**
@@ -200,7 +210,7 @@ public class TestBuilderConfigurationWrapperFactory
         EventSource src =
                 (EventSource) factory.createBuilderConfigurationWrapper(
                         HierarchicalConfiguration.class, builder);
-        src.addErrorListener(null);
+        src.addEventListener(ConfigurationEvent.ANY, null);
     }
 
     /**
@@ -213,7 +223,7 @@ public class TestBuilderConfigurationWrapperFactory
                 new BuilderConfigurationWrapperFactory(
                         EventSourceSupport.BUILDER_OPTIONAL);
         factory.createBuilderConfigurationWrapper(null,
-                EasyMock.createMock(BuilderWithEventSource.class));
+                createBuilderMock(new BaseHierarchicalConfiguration()));
     }
 
     /**
@@ -225,13 +235,5 @@ public class TestBuilderConfigurationWrapperFactory
         BuilderConfigurationWrapperFactory factory =
                 new BuilderConfigurationWrapperFactory();
         factory.createBuilderConfigurationWrapper(Configuration.class, null);
-    }
-
-    /**
-     * A combined interface needed for mock generation.
-     */
-    private static interface BuilderWithEventSource extends
-            ConfigurationBuilder<Configuration>/*, EventSource*/
-    {
     }
 }

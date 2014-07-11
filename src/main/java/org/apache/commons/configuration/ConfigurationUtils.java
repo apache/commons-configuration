@@ -27,7 +27,6 @@ import java.util.Iterator;
 
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
-import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.event.Event;
 import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.event.EventSource;
@@ -81,10 +80,6 @@ public final class ConfigurationUtils
      */
     private static final EventSource DUMMY_EVENT_SOURCE = new EventSource()
     {
-        @Override
-        public void addConfigurationListener(ConfigurationListener l)
-        {
-        }
 
         @Override
         public void addErrorListener(ConfigurationErrorListener l)

@@ -94,13 +94,6 @@ public class BaseEventSource implements EventSource
         initListeners();
     }
 
-    @Override
-    public void addConfigurationListener(ConfigurationListener l)
-    {
-        checkListener(l);
-        listeners.add(l);
-    }
-
     /**
      * Returns a collection with all configuration event listeners that are
      * currently registered at this object.

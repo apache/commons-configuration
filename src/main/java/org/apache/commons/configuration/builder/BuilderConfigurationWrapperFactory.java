@@ -87,7 +87,6 @@ public class BuilderConfigurationWrapperFactory
      *        <b>null</b>
      * @param builder the wrapped {@code ConfigurationBuilder} (must not be
      *        <b>null</b>)
-     * @param evSrcSupport the level of {@code EventSource} support
      * @throws IllegalArgumentException if a required parameter is missing
      * @throws ConfigurationRuntimeException if an error occurs when creating
      *         the result {@code Configuration}
@@ -184,7 +183,7 @@ public class BuilderConfigurationWrapperFactory
      * {@code Configuration} object returned by
      * {@code BuilderConfigurationWrapperFactory} also implements the
      * {@code EventSource} interface and how this implementation should work.
-     * See the documentation of the single constants for more details
+     * See the documentation of the single constants for more details.
      * </p>
      */
     public static enum EventSourceSupport
@@ -211,8 +210,12 @@ public class BuilderConfigurationWrapperFactory
          * associated {@code ConfigurationBuilder} object. If this option is
          * used, generated {@code Configuration} objects provide a fully
          * functional implementation of {@code EventSource} by delegating to the
-         * builder. The builder must implement the {@code EventSource}
-         * interface, otherwise an exception is thrown.
+         * builder. It is expected that the builder defines the methods
+         * {@code addConfigurationListener()} and
+         * {@code removeConfigurationListener()}, to which the methods of the
+         * {@code EventSource} interface are mapped. This is the case for all
+         * builder implementations derived from
+         * {@code BasicConfigurationBuilder}.
          */
         BUILDER,
 
@@ -232,6 +235,18 @@ public class BuilderConfigurationWrapperFactory
     private static class BuilderConfigurationWrapperInvocationHandler implements
             InvocationHandler
     {
+        /** The name of the event source method for removing a listener. */
+        private static final String METHOD_SOURCE_REMOVE =
+                "removeEventListener";
+
+        /** The name of the builder method for adding a listener. */
+        private static final String METHOD_BUILDER_ADD =
+                "addConfigurationListener";
+
+        /** The name of the builder method for removing a listener. */
+        private static final String METHOD_BUILDER_REMOVE =
+                "removeConfigurationListener";
+
         /** The wrapped builder. */
         private final ConfigurationBuilder<? extends Configuration> builder;
 
@@ -311,23 +326,75 @@ public class BuilderConfigurationWrapperFactory
         private Object handleEventSourceInvocation(Method method, Object[] args)
                 throws Exception
         {
-            Object src;
-            boolean mockIfUnsupported;
+            Object target;
+            Method methodToInvoke;
             if (EventSourceSupport.DUMMY == eventSourceSupport)
             {
-                src = this;
-                mockIfUnsupported = true;
+                target = ConfigurationUtils.asEventSource(this, true);
+                methodToInvoke = method;
             }
             else
             {
-                src = builder;
-                mockIfUnsupported =
-                        EventSourceSupport.BUILDER_OPTIONAL == eventSourceSupport;
+                target = builder;
+                methodToInvoke = findBuilderMethod(method);
+                if (methodToInvoke == null)
+                {
+                    target =
+                            ConfigurationUtils
+                                    .asEventSource(
+                                            builder,
+                                            EventSourceSupport.BUILDER_OPTIONAL == eventSourceSupport);
+                    methodToInvoke = method;
+                }
             }
 
-            Object target =
-                    ConfigurationUtils.asEventSource(src, mockIfUnsupported);
-            return method.invoke(target, args);
+            return convertResult(method.getReturnType(),
+                    methodToInvoke.invoke(target, args));
+        }
+
+        /**
+         * Determines the method on the builder to be called for the specified
+         * event source method. If no such method can be found, result is
+         * <b>null</b>.
+         *
+         * @param method the event source method to be called
+         * @return the corresponding builder method or <b>null</b>
+         */
+        private Method findBuilderMethod(Method method)
+        {
+            String builderMethodName =
+                    METHOD_SOURCE_REMOVE.equals(method.getName()) ? METHOD_BUILDER_REMOVE
+                            : METHOD_BUILDER_ADD;
+            try
+            {
+                return builder.getClass().getMethod(builderMethodName,
+                        method.getParameterTypes());
+            }
+            catch (NoSuchMethodException e)
+            {
+                return null;
+            }
+        }
+
+        /**
+         * Performs a conversion of the invocation result if necessary. The
+         * {@code removeEventListener()} method of {@code EventSource} returns a
+         * boolean, but the corresponding builder method returns a reference to
+         * the builder for method chaining. So these types have to be adapted.
+         *
+         * @param returnType the expected return type of the current invocation
+         * @param methodResult the actual result returned from the method
+         * @return the converted result
+         */
+        private static Object convertResult(Class<?> returnType,
+                Object methodResult)
+        {
+            if (Boolean.TYPE.equals(returnType)
+                    && !Boolean.class.isInstance(methodResult))
+            {
+                return Boolean.FALSE;
+            }
+            return methodResult;
         }
     }
 }
