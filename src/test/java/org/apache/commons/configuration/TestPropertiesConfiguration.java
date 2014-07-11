@@ -55,6 +55,7 @@ import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration.convert.LegacyListDelimiterHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
+import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -678,11 +679,16 @@ public class TestPropertiesConfiguration
     public void testClone() throws ConfigurationException
     {
         PropertiesConfiguration copy = (PropertiesConfiguration) conf.clone();
-        assertNotSame("Copy has same layout object", conf.getLayout(), copy.getLayout());
-        assertEquals("Wrong number of event listeners for original", 1, conf.getConfigurationListeners().size());
-        assertEquals("Wrong number of event listeners for clone", 1, copy.getConfigurationListeners().size());
-        assertSame("Wrong event listener for original", conf.getLayout(), conf.getConfigurationListeners().iterator().next());
-        assertSame("Wrong event listener for clone", copy.getLayout(), copy.getConfigurationListeners().iterator().next());
+        assertNotSame("Copy has same layout object", conf.getLayout(),
+                copy.getLayout());
+        assertEquals("Wrong number of event listeners for original", 1, conf
+                .getEventListeners(ConfigurationEvent.ANY).size());
+        assertEquals("Wrong number of event listeners for clone", 1, copy
+                .getEventListeners(ConfigurationEvent.ANY).size());
+        assertSame("Wrong event listener for original", conf.getLayout(), conf
+                .getEventListeners(ConfigurationEvent.ANY).iterator().next());
+        assertSame("Wrong event listener for clone", copy.getLayout(), copy
+                .getEventListeners(ConfigurationEvent.ANY).iterator().next());
         StringWriter outConf = new StringWriter();
         new FileHandler(conf).save(outConf);
         StringWriter outCopy = new StringWriter();
@@ -954,8 +960,8 @@ public class TestPropertiesConfiguration
         StringWriter writer = new StringWriter();
         new FileHandler(conf).save(writer);
         String s = writer.toString();
-        assertTrue("Value not found: " + s, s.indexOf(PROP_NAME
-                + " = http://www.apache.org") >= 0);
+        assertTrue("Value not found: " + s, s.contains(PROP_NAME
+                + " = http://www.apache.org"));
     }
 
     /**
@@ -1089,7 +1095,7 @@ public class TestPropertiesConfiguration
         StringWriter out = new StringWriter();
         new FileHandler(conf).save(out);
         assertTrue("Value was escaped: " + out,
-                out.toString().indexOf(text) >= 0);
+                out.toString().contains(text));
         saveTestConfig();
         PropertiesConfiguration c2 = new PropertiesConfiguration();
         load(c2, testSavePropertiesFile.getAbsolutePath());
