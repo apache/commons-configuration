@@ -61,8 +61,9 @@ import org.apache.commons.configuration.builder.fluent.FileBasedBuilderParameter
 import org.apache.commons.configuration.builder.fluent.Parameters;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.Event;
+import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
@@ -965,23 +966,30 @@ public class TestCombinedConfigurationBuilder
     public void testConfigurationBuilderProviderInheritEventListeners()
             throws ConfigurationException
     {
-        ConfigurationListener cl =
-                EasyMock.createNiceMock(ConfigurationListener.class);
-        ConfigurationErrorListener el =
-                EasyMock.createNiceMock(ConfigurationErrorListener.class);
-        EasyMock.replay(cl, el);
+        @SuppressWarnings("unchecked")
+        EventListener<Event> l1 = EasyMock.createNiceMock(EventListener.class);
+        @SuppressWarnings("unchecked")
+        EventListener<ConfigurationEvent> l2 =
+                EasyMock.createNiceMock(EventListener.class);
+        EasyMock.replay(l1, l2);
         File testFile =
                 ConfigurationAssert
                         .getTestFile("testCCCombinedChildBuilder.xml");
         builder.configure(new XMLBuilderParametersImpl().setFile(testFile))
-                .addConfigurationListener(cl).addErrorListener(el);
+                .addConfigurationListener(Event.ANY, l1)
+                .addConfigurationListener(ConfigurationEvent.ANY, l2);
         CombinedConfiguration cc = builder.getConfiguration();
         CombinedConfiguration cc2 =
                 (CombinedConfiguration) cc.getConfiguration("subcc");
-        assertTrue("Configuration listener not found", cc2
-                .getConfigurationListeners().contains(cl));
-        assertTrue("Error listener not found", cc2.getErrorListeners()
-                .contains(el));
+        Collection<EventListener<? super ConfigurationEvent>> listeners =
+                cc2.getEventListeners(ConfigurationEvent.ANY);
+        assertTrue("Listener 1 not found", listeners.contains(l1));
+        assertTrue("Listener 2 not found", listeners.contains(l2));
+        Collection<EventListener<? super Event>> eventListeners =
+                cc2.getEventListeners(Event.ANY);
+        assertEquals("Wrong number of event listeners", 1,
+                eventListeners.size());
+        assertTrue("Wrong listener", eventListeners.contains(l1));
     }
 
     /**
