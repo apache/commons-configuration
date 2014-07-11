@@ -130,8 +130,7 @@ public class BaseEventSource implements EventSource
      * @param <T> the event type
      * @return a collection with the event listeners of the specified event type
      *         (this collection is a snapshot of the currently registered
-     *         listeners; manipulating it has no effect on this event source
-     *         object)
+     *         listeners; it cannot be manipulated)
      */
     public <T extends Event> Collection<EventListener<? super T>> getEventListeners(
             EventType<T> eventType)
@@ -143,7 +142,7 @@ public class BaseEventSource implements EventSource
         {
             result.add(l);
         }
-        return result;
+        return Collections.unmodifiableCollection(result);
     }
 
     /**

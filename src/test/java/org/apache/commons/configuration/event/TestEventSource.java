@@ -42,7 +42,7 @@ public class TestEventSource
     static final Object TEST_PROPVALUE = "a test property value";
 
     /** The object under test. */
-    CountingEventSource source;
+    private CountingEventSource source;
 
     @Before
     public void setUp() throws Exception
@@ -57,9 +57,9 @@ public class TestEventSource
     public void testInit()
     {
         assertTrue("Listeners list is not empty", source
-                .getConfigurationListeners().isEmpty());
-        assertFalse("Removing listener", source
-                .removeConfigurationListener(new TestListener()));
+                .getEventListeners(ConfigurationEvent.ANY).isEmpty());
+        assertFalse("Removing listener", source.removeEventListener(
+                ConfigurationEvent.ANY, new EventListenerTestImpl(null)));
         assertFalse("Detail events are enabled", source.isDetailEvents());
         assertTrue("Error listeners list is not empty", source
                 .getErrorListeners().isEmpty());
@@ -69,11 +69,12 @@ public class TestEventSource
      * Tests registering a new listener.
      */
     @Test
-    public void testAddConfigurationListener()
+    public void testAddEventListener()
     {
-        TestListener l = new TestListener();
-        source.addConfigurationListener(l);
-        Collection<ConfigurationListener> listeners = source.getConfigurationListeners();
+        EventListenerTestImpl l = new EventListenerTestImpl(this);
+        source.addEventListener(ConfigurationEvent.ANY, l);
+        Collection<EventListener<? super ConfigurationEvent>> listeners =
+                source.getEventListeners(ConfigurationEvent.ANY);
         assertEquals("Wrong number of listeners", 1, listeners.size());
         assertTrue("Listener not in list", listeners.contains(l));
     }
@@ -85,26 +86,26 @@ public class TestEventSource
     @Test(expected = IllegalArgumentException.class)
     public void testAddNullConfigurationListener()
     {
-        source.addConfigurationListener(null);
+        source.addEventListener(ConfigurationEvent.ANY, null);
     }
 
     /**
      * Tests removing a listener.
      */
     @Test
-    public void testRemoveConfigurationListener()
+    public void testRemoveEventListener()
     {
-        TestListener l = new TestListener();
+        EventListenerTestImpl l = new EventListenerTestImpl(this);
         assertFalse("Listener can be removed?", source
-                .removeConfigurationListener(l));
-        source.addConfigurationListener(l);
-        source.addConfigurationListener(new TestListener());
+                .removeEventListener(ConfigurationEvent.ANY, l));
+        source.addEventListener(ConfigurationEvent.ADD_NODES, new EventListenerTestImpl(this));
+        source.addEventListener(ConfigurationEvent.ANY, l);
         assertFalse("Unknown listener can be removed", source
-                .removeConfigurationListener(new TestListener()));
+                .removeEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(null)));
         assertTrue("Could not remove listener", source
-                .removeConfigurationListener(l));
+                .removeEventListener(ConfigurationEvent.ANY, l));
         assertFalse("Listener still in list", source
-                .getConfigurationListeners().contains(l));
+                .getEventListeners(ConfigurationEvent.ANY).contains(l));
     }
 
     /**
@@ -113,11 +114,11 @@ public class TestEventSource
     @Test
     public void testRemoveNullConfigurationListener()
     {
-        source.addConfigurationListener(new TestListener());
+        source.addEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(null));
         assertFalse("Null listener can be removed", source
-                .removeConfigurationListener(null));
+                .removeEventListener(ConfigurationEvent.ANY, null));
         assertEquals("Listener list was modified", 1, source
-                .getConfigurationListeners().size());
+                .getEventListeners(ConfigurationEvent.ANY).size());
     }
 
     /**
@@ -126,8 +127,10 @@ public class TestEventSource
     @Test(expected = UnsupportedOperationException.class)
     public void testGetConfigurationListenersUpdate()
     {
-        source.addConfigurationListener(new TestListener());
-        Collection<ConfigurationListener> list = source.getConfigurationListeners();
+        source.addEventListener(ConfigurationEvent.ANY,
+                new EventListenerTestImpl(null));
+        Collection<EventListener<? super ConfigurationEvent>> list =
+                source.getEventListeners(ConfigurationEvent.ANY);
         list.clear();
     }
 
@@ -138,8 +141,10 @@ public class TestEventSource
     @Test
     public void testGetConfigurationListenersAddNew()
     {
-        Collection<ConfigurationListener> list = source.getConfigurationListeners();
-        source.addConfigurationListener(new TestListener());
+        Collection<EventListener<? super ConfigurationEvent>> list =
+                source.getEventListeners(ConfigurationEvent.ANY);
+        source.addEventListener(ConfigurationEvent.ANY,
+                new EventListenerTestImpl(null));
         assertTrue("Listener snapshot not empty", list.isEmpty());
     }
 
@@ -164,17 +169,13 @@ public class TestEventSource
     @Test
     public void testFireEvent()
     {
-        TestListener l = new TestListener();
-        source.addConfigurationListener(l);
-        source.fireEvent(TEST_TYPE, TEST_PROPNAME, TEST_PROPVALUE, true);
-        assertEquals("Not 1 event created", 1, source.eventCount);
-        assertEquals("Listener not called once", 1, l.numberOfCalls);
-        assertEquals("Wrong event type", TEST_TYPE, l.lastEvent.getType());
-        assertEquals("Wrong property name", TEST_PROPNAME, l.lastEvent
-                .getPropertyName());
-        assertEquals("Wrong property value", TEST_PROPVALUE, l.lastEvent
-                .getPropertyValue());
-        assertTrue("Wrong before event flag", l.lastEvent.isBeforeUpdate());
+        EventListenerTestImpl l = new EventListenerTestImpl(source);
+        source.addEventListener(ConfigurationEvent.ANY, l);
+        source.fireEvent(ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME,
+                TEST_PROPVALUE, true);
+        l.checkEvent(ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME,
+                TEST_PROPVALUE, true);
+        l.done();
     }
 
     /**
@@ -183,7 +184,7 @@ public class TestEventSource
     @Test
     public void testFireEventNoListeners()
     {
-        source.fireEvent(TEST_TYPE, TEST_PROPNAME, TEST_PROPVALUE, false);
+        source.fireEvent(ConfigurationEvent.ADD_NODES, TEST_PROPNAME, TEST_PROPVALUE, false);
         assertEquals("An event object was created", 0, source.eventCount);
     }
 
@@ -193,12 +194,12 @@ public class TestEventSource
     @Test
     public void testFireEventNoDetails()
     {
-        TestListener l = new TestListener();
-        source.addConfigurationListener(l);
+        EventListenerTestImpl l = new EventListenerTestImpl(source);
+        source.addEventListener(ConfigurationEvent.ANY, l);
         source.setDetailEvents(false);
-        source.fireEvent(TEST_TYPE, TEST_PROPNAME, TEST_PROPVALUE, false);
+        source.fireEvent(ConfigurationEvent.SET_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE, false);
         assertEquals("Event object was created", 0, source.eventCount);
-        assertEquals("Listener was called", 0, l.numberOfCalls);
+        l.done();
     }
 
     /**
@@ -208,22 +209,24 @@ public class TestEventSource
     @Test
     public void testRemoveListenerInFireEvent()
     {
-        ConfigurationListener lstRemove = new ConfigurationListener()
+        EventListener<ConfigurationEvent> lstRemove = new EventListener<ConfigurationEvent>()
         {
             @Override
-            public void configurationChanged(ConfigurationEvent event)
+            public void onEvent(ConfigurationEvent event)
             {
-                source.removeConfigurationListener(this);
+                source.removeEventListener(ConfigurationEvent.ANY, this);
             }
         };
 
-        source.addConfigurationListener(lstRemove);
-        TestListener l = new TestListener();
-        source.addConfigurationListener(l);
-        source.fireEvent(TEST_TYPE, TEST_PROPNAME, TEST_PROPVALUE, false);
-        assertEquals("Listener was not called", 1, l.numberOfCalls);
-        assertEquals("Listener was not removed", 1, source
-                .getConfigurationListeners().size());
+        source.addEventListener(ConfigurationEvent.ANY, lstRemove);
+        EventListenerTestImpl l = new EventListenerTestImpl(source);
+        source.addEventListener(ConfigurationEvent.ANY, l);
+        source.fireEvent(ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME,
+                TEST_PROPVALUE, false);
+        l.checkEvent(ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME,
+                TEST_PROPVALUE, false);
+        assertEquals("Listener was not removed", 1,
+                source.getEventListeners(ConfigurationEvent.ANY).size());
     }
 
     /**
@@ -330,11 +333,10 @@ public class TestEventSource
     @Test
     public void testClone() throws CloneNotSupportedException
     {
-        source.addConfigurationListener(new TestListener());
-        source.addErrorListener(new TestListener());
+        source.addEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(source));
         BaseEventSource copy = (BaseEventSource) source.clone();
         assertTrue("Configuration listeners registered for clone", copy
-                .getConfigurationListeners().isEmpty());
+                .getEventListeners(ConfigurationEvent.ANY).isEmpty());
         assertTrue("Error listeners registered for clone", copy
                 .getErrorListeners().isEmpty());
     }
@@ -379,11 +381,12 @@ public class TestEventSource
         int errorCount;
 
         @Override
-        protected ConfigurationEvent createEvent(int type, String propName,
-                Object propValue, boolean before)
+        protected <T extends ConfigurationEvent> ConfigurationEvent createEvent(
+                EventType<T> eventType, String propName, Object propValue,
+                boolean before)
         {
             eventCount++;
-            return super.createEvent(type, propName, propValue, before);
+            return super.createEvent(eventType, propName, propValue, before);
         }
 
         @Override
