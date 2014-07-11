@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
@@ -67,7 +67,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     private static final long serialVersionUID = 3373812230395363192L;
 
     /** A listener for reacting on changes caused by sub configurations. */
-    private final ConfigurationListener changeListener;
+    private final EventListener<ConfigurationEvent> changeListener;
 
     /**
      * Creates a new instance of {@code BaseHierarchicalConfiguration}.
@@ -316,7 +316,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     protected void initSubConfigurationForThisParent(SubnodeConfiguration subConfig)
     {
         initSubConfiguration(subConfig);
-        subConfig.addConfigurationListener(changeListener);
+        subConfig.addEventListener(ConfigurationEvent.ANY, changeListener);
     }
 
     /**
@@ -596,7 +596,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     protected void subnodeConfigurationChanged(ConfigurationEvent event)
     {
-        fireEvent(EVENT_SUBNODE_CHANGED, null, event, event.isBeforeUpdate());
+        fireEvent(ConfigurationEvent.SUBNODE_CHANGED, null, event, event.isBeforeUpdate());
     }
 
     /**
@@ -622,11 +622,12 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      *
      * @return the newly created change listener
      */
-    private ConfigurationListener createChangeListener()
+    private EventListener<ConfigurationEvent> createChangeListener()
     {
-        return new ConfigurationListener()
+        return new EventListener<ConfigurationEvent>()
         {
-            public void configurationChanged(ConfigurationEvent event)
+            @Override
+            public void onEvent(ConfigurationEvent event)
             {
                 subnodeConfigurationChanged(event);
             }

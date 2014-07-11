@@ -55,11 +55,11 @@ public class TestHierarchicalConfigurationEvents extends
         Collection<QueryResult<ImmutableNode>> nodes = hc.getExpressionEngine()
                 .query(hc.getRootNode(), key, hc.getNodeModel().getNodeHandler());
         hc.clearTree(key);
-        l.checkEvent(BaseHierarchicalConfiguration.EVENT_CLEAR_TREE, key, null,
+        listener.checkEvent(ConfigurationEvent.CLEAR_TREE, key, null,
                 true);
-        l.checkEvent(BaseHierarchicalConfiguration.EVENT_CLEAR_TREE, key, nodes,
+        listener.checkEvent(ConfigurationEvent.CLEAR_TREE, key, nodes,
                 false);
-        l.done();
+        listener.done();
     }
 
     /**
@@ -72,11 +72,11 @@ public class TestHierarchicalConfigurationEvents extends
         Collection<ImmutableNode> nodes = new ArrayList<ImmutableNode>(1);
         nodes.add(NodeStructureHelper.createNode("a_key", TEST_PROPVALUE));
         hc.addNodes(TEST_PROPNAME, nodes);
-        l.checkEvent(BaseHierarchicalConfiguration.EVENT_ADD_NODES, TEST_PROPNAME,
+        listener.checkEvent(ConfigurationEvent.ADD_NODES, TEST_PROPNAME,
                 nodes, true);
-        l.checkEvent(BaseHierarchicalConfiguration.EVENT_ADD_NODES, TEST_PROPNAME,
+        listener.checkEvent(ConfigurationEvent.ADD_NODES, TEST_PROPNAME,
                 nodes, false);
-        l.done();
+        listener.done();
     }
 
     /**
@@ -88,7 +88,7 @@ public class TestHierarchicalConfigurationEvents extends
     {
         ((BaseHierarchicalConfiguration) config).addNodes(TEST_PROPNAME,
                 new ArrayList<ImmutableNode>());
-        l.done();
+        listener.done();
     }
 
     /**
@@ -103,12 +103,12 @@ public class TestHierarchicalConfigurationEvents extends
                         .configurationAt(EXIST_PROPERTY, true);
         sub.addProperty("newProp", "newValue");
         checkSubnodeEvent(
-                l.nextEvent(BaseHierarchicalConfiguration.EVENT_SUBNODE_CHANGED),
+                listener.nextEvent(ConfigurationEvent.SUBNODE_CHANGED),
                 true);
         checkSubnodeEvent(
-                l.nextEvent(BaseHierarchicalConfiguration.EVENT_SUBNODE_CHANGED),
+                listener.nextEvent(ConfigurationEvent.SUBNODE_CHANGED),
                 false);
-        l.done();
+        listener.done();
     }
 
     /**
@@ -121,7 +121,7 @@ public class TestHierarchicalConfigurationEvents extends
                 ((BaseHierarchicalConfiguration) config)
                         .configurationAt(EXIST_PROPERTY);
         sub.addProperty("newProp", "newValue");
-        l.done();
+        listener.done();
     }
 
     /**
@@ -139,7 +139,7 @@ public class TestHierarchicalConfigurationEvents extends
         ConfigurationEvent evSub = (ConfigurationEvent) event
                 .getPropertyValue();
         assertEquals("Wrong event type",
-                AbstractConfiguration.EVENT_ADD_PROPERTY, evSub.getType());
+                ConfigurationEvent.ADD_PROPERTY, evSub.getEventType());
         assertEquals("Wrong property name", "newProp", evSub.getPropertyName());
         assertEquals("Wrong property value", "newValue", evSub
                 .getPropertyValue());

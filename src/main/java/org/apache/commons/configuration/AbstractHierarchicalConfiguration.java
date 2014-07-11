@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
@@ -430,9 +431,9 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         beginWrite(false);
         try
         {
-            fireEvent(EVENT_ADD_NODES, key, nodes, true);
+            fireEvent(ConfigurationEvent.ADD_NODES, key, nodes, true);
             addNodesInternal(key, nodes);
-            fireEvent(EVENT_ADD_NODES, key, nodes, false);
+            fireEvent(ConfigurationEvent.ADD_NODES, key, nodes, false);
         }
         finally
         {
@@ -626,9 +627,9 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         beginWrite(false);
         try
         {
-            fireEvent(EVENT_CLEAR_TREE, key, null, true);
+            fireEvent(ConfigurationEvent.CLEAR_TREE, key, null, true);
             Object nodes = clearTreeInternal(key);
-            fireEvent(EVENT_CLEAR_TREE, key, nodes, false);
+            fireEvent(ConfigurationEvent.CLEAR_TREE, key, nodes, false);
         }
         finally
         {
@@ -645,7 +646,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param key the key of the property to be removed
      * @return an object with information about the nodes that have been removed
      *         (this is needed for firing a meaningful event of type
-     *         EVENT_CLEAR_TREE)
+     *         CLEAR_TREE)
      * @since 2.0
      */
     protected Object clearTreeInternal(String key)
