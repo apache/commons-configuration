@@ -37,7 +37,8 @@ import java.util.Set;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventListener;
+import org.apache.commons.configuration.event.EventListenerTestImpl;
 import org.apache.commons.configuration.tree.DefaultConfigurationKey;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.DefaultExpressionEngineSymbols;
@@ -525,18 +526,12 @@ public class TestAbstractHierarchicalConfiguration
     @Test
     public void testCloneWithEventListeners()
     {
-        ConfigurationListener l = new ConfigurationListener()
-        {
-            public void configurationChanged(ConfigurationEvent event)
-            {
-                // just a dummy
-            }
-        };
-        config.addConfigurationListener(l);
+        EventListener<ConfigurationEvent> l = new EventListenerTestImpl(null);
+        config.addEventListener(ConfigurationEvent.ANY, l);
         AbstractHierarchicalConfiguration<?> copy =
                 (AbstractHierarchicalConfiguration<?>) config.clone();
         assertFalse("Event listener registered at clone", copy
-                .getConfigurationListeners().contains(l));
+                .getEventListeners(ConfigurationEvent.ANY).contains(l));
     }
 
     /**
