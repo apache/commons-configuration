@@ -87,12 +87,6 @@ public final class ConfigurationUtils
         }
 
         @Override
-        public boolean removeConfigurationListener(ConfigurationListener l)
-        {
-            return false;
-        }
-
-        @Override
         public void addErrorListener(ConfigurationErrorListener l)
         {
         }

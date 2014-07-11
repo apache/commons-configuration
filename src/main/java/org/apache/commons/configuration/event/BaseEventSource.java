@@ -101,12 +101,6 @@ public class BaseEventSource implements EventSource
         listeners.add(l);
     }
 
-    @Override
-    public boolean removeConfigurationListener(ConfigurationListener l)
-    {
-        return listeners.remove(l);
-    }
-
     /**
      * Returns a collection with all configuration event listeners that are
      * currently registered at this object.
@@ -143,16 +137,6 @@ public class BaseEventSource implements EventSource
             result.add(l);
         }
         return Collections.unmodifiableCollection(result);
-    }
-
-    /**
-     * Removes all registered configuration listeners.
-     * @deprecated Use clearEventListeners()
-     */
-    @Deprecated
-    public void clearConfigurationListeners()
-    {
-        listeners.clear();
     }
 
     /**

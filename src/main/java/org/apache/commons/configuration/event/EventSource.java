@@ -42,17 +42,6 @@ public interface EventSource
     void addConfigurationListener(ConfigurationListener l);
 
     /**
-     * Removes the specified event listener so that it does not receive any
-     * further events caused by this object.
-     *
-     * @param l the listener to be removed
-     * @return a flag whether the event listener was found
-     * @deprecated Use {@code removeEventListener()}
-     */
-    @Deprecated
-    boolean removeConfigurationListener(ConfigurationListener l);
-
-    /**
      * Adds a new configuration error listener to this object. This listener
      * will then be notified about internal problems.
      *
