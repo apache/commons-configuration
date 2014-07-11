@@ -40,8 +40,9 @@ import org.apache.commons.configuration.builder.ConfigurationBuilderEvent;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.Event;
+import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.DefaultLookups;
@@ -255,59 +256,31 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test
     public void testAddConfigurationListener() throws ConfigurationException
     {
-        ConfigurationListener l1 =
-                EasyMock.createMock(ConfigurationListener.class);
-        ConfigurationListener l2 =
-                EasyMock.createMock(ConfigurationListener.class);
+        @SuppressWarnings("unchecked")
+        EventListener<ConfigurationEvent> l1 =
+                EasyMock.createMock(EventListener.class);
+        @SuppressWarnings("unchecked")
+        EventListener<Event> l2 =
+                EasyMock.createMock(EventListener.class);
         EasyMock.replay(l1, l2);
         MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createTestBuilder(null);
         assertSame("Wrong result", builder,
-                builder.addConfigurationListener(l1));
+                builder.addConfigurationListener(ConfigurationEvent.ANY, l1));
         switchToConfig(1);
         XMLConfiguration config = builder.getConfiguration();
-        assertTrue("Listener not added", config.getConfigurationListeners()
+        assertTrue("Listener not added", config.getEventListeners(ConfigurationEvent.ANY)
                 .contains(l1));
-        builder.addConfigurationListener(l2);
-        assertTrue("Listener 2 not added", config.getConfigurationListeners()
+        builder.addConfigurationListener(Event.ANY, l2);
+        assertTrue("Listener 2 not added", config.getEventListeners(Event.ANY)
                 .contains(l2));
-        builder.removeConfigurationListener(l2);
-        assertFalse("Listener not removed", config.getConfigurationListeners()
+        builder.removeConfigurationListener(Event.ANY, l2);
+        assertFalse("Listener not removed", config.getEventListeners(Event.ANY)
                 .contains(l2));
         switchToConfig(2);
         XMLConfiguration config2 = builder.getConfiguration();
         assertFalse("Listener not globally removed", config2
-                .getConfigurationListeners().contains(l2));
-    }
-
-    /**
-     * Tests whether error listeners are handled correctly.
-     */
-    @Test
-    public void testAddErrorListener() throws ConfigurationException
-    {
-        ConfigurationErrorListener l1 =
-                EasyMock.createMock(ConfigurationErrorListener.class);
-        ConfigurationErrorListener l2 =
-                EasyMock.createMock(ConfigurationErrorListener.class);
-        EasyMock.replay(l1, l2);
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
-                createTestBuilder(null);
-        assertSame("Wrong result", builder, builder.addErrorListener(l1));
-        switchToConfig(1);
-        XMLConfiguration config = builder.getConfiguration();
-        assertTrue("Listener not added", config.getErrorListeners()
-                .contains(l1));
-        builder.addErrorListener(l2);
-        assertTrue("Listener 2 not added",
-                config.getErrorListeners().contains(l2));
-        builder.removeErrorListener(l2);
-        assertFalse("Listener not removed", config.getErrorListeners()
-                .contains(l2));
-        switchToConfig(2);
-        XMLConfiguration config2 = builder.getConfiguration();
-        assertFalse("Listener not globally removed", config2
-                .getErrorListeners().contains(l2));
+                .getEventListeners(Event.ANY).contains(l2));
     }
 
     /**

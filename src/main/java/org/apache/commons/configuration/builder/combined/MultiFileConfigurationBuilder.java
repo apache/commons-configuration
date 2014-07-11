@@ -29,9 +29,9 @@ import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilderEvent;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.Event;
 import org.apache.commons.configuration.event.EventListener;
+import org.apache.commons.configuration.event.EventType;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.InterpolatorSpecification;
@@ -230,13 +230,13 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * at managed configuration builders.
      */
     @Override
-    public synchronized BasicConfigurationBuilder<T> addConfigurationListener(
-            ConfigurationListener l)
+    public synchronized <E extends Event> BasicConfigurationBuilder<T> addConfigurationListener(
+            EventType<E> eventType, EventListener<? super E> l)
     {
-        super.addConfigurationListener(l);
+        super.addConfigurationListener(eventType, l);
         for (FileBasedConfigurationBuilder<T> b : getManagedBuilders().values())
         {
-            b.addConfigurationListener(l);
+            b.addConfigurationListener(eventType, l);
         }
         return this;
     }
@@ -246,45 +246,13 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * removed from managed configuration builders.
      */
     @Override
-    public synchronized BasicConfigurationBuilder<T> removeConfigurationListener(
-            ConfigurationListener l)
+    public synchronized <E extends Event> BasicConfigurationBuilder<T> removeConfigurationListener(
+            EventType<E> eventType, EventListener<? super E> l)
     {
-        super.removeConfigurationListener(l);
+        super.removeConfigurationListener(eventType, l);
         for (FileBasedConfigurationBuilder<T> b : getManagedBuilders().values())
         {
-            b.removeConfigurationListener(l);
-        }
-        return this;
-    }
-
-    /**
-     * {@inheritDoc} This implementation ensures that the listener is also added
-     * at managed configuration builders.
-     */
-    @Override
-    public synchronized BasicConfigurationBuilder<T> addErrorListener(
-            ConfigurationErrorListener l)
-    {
-        super.addErrorListener(l);
-        for (FileBasedConfigurationBuilder<T> b : getManagedBuilders().values())
-        {
-            b.addErrorListener(l);
-        }
-        return this;
-    }
-
-    /**
-     * {@inheritDoc} This implementation ensures that the listener is also
-     * removed from managed configuration builders.
-     */
-    @Override
-    public synchronized BasicConfigurationBuilder<T> removeErrorListener(
-            ConfigurationErrorListener l)
-    {
-        super.removeErrorListener(l);
-        for (FileBasedConfigurationBuilder<T> b : getManagedBuilders().values())
-        {
-            b.removeErrorListener(l);
+            b.removeConfigurationListener(eventType, l);
         }
         return this;
     }
