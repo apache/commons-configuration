@@ -77,9 +77,45 @@ public class ConfigurationEvent extends Event
      */
     private static final long serialVersionUID = 20140703L;
 
-    /** Constant for the common super type of all configuration update events. */
+    /**
+     * Constant for the common super type of all configuration update events.
+     *
+     * @since 2.0
+     */
     public static final EventType<ConfigurationEvent> ANY =
             new EventType<ConfigurationEvent>(Event.ANY, "CONFIGURATION_UPDATE");
+
+    /**
+     * Constant for the event type for an add property operation.
+     *
+     * @since 2.0
+     */
+    public static final EventType<ConfigurationEvent> ADD_PROPERTY =
+            new EventType<ConfigurationEvent>(ANY, "ADD_PROPERTY");
+
+    /**
+     * Constant for the event type for a set property operation.
+     *
+     * @since 2.0
+     */
+    public static final EventType<ConfigurationEvent> SET_PROPERTY =
+            new EventType<ConfigurationEvent>(ANY, "SET_PROPERTY");
+
+    /**
+     * Constant for the event type for a clear property operation.
+     *
+     * @since 2.0
+     */
+    public static final EventType<ConfigurationEvent> CLEAR_PROPERTY =
+            new EventType<ConfigurationEvent>(ANY, "CLEAR_PROPERTY");
+
+    /**
+     * Constant for the event type for a clear operation.
+     *
+     * @since 2.0
+     */
+    public static final EventType<ConfigurationEvent> CLEAR =
+            new EventType<ConfigurationEvent>(ANY, "CLEAR");
 
     /** The legacy event type. */
     private final int type;

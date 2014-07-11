@@ -106,24 +106,28 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Constant for the add property event type.
      * @since 1.3
+     * @deprecated Use the event type constants in {@code ConfigurationEvent}
      */
     public static final int EVENT_ADD_PROPERTY = 1;
 
     /**
      * Constant for the clear property event type.
      * @since 1.3
+     * @deprecated Use the event type constants in {@code ConfigurationEvent}
      */
     public static final int EVENT_CLEAR_PROPERTY = 2;
 
     /**
      * Constant for the set property event type.
      * @since 1.3
+     * @deprecated Use the event type constants in {@code ConfigurationEvent}
      */
     public static final int EVENT_SET_PROPERTY = 3;
 
     /**
      * Constant for the clear configuration event type.
      * @since 1.3
+     * @deprecated Use the event type constants in {@code ConfigurationEvent}
      */
     public static final int EVENT_CLEAR = 4;
 
