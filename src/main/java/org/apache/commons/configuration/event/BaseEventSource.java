@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -114,9 +116,34 @@ public class BaseEventSource implements EventSource
      * of the currently registered listeners; manipulating it has no effect
      * on this event source object)
      */
+    @Deprecated
     public Collection<ConfigurationListener> getConfigurationListeners()
     {
         return Collections.unmodifiableCollection(new ArrayList<ConfigurationListener>(listeners));
+    }
+
+    /**
+     * Returns a collection with all event listeners of the specified event type
+     * that are currently registered at this object.
+     *
+     * @param eventType the event type object
+     * @param <T> the event type
+     * @return a collection with the event listeners of the specified event type
+     *         (this collection is a snapshot of the currently registered
+     *         listeners; manipulating it has no effect on this event source
+     *         object)
+     */
+    public <T extends Event> Collection<EventListener<? super T>> getEventListeners(
+            EventType<T> eventType)
+    {
+        List<EventListener<? super T>> result =
+                new LinkedList<EventListener<? super T>>();
+        for (EventListener<? super T> l : eventListeners
+                .getEventListeners(eventType))
+        {
+            result.add(l);
+        }
+        return result;
     }
 
     /**
