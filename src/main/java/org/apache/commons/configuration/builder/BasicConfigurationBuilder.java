@@ -16,7 +16,6 @@
  */
 package org.apache.commons.configuration.builder;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,8 +30,10 @@ import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.beanutils.ConstructorArg;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.Event;
 import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.event.EventListenerList;
+import org.apache.commons.configuration.event.EventListenerRegistrationData;
 import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.event.EventType;
 import org.apache.commons.configuration.ex.ConfigurationException;
@@ -114,16 +115,10 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     private final Class<? extends T> resultClass;
 
     /**
-     * A collection with configuration listeners to be registered at newly
+     * A list with event listeners to be registered at newly
      * created configuration objects.
      */
-    private final Collection<ConfigurationListener> configListeners;
-
-    /**
-     * A collection with error listeners to be registered at newly created
-     * configuration objects.
-     */
-    private final Collection<ConfigurationErrorListener> errorListeners;
+    private final EventListenerList configListeners;
 
     /** An object managing the builder listeners registered at this builder. */
     private final EventListenerList eventListeners;
@@ -191,8 +186,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
 
         resultClass = resCls;
         this.allowFailOnInit = allowFailOnInit;
-        configListeners = new ArrayList<ConfigurationListener>();
-        errorListeners = new ArrayList<ConfigurationErrorListener>();
+        configListeners = new EventListenerList();
         eventListeners = new EventListenerList();
         updateParameters(params);
     }
@@ -282,12 +276,29 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      *
      * @param l the listener to be registered
      * @return a reference to this builder for method chaining
+     * @deprecated Use the method expecting an event type.
      */
+    @Deprecated
     public synchronized BasicConfigurationBuilder<T> addConfigurationListener(
             ConfigurationListener l)
     {
-        configListeners.add(l);
-        fetchEventSource().addConfigurationListener(l);
+        return this;
+    }
+
+    /**
+     * Adds the specified event listener to this builder. It is also registered
+     * at the result objects produced by this builder.
+     *
+     * @param eventType the event type object
+     * @param listener the listener to be registered
+     * @param <E> the event type
+     * @return a reference to this builder for method chaining
+     */
+    public synchronized <E extends Event> BasicConfigurationBuilder<T> addConfigurationListener(
+            EventType<E> eventType, EventListener<? super E> listener)
+    {
+        configListeners.addEventListener(eventType, listener);
+        fetchEventSource().addEventListener(eventType, listener);
         return this;
     }
 
@@ -297,12 +308,29 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      *
      * @param l the listener to be removed
      * @return a reference to this builder for method chaining
+     * @deprecated Use the method expecting an event type
      */
+    @Deprecated
     public synchronized BasicConfigurationBuilder<T> removeConfigurationListener(
             ConfigurationListener l)
     {
-        configListeners.remove(l);
-        fetchEventSource().removeConfigurationListener(l);
+        return this;
+    }
+
+    /**
+     * Removes the specified event listener from this builder. It is also
+     * removed from the current result object if it exists.
+     *
+     * @param eventType the event type object
+     * @param listener the listener to be removed
+     * @param <E> the event type
+     * @return a reference to this builder for method chaining
+     */
+    public synchronized <E extends Event> BasicConfigurationBuilder<T> removeConfigurationListener(
+            EventType<E> eventType, EventListener<? super E> listener)
+    {
+        configListeners.removeEventListener(eventType, listener);
+        fetchEventSource().removeEventListener(eventType, listener);
         return this;
     }
 
@@ -317,7 +345,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     public synchronized BasicConfigurationBuilder<T> addErrorListener(
             ConfigurationErrorListener l)
     {
-        errorListeners.add(l);
+        //errorListeners.add(l);
         fetchEventSource().addErrorListener(l);
         return this;
     }
@@ -333,7 +361,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     public synchronized BasicConfigurationBuilder<T> removeErrorListener(
             ConfigurationErrorListener l)
     {
-        errorListeners.remove(l);
+        //errorListeners.remove(l);
         fetchEventSource().removeErrorListener(l);
         return this;
     }
@@ -656,14 +684,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     protected synchronized void copyEventListeners(
             BasicConfigurationBuilder<?> target)
     {
-        for (ConfigurationListener l : configListeners)
-        {
-            target.addConfigurationListener(l);
-        }
-        for (ConfigurationErrorListener l : errorListeners)
-        {
-            target.addErrorListener(l);
-        }
+        target.configListeners.addAll(configListeners);
     }
 
     /**
@@ -690,13 +711,10 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     private void registerEventListeners(T obj)
     {
         EventSource evSrc = ConfigurationUtils.asEventSource(obj, true);
-        for (ConfigurationListener l : configListeners)
+        for (EventListenerRegistrationData<?> regData : configListeners
+                .getRegistrations())
         {
-            evSrc.addConfigurationListener(l);
-        }
-        for (ConfigurationErrorListener l : errorListeners)
-        {
-            evSrc.addErrorListener(l);
+            registerListener(evSrc, regData);
         }
     }
 
@@ -766,5 +784,18 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
         {
             ((Initializable) obj).initialize();
         }
+    }
+
+    /**
+     * Registers an event listener at an event source object.
+     *
+     * @param evSrc the event source
+     * @param regData the registration data object
+     * @param <E> the type of the event listener
+     */
+    private static <E extends Event> void registerListener(EventSource evSrc,
+            EventListenerRegistrationData<E> regData)
+    {
+        evSrc.addEventListener(regData.getEventType(), regData.getListener());
     }
 }
