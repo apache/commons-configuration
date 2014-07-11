@@ -28,7 +28,10 @@ import java.util.Iterator;
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.Event;
+import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.event.EventSource;
+import org.apache.commons.configuration.event.EventType;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
 import org.apache.commons.configuration.sync.Synchronizer;
@@ -96,6 +99,19 @@ public final class ConfigurationUtils
 
         @Override
         public boolean removeErrorListener(ConfigurationErrorListener l)
+        {
+            return false;
+        }
+
+        @Override
+        public <T extends Event> void addEventListener(EventType<T> eventType,
+                EventListener<? super T> listener)
+        {
+        }
+
+        @Override
+        public <T extends Event> boolean removeEventListener(
+                EventType<T> eventType, EventListener<? super T> listener)
         {
             return false;
         }

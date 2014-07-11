@@ -171,6 +171,21 @@ public class BaseEventSource implements EventSource
         return errorListeners.remove(l);
     }
 
+    @Override
+    public <T extends Event> void addEventListener(EventType<T> eventType,
+            EventListener<? super T> listener)
+    {
+        // TODO implementation
+    }
+
+    @Override
+    public <T extends Event> boolean removeEventListener(
+            EventType<T> eventType, EventListener<? super T> listener)
+    {
+        // TODO implementation
+        return false;
+    }
+
     /**
      * Removes all registered error listeners.
      *
