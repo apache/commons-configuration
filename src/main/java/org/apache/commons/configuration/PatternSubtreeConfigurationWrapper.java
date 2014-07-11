@@ -28,7 +28,9 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.Event;
+import org.apache.commons.configuration.event.EventListener;
+import org.apache.commons.configuration.event.EventType;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileBased;
 import org.apache.commons.configuration.tree.ExpressionEngine;
@@ -403,27 +405,30 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public void addConfigurationListener(ConfigurationListener l)
+    public <T extends Event> void addEventListener(EventType<T> eventType,
+            EventListener<? super T> listener)
     {
-        getConfig().addConfigurationListener(l);
+        getConfig().addEventListener(eventType, listener);
     }
 
     @Override
-    public boolean removeConfigurationListener(ConfigurationListener l)
+    public <T extends Event> boolean removeEventListener(
+            EventType<T> eventType, EventListener<? super T> listener)
     {
-        return getConfig().removeConfigurationListener(l);
+        return getConfig().removeEventListener(eventType, listener);
     }
 
     @Override
-    public Collection<ConfigurationListener> getConfigurationListeners()
+    public <T extends Event> Collection<EventListener<? super T>> getEventListeners(
+            EventType<T> eventType)
     {
-        return getConfig().getConfigurationListeners();
+        return getConfig().getEventListeners(eventType);
     }
 
     @Override
-    public void clearConfigurationListeners()
+    public void clearEventListeners()
     {
-        getConfig().clearConfigurationListeners();
+        getConfig().clearEventListeners();
     }
 
     @Override
