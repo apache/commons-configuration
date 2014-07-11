@@ -28,7 +28,7 @@ import java.util.Map;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventListenerTestImpl;
 import org.junit.Test;
 
 /**
@@ -93,17 +93,10 @@ public class TestMapConfiguration extends TestAbstractConfiguration
     public void testCloneModify()
     {
         MapConfiguration config = (MapConfiguration) getConfiguration();
-        config.addConfigurationListener(new ConfigurationListener()
-        {
-            @Override
-            public void configurationChanged(ConfigurationEvent event)
-            {
-                // Just a dummy
-            }
-        });
+        config.addEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(config));
         MapConfiguration copy = (MapConfiguration) config.clone();
         assertTrue("Event listeners were copied", copy
-                .getConfigurationListeners().isEmpty());
+                .getEventListeners(ConfigurationEvent.ANY).isEmpty());
 
         config.addProperty("cloneTest", Boolean.TRUE);
         assertFalse("Map not decoupled", copy.containsKey("cloneTest"));
