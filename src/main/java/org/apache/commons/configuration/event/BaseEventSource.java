@@ -71,9 +71,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class BaseEventSource implements EventSource
 {
-    /** A collection for the registered event listeners. */
-    private Collection<ConfigurationListener> listeners;
-
     /** A collection for the registered error listeners.*/
     private Collection<ConfigurationErrorListener> errorListeners;
 
@@ -92,21 +89,6 @@ public class BaseEventSource implements EventSource
     public BaseEventSource()
     {
         initListeners();
-    }
-
-    /**
-     * Returns a collection with all configuration event listeners that are
-     * currently registered at this object.
-     *
-     * @return a collection with the registered
-     * {@code ConfigurationListener}s (this collection is a snapshot
-     * of the currently registered listeners; manipulating it has no effect
-     * on this event source object)
-     */
-    @Deprecated
-    public Collection<ConfigurationListener> getConfigurationListeners()
-    {
-        return Collections.unmodifiableCollection(new ArrayList<ConfigurationListener>(listeners));
     }
 
     /**
@@ -246,36 +228,6 @@ public class BaseEventSource implements EventSource
 
     /**
      * Creates an event object and delivers it to all registered event
-     * listeners. The method will check first if sending an event is allowed
-     * (making use of the {@code detailEvents} property), and if
-     * listeners are registered.
-     *
-     * @param type the event's type
-     * @param propName the name of the affected property (can be <b>null</b>)
-     * @param propValue the value of the affected property (can be <b>null</b>)
-     * @param before the before update flag
-     * @deprecated Use fireEvent() with an EventType
-     */
-    @Deprecated
-    protected void fireEvent(int type, String propName, Object propValue, boolean before)
-    {
-        if (checkDetailEvents(-1))
-        {
-            Iterator<ConfigurationListener> it = listeners.iterator();
-            if (it.hasNext())
-            {
-                ConfigurationEvent event =
-                        createEvent(type, propName, propValue, before);
-                while (it.hasNext())
-                {
-                    it.next().configurationChanged(event);
-                }
-            }
-        }
-    }
-
-    /**
-     * Creates an event object and delivers it to all registered event
      * listeners. The method checks first if sending an event is allowed (making
      * use of the {@code detailEvents} property), and if listeners are
      * registered.
@@ -302,22 +254,6 @@ public class BaseEventSource implements EventSource
                 }
             }
         }
-    }
-
-    /**
-     * Creates a {@code ConfigurationEvent} object based on the passed in
-     * parameters. This is called by {@code fireEvent()} if it decides
-     * that an event needs to be generated.
-     *
-     * @param type the event's type
-     * @param propName the name of the affected property (can be <b>null</b>)
-     * @param propValue the value of the affected property (can be <b>null</b>)
-     * @param before the before update flag
-     * @return the newly created event object
-     */
-    protected ConfigurationEvent createEvent(int type, String propName, Object propValue, boolean before)
-    {
-        return new ConfigurationEvent(this, type, propName, propValue, before);
     }
 
     /**
@@ -417,7 +353,6 @@ public class BaseEventSource implements EventSource
      */
     private void initListeners()
     {
-        listeners = new CopyOnWriteArrayList<ConfigurationListener>();
         errorListeners = new CopyOnWriteArrayList<ConfigurationErrorListener>();
         eventListeners = new EventListenerList();
     }

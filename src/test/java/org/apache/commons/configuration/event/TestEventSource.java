@@ -135,7 +135,7 @@ public class TestEventSource
     }
 
     /**
-     * Tests that the collection returned by getConfigurationListeners() is
+     * Tests that the collection returned by getEventListeners() is
      * really a snapshot. A later added listener must not be visible.
      */
     @Test
