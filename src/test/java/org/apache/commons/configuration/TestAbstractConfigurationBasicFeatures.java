@@ -38,7 +38,8 @@ import org.apache.commons.configuration.convert.DefaultConversionHandler;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventListener;
+import org.apache.commons.configuration.event.EventType;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.easymock.EasyMock;
@@ -202,9 +203,9 @@ public class TestAbstractConfigurationBasicFeatures
         AbstractConfiguration config = setUpDestConfig();
         Configuration srcConfig = setUpSourceConfig();
         CollectingConfigurationListener l = new CollectingConfigurationListener();
-        config.addConfigurationListener(l);
+        config.addEventListener(ConfigurationEvent.ANY, l);
         config.copy(srcConfig);
-        checkCopyEvents(l, srcConfig, AbstractConfiguration.EVENT_SET_PROPERTY);
+        checkCopyEvents(l, srcConfig, ConfigurationEvent.SET_PROPERTY);
     }
 
     /**
@@ -284,9 +285,9 @@ public class TestAbstractConfigurationBasicFeatures
         AbstractConfiguration config = setUpDestConfig();
         Configuration srcConfig = setUpSourceConfig();
         CollectingConfigurationListener l = new CollectingConfigurationListener();
-        config.addConfigurationListener(l);
+        config.addEventListener(ConfigurationEvent.ANY, l);
         config.append(srcConfig);
-        checkCopyEvents(l, srcConfig, AbstractConfiguration.EVENT_ADD_PROPERTY);
+        checkCopyEvents(l, srcConfig, ConfigurationEvent.ADD_PROPERTY);
     }
 
     /**
@@ -1015,12 +1016,12 @@ public class TestAbstractConfigurationBasicFeatures
      * @param eventType the expected event type
      */
     private void checkCopyEvents(CollectingConfigurationListener l,
-            Configuration src, int eventType)
+            Configuration src, EventType<?> eventType)
     {
         Map<String, ConfigurationEvent> events = new HashMap<String, ConfigurationEvent>();
         for (ConfigurationEvent e : l.events)
         {
-            assertEquals("Wrong event type", eventType, e.getType());
+            assertEquals("Wrong event type", eventType, e.getEventType());
             assertTrue("Unknown property: " + e.getPropertyName(), src
                     .containsKey(e.getPropertyName()));
             if (!e.isBeforeUpdate())
@@ -1105,13 +1106,13 @@ public class TestAbstractConfigurationBasicFeatures
      * An event listener implementation that simply collects all received
      * configuration events.
      */
-    static class CollectingConfigurationListener implements
-            ConfigurationListener
+    private static class CollectingConfigurationListener implements
+            EventListener<ConfigurationEvent>
     {
-        List<ConfigurationEvent> events = new ArrayList<ConfigurationEvent>();
+        final List<ConfigurationEvent> events = new ArrayList<ConfigurationEvent>();
 
         @Override
-        public void configurationChanged(ConfigurationEvent event)
+        public void onEvent(ConfigurationEvent event)
         {
             events.add(event);
         }
