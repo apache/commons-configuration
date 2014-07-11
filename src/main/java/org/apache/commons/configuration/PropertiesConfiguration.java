@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.convert.ValueTransformer;
+import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.io.FileHandler;
@@ -417,7 +418,7 @@ public class PropertiesConfiguration extends BaseConfiguration
         // only one layout must exist
         if (this.layout != null)
         {
-            removeConfigurationListener(this.layout);
+            removeEventListener(ConfigurationEvent.ANY, this.layout);
         }
 
         if (layout == null)
@@ -428,7 +429,7 @@ public class PropertiesConfiguration extends BaseConfiguration
         {
             this.layout = layout;
         }
-        addConfigurationListener(this.layout);
+        addEventListener(ConfigurationEvent.ANY, this.layout);
     }
 
     /**

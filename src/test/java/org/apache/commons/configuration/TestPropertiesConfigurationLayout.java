@@ -31,7 +31,7 @@ import java.util.Iterator;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.LegacyListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
@@ -88,7 +88,8 @@ public class TestPropertiesConfigurationLayout
     {
         assertTrue("Object contains keys", layout.getKeys().isEmpty());
         assertNull("Header comment not null", layout.getHeaderComment());
-        Iterator<ConfigurationListener> it = config.getConfigurationListeners().iterator();
+        Iterator<EventListener<? super ConfigurationEvent>> it =
+                config.getEventListeners(ConfigurationEvent.ANY).iterator();
         assertTrue("No event listener registered", it.hasNext());
         assertSame("Layout not registered as event listener", layout, it.next());
         assertFalse("Multiple event listeners registered", it.hasNext());
@@ -268,9 +269,9 @@ public class TestPropertiesConfigurationLayout
     public void testEventAdd()
     {
         ConfigurationEvent event = new ConfigurationEvent(this,
-                AbstractConfiguration.EVENT_ADD_PROPERTY, TEST_KEY, TEST_VALUE,
+                ConfigurationEvent.ADD_PROPERTY, TEST_KEY, TEST_VALUE,
                 false);
-        layout.configurationChanged(event);
+        layout.onEvent(event);
         assertTrue("Property not stored", layout.getKeys().contains(TEST_KEY));
         assertEquals("Blanc lines before new property", 0, layout
                 .getBlancLinesBefore(TEST_KEY));
@@ -286,10 +287,10 @@ public class TestPropertiesConfigurationLayout
     public void testEventAddMultiple()
     {
         ConfigurationEvent event = new ConfigurationEvent(this,
-                AbstractConfiguration.EVENT_ADD_PROPERTY, TEST_KEY, TEST_VALUE,
+                ConfigurationEvent.ADD_PROPERTY, TEST_KEY, TEST_VALUE,
                 false);
-        layout.configurationChanged(event);
-        layout.configurationChanged(event);
+        layout.onEvent(event);
+        layout.onEvent(event);
         assertFalse("No multi-line property", layout.isSingleLine(TEST_KEY));
     }
 
@@ -304,9 +305,9 @@ public class TestPropertiesConfigurationLayout
         builder.addProperty(TEST_KEY, TEST_VALUE);
         layout.load(config, builder.getReader());
         ConfigurationEvent event = new ConfigurationEvent(this,
-                AbstractConfiguration.EVENT_ADD_PROPERTY, TEST_KEY, TEST_VALUE,
+                ConfigurationEvent.ADD_PROPERTY, TEST_KEY, TEST_VALUE,
                 false);
-        layout.configurationChanged(event);
+        layout.onEvent(event);
         assertFalse("No multi-line property", layout.isSingleLine(TEST_KEY));
         assertEquals("Comment was modified", TEST_COMMENT, layout
                 .getCanonicalComment(TEST_KEY, false));
@@ -320,9 +321,9 @@ public class TestPropertiesConfigurationLayout
     public void testEventSetNonExisting()
     {
         ConfigurationEvent event = new ConfigurationEvent(this,
-                AbstractConfiguration.EVENT_SET_PROPERTY, TEST_KEY, TEST_VALUE,
+                ConfigurationEvent.SET_PROPERTY, TEST_KEY, TEST_VALUE,
                 false);
-        layout.configurationChanged(event);
+        layout.onEvent(event);
         assertTrue("New property was not found", layout.getKeys().contains(
                 TEST_KEY));
     }
@@ -334,13 +335,13 @@ public class TestPropertiesConfigurationLayout
     public void testEventDelete()
     {
         ConfigurationEvent event = new ConfigurationEvent(this,
-                AbstractConfiguration.EVENT_ADD_PROPERTY, TEST_KEY, TEST_VALUE,
+                ConfigurationEvent.ADD_PROPERTY, TEST_KEY, TEST_VALUE,
                 false);
-        layout.configurationChanged(event);
+        layout.onEvent(event);
         event = new ConfigurationEvent(this,
-                AbstractConfiguration.EVENT_CLEAR_PROPERTY, TEST_KEY, null,
+                ConfigurationEvent.CLEAR_PROPERTY, TEST_KEY, null,
                 false);
-        layout.configurationChanged(event);
+        layout.onEvent(event);
         assertFalse("Property still existing", layout.getKeys().contains(
                 TEST_KEY));
     }
@@ -353,8 +354,8 @@ public class TestPropertiesConfigurationLayout
     {
         fillLayout();
         ConfigurationEvent event = new ConfigurationEvent(this,
-                AbstractConfiguration.EVENT_CLEAR, null, null, false);
-        layout.configurationChanged(event);
+                ConfigurationEvent.CLEAR, null, null, false);
+        layout.onEvent(event);
         assertTrue("Keys not empty", layout.getKeys().isEmpty());
         assertNull("Header comment was not reset", layout.getHeaderComment());
     }
@@ -366,9 +367,9 @@ public class TestPropertiesConfigurationLayout
     public void testEventAddBefore()
     {
         ConfigurationEvent event = new ConfigurationEvent(this,
-                AbstractConfiguration.EVENT_ADD_PROPERTY, TEST_KEY, TEST_VALUE,
+                ConfigurationEvent.ADD_PROPERTY, TEST_KEY, TEST_VALUE,
                 true);
-        layout.configurationChanged(event);
+        layout.onEvent(event);
         assertFalse("Property already stored", layout.getKeys().contains(
                 TEST_KEY));
     }
@@ -547,10 +548,8 @@ public class TestPropertiesConfigurationLayout
         fillLayout();
         layout.setComment("NonExistingKey", "NonExistingComment");
         String output = getLayoutString();
-        assertTrue("Non existing key was found", output
-                .indexOf("NonExistingKey") < 0);
-        assertTrue("Non existing comment was found", output
-                .indexOf("NonExistingComment") < 0);
+        assertTrue("Non existing key was found", !output.contains("NonExistingKey"));
+        assertTrue("Non existing comment was found", !output.contains("NonExistingComment"));
     }
 
     /**

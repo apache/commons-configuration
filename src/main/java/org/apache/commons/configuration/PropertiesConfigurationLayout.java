@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.lang3.StringUtils;
@@ -110,13 +110,10 @@ import org.apache.commons.lang3.StringUtils;
  * </ul>
  * </p>
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  * @since 1.3
  */
-public class PropertiesConfigurationLayout implements ConfigurationListener
+public class PropertiesConfigurationLayout implements EventListener<ConfigurationEvent>
 {
     /** Constant for the line break character. */
     private static final String CR = "\n";
@@ -485,7 +482,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     {
         if (++loadCounter == 1)
         {
-            config.removeConfigurationListener(this);
+            config.removeEventListener(ConfigurationEvent.ANY, this);
         }
         PropertiesConfiguration.PropertiesReader reader =
                 config.getIOFactory().createPropertiesReader(in);
@@ -536,7 +533,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
         {
             if (--loadCounter == 0)
             {
-                config.addConfigurationListener(this);
+                config.addEventListener(ConfigurationEvent.ANY, this);
             }
         }
     }
@@ -606,28 +603,31 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      * @param event the event object
      */
     @Override
-    public void configurationChanged(ConfigurationEvent event)
+    public void onEvent(ConfigurationEvent event)
     {
         if (!event.isBeforeUpdate())
         {
-            switch (event.getType())
+            if (ConfigurationEvent.ADD_PROPERTY.equals(event.getEventType()))
             {
-            case AbstractConfiguration.EVENT_ADD_PROPERTY:
-                boolean contained = layoutData.containsKey(event
-                        .getPropertyName());
-                PropertyLayoutData data = fetchLayoutData(event
-                        .getPropertyName());
+                boolean contained =
+                        layoutData.containsKey(event.getPropertyName());
+                PropertyLayoutData data =
+                        fetchLayoutData(event.getPropertyName());
                 data.setSingleLine(!contained);
-                break;
-            case AbstractConfiguration.EVENT_CLEAR_PROPERTY:
+            }
+            else if (ConfigurationEvent.CLEAR_PROPERTY.equals(event
+                    .getEventType()))
+            {
                 layoutData.remove(event.getPropertyName());
-                break;
-            case AbstractConfiguration.EVENT_CLEAR:
+            }
+            else if (ConfigurationEvent.CLEAR.equals(event.getEventType()))
+            {
                 clear();
-                break;
-            case AbstractConfiguration.EVENT_SET_PROPERTY:
+            }
+            else if (ConfigurationEvent.SET_PROPERTY.equals(event
+                    .getEventType()))
+            {
                 fetchLayoutData(event.getPropertyName());
-                break;
             }
         }
     }
