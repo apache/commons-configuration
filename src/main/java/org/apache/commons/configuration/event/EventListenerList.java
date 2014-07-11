@@ -214,6 +214,27 @@ public class EventListenerList
     }
 
     /**
+     * Adds all event listener registrations stored in the specified
+     * {@code EventListenerList} to this list.
+     *
+     * @param c the list to be copied (must not be <b>null</b>)
+     * @throws IllegalArgumentException if the list to be copied is <b>null</b>
+     */
+    public void addAll(EventListenerList c)
+    {
+        if (c == null)
+        {
+            throw new IllegalArgumentException(
+                    "List to be copied must not be null!");
+        }
+
+        for (EventListenerRegistrationData<?> regData : c.getRegistrations())
+        {
+            addEventListener(regData);
+        }
+    }
+
+    /**
      * Helper method for calling an event listener with an event. We have to
      * operate on raw types to make this code compile. However, this is safe
      * because of the way the listeners have been registered and associated with

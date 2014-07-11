@@ -474,6 +474,43 @@ public class TestEventListenerList
     }
 
     /**
+     * Tests whether the content of another list can be added.
+     */
+    @Test
+    public void testAddAll()
+    {
+        EventListener<EventBase> l1 = new ListenerTestImpl();
+        EventListener<EventBase> l2 = new ListenerTestImpl();
+        EventListener<EventBase> l3 = new ListenerTestImpl();
+        list.addEventListener(typeBase, l1);
+        EventListenerList list2 = new EventListenerList();
+        list2.addEventListener(typeSub1, l2);
+        list2.addEventListener(typeBase, l3);
+
+        list.addAll(list2);
+        Iterator<EventListenerRegistrationData<?>> it =
+                list.getRegistrations().iterator();
+        EventListenerRegistrationData<?> reg = it.next();
+        assertEquals("Wrong type (1)", typeBase, reg.getEventType());
+        assertEquals("Wrong listener (1)", l1, reg.getListener());
+        reg = it.next();
+        assertEquals("Wrong type (2)", typeSub1, reg.getEventType());
+        assertEquals("Wrong listener (2)", l2, reg.getListener());
+        reg = it.next();
+        assertEquals("Wrong type (3)", typeBase, reg.getEventType());
+        assertEquals("Wrong listener (3)", l3, reg.getListener());
+    }
+
+    /**
+     * Tries to add the content of a null list.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddAllNull()
+    {
+        list.addAll(null);
+    }
+
+    /**
      * Test event class. For testing purposes, a small hierarchy of test event
      * class is created. This way it can be checked whether event types are
      * correctly evaluated and take the event hierarchy into account.
