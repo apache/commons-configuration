@@ -16,7 +16,6 @@
  */
 package org.apache.commons.configuration.builder;
 
-import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileHandler;
@@ -51,8 +50,8 @@ public class TestAutoSaveListener
      */
     private void fireChangeEvent(boolean before)
     {
-        listener.configurationChanged(new ConfigurationEvent(this,
-                AbstractConfiguration.EVENT_ADD_PROPERTY, "someProperty",
+        listener.onEvent(new ConfigurationEvent(this,
+                ConfigurationEvent.ADD_PROPERTY, "someProperty",
                 "someValue", before));
     }
 

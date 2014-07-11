@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.configuration.FileBasedConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLPropertiesConfiguration;
+import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.lang3.ClassUtils;
@@ -343,7 +344,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
         if (autoSaveListener == null)
         {
             autoSaveListener = new AutoSaveListener(this);
-            addConfigurationListener(autoSaveListener);
+            addConfigurationListener(ConfigurationEvent.ANY, autoSaveListener);
             autoSaveListener.updateFileHandler(getFileHandler());
         }
     }
@@ -356,7 +357,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
     {
         if (autoSaveListener != null)
         {
-            removeConfigurationListener(autoSaveListener);
+            removeConfigurationListener(ConfigurationEvent.ANY, autoSaveListener);
             autoSaveListener.updateFileHandler(null);
             autoSaveListener = null;
         }

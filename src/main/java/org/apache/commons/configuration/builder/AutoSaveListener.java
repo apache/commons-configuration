@@ -17,7 +17,7 @@
 package org.apache.commons.configuration.builder;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.io.FileHandlerListenerAdapter;
@@ -46,7 +46,7 @@ import org.apache.commons.logging.LogFactory;
  * @since 2.0
  */
 class AutoSaveListener extends FileHandlerListenerAdapter implements
-        ConfigurationListener
+        EventListener<ConfigurationEvent>
 {
     /** The logger. */
     private final Log log = LogFactory.getLog(getClass());
@@ -81,7 +81,7 @@ class AutoSaveListener extends FileHandlerListenerAdapter implements
      * operation is in progress.
      */
     @Override
-    public void configurationChanged(ConfigurationEvent event)
+    public void onEvent(ConfigurationEvent event)
     {
         if (autoSaveRequired(event))
         {
