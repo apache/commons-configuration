@@ -16,6 +16,7 @@
  */
 package org.apache.commons.configuration.event;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -191,6 +192,17 @@ public class EventListenerList
             EventType<T> eventType)
     {
         return new EventListenerIterator<T>(listeners.iterator(), eventType);
+    }
+
+    /**
+     * Returns an (unmodifiable) list with registration information about all
+     * event listeners registered at this object.
+     *
+     * @return a list with event listener registration information
+     */
+    public List<EventListenerRegistrationData<?>> getRegistrations()
+    {
+        return Collections.unmodifiableList(listeners);
     }
 
     /**

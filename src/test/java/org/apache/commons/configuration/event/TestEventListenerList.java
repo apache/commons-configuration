@@ -428,6 +428,39 @@ public class TestEventListenerList
     }
 
     /**
+     * Tests whether all event listener registrations can be queried.
+     */
+    @Test
+    public void testGetRegistrations()
+    {
+        EventListenerRegistrationData<EventSub1> reg1 =
+                new EventListenerRegistrationData<EventSub1>(typeSub1,
+                        new ListenerTestImpl());
+        EventListenerRegistrationData<EventSub2> reg2 =
+                new EventListenerRegistrationData<EventSub2>(typeSub2,
+                        new ListenerTestImpl());
+        list.addEventListener(reg1);
+        list.addEventListener(reg2);
+
+        List<EventListenerRegistrationData<?>> registrations =
+                list.getRegistrations();
+        assertEquals("Wrong number of registrations", 2, registrations.size());
+        assertTrue("Registration 1 not found", registrations.contains(reg1));
+        assertTrue("Registration 2 not found", registrations.contains(reg2));
+    }
+
+    /**
+     * Tests that the list with registration information cannot be modified.
+     */
+    @Test(expected = UnsupportedOperationException.class)
+    public void testGetRegistrationsModify()
+    {
+        list.getRegistrations().add(
+                new EventListenerRegistrationData<EventBase>(typeBase,
+                        new ListenerTestImpl()));
+    }
+
+    /**
      * Test event class. For testing purposes, a small hierarchy of test event
      * class is created. This way it can be checked whether event types are
      * correctly evaluated and take the event hierarchy into account.
