@@ -75,6 +75,9 @@ public class BaseEventSource implements EventSource
     /** A collection for the registered error listeners.*/
     private Collection<ConfigurationErrorListener> errorListeners;
 
+    /** The list for managing registered event listeners. */
+    private EventListenerList eventListeners;
+
     /** A lock object for guarding access to the detail events counter. */
     private final Object lockDetailEventsCount = new Object();
 
@@ -175,15 +178,14 @@ public class BaseEventSource implements EventSource
     public <T extends Event> void addEventListener(EventType<T> eventType,
             EventListener<? super T> listener)
     {
-        // TODO implementation
+        eventListeners.addEventListener(eventType, listener);
     }
 
     @Override
     public <T extends Event> boolean removeEventListener(
             EventType<T> eventType, EventListener<? super T> listener)
     {
-        // TODO implementation
-        return false;
+        return eventListeners.removeEventListener(eventType, listener);
     }
 
     /**
@@ -220,7 +222,9 @@ public class BaseEventSource implements EventSource
      * @param propName the name of the affected property (can be <b>null</b>)
      * @param propValue the value of the affected property (can be <b>null</b>)
      * @param before the before update flag
+     * @deprecated Use fireEvent() with an EventType
      */
+    @Deprecated
     protected void fireEvent(int type, String propName, Object propValue, boolean before)
     {
         if (checkDetailEvents(-1))
@@ -239,6 +243,36 @@ public class BaseEventSource implements EventSource
     }
 
     /**
+     * Creates an event object and delivers it to all registered event
+     * listeners. The method checks first if sending an event is allowed (making
+     * use of the {@code detailEvents} property), and if listeners are
+     * registered.
+     *
+     * @param type the event's type
+     * @param propName the name of the affected property (can be <b>null</b>)
+     * @param propValue the value of the affected property (can be <b>null</b>)
+     * @param before the before update flag
+     */
+    protected <T extends ConfigurationEvent> void fireEvent(EventType<T> type,
+            String propName, Object propValue, boolean before)
+    {
+        if (checkDetailEvents(-1))
+        {
+            EventListenerList.EventListenerIterator<T> it =
+                    eventListeners.getEventListenerIterator(type);
+            if (it.hasNext())
+            {
+                ConfigurationEvent event =
+                        createEvent(type, propName, propValue, before);
+                while (it.hasNext())
+                {
+                    it.invokeNext(event);
+                }
+            }
+        }
+    }
+
+    /**
      * Creates a {@code ConfigurationEvent} object based on the passed in
      * parameters. This is called by {@code fireEvent()} if it decides
      * that an event needs to be generated.
@@ -250,6 +284,23 @@ public class BaseEventSource implements EventSource
      * @return the newly created event object
      */
     protected ConfigurationEvent createEvent(int type, String propName, Object propValue, boolean before)
+    {
+        return new ConfigurationEvent(this, type, propName, propValue, before);
+    }
+
+    /**
+     * Creates a {@code ConfigurationEvent} object based on the passed in
+     * parameters. This method is called by {@code fireEvent()} if it decides
+     * that an event needs to be generated.
+     *
+     * @param type the event's type
+     * @param propName the name of the affected property (can be <b>null</b>)
+     * @param propValue the value of the affected property (can be <b>null</b>)
+     * @param before the before update flag
+     * @return the newly created event object
+     */
+    protected <T extends ConfigurationEvent> ConfigurationEvent createEvent(
+            EventType<T> type, String propName, Object propValue, boolean before)
     {
         return new ConfigurationEvent(this, type, propName, propValue, before);
     }
@@ -336,6 +387,7 @@ public class BaseEventSource implements EventSource
     {
         listeners = new CopyOnWriteArrayList<ConfigurationListener>();
         errorListeners = new CopyOnWriteArrayList<ConfigurationErrorListener>();
+        eventListeners = new EventListenerList();
     }
 
     /**

@@ -38,6 +38,7 @@ import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.event.BaseEventSource;
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
+import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.ex.ConversionException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
@@ -710,9 +711,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         beginWrite(false);
         try
         {
-            fireEvent(EVENT_ADD_PROPERTY, key, value, true);
+            fireEvent(ConfigurationEvent.ADD_PROPERTY, key, value, true);
             addPropertyInternal(key, value);
-            fireEvent(EVENT_ADD_PROPERTY, key, value, false);
+            fireEvent(ConfigurationEvent.ADD_PROPERTY, key, value, false);
         }
         finally
         {
@@ -793,9 +794,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         beginWrite(false);
         try
         {
-            fireEvent(EVENT_SET_PROPERTY, key, value, true);
+            fireEvent(ConfigurationEvent.SET_PROPERTY, key, value, true);
             setPropertyInternal(key, value);
-            fireEvent(EVENT_SET_PROPERTY, key, value, false);
+            fireEvent(ConfigurationEvent.SET_PROPERTY, key, value, false);
         }
         finally
         {
@@ -841,9 +842,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         beginWrite(false);
         try
         {
-            fireEvent(EVENT_CLEAR_PROPERTY, key, null, true);
+            fireEvent(ConfigurationEvent.CLEAR_PROPERTY, key, null, true);
             clearPropertyDirect(key);
-            fireEvent(EVENT_CLEAR_PROPERTY, key, null, false);
+            fireEvent(ConfigurationEvent.CLEAR_PROPERTY, key, null, false);
         }
         finally
         {
@@ -866,9 +867,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         beginWrite(false);
         try
         {
-            fireEvent(EVENT_CLEAR, null, null, true);
+            fireEvent(ConfigurationEvent.CLEAR, null, null, true);
             clearInternal();
-            fireEvent(EVENT_CLEAR, null, null, false);
+            fireEvent(ConfigurationEvent.CLEAR, null, null, false);
         }
         finally
         {

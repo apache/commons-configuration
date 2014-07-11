@@ -47,8 +47,14 @@ public abstract class AbstractTestConfigurationEvents
     /** The configuration to be tested. */
     protected AbstractConfiguration config;
 
-    /** A test event listener. */
+    /**
+     * A test event listener.
+     * @deprecated Use the "modern" listener.
+     */
     protected ConfigurationListenerTestImpl l;
+
+    /** A test event listener. */
+    protected EventListenerTestImpl listener;
 
     @Before
     public void setUp() throws Exception
@@ -56,7 +62,8 @@ public abstract class AbstractTestConfigurationEvents
         config = createConfiguration();
         config.addProperty(EXIST_PROPERTY, "existing value");
         l = new ConfigurationListenerTestImpl(config);
-        config.addConfigurationListener(l);
+        listener = new EventListenerTestImpl(config);
+        config.addEventListener(ConfigurationEvent.ANY, listener);
     }
 
     /**
@@ -73,11 +80,11 @@ public abstract class AbstractTestConfigurationEvents
     public void testAddPropertyEvent()
     {
         config.addProperty(TEST_PROPNAME, TEST_PROPVALUE);
-        l.checkEvent(AbstractConfiguration.EVENT_ADD_PROPERTY, TEST_PROPNAME,
+        listener.checkEvent(ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME,
                 TEST_PROPVALUE, true);
-        l.checkEvent(AbstractConfiguration.EVENT_ADD_PROPERTY, TEST_PROPNAME,
+        listener.checkEvent(ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME,
                 TEST_PROPVALUE, false);
-        l.done();
+        listener.done();
     }
 
     /**
@@ -88,13 +95,13 @@ public abstract class AbstractTestConfigurationEvents
     {
         config.setDetailEvents(true);
         config.addProperty(TEST_PROPNAME, TEST_PROPVALUE);
-        l.checkEventCount(2);
-        l.checkEvent(AbstractConfiguration.EVENT_ADD_PROPERTY, TEST_PROPNAME,
+        listener.checkEventCount(2);
+        listener.checkEvent(ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME,
                 TEST_PROPVALUE, true);
-        l.skipToLast(AbstractConfiguration.EVENT_ADD_PROPERTY);
-        l.checkEvent(AbstractConfiguration.EVENT_ADD_PROPERTY, TEST_PROPNAME,
+        listener.skipToLast(ConfigurationEvent.ADD_PROPERTY);
+        listener.checkEvent(ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME,
                 TEST_PROPVALUE, false);
-        l.done();
+        listener.done();
     }
 
     /**
@@ -104,11 +111,11 @@ public abstract class AbstractTestConfigurationEvents
     public void testClearPropertyEvent()
     {
         config.clearProperty(EXIST_PROPERTY);
-        l.checkEvent(AbstractConfiguration.EVENT_CLEAR_PROPERTY,
+        listener.checkEvent(ConfigurationEvent.CLEAR_PROPERTY,
                 EXIST_PROPERTY, null, true);
-        l.checkEvent(AbstractConfiguration.EVENT_CLEAR_PROPERTY,
+        listener.checkEvent(ConfigurationEvent.CLEAR_PROPERTY,
                 EXIST_PROPERTY, null, false);
-        l.done();
+        listener.done();
     }
 
     /**
@@ -119,13 +126,13 @@ public abstract class AbstractTestConfigurationEvents
     {
         config.setDetailEvents(true);
         config.clearProperty(EXIST_PROPERTY);
-        l.checkEventCount(2);
-        l.checkEvent(AbstractConfiguration.EVENT_CLEAR_PROPERTY,
+        listener.checkEventCount(2);
+        listener.checkEvent(ConfigurationEvent.CLEAR_PROPERTY,
                 EXIST_PROPERTY, null, true);
-        l.skipToLast(AbstractConfiguration.EVENT_CLEAR_PROPERTY);
-        l.checkEvent(AbstractConfiguration.EVENT_CLEAR_PROPERTY,
+        listener.skipToLast(ConfigurationEvent.CLEAR_PROPERTY);
+        listener.checkEvent(ConfigurationEvent.CLEAR_PROPERTY,
                 EXIST_PROPERTY, null, false);
-        l.done();
+        listener.done();
     }
 
     /**
@@ -135,11 +142,11 @@ public abstract class AbstractTestConfigurationEvents
     public void testSetPropertyEvent()
     {
         config.setProperty(EXIST_PROPERTY, TEST_PROPVALUE);
-        l.checkEvent(AbstractConfiguration.EVENT_SET_PROPERTY, EXIST_PROPERTY,
+        listener.checkEvent(ConfigurationEvent.SET_PROPERTY, EXIST_PROPERTY,
                 TEST_PROPVALUE, true);
-        l.checkEvent(AbstractConfiguration.EVENT_SET_PROPERTY, EXIST_PROPERTY,
+        listener.checkEvent(ConfigurationEvent.SET_PROPERTY, EXIST_PROPERTY,
                 TEST_PROPVALUE, false);
-        l.done();
+        listener.done();
     }
 
     /**
@@ -150,13 +157,13 @@ public abstract class AbstractTestConfigurationEvents
     {
         config.setDetailEvents(true);
         config.setProperty(EXIST_PROPERTY, TEST_PROPVALUE);
-        l.checkEventCount(2);
-        l.checkEvent(AbstractConfiguration.EVENT_SET_PROPERTY, EXIST_PROPERTY,
+        listener.checkEventCount(2);
+        listener.checkEvent(ConfigurationEvent.SET_PROPERTY, EXIST_PROPERTY,
                 TEST_PROPVALUE, true);
-        l.skipToLast(AbstractConfiguration.EVENT_SET_PROPERTY);
-        l.checkEvent(AbstractConfiguration.EVENT_SET_PROPERTY, EXIST_PROPERTY,
+        listener.skipToLast(ConfigurationEvent.SET_PROPERTY);
+        listener.checkEvent(ConfigurationEvent.SET_PROPERTY, EXIST_PROPERTY,
                 TEST_PROPVALUE, false);
-        l.done();
+        listener.done();
     }
 
     /**
@@ -166,9 +173,9 @@ public abstract class AbstractTestConfigurationEvents
     public void testClearEvent()
     {
         config.clear();
-        l.checkEvent(AbstractConfiguration.EVENT_CLEAR, null, null, true);
-        l.checkEvent(AbstractConfiguration.EVENT_CLEAR, null, null, false);
-        l.done();
+        listener.checkEvent(ConfigurationEvent.CLEAR, null, null, true);
+        listener.checkEvent(ConfigurationEvent.CLEAR, null, null, false);
+        listener.done();
     }
 
     /**
@@ -180,10 +187,10 @@ public abstract class AbstractTestConfigurationEvents
     {
         config.setDetailEvents(true);
         config.clear();
-        l.checkEventCount(2);
-        l.checkEvent(AbstractConfiguration.EVENT_CLEAR, null, null, true);
-        l.skipToLast(AbstractConfiguration.EVENT_CLEAR);
-        l.checkEvent(AbstractConfiguration.EVENT_CLEAR, null, null, false);
-        l.done();
+        listener.checkEventCount(2);
+        listener.checkEvent(ConfigurationEvent.CLEAR, null, null, true);
+        listener.skipToLast(ConfigurationEvent.CLEAR);
+        listener.checkEvent(ConfigurationEvent.CLEAR, null, null, false);
+        listener.done();
     }
 }
