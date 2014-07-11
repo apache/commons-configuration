@@ -16,6 +16,9 @@
  */
 package org.apache.commons.configuration.reloading;
 
+import org.apache.commons.configuration.event.EventListener;
+import org.apache.commons.configuration.event.EventListenerList;
+import org.apache.commons.configuration.event.EventType;
 import org.apache.commons.lang3.event.EventListenerSupport;
 
 /**
@@ -67,7 +70,10 @@ public class ReloadingController
     private final ReloadingDetector detector;
 
     /** The helper object which manages the registered event listeners. */
-    private final EventListenerSupport<ReloadingListener> listeners;
+    private final EventListenerSupport<ReloadingListener> deprecatedListeners;
+
+    /** The helper object which manages the registered event listeners. */
+    private final EventListenerList listeners;
 
     /** A flag whether this controller is in reloading state. */
     private boolean reloadingState;
@@ -88,7 +94,8 @@ public class ReloadingController
         }
 
         detector = detect;
-        listeners = EventListenerSupport.create(ReloadingListener.class);
+        listeners = new EventListenerList();
+        deprecatedListeners = EventListenerSupport.create(ReloadingListener.class);
     }
 
     /**
@@ -106,20 +113,49 @@ public class ReloadingController
      * receive notifications whenever a reload operation is necessary.
      *
      * @param l the listener to be added (must not be <b>null</b>)
+     *          @deprecated Use {@code addEventListener()}
      */
     public void addReloadingListener(ReloadingListener l)
     {
-        listeners.addListener(l);
+        deprecatedListeners.addListener(l);
+    }
+
+    /**
+     * Adds an event listener of the specified type to this controller. It will
+     * receive notifications whenever a reload operation is necessary.
+     *
+     * @param eventType the event type (must not be <b>null</b>)
+     * @param listener the event listener (must not be <b>null</b>)
+     * @param <T> the event type
+     */
+    public <T extends ReloadingEvent> void addEventListener(
+            EventType<T> eventType, EventListener<? super T> listener)
+    {
+        listeners.addEventListener(eventType, listener);
     }
 
     /**
      * Removes the specified {@code ReloadingListener} from this controller.
      *
      * @param l the listener to be removed
+     *          @deprecated use {@code removeEventListener()}
      */
     public void removeReloadingListener(ReloadingListener l)
     {
-        listeners.removeListener(l);
+        deprecatedListeners.removeListener(l);
+    }
+
+    /**
+     * Removes the specified event listener from this controller.
+     *
+     * @param eventType the event type
+     * @param listener the listener to be removed
+     * @param <T> the event type
+     */
+    public <T extends ReloadingEvent> void removeEventListener(
+            EventType<T> eventType, EventListener<? super T> listener)
+    {
+        listeners.removeEventListener(eventType, listener);
     }
 
     /**
@@ -170,7 +206,8 @@ public class ReloadingController
 
         if (sendEvent)
         {
-            listeners.fire().reloadingRequired(new ReloadingEvent(this, data));
+            deprecatedListeners.fire().reloadingRequired(new ReloadingEvent(this, data));
+            listeners.fire(new ReloadingEvent(this, data));
             return true;
         }
         return false;
