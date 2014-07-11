@@ -31,7 +31,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
-import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.tree.ExpressionEngine;
@@ -738,40 +737,13 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public void addConfigurationListener(ConfigurationListener l)
-    {
-        super.addConfigurationListener(l);
-
-        for (CombinedConfiguration cc : configs.values())
-        {
-            cc.addConfigurationListener(l);
-        }
-    }
-
-    @Override
-    public boolean removeConfigurationListener(ConfigurationListener l)
+    public void clearEventListeners()
     {
         for (CombinedConfiguration cc : configs.values())
         {
-            cc.removeConfigurationListener(l);
+            cc.clearEventListeners();
         }
-        return super.removeConfigurationListener(l);
-    }
-
-    @Override
-    public Collection<ConfigurationListener> getConfigurationListeners()
-    {
-        return super.getConfigurationListeners();
-    }
-
-    @Override
-    public void clearConfigurationListeners()
-    {
-        for (CombinedConfiguration cc : configs.values())
-        {
-            cc.clearConfigurationListeners();
-        }
-        super.clearConfigurationListeners();
+        super.clearEventListeners();
     }
 
     @Override
@@ -987,10 +959,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         {
             config.addErrorListener(listener);
         }
-        for (ConfigurationListener listener : getConfigurationListeners())
-        {
-            config.addConfigurationListener(listener);
-        }
+        copyEventListeners(config);
         for (ConfigData data : configurations)
         {
             config.addConfiguration(data.getConfiguration(), data.getName(),
