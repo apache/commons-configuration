@@ -483,7 +483,6 @@ implements Cloneable
         {
             CompositeConfiguration copy = (CompositeConfiguration) super
                     .clone();
-            copy.clearConfigurationListeners();
             copy.configList = new LinkedList<Configuration>();
             copy.inMemoryConfiguration = ConfigurationUtils
                     .cloneConfiguration(getInMemoryConfiguration());
