@@ -31,11 +31,11 @@ import java.util.List;
 import java.util.Map;
 
 import junitx.framework.ListAssert;
-
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
@@ -515,15 +515,16 @@ public class TestConfigurationUtils
     @Test
     public void testAsEventSourceUnsupportedMock()
     {
-        ConfigurationListener cl = EasyMock.createMock(ConfigurationListener.class);
+        @SuppressWarnings("unchecked")
+        EventListener<ConfigurationEvent> cl = EasyMock.createMock(EventListener.class);
         ConfigurationErrorListener el = EasyMock.createMock(ConfigurationErrorListener.class);
         EasyMock.replay(cl, el);
         EventSource source = ConfigurationUtils.asEventSource(this, true);
-        source.addConfigurationListener(cl);
+        source.addEventListener(ConfigurationEvent.ANY, cl);
         source.addErrorListener(el);
-        assertFalse("Wrong result (1)", source.removeConfigurationListener(cl));
+        assertFalse("Wrong result (1)", source.removeEventListener(ConfigurationEvent.ANY, cl));
         assertFalse("Wrong result (2)", source.removeErrorListener(el));
-        source.addConfigurationListener(null);
+        source.addEventListener(ConfigurationEvent.ANY, null);
     }
 
     /**
