@@ -16,10 +16,7 @@
  */
 package org.apache.commons.configuration.event;
 
-import java.io.File;
-
 import org.apache.commons.configuration.AbstractConfiguration;
-import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
 /**
@@ -31,9 +28,6 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 public class TestPropertiesConfigurationEvents extends
         AbstractTestConfigurationEvents
 {
-    /** The file to be loaded.*/
-    static final File TEST_FILE = ConfigurationAssert.getTestFile("test.properties");
-
     @Override
     protected AbstractConfiguration createConfiguration()
     {
