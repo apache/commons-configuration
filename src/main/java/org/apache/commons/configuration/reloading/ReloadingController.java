@@ -19,7 +19,6 @@ package org.apache.commons.configuration.reloading;
 import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.event.EventListenerList;
 import org.apache.commons.configuration.event.EventType;
-import org.apache.commons.lang3.event.EventListenerSupport;
 
 /**
  * <p>
@@ -70,9 +69,6 @@ public class ReloadingController
     private final ReloadingDetector detector;
 
     /** The helper object which manages the registered event listeners. */
-    private final EventListenerSupport<ReloadingListener> deprecatedListeners;
-
-    /** The helper object which manages the registered event listeners. */
     private final EventListenerList listeners;
 
     /** A flag whether this controller is in reloading state. */
@@ -95,7 +91,6 @@ public class ReloadingController
 
         detector = detect;
         listeners = new EventListenerList();
-        deprecatedListeners = EventListenerSupport.create(ReloadingListener.class);
     }
 
     /**
@@ -106,18 +101,6 @@ public class ReloadingController
     public ReloadingDetector getDetector()
     {
         return detector;
-    }
-
-    /**
-     * Adds the specified {@code ReloadingListener} to this controller. It will
-     * receive notifications whenever a reload operation is necessary.
-     *
-     * @param l the listener to be added (must not be <b>null</b>)
-     *          @deprecated Use {@code addEventListener()}
-     */
-    public void addReloadingListener(ReloadingListener l)
-    {
-        deprecatedListeners.addListener(l);
     }
 
     /**
@@ -132,17 +115,6 @@ public class ReloadingController
             EventType<T> eventType, EventListener<? super T> listener)
     {
         listeners.addEventListener(eventType, listener);
-    }
-
-    /**
-     * Removes the specified {@code ReloadingListener} from this controller.
-     *
-     * @param l the listener to be removed
-     *          @deprecated use {@code removeEventListener()}
-     */
-    public void removeReloadingListener(ReloadingListener l)
-    {
-        deprecatedListeners.removeListener(l);
     }
 
     /**
@@ -206,7 +178,6 @@ public class ReloadingController
 
         if (sendEvent)
         {
-            deprecatedListeners.fire().reloadingRequired(new ReloadingEvent(this, data));
             listeners.fire(new ReloadingEvent(this, data));
             return true;
         }
