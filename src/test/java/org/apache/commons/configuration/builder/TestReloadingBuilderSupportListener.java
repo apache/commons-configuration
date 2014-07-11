@@ -20,10 +20,11 @@ import static org.junit.Assert.assertNotNull;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.reloading.ReloadingController;
 import org.apache.commons.configuration.reloading.ReloadingDetector;
-import org.apache.commons.configuration.reloading.ReloadingListener;
+import org.apache.commons.configuration.reloading.ReloadingEvent;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
@@ -63,14 +64,15 @@ public class TestReloadingBuilderSupportListener
      * Tests that the controller's reloading state is reset when a new result
      * object is created.
      */
+    @SuppressWarnings("unchecked")
     @Test
     public void testResetReloadingStateOnResultCreation()
             throws ConfigurationException
     {
         ReloadingController controller =
                 EasyMock.createMock(ReloadingController.class);
-        controller.addReloadingListener(EasyMock
-                .anyObject(ReloadingListener.class));
+        controller.addEventListener(EasyMock.eq(ReloadingEvent.ANY),
+                EasyMock.anyObject(EventListener.class));
         controller.resetReloadingState();
         EasyMock.replay(controller);
         BasicConfigurationBuilder<Configuration> builder =
@@ -79,6 +81,7 @@ public class TestReloadingBuilderSupportListener
 
         ReloadingBuilderSupportListener listener =
                 ReloadingBuilderSupportListener.connect(builder, controller);
+        assertNotNull("No listener returned", listener);
         builder.getConfiguration();
         EasyMock.verify(controller);
     }

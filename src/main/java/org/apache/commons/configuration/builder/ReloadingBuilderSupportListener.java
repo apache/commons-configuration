@@ -16,10 +16,10 @@
  */
 package org.apache.commons.configuration.builder;
 
+import org.apache.commons.configuration.event.Event;
 import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.reloading.ReloadingController;
 import org.apache.commons.configuration.reloading.ReloadingEvent;
-import org.apache.commons.configuration.reloading.ReloadingListener;
 
 /**
  * <p>
@@ -44,8 +44,7 @@ import org.apache.commons.configuration.reloading.ReloadingListener;
  * @version $Id$
  * @since 2.0
  */
-class ReloadingBuilderSupportListener implements ReloadingListener,
-        EventListener<ConfigurationBuilderEvent>
+class ReloadingBuilderSupportListener implements EventListener<Event>
 {
     /** Stores the associated configuration builder. */
     private final BasicConfigurationBuilder<?> builder;
@@ -85,7 +84,7 @@ class ReloadingBuilderSupportListener implements ReloadingListener,
     {
         ReloadingBuilderSupportListener listener =
                 new ReloadingBuilderSupportListener(configBuilder, controller);
-        controller.addReloadingListener(listener);
+        controller.addEventListener(ReloadingEvent.ANY, listener);
         configBuilder
                 .addEventListener(
                         ConfigurationBuilderResultCreatedEvent.RESULT_CREATED,
@@ -94,22 +93,21 @@ class ReloadingBuilderSupportListener implements ReloadingListener,
     }
 
     /**
-     * {@inheritDoc} This implementation resets the builder's managed
-     * configuration.
+     * {@inheritDoc} This implementation resets the controller's reloading state
+     * if an event about a newly created result was received. Otherwise, in case
+     * of a reloading event, the builder's result object is reset.
      */
     @Override
-    public void reloadingRequired(ReloadingEvent event)
+    public void onEvent(Event event)
     {
-        builder.resetResult();
-    }
-
-    /**
-     * {@inheritDoc} This implementation resets the controller's reloading
-     * state.
-     */
-    @Override
-    public void onEvent(ConfigurationBuilderEvent event)
-    {
-        reloadingController.resetReloadingState();
+        if (ConfigurationBuilderResultCreatedEvent.RESULT_CREATED.equals(event
+                .getEventType()))
+        {
+            reloadingController.resetReloadingState();
+        }
+        else
+        {
+            builder.resetResult();
+        }
     }
 }
