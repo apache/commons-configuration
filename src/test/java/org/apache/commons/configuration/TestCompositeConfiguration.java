@@ -38,7 +38,7 @@ import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.LegacyListDelimiterHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventListenerTestImpl;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.io.FileHandler;
 import org.easymock.EasyMock;
@@ -156,7 +156,7 @@ public class TestCompositeConfiguration
         }
         catch (NoSuchElementException nsee)
         {
-            assertTrue(nsee.getMessage().indexOf("bogus.property") > -1);
+            assertTrue(nsee.getMessage().contains("bogus.property"));
         }
 
         assertTrue("Should be false", !cc.getBoolean("test.missing.boolean", false));
@@ -560,10 +560,10 @@ public class TestCompositeConfiguration
     @Test
     public void testCloneEventListener()
     {
-        cc.addConfigurationListener(new TestEventListenerImpl());
+        cc.addEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(null));
         CompositeConfiguration cc2 = (CompositeConfiguration) cc.clone();
         assertTrue("Listeners have been cloned", cc2
-                .getConfigurationListeners().isEmpty());
+                .getEventListeners(ConfigurationEvent.ANY).isEmpty());
     }
 
     /**
@@ -583,10 +583,12 @@ public class TestCompositeConfiguration
     @Test
     public void testEventAddProperty()
     {
-        TestEventListenerImpl l = new TestEventListenerImpl();
-        cc.addConfigurationListener(l);
+        EventListenerTestImpl listener = new EventListenerTestImpl(cc);
+        cc.addEventListener(ConfigurationEvent.ANY, listener);
         cc.addProperty("test", "value");
-        assertEquals("No add events received", 2, l.eventCount);
+        listener.checkEvent(ConfigurationEvent.ADD_PROPERTY, "test", "value", true);
+        listener.checkEvent(ConfigurationEvent.ADD_PROPERTY, "test", "value", false);
+        listener.done();
     }
 
     /**
@@ -595,10 +597,12 @@ public class TestCompositeConfiguration
     @Test
     public void testEventSetProperty()
     {
-        TestEventListenerImpl l = new TestEventListenerImpl();
-        cc.addConfigurationListener(l);
+        EventListenerTestImpl listener = new EventListenerTestImpl(cc);
+        cc.addEventListener(ConfigurationEvent.ANY, listener);
         cc.setProperty("test", "value");
-        assertEquals("No set events received", 2, l.eventCount);
+        listener.checkEvent(ConfigurationEvent.SET_PROPERTY, "test", "value", true);
+        listener.checkEvent(ConfigurationEvent.SET_PROPERTY, "test", "value", false);
+        listener.done();
     }
 
     /**
@@ -608,13 +612,16 @@ public class TestCompositeConfiguration
     public void testEventClearProperty()
     {
         cc.addConfiguration(conf1);
+        String key = "configuration.loaded";
         assertTrue("Wrong value for property", cc
-                .getBoolean("configuration.loaded"));
-        TestEventListenerImpl l = new TestEventListenerImpl();
-        cc.addConfigurationListener(l);
-        cc.clearProperty("configuration.loaded");
-        assertFalse("Key still present", cc.containsKey("configuration.loaded"));
-        assertEquals("No clear events received", 2, l.eventCount);
+                .getBoolean(key));
+        EventListenerTestImpl listener = new EventListenerTestImpl(cc);
+        cc.addEventListener(ConfigurationEvent.ANY, listener);
+        cc.clearProperty(key);
+        assertFalse("Key still present", cc.containsKey(key));
+        listener.checkEvent(ConfigurationEvent.CLEAR_PROPERTY, key, null, true);
+        listener.checkEvent(ConfigurationEvent.CLEAR_PROPERTY, key, null, false);
+        listener.done();
     }
 
     /**
@@ -909,21 +916,5 @@ public class TestCompositeConfiguration
         assertEquals("Wrong number of configurations", 3,
                 cc.getNumberOfConfigurations());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-    }
-
-    /**
-     * A test configuration event listener that counts the number of received
-     * events. Used for testing the event facilities.
-     */
-    static class TestEventListenerImpl implements ConfigurationListener
-    {
-        /** The number of received events.*/
-        int eventCount;
-
-        @Override
-        public void configurationChanged(ConfigurationEvent event)
-        {
-            eventCount++;
-        }
     }
 }
