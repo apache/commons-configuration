@@ -16,7 +16,8 @@
  */
 package org.apache.commons.configuration.reloading;
 
-import java.util.EventObject;
+import org.apache.commons.configuration.event.Event;
+import org.apache.commons.configuration.event.EventType;
 
 /**
  * <p>
@@ -31,12 +32,16 @@ import java.util.EventObject;
  * @version $Id$
  * @since 2.0
  */
-public class ReloadingEvent extends EventObject
+public class ReloadingEvent extends Event
 {
     /**
      * The serial version UID.
      */
-    private static final long serialVersionUID = 20121006L;
+    private static final long serialVersionUID = 20140701L;
+
+    /** The common event super type for all reloading events. */
+    public static final EventType<ReloadingEvent> ANY =
+            new EventType<ReloadingEvent>(Event.ANY, "RELOAD");
 
     /** Stores additional data about this event. */
     private final Object data;
@@ -50,7 +55,7 @@ public class ReloadingEvent extends EventObject
      */
     public ReloadingEvent(ReloadingController source, Object addData)
     {
-        super(source);
+        super(source, ANY);
         data = addData;
     }
 

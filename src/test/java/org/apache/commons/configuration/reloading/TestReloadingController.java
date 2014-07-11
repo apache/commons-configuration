@@ -21,6 +21,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.commons.configuration.event.Event;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
@@ -181,5 +182,15 @@ public class TestReloadingController
     {
         EasyMock.replay(detector);
         createController().resetReloadingState();
+    }
+
+    /**
+     * Tests the event type of the reloading event.
+     */
+    @Test
+    public void testReloadingEventType()
+    {
+        assertEquals("Wrong super event type", Event.ANY,
+                ReloadingEvent.ANY.getSuperType());
     }
 }
