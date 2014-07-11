@@ -120,15 +120,16 @@ import org.apache.commons.configuration.tree.QueryResult;
  * {@link org.apache.commons.configuration.tree.xpath.XPathExpressionEngine}
  * there is an expression engine available that supports configuration keys in
  * XPATH syntax.</p>
- * <p>In addition to the events common for all configuration classes hierarchical
+ * <p>In addition to the events common for all configuration classes, hierarchical
  * configurations support some more events that correspond to some specific
- * methods and features:
- * <dl><dt><em>EVENT_ADD_NODES</em></dt><dd>The {@code addNodes()} method
+ * methods and features. For those events specific event type constants in
+ * {@code ConfigurationEvent} exist:
+ * <dl><dt><em>ADD_NODES</em></dt><dd>The {@code addNodes()} method
  * was called; the event object contains the key, to which the nodes were added,
  * and a collection with the new nodes as value.</dd>
- * <dt><em>EVENT_CLEAR_TREE</em></dt><dd>The {@code clearTree()} method was
+ * <dt><em>CLEAR_TREE</em></dt><dd>The {@code clearTree()} method was
  * called; the event object stores the key of the removed sub tree.</dd>
- * <dt><em>EVENT_SUBNODE_CHANGED</em></dt><dd>A {@code SubnodeConfiguration}
+ * <dt><em>SUBNODE_CHANGED</em></dt><dd>A {@code SubnodeConfiguration}
  * that was created from this configuration has been changed. The value property
  * of the event object contains the original event object as it was sent by the
  * subnode configuration.</dd></dl></p>
@@ -164,19 +165,25 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * Constant for the clear tree event.
      * @since 1.3
+     * @deprecated Use the event type constant in {@code ConfigurationEvent}
      */
+    @Deprecated
     public static final int EVENT_CLEAR_TREE = 10;
 
     /**
      * Constant for the add nodes event.
      * @since 1.3
+     * @deprecated Use the event type constant in {@code ConfigurationEvent}
      */
+    @Deprecated
     public static final int EVENT_ADD_NODES = 11;
 
     /**
      * Constant for the subnode configuration modified event.
+     * @deprecated Use the event type constant in {@code ConfigurationEvent}
      * @since 1.5
      */
+    @Deprecated
     public static final int EVENT_SUBNODE_CHANGED = 12;
 
     /** The model for managing the data stored in this configuration. */

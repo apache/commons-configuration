@@ -85,4 +85,52 @@ public class TestConfigurationEventTypes
     {
         checkUpdateEvent(ConfigurationEvent.CLEAR);
     }
+
+    /**
+     * Tests the common base event type for hierarchical update events.
+     */
+    @Test
+    public void testHierarchicalEventType()
+    {
+        checkUpdateEvent(ConfigurationEvent.ANY_HIERARCHICAL);
+    }
+
+    /**
+     * Helper method for checking the relevant properties of a given event type
+     * representing a hierarchical update event.
+     *
+     * @param eventType the event type to check
+     */
+    private void checkHierarchicalEvent(EventType<ConfigurationEvent> eventType)
+    {
+        assertSame("Wrong super type for " + eventType,
+                ConfigurationEvent.ANY_HIERARCHICAL, eventType.getSuperType());
+    }
+
+    /**
+     * Tests the event type for an add nodes operation.
+     */
+    @Test
+    public void testAddNodesEventType()
+    {
+        checkHierarchicalEvent(ConfigurationEvent.ADD_NODES);
+    }
+
+    /**
+     * Tests the event type for a clear tree operation.
+     */
+    @Test
+    public void testClearTreeEventType()
+    {
+        checkHierarchicalEvent(ConfigurationEvent.CLEAR_TREE);
+    }
+
+    /**
+     * Tests the event type indicating a change on a sub configuration.
+     */
+    @Test
+    public void testSubnodeChangedEventType()
+    {
+        checkHierarchicalEvent(ConfigurationEvent.SUBNODE_CHANGED);
+    }
 }
