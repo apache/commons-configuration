@@ -36,10 +36,10 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 import junitx.framework.ListAssert;
-
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventListener;
+import org.apache.commons.configuration.event.EventListenerTestImpl;
 import org.apache.commons.configuration.ex.ConversionException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
@@ -716,15 +716,8 @@ public class TestBaseConfiguration
     @Test
     public void testCloneModify()
     {
-        ConfigurationListener l = new ConfigurationListener()
-        {
-            @Override
-            public void configurationChanged(ConfigurationEvent event)
-            {
-                // just a dummy
-            }
-        };
-        config.addConfigurationListener(l);
+        EventListener<ConfigurationEvent> l = new EventListenerTestImpl(config);
+        config.addEventListener(ConfigurationEvent.ANY, l);
         config.addProperty("original", Boolean.TRUE);
         BaseConfiguration config2 = (BaseConfiguration) config.clone();
 
@@ -734,8 +727,8 @@ public class TestBaseConfiguration
         assertTrue("Wrong value of original property", config
                 .getBoolean("original"));
 
-        assertEquals("Event listener was copied", 0, config2
-                .getConfigurationListeners().size());
+        assertTrue("Event listener was copied", config2
+                .getEventListeners(ConfigurationEvent.ANY).isEmpty());
     }
 
     /**
