@@ -342,6 +342,25 @@ public class TestEventSource
     }
 
     /**
+     * Tests whether all event listeners can be removed.
+     */
+    @Test
+    public void testClearEventListeners()
+    {
+        source.addEventListener(ConfigurationEvent.ANY,
+                new EventListenerTestImpl(source));
+        source.addEventListener(ConfigurationEvent.ANY_HIERARCHICAL,
+                new EventListenerTestImpl(source));
+
+        source.clearEventListeners();
+        assertTrue("Got ANY listeners",
+                source.getEventListeners(ConfigurationEvent.ANY).isEmpty());
+        assertTrue("Got HIERARCHICAL listeners",
+                source.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL)
+                        .isEmpty());
+    }
+
+    /**
      * A test event listener implementation.
      */
     static class TestListener implements ConfigurationListener,

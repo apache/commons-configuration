@@ -147,7 +147,9 @@ public class BaseEventSource implements EventSource
 
     /**
      * Removes all registered configuration listeners.
+     * @deprecated Use clearEventListeners()
      */
+    @Deprecated
     public void clearConfigurationListeners()
     {
         listeners.clear();
@@ -212,6 +214,14 @@ public class BaseEventSource implements EventSource
             EventType<T> eventType, EventListener<? super T> listener)
     {
         return eventListeners.removeEventListener(eventType, listener);
+    }
+
+    /**
+     * Removes all registered event listeners.
+     */
+    public void clearEventListeners()
+    {
+        eventListeners.clear();
     }
 
     /**
