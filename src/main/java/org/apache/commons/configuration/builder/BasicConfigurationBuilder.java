@@ -29,7 +29,6 @@ import org.apache.commons.configuration.beanutils.BeanDeclaration;
 import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.beanutils.ConstructorArg;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
-import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.event.Event;
 import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.event.EventListenerList;
@@ -270,22 +269,6 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     }
 
     /**
-     * Adds the specified listener for {@code ConfigurationEvent}s to this
-     * builder. It is also registered at the result objects produced by this
-     * builder.
-     *
-     * @param l the listener to be registered
-     * @return a reference to this builder for method chaining
-     * @deprecated Use the method expecting an event type.
-     */
-    @Deprecated
-    public synchronized BasicConfigurationBuilder<T> addConfigurationListener(
-            ConfigurationListener l)
-    {
-        return this;
-    }
-
-    /**
      * Adds the specified event listener to this builder. It is also registered
      * at the result objects produced by this builder.
      *
@@ -299,21 +282,6 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     {
         configListeners.addEventListener(eventType, listener);
         fetchEventSource().addEventListener(eventType, listener);
-        return this;
-    }
-
-    /**
-     * Removes the specified listener for {@code ConfigurationEvent}s from this
-     * builder. It is also removed from the current result object if it exists.
-     *
-     * @param l the listener to be removed
-     * @return a reference to this builder for method chaining
-     * @deprecated Use the method expecting an event type
-     */
-    @Deprecated
-    public synchronized BasicConfigurationBuilder<T> removeConfigurationListener(
-            ConfigurationListener l)
-    {
         return this;
     }
 
