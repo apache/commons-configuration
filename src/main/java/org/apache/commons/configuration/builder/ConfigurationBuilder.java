@@ -57,8 +57,8 @@ public interface ConfigurationBuilder<T extends Configuration>
      * @param listener the listener to be registered (must not be <b>null</b>)
      * @throws IllegalArgumentException if a required parameter is <b>null</b>
      */
-    <T extends ConfigurationBuilderEvent> void addEventListener(
-            EventType<T> eventType, EventListener<? super T> listener);
+    <E extends ConfigurationBuilderEvent> void addEventListener(
+            EventType<E> eventType, EventListener<? super E> listener);
 
     /**
      * Removes the specified {@code EventListener} from this builder.
@@ -66,6 +66,6 @@ public interface ConfigurationBuilder<T extends Configuration>
      * @param eventType the event type
      * @param listener the listener to be removed
      */
-    <T extends ConfigurationBuilderEvent> void removeEventListener(
-            EventType<T> eventType, EventListener<? super T> listener);
+    <E extends ConfigurationBuilderEvent> void removeEventListener(
+            EventType<E> eventType, EventListener<? super E> listener);
 }
