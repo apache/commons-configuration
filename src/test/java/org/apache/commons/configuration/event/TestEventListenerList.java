@@ -278,21 +278,19 @@ public class TestEventListenerList
     }
 
     /**
-     * Helper method for collecting the event listeners in the given iterable.
+     * Helper method for collecting the elements in the given iterable.
      *
      * @param iterable the iterable
      * @return a list with the content of the iterable
      */
-    private static <T extends Event> List<EventListener<? super T>> fetchListeners(
-            Iterable<EventListener<? super T>> iterable)
+    private static <T> List<T> fetchElements(Iterable<? extends T> iterable)
     {
-        List<EventListener<? super T>> listeners =
-                new LinkedList<EventListener<? super T>>();
-        for (EventListener<? super T> listener : iterable)
+        List<T> elems = new LinkedList<T>();
+        for (T listener : iterable)
         {
-            listeners.add(listener);
+            elems.add(listener);
         }
-        return listeners;
+        return elems;
     }
 
     /**
@@ -306,7 +304,7 @@ public class TestEventListenerList
             EventType<? extends Event> eventType,
             EventListener<?>... expListeners)
     {
-        List<?> listeners = fetchListeners(list.getEventListeners(eventType));
+        List<?> listeners = fetchElements(list.getEventListeners(eventType));
         assertEquals("Wrong number of listeners", expListeners.length,
                 listeners.size());
         assertTrue("Wrong event listeners: " + listeners,
@@ -320,7 +318,7 @@ public class TestEventListenerList
     public void testGetEventListenersNull()
     {
         assertTrue("Got listeners",
-                fetchListeners(list.getEventListeners(null)).isEmpty());
+                fetchElements(list.getEventListeners(null)).isEmpty());
     }
 
     /**
