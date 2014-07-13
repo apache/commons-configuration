@@ -34,14 +34,11 @@ import org.junit.Test;
  */
 public class TestEventSource
 {
-    /** Constant for the event type used for testing. */
-    static final int TEST_TYPE = 42;
-
     /** Constant for the event property name. */
-    static final String TEST_PROPNAME = "test.property.name";
+    private final String TEST_PROPNAME = "test.property.name";
 
     /** Constant for the event property value. */
-    static final Object TEST_PROPVALUE = "a test property value";
+    private static final Object TEST_PROPVALUE = "a test property value";
 
     /** The object under test. */
     private CountingEventSource source;
@@ -59,12 +56,10 @@ public class TestEventSource
     public void testInit()
     {
         assertTrue("Listeners list is not empty", source
-                .getEventListeners(ConfigurationEvent.ANY).isEmpty());
+                .getEventListenerRegistrations().isEmpty());
         assertFalse("Removing listener", source.removeEventListener(
                 ConfigurationEvent.ANY, new EventListenerTestImpl(null)));
         assertFalse("Detail events are enabled", source.isDetailEvents());
-        assertTrue("Error listeners list is not empty", source
-                .getErrorListeners().isEmpty());
     }
 
     /**
@@ -86,7 +81,7 @@ public class TestEventSource
      * exception.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testAddNullConfigurationListener()
+    public void testAddNullEventListener()
     {
         source.addEventListener(ConfigurationEvent.ANY, null);
     }
@@ -114,7 +109,7 @@ public class TestEventSource
      * Tests if a null listener can be removed. This should be a no-op.
      */
     @Test
-    public void testRemoveNullConfigurationListener()
+    public void testRemoveNullEventListener()
     {
         source.addEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(null));
         assertFalse("Null listener can be removed", source
@@ -127,7 +122,7 @@ public class TestEventSource
      * Tests whether the listeners list is read only.
      */
     @Test(expected = UnsupportedOperationException.class)
-    public void testGetConfigurationListenersUpdate()
+    public void testGetEventListenersUpdate()
     {
         source.addEventListener(ConfigurationEvent.ANY,
                 new EventListenerTestImpl(null));
@@ -141,7 +136,7 @@ public class TestEventSource
      * really a snapshot. A later added listener must not be visible.
      */
     @Test
-    public void testGetConfigurationListenersAddNew()
+    public void testGetEventListenersAddNew()
     {
         Collection<EventListener<? super ConfigurationEvent>> list =
                 source.getEventListeners(ConfigurationEvent.ANY);
@@ -186,7 +181,8 @@ public class TestEventSource
     @Test
     public void testFireEventNoListeners()
     {
-        source.fireEvent(ConfigurationEvent.ADD_NODES, TEST_PROPNAME, TEST_PROPVALUE, false);
+        source.fireEvent(ConfigurationEvent.ADD_NODES, TEST_PROPNAME,
+                TEST_PROPVALUE, false);
         assertEquals("An event object was created", 0, source.eventCount);
     }
 
@@ -232,69 +228,6 @@ public class TestEventSource
     }
 
     /**
-     * Tests registering a new error listener.
-     */
-    @Test
-    public void testAddErrorListener()
-    {
-        TestListener l = new TestListener();
-        source.addErrorListener(l);
-        Collection<ConfigurationErrorListener> listeners = source.getErrorListeners();
-        assertEquals("Wrong number of listeners", 1, listeners.size());
-        assertTrue("Listener not in list", listeners.contains(l));
-    }
-
-    /**
-     * Tests adding an undefined error listener. This should cause an exception.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddNullErrorListener()
-    {
-        source.addErrorListener(null);
-    }
-
-    /**
-     * Tests removing an error listener.
-     */
-    @Test
-    public void testRemoveErrorListener()
-    {
-        TestListener l = new TestListener();
-        assertFalse("Listener can be removed?", source.removeErrorListener(l));
-        source.addErrorListener(l);
-        source.addErrorListener(new TestListener());
-        assertFalse("Unknown listener can be removed", source
-                .removeErrorListener(new TestListener()));
-        assertTrue("Could not remove listener", source.removeErrorListener(l));
-        assertFalse("Listener still in list", source.getErrorListeners()
-                .contains(l));
-    }
-
-    /**
-     * Tests if a null error listener can be removed. This should be a no-op.
-     */
-    @Test
-    public void testRemoveNullErrorListener()
-    {
-        source.addErrorListener(new TestListener());
-        assertFalse("Null listener can be removed", source
-                .removeErrorListener(null));
-        assertEquals("Listener list was modified", 1, source
-                .getErrorListeners().size());
-    }
-
-    /**
-     * Tests whether the listeners list is read only.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testGetErrorListenersUpdate()
-    {
-        source.addErrorListener(new TestListener());
-        Collection<ConfigurationErrorListener> list = source.getErrorListeners();
-        list.clear();
-    }
-
-    /**
      * Tests delivering an error event to a listener.
      */
     @Test
@@ -312,11 +245,13 @@ public class TestEventSource
                 ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE,
                 testException);
         lstRead.done();
-        lstWrite.checkEvent(ConfigurationErrorEvent.WRITE,
-                ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE);
+        assertEquals("Wrong exception (1)", testException, lstWrite.checkEvent(
+                ConfigurationErrorEvent.WRITE, ConfigurationEvent.ADD_PROPERTY,
+                TEST_PROPNAME, TEST_PROPVALUE));
         lstWrite.done();
-        lstAll.checkEvent(ConfigurationErrorEvent.WRITE,
-                ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE);
+        assertEquals("Wrong exception (2)", testException, lstAll.checkEvent(
+                ConfigurationErrorEvent.WRITE, ConfigurationEvent.ADD_PROPERTY,
+                TEST_PROPNAME, TEST_PROPVALUE));
         lstAll.done();
         assertEquals("Wrong number of error events created", 1,
                 source.errorCount);
@@ -343,9 +278,7 @@ public class TestEventSource
         source.addEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(source));
         BaseEventSource copy = (BaseEventSource) source.clone();
         assertTrue("Configuration listeners registered for clone", copy
-                .getEventListeners(ConfigurationEvent.ANY).isEmpty());
-        assertTrue("Error listeners registered for clone", copy
-                .getErrorListeners().isEmpty());
+                .getEventListenerRegistrations().isEmpty());
     }
 
     /**
@@ -423,23 +356,6 @@ public class TestEventSource
     }
 
     /**
-     * A test event listener implementation.
-     */
-    static class TestListener implements ConfigurationErrorListener
-    {
-        ConfigurationErrorEvent lastEvent;
-
-        int numberOfErrors;
-
-        @Override
-        public void configurationError(ConfigurationErrorEvent event)
-        {
-            lastEvent = event;
-            numberOfErrors++;
-        }
-    }
-
-    /**
      * A specialized event source implementation that counts the number of
      * created event objects. It is used to test whether the
      * {@code fireEvent()} methods only creates event objects if
@@ -469,14 +385,6 @@ public class TestEventSource
             errorCount++;
             return super
                     .createErrorEvent(type, opType, propName, propValue, ex);
-        }
-
-        @Override
-        protected ConfigurationErrorEvent createErrorEvent(int type,
-                String propName, Object value, Throwable ex)
-        {
-            errorCount++;
-            return super.createErrorEvent(type, propName, value, ex);
         }
     }
 }
