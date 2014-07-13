@@ -17,11 +17,6 @@
 package org.apache.commons.configuration.event;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * A test event listener class that can be used for testing whether
@@ -29,14 +24,8 @@ import java.util.List;
  *
  * @version $Id$
  */
-public class EventListenerTestImpl implements EventListener<ConfigurationEvent>
+public class EventListenerTestImpl extends AbstractEventListenerTestImpl<ConfigurationEvent>
 {
-    /** The expected event source. */
-    private final Object expectedSource;
-
-    /** Stores the received events. */
-    private final List<ConfigurationEvent> events;
-
     /**
      * Creates a new instance of {@code EventListenerTestImpl} and sets
      * the expected event source.
@@ -46,23 +35,7 @@ public class EventListenerTestImpl implements EventListener<ConfigurationEvent>
      */
     public EventListenerTestImpl(Object source)
     {
-        expectedSource = source;
-        events = new LinkedList<ConfigurationEvent>();
-    }
-
-    @Override
-    public void onEvent(ConfigurationEvent event) {
-        events.add(event);
-    }
-
-    /**
-     * Checks if at least {@code minEvents} events have been received.
-     *
-     * @param minEvents the minimum number of expected events
-     */
-    public void checkEventCount(int minEvents)
-    {
-        assertTrue("Too view events received", events.size() >= minEvents);
+        super(source);
     }
 
     /**
@@ -80,49 +53,5 @@ public class EventListenerTestImpl implements EventListener<ConfigurationEvent>
         assertEquals("Wrong property name", propName, e.getPropertyName());
         assertEquals("Wrong property value", propValue, e.getPropertyValue());
         assertEquals("Wrong before flag", before, e.isBeforeUpdate());
-    }
-
-    /**
-     * Returns the next received event and checks for the expected type. This
-     * method can be used instead of {@code checkEvent()} for comparing
-     * complex event values.
-     *
-     * @param expectedType the expected type of the event
-     * @return the event object
-     */
-    public ConfigurationEvent nextEvent(EventType<?> expectedType)
-    {
-        assertFalse("Too few events received", events.isEmpty());
-        ConfigurationEvent e = events.remove(0);
-        if (expectedSource != null)
-        {
-            assertEquals("Wrong event source", expectedSource, e.getSource());
-        }
-        assertEquals("Wrong event type", expectedType, e.getEventType());
-        return e;
-    }
-
-    /**
-     * Skips to the last received event and checks that no events of the given
-     * type have been received. This method is used by checks for detail events
-     * to ignore the detail events.
-     *
-     * @param type the event type
-     */
-    public void skipToLast(EventType<?> type)
-    {
-        while (events.size() > 1)
-        {
-            ConfigurationEvent e = events.remove(0);
-            assertTrue("Found end event in details", type != e.getEventType());
-        }
-    }
-
-    /**
-     * Checks if all events has been processed.
-     */
-    public void done()
-    {
-        assertTrue("Too many events received", events.isEmpty());
     }
 }
