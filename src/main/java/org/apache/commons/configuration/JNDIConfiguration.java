@@ -17,13 +17,6 @@
 
 package org.apache.commons.configuration;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameClassPair;
@@ -31,7 +24,14 @@ import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.NotContextException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.LogFactory;
 
@@ -224,7 +224,8 @@ public class JNDIConfiguration extends AbstractConfiguration
         }
         catch (NamingException e)
         {
-            fireError(EVENT_READ_PROPERTY, null, null, e);
+            fireError(ConfigurationErrorEvent.READ,
+                    ConfigurationErrorEvent.READ, null, null, e);
             return new ArrayList<String>().iterator();
         }
     }
@@ -309,7 +310,8 @@ public class JNDIConfiguration extends AbstractConfiguration
         }
         catch (NamingException e)
         {
-            fireError(EVENT_READ_PROPERTY, null, null, e);
+            fireError(ConfigurationErrorEvent.READ,
+                    ConfigurationErrorEvent.READ, null, null, e);
             return true;
         }
     }
@@ -366,7 +368,8 @@ public class JNDIConfiguration extends AbstractConfiguration
         }
         catch (NamingException e)
         {
-            fireError(EVENT_READ_PROPERTY, key, null, e);
+            fireError(ConfigurationErrorEvent.READ,
+                    ConfigurationErrorEvent.READ, key, null, e);
             return false;
         }
     }
@@ -424,7 +427,8 @@ public class JNDIConfiguration extends AbstractConfiguration
         }
         catch (NamingException e)
         {
-            fireError(EVENT_READ_PROPERTY, key, null, e);
+            fireError(ConfigurationErrorEvent.READ,
+                    ConfigurationErrorEvent.READ, key, null, e);
             return null;
         }
     }

@@ -23,14 +23,18 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Hashtable;
-import java.util.Properties;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Properties;
 
+import org.apache.commons.configuration.event.ConfigurationErrorEvent;
+import org.apache.commons.configuration.event.ErrorListenerTestImpl;
+import org.apache.commons.configuration.event.EventListener;
+import org.apache.commons.configuration.event.EventType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +52,7 @@ public class TestJNDIConfiguration {
     private NonStringTestHolder nonStringTestHolder;
 
     /** A test error listener for counting internal errors.*/
-    private ConfigurationErrorListenerImpl listener;
+    private ErrorListenerTestImpl listener;
 
     @Before
     public void setUp() throws Exception {
@@ -63,8 +67,8 @@ public class TestJNDIConfiguration {
         nonStringTestHolder = new NonStringTestHolder();
         nonStringTestHolder.setConfiguration(conf);
 
-        listener = new ConfigurationErrorListenerImpl();
-        conf.addErrorListener(listener);
+        listener = new ErrorListenerTestImpl(conf);
+        conf.addEventListener(ConfigurationErrorEvent.ANY, listener);
     }
 
     /**
@@ -76,7 +80,7 @@ public class TestJNDIConfiguration {
     {
         if (listener != null)
         {
-            listener.verify();
+            listener.done();
         }
     }
 
@@ -220,7 +224,10 @@ public class TestJNDIConfiguration {
     private PotentialErrorJNDIConfiguration setUpErrorConfig()
     {
         conf.installException();
-        conf.removeErrorListener(conf.getErrorListeners().iterator().next());
+        // remove log error listener to avoid output in tests
+        Iterator<EventListener<? super ConfigurationErrorEvent>> iterator =
+                conf.getEventListeners(ConfigurationErrorEvent.ANY).iterator();
+        conf.removeEventListener(ConfigurationErrorEvent.ANY, iterator.next());
         return conf;
     }
 
@@ -228,14 +235,18 @@ public class TestJNDIConfiguration {
      * Tests whether the expected error events have been received.
      *
      * @param type the expected event type
+     * @param opEventType the event type of the failed operation
      * @param propName the name of the property
      * @param propValue the property value
      */
-    private void checkErrorListener(int type, String propName, Object propValue)
+    private void checkErrorListener(
+            EventType<? extends ConfigurationErrorEvent> type,
+            EventType<?> opEventType, String propName, Object propValue)
     {
-        listener.verify(type, propName, propValue);
+        Throwable exception =
+                listener.checkEvent(type, opEventType, propName, propValue);
         assertTrue("Wrong exception class",
-                listener.getLastEvent().getCause() instanceof NamingException);
+                exception instanceof NamingException);
         listener = null;
     }
 
@@ -247,7 +258,7 @@ public class TestJNDIConfiguration {
     {
         JNDIConfiguration c = new JNDIConfiguration();
         assertEquals("No error log listener registered", 1, c
-                .getErrorListeners().size());
+                .getEventListeners(ConfigurationErrorEvent.ANY).size());
     }
 
     /**
@@ -258,8 +269,8 @@ public class TestJNDIConfiguration {
     {
         assertFalse("Iteration not empty", setUpErrorConfig().getKeys()
                 .hasNext());
-        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, null,
-                null);
+        checkErrorListener(ConfigurationErrorEvent.READ,
+                ConfigurationErrorEvent.READ, null, null);
     }
 
     /**
@@ -269,8 +280,8 @@ public class TestJNDIConfiguration {
     public void testIsEmptyError() throws Exception
     {
         assertTrue("Error config not empty", setUpErrorConfig().isEmpty());
-        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, null,
-                null);
+        checkErrorListener(ConfigurationErrorEvent.READ,
+                ConfigurationErrorEvent.READ, null, null);
     }
 
     /**
@@ -281,8 +292,8 @@ public class TestJNDIConfiguration {
     {
         assertFalse("Key contained after error", setUpErrorConfig()
                 .containsKey("key"));
-        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, "key",
-                null);
+        checkErrorListener(ConfigurationErrorEvent.READ,
+                ConfigurationErrorEvent.READ, "key", null);
     }
 
     /**
@@ -293,8 +304,8 @@ public class TestJNDIConfiguration {
     {
         assertNull("Wrong property value after error", setUpErrorConfig()
                 .getProperty("key"));
-        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, "key",
-                null);
+        checkErrorListener(ConfigurationErrorEvent.READ,
+                ConfigurationErrorEvent.READ, "key", null);
     }
 
     /**
@@ -319,7 +330,7 @@ public class TestJNDIConfiguration {
     {
         conf.installException(new NameNotFoundException("Test exception"));
         assertFalse("Got keys", conf.getKeys().hasNext());
-        listener.verify();
+        listener.done();
     }
 
     /**
