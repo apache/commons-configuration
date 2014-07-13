@@ -37,8 +37,8 @@ import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
 import org.apache.commons.configuration.event.BaseEventSource;
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.ex.ConversionException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
@@ -530,25 +530,24 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
-     * Adds a special
-     * {@link org.apache.commons.configuration.event.ConfigurationErrorListener}
-     * object to this configuration that will log all internal errors. This
-     * method is intended to be used by certain derived classes, for which it is
-     * known that they can fail on property access (e.g.
-     * {@code DatabaseConfiguration}).
+     * Adds a special {@link EventListener} object to this configuration that
+     * will log all internal errors. This method is intended to be used by
+     * certain derived classes, for which it is known that they can fail on
+     * property access (e.g. {@code DatabaseConfiguration}).
      *
      * @since 1.4
      */
-    public void addErrorLogListener()
+    public final void addErrorLogListener()
     {
-        addErrorListener(new ConfigurationErrorListener()
-        {
-            @Override
-            public void configurationError(ConfigurationErrorEvent event)
-            {
-                getLogger().warn("Internal error", event.getCause());
-            }
-        });
+        addEventListener(ConfigurationErrorEvent.ANY,
+                new EventListener<ConfigurationErrorEvent>()
+                {
+                    @Override
+                    public void onEvent(ConfigurationErrorEvent event)
+                    {
+                        getLogger().warn("Internal error", event.getCause());
+                    }
+                });
     }
 
     /**
