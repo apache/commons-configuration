@@ -32,28 +32,6 @@ package org.apache.commons.configuration.event;
  */
 public interface EventSource
 {
-    /**
-     * Adds a new configuration error listener to this object. This listener
-     * will then be notified about internal problems.
-     *
-     * @param l the listener to register (must not be <b>null</b>)
-     * @since 1.4
-     * @deprecated Use {@code addEventListener()}
-     */
-    @Deprecated
-    void addErrorListener(ConfigurationErrorListener l);
-
-    /**
-     * Removes the specified error listener so that it does not receive any
-     * further events caused by this object.
-     *
-     * @param l the listener to remove
-     * @return a flag whether the listener could be found and removed
-     * @since 1.4
-     * @deprecated Use {@code removeEventListener()}
-     */
-    @Deprecated
-    boolean removeErrorListener(ConfigurationErrorListener l);
 
     /**
      * Adds an event listener for the specified event type. This listener is

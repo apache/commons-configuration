@@ -16,13 +16,10 @@
  */
 package org.apache.commons.configuration.event;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * <p>
@@ -32,48 +29,43 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * This class implements functionality for managing a set of event listeners
  * that can be notified when an event occurs. It can be extended by
  * configuration classes that support the event mechanism. In this case these
- * classes only need to call the {@code fireEvent()} method when an event
- * is to be delivered to the registered listeners.
+ * classes only need to call the {@code fireEvent()} method when an event is to
+ * be delivered to the registered listeners.
  * </p>
  * <p>
  * Adding and removing event listeners can happen concurrently to manipulations
  * on a configuration that cause events. The operations are synchronized.
  * </p>
  * <p>
- * With the {@code detailEvents} property the number of detail events can
- * be controlled. Some methods in configuration classes are implemented in a way
+ * With the {@code detailEvents} property the number of detail events can be
+ * controlled. Some methods in configuration classes are implemented in a way
  * that they call other methods that can generate their own events. One example
- * is the {@code setProperty()} method that can be implemented as a
- * combination of {@code clearProperty()} and {@code addProperty()}.
- * With {@code detailEvents} set to <b>true</b>, all involved methods
- * will generate events (i.e. listeners will receive property set events,
- * property clear events, and property add events). If this mode is turned off
- * (which is the default), detail events are suppressed, so only property set
- * events will be received. Note that the number of received detail events may
- * differ for different configuration implementations.
- * {@link org.apache.commons.configuration.BaseHierarchicalConfiguration BaseHierarchicalConfiguration}
- * for instance has a custom implementation of {@code setProperty()},
- * which does not generate any detail events.
+ * is the {@code setProperty()} method that can be implemented as a combination
+ * of {@code clearProperty()} and {@code addProperty()}. With
+ * {@code detailEvents} set to <b>true</b>, all involved methods will generate
+ * events (i.e. listeners will receive property set events, property clear
+ * events, and property add events). If this mode is turned off (which is the
+ * default), detail events are suppressed, so only property set events will be
+ * received. Note that the number of received detail events may differ for
+ * different configuration implementations.
+ * {@link org.apache.commons.configuration.BaseHierarchicalConfiguration
+ * BaseHierarchicalConfiguration} for instance has a custom implementation of
+ * {@code setProperty()}, which does not generate any detail events.
  * </p>
  * <p>
  * In addition to &quot;normal&quot; events, error events are supported. Such
  * events signal an internal problem that occurred during access of properties.
- * For them a special listener interface exists:
- * {@link ConfigurationErrorListener}. There is another set of
- * methods dealing with event listeners of this type. The
+ * They are handled via the regular {@link EventListener} interface, but there
+ * are special event types defined by {@link ConfigurationErrorEvent}. The
  * {@code fireError()} method can be used by derived classes to send
  * notifications about errors to registered observers.
  * </p>
  *
- * @author <a href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  * @version $Id$
  * @since 1.3
  */
 public class BaseEventSource implements EventSource
 {
-    /** A collection for the registered error listeners.*/
-    private Collection<ConfigurationErrorListener> errorListeners;
-
     /** The list for managing registered event listeners. */
     private EventListenerList eventListeners;
 
@@ -161,19 +153,6 @@ public class BaseEventSource implements EventSource
     }
 
     @Override
-    public void addErrorListener(ConfigurationErrorListener l)
-    {
-        checkListener(l);
-        errorListeners.add(l);
-    }
-
-    @Override
-    public boolean removeErrorListener(ConfigurationErrorListener l)
-    {
-        return errorListeners.remove(l);
-    }
-
-    @Override
     public <T extends Event> void addEventListener(EventType<T> eventType,
             EventListener<? super T> listener)
     {
@@ -207,22 +186,6 @@ public class BaseEventSource implements EventSource
         {
             eventListeners.removeEventListener(reg);
         }
-    }
-
-    /**
-     * Returns a collection with all configuration error listeners that are
-     * currently registered at this object.
-     *
-     * @return a collection with the registered
-     * {@code ConfigurationErrorListener}s (this collection is a
-     * snapshot of the currently registered listeners; it cannot be manipulated)
-     * @since 1.4
-     * @deprecated Use getEventListeners() for events of type error evnet
-     */
-    @Deprecated
-    public Collection<ConfigurationErrorListener> getErrorListeners()
-    {
-        return Collections.unmodifiableCollection(new ArrayList<ConfigurationErrorListener>(errorListeners));
     }
 
     /**
@@ -293,32 +256,6 @@ public class BaseEventSource implements EventSource
 
     /**
      * Creates an error event object and delivers it to all registered error
-     * listeners.
-     *
-     * @param type the event's type
-     * @param propName the name of the affected property (can be <b>null</b>)
-     * @param propValue the value of the affected property (can be <b>null</b>)
-     * @param ex the {@code Throwable} object that caused this error event
-     * @since 1.4
-     * @deprecated Error events are now treated as regular events
-     */
-    @Deprecated
-    protected void fireError(int type, String propName, Object propValue, Throwable ex)
-    {
-        Iterator<ConfigurationErrorListener> it = errorListeners.iterator();
-        if (it.hasNext())
-        {
-            ConfigurationErrorEvent event =
-                    createErrorEvent(type, propName, propValue, ex);
-            while (it.hasNext())
-            {
-                it.next().configurationError(event);
-            }
-        }
-    }
-
-    /**
-     * Creates an error event object and delivers it to all registered error
      * listeners of a matching type.
      *
      * @param eventType the event's type
@@ -345,26 +282,6 @@ public class BaseEventSource implements EventSource
                 iterator.invokeNext(event);
             }
         }
-    }
-
-    /**
-     * Creates a {@code ConfigurationErrorEvent} object based on the
-     * passed in parameters. This is called by {@code fireError()} if it
-     * decides that an event needs to be generated.
-     *
-     * @param type the event's type
-     * @param propName the name of the affected property (can be <b>null</b>)
-     * @param propValue the value of the affected property (can be <b>null</b>)
-     * @param ex the {@code Throwable} object that caused this error
-     * event
-     * @return the event object
-     * @since 1.4
-     * @deprecated Use the method expecting an EventType
-     */
-    @Deprecated
-    protected ConfigurationErrorEvent createErrorEvent(int type, String propName, Object propValue, Throwable ex)
-    {
-        return new ConfigurationErrorEvent(this, type, propName, propValue, ex);
     }
 
     /**
@@ -406,26 +323,10 @@ public class BaseEventSource implements EventSource
     }
 
     /**
-     * Checks whether the specified event listener is not <b>null</b>. If this
-     * is the case, an {@code IllegalArgumentException} exception is thrown.
-     *
-     * @param l the listener to be checked
-     * @throws IllegalArgumentException if the listener is <b>null</b>
-     */
-    private static void checkListener(Object l)
-    {
-        if (l == null)
-        {
-            throw new IllegalArgumentException("Listener must not be null!");
-        }
-    }
-
-    /**
      * Initializes the collections for storing registered event listeners.
      */
     private void initListeners()
     {
-        errorListeners = new CopyOnWriteArrayList<ConfigurationErrorListener>();
         eventListeners = new EventListenerList();
     }
 
