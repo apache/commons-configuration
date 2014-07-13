@@ -115,6 +115,18 @@ public class BaseEventSource implements EventSource
     }
 
     /**
+     * Returns a list with all {@code EventListenerRegistrationData} objects
+     * currently contained for this event source. This method allows access to
+     * all registered event listeners, independent on their type.
+     *
+     * @return a list with information about all registered event listeners
+     */
+    public List<EventListenerRegistrationData<?>> getEventListenerRegistrations()
+    {
+        return eventListeners.getRegistrations();
+    }
+
+    /**
      * Returns a flag whether detail events are enabled.
      *
      * @return a flag if detail events are generated
@@ -190,7 +202,11 @@ public class BaseEventSource implements EventSource
      */
     public void clearErrorListeners()
     {
-        errorListeners.clear();
+        for (EventListenerRegistrationData<? extends ConfigurationErrorEvent> reg : eventListeners
+                .getRegistrationsForSuperType(ConfigurationErrorEvent.ANY))
+        {
+            eventListeners.removeEventListener(reg);
+        }
     }
 
     /**

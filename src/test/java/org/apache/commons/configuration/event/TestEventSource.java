@@ -18,9 +18,11 @@ package org.apache.commons.configuration.event;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -392,6 +394,29 @@ public class TestEventSource
     }
 
     /**
+     * Tests whether all error listeners can be cleared.
+     */
+    @Test
+    public void testClearErrorListeners()
+    {
+        EventListener<ConfigurationEvent> cl = new EventListenerTestImpl(null);
+        ErrorListenerTestImpl el1 = new ErrorListenerTestImpl(null);
+        ErrorListenerTestImpl el2 = new ErrorListenerTestImpl(null);
+        ErrorListenerTestImpl el3 = new ErrorListenerTestImpl(null);
+        source.addEventListener(ConfigurationErrorEvent.READ, el1);
+        source.addEventListener(ConfigurationErrorEvent.ANY, el2);
+        source.addEventListener(ConfigurationEvent.ANY, cl);
+        source.addEventListener(ConfigurationErrorEvent.WRITE, el3);
+
+        source.clearErrorListeners();
+        List<EventListenerRegistrationData<?>> regs =
+                source.getEventListenerRegistrations();
+        assertEquals("Wrong number of event listener registrations", 1,
+                regs.size());
+        assertSame("Wrong remaining listener", cl, regs.get(0).getListener());
+    }
+
+    /**
      * A test event listener implementation.
      */
     static class TestListener implements ConfigurationErrorListener
@@ -414,7 +439,7 @@ public class TestEventSource
      * {@code fireEvent()} methods only creates event objects if
      * necessary. It also allows testing the clone() operation.
      */
-    static class CountingEventSource extends BaseEventSource implements Cloneable
+    private static class CountingEventSource extends BaseEventSource implements Cloneable
     {
         int eventCount;
 
