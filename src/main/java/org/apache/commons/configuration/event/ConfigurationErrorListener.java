@@ -36,7 +36,9 @@ package org.apache.commons.configuration.event;
  * @version $Id$
  * @since 1.4
  * @see ConfigurationErrorEvent
+ * @deprecated Error events are now handled using regular event listeners
  */
+@Deprecated
 public interface ConfigurationErrorListener
 {
     /**

@@ -47,12 +47,6 @@ public abstract class AbstractTestConfigurationEvents
     /** The configuration to be tested. */
     protected AbstractConfiguration config;
 
-    /**
-     * A test event listener.
-     * @deprecated Use the "modern" listener.
-     */
-    protected ConfigurationListenerTestImpl l;
-
     /** A test event listener. */
     protected EventListenerTestImpl listener;
 
@@ -61,7 +55,6 @@ public abstract class AbstractTestConfigurationEvents
     {
         config = createConfiguration();
         config.addProperty(EXIST_PROPERTY, "existing value");
-        l = new ConfigurationListenerTestImpl(config);
         listener = new EventListenerTestImpl(config);
         config.addEventListener(ConfigurationEvent.ANY, listener);
     }

@@ -201,7 +201,9 @@ public class BaseEventSource implements EventSource
      * {@code ConfigurationErrorListener}s (this collection is a
      * snapshot of the currently registered listeners; it cannot be manipulated)
      * @since 1.4
+     * @deprecated Use getEventListeners() for events of type error evnet
      */
+    @Deprecated
     public Collection<ConfigurationErrorListener> getErrorListeners()
     {
         return Collections.unmodifiableCollection(new ArrayList<ConfigurationErrorListener>(errorListeners));
@@ -282,7 +284,9 @@ public class BaseEventSource implements EventSource
      * @param propValue the value of the affected property (can be <b>null</b>)
      * @param ex the {@code Throwable} object that caused this error event
      * @since 1.4
+     * @deprecated Error events are now treated as regular events
      */
+    @Deprecated
     protected void fireError(int type, String propName, Object propValue, Throwable ex)
     {
         Iterator<ConfigurationErrorListener> it = errorListeners.iterator();
