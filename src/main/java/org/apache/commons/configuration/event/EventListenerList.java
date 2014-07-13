@@ -17,9 +17,12 @@
 package org.apache.commons.configuration.event;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -203,6 +206,48 @@ public class EventListenerList
     public List<EventListenerRegistrationData<?>> getRegistrations()
     {
         return Collections.unmodifiableList(listeners);
+    }
+
+    /**
+     * Returns a list with {@code EventListenerRegistrationData} objects for all
+     * event listener registrations of the specified event type or an event type
+     * having this type as super type (directly or indirectly). Note that this
+     * is the opposite direction than querying event types for firing events: in
+     * this case event listener registrations are searched which are super event
+     * types from a given type. This method in contrast returns event listener
+     * registrations for listeners that extend a given super type.
+     *
+     * @param eventType the event type object
+     * @param <T> the event type
+     * @return a list with the matching event listener registration objects
+     */
+    public <T extends Event> List<EventListenerRegistrationData<? extends T>> getRegistrationsForSuperType(
+            EventType<T> eventType)
+    {
+        Map<EventType<?>, Set<EventType<?>>> superTypes =
+                new HashMap<EventType<?>, Set<EventType<?>>>();
+        List<EventListenerRegistrationData<? extends T>> results =
+                new LinkedList<EventListenerRegistrationData<? extends T>>();
+
+        for (EventListenerRegistrationData<?> reg : listeners)
+        {
+            Set<EventType<?>> base = superTypes.get(reg.getEventType());
+            if (base == null)
+            {
+                base = fetchSuperEventTypes(reg.getEventType());
+                superTypes.put(reg.getEventType(), base);
+            }
+            if (base.contains(eventType))
+            {
+                @SuppressWarnings("unchecked")
+                // This is safe because we just did a check
+                EventListenerRegistrationData<? extends T> result =
+                        (EventListenerRegistrationData<? extends T>) reg;
+                results.add(result);
+            }
+        }
+
+        return results;
     }
 
     /**

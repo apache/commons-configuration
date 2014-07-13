@@ -28,6 +28,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -506,6 +507,30 @@ public class TestEventListenerList
     public void testAddAllNull()
     {
         list.addAll(null);
+    }
+
+    /**
+     * Tests whether event listener registrations derived from a super type can
+     * be queried.
+     */
+    @Test
+    public void testGetEventListenerRegistrationsForSuperType()
+    {
+        ListenerTestImpl l1 = new ListenerTestImpl();
+        ListenerTestImpl l2 = new ListenerTestImpl();
+        @SuppressWarnings("unchecked")
+        EventListener<Event> l3 = EasyMock.createMock(EventListener.class);
+        list.addEventListener(typeSub1, l1);
+        list.addEventListener(Event.ANY, l3);
+        list.addEventListener(typeBase, l2);
+
+        List<EventListenerRegistrationData<? extends EventBase>> regs =
+                list.getRegistrationsForSuperType(typeBase);
+        Iterator<EventListenerRegistrationData<? extends EventBase>> iterator =
+                regs.iterator();
+        assertEquals("Wrong listener 1", l1, iterator.next().getListener());
+        assertEquals("Wrong listener 2", l2, iterator.next().getListener());
+        assertFalse("Too many elements", iterator.hasNext());
     }
 
     /**
