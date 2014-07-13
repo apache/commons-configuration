@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.Event;
 import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.event.EventType;
@@ -432,18 +431,6 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public void addErrorListener(ConfigurationErrorListener l)
-    {
-        getConfig().addErrorListener(l);
-    }
-
-    @Override
-    public boolean removeErrorListener(ConfigurationErrorListener l)
-    {
-        return getConfig().removeErrorListener(l);
-    }
-
-    @Override
     public void clearErrorListeners()
     {
         getConfig().clearErrorListeners();
@@ -459,12 +446,6 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     public void read(Reader reader) throws ConfigurationException, IOException
     {
         fetchFileBased().read(reader);
-    }
-
-    @Override
-    public Collection<ConfigurationErrorListener> getErrorListeners()
-    {
-        return getConfig().getErrorListeners();
     }
 
     private BaseHierarchicalConfiguration getConfig()
