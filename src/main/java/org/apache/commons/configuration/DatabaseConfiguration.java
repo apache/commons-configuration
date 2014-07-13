@@ -31,6 +31,9 @@ import java.util.List;
 
 import org.apache.commons.configuration.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
+import org.apache.commons.configuration.event.ConfigurationErrorEvent;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.EventType;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.LogFactory;
 
@@ -314,7 +317,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
     @Override
     protected Object getPropertyInternal(final String key)
     {
-        JdbcOperation<Object> op = new JdbcOperation<Object>(EVENT_READ_PROPERTY, key, null)
+        JdbcOperation<Object> op =
+                new JdbcOperation<Object>(ConfigurationErrorEvent.READ,
+                        ConfigurationErrorEvent.READ, key, null)
         {
             @Override
             protected Object performOperation() throws SQLException
@@ -362,7 +367,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
     @Override
     protected void addPropertyDirect(final String key, final Object obj)
     {
-        new JdbcOperation<Void>(EVENT_ADD_PROPERTY, key, obj)
+        new JdbcOperation<Void>(ConfigurationErrorEvent.WRITE,
+                ConfigurationEvent.ADD_PROPERTY, key, obj)
         {
             @Override
             protected Void performOperation() throws SQLException
@@ -434,7 +440,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
     @Override
     protected boolean isEmptyInternal()
     {
-        JdbcOperation<Integer> op = new JdbcOperation<Integer>(EVENT_READ_PROPERTY, null, null)
+        JdbcOperation<Integer> op =
+                new JdbcOperation<Integer>(ConfigurationErrorEvent.READ,
+                        ConfigurationErrorEvent.READ, null, null)
         {
             @Override
             protected Integer performOperation() throws SQLException
@@ -463,7 +471,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
     @Override
     protected boolean containsKeyInternal(final String key)
     {
-        JdbcOperation<Boolean> op = new JdbcOperation<Boolean>(EVENT_READ_PROPERTY, key, null)
+        JdbcOperation<Boolean> op =
+                new JdbcOperation<Boolean>(ConfigurationErrorEvent.READ,
+                        ConfigurationErrorEvent.READ, key, null)
         {
             @Override
             protected Boolean performOperation() throws SQLException
@@ -492,7 +502,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
     @Override
     protected void clearPropertyDirect(final String key)
     {
-        new JdbcOperation<Void>(EVENT_CLEAR_PROPERTY, key, null)
+        new JdbcOperation<Void>(ConfigurationErrorEvent.WRITE,
+                ConfigurationEvent.CLEAR_PROPERTY, key, null)
         {
             @Override
             protected Void performOperation() throws SQLException
@@ -515,7 +526,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
     @Override
     protected void clearInternal()
     {
-        new JdbcOperation<Void>(EVENT_CLEAR, null, null)
+        new JdbcOperation<Void>(ConfigurationErrorEvent.WRITE,
+                ConfigurationEvent.CLEAR, null, null)
         {
             @Override
             protected Void performOperation() throws SQLException
@@ -541,7 +553,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
     protected Iterator<String> getKeysInternal()
     {
         final Collection<String> keys = new ArrayList<String>();
-        new JdbcOperation<Collection<String>>(EVENT_READ_PROPERTY, null, null)
+        new JdbcOperation<Collection<String>>(ConfigurationErrorEvent.READ,
+                ConfigurationErrorEvent.READ, null, null)
         {
             @Override
             protected Collection<String> performOperation() throws SQLException
@@ -672,7 +685,10 @@ public class DatabaseConfiguration extends AbstractConfiguration
         private ResultSet resultSet;
 
         /** The type of the event to send in case of an error. */
-        private final int errorEventType;
+        private final EventType<? extends ConfigurationErrorEvent> errorEventType;
+
+        /** The type of the operation which caused an error. */
+        private final EventType<?> operationEventType;
 
         /** The property configurationName for an error event. */
         private final String errorPropertyName;
@@ -681,17 +697,20 @@ public class DatabaseConfiguration extends AbstractConfiguration
         private final Object errorPropertyValue;
 
         /**
-         * Creates a new instance of {@code JdbcOperation} and initializes
-         * the properties related to the error event.
+         * Creates a new instance of {@code JdbcOperation} and initializes the
+         * properties related to the error event.
          *
          * @param errEvType the type of the error event
+         * @param opType the operation event type
          * @param errPropName the property configurationName for the error event
          * @param errPropVal the property value for the error event
          */
-        protected JdbcOperation(int errEvType, String errPropName,
-                Object errPropVal)
+        protected JdbcOperation(
+                EventType<? extends ConfigurationErrorEvent> errEvType,
+                EventType<?> opType, String errPropName, Object errPropVal)
         {
             errorEventType = errEvType;
+            operationEventType = opType;
             errorPropertyName = errPropName;
             errorPropertyValue = errPropVal;
         }
@@ -721,7 +740,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
             }
             catch (SQLException e)
             {
-                fireError(errorEventType, errorPropertyName,
+                fireError(errorEventType, operationEventType, errorPropertyName,
                         errorPropertyValue, e);
             }
             finally
@@ -817,7 +836,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
         protected ResultSet openResultSet(String sql, boolean nameCol,
                 Object... params) throws SQLException
         {
-            return initStatement(sql, nameCol, params).executeQuery();
+            resultSet = initStatement(sql, nameCol, params).executeQuery();
+            return resultSet;
         }
 
         /**

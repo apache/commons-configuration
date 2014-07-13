@@ -21,16 +21,19 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import javax.sql.DataSource;
 import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.configuration.builder.fluent.DatabaseBuilderParameters;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
+import org.apache.commons.configuration.event.ConfigurationErrorEvent;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ErrorListenerTestImpl;
+import org.apache.commons.configuration.event.EventType;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.easymock.EasyMock;
 import org.junit.After;
@@ -50,7 +53,7 @@ public class TestDatabaseConfiguration
     private static final String CONFIG_NAME2 = "anotherTestConfig";
 
     /** An error listener for testing whether internal errors occurred.*/
-    private ConfigurationErrorListenerImpl listener;
+    private ErrorListenerTestImpl listener;
 
     /** The test helper. */
     private DatabaseConfigurationTestHelper helper;
@@ -76,7 +79,7 @@ public class TestDatabaseConfiguration
         // if an error listener is defined, we check whether an error occurred
         if(listener != null)
         {
-            assertEquals("An internal error occurred", 0, listener.getErrorCount());
+            listener.done();
         }
         helper.tearDown();
     }
@@ -101,9 +104,9 @@ public class TestDatabaseConfiguration
     private void setUpErrorListener(PotentialErrorDatabaseConfiguration config)
     {
         // remove log listener to avoid exception longs
-        config.removeErrorListener(config.getErrorListeners().iterator().next());
-        listener = new ConfigurationErrorListenerImpl();
-        config.addErrorListener(listener);
+        config.clearErrorListeners();
+        listener = new ErrorListenerTestImpl(config);
+        config.addEventListener(ConfigurationErrorEvent.ANY, listener);
         config.failOnConnect = true;
     }
 
@@ -127,17 +130,16 @@ public class TestDatabaseConfiguration
      * error event will be compared with the expected values.
      *
      * @param type the expected type of the error event
+     * @param opType the expected operation type
      * @param key the expected property key
      * @param value the expected property value
      */
-    private void checkErrorListener(int type, String key, Object value)
+    private void checkErrorListener(
+            EventType<? extends ConfigurationErrorEvent> type,
+            EventType<?> opType, String key, Object value)
     {
-        listener.verify(type, key, value);
-        assertTrue(
-                "Wrong event source",
-                listener.getLastEvent().getSource() instanceof DatabaseConfiguration);
-        assertTrue("Wrong exception",
-                listener.getLastEvent().getCause() instanceof SQLException);
+        Throwable exception = listener.checkEvent(type, opType, key, value);
+        assertTrue("Wrong exception", exception instanceof SQLException);
         listener = null; // mark as checked
     }
 
@@ -372,7 +374,8 @@ public class TestDatabaseConfiguration
     public void testLogErrorListener() throws ConfigurationException
     {
         DatabaseConfiguration config = helper.setUpConfig();
-        assertEquals("No error listener registered", 1, config.getErrorListeners().size());
+        assertEquals("No error listener registered", 1, config
+                .getEventListeners(ConfigurationErrorEvent.ANY).size());
     }
 
     /**
@@ -382,7 +385,8 @@ public class TestDatabaseConfiguration
     public void testGetPropertyError() throws ConfigurationException
     {
         setUpErrorConfig().getProperty("key1");
-        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, "key1", null);
+        checkErrorListener(ConfigurationErrorEvent.READ,
+                ConfigurationErrorEvent.READ, "key1", null);
     }
 
     /**
@@ -392,7 +396,8 @@ public class TestDatabaseConfiguration
     public void testAddPropertyError() throws ConfigurationException
     {
         setUpErrorConfig().addProperty("key1", "value");
-        checkErrorListener(AbstractConfiguration.EVENT_ADD_PROPERTY, "key1", "value");
+        checkErrorListener(ConfigurationErrorEvent.WRITE,
+                ConfigurationEvent.ADD_PROPERTY, "key1", "value");
     }
 
     /**
@@ -402,7 +407,8 @@ public class TestDatabaseConfiguration
     public void testIsEmptyError() throws ConfigurationException
     {
         assertTrue("Wrong return value for failure", setUpErrorConfig().isEmpty());
-        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, null, null);
+        checkErrorListener(ConfigurationErrorEvent.READ,
+                ConfigurationErrorEvent.READ, null, null);
     }
 
     /**
@@ -412,7 +418,8 @@ public class TestDatabaseConfiguration
     public void testContainsKeyError() throws ConfigurationException
     {
         assertFalse("Wrong return value for failure", setUpErrorConfig().containsKey("key1"));
-        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, "key1", null);
+        checkErrorListener(ConfigurationErrorEvent.READ,
+                ConfigurationErrorEvent.READ, "key1", null);
     }
 
     /**
@@ -422,7 +429,8 @@ public class TestDatabaseConfiguration
     public void testClearPropertyError() throws ConfigurationException
     {
         setUpErrorConfig().clearProperty("key1");
-        checkErrorListener(AbstractConfiguration.EVENT_CLEAR_PROPERTY, "key1", null);
+        checkErrorListener(ConfigurationErrorEvent.WRITE,
+                ConfigurationEvent.CLEAR_PROPERTY, "key1", null);
     }
 
     /**
@@ -432,7 +440,8 @@ public class TestDatabaseConfiguration
     public void testClearError() throws ConfigurationException
     {
         setUpErrorConfig().clear();
-        checkErrorListener(AbstractConfiguration.EVENT_CLEAR, null, null);
+        checkErrorListener(ConfigurationErrorEvent.WRITE,
+                ConfigurationEvent.CLEAR, null, null);
     }
 
     /**
@@ -442,7 +451,8 @@ public class TestDatabaseConfiguration
     public void testGetKeysError() throws ConfigurationException
     {
         Iterator<String> it = setUpErrorConfig().getKeys();
-        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, null, null);
+        checkErrorListener(ConfigurationErrorEvent.READ,
+                ConfigurationErrorEvent.READ, null, null);
         assertFalse("Iteration is not empty", it.hasNext());
     }
 
