@@ -23,8 +23,10 @@ package org.apache.commons.configuration.event;
  * </p>
  * <p>
  * Through the methods provided by this interface it is possible to register and
- * remove event listeners for configuration events. Both configuration change
- * listeners and error listeners are supported.
+ * remove listeners for different events supported by this library. The event
+ * type to be handled by a listener must be provided; the specified event listener
+ * must be compatible with this event type. By using generic type parameters, the
+ * compiler can check this.
  * </p>
  *
  * @version $Id$
@@ -32,7 +34,6 @@ package org.apache.commons.configuration.event;
  */
 public interface EventSource
 {
-
     /**
      * Adds an event listener for the specified event type. This listener is
      * notified about events of this type and all its sub types.
