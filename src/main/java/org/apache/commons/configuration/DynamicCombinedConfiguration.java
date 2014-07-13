@@ -30,7 +30,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
+import org.apache.commons.configuration.event.Event;
+import org.apache.commons.configuration.event.EventListener;
+import org.apache.commons.configuration.event.EventType;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.tree.ExpressionEngine;
@@ -747,23 +749,25 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public void addErrorListener(ConfigurationErrorListener l)
+    public <T extends Event> void addEventListener(EventType<T> eventType,
+            EventListener<? super T> listener)
     {
         for (CombinedConfiguration cc : configs.values())
         {
-            cc.addErrorListener(l);
+            cc.addEventListener(eventType, listener);
         }
-        super.addErrorListener(l);
+        super.addEventListener(eventType, listener);
     }
 
     @Override
-    public boolean removeErrorListener(ConfigurationErrorListener l)
+    public <T extends Event> boolean removeEventListener(
+            EventType<T> eventType, EventListener<? super T> listener)
     {
         for (CombinedConfiguration cc : configs.values())
         {
-            cc.removeErrorListener(l);
+            cc.removeEventListener(eventType, listener);
         }
-        return super.removeErrorListener(l);
+        return super.removeEventListener(eventType, listener);
     }
 
     @Override
@@ -774,12 +778,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             cc.clearErrorListeners();
         }
         super.clearErrorListeners();
-    }
-
-    @Override
-    public Collection<ConfigurationErrorListener> getErrorListeners()
-    {
-        return super.getErrorListeners();
     }
 
     /**
@@ -955,10 +953,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         config.setExpressionEngine(this.getExpressionEngine());
         config.setConversionExpressionEngine(getConversionExpressionEngine());
         config.setListDelimiterHandler(getListDelimiterHandler());
-        for (ConfigurationErrorListener listener : getErrorListeners())
-        {
-            config.addErrorListener(listener);
-        }
         copyEventListeners(config);
         for (ConfigData data : configurations)
         {
