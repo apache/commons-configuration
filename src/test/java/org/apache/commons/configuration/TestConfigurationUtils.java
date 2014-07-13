@@ -34,7 +34,6 @@ import junitx.framework.ListAssert;
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.event.EventSource;
@@ -202,7 +201,7 @@ public class TestConfigurationUtils
         conf.addProperty("test.key", "1\\,2\\,3");
         assertEquals("Wrong property value", "1,2,3", conf
                 .getString("test.key"));
-        HierarchicalConfiguration hc = ConfigurationUtils
+        HierarchicalConfiguration<?> hc = ConfigurationUtils
                 .convertToHierarchical(conf);
         assertEquals("Escaped list delimiters not correctly handled", "1,2,3",
                 hc.getString("test.key"));
@@ -223,7 +222,7 @@ public class TestConfigurationUtils
                         new DefaultExpressionEngineSymbols.Builder(
                                 DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
                                 .setIndexStart("[").setIndexEnd("]").create());
-        HierarchicalConfiguration hc = ConfigurationUtils
+        HierarchicalConfiguration<?> hc = ConfigurationUtils
                 .convertToHierarchical(conf, engine);
         assertTrue("Wrong value for test(a)", hc.getBoolean("test(a)"));
         assertFalse("Wrong value for test(b)", hc.getBoolean("test(b)"));
@@ -274,7 +273,7 @@ public class TestConfigurationUtils
         BaseConfiguration config = new BaseConfiguration();
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         config.addProperty("test", "1,2,3");
-        HierarchicalConfiguration hc = ConfigurationUtils
+        HierarchicalConfiguration<?> hc = ConfigurationUtils
                 .convertToHierarchical(config);
         assertEquals("Wrong value 1", 1, hc.getInt("test(0)"));
         assertEquals("Wrong value 2", 2, hc.getInt("test(1)"));
@@ -519,13 +518,10 @@ public class TestConfigurationUtils
     {
         @SuppressWarnings("unchecked")
         EventListener<ConfigurationEvent> cl = EasyMock.createMock(EventListener.class);
-        ConfigurationErrorListener el = EasyMock.createMock(ConfigurationErrorListener.class);
-        EasyMock.replay(cl, el);
+        EasyMock.replay(cl);
         EventSource source = ConfigurationUtils.asEventSource(this, true);
         source.addEventListener(ConfigurationEvent.ANY, cl);
-        source.addErrorListener(el);
         assertFalse("Wrong result (1)", source.removeEventListener(ConfigurationEvent.ANY, cl));
-        assertFalse("Wrong result (2)", source.removeErrorListener(el));
         source.addEventListener(ConfigurationEvent.ANY, null);
     }
 

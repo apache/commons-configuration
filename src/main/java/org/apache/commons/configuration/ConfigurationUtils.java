@@ -49,12 +49,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class ConfigurationUtils
 {
-    /** Constant for the file URL protocol.*/
-    static final String PROTOCOL_FILE = "file";
-
-    /** Constant for the resource path separator.*/
-    static final String RESOURCE_PATH_SEPARATOR = "/";
-
     /** Constant for the name of the clone() method.*/
     private static final String METHOD_CLONE = "clone";
 
@@ -223,7 +217,7 @@ public final class ConfigurationUtils
      * and only if the passed in configuration is <b>null</b>)
      * @since 1.3
      */
-    public static HierarchicalConfiguration convertToHierarchical(
+    public static HierarchicalConfiguration<?> convertToHierarchical(
             Configuration conf)
     {
         return convertToHierarchical(conf, null);
@@ -252,7 +246,7 @@ public final class ConfigurationUtils
      *         and only if the passed in configuration is <b>null</b>)
      * @since 1.6
      */
-    public static HierarchicalConfiguration convertToHierarchical(
+    public static HierarchicalConfiguration<?> convertToHierarchical(
             Configuration conf, ExpressionEngine engine)
     {
         if (conf == null)
@@ -262,7 +256,7 @@ public final class ConfigurationUtils
 
         if (conf instanceof HierarchicalConfiguration)
         {
-            HierarchicalConfiguration hc = (HierarchicalConfiguration) conf;
+            HierarchicalConfiguration<?> hc = (HierarchicalConfiguration<?>) conf;
             if (engine != null)
             {
                 hc.setExpressionEngine(engine);
@@ -566,7 +560,7 @@ public final class ConfigurationUtils
      * @since 2.0
      */
     public static ImmutableHierarchicalConfiguration unmodifiableConfiguration(
-            HierarchicalConfiguration c)
+            HierarchicalConfiguration<?> c)
     {
         return (ImmutableHierarchicalConfiguration) createUnmodifiableConfiguration(
                 IMMUTABLE_HIERARCHICAL_CONFIG_IFCS, c);
