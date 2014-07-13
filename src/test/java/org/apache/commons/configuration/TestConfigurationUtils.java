@@ -33,6 +33,7 @@ import java.util.Map;
 import junitx.framework.ListAssert;
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
+import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.EventListener;
@@ -389,8 +390,9 @@ public class TestConfigurationUtils
             protected void addPropertyDirect(String key, Object value)
             {
                 // always simulate an exception
-                fireError(EVENT_ADD_PROPERTY, key, value, new RuntimeException(
-                        "A faked exception!"));
+                fireError(ConfigurationErrorEvent.WRITE,
+                        ConfigurationEvent.ADD_PROPERTY, key, value,
+                        new RuntimeException("A faked exception!"));
             }
         };
         config.clearErrorListeners();

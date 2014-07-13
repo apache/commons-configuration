@@ -442,7 +442,7 @@ public final class ConfigurationUtils
      * on normal property access, e.g. {@code DatabaseConfiguration} or
      * {@code JNDIConfiguration}. Per default such errors are simply
      * logged and then ignored. This implementation will register a special
-     * {@link ConfigurationErrorListener} that throws a runtime
+     * {@link EventListener} that throws a runtime
      * exception (namely a {@code ConfigurationRuntimeException}) on
      * each received error event.
      *
@@ -456,15 +456,17 @@ public final class ConfigurationUtils
             throw new IllegalArgumentException(
                     "Configuration must implement EventSource!");
         }
-        ((EventSource) src).addErrorListener(new ConfigurationErrorListener()
-        {
-            @Override
-            public void configurationError(ConfigurationErrorEvent event)
-            {
-                // Throw a runtime exception
-                throw new ConfigurationRuntimeException(event.getCause());
-            }
-        });
+        ((EventSource) src).addEventListener(ConfigurationErrorEvent.ANY,
+                new EventListener<ConfigurationErrorEvent>()
+                {
+                    @Override
+                    public void onEvent(ConfigurationErrorEvent event)
+                    {
+                        // Throw a runtime exception
+                        throw new ConfigurationRuntimeException(event
+                                .getCause());
+                    }
+                });
     }
 
     /**
