@@ -28,7 +28,6 @@ import org.apache.commons.configuration.Initializable;
 import org.apache.commons.configuration.beanutils.BeanDeclaration;
 import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.beanutils.ConstructorArg;
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.Event;
 import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.event.EventListenerList;
@@ -299,38 +298,6 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     {
         configListeners.removeEventListener(eventType, listener);
         fetchEventSource().removeEventListener(eventType, listener);
-        return this;
-    }
-
-    /**
-     * Adds the specified listener for {@code ConfigurationErrorEvent}s to this
-     * builder. It is also registered at the result objects produced by this
-     * builder.
-     *
-     * @param l the listener to be registered
-     * @return a reference to this builder for method chaining
-     */
-    public synchronized BasicConfigurationBuilder<T> addErrorListener(
-            ConfigurationErrorListener l)
-    {
-        //errorListeners.add(l);
-        fetchEventSource().addErrorListener(l);
-        return this;
-    }
-
-    /**
-     * Removes the specified listener for {@code ConfigurationErrorEvent}s from
-     * this builder. It is also removed from the current result object if it
-     * exists.
-     *
-     * @param l the listener to be removed
-     * @return a reference to this builder for method chaining
-     */
-    public synchronized BasicConfigurationBuilder<T> removeErrorListener(
-            ConfigurationErrorListener l)
-    {
-        //errorListeners.remove(l);
-        fetchEventSource().removeErrorListener(l);
         return this;
     }
 

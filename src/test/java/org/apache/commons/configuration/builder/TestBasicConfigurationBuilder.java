@@ -22,7 +22,6 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,8 +44,9 @@ import org.apache.commons.configuration.beanutils.DefaultBeanFactory;
 import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.convert.ListDelimiterHandler;
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
+import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ErrorListenerTestImpl;
 import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
@@ -54,7 +54,6 @@ import org.apache.commons.configuration.reloading.ReloadingController;
 import org.apache.commons.configuration.reloading.ReloadingDetector;
 import org.easymock.EasyMock;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -397,52 +396,6 @@ public class TestBasicConfigurationBuilder
     }
 
     /**
-     * Tests whether error listeners can be registered.
-     */
-    @Test @Ignore //TODO error listeners have to be reworked
-    public void testAddErrorListener() throws ConfigurationException
-    {
-        ConfigurationErrorListener l1 =
-                EasyMock.createMock(ConfigurationErrorListener.class);
-        ConfigurationErrorListener l2 =
-                EasyMock.createMock(ConfigurationErrorListener.class);
-        EasyMock.replay(l1, l2);
-        BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
-                        PropertiesConfiguration.class).addErrorListener(l1);
-        PropertiesConfiguration config = builder.getConfiguration();
-        builder.addErrorListener(l2);
-        assertTrue("Listeners not registered", config.getErrorListeners()
-                .containsAll(Arrays.asList(l1, l2)));
-    }
-
-    /**
-     * Tests whether error listeners can be removed.
-     */
-    @Test @Ignore //TODO error listeners have to be reworked
-    public void testRemoveErrorListener() throws ConfigurationException
-    {
-        ConfigurationErrorListener l1 =
-                EasyMock.createMock(ConfigurationErrorListener.class);
-        ConfigurationErrorListener l2 =
-                EasyMock.createMock(ConfigurationErrorListener.class);
-        EasyMock.replay(l1, l2);
-        BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
-                        PropertiesConfiguration.class).addErrorListener(l1)
-                        .addErrorListener(l2);
-        builder.removeErrorListener(l2);
-        PropertiesConfiguration config = builder.getConfiguration();
-        assertFalse("Removed listener was registered", config
-                .getErrorListeners().contains(l2));
-        assertTrue("Listener not registered", config
-                .getErrorListeners().contains(l1));
-        builder.removeErrorListener(l1);
-        assertFalse("Listener still registered", config
-                .getErrorListeners().contains(l1));
-    }
-
-    /**
      * Tests whether event listeners can be copied to another builder.
      */
     @Test
@@ -450,12 +403,14 @@ public class TestBasicConfigurationBuilder
     {
         EventListener<ConfigurationEvent> l1 = createEventListener();
         EventListener<ConfigurationEvent> l2 = createEventListener();
+        EventListener<ConfigurationErrorEvent> l3 = new ErrorListenerTestImpl(null);
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
                 new BasicConfigurationBuilder<PropertiesConfiguration>(
                         PropertiesConfiguration.class);
-        builder.addConfigurationListener(ConfigurationEvent.ANY, l1)
-                .addConfigurationListener(ConfigurationEvent.ANY_HIERARCHICAL,
+        builder.addConfigurationListener(ConfigurationEvent.ANY, l1);
+                builder.addConfigurationListener(ConfigurationEvent.ANY_HIERARCHICAL,
                         l2);
+        builder.addConfigurationListener(ConfigurationErrorEvent.ANY, l3);
         BasicConfigurationBuilder<XMLConfiguration> builder2 =
                 new BasicConfigurationBuilder<XMLConfiguration>(
                         XMLConfiguration.class);
@@ -471,6 +426,10 @@ public class TestBasicConfigurationBuilder
                 listeners.size());
         assertTrue("Listener 1 not found", listeners.contains(l1));
         assertTrue("Listener 2 not found", listeners.contains(l2));
+        Collection<EventListener<? super ConfigurationErrorEvent>> errListeners =
+                config.getEventListeners(ConfigurationErrorEvent.ANY);
+        assertEquals("Wrong number of error listeners", 1, errListeners.size());
+        assertTrue("Wrong error listener", errListeners.contains(l3));
     }
 
     /**
