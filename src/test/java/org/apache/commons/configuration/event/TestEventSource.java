@@ -305,14 +305,13 @@ public class TestEventSource
                 testException);
         assertEquals("Not 1 event created", 1, source.errorCount);
         assertEquals("Error listener not called once", 1, l.numberOfErrors);
-        assertEquals("Normal event was generated", 0, l.numberOfCalls);
-        assertEquals("Wrong event type", TEST_TYPE, l.lastEvent.getType());
+        //assertEquals("Wrong event type", TEST_TYPE, l.lastEvent.getType());
         assertEquals("Wrong property name", TEST_PROPNAME, l.lastEvent
                 .getPropertyName());
         assertEquals("Wrong property value", TEST_PROPVALUE, l.lastEvent
                 .getPropertyValue());
         assertEquals("Wrong Throwable object", testException,
-                ((ConfigurationErrorEvent) l.lastEvent).getCause());
+                l.lastEvent.getCause());
     }
 
     /**
@@ -395,21 +394,11 @@ public class TestEventSource
     /**
      * A test event listener implementation.
      */
-    static class TestListener implements ConfigurationListener,
-            ConfigurationErrorListener
+    static class TestListener implements ConfigurationErrorListener
     {
-        ConfigurationEvent lastEvent;
-
-        int numberOfCalls;
+        ConfigurationErrorEvent lastEvent;
 
         int numberOfErrors;
-
-        @Override
-        public void configurationChanged(ConfigurationEvent event)
-        {
-            lastEvent = event;
-            numberOfCalls++;
-        }
 
         @Override
         public void configurationError(ConfigurationErrorEvent event)

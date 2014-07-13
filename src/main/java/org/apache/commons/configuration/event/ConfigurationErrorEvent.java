@@ -23,62 +23,153 @@ package org.apache.commons.configuration.event;
  * </p>
  * <p>
  * Some configuration implementations (e.g.
- * {@link org.apache.commons.configuration.DatabaseConfiguration}
- * or {@link org.apache.commons.configuration.JNDIConfiguration}
- * use an underlying storage that can throw an exception on each property
- * access. In earlier versions of this library such exceptions were logged and
- * then silently ignored. This makes it impossible for a client to find out that
- * something went wrong.
+ * {@link org.apache.commons.configuration.DatabaseConfiguration} or
+ * {@link org.apache.commons.configuration.JNDIConfiguration} use an underlying
+ * storage that can throw an exception on each property access. In earlier
+ * versions of this library such exceptions were logged and then silently
+ * ignored. This makes it impossible for a client to find out that something
+ * went wrong.
  * </p>
  * <p>
- * To give clients better control over the handling of errors that occur during
- * access of a configuration object a new event listener mechanism specific for
- * exceptions is introduced: Clients can register itself at a configuration
- * object as an <em>error listener</em> and are then notified about all
- * internal errors related to the source configuration object.
+ * To give clients better control over the handling of errors that might occur
+ * while interacting with a configuration object, a specialized error event type
+ * is introduced. Clients can register as listeners of this event type at a
+ * configuration object and are then notified about all internal errors related
+ * to the source configuration object.
  * </p>
  * <p>
- * By inheriting from {@code ConfigurationEvent} this event class
- * supports all properties that describe an operation on a configuration
- * instance. In addition a {@code Throwable} object is available
- * representing the occurred error. The event's type determines the operation
- * that caused the error. Note that depending on the event type and the occurred
- * exception not all of the other properties (e.g. name of the affected property
- * or its value) may be available.
+ * This class defines similar properties to the {@link ConfigurationEvent}
+ * class. This makes it possible to find out which operation was performed on a
+ * configuration causing this error event. In addition, a {@code Throwable}
+ * object is available representing the occurred error. Note that depending on
+ * the event type and the occurred exception not all of the other properties
+ * (e.g. name of the affected property or its value) may be available.
  * </p>
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @version $Id$
  * @since 1.4
  * @see ConfigurationEvent
  */
-public class ConfigurationErrorEvent extends ConfigurationEvent
+public class ConfigurationErrorEvent extends Event
 {
     /**
      * The serial version UID.
      */
-    private static final long serialVersionUID = -7433184493062648409L;
+    private static final long serialVersionUID = 20140712L;
+
+    /**
+     * Constant for the common event type for all error events. Specific types
+     * for error events use this type as super type.
+     *
+     * @since 2.0
+     */
+    public static final EventType<ConfigurationErrorEvent> ANY =
+            new EventType<ConfigurationErrorEvent>(Event.ANY, "ERROR");
+
+    /**
+     * Constant for the event type indicating a read error. Errors of this type
+     * are generated if the underlying data store throws an exception when
+     * reading a property.
+     *
+     * @since 2.0
+     */
+    public static final EventType<ConfigurationErrorEvent> READ =
+            new EventType<ConfigurationErrorEvent>(ANY, "READ_ERROR");
+
+    /**
+     * Constant for the event type indicating a write error. Errors of this type
+     * are generate if the underlying data store throws an exception when
+     * updating data.
+     *
+     * @since 2.0
+     */
+    public static final EventType<ConfigurationErrorEvent> WRITE =
+            new EventType<ConfigurationErrorEvent>(ANY, "WRITE_ERROR");
+
+    /** The event type of the operation which caused this error. */
+    private final EventType<?> errorOperationType;
+
+    /** Stores the property name. */
+    private final String propertyName;
+
+    /** Stores the property value. */
+    private final Object propertyValue;
 
     /** Stores the exception that caused this event. */
     private final Throwable cause;
 
     /**
-     * Creates a new instance of {@code ConfigurationErrorEvent} and
-     * initializes it.
+     * Creates a new instance of {@code ConfigurationErrorEvent} and initializes
+     * it.
      *
      * @param source the event source
      * @param type the event's type
      * @param propertyName the name of the affected property
      * @param propertyValue the value of the affected property
      * @param cause the exception object that caused this event
+     * @deprecated Use the other constructor
      */
+    @Deprecated
     public ConfigurationErrorEvent(Object source, int type,
             String propertyName, Object propertyValue, Throwable cause)
     {
-        super(source, type, propertyName, propertyValue, true);
+        this(source, ConfigurationErrorEvent.ANY, ConfigurationEvent.ANY,
+                propertyName, propertyValue, cause);
+    }
+
+    /**
+     * Creates a new instance of {@code ConfigurationErrorEvent} and sets all
+     * its properties.
+     *
+     * @param source the event source
+     * @param eventType the type of this event
+     * @param operationType the event type of the operation causing this error
+     * @param propName the name of the affected property
+     * @param propValue the value of the affected property
+     * @param cause the exception object that caused this event
+     */
+    public ConfigurationErrorEvent(Object source,
+            EventType<? extends ConfigurationErrorEvent> eventType,
+            EventType<?> operationType, String propName, Object propValue,
+            Throwable cause)
+    {
+        super(source, eventType);
+        errorOperationType = operationType;
+        propertyName = propName;
+        propertyValue = propValue;
         this.cause = cause;
+    }
+
+    /**
+     * Returns the {@code EventType} of the operation which caused this error.
+     *
+     * @return the event type of the operation causing this error
+     */
+    public EventType<?> getErrorOperationType()
+    {
+        return errorOperationType;
+    }
+
+    /**
+     * Returns the name of the property that was accessed when this error
+     * occurred.
+     *
+     * @return the property name related to this error (may be <b>null</b>)
+     */
+    public String getPropertyName()
+    {
+        return propertyName;
+    }
+
+    /**
+     * Returns the value of the property that was accessed when this error
+     * occurred.
+     *
+     * @return the property value related this error (may be <b>null</b>)
+     */
+    public Object getPropertyValue()
+    {
+        return propertyValue;
     }
 
     /**

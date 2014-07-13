@@ -16,6 +16,7 @@
  */
 package org.apache.commons.configuration.event;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 import org.junit.Test;
@@ -132,5 +133,45 @@ public class TestConfigurationEventTypes
     public void testSubnodeChangedEventType()
     {
         checkHierarchicalEvent(ConfigurationEvent.SUBNODE_CHANGED);
+    }
+
+    /**
+     * Tests the common base event type for error events.
+     */
+    @Test
+    public void testBaseErrorEventType()
+    {
+        assertEquals("Wrong super type", Event.ANY,
+                ConfigurationErrorEvent.ANY.getSuperType());
+    }
+
+    /**
+     * Helper method for checking the relevant properties of an error event
+     * type.
+     *
+     * @param type the type to be checked
+     */
+    private void checkErrorEvent(EventType<ConfigurationErrorEvent> type)
+    {
+        assertSame("Wrong super type for " + type, ConfigurationErrorEvent.ANY,
+                type.getSuperType());
+    }
+
+    /**
+     * Tests the event type indicating a read error.
+     */
+    @Test
+    public void testReadErrorEventType()
+    {
+        checkErrorEvent(ConfigurationErrorEvent.READ);
+    }
+
+    /**
+     * Tests the event type indicating a write error.
+     */
+    @Test
+    public void testWriteErrorEventType()
+    {
+        checkErrorEvent(ConfigurationErrorEvent.WRITE);
     }
 }
