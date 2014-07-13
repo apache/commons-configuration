@@ -318,6 +318,36 @@ public class BaseEventSource implements EventSource
     }
 
     /**
+     * Creates an error event object and delivers it to all registered error
+     * listeners of a matching type.
+     *
+     * @param eventType the event's type
+     * @param operationType the type of the failed operation
+     * @param propertyName the name of the affected property (can be
+     *        <b>null</b>)
+     * @param propertyValue the value of the affected property (can be
+     *        <b>null</b>)
+     * @param cause the {@code Throwable} object that caused this error event
+     */
+    public <T extends ConfigurationErrorEvent> void fireError(
+            EventType<T> eventType, EventType<?> operationType,
+            String propertyName, Object propertyValue, Throwable cause)
+    {
+        EventListenerList.EventListenerIterator<T> iterator =
+                eventListeners.getEventListenerIterator(eventType);
+        if (iterator.hasNext())
+        {
+            ConfigurationErrorEvent event =
+                    createErrorEvent(eventType, operationType, propertyName,
+                            propertyValue, cause);
+            while (iterator.hasNext())
+            {
+                iterator.invokeNext(event);
+            }
+        }
+    }
+
+    /**
      * Creates a {@code ConfigurationErrorEvent} object based on the
      * passed in parameters. This is called by {@code fireError()} if it
      * decides that an event needs to be generated.
@@ -329,10 +359,32 @@ public class BaseEventSource implements EventSource
      * event
      * @return the event object
      * @since 1.4
+     * @deprecated Use the method expecting an EventType
      */
+    @Deprecated
     protected ConfigurationErrorEvent createErrorEvent(int type, String propName, Object propValue, Throwable ex)
     {
         return new ConfigurationErrorEvent(this, type, propName, propValue, ex);
+    }
+
+    /**
+     * Creates a {@code ConfigurationErrorEvent} object based on the passed in
+     * parameters. This is called by {@code fireError()} if it decides that an
+     * event needs to be generated.
+     *
+     * @param type the event's type
+     * @param opType the operation type related to this error
+     * @param propName the name of the affected property (can be <b>null</b>)
+     * @param propValue the value of the affected property (can be <b>null</b>)
+     * @param ex the {@code Throwable} object that caused this error event
+     * @return the event object
+     */
+    protected ConfigurationErrorEvent createErrorEvent(
+            EventType<? extends ConfigurationErrorEvent> type,
+            EventType<?> opType, String propName, Object propValue, Throwable ex)
+    {
+        return new ConfigurationErrorEvent(this, type, opType, propName,
+                propValue, ex);
     }
 
     /**

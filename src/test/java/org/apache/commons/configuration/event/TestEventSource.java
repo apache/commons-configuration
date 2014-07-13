@@ -300,20 +300,26 @@ public class TestEventSource
     @Test
     public void testFireError()
     {
-        TestListener l = new TestListener();
-        source.addErrorListener(l);
+        ErrorListenerTestImpl lstRead = new ErrorListenerTestImpl(source);
+        ErrorListenerTestImpl lstWrite = new ErrorListenerTestImpl(source);
+        ErrorListenerTestImpl lstAll = new ErrorListenerTestImpl(source);
+        source.addEventListener(ConfigurationErrorEvent.READ, lstRead);
+        source.addEventListener(ConfigurationErrorEvent.WRITE, lstWrite);
+        source.addEventListener(ConfigurationErrorEvent.ANY, lstAll);
         Exception testException = new Exception("A test");
-        source.fireError(TEST_TYPE, TEST_PROPNAME, TEST_PROPVALUE,
+
+        source.fireError(ConfigurationErrorEvent.WRITE,
+                ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE,
                 testException);
-        assertEquals("Not 1 event created", 1, source.errorCount);
-        assertEquals("Error listener not called once", 1, l.numberOfErrors);
-        //assertEquals("Wrong event type", TEST_TYPE, l.lastEvent.getType());
-        assertEquals("Wrong property name", TEST_PROPNAME, l.lastEvent
-                .getPropertyName());
-        assertEquals("Wrong property value", TEST_PROPVALUE, l.lastEvent
-                .getPropertyValue());
-        assertEquals("Wrong Throwable object", testException,
-                l.lastEvent.getCause());
+        lstRead.done();
+        lstWrite.checkEvent(ConfigurationErrorEvent.WRITE,
+                ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE);
+        lstWrite.done();
+        lstAll.checkEvent(ConfigurationErrorEvent.WRITE,
+                ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE);
+        lstAll.done();
+        assertEquals("Wrong number of error events created", 1,
+                source.errorCount);
     }
 
     /**
@@ -322,8 +328,8 @@ public class TestEventSource
     @Test
     public void testFireErrorNoListeners()
     {
-        source.fireError(TEST_TYPE, TEST_PROPNAME, TEST_PROPVALUE,
-                new Exception());
+        source.fireError(ConfigurationErrorEvent.ANY, ConfigurationEvent.ANY,
+                TEST_PROPNAME, TEST_PROPVALUE, new Exception());
         assertEquals("An error event object was created", 0, source.errorCount);
     }
 
@@ -452,6 +458,17 @@ public class TestEventSource
         {
             eventCount++;
             return super.createEvent(eventType, propName, propValue, before);
+        }
+
+        @Override
+        protected ConfigurationErrorEvent createErrorEvent(
+                EventType<? extends ConfigurationErrorEvent> type,
+                EventType<?> opType, String propName, Object propValue,
+                Throwable ex)
+        {
+            errorCount++;
+            return super
+                    .createErrorEvent(type, opType, propName, propValue, ex);
         }
 
         @Override
