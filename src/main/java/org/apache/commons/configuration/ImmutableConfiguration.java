@@ -532,14 +532,14 @@ public interface ImmutableConfiguration
      * configuration key. If the key doesn't map to an existing object, the
      * method returns null unless
      * {@link AbstractConfiguration#isThrowExceptionOnMissing()} is set to
-     * <tt>true</tt>.
+     * {@code true}.
      *
      * @param <T> the target type of the value
      * @param cls the target class of the value
      * @param key the key of the value
      * @return the value of the requested type for the key
      * @throws NoSuchElementException if the key doesn't map to an existing
-     *         object and <tt>throwExceptionOnMissing=true</tt>
+     *         object and {@code throwExceptionOnMissing=true}
      * @throws ConversionException if the value is not compatible with the
      *         requested type
      * @since 2.0

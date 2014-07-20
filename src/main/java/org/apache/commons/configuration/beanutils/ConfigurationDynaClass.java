@@ -29,7 +29,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * The <tt>ConfigurationDynaClass</tt> dynamically determines properties for
+ * The {@code ConfigurationDynaClass} dynamically determines properties for
  * a {@code ConfigurationDynaBean} from a wrapped configuration-collection
  * {@link org.apache.commons.configuration.Configuration} instance.
  *

@@ -30,7 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * The <tt>ConfigurationDynaBean</tt> dynamically reads and writes
+ * The {@code ConfigurationDynaBean} dynamically reads and writes
  * configurations properties from a wrapped configuration-collection
  * {@link org.apache.commons.configuration.Configuration} instance. It also
  * implements a {@link java.util.Map} interface so that it can be used in

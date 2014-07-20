@@ -57,7 +57,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * <h4>Example</h4>
  *
- * Configuration file <tt>config.properties</tt>:
+ * Configuration file {@code config.properties}:
  * <pre>
  * title.color = #0000FF
  * remote.host = 192.168.0.53
@@ -81,10 +81,10 @@ import org.apache.commons.lang3.StringUtils;
  *
  * <h4>Dates</h4>
  *
- * Date objects are expected to be formatted with the pattern <tt>yyyy-MM-dd HH:mm:ss</tt>.
+ * Date objects are expected to be formatted with the pattern {@code yyyy-MM-dd HH:mm:ss}.
  * This default format can be changed by specifying another format in the
  * getters, or by putting a date format in the configuration under the key
- * <tt>org.apache.commons.configuration.format.date</tt>. Alternatively, the
+ * {@code org.apache.commons.configuration.format.date}. Alternatively, the
  * date format can also be specified via the {@code ConversionHandler} used
  * by a configuration instance:
  *
