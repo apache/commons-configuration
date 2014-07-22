@@ -363,12 +363,18 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      */
     public void resetResult()
     {
+        T oldResult;
         synchronized (this)
         {
+            oldResult = result;
             result = null;
             resultDeclaration = null;
         }
 
+        if (oldResult != null)
+        {
+            removeEventListeners(oldResult);
+        }
         fireBuilderEvent(new ConfigurationBuilderEvent(this,
                 ConfigurationBuilderEvent.RESET));
     }
@@ -694,6 +700,23 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     }
 
     /**
+     * Removes all available event listeners from the given result object. This
+     * method is called when the result of this builder is reset. Then the old
+     * managed configuration should no longer generate events.
+     *
+     * @param obj the affected result object
+     */
+    private void removeEventListeners(T obj)
+    {
+        EventSource evSrc = ConfigurationUtils.asEventSource(obj, true);
+        for (EventListenerRegistrationData<?> regData : eventListeners
+                .getRegistrations())
+        {
+            removeListener(evSrc, regData);
+        }
+    }
+
+    /**
      * Returns an {@code EventSource} for the current result object. If there is
      * no current result or if it does not extend {@code EventSource}, a dummy
      * event source is returned.
@@ -788,5 +811,18 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
             EventListenerRegistrationData<E> regData)
     {
         evSrc.addEventListener(regData.getEventType(), regData.getListener());
+    }
+
+    /**
+     * Removes an event listener from an event source object.
+     *
+     * @param evSrc the event source
+     * @param regData the registration data object
+     * @param <E> the type of the event listener
+     */
+    private static <E extends Event> void removeListener(EventSource evSrc,
+            EventListenerRegistrationData<E> regData)
+    {
+        evSrc.removeEventListener(regData.getEventType(), regData.getListener());
     }
 }

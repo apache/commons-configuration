@@ -462,6 +462,27 @@ public class TestBasicConfigurationBuilder
     }
 
     /**
+     * Tests whether configuration listeners are removed from the managed
+     * configuration when the builder's result object is reset.
+     */
+    @Test
+    public void testRemoveConfigurationListenersOnReset()
+            throws ConfigurationException
+    {
+        EventListenerTestImpl listener = new EventListenerTestImpl(null);
+        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class)
+                        .configure(new EventListenerParameters()
+                                .addEventListener(ConfigurationEvent.ANY,
+                                        listener));
+        PropertiesConfiguration config = builder.getConfiguration();
+        builder.resetResult();
+        config.addProperty("foo", "bar");
+        listener.done();
+    }
+
+    /**
      * Tests whether parameters starting with a reserved prefix are filtered out
      * before result objects are initialized.
      */
