@@ -262,39 +262,6 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     }
 
     /**
-     * Adds the specified event listener to this builder. It is also registered
-     * at the result objects produced by this builder.
-     *
-     * @param eventType the event type object
-     * @param listener the listener to be registered
-     * @param <E> the event type
-     * @deprecated Use addEventListener()
-     */
-    @Deprecated
-    public synchronized <E extends Event> void addConfigurationListener(
-            EventType<E> eventType, EventListener<? super E> listener)
-    {
-        addEventListener(eventType, listener);
-    }
-
-    /**
-     * Removes the specified event listener from this builder. It is also
-     * removed from the current result object if it exists.
-     *
-     * @param eventType the event type object
-     * @param listener the listener to be removed
-     * @param <E> the event type
-     * @return a flag whether the listener could be removed
-     * @deprecated Use removeEventListener()
-     */
-    @Deprecated
-    public synchronized <E extends Event> boolean removeConfigurationListener(
-            EventType<E> eventType, EventListener<? super E> listener)
-    {
-        return removeEventListener(eventType, listener);
-    }
-
-    /**
      * {@inheritDoc} This implementation creates the result configuration on
      * first access. Later invocations return the same object until this builder
      * is reset. The double-check idiom for lazy initialization is used (Bloch,
