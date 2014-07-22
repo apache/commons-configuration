@@ -120,7 +120,7 @@ public class MultiFileConfigurationBuilderProvider extends
                         : Configuration.class;
         return BuilderConfigurationWrapperFactory
                 .createBuilderConfigurationWrapper(ifcClass, builder,
-                        EventSourceSupport.BUILDER_OPTIONAL);
+                        EventSourceSupport.BUILDER);
     }
 
     /**

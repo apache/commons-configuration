@@ -34,7 +34,6 @@ import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.event.EventListenerTestImpl;
 import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.ex.ConfigurationException;
-import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
@@ -144,31 +143,10 @@ public class TestBuilderConfigurationWrapperFactory
     }
 
     /**
-     * Tests EventSource support level 'builder'.
-     */
-    @Test(expected = ConfigurationRuntimeException.class)
-    public void testEventSourceSupportBuilder()
-    {
-        BaseHierarchicalConfiguration conf =
-                new BaseHierarchicalConfiguration();
-        ConfigurationBuilder<BaseHierarchicalConfiguration> builder =
-                createBuilderMock(conf);
-        EasyMock.replay(builder);
-        BuilderConfigurationWrapperFactory factory =
-                new BuilderConfigurationWrapperFactory(
-                        EventSourceSupport.BUILDER);
-        EventSource src =
-                (EventSource) factory.createBuilderConfigurationWrapper(
-                        HierarchicalConfiguration.class, builder);
-        src.addEventListener(ConfigurationEvent.ANY, null);
-    }
-
-    /**
      * Tests whether EventSource methods can be delegated to the builder.
      */
     @Test
-    public void testEventSourceSupportBuilderOptionalSupported()
-            throws ConfigurationException
+    public void testEventSourceSupportBuilder() throws ConfigurationException
     {
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
                 new BasicConfigurationBuilder<PropertiesConfiguration>(
@@ -177,7 +155,7 @@ public class TestBuilderConfigurationWrapperFactory
         EventListener<ConfigurationEvent> l2 = new EventListenerTestImpl(null);
         BuilderConfigurationWrapperFactory factory =
                 new BuilderConfigurationWrapperFactory(
-                        EventSourceSupport.BUILDER_OPTIONAL);
+                        EventSourceSupport.BUILDER);
         EventSource src =
                 (EventSource) factory.createBuilderConfigurationWrapper(
                         Configuration.class, builder);
@@ -198,26 +176,25 @@ public class TestBuilderConfigurationWrapperFactory
     }
 
     /**
-     * Tests EventSource support level 'builder optional' if the builder does
-     * not provide support.
+     * Tests whether event source support of level builder is possible even for a
+     * mock builder.
      */
     @Test
-    public void testEventSourceSupportBuilderOptionalNotSupported()
+    public void testEventSourceSupportMockBuilder()
     {
         BaseHierarchicalConfiguration conf =
                 new BaseHierarchicalConfiguration();
-        EventListener<ConfigurationEvent> listener = new EventListenerTestImpl(null);
         ConfigurationBuilder<BaseHierarchicalConfiguration> builder =
                 createBuilderMock(conf);
+        EventListenerTestImpl listener = new EventListenerTestImpl(null);
         builder.addEventListener(ConfigurationEvent.ANY, listener);
         EasyMock.replay(builder);
+
         BuilderConfigurationWrapperFactory factory =
-                new BuilderConfigurationWrapperFactory(
-                        EventSourceSupport.BUILDER_OPTIONAL);
+                new BuilderConfigurationWrapperFactory(EventSourceSupport.BUILDER);
         EventSource src =
                 (EventSource) factory.createBuilderConfigurationWrapper(
                         HierarchicalConfiguration.class, builder);
-
         src.addEventListener(ConfigurationEvent.ANY, listener);
         EasyMock.verify(builder);
     }
@@ -230,7 +207,7 @@ public class TestBuilderConfigurationWrapperFactory
     {
         BuilderConfigurationWrapperFactory factory =
                 new BuilderConfigurationWrapperFactory(
-                        EventSourceSupport.BUILDER_OPTIONAL);
+                        EventSourceSupport.BUILDER);
         factory.createBuilderConfigurationWrapper(null,
                 createBuilderMock(new BaseHierarchicalConfiguration()));
     }
