@@ -152,9 +152,6 @@ public class ConfigurationEvent extends Event
             new EventType<ConfigurationEvent>(ANY_HIERARCHICAL,
                     "SUBNODE_CHANGED");
 
-    /** The legacy event type. */
-    private final int type;
-
     /** Stores the property name. */
     private final String propertyName;
 
@@ -182,39 +179,6 @@ public class ConfigurationEvent extends Event
         this.propertyName = propertyName;
         this.propertyValue = propertyValue;
         this.beforeUpdate = beforeUpdate;
-        this.type = 0;
-    }
-
-    /**
-     * Creates a new instance of {@code ConfigurationEvent} and initializes it
-     * with a legacy event type.
-     *
-     * @param source the event source
-     * @param type the numeric event type
-     * @param propertyName the name of the affected property
-     * @param propertyValue the value of the affected property
-     * @param beforeUpdate the before update flag
-     * @deprecated use the constructor which expects an {@code EventType}
-     */
-    public ConfigurationEvent(Object source, int type, String propertyName,
-            Object propertyValue, boolean beforeUpdate)
-    {
-        super(source, ANY);
-        this.propertyName = propertyName;
-        this.propertyValue = propertyValue;
-        this.beforeUpdate = beforeUpdate;
-        this.type = type;
-    }
-
-    /**
-     * Returns the numeric event type.
-     *
-     * @return the numeric event type
-     * @deprecated use {@code getEventType}
-     */
-    public int getType()
-    {
-        return type;
     }
 
     /**
