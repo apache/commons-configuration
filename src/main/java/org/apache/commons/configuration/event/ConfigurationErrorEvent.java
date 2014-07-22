@@ -99,25 +99,6 @@ public class ConfigurationErrorEvent extends Event
     private final Throwable cause;
 
     /**
-     * Creates a new instance of {@code ConfigurationErrorEvent} and initializes
-     * it.
-     *
-     * @param source the event source
-     * @param type the event's type
-     * @param propertyName the name of the affected property
-     * @param propertyValue the value of the affected property
-     * @param cause the exception object that caused this event
-     * @deprecated Use the other constructor
-     */
-    @Deprecated
-    public ConfigurationErrorEvent(Object source, int type,
-            String propertyName, Object propertyValue, Throwable cause)
-    {
-        this(source, ConfigurationErrorEvent.ANY, ConfigurationEvent.ANY,
-                propertyName, propertyValue, cause);
-    }
-
-    /**
      * Creates a new instance of {@code ConfigurationErrorEvent} and sets all
      * its properties.
      *
