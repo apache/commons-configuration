@@ -125,4 +125,30 @@ public class EventType<T extends Event>
         }
         return types;
     }
+
+    /**
+     * Checks whether an event type is derived from another type. This
+     * implementation tests whether {@code baseType} is a direct or indirect
+     * super type of {@code derivedType}. If one of the types is <b>null</b>,
+     * result is <b>false</b>.
+     *
+     * @param derivedType the derived event type
+     * @param baseType the base event type
+     * @return <b>true</b> if the derived type is an instance of the base type,
+     *         <b>false</b> otherwise
+     */
+    public static boolean isInstanceOf(EventType<?> derivedType,
+            EventType<?> baseType)
+    {
+        EventType<?> currentType = derivedType;
+        while (currentType != null)
+        {
+            if (currentType == baseType)
+            {
+                return true;
+            }
+            currentType = currentType.getSuperType();
+        }
+        return false;
+    }
 }

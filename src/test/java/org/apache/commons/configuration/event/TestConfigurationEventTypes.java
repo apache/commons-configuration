@@ -17,6 +17,7 @@
 package org.apache.commons.configuration.event;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
@@ -76,6 +77,52 @@ public class TestConfigurationEventTypes
                 superTypes.size());
         assertTrue("Wrong super types: " + superTypes,
                 superTypes.containsAll(expected));
+    }
+
+    /**
+     * Tests isInstanceOf() if the derived type is null.
+     */
+    @Test
+    public void testIsInstanceOfDerivedNull()
+    {
+        assertFalse("Wrong result", EventType.isInstanceOf(null, Event.ANY));
+    }
+
+    /**
+     * Tests isInstanceOf() if the base type is null.
+     */
+    @Test
+    public void testIsInstanceOfBaseNull()
+    {
+        assertFalse("Wrong result",
+                EventType.isInstanceOf(ConfigurationEvent.ANY, null));
+    }
+
+    /**
+     * Tests isInstanceOf() if there is no instanceof relationship.
+     */
+    @Test
+    public void testIsInstanceOfFalse()
+    {
+        assertFalse("Wrong result", EventType.isInstanceOf(
+                ConfigurationErrorEvent.READ, ConfigurationEvent.ANY));
+    }
+
+    /**
+     * Tests isInstanceOf() if the expected result is true.
+     */
+    @Test
+    public void testIsInstanceOfTrue()
+    {
+        assertTrue("Wrong result (1)", EventType.isInstanceOf(
+                ConfigurationEvent.ADD_NODES,
+                ConfigurationEvent.ANY_HIERARCHICAL));
+        assertTrue("Wrong result (2)", EventType.isInstanceOf(
+                ConfigurationEvent.ADD_NODES, ConfigurationEvent.ANY));
+        assertTrue("Wrong result (3)",
+                EventType.isInstanceOf(ConfigurationEvent.ADD_NODES, Event.ANY));
+        assertTrue("Wrong result (4)", EventType.isInstanceOf(
+                ConfigurationEvent.ADD_NODES, ConfigurationEvent.ADD_NODES));
     }
 
     /**
