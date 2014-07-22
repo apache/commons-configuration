@@ -274,14 +274,12 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      * @param eventType the event type object
      * @param listener the listener to be registered
      * @param <E> the event type
-     * @return a reference to this builder for method chaining
      */
-    public synchronized <E extends Event> BasicConfigurationBuilder<T> addConfigurationListener(
+    public synchronized <E extends Event> void addConfigurationListener(
             EventType<E> eventType, EventListener<? super E> listener)
     {
         configListeners.addEventListener(eventType, listener);
         fetchEventSource().addEventListener(eventType, listener);
-        return this;
     }
 
     /**
@@ -291,14 +289,13 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      * @param eventType the event type object
      * @param listener the listener to be removed
      * @param <E> the event type
-     * @return a reference to this builder for method chaining
+     * @return a flag whether the listener could be removed
      */
-    public synchronized <E extends Event> BasicConfigurationBuilder<T> removeConfigurationListener(
+    public synchronized <E extends Event> boolean removeConfigurationListener(
             EventType<E> eventType, EventListener<? super E> listener)
     {
-        configListeners.removeEventListener(eventType, listener);
         fetchEventSource().removeEventListener(eventType, listener);
-        return this;
+        return configListeners.removeEventListener(eventType, listener);
     }
 
     /**

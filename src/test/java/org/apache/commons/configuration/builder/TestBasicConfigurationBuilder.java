@@ -356,8 +356,8 @@ public class TestBasicConfigurationBuilder
         EasyMock.replay(l1, l2);
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
                 new BasicConfigurationBuilder<PropertiesConfiguration>(
-                        PropertiesConfiguration.class)
-                        .addConfigurationListener(ConfigurationEvent.ANY, l1);
+                        PropertiesConfiguration.class);
+        builder.addConfigurationListener(ConfigurationEvent.ANY, l1);
         PropertiesConfiguration config = builder.getConfiguration();
         builder.addConfigurationListener(ConfigurationEvent.ANY, l2);
         Collection<EventListener<? super ConfigurationEvent>> listeners =
@@ -377,11 +377,12 @@ public class TestBasicConfigurationBuilder
         EasyMock.replay(l1, l2);
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
                 new BasicConfigurationBuilder<PropertiesConfiguration>(
-                        PropertiesConfiguration.class)
-                        .addConfigurationListener(
-                                ConfigurationEvent.ANY_HIERARCHICAL, l1)
-                        .addConfigurationListener(ConfigurationEvent.ANY, l2);
-        builder.removeConfigurationListener(ConfigurationEvent.ANY, l2);
+                        PropertiesConfiguration.class);
+        builder.addConfigurationListener(ConfigurationEvent.ANY_HIERARCHICAL,
+                l1);
+        builder.addConfigurationListener(ConfigurationEvent.ANY, l2);
+        assertTrue("Wrong result",
+                builder.removeConfigurationListener(ConfigurationEvent.ANY, l2));
         PropertiesConfiguration config = builder.getConfiguration();
         assertFalse("Removed listener was registered", config
                 .getEventListeners(ConfigurationEvent.ANY).contains(l2));

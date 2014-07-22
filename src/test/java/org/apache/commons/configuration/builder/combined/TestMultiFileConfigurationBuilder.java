@@ -265,8 +265,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         EasyMock.replay(l1, l2);
         MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createTestBuilder(null);
-        assertSame("Wrong result", builder,
-                builder.addConfigurationListener(ConfigurationEvent.ANY, l1));
+        builder.addConfigurationListener(ConfigurationEvent.ANY, l1);
         switchToConfig(1);
         XMLConfiguration config = builder.getConfiguration();
         assertTrue("Listener not added", config.getEventListeners(ConfigurationEvent.ANY)
@@ -274,7 +273,9 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         builder.addConfigurationListener(Event.ANY, l2);
         assertTrue("Listener 2 not added", config.getEventListeners(Event.ANY)
                 .contains(l2));
-        builder.removeConfigurationListener(Event.ANY, l2);
+        assertTrue("Wrong result", builder.removeConfigurationListener(Event.ANY, l2));
+        assertFalse("Wrong result after removal",
+                builder.removeConfigurationListener(Event.ANY, l2));
         assertFalse("Listener not removed", config.getEventListeners(Event.ANY)
                 .contains(l2));
         switchToConfig(2);

@@ -975,9 +975,9 @@ public class TestCombinedConfigurationBuilder
         File testFile =
                 ConfigurationAssert
                         .getTestFile("testCCCombinedChildBuilder.xml");
-        builder.configure(new XMLBuilderParametersImpl().setFile(testFile))
-                .addConfigurationListener(Event.ANY, l1)
-                .addConfigurationListener(ConfigurationEvent.ANY, l2);
+        builder.configure(new XMLBuilderParametersImpl().setFile(testFile));
+        builder.addConfigurationListener(Event.ANY, l1);
+        builder.addConfigurationListener(ConfigurationEvent.ANY, l2);
         CombinedConfiguration cc = builder.getConfiguration();
         CombinedConfiguration cc2 =
                 (CombinedConfiguration) cc.getConfiguration("subcc");

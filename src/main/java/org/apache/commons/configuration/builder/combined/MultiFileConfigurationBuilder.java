@@ -230,7 +230,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * at managed configuration builders.
      */
     @Override
-    public synchronized <E extends Event> BasicConfigurationBuilder<T> addConfigurationListener(
+    public synchronized <E extends Event> void addConfigurationListener(
             EventType<E> eventType, EventListener<? super E> l)
     {
         super.addConfigurationListener(eventType, l);
@@ -238,7 +238,6 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
         {
             b.addConfigurationListener(eventType, l);
         }
-        return this;
     }
 
     /**
@@ -246,15 +245,15 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * removed from managed configuration builders.
      */
     @Override
-    public synchronized <E extends Event> BasicConfigurationBuilder<T> removeConfigurationListener(
+    public synchronized <E extends Event> boolean removeConfigurationListener(
             EventType<E> eventType, EventListener<? super E> l)
     {
-        super.removeConfigurationListener(eventType, l);
+        boolean result = super.removeConfigurationListener(eventType, l);
         for (FileBasedConfigurationBuilder<T> b : getManagedBuilders().values())
         {
             b.removeConfigurationListener(eventType, l);
         }
-        return this;
+        return result;
     }
 
     /**
