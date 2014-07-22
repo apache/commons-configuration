@@ -31,6 +31,7 @@ import org.apache.commons.configuration.builder.ConfigurationBuilderEvent;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.event.Event;
 import org.apache.commons.configuration.event.EventListener;
+import org.apache.commons.configuration.event.EventListenerList;
 import org.apache.commons.configuration.event.EventType;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
@@ -98,6 +99,9 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      */
     private final ThreadLocal<Boolean> inInterpolation =
             new ThreadLocal<Boolean>();
+
+    /** A list for the event listeners to be passed to managed builders. */
+    private final EventListenerList configurationListeners = new EventListenerList();
 
     /**
      * A specialized event listener which gets registered at all managed
@@ -227,31 +231,43 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
 
     /**
      * {@inheritDoc} This implementation ensures that the listener is also added
-     * at managed configuration builders.
+     * to managed configuration builders if necessary. Listeners for the builder-related
+     * event types are excluded because otherwise they would be triggered by the
+     * internally used configuration builders.
      */
     @Override
     public synchronized <E extends Event> void addEventListener(
             EventType<E> eventType, EventListener<? super E> l)
     {
         super.addEventListener(eventType, l);
-        for (FileBasedConfigurationBuilder<T> b : getManagedBuilders().values())
+        if (isEventTypeForManagedBuilders(eventType))
         {
-            b.addEventListener(eventType, l);
+            for (FileBasedConfigurationBuilder<T> b : getManagedBuilders()
+                    .values())
+            {
+                b.addEventListener(eventType, l);
+            }
+            configurationListeners.addEventListener(eventType, l);
         }
     }
 
     /**
      * {@inheritDoc} This implementation ensures that the listener is also
-     * removed from managed configuration builders.
+     * removed from managed configuration builders if necessary.
      */
     @Override
     public synchronized <E extends Event> boolean removeEventListener(
             EventType<E> eventType, EventListener<? super E> l)
     {
         boolean result = super.removeEventListener(eventType, l);
-        for (FileBasedConfigurationBuilder<T> b : getManagedBuilders().values())
+        if (isEventTypeForManagedBuilders(eventType))
         {
-            b.removeEventListener(eventType, l);
+            for (FileBasedConfigurationBuilder<T> b : getManagedBuilders()
+                    .values())
+            {
+                b.removeEventListener(eventType, l);
+            }
+            configurationListeners.removeEventListener(eventType, l);
         }
         return result;
     }
@@ -407,7 +423,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      */
     private void initListeners(FileBasedConfigurationBuilder<T> newBuilder)
     {
-        copyEventListeners(newBuilder);
+        copyEventListeners(newBuilder, configurationListeners);
         newBuilder.addEventListener(ConfigurationBuilderEvent.RESET,
                 managedBuilderDelegationListener);
     }
@@ -471,5 +487,21 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
             newParams.putAll(copy.getParameters());
         }
         return newParams;
+    }
+
+    /**
+     * Checks whether the given event type is of interest for the managed
+     * configuration builders. This method is called by the methods for managing
+     * event listeners to find out whether a listener should be passed to the
+     * managed builders, too.
+     *
+     * @param eventType the event type object
+     * @return a flag whether this event type is of interest for managed
+     *         builders
+     */
+    private static boolean isEventTypeForManagedBuilders(EventType<?> eventType)
+    {
+        return !EventType
+                .isInstanceOf(eventType, ConfigurationBuilderEvent.ANY);
     }
 }

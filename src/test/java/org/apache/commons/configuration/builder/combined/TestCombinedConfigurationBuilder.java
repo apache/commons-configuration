@@ -79,7 +79,6 @@ import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -1223,7 +1222,7 @@ public class TestCombinedConfigurationBuilder
     /**
      * Tests whether reloading support works for MultiFileConfigurationBuilder.
      */
-    @Test @Ignore
+    @Test
     public void testMultiTenentConfigurationReloading()
             throws ConfigurationException, InterruptedException
     {

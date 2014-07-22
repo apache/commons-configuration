@@ -606,11 +606,10 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     }
 
     /**
-     * Copies all {@code ConfigurationListener} and
-     * {@code ConfigurationErrorListener} objects to the specified target
-     * configuration builder. This method is intended to be used by derived
-     * classes which support inheritance of their properties to other builder
-     * objects.
+     * Copies all {@code EventListener} objects registered at this builder to
+     * the specified target configuration builder. This method is intended to be
+     * used by derived classes which support inheritance of their properties to
+     * other builder objects.
      *
      * @param target the target configuration builder (must not be <b>null</b>)
      * @throws NullPointerException if the target builder is <b>null</b>
@@ -618,7 +617,23 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     protected synchronized void copyEventListeners(
             BasicConfigurationBuilder<?> target)
     {
-        target.eventListeners.addAll(eventListeners);
+        copyEventListeners(target, eventListeners);
+    }
+
+    /**
+     * Copies all event listeners in the specified list to the specified target
+     * configuration builder. This method is intended to be used by derived
+     * classes which have to deal with managed configuration builders that need
+     * to be initialized with event listeners.
+     *
+     * @param target the target configuration builder (must not be <b>null</b>)
+     * @param listeners the event listeners to be copied over
+     * @throws NullPointerException if the target builder is <b>null</b>
+     */
+    protected void copyEventListeners(BasicConfigurationBuilder<?> target,
+            EventListenerList listeners)
+    {
+        target.eventListeners.addAll(listeners);
     }
 
     /**

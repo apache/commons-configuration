@@ -43,13 +43,13 @@ import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.Event;
 import org.apache.commons.configuration.event.EventListener;
+import org.apache.commons.configuration.event.EventListenerTestImpl;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.DefaultLookups;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.easymock.EasyMock;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXParseException;
 
@@ -257,26 +257,24 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test
     public void testAddConfigurationListener() throws ConfigurationException
     {
-        @SuppressWarnings("unchecked")
-        EventListener<ConfigurationEvent> l1 =
-                EasyMock.createMock(EventListener.class);
+        EventListener<ConfigurationEvent> l1 = new EventListenerTestImpl(null);
         @SuppressWarnings("unchecked")
         EventListener<Event> l2 =
                 EasyMock.createMock(EventListener.class);
-        EasyMock.replay(l1, l2);
+        EasyMock.replay(l2);
         MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createTestBuilder(null);
-        builder.addConfigurationListener(ConfigurationEvent.ANY, l1);
+        builder.addEventListener(ConfigurationEvent.ANY, l1);
         switchToConfig(1);
         XMLConfiguration config = builder.getConfiguration();
         assertTrue("Listener not added", config.getEventListeners(ConfigurationEvent.ANY)
                 .contains(l1));
-        builder.addConfigurationListener(Event.ANY, l2);
+        builder.addEventListener(Event.ANY, l2);
         assertTrue("Listener 2 not added", config.getEventListeners(Event.ANY)
                 .contains(l2));
-        assertTrue("Wrong result", builder.removeConfigurationListener(Event.ANY, l2));
+        assertTrue("Wrong result", builder.removeEventListener(Event.ANY, l2));
         assertFalse("Wrong result after removal",
-                builder.removeConfigurationListener(Event.ANY, l2));
+                builder.removeEventListener(Event.ANY, l2));
         assertFalse("Listener not removed", config.getEventListeners(Event.ANY)
                 .contains(l2));
         switchToConfig(2);
@@ -350,7 +348,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     /**
      * Tests whether builder listeners are handled correctly.
      */
-    @Test @Ignore
+    @Test
     public void testBuilderListener() throws ConfigurationException
     {
         BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
@@ -371,7 +369,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
      * Tests whether listeners at managed builders are removed when the cache is
      * cleared.
      */
-    @Test @Ignore
+    @Test
     public void testRemoveBuilderListenerOnReset()
             throws ConfigurationException
     {
