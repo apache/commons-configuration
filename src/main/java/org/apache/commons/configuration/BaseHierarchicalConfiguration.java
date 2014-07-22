@@ -56,12 +56,6 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     implements Serializable, Cloneable, InMemoryNodeModelSupport
 {
     /**
-     * Constant for the subnode configuration modified event.
-     * @since 1.5
-     */
-    public static final int EVENT_SUBNODE_CHANGED = 12;
-
-    /**
      * The serial version UID.
      */
     private static final long serialVersionUID = 3373812230395363192L;
@@ -588,7 +582,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     /**
      * This method is always called when a subnode configuration created from
      * this configuration has been modified. This implementation transforms the
-     * received event into an event of type {@code EVENT_SUBNODE_CHANGED}
+     * received event into an event of type {@code SUBNODE_CHANGED}
      * and notifies the registered listeners.
      *
      * @param event the event describing the change

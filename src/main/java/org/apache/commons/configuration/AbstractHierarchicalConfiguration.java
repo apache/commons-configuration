@@ -163,30 +163,6 @@ import org.apache.commons.configuration.tree.QueryResult;
 public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfiguration
     implements Cloneable, NodeKeyResolver<T>, HierarchicalConfiguration<T>
 {
-    /**
-     * Constant for the clear tree event.
-     * @since 1.3
-     * @deprecated Use the event type constant in {@code ConfigurationEvent}
-     */
-    @Deprecated
-    public static final int EVENT_CLEAR_TREE = 10;
-
-    /**
-     * Constant for the add nodes event.
-     * @since 1.3
-     * @deprecated Use the event type constant in {@code ConfigurationEvent}
-     */
-    @Deprecated
-    public static final int EVENT_ADD_NODES = 11;
-
-    /**
-     * Constant for the subnode configuration modified event.
-     * @deprecated Use the event type constant in {@code ConfigurationEvent}
-     * @since 1.5
-     */
-    @Deprecated
-    public static final int EVENT_SUBNODE_CHANGED = 12;
-
     /** The model for managing the data stored in this configuration. */
     private NodeModel<T> model;
 
