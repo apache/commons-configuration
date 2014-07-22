@@ -37,6 +37,7 @@ import org.apache.commons.configuration.builder.BuilderConfigurationWrapperFacto
 import org.apache.commons.configuration.builder.BuilderEventListenerImpl;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilderEvent;
+import org.apache.commons.configuration.builder.ConfigurationBuilderResultCreatedEvent;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.convert.DefaultListDelimiterHandler;
@@ -346,10 +347,10 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     }
 
     /**
-     * Tests whether builder listeners are handled correctly.
+     * Tests whether builder reset events are handled correctly.
      */
     @Test
-    public void testBuilderListener() throws ConfigurationException
+    public void testBuilderListenerReset() throws ConfigurationException
     {
         BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
         Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders =
@@ -358,11 +359,13 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
                 createBuilderWithAccessToManagedBuilders(managedBuilders);
         switchToConfig(1);
         builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
-        builder.getConfiguration();
+        XMLConfiguration configuration = builder.getConfiguration();
         managedBuilders.iterator().next().resetResult();
         ConfigurationBuilderEvent event =
                 listener.nextEvent(ConfigurationBuilderEvent.RESET);
         assertSame("Wrong event source", builder, event.getSource());
+        assertNotSame("Configuration not reset", configuration,
+                builder.getConfiguration());
     }
 
     /**
@@ -383,6 +386,29 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         builder.getConfiguration();
         builder.resetParameters();
         managedBuilders.iterator().next().resetResult();
+        listener.assertNoMoreEvents();
+    }
+
+    /**
+     * Tests whether builder events of other types can be received.
+     */
+    @Test
+    public void testBuilderListenerOtherTypes() throws ConfigurationException
+    {
+        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+                createTestBuilder(null);
+        builder.addEventListener(ConfigurationBuilderEvent.ANY, listener);
+        switchToConfig(1);
+        builder.getConfiguration();
+        ConfigurationBuilderEvent event =
+                listener.nextEvent(ConfigurationBuilderEvent.CONFIGURATION_REQUEST);
+        assertEquals("Wrong event source of request event", builder,
+                event.getSource());
+        ConfigurationBuilderResultCreatedEvent createdEvent =
+                listener.nextEvent(ConfigurationBuilderResultCreatedEvent.RESULT_CREATED);
+        assertEquals("Wrong source of creation event", builder,
+                createdEvent.getSource());
         listener.assertNoMoreEvents();
     }
 

@@ -28,6 +28,7 @@ import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilderEvent;
+import org.apache.commons.configuration.builder.ConfigurationBuilderResultCreatedEvent;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.event.Event;
 import org.apache.commons.configuration.event.EventListener;
@@ -114,7 +115,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
             {
                 @Override
                 public void onEvent(ConfigurationBuilderEvent event) {
-                    resetResult();
+                    handleManagedBuilderEvent(event);
                 }
             };
 
@@ -281,7 +282,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
     {
         for (FileBasedConfigurationBuilder<T> b : getManagedBuilders().values())
         {
-            b.removeEventListener(ConfigurationBuilderEvent.RESET,
+            b.removeEventListener(ConfigurationBuilderEvent.ANY,
                     managedBuilderDelegationListener);
         }
         getManagedBuilders().clear();
@@ -424,7 +425,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
     private void initListeners(FileBasedConfigurationBuilder<T> newBuilder)
     {
         copyEventListeners(newBuilder, configurationListeners);
-        newBuilder.addEventListener(ConfigurationBuilderEvent.RESET,
+        newBuilder.addEventListener(ConfigurationBuilderEvent.ANY,
                 managedBuilderDelegationListener);
     }
 
@@ -459,6 +460,54 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
             }
         }
         return fileName;
+    }
+
+    /**
+     * Handles events received from managed configuration builders. This method
+     * creates a new event with a source pointing to this builder and propagates
+     * it to all registered listeners.
+     *
+     * @param event the event received from a managed builder
+     */
+    private void handleManagedBuilderEvent(ConfigurationBuilderEvent event)
+    {
+        if (ConfigurationBuilderEvent.RESET.equals(event.getEventType()))
+        {
+            resetResult();
+        }
+        else
+        {
+            fireBuilderEvent(createEventWithChangedSource(event));
+        }
+    }
+
+    /**
+     * Creates a new {@code ConfigurationBuilderEvent} based on the passed in
+     * event, but with the source changed to this builder. This method is called
+     * when an event was received from a managed builder. In this case, the
+     * event has to be passed to the builder listeners registered at this
+     * object, but with the correct source property.
+     *
+     * @param event the event received from a managed builder
+     * @return the event to be propagated
+     */
+    private ConfigurationBuilderEvent createEventWithChangedSource(
+            ConfigurationBuilderEvent event)
+    {
+        if (ConfigurationBuilderResultCreatedEvent.RESULT_CREATED.equals(event
+                .getEventType()))
+        {
+            return new ConfigurationBuilderResultCreatedEvent(this,
+                    ConfigurationBuilderResultCreatedEvent.RESULT_CREATED,
+                    ((ConfigurationBuilderResultCreatedEvent) event)
+                            .getConfiguration());
+        }
+        @SuppressWarnings("unchecked")
+        // This is safe due to the constructor of ConfigurationBuilderEvent
+        EventType<? extends ConfigurationBuilderEvent> type =
+                (EventType<? extends ConfigurationBuilderEvent>) event
+                        .getEventType();
+        return new ConfigurationBuilderEvent(this, type);
     }
 
     /**
