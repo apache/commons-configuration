@@ -110,7 +110,7 @@
       <code><a href="../apidocs/org/apache/commons/configuration/event/Event.html">
       Event</a></code> class. This base class is pretty simple. It has a
       property for the source - inherited from the <code>java.util.EventObject</code>
-      super class and an event type. The event type can be used for instance
+      super class - and an event type. The event type can be used for instance
       in an event listener that has been registered for multiple events to
       find out what actually happened.
     </p>
@@ -260,6 +260,7 @@ import org.apache.commons.configuration.event.EventListener;
 
 public class ConfigurationLogListener implements EventListener<ConfigurationEvent>
 {
+    @Override
     public void onEvent(ConfigurationEvent event)
     {
         if (!event.isBeforeUpdate())
@@ -465,7 +466,7 @@ config.clearProperty("removedProperty"); // but this one will
     </p>
     <p>
       As an example of how to use event listeners for builders we are going to
-      make use of the <em>RESULT_CREATED</em> event time: every time a managed
+      make use of the <em>RESULT_CREATED</em> event type: every time a managed
       configuration is created, a special property is set with the creation
       date. This information can then be evaluated by client code. To achieve
       this, a special event listener class is created:
@@ -474,6 +475,7 @@ config.clearProperty("removedProperty"); // but this one will
 public class NewConfigurationInitListener
     implements EventListener<ConfigurationBuilderResultCreatedEvent>
 {
+    @Override
     public void onEvent(ConfigurationBuilderResultCreatedEvent event)
     {
         event.getConfiguration().addProperty("creationDate", new Date());
@@ -516,12 +518,12 @@ builder.addEventListener(ConfigurationEvent.ANY,
     new ConfigurationLogListener());
 ]]></source>
     <p>
-      As can be seen, the same pattern is always used for all kind of event
+      As can be seen, the same pattern is always used for all kinds of event
       listeners. Configuration builders offer a fluent API for setting up
       builder objects and setting required initialization parameters. This
       also includes the registration of event listeners. For this purpose the
       <code><a href="../apidocs/org/apache/commons/configuration/builder/EventListenerParameters.html">
-      EventListenerParameters</a></code> has been created. It allows setting an
+      EventListenerParameters</a></code> class has been created. It allows setting an
       arbitrary number of event listeners using method chaining. An instance
       configured with the event listeners to be registered can then be passed
       to the configuration builder's <code>configure()</code> method like
@@ -544,11 +546,37 @@ FileBasedConfigurationBuilder<Configuration> builder =
 Configuration config = builder.getConfiguration();
 ]]></source>
     <p>
-      Here the feature is used that the <code>configure()</code> takes an
+      Here the feature is used that the <code>configure()</code> method takes an
       arbitrary number of initialization parameter objects.
       <code>EventListenerParameters()</code> is a special parameters
       implementation which takes care of event listener registrations, but does
       not set any other initialization properties.
+    </p>
+    </subsection>
+
+    <subsection name="Reloading Events">
+    <p>
+      Another source of events is the
+      <code><a href="../apidocs/org/apache/commons/configuration/reloading/ReloadingController.html">
+      ReloadingController</a></code> class which was introduced in the chapter
+      <a href="howto_reloading.html">Automatic Reloading of Configuration Sources</a>.
+      A reloading controller generates events of type
+      <code><a href="../apidocs/org/apache/commons/configuration/reloading/ReloadingEvent.html">
+      ReloadingEvent</a></code> whenever it detects the need for a reloading
+      operation. Currently, there is only a single event type for reloading
+      events: <em>ReloadingEvent.ANY</em> which is directly derived from the
+      base type <em>Event.ANY</em>. The usage for registering listeners for
+      this event is analogous to the other event sources covered so far. 
+    </p>
+    <p>
+      In a typical usage scenario a mechanism is set up which periodically
+      triggers a reloading controller to perform a reloading check. If one of
+      these checks detects a change in a monitored configuration source, a
+      <code>ReloadingEvent</code> is fired to all registered listeners. The
+      message of this event is basically, that updated configuration information
+      is now available. An event listener for reloading events may react
+      accordingly, e.g. obtain the updated configuration object from its
+      builder and trigger some updates.
     </p>
     </subsection>
   </section>

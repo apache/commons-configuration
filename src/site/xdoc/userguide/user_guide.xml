@@ -162,6 +162,7 @@
         <li><a href="howto_events.html#Configuration_Update_Events">Configuration Update Events</a></li>
         <li><a href="howto_events.html#Configuration_Error_Events">Configuration Error Events</a></li>
         <li><a href="howto_events.html#Configuration_Builders_and_Events">Configuration Builders and Events</a></li>
+        <li><a href="howto_events.html#Reloading_Events">Reloading Events</a></li>
       </ul>
       <li><a href="howto_utilities.html#Utility_classes_and_Tips_and_Tricks">Utility classes and Tips and Tricks</a></li>
       <ul>
