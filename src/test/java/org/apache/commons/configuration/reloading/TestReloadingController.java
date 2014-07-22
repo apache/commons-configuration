@@ -124,7 +124,8 @@ public class TestReloadingController
         ReloadingController ctrl = createController();
         ctrl.addEventListener(ReloadingEvent.ANY, lRemoved);
         ctrl.addEventListener(ReloadingEvent.ANY, l);
-        ctrl.removeEventListener(ReloadingEvent.ANY, lRemoved);
+        assertTrue("Wrong result",
+                ctrl.removeEventListener(ReloadingEvent.ANY, lRemoved));
         Object testData = "Some test data";
         assertTrue("Wrong result", ctrl.checkForReloading(testData));
         assertTrue("Not in reloading state", ctrl.isInReloadingState());

@@ -16,8 +16,10 @@
  */
 package org.apache.commons.configuration.reloading;
 
+import org.apache.commons.configuration.event.Event;
 import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.event.EventListenerList;
+import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.event.EventType;
 
 /**
@@ -63,7 +65,7 @@ import org.apache.commons.configuration.event.EventType;
  * @version $Id$
  * @since 2.0
  */
-public class ReloadingController
+public class ReloadingController implements EventSource
 {
     /** Stores a reference to the reloading detector. */
     private final ReloadingDetector detector;
@@ -104,30 +106,20 @@ public class ReloadingController
     }
 
     /**
-     * Adds an event listener of the specified type to this controller. It will
-     * receive notifications whenever a reload operation is necessary.
-     *
-     * @param eventType the event type (must not be <b>null</b>)
-     * @param listener the event listener (must not be <b>null</b>)
-     * @param <T> the event type
+     * {@inheritDoc} This class generates events of type {@code ReloadingEvent}.
      */
-    public <T extends ReloadingEvent> void addEventListener(
+    @Override
+    public <T extends Event> void addEventListener(
             EventType<T> eventType, EventListener<? super T> listener)
     {
         listeners.addEventListener(eventType, listener);
     }
 
-    /**
-     * Removes the specified event listener from this controller.
-     *
-     * @param eventType the event type
-     * @param listener the listener to be removed
-     * @param <T> the event type
-     */
-    public <T extends ReloadingEvent> void removeEventListener(
+    @Override
+    public <T extends Event> boolean removeEventListener(
             EventType<T> eventType, EventListener<? super T> listener)
     {
-        listeners.removeEventListener(eventType, listener);
+        return listeners.removeEventListener(eventType, listener);
     }
 
     /**
