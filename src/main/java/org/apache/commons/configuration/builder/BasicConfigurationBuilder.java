@@ -303,7 +303,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     @Override
     public T getConfiguration() throws ConfigurationException
     {
-        eventListeners.fire(new ConfigurationBuilderEvent(this,
+        fireBuilderEvent(new ConfigurationBuilderEvent(this,
                 ConfigurationBuilderEvent.CONFIGURATION_REQUEST));
 
         T resObj = result;
@@ -323,8 +323,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
 
         if (created)
         {
-            eventListeners.fire(new ConfigurationBuilderResultCreatedEvent(
-                    this,
+            fireBuilderEvent(new ConfigurationBuilderResultCreatedEvent(this,
                     ConfigurationBuilderResultCreatedEvent.RESULT_CREATED,
                     resObj));
         }
@@ -370,7 +369,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
             resultDeclaration = null;
         }
 
-        eventListeners.fire(new ConfigurationBuilderEvent(this,
+        fireBuilderEvent(new ConfigurationBuilderEvent(this,
                 ConfigurationBuilderEvent.RESET));
     }
 
@@ -651,6 +650,16 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     {
         fetchEventSource().addEventListener(eventType, listener);
         eventListeners.addEventListener(eventType, listener);
+    }
+
+    /**
+     * Sends the specified builder event to all registered listeners.
+     *
+     * @param event the event to be fired
+     */
+    protected void fireBuilderEvent(ConfigurationBuilderEvent event)
+    {
+        eventListeners.fire(event);
     }
 
     /**
