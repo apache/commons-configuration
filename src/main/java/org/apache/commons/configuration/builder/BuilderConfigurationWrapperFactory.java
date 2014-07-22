@@ -348,8 +348,7 @@ public class BuilderConfigurationWrapperFactory
                 }
             }
 
-            return convertResult(method.getReturnType(),
-                    methodToInvoke.invoke(target, args));
+            return methodToInvoke.invoke(target, args);
         }
 
         /**
@@ -374,27 +373,6 @@ public class BuilderConfigurationWrapperFactory
             {
                 return null;
             }
-        }
-
-        /**
-         * Performs a conversion of the invocation result if necessary. The
-         * {@code removeEventListener()} method of {@code EventSource} returns a
-         * boolean, but the corresponding builder method returns a reference to
-         * the builder for method chaining. So these types have to be adapted.
-         *
-         * @param returnType the expected return type of the current invocation
-         * @param methodResult the actual result returned from the method
-         * @return the converted result
-         */
-        private static Object convertResult(Class<?> returnType,
-                Object methodResult)
-        {
-            if (Boolean.TYPE.equals(returnType)
-                    && !Boolean.class.isInstance(methodResult))
-            {
-                return Boolean.FALSE;
-            }
-            return methodResult;
         }
     }
 }

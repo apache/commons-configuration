@@ -184,7 +184,12 @@ public class TestBuilderConfigurationWrapperFactory
 
         src.addEventListener(ConfigurationEvent.ANY, l1);
         src.addEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2);
-        src.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2);
+        assertTrue(
+                "Wrong result for existing listener",
+                src.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2));
+        assertFalse(
+                "Wrong result for non-existing listener",
+                src.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2));
         PropertiesConfiguration config = builder.getConfiguration();
         Collection<EventListener<? super ConfigurationEvent>> listeners =
                 config.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL);
