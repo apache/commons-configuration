@@ -262,6 +262,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
         for (BuilderParameters p : params)
         {
             newParams.putAll(p.getParameters());
+            handleEventListenerProviders(p);
         }
 
         return setParameters(newParams);
@@ -660,6 +661,22 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     private EventSource fetchEventSource()
     {
         return ConfigurationUtils.asEventSource(result, true);
+    }
+
+    /**
+     * Checks whether the specified parameters object implements the
+     * {@code EventListenerProvider} interface. If so, the event listeners it
+     * provides are added to this builder.
+     *
+     * @param params the parameters object
+     */
+    private void handleEventListenerProviders(BuilderParameters params)
+    {
+        if (params instanceof EventListenerProvider)
+        {
+            configListeners.addAll(((EventListenerProvider) params)
+                    .getListeners());
+        }
     }
 
     /**

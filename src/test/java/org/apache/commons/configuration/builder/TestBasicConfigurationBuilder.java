@@ -48,6 +48,8 @@ import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ErrorListenerTestImpl;
 import org.apache.commons.configuration.event.EventListener;
+import org.apache.commons.configuration.event.EventListenerRegistrationData;
+import org.apache.commons.configuration.event.EventListenerTestImpl;
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration.reloading.ReloadingController;
@@ -431,6 +433,33 @@ public class TestBasicConfigurationBuilder
                 config.getEventListeners(ConfigurationErrorEvent.ANY);
         assertEquals("Wrong number of error listeners", 1, errListeners.size());
         assertTrue("Wrong error listener", errListeners.contains(l3));
+    }
+
+    /**
+     * Tests whether configuration listeners can be defined via the configure()
+     * method.
+     */
+    @Test
+    public void testEventListenerConfiguration() throws ConfigurationException
+    {
+        EventListenerTestImpl listener1 = new EventListenerTestImpl(null);
+        EventListenerRegistrationData<ConfigurationErrorEvent> regData =
+                new EventListenerRegistrationData<ConfigurationErrorEvent>(
+                        ConfigurationErrorEvent.WRITE,
+                        new ErrorListenerTestImpl(null));
+        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class)
+                        .configure(new EventListenerParameters()
+                                .addEventListener(ConfigurationEvent.ANY,
+                                        listener1).addEventListener(regData));
+        PropertiesConfiguration config = builder.getConfiguration();
+        assertTrue("Configuration listener not found", config
+                .getEventListeners(ConfigurationEvent.ANY).contains(listener1));
+        assertTrue(
+                "Error listener not found",
+                config.getEventListeners(regData.getEventType()).contains(
+                        regData.getListener()));
     }
 
     /**
