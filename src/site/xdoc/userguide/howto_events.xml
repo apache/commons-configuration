@@ -24,17 +24,84 @@
  </properties>
 
 <body>
-	<section name="Configuration Events">
+    <section name="Events">
     <p>
-      All configuration classes derived from
-      <code><a href="../apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
-      AbstractConfiguration</a></code> allow to register event listeners, which
-      are notified whenever the configuration's data is changed. This provides
-      an easy means for tracking updates on a configuration.
+      Many Java libraries support the <em>observer pattern</em> to send
+      notifications about state changes to registered observers. The domain
+      configuration data has also some important use cases for such
+      notifications. For instance, an application may want to be notified when
+      certain changes on configuration data are done or when a configuration
+      file was modified by an external source. For such requirements
+      <em>Commons Configuration</em> offers a powerful event mechanism.
     </p>
 
-    <subsection name="Configuration listeners">
-	<p>
+    <subsection name="Event Sources and Listeners">
+    <p>
+      In <em>Commons Configuration</em>, there is a central interface for all
+      objects that can generate events:
+      <code><a href="../apidocs/org/apache/commons/configuration/event/EventSource.html">
+      EventSource</a></code>. Here methods for adding and removing event listeners
+      are defined with the following signatures:
+    </p>
+    <source><![CDATA[
+    <T extends Event> void addEventListener(EventType<T> eventType,
+            EventListener<? super T> listener);
+
+    <T extends Event> boolean removeEventListener(EventType<T> eventType,
+            EventListener<? super T> listener);
+]]></source>
+    <p>
+      Users who are familiar with JavaFX will recognize some similarities to
+      the event mechanism used in this UI library. In the generation of
+      notifications the following components are involved:
+      <ul>
+        <li>An <em>event</em> object which contains all information about a
+        specific change which has happened.</li>
+        <li>Each event is associated with a specific <em>event type</em>. The
+        event type also determines the class of the event. For different kinds
+        of notifications, different event classes exist which also define their
+        own specific set of properties.</li>
+        <li>An event listener which is invoked with an event object when
+        something happens for which it has been registered.</li>
+      </ul>
+    </p>
+    <p>
+      The type parameters in the methods of the <code>EventSource</code>
+      interface ensure a type-safe registration of event listeners. As we will
+      see in the next section, events are organized in a logic hierarchy. An
+      event listener has to implement the
+      <code><a href="../apidocs/org/apache/commons/configuration/event/EventListener.html">
+      EventListener</a></code> interface. This interface has a type parameter
+      for the event type which can be processed. The listener can process events
+      of this specific type and also events derived from this type. So listeners
+      can be registered for very generic events, but also for specific ones.
+      This allows for filtering of events in a pretty natural way.
+    </p>
+    <p>
+      <em>Commons Configuration</em> provides the following implementations of
+      the <code>Event Source</code> interface:
+      <dl>
+        <dt>Configuration objects</dt>
+        <dd>Each configuration allows registering event listeners and generates
+        events when it is updated.</dd>
+        <dt><a href="howto_builders.html">Configuration builders</a></dt>
+        <dd>A typical configuration builder sends out events when its managed
+        configuration becomes invalid or when a new managed instance was
+        created.</dd>
+        <dt><a href="howto_reloading.html">Reloading controllers</a></dt>
+        <dd>Here events are generated when a change in a monitored configuration
+        source was detected.</dd>
+      </dl>
+    </p>
+    <p>
+      In the following sections these event sources are discussed in more
+      detail. But first we have to elaborate a bit more on the hierarchical
+      nature of events and how this is related to event listeners.
+    </p>
+    </subsection>
+
+    <subsection name="Configuration Events">
+    <p>
       Objects that are interested in update events triggered by configurations
       must implement the
       <code><a href="../apidocs/org/apache/commons/configuration/event/ConfigurationListener.html">
