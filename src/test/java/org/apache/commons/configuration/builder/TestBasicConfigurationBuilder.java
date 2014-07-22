@@ -359,9 +359,9 @@ public class TestBasicConfigurationBuilder
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
                 new BasicConfigurationBuilder<PropertiesConfiguration>(
                         PropertiesConfiguration.class);
-        builder.addConfigurationListener(ConfigurationEvent.ANY, l1);
+        builder.addEventListener(ConfigurationEvent.ANY, l1);
         PropertiesConfiguration config = builder.getConfiguration();
-        builder.addConfigurationListener(ConfigurationEvent.ANY, l2);
+        builder.addEventListener(ConfigurationEvent.ANY, l2);
         Collection<EventListener<? super ConfigurationEvent>> listeners =
                 config.getEventListeners(ConfigurationEvent.ANY);
         assertTrue("Listener 1 not registered", listeners.contains(l1));
@@ -380,18 +380,18 @@ public class TestBasicConfigurationBuilder
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
                 new BasicConfigurationBuilder<PropertiesConfiguration>(
                         PropertiesConfiguration.class);
-        builder.addConfigurationListener(ConfigurationEvent.ANY_HIERARCHICAL,
+        builder.addEventListener(ConfigurationEvent.ANY_HIERARCHICAL,
                 l1);
-        builder.addConfigurationListener(ConfigurationEvent.ANY, l2);
+        builder.addEventListener(ConfigurationEvent.ANY, l2);
         assertTrue("Wrong result",
-                builder.removeConfigurationListener(ConfigurationEvent.ANY, l2));
+                builder.removeEventListener(ConfigurationEvent.ANY, l2));
         PropertiesConfiguration config = builder.getConfiguration();
         assertFalse("Removed listener was registered", config
                 .getEventListeners(ConfigurationEvent.ANY).contains(l2));
         assertTrue("Listener not registered",
                 config.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL)
                         .contains(l1));
-        builder.removeConfigurationListener(
+        builder.removeEventListener(
                 ConfigurationEvent.ANY_HIERARCHICAL, l1);
         assertFalse("Listener still registered",
                 config.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL)
@@ -410,10 +410,9 @@ public class TestBasicConfigurationBuilder
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
                 new BasicConfigurationBuilder<PropertiesConfiguration>(
                         PropertiesConfiguration.class);
-        builder.addConfigurationListener(ConfigurationEvent.ANY, l1);
-                builder.addConfigurationListener(ConfigurationEvent.ANY_HIERARCHICAL,
-                        l2);
-        builder.addConfigurationListener(ConfigurationErrorEvent.ANY, l3);
+        builder.addEventListener(ConfigurationEvent.ANY, l1);
+        builder.addEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2);
+        builder.addEventListener(ConfigurationErrorEvent.ANY, l3);
         BasicConfigurationBuilder<XMLConfiguration> builder2 =
                 new BasicConfigurationBuilder<XMLConfiguration>(
                         XMLConfiguration.class);

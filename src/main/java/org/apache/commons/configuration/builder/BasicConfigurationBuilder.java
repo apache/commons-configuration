@@ -112,13 +112,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     /** The class of the objects produced by this builder instance. */
     private final Class<? extends T> resultClass;
 
-    /**
-     * A list with event listeners to be registered at newly
-     * created configuration objects.
-     */
-    private final EventListenerList configListeners;
-
-    /** An object managing the builder listeners registered at this builder. */
+    /** An object managing the event listeners registered at this builder. */
     private final EventListenerList eventListeners;
 
     /** A flag whether exceptions on initializing configurations are allowed. */
@@ -184,7 +178,6 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
 
         resultClass = resCls;
         this.allowFailOnInit = allowFailOnInit;
-        configListeners = new EventListenerList();
         eventListeners = new EventListenerList();
         updateParameters(params);
     }
@@ -275,12 +268,13 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      * @param eventType the event type object
      * @param listener the listener to be registered
      * @param <E> the event type
+     * @deprecated Use addEventListener()
      */
+    @Deprecated
     public synchronized <E extends Event> void addConfigurationListener(
             EventType<E> eventType, EventListener<? super E> listener)
     {
-        configListeners.addEventListener(eventType, listener);
-        fetchEventSource().addEventListener(eventType, listener);
+        addEventListener(eventType, listener);
     }
 
     /**
@@ -291,12 +285,13 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      * @param listener the listener to be removed
      * @param <E> the event type
      * @return a flag whether the listener could be removed
+     * @deprecated Use removeEventListener()
      */
+    @Deprecated
     public synchronized <E extends Event> boolean removeConfigurationListener(
             EventType<E> eventType, EventListener<? super E> listener)
     {
-        fetchEventSource().removeEventListener(eventType, listener);
-        return configListeners.removeEventListener(eventType, listener);
+        return removeEventListener(eventType, listener);
     }
 
     /**
@@ -337,22 +332,28 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritDoc} This implementation also takes care that the event listener
+     * is added to the managed configuration object.
      *
      * @throws IllegalArgumentException if the event type or the listener is
      *         <b>null</b>
      */
     @Override
-    public final  <E extends Event> void addEventListener(
+    public <E extends Event> void addEventListener(
             EventType<E> eventType, EventListener<? super E> listener)
     {
-        eventListeners.addEventListener(eventType, listener);
+        installEventListener(eventType, listener);
     }
 
+    /**
+     * {@inheritDoc} This implementation also takes care that the event listener
+     * is removed from the managed configuration object.
+     */
     @Override
-    public final  <E extends Event> boolean removeEventListener(
+    public <E extends Event> boolean removeEventListener(
             EventType<E> eventType, EventListener<? super E> listener)
     {
+        fetchEventSource().removeEventListener(eventType, listener);
         return eventListeners.removeEventListener(eventType, listener);
     }
 
@@ -617,7 +618,24 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     protected synchronized void copyEventListeners(
             BasicConfigurationBuilder<?> target)
     {
-        target.configListeners.addAll(configListeners);
+        target.eventListeners.addAll(eventListeners);
+    }
+
+    /**
+     * Adds the specified event listener to this object. This method is called
+     * by {@code addEventListener()}, it does the actual listener registration.
+     * Because it is final it can be called by sub classes in the constructor if
+     * there is already the need to register an event listener.
+     *
+     * @param eventType the event type object
+     * @param listener the listener to be registered
+     * @param <E> the event type
+     */
+    protected final <E extends Event> void installEventListener(
+            EventType<E> eventType, EventListener<? super E> listener)
+    {
+        fetchEventSource().addEventListener(eventType, listener);
+        eventListeners.addEventListener(eventType, listener);
     }
 
     /**
@@ -644,7 +662,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     private void registerEventListeners(T obj)
     {
         EventSource evSrc = ConfigurationUtils.asEventSource(obj, true);
-        for (EventListenerRegistrationData<?> regData : configListeners
+        for (EventListenerRegistrationData<?> regData : eventListeners
                 .getRegistrations())
         {
             registerListener(evSrc, regData);
@@ -674,7 +692,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     {
         if (params instanceof EventListenerProvider)
         {
-            configListeners.addAll(((EventListenerProvider) params)
+            eventListeners.addAll(((EventListenerProvider) params)
                     .getListeners());
         }
     }

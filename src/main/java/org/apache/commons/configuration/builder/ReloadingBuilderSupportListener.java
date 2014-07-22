@@ -86,7 +86,7 @@ class ReloadingBuilderSupportListener implements EventListener<Event>
                 new ReloadingBuilderSupportListener(configBuilder, controller);
         controller.addEventListener(ReloadingEvent.ANY, listener);
         configBuilder
-                .addEventListener(
+                .installEventListener(
                         ConfigurationBuilderResultCreatedEvent.RESULT_CREATED,
                         listener);
         return listener;
