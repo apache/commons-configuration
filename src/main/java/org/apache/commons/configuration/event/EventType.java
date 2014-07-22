@@ -16,6 +16,9 @@
  */
 package org.apache.commons.configuration.event;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * <p>
  * A class representing an event type.
@@ -100,5 +103,26 @@ public class EventType<T extends Event>
     {
         return String.format(FMT_TO_STRING, getClass().getSimpleName(),
                 getName());
+    }
+
+    /**
+     * Returns a set with all event types that are super types of the specified
+     * type. This set contains the direct and indirect super types and also
+     * includes the given type itself. The passed in type may be <b>null</b>,
+     * then an empty set is returned.
+     *
+     * @param eventType the event type in question
+     * @return a set with all super event types
+     */
+    public static Set<EventType<?>> fetchSuperEventTypes(EventType<?> eventType)
+    {
+        Set<EventType<?>> types = new HashSet<EventType<?>>();
+        EventType<?> currentType = eventType;
+        while (currentType != null)
+        {
+            types.add(currentType);
+            currentType = currentType.getSuperType();
+        }
+        return types;
     }
 }

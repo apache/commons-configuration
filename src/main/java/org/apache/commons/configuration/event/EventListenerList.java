@@ -18,7 +18,6 @@ package org.apache.commons.configuration.event;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -234,7 +233,7 @@ public class EventListenerList
             Set<EventType<?>> base = superTypes.get(reg.getEventType());
             if (base == null)
             {
-                base = fetchSuperEventTypes(reg.getEventType());
+                base = EventType.fetchSuperEventTypes(reg.getEventType());
                 superTypes.put(reg.getEventType(), base);
             }
             if (base.contains(eventType))
@@ -297,26 +296,6 @@ public class EventListenerList
     }
 
     /**
-     * Obtains a set of all super event types for the specified type (including
-     * the type itself). If an event listener was registered for one of these
-     * types, it can handle an event of the specified type.
-     *
-     * @param eventType the event type in question
-     * @return the set with all super event types
-     */
-    private static Set<EventType<?>> fetchSuperEventTypes(EventType<?> eventType)
-    {
-        Set<EventType<?>> types = new HashSet<EventType<?>>();
-        EventType<?> currentType = eventType;
-        while (currentType != null)
-        {
-            types.add(currentType);
-            currentType = currentType.getSuperType();
-        }
-        return types;
-    }
-
-    /**
      * A special {@code Iterator} implementation used by the
      * {@code getEventListenerIterator()} method. This iterator returns only
      * listeners compatible with a specified event type. It has a convenience
@@ -344,7 +323,7 @@ public class EventListenerList
         {
             underlyingIterator = it;
             baseEventType = base;
-            acceptedTypes = fetchSuperEventTypes(base);
+            acceptedTypes = EventType.fetchSuperEventTypes(base);
             initNextElement();
         }
 
@@ -419,8 +398,8 @@ public class EventListenerList
         private void validateEvent(Event event)
         {
             if (event == null
-                    || !fetchSuperEventTypes(event.getEventType()).contains(
-                            baseEventType))
+                    || !EventType.fetchSuperEventTypes(event.getEventType()).contains(
+                    baseEventType))
             {
                 throw new IllegalArgumentException(
                         "Event incompatible with listener iteration: " + event);

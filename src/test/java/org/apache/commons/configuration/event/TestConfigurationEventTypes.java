@@ -18,6 +18,11 @@ package org.apache.commons.configuration.event;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -29,6 +34,50 @@ import org.junit.Test;
  */
 public class TestConfigurationEventTypes
 {
+    /**
+     * Tests whether the set of super event types for null input can be
+     * obtained.
+     */
+    @Test
+    public void testFetchSuperEventTypesNull()
+    {
+        Set<EventType<?>> superTypes = EventType.fetchSuperEventTypes(null);
+        assertTrue("Got super types", superTypes.isEmpty());
+    }
+
+    /**
+     * Tests whether the set of super event types for the base type can be
+     * obtained.
+     */
+    @Test
+    public void testFetchSuperEventTypesForBaseType()
+    {
+        Set<EventType<?>> superTypes =
+                EventType.fetchSuperEventTypes(Event.ANY);
+        assertEquals("Wrong number of super types", 1, superTypes.size());
+        assertTrue("Wrong super types", superTypes.contains(Event.ANY));
+    }
+
+    /**
+     * Tests whether the super event types of a specific type can be retrieved.
+     */
+    @Test
+    public void testFetchSuperEventTypesOfType()
+    {
+        Set<EventType<?>> superTypes =
+                EventType.fetchSuperEventTypes(ConfigurationEvent.ADD_NODES);
+        List<EventType<? extends Event>> expected =
+                new LinkedList<EventType<? extends Event>>();
+        expected.add(ConfigurationEvent.ADD_NODES);
+        expected.add(ConfigurationEvent.ANY_HIERARCHICAL);
+        expected.add(ConfigurationEvent.ANY);
+        expected.add(Event.ANY);
+        assertEquals("Wrong number of super types", expected.size(),
+                superTypes.size());
+        assertTrue("Wrong super types: " + superTypes,
+                superTypes.containsAll(expected));
+    }
+
     /**
      * Tests the base event type for configuration events.
      */
