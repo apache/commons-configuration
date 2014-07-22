@@ -66,6 +66,6 @@ public interface ConfigurationBuilder<T extends Configuration>
      * @param eventType the event type
      * @param listener the listener to be removed
      */
-    <E extends ConfigurationBuilderEvent> void removeEventListener(
+    <E extends ConfigurationBuilderEvent> boolean removeEventListener(
             EventType<E> eventType, EventListener<? super E> listener);
 }

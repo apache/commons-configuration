@@ -17,8 +17,10 @@
 package org.apache.commons.configuration.builder;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -95,10 +97,26 @@ public class TestBasicConfigurationBuilderEvents
         builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
 
         builder.reset();
-        builder.removeEventListener(ConfigurationBuilderEvent.RESET, listener);
+        assertTrue("Wrong result", builder.removeEventListener(
+                ConfigurationBuilderEvent.RESET, listener));
         builder.resetResult();
         listener.nextEvent(ConfigurationBuilderEvent.RESET);
         listener.assertNoMoreEvents();
+    }
+
+    /**
+     * Tests removeEventListener() for a non-existing listener.
+     */
+    @Test
+    public void testRemoveEventListenerNotExisting()
+    {
+        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
+        assertFalse("Wrong result", builder.removeEventListener(
+                ConfigurationBuilderEvent.CONFIGURATION_REQUEST, listener));
     }
 
     /**

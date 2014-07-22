@@ -190,10 +190,10 @@ public class MultiFileConfigurationBuilderProvider extends
         }
 
         @Override
-        public <T extends ConfigurationBuilderEvent> void removeEventListener(
+        public <T extends ConfigurationBuilderEvent> boolean removeEventListener(
                 EventType<T> eventType, EventListener<? super T> listener)
         {
-            builder.removeEventListener(eventType, listener);
+            return builder.removeEventListener(eventType, listener);
         }
     }
 

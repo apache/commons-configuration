@@ -350,10 +350,10 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     }
 
     @Override
-    public final  <E extends ConfigurationBuilderEvent> void removeEventListener(
+    public final  <E extends ConfigurationBuilderEvent> boolean removeEventListener(
             EventType<E> eventType, EventListener<? super E> listener)
     {
-        eventListeners.removeEventListener(eventType, listener);
+        return eventListeners.removeEventListener(eventType, listener);
     }
 
     /**
