@@ -158,7 +158,8 @@
       <li><a href="howto_events.html#Events">Events</a></li>
       <ul>
         <li><a href="howto_events.html#Event_Sources_and_Listeners">Event Sources and Listeners</a></li>
-        <li><a href="howto_events.html#An_example">An example</a></li>
+        <li><a href="howto_events.html#The_Hierarchy_of_Events">The Hierarchy of Events</a></li>
+        <li><a href="howto_events.html#Configuration_Update_Events">Configuration Update Events</a></li>
         <li><a href="howto_events.html#Error_listeners">Error listeners</a></li>
       </ul>
       <li><a href="howto_utilities.html#Utility_classes_and_Tips_and_Tricks">Utility classes and Tips and Tricks</a></li>

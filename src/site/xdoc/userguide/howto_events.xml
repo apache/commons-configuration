@@ -175,7 +175,7 @@ config.addEventListener(ConfigurationEvent.ADD_PROPERTY, listener);
     </p>
     </subsection>
 
-    <subsection name="Configuration Events">
+    <subsection name="Configuration Update Events">
     <p>
       All configuration implementations derived from
       <code><a href="../apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
@@ -247,27 +247,26 @@ config.addEventListener(ConfigurationEvent.ADD_PROPERTY, listener);
         </ul>
       </ul>
     </p>
-    </subsection>
-
-    <subsection name="An example">
     <p>
-      Implementing an event listener is quite easy. As an example we are going
-      to define an event listener, which logs all received configuration events
-      to the console. The class could look as follows:
+      After all the theory about the different event types, let's come to a
+      concrete example. Implementing an event listener for configuration
+      events is quite easy. To prove this and as a kind of "Hello world" use
+      case, we are going to define an event listener which logs all received
+      configuration events to the console. The class could look as follows:
     </p>
     <source><![CDATA[
 import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventListener;
 
-public class ConfigurationLogListener implements ConfigurationListener
+public class ConfigurationLogListener implements EventListener<ConfigurationEvent>
 {
-    public void configurationChanged(ConfigurationEvent event)
+    public void onEvent(ConfigurationEvent event)
     {
         if (!event.isBeforeUpdate())
         {
             // only display events after the modification was done
             System.out.println("Received event!");
-            System.out.println("Type = " + event.getType());
+            System.out.println("Type = " + event.getEventType());
             if (event.getPropertyName() != null)
             {
                 System.out.println("Property name = " + event.getPropertyName());
@@ -282,16 +281,33 @@ public class ConfigurationLogListener implements ConfigurationListener
 ]]></source>
     <p>
       Now an instance of this event listener class has to be registered at a
-      configuration object:
+      configuration object (Note: in a later section we will learn how event
+      listeners can be added to configurations via their associated builders;
+      this is the preferred way):
     </p>
     <source><![CDATA[
 AbstractConfiguration config = ... // somehow create the configuration
-ConfigurationListener listener = new ConfigurationLogListener();
-config.addConfigurationListener(listener);
+EventListener<ConfigurationEvent> listener = new ConfigurationLogListener();
+config.addEventListener(ConfigurationEvent.ANY, listener);
 ...
 config.addProperty("newProperty", "newValue"); // will fire an event
 ]]></source>
+    <p>
+      Because our implementation is a very generic event listener it has been
+      registered for all kinds of configuration update events - the event type
+      <code>ConfigurationEvent.ANY</code> was used. Now consider the case that
+      we only want to log events about cleared properties. This can be easily
+      achieved - without having to modify the event listener implementation -
+      by just changing the registration code in the following way:
+    </p>
+    <source><![CDATA[
+config.addEventListener(ConfigurationEvent.CLEAR_PROPERTY, listener);
+...
+config.addProperty("newProperty", "newValue"); // will NOT fire an event
+config.clearProperty("removedProperty"); // but this one will
+]]></source>
     </subsection>
+
     <subsection name="Error listeners">
     <p>
       Some implementations of the <code>Configuration</code> interface operate
