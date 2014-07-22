@@ -215,14 +215,19 @@ public class BuilderConfigurationWrapperFactory
          * {@code removeConfigurationListener()}, to which the methods of the
          * {@code EventSource} interface are mapped. This is the case for all
          * builder implementations derived from
-         * {@code BasicConfigurationBuilder}.
+         * {@code BasicConfigurationBuilder}. If these methods are not
+         * available, an exception is thrown.
          */
         BUILDER,
 
         /**
          * {@code EventSource} support is implemented by delegating to the
-         * associated {@code ConfigurationBuilder} object if it supports this
-         * interface. Otherwise, a dummy implementation is used.
+         * associated {@code ConfigurationBuilder} object like for the type
+         * {@code BUILDER}. However, if the builder does not define the methods
+         * {@code addConfigurationListener()} and
+         * {@code removeConfigurationListener()}, the builder is used as event
+         * source itself (i.e. the methods {@code addEventListener()} or
+         * {@code removeEventListener()} are called.
          */
         BUILDER_OPTIONAL
     }
@@ -339,11 +344,11 @@ public class BuilderConfigurationWrapperFactory
                 methodToInvoke = findBuilderMethod(method);
                 if (methodToInvoke == null)
                 {
-                    target =
-                            ConfigurationUtils
-                                    .asEventSource(
-                                            builder,
-                                            EventSourceSupport.BUILDER_OPTIONAL == eventSourceSupport);
+                    if (EventSourceSupport.BUILDER == eventSourceSupport)
+                    {
+                        throw new ConfigurationRuntimeException(
+                                "Could not delegate event source operation to builder!");
+                    }
                     methodToInvoke = method;
                 }
             }

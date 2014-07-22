@@ -17,8 +17,7 @@
 package org.apache.commons.configuration.builder;
 
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.event.EventListener;
-import org.apache.commons.configuration.event.EventType;
+import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.ex.ConfigurationException;
 
 /**
@@ -38,7 +37,7 @@ import org.apache.commons.configuration.ex.ConfigurationException;
  * @param <T> the concrete type of the {@code Configuration} class produced by
  *        this builder
  */
-public interface ConfigurationBuilder<T extends Configuration>
+public interface ConfigurationBuilder<T extends Configuration> extends EventSource
 {
     /**
      * Returns the configuration provided by this builder. An implementation has
@@ -49,23 +48,4 @@ public interface ConfigurationBuilder<T extends Configuration>
      * @throws ConfigurationException if an error occurs
      */
     T getConfiguration() throws ConfigurationException;
-
-    /**
-     * Adds an event listener for the given event type to this builder.
-     *
-     * @param eventType the event type (must not be <b>null</b>)
-     * @param listener the listener to be registered (must not be <b>null</b>)
-     * @throws IllegalArgumentException if a required parameter is <b>null</b>
-     */
-    <E extends ConfigurationBuilderEvent> void addEventListener(
-            EventType<E> eventType, EventListener<? super E> listener);
-
-    /**
-     * Removes the specified {@code EventListener} from this builder.
-     *
-     * @param eventType the event type
-     * @param listener the listener to be removed
-     */
-    <E extends ConfigurationBuilderEvent> boolean removeEventListener(
-            EventType<E> eventType, EventListener<? super E> listener);
 }

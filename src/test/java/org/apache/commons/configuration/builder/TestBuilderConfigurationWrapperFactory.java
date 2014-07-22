@@ -206,8 +206,10 @@ public class TestBuilderConfigurationWrapperFactory
     {
         BaseHierarchicalConfiguration conf =
                 new BaseHierarchicalConfiguration();
+        EventListener<ConfigurationEvent> listener = new EventListenerTestImpl(null);
         ConfigurationBuilder<BaseHierarchicalConfiguration> builder =
                 createBuilderMock(conf);
+        builder.addEventListener(ConfigurationEvent.ANY, listener);
         EasyMock.replay(builder);
         BuilderConfigurationWrapperFactory factory =
                 new BuilderConfigurationWrapperFactory(
@@ -215,7 +217,9 @@ public class TestBuilderConfigurationWrapperFactory
         EventSource src =
                 (EventSource) factory.createBuilderConfigurationWrapper(
                         HierarchicalConfiguration.class, builder);
-        src.addEventListener(ConfigurationEvent.ANY, null);
+
+        src.addEventListener(ConfigurationEvent.ANY, listener);
+        EasyMock.verify(builder);
     }
 
     /**

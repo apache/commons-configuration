@@ -24,7 +24,7 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.builder.BuilderConfigurationWrapperFactory;
 import org.apache.commons.configuration.builder.BuilderConfigurationWrapperFactory.EventSourceSupport;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
-import org.apache.commons.configuration.builder.ConfigurationBuilderEvent;
+import org.apache.commons.configuration.event.Event;
 import org.apache.commons.configuration.event.EventListener;
 import org.apache.commons.configuration.event.EventType;
 import org.apache.commons.configuration.ex.ConfigurationException;
@@ -183,14 +183,14 @@ public class MultiFileConfigurationBuilderProvider extends
         }
 
         @Override
-        public <T extends ConfigurationBuilderEvent> void addEventListener(
+        public <T extends Event> void addEventListener(
                 EventType<T> eventType, EventListener<? super T> listener)
         {
             builder.addEventListener(eventType, listener);
         }
 
         @Override
-        public <T extends ConfigurationBuilderEvent> boolean removeEventListener(
+        public <T extends Event> boolean removeEventListener(
                 EventType<T> eventType, EventListener<? super T> listener)
         {
             return builder.removeEventListener(eventType, listener);
