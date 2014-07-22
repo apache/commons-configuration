@@ -344,7 +344,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
         if (autoSaveListener == null)
         {
             autoSaveListener = new AutoSaveListener(this);
-            addConfigurationListener(ConfigurationEvent.ANY, autoSaveListener);
+            addEventListener(ConfigurationEvent.ANY, autoSaveListener);
             autoSaveListener.updateFileHandler(getFileHandler());
         }
     }
@@ -357,7 +357,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
     {
         if (autoSaveListener != null)
         {
-            removeConfigurationListener(ConfigurationEvent.ANY, autoSaveListener);
+            removeEventListener(ConfigurationEvent.ANY, autoSaveListener);
             autoSaveListener.updateFileHandler(null);
             autoSaveListener = null;
         }
