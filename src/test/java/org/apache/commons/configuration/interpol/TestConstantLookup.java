@@ -21,7 +21,6 @@ import static org.junit.Assert.assertNull;
 
 import java.awt.event.KeyEvent;
 
-import org.apache.commons.configuration.AbstractConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,15 +32,12 @@ import org.junit.Test;
  */
 public class TestConstantLookup
 {
-    /** Constant for the name of the test class. */
-    private static final String CLS_NAME = AbstractConfiguration.class
-            .getName() + '.';
+    /** A public field that can be read by the lookup. */
+    public static final String FIELD = "Field that can be read";
 
-    /** Constant for the name of the test field. */
-    private static final String FIELD = "EVENT_READ_PROPERTY";
-
-    /** Constant for the test variable name. */
-    private static final String VARNAME = CLS_NAME + FIELD;
+    /** A private field that cannot be read by the lookup. */
+    @SuppressWarnings("unused")
+    private static final String PRIVATE_FIELD = "PRIVATE";
 
     /** The lookup object to be tested. */
     private ConstantLookup lookup;
@@ -50,6 +46,18 @@ public class TestConstantLookup
     public void setUp() throws Exception
     {
         lookup = new ConstantLookup();
+    }
+
+    /**
+     * Generates the name of a variable for a lookup operation based on the
+     * given field name of this class.
+     *
+     * @param field the field name
+     * @return the variable for looking up this field
+     */
+    private String variable(String field)
+    {
+        return getClass().getName() + '.' + field;
     }
 
     /**
@@ -68,9 +76,8 @@ public class TestConstantLookup
     @Test
     public void testLookupConstant()
     {
-        assertEquals("Wrong value of constant",
-                AbstractConfiguration.EVENT_READ_PROPERTY, lookup
-                        .lookup(VARNAME));
+        assertEquals("Wrong value of constant", FIELD,
+                lookup.lookup(variable("FIELD")));
     }
 
     /**
@@ -79,8 +86,8 @@ public class TestConstantLookup
     @Test
     public void testLookupNonExisting()
     {
-        assertNull("Non null return value for non existing constant", lookup
-                .lookup(CLS_NAME + "NO_FIELD"));
+        assertNull("Non null return value for non existing constant",
+                lookup.lookup(variable("NO_FIELD")));
     }
 
     /**
@@ -90,8 +97,8 @@ public class TestConstantLookup
     @Test
     public void testLookupPrivate()
     {
-        assertNull("Non null return value for non accessable field", lookup
-                .lookup(CLS_NAME + "DISABLED_DELIMITER"));
+        assertNull("Non null return value for non accessible field", lookup
+                .lookup(variable("PRIVATE_FIELD")));
     }
 
     /**
