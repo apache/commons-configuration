@@ -20,9 +20,6 @@ package org.apache.commons.configuration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import java.io.File;
-import java.net.URL;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Result;
@@ -30,6 +27,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.File;
+import java.net.URL;
 
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileHandler;
@@ -37,6 +36,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.w3c.dom.Document;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 
 /**
  * Test class for {@code XMLPropertiesConfiguration}.
@@ -87,6 +88,15 @@ public class TestXMLPropertiesConfiguration
         URL location = ConfigurationAssert.getTestURL(TEST_PROPERTIES_FILE);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        dBuilder.setEntityResolver(new EntityResolver()
+        {
+            @Override
+            public InputSource resolveEntity(String publicId, String systemId)
+            {
+                return new InputSource(getClass().getClassLoader()
+                        .getResourceAsStream("properties.dtd"));
+            }
+        });
         File file = new File(location.toURI());
         Document doc = dBuilder.parse(file);
         XMLPropertiesConfiguration conf = new XMLPropertiesConfiguration(doc.getDocumentElement());
