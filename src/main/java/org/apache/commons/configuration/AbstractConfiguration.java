@@ -104,47 +104,6 @@ import org.apache.commons.logging.impl.NoOpLog;
  */
 public abstract class AbstractConfiguration extends BaseEventSource implements Configuration
 {
-    /**
-     * Constant for the add property event type.
-     * @since 1.3
-     * @deprecated Use the event type constants in {@code ConfigurationEvent}
-     */
-    public static final int EVENT_ADD_PROPERTY = 1;
-
-    /**
-     * Constant for the clear property event type.
-     * @since 1.3
-     * @deprecated Use the event type constants in {@code ConfigurationEvent}
-     */
-    public static final int EVENT_CLEAR_PROPERTY = 2;
-
-    /**
-     * Constant for the set property event type.
-     * @since 1.3
-     * @deprecated Use the event type constants in {@code ConfigurationEvent}
-     */
-    public static final int EVENT_SET_PROPERTY = 3;
-
-    /**
-     * Constant for the clear configuration event type.
-     * @since 1.3
-     * @deprecated Use the event type constants in {@code ConfigurationEvent}
-     */
-    public static final int EVENT_CLEAR = 4;
-
-    /**
-     * Constant for the get property event type. This event type is used for
-     * error events.
-     * @since 1.4
-     */
-    public static final int EVENT_READ_PROPERTY = 5;
-
-    /** start token */
-    protected static final String START_TOKEN = "${";
-
-    /** end token */
-    protected static final String END_TOKEN = "}";
-
     /** The list delimiter handler. */
     private ListDelimiterHandler listDelimiterHandler;
 

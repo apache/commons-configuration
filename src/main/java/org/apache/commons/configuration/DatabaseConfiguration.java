@@ -307,7 +307,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
     /**
      * Returns the value of the specified property. If this causes a database
      * error, an error event will be generated of type
-     * {@code EVENT_READ_PROPERTY} with the causing exception. The
+     * {@code READ} with the causing exception. The
      * event's {@code propertyName} is set to the passed in property key,
      * the {@code propertyValue} is undefined.
      *
@@ -356,7 +356,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
 
     /**
      * Adds a property to this configuration. If this causes a database error,
-     * an error event will be generated of type {@code EVENT_ADD_PROPERTY}
+     * an error event will be generated of type {@code ADD_PROPERTY}
      * with the causing exception. The event's {@code propertyName} is
      * set to the passed in property key, the {@code propertyValue}
      * points to the passed in value.
@@ -431,7 +431,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
 
     /**
      * Checks if this configuration is empty. If this causes a database error,
-     * an error event will be generated of type {@code EVENT_READ_PROPERTY}
+     * an error event will be generated of type {@code READ}
      * with the causing exception. Both the event's {@code propertyName}
      * and {@code propertyValue} will be undefined.
      *
@@ -461,7 +461,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
     /**
      * Checks whether this configuration contains the specified key. If this
      * causes a database error, an error event will be generated of type
-     * {@code EVENT_READ_PROPERTY} with the causing exception. The
+     * {@code READ} with the causing exception. The
      * event's {@code propertyName} will be set to the passed in key, the
      * {@code propertyValue} will be undefined.
      *
@@ -493,7 +493,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
     /**
      * Removes the specified value from this configuration. If this causes a
      * database error, an error event will be generated of type
-     * {@code EVENT_CLEAR_PROPERTY} with the causing exception. The
+     * {@code CLEAR_PROPERTY} with the causing exception. The
      * event's {@code propertyName} will be set to the passed in key, the
      * {@code propertyValue} will be undefined.
      *
@@ -519,7 +519,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
     /**
      * Removes all entries from this configuration. If this causes a database
      * error, an error event will be generated of type
-     * {@code EVENT_CLEAR} with the causing exception. Both the
+     * {@code CLEAR} with the causing exception. Both the
      * event's {@code propertyName} and the {@code propertyValue}
      * will be undefined.
      */
@@ -543,7 +543,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * Returns an iterator with the names of all properties contained in this
      * configuration. If this causes a database
      * error, an error event will be generated of type
-     * {@code EVENT_READ_PROPERTY} with the causing exception. Both the
+     * {@code READ} with the causing exception. Both the
      * event's {@code propertyName} and the {@code propertyValue}
      * will be undefined.
      * @return an iterator with the contained keys (an empty iterator in case
