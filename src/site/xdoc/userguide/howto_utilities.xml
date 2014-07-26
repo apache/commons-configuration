@@ -290,6 +290,69 @@ String value = config.getString("myKey");
     </p>
     </subsection>
 
+    <subsection name="Wrapping Configuration Builders">
+    <p>
+      Section <a href="howto_builders.html">Creating Configurations</a>
+      describes the concept of <em>configuration builders</em> as the preferred
+      way of creating configurations. The full flexibility of configuration
+      builders can be leveraged if an application holds a central builder
+      instance, and each time access to configuration information is needed,
+      this builder is queried for its managed <code>Configuration</code>
+      object. This approach enables dynamism; the builder is free to replace
+      its managed configuration, for instance, when it detects a change on an
+      external configuration source. This is fully transparent for the
+      application.
+    </p>
+    <p>
+      The concept of configuration builders has been introduced in version 2.0
+      of <em>Commons Configuration</em>. In older versions of this library
+      <code>Configuration</code> objects were the only source of configuration
+      data. So applications using this version probably pass around objects of
+      this type. This makes the migration to the new configuration builders
+      harder.      
+    </p>
+    <p>
+      There is one helper class which can simplify this migration:
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/BuilderConfigurationWrapperFactory.html">
+      BuilderConfigurationWrapperFactory</a></code>. This class is capable of
+      creating special proxy objects implementing the <code>Configuration</code>
+      interface which behind the scenes delegate to the managed configuration
+      object of a configuration builder. For instance, if a wrapper configuration
+      named <em>config</em> has been created for the configuration builder
+      <em>builder</em>, a call like <code>config.getString("key")</code> is
+      translated to
+    </p>
+    <source><![CDATA[
+builder.getConfiguration().getString("key");
+]]></source>
+    <p>
+      In order to create such a proxy wrapping a configuration builder, an
+      instance of <code>BuilderConfigurationWrapperFactory</code> is needed.
+      The instance can be configured with an enumeration constant of the
+      <code>EventSourceSupport</code> class which determines whether and how the
+      proxy objects created by this factory should implement the
+      <code><a href="../apidocs/org/apache/commons/configuration/event/EventSource.html">
+      EventSource</a></code> interface. Then proxy objects can be constructed by
+      calling the <code>createBuilderConfigurationWrapper()</code> method passing
+      in the interface class and the configuration builder instance to be
+      wrapped. The following code fragment shows how a wrapper configuration for
+      a configuration builder can be produced:
+    </p>
+    <source><![CDATA[
+// Create the builder to be wrapped
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<Configuration> builder =
+    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+    .configure(params.fileBased()
+        .setFile(new File("config.properties"));
+
+// Create the wrapping proxy
+BuilderConfigurationWrapperFactory wrapperFactory = 
+    new BuilderConfigurationWrapperFactory(BuilderConfigurationWrapperFactory.EventSourceSupport.BUILDER);
+Configuration config = wrapperFactory.createBuilderConfigurationWrapper(
+    Configuration.class, builder);
+]]></source>
+    </subsection>
     </section>
 </body>
 

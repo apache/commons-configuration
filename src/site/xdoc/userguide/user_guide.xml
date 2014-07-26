@@ -171,6 +171,7 @@
         <li><a href="howto_utilities.html#Converting_between_properties_and_configurations">Converting between properties and configurations</a></li>
         <li><a href="howto_utilities.html#Interpolation_of_all_variables">Interpolation of all variables</a></li>
         <li><a href="howto_utilities.html#Handling_of_runtime_exceptions">Handling of runtime exceptions</a></li>
+        <li><a href="howto_utilities.html#Wrapping_Configuration_Builders">Wrapping Configuration Builders</a></li>
       </ul>
       <li><a href="howto_concurrency.html">Configurations and Concurrent Access</a></li>
       <ul>
