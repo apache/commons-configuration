@@ -237,14 +237,20 @@ Properties processConfiguration(Properties props)
     </p>
     <source><![CDATA[
 // Load a properties file (which may contain variables)
-PropertiesConfiguration config = new PropertiesConfiguration("config.properties");
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+    new FileBasedConfigurationBuilder<PropertiesConfiguration>(PropertiesConfiguration.class)
+    .configure(params.fileBased()
+        .setFile(new File("config.properties"));
+PropertiesConfiguration config = builder.getConfiguration();
 
 // Perform interpolation on all variables
 PropertiesConfiguration extConfig =
     (PropertiesConfiguration) config.interpolatedConfiguration();
 
 // Save the interpolated configuration (no more variables)
-extConfig.save("external_config.properties");
+FileHandler handler = new FileHandler(extConfig);
+handler.save("external_config.properties");
 ]]></source>
     </subsection>
 
