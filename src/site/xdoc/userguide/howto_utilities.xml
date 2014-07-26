@@ -24,7 +24,7 @@
  </properties>
 
 <body>
-	<section name="Utility classes and Tips and Tricks">
+    <section name="Utility classes and Tips and Tricks">
     <p>
       In this section some utility classes will be introduced that can be used
       to make handling of configuration objects easier. These classes already
@@ -34,7 +34,7 @@
     </p>
 
     <subsection name="Copy a configuration">
-	<p>
+    <p>
       Often it is required to copy the data of one <code>Configuration</code>
       object into another one. For this purpose the
       <code><a href="../apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
@@ -79,18 +79,22 @@
 
     <subsection name="Converting a flat configuration into a hierarchical one">
     <p>
-      <a href="howto_xml.html">Hierarchical configurations</a> provide some
+      <a href="howto_hierarchical.html">Hierarchical configurations</a> provide some
       enhanced features that are not available for &quot;flat&quot;
-      configurations. For instance they support more sophisticated query
+      configurations. For instance, they support more sophisticated query
       facilities. Because of that it may be sometimes useful to transform an
       ordinary configuration into a hierarchical one. The following code
       fragment shows how this can be done:
     </p>
     <source><![CDATA[
 // Create a flat configuration
-PropertiesConfiguration flatConfig = new PropertiesConfiguration();
-flatConfig.load(...);
-HierarchicalConfiguration hc =
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+    new FileBasedConfigurationBuilder<PropertiesConfiguration>(PropertiesConfiguration.class)
+    .configure(params.fileBased()
+        .setFile(new File("config.properties"));
+PropertiesConfiguration flatConfig = builder.getConfiguration();
+HierarchicalConfiguration<?> hc =
   ConfigurationUtils.convertToHierarchical(flatConfig);
 ]]></source>
     <p>
@@ -98,9 +102,10 @@ HierarchicalConfiguration hc =
       <code><a href="../apidocs/org/apache/commons/configuration/ConfigurationUtils.html">
       ConfigurationUtils</a></code> checks whether the passed in object
       is already a hierarchical configuration. If this is the case, it is
-      returned unchanged. Otherwise a new <code>HierarchicalConfiguration</code>
-      object is created, and the properties of the source configuration are
-      copied into it.
+      returned unchanged. Otherwise, a new instance of
+      <code><a href="../apidocs/org/apache/commons/configuration/BaseHierarchicalConfiguration.html">
+      BaseHierarchicalConfiguration</a></code> is created, and the properties of
+      the source configuration are copied into it.
     </p>
     <p>
       Sometimes a flat configuration contains keys with special characters
@@ -124,26 +129,33 @@ test(xy)=true
       To solve this problem, it is possible to specify an alternative expression
       engine that will be used for the conversion. For instance, if you know that
       your property keys can contain brackets, you could use an instance of
-      <code>DefaultExpressionEngine</code> that is configured with a different
+      <code><a href="../apidocs/org/apache/commons/configuration/tree/DefaultExpressionEngine.html">
+      DefaultExpressionEngine</a></code> that is configured with a different
       index marker. This could look as follows:
     </p>
     <source><![CDATA[
-DefaultExpressionEngine engineConvert = new DefaultExpressionEngine();
-engineConvert.setIndexStart("[");
-engineConvert.setIndexEnd("]");
-HierarchicalConfiguration hc =
+DefaultExpressionEngineSymbols symbols =
+    new DefaultExpressionEngineSymbols.Builder(
+        DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
+        .setIndexStart("[")
+        .setIndexEnd("]")
+        .create();
+DefaultExpressionEngine engineConvert = new DefaultExpressionEngine(symbols);
+HierarchicalConfiguration<?> hc =
   ConfigurationUtils.convertToHierarchical(flatConfig, engineConvert);
 ]]></source>
     <p>
       In this example an expression engine is constructed that uses square
-      brackets as index markers. Therefore normal brackets do not have a
-      special meaning and thus are no more problematic during conversion.
+      brackets as index markers. Therefore, normal brackets do not have a
+      special meaning and thus do not cause problems during conversion any more.
     </p>
     <p>
       <em>Note:</em> When using a <a href="howto_combinedconfiguration.html">
       CombinedConfiguration</a> flat configurations contained in the combined
       configuration are also converted into hierarchical configurations using
-      the methods discussed here. The <code>CombinedConfiguration</code> class
+      the methods discussed here. The
+      <code><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
+      CombinedConfiguration</a></code> class
       defines the method <code>setConversionExpressionEngine()</code>, which
       can be called to specify an expression engine to be used during this
       conversion. The expression engine passed to this method will be
