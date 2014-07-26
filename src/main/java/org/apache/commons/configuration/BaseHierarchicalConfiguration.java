@@ -671,11 +671,11 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @return a list with corresponding immutable configurations
      */
     private static List<ImmutableHierarchicalConfiguration> toImmutable(
-            List<? extends HierarchicalConfiguration> subs)
+            List<? extends HierarchicalConfiguration<?>> subs)
     {
         List<ImmutableHierarchicalConfiguration> res =
                 new ArrayList<ImmutableHierarchicalConfiguration>(subs.size());
-        for (HierarchicalConfiguration sub : subs)
+        for (HierarchicalConfiguration<?> sub : subs)
         {
             res.add(ConfigurationUtils.unmodifiableConfiguration(sub));
         }
