@@ -846,7 +846,8 @@ DefaultExpressionEngineSymbols symbols =
         // A Backslash is used for escaping property delimiters
         .setEscapedDelimiter("\\/")
         .create();
-        
+DefaultExpressionEngine engine = new DefaultExpressionEngine(symbols);
+
 // Now create a configuration using this expression engine
 Parameters params = new Parameters();
 FileBasedConfigurationBuilder<XMLConfiguration> builder =
