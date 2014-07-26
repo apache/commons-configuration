@@ -256,7 +256,7 @@ handler.save("external_config.properties");
 
     <subsection name="Handling of runtime exceptions">
     <p>
-      Section <a href="howto_events.html#Error_listeners">Error listeners</a>
+      Section <a href="howto_events.html#Configuration_Error_Events">Configuration Error Events</a>
       introduces a way of dealing with runtime exceptions that can occur on
       accessing configuration properties by registering an event listener. If
       you do not want to provide a special error handler, but only need to
@@ -265,8 +265,7 @@ handler.save("external_config.properties");
       <code><a href="../apidocs/org/apache/commons/configuration/ConfigurationUtils.html">
       ConfigurationUtils</a></code> class: <code>enableRuntimeExceptions()</code>
       registers a special error listener at the passed in configuration that
-      will throw a
-      <code><a href="../apidocs/org/apache/commons/configuration/ConfigurationRuntimeException.html">
+      throws a <code><a href="../apidocs/org/apache/commons/configuration/ConfigurationRuntimeException.html">
       ConfigurationRuntimeException</a></code> exception for each received
       error event. The following code fragment shows an example of using this
       method:
@@ -280,14 +279,14 @@ String value = config.getString("myKey");
 ]]></source>
     <p>
       <code>enableRuntimeExceptions()</code> can be called for all
-      <code>Configuration</code> implementations that are derived from
+      <code>Configuration</code> implementations that implement the
       <code><a href="../apidocs/org/apache/commons/configuration/event/EventSource.html">
-      EventSource</a></code> (which is the case for almost all configuration
-      classes provided by this library). Of course the affected implementation
+      EventSource</a></code> interface (which is the case for almost all configuration
+      classes provided by this library). Of course, the affected implementation
       must support the mechanism of error events, otherwise the registered
       listener will not be triggered. In
-      <a href="howto_events.html#Error_listeners">Error listeners</a> more
-      information can be found.
+      <a href="howto_events.html#Configuration_Error_Events">Configuration Error
+      Events</a> more information can be found.
     </p>
     </subsection>
 
