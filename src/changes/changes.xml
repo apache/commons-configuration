@@ -32,6 +32,10 @@
         listener interface which can be used to receive notifications from
         multiple types of event sources.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-578">
+        The user's guide has been fully reworked to cover all new and enhanced
+        features of version 2.0.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-577">
         The dependency to Commons Collections is no longer needed.
       </action>
