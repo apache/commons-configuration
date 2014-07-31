@@ -1073,8 +1073,11 @@ public class TestINIConfiguration
         INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
         SubnodeConfiguration sub = config.getSection(null);
         NodeHandler<ImmutableNode> handler = sub.getModel().getNodeHandler();
-        assertTrue("Sections not filtered",
-                handler.getChildren(sub.getRootNode(), "section1").isEmpty());
+        assertTrue(
+                "Sections not filtered",
+                handler.getChildren(
+                        sub.getModel().getNodeHandler().getRootNode(),
+                        "section1").isEmpty());
     }
 
     /**

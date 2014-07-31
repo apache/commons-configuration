@@ -72,6 +72,16 @@ public class TestAbstractHierarchicalConfiguration
                         new InMemoryNodeModel(root));
     }
 
+    /**
+     * Convenience method for obtaining the root node of the test configuration.
+     *
+     * @return the root node of the test configuration
+     */
+    private ImmutableNode getRootNode()
+    {
+        return config.getModel().getNodeHandler().getRootNode();
+    }
+
     @Test
     public void testIsEmptyFalse()
     {
@@ -594,7 +604,7 @@ public class TestAbstractHierarchicalConfiguration
                 new AbstractHierarchicalConfigurationTestImpl(
                         new InMemoryNodeModel());
         configDest.addProperty("test", "TEST");
-        Collection<ImmutableNode> nodes = config.getRootNode().getChildren();
+        Collection<ImmutableNode> nodes = getRootNode().getChildren();
         assertEquals("Wrong number of children", 1, nodes.size());
         configDest.addNodes("newNodes", nodes);
         for (int i = 0; i < NodeStructureHelper.tablesLength(); i++)
@@ -804,7 +814,7 @@ public class TestAbstractHierarchicalConfiguration
     public void testResolveNodeKey()
     {
         List<ImmutableNode> nodes =
-                config.resolveNodeKey(config.getRootNode(),
+                config.resolveNodeKey(getRootNode(),
                         "tables.table.name", config.getModel().getNodeHandler());
         assertEquals("Wrong number of nodes",
                 NodeStructureHelper.tablesLength(), nodes.size());
@@ -825,7 +835,7 @@ public class TestAbstractHierarchicalConfiguration
         config.addProperty(attrKey, "system");
         assertTrue(
                 "Got attribute results",
-                config.resolveNodeKey(config.getRootNode(), attrKey,
+                config.resolveNodeKey(getRootNode(), attrKey,
                         config.getModel().getNodeHandler()).isEmpty());
     }
 
@@ -838,10 +848,10 @@ public class TestAbstractHierarchicalConfiguration
     {
         Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
         ImmutableNode nodeTabName =
-                NodeStructureHelper.nodeForKey(config.getRootNode(),
+                NodeStructureHelper.nodeForKey(getRootNode(),
                         "tables/table(0)/name");
         ImmutableNode nodeFldName =
-                NodeStructureHelper.nodeForKey(config.getRootNode(),
+                NodeStructureHelper.nodeForKey(getRootNode(),
                         "tables/table(0)/fields/field(1)/name");
         assertEquals("Wrong key (1)", "tables(0).table(0).name(0)",
                 config.nodeKey(nodeTabName, cache, config.getModel()
@@ -860,7 +870,7 @@ public class TestAbstractHierarchicalConfiguration
     {
         Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
         ImmutableNode nodeTabName =
-                NodeStructureHelper.nodeForKey(config.getRootNode(),
+                NodeStructureHelper.nodeForKey(getRootNode(),
                         "tables/table(0)/name");
         NodeHandler<ImmutableNode> handler = config.getModel().getNodeHandler();
         config.nodeKey(nodeTabName, cache, handler);
@@ -871,7 +881,7 @@ public class TestAbstractHierarchicalConfiguration
                 cache.get(handler.getParent(nodeTabName)));
         assertEquals("Wrong entry (3)", "tables(0)",
                 cache.get(handler.getParent(handler.getParent(nodeTabName))));
-        assertEquals("Wrong root entry", "", cache.get(config.getRootNode()));
+        assertEquals("Wrong root entry", "", cache.get(getRootNode()));
     }
 
     /**
@@ -882,7 +892,7 @@ public class TestAbstractHierarchicalConfiguration
     {
         Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
         ImmutableNode nodeTabName =
-                NodeStructureHelper.nodeForKey(config.getRootNode(),
+                NodeStructureHelper.nodeForKey(getRootNode(),
                         "tables/table(0)/name");
         NodeHandler<ImmutableNode> handler = config.getModel().getNodeHandler();
         cache.put(handler.getParent(nodeTabName), "somePrefix");
@@ -898,7 +908,7 @@ public class TestAbstractHierarchicalConfiguration
     {
         Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
         assertEquals("Wrong root node key", "",
-                config.nodeKey(config.getRootNode(), cache, config.getModel()
+                config.nodeKey(getRootNode(), cache, config.getModel()
                         .getNodeHandler()));
     }
 
@@ -910,8 +920,8 @@ public class TestAbstractHierarchicalConfiguration
     {
         Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
         final String key = "someResultKey";
-        cache.put(config.getRootNode(), key);
-        assertEquals("Wrong result", key, config.nodeKey(config.getRootNode(),
+        cache.put(getRootNode(), key);
+        assertEquals("Wrong result", key, config.nodeKey(getRootNode(),
                 cache, config.getModel().getNodeHandler()));
     }
 

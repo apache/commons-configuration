@@ -392,7 +392,8 @@ public class TestCombinedConfiguration
         config.addConfiguration(new PropertiesConfiguration(), "props");
 
         CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
-        assertNotNull("No root node", cc2.getRootNode());
+        assertNotNull("No root node", cc2.getModel().getNodeHandler()
+                .getRootNode());
         assertEquals("Wrong number of contained configurations", config
                 .getNumberOfConfigurations(), cc2.getNumberOfConfigurations());
         assertSame("Wrong node combiner", config.getNodeCombiner(), cc2
@@ -843,8 +844,8 @@ public class TestCombinedConfiguration
      */
     private void checkCombinedRootNotConstructed()
     {
-        assertTrue("Root node was constructed", config.getRootNode()
-                .getChildren().isEmpty());
+        assertTrue("Root node was constructed", config.getModel()
+                .getNodeHandler().getRootNode().getChildren().isEmpty());
     }
 
     /**

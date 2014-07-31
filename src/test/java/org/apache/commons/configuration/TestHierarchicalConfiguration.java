@@ -149,8 +149,8 @@ public class TestHierarchicalConfiguration
         config.addProperty(key, "system");
         BaseHierarchicalConfiguration subset =
                 (BaseHierarchicalConfiguration) config.subset(key);
-        assertTrue("Got children of root node", subset.getRootNode()
-                .getChildren().isEmpty());
+        assertTrue("Got children of root node", subset.getModel()
+                .getNodeHandler().getRootNode().getChildren().isEmpty());
         assertEquals("Attribute not found", "system",
                 subset.getString("[@type]"));
     }

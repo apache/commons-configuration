@@ -132,9 +132,11 @@ public class TestSubnodeConfiguration
     public void testInitSubNodeConfig()
     {
         setUpSubnodeConfig();
-        assertSame("Wrong root node in subnode",
-                NodeStructureHelper.nodeForKey(parent.getRootNode(),
-                        "tables/table(0)"), config.getRootNode());
+        assertSame(
+                "Wrong root node in subnode",
+                NodeStructureHelper.nodeForKey(parent.getModel()
+                        .getNodeHandler().getRootNode(), "tables/table(0)"),
+                config.getModel().getNodeHandler().getRootNode());
         assertSame("Wrong parent config", parent, config.getParent());
     }
 
