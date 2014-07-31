@@ -1292,7 +1292,8 @@ public class TestCombinedConfigurationBuilder
         builder.configure(createParameters()
                 .setFile(TEST_FILE));
         CombinedConfiguration cc = builder.getConfiguration();
-        assertNotNull("Root node not initialized", cc.getRootNode());
+        assertNotNull("Root node not initialized", cc.getNodeModel()
+                .getNodeHandler().getRootNode());
     }
 
     /**

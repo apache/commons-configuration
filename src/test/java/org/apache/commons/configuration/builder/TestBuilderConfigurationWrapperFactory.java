@@ -101,7 +101,9 @@ public class TestBuilderConfigurationWrapperFactory
                         HierarchicalConfiguration.class, builder);
         assertEquals("Wrong value (1)", "value1", wrapper.getString("test1"));
         assertEquals("Wrong value (2)", 42, wrapper.getInt("test2"));
-        assertSame("Wrong root node", conf.getRootNode(), wrapper.getRootNode());
+        assertSame("Wrong root node", conf.getNodeModel().getNodeHandler()
+                .getRootNode(), wrapper.getNodeModel().getNodeHandler()
+                .getRootNode());
     }
 
     /**
