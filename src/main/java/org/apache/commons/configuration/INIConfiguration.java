@@ -784,7 +784,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
         beginRead(false);
         try
         {
-            for (ImmutableNode node : getRootNode().getChildren())
+            for (ImmutableNode node : getModel().getNodeHandler().getRootNode()
+                    .getChildren())
             {
                 if (isSectionNode(node))
                 {
