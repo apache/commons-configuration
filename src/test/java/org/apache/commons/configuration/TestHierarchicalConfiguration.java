@@ -53,7 +53,7 @@ public class TestHierarchicalConfiguration
                 new ImmutableNode.Builder(1).addChild(
                         NodeStructureHelper.ROOT_TABLES_TREE).create();
         config = new BaseHierarchicalConfiguration();
-        config.setRootNode(root);
+        config.getNodeModel().setRootNode(root);
     }
 
     /**
