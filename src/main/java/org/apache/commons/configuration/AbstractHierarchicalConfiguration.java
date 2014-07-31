@@ -191,41 +191,6 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
-     * Sets the root node of this hierarchical configuration.
-     *
-     * @param rootNode the root node
-     */
-    public final void setRootNode(T rootNode)
-    {
-        if (rootNode == null)
-        {
-            throw new IllegalArgumentException("Root node must not be null!");
-        }
-
-        beginWrite(false);
-        try
-        {
-            setRootNodeInternal(rootNode);
-        }
-        finally
-        {
-            endWrite();
-        }
-    }
-
-    /**
-     * Actually sets the root node of this configuration. This method is called
-     * by {@code setRootNode()}. Subclasses that need to adapt this operation
-     * can override it.
-     *
-     * @param rootNode the new root node of this configuration
-     */
-    protected void setRootNodeInternal(T rootNode)
-    {
-        getModel().setRootNode(rootNode);
-    }
-
-    /**
      * {@inheritDoc} This implementation handles synchronization and delegates
      * to {@code getRootElementNameInternal()}.
      */

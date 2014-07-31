@@ -386,19 +386,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    protected void setRootNodeInternal(ImmutableNode rootNode)
-    {
-        if (configs != null)
-        {
-            this.getCurrentConfig().setRootNode(rootNode);
-        }
-        else
-        {
-            super.setRootNodeInternal(rootNode);
-        }
-    }
-
-    @Override
     protected void addPropertyInternal(String key, Object value)
     {
         this.getCurrentConfig().addProperty(key, value);

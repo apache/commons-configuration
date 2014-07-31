@@ -329,19 +329,6 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    protected void setRootNodeInternal(ImmutableNode rootNode)
-    {
-        if (init)
-        {
-            getConfig().setRootNode(rootNode);
-        }
-        else
-        {
-            super.setRootNodeInternal(rootNode);
-        }
-    }
-
-    @Override
     public ExpressionEngine getExpressionEngine()
     {
         return config.getExpressionEngine();
