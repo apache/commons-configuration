@@ -256,8 +256,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     {
         super(c);
         rootElementName =
-                (c != null) ? c.getRootElementName() : getRootNode()
-                        .getNodeName();
+                (c != null) ? c.getRootElementName() : null;
         setLogger(LogFactory.getLog(XMLConfiguration.class));
     }
 
@@ -875,7 +874,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
                 new XMLBuilderVisitor(newHelper, getListDelimiterHandler());
         builder.handleRemovedNodes(handler);
         builder.processDocument(handler);
-        initRootElementText(newHelper.getDocument(), getRootNode().getValue());
+        initRootElementText(newHelper.getDocument(), getModel()
+                .getNodeHandler().getRootNode().getValue());
         return newHelper.getDocument();
     }
 

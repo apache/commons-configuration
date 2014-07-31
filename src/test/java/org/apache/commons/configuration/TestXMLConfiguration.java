@@ -1239,7 +1239,8 @@ public class TestXMLConfiguration
     {
         XMLConfiguration c2 = new XMLConfiguration();
         load(c2, testProperties2);
-        conf.addNodes("copiedProperties", c2.getRootNode().getChildren());
+        conf.addNodes("copiedProperties", c2.getModel().getNodeHandler()
+                .getRootNode().getChildren());
         saveTestConfig();
         checkSavedConfig();
     }
