@@ -53,13 +53,6 @@ public interface HierarchicalConfiguration<T>
     T getRootNode();
 
     /**
-     * Sets the root node of this hierarchical configuration.
-     *
-     * @param rootNode the root node
-     */
-    void setRootNode(T rootNode);
-
-    /**
      * Sets the expression engine to be used by this configuration. All property
      * keys this configuration has to deal with will be interpreted by this
      * engine.

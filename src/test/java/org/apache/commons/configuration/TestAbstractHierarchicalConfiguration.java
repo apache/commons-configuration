@@ -73,20 +73,6 @@ public class TestAbstractHierarchicalConfiguration
     }
 
     @Test
-    public void testSetRootNode()
-    {
-        ImmutableNode root = NodeStructureHelper.createNode("testNode", null);
-        config.setRootNode(root);
-        assertSame("Wrong root node", root, config.getRootNode());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testSetRootNodeNull()
-    {
-        config.setRootNode(null);
-    }
-
-    @Test
     public void testIsEmptyFalse()
     {
         assertFalse(config.isEmpty());

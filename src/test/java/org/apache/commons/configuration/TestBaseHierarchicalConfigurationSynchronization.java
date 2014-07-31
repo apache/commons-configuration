@@ -126,16 +126,6 @@ public class TestBaseHierarchicalConfigurationSynchronization
     }
 
     /**
-     * Tests whether setRootNode() is correctly synchronized.
-     */
-    @Test
-    public void testSetRootNodeSynchronized()
-    {
-        config.setRootNode(NodeStructureHelper.createNode("testRoot", null));
-        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
-    }
-
-    /**
      * Tests whether synchronization is performed when copying a configuration.
      */
     @Test
