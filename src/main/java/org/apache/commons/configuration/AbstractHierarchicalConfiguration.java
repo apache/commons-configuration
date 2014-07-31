@@ -217,7 +217,8 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     protected String getRootElementNameInternal()
     {
-        return getModel().getNodeHandler().nodeName(getRootNode());
+        NodeHandler<T> nodeHandler = getModel().getNodeHandler();
+        return nodeHandler.nodeName(nodeHandler.getRootNode());
     }
 
     /**
@@ -406,7 +407,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     @Override
     protected boolean isEmptyInternal()
     {
-        return !nodeDefined(getRootNode());
+        return !nodeDefined(getModel().getNodeHandler().getRootNode());
     }
 
     /**
@@ -620,8 +621,9 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     protected Iterator<String> getKeysInternal()
     {
         DefinedKeysVisitor visitor = new DefinedKeysVisitor();
-        NodeTreeWalker.INSTANCE.walkDFS(getRootNode(), visitor,
-                getModel().getNodeHandler());
+        NodeHandler<T> nodeHandler = getModel().getNodeHandler();
+        NodeTreeWalker.INSTANCE.walkDFS(nodeHandler.getRootNode(), visitor,
+                nodeHandler);
 
         return visitor.getKeyList().iterator();
     }
@@ -754,7 +756,8 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     protected List<QueryResult<T>> fetchNodeList(String key)
     {
-        return resolveKey(getRootNode(), key, getModel().getNodeHandler());
+        NodeHandler<T> nodeHandler = getModel().getNodeHandler();
+        return resolveKey(nodeHandler.getRootNode(), key, nodeHandler);
     }
 
     /**
