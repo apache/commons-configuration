@@ -79,7 +79,7 @@ public abstract class AbstractCombinerTest
                 .getRootNode());
 
         BaseHierarchicalConfiguration result = new BaseHierarchicalConfiguration();
-        result.setRootNode(cn);
+        result.getNodeModel().setRootNode(cn);
 
         return result;
     }
