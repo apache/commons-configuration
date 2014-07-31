@@ -270,7 +270,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         writer.println("<!DOCTYPE plist SYSTEM \"file://localhost/System/Library/DTDs/PropertyList.dtd\">");
         writer.println("<plist version=\"1.0\">");
 
-        printNode(writer, 1, getRootNode());
+        printNode(writer, 1, getNodeModel().getNodeHandler().getRootNode());
 
         writer.println("</plist>");
         writer.flush();
