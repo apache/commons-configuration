@@ -75,8 +75,10 @@ public abstract class AbstractCombinerTest
         new FileHandler(conf1).load(CONF1);
         XMLConfiguration conf2 = new XMLConfiguration();
         new FileHandler(conf2).load(CONF2);
-        ImmutableNode cn = combiner.combine(conf1.getRootNode(), conf2
-                .getRootNode());
+        ImmutableNode cn =
+                combiner.combine(conf1.getNodeModel().getNodeHandler()
+                        .getRootNode(), conf2.getNodeModel().getNodeHandler()
+                        .getRootNode());
 
         BaseHierarchicalConfiguration result = new BaseHierarchicalConfiguration();
         result.getNodeModel().setRootNode(cn);

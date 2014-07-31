@@ -167,10 +167,11 @@ public class TestOverrideCombiner extends AbstractCombinerTest
         assertEquals("Wrong field", "docname", c
                 .getString("fields.field(1).name"));
 
+        NodeHandler<ImmutableNode> nodeHandler = config.getNodeModel().getNodeHandler();
         List<QueryResult<ImmutableNode>> nds =
-                config.getExpressionEngine().query(config.getRootNode(),
+                config.getExpressionEngine().query(nodeHandler.getRootNode(),
                         "database.tables.table",
-                        config.getNodeModel().getNodeHandler());
+                        nodeHandler);
         assertFalse("No node found", nds.isEmpty());
         assertFalse("An attribute result", nds.get(0).isAttributeResult());
         return nds.get(0).getNode();
