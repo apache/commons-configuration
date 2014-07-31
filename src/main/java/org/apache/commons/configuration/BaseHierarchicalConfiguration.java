@@ -155,7 +155,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
                             return parent.getInterpolator();
                         }
                     };
-            result.setRootNode(createSubsetRootNode(results));
+            result.getModel().setRootNode(createSubsetRootNode(results));
 
             if (result.isEmpty())
             {
