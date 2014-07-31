@@ -206,7 +206,8 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
         try
         {
             PropertyListConfiguration config = parser.parse();
-            getModel().setRootNode(config.getRootNode());
+            getModel().setRootNode(
+                    config.getNodeModel().getNodeHandler().getRootNode());
         }
         catch (ParseException e)
         {
