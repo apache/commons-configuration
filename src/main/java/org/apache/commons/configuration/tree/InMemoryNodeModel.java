@@ -88,7 +88,14 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     }
 
     /**
-     * Returns the root node of this mode.
+     * Returns the root node of this mode. Note: This method should be used with
+     * care. The model may be updated concurrently which causes the root node to
+     * be replaced. If the root node is to be processed further (e.g. by
+     * executing queries on it), the model should be asked for its
+     * {@code NodeHandler}, and the root node should be obtained from there. The
+     * connection between a node handler and its root node remain constant
+     * because an update of the model causes the whole node handler to be
+     * replaced.
      *
      * @return the current root node
      */
