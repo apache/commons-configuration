@@ -661,7 +661,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     @Override
     protected NodeModel<ImmutableNode> cloneNodeModel()
     {
-        return new InMemoryNodeModel(getRootNode());
+        return new InMemoryNodeModel(getModel().getNodeHandler().getRootNode());
     }
 
     /**
