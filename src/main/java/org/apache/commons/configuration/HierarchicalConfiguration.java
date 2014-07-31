@@ -46,13 +46,6 @@ public interface HierarchicalConfiguration<T>
     extends Configuration, ImmutableHierarchicalConfiguration, NodeModelSupport<T>
 {
     /**
-     * Returns the root node of this hierarchical configuration.
-     *
-     * @return the root node
-     */
-    T getRootNode();
-
-    /**
      * Sets the expression engine to be used by this configuration. All property
      * keys this configuration has to deal with will be interpreted by this
      * engine.

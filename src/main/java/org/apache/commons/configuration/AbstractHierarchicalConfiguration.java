@@ -46,19 +46,23 @@ import org.apache.commons.configuration.tree.NodeUpdateData;
 import org.apache.commons.configuration.tree.QueryResult;
 
 /**
- * <p>A specialized configuration class that extends its base class by the
- * ability of keeping more structure in the stored properties.</p>
- * <p>There
- * are some sources of configuration data that cannot be stored very well in a
- * {@code BaseConfiguration} object because then their structure is lost.
+ * <p>
+ * A specialized configuration class that extends its base class by the ability
+ * of keeping more structure in the stored properties.
+ * </p>
+ * <p>
+ * There are some sources of configuration data that cannot be stored very well
+ * in a {@code BaseConfiguration} object because then their structure is lost.
  * This is for instance true for XML documents. This class can deal with such
  * structured configuration sources by storing the properties in a tree-like
  * organization. The exact storage structure of the underlying data does not
- * matter for the configuration instance; it uses a {@link NodeModel} object
- * for accessing it.</p>
- * <p>The hierarchical organization allows for a more
- * sophisticated access to single properties. As an example consider the
- * following XML document:</p>
+ * matter for the configuration instance; it uses a {@link NodeModel} object for
+ * accessing it.
+ * </p>
+ * <p>
+ * The hierarchical organization allows for a more sophisticated access to
+ * single properties. As an example consider the following XML document:
+ * </p>
  * <p>
  *
  * <pre>
@@ -94,71 +98,81 @@ import org.apache.commons.configuration.tree.QueryResult;
  * </pre>
  *
  * </p>
- * <p>If this document is parsed and stored in a hierarchical configuration
- * object (which can be done by one of
- * the sub classes), there are enhanced possibilities of accessing properties.
- * Per default, the keys for querying information can contain indices that select a specific
- * element if there are multiple hits.</p>
- * <p>For instance the key
- * {@code tables.table(0).name} can be used to find out the name of the
- * first table. In opposite {@code tables.table.name} would return a
+ * <p>
+ * If this document is parsed and stored in a hierarchical configuration object
+ * (which can be done by one of the sub classes), there are enhanced
+ * possibilities of accessing properties. Per default, the keys for querying
+ * information can contain indices that select a specific element if there are
+ * multiple hits.
+ * </p>
+ * <p>
+ * For instance the key {@code tables.table(0).name} can be used to find out the
+ * name of the first table. In opposite {@code tables.table.name} would return a
  * collection with the names of all available tables. Similarly the key
- * {@code tables.table(1).fields.field.name} returns a collection with
- * the names of all fields of the second table. If another index is added after
- * the {@code field} element, a single field can be accessed:
- * {@code tables.table(1).fields.field(0).name}.</p>
- * <p>There is a
- * {@code getMaxIndex()} method that returns the maximum allowed index
- * that can be added to a given property key. This method can be used to iterate
- * over all values defined for a certain property.</p>
- * <p>Since the 1.3 release of <em>Commons Configuration</em> hierarchical
+ * {@code tables.table(1).fields.field.name} returns a collection with the names
+ * of all fields of the second table. If another index is added after the
+ * {@code field} element, a single field can be accessed:
+ * {@code tables.table(1).fields.field(0).name}.
+ * </p>
+ * <p>
+ * There is a {@code getMaxIndex()} method that returns the maximum allowed
+ * index that can be added to a given property key. This method can be used to
+ * iterate over all values defined for a certain property.
+ * </p>
+ * <p>
+ * Since the 1.3 release of <em>Commons Configuration</em> hierarchical
  * configurations support an <em>expression engine</em>. This expression engine
  * is responsible for evaluating the passed in configuration keys and map them
  * to the stored properties. The examples above are valid for the default
- * expression engine, which is used when a new {@code AbstractHierarchicalConfiguration}
- * instance is created. With the {@code setExpressionEngine()} method a
- * different expression engine can be set. For instance with
+ * expression engine, which is used when a new
+ * {@code AbstractHierarchicalConfiguration} instance is created. With the
+ * {@code setExpressionEngine()} method a different expression engine can be
+ * set. For instance with
  * {@link org.apache.commons.configuration.tree.xpath.XPathExpressionEngine}
  * there is an expression engine available that supports configuration keys in
- * XPATH syntax.</p>
- * <p>In addition to the events common for all configuration classes, hierarchical
+ * XPATH syntax.
+ * </p>
+ * <p>
+ * In addition to the events common for all configuration classes, hierarchical
  * configurations support some more events that correspond to some specific
  * methods and features. For those events specific event type constants in
  * {@code ConfigurationEvent} exist:
- * <dl><dt><em>ADD_NODES</em></dt><dd>The {@code addNodes()} method
- * was called; the event object contains the key, to which the nodes were added,
- * and a collection with the new nodes as value.</dd>
- * <dt><em>CLEAR_TREE</em></dt><dd>The {@code clearTree()} method was
- * called; the event object stores the key of the removed sub tree.</dd>
- * <dt><em>SUBNODE_CHANGED</em></dt><dd>A {@code SubnodeConfiguration}
- * that was created from this configuration has been changed. The value property
- * of the event object contains the original event object as it was sent by the
- * subnode configuration.</dd></dl></p>
+ * <dl>
+ * <dt><em>ADD_NODES</em></dt>
+ * <dd>The {@code addNodes()} method was called; the event object contains the
+ * key, to which the nodes were added, and a collection with the new nodes as
+ * value.</dd>
+ * <dt><em>CLEAR_TREE</em></dt>
+ * <dd>The {@code clearTree()} method was called; the event object stores the
+ * key of the removed sub tree.</dd>
+ * <dt><em>SUBNODE_CHANGED</em></dt>
+ * <dd>A {@code SubnodeConfiguration} that was created from this configuration
+ * has been changed. The value property of the event object contains the
+ * original event object as it was sent by the subnode configuration.</dd>
+ * </dl>
+ * </p>
  * <p>
- * Whether an {@code AbstractHierarchicalConfiguration} object is thread-safe or not
- * depends on the underlying {@code NodeModel} and the {@link Synchronizer} it is associated with.
- * Some {@code NodeModel} implementations are inherently thread-safe; they do not require
- * a special {@code Synchronizer}. (Per default, a
- * dummy {@code Synchronizer} is used which is not thread-safe!) The methods
- * for querying or updating configuration data invoke this {@code Synchronizer}
- * accordingly. There is one exception to this rule: The {@link #getRootNode()}
- * method is not guarded using the {@code Synchronizer}. This is due to the
- * fact that the caller can do anything with this root node, so it is not
- * clear which kind of synchronization should be performed. So when accessing
- * the configuration's root node directly, the client application is responsible
- * for proper synchronization. This is achieved by calling the methods
+ * Whether an {@code AbstractHierarchicalConfiguration} object is thread-safe or
+ * not depends on the underlying {@code NodeModel} and the {@link Synchronizer}
+ * it is associated with. Some {@code NodeModel} implementations are inherently
+ * thread-safe; they do not require a special {@code Synchronizer}. (Per
+ * default, a dummy {@code Synchronizer} is used which is not thread-safe!) The
+ * methods for querying or updating configuration data invoke this
+ * {@code Synchronizer} accordingly. When accessing the configuration's root
+ * node directly, the client application is responsible for proper
+ * synchronization. This is achieved by calling the methods
  * {@link #lock(LockMode)}, and {@link #unlock(LockMode)} with a proper
  * {@link LockMode} argument. In any case, it is recommended to not access the
- * root node directly, but to use corresponding methods for querying or
- * updating configuration data instead. Direct manipulations of a
- * configuration's node structure circumvent many internal mechanisms and thus
- * can cause undesired effects. For concrete subclasses dealing with specific
- * node structures, this situation may be different.
+ * root node directly, but to use corresponding methods for querying or updating
+ * configuration data instead. Direct manipulations of a configuration's node
+ * structure circumvent many internal mechanisms and thus can cause undesired
+ * effects. For concrete subclasses dealing with specific node structures, this
+ * situation may be different.
  * </p>
  *
  * @version $Id$
  * @since 2.0
- * @param  <T> the type of the nodes managed by this hierarchical configuration
+ * @param <T> the type of the nodes managed by this hierarchical configuration
  */
 public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfiguration
     implements Cloneable, NodeKeyResolver<T>, HierarchicalConfiguration<T>
@@ -178,16 +192,6 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     protected AbstractHierarchicalConfiguration(NodeModel<T> nodeModel)
     {
         model = nodeModel;
-    }
-
-    /**
-     * Returns the root node of this hierarchical configuration.
-     *
-     * @return the root node
-     */
-    public T getRootNode()
-    {
-        return getModel().getNodeHandler().getRootNode();
     }
 
     /**

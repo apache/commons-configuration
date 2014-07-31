@@ -372,19 +372,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         }
     }
 
-    /**
-     * Returns the configuration root node of this combined configuration. This
-     * method will construct a combined node structure using the current node
-     * combiner if necessary.
-     *
-     * @return the combined root node
-     */
-    @Override
-    public ImmutableNode getRootNode()
-    {
-        return getCurrentConfig().getRootNode();
-    }
-
     @Override
     protected void addPropertyInternal(String key, Object value)
     {

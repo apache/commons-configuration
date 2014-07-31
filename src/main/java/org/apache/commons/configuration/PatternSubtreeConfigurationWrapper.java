@@ -323,12 +323,6 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public ImmutableNode getRootNode()
-    {
-        return getConfig().getRootNode();
-    }
-
-    @Override
     public ExpressionEngine getExpressionEngine()
     {
         return config.getExpressionEngine();
