@@ -68,11 +68,11 @@ public abstract class ConfigurationXMLReader implements XMLReader
     protected ConfigurationXMLReader()
     {
         super();
-        setRootName(DEFAULT_ROOT_NAME);
+        rootName = DEFAULT_ROOT_NAME;
     }
 
     /**
-     * Parses the acutal configuration object. The passed system ID will be
+     * Parses the current configuration object. The passed system ID will be
      * ignored.
      *
      * @param systemId the system ID (ignored)
