@@ -38,7 +38,7 @@ public class Logging extends Log4JLogger
      */
     private static final String FQCN = Logging.class.getName();
 
-    private static Priority traceLevel;
+    private static Priority traceLevel; // TODO should this be Level?
 
     static
     {
@@ -53,7 +53,7 @@ public class Logging extends Log4JLogger
         catch (Exception ex)
         {
             // ok, trace not available
-            traceLevel = Priority.DEBUG;
+            traceLevel = Level.DEBUG;
         }
 
         String level = System.getProperty("LogLevel");
@@ -146,7 +146,7 @@ public class Logging extends Log4JLogger
     @Override
     public void debug(Object message)
     {
-        getLogger().log(FQCN, Priority.DEBUG, message, null);
+        getLogger().log(FQCN, Level.DEBUG, message, null);
     }
 
     /**
@@ -159,7 +159,7 @@ public class Logging extends Log4JLogger
     @Override
     public void debug(Object message, Throwable t)
     {
-        getLogger().log(FQCN, Priority.DEBUG, message, t);
+        getLogger().log(FQCN, Level.DEBUG, message, t);
     }
 
 
@@ -172,7 +172,7 @@ public class Logging extends Log4JLogger
     @Override
     public void info(Object message)
     {
-        getLogger().log(FQCN, Priority.INFO, message, null);
+        getLogger().log(FQCN, Level.INFO, message, null);
     }
 
 
@@ -186,7 +186,7 @@ public class Logging extends Log4JLogger
     @Override
     public void info(Object message, Throwable t)
     {
-        getLogger().log(FQCN, Priority.INFO, message, t);
+        getLogger().log(FQCN, Level.INFO, message, t);
     }
 
 
@@ -199,7 +199,7 @@ public class Logging extends Log4JLogger
     @Override
     public void warn(Object message)
     {
-        getLogger().log(FQCN, Priority.WARN, message, null);
+        getLogger().log(FQCN, Level.WARN, message, null);
     }
 
 
@@ -213,7 +213,7 @@ public class Logging extends Log4JLogger
     @Override
     public void warn(Object message, Throwable t)
     {
-        getLogger().log(FQCN, Priority.WARN, message, t);
+        getLogger().log(FQCN, Level.WARN, message, t);
     }
 
 
@@ -226,7 +226,7 @@ public class Logging extends Log4JLogger
     @Override
     public void error(Object message)
     {
-        getLogger().log(FQCN, Priority.ERROR, message, null);
+        getLogger().log(FQCN, Level.ERROR, message, null);
     }
 
 
@@ -240,7 +240,7 @@ public class Logging extends Log4JLogger
     @Override
     public void error(Object message, Throwable t)
     {
-        getLogger().log(FQCN, Priority.ERROR, message, t);
+        getLogger().log(FQCN, Level.ERROR, message, t);
     }
 
 
@@ -253,7 +253,7 @@ public class Logging extends Log4JLogger
     @Override
     public void fatal(Object message)
     {
-        getLogger().log(FQCN, Priority.FATAL, message, null);
+        getLogger().log(FQCN, Level.FATAL, message, null);
     }
 
 
@@ -267,7 +267,7 @@ public class Logging extends Log4JLogger
     @Override
     public void fatal(Object message, Throwable t)
     {
-        getLogger().log(FQCN, Priority.FATAL, message, t);
+        getLogger().log(FQCN, Level.FATAL, message, t);
     }
 
 }
