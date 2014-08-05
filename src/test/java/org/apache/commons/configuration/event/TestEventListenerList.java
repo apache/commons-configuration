@@ -540,6 +540,8 @@ public class TestEventListenerList
      */
     private static class EventBase extends Event
     {
+        private static final long serialVersionUID = 1L;
+
         /** An event message for testing pay-load. */
         private final String message;
 
@@ -561,6 +563,8 @@ public class TestEventListenerList
      */
     private static class EventSub1 extends EventBase
     {
+        private static final long serialVersionUID = 1L;
+
         public EventSub1(Object source, EventType<? extends EventSub1> type,
                 String msg)
         {
@@ -573,6 +577,8 @@ public class TestEventListenerList
      */
     private static class EventSub2 extends EventBase
     {
+        private static final long serialVersionUID = 1L;
+
         public EventSub2(Object source, EventType<? extends EventSub2> type,
                 String msg)
         {
