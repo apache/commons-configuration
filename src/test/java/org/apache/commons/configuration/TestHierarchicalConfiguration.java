@@ -554,7 +554,7 @@ public class TestHierarchicalConfiguration
     {
         BaseHierarchicalConfiguration copy =
                 new BaseHierarchicalConfiguration(
-                        (HierarchicalConfiguration) null);
+                        (HierarchicalConfiguration<ImmutableNode>) null);
         assertTrue("Configuration not empty", copy.isEmpty());
     }
 

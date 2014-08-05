@@ -198,7 +198,7 @@ public class TestImmutableConfiguration
     @Test
     public void testUnmodifiableHierarchicalConfiguration()
     {
-        HierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
+        HierarchicalConfiguration<?> conf = new BaseHierarchicalConfiguration();
         String key = "test";
         conf.addProperty(key, Boolean.TRUE);
         ImmutableHierarchicalConfiguration ihc =

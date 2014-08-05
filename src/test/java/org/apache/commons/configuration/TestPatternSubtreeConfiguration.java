@@ -24,6 +24,7 @@ import java.io.StringWriter;
 
 import org.apache.commons.configuration.ex.ConfigurationException;
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.tree.ImmutableNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +32,7 @@ import org.junit.Test;
 /**
  * Unit test for simple MultiConfigurationTest.
  *
- * @version $Id:$
+ * @version $Id$
  */
 public class TestPatternSubtreeConfiguration
 {
@@ -72,7 +73,7 @@ public class TestPatternSubtreeConfiguration
     @Test(expected = ConfigurationException.class)
     public void testReadNotFileBased() throws ConfigurationException
     {
-        HierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
+        HierarchicalConfiguration<ImmutableNode> hc = new BaseHierarchicalConfiguration();
         PatternSubtreeConfigurationWrapper config =
                 new PatternSubtreeConfigurationWrapper(hc, PATTERN);
         new FileHandler(config).load(CONFIG_FILE);
@@ -85,7 +86,7 @@ public class TestPatternSubtreeConfiguration
     @Test(expected = ConfigurationException.class)
     public void testSaveNotFileBased() throws ConfigurationException
     {
-        HierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
+        HierarchicalConfiguration<ImmutableNode> hc = new BaseHierarchicalConfiguration();
         PatternSubtreeConfigurationWrapper config =
                 new PatternSubtreeConfigurationWrapper(hc, PATTERN);
         new FileHandler(config).save(new StringWriter());

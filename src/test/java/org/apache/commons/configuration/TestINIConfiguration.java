@@ -898,7 +898,7 @@ public class TestINIConfiguration
         sub.setProperty("test", "success");
         StringWriter writer = new StringWriter();
         config.write(writer);
-        HierarchicalConfiguration config2 = setUpConfig(writer.toString());
+        HierarchicalConfiguration<?> config2 = setUpConfig(writer.toString());
         assertEquals("Wrong value", "success",
                 config2.getString("section.test"));
     }

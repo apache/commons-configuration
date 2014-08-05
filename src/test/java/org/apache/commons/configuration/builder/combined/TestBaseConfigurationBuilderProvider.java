@@ -51,9 +51,9 @@ public class TestBaseConfigurationBuilderProvider
      * @param reload a flag whether reload operations are supported
      * @return the configuration object
      */
-    private HierarchicalConfiguration setUpConfig(boolean reload)
+    private HierarchicalConfiguration<?> setUpConfig(boolean reload)
     {
-        HierarchicalConfiguration config = new BaseHierarchicalConfiguration();
+        HierarchicalConfiguration<?> config = new BaseHierarchicalConfiguration();
         config.addProperty(CombinedConfigurationBuilder.ATTR_RELOAD,
                 Boolean.valueOf(reload));
         config.addProperty("[@throwExceptionOnMissing]", Boolean.TRUE);
@@ -74,7 +74,7 @@ public class TestBaseConfigurationBuilderProvider
      * @return the declaration
      */
     private ConfigurationDeclaration createDeclaration(
-            HierarchicalConfiguration declConfig)
+            HierarchicalConfiguration<?> declConfig)
     {
         CombinedConfigurationBuilder parentBuilder =
                 new CombinedConfigurationBuilder()
@@ -129,7 +129,7 @@ public class TestBaseConfigurationBuilderProvider
     private ConfigurationBuilder<? extends Configuration> checkBuilder(
             boolean reload) throws ConfigurationException
     {
-        HierarchicalConfiguration declConfig = setUpConfig(reload);
+        HierarchicalConfiguration<?> declConfig = setUpConfig(reload);
         ConfigurationDeclaration decl = createDeclaration(declConfig);
         ConfigurationBuilder<? extends Configuration> builder =
                 createProvider().getConfigurationBuilder(decl);
@@ -206,7 +206,7 @@ public class TestBaseConfigurationBuilderProvider
                         PropertiesConfiguration.class.getName(),
                         Arrays.asList(FileBasedBuilderParametersImpl.class
                                 .getName()));
-        HierarchicalConfiguration declConfig = setUpConfig(true);
+        HierarchicalConfiguration<?> declConfig = setUpConfig(true);
         ConfigurationDeclaration decl = createDeclaration(declConfig);
         provider.getConfigurationBuilder(decl);
     }
@@ -223,7 +223,7 @@ public class TestBaseConfigurationBuilderProvider
     private void checkAllowFailOnInit(boolean expFlag, String... props)
             throws ConfigurationException
     {
-        HierarchicalConfiguration declConfig = setUpConfig(false);
+        HierarchicalConfiguration<?> declConfig = setUpConfig(false);
         for (String key : props)
         {
             declConfig.addProperty(key, Boolean.TRUE);
