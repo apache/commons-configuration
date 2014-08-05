@@ -288,9 +288,10 @@ public class EventListenerList
      * @param listener the event listener to be called
      * @param event the event to be fired
      */
-    @SuppressWarnings("unchecked, rawtypes")
+    @SuppressWarnings("unchecked")
     private static void callListener(EventListener<?> listener, Event event)
     {
+        @SuppressWarnings("rawtypes")
         EventListener rowListener = listener;
         rowListener.onEvent(event);
     }
@@ -427,10 +428,11 @@ public class EventListenerList
          * @param regData the data object
          * @return the extracted listener
          */
-        @SuppressWarnings("unchecked, rawtypes")
+        @SuppressWarnings("unchecked")
         private EventListener<? super T> castListener(
                 EventListenerRegistrationData<?> regData)
         {
+            @SuppressWarnings("rawtypes")
             EventListener listener = regData.getListener();
             return listener;
         }
