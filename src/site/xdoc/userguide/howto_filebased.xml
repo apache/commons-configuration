@@ -177,6 +177,105 @@ config.setProperty("colors.background", "#000000"); // the configuration is save
 	</p>
         </subsection>
 
+        <subsection name="Making it easier">
+        <p>
+          The code fragments presented so far in this chapter and the previous
+          one show that the fluent API offered by configuration builders in many
+          cases allows the creation and initialization of a configuration
+          builder in a single expression. Nevertheless, especially in simple
+          cases when no complex initialization is required, this approach tends
+          to become verbose. For instance, if just a configuration is to be
+          loaded from a file, you always have to create a file-based
+          parameters object, initialize it, create a builder, and pass the
+          parameters to its <code>configure()</code> method.
+        </p>
+        <p>
+          To support this frequent use case in a more convenient way, the
+          <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Configurations.html">
+          Configurations</a></code> class exists. This class contains a bunch
+          of convenience methods that simplify the creation of many standard
+          configurations from different sources like files or URLs. Using
+          this class, the code for the creation of a configuration builder can
+          be reduced. The example for loading a properties configuration
+          presented above becomes now:
+        </p>
+        <source><![CDATA[
+Configurations configs = new Configurations();
+// Read data from this file
+File propertiesFile = new File("config.properties");
+
+FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+    configs.propertiesBuilder(propertiesFile);
+]]></source>
+        <p>
+          From this builder the properties configuration can be obtained in the
+          usual way. It is even possible to by-pass the builder at all:
+        </p>
+        <source><![CDATA[
+Configurations configs = new Configurations();
+// Read data from this file
+File propertiesFile = new File("config.properties");
+
+PropertiesConfiguration config = configs.properties(propertiesFile);
+]]></source>
+        <p>
+          Here behind the scenes a configuration builder is created and
+          initialized; then its managed configuration is queried and returned
+          to the caller. A <code>ConfigurationException</code> is thrown if
+          an error occurs. Skipping the configuration builder and accessing the
+          configuration directly is recommended only for simple use cases. A
+          builder typically offers more flexibility for the handling and
+          management of configuration objects.
+        </p>
+        <p>
+          In these examples, a <code>java.io.File</code> object was used to
+          access configuration data. There are overloaded methods for
+          specifying the data to be loaded in alternative ways: using URLs or
+          file names/paths. In addition to properties configurations, the
+          <code>Configurations</code> class supports a couple of other
+          frequently used configuration formats. For instance, the methods
+          <code>xml()</code> and <code>xmlBuilder()</code> provide easy access
+          to XML documents.
+        </p>
+        <p>
+          Even if there is no direct support for a specific configuration
+          implementation, with the generic <code>fileBased()</code> or
+          <code>fileBasedBuilder()</code> methods, access to all kinds of
+          file-based configurations can be simplified. We take the
+          <code><a href="../apidocs/org/apache/commons/configuration/plist/PropertyListConfiguration.html">
+          PropertyListConfiguration</a></code> class as an example for which no
+          specific access methods exist. The code fragment below shows how a
+          builder for such a configuration can be constructed using a generic
+          method:
+        </p>
+        <source><![CDATA[
+Configurations configs = new Configurations();
+// Read data from this URL
+URL sourceURL = ...;
+
+FileBasedConfigurationBuilder<PropertyListConfiguration> builder =
+    configs.fileBasedBuilder(PropertyListConfiguration.class, sourceURL);
+PropertyListConfiguration config = builder.getConfiguration();
+]]></source>
+        <p>
+          <code>Configurations</code> instances are thread-safe and can be stored
+          centrally by an application. So they can be used as a central configuration
+          factory - of course, with limited flexibility; this is the price to
+          be payed for simplicity. However, these restrictions can be partly
+          circumvented by making use of
+          <a href="howto_builders.html#Default_Initialization_Parameters">default
+          initialization parameters</a>. An instance is associated with a
+          <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Parameters.html">
+          Parameters</a></code> object which is used to construct parameter
+          objects for the created configuration builders. By assigning default
+          parameters to this object the default settings used for the created
+          builders can be tweaked. Note however, that the class typically
+          creates only generic parameter objects; file-based parameters rather
+          than, say, specialized parameters for properties configurations. This
+          makes default settings only possible for basic parameters.
+        </p>
+        </subsection>
+
         <subsection name="File Operations on Configurations">
         <p>
           With <code>FileBasedConfigurationBuilder</code> a single configuration

@@ -66,6 +66,7 @@
       <li><a href="howto_filebased.html#File-based_Configurations">File-based Configurations</a></li>
       <ul>
         <li><a href="howto_filebased.html#FileBasedConfigurationBuilder">FileBasedConfigurationBuilder</a></li>
+        <li><a href="howto_filebased.html#Making_it_easier">Making it easier</a></li>
         <li><a href="howto_filebased.html#File_Operations_on_Configurations">File Operations on Configurations</a></li>
         <li><a href="howto_filebased.html#Customizing_File_Access">Customizing File Access</a></li>
         <li><a href="howto_filebased.html#File_Systems">File Systems</a></li>
