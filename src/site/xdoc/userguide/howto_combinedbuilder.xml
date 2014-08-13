@@ -182,6 +182,21 @@ CombinedConfiguration config = builder.getConfiguration();
       making use of the <code>definitionBuilder</code> property allows at least
       passing in a specially configured builder object.
     </p>
+    <p>
+      If you do not need any specific initialization and just want to read the
+      configuration definition from an XML document, the
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Configurations.html">
+      Configurations</a></code> helper class introduced in section
+      <a href="howto_filebased.html#Making_it_easier">Making it easier</a> is
+      made for you. It offers convenience methods for creating a builder for
+      combined configurations from various sources. Here is an example how a
+      builder can be constructed from a definition file specified as a file
+      path:
+    </p>
+    <source><![CDATA[
+Configurations configs = new Configurations();
+CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definition/file.xml");
+]]></source>
     </subsection>
 
     <subsection name="Overriding properties">
