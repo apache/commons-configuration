@@ -53,6 +53,7 @@
         <li><a href="#Creating_Configurations">Creating Configurations</a></li>
         <li><a href="#Reloading">Reloading</a></li>
         <li><a href="#Combining_Configuration_Sources">Combining Configuration Sources</a></li>
+        <li><a href="#Concurrency_Issues">Concurrency Issues</a></li>
       </ul>
     </p>
 
@@ -358,6 +359,85 @@ PropertiesConfiguration config = builder.getConfiguration();
       usage and supported extension points can be found in chapter
       <a href="howto_combinedbuilder.html">Combining Configuration Sources</a>
       of the user's guide.
+    </p>
+    </subsection>
+
+    <subsection name="Concurrency Issues">
+    <p>
+      An important design goal of <em>Commons Configuration</em> 2.0 was to
+      improve the behavior of configuration objects when accessed by multiple
+      threads. In the 1.x series, support for concurrent access to configuration
+      data has grown historically: The original intent was that a configuration
+      object can be read by multiple threads in a safe way, but as soon as one
+      thread modifies the data, the user has to ensure proper synchronization
+      manually. Later on, also due to the reloading implementation, more and
+      more synchronization was added. This even caused performance bottlenecks,
+      for instance as reported in
+      <a href="https://issues.apache.org/jira/browse/CONFIGURATION-530">CONFIGURATION-530</a>.
+    </p>
+    <p>
+      The changes in version 2.0 related to multi-threading include multiple
+      aspects. The most obvious change is probably that synchronization of
+      configurations is now much more flexible. A configuration instance is
+      assigned a
+      <code><a href="../apidocs/org/apache/commons/configuration/sync/Synchronizer.html">
+      Synchronizer</a></code> object which controls if and how locks are obtained
+      when executing operations on this configuration. By changing the
+      synchronizer, an application can adapt the locking behavior to its specific
+      needs. For instance, if a configuration is only accessed by a single
+      thread, there is no need for any synchronization. Typcical usage modes are
+      reflected by different default implementations of the
+      <code>Synchronizer</code> interface:
+      <ul>
+        <li><code><a href="../apidocs/org/apache/commons/configuration/sync/NoOpSynchronizer.html">
+        NoOpSynchronizer</a></code> does not use any synchronization at all.
+        This is the option of choice for single-threaded access, but fails in a
+        multi-threaded environment.</li>
+        <li><code><a href="../apidocs/org/apache/commons/configuration/sync/ReadWriteSynchronizer.html">
+        ReadWriteSynchronizer</a></code> implements synchronization based on a
+        read/write lock.</li>
+      </ul>
+      Note that the default option is <code>NoOpSynchronizer</code>. This means
+      that configuration objects are not thread-safe per default! You have to
+      change the synchronizer in order to make them safe for concurrent access.
+      This can be done for instance by using a builder which is configured
+      correspondingly.
+    </p>
+    <p>
+      Talking about builders: This is another concept which supports access to
+      configuration data by multiple threads. Access to a builder is always
+      thread-safe. By shifting the responsibility for reloading operations from
+      the configuration to the builder, the need for intensive locking on each
+      property access could be eleminated.
+    </p>
+    <p>
+      Hierarchical configurations derived from
+      <code><a href="../apidocs/org/apache/commons/configuration/BaseHierarchicalConfiguration.html">
+      BaseHierarchicalConfiguration</a></code> now use a new implementation
+      which allows for concurrent access without locking. So this group of
+      configurations can be used without having to set a fully-functional
+      synchronizer.
+    </p>
+    <p>
+      There are some other changes on classes with the goal to make them
+      well-behaving citizens in a concurrent environment. This includes:
+      <ul>
+        <li>Some classes have been made immutable, passing all information to the
+        constructor rather than using bean-style properties for their
+        initialization. An example is
+        <code><a href="../apidocs/org/apache/commons/configuration/tree/DefaultExpressionEngine.html">
+        DefaultExpressionEngine</a></code> whose instances can now be shared between
+        different hierarchical configuration objects.</li>
+        <li>Static utility classes with state have been rewritten so that they
+        can be instantiated. Mutable static fields are in general
+        thread-hostile. Refer to
+        <a href="https://issues.apache.org/jira/browse/CONFIGURATION-486">CONFIGURATION-486</a>
+        for further details.</li>  
+      </ul>
+    </p>
+    <p>
+      Please refer to <a href="howto_concurrency.html">Configurations and
+      Concurrent Access</a> for a full description of this complex topic.
     </p>
     </subsection>
   </section>
