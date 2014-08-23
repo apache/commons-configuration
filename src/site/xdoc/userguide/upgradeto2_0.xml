@@ -52,6 +52,7 @@
         <li><a href="#Accessing_Configuration_Properties">Accessing Configuration Properties</a></li>
         <li><a href="#Creating_Configurations">Creating Configurations</a></li>
         <li><a href="#Reloading">Reloading</a></li>
+        <li><a href="#Combining_Configuration_Sources">Combining Configuration Sources</a></li>
       </ul>
     </p>
 
@@ -276,6 +277,87 @@ PropertiesConfiguration config = builder.getConfiguration();
       mechanisms. The mentioned chapter about <a href="howto_reloading.html">reloading</a>
       describes in detail how a reloading-aware configuration builder can be
       setup and fine-tuned to an application's needs.
+    </p>
+    </subsection>
+
+    <subsection name="Combining Configuration Sources">
+    <p>
+      In <em>Commons Configuration</em> 1.x, there were two options for
+      creating a
+      <a href="howto_combinedbuilder.html#Combining_Configuration_Sources">combined
+      configuration</a> out of multiple sources:
+      <ul>
+        <li>The already deprecated <code>ConfigurationFactory</code> class</li>
+        <li>The <code>DefaultConfigurationBuilder</code> class</li>
+      </ul>
+    </p>
+    <p>
+      The former has been removed. The functionality provided by
+      <code>DefaultConfigurationBuilder</code> is still available, but the
+      class has been renamed to
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/combined/CombinedConfigurationBuilder.html">
+      CombinedConfigurationBuilder</a></code> (the old name was no longer
+      appropriate as builders are now a common concept in the library) and
+      adapted to other builder implementations.
+    </p>
+    <p>
+      <code>DefaultConfigurationBuilder</code> inherited from
+      <code>XMLConfiguration</code> - it was itself a configuration and could be
+      populated dynamically. <code>CombinedConfigurationBuilder</code> in
+      contrast is a regular builder implementation. In its initialization
+      parameters it can be passed another builder object from which the
+      definition for the combined configuration is obtained. So a dynamic
+      approach is possible here as well. In both cases, the
+      <code>getConfiguration()</code> method is used to obtain the
+      <code><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
+      CombinedConfiguration</a></code> object constructed by the builder. From
+      a usage point of view there is not that much difference between these
+      classes.
+    </p>
+    <p>
+      In both the old and the version, a XML-based definition file is used to
+      declare the different configuration sources that are to be combined plus
+      some additional settings. The principle structure of this file has not
+      changed - the full description of the new format is available at
+      <a href="howto_combinedbuilder.html#Configuration_definition_file_reference">Configuration
+      definition file reference</a>.
+    </p>
+    <p>
+      A problem when migrating from <code>DefaultConfigurationBuilder</code> to
+      <code>CombinedConfigurationBuilder</code> is that those definition files
+      can contain <a href="howto_beans.html">bean definitions</a>, i.e. references
+      to classes which will be automatically instantiated by <em>Commons
+      Configuration</em>. Because of change of the package name definition files
+      written for version 1.x will not work with the new version if they make
+      use of this feature and reference internal classes shipped with the
+      library. Here the fully-qualified class names in definition files have to
+      be adapted.
+    </p>
+    <p>
+      A prominent example of bean definitions were reloading strategies assigned
+      to specific configuration sources. As the whole reloading mechanism has
+      changed significantly, such declarations are no longer supported. There is
+      a much simpler replacement: just add the <em>config-reload</em> attribute
+      to a configuration source declaration to enable reloading support for this
+      source.
+    </p>
+    <p>
+      Another incompatible change is related to the extensibility of the
+      definition file format. It used to be possible - and still is - to define
+      custom tags for declaring special configuration sources. This is done by
+      registering provider objects at the configuration builder. Because the
+      internal implementation of <code>CombinedConfigurationBuilder</code> is
+      very different from the old one, this also affects the interface used for
+      providers. The main difference is that providers for the old version used
+      to create configuration objects directly, while the new providers create
+      configuration builders. If custom providers have been used in the past,
+      additional migration effort has to be planned in.
+    </p>
+    <p>
+      A complete description of <code>CombinedConfigurationBuilder</code>, its
+      usage and supported extension points can be found in chapter
+      <a href="howto_combinedbuilder.html">Combining Configuration Sources</a>
+      of the user's guide.
     </p>
     </subsection>
   </section>
