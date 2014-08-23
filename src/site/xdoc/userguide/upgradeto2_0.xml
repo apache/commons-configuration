@@ -25,29 +25,15 @@
 <body>
     <section name="Migration Guide to Version 2.0">
     <p>
-      Version 2.0 of <em>Commons Configuration</em> is the result of a major
-      redesign of this library. Some concepts used within the 1.x version
-      series have changed significantly or have even been replaced by alternative
-      approaches. Therefore, you cannot simply drop the new jar in your classpath
-      and expect that everything continues to work.
-    </p>
-    <p>
       This document aims at supporting with the migration from version 1.x of
       <em>Commons Configuration</em> to version 2.0. Target audience are
       users of an older version who want to upgrade. The document describes the
-      problems which are likely to be encountered during this migration and
-      discusses possible strategies or solutions.
+      areas in which major changes have been implemented; here problems are
+      likely to be encountered during migration. It has the following content:
     </p>
     <p>
-      Also note that the <a href="user_guide.html">user's guide</a> has been
-      fully reworked to cover all the new features and concepts offered by
-      <em>Commons Configuration</em> 2.0. Because of that, this document will not
-      describe interfaces or classes in detail, but simply refer to the
-      corresponding sections of the user guide.
-    </p>
-    <p>
-      This document has the following content:
       <ul>
+        <li><a href="#Introduction">Introduction</a></li>
         <li><a href="#Structural_Changes">Structural Changes</a></li>
         <li><a href="#Accessing_Configuration_Properties">Accessing Configuration Properties</a></li>
         <li><a href="#Creating_Configurations">Creating Configurations</a></li>
@@ -57,6 +43,39 @@
         <li><a href="#Events">Events</a></li>
       </ul>
     </p>
+
+    <subsection name="Introduction">
+    <p>
+      Version 2.0 of <em>Commons Configuration</em> is the result of a major
+      redesign of this library. While version 1.x has become pretty stable and
+      does what it is expected to do, there are some limitations and design
+      flaws which could not be fixed in a painless and compatible way.
+    </p>
+    <p>
+      In order to overcome these restrictions, version 2.0 has applied significant
+      changes to some of the problematic concepts or even replaced them  by
+      alternative approaches. This has lead to an ambivalent situation: On one
+      hand, you will recognize many similarities to the old version - classes
+      with familar names that continue to do what they have done before. On
+      the other hand, completely new approaches have been introduced; in the
+      affected areas <em>Commons Configuration</em> 2.0 will look like a
+      completely new product rather than a plain upgrade.
+    </p>
+    <p>
+      Because of such major changes, you cannot simply drop the new jar in your
+      classpath and expect that everything continues to work. In the remaining
+      part of this document the most important changes are described. This
+      should give you an impression about the effort required to integrate the
+      new version with your application.
+    </p>
+    <p>
+      Also note that the <a href="user_guide.html">user's guide</a> has been
+      fully reworked to cover all the new features and concepts offered by
+      <em>Commons Configuration</em> 2.0. Because of that, this document will not
+      describe interfaces or classes in detail, but simply refer to the
+      corresponding sections of the user guide.
+    </p>
+    </subsection>
 
     <subsection name="Structural Changes">
     <p>
