@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Migration Guide for 2.0</title>
+ </properties>
+
+<body>
+    <section name="Migration Guide to Version 2.0">
+    <p>
+      Version 2.0 of <em>Commons Configuration</em> is the result of a major
+      redesign of this library. Some concepts used within the 1.x version
+      series have changed significantly or have even been replaced by alternative
+      approaches. Therefore, you cannot simply drop the new jar in your classpath
+      and expect that everything continues to work.
+    </p>
+    <p>
+      This document aims at supporting with the migration from version 1.x of
+      <em>Commons Configuration</em> to version 2.0. Target audience are
+      users of an older version who want to upgrade. The document describes the
+      problems which are likely to be encountered during this migration and
+      discusses possible strategies or solutions.
+    </p>
+    <p>
+      Also note that the <a href="user_guide.html">user's guide</a> has been
+      fully reworked to cover all the new features and concepts offered by
+      <em>Commons Configuration</em> 2.0. Because of that, this document will not
+      describe interfaces or classes in detail, but simply refer to the
+      corresponding sections of the user guide.
+    </p>
+    <p>
+      This document has the following content:
+      <ul>
+        <li><a href="#Structural_Changes">Structural Changes</a></li>
+      </ul>
+    </p>
+
+    <subsection name="Structural Changes">
+    <p>
+      The most obvious change you will notice at the very beginning is that
+      the root package was renamed to <code>org.apache.commons.configuration2</code>
+      - the major version is now part of the package name. This certainly makes
+      migration harder, but it is the only possibility to avoid jar hell.
+      Imagine for a moment that we had kept the old package name. This
+      would work well for applications that are the only user of the
+      <em>Commons Configuration</em> library. But as soon as there are 3rd
+      party libraries also using this component, but in version 1.x, then there
+      is real trouble: The class path then contains classes with identical
+      names in different versions - results will be unpredictable! The change
+      of the package name solves this problem because the new version can now
+      co-exist with an old version without interfering.
+    </p>
+    <p>
+      For the same reason the <a href="http://maven.apache.org">Maven</a>
+      coordinates have been changed. Use the following dependency declaration
+      in your pom:
+    </p>
+    <source><![CDATA[
+<dependency>
+  <groupId>org.apache.commons</groupId>
+  <artifactId>commons-configuration2</artifactId>
+  <version>2.0</version>
+</dependency>
+]]></source>
+    <p>
+      So for Maven version 2.0 is a completely different artifact. This
+      allows a peaceful co-existence of <em>Commons Configuration</em> 1.x and
+      2.0 in the dependency set of a project.
+    </p>
+    </subsection>
+
+  </section>
+</body>
+
+</document>
