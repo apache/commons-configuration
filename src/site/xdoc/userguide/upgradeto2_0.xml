@@ -53,7 +53,7 @@
     </p>
     <p>
       In order to overcome these restrictions, version 2.0 has applied significant
-      changes to some of the problematic concepts or even replaced them  by
+      changes to some of the problematic concepts or even replaced them by
       alternative approaches. This has lead to an ambivalent situation: On one
       hand, you will recognize many similarities to the old version - classes
       with familar names that continue to do what they have done before. On
@@ -90,7 +90,10 @@
       is real trouble: The class path then contains classes with identical
       names in different versions - results will be unpredictable! The change
       of the package name solves this problem because the new version can now
-      co-exist with an old version without interfering.
+      co-exist with an old version without interfering. The very first step
+      you have to when migrating to version 2.0 is to reorganize your imports
+      to adapt them to the new package name. Modern IDEs will support you with
+      this task.
     </p>
     <p>
       For the same reason the <a href="http://maven.apache.org">Maven</a>
@@ -189,7 +192,7 @@
       PropertiesConfiguration</a></code> or
       <code><a href="../apidocs/org/apache/commons/configuration/XMLConfiguration.html">
       XMLConfiguration</a></code> - there were constructors which immediately
-      populate the newly created instances from a data source. If additional
+      populated the newly created instances from a data source. If additional
       settings were to be applied, this was done after the creation using
       bean-like set methods. For instance, in order to create an initialized
       <code>PropertiesConfiguration</code> object, the following code could be
@@ -211,7 +214,7 @@ config.setListDelimiter(';');
         the data is directly loaded by the constructor these settings are
         applied too late and thus ignored by the load operation.</li>
         <li>The constructor calls a protected method for loading the data. This
-        can lead to subtil bugs because at this time the instance is not yet
+        can lead to subtle bugs because at this time the instance is not yet
         fully initialized.</li>
         <li>The various set methods are not thread-safe; if this configuration
         instance is to be accessed from another thread, there may be problems.</li>
@@ -236,7 +239,7 @@ FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
     .configure(new Parameters().properties()
         .setFileName("myconfig.properties")
         .setThrowExceptionOnMissing(true)
-        .setListDelimiterHandler(new DefaultListDelimiterHandler(';))
+        .setListDelimiterHandler(new DefaultListDelimiterHandler(';'))
         .setIncludesAllowed(false));
 PropertiesConfiguration config = builder.getConfiguration();
 ]]></source>
@@ -254,7 +257,7 @@ PropertiesConfiguration config = builder.getConfiguration();
       operation is performed. For the application this is fully transparent.
     </p>
     <p>
-      Working with builders may seem a bit verbose first. There are some ways
+      Working with builders may seem a bit verbose at first. There are some ways
       to simplify their usage. Be sure to read the section
       <a href="howto_filebased.html#Making_it_easier">Making it easier</a>
       which describes some useful short cuts. It is also possible to define
@@ -294,7 +297,7 @@ PropertiesConfiguration config = builder.getConfiguration();
     </p>
     <p>
       The <code>FileChangedReloadingStrategy</code> class from version 1.0
-      does no longer exist. It is replaced by the new, more powerful reloading
+      no longer exists. It is replaced by the new, more powerful reloading
       mechanisms. The mentioned chapter about <a href="howto_reloading.html">reloading</a>
       describes in detail how a reloading-aware configuration builder can be
       setup and fine-tuned to an application's needs.
@@ -322,7 +325,7 @@ PropertiesConfiguration config = builder.getConfiguration();
       adapted to other builder implementations.
     </p>
     <p>
-      <code>DefaultConfigurationBuilder</code> inherited from
+      In version 1.x <code>DefaultConfigurationBuilder</code> inherited from
       <code>XMLConfiguration</code> - it was itself a configuration and could be
       populated dynamically. <code>CombinedConfigurationBuilder</code> in
       contrast is a regular builder implementation. In its initialization
@@ -348,7 +351,7 @@ PropertiesConfiguration config = builder.getConfiguration();
       <code>CombinedConfigurationBuilder</code> is that those definition files
       can contain <a href="howto_beans.html">bean definitions</a>, i.e. references
       to classes which will be automatically instantiated by <em>Commons
-      Configuration</em>. Because of change of the package name definition files
+      Configuration</em>. Because of the change of the package name definition files
       written for version 1.x will not work with the new version if they make
       use of this feature and reference internal classes shipped with the
       library. Here the fully-qualified class names in definition files have to
@@ -421,7 +424,7 @@ PropertiesConfiguration config = builder.getConfiguration();
       that configuration objects are not thread-safe per default! You have to
       change the synchronizer in order to make them safe for concurrent access.
       This can be done for instance by using a builder which is configured
-      correspondingly.
+      accordingly.
     </p>
     <p>
       Talking about builders: This is another concept which supports access to
@@ -495,7 +498,7 @@ PropertiesConfiguration config = builder.getConfiguration();
     </p>
     <p>
       The most basic use case for event listeners in version 1.x was probably
-      the registration of a change listener on a single configuration instance.
+      the registration of a change listener at a single configuration instance.
       To achieve an equivalent effect with the new API, one would implement an
       event listener and register it for the event type
       <code><a href="../apidocs/org/apache/commons/configuration/event/ConfigurationEvent.html#ANY">
