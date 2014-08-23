@@ -30,7 +30,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>commons-configuration</groupId>
   <artifactId>commons-configuration</artifactId>
-  <version>2.0-SNAPSHOT</version>
+  <version>2.0-alpha1-SNAPSHOT</version>
   <name>Apache Commons Configuration</name>
 
   <inceptionYear>2001</inceptionYear>
@@ -428,7 +428,10 @@
 
   <properties>
     <commons.componentid>configuration</commons.componentid>
-    <commons.release.version>1.9</commons.release.version>
+    <commons.release.version>1.10</commons.release.version>
+    <commons.release.desc>(stable version)</commons.release.desc>
+    <commons.release.2.version>2.0-alpha1</commons.release.2.version>
+    <commons.release.2.desc>(alpha release)</commons.release.2.desc>
     <commons.rc.version>RC1</commons.rc.version>
     <commons.jira.id>CONFIGURATION</commons.jira.id>
     <commons.jira.pid>12310467</commons.jira.pid>
