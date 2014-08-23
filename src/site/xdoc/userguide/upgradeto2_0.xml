@@ -51,6 +51,7 @@
         <li><a href="#Structural_Changes">Structural Changes</a></li>
         <li><a href="#Accessing_Configuration_Properties">Accessing Configuration Properties</a></li>
         <li><a href="#Creating_Configurations">Creating Configurations</a></li>
+        <li><a href="#Reloading">Reloading</a></li>
       </ul>
     </p>
 
@@ -240,6 +241,41 @@ PropertiesConfiguration config = builder.getConfiguration();
       settings for configuration objects. This mechanism is described in
       <a href="howto_builders.html#Default_Initialization_Parameters">Default
       Initialization Parameters</a>.
+    </p>
+    </subsection>
+
+    <subsection name="Reloading">
+    <p>
+      Support for reloading of externally changed configuration sources was
+      limited in <em>Commons Configuration</em> 1.x. There was a reloading
+      strategy implementation that was triggered on each access to a
+      configuration property and checked whether an underlying file was changed
+      in the meantime. If this was the case, the configuration was automatically
+      reloaded. <a href="https://issues.apache.org/jira/browse/CONFIGURATION-520">
+      CONFIGURATION-520</a> contains a discussion about the problems and
+      limitations of this approach.
+    </p>
+    <p>
+      In version 2.0 reloading functionality has been completely redesigned.
+      The new approaches are described in the chapter
+      <a href="howto_reloading.html">Automatic Reloading of Configuration
+      Sources</a> of the user's guide. In a nutshell,
+      <a href="howto_builders.html">configuration builders</a> play an important
+      role here. There are builder implementations available which can be
+      configured to monitor external configuration sources in a pretty generic
+      way. When a change is detected, the builder resets its managed configuration
+      so that the next time it is accessed a new instance is created. In addition,
+      an event can be generated notifying the application that new configuration
+      information might be available. The whole mechanism can be setup to
+      perform reloading checks periodically and automatically in a background
+      thread.
+    </p>
+    <p>
+      The <code>FileChangedReloadingStrategy</code> class from version 1.0
+      does no longer exist. It is replaced by the new, more powerful reloading
+      mechanisms. The mentioned chapter about <a href="howto_reloading.html">reloading</a>
+      describes in detail how a reloading-aware configuration builder can be
+      setup and fine-tuned to an application's needs.
     </p>
     </subsection>
   </section>
