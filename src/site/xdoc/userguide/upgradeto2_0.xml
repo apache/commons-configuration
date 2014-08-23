@@ -49,6 +49,7 @@
       This document has the following content:
       <ul>
         <li><a href="#Structural_Changes">Structural Changes</a></li>
+        <li><a href="#Accessing_Configuration_Properties">Accessing Configuration Properties</a></li>
       </ul>
     </p>
 
@@ -83,6 +84,74 @@
       So for Maven version 2.0 is a completely different artifact. This
       allows a peaceful co-existence of <em>Commons Configuration</em> 1.x and
       2.0 in the dependency set of a project.
+    </p>
+    </subsection>
+
+    <subsection name="Accessing Configuration Properties">
+    <p>
+      The good news is that there are only minor changes in the central
+      <code><a href="../apidocs/org/apache/commons/configuration/Configuration.html">
+      Configuration</a></code> interface used for reading and writing configuration
+      data. A few methods have been added supporting new features, but the
+      principle patterns for dealing with <code>Configuration</code> objects
+      remain valid. These concepts are described in the user's guide in the
+      sections <a href="overview.html#Using_Configuration">Using Configuration</a>
+      and <a href="howto_basicfeatures.html#Basic_features_and_AbstractConfiguration">Basic
+      features and AbstractConfiguration</a>.
+    </p>
+    <p>
+      What has changed is the default implementation of
+      <a href="howto_basicfeatures.html#List_handling">List handling</a> in
+      <code><a href="../apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
+      AbstractConfiguration</a></code>. In version 1.x list splitting was
+      enabled per default; string properties containing a &quot;,&quot; character
+      were interpreted as lists with multiple elements. This was a frequent
+      source for confusion and bug reports. In version 2.0 list splitting is now
+      disabled initially. The implementation also has been extended: it is no
+      longer limited to providing a delimiter character, but an implementation
+      of the <code><a href="../apidocs/org/apache/commons/configuration/convert/ListDelimiterHandler.html">
+      ListDelimiterHandler</a></code> interface can be set which controls all
+      aspects of list handling. In order to enable list handling again, pass a
+      <code><a href="../apidocs/org/apache/commons/configuration/convert/DefaultListDelimiterHandler.html">
+      DefaultListDelimiterHandler</a></code> object to your
+      <code>AbstractConfiguration</code> instance. This class supports splitting
+      string properties at specific delimiter characters. However, its results
+      are not 100% identical to the ones produced by <em>Commons Configuration</em>
+      1.0: this version contained some inconsistencies regarding the escaping of
+      list delimiter characters. If you really need the same behavior in this
+      area, then use the
+      <code><a href="../apidocs/org/apache/commons/configuration/convert/LegacyListDelimiterHandler.html">
+      LegacyListDelimiterHandler</a></code> class.
+    </p>
+    <p>
+      Version 2.0 also has changes related to
+      <a href="howto_hierarchical.html#Hierarchical_Configurations">Hierarchical
+      Configurations</a>.
+      <code><a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+      HierarchicalConfiguration</a></code>, formally the base class for all
+      hierarchical configurations, is now an interface. The equivalent to the
+      old base class is now named
+      <code><a href="../apidocs/org/apache/commons/configuration/BaseHierarchicalConfiguration.html">
+      BaseHierarchicalConfiguration</a></code>. It extends the abstract base class
+      <code><a href="../apidocs/org/apache/commons/configuration/AbstractHierarchicalConfiguration.html">
+      AbstractHierarchicalConfiguration</a></code>. The difference between these
+      classes is that <code>AbstractHierarchicalConfiguration</code> provides
+      generic algorithms for dealing with an arbitrary hierarchical node
+      structure. <code>BaseHierarchicalConfiguration</code> in contrast defines
+      its own node structure based on objects kept in memory. In future, it
+      should be possible to support other kinds of hierarchical structures
+      directly by creating specialized sub classes from
+      <code>AbstractHierarchicalConfiguration</code>. Refer to section
+      <a href="howto_hierarchical.html#Internal_Representation">Internal Representation</a>
+      for further information. The node objects a hierarchical configuration
+      deals with are now exposed as a generic type parameter; for instance,
+      <code>BasieHierarchicalConfiguration</code> is actually an
+      <code>AbstractHierarchicalConfiguration&lt;ImmutableNode&gt;</code>.
+      For most applications only interested in accessing configuration data via
+      the typical access methods, this parameter is not relevant and can be
+      replaced by a wildcard (&quot;?&quot;) in variable declarations. Extended
+      query facilities on hierarchical configurations work in the same way as
+      in version 1.x; so applications need not be updated in this area.
     </p>
     </subsection>
 
