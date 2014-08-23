@@ -50,6 +50,7 @@
       <ul>
         <li><a href="#Structural_Changes">Structural Changes</a></li>
         <li><a href="#Accessing_Configuration_Properties">Accessing Configuration Properties</a></li>
+        <li><a href="#Creating_Configurations">Creating Configurations</a></li>
       </ul>
     </p>
 
@@ -155,6 +156,92 @@
     </p>
     </subsection>
 
+    <subsection name="Creating Configurations">
+    <p>
+      A major difference between <em>Commons Configuration</em> 1.x and 2.0 is
+      the way configuration objects are created, initialized, and managed. In
+      version 1.x configurations are created directly using their constructor.
+      Especially for file-based configuration implementations - like
+      <code><a href="../apidocs/org/apache/commons/configuration/PropertiesConfiguration.html">
+      PropertiesConfiguration</a></code> or
+      <code><a href="../apidocs/org/apache/commons/configuration/XMLConfiguration.html">
+      XMLConfiguration</a></code> - there were constructors which immediately
+      populate the newly created instances from a data source. If additional
+      settings were to be applied, this was done after the creation using
+      bean-like set methods. For instance, in order to create an initialized
+      <code>PropertiesConfiguration</code> object, the following code could be
+      used:
+    </p>
+    <source><![CDATA[
+// Version 1.x: Initializing a properties configuration
+PropertiesConfiguration config = new PropertiesConfiguration("myconfig.properties");
+config.setThrowExceptionOnMissing(true);
+config.setIncludesAllowed(false);
+config.setListDelimiter(';');
+]]></source>
+    <p>
+      While this code is easy to write, there are some non-obvious problems:
+      <ul>
+        <li>Some settings influence the loading of the configuration data. In
+        this example, the definition of the list delimiter and the
+        <em>includesAllowed</em> flag fall into this category. However, because
+        the data is directly loaded by the constructor these settings are
+        applied too late and thus ignored by the load operation.</li>
+        <li>The constructor calls a protected method for loading the data. This
+        can lead to subtil bugs because at this time the instance is not yet
+        fully initialized.</li>
+        <li>The various set methods are not thread-safe; if this configuration
+        instance is to be accessed from another thread, there may be problems.</li>
+      </ul>
+    </p>
+    <p>
+      To overcome these problems, <em>Commons Configuration</em> uses a
+      different approach for the creation of configuration objects based on
+      <a href="howto_builders.html">configuration builders</a>. The basic idea
+      is that a configuration builder is created and initialized with all
+      parameters to be applied to the new configuration object. When the
+      configuration instance is queried from its builder it is guaranteed that
+      it has been fully initialized in the correct order. In addition, access
+      to configuration builders is thread-safe. Configuration builders offer a
+      fluent API for setting the initialization parameters for the configuration
+      to be created. The example above would become something like the
+      following in version 2.0:
+    </p>
+        <source><![CDATA[
+FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+    new FileBasedConfigurationBuilder<PropertiesConfiguration>(PropertiesConfiguration.class)
+    .configure(new Parameters().properties()
+        .setFileName("myconfig.properties")
+        .setThrowExceptionOnMissing(true)
+        .setListDelimiterHandler(new DefaultListDelimiterHandler(';))
+        .setIncludesAllowed(false));
+PropertiesConfiguration config = builder.getConfiguration();
+]]></source>
+    <p>
+      Builders also offer an increased flexibility regarding the management of
+      configuration objects. While in version 1.x of <em>Commons Configuration</em>
+      typically <code>Configuration</code> objects were kept centrally and
+      accessed throughout an application, the recommended way in version 2.0 is
+      to work with configuration builders. A builder not only creates a new
+      configuration object but also caches a reference to it so that it can be
+      accessed again and again. This makes it possible to add special
+      functionality to the builder. For instance, it may decide to return a
+      different configuration object under certain circumstances - e.g. when a
+      change on an external configuration source is detected and a reload
+      operation is performed. For the application this is fully transparent.
+    </p>
+    <p>
+      Working with builders may seem a bit verbose first. There are some ways
+      to simplify their usage. Be sure to read the section
+      <a href="howto_filebased.html#Making_it_easier">Making it easier</a>
+      which describes some useful short cuts. It is also possible to define
+      default values for initialization parameters. This allows simplifying of
+      builder configurations and can establish application-global standard
+      settings for configuration objects. This mechanism is described in
+      <a href="howto_builders.html#Default_Initialization_Parameters">Default
+      Initialization Parameters</a>.
+    </p>
+    </subsection>
   </section>
 </body>
 
