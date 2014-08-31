@@ -183,12 +183,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * @version $Id$
  */
 public class XMLConfiguration extends BaseHierarchicalConfiguration implements
-        FileBasedConfiguration, FileLocatorAware, InputStreamSupport {
-    /**
-     * The serial version UID.
-     */
-    private static final long serialVersionUID = 2453781111653383552L;
-
+        FileBasedConfiguration, FileLocatorAware, InputStreamSupport
+{
     /** Constant for the default root element name. */
     private static final String DEFAULT_ROOT_NAME = "configuration";
 

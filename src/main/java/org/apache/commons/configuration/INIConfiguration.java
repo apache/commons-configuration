@@ -230,11 +230,6 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
     protected static final String SEPARATOR_CHARS = "=:";
 
     /**
-     * The serial version UID.
-     */
-    private static final long serialVersionUID = 2548006161386850670L;
-
-    /**
      * Constant for the line separator.
      */
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");

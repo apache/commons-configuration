@@ -194,11 +194,6 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             new EventType<ConfigurationEvent>(ConfigurationEvent.ANY,
                     "COMBINED_INVALIDATE");
 
-    /**
-     * The serial version ID.
-     */
-    private static final long serialVersionUID = 8338574525528692307L;
-
     /** Constant for the expression engine for parsing the at path. */
     private static final DefaultExpressionEngine AT_ENGINE = DefaultExpressionEngine.INSTANCE;
 

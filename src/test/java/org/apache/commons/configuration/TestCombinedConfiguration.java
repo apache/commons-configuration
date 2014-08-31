@@ -956,8 +956,6 @@ public class TestCombinedConfiguration
         BaseHierarchicalConfiguration childEx =
                 new BaseHierarchicalConfiguration()
                 {
-                    private static final long serialVersionUID = 1L;
-
                     @Override
                     public NodeModel<ImmutableNode> getModel() {
                         throw testEx;

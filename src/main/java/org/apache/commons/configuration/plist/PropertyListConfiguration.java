@@ -113,9 +113,6 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
     /** Constant for the ID prefix for GMT time zones. */
     private static final String TIME_ZONE_PREFIX = "GMT";
 
-    /** The serial version UID. */
-    private static final long serialVersionUID = 3227248503779092127L;
-
     /** Constant for the milliseconds of a minute.*/
     private static final int MILLIS_PER_MINUTE = 1000 * 60;
 

@@ -48,8 +48,6 @@ import org.apache.commons.configuration.tree.ImmutableNode;
 public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfiguration
     implements FileBasedConfiguration
 {
-    private static final long serialVersionUID = 7456061169617014189L;
-
     /** The wrapped configuration */
     private final HierarchicalConfiguration<ImmutableNode> config;
 

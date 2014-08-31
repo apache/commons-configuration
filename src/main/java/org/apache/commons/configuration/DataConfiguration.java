@@ -98,18 +98,13 @@ import org.apache.commons.lang3.StringUtils;
  * @version $Id$
  * @since 1.1
  */
-public class DataConfiguration extends AbstractConfiguration implements Serializable
+public class DataConfiguration extends AbstractConfiguration
 {
     /** The key of the property storing the user defined date format. */
     public static final String DATE_FORMAT_KEY = "org.apache.commons.configuration.format.date";
 
     /** The default format for dates. */
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-
-    /**
-     * The serial version UID.
-     */
-    private static final long serialVersionUID = -69011336405718640L;
 
     /** Stores temporary date formats. */
     private static final ThreadLocal<String> TEMP_DATE_FORMAT = new ThreadLocal<String>();

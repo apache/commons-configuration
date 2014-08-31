@@ -108,11 +108,6 @@ import org.apache.commons.configuration.tree.TrackedNodeModel;
  */
 public class SubnodeConfiguration extends BaseHierarchicalConfiguration
 {
-    /**
-     * The serial version UID.
-     */
-    private static final long serialVersionUID = 3105734147019386480L;
-
     /** Stores the parent configuration. */
     private final BaseHierarchicalConfiguration parent;
 

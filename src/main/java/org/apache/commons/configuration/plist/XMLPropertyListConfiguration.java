@@ -126,11 +126,6 @@ import org.xml.sax.helpers.DefaultHandler;
 public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
     implements FileBasedConfiguration, FileLocatorAware
 {
-    /**
-     * The serial version UID.
-     */
-    private static final long serialVersionUID = -3162063751042475985L;
-
     /** Size of the indentation for the generated file. */
     private static final int INDENT_SIZE = 4;
 

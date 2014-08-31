@@ -17,7 +17,6 @@
 
 package org.apache.commons.configuration;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -53,13 +52,8 @@ import org.apache.commons.lang3.ObjectUtils;
  * @version $Id$
  */
 public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfiguration<ImmutableNode>
-    implements Serializable, Cloneable, InMemoryNodeModelSupport
+    implements Cloneable, InMemoryNodeModelSupport
 {
-    /**
-     * The serial version UID.
-     */
-    private static final long serialVersionUID = 3373812230395363192L;
-
     /** A listener for reacting on changes caused by sub configurations. */
     private final EventListener<ConfigurationEvent> changeListener;
 

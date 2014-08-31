@@ -1444,10 +1444,6 @@ public class TestCombinedConfigurationBuilder
     public static class CombinedConfigurationTestImpl extends
             CombinedConfiguration
     {
-        /**
-         * The serial version UID.
-         */
-        private static final long serialVersionUID = 20121216L;
     }
 
     /**

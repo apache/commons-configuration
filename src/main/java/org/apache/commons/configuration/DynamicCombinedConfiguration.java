@@ -65,8 +65,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DynamicCombinedConfiguration extends CombinedConfiguration
 {
-    private static final long serialVersionUID = 680097981171908142L;
-
     /**
      * Stores the current configuration for each involved thread. This value is
      * set at the beginning of an operation and removed at the end.
