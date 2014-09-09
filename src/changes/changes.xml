@@ -69,6 +69,10 @@
         listener from all child configurations. This fixes a possible memory
         leak.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-570">
+        Fixed a possible ConcurrentModificationException when a SystemConfiguration
+        instance is passed to the append() or copy() methods.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-567" due-to="Shen liang">
         XMLBeanDeclaration now escapes node names before they are used to
         determine nested properties.
