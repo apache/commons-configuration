@@ -661,6 +661,21 @@ public class TestPropertiesConfigurationLayout
     }
 
     /**
+     * Tests whether a line with whitespace is handled correctly. This is
+     * related to CONFIGURATION-582.
+     */
+    @Test
+    public void testLineWithBlank() throws ConfigurationException
+    {
+        builder.addComment(TEST_COMMENT);
+        builder.addLine(" ");
+        builder.addProperty(TEST_KEY, TEST_VALUE);
+        layout.load(config, builder.getReader());
+        assertEquals("Wrong comment", TEST_COMMENT + CRNORM + " ",
+                layout.getCanonicalComment(TEST_KEY, false));
+    }
+
+    /**
      * Helper method for filling the layout object with some properties.
      */
     private void fillLayout()
@@ -718,6 +733,16 @@ public class TestPropertiesConfigurationLayout
 
         /** A counter for varying the comment character. */
         private int commentCounter;
+
+        /**
+         * Adds a line verbatim to the simulated file.
+         *
+         * @param s the content of the line
+         */
+        public void addLine(String s)
+        {
+            buf.append(s).append(CR);
+        }
 
         /**
          * Adds a property to the simulated file.

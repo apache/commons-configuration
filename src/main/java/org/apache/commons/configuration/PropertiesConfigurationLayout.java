@@ -724,7 +724,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      */
     static String stripCommentChar(String s, boolean comment)
     {
-        if (s.length() < 1 || (isCommentLine(s) == comment))
+        if (StringUtils.isBlank(s) || (isCommentLine(s) == comment))
         {
             return s;
         }
