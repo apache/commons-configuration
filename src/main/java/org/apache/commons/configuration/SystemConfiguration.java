@@ -104,4 +104,14 @@ public class SystemConfiguration extends MapConfiguration
             System.setProperty(key, value);
         }
     }
+
+    /**
+     * {@inheritDoc} This implementation returns a snapshot of the keys in the
+     * system properties. If another thread modifies system properties concurrently,
+     * these changes are not reflected by the iterator returned by this method.
+     */
+    @Override
+    protected Iterator<String> getKeysInternal() {
+        return System.getProperties().stringPropertyNames().iterator();
+    }
 }
