@@ -37,6 +37,10 @@
         listener interface which can be used to receive notifications from
         multiple types of event sources.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-582">
+        Fixed a StringIndexOutOfBoundsException in PropertiesConfigurationLayout
+        which was caused by lines containing only whitespace.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-579">
         A migration guide has been created which supports when upgrading from
         version 1.x to 2.0.
