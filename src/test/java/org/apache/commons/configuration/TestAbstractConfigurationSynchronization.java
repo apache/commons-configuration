@@ -21,10 +21,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collections;
+
 import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -222,5 +225,43 @@ public class TestAbstractConfigurationSynchronization
         sync.verify();
         assertEquals("Wrong synchronizer for subset",
                 NoOpSynchronizer.INSTANCE, subset.getSynchronizer());
+    }
+
+    /**
+     * Prepares a mock configuration for a copy operation.
+     *
+     * @return the mock configuration
+     */
+    private static Configuration prepareConfigurationMockForCopy()
+    {
+        Configuration config2 = EasyMock.createStrictMock(Configuration.class);
+        config2.lock(LockMode.READ);
+        EasyMock.expect(config2.getKeys()).andReturn(
+                Collections.<String> emptySet().iterator());
+        config2.unlock(LockMode.READ);
+        EasyMock.replay(config2);
+        return config2;
+    }
+
+    /**
+     * Tests whether the append() method uses synchronization.
+     */
+    @Test
+    public void testAppendSynchronized()
+    {
+        Configuration config2 = prepareConfigurationMockForCopy();
+        config.append(config2);
+        EasyMock.verify(config2);
+    }
+
+    /**
+     * Tests whether the copy() method uses synchronization.
+     */
+    @Test
+    public void testCopySynchronized()
+    {
+        Configuration config2 = prepareConfigurationMockForCopy();
+        config.copy(config2);
+        EasyMock.verify(config2);
     }
 }

@@ -1492,11 +1492,19 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     {
         if (c != null)
         {
-            for (Iterator<String> it = c.getKeys(); it.hasNext();)
+            c.lock(LockMode.READ);
+            try
             {
-                String key = it.next();
-                Object value = encodeForCopy(c.getProperty(key));
-                setProperty(key, value);
+                for (Iterator<String> it = c.getKeys(); it.hasNext();)
+                {
+                    String key = it.next();
+                    Object value = encodeForCopy(c.getProperty(key));
+                    setProperty(key, value);
+                }
+            }
+            finally
+            {
+                c.unlock(LockMode.READ);
             }
         }
     }
@@ -1522,11 +1530,19 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     {
         if (c != null)
         {
-            for (Iterator<String> it = c.getKeys(); it.hasNext();)
+            c.lock(LockMode.READ);
+            try
             {
-                String key = it.next();
-                Object value = encodeForCopy(c.getProperty(key));
-                addProperty(key, value);
+                for (Iterator<String> it = c.getKeys(); it.hasNext();)
+                {
+                    String key = it.next();
+                    Object value = encodeForCopy(c.getProperty(key));
+                    addProperty(key, value);
+                }
+            }
+            finally
+            {
+                c.unlock(LockMode.READ);
             }
         }
     }
