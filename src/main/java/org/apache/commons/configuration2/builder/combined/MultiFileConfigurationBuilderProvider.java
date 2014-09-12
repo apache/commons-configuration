@@ -59,15 +59,15 @@ public class MultiFileConfigurationBuilderProvider extends
 {
     /** Constant for the name of the builder class. */
     private static final String BUILDER_CLASS =
-            "org.apache.commons.configuration.builder.combined.MultiFileConfigurationBuilder";
+            "org.apache.commons.configuration2.builder.combined.MultiFileConfigurationBuilder";
 
     /** Constant for the name of the reloading builder class. */
     private static final String RELOADING_BUILDER_CLASS =
-            "org.apache.commons.configuration.builder.combined.ReloadingMultiFileConfigurationBuilder";
+            "org.apache.commons.configuration2.builder.combined.ReloadingMultiFileConfigurationBuilder";
 
     /** Constant for the name of the parameters class. */
     private static final String PARAM_CLASS =
-            "org.apache.commons.configuration.builder.combined.MultiFileBuilderParametersImpl";
+            "org.apache.commons.configuration2.builder.combined.MultiFileBuilderParametersImpl";
 
     /**
      * Creates a new instance of {@code MultiFileConfigurationBuilderProvider}

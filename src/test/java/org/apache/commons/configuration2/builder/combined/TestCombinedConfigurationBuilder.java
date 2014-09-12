@@ -114,7 +114,7 @@ public class TestCombinedConfigurationBuilder
     public void setUp() throws Exception
     {
         System.setProperty("java.naming.factory.initial",
-                "org.apache.commons.configuration.MockInitialContextFactory");
+                "org.apache.commons.configuration2.MockInitialContextFactory");
         System.setProperty("test_file_xml", TEST_SUB_XML);
         System.setProperty("test_file_combine", "testcombine1.xml");
         parameters = new Parameters();

@@ -26,6 +26,6 @@
   <system/>
   <properties fileName="testInterpolation.properties"/>
   <xml fileName="${testXmlFile}" config-name="test">
-    <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+    <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
   </xml>
 </configuration>

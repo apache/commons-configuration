@@ -22,11 +22,11 @@
   <header>
     <result>
       <listDelimiterHandler
-        config-class="org.apache.commons.configuration.convert.DefaultListDelimiterHandler">
+        config-class="org.apache.commons.configuration2.convert.DefaultListDelimiterHandler">
         <config-constrarg config-value=","/>
       </listDelimiterHandler>
-      <nodeCombiner config-class="org.apache.commons.configuration.tree.OverrideCombiner"/>
-      <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.OverrideCombiner"/>
+      <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
     <combiner>
       <override>

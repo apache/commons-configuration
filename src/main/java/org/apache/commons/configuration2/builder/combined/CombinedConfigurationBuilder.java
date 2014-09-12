@@ -395,55 +395,55 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
 
     /** Constant for the basic configuration builder class. */
     private static final String BASIC_BUILDER =
-            "org.apache.commons.configuration.builder.BasicConfigurationBuilder";
+            "org.apache.commons.configuration2.builder.BasicConfigurationBuilder";
 
     /** Constant for the file-based configuration builder class. */
     private static final String FILE_BUILDER =
-            "org.apache.commons.configuration.builder.FileBasedConfigurationBuilder";
+            "org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder";
 
     /** Constant for the reloading file-based configuration builder class. */
     private static final String RELOADING_BUILDER =
-            "org.apache.commons.configuration.builder.ReloadingFileBasedConfigurationBuilder";
+            "org.apache.commons.configuration2.builder.ReloadingFileBasedConfigurationBuilder";
 
     /** Constant for the name of the file-based builder parameters class. */
     private static final String FILE_PARAMS =
-            "org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl";
+            "org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl";
 
     /** Constant for the provider for properties files. */
     private static final ConfigurationBuilderProvider PROPERTIES_PROVIDER =
             new FileExtensionConfigurationBuilderProvider(
                     FILE_BUILDER,
                     RELOADING_BUILDER,
-                    "org.apache.commons.configuration.XMLPropertiesConfiguration",
-                    "org.apache.commons.configuration.PropertiesConfiguration",
+                    "org.apache.commons.configuration2.XMLPropertiesConfiguration",
+                    "org.apache.commons.configuration2.PropertiesConfiguration",
                     EXT_XML, Arrays.asList(FILE_PARAMS));
 
     /** Constant for the provider for XML files. */
     private static final ConfigurationBuilderProvider XML_PROVIDER =
             new BaseConfigurationBuilderProvider(FILE_BUILDER, RELOADING_BUILDER,
-                    "org.apache.commons.configuration.XMLConfiguration",
-                    Arrays.asList("org.apache.commons.configuration.builder.XMLBuilderParametersImpl"));
+                    "org.apache.commons.configuration2.XMLConfiguration",
+                    Arrays.asList("org.apache.commons.configuration2.builder.XMLBuilderParametersImpl"));
 
     /** Constant for the provider for JNDI sources. */
     private static final BaseConfigurationBuilderProvider JNDI_PROVIDER =
             new BaseConfigurationBuilderProvider(
                     BASIC_BUILDER,
                     null,
-                    "org.apache.commons.configuration.JNDIConfiguration",
-                    Arrays.asList("org.apache.commons.configuration.builder.JndiBuilderParametersImpl"));
+                    "org.apache.commons.configuration2.JNDIConfiguration",
+                    Arrays.asList("org.apache.commons.configuration2.builder.JndiBuilderParametersImpl"));
 
     /** Constant for the provider for system properties. */
     private static final BaseConfigurationBuilderProvider SYSTEM_PROVIDER =
             new BaseConfigurationBuilderProvider(
                     BASIC_BUILDER,
                     null,
-                    "org.apache.commons.configuration.SystemConfiguration",
-                    Arrays.asList("org.apache.commons.configuration.builder.BasicBuilderParameters"));
+                    "org.apache.commons.configuration2.SystemConfiguration",
+                    Arrays.asList("org.apache.commons.configuration2.builder.BasicBuilderParameters"));
 
     /** Constant for the provider for ini files. */
     private static final BaseConfigurationBuilderProvider INI_PROVIDER =
             new BaseConfigurationBuilderProvider(FILE_BUILDER, RELOADING_BUILDER,
-                    "org.apache.commons.configuration.INIConfiguration",
+                    "org.apache.commons.configuration2.INIConfiguration",
                     Arrays.asList(FILE_PARAMS));
 
     /** Constant for the provider for environment properties. */
@@ -451,16 +451,16 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             new BaseConfigurationBuilderProvider(
                     BASIC_BUILDER,
                     null,
-                    "org.apache.commons.configuration.EnvironmentConfiguration",
-                    Arrays.asList("org.apache.commons.configuration.builder.BasicBuilderParameters"));
+                    "org.apache.commons.configuration2.EnvironmentConfiguration",
+                    Arrays.asList("org.apache.commons.configuration2.builder.BasicBuilderParameters"));
 
     /** Constant for the provider for plist files. */
     private static final BaseConfigurationBuilderProvider PLIST_PROVIDER =
             new FileExtensionConfigurationBuilderProvider(
                     FILE_BUILDER,
                     RELOADING_BUILDER,
-                    "org.apache.commons.configuration.plist.XMLPropertyListConfiguration",
-                    "org.apache.commons.configuration.plist.PropertyListConfiguration",
+                    "org.apache.commons.configuration2.plist.XMLPropertyListConfiguration",
+                    "org.apache.commons.configuration2.plist.PropertyListConfiguration",
                     EXT_XML, Arrays.asList(FILE_PARAMS));
 
     /** Constant for the provider for configuration definition files. */
@@ -470,8 +470,8 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     /** Constant for the provider for multiple XML configurations. */
     private static final MultiFileConfigurationBuilderProvider MULTI_XML_PROVIDER =
             new MultiFileConfigurationBuilderProvider(
-                    "org.apache.commons.configuration.XMLConfiguration",
-                    "org.apache.commons.configuration.builder.XMLBuilderParametersImpl");
+                    "org.apache.commons.configuration2.XMLConfiguration",
+                    "org.apache.commons.configuration2.builder.XMLBuilderParametersImpl");
 
     /** An array with the names of the default tags. */
     private static final String[] DEFAULT_TAGS = {

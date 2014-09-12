@@ -23,9 +23,9 @@
 <configuration>
   <header>
     <result loggerName="TestLogger"
-            config-class="org.apache.commons.configuration.DynamicCombinedConfiguration"
+            config-class="org.apache.commons.configuration2.DynamicCombinedConfiguration"
             keyPattern="$${sys:Id}">
-      <nodeCombiner config-class="org.apache.commons.configuration.tree.MergeCombiner"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.MergeCombiner"/>
     </result>
   </header>
   <override>
@@ -33,12 +33,12 @@
                config-name="clientConfig" schemaValidation="false"
                config-optional="true" config-forceCreate="true">
        <expressionEngine
-          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </multiFile>
     <xml fileName="testMultiConfiguration_default.xml"
          config-name="defaultConfig">
       <expressionEngine
-          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </xml>
   </override>
 </configuration>

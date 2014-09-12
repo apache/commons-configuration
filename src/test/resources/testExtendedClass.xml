@@ -19,9 +19,9 @@
 <configuration>
   <header>
     <result delimiterParsingDisabled="true"
-            config-class="org.apache.commons.configuration.TestDefaultConfigurationBuilder$ExtendedCombinedConfiguration">
-      <nodeCombiner config-class="org.apache.commons.configuration.tree.OverrideCombiner"/>
-      <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+            config-class="org.apache.commons.configuration2.TestDefaultConfigurationBuilder$ExtendedCombinedConfiguration">
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.OverrideCombiner"/>
+      <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
     <combiner>
       <override>
@@ -35,12 +35,12 @@
   <system/>
   <properties fileName="test.properties" throwExceptionOnMissing="true"
     config-name="properties">
-    <reloadingStrategy config-class="org.apache.commons.configuration.reloading.FileChangedReloadingStrategy"
+    <reloadingStrategy config-class="org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy"
       refreshDelay="10000"/>
   </properties>
   <!-- Fetch the file name from a variable -->
   <xml fileName="${test_file_xml}" config-name="xml">
-    <expressionEngine config-class="org.apache.commons.configuration.tree.DefaultExpressionEngine"
+    <expressionEngine config-class="org.apache.commons.configuration2.tree.DefaultExpressionEngine"
       propertyDelimiter="/" indexStart="[" indexEnd="]"/>
   </xml>
   <additional>

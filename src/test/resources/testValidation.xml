@@ -19,10 +19,10 @@
 <configuration>
   <header>
     <result delimiterParsingDisabled="true">
-      <nodeCombiner config-class="org.apache.commons.configuration.tree.OverrideCombiner"/>
-      <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.OverrideCombiner"/>
+      <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
-    <entity-resolver catalogFiles="catalog.xml"/>    
+    <entity-resolver catalogFiles="catalog.xml"/>
   </header>
   <system/>
   <properties fileName="test.properties.xml" throwExceptionOnMissing="true"

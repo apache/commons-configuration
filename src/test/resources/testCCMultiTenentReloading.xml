@@ -22,7 +22,7 @@
 <configuration>
   <header>
     <result keyPattern="$${sys:Id}"
-            config-class="org.apache.commons.configuration.DynamicCombinedConfiguration">
+            config-class="org.apache.commons.configuration2.DynamicCombinedConfiguration">
     </result>
   </header>
   <override>

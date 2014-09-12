@@ -45,23 +45,23 @@ public class CombinedConfigurationBuilderProvider extends
 {
     /** Constant for the name of the supported builder class. */
     private static final String BUILDER_CLASS =
-            "org.apache.commons.configuration.builder.combined.CombinedConfigurationBuilder";
+            "org.apache.commons.configuration2.builder.combined.CombinedConfigurationBuilder";
 
     /** Constant for the name of the supported reloading builder class. */
     private static final String RELOADING_BUILDER_CLASS =
-            "org.apache.commons.configuration.builder.combined.ReloadingCombinedConfigurationBuilder";
+            "org.apache.commons.configuration2.builder.combined.ReloadingCombinedConfigurationBuilder";
 
     /** Constant for the name of the supported configuration class. */
     private static final String CONFIGURATION_CLASS =
-            "org.apache.commons.configuration.CombinedConfiguration";
+            "org.apache.commons.configuration2.CombinedConfiguration";
 
     /** Constant for the combined configuration builder parameters class. */
     private static final String COMBINED_PARAMS =
-            "org.apache.commons.configuration.builder.combined.CombinedBuilderParametersImpl";
+            "org.apache.commons.configuration2.builder.combined.CombinedBuilderParametersImpl";
 
     /** Constant for the name of the file-based builder parameters class. */
     private static final String FILE_PARAMS =
-            "org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl";
+            "org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl";
 
     /**
      * Creates a new instance of {@code CombinedConfigurationBuilderProvider}.

@@ -23,11 +23,11 @@
 <configuration>
   <header>
     <result loggerName="TestLogger"
-            config-class="org.apache.commons.configuration.DynamicCombinedConfiguration"
+            config-class="org.apache.commons.configuration2.DynamicCombinedConfiguration"
             keyPattern="$${sys:Id}">
-      <nodeCombiner config-class="org.apache.commons.configuration.tree.MergeCombiner"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.MergeCombiner"/>
       <expressionEngine
-          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
     <entity-resolver catalogFiles="catalog.xml"/>
   </header>
@@ -36,13 +36,13 @@
                config-name="clientConfig" config-optional="true"
                config-forceCreate="true" schemaValidation="false">
        <expressionEngine
-          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </multiFile>
     <xml fileName="testwrite/testMultiDynamic_default.xml"
          config-name="defaultConfig" config-reload="true"
          schemaValidation="false">
       <expressionEngine
-          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </xml>
   </override>
 </configuration>

@@ -56,7 +56,7 @@ public class TestConfigurationUtils
 {
     /** Constant for the name of a class to be loaded. */
     private static final String CLS_NAME =
-            "org.apache.commons.configuration.PropertiesConfiguration";
+            "org.apache.commons.configuration2.PropertiesConfiguration";
 
     /** Stores the CCL. */
     private ClassLoader ccl;
