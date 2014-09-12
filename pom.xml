@@ -500,7 +500,7 @@
             </excludes>
             <systemPropertyVariables>
               <java.awt.headless>true</java.awt.headless>
-              <org.apache.commons.logging.Log>org.apache.commons.configuration.Logging</org.apache.commons.logging.Log>
+              <org.apache.commons.logging.Log>org.apache.commons.configuration2.Logging</org.apache.commons.logging.Log>
             </systemPropertyVariables>
           </configuration>
         </plugin>
