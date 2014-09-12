@@ -117,7 +117,7 @@
     <subsection name="Accessing Configuration Properties">
     <p>
       The good news is that there are only minor changes in the central
-      <code><a href="../apidocs/org/apache/commons/configuration/Configuration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/Configuration.html">
       Configuration</a></code> interface used for reading and writing configuration
       data. A few methods have been added supporting new features, but the
       principle patterns for dealing with <code>Configuration</code> objects
@@ -129,17 +129,17 @@
     <p>
       What has changed is the default implementation of
       <a href="howto_basicfeatures.html#List_handling">List handling</a> in
-      <code><a href="../apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/AbstractConfiguration.html">
       AbstractConfiguration</a></code>. In version 1.x list splitting was
       enabled per default; string properties containing a &quot;,&quot; character
       were interpreted as lists with multiple elements. This was a frequent
       source for confusion and bug reports. In version 2.0 list splitting is now
       disabled initially. The implementation also has been extended: it is no
       longer limited to providing a delimiter character, but an implementation
-      of the <code><a href="../apidocs/org/apache/commons/configuration/convert/ListDelimiterHandler.html">
+      of the <code><a href="../apidocs/org/apache/commons/configuration2/convert/ListDelimiterHandler.html">
       ListDelimiterHandler</a></code> interface can be set which controls all
       aspects of list handling. In order to enable list handling again, pass a
-      <code><a href="../apidocs/org/apache/commons/configuration/convert/DefaultListDelimiterHandler.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/convert/DefaultListDelimiterHandler.html">
       DefaultListDelimiterHandler</a></code> object to your
       <code>AbstractConfiguration</code> instance. This class supports splitting
       string properties at specific delimiter characters. However, its results
@@ -147,20 +147,20 @@
       1.0: this version contained some inconsistencies regarding the escaping of
       list delimiter characters. If you really need the same behavior in this
       area, then use the
-      <code><a href="../apidocs/org/apache/commons/configuration/convert/LegacyListDelimiterHandler.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/convert/LegacyListDelimiterHandler.html">
       LegacyListDelimiterHandler</a></code> class.
     </p>
     <p>
       Version 2.0 also has changes related to
       <a href="howto_hierarchical.html#Hierarchical_Configurations">Hierarchical
       Configurations</a>.
-      <code><a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/HierarchicalConfiguration.html">
       HierarchicalConfiguration</a></code>, formally the base class for all
       hierarchical configurations, is now an interface. The equivalent to the
       old base class is now named
-      <code><a href="../apidocs/org/apache/commons/configuration/BaseHierarchicalConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/BaseHierarchicalConfiguration.html">
       BaseHierarchicalConfiguration</a></code>. It extends the abstract base class
-      <code><a href="../apidocs/org/apache/commons/configuration/AbstractHierarchicalConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/AbstractHierarchicalConfiguration.html">
       AbstractHierarchicalConfiguration</a></code>. The difference between these
       classes is that <code>AbstractHierarchicalConfiguration</code> provides
       generic algorithms for dealing with an arbitrary hierarchical node
@@ -188,9 +188,9 @@
       the way configuration objects are created, initialized, and managed. In
       version 1.x configurations are created directly using their constructor.
       Especially for file-based configuration implementations - like
-      <code><a href="../apidocs/org/apache/commons/configuration/PropertiesConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/PropertiesConfiguration.html">
       PropertiesConfiguration</a></code> or
-      <code><a href="../apidocs/org/apache/commons/configuration/XMLConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/XMLConfiguration.html">
       XMLConfiguration</a></code> - there were constructors which immediately
       populated the newly created instances from a data source. If additional
       settings were to be applied, this was done after the creation using
@@ -319,7 +319,7 @@ PropertiesConfiguration config = builder.getConfiguration();
       The former has been removed. The functionality provided by
       <code>DefaultConfigurationBuilder</code> is still available, but the
       class has been renamed to
-      <code><a href="../apidocs/org/apache/commons/configuration/builder/combined/CombinedConfigurationBuilder.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/builder/combined/CombinedConfigurationBuilder.html">
       CombinedConfigurationBuilder</a></code> (the old name was no longer
       appropriate as builders are now a common concept in the library) and
       adapted to other builder implementations.
@@ -333,7 +333,7 @@ PropertiesConfiguration config = builder.getConfiguration();
       definition for the combined configuration is obtained. So a dynamic
       approach is possible here as well. In both cases, the
       <code>getConfiguration()</code> method is used to obtain the
-      <code><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/CombinedConfiguration.html">
       CombinedConfiguration</a></code> object constructed by the builder. From
       a usage point of view there is not that much difference between these
       classes.
@@ -403,7 +403,7 @@ PropertiesConfiguration config = builder.getConfiguration();
       aspects. The most obvious change is probably that synchronization of
       configurations is now much more flexible. A configuration instance is
       assigned a
-      <code><a href="../apidocs/org/apache/commons/configuration/sync/Synchronizer.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/sync/Synchronizer.html">
       Synchronizer</a></code> object which controls if and how locks are obtained
       when executing operations on this configuration. By changing the
       synchronizer, an application can adapt the locking behavior to its specific
@@ -412,11 +412,11 @@ PropertiesConfiguration config = builder.getConfiguration();
       reflected by different default implementations of the
       <code>Synchronizer</code> interface:
       <ul>
-        <li><code><a href="../apidocs/org/apache/commons/configuration/sync/NoOpSynchronizer.html">
+        <li><code><a href="../apidocs/org/apache/commons/configuration2/sync/NoOpSynchronizer.html">
         NoOpSynchronizer</a></code> does not use any synchronization at all.
         This is the option of choice for single-threaded access, but fails in a
         multi-threaded environment.</li>
-        <li><code><a href="../apidocs/org/apache/commons/configuration/sync/ReadWriteSynchronizer.html">
+        <li><code><a href="../apidocs/org/apache/commons/configuration2/sync/ReadWriteSynchronizer.html">
         ReadWriteSynchronizer</a></code> implements synchronization based on a
         read/write lock.</li>
       </ul>
@@ -435,7 +435,7 @@ PropertiesConfiguration config = builder.getConfiguration();
     </p>
     <p>
       Hierarchical configurations derived from
-      <code><a href="../apidocs/org/apache/commons/configuration/BaseHierarchicalConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/BaseHierarchicalConfiguration.html">
       BaseHierarchicalConfiguration</a></code> now use a new implementation
       which allows for concurrent access without locking. So this group of
       configurations can be used without having to set a fully-functional
@@ -448,14 +448,14 @@ PropertiesConfiguration config = builder.getConfiguration();
         <li>Some classes have been made immutable, passing all information to the
         constructor rather than using bean-style properties for their
         initialization. An example is
-        <code><a href="../apidocs/org/apache/commons/configuration/tree/DefaultExpressionEngine.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/tree/DefaultExpressionEngine.html">
         DefaultExpressionEngine</a></code> whose instances can now be shared between
         different hierarchical configuration objects.</li>
         <li>Static utility classes with state have been rewritten so that they
         can be instantiated. Mutable static fields are in general
         thread-hostile. Refer to
         <a href="https://issues.apache.org/jira/browse/CONFIGURATION-486">CONFIGURATION-486</a>
-        for further details.</li>  
+        for further details.</li>
       </ul>
     </p>
     <p>
@@ -473,21 +473,21 @@ PropertiesConfiguration config = builder.getConfiguration();
       events generated by configuration builders and reloading events. Despite
       this increased number of event sources, there is now only a single event
       listener interface
-      (<code><a href="../apidocs/org/apache/commons/configuration/event/EventListener.html">
+      (<code><a href="../apidocs/org/apache/commons/configuration2/event/EventListener.html">
       EventListener</a></code>), and the mechanisms for adding and removing event
       listeners are the same everywhere; the basic protocol is defined by the
-      <code><a href="../apidocs/org/apache/commons/configuration/event/EventSource.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/event/EventSource.html">
       EventSource</a></code> interface. (Note that <code>EventSource</code> used
       to be a class in version 1.x; it actually was the base class of
       <code>AbstractConfiguration</code> and therefore inherited by all concrete
       configuration implementations. In version 2.0 this role has been taken
-      over by the <code><a href="../apidocs/org/apache/commons/configuration/event/BaseEventSource.html">
+      over by the <code><a href="../apidocs/org/apache/commons/configuration2/event/BaseEventSource.html">
       BaseEventSource</a></code> class.)
     </p>
     <p>
       While the old version used numeric constants to define specific event types,
       the new events are classified by instances of the
-      <code><a href="../apidocs/org/apache/commons/configuration/event/EventType.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/event/EventType.html">
       EventType</a></code> class. Event types can be used to determine the
       semantic meaning of an event, but also for filtering for specific events.
       They stand in a logic hierarchical relation with each other; an event
@@ -501,7 +501,7 @@ PropertiesConfiguration config = builder.getConfiguration();
       the registration of a change listener at a single configuration instance.
       To achieve an equivalent effect with the new API, one would implement an
       event listener and register it for the event type
-      <code><a href="../apidocs/org/apache/commons/configuration/event/ConfigurationEvent.html#ANY">
+      <code><a href="../apidocs/org/apache/commons/configuration2/event/ConfigurationEvent.html#ANY">
       ConfigurationEvent.ANY</a></code>. This listener will then receive
       notifications for all kinds of updates performed on the monitored
       configuration. Structure and content of these events is nearly

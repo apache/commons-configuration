@@ -40,7 +40,7 @@
           builder</a> implementation is responsible for the creation of
           file-based configuration objects and the management of their
           associated data files:
-          <code><a href="../apidocs/org/apache/commons/configuration/builder/FileBasedConfigurationBuilder.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/builder/FileBasedConfigurationBuilder.html">
           FileBasedConfigurationBuilder</a></code>. Usage of this class follows
           the typical pattern for configuration builders, i.e. a builder
           instance is created providing the class of the <code>Configuration</code>
@@ -54,7 +54,7 @@
         <p>
           In order to define the file to be loaded, a parameters object
           implementing the
-          <code><a href="../apidocs/org/apache/commons/configuration/builder/FileBasedBuilderProperties.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/builder/FileBasedBuilderProperties.html">
           FileBasedBuilderProperties</a></code> interface can be passed to the
           builder's <code>configure()</code> method. Using this interface the
           location of the file to be loaded can be provided in multiple ways:
@@ -70,7 +70,7 @@
             loaded can be provided.</li>
           </ul>
           A parameters object for file-based configurations is typically obtained
-          from a <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Parameters.html">
+          from a <code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/Parameters.html">
           Parameters</a></code> instance. Here the <code>fileBased()</code> method
           or one of the methods returning parameter objects derived from
           <code>FileBasedBuilderProperties</code> can be used. In addition to
@@ -191,7 +191,7 @@ config.setProperty("colors.background", "#000000"); // the configuration is save
         </p>
         <p>
           To support this frequent use case in a more convenient way, the
-          <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Configurations.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/Configurations.html">
           Configurations</a></code> class exists. This class contains a bunch
           of convenience methods that simplify the creation of many standard
           configurations from different sources like files or URLs. Using
@@ -242,7 +242,7 @@ PropertiesConfiguration config = configs.properties(propertiesFile);
           implementation, with the generic <code>fileBased()</code> or
           <code>fileBasedBuilder()</code> methods, access to all kinds of
           file-based configurations can be simplified. We take the
-          <code><a href="../apidocs/org/apache/commons/configuration/plist/PropertyListConfiguration.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/plist/PropertyListConfiguration.html">
           PropertyListConfiguration</a></code> class as an example for which no
           specific access methods exist. The code fragment below shows how a
           builder for such a configuration can be constructed using a generic
@@ -265,7 +265,7 @@ PropertyListConfiguration config = builder.getConfiguration();
           circumvented by making use of
           <a href="howto_builders.html#Default_Initialization_Parameters">default
           initialization parameters</a>. An instance is associated with a
-          <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Parameters.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/Parameters.html">
           Parameters</a></code> object which is used to construct parameter
           objects for the created configuration builders. By assigning default
           parameters to this object the default settings used for the created
@@ -287,7 +287,7 @@ PropertyListConfiguration config = builder.getConfiguration();
         </p>
         <p>
           I/O operations on files are controlled by the
-          <code><a href="../apidocs/org/apache/commons/configuration/io/FileHandler.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/io/FileHandler.html">
           FileHandler</a></code> class. Basically, this class connects a location
           of a configuration file (and some other meta information like the
           file's encoding) with an object which can read data from or write data
@@ -297,7 +297,7 @@ PropertyListConfiguration config = builder.getConfiguration();
         </p>
         <p>
           The object which actually reads and writes the data is represented by the
-          <code><a href="../apidocs/org/apache/commons/configuration/io/FileBased.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/io/FileBased.html">
           FileBased</a></code> interface. This is a pretty lean interface
           consisting of only two methods for reading data from a Reader and
           writing data to a Writer. All configuration implementations that can
@@ -382,7 +382,7 @@ handler.save(out);
 	  target object. Here concurrent I/O operations could cause problems.
 	  Therefore, <code>FileHandler</code> checks whether the target object
 	  implements the
-	  <code><a href="../apidocs/org/apache/commons/configuration/sync/SynchronizerSupport.html">
+	  <code><a href="../apidocs/org/apache/commons/configuration2/sync/SynchronizerSupport.html">
           SynchronizerSupport</a></code> interface. If this is the case, proper
           synchronization for load and save operations can be performed. Because
           all configuration implementations implement <code>SynchronizerSupport</code>
@@ -390,7 +390,7 @@ handler.save(out);
 	</p>
         <p>
           Another important class related to file access is
-          <code><a href="../apidocs/org/apache/commons/configuration/io/FileLocator.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/io/FileLocator.html">
           FileLocator</a></code>. An instance stores all information
           required for resolving a file to be accessed. <code>FileHandler</code>
           uses a <code>FileLocator</code> instance to maintain this part of
@@ -425,7 +425,7 @@ handler.save(out);
         In its default mode of operation <em>Commons Configuration</em> supports retrieving and storing
         configuration files either on a local file system or via http. However, <em>Commons
         Configuration</em> provides support for allowing other File System adapters. All file
-        access is accomplished through the <code><a href="../apidocs/org/apache/commons/configuration/io/FileSystem.html">
+        access is accomplished through the <code><a href="../apidocs/org/apache/commons/configuration2/io/FileSystem.html">
         FileSystem</a></code> class so accessing files using other mechanisms is possible.
       </p>
       <p>
@@ -443,20 +443,20 @@ handler.save(out);
         processed by the builder - in both a global way and for each referenced
         sub configuration. The following listing shows a configuration definition
         file for a combined builder making use of this functionality. Per
-        default, the <code><a href="../apidocs/org/apache/commons/configuration/io/VFSFileSystem.html">
+        default, the <code><a href="../apidocs/org/apache/commons/configuration2/io/VFSFileSystem.html">
         VFSFileSystem</a></code> is used, but the included XML
         configuration is loaded via a
-        <code><a href="../apidocs/org/apache/commons/configuration/io/DefaultFileSystem.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/io/DefaultFileSystem.html">
         DefaultFileSystem</a></code> instance:
       </p>
      <source><![CDATA[
 <configuration>
   <header>
-    <fileSystem config-class="org.apache.commons.configuration.io.VFSFileSystem"/>
+    <fileSystem config-class="org.apache.commons.configuration2.io.VFSFileSystem"/>
   </header>
   <override>
     <xml fileName="settings.xml" config-name="xml">
-      <fileSystem config-class="org.apache.commons.configuration.io.DefaultFileSystem"/>
+      <fileSystem config-class="org.apache.commons.configuration2.io.DefaultFileSystem"/>
     </xml>
 
     <!-- Other sources omitted -->
@@ -466,7 +466,7 @@ handler.save(out);
       <p>
         Commons VFS allows options to the underlying file systems being used. <em>Commons Configuration</em>
         allows applications to provide these by implementing the
-        <code><a href="../apidocs/org/apache/commons/configuration/io/FileOptionsProvider.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/io/FileOptionsProvider.html">
         FileOptionsProvider</a></code> interface
         and registering the provider with the <code>FileSystem</code>. <code>FileOptionsProvider</code>
         has a single method that must be implemented, <code>getOptions()</code>, which returns a Map
@@ -486,7 +486,7 @@ handler.save(out);
         algorithm for looking up configuration files defined by a file name
         and an optional base path in various places. Starting with version 2.0,
         it is now possible to adapt this algorithm. The key to this is the
-        <code><a href="../apidocs/org/apache/commons/configuration/io/FileLocationStrategy.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/io/FileLocationStrategy.html">
         FileLocationStrategy</a></code> interface. The interface defines
         a single method:
       </p>
@@ -495,7 +495,7 @@ URL locate(FileSystem fileSystem, FileLocator locator);
 ]]></source>
       <p>
         The purpose of this method is to resolve a file described by the passed
-        in <code><a href="../apidocs/org/apache/commons/configuration/io/FileLocator.html">
+        in <code><a href="../apidocs/org/apache/commons/configuration2/io/FileLocator.html">
         FileLocator</a></code> object and return a URL for it. If
         required, the provided <code>FileSystem</code> can be used. The URL
         yielded by a successful locate operation is directly used to access
@@ -522,7 +522,7 @@ URL locate(FileSystem fileSystem, FileLocator locator);
           </tr>
           <tr>
             <td valign="top">
-              <code><a href="../apidocs/org/apache/commons/configuration/io/ProvidedURLLocationStrategy.html">
+              <code><a href="../apidocs/org/apache/commons/configuration2/io/ProvidedURLLocationStrategy.html">
               ProvidedURLLocationStrategy</a></code>
             </td>
             <td>
@@ -536,7 +536,7 @@ URL locate(FileSystem fileSystem, FileLocator locator);
           </tr>
           <tr>
             <td valign="top">
-              <code><a href="../apidocs/org/apache/commons/configuration/io/FileSystemLocationStrategy.html">
+              <code><a href="../apidocs/org/apache/commons/configuration2/io/FileSystemLocationStrategy.html">
               FileSystemLocationStrategy</a></code>
             </td>
             <td>
@@ -548,7 +548,7 @@ URL locate(FileSystem fileSystem, FileLocator locator);
           </tr>
           <tr>
             <td valign="top">
-              <code><a href="../apidocs/org/apache/commons/configuration/io/AbsoluteNameLocationStrategy.html">
+              <code><a href="../apidocs/org/apache/commons/configuration2/io/AbsoluteNameLocationStrategy.html">
               AbsoluteNameLocationStrategy</a></code>
             </td>
             <td>
@@ -560,7 +560,7 @@ URL locate(FileSystem fileSystem, FileLocator locator);
           </tr>
           <tr>
             <td valign="top">
-              <code><a href="../apidocs/org/apache/commons/configuration/io/BasePathLocationStrategy.html">
+              <code><a href="../apidocs/org/apache/commons/configuration2/io/BasePathLocationStrategy.html">
               BasePathLocationStrategy</a></code>
             </td>
             <td>
@@ -572,7 +572,7 @@ URL locate(FileSystem fileSystem, FileLocator locator);
           </tr>
           <tr>
             <td valign="top">
-              <code><a href="../apidocs/org/apache/commons/configuration/io/HomeDirectoryLocationStrategy.html">
+              <code><a href="../apidocs/org/apache/commons/configuration2/io/HomeDirectoryLocationStrategy.html">
               HomeDirectoryLocationStrategy</a></code>
             </td>
             <td>
@@ -584,7 +584,7 @@ URL locate(FileSystem fileSystem, FileLocator locator);
           </tr>
           <tr>
             <td valign="top">
-              <code><a href="../apidocs/org/apache/commons/configuration/io/ClasspathLocationStrategy.html">
+              <code><a href="../apidocs/org/apache/commons/configuration2/io/ClasspathLocationStrategy.html">
               ClasspathLocationStrategy</a></code>
             </td>
             <td>
@@ -595,7 +595,7 @@ URL locate(FileSystem fileSystem, FileLocator locator);
           </tr>
           <tr>
             <td valign="top">
-              <code><a href="../apidocs/org/apache/commons/configuration/io/CombinedLocationStrategy.html">
+              <code><a href="../apidocs/org/apache/commons/configuration2/io/CombinedLocationStrategy.html">
               CombinedLocationStrategy</a></code>
             </td>
             <td>

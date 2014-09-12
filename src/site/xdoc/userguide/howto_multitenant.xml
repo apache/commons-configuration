@@ -46,17 +46,17 @@
 
       <subsection name="MultiFileConfigurationBuilder">
         <p>
-          <code><a href="../apidocs/org/apache/commons/configuration/builder/combined/MultiFileConfigurationBuilder.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/builder/combined/MultiFileConfigurationBuilder.html">
           MultiFileConfigurationBuilder</a></code> is a specialized configuration
           builder implementation which internally manages a set of builders for
           <a href="howto_filebased.html">file-based configurations</a>. In the
           initialization parameters of this builder a file name pattern has to
           be passed. The pattern can contain keys that will be resolved using the
-          <code><a href="../apidocs/org/apache/commons/configuration/interpol/ConfigurationInterpolator.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/interpol/ConfigurationInterpolator.html">
           ConfigurationInterpolator</a></code> every time the builder's
           <code>getConfiguration()</code> method is called. The resolved pattern
           is then interpreted as the name of a configuration file to be loaded
-          by a newly created <code><a href="../apidocs/org/apache/commons/configuration/builder/FileBasedConfigurationBuilder.html">
+          by a newly created <code><a href="../apidocs/org/apache/commons/configuration2/builder/FileBasedConfigurationBuilder.html">
           FileBasedConfigurationBuilder</a></code>.
         </p>
         <p>
@@ -81,12 +81,12 @@
       </subsection>
       <subsection name="DynamicCombinedConfiguration">
         <p>
-          The <code><a href="../apidocs/org/apache/commons/configuration/builder/combined/CombinedConfigurationBuilder.html">
+          The <code><a href="../apidocs/org/apache/commons/configuration2/builder/combined/CombinedConfigurationBuilder.html">
           CombinedConfigurationBuilder</a></code> class allows multiple configuration files to be
           merged together. However, it will not collaborate with a <code>MultiFileConfiguration</code>
           properly since the underlying managed configuration will be different depending
           on the resolution of the location pattern.
-          <code><a href="../apidocs/org/apache/commons/configuration/DynamicCombinedConfiguration.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/DynamicCombinedConfiguration.html">
           DynamicCombinedConfiguration</a></code> solves this by creating a new
           <code>CombinedConfiguration</code> for each pattern.
         </p>
@@ -94,10 +94,10 @@
       <subsection name="Sample Configuration">
         <p>
            This sample configuration illustrates how to use
-           <code><a href="../apidocs/org/apache/commons/configuration/builder/combined/CombinedConfigurationBuilder.html">
+           <code><a href="../apidocs/org/apache/commons/configuration2/builder/combined/CombinedConfigurationBuilder.html">
            CombinedConfigurationBuilder</a></code>
            in combination with
-           <code><a href="../apidocs/org/apache/commons/configuration/builder/combined/MultiFileConfigurationBuilder.html">
+           <code><a href="../apidocs/org/apache/commons/configuration2/builder/combined/MultiFileConfigurationBuilder.html">
            MultiFileConfigurationBuilder</a></code> to create a multi-tenant
            configuration.
         </p>
@@ -105,11 +105,11 @@
 <configuration>
   <header>
     <result loggerName="TestLogger"
-            config-class="org.apache.commons.configuration.DynamicCombinedConfiguration"
+            config-class="org.apache.commons.configuration2.DynamicCombinedConfiguration"
             keyPattern="$${sys:Id}">
-      <nodeCombiner config-class="org.apache.commons.configuration.tree.MergeCombiner"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.MergeCombiner"/>
       <expressionEngine
-          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
   </header>
   <override>
@@ -118,12 +118,12 @@
                config-forceCreate="true"
                schemaValidation="true">
        <expressionEngine
-          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </multiFile>
     <xml fileName="testMultiConfiguration_default.xml"
          config-name="defaultConfig" schemaValidation="true">
       <expressionEngine
-          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </xml>
   </override>
 </configuration>
@@ -172,17 +172,17 @@
       <subsection name="Builder Configuration Related to Multi-file Configurations">
         <p>
           When setting up a
-          <code><a href="../apidocs/org/apache/commons/configuration/builder/combined/MultiFileConfigurationBuilder.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/builder/combined/MultiFileConfigurationBuilder.html">
           MultiFileConfigurationBuilder</a></code> a special object with
           initialization parameters can be used as argument to the
           <code>configure()</code> method. It is of type
-          <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/MultiFileBuilderParameters.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/MultiFileBuilderParameters.html">
           MultiFileBuilderParameters</a></code> and can be obtained via the
           <code>multiFile()</code> method of a
-          <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Parameter.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/Parameter.html">
           Parameters</a></code> object. The properties specific to this
           configuration type are defined by the
-          <code><a href="../apidocs/org/apache/commons/configuration/builder/MultiFileBuilderProperties.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/builder/MultiFileBuilderProperties.html">
           MultiFileBuilderProperties</a></code> interface. They include
           <ul>
             <li>The pattern string for determining the name of the
@@ -224,7 +224,7 @@ XMLConfiguration config = builder.getConfiguration();
           a single configuration file. However, this either means the subcomponent
           has to be aware of the surrounding configuration and navigate past it or the
           application must be provided just the portion of the configuration it
-          can process. <code><a href="../apidocs/org/apache/commons/configuration/PatternSubtreeConfigurationWrapper.html">
+          can process. <code><a href="../apidocs/org/apache/commons/configuration2/PatternSubtreeConfigurationWrapper.html">
           PatternSubtreeConfigurationWrapper</a></code> can be used for this purpose.
         </p>
         <p>
@@ -232,7 +232,7 @@ XMLConfiguration config = builder.getConfiguration();
           attributes needed to make components work correctly injected into them.
           When working with Commons Configuration this works very well. Components
           simply need to have a
-          <code><a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/HierarchicalConfiguration.html">
           HierarchicalConfiguration</a></code> attribute along with
           a corresponding setter and getter. The injection framework can then be
           used to provide the component with the correct configuration using
@@ -241,9 +241,9 @@ XMLConfiguration config = builder.getConfiguration();
         <p>
         <source><![CDATA[
   <bean id="configurationBuilder"
-        class="org.apache.commons.configuration.builder.FileBasedConfigurationBuilder">
+        class="org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder">
     <constructor-arg index="0"
-      value="org.apache.commons.configuration.XMLConfiguration"/>
+      value="org.apache.commons.configuration2.XMLConfiguration"/>
     <constructor-arg index="1">
         <map>
             <entry key="config-fileBased">
@@ -258,7 +258,7 @@ XMLConfiguration config = builder.getConfiguration();
         factory-method="getConfiguration">
   </bean>
   <bean id="subcomponentConfig"
-        class="org.apache.commons.configuration.PatternSubtreeConfigurationWrapper"
+        class="org.apache.commons.configuration2.PatternSubtreeConfigurationWrapper"
         autowire='autodetect'>
     <constructor-arg index="0">
       <ref bean="applicationConfig"/>
@@ -292,7 +292,7 @@ XMLConfiguration config = builder.getConfiguration();
           managed configuration instance can be declared directly as keys of
           this map. The configuration of the file to be loaded is an
           exceptional case: This information is stored internally as a
-          <code><a href="../apidocs/org/apache/commons/configuration/io/FileHandler.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/io/FileHandler.html">
           FileHandler</a></code> object, and the properties of this object are
           contained in a sub map under the key <em>config-fileBased</em>.
         </p>

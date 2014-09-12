@@ -27,7 +27,7 @@
     <p>
       An important sub category of hierarchical configurations files are XML
       documents. <em>Commons Configuration</em> ships with the
-      <code><a href="../apidocs/org/apache/commons/configuration/XMLConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/XMLConfiguration.html">
       XMLConfiguration</a></code> class that can read and write files of this
       type. All features described in the chapter about
       <a href="howto_hierarchical.html">Hierarchical Configurations</a> are
@@ -120,7 +120,7 @@ XMLConfiguration config = builder.getConfiguration();
         <p>
             <code>XMLConfiguration</code> provides a simple default implementation of
             an <code>EntityResolver</code> in form of the
-            <code><a href="../apidocs/org/apache/commons/configuration/resolver/DefaultEntityResolver.html">
+            <code><a href="../apidocs/org/apache/commons/configuration2/resolver/DefaultEntityResolver.html">
             DefaultEntityResolver</a></code> class. This implementation is initialized
             by calling the <code>registerEntityId()</code> method with the
             public IDs of the entities to be retrieved and their corresponding
@@ -167,7 +167,7 @@ XMLConfiguration config = builder.getConfiguration();
             Entity and URI Resolvers</a> describes using a set of catalog files to
             resolve enitities. <em>Commons Configuration</em> provides support for
             this Catalog Resolver through its own
-            <code><a href="../apidocs/org/apache/commons/configuration/resolver/CatalogResolver.html">
+            <code><a href="../apidocs/org/apache/commons/configuration2/resolver/CatalogResolver.html">
             CatalogResolver</a></code> class.
         </p>
          <source><![CDATA[
@@ -257,7 +257,7 @@ XMLConfiguration config = builder.getConfiguration();
         builders. The initialization parameters supported for them include all
         the settings available for hierarchical configurations and file-based
         configurations. In addition, the
-        <code><a href="../apidocs/org/apache/commons/configuration/builder/XMLBuilderProperties.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/builder/XMLBuilderProperties.html">
         XMLBuilderProperties</a></code> interface defines settings specific to
         XML configurations. This includes
         <ul>
@@ -271,9 +271,9 @@ XMLConfiguration config = builder.getConfiguration();
       <p>
         A parameters object for an XML configuration can be obtained using
         the <code>xml()</code> method of a
-        <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Parameter.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/Parameter.html">
         Parameters</a></code> instance. It returns an object implementing the
-        <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/XMLBuilderParameters.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/XMLBuilderParameters.html">
         XMLBuilderParameters</a></code> interface which defines set
         methods for all the available properties.
       </p>

@@ -29,7 +29,7 @@
         Commons Configuration allows you to access configuration properties from
         a variety of different sources. No matter if they are stored in a properties file,
         a XML document, or a JNDI tree, they can all be accessed in the same way
-        through the generic <code><a href="../apidocs/org/apache/commons/configuration/Configuration.html">Configuration</a></code>
+        through the generic <code><a href="../apidocs/org/apache/commons/configuration2/Configuration.html">Configuration</a></code>
         interface.
       </p>
       <p>
@@ -89,12 +89,12 @@
 
       </p>
       </subsection>
-      
+
       <subsection name="The Configuration interface">
       <p>
         All the classes in this package that represent different kinds of configuration
         sources share a single interface:
-        <code><a href="../apidocs/org/apache/commons/configuration/Configuration.html">Configuration</a></code>.
+        <code><a href="../apidocs/org/apache/commons/configuration2/Configuration.html">Configuration</a></code>.
         This interface allows you to access and manipulate configuration properties
         in a generic way.
       </p>
@@ -103,7 +103,7 @@
         divided into methods which query data from the configuration and
         methods which alter the configuration object. In fact, the
         <code>Configuration</code> interface extends a base interface called
-        <code><a href="../apidocs/org/apache/commons/configuration/ImmutableConfiguration.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/ImmutableConfiguration.html">
         ImmutableConfiguration</a></code>. <code>ImmutableConfiguration</code>
         defines all methods which read data from a configuration object without
         changing its state. <code>Configuration</code> adds methods for
@@ -191,7 +191,7 @@
         object into an <code>ImmutableConfiguration</code>: just pass the
         configuration in question to the <code>unmodifiableConfiguration()</code>
         method of the
-        <code><a href="../apidocs/org/apache/commons/configuration/ConfigurationUtils.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/ConfigurationUtils.html">
         ConfigurationUtils</a></code> utility class. This results in an
         immutable configuration containing the same data as the original
         configuration.

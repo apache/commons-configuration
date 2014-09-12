@@ -50,7 +50,7 @@
     </p>
     <p>
       A basic component is a <em>reloading detector</em>, defined by the
-      <code><a href="../apidocs/org/apache/commons/configuration/reloading/ReloadingDetector.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/reloading/ReloadingDetector.html">
       ReloadingDetector</a></code> interface. This object is responsible for
       detecting a change on an external configuration source. An example
       implementation could check whether the last-modified data of a specific
@@ -70,7 +70,7 @@
     </p>
     <p>
       The next component taking part in reloading is an instance of the
-      <code><a href="../apidocs/org/apache/commons/configuration/reloading/ReloadingController.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/reloading/ReloadingController.html">
       ReloadingController</a></code> class. This is a fully functional class
       implementing a generic protocol for executing a reload check (based on an
       external trigger) and reacting accordingly. The actual check whether a
@@ -84,7 +84,7 @@
       controller changes into the so-called <em>reloading state</em>. This
       means that the need for a reload was detected and now the reload has
       actually to happen. Typically, this is done by one of the
-      <code><a href="../apidocs/org/apache/commons/configuration/reloading/ReloadingListener.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/reloading/ReloadingListener.html">
       ReloadingListener</a></code> objects registered at the controller. As long
       as the controller is in reloading state, no further changes on the
       configuration source monitored by the associated <code>ReloadingDetector</code>
@@ -118,7 +118,7 @@
       which get changed by external sources are a typical use case for an
       automatic reloading feature. Therefore, <em>Commons Configuration</em>
       has some special support in this area. This is mainly provided by the
-      <code><a href="../apidocs/org/apache/commons/configuration/builder/ReloadingFileBasedConfigurationBuilder.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/builder/ReloadingFileBasedConfigurationBuilder.html">
       ReloadingFileBasedConfigurationBuilder</a></code> class, an extension of
       the standard builder for file-based configurations.
     </p>
@@ -128,13 +128,13 @@
       <code>ReloadingDetector</code> that is associated with the file managed
       by the builder. (Actually, the situation is a bit more complex: the
       creation of the reloading detector is delegated to an object implementing
-      the <code><a href="../apidocs/org/apache/commons/configuration/builder/ReloadingDetectorFactory.html">
+      the <code><a href="../apidocs/org/apache/commons/configuration2/builder/ReloadingDetectorFactory.html">
       ReloadingDetectorFactory</a></code> interface. The factory to be used can
       be configured via the builder's initialization parameters. Per default, a
-      <code><a href="../apidocs/org/apache/commons/configuration/builder/DefaultReloadingDetectorFactory.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/builder/DefaultReloadingDetectorFactory.html">
       DefaultReloadingDetectorFactory</a></code> object is used which creates
       an instance of the
-      <code><a href="../apidocs/org/apache/commons/configuration/reloading/FileHandlerReloadingDetector.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/reloading/FileHandlerReloadingDetector.html">
       FileHandlerReloadingDetector</a></code> class. Such an object can detect
       changes on a file referenced by a <code>FileHandler</code>.) The builder
       is already registered as change listener at the reloading controller;
@@ -146,7 +146,7 @@
     </p>
     <p>
       For this example we use the
-      <code><a href="../apidocs/org/apache/commons/configuration/reloading/PeriodicReloadingTrigger.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/reloading/PeriodicReloadingTrigger.html">
       PeriodicReloadingTrigger</a></code> class which is based on a scheduled
       executor service. When constructing an instance of this class the
       <code>ReloadingController</code> and the period in which to trigger a
@@ -247,10 +247,10 @@ trigger.start();
       file-based configurations some settings can be defined that influence
       reloading operations. These settings are part of the initialization
       parameters for file-based configurations and defined by the
-      <code><a href="../apidocs/org/apache/commons/configuration/builder/FileBasedBuilderProperties.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/builder/FileBasedBuilderProperties.html">
       FileBasedBuilderProperties</a></code> interface:
       <ul>
-        <li>The <code><a href="../apidocs/org/apache/commons/configuration/builder/ReloadingDetectorFactory.html">
+        <li>The <code><a href="../apidocs/org/apache/commons/configuration2/builder/ReloadingDetectorFactory.html">
         ReloadingDetectorFactory</a></code> to be used when the reloading
         controller is created. An application with special requirements related
         to the detection of changes can here provide a custom factory. As was
@@ -268,15 +268,15 @@ trigger.start();
 
     <subsection name="Generic Reloading Support">
     <p>
-      In fact, <code><a href="../apidocs/org/apache/commons/configuration/builder/ReloadingFileBasedConfigurationBuilder.html">
+      In fact, <code><a href="../apidocs/org/apache/commons/configuration2/builder/ReloadingFileBasedConfigurationBuilder.html">
       ReloadingFileBasedConfigurationBuilder</a></code> is a pretty thin
       implementation around a generic reloading mechanism already supported by
-      the <code><a href="../apidocs/org/apache/commons/configuration/builder/BasicConfigurationBuilder.html">
+      the <code><a href="../apidocs/org/apache/commons/configuration2/builder/BasicConfigurationBuilder.html">
       BasicConfigurationBuilder</a></code> base class. What it does is mainly
       specific to file-based configurations: It ensures that a suitable
       <code>ReloadingDetector</code> is used which is connected to the file
       managed by the builder, and that this detector is used by a
-      <code><a href="../apidocs/org/apache/commons/configuration/reloading/ReloadingController.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/reloading/ReloadingController.html">
       ReloadingController</a></code> object also created by the builder.
     </p>
     <p>
@@ -374,7 +374,7 @@ builder.addEventListener(ConfigurationBuilderEvent.CONFIGURATION_REQUEST,
 
     <subsection name="Managed Reloading">
     <p>
-      <code><a href="../apidocs/org/apache/commons/configuration/reloading/ManagedReloadingDetector.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/reloading/ManagedReloadingDetector.html">
       ManagedReloadingDetector</a></code> is an alternative to automatic
       reloading. It allows to hot-reload properties on a running application,
       but only when requested by an administrator. The detector class defines a

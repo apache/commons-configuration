@@ -29,12 +29,12 @@
       <p>
         Properties files are a popular means of configuring applications. Of course, <em>Commons Configuration</em>
         supports this format and enhances significantly the basic <code>java.util.Properties</code> class.
-        This section introduces the features of the 
-        <code><a href="../apidocs/org/apache/commons/configuration/PropertiesConfiguration.html">PropertiesConfiguration</a></code> class.
+        This section introduces the features of the
+        <code><a href="../apidocs/org/apache/commons/configuration2/PropertiesConfiguration.html">PropertiesConfiguration</a></code> class.
         Note that <code>PropertiesConfiguration</code> is a very typical example
         for an implementation of the <code>Configuration</code> interface; it
         extends
-        <code><a href="../apidocs/org/apache/commons/configuration/AbstractConfiguration.html">AbstractConfiguration</a></code>,
+        <code><a href="../apidocs/org/apache/commons/configuration2/AbstractConfiguration.html">AbstractConfiguration</a></code>,
         thus all the features provided by this base class are available here as
         well. More information about functionality common to all standard
         <code>Configuration</code> implementations can be found in the section
@@ -76,7 +76,7 @@ catch(ConfigurationException cex)
         <p>
           As is demonstrated by this example, a configuration object for a
           properties file is obtained via a
-          <code><a href="../apidocs/org/apache/commons/configuration/builder/FileBasedConfigurationBuilder.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/builder/FileBasedConfigurationBuilder.html">
           FileBasedConfigurationBuilder</a></code> as described in the section
           <a href="howto_filebased.html">File-based Configurations</a>.
         </p>
@@ -126,7 +126,7 @@ colors.pie = #FF0000, #00FF00, #0000FF
 </source>
         <p>
           Provided that an appropriate
-          <code><a href="../apidocs/org/apache/commons/configuration/convert/ListDelimiterHandler.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/convert/ListDelimiterHandler.html">
           ListDelimiterHandler</a></code> object was set for the
           configuration instance, the value is split automatically, and
           you can retrieve an array or a <code>java.util.List</code> directly with:
@@ -138,7 +138,7 @@ List&lt;Object&gt; colorList = config.getList("colors.pie");
         <p>
           Splitting of string values at list delimiter characters is disabled
           by default. It can be enabled by specifying an instance of
-          <code><a href="../apidocs/org/apache/commons/configuration/convert/DefaultListDelimiterHandler.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/convert/DefaultListDelimiterHandler.html">
           DefaultListDelimiterHandler</a></code>. This can be done when loading
           the configuration via the builder:
         </p>
@@ -274,7 +274,7 @@ config.dirs = \\\\share2
       ]]></source>
       <p>
         Please also refer to the Javadocs of the
-        <code><a href="../apidocs/org/apache/commons/configuration/convert/DefaultListDelimiterHandler.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/convert/DefaultListDelimiterHandler.html">
         DefaultListDelimiterHandler</a></code> class; it describes the
         escaping rules to be applied in detail.
       </p>
@@ -284,7 +284,7 @@ config.dirs = \\\\share2
       <p>
         Each <code>PropertiesConfiguration</code> object is associated with a
         <em>Layout object</em>, an instance of the class
-        <code><a href="../apidocs/org/apache/commons/configuration/PropertiesConfigurationLayout.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/PropertiesConfigurationLayout.html">
         PropertiesConfigurationLayout</a></code>. This layout object is
         responsible for preserving most of the structure of loaded configuration
         files. This means that things like comments or blank lines in a saved
@@ -413,7 +413,7 @@ public class WhitespacePropertiesReader extends PropertiesConfiguration.Properti
     {
         super(in, delimiter);
     }
-    
+
     /**
      * Special algorithm for parsing properties keys with whitespace. This
      * method is called for each non-comment line read from the properties
@@ -479,11 +479,11 @@ Configuration config = builder.getConfiguration();
         When setting up a configuration builder to produce a
         <code>PropertiesConfiguration</code> instance typically an object
         implementing the
-        <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/PropertiesBuilderParameters.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/PropertiesBuilderParameters.html">
         PropertiesBuilderParameters</a></code> interface is used. In addition
         to the parameters common to all file-based configurations, there are
         settings specific to properties files which are defined by the
-        <code><a href="../apidocs/org/apache/commons/configuration/builder/PropertiesBuilderProperties.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/builder/PropertiesBuilderProperties.html">
         PropertiesBuilderProperties</a></code> interface. These include
         <ul>
           <li>A flag whether <a href="#Includes">include files</a> are supported.
@@ -497,7 +497,7 @@ Configuration config = builder.getConfiguration();
       <p>
         A parameters object for a properties configuration can be obtained using
         the <code>properties()</code> method of a
-        <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Parameter.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/Parameter.html">
         Parameters</a></code> instance
       </p>
       </subsection>

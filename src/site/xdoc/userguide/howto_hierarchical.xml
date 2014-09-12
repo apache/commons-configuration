@@ -28,9 +28,9 @@
       Many sources of configuration data have a hierarchical or tree-like
       nature. They can represent data that is structured in many ways.
       Such configuration sources are represented by classes implementing the
-      <code><a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/HierarchicalConfiguration.html">
       HierarchicalConfiguration</a></code> interface. With
-      <code><a href="../apidocs/org/apache/commons/configuration/BaseHierarchicalConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/BaseHierarchicalConfiguration.html">
       BaseHierarchicalConfiguration</a></code> there is a fully functional
       implementation of the interface from which most of the hierarchical
       configuration classes shipped with <em>Commons Configuration</em> are
@@ -39,7 +39,7 @@
     <p>
       Prominent examples of hierarchical configuration sources are XML
       documents. They can be read and written using the
-      <code><a href="../apidocs/org/apache/commons/configuration/XMLConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/XMLConfiguration.html">
       XMLConfiguration</a></code> class. This section explains how
       to deal with such structured data and demonstrates the enhanced query
       facilities supported by <code>HierarchicalConfiguration</code>. We
@@ -48,15 +48,15 @@
       properties) applies to other hierarchical configurations as well.
       Examples for other hierarchical configuration classes are
       <ul>
-        <li><code><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
+        <li><code><a href="../apidocs/org/apache/commons/configuration2/CombinedConfiguration.html">
         CombinedConfiguration</a></code></li>
-        <li><code><a href="../apidocs/org/apache/commons/configuration/INIConfiguration.html">
+        <li><code><a href="../apidocs/org/apache/commons/configuration2/INIConfiguration.html">
         INIConfiguration</a></code></li>
-        <li><code><a href="../apidocs/org/apache/commons/configuration/plist/PropertyListConfiguration.html">
+        <li><code><a href="../apidocs/org/apache/commons/configuration2/plist/PropertyListConfiguration.html">
         PropertyListConfiguration</a></code></li>
       </ul>
     </p>
-        
+
     <subsection name="Accessing properties in hierarchical configurations">
     <p>
       We will start with a simple XML document to show some basics
@@ -84,13 +84,13 @@
 ]]></source>
     <p>
       (As becomes obvious, this tutorial does not bother with good
-      design of XML documents, the example file should rather 
+      design of XML documents, the example file should rather
       demonstrate the different ways of accessing properties.)
       To access the data stored in this document it must be loaded
-      by <code><a href="../apidocs/org/apache/commons/configuration/XMLConfiguration.html">
-      XMLConfiguration</a></code>. Like for other 
+      by <code><a href="../apidocs/org/apache/commons/configuration2/XMLConfiguration.html">
+      XMLConfiguration</a></code>. Like for other
       <a href="howto_filebased.html">file-based</a>  configuration classes
-      a <code><a href="../apidocs/org/apache/commons/configuration/builder/FileBasedConfigurationBuilder.html">
+      a <code><a href="../apidocs/org/apache/commons/configuration2/builder/FileBasedConfigurationBuilder.html">
       FileBasedConfigurationBuilder</a></code> is used for reading the source
       file as shown in the following code fragement:
     </p>
@@ -156,7 +156,7 @@ List<Object> buttons = config.getList("buttons.name");
           has the three values <em>OK</em>, <em>Cancel</em>, and
           <em>Help</em>, so it is queried using the <code>getList()</code>
           method. This works with attributes, too. In addition, a special
-          <code><a href="../apidocs/org/apache/commons/configuration/convert/ListDelimiterHandler.html">
+          <code><a href="../apidocs/org/apache/commons/configuration2/convert/ListDelimiterHandler.html">
           ListDelimiterHandler</a></code> implementation can be set which
           supports splitting texts at a specific list delimiter character. This
           works in the same way as described in the section about
@@ -423,7 +423,7 @@ List<Object> ... // further calls for other data that might be stored in the con
       very handy when processing list-like structures:
     </p>
 <source><![CDATA[
-List<HierarchicalConfiguration<ImmutableNode>> fields = 
+List<HierarchicalConfiguration<ImmutableNode>> fields =
     config.configurationsAt("tables.table(0).fields.field");
 for(HierarchicalConfiguration sub : fields)
 {
@@ -447,7 +447,7 @@ for(HierarchicalConfiguration sub : fields)
       which accept an additional <strong>boolean</strong> parameter. If
       here the value <strong>true</strong> is passed, a special
       configuration implementation is returned (in fact, an instance of the
-      <code><a href="../apidocs/org/apache/commons/configuration/SubnodeConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/SubnodeConfiguration.html">
       SubnodeConfiguration</a></code> class) that operates on the same
       data structures as the original configuration. Therefore, changes made
       on one configuration are directly reflected by the other one.
@@ -632,7 +632,7 @@ config.addProperty("tables.table.fields.field.type", "java.sql.Date");
     <p>
       For more information about adding properties to a hierarchical
       configuration also have a look at the javadocs for
-      <code><a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/HierarchicalConfiguration.html">
       HierarchicalConfiguration</a></code>.
     </p>
     </subsection>
@@ -698,16 +698,16 @@ String complex = config.getString("test..complex.test..sub..element");
     <subsection name="Internal Representation">
     <p>
       You might have noted that the
-      <code><a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/HierarchicalConfiguration.html">
       HierarchicalConfiguration</a></code> interface has a type parameter
       defining the type of nodes it operates on. Internally, the nodes build up
       a tree structure on which queries or manipulating operations can be
       executed. There is an abstract base class
-      <code><a href="../apidocs/org/apache/commons/configuration/AbstractHierarchicalConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/AbstractHierarchicalConfiguration.html">
       AbstractHierarchicalConfiguration</a></code> implementing a major part of
       the provided functionality in terms of abstract node objects. These nodes
       are not directly accessed, but via a so-called
-      <code><a href="../apidocs/org/apache/commons/configuration/tree/NodeHandler.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/tree/NodeHandler.html">
       NodeHandler</a></code>. The <code>NodeHandler</code> interface defines a
       number of methods for accessing properties of a node like its name, its
       value, or its children in a generic way.
@@ -717,10 +717,10 @@ String complex = config.getString("test..complex.test..sub..element");
       with different hierarchical data structures, e.g. file systems, JNDI, etc.
       The standard configurations shipped with <em>Commons Configuration</em>
       mainly use an in-memory representation of their data based on the
-      <code><a href="../apidocs/org/apache/commons/configuration/tree/ImmutableNode.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/tree/ImmutableNode.html">
       ImmutableNode</a></code> class. There is a special base class for
       configurations of this type called
-      <code><a href="../apidocs/org/apache/commons/configuration/BaseHierarchicalConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/BaseHierarchicalConfiguration.html">
       BaseHierarchicalConfiguration</a></code>. As the name implies, the nodes
       used by these configurations are immutable; this is beneficial especially
       when it comes to <a href="howto_concurrency.html#Special_cases">concurrent
@@ -754,7 +754,7 @@ ImmutableNode root = config.getNodeModel().getNodeHandler().getRootNode();
             becomes possible to plug in different expression engines into a
             <code>HierarchicalConfiguration</code> object. So by providing
             different implementations of the
-            <code><a href="../apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
+            <code><a href="../apidocs/org/apache/commons/configuration2/tree/ExpressionEngine.html">
             ExpressionEngine</a></code>
             interface hierarchical configurations can support alternative
             expression languages for accessing their data.
@@ -763,7 +763,7 @@ ImmutableNode root = config.getNodeModel().getNodeHandler().getRootNode();
             Before we discuss the available expression engines that ship
             with Commons Configuration, it should be explained how an
             expression engine can be associated with a configuration object.
-            <code><a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+            <code><a href="../apidocs/org/apache/commons/configuration2/HierarchicalConfiguration.html">
             HierarchicalConfiguration</a></code> and all implementing classes
             provide a <code>setExpressionEngine()</code> method, which expects
             an implementation of the <code>ExpressionEngine</code> interface as
@@ -805,9 +805,9 @@ FileBasedConfigurationBuilder<XMLConfiguration> builder =
             <p>
                 The syntax described so far for property keys of hierarchical
                 configurations is implemented by a specific implementation of the
-                <code><a href="../apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
+                <code><a href="../apidocs/org/apache/commons/configuration2/tree/ExpressionEngine.html">
                 ExpressionEngine</a></code> interface called
-                <code><a href="../apidocs/org/apache/commons/configuration/tree/DefaultExpressionEngine.html">
+                <code><a href="../apidocs/org/apache/commons/configuration2/tree/DefaultExpressionEngine.html">
                 DefaultExpressionEngine</a></code>. An instance of this class
                 is used by the base implementation of
                 <code>HierarchicalConfiguration</code> if no specific expression
@@ -826,7 +826,7 @@ FileBasedConfigurationBuilder<XMLConfiguration> builder =
                 change it! The following example shows how the syntax of a
                 <code>DefaultExpressionEngine</code> object is modified. The
                 key is to create an instance of the
-                <code><a href="../apidocs/org/apache/commons/configuration/tree/DefaultExpressionEngineSymbols.html">
+                <code><a href="../apidocs/org/apache/commons/configuration2/tree/DefaultExpressionEngineSymbols.html">
                 DefaultExpressionEngineSymbols</a></code> class and to
                 initialize it with the desired syntax elements. This is done
                 using a builder approach:
@@ -897,7 +897,7 @@ DefaultExpressionEngine engine = new DefaultExpressionEngine(symbolsNoAttributes
 Object value = config.getProperty("tables.table(0).name");
 // name can either be a child node of table or an attribute
          ]]></source>
-        
+
         <a name="The_XPATH_expression_engine"></a>
         <strong>The XPATH expression engine</strong>
             <p>
@@ -938,7 +938,7 @@ Object value = config.getProperty("tables.table(0).name");
             </p>
             <p>
                 For enabling XPATH syntax for property keys you need the
-                <code><a href="../apidocs/org/apache/commons/configuration/tree/xpath/XPathExpressionEngine.html">
+                <code><a href="../apidocs/org/apache/commons/configuration2/tree/xpath/XPathExpressionEngine.html">
                 XPathExpressionEngine</a></code> class. This class
                 implements the <code>ExpressionEngine</code> interface and can
                 be plugged into a <code>HierarchicalConfiguration</code> object
@@ -1074,7 +1074,7 @@ config.addProperty("tables table/name", "documents");
                 the  <code>&lt;tables&gt;</code> element. More information about
                 keys and how they play together with <code>addProperty()</code>
                 and <code>setProperty()</code> can be found in the Javadocs for
-                <a href="../apidocs/org/apache/commons/configuration/tree/xpath/XPathExpressionEngine.html">
+                <a href="../apidocs/org/apache/commons/configuration2/tree/xpath/XPathExpressionEngine.html">
                 <code>XPathExpressionEngine</code></a>.
             </p>
             <p>
@@ -1096,7 +1096,7 @@ config.addProperty("tables table/name", "documents");
       <p>
         There is special support for the initialization parameters of
         configuration builders for hierarchical configurations. The
-        <code><a href="../apidocs/org/apache/commons/configuration/builder/HierarchicalBuilderProperties.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/builder/HierarchicalBuilderProperties.html">
         HierarchicalBuilderProperties</a></code> interface defines additional
         settings applicable to hierarchical configurations. Currently, the
         <a href="#Expression_engines">expression engine</a> can be set.
@@ -1104,9 +1104,9 @@ config.addProperty("tables table/name", "documents");
       <p>
         A parameters object for a hierarchical configuration can be obtained using
         the <code>hierarchical()</code> method of a
-        <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/Parameter.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/Parameter.html">
         Parameters</a></code> instance. It returns an object implementing the
-        <code><a href="../apidocs/org/apache/commons/configuration/builder/fluent/HierarchicalBuilderParameters.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/HierarchicalBuilderParameters.html">
         HierarchicalBuilderParameters</a></code> interface which contains set
         methods for all the available properties, including the ones inherited
         from base interfaces.
