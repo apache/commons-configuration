@@ -32,6 +32,10 @@
         Some configuration classes declared this interface without being
         actually serializable.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-588">
+        The name of the top-level package and the maven coordinates have been
+        changed to allow a coexistence of Commons Configuration 1.x with 2.0.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-584">
         The event mechanism has been reworked. There is now a generic event
         listener interface which can be used to receive notifications from
