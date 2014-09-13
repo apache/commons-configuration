@@ -28,6 +28,11 @@ import org.xml.sax.EntityResolver;
  * The {@code XMLConfiguration} class defines a bunch of additional properties
  * related to XML processing.
  * </p>
+ * <p>
+ * <strong>Important note:</strong> This interface is not intended to be
+ * implemented by client code! It defines a set of available properties and may
+ * be extended even in minor releases.
+ * </p>
  *
  * @version $Id$
  * @since 2.0

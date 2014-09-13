@@ -39,6 +39,11 @@ import org.apache.commons.logging.Log;
  * object. Properties can be set using a fluent API making it convenient for
  * client code to specify concrete property values in a single statement.
  * </p>
+ * <p>
+ * <strong>Important note:</strong> This interface is not intended to be
+ * implemented by client code! It defines a set of available properties and may
+ * be extended even in minor releases.
+ * </p>
  *
  * @version $Id$
  * @since 2.0

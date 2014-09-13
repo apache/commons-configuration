@@ -27,6 +27,11 @@ import org.apache.commons.configuration2.PropertiesConfigurationLayout;
  * This interface defines additional properties which can be set when
  * initializing a {@code PropertiesConfiguration} object.
  * </p>
+ * <p>
+ * <strong>Important note:</strong> This interface is not intended to be
+ * implemented by client code! It defines a set of available properties and may
+ * be extended even in minor releases.
+ * </p>
  *
  * @version $Id$
  * @since 2.0

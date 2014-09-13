@@ -28,6 +28,11 @@ import org.apache.commons.configuration2.builder.BuilderParameters;
  * managing multiple file-based configurations which are selected by a pattern.
  * Properties can be set in a fluent style.
  * </p>
+ * <p>
+ * <strong>Important note:</strong> This interface is not intended to be
+ * implemented by client code! It defines a set of available properties and may
+ * be extended even in minor releases.
+ * </p>
  *
  * @version $Id $
  * @since 2.0

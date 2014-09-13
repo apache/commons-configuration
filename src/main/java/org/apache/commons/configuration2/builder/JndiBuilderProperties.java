@@ -26,6 +26,11 @@ import javax.naming.Context;
  * This interface defines properties related to the JNDI tree to be represented
  * by a {@code JNDIConfiguration}.
  * </p>
+ * <p>
+ * <strong>Important note:</strong> This interface is not intended to be
+ * implemented by client code! It defines a set of available properties and may
+ * be extended even in minor releases.
+ * </p>
  *
  * @version $Id$
  * @since 2.0

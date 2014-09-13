@@ -27,6 +27,11 @@ import org.apache.commons.configuration2.builder.XMLBuilderProperties;
  * Definition of a parameters interface providing a fluent API for setting all
  * properties for a XML configuration.
  * </p>
+ * <p>
+ * <strong>Important note:</strong> This interface is not intended to be
+ * implemented by client code! It defines a set of available properties and may
+ * be extended even in minor releases.
+ * </p>
  *
  * @version $Id$
  * @since 2.0
