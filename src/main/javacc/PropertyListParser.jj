@@ -22,14 +22,14 @@ options {
 
 PARSER_BEGIN(PropertyListParser)
 
-package org.apache.commons.configuration.plist;
+package org.apache.commons.configuration2.plist;
 
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.apache.commons.configuration.HierarchicalConfiguration;
-import org.apache.commons.configuration.tree.ImmutableNode;
+import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.apache.commons.configuration2.tree.ImmutableNode;
 
 import org.apache.commons.codec.binary.Hex;
 

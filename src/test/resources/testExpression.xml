@@ -19,16 +19,16 @@
 <configuration>
   <header>
     <result delimiterParsingDisabled="true" forceReloadCheck="true"
-            config-class="org.apache.commons.configuration.DynamicCombinedConfiguration"
+            config-class="org.apache.commons.configuration2.DynamicCombinedConfiguration"
             keyPattern="$${sys:Id}">
-      <nodeCombiner config-class="org.apache.commons.configuration.tree.MergeCombiner"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.MergeCombiner"/>
       <expressionEngine
-          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
     <lookups>
-      <lookup config-prefix="mdc" config-class="org.apache.commons.configuration.TestVFSConfigurationBuilder$MDCStrLookup"/>
+      <lookup config-prefix="mdc" config-class="org.apache.commons.configuration2.TestVFSConfigurationBuilder$MDCStrLookup"/>
       <lookup config-prefix="expr"
-              config-class="org.apache.commons.configuration.interpol.ExprLookup">
+              config-class="org.apache.commons.configuration2.interpol.ExprLookup">
         <variables>
           <variable name="String" value="Class:org.apache.commons.lang.StringUtils"/>
           <variable name="MDC" value="Class:org.slf4j.MDC"/>
@@ -37,20 +37,20 @@
     </lookups>
     <providers>
       <provider config-tag="multifile"
-         config-class="org.apache.commons.configuration.DefaultConfigurationBuilder$FileConfigurationProvider"
-         configurationClass="org.apache.commons.configuration.MultiFileHierarchicalConfiguration"/>
+         config-class="org.apache.commons.configuration2.DefaultConfigurationBuilder$FileConfigurationProvider"
+         configurationClass="org.apache.commons.configuration2.MultiFileHierarchicalConfiguration"/>
     </providers>
   </header>
   <override>
     <multifile filePattern='$$${expr:String.right(MDC.get("Id"), 2)}/testMultiConfiguration_$$${sys:Id}.xml'
                config-name="clientConfig" delimiterParsingDisabled="true">
        <expressionEngine
-          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </multifile>
     <xml fileName="testMultiConfiguration_default.xml"
          config-name="defaultConfig" delimiterParsingDisabled="true">
       <expressionEngine
-          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </xml>
   </override>
 </configuration>

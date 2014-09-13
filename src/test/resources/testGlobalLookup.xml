@@ -19,12 +19,12 @@
 <configuration>
   <header>
     <result delimiterParsingDisabled="true">
-      <nodeCombiner config-class="org.apache.commons.configuration.tree.OverrideCombiner"/>
-      <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.OverrideCombiner"/>
+      <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
     <lookups>
       <lookup config-prefix="test"
-              config-class="org.apache.commons.configuration.TestDefaultConfigurationBuilder$TestLookup"/>
+              config-class="org.apache.commons.configuration2.TestDefaultConfigurationBuilder$TestLookup"/>
     </lookups>
     <combiner>
       <override>
@@ -38,12 +38,12 @@
   <system/>
   <properties fileName="test.properties" throwExceptionOnMissing="true"
     config-name="properties">
-    <reloadingStrategy config-class="org.apache.commons.configuration.reloading.FileChangedReloadingStrategy"
+    <reloadingStrategy config-class="org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy"
       refreshDelay="10000"/>
   </properties>
   <!-- Fetch the file name from a variable -->
   <xml fileName="${test:test_file_xml}" config-name="xml">
-    <expressionEngine config-class="org.apache.commons.configuration.tree.DefaultExpressionEngine"
+    <expressionEngine config-class="org.apache.commons.configuration2.tree.DefaultExpressionEngine"
       propertyDelimiter="/" indexStart="[" indexEnd="]"/>
   </xml>
   <additional>

@@ -20,7 +20,7 @@
   <header>
     <providers>
       <provider config-tag="test"
-                config-class="org.apache.commons.configuration.builder.combined.TestCombinedConfigurationBuilder$BuilderProviderTestImpl"
+                config-class="org.apache.commons.configuration2.builder.combined.TestCombinedConfigurationBuilder$BuilderProviderTestImpl"
                 propertyKey="testKey"/>
     </providers>
   </header>

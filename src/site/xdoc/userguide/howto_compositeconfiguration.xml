@@ -30,7 +30,7 @@
             There are many use cases when you want to collect the properties
             of several configuration sources and access them like a single
             configuration object. One way to do that is using the
-            <code><a href="../apidocs/org/apache/commons/configuration/CompositeConfiguration.html">
+            <code><a href="../apidocs/org/apache/commons/configuration2/CompositeConfiguration.html">
             CompositeConfiguration</a></code> class.
         </p>
         <p>
@@ -71,7 +71,7 @@ cc.addConfiguration(builderDefaults.getConfiguration());
 
 		<subsection name="Saving Changes">
 			<p>
-				If you have a non static Configuration where you want to 
+				If you have a non static Configuration where you want to
 				save changes made to a configuration, and you are using a
 				CompositeConfiguration, then you will need to pass into
 				the constructor of the CompositeConfiguration what Configuration

@@ -24,7 +24,7 @@
   <header>
     <lookups>
       <lookup config-prefix="test"
-              config-class="org.apache.commons.configuration.builder.combined.TestCombinedConfigurationBuilder$TestLookup"/>
+              config-class="org.apache.commons.configuration2.builder.combined.TestCombinedConfigurationBuilder$TestLookup"/>
     </lookups>
   </header>
   <!-- Fetch the file name from a variable -->

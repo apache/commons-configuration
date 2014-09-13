@@ -19,14 +19,14 @@
 <configuration systemProperties="test.properties.xml">
   <header>
     <result delimiterParsingDisabled="true">
-      <nodeCombiner config-class="org.apache.commons.configuration.tree.OverrideCombiner"/>
-      <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.OverrideCombiner"/>
+      <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
   </header>
   <system/>
   <properties fileName="test2.properties" throwExceptionOnMissing="true"
     config-name="properties">
-    <reloadingStrategy config-class="org.apache.commons.configuration.reloading.FileChangedReloadingStrategy"
+    <reloadingStrategy config-class="org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy"
       refreshDelay="10000"/>
   </properties>
 </configuration>

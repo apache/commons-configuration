@@ -21,15 +21,15 @@
 <configuration>
   <header>
     <result loggerName="TestLogger"
-            config-class="org.apache.commons.configuration.DynamicCombinedConfiguration"
+            config-class="org.apache.commons.configuration2.DynamicCombinedConfiguration"
             keyPattern="$${test:Id}">
-      <nodeCombiner config-class="org.apache.commons.configuration.tree.MergeCombiner"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.MergeCombiner"/>
       <expressionEngine
-          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
     <lookups>
       <lookup config-prefix="test"
-              config-class="org.apache.commons.configuration.TestDynamicCombinedConfiguration$ThreadLookup"/>
+              config-class="org.apache.commons.configuration2.TestDynamicCombinedConfiguration$ThreadLookup"/>
     </lookups>
     <entity-resolver catalogFiles="catalog.xml"/>
   </header>
@@ -39,12 +39,12 @@
                config-forceCreate="true"
                schemaValidation="true">
        <expressionEngine
-          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </multiFile>
     <xml fileName="testMultiConfiguration_default.xml"
          config-name="defaultConfig" schemaValidation="true">
       <expressionEngine
-          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </xml>
   </override>
 </configuration>

@@ -28,7 +28,7 @@
     <p>
       The <code>Configuration</code> interface defines a whole bunch of methods.
       Implementing these methods all from scratch can be quite hard. Because of
-      that the <code><a href="../apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
+      that the <code><a href="../apidocs/org/apache/commons/configuration2/AbstractConfiguration.html">
       AbstractConfiguration</a></code> class exists. This class serves as a
       common base class for most of the <code>Configuration</code> implementations
       in <em>Commons Configuration</em> and provides a great deal of the
@@ -108,7 +108,7 @@ long longValue = config.getLong("NonExistingProperty");
       generated from a single string. To achieve this, an
       <code>AbstractConfiguration</code> instance collaborates with an object
       implementing the
-      <code><a href="../apidocs/org/apache/commons/configuration/convert/ListDelimiterHandler.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/convert/ListDelimiterHandler.html">
       ListDelimiterHandler</a></code> interface. This interface defines methods
       for dealing with objects that may contain multiple values. Examples of
       such complex objects are arrays, lists, and strings containing a specific
@@ -118,7 +118,7 @@ long longValue = config.getLong("NonExistingProperty");
     </p>
     <p>
       Per default, <code>AbstractConfiguration</code> uses an instance of the
-      <code><a href="../apidocs/org/apache/commons/configuration/convert/DisabledListDelimiterHandler.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/convert/DisabledListDelimiterHandler.html">
       DisabledListDelimiterHandler</a></code> class as list handler. This
       class can deal with lists and arrays, but it does not recognize any list
       delimiter characters in strings. (Hence the name, as splitting of strings
@@ -126,7 +126,7 @@ long longValue = config.getLong("NonExistingProperty");
     </p>
     <p>
       An alternative implementation of <code>ListDelimiterHandler</code> is
-      <code><a href="../apidocs/org/apache/commons/configuration/convert/DefaultListDelimiterHandler.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/convert/DefaultListDelimiterHandler.html">
       DefaultListDelimiterHandler</a></code>. This class actually supports
       string splitting; the list delimiter character has to be passed to the
       constructor. Whenever a property is added to the configuration (or the
@@ -284,7 +284,7 @@ public class EchoLookup extends StrLookup
       Now we want this class to be called for variables with the prefix
       <code>echo</code>. For this purpose the <code>EchoLookup</code> class
       has to be registered at the
-      <code><a href="../apidocs/org/apache/commons/configuration/interpol/ConfigurationInterpolator.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/interpol/ConfigurationInterpolator.html">
       ConfigurationInterpolator</a></code> class with the desired prefix.
       <code>ConfigurationInterpolator</code> implements a thin wrapper over the
       <code>StrLookup</code> API defined by Commons Lang. It has a static
@@ -338,7 +338,7 @@ user.file = ${expr:System.getProperty("user.home"}/settings.xml
     <result/>
     <lookups>
       <lookup config-prefix="expr"
-              config-class="org.apache.commons.configuration.interpol.ExprLookup">
+              config-class="org.apache.commons.configuration2.interpol.ExprLookup">
         <variables>
           <variable name="System" value="Class:java.lang.System"/>
           <variable name"net" value="Class:java.net.InetAddress"/>
@@ -367,7 +367,7 @@ user.file = ${expr:System.getProperty("user.home"}/settings.xml
     <result/>
     <lookups>
       <lookup config-prefix="expr"
-              config-class="org.apache.commons.configuration.interpol.ExprLookup">
+              config-class="org.apache.commons.configuration2.interpol.ExprLookup">
         <variables>
           <variable name"net" value="Class:java.net.InetAddress"/>
           <variable name="String" value="Class:org.apache.commons.lang.StringUtils"/>
@@ -376,7 +376,7 @@ user.file = ${expr:System.getProperty("user.home"}/settings.xml
     </lookups>
   </header>
   <override>
-    <xml fileName="${expr:$[sys:basePath] + 
+    <xml fileName="${expr:$[sys:basePath] +
          String.lowercase(net.localHost.hostName) + '/testMultiConfiguration_default.xml'}"
          config-name="defaultConfig" delimiterParsingDisabled="true">
     </xml>
@@ -388,7 +388,7 @@ user.file = ${expr:System.getProperty("user.home"}/settings.xml
     <subsection name="Data type conversions">
     <p>
       As was already mentioned when discussing the
-      <code><a href="../apidocs/org/apache/commons/configuration/Configuration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/Configuration.html">
       Configuration</a></code> interface, there are various <code>get()</code>
       methods returning property values in different target data types. If
       necessary, a data type conversion is performed. Take a look at the
@@ -466,7 +466,7 @@ int theAnswer = config.getInt("answer");
       standard types out of the box. In addition to the result types of the
       <code>get()</code> methods in the <code>Configuration</code> interface,
       some more types are supported. These are listed in the documentation of the
-      <code><a href="../apidocs/org/apache/commons/configuration/DataConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/DataConfiguration.html">
       DataConfiguration</a></code> class. <code>DataConfiguration</code> is a
       <em>decorator</em> providing additional data type conversion methods for
       more target types; these additional methods are implemented on top of the
@@ -476,7 +476,7 @@ int theAnswer = config.getInt("answer");
       If your application deals with special objects, there may be the
       requirement to extend the conversion capabilities offered by the
       library. To support this use case, there is the
-      <code><a href="../apidocs/org/apache/commons/configuration/convert/ConversionHandler.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/convert/ConversionHandler.html">
       ConversionHandler</a></code> interface. Each instance of a configuration
       class derived from <code>AbstractConfiguration</code> is associated with
       such a <code>ConversionHandler</code> object. The interface defines
@@ -496,7 +496,7 @@ int theAnswer = config.getInt("answer");
     <p>
       If the conversion facilities provided by <em>Commons Configuration</em>
       are not to be fully replaced, but only extended by some custom types,
-      the class <code><a href="../apidocs/org/apache/commons/configuration/convert/DefaultConversionHandler.html">
+      the class <code><a href="../apidocs/org/apache/commons/configuration2/convert/DefaultConversionHandler.html">
       DefaultConversionHandler</a></code> is a good starting point. As the name
       implies, an instance of this class is used per default for doing type
       conversions. <code>DefaultConversionHandler</code> has some protected
