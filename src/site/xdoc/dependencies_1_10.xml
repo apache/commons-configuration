@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<!-- ===================================================================== -->
+<!-- $Id$ -->
+<!-- ===================================================================== -->
+
+<document>
+
+    <properties>
+        <title>Runtime dependencies</title>
+    </properties>
+
+    <body>
+
+        <section name="Runtime dependencies">
+
+            <p>
+              Commons Configuration requires Java 5 or later.
+            </p>
+            <p>
+              A lot of dependencies are declared in the Maven POM. These are all
+              needed during compile time. On runtime however you only need to
+              add the dependencies to your classpath that are required by the
+              parts of the Commons Configuration package you are using. The
+              following table helps you to determine which dependencies you
+              have to include based on the components you intend to use:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th width="30%">Component</th>
+                        <th>Dependencies</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Core</td>
+                        <td>
+                            commons-lang<br/>
+                            commons-logging
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>DefaultConfigurationBuilder</td>
+                        <td>commons-beanutils</td>
+                    </tr>
+                    <tr>
+                        <td>ConfigurationFactory (deprecated)</td>
+                        <td>commons-digester</td>
+                    </tr>
+                    <tr>
+                        <td>ConfigurationConverter</td>
+                        <td>commons-collections</td>
+                    </tr>
+                    <tr>
+                        <td>
+                          PropertyListConfiguration<br/>
+                          XMLPropertyListConfiguration
+                        </td>
+                        <td>commons-codec</td>
+                    </tr>
+                    <tr>
+                        <td>ConfigurationDynaBean</td>
+                        <td>commons-beanutils</td>
+                    </tr>
+                    <tr>
+                        <td>XPathExpressionEngine</td>
+                        <td>commons-jxpath</td>
+                    </tr>
+                    <tr>
+                        <td>CatalogResolver</td>
+                        <td>xml-resolver</td>
+                    </tr>
+                    <tr>
+                        <td>Web configurations</td>
+                        <td>servlet-api</td>
+                    </tr>
+                    <tr>
+                        <td>ExprLookup</td>
+                        <td>commons-jexl</td>
+                    </tr>
+                    <tr>
+                        <td>VFSFileSystem, VFSFileChangedReloadingStrategy</td>
+                        <td>commons-vfs</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+              <strong>Notes</strong>
+            </p>
+            <p>
+              <ul>
+                <li>Commons Configuration makes use of other
+                Commons components. You should be able to use the current
+                versions of these components together with Commons Configuration.
+                In some cases, when no specific features are used, older
+                versions will work, too. Below is a table with the version
+                numbers that have been tested:
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Component</th>
+                      <th>Version</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>commons-lang</td>
+                      <td>2.2, 2.3, 2.4, 2.5, 2.6</td>
+                    </tr>
+                    <tr>
+                      <td>commons-collections</td>
+                      <td>3.1, 3.2, 3.2.1</td>
+                    </tr>
+                    <tr>
+                      <td>commons-logging</td>
+                      <td>1.0.4, 1.1, 1.1.1</td>
+                    </tr>
+                    <tr>
+                      <td>commons-digester</td>
+                      <td>1.6, 1.7, 1.8, 1.8.1</td>
+                    </tr>
+                    <tr>
+                      <td>commons-beanutils</td>
+                      <td>1.7.0, 1.8.0, 1.8.2, 1.8.3</td>
+                    </tr>
+                    <tr>
+                      <td>commons-codec</td>
+                      <td>1.3, 1.5, 1.6</td>
+                    </tr>
+                    <tr>
+                      <td>commons-jxpath</td>
+                      <td>1.2, 1.3</td>
+                    </tr>
+                    <tr>
+                      <td>commons-jexl</td>
+                      <td>2.1.1</td>
+                    </tr>
+                    <tr>
+                      <td>commons-vfs</td>
+                      <td>2.0</td>
+                    </tr>
+                    <tr>
+                      <td>xml-resolver</td>
+                      <td>1.2</td>
+                    </tr>
+                  </tbody>
+                </table>
+                </li>
+              </ul>
+            </p>
+        </section>
+
+    </body>
+
+</document>
