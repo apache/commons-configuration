@@ -25,8 +25,8 @@
   </properties>
 
   <body>
-    <release version="2.0" date="in SVN"
-      description="TBD">
+    <release version="2.0-alpha1" date="in SVN"
+      description="First alpha release after a major redesign.">
       <action dev="oheger" type="update" issue="CONFIGURATION-590">
         Removed Serializable interface from all configuration implementations.
         Some configuration classes declared this interface without being
