@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.EventListener;
@@ -1003,8 +1002,7 @@ public class TestAbstractHierarchicalConfiguration
         assertNotNull(prop);
         assertEquals("creationDate", prop.toString());
 
-        Set<String> keys = new HashSet<String>();
-        CollectionUtils.addAll(keys, config.getKeys());
+        Set<String> keys = ConfigurationAssert.keysToSet(config);
         assertEquals("Wrong number of defined keys", 2, keys.size());
         assertTrue("Key not found", keys.contains("tables/table/name"));
         assertTrue("Key not found", keys

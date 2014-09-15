@@ -23,7 +23,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.combined.CombinedConfigurationBuilder;
 import org.apache.commons.configuration2.io.FileHandler;
@@ -56,8 +55,8 @@ public class TestPropertiesSequence
         Configuration a = simpleConfiguration.subset("prefix");
         Configuration b = compositeConfiguration.subset("prefix");
 
-        List<?> keysSimpleConfiguration = IteratorUtils.toList(a.getKeys());
-        List<?> keysCompositeConfiguration = IteratorUtils.toList(b.getKeys());
+        List<String> keysSimpleConfiguration = ConfigurationAssert.keysToList(a);
+        List<String> keysCompositeConfiguration = ConfigurationAssert.keysToList(b);
 
         assertTrue("Size:" + keysSimpleConfiguration.size(), keysSimpleConfiguration.size() > 0);
         assertEquals(keysSimpleConfiguration.size(), keysCompositeConfiguration.size());
@@ -92,8 +91,8 @@ public class TestPropertiesSequence
         Configuration a = simpleConfiguration.subset("prefix");
         Configuration b = compositeConfiguration.subset("prefix");
 
-        List<?> keysSimpleConfiguration = IteratorUtils.toList(a.getKeys());
-        List<?> keysCompositeConfiguration = IteratorUtils.toList(b.getKeys());
+        List<String> keysSimpleConfiguration = ConfigurationAssert.keysToList(a);
+        List<String> keysCompositeConfiguration = ConfigurationAssert.keysToList(b);
 
         assertTrue("Size:" + keysSimpleConfiguration.size(), keysSimpleConfiguration.size() > 0);
         assertEquals(keysSimpleConfiguration.size(), keysCompositeConfiguration.size());

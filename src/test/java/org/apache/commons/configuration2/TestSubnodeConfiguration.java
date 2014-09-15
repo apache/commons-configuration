@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
@@ -236,7 +235,7 @@ public class TestSubnodeConfiguration
     {
         setUpSubnodeConfig();
         Set<String> keys = new HashSet<String>();
-        CollectionUtils.addAll(keys, config.getKeys());
+        keys.addAll(ConfigurationAssert.keysToList(config));
         assertEquals("Incorrect number of keys", 2, keys.size());
         assertTrue("Key 1 not contained", keys.contains("name"));
         assertTrue("Key 2 not contained", keys.contains("fields.field.name"));
@@ -302,8 +301,7 @@ public class TestSubnodeConfiguration
         setUpSubnodeConfig("tables/table[1]");
         assertEquals("Wrong field name", NodeStructureHelper.field(0, 1),
                 config.getString("fields/field[2]/name"));
-        Set<String> keys = new HashSet<String>();
-        CollectionUtils.addAll(keys, config.getKeys());
+        Set<String> keys = ConfigurationAssert.keysToSet(config);
         assertEquals("Wrong number of keys", 2, keys.size());
         assertTrue("Key 1 not contained", keys.contains("name"));
         assertTrue("Key 2 not contained", keys.contains("fields/field/name"));

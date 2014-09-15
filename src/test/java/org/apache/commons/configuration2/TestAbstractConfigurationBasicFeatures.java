@@ -32,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration2.convert.ConversionHandler;
 import org.apache.commons.configuration2.convert.DefaultConversionHandler;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
@@ -77,8 +76,7 @@ public class TestAbstractConfigurationBasicFeatures
             protected Iterator<String> getKeysInternal()
             {
                 Collection<String> keyCol = new ArrayList<String>();
-                CollectionUtils.addAll(keyCol, getUnderlyingConfiguration()
-                        .getKeys());
+                ConfigurationAssert.appendKeys(getUnderlyingConfiguration(), keyCol);
                 String[] keys = keyCol.toArray(new String[keyCol.size()]);
                 return Arrays.asList(keys).iterator();
             }
