@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.collections.ExtendedProperties;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
@@ -39,24 +38,6 @@ import org.junit.Test;
  */
 public class TestConfigurationConverter
 {
-    @Test
-    public void testExtendedPropertiesToConfiguration()
-    {
-        ExtendedProperties eprops = new ExtendedProperties();
-        eprops.setProperty("string", "teststring");
-        eprops.setProperty("int", "123");
-        eprops.addProperty("list", "item 1");
-        eprops.addProperty("list", "item 2");
-
-        Configuration config = ConfigurationConverter.getConfiguration(eprops);
-
-        assertEquals("This returns 'teststring'", "teststring", config.getString("string"));
-        List<Object> item1 = config.getList("list");
-        assertEquals("This returns 'item 1'", "item 1", item1.get(0));
-
-        assertEquals("This returns 123", 123, config.getInt("int"));
-    }
-
     @Test
     public void testPropertiesToConfiguration()
     {
@@ -74,23 +55,6 @@ public class TestConfigurationConverter
         assertEquals("This returns 'item 1'", "item 1", item1.get(0));
 
         assertEquals("This returns 123", 123, config.getInt("int"));
-    }
-
-    @Test
-    public void testConfigurationToExtendedProperties()
-    {
-        Configuration config = new BaseConfiguration();
-        config.setProperty("string", "teststring");
-        config.setProperty("int", "123");
-        config.addProperty("list", "item 1");
-        config.addProperty("list", "item 2");
-
-        ExtendedProperties eprops = ConfigurationConverter.getExtendedProperties(config);
-
-        assertEquals("This returns 'teststring'", "teststring", eprops.getString("string"));
-        List<?> list = eprops.getVector("list");
-        assertEquals("This returns 'item 1'", "item 1", list.get(0));
-        assertEquals("This returns 123", 123, eprops.getInt("int"));
     }
 
     /**

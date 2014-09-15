@@ -17,13 +17,11 @@
 
 package org.apache.commons.configuration2;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.collections.ExtendedProperties;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.lang3.StringUtils;
 
@@ -48,17 +46,6 @@ public final class ConfigurationConverter
     }
 
     /**
-     * Convert a ExtendedProperties class into a Configuration class.
-     *
-     * @param eprops ExtendedProperties object to convert
-     * @return Configuration created from the ExtendedProperties
-     */
-    public static Configuration getConfiguration(ExtendedProperties eprops)
-    {
-        return new MapConfiguration(eprops);
-    }
-
-    /**
      * Convert a standard Properties class into a configuration class.
      *
      * @param props properties object to convert
@@ -67,33 +54,6 @@ public final class ConfigurationConverter
     public static Configuration getConfiguration(Properties props)
     {
         return new MapConfiguration(props);
-    }
-
-    /**
-     * Convert a Configuration class into a ExtendedProperties class.
-     *
-     * @param config Configuration object to convert
-     * @return ExtendedProperties created from the Configuration
-     */
-    public static ExtendedProperties getExtendedProperties(Configuration config)
-    {
-        ExtendedProperties props = new ExtendedProperties();
-
-        for (Iterator<String> keys = config.getKeys(); keys.hasNext();)
-        {
-            String key = keys.next();
-            Object property = config.getProperty(key);
-
-            // turn lists into vectors
-            if (property instanceof List)
-            {
-                property = new ArrayList<Object>((List<?>) property);
-            }
-
-            props.setProperty(key, property);
-        }
-
-        return props;
     }
 
     /**
