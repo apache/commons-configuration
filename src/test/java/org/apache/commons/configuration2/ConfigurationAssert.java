@@ -23,7 +23,12 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 
@@ -136,6 +141,47 @@ public class ConfigurationAssert
         if (expEquals)
         {
             assertEquals("Different hash codes", o1.hashCode(), o2.hashCode());
+        }
+    }
+
+    /**
+     * Returns a list with all keys defined for the specified configuration.
+     *
+     * @param config the configuration
+     * @return a list with all keys of this configuration
+     */
+    public static List<String> keysToList(Configuration config)
+    {
+        List<String> keyList = new LinkedList<String>();
+        appendKeys(config, keyList);
+        return keyList;
+    }
+
+    /**
+     * Returns a set with all keys defined for the specified configuration.
+     *
+     * @param config the configuration
+     * @return a set with all keys of this configuration
+     */
+    public static Set<String> keysToSet(Configuration config)
+    {
+        Set<String> keySet = new HashSet<String>();
+        appendKeys(config, keySet);
+        return keySet;
+    }
+
+    /**
+     * Appends all keys in the specified configuration to the given collection.
+     *
+     * @param config the configuration
+     * @param collection the target collection
+     */
+    public static void appendKeys(Configuration config,
+            Collection<String> collection)
+    {
+        for (Iterator<String> it = config.getKeys(); it.hasNext();)
+        {
+            collection.add(it.next());
         }
     }
 
