@@ -24,18 +24,24 @@
 
   <body>
     <menu name="Configuration">
-      <item name="Home"                         href="/index.html"/>  
+      <item name="Overview"                     href="/index.html"/>  
       <item name="Download"                     href="http://commons.apache.org/configuration/download_configuration.cgi"/>  
-      <item name="Release History"              href="/changes-report.html"/>
-      <item name="User's Guide"                 href="/userguide/user_guide.html"/>
-      <item name="Upgrade Guide"                href="/userguide/upgradeto2_0.html"/>
+      <item name="Issue Tracking"               href="issue-tracking.html"/>
       <item name="Runtime Dependencies"         href="/dependencies.html"/>
-      <item name="Javadoc"                      href="/apidocs/index.html"/>
     </menu>
 
-    <menu name="Development">
+    <menu name="Documentation">
       <item name="Building"                     href="/building.html"/>
-      <item name="Issue Tracking"               href="issue-tracking.html"/>
+      <item name="Release History"              href="/changes-report.html"/>
+      <item name="1.10" collapse="true"         href="/index.html">
+        <item name="User's Guide"               href="http://commons.apache.org/configuration/javadocs/v1.10/userguide/user_guide.html"/>
+        <item name="Javadoc"              	href="http://commons.apache.org/configuration/javadocs/v1.10/apidocs/index.html"/>
+      </item>
+      <item name="2.0-alpha" collapse="true"    href="/index.html">
+        <item name="User's Guide"               href="/userguide/user_guide.html"/>
+        <item name="Upgrade Guide"              href="/userguide/upgradeto2_0.html"/>
+        <item name="Javadoc"                    href="/apidocs/index.html"/>
+      </item>
     </menu>
 
   </body>
