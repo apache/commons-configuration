@@ -314,6 +314,60 @@
       </action>
     </release>
 
+    <release version="1.10" date="2013-10-27"
+      description="Minor bug fixes and improvements">
+      <action dev="oheger" type="update" issue="CONFIGURATION-500">
+        XMLConfiguration now adds attributes of elements defining a list to
+        all list nodes.
+      </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-525">
+        PropertiesConfiguration now keeps a comment at the bottom of a
+        properties file. A new footer property was added for reading and
+        writing this footer comment.
+      </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-526" due-to="Oliver Kopp">
+        XMLPropertiesConfiguration now supports loading from and saving to DOM
+        nodes.
+      </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-534">
+        The includesAllowed property of PropertyConfiguration is now independent
+        from the existence of a base path.
+      </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-546" due-to="Justin Couch">
+        BeanHelper can now process BeanDefinitions initializing properties of
+        collection types of their target beans.
+      </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-550">
+        Conversion to Character is now supported.
+      </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-555">
+        Fixed a bug in the handling of the xml:space attribute in
+        XMLConfiguration. The attribute is now also applied to the current
+        element, not only to sub elements.
+      </action>
+      <action dev="henning" type="fix" issue="CONFIGURATION-556">
+        In 1.7 and before, any change to the system properties was
+        immediately reflected in a SystemConfiguration object. This
+        behaviour broke in 1.8 and 1.9. This has been fixed for 1.10.
+      </action>
+      <action dev="henning" type="fix" issue="CONFIGURATION-557">
+        In 1.7 and before, it was possible to pass an arbitrary Map
+        into the constructor of MapConfiguration. With the
+        generification in 1.8, this actually broke and it was no
+        longer possible to pass in e.g. a Map&lt;String, String&gt;
+        because the signature now required a Map&lt;String,
+        Object&gt;. Changing the constructor to accept a
+        Map&lt;String, ?&gt; restores this.
+      </action>
+      <action dev="henning" type="fix" issue="CONFIGURATION-558">
+        Similar to CONFIGURATION-557, the getList(String, List) method
+        was generified to be getList(String, List&lt;Object&gt;) but
+        needs to be getList(String, List&lt;?&gt;) so that code that
+        used a more specific list (such as a List&lt;String&gt;) still
+        compiles against the new API.
+      </action>
+    </release>
+
     <release version="1.9" date="2012-08-22"
       description="Minor bug fixes and improvements">
       <action dev="oheger" type="update" issue="CONFIGURATION-503" due-to="Tino Sino">
