@@ -69,6 +69,9 @@ o CONFIGURATION-512:  It is now possible to obtain an immutable view on a Config
 o CONFIGURATION-508:  Generic get() methods have been added to the Configuration interface.
                       These methods expect a target class and try to convert the value of
                       the specified property to this target class.
+o CONFIGURATION-204:  With the new reloading mechanism automatic and periodic reloading checks
+                      can be performed.
+o CONFIGURATION-202:  Reloading checks can now be performed in a background thread.
 
 Fixed Bugs:
 o CONFIGURATION-582:  Fixed a StringIndexOutOfBoundsException in PropertiesConfigurationLayout
@@ -191,6 +194,9 @@ o CONFIGURATION-418:  The handling of list delimiters and their escape character
 o CONFIGURATION-330:  Concurrent access to configurations has been reworked.
 o CONFIGURATION-153:  It is now possible to define the strategy used for locating
                       configuration files.
+o CONFIGURATION-136:  Reloading can no longer corrupt a configuration instance. This is now
+                      handled by a configuration builder; the original configuration instance
+                      is not modified.
 o CONFIGURATION-26:   It is now possible to influence the conversion from a container object
                       (a collection or an array) to a single value (e.g. what is returned by
                       getString() if the current property has multiple values). Per default,

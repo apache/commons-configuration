@@ -148,11 +148,11 @@
         files. Arbitrary file-based configurations are now supported.
       </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-539">
-        The deprectated INIConfiguration class was removed.
+        The deprecated INIConfiguration class was removed.
         HierarchicalINIConfiguration was renamed to INIConfiguration.
       </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-537">
-        The deprectated ConfigurationFactory class was removed.
+        The deprecated ConfigurationFactory class was removed.
       </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-536">
         File-based configurations are now implemented in a different way.
@@ -289,9 +289,21 @@
       <action dev="oheger" type="update" issue="CONFIGURATION-330">
         Concurrent access to configurations has been reworked.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-204">
+        With the new reloading mechanism automatic and periodic reloading checks
+        can be performed.
+      </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-202">
+        Reloading checks can now be performed in a background thread.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-153">
         It is now possible to define the strategy used for locating
         configuration files.
+      </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-136">
+        Reloading can no longer corrupt a configuration instance. This is now
+        handled by a configuration builder; the original configuration instance
+        is not modified.
       </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-26">
         It is now possible to influence the conversion from a container object
