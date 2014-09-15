@@ -85,6 +85,9 @@ o CONFIGURATION-567:  XMLBeanDeclaration now escapes node names before they are 
                       determine nested properties. Thanks to Shen liang.
 
 Changes:
+o CONFIGURATION-591:  Removed methods from ConfigurationConverter related to ExtendedProperties.
+                      This class is no longer supported by recent versions of Commons
+                      Collections.
 o CONFIGURATION-590:  Removed Serializable interface from all configuration implementations.
                       Some configuration classes declared this interface without being
                       actually serializable.
