@@ -1,7 +1,7 @@
 $Id$
 
                         Commons Configuration Package
-                         Version 2.0-alpha1-SNAPSHOT
+                             Version 2.0-alpha1
                                 Release Notes
 
 
