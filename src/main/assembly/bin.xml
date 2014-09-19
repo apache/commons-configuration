@@ -20,7 +20,7 @@
     <format>tar.gz</format>
     <format>zip</format>
   </formats>
-  <baseDirectory>${artifactId}-${commons.release.version}</baseDirectory>
+  <baseDirectory>${artifactId}-${commons.release.2.version}</baseDirectory>
   <fileSets>
     <fileSet>
       <includes>
