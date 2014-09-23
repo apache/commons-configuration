@@ -55,7 +55,7 @@
   <distributionManagement>
     <site>
       <id>apache.website</id>
-      <url>${commons.deployment.protocol}://people.apache.org/www/commons.apache.org/${commons.componentid}</url>
+      <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-configuration/</url>
     </site>
   </distributionManagement>
 
