@@ -20,7 +20,7 @@
   configuration sources created by a DefaultConfigurationBuilder.
   This XML configuration references a variable defined by another configuration
   source.
-  $Id:$
+  $Id$
 -->
 <test>
   <products>

@@ -25,7 +25,7 @@
   </properties>
 
   <body>
-    <release version="2.0-alpha1" date="in SVN"
+    <release version="2.0-alpha1" date="2014-09-23"
       description="First alpha release after a major redesign.">
       <action dev="oheger" type="update" issue="CONFIGURATION-591">
         Removed methods from ConfigurationConverter related to ExtendedProperties.
