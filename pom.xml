@@ -431,6 +431,8 @@
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
 
+    <commons.scmPubUrl>https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-configuration</commons.scmPubUrl>
+
     <!-- Explicitly declare optional dependencies for the OSGi manifest. -->
     <commons.osgi.import>
       org.apache.commons.beanutils.*;resolution:=optional,
