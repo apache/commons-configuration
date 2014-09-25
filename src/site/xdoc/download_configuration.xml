@@ -129,28 +129,28 @@ limitations under the License.
       <subsection name="Binaries">
         <table>
           <tr>
-              <td><a href="[preferred]/commons/configuration/binaries/commons-configuration-2.0-alpha1-bin.tar.gz">commons-configuration-2.0-alpha1-bin.tar.gz</a></td>
-              <td><a href="http://www.apache.org/dist/commons/configuration/binaries/commons-configuration-2.0-alpha1-bin.tar.gz.md5">md5</a></td>
-              <td><a href="http://www.apache.org/dist/commons/configuration/binaries/commons-configuration-2.0-alpha1-bin.tar.gz.asc">pgp</a></td>
+              <td><a href="[preferred]/commons/configuration/binaries/commons-configuration2-2.0-alpha1-bin.tar.gz">commons-configuration2-2.0-alpha1-bin.tar.gz</a></td>
+              <td><a href="http://www.apache.org/dist/commons/configuration/binaries/commons-configuration2-2.0-alpha1-bin.tar.gz.md5">md5</a></td>
+              <td><a href="http://www.apache.org/dist/commons/configuration/binaries/commons-configuration2-2.0-alpha1-bin.tar.gz.asc">pgp</a></td>
           </tr>
           <tr>
-              <td><a href="[preferred]/commons/configuration/binaries/commons-configuration-2.0-alpha1-bin.zip">commons-configuration-2.0-alpha1-bin.zip</a></td>
-              <td><a href="http://www.apache.org/dist/commons/configuration/binaries/commons-configuration-2.0-alpha1-bin.zip.md5">md5</a></td>
-              <td><a href="http://www.apache.org/dist/commons/configuration/binaries/commons-configuration-2.0-alpha1-bin.zip.asc">pgp</a></td>
+              <td><a href="[preferred]/commons/configuration/binaries/commons-configuration2-2.0-alpha1-bin.zip">commons-configuration2-2.0-alpha1-bin.zip</a></td>
+              <td><a href="http://www.apache.org/dist/commons/configuration/binaries/commons-configuration2-2.0-alpha1-bin.zip.md5">md5</a></td>
+              <td><a href="http://www.apache.org/dist/commons/configuration/binaries/commons-configuration2-2.0-alpha1-bin.zip.asc">pgp</a></td>
           </tr>
         </table>
       </subsection>
       <subsection name="Source">
         <table>
           <tr>
-              <td><a href="[preferred]/commons/configuration/source/commons-configuration-2.0-alpha1-src.tar.gz">commons-configuration-2.0-alpha1-src.tar.gz</a></td>
-              <td><a href="http://www.apache.org/dist/commons/configuration/source/commons-configuration-2.0-alpha1-src.tar.gz.md5">md5</a></td>
-              <td><a href="http://www.apache.org/dist/commons/configuration/source/commons-configuration-2.0-alpha1-src.tar.gz.asc">pgp</a></td>
+              <td><a href="[preferred]/commons/configuration/source/commons-configuration2-2.0-alpha1-src.tar.gz">commons-configuration2-2.0-alpha1-src.tar.gz</a></td>
+              <td><a href="http://www.apache.org/dist/commons/configuration/source/commons-configuration2-2.0-alpha1-src.tar.gz.md5">md5</a></td>
+              <td><a href="http://www.apache.org/dist/commons/configuration/source/commons-configuration2-2.0-alpha1-src.tar.gz.asc">pgp</a></td>
           </tr>
           <tr>
-              <td><a href="[preferred]/commons/configuration/source/commons-configuration-2.0-alpha1-src.zip">commons-configuration-2.0-alpha1-src.zip</a></td>
-              <td><a href="http://www.apache.org/dist/commons/configuration/source/commons-configuration-2.0-alpha1-src.zip.md5">md5</a></td>
-              <td><a href="http://www.apache.org/dist/commons/configuration/source/commons-configuration-2.0-alpha1-src.zip.asc">pgp</a></td>
+              <td><a href="[preferred]/commons/configuration/source/commons-configuration2-2.0-alpha1-src.zip">commons-configuration2-2.0-alpha1-src.zip</a></td>
+              <td><a href="http://www.apache.org/dist/commons/configuration/source/commons-configuration2-2.0-alpha1-src.zip.md5">md5</a></td>
+              <td><a href="http://www.apache.org/dist/commons/configuration/source/commons-configuration2-2.0-alpha1-src.zip.asc">pgp</a></td>
           </tr>
         </table>
       </subsection>
