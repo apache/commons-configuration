@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+  <properties>
+    <title>Configuration Overview</title>
+    <author email="epugh@upstate.com">Eric Pugh</author>
+    <author email="smanux@lfjr.net">Emmanuel Bourg</author>
+  </properties>
+  <body>
+
+    <section name="Using Configuration">
+      <p>
+        Commons Configuration allows you to access configuration properties from
+        a variety of different sources. No matter if they are stored in a properties file,
+        a XML document, or a JNDI tree, they can all be accessed in the same way
+        through the generic <code><a href="../apidocs/org/apache/commons/configuration/Configuration.html">Configuration</a></code>
+        interface.
+      </p>
+      <p>
+        Another strength of Commons Configuration is its ability to mix configurations
+        from heterogeneous sources and treat them like a single logic configuration.
+        This section will introduce you to the different configurations
+        available and will show you how to combine them.
+      </p>
+
+      <subsection name="Configuration Sources">
+      <p>
+        Currently there are quite a number of different sources of Configuration objects. But,
+        by just using a Configuration object versus a specific type like XMLConfiguration or
+        JNDIConfiguration, you are sheltered from the mechanics of actually retrieving the
+        configuration values. These various sources include:
+        <ul>
+          <li>
+              <strong>PropertiesConfiguration</strong>
+              Loads configuration values from a properties file.
+          </li>
+          <li>
+              <strong>XMLConfiguration</strong>
+              Takes values from an XML document.
+          </li>
+          <li>
+              <strong>INIConfiguration</strong>
+              Loads the values from a .ini file as used by Windows.
+          </li>
+          <li>
+              <strong>PropertyListConfiguration</strong>
+              Loads values from an OpenStep .plist file. XMLPropertyListConfiguration is also
+              available to read the XML variant used by Mac OS X.
+          </li>
+          <li>
+              <strong>JNDIConfiguration</strong>
+              Using a key in the JNDI tree, can retrieve values as configuration properties.
+          </li>
+          <li>
+              <strong>BaseConfiguration</strong>
+              An in-memory method of populating a Configuration object.
+          </li>
+          <li>
+              <strong>HierarchicalConfiguration</strong>
+              An in-memory Configuration object that is able to deal with complex
+              structured data.
+          </li>
+          <li>
+              <strong>SystemConfiguration</strong>
+              A configuration using the system properties
+          </li>
+          <li>
+              <strong>ConfigurationConverter</strong>
+              Takes a java.util.Properties or an org.apache.commons.collections.ExtendedProperties
+              and converts it to a Configuration object.
+          </li>
+       </ul>
+
+      </p>
+      </subsection>
+
+      <subsection name="Mixing Configuration Sources">
+      <p>
+        Often you want to provide a base set of configuration values, but allow the user to easily
+        override them for their specific environment.  Well one way is to hard code the default
+        values into your code, and have then provide a property file that overrides this.  However,
+        this is a very rigid way of doing things. Instead, with the <code>CompositeConfiguration</code>
+        you can provide many different ways of setting up a configuration. You can either do it
+        manually:
+      </p>
+
+<source>
+CompositeConfiguration config = new CompositeConfiguration();
+config.addConfiguration(new SystemConfiguration());
+config.addConfiguration(new PropertiesConfiguration("application.properties"));
+</source>
+
+      <p>or via the <code>ConfigurationFactory</code> class:</p>
+
+<source>
+ConfigurationFactory factory = new ConfigurationFactory("config.xml");
+Configuration config = factory.getConfiguration();
+</source>
+
+      <p>
+        The <code>config.xml</code> file used in the example above is a configuration descriptor,
+        it specifies the Configuration objects to load. Here is an example of descriptor:
+      </p>
+
+<source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<configuration>
+  <system/>
+  <properties fileName="application.properties"/>
+</configuration>
+]]></source>
+
+      <p>
+        What this says is that we are loading up all system properties, as well as the properties
+        file <code>application.properties</code>. The order of precedence is first to last. So in
+        the above example, if a property is not found in the system properties, it'll be searched
+        in the properties file. This allows you to set up default values in a properties file, and
+        override them with the system properties.
+      </p>
+      </subsection>
+      
+      <subsection name="The Configuration interface">
+      <p>
+        All the classes in this package that represent different kinds of configuration
+        sources share a single interface:
+        <code><a href="../apidocs/org/apache/commons/configuration/Configuration.html">Configuration</a></code>.
+        This interface allows you to access and manipulate configuration properties
+        in a generic way.
+      </p>
+      <p>
+        A major part of the methods defined in the <code>Configuration</code>
+        interface deals with retrieving properties of different data types. All
+        these methods take a key as an argument that points to the desired
+        property. This is a string value whose exact meaning depends on the
+        concrete <code>Configuration</code> implementation used. They try to
+        find the property specified by the passed in key and convert it to their
+        target type; this converted value will be returned. There are also
+        overloaded variants of all methods that allow to specify a default value,
+        which will be returned if the property cannot be found. The following
+        data types are supported:
+        <ul>
+          <li>BigDecimal</li>
+          <li>BigInteger</li>
+          <li>boolean</li>
+          <li>byte</li>
+          <li>double</li>
+          <li>float</li>
+          <li>int</li>
+          <li>long</li>
+          <li>short</li>
+          <li>String</li>
+        </ul>
+        The names of these methods start with <code>get</code> followed by their
+        data type. The <code>getString()</code> method for instance will return
+        String values, <code>getInt()</code> will operate on integers.
+      </p>
+      <p>
+        Properties can have multiple values, so it is also possible to query a
+        list containing all of the available values. This is done using the
+        <code>getList()</code> method.
+      </p>
+      <p>
+        For manipulating properties or their values the following methods can
+        be used:
+        <dl>
+          <dt><code>addProperty()</code></dt>
+          <dd>Adds a new property to the configuration. If this property already
+          exists, another value is added to it (so it becomes a multi-valued
+          property).</dd>
+          <dt><code>clearProperty()</code></dt>
+          <dd>Removes the specified property from the configuration.</dd>
+          <dt><code>setProperty()</code></dt>
+          <dd>Overwrites the value of the specified property. This is the same
+          as removing the property and then calling <code>addProperty()</code>
+          with the new property value.</dd>
+          <dt><code>clear()</code></dt>
+          <dd>Wipes out the whole configuration</dd>
+        </dl>
+      </p>
+      </subsection>
+
+      <subsection name="Threading issues">
+      <p>
+        The most concrete implementations of the <code>Configuration</code>
+        interface that are shipped with this library are not thread-safe.
+        They can be accessed concurrently in a read-only manner. However if one
+        thread modifies a configuration object, manual synchronization has to be
+        performed to ensure correctness of data. Notes about the thread
+        safety of conrete implementation classes can be found in the Javadocs
+        for these classes.
+      </p>
+      </subsection>
+    </section>
+
+  </body>
+</document>

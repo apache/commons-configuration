@@ -1,0 +1,244 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>File-based Configurations</title>
+  <author email="oheger@apache.org">Oliver Heger</author>
+ </properties>
+
+<body>
+    <section name="File-based Configurations">
+        <p>
+            Often configuration properties are stored in files on the user's hard
+          disk, e.g. in .properties files or as XML documents. Configuration
+          classes that deal with such properties need to provide typical operations
+          like loading or saving files. The files to be processed can be specified
+          in several different flavors like <code>java.io.File</code> objects,
+          relative or absolute path names, or URLs.
+        </p>
+        <p>
+          To provide a consistent way of dealing with configuration files in
+          Commons Configuration the <code><a href="../apidocs/org/apache/commons/configuration/FileConfiguration.html">FileConfiguration</a></code>
+          interface exists. <code>FileConfiguration</code> defines a standard
+          API for accessing files and is implemented by many configuration
+          implementations, including <code>PropertiesConfiguration</code> and
+          <code>XMLConfiguration</code>.
+        </p>
+        <p>
+          In the following sections we take a closer look at the methods of the
+          <code>FileConfiguration</code> interface and how they are used.
+        </p>
+
+        <subsection name="Specifying the file">
+          <p>
+            The <code>FileConfiguration</code> interface contains several
+            methods for specifying the file to be loaded. The following variants
+            are supported:
+            <ul>
+              <li>With the <code>setFile()</code> method the data file can be
+              specified as a <code>java.io.File</code> object.</li>
+              <li>The <code>setURL()</code> takes a <code>java.net.URL</code>
+              as argument; the file will be loaded from this URL.</li>
+              <li>The methods <code>setFileName()</code> and <code>setBasePath()</code>
+              allows to specify the path of the data file. The base path is
+              important if relative paths are to be resolved based on this file.</li>
+            </ul>
+          </p>
+          <p>
+            While a <code>File</code> or a URL uniquely identify a file, the
+            situation is a bit ambigous when only a base path and a file name are
+            set. These can be arbitrary strings (even full URLs) whose exact
+            meaning must be detected when the file is loaded. For this purpose
+            file-based configurations perform the following checks (in this
+            order):
+            <ul>
+              <li>If the combination from base path and file name is a full URL
+              that points to an existing file, this URL will be used to load
+              the file.</li>
+              <li>If the combination from base path and file name is an absolute
+              file name and this file exists, it will be loaded.</li>
+              <li>If the combination from base path and file name is a relative
+              file path that points to an existing file, this file will be loaded.</li>
+              <li>If a file with the specified name exists in the user's home
+              directory, this file will be loaded.</li>
+              <li>Otherwise the file name is interpreted as a resource name, and
+              it is checked whether the data file can be loaded from the classpath.</li>
+            </ul>
+            If all these checks fail, a <code>ConfigurationException</code> will
+            be thrown.
+          </p>
+        </subsection>
+
+        <subsection name="Loading">
+          <p>
+            After the file name has been defined using one of the methods mentioned
+            above, the <code>load()</code> method can be called. This method tries
+            to locate the file and open it. If this fails, a <code>ConfigurationException</code>
+            is thrown.
+          </p>
+          <p>
+            The <code>FileConfiguration</code> interface defines multiple overloaded
+            <code>load()</code> methods. The one that takes no argument will
+            always operate on the file name that has been set earlier. All
+            other methods allow to specify the source to be loaded. This can be
+            done as <code>java.io.File</code>, <code>java.net.URL</code>, string
+            (containing either an absolute or relative path), input stream, or
+            reader. When using these variants of the <code>load()</code> method
+            be aware of two things:
+            <ol>
+              <li>They do not change the configuration's file name. To do this
+              you have to explicitely call one of the setter methods.</li>
+              <li>The <code>load()</code> methods do not empty the
+              configuration before new data is loaded. This makes it easy to
+              construct union configurations by simply calling <code>load()</code>
+              multiple times. But if you want to reuse a <code>Configuration</code>
+              object and load a different file, remember to call the
+              <code>clear()</code> method first to ensure that old properties are
+              wiped out.</li>
+            </ol>
+          </p>
+          <p>
+            File-based configurations typically define a set of constructors that
+            correspond to the various setter methods for defining the data file.
+            These constructors will set the file and then invoke the <code>load()</code>
+            method. So creating a file-based configuration object and loading its
+            content can be done in a single step.
+          </p>
+        </subsection>
+
+        <subsection name="Saving">
+          <p>
+            Saving is implemented analogously to loading: There is a no argument
+            <code>save()</code> method that will use the internal file name. Then
+            for each <code>load()</code> method a corresponding <code>save()</code>
+            method exists that will write the data contained in the configuration
+            to different targets.
+          </p>
+          <p>
+            An example for loading, manipulating, and saving a configuration
+            (based on a <a href="howto_properties.html"><code>PropertiesConfiguration</code></a>)
+            could look as follows:
+          </p>
+<source>
+PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
+config.setProperty("colors.background", "#000000");
+config.save();
+</source>
+          <p>
+            You can also save a copy of the configuration to another file:
+          </p>
+<source>
+PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
+config.setProperty("colors.background", "#000000");
+config.save("usergui.backup.properties);
+</source>
+        </subsection>
+
+        <subsection name="Automatic Saving">
+          <p>
+            If you want to ensure that every modification of a configuration
+            object is immideately written to disk, you can enable the automatic
+            saving mode. This is done through the <code>setAutoSave()</code>
+            method as shown in the following example:
+          </p>
+<source>
+PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
+config.setAutoSave(true);
+config.setProperty("colors.background", "#000000"); // the configuration is saved after this call
+</source>
+          <p>
+            Be careful with this mode when you have many updates on your
+            configuration. This will lead to many I/O operations, too.
+          </p>
+        </subsection>
+
+        <subsection name="Automatic Reloading">
+        <p>
+          A common issue with file-based configurations is to handle the
+          reloading of the data file when it changes. This is especially important
+          if you have long running applications and do not want to restart them
+          when a configuration file was updated. Commons Configuration has the
+          concept of so called <em>reloading strategies</em> that can be
+          associated with a file-based configuration. Such a strategy monitors
+          a configuration file and is able to detect changes. A default reloading
+          strategy is <code><a href="../apidocs/org/apache/commons/configuration/reloading/FileChangedReloadingStrategy.html">FileChangedReloadingStrategy</a></code>.
+          It can be set on a file-based configuration as follows:
+        </p>
+<source>
+PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
+config.setReloadingStrategy(new FileChangedReloadingStrategy());
+</source>
+        <p>
+          <code>FileChangedReloadingStrategy</code> works as follows: On every
+          property access the configuration checks its associated reloading
+          strategy. <code>FileChangedReloadingStrategy</code> will then obtain
+          the last modification date of the configuration file and check whether
+          it has changed since the last access. If this is the case, a reload is
+          triggered. To avoid often disk access when multiple properties are
+          queried from the configuration, a <em>refresh delay</em> can be set on
+          the reloading strategy. This is a time in milli seconds with the meaning
+          that the reloading strategy will only once check the file's last
+          modification time in the period specified here.
+        </p>
+        </subsection>
+
+        <subsection name="Managed Reloading">
+        <p>
+          <code>ManagedReloadingStrategy</code> is an alternative to automatic
+          reloading. It allows to hot-reload properties on a running application
+          but only when requested by admin. The <code>refresh()</code> method
+          will force a reload of the configuration source.
+        </p>
+        <p>
+          A typical use of this feature is to setup ManagedReloadingStrategy as
+          a JMX MBean. The following code sample uses Springframework
+          MBeanExporter to expose the ManagedReloadingStrategy to the JMX
+          console :
+<source>
+<![CDATA[
+<!-- A file based configuration bean -->
+<bean id="configuration" class="(...).PropertiesConfiguration">
+    <constructor-arg type="java.net.URL" value="file:${user.home}/custom.properties"/>
+    <property name="reloadingStrategy" ref="reloadingStrategy"/>
+</bean>
+
+<!-- The managed reloading strategy for the configuration bean -->
+<bean id="reloadingStrategy" class="...ManagedReloadingStrategy"/>
+
+<!-- The MBeanExporter that exposes reloadingStrategy to the JMX console -->
+<bean id="mbeanMetadataExporter" class="org.springframework.jmx.export.MBeanExporter">
+    <property name="server" ref="mbeanServer"/>
+    <property name="beans">
+        <map>
+            <entry key="myApp:bean=configuration" value-ref="reloadingStrategy"/>
+        </map>
+    </property>
+</bean>
+]]>
+</source>
+          With this configuration, the JMX console will expose the
+          "myApp:bean=configuration" MBean and it's refresh operation.
+        </p>
+        </subsection>
+    </section>
+
+</body>
+
+</document>

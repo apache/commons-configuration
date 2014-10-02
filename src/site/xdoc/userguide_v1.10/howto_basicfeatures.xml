@@ -1,0 +1,361 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Basic Features</title>
+  <author email="oheger@apache.org">Oliver Heger</author>
+ </properties>
+
+<body>
+	<section name="Basic features and AbstractConfiguration">
+    <p>
+      The <code>Configuration</code> interface defines a whole bunch of methods.
+      Implementing these methods all from scratch can be quite hard. Because of
+      that the <code><a href="../apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
+      AbstractConfiguration</a></code> class exists. This class serves as a
+      common base class for most of the <code>Configuration</code> implementations
+      in <em>Commons Configuration</em> and provides a great deal of the
+      functionality required by the interface. So for creating a custom
+      <code>Configuration</code> implementation this class will be a good
+      starting point.
+    </p>
+    <p>
+      In addition to base implementations for lots of the methods declared in
+      the <code>Configuration</code> interface the <code>AbstractConfiguration</code>
+      class provides some other handy and convenient features. Because this
+      class is at the very root of the class hierarchy in <em>Commons
+      Configuration</em> these features are available in most of the specific
+      implementations of the <code>Configuration</code> interface provided by
+      this library. We will cover some of these basic features in this section.
+    </p>
+
+    <subsection name="Handling of missing properties">
+	<p>
+      What is a configuration object supposed to do if you pass in a key to one
+      of its get methods that does not map to an existing property? Well, the
+      default behavior as implemented in <code>AbstractConfiguration</code> is
+      to return <b>null</b> if the return value is an object type. For primitive
+      types as return values returning <b>null</b> (or any other special
+      value) is not possible, so in this case a <code>NoSuchElementException</code>
+      is thrown:
+    </p>
+    <source><![CDATA[
+// This will return null if no property with key "NonExistingProperty" exists
+String strValue = config.getString("NonExistingProperty");
+
+// This will throw a NoSuchElementException exception if no property with
+// key "NonExistingProperty" exists
+long longValue = config.getLong("NonExistingProperty");
+]]></source>
+    <p>
+      For object types like <code>String</code>, <code>BigDecimal</code>, or
+      <code>BigInteger</code> this default behavior can be changed: If the
+      <code>setThrowExceptionOnMissing()</code> method is called with an
+      argument of <b>true</b>, these methods will behave like their primitive
+      counter parts and also throw an exception if the passed in property key
+      cannot be resolved.
+    </p>
+    <p>
+      <em>Note:</em> Unfortunately support for the <code>throwExceptionOnMissing</code>
+      property is not always consistent: The methods <code>getList()</code> and
+      <code>getStringArray()</code> do not evaluate this flag, but return an
+      empty list or array if the requested property cannot be found. Maybe this
+      behavior will be changed in a future major release.
+    </p>
+    </subsection>
+
+    <subsection name="List handling">
+    <p>
+      With <code>getList()</code> and <code>getStringArray()</code> the
+      <code>Configuration</code> interface defines methods for dealing with
+      properties that have multiple values. When a configuration source (e.g.
+      a properties file, an XML document, or a JNDI context) is processed the
+      corresponding <code>Configuration</code> implementation detects such
+      properties with multiple values and ensures that the data is correctly
+      stored.
+    </p>
+    <p>
+      When modifying properties the <code>addProperty()</code> and
+      <code>setProperty()</code> methods of <code>AbstractConfiguration</code>
+      also implement special list handling. The property value that is passed
+      to these methods can be a list or an array resulting in a property
+      with multiple values. If the property value is a string, it is checked
+      whether it contains the <em>list delimiter character</em>. If this is
+      the case, the string is splitted, and its single parts are added one
+      by one. The list delimiter character is the comma by default. It is
+      also taken into account when the configuration source is loaded
+      (i.e. string values of properties will be checked whether they contain
+      this delimiter). By using the <code>setListDelimiter()</code>
+      method you can set it to a different character. Here are some examples:
+    </p>
+<source>
+// Change the list delimiter character to a slash
+config.setListDelimiter('/');
+// Now add some properties
+config.addProperty("greeting", "Hello, how are you?");
+config.addProperty("colors.pie",
+  new String[] { "#FF0000", "#00FF00", "#0000FF" });
+config.addProperty("colors.graph", "#808080/#00FFCC/#6422FF");
+
+// Access data
+String salut = config.getString("greeting");
+List&lt;Object&gt; colPie = config.getList("colors.pie");
+String[] colGraph = config.getStringArray("colors.graph");
+
+String firstPieColor = config.getString("colors.pie");
+</source>
+    <p>
+      In this example the list delimiter character is changed from a comma
+      to a slash. Because of this the <code>greeting</code> property won't
+      be split, but remains a single string. The string passed as value
+      for the <code>colors.graph</code> property in opposite contains the
+      new delimiter character and thus will result in a property with three
+      values. Note that lists are of type <code>Object</code>. This is because
+      the concrete class of the values of a property is not known. For instance,
+      if you call <code>addProperty(&quot;answer&quot;, 42)</code>, an
+      <code>Integer</code> object will be stored in the configuration.
+    </p>
+    <p>
+      Of interest is also the last line of the example fragment. Here the
+      <code>getString()</code> method is called for a property that has
+      multiple values. This call will return the first value of the list.
+    </p>
+    <p>
+      If you want to change the list delimiter character for all configuration
+      objects, you can use the static <code>setDefaultListDelimiter()</code>
+      method of <code>AbstractConfiguration</code>. It is also possible to
+      disable splitting of string properties at all for a Configuration
+      instance by calling its <code>setDelimiterParsingDisabled()</code>
+      method with a value of <b>true</b>.
+    </p>
+    </subsection>
+
+    <subsection name="Variable Interpolation">
+    <p>
+      If you are familiar with Ant or Maven, you have most certainly already encountered
+      the variables (like <code>${token}</code>) that are automatically expanded when the
+      configuration file is loaded. Commons Configuration supports this feature as well,
+      here is an example (we use a properties file in this example, but other
+      configuration sources work the same way; you can learn more about
+      properties files in the chapter <a href="howto_properties.html">Properties
+      files</a>):
+    </p>
+<source>
+application.name = Killer App
+application.version = 1.6.2
+
+application.title = ${application.name} ${application.version}
+</source>
+    <p>
+      If you now retrieve the value for the <code>application.title</code>
+      property, the result will be <code>Killer App 1.6.2</code>. So per default
+      variables are interpreted as the keys of other properties. This is only a
+      special case, the general syntax of a variable name is
+      <code>${prefix:name}</code>. The prefix tells Commons Configuration that
+      the variable is to be evaluated in a certain context. We have already seen
+      that the context is the current configuration instance if the prefix is
+      missing. The following other prefix names are supported by default:
+      <table border="1">
+      <tr>
+        <th>Prefix</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td valign="top">sys</td>
+        <td>This prefix marks a variable to be a system property. Commons
+        Configuration will search for a system property with the given name and
+        replace the variable by its value. This is a very easy means for
+        accessing the values of system properties in every configuration
+        implementation.</td>
+      </tr>
+      <tr>
+        <td valign="top">const</td>
+        <td>The <code>const</code> prefix indicates that a variable is to be
+        interpreted as a constant member field of a class (i.e. a field with the
+        <b>static final</b> modifiers). The name of the variable must be of the form
+        <code>&lt;full qualified class name&gt;.&lt;field name&gt;</code>. The
+        specified class will be loaded and the value of this field will be
+        obtained.</td>
+      </tr>
+      <tr>
+        <td valign="top">env</td>
+        <td>Variables can also reference OS-specific environment properties.
+        This is indicated by the <code>env</code> prefix.</td>
+      </tr>
+      </table>
+      Here are some examples (again using properties syntax):
+    </p>
+    <source><![CDATA[
+user.file = ${sys:user.home}/settings.xml
+
+action.key = ${const:java.awt.event.KeyEvent.VK_CANCEL}
+
+java.home = ${env:JAVA_HOME}
+]]></source>
+    <p>
+      If a variable cannot be resolved, e.g. because the name is invalid or an
+      unknown prefix is used, it won't be replaced, but is returned as is
+      including the dollar sign and the curly braces.
+    </p>
+    </subsection>
+
+    <subsection name="Customizing interpolation">
+    <p>
+      This sub section goes a bit behind the scenes of interpolation and
+      explains some approaches how you can add your own interpolation facilities.
+      Under the hood interpolation is implemented using the
+      <code>StrSubstitutor</code> class of the <code>text</code> package of
+      <a href="http://commons.apache.org/lang/">Commons Lang</a>. This
+      class uses objects derived from the <code>StrLookup</code> class for
+      resolving variables. <code>StrLookup</code> defines a simple
+      <code>lookup()</code> method that must be implemented by custom
+      implementations; it expects the name of a variable as argument and
+      returns the corresponding value (further details can be found in the
+      documentation of Commons Lang). The standard prefixes for variables we
+      have covered so far are indeed realized by special classes derived from
+      <code>StrLookup</code>.
+    </p>
+    <p>
+      It is now possible to create your own implementation of <code>StrLookup</code>
+      and make it available for all configuration objects under a custom
+      prefix. We will show how this can be achieved. The first step is to
+      create a new class derived from <code>StrLookup</code>, which must
+      implement the <code>lookup()</code> method. As an example we implement a
+      rather dull lookup object that simply returns a kind of &quot;echo&quot;
+      for the variable passed in:
+    </p>
+    <source><![CDATA[
+import org.apache.commons.lang.text.StrLookup;
+
+public class EchoLookup extends StrLookup
+{
+    public String lookup(String varName)
+    {
+        return "Value of variable " + varName;
+    }
+}
+]]></source>
+    <p>
+      Now we want this class to be called for variables with the prefix
+      <code>echo</code>. For this purpose the <code>EchoLookup</code> class
+      has to be registered at the
+      <code><a href="../apidocs/org/apache/commons/configuration/interpol/ConfigurationInterpolator.html">
+      ConfigurationInterpolator</a></code> class with the desired prefix.
+      <code>ConfigurationInterpolator</code> implements a thin wrapper over the
+      <code>StrLookup</code> API defined by Commons Lang. It has a static
+      <code>registerGlobalLookup()</code> method, which we have to call as
+      follows:
+    </p>
+    <source><![CDATA[
+// Place this code somewhere in an initialization section of your application
+ConfigurationInterpolator.registerGlobalLookup("echo", new EchoLookup());
+    ]]></source>
+    <p>
+      Each <code>AbstractConfiguration</code> object that is created after this
+      line is executed will contain the new lookup class and can thus resolve
+      variables of the form <code>${echo:my_variable}</code>.
+    </p>
+    <p>
+      Each instance of <code>AbstractConfiguration</code> is associated with a
+      <code>ConfigurationInterpolator</code> object. This object is created by
+      the <code>createInterpolator()</code> method on first access of one of
+      the interpolation features. By overriding this method even deeper
+      intervention in the interpolation mechanism is possible. For instance
+      a custom implementation can add further lookup objects to the interpolator,
+      which are then only used by this configuration instance.
+    </p>
+    </subsection>
+    <subsection name="Using Expressions">
+      <p>
+        In addition to the simple lookup mechanisms previously described, Commond Configuration
+        provides <code>ExprLookup</code> which uses <a href="http://commons.apache.org/jexl">Apache
+        Commons Jexl</a> to allow expressions to be resolved wherever a StrLookup is allowed. This
+        example shows an alternate way of obtaining a system property if the ExprLookup is
+        configured.
+      </p>
+<source><![CDATA[
+user.file = ${expr:System.getProperty("user.home"}/settings.xml
+]]></source>
+      <p>
+        <code>ExprLookup</code> is not enabled by default, it must be manually added or configured via
+        <code>DefaultConfigurationBuilder</code>. Builds that use Maven 2 and reference Commons
+        Configuration will not include a dependency on Jexl, so if this feature is used the
+        dependency on Jexl must be manually added to the project.
+      </p>
+      <p>
+        When using <code>DefaultConfigurationBuilder</code> adding <code>ExprLookup</code> is
+        straightforward.
+      </p>
+<source><![CDATA[
+<configuration>
+  <header>
+    <result/>
+    <lookups>
+      <lookup config-prefix="expr"
+              config-class="org.apache.commons.configuration.interpol.ExprLookup">
+        <variables>
+          <variable name="System" value="Class:java.lang.System"/>
+          <variable name"net" value="Class:java.net.InetAddress"/>
+          <variable name="String" value="Class:org.apache.commons.lang.StringUtils"/>
+        </variables>
+      </lookup>
+    </lookups>
+  </header>
+  <override>
+    <xml fileName="${expr:System.getProperty('basePath') +
+         String.lowercase(net.localHost.hostName) + '/testMultiConfiguration_default.xml'}"
+         config-name="defaultConfig" delimiterParsingDisabled="true">
+    </xml>
+  </override>
+</configuration>
+]]></source>
+      <p>
+        The example above shows how to invoke static methods during expression evaluation. The
+        next example shows mixing expression evaluation with a subordinate lookup to
+        obtain the "basePath" system property. Note the difference in how the
+        system property was obtained in the previous example.
+      </p>
+<source><![CDATA[
+<configuration>
+  <header>
+    <result/>
+    <lookups>
+      <lookup config-prefix="expr"
+              config-class="org.apache.commons.configuration.interpol.ExprLookup">
+        <variables>
+          <variable name"net" value="Class:java.net.InetAddress"/>
+          <variable name="String" value="Class:org.apache.commons.lang.StringUtils"/>
+        </variables>
+      </lookup>
+    </lookups>
+  </header>
+  <override>
+    <xml fileName="${expr:$[sys:basePath] + 
+         String.lowercase(net.localHost.hostName) + '/testMultiConfiguration_default.xml'}"
+         config-name="defaultConfig" delimiterParsingDisabled="true">
+    </xml>
+  </override>
+</configuration>
+]]></source>
+    </subsection>
+  </section>
+</body>
+
+</document>

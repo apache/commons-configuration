@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Configuration Events Howto</title>
+  <author email="oheger@apache.org">Oliver Heger</author>
+ </properties>
+
+<body>
+	<section name="Configuration Events">
+    <p>
+      All configuration classes derived from
+      <code><a href="../apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
+      AbstractConfiguration</a></code> allow to register event listeners, which
+      are notified whenever the configuration's data is changed. This provides
+      an easy means for tracking updates on a configuration.
+    </p>
+
+    <subsection name="Configuration listeners">
+	<p>
+      Objects that are interested in update events triggered by configurations
+      must implement the
+      <code><a href="../apidocs/org/apache/commons/configuration/event/ConfigurationListener.html">
+      ConfigurationListener</a></code> interface. This interface defines a
+      single method <code>configurationChanged()</code>, which is passed a
+      <code><a href="../apidocs/org/apache/commons/configuration/event/ConfigurationEvent.html">
+      ConfigurationEvent</a></code> object. The event object contains all
+      information available about the modification, including:
+      <ul>
+        <li>A source object, which is usually the configuration object that was
+        modified.</li>
+        <li>The event's type. This is a numeric value that corresponds to
+        constant declarations in concrete configuration classes. It describes
+        what exactly has happended.</li>
+        <li>If available, the name of the property whose modification caused the
+        event.</li>
+        <li>If available, the value of the property that caused this event.</li>
+        <li>A flag whether this event was generated before or after the update
+        of the source configuration. A modification of a configuration typically
+        causes two events: one event before and one event after the modification
+        is performed. This allows event listeners to react at the correct point
+        of time.</li>
+      </ul>
+      Depending on the event type not all of this data may be available.
+    </p>
+    <p>
+      For resolving the numeric event type use constants defined in
+      <code>AbstractConfiguration</code> or derived classes. These constants
+      start with the prefix <code>EVENT_</code> and have a speaking name. Here
+      is an incomplete list of available event types with the configuration
+      classes, in which they are defined:
+    </p>
+    <p>
+      <dl>
+        <dt>AbstractConfiguration</dt>
+        <dd>EVENT_ADD_PROPERTY (a property was added; the name of the affected
+        property and the value that was added can be obtained from the
+        event object), EVENT_SET_PROPERTY (a property's value was changed; the
+        event object stores the name of the affected property and its new value),
+        EVENT_CLEAR_PROPERTY (a property was removed from the configuration;
+        its name is stored in the event object), EVENT_CLEAR (the configuration
+        was cleared)</dd>
+        <dt>AbstractFileConfiguration</dt>
+        <dd>EVENT_RELOAD (the configuration was reloaded)</dd>
+        <dt>HierarchicalConfiguration</dt>
+        <dd>EVENT_ADD_NODES (the <code>addNodes()</code> method was called;
+        the event object contains the key, to which the nodes were added, and
+        a collection with the new nodes as value),
+        EVENT_CLEAR_TREE (the <code>clearTree()</code> method was called; the
+        event object stores the key of the removed sub tree),
+        EVENT_SUBNODE_CHANGED (a <code>SubnodeConfiguration</code> that was
+        created from this configuration has been changed. The value property
+        of the event object contains the original event object as it was sent by
+        the subnode configuration. <em>Note: At the moment it is not possible
+        to map the property key as it was received from the subnode configuration
+        into the namespace of the parent configuration.)</em></dd>
+      </dl>
+    </p>
+    </subsection>
+
+    <subsection name="An example">
+    <p>
+      Implementing an event listener is quite easy. As an example we are going
+      to define an event listener, which logs all received configuration events
+      to the console. The class could look as follows:
+    </p>
+    <source><![CDATA[
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
+
+public class ConfigurationLogListener implements ConfigurationListener
+{
+    public void configurationChanged(ConfigurationEvent event)
+    {
+        if (!event.isBeforeUpdate())
+        {
+            // only display events after the modification was done
+            System.out.println("Received event!");
+            System.out.println("Type = " + event.getType());
+            if (event.getPropertyName() != null)
+            {
+                System.out.println("Property name = " + event.getPropertyName());
+            }
+            if (event.getPropertyValue() != null)
+            {
+                System.out.println("Property value = " + event.getPropertyValue());
+            }
+        }
+    }
+}
+]]></source>
+    <p>
+      Now an instance of this event listener class has to be registered at a
+      configuration object:
+    </p>
+    <source><![CDATA[
+AbstractConfiguration config = ... // somehow create the configuration
+ConfigurationListener listener = new ConfigurationLogListener();
+config.addConfigurationListener(listener);
+...
+config.addProperty("newProperty", "newValue"); // will fire an event
+]]></source>
+    </subsection>
+    <subsection name="Error listeners">
+    <p>
+      Some implementations of the <code>Configuration</code> interface operate
+      on underlying storages that can throw exceptions on each property access.
+      As an example consider <code>
+      <a href="../apidocs/org/apache/commons/configuration/DatabaseConfiguration.html">
+      DatabaseConfiguration</a></code>: this configuration class issues an SQL
+      statement for each accessed property, which can potentially cause a
+      <code>SQLException</code>.
+    </p>
+    <p>
+      In earlier versions of <em>Commons Configuration</em> such exceptions
+      were simply logged and then swallowed. So for clients it was impossible
+      to find out if something went wrong. From version 1.4 on there is a new
+      way of dealing with those internal errors: the concept of <em>error
+      listeners</em>.
+    </p>
+    <p>
+      A configuration error listener is very similar to a regular configuration
+      event listener. Instead of the <code>ConfigurationListener</code>
+      interface it has to implement the
+      <code><a href="../apidocs/org/apache/commons/configuration/event/ConfigurationErrorListener.html">
+      ConfigurationErrorListener</a></code> interface, which defines a single method
+      <code>configurationError()</code>. In case of an internal error this
+      method is invoked, and a
+      <code><a href="../apidocs/org/apache/commons/configuration/event/ConfigurationErrorEvent.html">
+      ConfigurationErrorEvent</a></code> with information about that error is
+      passed. By inheriting from <code>ConfigurationEvent</code>
+      <code>ConfigurationErrorEvent</code> supports all information that is
+      available for normal configuration listeners, too (e.g. the event type or
+      the property that was accessed when the problem occurred; note that the
+      <code>isBefore()</code> method does not really make sense for error
+      events because an error can only occur after something was done, so it
+      returns always <b>false</b> is this context). This data can
+      be used to find out when and where the error happened. In addition there
+      is the <code>getCause()</code> method that returns the <code>Throwable</code>
+      object, which generated this event (i.e. the causing exception).
+    </p>
+    <p>
+      We can now continue our example from the previous section and make our
+      example configuration listener also capable of tracing error events. To
+      achieve this we let the <code>ConfigurationLogListener</code> class also
+      implement the <code>ConfigurationErrorListener</code> interface:
+    </p>
+    <source>
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
+<b>import org.apache.commons.configuration.event.ConfigurationListener;</b>
+
+public class ConfigurationLogListener
+  implements ConfigurationListener, <b>ConfigurationErrorListener</b>
+{
+    public void configurationChanged(ConfigurationEvent event)
+    {
+      // remains unchanged, see above
+      ...
+    }
+    
+    <b>public void configurationError(ConfigurationErrorEvent event)
+    {
+        System.out.println("An internal error occurred!");
+        // Log the standard properties of the configuration event
+        configurationChanged(event);
+        // Now log the exception
+        event.getCause().printStackTrace();
+    }</b>
+}
+</source>
+    <p>
+      Now the listener object has to be registered as an error listener, too.
+      For this purpose <code>AbstractConfiguration</code> provides the
+      <code>addErrorListener()</code> method. The following example fragment
+      shows the registration of the log listener object:
+    </p>
+    <source>
+AbstractConfiguration config = ... // somehow create the configuration
+ConfigurationListener listener = new ConfigurationLogListener();
+config.addConfigurationListener(listener);
+<b>config.addErrorListener((ConfigurationErrorListener) listener);</b>
+...
+config.addProperty("newProperty", "newValue"); // will fire an event
+</source>
+    <p>
+      Note: <code>AbstractConfiguration</code> already implements a mechanism
+      for writing internal errors to a logger object: It has the protected
+      <code>addErrorLogListener()</code> method that can be called by derived
+      classes to register a listener that will output all occurring internal
+      errors using the default logger. Configuration implementations like
+      <code>DatabaseConfiguration</code> that are affected by potential internal
+      errors call this method during their initialization. So the default
+      behavior of <em>Commons Configuration</em> for these classes is not
+      changed: they still catch occurring exceptions and log them. However by
+      registering specific error listeners it is now possible for clients to
+      implement their own handling of such errors.
+    </p>
+    </subsection>
+    </section>
+</body>
+
+</document>

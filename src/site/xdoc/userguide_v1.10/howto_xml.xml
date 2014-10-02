@@ -1,0 +1,1163 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Hierarchical configurations and XML Howto</title>
+  <author email="oheger@apache.org">Oliver Heger</author>
+ </properties>
+
+<body>
+	<section name="Using Hierarchical Configurations">
+		<p>
+ 	 		This section explains how to use hierarchical
+    		and structured XML datasets.
+    	</p>
+    </section>
+
+	<section name="Hierarchical properties">
+		<p>
+            Many sources of configuration data have a hierarchical or tree-like
+            nature. They can represent data that is structured in many ways.
+            Such configuration sources are represented by classes derived from
+            <a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+            <code>HierarchicalConfiguration</code></a>.
+        </p>
+        <p>
+            Prominent examples of hierarchical configuration sources are XML
+            documents. They can be read and written using the
+            <a href="../apidocs/org/apache/commons/configuration/XMLConfiguration.html">
+            <code>XMLConfiguration</code></a> class. This section explains how
+            to deal with such structured data and demonstrates the enhanced query
+            facilities supported by <code>HierarchicalConfiguration</code>. We
+            use XML documents as examples for structured configuration sources,
+            but the information provided here (especially the rules for accessing
+            properties) applies to other hierarchical configurations as well.
+            Examples for other hierarchical configuration classes are
+            <ul>
+            <li><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
+            <code>CombinedConfiguration</code></a></li>
+            <li><a href="../apidocs/org/apache/commons/configuration/HierarchicalINIConfiguration.html">
+            <code>HierarchicalINIConfiguration</code></a></li>
+            <li><a href="../apidocs/org/apache/commons/configuration/plist/PropertyListConfiguration.html">
+            <code>PropertyListConfiguration</code></a></li>
+            </ul>
+		</p>
+        <subsection name="Accessing properties in hierarchical configurations">
+            <p>
+                We will start with a simple XML document to show some basics
+                about accessing properties. The following file named
+                <code>gui.xml</code> is used as example document:
+            </p>
+   			<source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<gui-definition>
+  <colors>
+    <background>#808080</background>
+    <text>#000000</text>
+    <header>#008000</header>
+    <link normal="#000080" visited="#800080"/>
+    <default>${colors.header}</default>
+  </colors>
+  <rowsPerPage>15</rowsPerPage>
+  <buttons>
+    <name>OK,Cancel,Help</name>
+  </buttons>
+  <numberFormat pattern="###\,###.##"/>
+</gui-definition>
+]]></source>
+			<p>
+				(As becomes obvious, this tutorial does not bother with good
+				design of XML documents, the example file should rather 
+				demonstrate the different ways of accessing properties.)
+				To access the data stored in this document it must be loaded
+                by <code>XMLConfiguration</code>. Like other 
+                <a href="howto_filebased.html">file based</a>
+                configuration classes <code>XMLConfiguration</code> supports
+                many ways of specifying the file to process. One way is to
+                pass the file name to the constructor as shown in the following
+                code fragment:
+			</p>
+   			<source><![CDATA[
+try
+{
+    XMLConfiguration config = new XMLConfiguration("tables.xml");
+    // do something with config
+}
+catch(ConfigurationException cex)
+{
+    // something went wrong, e.g. the file was not found
+}
+]]></source>
+			<p>
+				If no exception was thrown, the properties defined in the
+                XML document are now available in the configuration object.
+                Other hierarchical configuration classes that operate on files
+                have corresponding constructors and methods for loading their data.
+                The following fragment shows how the properties can be accessed:
+			</p>
+   			<source><![CDATA[
+String backColor = config.getString("colors.background");
+String textColor = config.getString("colors.text");
+String linkNormal = config.getString("colors.link[@normal]");
+String defColor = config.getString("colors.default");
+int rowsPerPage = config.getInt("rowsPerPage");
+List<Object> buttons = config.getList("buttons.name");
+]]></source>
+			<p>
+				This listing demonstrates some important points about constructing
+				keys for accessing properties in hierarchical configuration sources and about
+                features of <code>HierarchicalConfiguration</code> in general:
+				<ul>
+					<li>
+						Nested elements are accessed using a dot notation. In
+						the example document there is an element
+						<code>&lt;text&gt;</code> in the body of the
+						<code>&lt;color&gt;</code> element. The corresponding
+						key is <code>color.text</code>.
+					</li>
+					<li>
+						The root element is ignored when constructing keys. In
+						the example you do not write
+						<code>gui-definition.color.text</code>, but only
+						<code>color.text</code>.
+					</li>
+					<li>
+						Attributes of XML elements are accessed in a XPath like
+						notation.
+					</li>
+                    <li>
+                        Interpolation can be used as in <code>PropertiesConfiguration</code>.
+                        Here the <code>&lt;default&gt;</code> element in the
+                        <code>colors</code> section refers to another color.
+                    </li>
+                    <li>
+                        Lists of properties can be defined in a short form using
+                        the delimiter character (which is the comma by default).
+                        In this example the <code>buttons.name</code> property
+                        has the three values <em>OK</em>, <em>Cancel</em>, and
+                        <em>Help</em>, so it is queried using the <code>getList()</code>
+                        method. This works in attributes, too. Using the static
+                        <code>setDefaultDelimiter()</code> method of
+                        <code>AbstractConfiguration</code> you can globally
+                        define a different delimiter character or -
+                        by setting the delimiter to 0 - disabling this mechanism
+                        completely. Placing a backslash before a delimiter
+                        character will escape it. This is demonstrated in the
+                        <code>pattern</code> attribute of the <code>numberFormat</code>
+                        element.
+                    </li>
+				</ul>
+			</p>
+            <p>
+                In the next section will show how data in a more complex XML
+                document can be processed.
+            </p>
+        </subsection>
+		<subsection name="Complex hierarchical structures">
+			<p>
+				Consider the following scenario: An application operates on
+				database tables and wants to load a definition of the database
+				schema from its configuration. A XML document provides this
+				information. It could look as follows:
+			</p>
+   			<source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<database>
+  <tables>
+    <table tableType="system">
+      <name>users</name>
+      <fields>
+        <field>
+          <name>uid</name>
+          <type>long</type>
+        </field>
+        <field>
+          <name>uname</name>
+          <type>java.lang.String</type>
+        </field>
+        <field>
+          <name>firstName</name>
+          <type>java.lang.String</type>
+        </field>
+        <field>
+          <name>lastName</name>
+          <type>java.lang.String</type>
+        </field>
+        <field>
+          <name>email</name>
+          <type>java.lang.String</type>
+        </field>
+      </fields>
+    </table>
+    <table tableType="application">
+      <name>documents</name>
+      <fields>
+        <field>
+          <name>docid</name>
+          <type>long</type>
+        </field>
+        <field>
+          <name>name</name>
+          <type>java.lang.String</type>
+        </field>
+        <field>
+          <name>creationDate</name>
+          <type>java.util.Date</type>
+        </field>
+        <field>
+          <name>authorID</name>
+          <type>long</type>
+        </field>
+        <field>
+          <name>version</name>
+          <type>int</type>
+        </field>
+      </fields>
+    </table>
+  </tables>
+</database>
+]]></source>
+			<p>
+				This XML is quite self explanatory; there is an arbitrary number
+				of table elements, each of it has a name and a list of fields.
+				A field in turn consists of a name and a data type. This
+                XML document (let's call it <code>tables.xml</code>) can be
+                loaded in exactly the same way as the simple document in the
+                section before.
+			</p>
+			<p>
+				When we now want to access some of the properties we face a
+                problem: the syntax for	constructing configuration keys we
+                learned so far is not powerful enough to access all of the data
+                stored in the tables document.
+			</p>
+			<p>
+				Because the document contains a list of tables some properties
+				are defined more than once. E.g. the configuration key
+				<code>tables.table.name</code> refers to a <code>name</code>
+				element inside a <code>table</code> element inside a
+				<code>tables</code> element. This constellation happens to
+				occur twice in the tables document.
+			</p>
+			<p>
+				Multiple definitions of a property do not cause problems and are
+				supported by all classes of Configuration. If such a property
+				is queried using <code>getProperty()</code>, the method
+				recognizes that there are multiple values for that property and
+				returns a collection with all these values. So we could write
+			</p>
+   			<source><![CDATA[
+Object prop = config.getProperty("tables.table.name");
+if(prop instanceof Collection)
+{
+	System.out.println("Number of tables: " + ((Collection<?>) prop).size());
+}
+]]></source>
+			<p>
+				An alternative to this code would be the <code>getList()</code>
+				method of <code>Configuration</code>. If a property is known to
+				have multiple values (as is the table name property in this example),
+				<code>getList()</code> allows retrieving all values at once.
+				<b>Note:</b> it is legal to call <code>getString()</code>
+				or one of the other getter methods on a property with multiple
+				values; it returns the first element of the list.
+			</p>
+		</subsection>
+		<subsection name="Accessing structured properties">
+			<p>
+				Okay, we can obtain a list with the names of all defined
+				tables. In the same way we can retrieve a list with the names
+				of all table fields: just pass the key
+				<code>tables.table.fields.field.name</code> to the
+				<code>getList()</code> method. In our example this list
+				would contain 10 elements, the names of all fields of all tables.
+				This is fine, but how do we know, which field belongs to
+				which table?
+			</p>
+			<p>
+				When working with such hierarchical structures the configuration keys
+				used to query properties can have an extended syntax. All components
+				of a key can be appended by a numerical value in parentheses that
+				determines the index of the affected property. So if we have two
+				<code>table</code> elements we can exactly specify, which one we
+				want to address by appending the corresponding index. This is
+				explained best by some examples:
+			</p>
+			<p>
+				We will now provide some configuration keys and show the results
+				of a <code>getProperty()</code> call with these keys as arguments.
+				<dl>
+					<dt><code>tables.table(0).name</code></dt>
+					<dd>
+						Returns the name of the first table (all indices are 0 based),
+						in this example the string <em>users</em>.
+					</dd>
+					<dt><code>tables.table(0)[@tableType]</code></dt>
+					<dd>
+						Returns the value of the tableType attribute of the first
+						table (<em>system</em>).
+					</dd>
+					<dt><code>tables.table(1).name</code></dt>
+					<dd>
+						Analogous to the first example returns the name of the
+						second table (<em>documents</em>).
+					</dd>
+					<dt><code>tables.table(2).name</code></dt>
+					<dd>
+						Here the name of a third table is queried, but because there
+						are only two tables result is <b>null</b>. The fact that a
+						<b>null</b> value is returned for invalid indices can be used
+						to find out how many values are defined for a certain property:
+						just increment the index in a loop as long as valid objects
+						are returned.
+					</dd>
+					<dt><code>tables.table(1).fields.field.name</code></dt>
+					<dd>
+						Returns a collection with the names of all fields that
+						belong to the second table. With such kind of keys it is
+						now possible to find out, which fields belong to which table.
+					</dd>
+					<dt><code>tables.table(1).fields.field(2).name</code></dt>
+					<dd>
+						The additional index after field selects a certain field.
+						This expression represents the name of the third field in
+						the second table (<em>creationDate</em>).
+					</dd>
+					<dt><code>tables.table.fields.field(0).type</code></dt>
+					<dd>
+						This key may be a bit unusual but nevertheless completely
+						valid. It selects the data types of the first fields in all
+						tables. So here a collection would be returned with the
+						values [<em>long, long</em>].
+					</dd>
+				</dl>
+			</p>
+			<p>
+				These examples should make the usage of indices quite clear.
+				Because each configuration key can contain an arbitrary number
+				of indices it is possible to navigate through complex structures of
+				hierarchical configurations; each property can be uniquely identified.
+			</p>
+            <p>
+                Sometimes dealing with long property keys may become inconvenient,
+                especially if always the same properties are accessed. For this
+                case <code>HierarchicalConfiguration</code> provides a short cut
+                with the <code>configurationAt()</code> method. This method can
+                be passed a key that selects exactly one node of the hierarchy
+                of nodes contained in a hierarchical configuration. Then a new
+                hierarchical configuration will be returned whose root node is
+                the selected node. So all property keys passed into that
+                configuration should be relative to the new root node. For
+                instance, if we are only interested in information about the
+                first database table, we could do something like that:
+            </p>
+   			<source><![CDATA[
+HierarchicalConfiguration sub = config.configurationAt("tables.table(0)");
+String tableName = sub.getString("name");  // only need to provide relative path
+List<Object> fieldNames = sub.getList("fields.field.name");
+]]></source>
+            <p>
+                For dealing with complex list-like structures there is another
+                short cut. Often it will be necessary to iterate over all items
+                in the list and access their (sub) properties. A good example are
+                the fields of the tables in our demo configuration. When you want
+                to process all fields of a table (e.g. for constructing a
+                <code>CREATE TABLE</code> statement), you will need all information
+                stored for them in the configuration. An option would be to use
+                the <code>getList()</code> method to fetch the required data one
+                by one:
+            </p>
+   			<source><![CDATA[
+List<Object> fieldNames = config.getList("tables.table(0).fields.field.name");
+List<Object> fieldTypes = config.getList("tables.table(0).fields.field.type");
+List<Object> ... // further calls for other data that might be stored in the config
+]]></source>
+            <p>
+                But this is not very readable and will fail if not all field
+                elements contain the same set of data (for instance the
+                <code>type</code> property may be optional, then the list for
+                the types can contain less elements than the other lists). A
+                solution to these problems is the <code>configurationsAt()</code>
+                method, a close relative to the <code>configurationAt()</code>
+                method covered above. This method evaluates the passed in key and
+                collects all configuration nodes that match this criterion. Then
+                for each node a <code>HierarchicalConfiguration</code> object is
+                created with this node as root node. A list with these configuration
+                objects is returned. As the following example shows this comes in
+                very handy when processing list-like structures:
+            </p>
+   			<source><![CDATA[
+List<HierarchicalConfiguration> fields = 
+    config.configurationsAt("tables.table(0).fields.field");
+for(HierarchicalConfiguration sub : fields)
+{
+    // sub contains all data about a single field
+    String fieldName = sub.getString("name");
+    String fieldType = sub.getString("type");
+    ...
+]]></source>
+        <p>
+          The configurations returned by the <code>configurationAt()</code> and
+          <code>configurationsAt()</code> method are in fact instances of the
+          <a href="../apidocs/org/apache/commons/configuration/SubnodeConfiguration.html">
+          <code>SubnodeConfiguration</code></a> class. The API documentation of
+          this class contains more information about its features and
+          limitations.
+        </p>
+		</subsection>
+		<subsection name="Adding new properties">
+			<p>
+				So far we have learned how to use indices to avoid ambiguities when
+				querying properties. The same problem occurs when adding new
+				properties to a structured configuration. As an example let's
+				assume we want to add a new field to the second table. New properties
+				can be added to a configuration using the <code>addProperty()</code>
+				method. Of course, we have to exactly specify where in the tree like structure new
+				data is to be inserted. A statement like
+			</p>
+   			<source><![CDATA[
+// Warning: This might cause trouble!
+config.addProperty("tables.table.fields.field.name", "size");
+]]></source>
+			<p>
+				would not be sufficient because it does not contain all needed
+				information. How is such a statement processed by the
+				<code>addProperty()</code> method?
+			</p>
+			<p>
+				<code>addProperty()</code> splits the provided key into its
+				single parts and navigates through the properties tree along the
+				corresponding element names. In this example it will start at the
+				root element and then find the <code>tables</code> element. The
+				next key part to be processed is <code>table</code>, but here a
+				problem occurs: the configuration contains two <code>table</code>
+				properties below the <code>tables</code> element. To get rid off
+				this ambiguity an index can be specified at this position in the
+				key that makes clear, which of the two properties should be
+				followed. <code>tables.table(1).fields.field.name</code> e.g.
+				would select the second <code>table</code> property. If an index
+				is missing, <code>addProperty()</code> always follows the last
+				available element. In our example this would be the second
+				<code>table</code>, too.
+			</p>
+			<p>
+				The following parts of the key are processed in exactly the same
+				manner. Under the selected <code>table</code> property there is
+				exactly one <code>fields</code> property, so this step is not
+				problematic at all. In the next step the <code>field</code> part
+				has to be processed. At the actual position in the properties tree
+				there are multiple <code>field</code> (sub) properties. So we here
+				have the same situation as for the <code>table</code> part.
+				Because no explicit index is defined the last <code>field</code>
+				property is selected. The last part of the key passed to
+				<code>addProperty()</code> (<code>name</code> in this example)
+				will always be added as new property at the position that has
+				been reached in the former processing steps. So in our example
+				the last <code>field</code> property of the second table would
+				be given a new <code>name</code> sub property and the resulting
+				structure would look like the following listing:
+			</p>
+   			<source><![CDATA[
+	...
+    <table tableType="application">
+      <name>documents</name>
+      <fields>
+        <field>
+          <name>docid</name>
+          <type>long</type>
+        </field>
+        <field>
+          <name>name</name>
+          <type>java.lang.String</type>
+        </field>
+        <field>
+          <name>creationDate</name>
+          <type>java.util.Date</type>
+        </field>
+        <field>
+          <name>authorID</name>
+          <type>long</type>
+        </field>
+        <field>
+          <name>version</name>
+          <name>size</name>    <== Newly added property
+          <type>int</type>
+        </field>
+      </fields>
+    </table>
+  </tables>
+</database>
+]]></source>
+			<p>
+				This result is obviously not what was desired, but it demonstrates
+				how <code>addProperty()</code> works: the method follows an
+				existing branch in the properties tree and adds new leaves to it.
+				(If the passed in key does not match a branch in the existing tree,
+				a new branch will be added. E.g. if we pass the key
+				<code>tables.table.data.first.test</code>, the existing tree can be
+				navigated until the <code>data</code> part of the key. From here a
+				new branch is started with the remaining parts <code>data</code>,
+				<code>first</code> and <code>test</code>.)
+			</p>
+			<p>
+				If we want a different behavior, we must explicitely tell
+				<code>addProperty()</code> what to do. In our example with the
+				new field our intension was to create a new branch for the
+				<code>field</code> part in the key, so that a new <code>field</code>
+				property is added to the structure rather than adding sub properties
+				to the last existing <code>field</code> property. This can be
+				achieved by specifying the special index <code>(-1)</code> at the
+				corresponding position in the key as shown below:
+			</p>
+   			<source><![CDATA[
+config.addProperty("tables.table(1).fields.field(-1).name", "size");
+config.addProperty("tables.table(1).fields.field.type", "int");
+]]></source>
+			<p>
+				The first line in this fragment specifies that a new branch is
+				to be created for the <code>field</code> property (index -1).
+				In the second line no index is specified for the field, so the
+				last one is used - which happens to be the field that has just
+				been created. So these two statements add a fully defined field
+				to the second table. This is the default pattern for adding new
+				properties or whole hierarchies of properties: first create a new
+				branch in the properties tree and then populate its sub properties.
+				As an additional example let's add a complete new table definition
+				to our example configuration:
+			</p>
+   			<source><![CDATA[
+// Add a new table element and define the name
+config.addProperty("tables.table(-1).name", "versions");
+
+// Add a new field to the new table
+// (an index for the table is not necessary because the latest is used)
+config.addProperty("tables.table.fields.field(-1).name", "id");
+config.addProperty("tables.table.fields.field.type", "int");
+
+// Add another field to the new table
+config.addProperty("tables.table.fields.field(-1).name", "date");
+config.addProperty("tables.table.fields.field.type", "java.sql.Date");
+...
+]]></source>
+			<p>
+				For more information about adding properties to a hierarchical
+				configuration also have a look at the javadocs for
+				<code>HierarchicalConfiguration</code>.
+			</p>
+		</subsection>
+		<subsection name="Escaping special characters">
+            <p>
+                Some characters in property keys or values require a special
+                treatment.
+            </p>
+			<p>
+                Per default the dot character is used as delimiter by most
+                configuration classes (we will learn how to change this for
+                hierarchical configurations in a later section). In some
+                configuration formats however, dots can be contained in the
+                names of properties. For instance, in XML the dot is a legal
+                character that can occur in any tag. The same is true for the names
+                of properties in windows ini files. So the following XML
+                document is completely valid:
+			</p>
+   			<source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<configuration>
+  <test.value>42</test.value>
+  <test.complex>
+    <test.sub.element>many dots</test.sub.element>
+  </test.complex>
+</configuration>
+]]></source>
+			<p>
+                This XML document can be loaded by <code>XMLConfiguration</code>
+                without trouble, but when we want to access certain properties
+                we face a problem: The configuration claims that it does not
+                store any values for the properties with the keys
+                <code>test.value</code> or <code>test.complex.test.sub.element</code>!
+            </p>
+            <p>
+                Of course, it is the dot character contained in the property
+                names, which causes this problem. A dot is always interpreted
+                as a delimiter between elements. So given the property key
+                <code>test.value</code> the configuration would look for an
+                element named <code>test</code> and then for a sub element
+                with the name <code>value</code>. To change this behavior it is
+                possible to escape a dot character, thus telling the configuration
+                that it is really part of an element name. This is simply done
+                by duplicating the dot. So the following statements will return
+                the desired property values:
+            </p>
+   			<source><![CDATA[
+int testVal = config.getInt("test..value");
+String complex = config.getString("test..complex.test..sub..element");
+]]></source>
+            <p>
+                Note the duplicated dots whereever the dot does not act as
+                delimiter. This way it is possible to access properties containing
+                dots in arbitrary combination. However, as you can see, the
+                escaping can be confusing sometimes. So if you have a choice,
+                you should avoid dots in the tag names of your XML configuration
+                files or other configuration sources.
+            </p>
+            <p>
+                Another source of problems is related to list delimiter characters
+                in the values of properties. Like other configuration classes
+                <code>XMLConfiguration</code> implements
+                <a href="howto_basicfeatures.html#List_handling">list handling</a>.
+                This means that the values of XML elements and attributes are
+                checked whether they contain a list delimiter character. If this
+                is the case, the value is split, and a list property is created.
+                Per default this feature is enabled. Have a look at the
+                following example:
+            </p>
+   			<source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<configuration>
+  <pi>3,1415</pi>
+</configuration>
+]]></source>
+            <p>
+                Here we use the comma as delimiter for fraction digits (as is
+                standard for some languages). However, the configuration will
+                interpret the comma as list delimiter character and assign the
+                property <em>pi</em> the two values 3 and 1415. This was not
+                desired.
+            </p>
+            <p>
+                XML has a natural way of defining list properties by simply
+                repeating elements. So defining multiple values of a property in
+                a single element or attribute is a rather untypical use case.
+                Unfortunately, early versions of Commons Configuration had list
+                delimiter splitting enabled per default. Later it became obvious
+                that this feature can cause serious problems related to the
+                interpretation of property values and the escaping of delimiter
+                characters. For reasons of backwards compatibility we have to
+                stick to this approach in the 1.x series though.
+            </p>
+            <p>
+                In the next major release the handling of lists will propably be
+                reworked. Therefore it is recommended not to use this feature.
+                You are save if you disable it immediately after the creation of
+                an <code>XMLConfiguration</code> object (and before a file is
+                loaded). This can be achieved as follows:
+            </p>
+   			<source><![CDATA[
+XMLConfiguration config = new XMLConfiguration();
+config.setDelimiterParsingDisabled(true);
+config.setAttributeSplittingDisabled(true);
+config.load("config.xml");
+]]></source>
+        </subsection>
+	</section>
+
+    <section name="Expression engines">
+        <p>
+            In the previous chapters we saw many examples about how properties
+            in a <code>XMLConfiguration</code> object (or more general in a
+            <code>HierarchicalConfiguration</code> object, because this is the
+            base class, which implements this functionality) can be queried or
+            modified using a special syntax for the property keys. Well, this
+            was not the full truth. Actually, property keys are not processed
+            by the configuration object itself, but are delegated to a helper
+            object, a so called <em>Expression engine</em>.
+        </p>
+        <p>
+            The separation of the task of interpreting property keys into a
+            helper object is a typical application of the <em>Strategy</em>
+            design pattern. In this case it also has the advantage that it
+            becomes possible to plug in different expression engines into a
+            <code>HierarchicalConfiguration</code> object. So by providing
+            different implementations of the
+            <a href="../apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
+            <code>ExpressionEngine</code></a>
+            interface hierarchical configurations can support alternative
+            expression languages for accessing their data.
+        </p>
+        <p>
+            Before we discuss the available expression engines that ship
+            with Commons Configuration, it should be explained how an
+            expression engine can be associated with a configuration object.
+            <a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+            <code>HierarchicalConfiguration</code></a> and all derived classes
+            provide a <code>setExpressionEngine()</code> method, which expects
+            an implementation of the <code>ExpressionEngine</code> interface as
+            argument. After this method was called, the configuration object will
+            use the passed expression engine, which means that all property keys
+            passed to methods like <code>getProperty()</code>,
+            <code>getString()</code>, or <code>addProperty()</code> must
+            conform to the syntax supported by this engine. Property keys
+            returned by the <code>getKeys()</code> method will follow this
+            syntax, too.
+        </p>
+        <p>
+            In addition to instance specific expression engines that change the
+            behavior of single configuration objects it is also possible to set
+            a global expression engine. This engine is shared between all
+            hierarchical configuration objects, for which no specific expression
+            engine was set. The global expression engine can be set using the
+            static <code>setDefaultExpressionEngine()</code> method of
+            <code>HierarchicalConfiguration</code>. By invoking this method with
+            a custom expression engine the syntax of all hierarchical configuration
+            objects can be altered at once.
+        </p>
+        
+        <subsection name="The default expression engine">
+            <p>
+                The syntax described so far for property keys of hierarchical
+                configurations is implemented by a specific implementation of the
+                <a href="../apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
+                <code>ExpressionEngine</code></a> interface called
+                <a href="../apidocs/org/apache/commons/configuration/tree/DefaultExpressionEngine.html">
+                <code>DefaultExpressionEngine</code></a>. An instance of this class
+                is installed as the global expression engine in
+                <code>HierarchicalConfiguration</code>. So all newly created
+                instances of this class will make use of this engine (which is
+                the reason that our examples above worked).
+            </p>
+            <p>
+                After reading the examples of property keys provided so far in
+                this document you should have a sound understanding regarding
+                the features and the syntax supported by the
+                <code>DefaultExpressionEngine</code> class. But it can do a
+                little bit more for you: it defines a bunch of properties,
+                which can be used to customize most tokens that can appear in a
+                valid property key. You prefer curly brackets over paranthesis
+                as index markers? You find the duplicated dot as escaped
+                property delimiter counter-intuitive? Well, simply go ahead and
+                change it! The following example shows how the syntax of a
+                <code>DefaultExpressionEngine</code> object is modified. Then
+                this object is set as the global expression engine, so that from
+                now on all hierarchical configuration objects will take up this
+                new syntax:
+            </p>
+            <source><![CDATA[
+DefaultExpressionEngine engine = new DefaultExpressionEngine();
+
+// Use a slash as property delimiter
+engine.setPropertyDelimiter("/");
+// Indices should be provided in curly brackets
+engine.setIndexStart("{");
+engine.setIndexEnd("}");
+// For attributes use simply a @
+engine.setAttributeStart("@");
+engine.setAttributeEnd(null);
+// A Backslash is used for escaping property delimiters
+engine.setEscapedDelimiter("\\/");
+
+// Now install this engine as the global engine
+HierarchicalConfiguration.setDefaultExpressionEngine(engine);
+
+// Access properties using the new syntax
+HierarchicalConfiguration config = ...
+String tableName = config.getString("tables/table{0}/name");
+String tableType = config.getString("tables/table{0}@type");
+         ]]></source>
+            <p>
+                <em>Tip:</em> Sometimes when processing an XML document you
+                don't want to distinguish between attributes and &quot;normal&quot;
+                child nodes. You can achieve this by setting the
+                <code>AttributeEnd</code> property to <b>null</b> and the
+                <code>AttributeStart</code> property to the same value as the
+                <code>PropertyDelimiter</code> property. Then the syntax for
+                accessing attributes is the same as the syntax for other
+                properties:
+            </p>
+            <source><![CDATA[
+DefaultExpressionEngine engine = new DefaultExpressionEngine();
+engine.setAttributeEnd(null);
+engine.setAttributeStart(engine.getPropertyDelimiter());
+...
+Object value = config.getProperty("tables.table(0).name");
+// name can either be a child node of table or an attribute
+         ]]></source>
+        </subsection>
+        
+        <subsection name="The XPATH expression engine">
+            <p>
+                The expression language provided by the <code>DefaultExpressionEngine</code>
+                class is powerful enough to address all properties in a
+                hierarchical configuration, but it is not always convenient to
+                use. Especially if list structures are involved, it is often
+                necessary to iterate through the whole list to find a certain
+                element.
+            </p>
+            <p>
+                Think about our example configuration that stores information about
+                database tables. A use case could be to load all fields that belong
+                to the &quot;users&quot; table. If you knew the index of this
+                table, you could simply build a property key like
+                <code>tables.table(&lt;index&gt;).fields.field.name</code>,
+                but how do you find out the correct index? When using the
+                default expression engine, the only solution to this problem is
+                to iterate over all tables until you find the &quot;users&quot;
+                table.
+            </p>
+            <p>
+                Life would be much easier if an expression language could be used,
+                which would directly support queries of such kind. In the XML
+                world, the XPATH syntax has grown popular as a powerful means
+                of querying structured data. In XPATH a query that selects all
+                field names of the &quot;users&quot; table would look something
+                like <code>tables/table[@name='users']/fields/name</code> (here
+                we assume that the table's name is modelled as an attribute).
+                This is not only much simpler than an iteration over all tables,
+                but also much more readable: it is quite obvious, which fields
+                are selected by this query.
+            </p>
+            <p>
+                Given the power of XPATH it is no wonder that we got many
+                user requests to add XPATH support to Commons Configuration.
+                Well, here is it!
+            </p>
+            <p>
+                For enabling XPATH syntax for property keys you need the
+                <a href="../apidocs/org/apache/commons/configuration/tree/xpath/XPathExpressionEngine.html">
+                <code>XPathExpressionEngine</code></a> class. This class
+                implements the <code>ExpressionEngine</code> interface and can
+                be plugged into a <code>HierarchicalConfiguration</code> object
+                using the <code>setExpressionEngine()</code> method. It is also
+                possible to set an instance of this class as the global
+                expression engine, so that all hierarchical configuration
+                objects make use of XPATH syntax. The following code fragment
+                shows how XPATH support can be enabled for a configuration
+                object:
+            </p>
+            <source><![CDATA[
+HierarchicalConfiguration config = ...
+config.setExpressionEngine(new XPathExpressionEngine());
+
+// Now we can use XPATH queries:
+List<Object> fields = config.getList("tables/table[1]/fields/name");
+         ]]></source>
+            <p>
+                XPATH expressions are not only used for selecting properties
+                (i.e. for the several getter methods), but also for adding new
+                properties. For this purpose the keys passed into the
+                <code>addProperty()</code> method must conform to a special
+                syntax. They consist of two parts: the first part is an
+                arbitrary XPATH expression that selects the node where the new
+                property is to be added to, the second part defines the new
+                element to be added. Both parts are separated by whitespace.
+            </p>
+            <p>
+                Okay, let's make an example. Say, we want to add a <code>type</code>
+                property under the first table (as a sibling to the <code>name</code>
+                element). Then the first part of our key will have to select
+                the first table element, the second part will simply be
+                <code>type</code>, i.e. the name of the new property:
+            </p>
+            <source><![CDATA[
+config.addProperty("tables/table[1] type", "system");
+         ]]></source>
+            <p>
+                (Note that indices in XPATH are 1-based, while in the default
+                expression language they are 0-based.) In this example the part
+                <code>tables/table[1]</code> selects the target element of the
+                add operation. This element must exist and must be unique, otherwise an exception
+                will be thrown. <code>type</code> is the name of the new element
+                that will be added. If instead of a normal element an attribute
+                should be added, the example becomes
+            </p>
+            <source><![CDATA[
+config.addProperty("tables/table[1] @type", "system");
+         ]]></source>
+            <p>
+                It is possible to add complete paths at once. Then the single
+                elements in the new path are separated by &quot;/&quot;
+                characters. The following example shows how data about a new
+                table can be added to the configuration. Here we use full paths:
+            </p>
+            <source><![CDATA[
+// Add new table "tasks" with name element and type attribute
+config.addProperty("tables table/name", "tasks");
+// last() selects the last element of this name,
+// which is the newest table element
+config.addProperty("tables/table[last()] @type", "system");
+
+// Now add fields
+config.addProperty("tables/table[last()] fields/field/name", "taskid");
+config.addProperty("tables/table[last()]/fields/field[last()] type", "int");
+config.addProperty("tables/table[last()]/fields field/name", "name");
+config.addProperty("tables/table[last()]/fields field/name", "startDate");
+...
+         ]]></source>
+            <p>
+                The first line of this example adds the path <code>table/name</code>
+                to the <code>tables</code> element, i.e. a new <code>table</code>
+                element will be created and added as last child to the
+                <code>tables</code> element. Then a new <code>name</code> element
+                is added as child to the new <code>table</code> element. To this
+                element the value &quot;tasks&quot; is assigned. The next line
+                adds a <code>type</code> attribute to the new table element. To
+                obtain the correct <code>table</code> element, to which the
+                attribute must be added, the XPATH function <code>last()</code>
+                is used; this function selects the last element with a given
+                name, which in this case is the new <code>table</code> element.
+                The following lines all use the same approach to construct a new
+                element hierarchy: At first complete new branches are added
+                (<code>fields/field/name</code>), then to the newly created
+                elements further children are added.
+            </p>
+            <p>
+                There is one gotcha with these keys described so far: they do
+                not work with the <code>setProperty()</code> method! This is
+                because <code>setProperty()</code> has to check whether the
+                passed in key already exists; therefore it needs a key which can
+                be interpreted by query methods. If you want to use
+                <code>setProperty()</code>, you can pass in regular keys (i.e.
+                without a whitespace separator). The method then tries to figure
+                out which part of the key already exists in the configuration
+                and adds new nodes as necessary. In principle such regular keys
+                can also be used with <code>addProperty()</code>. However, they
+                do not contain sufficient information to decide where new nodes
+                should be added.
+            </p>
+            <p>
+                To make this clearer let's go back to the example with the
+                tables. Consider that there is a configuration which already
+                contains information about some database tables. In order to add
+                a new table element in the configuration
+                <code>addProperty()</code> could be used as follows:
+            </p>
+            <source><![CDATA[
+config.addProperty("tables/table/name", "documents");
+         ]]></source>
+            <p>
+                In the configuration a <code>&lt;tables&gt;</code> element
+                already exists, also <code>&lt;table&gt;</code> and
+                <code>&lt;name&gt;</code> elements. How should the expression
+                engine know where new node structures are to be added? The
+                solution to this problem is to provide this information in the
+                key by stating:
+            </p>
+            <source><![CDATA[
+config.addProperty("tables table/name", "documents");
+         ]]></source>
+            <p>
+                Now it is clear that new nodes should be added as children of
+                the  <code>&lt;tables&gt;</code> element. More information about
+                keys and how they play together with <code>addProperty()</code>
+                and <code>setProperty()</code> can be found in the Javadocs for
+                <a href="../apidocs/org/apache/commons/configuration/tree/xpath/XPathExpressionEngine.html">
+                <code>XPathExpressionEngine</code></a>.
+            </p>
+            <p>
+                <em>Note:</em> XPATH support is implemented through
+                <a href="http://commons.apache.org/jxpath">Commons JXPath</a>.
+                So when making use of this feature, be sure you include the
+                commons-jxpath jar in your classpath.
+            </p>
+            <p>
+                In this tutorial we don't want to describe XPATH syntax and
+                expressions in detail. Please refer to corresponding documentation.
+                It is important to mention that by embedding Commons JXPath the
+                full extent of the XPATH 1.0 standard can be used for constructing
+                property keys.
+            </p>
+        </subsection>
+    </section>
+
+    <section name="Validation of XML configuration files">
+        <p>
+            XML parsers provide support for validation of XML documents to ensure that they
+            conform to a certain DTD or XML Schema. This feature can be useful for
+            configuration files, too. <code>XMLConfiguration</code> allows this feature
+            to be enabled when files are loaded.
+        </p>
+        <subsection name="Validation using a DTD">
+        <p>
+            The easiest way to turn on validation is to simply set the
+            <code>validating</code> property to true as shown in the
+            following example:
+        </p>
+        <source><![CDATA[
+XMLConfiguration config = new XMLConfiguration();
+config.setFileName("myconfig.xml");
+config.setValidating(true);
+
+// This will throw a ConfigurationException if the XML document does not
+// conform to its DTD.
+config.load();
+]]></source>
+        <p>
+            Setting the <code>validating</code> flag to true will cause
+            <code>XMLConfiguration</code> to use a validating XML parser. At this parser
+            a custom <code>ErrorHandler</code> will be registered, which throws
+            exceptions on simple and fatal parsing errors.
+        </p>
+        </subsection>
+        <subsection name="Validation using a Schema">
+        <p>
+            XML Parsers also provide support for validating XML documents using an
+            XML Schema. XMLConfiguration provides a simple mechanism for enabling
+            this by setting the <code>schemaValidation</code> flag to true. This
+            will also set the <code>validating</code> flag to true so both do not
+            need to be set. The XML Parser will then use the schema defined in the
+            XML document to validate it. Enabling schema validation will also
+            enable the parser's namespace support.
+        </p>
+        <p>
+        <source><![CDATA[
+XMLConfiguration config = new XMLConfiguration();
+config.setFileName("myconfig.xml");
+config.setSchemaValidation(true);
+
+// This will throw a ConfigurationException if the XML document does not
+// conform to its Schema.
+config.load();
+]]></source>
+        </p>
+        </subsection>
+        <subsection name="Default Entity Resolution">
+        <p>
+            There is also some support for dealing with DTD files. Often the
+            DTD of an XML document is stored locally so that it can be quickly
+            accessed. However the <code>DOCTYPE</code> declaration of the document
+            points to a location on the web as in the following example:
+        </p>
+        <source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+  PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+  "http://java.sun.com/j2ee/dtds/web-app_2.2.dtd">
+]]></source>
+        <p>
+            When working with XML documents directly you would use an
+            <code>EntityResolver</code> in such a case. The task of such an
+            entity resolver is to point the XML parser to the location of the
+            file referred to by the declaration. So in our example the entity
+            resolver would load the DTD file from a local cache instead of
+            retrieving it from the internet.
+        </p>
+        <p>
+            <code>XMLConfiguration</code> provides a simple default implementation of
+            an <code>EntityResolver</code>. This implementation is initialized
+            by calling the <code>registerEntityId()</code> method with the
+            public IDs of the entities to be retrieved and their corresponding
+            local URLs. This method has to be called before the configuration
+            is loaded. To continue our example, consider that the DTD file for
+            our example document is stored on the class path. We can register it
+            at <code>XMLConfiguration</code> using the following code:
+        </p>
+        <source><![CDATA[
+XMLConfiguration config = new XMLConfiguration();
+// load the URL to the DTD file from class path
+URL dtdURL = getClass().getResource("web-app_2.2.dtd");
+// register it at the configuration
+config.registerEntityId("-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN",
+    dtdURL);
+config.setValidating(true);  // enable validation
+config.setFileName("web.xml");
+config.load();
+]]></source>
+        <p>
+            This basically tells the XML configuration to use the specified
+            URL when it encounters the given public ID. Note that the call to
+            <code>registerEntityId()</code> has to be performed before the
+            configuration is loaded. So you cannot use one of the constructors
+            that directly load the configuration.
+        </p>
+        </subsection>
+        <subsection name="Enhanced Entity Resolution">
+        <p>
+            While the default entity resolver can be used under certain circumstances,
+            it does not work well when using the DefaultConfigurationBuilder.
+            Furthermore, in many circumstances the programmatic nature of
+            registering entities will tie the application tightly to the
+            XML content. In addition, because it only works with the public id it
+            cannot support XML documents using an XML Schema.
+        </p>
+        <p>
+            <a href="http://xml.apache.org/commons/components/resolver/resolver-article.html#s.whats.wrong">XML
+            Entity and URI Resolvers</a> describes using a set of catalog files to
+            resolve enitities. Commons Configuration provides support for
+            this Catalog Resolver through its own CatalogResolver class.
+        </p>
+         <source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Employees xmlns="http://commons.apache.org/employee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://commons.apache.org/employee http://commons.apache.org/sample.xsd">
+  <Employee>
+    <SSN>555121211</SSN>
+    <Name>John Doe</Name>
+    <DateOfBirth>1975-05-15</DateOfBirth>
+    <EmployeeType>Exempt</EmployeeType>
+    <Salary>100000</Salary>
+  </Employee>
+</Employees>]]></source>
+        <p>
+            The XML sample above is an XML document using a default namespace of
+            http://commons.apache.org/employee. The schemaLocation allows a set
+            of namespaces and hints to the location of their corresponding
+            schemas. When processing the document the parser will pass the hint,
+            in this case http://commons.apache.org/sample.xsd, to the entity resolver
+            as the system id. More information on using schema locations can be found
+            at <a href="http://www.w3.org/TR/xmlschema-0/#schemaLocation">schemaLocation</a>.
+        </p>
+        <p>
+            The example that follows shows how to use the CatalogResolver when
+            processing an XMLConfiguration. It should be noted that by using the
+            setEntityResolver method any EntityResolver may be used, not just those
+            provided by Commons Configuration.
+        </p>
+        <source><![CDATA[
+CatalogResolver resolver = new CatalogResolver();
+resolver.setCatalogFiles("local/catalog.xml","http://test.org/catalogs/catalog1.xml");
+XMLConfiguration config = new XMLConfiguration();
+config.setEntityResolver(resolver);
+config.setSchemaValidation(true);  // enable schema validation
+config.setFileName("config.xml");
+config.load();
+]]></source>
+        </subsection>
+        <subsection name="Extending Validation and Entity Resolution">
+        <p>
+            The mechanisms provided with Commons Configuration will hopefully be
+            sufficient in most cases, however there will certainly be circumstances
+            where they are not. XMLConfiguration provides two extension mechanisms
+            that should provide applications with all the flexibility they may
+            need. The first, registering a custom Entity Resolver has already been
+            discussed in the preceeding section. The second is that XMLConfiguration
+            provides a generic way of setting up the XML parser to use: A preconfigured
+            <code>DocumentBuilder</code> object can be passed to the
+            <code>setDocumentBuilder()</code> method.
+        </p>
+        <p>
+            So an application can create a <code>DocumentBuilder</code> object
+            and initialize it according to its special needs. Then this
+            object must be passed to the <code>XMLConfiguration</code> instance
+            before invocation of the <code>load()</code> method. When loading
+            a configuration file, the passed in <code>DocumentBuilder</code> will
+            be used instead of the default one. <em>Note:</em> If a custom
+            <code>DocumentBuilder</code> is used, the default implementation of
+            the <code>EntityResolver</code> interface is disabled. This means
+            that the <code>registerEntityId()</code> method has no effect in
+            this mode.
+        </p>
+        </subsection>
+    </section>
+</body>
+
+</document>

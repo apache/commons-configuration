@@ -1,0 +1,758 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Combined Configurations</title>
+  <author email="oheger@apache.com">Oliver Heger</author>
+ </properties>
+
+<body>
+    <section name="Combined Configuration">
+    <p>
+      The <code><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
+      CombinedConfiguration</a></code> class provides an alternative for handling
+      multiple configuration sources. Its API is very similar to the
+      <code>CompositeConfiguration</code> class, which was discussed in the
+      <a href="howto_compositeconfiguration.html#Composite Configuration Details">last
+      section</a>. There are the following differences however:
+    </p>
+    <p>
+      <ul>
+        <li>A <code>CombinedConfiguration</code> is a truely
+        <a href="howto_xml.html#Hierarchical properties">hierarchical
+        configuration</a>. This means that all the enhanced facilities
+        provided by <code>HierarchicalConfiguration</code> (e.g. expression
+        engines) can be used.</li>
+        <li>A <code>CombinedConfiguration</code> is not limited to implementing
+        an override semantics for the properties of the contained configurations.
+        Instead it has the concept of so-called <em>node combiners</em>, which
+        know how properties of multiple configuration sources can be combined.
+        Node combiners are discussed later in detail. For instance, there is a
+        node combiner implementation available that constructs a union of the
+        contained configurations.</li>
+        <li>Contained configurations can be assigned a name. They can later be
+        accessed by their name.</li>
+        <li>Each contained configuration can have an optional prefix. Its
+        properties are then added under this prefix to the combined
+        configuration.</li>
+        <li>There is no concept of an <em>in memory configuration</em>. Changes
+        to a combined configuration are handled in a different way.</li>
+      </ul>
+   	</p>
+
+    <subsection name="How it works">
+    <p>
+      A <code>CombinedConfiguration</code> provides a logic view on the
+      properties of the configurations it contains. This view is determined
+      by the associated node combiner object. Because of that it must be
+      re-constructed whenever one of these contained configurations is
+      changed.
+    </p>
+    <p>
+      To achieve this, a <code>CombinedConfiguration</code> object registers
+      itself as an event listener at the configurations that are added to it.
+      It will then be notified for every modification that occurs. If such a
+      notification is received, the internally managed view is invalidated.
+      When a property of the combined configuration is to be accessed, the view
+      is checked whether it is valid. If this is the case, the property's value
+      can be directly fetched. Otherwise the associated node combiner is asked
+      to re-construct the view.
+    </p>
+    </subsection>
+    
+    <subsection name="Node combiners">
+    <p>
+      A <em>node combiner</em> is an object of a class that inherits from the
+      abstract <code><a href="../apidocs/org/apache/commons/configuration/tree/NodeCombiner.html">NodeCombiner</a></code>
+      class. This class defines an abstract <code>combine()</code> method, which
+      takes the root nodes of two hierarchical configurations and returns the
+      root node of the combined node structure. It is up to a concrete
+      implementation how this combined structure will look like. Commons
+      Configuration ships with three concrete implementations
+      <code><a href="../apidocs/org/apache/commons/configuration/tree/OverrideCombiner.html">OverrideCombiner</a></code>,
+      <code><a href="../apidocs/org/apache/commons/configuration/tree/MergeCombiner.html">MergeCombiner</a></code>
+      and <code><a href="../apidocs/org/apache/commons/configuration/tree/UnionCombiner.html">UnionCombiner</a></code>,
+      which implement an override, merge, and union semantics respectively.
+    </p>
+    <p>
+      Constructing a combination of multiple node hierarchies is not a trivial
+      task. The available implementations descend the passed in node hierarchies
+      in a recursive manner to decide, which nodes have to be copied into the
+      resulting structure. Under certain circumstances two nodes of the source
+      structures can be combined into a single result node, but unfortunately
+      this process cannot be fully automated, but sometimes needs some hints
+      from the developer. As an example consider the following XML configuration
+      sources:
+    </p>
+    <source><![CDATA[
+<configuration>
+  <database>
+    <tables>
+      <table>
+        <name>users</name>
+        <fields>
+          <field>
+            <name>user_id</name>
+          </field>
+          ...
+        </fields>
+      </table>
+    </tables>
+  </database>
+</configuration>
+]]></source>
+    <p>and</p>
+    <source><![CDATA[
+<configuration>
+  <database>
+    <tables>
+      <table>
+        <name>documents</name>
+        <fields>
+          <field>
+            <name>document_id</name>
+          </field>
+          ...
+        </fields>
+      </table>
+    </tables>
+  </database>
+</configuration>
+]]></source>
+    <p>
+      These two configuration sources define database tables. Each source
+      defines one table. When constructing a union for these sources the result
+      should look as follows:
+    </p>
+    <source><![CDATA[
+<configuration>
+  <database>
+    <tables>
+      <table>
+        <name>users</name>
+        <fields>
+          <field>
+            <name>user_id</name>
+          </field>
+          ...
+        </fields>
+      </table>
+      <table>
+        <name>documents</name>
+        <fields>
+          <field>
+            <name>document_id</name>
+          </field>
+          ...
+        </fields>
+      </table>
+    </tables>
+  </database>
+</configuration>
+]]></source>
+    <p>
+      As you can see, the resulting structure contains two <code>table</code>
+      nodes while the nodes <code>database</code> and <code>tables</code> appear
+      only once. For a human being this is quite logic because <code>database</code>
+      and <code>tables</code> define the overall structure of the configuration
+      data, and there can be multiple tables. A node combiner however does not
+      know anything about structure nodes, list nodes, or whatever. From its point of
+      view there is no detectable difference between the <code>tables</code>
+      nodes and the <code>table</code> nodes in the source structures: both
+      appear once in each source file and have no values. So without any
+      assistance the result constructed by the <code>UnionCombiner</code> when
+      applied on the two example sources would be a bit different:
+    </p>
+    <source><![CDATA[
+<configuration>
+  <database>
+    <tables>
+      <table>
+        <name>users</name>
+        <fields>
+          <field>
+            <name>user_id</name>
+          </field>
+          ...
+        </fields>
+        <name>documents</name>
+        <fields>
+          <field>
+            <name>document_id</name>
+          </field>
+          ...
+        </fields>
+      </table>
+    </tables>
+  </database>
+</configuration>
+]]></source>
+    <p>
+      Note that the <code>table</code> node would be considered a structure
+      node, too, and would not be duplicated. This is probably not what was
+      desired. To deal with such situations it is possible to tell the node
+      combiner that certain nodes are list nodes and thus should not be
+      combined. So in this concrete example the <code>table</code> node should
+      be declared as a list node, then we would get the expected result. We will
+      see below how this is done. Note that this explicit declaration of a list
+      node is necessary only in situations where there is ambiguity. If in one
+      of our example configuration sources multiple tables had been defined, the
+      node combiner would have concluded itself that <code>table</code> is a list
+      node and would have acted correspondigly.
+    </p>
+    <p>
+      The examples the follow are provided to further illustrate the differences
+      between the combiners that are delivered with Commons Configuration. The first
+      two files are the files that will be combined.
+    </p>
+    <table border='0'>
+    <tr>
+      <th width="50%">testfile1.xml</th>
+      <th width="50%">testfile2.xml</th>
+    </tr>
+    <tr><td width="50%">
+<source><![CDATA[<config>
+  <gui>
+    <bgcolor>green</bgcolor>
+    <selcolor>yellow</selcolor>
+    <level default="2">1</level>
+  </gui>
+  <net>
+    <proxy>
+      <url>http://www.url1.org</url>
+      <url>http://www.url2.org</url>
+      <url>http://www.url3.org</url>
+    </proxy>
+    <service>
+      <url>http://service1.org</url>
+    </service>
+    <server>
+    </server>
+  </net>
+  <base>
+    <services>
+      <security>
+        <login>
+          <user>Admin</user>
+          <passwd type="secret"/>
+        </login>
+      </security>
+    </services>
+  </base>
+  <database>
+    <tables>
+      <table id="1">
+        <name>documents</name>
+        <fields>
+          <field>
+            <name>docid</name>
+            <type>long</type>
+          </field>
+          <field>
+            <name>docname</name>
+            <type>varchar</type>
+          </field>
+          <field>
+            <name>authorID</name>
+            <type>int</type>
+          </field>
+        </fields>
+      </table>
+    </tables>
+  </database>
+  <Channels>
+    <Channel id="1" type="half">
+      <Name>My Channel</Name>
+    </Channel>
+    <Channel id="2">
+      <MoreChannelData>more test 2 data</MoreChannelData>
+    </Channel>
+    <Channel id="3" type="half">
+      <Name>Test Channel</Name>
+    </Channel>
+    <Channel id="4">
+      <Name>Channel 4</Name>
+    </Channel>
+  </Channels>
+</config>
+]]></source></td><td width="50%">
+<source><![CDATA[<config>
+  <base>
+    <services>
+      <security>
+        <login>
+          <user type="default">scotty</user>
+          <passwd>BeamMeUp</passwd>
+        </login>
+      </security>
+    </services>
+  </base>
+  <gui>
+    <bgcolor>black</bgcolor>
+    <fgcolor>blue</fgcolor>
+    <level min="1">4</level>
+  </gui>
+  <net>
+    <server>
+      <url>http://appsvr1.com</url>
+      <url>http://appsvr2.com</url>
+      <url>http://testsvr.com</url>
+      <url>http://backupsvr.com</url>
+    </server>
+    <service>
+      <url type="2">http://service2.org</url>
+      <url type="2">http://service3.org</url>
+    </service>
+  </net>
+  <database>
+    <tables>
+      <table id="2">
+        <name>tasks</name>
+        <fields>
+          <field>
+            <name>taskid</name>
+            <type>long</type>
+          </field>
+          <field>
+            <name>taskname</name>
+            <type>varchar</type>
+          </field>
+        </fields>
+      </table>
+    </tables>
+  </database>
+  <Channels>
+    <Channel id="1">
+      <Name>Channel 1</Name>
+      <ChannelData>test 1 data</ChannelData>
+    </Channel>
+    <Channel id="2" type="full">
+      <Name>Channel 2</Name>
+      <ChannelData>test 2 data</ChannelData>
+    </Channel>
+    <Channel id="3" type="full">
+      <Name>Channel 3</Name>
+      <ChannelData>test 3 data</ChannelData>
+    </Channel>
+    <Channel id="4" type="half">
+      <Name>Test Channel 1</Name>
+    </Channel>
+    <Channel id="4" type="full">
+      <Name>Test Channel 2</Name>
+    </Channel>
+  </Channels>
+</config>
+]]></source></td></tr></table>
+      <p>
+        The first listing shows the result of using the <code>OverrideCombiner</code>.
+      </p>
+      <table>
+        <tr><th width="40%">OverrideCombiner Results</th><th width="60%">Notes</th></tr>
+        <tr><td width="40%">
+ <source><![CDATA[<config>
+  <gui>
+    <bgcolor>green</bgcolor>
+    <selcolor>yellow</selcolor>
+    <level default='2' min='1'>1</level>
+    <fgcolor>blue</fgcolor>
+  </gui>
+  <net>
+    <proxy>
+      <url>http://www.url1.org</url>
+      <url>http://www.url2.org</url>
+      <url>http://www.url3.org</url>
+    </proxy>
+    <service>
+      <url>http://service1.org</url>
+    </service>
+    <server>
+      <url>http://appsvr1.com</url>
+      <url>http://appsvr2.com</url>
+      <url>http://testsvr.com</url>
+      <url>http://backupsvr.com</url>
+    </server>
+  </net>
+  <base>
+    <services>
+      <security>
+        <login>
+          <user type='default'>Admin</user>
+          <passwd type='secret'>BeamMeUp</passwd>
+        </login>
+      </security>
+    </services>
+  </base>
+  <database>
+    <tables>
+      <table id='1'>
+        <name>documents</name>
+        <fields>
+          <field>
+            <name>docid</name>
+            <type>long</type>
+          </field>
+          <field>
+            <name>docname</name>
+            <type>varchar</type>
+          </field>
+          <field>
+            <name>authorID</name>
+            <type>int</type>
+          </field>
+        </fields>
+      </table>
+    </tables>
+  </database>
+  <Channels>
+    <Channel id='1' type='half'>
+      <Name>My Channel</Name>
+    </Channel>
+    <Channel id='2'>
+      <MoreChannelData>more test 2 data</MoreChannelData>
+    </Channel>
+    <Channel id='3' type='half'>
+      <Name>Test Channel</Name>
+    </Channel>
+  </Channels>
+</config>
+]]></source></td><td width="60%">
+      <p>
+        The features that are significant in this file are:
+        <ul>
+          <li>In the gui section each of the child elements only appears once. The level element
+          merges the attributes from the two files and uses the element value of the first file.</li>
+          <li>In the security section the user type attribute was obtained from the second file
+          while the user value came from the first file. Alternately, the password type was
+          obtained from the first file while the value came from the second.</li>
+          <li>Only the data from table 1 was included.</li>
+          <li>Channel 1 in the first file completely overrode Channel 1 in the second file.</li>
+          <li>Channel 2 in the first file completely overrode Channel 2 in the second file. While
+          the attributes were merged in the case of the login elements the type attribute
+          was not merged in this case.</li>
+          <li>Again, only Channel 3 from the first file was included.</li>
+        </ul>
+      </p>
+      <p>
+        How the Channel elements ended up may not at first be obvious. The <code>OverrideCombiner</code>
+        simply noticed that the Channels element had three child elements named Channel and
+        used that to determine that only the contents of the Channels element in the first file
+        would be used.
+      </p></td></tr></table>
+      <p>
+        The next file is the the result of using the <code>UnionCombiner</code>
+      </p>
+      <table>
+        <tr>
+          <th width="40%">UnionCombiner Results</th>
+          <th width="60%">Notes</th>
+        </tr>
+        <tr><td width="40%">
+ <source><![CDATA[<config>
+  <gui>
+    <bgcolor>green</bgcolor>
+    <selcolor>yellow</selcolor>
+    <level default='2'>1</level>
+    <bgcolor>black</bgcolor>
+    <fgcolor>blue</fgcolor>
+    <level min='1'>4</level>
+  </gui>
+  <net>
+    <proxy>
+      <url>http://www.url1.org</url>
+      <url>http://www.url2.org</url>
+      <url>http://www.url3.org</url>
+    </proxy>
+    <service>
+      <url>http://service1.org</url>
+      <url type='2'>http://service2.org</url>
+      <url type='2'>http://service3.org</url>
+    </service>
+    <server></server>
+    <server>
+      <url>http://appsvr1.com</url>
+      <url>http://appsvr2.com</url>
+      <url>http://testsvr.com</url>
+      <url>http://backupsvr.com</url>
+    </server>
+  </net>
+  <base>
+    <services>
+      <security>
+        <login>
+          <user>Admin</user>
+          <passwd type='secret'></passwd>
+          <user type='default'>scotty</user>
+          <passwd>BeamMeUp</passwd>
+        </login>
+      </security>
+    </services>
+  </base>
+  <database>
+    <tables>
+      <table id='1' id='2'>
+        <name>documents</name>
+        <fields>
+          <field>
+            <name>docid</name>
+            <type>long</type>
+          </field>
+          <field>
+            <name>docname</name>
+            <type>varchar</type>
+          </field>
+          <field>
+            <name>authorID</name>
+            <type>int</type>
+          </field>
+          <field>
+            <name>taskid</name>
+            <type>long</type>
+          </field>
+          <field>
+            <name>taskname</name>
+            <type>varchar</type>
+          </field>
+        </fields>
+        <name>tasks</name>
+      </table>
+    </tables>
+  </database>
+  <Channels>
+    <Channel id='1' type='half'>
+      <Name>My Channel</Name>
+    </Channel>
+    <Channel id='2'>
+      <MoreChannelData>more test 2 data</MoreChannelData>
+    </Channel>
+    <Channel id='3' type='half'>
+      <Name>Test Channel</Name>
+    </Channel>
+    <Channel id='1'>
+      <Name>Channel 1</Name>
+      <ChannelData>test 1 data</ChannelData>
+    </Channel>
+    <Channel id='2' type='full'>
+      <Name>Channel 2</Name>
+      <ChannelData>test 2 data</ChannelData>
+    </Channel>
+    <Channel id='3' type='full'>
+      <Name>Channel 3</Name>
+      <ChannelData>test 3 data</ChannelData>
+    </Channel>
+  </Channels>
+</config>
+]]></source></td><td width="60%">
+      <p>
+        The feature that is significant in this file is rather obvious. It is just a simple
+        union of the contents of the two files.
+      </p>
+      </td></tr></table>
+      <p>
+        Finally, the last file is the result of using the <code>MergeCombiner</code>
+      </p>
+      <table>
+        <tr>
+          <th width="40%">MergeCombiner Results</th>
+          <th width="60%">Notes</th>
+        </tr>
+        <tr><td width="40%">
+<source><![CDATA[<config>
+  <gui>
+    <bgcolor>green</bgcolor>
+    <selcolor>yellow</selcolor>
+    <level default='2' min='1'>1</level>
+    <fgcolor>blue</fgcolor>
+  </gui>
+  <net>
+    <proxy>
+      <url>http://www.url1.org</url>
+      <url>http://www.url2.org</url>
+      <url>http://www.url3.org</url>
+    </proxy>
+    <service>
+      <url>http://service1.org</url>
+    </service>
+    <server>
+      <url>http://appsvr1.com</url>
+      <url>http://appsvr2.com</url>
+      <url>http://testsvr.com</url>
+      <url>http://backupsvr.com</url>
+    </server>
+  </net>
+  <base>
+    <services>
+      <security>
+        <login>
+          <user type='default'>Admin</user>
+          <passwd type='secret'></passwd>
+        </login>
+      </security>
+    </services>
+  </base>
+  <database>
+    <tables>
+      <table id='1'>
+        <name>documents</name>
+        <fields>
+          <field>
+            <name>docid</name>
+            <type>long</type>
+          </field>
+          <field>
+            <name>docname</name>
+            <type>varchar</type>
+          </field>
+          <field>
+            <name>authorID</name>
+            <type>int</type>
+          </field>
+        </fields>
+      </table>
+      <table id='2'>
+        <name>tasks</name>
+        <fields>
+          <field>
+            <name>taskid</name>
+            <type>long</type>
+          </field>
+          <field>
+            <name>taskname</name>
+            <type>varchar</type>
+          </field>
+        </fields>
+      </table>
+    </tables>
+  </database>
+  <Channels>
+    <Channel id='1' type='half'>
+      <Name>My Channel</Name>
+      <ChannelData>test 1 data</ChannelData>
+    </Channel>
+    <Channel id='2' type='full'>
+      <MoreChannelData>more test 2 data</MoreChannelData>
+      <Name>Channel 2</Name>
+      <ChannelData>test 2 data</ChannelData>
+    </Channel>
+    <Channel id='3' type='half'>
+      <Name>Test Channel</Name>
+    </Channel>
+    <Channel id='3' type='full'>
+      <Name>Channel 3</Name>
+      <ChannelData>test 3 data</ChannelData>
+    </Channel>
+  </Channels>
+</config>
+]]></source></td><td width="60%">
+      <p>
+        The features that are significant in this file are:
+        <ul>
+          <li>In the gui section the elements were merged.</li>
+          <li>In the net section the elements were merged, with the exception of the urls.</li>
+          <li>In the security section the user and password were merged. Notice that the
+          empty value for the password from the first file overrode the password in the
+          second file.</li>
+          <li>Both table elements appear</li>
+          <li>Channel 1 and Channel 2 were merged</li>
+          <li>Both Channel 3 elements appear as they were determined to not be the same.</li>
+        </ul>
+      </p>
+      <p>
+        When merging elements attributes play a critical role. If an element has an attribute that
+        appears in both sources, the value of that attribute must be the same for the elements to be
+        merged.
+      </p>
+      <p>
+        Merging is only allowed between a single node in each of the files, so if an element
+        in the first file matches more than one element in the second file no merging will take
+        place and the element from the first file (and its contents) are included and the elements
+        in the second file are not. If the element is marked as a list node then the elements from
+        the second file will also be included.
+      </p></td></tr></table>
+    </subsection>
+
+	<subsection name="Constructing a CombinedConfiguration">
+	<p>
+      To create a <code>CombinedConfiguration</code> object you specify the node
+      combiner to use and then add an arbitrary number of configurations. We will
+      show how to construct a union configuration from the two example sources
+      introduced earlier:
+    </p>
+<source><![CDATA[
+// Load the source configurations
+XMLConfiguration conf1 = new XMLConfiguration("table1.xml");
+XMLConfiguration conf2 = new XMLConfiguration("table2.xml");
+
+// Create and initialize the node combiner
+NodeCombiner combiner = new UnionCombiner();
+combiner.addListNode("table");  // mark table as list node
+            // this is needed only if there are ambiguities
+
+// Construct the combined configuration
+CombinedConfiguration cc = new CombinedConfiguration(combiner);
+cc.addConfiguration(conf1, "tab1");
+cc.addConfiguration(conf2);
+]]></source>
+    <p>
+      Here we also specified a name for one of the configurations, so it can
+      later be accessed by <code>cc.getConfiguration("tab1");</code>. Access by
+      index is also supported. After that the properties in the combined
+      configuration can be accessed as if it were a normal hierarchical
+      configuration
+    </p>
+    </subsection>
+    
+    <subsection name="Dealing with changes">
+    <p>
+      There is nothing that prevents you from updating a combined configuration,
+      e.g. by calling methods like <code>addProperty()</code> or
+      <code>removeProperty()</code>. The problem is that depending on the used
+      node combiner it might no be clear, which of the contained configurations
+      will be modified or whether one is modified at all.
+    </p>
+    <p>
+      Typical node combiners work by copying parts of the node structures of
+      the source configurations into the target structure and linking them
+      togehter using special link nodes. So updates of the combined node structure
+      will either effect nodes from one of the contained configuration (then
+      the changes are directly visible in this configuration) or one of the link
+      nodes (then they cannot really be saved).
+    </p>
+    <p>
+      It is also possible that a change is done at the combined node structure,
+      which is not compatible with the current node combiner. Imagine that an
+      <code>OverrideCombiner</code> is used and that a
+      property should be removed. This property will then be removed from one
+      of the contained configurations. Now it may happen that this removed
+      property had hidden property values of other contained configurations.
+      Their values won't become visible automatically, but only after the
+      combined view was re-constructed.
+    </p>
+    <p>
+      Because of that it is recommended that changes are not done at the
+      combined configuration, but only at contained configurations. This way
+      the correct configuration to be updated can unambigously be identified.
+      Obtaining the configuration to be updated from the combined configuration
+      is easy when it was given a name.
+    </p>
+    </subsection>
+	</section>
+</body>
+
+</document>
