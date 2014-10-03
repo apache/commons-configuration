@@ -20,7 +20,7 @@
 <document>
 
  <properties>
-  <title>Commons Configuration User's Guide</title>
+  <title>Commons Configuration 1.10 User's Guide</title>
  </properties>
 
 <body>
@@ -28,7 +28,7 @@
     <section name="About this document">
 		<p>
  	 		This document describes the features of the Commons Configuration
-            component starting with the very basics and up to the more advanced
+            component in version 1.10 starting with the very basics and up to the more advanced
             topics. If you read it in a linear way, you should get a sound
             understanding of the provided classes and the possibilities they
             offer. But you can also skip sections and jump directly to the topics
