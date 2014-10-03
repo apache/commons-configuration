@@ -33,8 +33,8 @@
       <item name="Building"                     href="/building.html"/>
       <item name="Release History"              href="/changes-report.html"/>
       <item name="1.10" collapse="true"         href="/index.html">
-        <item name="User's Guide"               href="http://commons.apache.org/configuration/javadocs/v1.10/userguide/user_guide.html"/>
-        <item name="Javadoc"              	href="http://commons.apache.org/configuration/javadocs/v1.10/apidocs/index.html"/>
+        <item name="User's Guide"               href="/userguide_v1.10/user_guide.html"/>
+        <item name="Javadoc"                    href="http://commons.apache.org/configuration/javadocs/v1.10/apidocs/index.html"/>
         <item name="Runtime Dependencies"       href="/dependencies_1_10.html"/>
       </item>
       <item name="2.0-alpha" collapse="true"    href="/index.html">
