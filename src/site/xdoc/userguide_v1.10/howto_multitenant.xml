@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+  <properties>
+    <title>Mutli-tenant Configurations</title>
+    <author email="rgoers@apache.org">Ralph Goers</author>
+  </properties>
+
+  <body>
+    <section name="Multi-tenant Configurations">
+      <p>
+        In a multi-tenant environment a single instance of the application
+        while run on behalf of many clients. Typically, this will require
+        that each client have its own unique configuration. The simplest
+        approach to enable an application to be multi-tenant is for it
+        to not really be aware of it at all. This requires that the
+        configuration framework take on some of the responsility for
+        making the application work correctly.
+      </p>
+      <p>
+        One approach to enable this support in a web application might be
+        to use a Servlet Filter and then use the Log4j or SLF4J MDC to
+        save the attributes needed to identify the client. These attributes
+        can then be used to identify the specific client configuration to
+        be used. The classes described below use this technique to allow
+        configurations to transparently provide the configuration appropriate
+        for the clients.
+      </p>
+
+      <subsection name="MultiFileHierarchicalConfiguration">
+        <p>
+          The constructor for this class accepts a pattern. The pattern can
+          contain keys that will be resolved using the ConfigurationInterpolator
+          on each call to a method in the class. The configuration file will then
+          be located using the resolved pattern and a new XMLConfiguration
+          will be created and cached for subsequent requests. The ExpressionEngine,
+          ReloadingStrategy and listeners will be propogated to each of the
+          created configurations.
+        </p>
+        <p>
+          When used in a combined configuration it is often acceptable for a file
+          matching a particular pattern to be missing so, by default, most exceptions
+          encountered when loading files are ignored. To change this behavior
+          call setIgnoreException(false) or configure the attribute to false in
+          DefaultConfigurationBuilder's configuration file. If schema validation
+          is enabled validation exceptions will always cause a failure.
+        </p>
+      </subsection>
+      <subsection name="DynamicCombinedConfiguration">
+        <p>
+          The CombinedConfiguration class allows multiple configuration files to be
+          merged together. However, it will not merge a MultiFileHierarchicalConfiguration
+          properly since the underlying configuration file will be different depending
+          on the resolution of the location pattern. DynamicCombinedConfiguration
+          solves this by creating a new CombinedConfiguration for each pattern.
+        </p>
+      </subsection>
+      <subsection name="Sample Configuration">
+        <p>
+           This sample configuration illustrates how to use DynamicCombinedConfiguration
+           in combination with MultiFileHierarchicalConfiguration to create a multi-tenant
+           configuration.
+        </p>
+        <source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- Test configuration definition file that demonstrates complex initialization -->
+<configuration>
+  <header>
+    <result delimiterParsingDisabled="true" forceReloadCheck="true"
+            config-class="org.apache.commons.configuration.DynamicCombinedConfiguration"
+            keyPattern="$${sys:Id}">
+      <expressionEngine
+          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+    </result>
+    <providers>
+      <provider config-tag="multifile"
+         config-class="org.apache.commons.configuration.DefaultConfigurationBuilder$FileConfigurationProvider"
+         configurationClass="org.apache.commons.configuration.MultiFileHierarchicalConfiguration"/>
+    </providers>
+  </header>
+  <override>
+    <multifile filePattern="/opt/configs/$$${sys:Id}/config.xml" config-name="clientConfig"/>
+    <xml fileName="/opt/configs/default/config.xml" config-name="defaultConfig"/>
+  </override>
+</configuration>
+]]></source>
+        <p>
+          Note how the variables have multiple '$'. This is how variables are escaped and
+          is necessary because the variables will be interpolated multiple times. Each
+          attempt will remove the leading '$'. When there is only a single '$' in front
+          of the '{' the interpolator will then resolve the variable. The first extra '$'
+          is necessary because DefaultConfigurationBuilder will interpolate any variables
+          in the configuration. In the case of the multifile configuration item two
+          leading '$' characters are necessary before the variable because it will be
+          interpolated by both DefaultConfigurationBuilder and DynamicCombinedConfiguration
+          before MultiFileHierarchicalConfiguration gets the chance to evaluate it.
+          Although in this example one would not expect system properties to change
+          at runtime, other types of lookups such as the MDCStrLookup provided with
+          SLF4J require that the variables be evaluated as the configuration is being
+          accessed instead of when the configuration file is processed to behave as desired.
+        </p>
+      </subsection>
+      <subsection name="PatternSubtreeConfigurationWrapper">
+        <p>
+          Applications are often composed of many components each of which need their
+          own configuration. This can be accomodated by having a configuration file
+          per component, but this can make things hard to manage when there are many
+          clients and many components. A second approach is to combine them into
+          a single configuration file. However, this either means the subcomponent
+          has to be aware of the surrounding configuration and navigate past it or the
+          application must be provided just the portion of the configuration it
+          can process. PatternSubtreeConfigurationWrapper can be used for this purpose.
+        </p>
+        <p>
+          Normal practice when using dependency injection frameworks is to have the
+          attributes needed to make components work correctly injected into them.
+          When working with Commons Configuration this works very well. Components
+          simply need to have a HierarchicalConfiguration attribute along with
+          a corresponding setter and getter. The injection framework can then be
+          used to provide the component with the correct configuration using
+          PatternSubtreeConfigurationWrapper as shown in the next example.
+        </p>
+        <p>
+        <source><![CDATA[
+  <bean id="configurationBuilder"
+        class="org.apache.commons.configuration.DefaultConfigurationBuilder">
+    <property name="fileName">
+      <value>configuration.xml</value>
+    </property>
+  </bean>
+  <bean id="applicationConfig" factory-bean="configurationBuilder"
+        factory-method="getConfiguration">
+  </bean>
+  <bean id="subcomponentConfig"
+        class="org.apache.commons.configuration.PatternSubtreeConfigurationWrapper"
+        autowire='autodetect'>
+    <constructor-arg index="0">
+      <ref bean="applicationConfig"/>
+    </constructor-arg>
+    <constructor-arg index="1" value="/Components/MyComponent"
+  </bean>
+  <bean id='MyComponent' class='org.test.MyComponent' autowire='autodetect'>
+    <property name="configuration">
+      <ref bean="subcomponentConfig"/>
+    </property>
+  </bean>
+]]></source>
+        </p>
+      </subsection>
+    </section>
+
+  </body>
+
+</document>

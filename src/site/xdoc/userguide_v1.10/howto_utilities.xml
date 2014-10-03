@@ -1,0 +1,279 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Utility classes and Tips and Tricks Howto</title>
+  <author email="oheger@apache.org">Oliver Heger</author>
+ </properties>
+
+<body>
+	<section name="Utility classes and Tips and Tricks">
+    <p>
+      In this section some utility classes will be introduced that can be used
+      to make handling of configuration objects easier. These classes already
+      provide solutions for some often occurring problems. We will list these
+      problems in no specific order and show how they can be solved with
+      classes provided by <em>Commons Configuration</em>.
+    </p>
+
+    <subsection name="Copy a configuration">
+	<p>
+      Often it is required to copy the data of one <code>Configuration</code>
+      object into another one. For this purpose the
+      <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
+      AbstractConfiguration</a></code> class (which serves as the base class for
+      most of the configuration implementations shipped with this library)
+      provides two methods implementing a basic copy operation:
+      <ul>
+        <li><code>append()</code> takes the configuration to be copied
+        as argument and adds all of its properties to the current configuration.</li>
+        <li><code>copy()</code> is very similar to <code>append()</code>. The
+        difference is that properties that already exist in the target
+        configuration are replaced by the properties of the source configuration.
+        </li>
+      </ul>
+    </p>
+    <p>
+      These methods work fine if the target configuration is not a hierarchical
+      configuration. If a hierarchical configuration is to be copied into
+      another one, the methods are not able to handle the hierarchical
+      structure; so the resulting configuration will contain all of the
+      properties of the source configuration, but the specific parent-child
+      relations will probably be lost. If a hierarchical configuration needs to
+      be copied, there are the following options:
+      <ul>
+        <li>The <code>clone()</code> method can be used to create a copy of a
+        hierarchical configuration. This also works for non-hierarchical
+        configurations. Most of the configuration implementations provided by
+        <em>Commons Configurations</em> support cloning. The
+        <code>cloneConfiguration()</code> method of
+        <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/ConfigurationUtils.html">
+        ConfigurationUtils</a></code> can be used for creating a copy of an
+        arbitrary <code>Configuration</code> object. This method checks whether
+        the passed in configuration implements the <code>Cloneable</code>
+        interface and, if so, invokes its <code>clone()</code> method.</li>
+        <li>Most hierarchical configurations have a constructor, which takes
+        another hierarchical configuration as argument. This constructor
+        copies the content of the specified configuration into the newly created
+        object.</li>
+      </ul>
+    </p>
+    </subsection>
+
+    <subsection name="Converting a flat configuration into a hierarchical one">
+    <p>
+      <a href="howto_xml.html">Hierarchical configurations</a> provide some
+      enhanced features that are not available for &quot;flat&quot;
+      configurations. For instance they support more sophisticated query
+      facilities. Because of that it may be sometimes useful to transform an
+      ordinary configuration into a hierarchical one. The following code
+      fragment shows how this can be done:
+    </p>
+    <source><![CDATA[
+// Create a flat configuration
+PropertiesConfiguration flatConfig = new PropertiesConfiguration();
+flatConfig.load(...);
+HierarchicalConfiguration hc =
+  ConfigurationUtils.convertToHierarchical(flatConfig);
+]]></source>
+    <p>
+      The <code>convertToHierarchical()</code> method of
+      <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/ConfigurationUtils.html">
+      ConfigurationUtils</a></code> checks whether the passed in object
+      is already a hierarchical configuration. If this is the case, it is
+      returned unchanged. Otherwise a new <code>HierarchicalConfiguration</code>
+      object is created, and the properties of the source configuration are
+      copied into it.
+    </p>
+    <p>
+      Sometimes a flat configuration contains keys with special characters
+      that are not compatible with the expression engine of a hierarchical
+      configuration. For instance, a properties configuration could have the
+      following property:
+    </p>
+    <source><![CDATA[
+test(xy)=true
+]]></source>
+    <p>
+      When processing this property during conversion the default expression
+      engine of the resulting hierarchical configuration will interpret the
+      brackets as an index marker and try to convert the string between the
+      brackets into a number. In this example this fails with a
+      <code>NumberFormatException</code>! The cause for this problem is that the
+      property key contains characters with a special meaning for the default
+      expression engine.
+    </p>
+    <p>
+      To solve this problem, it is possible to specify an alternative expression
+      engine that will be used for the conversion. For instance, if you know that
+      your property keys can contain brackets, you could use an instance of
+      <code>DefaultExpressionEngine</code> that is configured with a different
+      index marker. This could look as follows:
+    </p>
+    <source><![CDATA[
+DefaultExpressionEngine engineConvert = new DefaultExpressionEngine();
+engineConvert.setIndexStart("[");
+engineConvert.setIndexEnd("]");
+HierarchicalConfiguration hc =
+  ConfigurationUtils.convertToHierarchical(flatConfig, engineConvert);
+]]></source>
+    <p>
+      In this example an expression engine is constructed that uses square
+      brackets as index markers. Therefore normal brackets do not have a
+      special meaning and thus are no more problematic during conversion.
+    </p>
+    <p>
+      <em>Note:</em> When using a <a href="howto_combinedconfiguration.html">
+      CombinedConfiguration</a> flat configurations contained in the combined
+      configuration are also converted into hierarchical configurations using
+      the methods discussed here. The <code>CombinedConfiguration</code> class
+      defines the method <code>setConversionExpressionEngine()</code>, which
+      can be called to specify an expression engine to be used during this
+      conversion. The expression engine passed to this method will be
+      propagated to ConfigurationUtils.convertToHierarchical().
+    </p>
+    </subsection>
+
+    <subsection name="Converting between properties and configurations">
+    <p>
+      When working with the JDK the <code>java.util.Properties</code> class is
+      typically used for storing configuration data. If <em>Commons
+      Configuration</em> is to be integrated in such an application, there may
+      be the requirement of converting from <code>Properties</code> objects to
+      <code>Configuration</code> objects and vice versa. For this purpose an
+      utility class can be used:
+      <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/ConfigurationConverter.html">
+      ConfigurationConverter</a></code>.
+    </p>
+    <p>
+      Usage of this class is pretty simple. It provides some static utility
+      methods that perform different conversions. Below you can see some
+      examples. In this fragment we assume that we have a method
+      <code>processConfiguration()</code> that is called from older parts of an
+      application that are not aware of the <em>Commons Configuration</em> API.
+      So they pass in a <code>Properties</code> object and expect one as
+      return value. Inside the method a temporary <code>Configuration</code>
+      object is created and used.
+    </p>
+    <source><![CDATA[
+/**
+ * Does some processing of properties.
+ * @param props the source properties
+ * @return the processed properties
+ */
+Properties processConfiguration(Properties props)
+{
+    // Create a configuration for the properties for easy access
+    Configuration config = ConfigurationConverter.getConfiguration(props);
+    
+    // Now use the Configuration API for manipulating the configuration data
+    ...
+    
+    // Return a Properties object with the results
+    return ConfigurationConverter.getProperties(config);
+}
+]]></source>
+    <p>
+      Please refer to the Javadocs of
+      <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/ConfigurationConverter.html">
+      ConfigurationConverter</a></code> to learn more about the available
+      conversion methods and their limitations.
+    </p>
+    </subsection>
+
+    <subsection name="Interpolation of all variables">
+    <p>
+      Another issue with the integration of <em>Commons Configuration</em> with
+      native Java applications can be variables: Configuration implementations
+      are able to detect variables like <code>${myReference}</code> or
+      <code>${sys:java.version}</code> in the values of their properties and
+      substitute them by their current values (see the section
+      <a href="howto_basicfeatures.html#Variable_Interpolation">Variable
+      Interpolation</a> for more details). External components probably do not
+      know how to handle such placeholders when processing configuration files
+      written by <em>Commons Configuration</em>.
+    </p>
+    <p>
+      <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
+      AbstractConfiguration</a></code> provides the method
+      <code>interpolatedConfiguration()</code>. This method creates a clone of
+      the current configuration and then performs interpolation on all of its
+      properties. So the result of this method is a configuration object with
+      basically the same content as the original configuration, but with all
+      variables replaced by their actual values (as far as this was possible).
+      The following code fragment shows how a
+      <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/PropertiesConfiguration.html">
+      PropertiesConfiguration</a></code> object can be saved in a way that the
+      resulting properties file does not contain any variables:
+    </p>
+    <source><![CDATA[
+// Load a properties file (which may contain variables)
+PropertiesConfiguration config = new PropertiesConfiguration("config.properties");
+
+// Perform interpolation on all variables
+PropertiesConfiguration extConfig =
+    (PropertiesConfiguration) config.interpolatedConfiguration();
+
+// Save the interpolated configuration (no more variables)
+extConfig.save("external_config.properties");
+]]></source>
+    </subsection>
+
+    <subsection name="Handling of runtime exceptions">
+    <p>
+      Section <a href="howto_events.html#Error_listeners">Error listeners</a>
+      introduces a way of dealing with runtime exceptions that can occur on
+      accessing configuration properties by registering an event listener. If
+      you do not want to provide a special error handler, but only need to
+      propagate the exception that caused the error event, you can make use of
+      a convenience method of the
+      <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/ConfigurationUtils.html">
+      ConfigurationUtils</a></code> class: <code>enableRuntimeExceptions()</code>
+      registers a special error listener at the passed in configuration that
+      will throw a
+      <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/ConfigurationRuntimeException.html">
+      ConfigurationRuntimeException</a></code> exception for each received
+      error event. The following code fragment shows an example of using this
+      method:
+    </p>
+    <source><![CDATA[
+JNDIConfiguration config = new JNDIConfiguration();
+ConfigurationUtils.enableRuntimeExceptions(config);
+
+// This may now throw a ConfigurationRuntimeException
+String value = config.getString("myKey");
+]]></source>
+    <p>
+      <code>enableRuntimeExceptions()</code> can be called for all
+      <code>Configuration</code> implementations that are derived from
+      <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/event/EventSource.html">
+      EventSource</a></code> (which is the case for almost all configuration
+      classes provided by this library). Of course the affected implementation
+      must support the mechanism of error events, otherwise the registered
+      listener will not be triggered. In
+      <a href="howto_events.html#Error_listeners">Error listeners</a> more
+      information can be found.
+    </p>
+    </subsection>
+
+    </section>
+</body>
+
+</document>

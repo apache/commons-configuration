@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Composite Configuration Details</title>
+  <author email="epugh@opensourceconnections.com">Eric Pugh</author>
+ </properties>
+
+<body>
+
+    <section name="Composite Configuration Details">
+        <p>
+            There are many use cases when you want to collect the properties
+            of several configuration sources and access them like a single
+            configuration object. One way to do that is using the
+            <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/CompositeConfiguration.html">
+            CompositeConfiguration</a></code> class.
+        </p>
+        <p>
+            A <code>CompositeConfiguration</code> object contains a list of
+            other configuration objects. When properties are accessed from a
+            composite configuration the object takes the passed in property key
+            and iterates over the list of the contained configurations. As soon
+            as a value is found for the key it is returned. This means that a
+            <code>CompositeConfiguration</code> implements a kind of override
+            semantics, i.e. the properties of configurations that were added
+            first hide the property values of configurations added later.
+        </p>
+    	<p>
+    		We will discuss how you can establish a "default" choice for your
+    		Composite Configuration as well as save changes made to your
+    		Composite Configuration.
+    	</p>
+    	<subsection name="Setting Up Defaults">
+    		<p>
+    			Defaults are very simple.  You can just add them as your last configuration object, 
+    			either through the ConfigurationFactory or manually:
+    		</p>
+    			<source><![CDATA[
+Configuration defaults = new PropertiesConfiguration(fileToDefaults);
+Configuration otherProperties = new PropertiesConfiguration(fileToOtherProperties);
+CompositeConfiguration cc = new CompositeConfiguration();
+cc.addConfiguration(otherProperties);
+cc.addConfiguration(fileToDefaults);
+]]></source>
+		</subsection>
+		
+		<subsection name="Saving Changes">
+			<p>
+				If you have a non static Configuration where you want to 
+				save changes made to a configuration, and you are using a
+				CompositeConfiguration, then you will need to pass into
+				the constructor of the CompositeConfiguration what Configuration
+				to save the changes via.
+			</p>
+    			<source><![CDATA[
+PropertiesConfiguration saveConfiguration = new PropertiesConfiguration(fileToSaveChangesIn);
+Configuration cc = new CompositeConfiguration(saveConfiguration);
+cc.setProperty("newProperty","new value");
+
+saveConfiguration.save();
+]]></source>
+			<p>
+				Alternatively, you can just request the
+				in-memory configuration that stores the changes. The following
+                example fragment copies all properties from the in-memory
+                configuration into a <code>DatabaseConfiguration</code>, so
+                that they are made persistent:
+    			<source><![CDATA[
+Configuration changes = myCompositeConfiguration.getInMemoryConfiguration();
+DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
+for (Iterator<String> i = changes.getKeys(); i.hasNext()){
+	String key = i.next();
+	Object value = changes.get(key);
+	config.setProperty(key,value);
+}
+]]></source>
+			</p>
+
+		</subsection>
+	</section>
+</body>
+
+</document>

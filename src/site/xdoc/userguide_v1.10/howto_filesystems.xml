@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>File Systems</title>
+  <author email="rgoers@apache.org">Ralph Goers</author>
+ </properties>
+
+<body>
+    <section name="File Systems">
+      <p>
+        In its default mode of operation Commons Configuration supports retrieving and storing
+        configuration files either on a local file system or via http. However, Commons
+        Configuration provides support for allowing other File System adapters. All file
+        access is accomplished through the <code>FileSystem</code> interface so accessing files
+        using other mechanisms is possible.
+      </p>
+      <p>
+        Commons Configuration also provides a second FileSystem which allows retrieval using
+        <a href="http://commons.apache.org/vfs">Apache Commons VFS</a>. As of this writing
+        Commons VFS supports 18 protocols for manipulating files.
+      </p>
+      <subsection name="Configuration">
+      <p>
+        The FileSystem used by Commons Configuration can be set in one of several ways:
+        <ol>
+          <li>A system property named "org.apache.commons.configuration.filesystem" can be defined
+          with the full class name of the desired <code>FileSystem</code> implementation to set the
+          default <code>FileSystem</code>.</li>
+          <li><code>FileSystem.setDefaultFilesystem()</code> can be called to directly set the
+          default <code>FileSystem</code> implementation.</li>
+          <li><code>DefaultConfigurationBuilder.setFileSystem()</code> can be called to set the
+          FileSystem implementation. <code>DefaultConfiguratonBuilder</code> will use this for each
+          configuration it creates</li>
+          <li><code>DefaultConfigurationBuilder</code> can be configured with the <code>FileSystem</code>
+          to be used when creating each of the configurations.</li>
+          <li>Each Configuration referenced in <code>DefaultConfigurationBuilder's</code>
+          configuration can be configured with the <code>FileSystem</code> to use for that
+          configuration.</li>
+          <li>Call setFileSystem() directly on any Configuration that implements <code>FileSystemBased.</code>
+          Both <code>AbstractFileConfiguration</code> and <code>AbstractHierarchicalFileConfiguration</code>
+          implement <code>FileSystemBased</code></li>
+        </ol>
+      </p>
+      <p>
+        The example that follows shows how to add <code>FileSystem</code> configuration to
+        <code>DefaultConfigurationBuilder</code>.
+      </p>
+     <source><![CDATA[
+<configuration>
+  <header>
+    <result delimiterParsingDisabled="true" forceReloadCheck="true">
+      <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+    </result>
+    <fileSystem config-class="org.apache.commons.configuration.VFSFileSystem"/>
+  </header>
+  <override>
+    <xml fileName="settings.xml" config-name="xml">
+      <fileSystem config-class="org.apache.commons.configuration.DefaultFileSystem"/>
+    </xml>
+  </override>
+</configuration>
+]]></source>
+      </subsection>
+      <subsection name="File Options Provider">
+        <p>
+          Commons VFS allows options to the underlying file systems being used. Commons Configuration
+          allows applications to provide these by implementing the <code>FileOptionsProvider</code> interface
+          and registering the provider with the <code>FileSystem</code>. <code>FileOptionsProvider</code>
+          has a single method that must be implemented, <code>getOptions</code>, which returns a Map
+          containing the keys and values that the <code>FileSystem</code> might use. The getOptions
+          method is called as each configuration uses VFS to create a <code>FileOjbect</code> to
+          access the file. The map returned does not have to contain the same keys and/or values
+          each time it is called. For example, the value of the <code>currentUser</code> key can be
+          set to the id of the currently logged in user to allow a WebDAV save to record the userid
+          as a file attribute.
+        </p>
+      </subsection>
+      <subsection name="File Reloading Strategy">
+        <p>
+          The <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/reloading/VFSFileChangedReloadingStrategy.html">VFSFileChangedReloadingStrategy</a></code>
+          can be used to cause Configurations accessed via the <code>VFSFileSystem</code> to be
+          monitored and reloaded when the files are modified. The example below shows how
+          <code>DefaultConfigurationBuilder</code> can be configured to use
+          <code>VFSFilChangedReloadingStrategy</code>.
+          In the example below both test.properties and settings.xml would be checked for changes
+          once per minute.
+        </p>
+       <source><![CDATA[
+<configuration>
+  <header>
+    <result delimiterParsingDisabled="true" forceReloadCheck="true">
+      <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+    </result>
+    <fileSystem config-class="org.apache.commons.configuration.VFSFileSystem"/>
+  </header>
+  <override>
+    <properties fileName="test.properties" throwExceptionOnMissing="true">
+      <reloadingStrategy refreshDelay="60000"
+        config-class="org.apache.commons.configuration.reloading.VFSFileChangedReloadingStrategy"/>
+    </properties>
+    <xml fileName="settings.xml" config-name="xml">
+      <reloadingStrategy refreshDelay="60000"
+         config-class="org.apache.commons.configuration.reloading.VFSFileChangedReloadingStrategy"/>
+    </xml>
+  </override>
+</configuration>
+]]></source>
+      </subsection>
+    </section>
+
+</body>
+
+</document>
