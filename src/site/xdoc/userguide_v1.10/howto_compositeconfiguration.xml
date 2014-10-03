@@ -30,7 +30,7 @@
             There are many use cases when you want to collect the properties
             of several configuration sources and access them like a single
             configuration object. One way to do that is using the
-            <code><a href="../apidocs/org/apache/commons/configuration/CompositeConfiguration.html">
+            <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/CompositeConfiguration.html">
             CompositeConfiguration</a></code> class.
         </p>
         <p>

@@ -36,13 +36,13 @@
             Many sources of configuration data have a hierarchical or tree-like
             nature. They can represent data that is structured in many ways.
             Such configuration sources are represented by classes derived from
-            <a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+            <a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
             <code>HierarchicalConfiguration</code></a>.
         </p>
         <p>
             Prominent examples of hierarchical configuration sources are XML
             documents. They can be read and written using the
-            <a href="../apidocs/org/apache/commons/configuration/XMLConfiguration.html">
+            <a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/XMLConfiguration.html">
             <code>XMLConfiguration</code></a> class. This section explains how
             to deal with such structured data and demonstrates the enhanced query
             facilities supported by <code>HierarchicalConfiguration</code>. We
@@ -51,11 +51,11 @@
             properties) applies to other hierarchical configurations as well.
             Examples for other hierarchical configuration classes are
             <ul>
-            <li><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
+            <li><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
             <code>CombinedConfiguration</code></a></li>
-            <li><a href="../apidocs/org/apache/commons/configuration/HierarchicalINIConfiguration.html">
+            <li><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/HierarchicalINIConfiguration.html">
             <code>HierarchicalINIConfiguration</code></a></li>
-            <li><a href="../apidocs/org/apache/commons/configuration/plist/PropertyListConfiguration.html">
+            <li><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/plist/PropertyListConfiguration.html">
             <code>PropertyListConfiguration</code></a></li>
             </ul>
 		</p>
@@ -417,7 +417,7 @@ for(HierarchicalConfiguration sub : fields)
         <p>
           The configurations returned by the <code>configurationAt()</code> and
           <code>configurationsAt()</code> method are in fact instances of the
-          <a href="../apidocs/org/apache/commons/configuration/SubnodeConfiguration.html">
+          <a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/SubnodeConfiguration.html">
           <code>SubnodeConfiguration</code></a> class. The API documentation of
           this class contains more information about its features and
           limitations.
@@ -689,7 +689,7 @@ config.load("config.xml");
             becomes possible to plug in different expression engines into a
             <code>HierarchicalConfiguration</code> object. So by providing
             different implementations of the
-            <a href="../apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
+            <a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
             <code>ExpressionEngine</code></a>
             interface hierarchical configurations can support alternative
             expression languages for accessing their data.
@@ -698,7 +698,7 @@ config.load("config.xml");
             Before we discuss the available expression engines that ship
             with Commons Configuration, it should be explained how an
             expression engine can be associated with a configuration object.
-            <a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+            <a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
             <code>HierarchicalConfiguration</code></a> and all derived classes
             provide a <code>setExpressionEngine()</code> method, which expects
             an implementation of the <code>ExpressionEngine</code> interface as
@@ -726,9 +726,9 @@ config.load("config.xml");
             <p>
                 The syntax described so far for property keys of hierarchical
                 configurations is implemented by a specific implementation of the
-                <a href="../apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
+                <a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
                 <code>ExpressionEngine</code></a> interface called
-                <a href="../apidocs/org/apache/commons/configuration/tree/DefaultExpressionEngine.html">
+                <a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/tree/DefaultExpressionEngine.html">
                 <code>DefaultExpressionEngine</code></a>. An instance of this class
                 is installed as the global expression engine in
                 <code>HierarchicalConfiguration</code>. So all newly created
@@ -832,7 +832,7 @@ Object value = config.getProperty("tables.table(0).name");
             </p>
             <p>
                 For enabling XPATH syntax for property keys you need the
-                <a href="../apidocs/org/apache/commons/configuration/tree/xpath/XPathExpressionEngine.html">
+                <a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/tree/xpath/XPathExpressionEngine.html">
                 <code>XPathExpressionEngine</code></a> class. This class
                 implements the <code>ExpressionEngine</code> interface and can
                 be plugged into a <code>HierarchicalConfiguration</code> object
@@ -959,7 +959,7 @@ config.addProperty("tables table/name", "documents");
                 the  <code>&lt;tables&gt;</code> element. More information about
                 keys and how they play together with <code>addProperty()</code>
                 and <code>setProperty()</code> can be found in the Javadocs for
-                <a href="../apidocs/org/apache/commons/configuration/tree/xpath/XPathExpressionEngine.html">
+                <a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/tree/xpath/XPathExpressionEngine.html">
                 <code>XPathExpressionEngine</code></a>.
             </p>
             <p>

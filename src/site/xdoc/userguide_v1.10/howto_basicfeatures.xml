@@ -28,7 +28,7 @@
     <p>
       The <code>Configuration</code> interface defines a whole bunch of methods.
       Implementing these methods all from scratch can be quite hard. Because of
-      that the <code><a href="../apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
+      that the <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
       AbstractConfiguration</a></code> class exists. This class serves as a
       common base class for most of the <code>Configuration</code> implementations
       in <em>Commons Configuration</em> and provides a great deal of the
@@ -256,7 +256,7 @@ public class EchoLookup extends StrLookup
       Now we want this class to be called for variables with the prefix
       <code>echo</code>. For this purpose the <code>EchoLookup</code> class
       has to be registered at the
-      <code><a href="../apidocs/org/apache/commons/configuration/interpol/ConfigurationInterpolator.html">
+      <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/interpol/ConfigurationInterpolator.html">
       ConfigurationInterpolator</a></code> class with the desired prefix.
       <code>ConfigurationInterpolator</code> implements a thin wrapper over the
       <code>StrLookup</code> API defined by Commons Lang. It has a static

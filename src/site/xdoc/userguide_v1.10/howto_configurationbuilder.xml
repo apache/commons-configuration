@@ -27,7 +27,7 @@
 	<section name="Using DefaultConfigurationBuilder">
     <p>
       This section explains how a
-      <code><a href="../apidocs/org/apache/commons/configuration/DefaultConfigurationBuilder.html">
+      <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/DefaultConfigurationBuilder.html">
       DefaultConfigurationBuilder</a></code>object is setup that provides
       access to a collection of different configuration sources.
       <code>DefaultConfigurationBuilder</code> is the option of choice for
@@ -482,7 +482,7 @@ Configuration config = builder.getConfiguration(true);
         <dt>ini</dt>
         <dd>This tag can be used to include an ini file into the resulting
         combined configuration. Behind the scenes an instance of
-        <code><a href="../apidocs/org/apache/commons/configuration/HierarchicalINIConfiguration.html">
+        <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/HierarchicalINIConfiguration.html">
         HierarchicalINIConfiguration</a></code> is used to load the ini file.</dd>
         <dt>env</dt>
         <dd>With this tag direct access to environment properties can be enabled.
@@ -736,7 +736,7 @@ Configuration config = builder.getConfiguration(true);
       configuration sources we have to set this flag so that this reloading
       strategy can function properly. More details about this topic can be
       found in the Javadocs for
-      <code><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
+      <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
       CombinedConfiguration</a></code>. We also set some properties for the
       configurations to be loaded; for instance we declare that one of the XML
       configurations should be validated.
