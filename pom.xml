@@ -327,7 +327,7 @@
     <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>1.7.2.2</version>
+      <version>1.8.0.10</version>
       <scope>test</scope>
     </dependency>
 
