@@ -17,13 +17,16 @@
 
 package org.apache.commons.configuration2.plist;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +35,6 @@ import java.util.TimeZone;
 import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;
 import junitx.framework.ObjectAssert;
-
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationAssert;
 import org.apache.commons.configuration2.ConfigurationComparator;
@@ -454,5 +456,56 @@ public class TestXMLPropertyListConfiguration
                         .indexOf(
                                 "<?xml version=\"1.0\" encoding=\"" + encoding
                                         + "\"?>") >= 0);
+    }
+
+    /**
+     * Checks whether the test configuration contains a key with an array value.
+     *
+     * @param expectedValues the expected values
+     */
+    private void checkArrayProperty(List<?> expectedValues)
+            throws ConfigurationException
+    {
+        StringWriter out = new StringWriter();
+        new FileHandler(config).save(out);
+        StringBuilder values = new StringBuilder();
+        for (Object v : expectedValues)
+        {
+            values.append("<string>").append(v).append("</string>");
+        }
+        String content = out.toString().replaceAll("[ \n\r]", "");
+        assertThat(content, containsString(String.format(
+                "<key>array</key><array>%s</array>", values)));
+    }
+
+    /**
+     * Tests whether a list can be saved correctly. This test is related to
+     * CONFIGURATION-427.
+     */
+    @Test
+    public void testSaveList() throws ConfigurationException
+    {
+        List<String> elems =
+                Arrays.asList("element1", "element2", "anotherElement");
+        config = new XMLPropertyListConfiguration();
+        config.addProperty("array", elems);
+
+        checkArrayProperty(elems);
+    }
+
+    /**
+     * Tests whether an array can be saved correctly. This test is related to
+     * CONFIGURATION-427.
+     */
+    @Test
+    public void testSaveArray() throws ConfigurationException
+    {
+        Object[] elems = {
+                "arrayElem1", "arrayElem2", "arrayElem3"
+        };
+        config = new XMLPropertyListConfiguration();
+        config.addProperty("array", elems);
+
+        checkArrayProperty(Arrays.asList(elems));
     }
 }
