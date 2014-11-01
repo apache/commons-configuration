@@ -37,21 +37,25 @@ import java.util.Set;
  */
 public abstract class NodeHandlerDecorator<T> implements NodeHandler<T>
 {
+    @Override
     public String nodeName(T node)
     {
         return getDecoratedNodeHandler().nodeName(node);
     }
 
+    @Override
     public Object getValue(T node)
     {
         return getDecoratedNodeHandler().getValue(node);
     }
 
+    @Override
     public T getParent(T node)
     {
         return getDecoratedNodeHandler().getParent(node);
     }
 
+    @Override
     public List<T> getChildren(T node)
     {
         return getDecoratedNodeHandler().getChildren(node);
@@ -73,46 +77,55 @@ public abstract class NodeHandlerDecorator<T> implements NodeHandler<T>
                 matcher, criterion);
     }
 
+    @Override
     public List<T> getChildren(T node, String name)
     {
         return getDecoratedNodeHandler().getChildren(node, name);
     }
 
+    @Override
     public T getChild(T node, int index)
     {
         return getDecoratedNodeHandler().getChild(node, index);
     }
 
+    @Override
     public int indexOfChild(T parent, T child)
     {
         return getDecoratedNodeHandler().indexOfChild(parent, child);
     }
 
+    @Override
     public int getChildrenCount(T node, String name)
     {
         return getDecoratedNodeHandler().getChildrenCount(node, name);
     }
 
+    @Override
     public Set<String> getAttributes(T node)
     {
         return getDecoratedNodeHandler().getAttributes(node);
     }
 
+    @Override
     public boolean hasAttributes(T node)
     {
         return getDecoratedNodeHandler().hasAttributes(node);
     }
 
+    @Override
     public Object getAttributeValue(T node, String name)
     {
         return getDecoratedNodeHandler().getAttributeValue(node, name);
     }
 
+    @Override
     public boolean isDefined(T node)
     {
         return getDecoratedNodeHandler().isDefined(node);
     }
 
+    @Override
     public T getRootNode()
     {
         return getDecoratedNodeHandler().getRootNode();
