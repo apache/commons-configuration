@@ -129,6 +129,9 @@ public class DefaultExpressionEngine implements ExpressionEngine
     /** The symbols used by this instance. */
     private final DefaultExpressionEngineSymbols symbols;
 
+    /** The matcher for node names. */
+    private final NodeMatcher<String> nameMatcher;
+
     /**
      * Creates a new instance of {@code DefaultExpressionEngine} and initializes
      * its symbols.
@@ -138,11 +141,32 @@ public class DefaultExpressionEngine implements ExpressionEngine
      */
     public DefaultExpressionEngine(DefaultExpressionEngineSymbols syms)
     {
+        this(syms, null);
+    }
+
+    /**
+     * Creates a new instance of {@code DefaultExpressionEngine} and initializes
+     * its symbols and the matcher for comparing node names. The passed in
+     * matcher is always used when the names of nodes have to be matched against
+     * parts of configuration keys.
+     *
+     * @param syms the object with the symbols (must not be <b>null</b>)
+     * @param nodeNameMatcher the matcher for node names; can be <b>null</b>,
+     *        then a default matcher is used
+     * @throws IllegalArgumentException if the symbols are <b>null</b>
+     */
+    public DefaultExpressionEngine(DefaultExpressionEngineSymbols syms,
+            NodeMatcher<String> nodeNameMatcher)
+    {
         if (syms == null)
         {
             throw new IllegalArgumentException("Symbols must not be null!");
         }
+
         symbols = syms;
+        nameMatcher =
+                (nodeNameMatcher != null) ? nodeNameMatcher
+                        : NodeNameMatchers.EQUALS;
     }
 
     /**
@@ -161,6 +185,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * {@inheritDoc} This method supports the syntax as described in the class
      * comment.
      */
+    @Override
     public <T> List<QueryResult<T>> query(T root, String key,
             NodeHandler<T> handler)
     {
@@ -177,6 +202,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * The name of the root node is a blank string. Note that no indices are
      * returned.
      */
+    @Override
     public <T> String nodeKey(T node, String parentKey, NodeHandler<T> handler)
     {
         if (parentKey == null)
@@ -194,6 +220,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
         }
     }
 
+    @Override
     public String attributeKey(String parentKey, String attributeName)
     {
         DefaultConfigurationKey key =
@@ -209,6 +236,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * in any case and without further checks. If it is <b>null</b>, only the
      * name of the current node with its index is returned.
      */
+    @Override
     public <T> String canonicalKey(T node, String parentKey,
             NodeHandler<T> handler)
     {
@@ -315,6 +343,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param handler the node handler
      * @return a data object with information needed for the add operation
      */
+    @Override
     public <T> NodeAddData<T> prepareAdd(T root, String key, NodeHandler<T> handler)
     {
         DefaultConfigurationKey.KeyIterator it = new DefaultConfigurationKey(
@@ -369,7 +398,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
             String key = keyPart.nextKey(false);
             if (keyPart.isPropertyKey())
             {
-                processSubNodes(keyPart, handler.getChildren(node, key),
+                processSubNodes(keyPart, findChildNodesByName(handler, node, key),
                         results, handler);
             }
             if (keyPart.isAttribute() && !keyPart.hasNext())
@@ -409,15 +438,19 @@ public class DefaultExpressionEngine implements ExpressionEngine
             }
             int idx =
                     keyIt.hasIndex() ? keyIt.getIndex() : handler
-                            .getChildrenCount(node, keyPart) - 1;
-            if (idx < 0 || idx >= handler.getChildrenCount(node, keyPart))
+                            .getMatchingChildrenCount(node, nameMatcher,
+                                    keyPart) - 1;
+            if (idx < 0
+                    || idx >= handler.getMatchingChildrenCount(node,
+                            nameMatcher, keyPart))
             {
                 return node;
             }
             else
             {
                 return findLastPathNode(keyIt,
-                        handler.getChildren(node, keyPart).get(idx), handler);
+                        findChildNodesByName(handler, node, keyPart).get(idx),
+                        handler);
             }
         }
 
@@ -469,9 +502,26 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param <T> the type of the nodes to be dealt with
      * @return the index of this node
      */
-    private static <T> int determineIndex(T node, T parent, String nodeName,
+    private <T> int determineIndex(T node, T parent, String nodeName,
                                           NodeHandler<T> handler)
     {
-        return handler.getChildren(parent, nodeName).indexOf(node);
+        return findChildNodesByName(handler, parent, nodeName).indexOf(node);
+    }
+
+    /**
+     * Returns a list with all child nodes of the given parent node which match
+     * the specified node name. The match is done using the current node name
+     * matcher.
+     *
+     * @param handler the {@code NodeHandler}
+     * @param parent the parent node
+     * @param nodeName the name of the current node
+     * @param <T> the type of the nodes to be dealt with
+     * @return a list with all matching child nodes
+     */
+    private <T> List<T> findChildNodesByName(NodeHandler<T> handler, T parent,
+            String nodeName)
+    {
+        return handler.getMatchingChildren(parent, nameMatcher, nodeName);
     }
 }

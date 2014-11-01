@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -582,6 +583,30 @@ public class TestDefaultExpressionEngine
     }
 
     /**
+     * Tests whether the node matcher is used when querying keys.
+     */
+    @Test
+    public void testQueryKeyWithAlternativeMatcher()
+    {
+        setUpAlternativeMatcher();
+        checkKey("tables_._table_.name_", "name", 2);
+    }
+
+    /**
+     * Tests whether the node matcher is used when adding keys.
+     */
+    @Test
+    public void testPrepareAddWithAlternativeMatcher()
+    {
+        setUpAlternativeMatcher();
+        NodeAddData<ImmutableNode> data =
+                engine.prepareAdd(root, "tables_.table._fields__._field.name",
+                        handler);
+        assertEquals("Wrong name of new node", "name", data.getNewNodeName());
+        assertTrue("Path nodes available", data.getPathNodes().isEmpty());
+    }
+
+    /**
      * Creates a node hierarchy for testing that consists of tables, their
      * fields, and some additional data:
      *
@@ -646,6 +671,24 @@ public class TestDefaultExpressionEngine
                         .setPropertyDelimiter("/").setEscapedDelimiter(null)
                         .setIndexStart("[").setIndexEnd("]").create();
         engine = new DefaultExpressionEngine(symbols);
+    }
+
+    /**
+     * Configures the test expression engine to use a special matcher. This
+     * matcher ignores underscore characters in node names.
+     */
+    private void setUpAlternativeMatcher()
+    {
+        NodeMatcher<String> matcher = new NodeMatcher<String>()
+        {
+            @Override
+            public <T> boolean matches(T node, NodeHandler<T> handler,
+                    String criterion)
+            {
+                return handler.nodeName(node).equals(StringUtils.remove(criterion, '_'));
+            }
+        };
+        engine = new DefaultExpressionEngine(engine.getSymbols(), matcher);
     }
 
     /**
