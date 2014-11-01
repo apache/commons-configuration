@@ -57,15 +57,30 @@ abstract class AbstractImmutableNodeHandler implements
     }
 
     @Override
-    public <C> int getMatchingChildrenCount(ImmutableNode node, NodeMatcher<C> matcher, C criterion) {
-        //TODO implementation
-        throw new UnsupportedOperationException("Not yet implemented!");
+    public <C> int getMatchingChildrenCount(ImmutableNode node,
+            NodeMatcher<C> matcher, C criterion)
+    {
+        return getMatchingChildren(node, matcher, criterion).size();
     }
 
+    /**
+     * {@inheritDoc} This implementation returns an immutable list with all
+     * child nodes accepted by the specified matcher.
+     */
     @Override
-    public <C> List<ImmutableNode> getMatchingChildren(ImmutableNode node, NodeMatcher<C> matcher, C criterion) {
-        //TODO implementation
-        throw new UnsupportedOperationException("Not yet implemented!");
+    public <C> List<ImmutableNode> getMatchingChildren(ImmutableNode node,
+            NodeMatcher<C> matcher, C criterion)
+    {
+        List<ImmutableNode> result =
+                new ArrayList<ImmutableNode>(node.getChildren().size());
+        for (ImmutableNode c : node.getChildren())
+        {
+            if (matcher.matches(c, this, criterion))
+            {
+                result.add(c);
+            }
+        }
+        return Collections.unmodifiableList(result);
     }
 
     /**

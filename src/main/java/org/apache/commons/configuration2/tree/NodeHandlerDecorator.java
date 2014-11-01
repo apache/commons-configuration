@@ -58,15 +58,19 @@ public abstract class NodeHandlerDecorator<T> implements NodeHandler<T>
     }
 
     @Override
-    public <C> List<T> getMatchingChildren(T node, NodeMatcher<C> matcher, C criterion) {
-        //TODO implementation
-        throw new UnsupportedOperationException("Not yet implemented!");
+    public <C> List<T> getMatchingChildren(T node, NodeMatcher<C> matcher,
+            C criterion)
+    {
+        return getDecoratedNodeHandler().getMatchingChildren(node, matcher,
+                criterion);
     }
 
     @Override
-    public <C> int getMatchingChildrenCount(T node, NodeMatcher<C> matcher, C criterion) {
-        //TODO implementation
-        throw new UnsupportedOperationException("Not yet implemented!");
+    public <C> int getMatchingChildrenCount(T node, NodeMatcher<C> matcher,
+            C criterion)
+    {
+        return getDecoratedNodeHandler().getMatchingChildrenCount(node,
+                matcher, criterion);
     }
 
     public List<T> getChildren(T node, String name)
