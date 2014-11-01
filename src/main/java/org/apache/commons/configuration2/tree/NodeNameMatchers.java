@@ -48,5 +48,20 @@ public enum NodeNameMatchers implements NodeMatcher<String>
         {
             return StringUtils.equals(criterion, handler.nodeName(node));
         }
+    },
+
+    /**
+     * A matcher for matches on node names which ignores case. For this matcher
+     * the names {@code node}, {@code NODE}, or {@code NodE} are all the same.
+     */
+    EQUALS_IGNORE_CASE
+    {
+        @Override
+        public <T> boolean matches(T node, NodeHandler<T> handler,
+                String criterion)
+        {
+            return StringUtils.equalsIgnoreCase(criterion,
+                    handler.nodeName(node));
+        }
     }
 }

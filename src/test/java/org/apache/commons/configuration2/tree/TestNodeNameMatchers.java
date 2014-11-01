@@ -84,15 +84,59 @@ public class TestNodeNameMatchers
     }
 
     /**
+     * Tests whether a matcher can handle null input safely.
+     *
+     * @param matcher the matcher to be tested
+     */
+    private void checkMatcherWithNullInput(NodeMatcher<String> matcher)
+    {
+        assertFalse("Match (1)",
+                matcher.matches(createNode(NODE_NAME), handler, null));
+        assertFalse("Match (2)",
+                matcher.matches(createNode(null), handler, NODE_NAME));
+    }
+
+    /**
      * Tests whether the equals matcher can handle a null criterion.
      */
     @Test
     public void testEqualsNullCriterion()
     {
+        checkMatcherWithNullInput(NodeNameMatchers.EQUALS);
+    }
+
+    /**
+     * Tests the equalsIgnoreCase mather if the expected result is true.
+     */
+    @Test
+    public void testEqualsIgnoreCaseMatch()
+    {
         ImmutableNode node = createNode(NODE_NAME);
-        assertFalse("Match (1)",
-                NodeNameMatchers.EQUALS.matches(node, handler, null));
-        assertFalse("Match (2)", NodeNameMatchers.EQUALS.matches(
-                createNode(null), handler, NODE_NAME));
+        assertTrue("No match (1)", NodeNameMatchers.EQUALS_IGNORE_CASE.matches(
+                node, handler, NODE_NAME));
+        assertTrue("No match (2)", NodeNameMatchers.EQUALS_IGNORE_CASE.matches(
+                node, handler, NODE_NAME.toLowerCase(Locale.ENGLISH)));
+        assertTrue("No match (3)", NodeNameMatchers.EQUALS_IGNORE_CASE.matches(
+                node, handler, NODE_NAME.toUpperCase(Locale.ENGLISH)));
+    }
+
+    /**
+     * Tests the equalsIgnoreCase matcher if the expected result is false.
+     */
+    @Test
+    public void testEqualsIgnoreCaseNoMatch()
+    {
+        ImmutableNode node = createNode(NODE_NAME);
+        assertFalse("Match", NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node,
+                handler, NODE_NAME + "_other"));
+    }
+
+    /**
+     * Tests whether the equalsIgnoreCase matcher is null-safe.
+     */
+    @Test
+    public void testEqualsIgnoreCaseNullCriterion()
+    {
+        checkMatcherWithNullInput(NodeNameMatchers.EQUALS_IGNORE_CASE);
     }
 }
