@@ -897,6 +897,54 @@ DefaultExpressionEngine engine = new DefaultExpressionEngine(symbolsNoAttributes
 Object value = config.getProperty("tables.table(0).name");
 // name can either be a child node of table or an attribute
          ]]></source>
+            <p>
+              There is another property which can be used to customize an
+              instance of <code>DefaultExpressionEngine</code>: the <em>node
+              name matcher</em>. This is an object implementing the
+              <code><a href="../apidocs/org/apache/commons/configuration2/tree/NodeMatcher.html">
+              NodeMatcher</a></code> interface which controls how the names of
+              configuration nodes are matched against the single parts of a
+              configuration key. It can be passed as an optional second argument
+              to the constructor. Per default, an exact match is performed, i.e.
+              in order to successfully resolve a key like <em>tables.table.name</em>,
+              there has to be a node named <em>tables</em> with a child node
+              named <em>table</em> which in turn has a child with the name
+              <em>name</em> - this is what most people would expect.
+            </p>
+            <p>
+              There are use cases, however, when more flexibility or tolerance
+              is desired. For instance, applications under Windows storing their
+              settings in ini files sometimes expect that they can access keys
+              in a case insensitive manner. The node name matcher can help
+              here. The enumeration class
+              <code><a href="../apidocs/org/apache/commons/configuration2/tree/NodeNameMatchers.html">
+              NodeNameMatchers</a></code> defines some standard matchers which
+              can collaborate with <code>DefaultExpressionEngine</code>. In
+              addition to the <code>EQUALS</code> matcher used by default, there
+              is also an <code>EQUALS_IGNORE_CASE</code> matcher. According to
+              its name, this matcher ignores case when matching configuration
+              keys against nodes. The following fragment shows how this matcher
+              can be enabled (we use an <code>INIConfiguration</code> as
+              example here, but this technique works with all other hierarchical
+              configurations, too):
+            </p>
+            <source><![CDATA[
+DefaultExpressionEngine engine = new DefaultExpressionEngine(
+  DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS,
+  NodeNameMatchers.EQUALS_IGNORE_CASE);
+
+Parameters params = new Parameters();
+FileBasedConfigurationBuilder<INIConfiguration> builder =
+    new FileBasedConfigurationBuilder<INIConfiguration>(INIConfiguration.class)
+    .configure(params.hierarchical()
+        .setFileName("settings.ini")
+        .setExpressionEngine(engine));
+INIConfiguration config = builder.getConfiguration();
+
+// Access properties no matter of their concrete case
+String backGroundColor = config.getString("colors.background");
+String foreGroundColor = config.getString("COLORS.ForeGround");
+         ]]></source>
 
         <a name="The_XPATH_expression_engine"></a>
         <strong>The XPATH expression engine</strong>
