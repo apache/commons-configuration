@@ -27,6 +27,11 @@
   <body>
     <release version="2.0-alpha2" date="TBD"
       description="TBD">
+      <action dev="oheger" type="add" issue="CONFIGURATION-574">
+        DefaultExpressionEngine can now be customized to match configuration
+        keys in a case-insensitive manner. This is useful for instance for
+        dealing with Windows INI files.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-427">
         XMLPropertyListConfiguration can now save arrays in the correct form.
       </action>
