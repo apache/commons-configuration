@@ -21,8 +21,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * <p>
  * An abstract base class for a {@link NodeHandler} implementation for
@@ -93,16 +91,7 @@ abstract class AbstractImmutableNodeHandler implements
     @Override
     public List<ImmutableNode> getChildren(ImmutableNode node, String name)
     {
-        List<ImmutableNode> result =
-                new ArrayList<ImmutableNode>(node.getChildren().size());
-        for (ImmutableNode c : node.getChildren())
-        {
-            if (StringUtils.equals(name, c.getNodeName()))
-            {
-                result.add(c);
-            }
-        }
-        return Collections.unmodifiableList(result);
+        return getMatchingChildren(node, NodeNameMatchers.EQUALS, name);
     }
 
     @Override
@@ -126,7 +115,7 @@ abstract class AbstractImmutableNodeHandler implements
         }
         else
         {
-            return getChildren(node, name).size();
+            return getMatchingChildrenCount(node, NodeNameMatchers.EQUALS, name);
         }
     }
 
