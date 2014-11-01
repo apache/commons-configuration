@@ -29,6 +29,7 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -40,8 +41,11 @@ import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.sync.ReadWriteSynchronizer;
+import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
+import org.apache.commons.configuration2.tree.DefaultExpressionEngineSymbols;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.NodeHandler;
+import org.apache.commons.configuration2.tree.NodeNameMatchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -315,12 +319,20 @@ public class TestINIConfiguration
      */
     private void checkContent(INIConfiguration instance)
     {
-        assertTrue(instance.getString("section1.var1").equals("foo"));
-        assertTrue(instance.getInt("section1.var2") == 451);
-        assertTrue(instance.getDouble("section2.var1") == 123.45);
-        assertTrue(instance.getString("section2.var2").equals("bar"));
-        assertTrue(instance.getBoolean("section3.var1"));
-        assertTrue(instance.getSections().size() == 3);
+        assertEquals("var1", "foo", instance.getString("section1.var1"));
+        assertEquals("var2", 451, instance.getInt("section1.var2"));
+        assertEquals("section2.var1", 123.45,
+                instance.getDouble("section2.var1"), .001);
+        assertEquals("section2.var2", "bar",
+                instance.getString("section2.var2"));
+        assertEquals("section3.var1", true,
+                instance.getBoolean("section3.var1"));
+        assertEquals("Wrong number of sections", 3, instance.getSections()
+                .size());
+        assertTrue(
+                "Wrong sections",
+                instance.getSections().containsAll(
+                        Arrays.asList("section1", "section2", "section3")));
     }
 
     /**
@@ -1135,6 +1147,30 @@ public class TestINIConfiguration
                 handler.indexOfChild(handler.getRootNode(), children.get(0)));
         assertEquals("Wrong index of section child", -1,
                 handler.indexOfChild(handler.getRootNode(), children.get(1)));
+    }
+
+    /**
+     * Tests whether an expression engine can be used which ignores case.
+     */
+    @Test
+    public void testExpressionEngineIgnoringCase()
+            throws ConfigurationException
+    {
+        DefaultExpressionEngine engine =
+                new DefaultExpressionEngine(
+                        DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS,
+                        NodeNameMatchers.EQUALS_IGNORE_CASE);
+        INIConfiguration config = new INIConfiguration();
+        config.setExpressionEngine(engine);
+        load(config, INI_DATA);
+
+        checkContent(config);
+        assertEquals("Wrong result (1)", "foo",
+                config.getString("Section1.var1"));
+        assertEquals("Wrong result (2)", "foo",
+                config.getString("section1.Var1"));
+        assertEquals("Wrong result (1)", "foo",
+                config.getString("SECTION1.VAR1"));
     }
 
     /**
