@@ -31,8 +31,8 @@ import java.util.Set;
  * provide the underlying handler.
  * </p>
  *
- * @author Oliver Heger
  * @version $Id$
+ * @since 2.0
  * @param <T> the type of the nodes supported by this handler
  */
 public abstract class NodeHandlerDecorator<T> implements NodeHandler<T>
