@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
+import org.apache.commons.configuration2.ConfigurationDecoder;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.convert.ConversionHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
@@ -81,6 +82,9 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
 
     /** The key for the <em>conversionHandler</em> property. */
     private static final String PROP_CONVERSION_HANDLER = "conversionHandler";
+
+    /** The key for the <em>configurationDecoder</em> property. */
+    private static final String PROP_CONFIGURATION_DECODER = "configurationDecoder";
 
     /** The key for the {@code BeanHelper}. */
     private static final String PROP_BEAN_HELPER = RESERVED_PARAMETER_PREFIX
@@ -263,6 +267,17 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
     public BasicBuilderParameters setBeanHelper(BeanHelper beanHelper)
     {
         return setProperty(PROP_BEAN_HELPER, beanHelper);
+    }
+
+    /**
+     * {@inheritDoc} This implementation stores the passed in
+     * {@code ConfigurationDecoder} object in the internal parameters map.
+     */
+    @Override
+    public BasicBuilderParameters setConfigurationDecoder(
+            ConfigurationDecoder decoder)
+    {
+        return setProperty(PROP_CONFIGURATION_DECODER, decoder);
     }
 
     /**

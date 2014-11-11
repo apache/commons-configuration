@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.configuration2.ConfigurationDecoder;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.convert.ConversionHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
@@ -514,5 +515,20 @@ public class TestBasicBuilderParameters
     public void testFetchBeanHelperNullMap()
     {
         BasicBuilderParameters.fetchBeanHelper(null);
+    }
+
+    /**
+     * Tests whether a decoder can be set.
+     */
+    @Test
+    public void testSetConfigurationDecoder()
+    {
+        ConfigurationDecoder decoder =
+                EasyMock.createMock(ConfigurationDecoder.class);
+        EasyMock.replay(decoder);
+        assertSame("Wrong result", params,
+                params.setConfigurationDecoder(decoder));
+        assertSame("Decoder not set", decoder,
+                params.getParameters().get("configurationDecoder"));
     }
 }

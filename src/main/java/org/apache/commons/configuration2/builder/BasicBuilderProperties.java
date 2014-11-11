@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
+import org.apache.commons.configuration2.ConfigurationDecoder;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.convert.ConversionHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
@@ -163,6 +164,16 @@ public interface BasicBuilderProperties<T>
      * @return a reference to this object for method chaining
      */
     T setConversionHandler(ConversionHandler handler);
+
+    /**
+     * Sets the {@code ConfigurationDecoder} object for this configuration. This
+     * object is called when encoded properties are queried using the
+     * {@code getEncodedString()} method.
+     *
+     * @param decoder the {@code ConfigurationDecoder} to be used
+     * @return a reference to this object for method chaining
+     */
+    T setConfigurationDecoder(ConfigurationDecoder decoder);
 
     /**
      * Sets a {@code BeanHelper} object to be used by the configuration builder.
