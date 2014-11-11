@@ -558,6 +558,51 @@ config.setConversionHandler(handler);
       the default pattern <code>yyyy-MM-dd HH:mm:ss</code> is used.
     </p>
     </subsection>
+
+    <subsection name="Encoded Properties">
+    <p>
+      Sometimes property values cannot be stored in plain text in configuration
+      files. For instance, security-related information like database passwords
+      should be encrypted. <em>Commons Configuration</em> does not provide
+      algorithms for encrypting (or otherwise encoding) properties. However,
+      there is a generic mechanism for automatically reading encoded properties
+      and transforming them into plain text before they are handed over to the
+      caller. A key role in this mechanism plays the
+      <code><a href="../apidocs/org/apache/commons/configuration2/ConfigurationDecoder.html">
+      ConfigurationDecoder</a></code> interface.
+    </p>
+    <p>
+      <code>ConfigurationDecoder</code> defines a single method <em>decode()</em>
+      which expects a string as input and returns a decoded string. It should be
+      easy for an application to provide a custom implementation for the
+      encoding algorithm it uses. The
+      <code><a href="../apidocs/org/apache/commons/configuration2/ImmutableConfiguration.html">
+      ImmutableConfiguration</a></code> interface defines two overloaded methods
+      for querying the values of encoded properties:
+    </p>
+<source><![CDATA[
+    String getEncodedString(String key, ConfigurationDecoder decoder);
+
+    String getEncodedString(String key);
+]]></source>
+    <p>
+      Both methods operate on string properties. Basically, the string value for
+      the passed in key is retrieved by delegating to <code>getString()</code>.
+      This value is then passed to a <code>ConfigurationDecoder</code> to
+      obtain the plain text value. One of these methods expects the
+      <code>ConfigurationDecoder</code> to be used as argument. The other
+      variant makes use of a decoder associated with this configuration. For
+      this purpose
+      <code><a href="../apidocs/org/apache/commons/configuration2/AbstractConfiguration.html">
+      AbstractConfiguration</a></code> offers a property named
+      <em>configurationDecoder</em>. Making use of this property simplifies
+      access to encoded properties: When the central configuration object is
+      created the decoder is initialized. Other parts of the application do not 
+      need any knowledge about the decoding algorithm to be applied; rather, it
+      is sufficient to call the simple variant of <code>getEncodedString()</code>
+      to obtain a property value which can be processed immediately.
+    </p>
+    </subsection>
   </section>
 </body>
 
