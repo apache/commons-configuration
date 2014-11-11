@@ -122,6 +122,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /** The object responsible for synchronization. */
     private volatile Synchronizer synchronizer;
 
+    /** The object used for dealing with encoded property values. */
+    private ConfigurationDecoder configurationDecoder;
+
     /** Stores the logger.*/
     private Log log;
 
@@ -376,6 +379,30 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
             ciNew.setParentInterpolator(parent);
             success = interpolator.compareAndSet(ciOld, ciNew);
         } while (!success);
+    }
+
+    /**
+     * Sets the {@code ConfigurationDecoder} for this configuration. This object
+     * is used by {@link #getEncodedString(String)}.
+     *
+     * @param configurationDecoder the {@code ConfigurationDecoder}
+     * @since 2.0
+     */
+    public void setConfigurationDecoder(
+            ConfigurationDecoder configurationDecoder)
+    {
+        this.configurationDecoder = configurationDecoder;
+    }
+
+    /**
+     * Returns the {@code ConfigurationDecoder} used by this instance.
+     *
+     * @return the {@code ConfigurationDecoder}
+     * @since 2.0
+     */
+    public ConfigurationDecoder getConfigurationDecoder()
+    {
+        return configurationDecoder;
     }
 
     /**
@@ -1308,10 +1335,25 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         return (value != null) ? decoder.decode(value) : null;
     }
 
+    /**
+     * {@inheritDoc} This implementation makes use of the
+     * {@code ConfigurationDecoder} set for this configuration. If no such
+     * object has been set, an {@code IllegalStateException} exception is
+     * thrown.
+     *
+     * @throws IllegalStateException if no {@code ConfigurationDecoder} is set
+     * @see #setConfigurationDecoder(ConfigurationDecoder)
+     */
     @Override
-    public String getEncodedString(String key) {
-        //TODO implementation
-        throw new UnsupportedOperationException("Not yet implemented!");
+    public String getEncodedString(String key)
+    {
+        ConfigurationDecoder decoder = getConfigurationDecoder();
+        if (decoder == null)
+        {
+            throw new IllegalStateException(
+                    "No default ConfigurationDecoder defined!");
+        }
+        return getEncodedString(key, decoder);
     }
 
     /**

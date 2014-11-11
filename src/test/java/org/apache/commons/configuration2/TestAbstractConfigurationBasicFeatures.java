@@ -995,6 +995,37 @@ public class TestAbstractConfigurationBasicFeatures
     }
 
     /**
+     * Tries to query an encoded string with the default decoder if this property is not
+     * defined.
+     */
+    @Test(expected = IllegalStateException.class)
+    public void testGetEncodedStringNoDefaultDecoderDefined()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.getEncodedString(KEY_PREFIX);
+    }
+
+    /**
+     * Tests whether a default decoder can be set which is queried for encoded strings.
+     */
+    @Test
+    public void testGetEncodedStringWithDefaultDecoder()
+    {
+        ConfigurationDecoder decoder =
+                EasyMock.createMock(ConfigurationDecoder.class);
+        final String value = "original value";
+        final String decodedValue = "decoded value";
+        EasyMock.expect(decoder.decode(value)).andReturn(decodedValue);
+        EasyMock.replay(decoder);
+
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.setConfigurationDecoder(decoder);
+        config.addProperty(KEY_PREFIX, value);
+        assertEquals("Wrong decoded value", decodedValue,
+                config.getEncodedString(KEY_PREFIX));
+    }
+
+    /**
      * Creates the source configuration for testing the copy() and append()
      * methods. This configuration contains keys with an odd index and values
      * starting with the prefix "src". There are also some list properties.
