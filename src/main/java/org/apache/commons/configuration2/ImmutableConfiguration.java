@@ -483,6 +483,36 @@ public interface ImmutableConfiguration
     String getString(String key, String defaultValue);
 
     /**
+     * Get the value of a string property that is stored in encoded form in this
+     * configuration. This method obtains the value of the string property
+     * identified by the given key. This value is then passed to the provided
+     * {@code ConfigurationDecoder}. The value returned by the
+     * {@code ConfigurationDecoder} is passed to the caller. If the key is not
+     * associated with a value, the decoder is not invoked; depending on this
+     * configuration's settings either <b>null</b> is returned or an exception
+     * is thrown.
+     *
+     * @param key the configuration key
+     * @param decoder the {@code ConfigurationDecoder} (must not be <b>null</b>)
+     * @return the plain string value of the specified encoded property
+     * @throws IllegalArgumentException if a <b>null</b> decoder is passed
+     */
+    String getEncodedString(String key, ConfigurationDecoder decoder);
+
+    /**
+     * Get the value of a string property that is stored in encoded form in this
+     * configuration using a default {@code ConfigurationDecoder}. This method
+     * works like the method with the same name, but it uses a default
+     * {@code ConfigurationDecoder} associated with this configuration. It
+     * depends on a specific implementation how this default decoder is
+     * obtained.
+     *
+     * @param key the configuration key
+     * @return the plain string value of the specified encoded property
+     */
+    String getEncodedString(String key);
+
+    /**
      * Get an array of strings associated with the given configuration key.
      * If the key doesn't map to an existing object an empty array is returned
      *

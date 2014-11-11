@@ -1288,6 +1288,18 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         return (result != null) ? result : interpolate(defaultValue);
     }
 
+    @Override
+    public String getEncodedString(String key, ConfigurationDecoder decoder) {
+        //TODO implementation
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
+    @Override
+    public String getEncodedString(String key) {
+        //TODO implementation
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
     /**
      * Get an array of strings associated with the given configuration key.
      * If the key doesn't map to an existing object, an empty array is returned.
