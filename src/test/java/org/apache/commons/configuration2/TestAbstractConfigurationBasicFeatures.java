@@ -953,6 +953,48 @@ public class TestAbstractConfigurationBasicFeatures
     }
 
     /**
+     * Tries to query an encoded string without a decoder.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetEncodedStringNoDecoder()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.getEncodedString(KEY_PREFIX, null);
+    }
+
+    /**
+     * Tests whether undefined keys are handled when querying encoded strings.
+     */
+    @Test
+    public void testGetEncodedStringNoValue()
+    {
+        ConfigurationDecoder decoder =
+                EasyMock.createMock(ConfigurationDecoder.class);
+        EasyMock.replay(decoder);
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        assertNull("Got a value", config.getEncodedString(KEY_PREFIX, decoder));
+    }
+
+    /**
+     * Tests whether an encoded value can be retrieved.
+     */
+    @Test
+    public void testGetEncodedStringValue()
+    {
+        ConfigurationDecoder decoder =
+                EasyMock.createMock(ConfigurationDecoder.class);
+        final String value = "original value";
+        final String decodedValue = "decoded value";
+        EasyMock.expect(decoder.decode(value)).andReturn(decodedValue);
+        EasyMock.replay(decoder);
+
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.addProperty(KEY_PREFIX, value);
+        assertEquals("Wrong decoded value", decodedValue,
+                config.getEncodedString(KEY_PREFIX, decoder));
+    }
+
+    /**
      * Creates the source configuration for testing the copy() and append()
      * methods. This configuration contains keys with an odd index and values
      * starting with the prefix "src". There are also some list properties.

@@ -1288,10 +1288,24 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         return (result != null) ? result : interpolate(defaultValue);
     }
 
+    /**
+     * {@inheritDoc} This implementation delegates to {@link #getString(String)}
+     * in order to obtain the value of the passed in key. This value is passed
+     * to the decoder. Because {@code getString()} is used behind the scenes all
+     * standard features like handling of missing keys and interpolation work as
+     * expected.
+     */
     @Override
-    public String getEncodedString(String key, ConfigurationDecoder decoder) {
-        //TODO implementation
-        throw new UnsupportedOperationException("Not yet implemented!");
+    public String getEncodedString(String key, ConfigurationDecoder decoder)
+    {
+        if (decoder == null)
+        {
+            throw new IllegalArgumentException(
+                    "ConfigurationDecoder must not be null!");
+        }
+
+        String value = getString(key);
+        return (value != null) ? decoder.decode(value) : null;
     }
 
     @Override
