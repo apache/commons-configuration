@@ -32,6 +32,9 @@
         keys in a case-insensitive manner. This is useful for instance for
         dealing with Windows INI files.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-565">
+        Added support for querying encoded properties.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-427">
         XMLPropertyListConfiguration can now save arrays in the correct form.
       </action>
