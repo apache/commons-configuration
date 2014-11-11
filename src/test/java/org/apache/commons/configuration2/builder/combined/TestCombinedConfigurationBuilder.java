@@ -40,6 +40,7 @@ import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.CombinedConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationAssert;
+import org.apache.commons.configuration2.ConfigurationDecoder;
 import org.apache.commons.configuration2.DynamicCombinedConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
@@ -946,16 +947,19 @@ public class TestCombinedConfigurationBuilder
                 ConfigurationAssert
                         .getTestFile("testCCCombinedChildBuilder.xml");
         ListDelimiterHandler listHandler = new DefaultListDelimiterHandler('*');
+        ConfigurationDecoder decoder = EasyMock.createMock(ConfigurationDecoder.class);
         builder.configure(new CombinedBuilderParametersImpl()
                 .setDefinitionBuilderParameters(
                         new XMLBuilderParametersImpl().setFile(testFile))
-                .setListDelimiterHandler(listHandler));
+                .setListDelimiterHandler(listHandler)
+                .setConfigurationDecoder(decoder));
         CombinedConfiguration cc = builder.getConfiguration();
         CombinedConfiguration cc2 =
                 (CombinedConfiguration) cc.getConfiguration("subcc");
         assertFalse("Wrong exception flag", cc2.isThrowExceptionOnMissing());
         assertEquals("Wrong list delimiter handler", listHandler,
                 cc2.getListDelimiterHandler());
+        assertEquals("Wrong decoder", decoder, cc2.getConfigurationDecoder());
     }
 
     /**

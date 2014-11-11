@@ -128,6 +128,7 @@ public class CombinedConfigurationBuilderProvider extends
     {
         params.setListDelimiterHandler(config.getListDelimiterHandler())
                 .setLogger(config.getLogger())
-                .setThrowExceptionOnMissing(config.isThrowExceptionOnMissing());
+                .setThrowExceptionOnMissing(config.isThrowExceptionOnMissing())
+                .setConfigurationDecoder(config.getConfigurationDecoder());
     }
 }
