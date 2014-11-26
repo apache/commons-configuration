@@ -628,7 +628,7 @@ public class PropertiesConfiguration extends BaseConfiguration
         private static final Pattern PROPERTY_PATTERN = Pattern
                 .compile("(([\\S&&[^\\\\" + new String(SEPARATORS)
                         + "]]|\\\\.)*)(\\s*(\\s+|[" + new String(SEPARATORS)
-                        + "])\\s*)(.*)");
+                        + "])\\s*)?(.*)");
 
         /** Constant for the index of the group for the key. */
         private static final int IDX_KEY = 1;
@@ -1185,7 +1185,7 @@ public class PropertiesConfiguration extends BaseConfiguration
         protected String fetchSeparator(String key, Object value)
         {
             return (getGlobalSeparator() != null) ? getGlobalSeparator()
-                    : getCurrentSeparator();
+                    : StringUtils.defaultString(getCurrentSeparator());
         }
     } // class PropertiesWriter
 

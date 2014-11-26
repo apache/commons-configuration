@@ -142,15 +142,35 @@ public class TestPropertiesConfiguration
     }
 
     /**
-     * Tests that empty properties are treated as the empty string
-     * (rather than as null).
+     * Checks for a property without a value.
+     * 
+     * @param key the key to be checked
+     */
+    private void checkEmpty(String key)
+    {
+        String empty = conf.getString(key);
+        assertNotNull("Property not found: " + key, empty);
+        assertEquals("Wrong value for property " + key, "", empty);
+    }
+
+    /**
+     * Tests that empty properties are treated as the empty string (rather than
+     * as null).
      */
     @Test
-    public void testEmpty() throws Exception
+    public void testEmpty()
     {
-        String empty = conf.getString("test.empty");
-        assertNotNull(empty);
-        assertEquals("", empty);
+        checkEmpty("test.empty");
+    }
+
+    /**
+     * Tests that properties are detected that do not have a separator and a
+     * value.
+     */
+    @Test
+    public void testEmptyNoSeparator()
+    {
+        checkEmpty("test.empty2");
     }
 
     /**
