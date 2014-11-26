@@ -35,6 +35,11 @@
       <action dev="oheger" type="add" issue="CONFIGURATION-565">
         Added support for querying encoded properties.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-564">
+        PropertiesConfiguration now supports again properties without a value
+        and a separator character. The keys of such properties are added to
+        the configuration with an empty String as value.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-427">
         XMLPropertyListConfiguration can now save arrays in the correct form.
       </action>
