@@ -122,6 +122,18 @@ public abstract class TestAbstractConfiguration
     }
 
     @Test
+    public void testSize()
+    {
+        assertEquals("Wrong size", 4, getConfiguration().size());
+    }
+
+    @Test
+    public void testSizeEmpty()
+    {
+        assertEquals("Wrong size of empty configuration", 0, getEmptyConfiguration().size());
+    }
+
+    @Test
     public void testContainsKey()
     {
         Configuration config = getConfiguration();
