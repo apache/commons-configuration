@@ -198,6 +198,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * {@inheritDoc} This implementation handles synchronization and delegates
      * to {@code getRootElementNameInternal()}.
      */
+    @Override
     public final String getRootElementName()
     {
         beginRead(false);
@@ -251,6 +252,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @return the current expression engine
      * @since 1.3
      */
+    @Override
     public ExpressionEngine getExpressionEngine()
     {
         return (expressionEngine != null) ? expressionEngine
@@ -266,6 +268,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * then the default expression engine will be used
      * @since 1.3
      */
+    @Override
     public void setExpressionEngine(ExpressionEngine expressionEngine)
     {
         this.expressionEngine = expressionEngine;
@@ -367,6 +370,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param nodes a collection with the {@code Node} objects to be
      * added
      */
+    @Override
     public final void addNodes(String key, Collection<? extends T> nodes)
     {
         if (nodes == null || nodes.isEmpty())
@@ -445,6 +449,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * {@inheritDoc} This implementation delegates to the expression engine.
      */
+    @Override
     public List<QueryResult<T>> resolveKey(T root, String key,
             NodeHandler<T> handler)
     {
@@ -455,6 +460,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * {@inheritDoc} This implementation delegates to {@code resolveKey()} and
      * then filters out attribute results.
      */
+    @Override
     public List<T> resolveNodeKey(T root, String key, NodeHandler<T> handler)
     {
         List<QueryResult<T>> results = resolveKey(root, key, handler);
@@ -472,6 +478,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * {@inheritDoc} This implementation delegates to the expression engine.
      */
+    @Override
     public NodeAddData<T> resolveAddKey(T root, String key,
             NodeHandler<T> handler)
     {
@@ -484,6 +491,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * determines which nodes need to be changed and whether new ones need to be
      * added or existing ones need to be removed.
      */
+    @Override
     public NodeUpdateData<T> resolveUpdateKey(T root, String key,
             Object newValue, NodeHandler<T> handler)
     {
@@ -529,6 +537,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * root node has to be traversed. The cache is used to store and access keys
      * for nodes encountered on the path.
      */
+    @Override
     public String nodeKey(T node, Map<T, String> cache, NodeHandler<T> handler) {
         List<T> path = new LinkedList<T>();
         T currentNode = node;
@@ -568,6 +577,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      *
      * @param key the key of the property to be removed
      */
+    @Override
     public final void clearTree(String key)
     {
         beginWrite(false);
@@ -702,6 +712,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param key the key to be checked
      * @return the maximum defined index for this key
      */
+    @Override
     public final int getMaxIndex(String key)
     {
         beginRead(false);
