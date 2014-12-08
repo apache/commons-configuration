@@ -423,6 +423,15 @@ public class TestAbstractHierarchicalConfiguration
         assertFalse("More keys than expected", it.hasNext());
     }
 
+    /**
+     * Tests whether the correct size is calculated.
+     */
+    @Test
+    public void testSize()
+    {
+        assertEquals("Wrong size", 2, config.size());
+    }
+
     @Test
     public void testAddProperty()
     {

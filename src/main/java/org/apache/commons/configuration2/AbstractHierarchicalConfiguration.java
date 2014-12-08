@@ -615,6 +615,18 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
+     * {@inheritDoc} This implementation is slightly more efficient than the
+     * default implementation. It does not iterate over the key set, but
+     * directly queries its size after it has been constructed. Note that
+     * constructing the key set is still an O(n) operation.
+     */
+    @Override
+    protected int sizeInternal()
+    {
+        return visitDefinedKeys().getKeyList().size();
+    }
+
+    /**
      * Returns an iterator with all keys defined in this configuration.
      * Note that the keys returned by this method will not contain any
      * indices. This means that some structure will be lost.</p>
@@ -624,12 +636,21 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     @Override
     protected Iterator<String> getKeysInternal()
     {
+        return visitDefinedKeys().getKeyList().iterator();
+    }
+
+    /**
+     * Creates a {@code DefinedKeysVisitor} and visits all defined keys with it.
+     *
+     * @return the visitor after all keys have been visited
+     */
+    private DefinedKeysVisitor visitDefinedKeys()
+    {
         DefinedKeysVisitor visitor = new DefinedKeysVisitor();
         NodeHandler<T> nodeHandler = getModel().getNodeHandler();
         NodeTreeWalker.INSTANCE.walkDFS(nodeHandler.getRootNode(), visitor,
                 nodeHandler);
-
-        return visitor.getKeyList().iterator();
+        return visitor;
     }
 
     /**
