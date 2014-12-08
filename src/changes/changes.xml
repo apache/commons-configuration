@@ -43,6 +43,9 @@
       <action dev="oheger" type="update" issue="CONFIGURATION-427">
         XMLPropertyListConfiguration can now save arrays in the correct form.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-200">
+        A size() method was added to the ImmutableConfiguration interface.
+      </action>
     </release>
 
     <release version="2.0-alpha1" date="2014-09-23"
