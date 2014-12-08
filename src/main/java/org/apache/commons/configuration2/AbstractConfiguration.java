@@ -1055,10 +1055,23 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         }
     }
 
+    /**
+     * Actually calculates the size of this configuration. This method is called
+     * by {@code size()} with a read lock held. The base implementation provided
+     * here calculates the size based on the iterator returned by
+     * {@code getKeys()}. Sub classes which can determine the size in a more
+     * efficient way should override this method.
+     *
+     * @return the size of this configuration (i.e. the number of keys)
+     */
     protected int sizeInternal()
     {
-        // TODO implementation
-        return 1;
+        int size = 0;
+        for (Iterator<String> keyIt = getKeysInternal(); keyIt.hasNext(); size++)
+        {
+            keyIt.next();
+        }
+        return size;
     }
 
     /**

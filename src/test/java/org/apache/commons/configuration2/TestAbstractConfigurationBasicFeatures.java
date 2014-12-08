@@ -1026,6 +1026,21 @@ public class TestAbstractConfigurationBasicFeatures
     }
 
     /**
+     * Tests the default implementation of sizeInternal().
+     */
+    @Test
+    public void testSizeInternal()
+    {
+        AbstractConfiguration config =
+                new TestConfigurationImpl(new PropertiesConfiguration());
+        for (int i = 0; i < PROP_COUNT; i++)
+        {
+            config.addProperty(KEY_PREFIX + i, "value" + i);
+        }
+        assertEquals("Wrong size", PROP_COUNT, config.size());
+    }
+
+    /**
      * Creates the source configuration for testing the copy() and append()
      * methods. This configuration contains keys with an odd index and values
      * starting with the prefix "src". There are also some list properties.
