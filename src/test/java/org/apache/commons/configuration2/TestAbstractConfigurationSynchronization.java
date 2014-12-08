@@ -188,9 +188,19 @@ public class TestAbstractConfigurationSynchronization
      * Tests whether isEmpty() is correctly synchronized.
      */
     @Test
-    public void testIsEmptySychronized()
+    public void testIsEmptySynchronized()
     {
         assertFalse("Configuration is empty", config.isEmpty());
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+    }
+
+    /**
+     * Tests whether size() is correctly synchronized.
+     */
+    @Test
+    public void testSizeSynchronized()
+    {
+        assertTrue("Wrong size", config.size() > 0);
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -198,7 +208,7 @@ public class TestAbstractConfigurationSynchronization
      * Tests whether getKeys() is correctly synchronized.
      */
     @Test
-    public void testGetKeysSychronized()
+    public void testGetKeysSynchronized()
     {
         assertTrue("No keys", config.getKeys().hasNext());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);

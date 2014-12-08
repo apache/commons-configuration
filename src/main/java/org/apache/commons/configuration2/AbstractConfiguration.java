@@ -1027,13 +1027,6 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         }
     }
 
-    @Override
-    public int size()
-    {
-        // TODO implementation
-        return 0;
-    }
-
     /**
      * Actually checks whether this configuration contains data. This method is
      * called by {@code isEmpty()}. It has to be defined by concrete subclasses.
@@ -1043,6 +1036,30 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @since 2.0
      */
     protected abstract boolean isEmptyInternal();
+
+    /**
+     * {@inheritDoc} This implementation handles synchronization and delegates
+     * to {@code sizeInternal()}.
+     */
+    @Override
+    public final int size()
+    {
+        beginRead(false);
+        try
+        {
+            return sizeInternal();
+        }
+        finally
+        {
+            endRead();
+        }
+    }
+
+    protected int sizeInternal()
+    {
+        // TODO implementation
+        return 1;
+    }
 
     /**
      * {@inheritDoc} This implementation handles synchronization and delegates
