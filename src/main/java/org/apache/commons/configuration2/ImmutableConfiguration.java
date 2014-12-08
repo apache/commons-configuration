@@ -63,6 +63,17 @@ public interface ImmutableConfiguration
     boolean isEmpty();
 
     /**
+     * Returns the number of keys stored in this configuration. Note that a
+     * concrete implementation is not guaranteed to be efficient; for some
+     * implementations it may be expensive to determine the size. Especially, if
+     * you just want to check whether a configuration is empty, it is preferable
+     * to use the {@link #isEmpty()} method.
+     *
+     * @return the number of keys stored in this configuration
+     */
+    int size();
+
+    /**
      * Check if the configuration contains the specified key.
      *
      * @param key the key whose presence in this configuration is to be tested

@@ -1027,6 +1027,13 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         }
     }
 
+    @Override
+    public int size()
+    {
+        // TODO implementation
+        return 0;
+    }
+
     /**
      * Actually checks whether this configuration contains data. This method is
      * called by {@code isEmpty()}. It has to be defined by concrete subclasses.
