@@ -762,4 +762,18 @@ public class TestBaseConfiguration
         assertEquals("Wrong interpolation in clone", "The answer is 43.",
                 clone.getString(keyAnswer));
     }
+
+    /**
+     * Tests the specific size() implementation.
+     */
+    @Test
+    public void testSize()
+    {
+        final int count = 16;
+        for (int i = 0; i < count; i++)
+        {
+            config.addProperty("key" + i, "value" + i);
+        }
+        assertEquals("Wrong size", count, config.size());
+    }
 }

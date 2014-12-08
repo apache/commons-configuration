@@ -146,6 +146,16 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
     }
 
     /**
+     * {@inheritDoc} This implementation obtains the size directly from the map
+     * used as data store. So this is a rather efficient implementation.
+     */
+    @Override
+    protected int sizeInternal()
+    {
+        return store.size();
+    }
+
+    /**
      * Get the list of the keys contained in the configuration
      * repository.
      *
