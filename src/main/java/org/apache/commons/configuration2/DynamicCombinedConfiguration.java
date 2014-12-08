@@ -608,6 +608,11 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
+    protected int sizeInternal() {
+        return this.getCurrentConfig().size();
+    }
+
+    @Override
     protected void setPropertyInternal(String key, Object value)
     {
         if (configs != null)

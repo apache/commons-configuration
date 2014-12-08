@@ -119,6 +119,7 @@ public class TestDynamicCombinedConfiguration
         assertEquals("OK-1", config.getString("buttons/name"));
         assertEquals(3, config.getMaxIndex("buttons/name"));
         assertEquals("a\\,b\\,c", config.getString("split/list2"));
+        assertEquals("Wrong size", 18, config.size());
         config.addProperty("listDelimiterTest", "1,2,3");
         assertEquals("List delimiter not detected", "1", config.getString("listDelimiterTest"));
     }
