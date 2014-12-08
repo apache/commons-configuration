@@ -227,6 +227,12 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
         return map.keySet().iterator();
     }
 
+    @Override
+    protected int sizeInternal()
+    {
+        return map.size();
+    }
+
     /**
      * Returns a copy of this object. The returned configuration will contain
      * the same properties as the original. Event listeners are not cloned.
