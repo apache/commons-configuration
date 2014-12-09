@@ -70,7 +70,7 @@ Integer integer = config.getInteger("number");
       </p>
     </section>  	
     
-    <section name="Commons Configuration 2.0 alpha1">
+    <section name="Commons Configuration 2.0 alpha2">
     <p>
       The latest stable release of Apache Commons Configuration is version 1.10. It is available from the
       <a href="http://commons.apache.org/configuration/download_configuration.cgi">Apache download area</a>. 
@@ -80,16 +80,16 @@ Integer integer = config.getInteger("number");
     <p>
       In the meantime, work has been spent on a major redesign of the library
       addressing some of the weaknesses of the 1.x version series. The results
-      are now made available as an alpha release. This release aims at gaining
+      are now made available as a series of alpha releases. These releases aim at gaining
       feedback from the community regarding changed and new concepts implemented
-      for version 2.0. It is not yet production ready! The version is also
+      for version 2.0. They are not yet production ready! The current alpha version is also
       available from the <a href="http://commons.apache.org/configuration/download_configuration.cgi">Download
       page</a>. There is a <a href="userguide/upgradeto2_0.html">Migration
       guide</a> that can be used as guideline when upgrading from version 1.x to
       2.0. It describes the most important changes.
     </p>
     </section>
-    
+
     <section name="History">
       <p>
         Commons Configuration started as code in Apache JServ.  The JServ code was subsequently
