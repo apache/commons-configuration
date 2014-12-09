@@ -1,7 +1,7 @@
 $Id$
 
                         Commons Configuration Package
-                             Version 2.0-alpha1
+                             Version 2.0-alpha2
                                 Release Notes
 
 
@@ -13,6 +13,42 @@ Configuration component. It describes the changes since the previous version.
 The Commons Configuration software library provides a generic configuration
 interface which enables an application to read configuration data from a variety
 of sources.
+
+After version 2.0-alpha1 has been out for a while (the corresponding release
+notes can be found below), this second alpha release contains a few number of
+improvements and new features whose implementation required some changes on
+existing interfaces. In most cases, new methods were added offering enhanced
+functionality. Because these are typically interfaces implemented by the
+library itself client code using the previous alpha version should hardly be
+affected.
+
+Below is a list of all changes in this version:
+
+New features:
+=============
+o CONFIGURATION-574:  DefaultExpressionEngine can now be customized to match
+                      configuration keys in a case-insensitive manner. This is useful
+                      for instance for dealing with Windows INI files.
+o CONFIGURATION-565:  Added support for querying encoded properties.
+o CONFIGURATION-200:  A size() method was added to the ImmutableConfiguration interface.
+
+Fixed Bugs:
+===========
+o CONFIGURATION-564:  PropertiesConfiguration now supports again properties without a
+                      value and a separator character. The keys of such properties
+                      are added to the configuration with an empty String as value.
+o CONFIGURATION-427:  XMLPropertyListConfiguration can now save arrays in the correct form.
+
+Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+
+For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
+
+http://commons.apache.org/proper/commons-configuration/
+
+                        Commons Configuration Package
+                             Version 2.0-alpha1
+                                Release Notes
 
 This is the first alpha release for version 2.0 of Commons Configuration.
 Version 2 is a major redesign of the Configuration API. It breaks compatibility
@@ -74,6 +110,7 @@ o CONFIGURATION-204:  With the new reloading mechanism automatic and periodic re
 o CONFIGURATION-202:  Reloading checks can now be performed in a background thread.
 
 Fixed Bugs:
+===========
 o CONFIGURATION-582:  Fixed a StringIndexOutOfBoundsException in PropertiesConfigurationLayout
                       which was caused by lines containing only whitespace.
 o CONFIGURATION-572:  When a CombinedConfiguration is cleared it removes itself as change
