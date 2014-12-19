@@ -603,7 +603,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-changes-plugin</artifactId>
-        <version>2.4</version>
+        <version>2.11</version>
         <configuration>
           <xmlPath>${basedir}/src/changes/changes.xml</xmlPath>
           <issueLinkTemplate>%URL%/%ISSUE%</issueLinkTemplate>
@@ -657,6 +657,7 @@
         <artifactId>clirr-maven-plugin</artifactId>
         <version>2.4</version>
         <configuration>
+          <comparisonVersion>2.0-alpha1</comparisonVersion>
           <excludes>
             <exclude>org/apache/commons/configuration/plist/PropertyListParser*</exclude>
           </excludes>
