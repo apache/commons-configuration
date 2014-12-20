@@ -122,6 +122,13 @@
         <revision>2.0-alpha1</revision>
       </Version>
     </release>
+    <release>
+      <Version>
+        <name>Commons Configuration 2.0-alpha2</name>
+        <created>2014-12-20</created>
+        <revision>2.0-alpha2</revision>
+      </Version>
+    </release>
 
     <mailing-list rdf:resource="http://commons.apache.org/mail-lists.html"/>
   </Project>
