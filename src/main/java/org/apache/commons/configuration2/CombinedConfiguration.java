@@ -825,7 +825,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     protected void beginWrite(boolean optimize)
     {
         super.beginWrite(true);
-        if(optimize)
+        if (optimize)
         {
             // just need a lock, don't construct configuration
             return;

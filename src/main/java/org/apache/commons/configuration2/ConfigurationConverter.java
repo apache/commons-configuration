@@ -71,7 +71,7 @@ public final class ConfigurationConverter
         ListDelimiterHandler listHandler;
         boolean useDelimiterHandler;
 
-        if(config instanceof AbstractConfiguration)
+        if (config instanceof AbstractConfiguration)
         {
             listHandler = ((AbstractConfiguration) config).getListDelimiterHandler();
             useDelimiterHandler = true;
