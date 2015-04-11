@@ -46,4 +46,20 @@
     </Or>
     <Bug pattern="DM_DEFAULT_ENCODING" />
   </Match>
+
+  <!-- Reason: This warning is caused by the protected initResultInstance()
+       method which is not synchronized. The documentation states that this
+       method accesses internal state and must only be called in a synchronized
+       block.
+  -->
+  <Match>
+    <Class name="org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder" />
+    <Field name="autoSaveListener" />
+    <Bug pattern="IS2_INCONSISTENT_SYNC" />
+  </Match>
+  <Match>
+    <Class name="org.apache.commons.configuration2.builder.combined.ReloadingCombinedConfigurationBuilder" />
+    <Field name="reloadingController" />
+    <Bug pattern="IS2_INCONSISTENT_SYNC" />
+  </Match>
 </FindBugsFilter>

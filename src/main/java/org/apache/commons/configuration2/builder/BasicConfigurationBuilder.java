@@ -455,7 +455,8 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      * implementation uses the {@link BeanHelper} class to initialize the
      * object's property based on the {@link BeanDeclaration} returned by
      * {@link #getResultDeclaration()}. Note: This method is invoked in a
-     * synchronized block
+     * synchronized block. This is required because internal state is accessed.
+     * Sub classes must not call this method without proper synchronization.
      *
      * @param obj the object to be initialized
      * @throws ConfigurationException if an error occurs
