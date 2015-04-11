@@ -45,11 +45,6 @@ import org.apache.commons.lang3.StringUtils;
  */
 final class PropertyConverter
 {
-    /** Constant for the list delimiter as char.*/
-    static final char LIST_ESC_CHAR = '\\';
-
-    /** Constant for the list delimiter escaping character as string.*/
-    static final String LIST_ESCAPE = String.valueOf(LIST_ESC_CHAR);
 
     /** Constant for the prefix of hex numbers.*/
     private static final String HEX_PREFIX = "0x";
@@ -66,7 +61,7 @@ final class PropertyConverter
     /** Constant for the argument classes of the Number constructor that takes a String. */
     private static final Class<?>[] CONSTR_ARGS = {String.class};
 
-    /** The fully qualified name of {@link javax.mail.internet.InternetAddress} */
+    /** The fully qualified name of {@code javax.mail.internet.InternetAddress} */
     private static final String INTERNET_ADDRESS_CLASSNAME = "javax.mail.internet.InternetAddress";
 
     /**
@@ -260,7 +255,7 @@ final class PropertyConverter
         }
         else
         {
-            return new Byte(n.byteValue());
+            return n.byteValue();
         }
     }
 
@@ -280,7 +275,7 @@ final class PropertyConverter
         }
         else
         {
-            return new Short(n.shortValue());
+            return n.shortValue();
         }
     }
 
@@ -300,7 +295,7 @@ final class PropertyConverter
         }
         else
         {
-            return new Integer(n.intValue());
+            return n.intValue();
         }
     }
 
@@ -320,7 +315,7 @@ final class PropertyConverter
         }
         else
         {
-            return new Long(n.longValue());
+            return n.longValue();
         }
     }
 
@@ -456,7 +451,7 @@ final class PropertyConverter
             try
             {
                 Constructor<?> constr = targetClass.getConstructor(CONSTR_ARGS);
-                return (Number) constr.newInstance(new Object[]{str});
+                return (Number) constr.newInstance(str);
             }
             catch (InvocationTargetException itex)
             {
@@ -664,8 +659,8 @@ final class PropertyConverter
             try
             {
                 Constructor<?> ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME)
-                        .getConstructor(new Class[] {String.class});
-                return ctor.newInstance(new Object[] {value});
+                        .getConstructor(String.class);
+                return ctor.newInstance(value);
             }
             catch (Exception e)
             {
