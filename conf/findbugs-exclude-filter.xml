@@ -62,4 +62,9 @@
     <Field name="reloadingController" />
     <Bug pattern="IS2_INCONSISTENT_SYNC" />
   </Match>
+  <Match>
+    <Class name="org.apache.commons.configuration2.builder.combined.CombinedConfigurationBuilder" />
+    <Field name="sourceData" />
+    <Bug pattern="IS2_INCONSISTENT_SYNC" />
+  </Match>
 </FindBugsFilter>

@@ -757,7 +757,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      *
      * @return a collection with the builders for child configuration sources
      */
-    protected Collection<ConfigurationBuilder<? extends Configuration>> getChildBuilders()
+    protected synchronized Collection<ConfigurationBuilder<? extends Configuration>> getChildBuilders()
     {
         return sourceData.getChildBuilders();
     }
