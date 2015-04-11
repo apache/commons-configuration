@@ -32,14 +32,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.configuration2.convert.ConversionHandler;
 import org.apache.commons.configuration2.convert.DefaultConversionHandler;
-import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.event.BaseEventSource;
 import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.EventListener;
-import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.ex.ConversionException;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.InterpolatorSpecification;
@@ -75,8 +73,8 @@ import org.apache.commons.logging.impl.NoOpLog;
  * {@link #setListDelimiterHandler(ListDelimiterHandler)} method. It is
  * disabled per default. To enable this feature, set a suitable
  * {@code ListDelimiterHandler}, e.g. an instance of
- * {@link DefaultListDelimiterHandler} configured with the desired list
- * delimiter character.</li>
+ * {@link org.apache.commons.configuration2.convert.DefaultListDelimiterHandler
+ * DefaultListDelimiterHandler} configured with the desired list delimiter character.</li>
  * <li>Allows specifying how missing properties are treated. Per default the
  * get methods returning an object will return <b>null</b> if the searched
  * property key is not found (and no default value is provided). With the
@@ -157,7 +155,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * contain a list delimiter and thus have to be split to multiple values.
      * Per default, a {@code ListDelimiterHandler} implementation is set which
      * does not support list splitting. This can be changed for instance by
-     * setting a {@link DefaultListDelimiterHandler} object.
+     * setting a {@link org.apache.commons.configuration2.convert.DefaultListDelimiterHandler
+     * DefaultListDelimiterHandler} object.
      *
      * @param listDelimiterHandler the {@code ListDelimiterHandler} to be used
      *        (must not be <b>null</b>)
@@ -1663,8 +1662,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * variable interpolation.
      *
      * @return a configuration with all variables interpolated
-     * @throws ConfigurationRuntimeException if this configuration cannot be
-     * cloned
+     * @throws org.apache.commons.configuration2.ex.ConfigurationRuntimeException if this
+     * configuration cannot be cloned
      * @since 1.5
      */
     public Configuration interpolatedConfiguration()
