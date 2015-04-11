@@ -38,7 +38,10 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * of a resource to be loaded from class path).</li>
  * </ul>
  * In addition, other properties are available which are also needed for loading
- * or saving a file, like the encoding or the underlying {@link FileSystem}.
+ * or saving a file, like the underlying {@link FileSystem}. The encoding to be
+ * used when accessing the represented data is also part of the data contained
+ * in an instance; if no encoding is set explicitly, the platform's default
+ * encoding is used.
  * </p>
  * <p>
  * Instances of this class are immutable and thus can be safely shared between

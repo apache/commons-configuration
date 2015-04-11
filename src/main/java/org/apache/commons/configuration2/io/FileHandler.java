@@ -545,7 +545,8 @@ public class FileHandler
 
     /**
      * Sets the encoding of the associated file. The encoding applies if binary
-     * files are loaded.
+     * files are loaded. Note that in this case setting an encoding is
+     * recommended; otherwise the platform's default encoding is used.
      *
      * @param encoding the encoding of the associated file
      */

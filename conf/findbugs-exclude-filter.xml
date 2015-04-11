@@ -34,4 +34,16 @@
     <Method name="dump" />
     <Bug pattern="DM_DEFAULT_ENCODING" />
   </Match>
+
+  <!-- Reason: An encoding can be explicitly provided. If this is not done,
+       the default encoding is used. This is stated in the documentation.
+  -->
+  <Match>
+    <Class name="org.apache.commons.configuration2.io.FileHandler" />
+    <Or>
+      <Method name="loadFromTransformedStream" />
+      <Method name="saveToStream" />
+    </Or>
+    <Bug pattern="DM_DEFAULT_ENCODING" />
+  </Match>
 </FindBugsFilter>
