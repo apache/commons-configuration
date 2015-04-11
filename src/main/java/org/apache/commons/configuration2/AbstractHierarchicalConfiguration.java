@@ -31,9 +31,7 @@ import java.util.Stack;
 
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
-import org.apache.commons.configuration2.sync.LockMode;
 import org.apache.commons.configuration2.sync.NoOpSynchronizer;
-import org.apache.commons.configuration2.sync.Synchronizer;
 import org.apache.commons.configuration2.tree.ConfigurationNodeVisitorAdapter;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
@@ -153,7 +151,8 @@ import org.apache.commons.configuration2.tree.QueryResult;
  * </p>
  * <p>
  * Whether an {@code AbstractHierarchicalConfiguration} object is thread-safe or
- * not depends on the underlying {@code NodeModel} and the {@link Synchronizer}
+ * not depends on the underlying {@code NodeModel} and the
+ * {@link org.apache.commons.configuration2.sync.Synchronizer Synchronizer}
  * it is associated with. Some {@code NodeModel} implementations are inherently
  * thread-safe; they do not require a special {@code Synchronizer}. (Per
  * default, a dummy {@code Synchronizer} is used which is not thread-safe!) The
@@ -161,8 +160,10 @@ import org.apache.commons.configuration2.tree.QueryResult;
  * {@code Synchronizer} accordingly. When accessing the configuration's root
  * node directly, the client application is responsible for proper
  * synchronization. This is achieved by calling the methods
- * {@link #lock(LockMode)}, and {@link #unlock(LockMode)} with a proper
- * {@link LockMode} argument. In any case, it is recommended to not access the
+ * {@link #lock(org.apache.commons.configuration2.sync.LockMode) lock()},
+ * and {@link #unlock(org.apache.commons.configuration2.sync.LockMode) unlock()} with a proper
+ * {@link org.apache.commons.configuration2.sync.LockMode LockMode} argument.
+ * In any case, it is recommended to not access the
  * root node directly, but to use corresponding methods for querying or updating
  * configuration data instead. Direct manipulations of a configuration's node
  * structure circumvent many internal mechanisms and thus can cause undesired
@@ -538,7 +539,8 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * for nodes encountered on the path.
      */
     @Override
-    public String nodeKey(T node, Map<T, String> cache, NodeHandler<T> handler) {
+    public String nodeKey(T node, Map<T, String> cache, NodeHandler<T> handler)
+    {
         List<T> path = new LinkedList<T>();
         T currentNode = node;
         String key = cache.get(node);
