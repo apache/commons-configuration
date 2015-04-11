@@ -17,7 +17,6 @@
 package org.apache.commons.configuration2.builder.combined;
 
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -253,12 +252,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             .getName()
             + "/ADDITIONAL_CONFIG";
 
-    /**
-     * Constant for the type of error events caused by optional configurations
-     * that cannot be loaded.
-     */
-    public static final int EVENT_ERR_LOAD_OPTIONAL = 51;
-
     /** Constant for the name of the configuration bean factory. */
     static final String CONFIG_BEAN_FACTORY_NAME = CombinedConfigurationBuilder.class
             .getName()
@@ -295,10 +288,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     /** Constant for the optional attribute without the reserved prefix. */
     static final String ATTR_OPTIONAL = DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_START
             + ATTR_OPTIONALNAME + DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_END;
-
-    /** Constant for the file name attribute. */
-    static final String ATTR_FILENAME = DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_START
-            + "fileName" + DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_END;
 
     /** Constant for the forceCreate attribute. */
     static final String ATTR_FORCECREATE = DefaultExpressionEngineSymbols.DEFAULT_ATTRIBUTE_START
@@ -416,13 +405,13 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                     RELOADING_BUILDER,
                     "org.apache.commons.configuration2.XMLPropertiesConfiguration",
                     "org.apache.commons.configuration2.PropertiesConfiguration",
-                    EXT_XML, Arrays.asList(FILE_PARAMS));
+                    EXT_XML, Collections.singletonList(FILE_PARAMS));
 
     /** Constant for the provider for XML files. */
     private static final ConfigurationBuilderProvider XML_PROVIDER =
             new BaseConfigurationBuilderProvider(FILE_BUILDER, RELOADING_BUILDER,
                     "org.apache.commons.configuration2.XMLConfiguration",
-                    Arrays.asList("org.apache.commons.configuration2.builder.XMLBuilderParametersImpl"));
+                    Collections.singletonList("org.apache.commons.configuration2.builder.XMLBuilderParametersImpl"));
 
     /** Constant for the provider for JNDI sources. */
     private static final BaseConfigurationBuilderProvider JNDI_PROVIDER =
@@ -430,7 +419,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                     BASIC_BUILDER,
                     null,
                     "org.apache.commons.configuration2.JNDIConfiguration",
-                    Arrays.asList("org.apache.commons.configuration2.builder.JndiBuilderParametersImpl"));
+                    Collections.singletonList("org.apache.commons.configuration2.builder.JndiBuilderParametersImpl"));
 
     /** Constant for the provider for system properties. */
     private static final BaseConfigurationBuilderProvider SYSTEM_PROVIDER =
@@ -438,13 +427,13 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                     BASIC_BUILDER,
                     null,
                     "org.apache.commons.configuration2.SystemConfiguration",
-                    Arrays.asList("org.apache.commons.configuration2.builder.BasicBuilderParameters"));
+                    Collections.singletonList("org.apache.commons.configuration2.builder.BasicBuilderParameters"));
 
     /** Constant for the provider for ini files. */
     private static final BaseConfigurationBuilderProvider INI_PROVIDER =
             new BaseConfigurationBuilderProvider(FILE_BUILDER, RELOADING_BUILDER,
                     "org.apache.commons.configuration2.INIConfiguration",
-                    Arrays.asList(FILE_PARAMS));
+                    Collections.singletonList(FILE_PARAMS));
 
     /** Constant for the provider for environment properties. */
     private static final BaseConfigurationBuilderProvider ENV_PROVIDER =
@@ -452,7 +441,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                     BASIC_BUILDER,
                     null,
                     "org.apache.commons.configuration2.EnvironmentConfiguration",
-                    Arrays.asList("org.apache.commons.configuration2.builder.BasicBuilderParameters"));
+                    Collections.singletonList("org.apache.commons.configuration2.builder.BasicBuilderParameters"));
 
     /** Constant for the provider for plist files. */
     private static final BaseConfigurationBuilderProvider PLIST_PROVIDER =
@@ -461,7 +450,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                     RELOADING_BUILDER,
                     "org.apache.commons.configuration2.plist.XMLPropertyListConfiguration",
                     "org.apache.commons.configuration2.plist.PropertyListConfiguration",
-                    EXT_XML, Arrays.asList(FILE_PARAMS));
+                    EXT_XML, Collections.singletonList(FILE_PARAMS));
 
     /** Constant for the provider for configuration definition files. */
     private static final BaseConfigurationBuilderProvider COMBINED_PROVIDER =
