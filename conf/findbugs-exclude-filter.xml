@@ -15,17 +15,23 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
+<!--
+  This file contains some false positive bugs detected by findbugs. Their
+  false positive nature has been analyzed individually and they have been
+  put here to instruct findbugs it must ignore them.
+  $Id$
+-->
 
-<!-- ===================================================================== -->
-<!-- $Id$ -->
-<!-- ===================================================================== -->
 <FindBugsFilter>
-  <!-- Enable only high priority warnings -->
+  <!-- Reason: The reliance on default encoding is only in debug code. -->
   <Match>
-    <Priority value="2"/>
+    <Class name="org.apache.commons.configuration2.CombinedConfiguration" />
+    <Method name="constructCombinedNode" />
+    <Bug pattern="DM_DEFAULT_ENCODING" />
   </Match>
-
   <Match>
-    <Priority value="3"/>
+    <Class name="org.apache.commons.configuration2.ConfigurationUtils" />
+    <Method name="dump" />
+    <Bug pattern="DM_DEFAULT_ENCODING" />
   </Match>
 </FindBugsFilter>
