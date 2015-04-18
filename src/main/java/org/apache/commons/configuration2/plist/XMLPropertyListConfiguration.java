@@ -574,6 +574,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
             {
                 // remove the root of the XMLPropertyListConfiguration previously pushed on the stack
                 PListNodeBuilder builder = pop();
+                assert builder != null : "Stack was empty!";
                 if (peek() instanceof ArrayNodeBuilder)
                 {
                     // create the configuration
