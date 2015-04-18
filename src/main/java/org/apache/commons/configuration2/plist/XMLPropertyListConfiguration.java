@@ -47,6 +47,7 @@ import org.apache.commons.configuration2.FileBasedConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.MapConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.io.FileLocator;
 import org.apache.commons.configuration2.io.FileLocatorAware;
 import org.apache.commons.configuration2.tree.ImmutableNode;
@@ -413,7 +414,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         }
         else if (value instanceof byte[])
         {
-            String base64 = null;
+            String base64;
             try
             {
                 base64 = new String(Base64.encodeBase64((byte[]) value), DATA_ENCODING);
@@ -502,6 +503,23 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         }
 
         /**
+         * Returns the node on top of the non-empty stack. Throws an exception if the
+         * stack is empty.
+         *
+         * @return the top node of the stack
+         * @throws ConfigurationRuntimeException if the stack is empty
+         */
+        private PListNodeBuilder peekNE()
+        {
+            PListNodeBuilder result = peek();
+            if (result == null)
+            {
+                throw new ConfigurationRuntimeException("Access to empty stack!");
+            }
+            return result;
+        }
+
+        /**
          * Remove and return the node on the top of the stack.
          */
         private PListNodeBuilder pop()
@@ -549,7 +567,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
                 // create a new node, link it to its parent and push it on the stack
                 PListNodeBuilder node = new PListNodeBuilder();
                 node.setName(buffer.toString());
-                peek().addChild(node);
+                peekNE().addChild(node);
                 push(node);
             }
             else if ("dict".equals(qName))
@@ -562,7 +580,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
                     XMLPropertyListConfiguration config = new XMLPropertyListConfiguration(builder.createNode());
 
                     // add it to the ArrayNodeBuilder
-                    ArrayNodeBuilder node = (ArrayNodeBuilder) peek();
+                    ArrayNodeBuilder node = (ArrayNodeBuilder) peekNE();
                     node.addValue(config);
                 }
             }
@@ -570,33 +588,33 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
             {
                 if ("string".equals(qName))
                 {
-                    peek().addValue(buffer.toString());
+                    peekNE().addValue(buffer.toString());
                 }
                 else if ("integer".equals(qName))
                 {
-                    peek().addIntegerValue(buffer.toString());
+                    peekNE().addIntegerValue(buffer.toString());
                 }
                 else if ("real".equals(qName))
                 {
-                    peek().addRealValue(buffer.toString());
+                    peekNE().addRealValue(buffer.toString());
                 }
                 else if ("true".equals(qName))
                 {
-                    peek().addTrueValue();
+                    peekNE().addTrueValue();
                 }
                 else if ("false".equals(qName))
                 {
-                    peek().addFalseValue();
+                    peekNE().addFalseValue();
                 }
                 else if ("data".equals(qName))
                 {
-                    peek().addDataValue(buffer.toString());
+                    peekNE().addDataValue(buffer.toString());
                 }
                 else if ("date".equals(qName))
                 {
                     try
                     {
-                        peek().addDateValue(buffer.toString());
+                        peekNE().addDateValue(buffer.toString());
                     }
                     catch (IllegalArgumentException iex)
                     {
@@ -607,7 +625,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
                 else if ("array".equals(qName))
                 {
                     ArrayNodeBuilder array = (ArrayNodeBuilder) pop();
-                    peek().addList(array);
+                    peekNE().addList(array);
                 }
 
                 // remove the plist node on the stack once the value has been parsed,
