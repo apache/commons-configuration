@@ -424,7 +424,7 @@ public class CatalogResolver implements EntityResolver
                     }
                     catch (ConfigurationException ce)
                     {
-                        String name = (url == null) ? fileName : url.toString();
+                        String name = url.toString();
                         // Ignore the exception.
                         catalogManager.debug.message(DEBUG_ALL,
                             "Unable to get input stream for " + name + ". " + ce.getMessage());
