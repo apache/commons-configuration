@@ -290,7 +290,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
 
         if (node.getNodeName() != null)
         {
-            out.println(padding + "<key>" + StringEscapeUtils.escapeXml(node.getNodeName()) + "</key>");
+            out.println(padding + "<key>" + StringEscapeUtils.escapeXml10(node.getNodeName()) + "</key>");
         }
 
         List<ImmutableNode> children = node.getChildren();
@@ -424,11 +424,11 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
                 // Cannot happen as UTF-8 is a standard encoding
                 throw new AssertionError(e);
             }
-            out.println(padding + "<data>" + StringEscapeUtils.escapeXml(base64) + "</data>");
+            out.println(padding + "<data>" + StringEscapeUtils.escapeXml10(base64) + "</data>");
         }
         else if (value != null)
         {
-            out.println(padding + "<string>" + StringEscapeUtils.escapeXml(String.valueOf(value)) + "</string>");
+            out.println(padding + "<string>" + StringEscapeUtils.escapeXml10(String.valueOf(value)) + "</string>");
         }
         else
         {
