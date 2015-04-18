@@ -258,8 +258,9 @@ public class DefaultFileSystem extends FileSystem
      * Create the path to the specified file.
      *
      * @param file the target file
+     * @throws ConfigurationException if the path cannot be created
      */
-    private void createPath(File file)
+    private void createPath(File file) throws ConfigurationException
     {
         if (file != null)
         {
@@ -269,7 +270,10 @@ public class DefaultFileSystem extends FileSystem
                 File parent = file.getParentFile();
                 if (parent != null && !parent.exists())
                 {
-                    parent.mkdirs();
+                    if (!parent.mkdirs())
+                    {
+                        throw new ConfigurationException("Cannot create path: " + parent);
+                    }
                 }
             }
         }

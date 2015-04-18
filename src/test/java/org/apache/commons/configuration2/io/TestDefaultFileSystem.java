@@ -19,6 +19,9 @@ package org.apache.commons.configuration2.io;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.NoOpLog;
@@ -62,5 +65,15 @@ public class TestDefaultFileSystem
         Log log = LogFactory.getLog(getClass());
         fileSystem.setLogger(log);
         assertSame("Logger not set", log, fileSystem.getLogger());
+    }
+
+    /**
+     * Tests that an invalid output path causes an exception to be thrown when creating
+     * an ouput stream.
+     */
+    @Test(expected = ConfigurationException.class)
+    public void testGetOutputStreamInvalidPath() throws ConfigurationException
+    {
+        fileSystem.getOutputStream(new File("this is/<certainly>\\an#invalid#*path!"));
     }
 }
