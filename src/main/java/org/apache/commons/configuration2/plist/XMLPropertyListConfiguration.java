@@ -21,6 +21,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -129,6 +130,9 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
 {
     /** Size of the indentation for the generated file. */
     private static final int INDENT_SIZE = 4;
+
+    /** Constant for the encoding for binary data. */
+    private static final String DATA_ENCODING = "UTF-8";
 
     /** Temporarily stores the current file location. */
     private FileLocator locator;
@@ -409,7 +413,16 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         }
         else if (value instanceof byte[])
         {
-            String base64 = new String(Base64.encodeBase64((byte[]) value));
+            String base64 = null;
+            try
+            {
+                base64 = new String(Base64.encodeBase64((byte[]) value), DATA_ENCODING);
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                // Cannot happen as UTF-8 is a standard encoding
+                throw new AssertionError(e);
+            }
             out.println(padding + "<data>" + StringEscapeUtils.escapeXml(base64) + "</data>");
         }
         else if (value != null)
@@ -721,7 +734,15 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
          */
         public void addDataValue(String value)
         {
-            addValue(Base64.decodeBase64(value.getBytes()));
+            try
+            {
+                addValue(Base64.decodeBase64(value.getBytes(DATA_ENCODING)));
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                //Cannot happen as UTF-8 is a default encoding
+                throw new AssertionError(e);
+            }
         }
 
         /**
