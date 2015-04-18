@@ -478,9 +478,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
             @Override
             protected Boolean performOperation() throws SQLException
             {
-                PreparedStatement pstmt = initStatement(String.format(
-                        SQL_GET_PROPERTY, table, keyColumn), true, key);
-                ResultSet rs = pstmt.executeQuery();
+                ResultSet rs = openResultSet(
+                        String.format(SQL_GET_PROPERTY, table, keyColumn), true, key);
 
                 return rs.next();
             }
