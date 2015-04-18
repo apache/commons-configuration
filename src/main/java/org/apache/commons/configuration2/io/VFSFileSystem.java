@@ -29,6 +29,8 @@ import java.util.Map;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.vfs2.FileContent;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
@@ -49,6 +51,9 @@ import org.apache.commons.vfs2.provider.UriParser;
  */
 public class VFSFileSystem extends DefaultFileSystem
 {
+    /** The logger. */
+    private final Log log = LogFactory.getLog(getClass());
+
     public VFSFileSystem()
     {
     }
@@ -344,7 +349,7 @@ public class VFSFileSystem extends DefaultFileSystem
         }
         catch (Exception ex)
         {
-            return;
+            log.warn("Cannot access property '" + key + "'! Ignoring.", ex);
         }
 
     }
