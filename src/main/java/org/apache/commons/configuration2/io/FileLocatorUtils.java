@@ -425,7 +425,7 @@ public final class FileLocatorUtils
      * name.
      *
      * @param basePath the base path
-     * @param fileName the file name
+     * @param fileName the file name (must not be <b>null</b>)
      * @return the file object (<b>null</b> if no file can be obtained)
      */
     static File getFile(String basePath, String fileName)
@@ -550,22 +550,17 @@ public final class FileLocatorUtils
      * {@code getURL()} does not seem to be a valid URL.
      *
      * @param basePath the base path
-     * @param fileName the file name
+     * @param fileName the file name (must not be <b>null</b>)
      * @return the resulting file
      */
     static File constructFile(String basePath, String fileName)
     {
         File file;
 
-        File absolute = null;
-        if (fileName != null)
+        File absolute = new File(fileName);
+        if (StringUtils.isEmpty(basePath) || absolute.isAbsolute())
         {
-            absolute = new File(fileName);
-        }
-
-        if (StringUtils.isEmpty(basePath) || (absolute != null && absolute.isAbsolute()))
-        {
-            file = new File(fileName);
+            file = absolute;
         }
         else
         {
