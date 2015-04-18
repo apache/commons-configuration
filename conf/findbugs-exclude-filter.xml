@@ -80,4 +80,18 @@
       <Class name="org.apache.commons.configuration2.plist.TokenMgrError" />
     </Or>
   </Match>
+
+  <!-- Reason: These classes are used only temporarily while executing XPATH
+       queries on configuration nodes. They are not intended to be serialized.
+  -->
+  <Match>
+    <Class name="org.apache.commons.configuration2.tree.xpath.ConfigurationNodePointer" />
+    <Field name="handler" />
+    <Bug pattern="SE_BAD_FIELD" />
+  </Match>
+  <Match>
+    <Class name="org.apache.commons.configuration2.tree.xpath.ConfigurationAttributePointer" />
+    <Field name="attributeResult" />
+    <Bug pattern="SE_BAD_FIELD" />
+  </Match>
 </FindBugsFilter>
