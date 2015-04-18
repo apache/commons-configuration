@@ -16,6 +16,7 @@
  */
 package org.apache.commons.configuration2.event;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,8 +44,11 @@ import java.util.Set;
  * @since 2.0
  * @param <T> the event associated with this type
  */
-public class EventType<T extends Event>
+public class EventType<T extends Event> implements Serializable
 {
+    /** Serial version UID. */
+    private static final long serialVersionUID = 20150416L;
+
     /** Constant for the format used by toString(). */
     private static final String FMT_TO_STRING = "%s [ %s ]";
 
