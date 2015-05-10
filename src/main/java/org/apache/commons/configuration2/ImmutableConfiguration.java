@@ -21,10 +21,7 @@ import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Properties;
-
-import org.apache.commons.configuration2.ex.ConversionException;
 
 /**
  * <p>The main interface for accessing configuration data in a read-only fashion.</p>
@@ -135,21 +132,18 @@ public interface ImmutableConfiguration
     Iterator<String> getKeys();
 
     /**
-     * Get a list of properties associated with the given configuration key.
-     * This method expects the given key to have an arbitrary number of String
-     * values, each of which is of the form {@code key=value}. These
-     * strings are split at the equals sign, and the key parts will become
-     * keys of the returned {@code Properties} object, the value parts
-     * become values.
+     * Get a list of properties associated with the given configuration key. This method
+     * expects the given key to have an arbitrary number of String values, each of which
+     * is of the form {@code key=value}. These strings are split at the equals sign, and
+     * the key parts will become keys of the returned {@code Properties} object, the value
+     * parts become values.
      *
      * @param key The configuration key.
      * @return The associated properties if key is found.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a String/List.
-     *
-     * @throws IllegalArgumentException if one of the tokens is
-     *         malformed (does not contain an equals sign).
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a String/List.
+     * @throws IllegalArgumentException if one of the tokens is malformed (does not contain
+     * an equals sign).
      */
     Properties getProperties(String key);
 
@@ -158,23 +152,20 @@ public interface ImmutableConfiguration
      *
      * @param key The configuration key.
      * @return The associated boolean.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Boolean.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Boolean.
      */
     boolean getBoolean(String key);
 
     /**
-     * Get a boolean associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
+     * Get a boolean associated with the given configuration key. If the key doesn't map
+     * to an existing object, the default value is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated boolean.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Boolean.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Boolean.
      */
     boolean getBoolean(String key, boolean defaultValue);
 
@@ -183,11 +174,10 @@ public interface ImmutableConfiguration
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
-     * @return The associated boolean if key is found and has valid
-     *         format, default value otherwise.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Boolean.
+     * @return The associated boolean if key is found and has valid format, default value
+     * otherwise.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Boolean.
      */
     Boolean getBoolean(String key, Boolean defaultValue);
 
@@ -196,23 +186,20 @@ public interface ImmutableConfiguration
      *
      * @param key The configuration key.
      * @return The associated byte.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Byte.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Byte.
      */
     byte getByte(String key);
 
     /**
-     * Get a byte associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
+     * Get a byte associated with the given configuration key. If the key doesn't map to
+     * an existing object, the default value is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated byte.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Byte.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Byte.
      */
     byte getByte(String key, byte defaultValue);
 
@@ -221,11 +208,10 @@ public interface ImmutableConfiguration
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
-     * @return The associated byte if key is found and has valid format, default
-     *         value otherwise.
-     *
-     * @throws ConversionException is thrown if the key maps to an object that
-     *         is not a Byte.
+     * @return The associated byte if key is found and has valid format, default value
+     * otherwise.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Byte.
      */
     Byte getByte(String key, Byte defaultValue);
 
@@ -234,23 +220,20 @@ public interface ImmutableConfiguration
      *
      * @param key The configuration key.
      * @return The associated double.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Double.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Double.
      */
     double getDouble(String key);
 
     /**
-     * Get a double associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
+     * Get a double associated with the given configuration key. If the key doesn't map to
+     * an existing object, the default value is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated double.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Double.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Double.
      */
     double getDouble(String key, double defaultValue);
 
@@ -259,11 +242,10 @@ public interface ImmutableConfiguration
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
-     * @return The associated double if key is found and has valid
-     *         format, default value otherwise.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Double.
+     * @return The associated double if key is found and has valid format, default value
+     * otherwise.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Double.
      */
     Double getDouble(String key, Double defaultValue);
 
@@ -272,37 +254,33 @@ public interface ImmutableConfiguration
      *
      * @param key The configuration key.
      * @return The associated float.
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Float.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Float.
      */
     float getFloat(String key);
 
     /**
-     * Get a float associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
+     * Get a float associated with the given configuration key. If the key doesn't map to
+     * an existing object, the default value is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated float.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Float.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Float.
      */
     float getFloat(String key, float defaultValue);
 
     /**
-     * Get a {@link Float} associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
+     * Get a {@link Float} associated with the given configuration key. If the key doesn't
+     * map to an existing object, the default value is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
-     * @return The associated float if key is found and has valid
-     *         format, default value otherwise.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Float.
+     * @return The associated float if key is found and has valid format, default value
+     * otherwise.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Float.
      */
     Float getFloat(String key, Float defaultValue);
 
@@ -311,38 +289,33 @@ public interface ImmutableConfiguration
      *
      * @param key The configuration key.
      * @return The associated int.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Integer.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Integer.
      */
     int getInt(String key);
 
     /**
-     * Get a int associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
+     * Get a int associated with the given configuration key. If the key doesn't map to an
+     * existing object, the default value is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated int.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Integer.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Integer.
      */
     int getInt(String key, int defaultValue);
 
     /**
-     * Get an {@link Integer} associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
+     * Get an {@link Integer} associated with the given configuration key. If the key
+     * doesn't map to an existing object, the default value is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
-     * @return The associated int if key is found and has valid format, default
-     *         value otherwise.
-     *
-     * @throws ConversionException is thrown if the key maps to an object that
-     *         is not a Integer.
+     * @return The associated int if key is found and has valid format, default value
+     * otherwise.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Integer.
      */
     Integer getInteger(String key, Integer defaultValue);
 
@@ -351,9 +324,8 @@ public interface ImmutableConfiguration
      *
      * @param key The configuration key.
      * @return The associated long.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Long.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Long.
      */
     long getLong(String key);
 
@@ -366,7 +338,7 @@ public interface ImmutableConfiguration
      * @param defaultValue The default value.
      * @return The associated long.
      *
-     * @throws ConversionException is thrown if the key maps to an
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
      *         object that is not a Long.
      */
     long getLong(String key, long defaultValue);
@@ -381,7 +353,7 @@ public interface ImmutableConfiguration
      * @return The associated long if key is found and has valid
      * format, default value otherwise.
      *
-     * @throws ConversionException is thrown if the key maps to an
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
      *         object that is not a Long.
      */
     Long getLong(String key, Long defaultValue);
@@ -392,7 +364,7 @@ public interface ImmutableConfiguration
      * @param key The configuration key.
      * @return The associated short.
      *
-     * @throws ConversionException is thrown if the key maps to an
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
      *         object that is not a Short.
      */
     short getShort(String key);
@@ -404,7 +376,7 @@ public interface ImmutableConfiguration
      * @param defaultValue The default value.
      * @return The associated short.
      *
-     * @throws ConversionException is thrown if the key maps to an
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
      *         object that is not a Short.
      */
     short getShort(String key, short defaultValue);
@@ -419,7 +391,7 @@ public interface ImmutableConfiguration
      * @return The associated short if key is found and has valid
      *         format, default value otherwise.
      *
-     * @throws ConversionException is thrown if the key maps to an
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
      *         object that is not a Short.
      */
     Short getShort(String key, Short defaultValue);
@@ -473,7 +445,7 @@ public interface ImmutableConfiguration
      * @param key The configuration key.
      * @return The associated string.
      *
-     * @throws ConversionException is thrown if the key maps to an object that
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
      *         is not a String.
      */
     String getString(String key);
@@ -488,7 +460,7 @@ public interface ImmutableConfiguration
      * @return The associated string if key is found and has valid
      *         format, default value otherwise.
      *
-     * @throws ConversionException is thrown if the key maps to an object that
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
      *         is not a String.
      */
     String getString(String key, String defaultValue);
@@ -530,7 +502,7 @@ public interface ImmutableConfiguration
      * @param key The configuration key.
      * @return The associated string array if key is found.
      *
-     * @throws ConversionException is thrown if the key maps to an
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
      *         object that is not a String/List of Strings.
      */
     String[] getStringArray(String key);
@@ -548,7 +520,7 @@ public interface ImmutableConfiguration
      * @param key The configuration key.
      * @return The associated List.
      *
-     * @throws ConversionException is thrown if the key maps to an
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
      *         object that is not a List.
      */
     List<Object> getList(String key);
@@ -562,7 +534,7 @@ public interface ImmutableConfiguration
      * @param defaultValue The default value.
      * @return The associated List of strings.
      *
-     * @throws ConversionException is thrown if the key maps to an
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
      *         object that is not a List.
      * @see #getList(Class, String, List)
      */
@@ -579,9 +551,9 @@ public interface ImmutableConfiguration
      * @param cls the target class of the value
      * @param key the key of the value
      * @return the value of the requested type for the key
-     * @throws NoSuchElementException if the key doesn't map to an existing
+     * @throws java.util.NoSuchElementException if the key doesn't map to an existing
      *         object and {@code throwExceptionOnMissing=true}
-     * @throws ConversionException if the value is not compatible with the
+     * @throws org.apache.commons.configuration2.ex.ConversionException if the value is not compatible with the
      *         requested type
      * @since 2.0
      */
@@ -599,7 +571,8 @@ public interface ImmutableConfiguration
      *
      * @return the value of the requested type for the key
      *
-     * @throws ConversionException if the value is not compatible with the requested type
+     * @throws org.apache.commons.configuration2.ex.ConversionException if the value is not
+     * compatible with the requested type
      *
      * @since 2.0
      */
@@ -613,7 +586,7 @@ public interface ImmutableConfiguration
      * @param key The configuration key.
      * @return The associated array if the key is found, and the value compatible with the type specified.
      *
-     * @throws ConversionException is thrown if the key maps to an object that
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
      *     is not compatible with a list of the specified class.
      *
      * @since 2.0
@@ -629,7 +602,7 @@ public interface ImmutableConfiguration
      * @param defaultValue the default value
      * @return The associated array if the key is found, and the value compatible with the type specified.
      *
-     * @throws ConversionException is thrown if the key maps to an object that
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
      *     is not compatible with an array of the specified class.
      * @throws IllegalArgumentException if the default value is not an array of the specified type
      *
@@ -646,7 +619,7 @@ public interface ImmutableConfiguration
      * @param key The configuration key.
      * @return The associated list if the key is found.
      *
-     * @throws ConversionException is thrown if the key maps to an object that
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
      *     is not compatible with a list of the specified class.
      *
      * @since 2.0
@@ -668,7 +641,7 @@ public interface ImmutableConfiguration
      * @param defaultValue the default value.
      * @return The associated List.
      *
-     * @throws ConversionException is thrown if the key maps to an object that
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
      *     is not compatible with a list of the specified class.
      *
      * @since 2.0
@@ -686,7 +659,7 @@ public interface ImmutableConfiguration
      * @param key the configuration key
      * @param target the target collection (may be <b>null</b>)
      * @return the collection to which data was added
-     * @throws ConversionException if the conversion is not possible
+     * @throws org.apache.commons.configuration2.ex.ConversionException if the conversion is not possible
      * @since 2.0
      */
     <T> Collection<T> getCollection(Class<T> cls, String key,
@@ -717,7 +690,7 @@ public interface ImmutableConfiguration
      * @param target the target collection (may be <b>null</b>)
      * @param defaultValue the default value (may be <b>null</b>)
      * @return the collection to which data was added
-     * @throws ConversionException if the conversion is not possible
+     * @throws org.apache.commons.configuration2.ex.ConversionException if the conversion is not possible
      * @since 2.0
      */
     <T> Collection<T> getCollection(Class<T> cls, String key,
