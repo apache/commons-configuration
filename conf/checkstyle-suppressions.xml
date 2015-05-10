@@ -36,4 +36,9 @@
       lines="1074-1107"/>
 
     <suppress files="FileUtils\.java" checks="[a-zA-Z0-9]*"/>
+
+    <!-- There is an import for an exception class which is used in the
+         Javadoc for almost every method.
+    -->
+    <suppress checks="UnusedImports" files="DataConfiguration"/>
 </suppressions>
