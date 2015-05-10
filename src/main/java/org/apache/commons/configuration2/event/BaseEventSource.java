@@ -265,6 +265,7 @@ public class BaseEventSource implements EventSource
      * @param propertyValue the value of the affected property (can be
      *        <b>null</b>)
      * @param cause the {@code Throwable} object that caused this error event
+     * @param <T> the event type
      */
     public <T extends ConfigurationErrorEvent> void fireError(
             EventType<T> eventType, EventType<?> operationType,
