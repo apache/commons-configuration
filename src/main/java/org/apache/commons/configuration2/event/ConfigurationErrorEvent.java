@@ -53,11 +53,6 @@ package org.apache.commons.configuration2.event;
 public class ConfigurationErrorEvent extends Event
 {
     /**
-     * The serial version UID.
-     */
-    private static final long serialVersionUID = 20140712L;
-
-    /**
      * Constant for the common event type for all error events. Specific types
      * for error events use this type as super type.
      *
@@ -85,6 +80,11 @@ public class ConfigurationErrorEvent extends Event
      */
     public static final EventType<ConfigurationErrorEvent> WRITE =
             new EventType<ConfigurationErrorEvent>(ANY, "WRITE_ERROR");
+
+    /**
+     * The serial version UID.
+     */
+    private static final long serialVersionUID = 20140712L;
 
     /** The event type of the operation which caused this error. */
     private final EventType<?> errorOperationType;
