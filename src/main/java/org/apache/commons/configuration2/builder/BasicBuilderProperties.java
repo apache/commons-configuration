@@ -19,7 +19,6 @@ package org.apache.commons.configuration2.builder;
 import java.util.Collection;
 import java.util.Map;
 
-import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.ConfigurationDecoder;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.convert.ConversionHandler;
@@ -78,13 +77,13 @@ public interface BasicBuilderProperties<T>
     /**
      * Sets the value of the <em>listDelimiterHandler</em> property. This
      * property defines the object responsible for dealing with list delimiter
-     * and escaping characters. Note: {@link AbstractConfiguration} does not
-     * allow setting this property to <b>null</b>. If the default
+     * and escaping characters. Note:
+     * {@link org.apache.commons.configuration2.AbstractConfiguration AbstractConfiguration}
+     * does not allow setting this property to <b>null</b>. If the default
      * {@code ListDelimiterHandler} is to be used, do not call this method.
      *
      * @param handler the {@code ListDelimiterHandler}
      * @return a reference to this object for method chaining
-     * @see AbstractConfiguration#setListDelimiterHandler(ListDelimiterHandler)
      */
     T setListDelimiterHandler(ListDelimiterHandler handler);
 
