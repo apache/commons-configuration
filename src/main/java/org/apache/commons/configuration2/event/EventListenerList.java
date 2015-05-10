@@ -113,6 +113,7 @@ public class EventListenerList
      *
      * @param eventType the event type
      * @param listener the event listener to be removed
+     * @param <T> the type of events processed by this listener
      * @return a flag whether a listener registration was removed
      */
     public <T extends Event> boolean removeEventListener(
@@ -304,7 +305,7 @@ public class EventListenerList
      *
      * @param <T> the event type
      */
-    public static class EventListenerIterator<T extends Event> implements
+    public static final class EventListenerIterator<T extends Event> implements
             Iterator<EventListener<? super T>>
     {
         /** The underlying iterator. */
