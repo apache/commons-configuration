@@ -21,7 +21,6 @@ import java.util.Map;
 import org.apache.commons.configuration2.FileBasedConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
-import org.apache.commons.configuration2.reloading.FileHandlerReloadingDetector;
 import org.apache.commons.configuration2.reloading.ReloadingController;
 import org.apache.commons.configuration2.reloading.ReloadingControllerSupport;
 import org.apache.commons.configuration2.reloading.ReloadingDetector;
@@ -35,7 +34,7 @@ import org.apache.commons.configuration2.reloading.ReloadingDetector;
  * This builder class exposes a {@link ReloadingController} object controlling
  * reload operations on the file-based configuration produced as result object.
  * For the {@code FileHandler} defining the location of the configuration a
- * {@link FileHandlerReloadingDetector} is created and associated with the
+ * configurable {@link ReloadingDetector} is created and associated with the
  * controller. So changes on the source file can be detected. When ever such a
  * change occurs, the result object of this builder is reset. This means that
  * the next time {@code getConfiguration()} is called a new
