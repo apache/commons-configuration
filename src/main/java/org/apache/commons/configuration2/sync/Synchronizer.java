@@ -16,14 +16,13 @@
  */
 package org.apache.commons.configuration2.sync;
 
-import org.apache.commons.configuration2.AbstractConfiguration;
-
 /**
  * <p>
  * An interface controlling synchronization of configuration instances.
  * </p>
  * <p>
- * Each {@code Configuration} object derived from {@link AbstractConfiguration}
+ * Each {@code Configuration} object derived from
+ * {@link org.apache.commons.configuration2.AbstractConfiguration AbstractConfiguration}
  * has an associated {@code Synchronizer} object. Before an operation on the
  * configuration is performed (e.g. a property read or an update), the
  * {@code Synchronizer} is invoked. Depending on the concrete implementation of
