@@ -114,7 +114,8 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
             new EventListener<ConfigurationBuilderEvent>()
             {
                 @Override
-                public void onEvent(ConfigurationBuilderEvent event) {
+                public void onEvent(ConfigurationBuilderEvent event)
+                {
                     handleManagedBuilderEvent(event);
                 }
             };
