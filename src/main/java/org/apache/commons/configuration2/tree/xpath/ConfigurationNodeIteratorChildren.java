@@ -34,6 +34,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @since 1.3
  * @version $Id$
+ * @param <T> the type of the nodes this iterator deals with
  */
 class ConfigurationNodeIteratorChildren<T> extends
         ConfigurationNodeIteratorBase<T>
@@ -202,9 +203,9 @@ class ConfigurationNodeIteratorChildren<T> extends
     private int findStartIndex(List<T> children, T startNode)
     {
         int index = 0;
-        for(T child : children)
+        for (T child : children)
         {
-            if(child == startNode)
+            if (child == startNode)
             {
                 return index;
             }
