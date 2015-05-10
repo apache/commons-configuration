@@ -21,7 +21,6 @@ import java.util.Map;
 import org.apache.commons.configuration2.ConfigurationUtils;
 import org.apache.commons.configuration2.builder.BasicBuilderParameters;
 import org.apache.commons.configuration2.builder.BuilderParameters;
-import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 
 /**
  * <p>
@@ -34,7 +33,8 @@ import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
  * file-based builder for this purpose. Therefore, parameters inherited from the
  * super class are treated differently:
  * <ul>
- * <li>The {@link ConfigurationInterpolator} is needed by a
+ * <li>The {@link org.apache.commons.configuration2.interpol.ConfigurationInterpolator
+ * ConfigurationInterpolator} is needed by a
  * {@code MultiFileConfigurationBuilder} to resolve the file pattern. It is
  * expected to be set and will not be passed to sub configurations created by
  * the builder.</li>
