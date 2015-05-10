@@ -109,11 +109,13 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * {@code NodeHandler} interface itself. So this implementation just returns
      * the <strong>this</strong> reference.
      */
+    @Override
     public NodeHandler<ImmutableNode> getNodeHandler()
     {
         return getReferenceNodeHandler();
     }
 
+    @Override
     public void addProperty(String key, Iterable<?> values,
             NodeKeyResolver<ImmutableNode> resolver)
     {
@@ -130,6 +132,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param key the key
      * @param selector the {@code NodeSelector} defining the root node (or
      *        <b>null</b>)
+     * @param values the values to be added
      * @param resolver the {@code NodeKeyResolver}
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
@@ -141,6 +144,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         {
             updateModel(new TransactionInitializer()
             {
+                @Override
                 public boolean initTransaction(ModelTransaction tx)
                 {
                     initializeAddTransaction(tx, key, values, resolver);
@@ -150,6 +154,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         }
     }
 
+    @Override
     public void addNodes(String key, Collection<? extends ImmutableNode> nodes,
             NodeKeyResolver<ImmutableNode> resolver)
     {
@@ -178,6 +183,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         {
             updateModel(new TransactionInitializer()
             {
+                @Override
                 public boolean initTransaction(ModelTransaction tx)
                 {
                     List<QueryResult<ImmutableNode>> results =
@@ -213,6 +219,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         }
     }
 
+    @Override
     public void setProperty(String key, Object value,
             NodeKeyResolver<ImmutableNode> resolver)
     {
@@ -238,6 +245,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     {
         updateModel(new TransactionInitializer()
         {
+            @Override
             public boolean initTransaction(ModelTransaction tx)
             {
                 boolean added = false;
@@ -267,6 +275,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * removed, too. Return value is a collection with {@code QueryResult}
      * objects for the elements to be removed from the model.
      */
+    @Override
     public List<QueryResult<ImmutableNode>> clearTree(String key,
             NodeKeyResolver<ImmutableNode> resolver)
     {
@@ -294,6 +303,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                 new LinkedList<QueryResult<ImmutableNode>>();
         updateModel(new TransactionInitializer()
         {
+            @Override
             public boolean initTransaction(ModelTransaction tx)
             {
                 boolean changes = false;
@@ -334,6 +344,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * {@inheritDoc} If this operation leaves an affected node in an undefined
      * state, it is removed from the model.
      */
+    @Override
     public void clearProperty(String key,
             NodeKeyResolver<ImmutableNode> resolver)
     {
@@ -356,8 +367,11 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     public void clearProperty(final String key, NodeSelector selector,
             final NodeKeyResolver<ImmutableNode> resolver)
     {
-        updateModel(new TransactionInitializer() {
-            public boolean initTransaction(ModelTransaction tx) {
+        updateModel(new TransactionInitializer()
+        {
+            @Override
+            public boolean initTransaction(ModelTransaction tx)
+            {
                 List<QueryResult<ImmutableNode>> results =
                         resolver.resolveKey(tx.getQueryRoot(), key,
                                 tx.getCurrentData());
@@ -373,6 +387,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      *
      * @param resolver the {@code NodeKeyResolver}
      */
+    @Override
     public void clear(NodeKeyResolver<ImmutableNode> resolver)
     {
         ImmutableNode newRoot =
@@ -400,6 +415,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param newRoot the new root node to be set (can be <b>null</b>, then an
      *        empty root node is set)
      */
+    @Override
     public void setRootNode(ImmutableNode newRoot)
     {
         structure.set(createTreeData(initialRootNode(newRoot), structure.get()));
@@ -799,6 +815,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         NodeTreeWalker.INSTANCE.walkBFS(root,
                 new ConfigurationNodeVisitorAdapter<ImmutableNode>()
                 {
+                    @Override
                     public void visitBeforeChildren(ImmutableNode node,
                             NodeHandler<ImmutableNode> handler)
                     {
@@ -1383,7 +1400,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * {@code TreeData} is attempted. If this fails - because another update
      * came across -, the whole operation has to be tried anew.
      */
-    private static interface TransactionInitializer
+    private interface TransactionInitializer
     {
         /**
          * Initializes the specified transaction for an update operation. The
