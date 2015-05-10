@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.convert.ValueTransformer;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
@@ -84,7 +83,9 @@ import org.apache.commons.lang3.text.translate.UnicodeEscaper;
  *  <li>
  *   The list delimiter facilities provided by {@link AbstractConfiguration}
  *   are supported, too. If an appropriate {@link ListDelimiterHandler} is
- *   set (for instance a {@link DefaultListDelimiterHandler} object configured
+ *   set (for instance
+ *   a {@link org.apache.commons.configuration2.convert.DefaultListDelimiterHandler D
+ *   efaultListDelimiterHandler} object configured
  *   with a comma as delimiter character), <i>value</i> can contain <em>value
  *   delimiters</em> and will then be interpreted as a list of tokens. So the
  *   following property definition
@@ -893,8 +894,8 @@ public class PropertiesConfiguration extends BaseConfiguration
          * Commons Lang 3.
          */
         private static final CharSequenceTranslator ESCAPE_PROPERTIES =
-                new AggregateTranslator(new LookupTranslator(new String[][] {
-                    { "\\", "\\\\" }}),
+                new AggregateTranslator(new LookupTranslator(new String[][]{
+                    {"\\", "\\\\"}}),
                         new LookupTranslator(EntityArrays.JAVA_CTRL_CHARS_ESCAPE()),
                         UnicodeEscaper.outsideOf(32, 0x7f));
 

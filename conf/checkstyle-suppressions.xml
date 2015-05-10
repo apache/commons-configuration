@@ -31,5 +31,12 @@
     <suppress checks="DoubleCheckedLocking" files="DynamicCombinedConfiguration.java"
       lines="800-900"/>
 
+    <!-- There is an empty catch block ignoring unsupported operation exceptions
+         from the list delimiter handler. This is okay, then the property is
+         written out in multiple lines.
+    -->
+    <suppress checks="EmptyBlock" files="PropertiesConfiguration.java"
+      lines="1074-1107"/>
+
     <suppress files="FileUtils\.java" checks="[a-zA-Z0-9]*"/>
 </suppressions>
