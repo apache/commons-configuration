@@ -39,6 +39,7 @@ import org.apache.commons.configuration2.sync.LockMode;
 import org.apache.commons.configuration2.sync.NoOpSynchronizer;
 import org.apache.commons.configuration2.sync.Synchronizer;
 import org.apache.commons.configuration2.sync.SynchronizerSupport;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>
@@ -311,7 +312,8 @@ public class FileHandler
                 builder.fileName(name);
                 builder.sourceURL(null);
             }
-        }.update();
+        }
+        .update();
     }
 
     /**
@@ -363,7 +365,8 @@ public class FileHandler
                 builder.basePath(path);
                 builder.sourceURL(null);
             }
-        }.update();
+        }
+        .update();
     }
 
     /**
@@ -400,7 +403,8 @@ public class FileHandler
             {
                 builder.fileName(fileName).basePath(basePath).sourceURL(null);
             }
-        }.update();
+        }
+        .update();
     }
 
     /**
@@ -468,7 +472,8 @@ public class FileHandler
                 builder.sourceURL(url);
                 builder.basePath(null).fileName(null);
             }
-        }.update();
+        }
+        .update();
     }
 
     /**
@@ -529,7 +534,8 @@ public class FileHandler
             {
                 builder.basePath(null).fileName(null).sourceURL(null);
             }
-        }.update();
+        }
+        .update();
     }
 
     /**
@@ -559,7 +565,8 @@ public class FileHandler
             {
                 builder.encoding(encoding);
             }
-        }.update();
+        }
+        .update();
     }
 
     /**
@@ -590,7 +597,8 @@ public class FileHandler
             {
                 builder.fileSystem(fileSystem);
             }
-        }.update();
+        }
+        .update();
     }
 
     /**
@@ -634,7 +642,8 @@ public class FileHandler
                 builder.locationStrategy(strategy);
             }
 
-        }.update();
+        }
+        .update();
     }
 
     /**
@@ -1204,7 +1213,7 @@ public class FileHandler
         {
             out = FileLocatorUtils.obtainFileSystem(locator).getOutputStream(url);
             saveToStream(out, locator.getEncoding(), url);
-            if(out instanceof VerifiableOutputStream)
+            if (out instanceof VerifiableOutputStream)
             {
                 try
                 {
@@ -1468,7 +1477,7 @@ public class FileHandler
         }
         catch (IOException e)
         {
-            // ignore
+            LogFactory.getLog(FileHandler.class).warn("Exception when closing " + cl, e);
         }
     }
 
