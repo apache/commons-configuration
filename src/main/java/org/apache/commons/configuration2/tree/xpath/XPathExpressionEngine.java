@@ -192,13 +192,10 @@ public class XPathExpressionEngine implements ExpressionEngine
     }
 
     /**
-     * Executes a query. The passed in property key is directly passed to a
-     * JXPath context.
-     *
-     * @param root the configuration root node
-     * @param key the query to be executed
-     * @return a list with the nodes that are selected by the query
+     * {@inheritDoc} This implementation interprets the passed in key as an XPATH
+     * expression.
      */
+    @Override
     public <T> List<QueryResult<T>> query(T root, String key,
             NodeHandler<T> handler)
     {
@@ -228,6 +225,7 @@ public class XPathExpressionEngine implements ExpressionEngine
      * So all child nodes of a given parent with the same name have the same
      * key.
      */
+    @Override
     public <T> String nodeKey(T node, String parentKey, NodeHandler<T> handler)
     {
         if (parentKey == null)
@@ -257,6 +255,7 @@ public class XPathExpressionEngine implements ExpressionEngine
         }
     }
 
+    @Override
     public String attributeKey(String parentKey, String attributeName)
     {
         StringBuilder buf =
@@ -275,6 +274,7 @@ public class XPathExpressionEngine implements ExpressionEngine
      * {@inheritDoc} This implementation works similar to {@code nodeKey()}, but
      * always adds an index expression to the resulting key.
      */
+    @Override
     public <T> String canonicalKey(T node, String parentKey,
             NodeHandler<T> handler)
     {
@@ -301,6 +301,7 @@ public class XPathExpressionEngine implements ExpressionEngine
      * {@inheritDoc} The expected format of the passed in key is explained in
      * the class comment.
      */
+    @Override
     public <T> NodeAddData<T> prepareAdd(T root, String key,
             NodeHandler<T> handler)
     {
