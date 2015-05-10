@@ -51,7 +51,7 @@ public class SystemConfiguration extends MapConfiguration
      * just a short cut for {@code setSystemProperties(null, fileName)}.
      *
      * @param fileName The name of the property file.
-     * @throws Exception if an error occurs.
+     * @throws ConfigurationException if an error occurs.
      * @since 1.6
      */
     public static void setSystemProperties(String fileName)
@@ -111,7 +111,8 @@ public class SystemConfiguration extends MapConfiguration
      * these changes are not reflected by the iterator returned by this method.
      */
     @Override
-    protected Iterator<String> getKeysInternal() {
+    protected Iterator<String> getKeysInternal()
+    {
         return System.getProperties().stringPropertyNames().iterator();
     }
 }
