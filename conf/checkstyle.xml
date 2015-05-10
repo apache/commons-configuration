@@ -143,10 +143,8 @@
         <!-- Checks for common coding problems               -->
         <!-- See http://checkstyle.sf.net/config_coding.html -->
         <module name="CovariantEquals"/>
-        <module name="DoubleCheckedLocking"/>
         <module name="EqualsHashCode"/>
         <module name="IllegalInstantiation"/>
-        <module name="InnerAssignment"/>
         <module name="MagicNumber">
             <property name="ignoreNumbers" value="-1,0,1,2,3"/>
         </module>
