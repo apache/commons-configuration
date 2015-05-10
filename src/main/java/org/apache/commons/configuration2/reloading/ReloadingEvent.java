@@ -34,14 +34,14 @@ import org.apache.commons.configuration2.event.EventType;
  */
 public class ReloadingEvent extends Event
 {
+    /** The common event super type for all reloading events. */
+    public static final EventType<ReloadingEvent> ANY =
+            new EventType<ReloadingEvent>(Event.ANY, "RELOAD");
+
     /**
      * The serial version UID.
      */
     private static final long serialVersionUID = 20140701L;
-
-    /** The common event super type for all reloading events. */
-    public static final EventType<ReloadingEvent> ANY =
-            new EventType<ReloadingEvent>(Event.ANY, "RELOAD");
 
     /** Stores additional data about this event. */
     private final Object data;
