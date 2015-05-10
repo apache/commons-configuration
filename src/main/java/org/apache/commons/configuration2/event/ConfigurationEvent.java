@@ -73,11 +73,6 @@ package org.apache.commons.configuration2.event;
 public class ConfigurationEvent extends Event
 {
     /**
-     * The serial version UID.
-     */
-    private static final long serialVersionUID = 20140703L;
-
-    /**
      * Constant for the common super type of all configuration update events.
      *
      * @since 2.0
@@ -151,6 +146,11 @@ public class ConfigurationEvent extends Event
     public static final EventType<ConfigurationEvent> SUBNODE_CHANGED =
             new EventType<ConfigurationEvent>(ANY_HIERARCHICAL,
                     "SUBNODE_CHANGED");
+
+    /**
+     * The serial version UID.
+     */
+    private static final long serialVersionUID = 20140703L;
 
     /** Stores the property name. */
     private final String propertyName;
