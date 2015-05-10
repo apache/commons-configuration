@@ -198,8 +198,8 @@ public class DefaultBeanFactory implements BeanFactory
             BeanCreationContext bcc)
     {
         Class<?>[] types = ctor.getParameterTypes();
-        assert types.length == nullSafeConstructorArgs(bcc.getBeanDeclaration()).size() :
-            "Wrong number of constructor arguments!";
+        assert types.length == nullSafeConstructorArgs(bcc.getBeanDeclaration()).size()
+                : "Wrong number of constructor arguments!";
         Object[] args = new Object[types.length];
         int idx = 0;
 
