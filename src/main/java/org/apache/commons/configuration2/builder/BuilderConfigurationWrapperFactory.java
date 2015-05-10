@@ -23,7 +23,6 @@ import java.lang.reflect.Proxy;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationUtils;
 import org.apache.commons.configuration2.event.EventSource;
-import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 
 /**
  * <p>
@@ -87,9 +86,10 @@ public class BuilderConfigurationWrapperFactory
      *        <b>null</b>
      * @param builder the wrapped {@code ConfigurationBuilder} (must not be
      *        <b>null</b>)
+     * @return the wrapper configuration
      * @throws IllegalArgumentException if a required parameter is missing
-     * @throws ConfigurationRuntimeException if an error occurs when creating
-     *         the result {@code Configuration}
+     * @throws org.apache.commons.configuration2.ex.ConfigurationRuntimeException if an error
+     *         occurs when creating the result {@code Configuration}
      */
     public <T extends Configuration> T createBuilderConfigurationWrapper(
             Class<T> ifcClass, ConfigurationBuilder<? extends T> builder)
@@ -123,9 +123,10 @@ public class BuilderConfigurationWrapperFactory
      * @param builder the wrapped {@code ConfigurationBuilder} (must not be
      *        <b>null</b>)
      * @param evSrcSupport the level of {@code EventSource} support
+     * @return the wrapper configuration
      * @throws IllegalArgumentException if a required parameter is missing
-     * @throws ConfigurationRuntimeException if an error occurs when creating
-     *         the result {@code Configuration}
+     * @throws org.apache.commons.configuration2.ex.ConfigurationRuntimeException if an error
+     *         occurs when creating the result {@code Configuration}
      */
     public static <T extends Configuration> T createBuilderConfigurationWrapper(
             Class<T> ifcClass, ConfigurationBuilder<? extends T> builder,
@@ -186,7 +187,7 @@ public class BuilderConfigurationWrapperFactory
      * See the documentation of the single constants for more details.
      * </p>
      */
-    public static enum EventSourceSupport
+    public enum EventSourceSupport
     {
         /**
          * No support of the {@code EventSource} interface. If this option is
