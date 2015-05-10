@@ -42,7 +42,7 @@ import java.util.Map;
  * @version $Id$
  * @since 2.0
  */
-public class ImmutableNode
+public final class ImmutableNode
 {
     /** The name of this node. */
     private final String nodeName;
@@ -223,6 +223,7 @@ public class ImmutableNode
      *
      * @param newChildren the collection with the new children (may be
      *        <b>null</b>)
+     * @return the new node with replaced children
      */
     public ImmutableNode replaceChildren(Collection<ImmutableNode> newChildren)
     {
