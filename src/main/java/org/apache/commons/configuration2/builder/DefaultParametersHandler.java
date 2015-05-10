@@ -16,8 +16,6 @@
  */
 package org.apache.commons.configuration2.builder;
 
-import org.apache.commons.configuration2.builder.fluent.Parameters;
-
 /**
  * <p>
  * Definition of an interface for setting default values for specific
@@ -26,7 +24,8 @@ import org.apache.commons.configuration2.builder.fluent.Parameters;
  * <p>
  * An object implementing this interface knows how to initialize a parameters
  * object of a specific class with default values. Such objects can be
- * registered at the {@link Parameters} class. Whenever a specific parameters
+ * registered at the {@link org.apache.commons.configuration2.builder.fluent.Parameters
+ * Parameters} class. Whenever a specific parameters
  * object is created all registered {@code DefaultParametersHandler} objects
  * that can handle this parameters type are invoked, so that they get the chance
  * to perform arbitrary initialization.
@@ -34,6 +33,7 @@ import org.apache.commons.configuration2.builder.fluent.Parameters;
  *
  * @version $Id$
  * @since 2.0
+ * @param <T> the type of parameters supported by this handler
  */
 public interface DefaultParametersHandler<T>
 {
