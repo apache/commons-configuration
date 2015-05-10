@@ -23,7 +23,7 @@ import org.apache.commons.configuration2.reloading.ReloadingEvent;
 
 /**
  * <p>
- * An internally helper class for adding reloading support to an arbitrary
+ * An internally used helper class for adding reloading support to an arbitrary
  * {@link ConfigurationBuilder}.
  * </p>
  * <p>
@@ -44,7 +44,7 @@ import org.apache.commons.configuration2.reloading.ReloadingEvent;
  * @version $Id$
  * @since 2.0
  */
-class ReloadingBuilderSupportListener implements EventListener<Event>
+final class ReloadingBuilderSupportListener implements EventListener<Event>
 {
     /** Stores the associated configuration builder. */
     private final BasicConfigurationBuilder<?> builder;
