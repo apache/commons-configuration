@@ -478,7 +478,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      *         object
      * @throws ConfigurationException if an error occurs
      */
-    protected synchronized final BeanDeclaration getResultDeclaration()
+    protected final synchronized BeanDeclaration getResultDeclaration()
             throws ConfigurationException
     {
         if (resultDeclaration == null)
@@ -495,7 +495,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      *
      * @return a map with the current set of initialization parameters
      */
-    protected synchronized final Map<String, Object> getParameters()
+    protected final synchronized Map<String, Object> getParameters()
     {
         if (parameters != null)
         {
