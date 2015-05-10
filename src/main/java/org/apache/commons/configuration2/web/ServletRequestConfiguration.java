@@ -17,13 +17,12 @@
 
 package org.apache.commons.configuration2.web;
 
+import javax.servlet.ServletRequest;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.ServletRequest;
 
 /**
  * A configuration wrapper to read the parameters of a servlet request. This
@@ -66,7 +65,8 @@ public class ServletRequestConfiguration extends BaseWebConfiguration
         {
             // ensure that escape characters in all list elements are removed
             List<Object> result = new ArrayList<Object>(values.length);
-            for (String value : values) {
+            for (String value : values)
+            {
                 Object val = handleDelimiters(value);
                 if (val instanceof Collection)
                 {
