@@ -168,6 +168,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @param key the key to the bean declaration (this key must point to
      *        exactly one bean declaration or a {@code IllegalArgumentException}
      *        exception will be thrown)
+     * @param <T> the node type of the configuration
      * @throws IllegalArgumentException if required information is missing to
      *         construct the bean declaration
      */
@@ -185,6 +186,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @param optional a flag whether this declaration is optional; if set to
      *        <b>true</b>, no exception will be thrown if the passed in key is
      *        undefined
+     * @param <T> the node type of the configuration
      * @throws IllegalArgumentException if required information is missing to
      *         construct the bean declaration
      */
@@ -213,6 +215,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      *        <b>true</b>, no exception will be thrown if the passed in key is
      *        undefined
      * @param defBeanClsName a default bean class name
+     * @param <T> the node type of the configuration
      * @throws IllegalArgumentException if required information is missing to
      *         construct the bean declaration
      * @since 2.0
@@ -252,6 +255,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * node must contain the bean declaration.
      *
      * @param config the configuration with the bean declaration
+     * @param <T> the node type of the configuration
      */
     public <T> XMLBeanDeclaration(HierarchicalConfiguration<T> config)
     {
