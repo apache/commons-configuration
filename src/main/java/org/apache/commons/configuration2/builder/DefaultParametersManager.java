@@ -20,10 +20,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.commons.configuration2.builder.fluent.FileBasedBuilderParameters;
-import org.apache.commons.configuration2.builder.fluent.PropertiesBuilderParameters;
-import org.apache.commons.configuration2.builder.fluent.XMLBuilderParameters;
-
 /**
  * <p>
  * A class for managing a set of {@link DefaultParametersHandler} objects.
@@ -98,8 +94,10 @@ public class DefaultParametersManager
      * by the methods supported by the different parameter objects. A properties
      * parameter object for instance supports all methods defined for a
      * file-based parameter object. So one can argue that
-     * {@link FileBasedBuilderParameters} is a base interface of
-     * {@link PropertiesBuilderParameters} (although, for technical reasons,
+     * {@link org.apache.commons.configuration2.builder.fluent.FileBasedBuilderParameters
+     * FileBasedBuilderParameters} is a base interface of
+     * {@link org.apache.commons.configuration2.builder.fluent.PropertiesBuilderParameters
+     * PropertiesBuilderParameters} (although, for technical reasons,
      * this relation is not reflected in the Java classes). A
      * {@link DefaultParametersHandler} object defined for a base interface can
      * also deal with parameter objects "derived" from this base interface (i.e.
@@ -108,7 +106,8 @@ public class DefaultParametersManager
      * {@code DefaultParametersHandler} for a base interface (e.g.
      * {@code FileBasedBuilderParameters}), but it should only process specific
      * derived interfaces (say {@code PropertiesBuilderParameters}, but not
-     * {@link XMLBuilderParameters}). This can be achieved by passing in
+     * {@link org.apache.commons.configuration2.builder.fluent.XMLBuilderParameters
+     * XMLBuilderParameters}). This can be achieved by passing in
      * {@code PropertiesBuilderParameters} as start class. In this case,
      * {@code DefaultParametersManager} ensures that the handler is only called
      * on parameter objects having both the start class and the actual type
