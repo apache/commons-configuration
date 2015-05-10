@@ -41,4 +41,6 @@
          Javadoc for almost every method.
     -->
     <suppress checks="UnusedImports" files="DataConfiguration"/>
+    <suppress checks="UnusedImports" files="ConversionHandler"/>
+    <suppress checks="UnusedImports" files="DefaultConversionHandler"/>
 </suppressions>
