@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
-import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 
 /**
@@ -59,11 +57,13 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * <p>
  * The handling of list delimiters is a bit different for this configuration
  * implementation: When a property of type String is queried, it is passed to
- * the current {@link ListDelimiterHandler} which may generate multiple values.
+ * the current {@link org.apache.commons.configuration2.convert.ListDelimiterHandler
+ * ListDelimiterHandler} which may generate multiple values.
  * Note that per default a list delimiter handler is set which does not do any
  * list splitting, so this feature is disabled. It can be enabled by setting
  * a properly configured {@code ListDelimiterHandler} implementation, e.g. a
- * {@link DefaultListDelimiterHandler} object.
+ * {@link org.apache.commons.configuration2.convert.DefaultListDelimiterHandler
+ * DefaultListDelimiterHandler} object.
  * </p>
  * <p>
  * Notice that list splitting is only performed for single string values. If a
