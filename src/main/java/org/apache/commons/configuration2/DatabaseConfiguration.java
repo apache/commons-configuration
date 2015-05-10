@@ -398,7 +398,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 pstmt.executeUpdate();
                 return null;
             }
-        }.execute();
+        }
+        .execute();
     }
 
     /**
@@ -512,7 +513,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 ps.executeUpdate();
                 return null;
             }
-        }.execute();
+        }
+        .execute();
     }
 
     /**
@@ -535,7 +537,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
                         table), true).executeUpdate();
                 return null;
             }
-        }.execute();
+        }
+        .execute();
     }
 
     /**
@@ -567,7 +570,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 }
                 return keys;
             }
-        }.execute();
+        }
+        .execute();
 
         return keys.iterator();
     }
