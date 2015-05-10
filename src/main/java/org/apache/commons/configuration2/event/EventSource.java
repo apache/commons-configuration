@@ -56,6 +56,7 @@ public interface EventSource
      *
      * @param eventType the event type
      * @param listener the event listener to be removed
+     * @param <T> the type of events processed by this listener
      * @return a flag whether a listener registration was removed
      */
     <T extends Event> boolean removeEventListener(EventType<T> eventType,
