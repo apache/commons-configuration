@@ -37,6 +37,9 @@ package org.apache.commons.configuration2.event;
  */
 public final class EventListenerRegistrationData<T extends Event>
 {
+    /** Constant for the factor used by the calculation of the hash code. */
+    private static final int HASH_FACTOR = 31;
+
     /** The event type. */
     private final EventType<T> eventType;
 
@@ -91,7 +94,7 @@ public final class EventListenerRegistrationData<T extends Event>
     public int hashCode()
     {
         int result = eventType.hashCode();
-        result = 31 * result + listener.hashCode();
+        result = HASH_FACTOR * result + listener.hashCode();
         return result;
     }
 
