@@ -640,7 +640,7 @@ public final class BeanHelper
      * back to the provided {@code BeanHelper} instance (which is the instance
      * that created this object).
      */
-    private static class BeanCreationContextImpl implements BeanCreationContext
+    private static final class BeanCreationContextImpl implements BeanCreationContext
     {
         /** The association BeanHelper instance. */
         private final BeanHelper beanHelper;
