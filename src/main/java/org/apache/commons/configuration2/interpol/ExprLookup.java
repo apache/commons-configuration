@@ -219,7 +219,7 @@ public class ExprLookup implements Lookup
     @Override
     public String lookup(String var)
     {
-        if(substitutor == null)
+        if (substitutor == null)
         {
             return var;
         }
