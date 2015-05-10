@@ -69,7 +69,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * Stores the current configuration for each involved thread. This value is
      * set at the beginning of an operation and removed at the end.
      */
-    private static final ThreadLocal<CurrentConfigHolder> currentConfig =
+    private static final ThreadLocal<CurrentConfigHolder> CURRENT_CONFIG =
             new ThreadLocal<CurrentConfigHolder>();
 
     /** The CombinedConfigurations */
@@ -608,7 +608,8 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    protected int sizeInternal() {
+    protected int sizeInternal()
+    {
         return this.getCurrentConfig().size();
     }
 
@@ -806,7 +807,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         if (!optimize && cch.getCurrentConfiguration() == null)
         {
             // delegate to beginWrite() which creates the child configuration
-            beginWrite(optimize);
+            beginWrite(false);
             endWrite();
         }
 
@@ -841,7 +842,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     protected void endRead()
     {
-        currentConfig.get().getCurrentConfiguration().endRead();
+        CURRENT_CONFIG.get().getCurrentConfiguration().endRead();
         releaseLock();
     }
 
@@ -863,11 +864,11 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      */
     private void releaseLock()
     {
-        CurrentConfigHolder cch = currentConfig.get();
+        CurrentConfigHolder cch = CURRENT_CONFIG.get();
         assert cch != null : "No current configuration!";
-        if(cch.decrementLockCountAndCheckRelease())
+        if (cch.decrementLockCountAndCheckRelease())
         {
-            currentConfig.remove();
+            CURRENT_CONFIG.remove();
         }
     }
 
@@ -886,8 +887,8 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         beginRead(false);
         try
         {
-            config = currentConfig.get().getCurrentConfiguration();
-            key = currentConfig.get().getKey();
+            config = CURRENT_CONFIG.get().getCurrentConfiguration();
+            key = CURRENT_CONFIG.get().getKey();
         }
         finally
         {
@@ -949,7 +950,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      */
     private ConfigurationInterpolator initLocalInterpolator()
     {
-        ConfigurationInterpolator ci = new ConfigurationInterpolator()
+        return new ConfigurationInterpolator()
         {
             @Override
             protected Lookup fetchLookupForPrefix(String prefix)
@@ -959,7 +960,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
                                 prefix));
             }
         };
-        return ci;
     }
 
     /**
@@ -973,13 +973,13 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      */
     private CurrentConfigHolder ensureCurrentConfiguration()
     {
-        CurrentConfigHolder cch = currentConfig.get();
+        CurrentConfigHolder cch = CURRENT_CONFIG.get();
         if (cch == null)
         {
             String key = String.valueOf(localSubst.interpolate(keyPattern));
             cch = new CurrentConfigHolder(key);
             cch.setCurrentConfiguration(configs.get(key));
-            currentConfig.set(cch);
+            CURRENT_CONFIG.set(cch);
         }
         return cch;
     }
