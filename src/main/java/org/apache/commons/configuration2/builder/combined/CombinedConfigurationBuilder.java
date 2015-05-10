@@ -41,7 +41,6 @@ import org.apache.commons.configuration2.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration2.builder.BuilderParameters;
 import org.apache.commons.configuration2.builder.ConfigurationBuilder;
 import org.apache.commons.configuration2.builder.ConfigurationBuilderEvent;
-import org.apache.commons.configuration2.builder.DefaultParametersManager;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.FileBasedBuilderProperties;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
@@ -49,7 +48,6 @@ import org.apache.commons.configuration2.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.XMLBuilderProperties;
 import org.apache.commons.configuration2.event.EventListener;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.Lookup;
 import org.apache.commons.configuration2.io.FileSystem;
@@ -1001,7 +999,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         {
             initChildXMLParameters((XMLBuilderProperties<?>) params);
         }
-        if(params instanceof FileBasedBuilderProperties<?>)
+        if (params instanceof FileBasedBuilderProperties<?>)
         {
             initChildFileBasedParameters((FileBasedBuilderProperties<?>) params);
         }
@@ -1131,7 +1129,8 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
-     * Executes the {@link DefaultParametersManager} stored in the current
+     * Executes the {@link org.apache.commons.configuration2.builder.DefaultParametersManager
+     * DefaultParametersManager} stored in the current
      * parameters on the passed in parameters object. If default handlers have been
      * registered for this type of parameters, an initialization is now
      * performed. This method is called before the parameters object is
@@ -1139,8 +1138,8 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * can be overridden later with concrete property definitions.
      *
      * @param params the parameters to be initialized
-     * @throws ConfigurationRuntimeException if an error occurs when copying
-     *         properties
+     * @throws org.apache.commons.configuration2.ex.ConfigurationRuntimeException if an error
+     *         occurs when copying properties
      */
     private void initDefaultChildParameters(BuilderParameters params)
     {
@@ -1288,8 +1287,10 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                 new EventListener<ConfigurationBuilderEvent>()
                 {
             @Override
-            public void onEvent(ConfigurationBuilderEvent event) {
-                synchronized (CombinedConfigurationBuilder.this) {
+            public void onEvent(ConfigurationBuilderEvent event)
+            {
+                synchronized (CombinedConfigurationBuilder.this)
+                {
                     reset();
                     definitionBuilder = defBuilder;
                 }
@@ -1571,7 +1572,8 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             changeListener = new EventListener<ConfigurationBuilderEvent>()
             {
                 @Override
-                public void onEvent(ConfigurationBuilderEvent event) {
+                public void onEvent(ConfigurationBuilderEvent event)
+                {
                     resetResult();
                 }
             };
