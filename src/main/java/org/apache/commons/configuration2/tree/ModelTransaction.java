@@ -331,7 +331,8 @@ class ModelTransaction
      * Returns the current {@code TreeData} object this transaction operates on.
      * @return the associated {@code TreeData} object
      */
-    public TreeData getCurrentData() {
+    public TreeData getCurrentData()
+    {
         return currentData;
     }
 
