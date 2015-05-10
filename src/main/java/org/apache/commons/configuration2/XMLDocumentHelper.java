@@ -149,7 +149,8 @@ class XMLDocumentHelper
         }
         else
         {
-            pubID = sysID = null;
+            pubID = null;
+            sysID = null;
         }
 
         return new XMLDocumentHelper(copyDocument(srcDoc),
