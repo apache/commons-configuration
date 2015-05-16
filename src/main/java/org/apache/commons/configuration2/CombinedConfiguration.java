@@ -83,7 +83,6 @@ import org.apache.commons.configuration2.tree.UnionCombiner;
  * on the current {@link NodeCombiner} and the involved properties, the results
  * may be different than expected. Some examples may illustrate this:
  * </p>
- * <p>
  * <ul>
  * <li>Imagine a {@code CombinedConfiguration} <em>cc</em> containing two child
  * configurations with the following content:
@@ -151,6 +150,7 @@ import org.apache.commons.configuration2.tree.UnionCombiner;
  * when the {@code CombinedConfiguration} is re-constructed, this change is
  * taken into account.)</li>
  * </ul>
+ * <p>
  * Because of such problems it is recommended to perform updates only on the
  * managed child configurations.
  * </p>
