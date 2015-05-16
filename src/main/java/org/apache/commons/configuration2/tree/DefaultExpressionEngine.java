@@ -25,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * <p>
  * A default implementation of the {@code ExpressionEngine} interface
- * providing the &quot;native&quote; expression language for hierarchical
+ * providing the &quot;native&quot; expression language for hierarchical
  * configurations.
  * </p>
  * <p>
@@ -33,7 +33,6 @@ import org.apache.commons.lang3.StringUtils;
  * through a hierarchy of configuration nodes. It supports the following
  * operations:
  * </p>
- * <p>
  * <ul>
  * <li>Navigating from a node to one of its children using the child node
  * delimiter, which is by the default a dot (&quot;.&quot;).</li>
@@ -44,7 +43,6 @@ import org.apache.commons.lang3.StringUtils;
  * specific node can be selected using a numerical index. By default indices are
  * written in parenthesis.</li>
  * </ul>
- * </p>
  * <p>
  * As an example consider the following XML document:
  * </p>
@@ -81,7 +79,6 @@ import org.apache.commons.lang3.StringUtils;
  *  &lt;/database&gt;
  * </pre>
  *
- * </p>
  * <p>
  * If this document is parsed and stored in a hierarchical configuration object,
  * for instance the key {@code tables.table(0).name} can be used to find
@@ -265,7 +262,6 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * clarify this: Suppose the current node structure looks like the
      * following:
      * </p>
-     * <p>
      * <pre>
      *  tables
      *     +-- table
@@ -281,7 +277,6 @@ public class DefaultExpressionEngine implements ExpressionEngine
      *             +-- fields
      *                    ...
      * </pre>
-     * </p>
      * <p>
      * In this example a database structure is defined, e.g. all fields of the
      * first table could be accessed using the key
@@ -290,11 +285,9 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * hierarchy the new property is to be inserted. So to add a new field name
      * to a table it is not enough to say just
      * </p>
-     * <p>
      * <pre>
      * config.addProperty(&quot;tables.table.fields.field.name&quot;, &quot;newField&quot;);
      * </pre>
-     * </p>
      * <p>
      * The statement given above contains some ambiguity. For instance it is not
      * clear, to which table the new field should be added. If this method finds
@@ -316,21 +309,17 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * achieved by specifying an invalid index (like -1) after the element where
      * a new branch should be created. Given this our example would run:
      * </p>
-     * <p>
      * <pre>
      * config.addProperty(&quot;tables.table(1).fields.field(-1).name&quot;, &quot;newField&quot;);
      * </pre>
-     * </p>
      * <p>
      * With this notation it is possible to add new branches everywhere. We
      * could for instance create a new {@code table} element by
      * specifying
      * </p>
-     * <p>
      * <pre>
      * config.addProperty(&quot;tables.table(-1).fields.field.name&quot;, &quot;newField2&quot;);
      * </pre>
-     * </p>
      * <p>
      * (Note that because after the {@code table} element a new branch is
      * created indices in following elements are not relevant; the branch is new
