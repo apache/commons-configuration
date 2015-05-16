@@ -35,7 +35,6 @@ import java.util.List;
  * Sometimes it is not possible for this combiner to detect whether two nodes
  * can be combined or not. Consider the following two node hierarchies:
  * </p>
- * <p>
  *
  * <pre>
  * Hierarchy 1:
@@ -52,9 +51,6 @@ import java.util.List;
  *                     ...
  * </pre>
  *
- * </p>
- * <p>
- *
  * <pre>
  * Hierarchy 2:
  *
@@ -70,12 +66,11 @@ import java.util.List;
  *                     ...
  * </pre>
  *
- * </p>
  * <p>
  * Both hierarchies contain data about database tables. Each describes a single
  * table. If these hierarchies are to be combined, the result should probably
  * look like the following:
- * <p>
+ * </p>
  *
  * <pre>
  * Database
@@ -94,7 +89,6 @@ import java.util.List;
  *                     ...
  * </pre>
  *
- * </p>
  * <p>
  * i.e. the {@code Tables} nodes should be combined, while the
  * {@code Table} nodes should both be added to the resulting tree. From
@@ -177,7 +171,6 @@ public class UnionCombiner extends NodeCombiner
      * combination is possible. The actual implementation tests the following
      * conditions:
      * </p>
-     * <p>
      * <ul>
      * <li>In both the first and the second source node there is only one child
      * node with the given name (no list structures).</li>
@@ -185,7 +178,6 @@ public class UnionCombiner extends NodeCombiner
      * not passed to the {@code addListNode()} method.</li>
      * <li>None of these matching child nodes has a value.</li>
      * </ul>
-     * </p>
      * <p>
      * If all of these tests are successful, the matching child node of the
      * second source node is returned. Otherwise the result is <b>null</b>.
