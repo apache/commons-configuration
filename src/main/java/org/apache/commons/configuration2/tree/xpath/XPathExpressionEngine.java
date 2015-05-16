@@ -52,6 +52,7 @@ import org.apache.commons.lang3.StringUtils;
  * For adding new properties, this expression engine uses a specific syntax: the
  * &quot;key&quot; of a new property must consist of two parts that are
  * separated by whitespace:
+ * </p>
  * <ol>
  * <li>An XPATH expression selecting a single node, to which the new element(s)
  * are to be added. This can be an arbitrary complex expression, but it must
@@ -60,50 +61,43 @@ import org.apache.commons.lang3.StringUtils;
  * either a single node name or a complete path of nodes (separated by the
  * &quot;/&quot; character or &quot;@&quot; for an attribute) can be specified.</li>
  * </ol>
+ * <p>
  * Some examples for valid keys that can be passed into the configuration's
  * {@code addProperty()} method follow:
  * </p>
- * <p>
  *
  * <pre>
  * &quot;/tables/table[1] type&quot;
  * </pre>
  *
- * </p>
  * <p>
  * This will add a new {@code type} node as a child of the first {@code table}
  * element.
  * </p>
- * <p>
  *
  * <pre>
  * &quot;/tables/table[1] @type&quot;
  * </pre>
  *
- * </p>
  * <p>
  * Similar to the example above, but this time a new attribute named
  * {@code type} will be added to the first {@code table} element.
  * </p>
- * <p>
  *
  * <pre>
  * &quot;/tables table/fields/field/name&quot;
  * </pre>
  *
- * </p>
  * <p>
  * This example shows how a complex path can be added. Parent node is the
  * {@code tables} element. Here a new branch consisting of the nodes
  * {@code table}, {@code fields}, {@code field}, and {@code name} will be added.
  * </p>
- * <p>
  *
  * <pre>
  * &quot;/tables table/fields/field@type&quot;
  * </pre>
  *
- * </p>
  * <p>
  * This is similar to the last example, but in this case a complex path ending
  * with an attribute is defined.
@@ -119,11 +113,13 @@ import org.apache.commons.lang3.StringUtils;
  * delimiter). In this case the key is evaluated, and the biggest part pointing
  * to an existing node is determined. The remaining part is then added as new
  * path. As an example consider the key
+ * </p>
  *
  * <pre>
  * &quot;tables/table[last()]/fields/field/name&quot;
  * </pre>
  *
+ * <p>
  * If the key does not point to an existing node, the engine will check the
  * paths {@code "tables/table[last()]/fields/field"},
  * {@code "tables/table[last()]/fields"}, {@code "tables/table[last()]"}, and so
