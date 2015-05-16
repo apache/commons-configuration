@@ -35,6 +35,7 @@ import org.apache.commons.configuration2.event.EventType;
  * </p>
  * <p>
  * A typical usage scenario is as follows:
+ * </p>
  * <ul>
  * <li>A {@code ReloadingController} instance is created and initialized with a
  * {@link ReloadingDetector} object.</li>
@@ -55,7 +56,6 @@ import org.apache.commons.configuration2.event.EventType;
  * {@code checkForReloading()} will not do any new checks or send out event
  * notifications any more.</li>
  * </ul>
- * </p>
  * <p>
  * This class can be accessed from multiple threads concurrently. It shields the
  * associated {@link ReloadingDetector} object for concurrent access, so that a
