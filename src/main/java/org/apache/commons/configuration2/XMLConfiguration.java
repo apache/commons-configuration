@@ -94,7 +94,6 @@ import org.xml.sax.helpers.DefaultHandler;
  * The delimiter can be escaped by a backslash. As an example consider the
  * following XML fragment:
  * </p>
- * <p>
  *
  * <pre>
  * &lt;config&gt;
@@ -104,7 +103,6 @@ import org.xml.sax.helpers.DefaultHandler;
  * &lt;/config&gt;
  * </pre>
  *
- * </p>
  * <p>
  * Here the content of the {@code array} element will be split at the commas, so
  * the {@code array} key will be assigned 4 values. In the {@code scalar}
@@ -115,6 +113,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * The configuration API allows setting multiple values for a single attribute,
  * e.g. something like the following is legal (assuming that the default
  * expression engine is used):
+ * </p>
  *
  * <pre>
  * XMLConfiguration config = new XMLConfiguration();
@@ -122,6 +121,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * config.addProperty(&quot;test.dir[@name]&quot;, &quot;D:\\Data\\&quot;);
  * </pre>
  *
+ * <p>
  * However, in XML such a constellation is not supported; an attribute can
  * appear only once for a single element. Therefore, an attempt to save a
  * configuration which violates this condition will throw an exception.
@@ -141,23 +141,23 @@ import org.xml.sax.helpers.DefaultHandler;
  * cases this is desired. However, sometimes whitespace is indeed important and
  * should be treated as part of the value of a property as in the following
  * example:
- *
+ * </p>
  * <pre>
  *   &lt;indent&gt;    &lt;/indent&gt;
  * </pre>
  *
- * </p>
  * <p>
  * Per default the spaces in the {@code indent} element will be trimmed
  * resulting in an empty element. To tell {@code XMLConfiguration} that spaces
  * are relevant the {@code xml:space} attribute can be used, which is defined in
  * the <a href="http://www.w3.org/TR/REC-xml/#sec-white-space">XML
  * specification</a>. This will look as follows:
- *
+ * </p>
  * <pre>
  *   &lt;indent <strong>xml:space=&quot;preserve&quot;</strong>&gt;    &lt;/indent&gt;
  * </pre>
  *
+ * <p>
  * The value of the {@code indent} property will now contain the spaces.
  * </p>
  * <p>
