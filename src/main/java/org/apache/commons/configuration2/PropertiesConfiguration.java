@@ -63,7 +63,7 @@ import org.apache.commons.lang3.text.translate.UnicodeEscaper;
  *
  * <ul>
  *  <li>
- *   Each property has the syntax <code>key &lt;separator> value</code>. The
+ *   Each property has the syntax <code>key &lt;separator&gt; value</code>. The
  *   separators accepted are {@code '='}, {@code ':'} and any white
  *   space character. Examples:
  * <pre>
@@ -136,9 +136,9 @@ import org.apache.commons.lang3.text.translate.UnicodeEscaper;
  *  </li>
  * </ul>
  *
- * <p>Here is an example of a valid extended properties file:
+ * <p>Here is an example of a valid extended properties file:</p>
  *
- * <p><pre>
+ * <pre>
  *      # lines starting with # are comments
  *
  *      # This is the simplest property
@@ -286,7 +286,7 @@ public class PropertiesConfiguration extends BaseConfiguration
     }
 
     /**
-     * Controls whether additional files can be loaded by the include = <xxx>
+     * Controls whether additional files can be loaded by the {@code include = <xxx>}
      * statement or not. This is <b>true</b> per default.
      *
      * @param includesAllowed True if Includes are allowed.
