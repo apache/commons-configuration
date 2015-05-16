@@ -37,6 +37,7 @@ import java.util.List;
  * </p>
  * <p>
  * Information managed by this class contains:
+ * </p>
  * <ul>
  * <li>the configuration node, to which new elements must be added</li>
  * <li>the name of the new node</li>
@@ -44,7 +45,6 @@ import java.util.List;
  * <li>if a whole branch is to be added at once, the names of all nodes between
  * the parent node (the target of the add operation) and the new node</li>
  * </ul>
- * </p>
  *
  * @since 1.3
  * @version $Id$
