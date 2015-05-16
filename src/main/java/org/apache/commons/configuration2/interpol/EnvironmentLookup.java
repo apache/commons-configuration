@@ -23,15 +23,15 @@ package org.apache.commons.configuration2.interpol;
  * variables.
  * </p>
  * <p>
- * This implementation relies on {@link System.getenv()} to resolve
+ * This implementation relies on {@link System#getenv()} to resolve
  * environment variables. It can be used for referencing environment variables
  * in configuration files in an easy way, for instance:
+ * </p>
  *
  * <pre>
  * java.home = ${env:JAVA_HOME}
  * </pre>
  *
- * </p>
  * <p>
  * {@code EnvironmentLookup} is one of the standard lookups that is
  * registered per default for each configuration.
