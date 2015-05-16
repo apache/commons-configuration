@@ -57,7 +57,7 @@ import org.apache.commons.logging.impl.NoOpLog;
  * implement only abstract methods from this class. A lot of functionality
  * needed by typical implementations of the {@code Configuration}
  * interface is already provided by this base class. Following is a list of
- * features implemented here:
+ * features implemented here:</p>
  * <ul><li>Data conversion support. The various data types required by the
  * {@code Configuration} interface are already handled by this base class.
  * A concrete sub class only needs to provide a generic {@code getProperty()}
@@ -85,7 +85,7 @@ import org.apache.commons.logging.impl.NoOpLog;
  * constants to get an impression about which event types are supported.</li>
  * <li>Support for proper synchronization based on the {@link Synchronizer}
  * interface.</li>
- * </ul></p>
+ * </ul>
  * <p>
  * Most methods defined by the {@code Configuration} interface are already
  * implemented in this class. Many method implementations perform basic
