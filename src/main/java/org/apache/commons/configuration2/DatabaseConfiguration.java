@@ -51,8 +51,11 @@ import org.apache.commons.logging.LogFactory;
  * configuration. Such an object can be created using the {@code database()}
  * method of the {@code Parameters} class. See the examples below for more
  * details.
+ * </p>
  *
- * <h4>Example 1 - One configuration per table</h4>
+ * <p>
+ * <strong>Example 1 - One configuration per table</strong>
+ * </p>
  *
  * <pre>
  * CREATE TABLE myconfig (
@@ -62,8 +65,8 @@ import org.apache.commons.logging.LogFactory;
  *
  * INSERT INTO myconfig (key, value) VALUES ('foo', 'bar');
  *
- * BasicConfigurationBuilder<DatabaseConfiguration> builder =
- *     new BasicConfigurationBuilder<DatabaseConfiguration>(DatabaseConfiguration.class);
+ * BasicConfigurationBuilder&lt;DatabaseConfiguration&gt; builder =
+ *     new BasicConfigurationBuilder&lt;DatabaseConfiguration&gt;(DatabaseConfiguration.class);
  * builder.configure(
  *     Parameters.database()
  *         .setDataSource(dataSource)
@@ -75,7 +78,9 @@ import org.apache.commons.logging.LogFactory;
  * String value = config.getString("foo");
  * </pre>
  *
- * <h4>Example 2 - Multiple configurations per table</h4>
+ * <p>
+ * <strong>Example 2 - Multiple configurations per table</strong>
+ * </p>
  *
  * <pre>
  * CREATE TABLE myconfigs (
@@ -88,8 +93,8 @@ import org.apache.commons.logging.LogFactory;
  * INSERT INTO myconfigs (name, key, value) VALUES ('config1', 'key1', 'value1');
  * INSERT INTO myconfigs (name, key, value) VALUES ('config2', 'key2', 'value2');
  *
- * BasicConfigurationBuilder<DatabaseConfiguration> builder =
- *     new BasicConfigurationBuilder<DatabaseConfiguration>(DatabaseConfiguration.class);
+ * BasicConfigurationBuilder&lt;DatabaseConfiguration&gt; builder =
+ *     new BasicConfigurationBuilder&lt;DatabaseConfiguration&gt;(DatabaseConfiguration.class);
  * builder.configure(
  *     Parameters.database()
  *         .setDataSource(dataSource)
