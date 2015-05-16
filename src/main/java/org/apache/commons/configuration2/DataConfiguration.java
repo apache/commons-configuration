@@ -44,7 +44,7 @@ import org.apache.commons.lang3.StringUtils;
  *   <li>{@link java.util.Calendar}</li>
  *   <li>{@link java.awt.Color}</li>
  *   <li>{@link java.net.InetAddress}</li>
- *   <li>{@link javax.mail.internet.InternetAddress} (requires Javamail in the classpath)</li>
+ *   <li>{@code javax.mail.internet.InternetAddress} (requires Javamail in the classpath)</li>
  *   <li>{@link java.lang.Enum} (Java 5 enumeration types)</li>
  * </ul>
  *
@@ -54,7 +54,7 @@ import org.apache.commons.lang3.StringUtils;
  * {@code get()}, {@code getCollection()}, and {@code getArray()} methods are
  * used to actually perform data conversions.
  *
- * <h4>Example</h4>
+ * <p><strong>Example</strong></p>
  *
  * Configuration file {@code config.properties}:
  * <pre>
@@ -78,7 +78,7 @@ import org.apache.commons.lang3.StringUtils;
  * List contacts = config.getList(InternetAddress.class, "email.contact");
  * </pre>
  *
- * <h4>Dates</h4>
+ * <p><strong>Dates</strong></p>
  *
  * Date objects are expected to be formatted with the pattern {@code yyyy-MM-dd HH:mm:ss}.
  * This default format can be changed by specifying another format in the
