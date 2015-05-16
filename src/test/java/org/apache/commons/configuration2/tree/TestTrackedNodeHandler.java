@@ -69,10 +69,10 @@ public class TestTrackedNodeHandler
     @Test
     public void testGetParent()
     {
-        ImmutableNode node = EasyMock.createMock(ImmutableNode.class);
-        ImmutableNode parent = EasyMock.createMock(ImmutableNode.class);
+        ImmutableNode node = new ImmutableNode.Builder().name("node").create();
+        ImmutableNode parent = new ImmutableNode.Builder().name("parent").create();
         EasyMock.expect(parentHandler.getParent(node)).andReturn(parent);
-        EasyMock.replay(parentHandler, parent, node);
+        EasyMock.replay(parentHandler);
 
         assertSame("Wrong parent node", parent, handler.getParent(node));
         EasyMock.verify(parentHandler);
