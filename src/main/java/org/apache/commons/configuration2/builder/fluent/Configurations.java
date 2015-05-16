@@ -47,7 +47,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * An an example consider the creation of a {@code PropertiesConfiguration}
  * object from a file. Using a builder, code like the following one would have
  * to be written:
- *
+ * </p>
  * <pre>
  * Parameters params = new Parameters();
  * FileBasedConfigurationBuilder&lt;PropertiesConfiguration&gt; builder =
@@ -56,16 +56,16 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  *                 .setFile(new File(&quot;config.properties&quot;)));
  * PropertiesConfiguration config = builder.getConfiguration();
  * </pre>
- *
+ * <p>
  * With a convenience method of {@code Configurations} the same can be achieved
  * with the following:
- *
+ * </p>
  * <pre>
  * Configurations configurations = new Configurations();
  * PropertiesConfiguration config = configurations.properties(new File(
  *         &quot;config.properties&quot;));
  * </pre>
- *
+ * <p>
  * There are similar methods for constructing builder objects from which
  * configurations can then be obtained.
  * </p>
