@@ -34,11 +34,13 @@ import java.util.List;
  * the {@code java.util.Properties} class cannot have multiple occurrences of a
  * single property key, therefore a different storage scheme for multi-valued
  * properties is needed. A possible storage scheme could look as follows:
+ * </p>
  *
  * <pre>
  * myProperty=value1,value2,value3
  * </pre>
  *
+ * <p>
  * Here a comma is used as list delimiter. When parsing this property (and using
  * a corresponding {@code ListDelimiterHandler} implementation) the string value
  * is split, and three values are added for the property key.
