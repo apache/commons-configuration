@@ -30,6 +30,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * <p>
  * An instance of this class provides information for locating and accessing a
  * file. The file location can be defined
+ * </p>
  * <ul>
  * <li>as a URL; this identifies a file in a unique way</li>
  * <li>as a combination of base path and file name; if this variant is used,
@@ -37,12 +38,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * referenced file (for instance, the file name may be interpreted as the name
  * of a resource to be loaded from class path).</li>
  * </ul>
+ * <p>
  * In addition, other properties are available which are also needed for loading
  * or saving a file, like the underlying {@link FileSystem}. The encoding to be
  * used when accessing the represented data is also part of the data contained
  * in an instance; if no encoding is set explicitly, the platform's default
  * encoding is used.
- * </p>
  * <p>
  * Instances of this class are immutable and thus can be safely shared between
  * arbitrary components. {@link FileHandler} also uses an instance to reference
