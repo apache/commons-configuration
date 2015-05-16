@@ -31,13 +31,13 @@ import org.apache.commons.lang3.ObjectUtils;
  * </p>
  * <p>
  * This combiner performs the merge using a few rules:
+ * </p>
  * <ol>
  * <li>Nodes can be merged when attributes that appear in both have the same value.</li>
  * <li>Only a single node in the second file is considered a match to the node in the first file.</li>
  * <li>Attributes in nodes that match are merged.
  * <li>Nodes in both files that do not match are added to the result.</li>
  * </ol>
- * </p>
  *
  * @version $Id$
  * @since 1.7
