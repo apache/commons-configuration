@@ -70,7 +70,7 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * </pre>
  * <p>
  * The format of ini files is fairly straight forward and is composed of three
- * components:<br>
+ * components:</p>
  * <ul>
  * <li><b>Sections:</b> Ini files are split into sections, each section starting
  * with a section declaration. A section declaration starts with a '[' and ends
@@ -79,7 +79,6 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * have a typical {@code key = value} format.</li>
  * <li><b>Comments:</b> Lines starting with a ';' are assumed to be comments.</li>
  * </ul>
- * </p>
  * <p>
  * There are various implementations of the ini file format by various vendors
  * which has caused a number of differences to appear. As far as possible this
@@ -87,6 +86,7 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * </p>
  * <p>
  * Some of the differences supported are as follows:
+ * </p>
  * <ul>
  * <li><b>Comments:</b> The '#' character is also accepted as a comment
  * signifier.</li>
@@ -103,7 +103,6 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * sections; this configuration simply merges duplicates; if a section has a
  * duplicate parameter the values are then added to the key as a list.</li>
  * </ul>
- * </p>
  * <p>
  * Global parameters are also allowed; any parameters declared before a section
  * is declared are added to a global section. It is important to note that this
@@ -116,8 +115,7 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * behavior. Because this is a hierarchical configuration you can change this by
  * setting a different {@link org.apache.commons.configuration2.tree.ExpressionEngine}.)
  * </p>
- * <p>
- * <h3>Implementation Details:</h3> Consider the following ini file:<br>
+ * <h3>Implementation Details:</h3> Consider the following ini file:
  * <pre>
  *  default = ok
  *
@@ -147,9 +145,8 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  *  passwd : abc=def
  *  a:b = "value"
  *  </pre>
- * </p>
  * <p>
- * This ini file will be parsed without error. Note:
+ * This ini file will be parsed without error. Note:</p>
  * <ul>
  * <li>The parameter named "default" is added to the global section, it's value
  * is accessed simply using {@code getProperty("default")}.</li>
@@ -173,15 +170,15 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * character is used as separator. Thus the second property definition in the
  * section has the key {@code a:b} and the value {@code value}.</li>
  * </ul>
- * </p>
  * <p>
  * Internally, this configuration maps the content of the represented ini file
- * to its node structure in the following way:
+ * to its node structure in the following way:</p>
  * <ul>
  * <li>Sections are represented by direct child nodes of the root node.</li>
  * <li>For the content of a section, corresponding nodes are created as children
  * of the section node.</li>
  * </ul>
+ * <p>
  * This explains how the keys for the properties can be constructed. You can
  * also use other methods of {@link HierarchicalConfiguration} for querying or
  * manipulating the hierarchy of configuration nodes, for instance the
