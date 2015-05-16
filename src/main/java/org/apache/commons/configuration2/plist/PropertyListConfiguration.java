@@ -62,9 +62,9 @@ import org.apache.commons.lang3.StringUtils;
  *
  *     array = ( value1, value2, value3 );
  *
- *     data = &lt;4f3e0145ab>;
+ *     data = &lt;4f3e0145ab&gt;;
  *
- *     date = &lt;*D2007-05-05 20:05:00 +0100>;
+ *     date = &lt;*D2007-05-05 20:05:00 +0100&gt;;
  *
  *     nested =
  *     {
