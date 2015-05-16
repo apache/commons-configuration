@@ -52,6 +52,7 @@ import org.apache.commons.logging.LogFactory;
  * manage is passed in. Basically, this object is assigned a location from which
  * it is loaded and to which it can be saved. The following possibilities exist
  * to specify such a location:
+ * </p>
  * <ul>
  * <li>URLs: With the method {@code setURL()} a full URL to the configuration
  * source can be specified. This is the most flexible way. Note that the
@@ -66,7 +67,6 @@ import org.apache.commons.logging.LogFactory;
  * {@code setBasePath()} method. The file name, non surprisingly, defines the
  * name of the configuration file.</li>
  * </ul>
- * </p>
  * <p>
  * An instance stores a location. The {@code load()} and {@code save()} methods
  * that do not take an argument make use of this internal location.
@@ -84,6 +84,7 @@ import org.apache.commons.logging.LogFactory;
  * exist. So there may be some differences in the way location information is
  * interpreted by load and save operations. In order to avoid this, the
  * following approach is recommended:
+ * </p>
  * <ul>
  * <li>Use the desired {@code setXXX()} methods to define the location of the
  * file to be loaded.</li>
@@ -92,11 +93,11 @@ import org.apache.commons.logging.LogFactory;
  * <li>Later on, {@code save()} can be called. This method now has sufficient
  * information to store the file at the correct location.</li>
  * </ul>
- * </p>
  * <p>
  * When loading or saving a {@code FileBased} object some additional
  * functionality is performed if the object implements one of the following
  * interfaces:
+ * </p>
  * <ul>
  * <li>{@code FileLocatorAware}: In this case an object with the current file
  * location is injected before the load or save operation is executed. This is
@@ -109,7 +110,6 @@ import org.apache.commons.logging.LogFactory;
  * object it is not allowed to perform multiple save operations in parallel;
  * therefore, by obtaining a write lock, we are on the safe side.)</li>
  * </ul>
- * </p>
  * <p>
  * This class is thread-safe.
  * </p>
