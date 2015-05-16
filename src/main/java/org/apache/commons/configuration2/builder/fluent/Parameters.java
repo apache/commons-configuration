@@ -55,6 +55,7 @@ import org.apache.commons.configuration2.builder.combined.MultiFileBuilderParame
  * objects offering a truly fluent API. The methods provided can be called
  * directly when setting up a configuration builder as shown in the following
  * example code fragment:
+ * </p>
  *
  * <pre>
  * Parameters params = new Parameters();
@@ -63,7 +64,6 @@ import org.apache.commons.configuration2.builder.combined.MultiFileBuilderParame
  *         .setListDelimiter('#').setFileName(&quot;test.xml&quot;));
  * </pre>
  *
- * </p>
  * <p>
  * Using this class it is not only possible to create new parameters objects but
  * also to initialize the newly created objects with default values. This is
