@@ -90,7 +90,6 @@ import org.xml.sax.EntityResolver;
  * <p>
  * The configuration definition file has the following basic structure:
  * </p>
- * <p>
  *
  * <pre>
  * &lt;configuration systemProperties="properties file name"&gt;
@@ -106,7 +105,6 @@ import org.xml.sax.EntityResolver;
  * &lt;/configuration&gt;
  * </pre>
  *
- * </p>
  * <p>
  * The name of the root element (here {@code configuration}) is arbitrary. The
  * optional {@code systemProperties} attribute identifies the path to a property
@@ -133,8 +131,8 @@ import org.xml.sax.EntityResolver;
  * added. There are some reserved attributes with a special meaning that can be
  * used in every configuration declaration:
  * </p>
- * <p>
  * <table border="1">
+ * <caption>Standard attributes for configuration declarations</caption>
  * <tr>
  * <th>Attribute</th>
  * <th>Meaning</th>
@@ -163,7 +161,6 @@ import org.xml.sax.EntityResolver;
  * value of <strong>true</strong>.</td>
  * </tr>
  * </table>
- * </p>
  * <p>
  * The optional <em>header</em> section can contain some meta data about the
  * created configuration itself. For instance, it is possible to set further
@@ -183,22 +180,24 @@ import org.xml.sax.EntityResolver;
  * </p>
  * <p>
  * A custom EntityResolver can be used for all XMLConfigurations by adding
+ * </p>
  *
  * <pre>
  * &lt;entity-resolver config-class="EntityResolver fully qualified class name"&gt;
  * </pre>
  *
+ * <p>
  * A specific CatalogResolver can be specified for all XMLConfiguration sources
  * by adding
- *
+ * </p>
  * <pre>
  * &lt;entity-resolver catalogFiles="comma separated list of catalog files"&gt;
  * </pre>
  *
- * </p>
  * <p>
  * Additional ConfigurationProviders can be added by configuring them in the
  * <em>header</em> section.
+ * </p>
  *
  * <pre>
  * &lt;providers&gt;
@@ -206,10 +205,10 @@ import org.xml.sax.EntityResolver;
  * &lt;/providers&gt;
  * </pre>
  *
- * </p>
  * <p>
  * Additional variable resolvers can be added by configuring them in the
  * <em>header</em> section.
+ * </p>
  *
  * <pre>
  * &lt;lookups&gt;
@@ -217,7 +216,6 @@ import org.xml.sax.EntityResolver;
  * &lt;/lookups&gt;
  * </pre>
  *
- * </p>
  * <p>
  * All declared override configurations are directly added to the resulting
  * combined configuration. If they are given names (using the
