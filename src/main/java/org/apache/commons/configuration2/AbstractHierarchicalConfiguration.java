@@ -61,7 +61,6 @@ import org.apache.commons.configuration2.tree.QueryResult;
  * The hierarchical organization allows for a more sophisticated access to
  * single properties. As an example consider the following XML document:
  * </p>
- * <p>
  *
  * <pre>
  * &lt;database&gt;
@@ -95,7 +94,6 @@ import org.apache.commons.configuration2.tree.QueryResult;
  * &lt;/database&gt;
  * </pre>
  *
- * </p>
  * <p>
  * If this document is parsed and stored in a hierarchical configuration object
  * (which can be done by one of the sub classes), there are enhanced
@@ -135,6 +133,7 @@ import org.apache.commons.configuration2.tree.QueryResult;
  * configurations support some more events that correspond to some specific
  * methods and features. For those events specific event type constants in
  * {@code ConfigurationEvent} exist:
+ * </p>
  * <dl>
  * <dt><em>ADD_NODES</em></dt>
  * <dd>The {@code addNodes()} method was called; the event object contains the
@@ -148,7 +147,6 @@ import org.apache.commons.configuration2.tree.QueryResult;
  * has been changed. The value property of the event object contains the
  * original event object as it was sent by the subnode configuration.</dd>
  * </dl>
- * </p>
  * <p>
  * Whether an {@code AbstractHierarchicalConfiguration} object is thread-safe or
  * not depends on the underlying {@code NodeModel} and the
@@ -641,7 +639,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * Returns an iterator with all keys defined in this configuration.
      * Note that the keys returned by this method will not contain any
-     * indices. This means that some structure will be lost.</p>
+     * indices. This means that some structure will be lost.
      *
      * @return an iterator with the defined keys in this configuration
      */
