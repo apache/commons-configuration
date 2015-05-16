@@ -28,12 +28,12 @@ import org.apache.commons.lang3.text.StrLookup;
  * the Commons Lang project to resolve system properties. It can be used for
  * referencing system properties in configuration files in an easy way, for
  * instance:
+ * </p>
  *
  * <pre>
  * current.user = ${sys:user.name}
  * </pre>
  *
- * </p>
  * <p>
  * {@code SystemPropertiesLookup} is one of the standard lookups that is
  * registered per default for each configuration.
