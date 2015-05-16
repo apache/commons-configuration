@@ -322,7 +322,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      *
      * @param key the key
      * @param value the value
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException always thrown as this method is not supported
      */
     @Override
     protected void setPropertyInternal(String key, Object value)
@@ -439,7 +439,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      *
      * @param key the key
      * @param obj the value
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException always thrown as this method is not supported
      */
     @Override
     protected void addPropertyDirect(String key, Object obj)
