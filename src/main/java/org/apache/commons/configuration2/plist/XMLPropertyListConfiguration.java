@@ -66,59 +66,59 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * <p>Example:</p>
  * <pre>
- * &lt;?xml version="1.0"?>
- * &lt;!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
- * &lt;plist version="1.0">
- *     &lt;dict>
- *         &lt;key>string&lt;/key>
- *         &lt;string>value1&lt;/string>
+ * &lt;?xml version="1.0"?&gt;
+ * &lt;!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd"&gt;
+ * &lt;plist version="1.0"&gt;
+ *     &lt;dict&gt;
+ *         &lt;key&gt;string&lt;/key&gt;
+ *         &lt;string&gt;value1&lt;/string&gt;
  *
- *         &lt;key>integer&lt;/key>
- *         &lt;integer>12345&lt;/integer>
+ *         &lt;key&gt;integer&lt;/key&gt;
+ *         &lt;integer&gt;12345&lt;/integer&gt;
  *
- *         &lt;key>real&lt;/key>
- *         &lt;real>-123.45E-1&lt;/real>
+ *         &lt;key&gt;real&lt;/key&gt;
+ *         &lt;real&gt;-123.45E-1&lt;/real&gt;
  *
- *         &lt;key>boolean&lt;/key>
- *         &lt;true/>
+ *         &lt;key&gt;boolean&lt;/key&gt;
+ *         &lt;true/&gt;
  *
- *         &lt;key>date&lt;/key>
- *         &lt;date>2005-01-01T12:00:00Z&lt;/date>
+ *         &lt;key&gt;date&lt;/key&gt;
+ *         &lt;date&gt;2005-01-01T12:00:00Z&lt;/date&gt;
  *
- *         &lt;key>data&lt;/key>
- *         &lt;data>RHJhY28gRG9ybWllbnMgTnVucXVhbSBUaXRpbGxhbmR1cw==&lt;/data>
+ *         &lt;key&gt;data&lt;/key&gt;
+ *         &lt;data&gt;RHJhY28gRG9ybWllbnMgTnVucXVhbSBUaXRpbGxhbmR1cw==&lt;/data&gt;
  *
- *         &lt;key>array&lt;/key>
- *         &lt;array>
- *             &lt;string>value1&lt;/string>
- *             &lt;string>value2&lt;/string>
- *             &lt;string>value3&lt;/string>
- *         &lt;/array>
+ *         &lt;key&gt;array&lt;/key&gt;
+ *         &lt;array&gt;
+ *             &lt;string&gt;value1&lt;/string&gt;
+ *             &lt;string&gt;value2&lt;/string&gt;
+ *             &lt;string&gt;value3&lt;/string&gt;
+ *         &lt;/array&gt;
  *
- *         &lt;key>dictionnary&lt;/key>
- *         &lt;dict>
- *             &lt;key>key1&lt;/key>
- *             &lt;string>value1&lt;/string>
- *             &lt;key>key2&lt;/key>
- *             &lt;string>value2&lt;/string>
- *             &lt;key>key3&lt;/key>
- *             &lt;string>value3&lt;/string>
- *         &lt;/dict>
+ *         &lt;key&gt;dictionnary&lt;/key&gt;
+ *         &lt;dict&gt;
+ *             &lt;key&gt;key1&lt;/key&gt;
+ *             &lt;string&gt;value1&lt;/string&gt;
+ *             &lt;key&gt;key2&lt;/key&gt;
+ *             &lt;string&gt;value2&lt;/string&gt;
+ *             &lt;key&gt;key3&lt;/key&gt;
+ *             &lt;string&gt;value3&lt;/string&gt;
+ *         &lt;/dict&gt;
  *
- *         &lt;key>nested&lt;/key>
- *         &lt;dict>
- *             &lt;key>node1&lt;/key>
- *             &lt;dict>
- *                 &lt;key>node2&lt;/key>
- *                 &lt;dict>
- *                     &lt;key>node3&lt;/key>
- *                     &lt;string>value&lt;/string>
- *                 &lt;/dict>
- *             &lt;/dict>
- *         &lt;/dict>
+ *         &lt;key&gt;nested&lt;/key&gt;
+ *         &lt;dict&gt;
+ *             &lt;key&gt;node1&lt;/key&gt;
+ *             &lt;dict&gt;
+ *                 &lt;key&gt;node2&lt;/key&gt;
+ *                 &lt;dict&gt;
+ *                     &lt;key&gt;node3&lt;/key&gt;
+ *                     &lt;string&gt;value&lt;/string&gt;
+ *                 &lt;/dict&gt;
+ *             &lt;/dict&gt;
+ *         &lt;/dict&gt;
  *
- *     &lt;/dict>
- * &lt;/plist>
+ *     &lt;/dict&gt;
+ * &lt;/plist&gt;
  * </pre>
  *
  * @since 1.2

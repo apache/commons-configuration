@@ -17,14 +17,13 @@
 
 package org.apache.commons.configuration2;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -47,14 +46,14 @@ import org.xml.sax.helpers.DefaultHandler;
  * An XML properties file looks like this:
  *
  * <pre>
- * &lt;?xml version="1.0"?>
- * &lt;!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
- * &lt;properties>
- *   &lt;comment>Description of the property list&lt;/comment>
- *   &lt;entry key="key1">value1&lt;/entry>
- *   &lt;entry key="key2">value2&lt;/entry>
- *   &lt;entry key="key3">value3&lt;/entry>
- * &lt;/properties>
+ * &lt;?xml version="1.0"?&gt;
+ * &lt;!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd"&gt;
+ * &lt;properties&gt;
+ *   &lt;comment&gt;Description of the property list&lt;/comment&gt;
+ *   &lt;entry key="key1"&gt;value1&lt;/entry&gt;
+ *   &lt;entry key="key2"&gt;value2&lt;/entry&gt;
+ *   &lt;entry key="key3"&gt;value3&lt;/entry&gt;
+ * &lt;/properties&gt;
  * </pre>
  *
  * The Java 5.0 runtime is not required to use this class. The default encoding
