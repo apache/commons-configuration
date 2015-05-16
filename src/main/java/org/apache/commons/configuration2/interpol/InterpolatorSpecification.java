@@ -34,12 +34,12 @@ import java.util.Map;
  * {@code ConfigurationInterpolator} directly which can be used as is.
  * Alternatively, some or all properties of an instance to be newly created can
  * be set. These properties include
+ * </p>
  * <ul>
  * <li>a map with {@code Lookup} objects associated with a specific prefix</li>
  * <li>a collection with default {@code Lookup} objects (without a prefix)</li>
  * <li>a parent {@code ConfigurationInterpolator}</li>
  * </ul>
- * </p>
  * <p>
  * When setting up a configuration it is possible to define the
  * {@code ConfigurationInterpolator} in terms of this class. The configuration
@@ -132,7 +132,7 @@ public final class InterpolatorSpecification
     }
 
     /**
-     * <p<A <em>builder</em> class for creating instances of
+     * <p>A <em>builder</em> class for creating instances of
      * {@code InterpolatorSpecification}.</p>
      * <p>
      * This class provides a fluent API for defining the various properties of
