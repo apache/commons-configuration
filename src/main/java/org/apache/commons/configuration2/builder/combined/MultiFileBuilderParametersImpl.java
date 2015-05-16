@@ -32,6 +32,7 @@ import org.apache.commons.configuration2.builder.BuilderParameters;
  * because it does not create a configuration on its own, but delegates to a
  * file-based builder for this purpose. Therefore, parameters inherited from the
  * super class are treated differently:
+ * </p>
  * <ul>
  * <li>The {@link org.apache.commons.configuration2.interpol.ConfigurationInterpolator
  * ConfigurationInterpolator} is needed by a
@@ -44,7 +45,6 @@ import org.apache.commons.configuration2.builder.BuilderParameters;
  * properties of sub configurations in a single place. If such a parameters
  * object is set, its properties take precedence.</li>
  * </ul>
- * </p>
  * <p>
  * This class is not thread-safe. It is intended that an instance is constructed
  * and initialized by a single thread during configuration of a
