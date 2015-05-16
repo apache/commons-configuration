@@ -217,6 +217,7 @@ public class BaseEventSource implements EventSource
      * @param propName the name of the affected property (can be <b>null</b>)
      * @param propValue the value of the affected property (can be <b>null</b>)
      * @param before the before update flag
+     * @param <T> the type of the event to be fired
      */
     protected <T extends ConfigurationEvent> void fireEvent(EventType<T> type,
             String propName, Object propValue, boolean before)
@@ -246,6 +247,7 @@ public class BaseEventSource implements EventSource
      * @param propName the name of the affected property (can be <b>null</b>)
      * @param propValue the value of the affected property (can be <b>null</b>)
      * @param before the before update flag
+     * @param <T> the type of the event to be created
      * @return the newly created event object
      */
     protected <T extends ConfigurationEvent> ConfigurationEvent createEvent(
