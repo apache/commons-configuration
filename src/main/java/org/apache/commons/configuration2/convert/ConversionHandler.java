@@ -29,12 +29,12 @@ import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
  * <p>
  * This interface defines a couple of methods related to different kinds of data
  * type conversion:
+ * </p>
  * <ul>
  * <li>Conversion to an object of a specific type</li>
  * <li>Conversion to an array of a specific type</li>
  * <li>Conversion to a collection of a specific type</li>
  * </ul>
- * </p>
  * <p>
  * Data type conversion is related to variable substitution (aka interpolation).
  * Before a value can be converted to a target type substitution has to be
