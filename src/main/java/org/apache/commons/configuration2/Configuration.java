@@ -159,7 +159,7 @@ public interface Configuration extends ImmutableConfiguration, SynchronizerSuppo
      * special default {@code Lookup} object that tries to resolve variables by
      * matching them with properties contained in this {@code Configuration}.
      * This is also the main difference to the
-     * {@link #setConfigurationInterpolator(ConfigurationInterpolator)} method
+     * {@link #setInterpolator(ConfigurationInterpolator)} method
      * which sets the passed in object as is without adding this special lookup.
      *
      * @param prefixLookups the map with {@code Lookup} objects associated with
