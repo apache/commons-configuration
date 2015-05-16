@@ -40,6 +40,7 @@ import org.apache.commons.configuration2.reloading.ReloadingControllerSupport;
  * files whose file names are determined using a file name pattern and a
  * {@code ConfigurationInterpolator} object. It provides the following
  * additional features:
+ * </p>
  * <ul>
  * <li>Configuration builder for managed configurations have reloading support.
  * So reloading is possible for all configuration sources loaded by this builder
@@ -47,7 +48,6 @@ import org.apache.commons.configuration2.reloading.ReloadingControllerSupport;
  * <li>A {@link ReloadingController} is provided which can be used to trigger
  * reload checks on all managed configurations.</li>
  * </ul>
- * </p>
  * <p>
  * Although this builder manages an arbitrary number of child configurations, to
  * clients only a single configuration is visible - the one selected by the
