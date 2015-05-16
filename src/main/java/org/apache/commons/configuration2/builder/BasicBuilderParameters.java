@@ -343,7 +343,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      *
      * @param params the map with parameters (must not be <b>null</b>)
      * @return the {@code BeanHelper} stored in this map or <b>null</b>
-     * @throws IllegalArgumentException if the map is <b>null</b<
+     * @throws IllegalArgumentException if the map is <b>null</b>
      */
     public static BeanHelper fetchBeanHelper(Map<String, Object> params)
     {
