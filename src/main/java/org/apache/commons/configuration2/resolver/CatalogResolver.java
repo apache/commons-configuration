@@ -148,18 +148,17 @@ public class CatalogResolver implements EntityResolver
     }
 
     /**
+     * <p>
      * Implements the {@code resolveEntity} method
      * for the SAX interface.
-     * <p/>
+     * </p>
      * <p>Presented with an optional public identifier and a system
      * identifier, this function attempts to locate a mapping in the
      * catalogs.</p>
-     * <p/>
      * <p>If such a mapping is found, the resolver attempts to open
      * the mapped value as an InputSource and return it. Exceptions are
      * ignored and null is returned if the mapped value cannot be opened
      * as an input source.</p>
-     * <p/>
      * <p>If no mapping is found (or an error occurs attempting to open
      * the mapped value as an input source), null is returned and the system
      * will use the specified system identifier as if no entityResolver
