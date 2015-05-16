@@ -85,8 +85,8 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * </p>
      * <p>
      * The difference between this method and the
-     * {@link #subset(String)} method is that
-     * {@code subset()} supports arbitrary subsets of configuration nodes
+     * {@link #immutableSubset(String)} method is that
+     * {@code immutableSubset()} supports arbitrary subsets of configuration nodes
      * while {@code immutableConfigurationAt()} only returns a single sub tree.
      * Please refer to the documentation of the
      * {@code SubnodeConfiguration} class to obtain further information
@@ -122,9 +122,9 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * If you need access to all fields of a certain table, you can simply do
      *
      * <pre>
-     * List<ImmutableHierarchicalConfiguration> fields =
+     * List&lt;ImmutableHierarchicalConfiguration&gt; fields =
      *   config.immutableConfigurationsAt("tables.table(0).fields.field");
-     * for(Iterator<ImmutableHierarchicalConfiguration> it = fields.iterator();
+     * for(Iterator&lt;ImmutableHierarchicalConfiguration&gt; it = fields.iterator();
      *   it.hasNext();)
      * {
      *     ImmutableHierarchicalConfiguration sub = it.next();
