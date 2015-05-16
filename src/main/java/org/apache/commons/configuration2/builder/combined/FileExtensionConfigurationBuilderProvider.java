@@ -74,7 +74,7 @@ public class FileExtensionConfigurationBuilderProvider extends
      * @param ext the file extension to select the configuration class (must not
      *        be <b>null</b>)
      * @param paramCls a collection with the names of parameters classes; an
-     *        instance of {@link BasicBuilderParametersImpl} is created
+     *        instance of a parameters object with basic properties is created
      *        automatically and does not need to be contained in this list; the
      *        collection can be <b>null</b> if no additional parameter objects
      *        are needed
