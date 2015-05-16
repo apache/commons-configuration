@@ -59,7 +59,6 @@ import org.apache.commons.lang3.StringUtils;
  * To get an impression how this class works consider the following properties
  * file:
  * </p>
- * <p>
  *
  * <pre>
  * # A demo configuration file
@@ -82,11 +81,9 @@ import org.apache.commons.lang3.StringUtils;
  * AppVendor=TestSoft
  * </pre>
  *
- * </p>
  * <p>
  * For this example the following points are relevant:
  * </p>
- * <p>
  * <ul>
  * <li>The first two lines are set as header comment. The header comment is
  * determined by the last blanc line before the first property definition.</li>
@@ -108,7 +105,6 @@ import org.apache.commons.lang3.StringUtils;
  * &quot;single line&quot; flag is set to <b>false</b> for this property. When
  * the file is saved, two property definitions will be written (in series).</li>
  * </ul>
- * </p>
  *
  * @version $Id$
  * @since 1.3
