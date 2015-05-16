@@ -30,6 +30,7 @@
  * {@code Configuration} and can read or write properties as its pleasure.
  * </p>
  * <h3>Important note</h3>
+ * <p>
  * <strong>This package contains a number of interfaces that reflect the
  * initialization parameters available for supported configuration implementations.
  * These interfaces are not intended to be implemented by client code! When new
