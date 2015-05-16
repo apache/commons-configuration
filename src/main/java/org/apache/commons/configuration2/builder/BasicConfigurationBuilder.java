@@ -63,6 +63,7 @@ import org.apache.commons.configuration2.reloading.ReloadingController;
  * <p>
  * There are multiple options for setting up a {@code BasicConfigurationBuilder}
  * instance:
+ * </p>
  * <ul>
  * <li>All initialization properties can be set in one or multiple calls of the
  * {@code configure()} method. In each call an arbitrary number of
@@ -78,7 +79,6 @@ import org.apache.commons.configuration2.reloading.ReloadingController;
  * {@code Configuration} object to be called with the corresponding value as
  * parameter.</li>
  * </ul>
- * </p>
  * <p>
  * A builder instance can be constructed with an <em>allowFailOnInit</em>
  * flag. If set to <strong>true</strong>, exceptions during initialization
