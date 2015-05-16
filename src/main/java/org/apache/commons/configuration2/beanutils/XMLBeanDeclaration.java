@@ -41,7 +41,6 @@ import org.apache.commons.lang3.StringUtils;
  * configuration file. Such a declaration must look like the following example
  * fragment:
  * </p>
- * <p>
  *
  * <pre>
  *   ...
@@ -54,11 +53,11 @@ import org.apache.commons.lang3.StringUtils;
  *   &lt;/personBean&gt;
  * </pre>
  *
- * </p>
  * <p>
  * The bean declaration can be contained in an arbitrary element. Here it is the
  * {@code personBean} element. In the attributes of this element
  * there can occur some reserved attributes, which have the following meaning:
+ * </p>
  * <dl>
  * <dt>{@code config-class}</dt>
  * <dd>Here the full qualified name of the bean's class can be specified. An
@@ -75,7 +74,6 @@ import org.apache.commons.lang3.StringUtils;
  * <dd>With this attribute a parameter can be specified that will be passed to
  * the bean factory. This may be useful for custom bean factories.</dd>
  * </dl>
- * </p>
  * <p>
  * All further attributes starting with the {@code config-} prefix are
  * considered as meta data and will be ignored. All other attributes are treated
