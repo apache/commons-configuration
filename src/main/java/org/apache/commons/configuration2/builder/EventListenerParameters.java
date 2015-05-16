@@ -39,6 +39,7 @@ import org.apache.commons.configuration2.event.EventType;
  * </p>
  * <p>
  * The code fragment below shows a typical usage scenario:
+ * </p>
  *
  * <pre>
  * BasicConfigurationBuilder&lt;Configuration&gt; builder =
@@ -48,7 +49,6 @@ import org.apache.commons.configuration2.event.EventType;
  *                         ConfigurationEvent.ANY, myListener));
  * </pre>
  *
- * </p>
  * <p>
  * In order to support a configuration builder's {@code configure()} method,
  * this class implements the {@code BuilderParameters} interface. However, this
