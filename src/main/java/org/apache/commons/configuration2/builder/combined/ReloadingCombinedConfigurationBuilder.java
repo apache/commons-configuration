@@ -39,13 +39,13 @@ import org.apache.commons.configuration2.reloading.ReloadingControllerSupport;
  * </p>
  * <p>
  * This class differs from its super class in the following aspects:
+ * </p>
  * <ul>
  * <li>A {@link ReloadingController} is created which manages all child
  * configuration builders supporting reloading operations.</li>
  * <li>If no {@code ConfigurationBuilder} is provided for the definition
  * configuration, a builder with reloading support is created.</li>
  * </ul>
- * </p>
  * <p>
  * This class can be used exactly as its super class for creating combined
  * configurations from multiple configuration sources. In addition, the combined
