@@ -127,7 +127,54 @@ CombinedConfiguration config = builder.getConfiguration();
     <p>
       Now the <em>config</em> object can be accessed in the usual way to query
       configuration properties, e.g. by using methods like <code>getString()</code>,
-      or <code>getInt()</code>. Just defining the configuration definition file
+      or <code>getInt()</code>. A frequent use case is that a configuration
+      file is shipped with an application inside its jar archive. For instance,
+      the jar could have a special folder where all configuration files are
+      located as in the following example:
+    </p>
+    <source><![CDATA[
+/classes
+/conf
+/conf/mainConfig.xml
+/conf/subConfig1.properties
+/conf/subConfig2.xml
+]]></source>
+    <p>
+      Here the <em>conf</em> folder in the jar contains a main configuration
+      file - this is the definition file for the combined builder - and two
+      configuration sources referenced from the main file.
+      <code>mainConfig.xml</code> looks as follows:
+    </p>
+    <source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<configuration>
+  <properties fileName="subConfig1.properties"/>
+  <xml fileName="subConfig2.xml"/>
+</configuration>
+]]></source>
+    <p>
+      In order to load this file and the referenced configuration sources, the
+      previous example can slightly be adapted to determine a URL to the main
+      configuration file from the application's class loader:
+    </p>
+    <source><![CDATA[
+Parameters params = new Parameters();
+CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder()
+    .configure(params.fileBased().setURL(
+      getClass().getClassLoader().getResource("/conf/mainConfig.xml")
+    ));
+CombinedConfiguration config = builder.getConfiguration();
+]]></source>
+    <p>
+      The point to take here is that it is possible to load a combined
+      configuration directly from a jar file by specifying the URL to the
+      configuration definition file. The configuration sources to be embedded
+      are specified as relative paths; they are automatically resolved based on
+      the URL of the main configuration file.
+    </p>
+    <p>
+      Just defining the configuration definition file
       via a file-based parameters object is a special case. Internally, a builder
       for an <code>XMLConfiguration</code> object is constructed which is then
       used to load and interprete the definition file. This should be appropriate
