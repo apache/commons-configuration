@@ -436,8 +436,6 @@
     <!-- Explicitly declare optional dependencies for the OSGi manifest. -->
     <commons.osgi.import>
       org.apache.commons.beanutils.*;resolution:=optional,
-      org.apache.commons.digester.*;resolution:=optional,
-      org.apache.commons.collections.*;resolution:=optional,
       org.apache.commons.codec.*;resolution:=optional,
       org.apache.commons.jxpath.*;resolution:=optional,
       org.apache.xml.resolver.*;resolution:=optional,
