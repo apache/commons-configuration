@@ -625,6 +625,8 @@
           <suppressionsLocation>${basedir}/conf/checkstyle-suppressions.xml</suppressionsLocation>
           <enableRulesSummary>false</enableRulesSummary>
           <propertyExpansion>basedir=${basedir}</propertyExpansion>
+          <includeResources>false</includeResources>
+          <includeTestResources>false</includeTestResources>
         </configuration>
       </plugin>
       <plugin>
