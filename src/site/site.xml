@@ -37,7 +37,7 @@
         <item name="Javadoc"                    href="http://commons.apache.org/configuration/javadocs/v1.10/apidocs/index.html"/>
         <item name="Runtime Dependencies"       href="/dependencies_1_10.html"/>
       </item>
-      <item name="2.0-alpha" collapse="true"    href="/index.html">
+      <item name="2.0-beta" collapse="true"     href="/index.html">
         <item name="User's Guide"               href="/userguide/user_guide.html"/>
         <item name="Upgrade Guide"              href="/userguide/upgradeto2_0.html"/>
         <item name="Javadoc"                    href="/apidocs/index.html"/>
