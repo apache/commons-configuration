@@ -1,9 +1,8 @@
 $Id$
 
                         Commons Configuration Package
-                             Version 2.0-alpha2
+                             Version 2.0-beta1
                                 Release Notes
-
 
 INTRODUCTION
 ============
@@ -13,6 +12,33 @@ Configuration component. It describes the changes since the previous version.
 The Commons Configuration software library provides a generic configuration
 interface which enables an application to read configuration data from a variety
 of sources.
+
+This is the first beta release of Commons Configuration 2.0 after two alpha
+versions. There has not been much feedback so far and no requests for API
+changes. Therefore, we move forwards to a beta release indicating that the API
+can be considered more stable. However, at this stage, changes of the API can
+still not be fully excluded.
+
+Below is a list of all changes in this version. Compared to version 2.0-alpha2,
+there has only be a single change: an obsolete interface (which had been
+overlooked during a major refactoring) was removed. So applications that are
+using 2.0-alpha2 should be able to migrate to 2.0-beta1 without problems.
+
+Changes:
+========
+o CONFIGURATION-598: Removed obsolete ConfigurationBuilder interface in the
+                     base package.
+
+Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+
+For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
+
+
+                        Commons Configuration Package
+                             Version 2.0-alpha2
+                                Release Notes
+
 
 After version 2.0-alpha1 has been out for a while (the corresponding release
 notes can be found below), this second alpha release contains a few number of
