@@ -16,12 +16,14 @@
  */
 package org.apache.commons.configuration2.io;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import java.net.URL;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
+import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.builder.fluent.Configurations;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,14 +56,16 @@ public class TestClasspathLocationStrategy
      * Tests a successful location of a provided resource name.
      */
     @Test
-    public void testLocateSuccess()
+    public void testLocateSuccess() throws ConfigurationException
     {
         FileLocator locator =
                 FileLocatorUtils.fileLocator().fileName(FILE_NAME)
                         .basePath("somePath").create();
         URL url = strategy.locate(fileSystem, locator);
-        assertEquals("Wrong URL", ConfigurationAssert.getTestURL(FILE_NAME)
-                .toExternalForm(), url.toExternalForm());
+        Configurations configurations = new Configurations();
+        XMLConfiguration config1 = configurations.xml(url);
+        XMLConfiguration config2 = configurations.xml(ConfigurationAssert.getTestURL(FILE_NAME));
+        ConfigurationAssert.assertConfigurationEquals(config1, config2);
     }
 
     /**
