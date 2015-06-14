@@ -25,7 +25,7 @@
   </properties>
 
   <body>
-    <release version="2.0-alpha3" date="TBD"
+    <release version="2.0-beta1" date="TBD"
       description="TBD">
       <action dev="oheger" type="update" issue="CONFIGURATION-598" due-to="Bjarne Bostr&#xF6;m">
         Removed obsolete ConfigurationBuilder interface in the base package.

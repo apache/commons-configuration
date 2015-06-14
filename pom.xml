@@ -423,8 +423,8 @@
     <commons.componentid>configuration</commons.componentid>
     <commons.release.version>1.10</commons.release.version>
     <commons.release.desc>(stable version)</commons.release.desc>
-    <commons.release.2.version>2.0-alpha2</commons.release.2.version>
-    <commons.release.2.desc>(alpha release)</commons.release.2.desc>
+    <commons.release.2.version>2.0-beta1</commons.release.2.version>
+    <commons.release.2.desc>(beta release)</commons.release.2.desc>
     <commons.rc.version>RC1</commons.rc.version>
     <commons.jira.id>CONFIGURATION</commons.jira.id>
     <commons.jira.pid>12310467</commons.jira.pid>
