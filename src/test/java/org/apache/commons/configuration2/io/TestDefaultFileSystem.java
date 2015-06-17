@@ -74,6 +74,6 @@ public class TestDefaultFileSystem
     @Test(expected = ConfigurationException.class)
     public void testGetOutputStreamInvalidPath() throws ConfigurationException
     {
-        fileSystem.getOutputStream(new File("this is/<certainly>\\an#invalid#*path!"));
+        fileSystem.getOutputStream(new File(""));
     }
 }
