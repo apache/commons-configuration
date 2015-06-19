@@ -22,7 +22,7 @@
   <property name="component.propfile" value="${basedir}/build.properties"/>
   <property file="${component.propfile}"/>
 
-  <property name="component.final.name" value="commons-configuration-2.0-alpha3-SNAPSHOT"/>
+  <property name="component.final.name" value="commons-configuration-2.0-beta2-SNAPSHOT"/>
   <property name="build.dir" value="target"/>
   <property name="build.classes.dir" value="${build.dir}/classes"/>
   <property name="src.java.dir" value="src/main/java"/>
