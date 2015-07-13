@@ -18,11 +18,14 @@ package org.apache.commons.configuration2.tree;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
+import org.apache.commons.configuration2.CombinedConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.Test;
 
@@ -175,5 +178,37 @@ public class TestOverrideCombiner extends AbstractCombinerTest
         assertFalse("No node found", nds.isEmpty());
         assertFalse("An attribute result", nds.get(0).isAttributeResult());
         return nds.get(0).getNode();
+    }
+
+    /**
+     * Tests a combine operation of non-hierarchical properties. This test is
+     * related to CONFIGURATION-604.
+     */
+    @Test
+    public void testCombineProperties()
+    {
+        PropertiesConfiguration c1 = new PropertiesConfiguration();
+        c1.addProperty("x.y.simpleCase", false);
+        c1.addProperty("x.y.between", false);
+        c1.addProperty("x.y.isDistinctFrom",false);
+        c1.addProperty("x.y",false);
+        PropertiesConfiguration c2 = new PropertiesConfiguration();
+        c2.addProperty("x.y", true);
+        c2.addProperty("x.y.between",true);
+        c2.addProperty("x.y.comparison",true);
+        c2.addProperty("x.y.in",true);
+        c2.addProperty("x.y.isDistinctFrom",true);
+        c2.addProperty("x.y.simpleCase", true);
+
+        CombinedConfiguration config = new CombinedConfiguration(new OverrideCombiner());
+        config.addConfiguration(c1);
+        config.addConfiguration(c2);
+        assertFalse("Wrong value for x.y", config.getBoolean("x.y"));
+        assertFalse("Wrong value for x.y.between", config.getBoolean("x.y.between"));
+        assertFalse("Wrong value for x.y.isDistinctFrom", config.getBoolean("x.y.isDistinctFrom"));
+        assertFalse("Wrong value for x.y.simpleCase", config.getBoolean("x.y.simpleCase"));
+        assertTrue("Wrong value for x.y.in", config.getBoolean("x.y.in"));
+        assertTrue("Wrong value for x.y.comparison", config.getBoolean("x.y.comparison"));
+        assertEquals("Wrong size", 6, config.size());
     }
 }

@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import junitx.framework.ListAssert;
+
 import org.apache.commons.configuration2.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
@@ -42,6 +43,7 @@ import org.apache.commons.configuration2.sync.NoOpSynchronizer;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngineSymbols;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
+import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
@@ -91,7 +93,7 @@ public class TestConfigurationUtils
         assertEquals("String representation of a configuration", "two=2" , ConfigurationUtils.toString(config));
 
         config.setProperty("one","1");
-        assertEquals("String representation of a configuration", "two=2" + lineSeparator + "one=1" , ConfigurationUtils.toString(config));
+        assertEquals("String representation of a configuration", "two=2" + lineSeparator + "one=1", ConfigurationUtils.toString(config));
     }
 
     @Test
@@ -278,6 +280,26 @@ public class TestConfigurationUtils
         assertEquals("Wrong value 1", 1, hc.getInt("test(0)"));
         assertEquals("Wrong value 2", 2, hc.getInt("test(1)"));
         assertEquals("Wrong value 3", 3, hc.getInt("test(2)"));
+    }
+
+    /**
+     * Tests that the structure of the resulting hierarchical configuration
+     * does not depend on the order of properties in the source configuration.
+     * This test is related to CONFIGURATION-604.
+     */
+    @Test
+    public void testConvertToHierarchicalOrderOfProperties()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.addProperty("x.y.z", true);
+        config.addProperty("x.y", true);
+        @SuppressWarnings("unchecked")
+        HierarchicalConfiguration<ImmutableNode> hc =
+                (HierarchicalConfiguration<ImmutableNode>)
+                        ConfigurationUtils.convertToHierarchical(config);
+        ImmutableNode rootNode = hc.getNodeModel().getNodeHandler().getRootNode();
+        ImmutableNode nodeX = rootNode.getChildren().get(0);
+        assertEquals("Wrong number of children of x", 1, nodeX.getChildren().size());
     }
 
     /**

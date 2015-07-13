@@ -262,7 +262,7 @@ public final class ConfigurationUtils
 
             // Per default, a DisabledListDelimiterHandler is set.
             // So list delimiters in property values are not an issue.
-            hc.append(conf);
+            hc.copy(conf);
             return hc;
         }
     }
