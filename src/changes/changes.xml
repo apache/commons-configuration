@@ -27,6 +27,10 @@
   <body>
     <release version="2.0-beta2" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-605">
+        XMLConfiguration no longer drops keys when list delimiter characters
+        occur in element values.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-604">
         Fixed a problem in the conversion of a flat configuration to a
         hierarchical one that could cause the loss of properties in a
