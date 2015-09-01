@@ -31,6 +31,9 @@
         Fixed a bug in PropertiesConfiguration related to the loading of include
         files. The FileHandler used for this purpose was not fully initialized.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-608">
+        Adapted the return type of ReloadingFileBasedConfigurationBuilder.configure().
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-605">
         XMLConfiguration no longer drops keys when list delimiter characters
         occur in element values.
