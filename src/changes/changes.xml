@@ -27,6 +27,10 @@
   <body>
     <release version="2.0-beta2" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-609">
+        Fixed a bug in PropertiesConfiguration related to the loading of include
+        files. The FileHandler used for this purpose was not fully initialized.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-605">
         XMLConfiguration no longer drops keys when list delimiter characters
         occur in element values.
