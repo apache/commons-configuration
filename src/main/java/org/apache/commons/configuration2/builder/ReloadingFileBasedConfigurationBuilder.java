@@ -142,7 +142,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * {@inheritDoc} This method is overridden here to change the result type.
      */
     @Override
-    public FileBasedConfigurationBuilder<T> configure(
+    public ReloadingFileBasedConfigurationBuilder<T> configure(
             BuilderParameters... params)
     {
         super.configure(params);
