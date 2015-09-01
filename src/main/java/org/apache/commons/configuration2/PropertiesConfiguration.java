@@ -1417,6 +1417,7 @@ public class PropertiesConfiguration extends BaseConfiguration
         }
 
         FileHandler fh = new FileHandler(this);
+        fh.setFileLocator(locator);
         fh.load(url);
     }
 

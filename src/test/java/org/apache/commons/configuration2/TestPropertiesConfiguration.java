@@ -27,15 +27,18 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -50,14 +53,18 @@ import java.util.Set;
 
 import org.apache.commons.configuration2.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.combined.CombinedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration2.convert.LegacyListDelimiterHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.io.DefaultFileSystem;
 import org.apache.commons.configuration2.io.FileHandler;
+import org.apache.commons.configuration2.io.FileSystem;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -143,7 +150,7 @@ public class TestPropertiesConfiguration
 
     /**
      * Checks for a property without a value.
-     * 
+     *
      * @param key the key to be checked
      */
     private void checkEmpty(String key)
@@ -1120,6 +1127,50 @@ public class TestPropertiesConfiguration
         PropertiesConfiguration c2 = new PropertiesConfiguration();
         load(c2, testSavePropertiesFile.getAbsolutePath());
         assertEquals("Wrong value", text, c2.getString(PROP_NAME));
+    }
+
+    /**
+     * Tests whether the correct file system is used when loading an include
+     * file. This test is related to CONFIGURATION-609.
+     */
+    @Test
+    public void testLoadIncludeFileViaFileSystem() throws ConfigurationException
+    {
+        conf.clear();
+        conf.addProperty("include", "include.properties");
+        saveTestConfig();
+
+        FileSystem fs = new DefaultFileSystem()
+        {
+            @Override
+            public InputStream getInputStream(URL url)
+                    throws ConfigurationException
+            {
+                if (url.toString().endsWith("include.properties"))
+                {
+                    try
+                    {
+                        return new ByteArrayInputStream(
+                                "test.outcome = success".getBytes("UTF-8"));
+                    }
+                    catch (UnsupportedEncodingException e)
+                    {
+                        throw new ConfigurationException("Unsupported encoding",
+                                e);
+                    }
+                }
+                return super.getInputStream(url);
+            }
+        };
+        Parameters params = new Parameters();
+        FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        builder.configure(params.fileBased().setFile(testSavePropertiesFile)
+                .setBasePath(ConfigurationAssert.OUT_DIR.toURI().toString())
+                .setFileSystem(fs));
+        PropertiesConfiguration configuration = builder.getConfiguration();
+        assertEquals("success", configuration.getString("test.outcome"));
     }
 
     /**
