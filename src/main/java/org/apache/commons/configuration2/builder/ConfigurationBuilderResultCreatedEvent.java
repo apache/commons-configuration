@@ -16,7 +16,7 @@
  */
 package org.apache.commons.configuration2.builder;
 
-import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apache.commons.configuration2.event.EventType;
 
 /**
@@ -27,7 +27,7 @@ import org.apache.commons.configuration2.event.EventType;
  * <p>
  * Events of this type are fired in the {@code getConfiguration()} method of a
  * configuration builder each time a new result object is created. At the time
- * the event is fired, no lock is held. The newly created {@code Configuration}
+ * the event is fired, no lock is held. The newly created {@code ImmutableConfiguration}
  * object is available as a property of this event.
  * </p>
  * <p>
@@ -52,7 +52,7 @@ public class ConfigurationBuilderResultCreatedEvent extends
                     "RESULT_CREATED");
 
     /** The newly created configuration object. */
-    private final Configuration configuration;
+    private final ImmutableConfiguration configuration;
 
     /**
      * Creates a new instance of {@code ConfigurationBuilderResultCreatedEvent}
@@ -61,14 +61,14 @@ public class ConfigurationBuilderResultCreatedEvent extends
      * @param source the {@code ConfigurationBuilder} object which triggered
      *        this event (must not be <b>null</b>)
      * @param evType the type of this event (must not be <b>null</b>)
-     * @param createdConfiguration the newly created {@code Configuration}
+     * @param createdConfiguration the newly created {@code ImmutableConfiguration}
      *        object (must not be <b>null</b>)
      * @throws IllegalArgumentException if a required parameter is null
      */
     public ConfigurationBuilderResultCreatedEvent(
             ConfigurationBuilder<?> source,
             EventType<? extends ConfigurationBuilderResultCreatedEvent> evType,
-            Configuration createdConfiguration)
+            ImmutableConfiguration createdConfiguration)
     {
         super(source, evType);
         if (createdConfiguration == null)
@@ -80,11 +80,11 @@ public class ConfigurationBuilderResultCreatedEvent extends
     }
 
     /**
-     * Returns the newly created {@code Configuration} object.
+     * Returns the newly created {@code ImmutableConfiguration} object.
      *
-     * @return the newly created {@code Configuration}
+     * @return the newly created {@code ImmutableConfiguration}
      */
-    public Configuration getConfiguration()
+    public ImmutableConfiguration getConfiguration()
     {
         return configuration;
     }

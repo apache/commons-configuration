@@ -16,33 +16,40 @@
  */
 package org.apache.commons.configuration2.builder;
 
-import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apache.commons.configuration2.event.EventSource;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 
 /**
  * <p>
- * Definition of an interface for objects that can create {@link Configuration}
- * objects of a specific type.
+ * Definition of an interface for objects that can create {@link ImmutableConfiguration}
+ * or {@link org.apache.commons.configuration2.Configuration Configuration} objects of a
+ * specific type.
  * </p>
  * <p>
- * This interface defines an abstract way of creating a {@code Configuration}
+ * This interface defines an abstract way of creating a {@code ImmutableConfiguration}
  * object. It does not assume any specific way of how this is done; this is
  * completely in the responsibility of an implementation class. There is just a
  * single method that returns the configuration constructed by this builder.
  * </p>
+ * <p>
+ * Note: {@code ImmutableConfiguration} is just the base interface for all configuration
+ * objects. So that the return type of the {@code getConfiguration()} method is
+ * {@code ImmutableConfiguration} does not mean that only immutable configurations can
+ * be created.
+ * </p>
  *
  * @version $Id$
  * @since 2.0
- * @param <T> the concrete type of the {@code Configuration} class produced by
+ * @param <T> the concrete type of the {@code ImmutableConfiguration} class produced by
  *        this builder
  */
-public interface ConfigurationBuilder<T extends Configuration> extends EventSource
+public interface ConfigurationBuilder<T extends ImmutableConfiguration> extends EventSource
 {
     /**
      * Returns the configuration provided by this builder. An implementation has
      * to perform all necessary steps for creating and initializing a
-     * {@code Configuration} object.
+     * {@code ImmutableConfiguration} object.
      *
      * @return the configuration
      * @throws ConfigurationException if an error occurs

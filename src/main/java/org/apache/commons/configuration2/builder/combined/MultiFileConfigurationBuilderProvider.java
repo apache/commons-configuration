@@ -118,7 +118,7 @@ public class MultiFileConfigurationBuilderProvider extends
         Class ifcClass =
                 HierarchicalConfiguration.class.isAssignableFrom(configClass) ? HierarchicalConfiguration.class
                         : Configuration.class;
-        return BuilderConfigurationWrapperFactory
+        return (Configuration) BuilderConfigurationWrapperFactory
                 .createBuilderConfigurationWrapper(ifcClass, builder,
                         EventSourceSupport.BUILDER);
     }

@@ -20,8 +20,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationUtils;
+import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apache.commons.configuration2.event.EventSource;
 
 /**
@@ -30,8 +30,8 @@ import org.apache.commons.configuration2.event.EventSource;
  * {@link ConfigurationBuilder}.
  * </p>
  * <p>
- * Using this class special {@code Configuration} proxies can be created that
- * delegate all method invocations to another {@code Configuration} obtained
+ * Using this class special {@code ImmutableConfiguration} proxies can be created that
+ * delegate all method invocations to another {@code ImmutableConfiguration} obtained
  * from a {@code ConfigurationBuilder}. For instance, if there is a
  * configuration {@code c} wrapping the builder {@code builder}, the call
  * {@code c.getString(myKey)} is transformed to
@@ -39,7 +39,7 @@ import org.apache.commons.configuration2.event.EventSource;
  * </p>
  * <p>
  * There are multiple use cases for such a constellation. One example is that
- * client code can continue working with {@code Configuration} objects while
+ * client code can continue working with {@code ImmutableConfiguration} objects while
  * under the hood builders are used. Another example is that dynamic
  * configurations can be realized in a transparent way: a client holds a single
  * configuration (proxy) object, but the underlying builder may return a
@@ -75,7 +75,7 @@ public class BuilderConfigurationWrapperFactory
     }
 
     /**
-     * Creates a wrapper {@code Configuration} on top of the specified
+     * Creates a wrapper {@code ImmutableConfiguration} on top of the specified
      * {@code ConfigurationBuilder}. This implementation delegates to
      * {@link #createBuilderConfigurationWrapper(Class, ConfigurationBuilder, EventSourceSupport)}
      * .
@@ -89,9 +89,9 @@ public class BuilderConfigurationWrapperFactory
      * @return the wrapper configuration
      * @throws IllegalArgumentException if a required parameter is missing
      * @throws org.apache.commons.configuration2.ex.ConfigurationRuntimeException if an error
-     *         occurs when creating the result {@code Configuration}
+     *         occurs when creating the result {@code ImmutableConfiguration}
      */
-    public <T extends Configuration> T createBuilderConfigurationWrapper(
+    public <T extends ImmutableConfiguration> T createBuilderConfigurationWrapper(
             Class<T> ifcClass, ConfigurationBuilder<? extends T> builder)
     {
         return createBuilderConfigurationWrapper(ifcClass, builder,
@@ -100,7 +100,7 @@ public class BuilderConfigurationWrapperFactory
 
     /**
      * Returns the level of {@code EventSource} support used when generating
-     * {@code Configuration} objects.
+     * {@code ImmutableConfiguration} objects.
      *
      * @return the level of {@code EventSource} support
      */
@@ -110,9 +110,9 @@ public class BuilderConfigurationWrapperFactory
     }
 
     /**
-     * Returns a {@code Configuration} object which wraps the specified
+     * Returns a {@code ImmutableConfiguration} object which wraps the specified
      * {@code ConfigurationBuilder}. Each access of the configuration is
-     * delegated to a corresponding call on the {@code Configuration} object
+     * delegated to a corresponding call on the {@code ImmutableConfiguration} object
      * managed by the builder. This is a convenience method which allows
      * creating wrapper configurations without having to instantiate this class.
      *
@@ -126,9 +126,9 @@ public class BuilderConfigurationWrapperFactory
      * @return the wrapper configuration
      * @throws IllegalArgumentException if a required parameter is missing
      * @throws org.apache.commons.configuration2.ex.ConfigurationRuntimeException if an error
-     *         occurs when creating the result {@code Configuration}
+     *         occurs when creating the result {@code ImmutableConfiguration}
      */
-    public static <T extends Configuration> T createBuilderConfigurationWrapper(
+    public static <T extends ImmutableConfiguration> T createBuilderConfigurationWrapper(
             Class<T> ifcClass, ConfigurationBuilder<? extends T> builder,
             EventSourceSupport evSrcSupport)
     {
@@ -177,11 +177,11 @@ public class BuilderConfigurationWrapperFactory
     /**
      * <p>
      * An enumeration class with different options for supporting the
-     * {@code EventSource} interface in generated {@code Configuration} proxies.
+     * {@code EventSource} interface in generated {@code ImmutableConfiguration} proxies.
      * </p>
      * <p>
      * Using literals of this class it is possible to specify that a
-     * {@code Configuration} object returned by
+     * {@code ImmutableConfiguration} object returned by
      * {@code BuilderConfigurationWrapperFactory} also implements the
      * {@code EventSource} interface and how this implementation should work.
      * See the documentation of the single constants for more details.
@@ -191,7 +191,7 @@ public class BuilderConfigurationWrapperFactory
     {
         /**
          * No support of the {@code EventSource} interface. If this option is
-         * set, {@code Configuration} objects generated by
+         * set, {@code ImmutableConfiguration} objects generated by
          * {@code BuilderConfigurationWrapperFactory} do not implement the
          * {@code EventSource} interface.
          */
@@ -199,7 +199,7 @@ public class BuilderConfigurationWrapperFactory
 
         /**
          * Dummy support of the {@code EventSource} interface. This option
-         * causes {@code Configuration} objects generated by
+         * causes {@code ImmutableConfiguration} objects generated by
          * {@code BuilderConfigurationWrapperFactory} to implement the
          * {@code EventSource} interface, however, this implementation consists
          * only of empty dummy methods without real functionality.
@@ -209,7 +209,7 @@ public class BuilderConfigurationWrapperFactory
         /**
          * {@code EventSource} support is implemented by delegating to the
          * associated {@code ConfigurationBuilder} object. If this option is
-         * used, generated {@code Configuration} objects provide a fully
+         * used, generated {@code ImmutableConfiguration} objects provide a fully
          * functional implementation of {@code EventSource} by delegating to the
          * builder. Because the {@code ConfigurationBuilder} interface extends
          * {@code EventSource} this delegation is always possible.
@@ -226,7 +226,7 @@ public class BuilderConfigurationWrapperFactory
             InvocationHandler
     {
         /** The wrapped builder. */
-        private final ConfigurationBuilder<? extends Configuration> builder;
+        private final ConfigurationBuilder<? extends ImmutableConfiguration> builder;
 
         /** The level of {@code EventSource} support. */
         private final EventSourceSupport eventSourceSupport;
@@ -239,7 +239,7 @@ public class BuilderConfigurationWrapperFactory
          * @param evSrcSupport the level of {@code EventSource} support
          */
         public BuilderConfigurationWrapperInvocationHandler(
-                ConfigurationBuilder<? extends Configuration> wrappedBuilder,
+                ConfigurationBuilder<? extends ImmutableConfiguration> wrappedBuilder,
                 EventSourceSupport evSrcSupport)
         {
             builder = wrappedBuilder;

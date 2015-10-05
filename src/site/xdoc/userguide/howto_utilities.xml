@@ -309,13 +309,16 @@ String value = config.getString("myKey");
       <code>Configuration</code> objects were the only source of configuration
       data. So applications using this version probably pass around objects of
       this type. This makes the migration to the new configuration builders
-      harder.
+      harder. Further, such configurations are mutable. Should one wish to
+      establish a boundary between the consumer consuming the configuration
+      and another part of the system modifying the configuration, 2.0 has
+      introduced an <code>ImmutableConfiguration</code>.
     </p>
     <p>
       There is one helper class which can simplify this migration:
       <code><a href="../apidocs/org/apache/commons/configuration2/builder/BuilderConfigurationWrapperFactory.html">
       BuilderConfigurationWrapperFactory</a></code>. This class is capable of
-      creating special proxy objects implementing the <code>Configuration</code>
+      creating special proxy objects implementing the <code>ImmutableConfiguration</code>
       interface which behind the scenes delegate to the managed configuration
       object of a configuration builder. For instance, if a wrapper configuration
       named <em>config</em> has been created for the configuration builder

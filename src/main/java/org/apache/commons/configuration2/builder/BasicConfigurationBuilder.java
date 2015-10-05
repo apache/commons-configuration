@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationUtils;
+import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apache.commons.configuration2.Initializable;
 import org.apache.commons.configuration2.beanutils.BeanDeclaration;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
@@ -41,21 +41,21 @@ import org.apache.commons.configuration2.reloading.ReloadingController;
 /**
  * <p>
  * An implementation of the {@code ConfigurationBuilder} interface which is able
- * to create different concrete {@code Configuration} implementations based on
+ * to create different concrete {@code ImmutableConfiguration} implementations based on
  * reflection.
  * </p>
  * <p>
  * When constructing an instance of this class the concrete
- * {@code Configuration} implementation class has to be provided. Then
- * properties for the new {@code Configuration} instance can be set. The first
+ * {@code ImmutableConfiguration} implementation class has to be provided. Then
+ * properties for the new {@code ImmutableConfiguration} instance can be set. The first
  * call to {@code getConfiguration()} creates and initializes the new
- * {@code Configuration} object. It is cached and returned by subsequent calls.
+ * {@code ImmutableConfiguration} object. It is cached and returned by subsequent calls.
  * This cache - and also the initialization properties set so far - can be
  * flushed by calling one of the {@code reset()} methods. That way other
- * {@code Configuration} instances with different properties can be created.
+ * {@code ImmutableConfiguration} instances with different properties can be created.
  * </p>
  * <p>
- * If the newly created {@code Configuration} object implements the
+ * If the newly created {@code ImmutableConfiguration} object implements the
  * {@code Initializable} interface, its {@code initialize()} method is called
  * after all initialization properties have been set. This way a concrete
  * implementation class can perform arbitrary initialization steps.
@@ -73,10 +73,10 @@ import org.apache.commons.configuration2.reloading.ReloadingController;
  * injection framework -, the fluent API approach may not be suitable. For those
  * use cases it is also possible to pass in all initialization parameters as a
  * map. The keys of the map have to match initialization properties of the
- * {@code Configuration} object to be created, the values are the corresponding
+ * {@code ImmutableConfiguration} object to be created, the values are the corresponding
  * property values. For instance, the key <em>throwExceptionOnMissing</em> in
  * the map will cause the method {@code setThrowExceptionOnMissing()} on the
- * {@code Configuration} object to be called with the corresponding value as
+ * {@code ImmutableConfiguration} object to be called with the corresponding value as
  * parameter.</li>
  * </ul>
  * <p>
@@ -97,16 +97,16 @@ import org.apache.commons.configuration2.reloading.ReloadingController;
  * properties and call {@code getConfiguration()}. However, the intended use
  * case is that the builder is configured by a single thread first. Then
  * {@code getConfiguration()} can be called concurrently, and it is guaranteed
- * that always the same {@code Configuration} instance is returned until the
+ * that always the same {@code ImmutableConfiguration} instance is returned until the
  * builder is reset.
  * </p>
  *
  * @version $Id$
  * @since 2.0
- * @param <T> the concrete type of {@code Configuration} objects created by this
+ * @param <T> the concrete type of {@code ImmutableConfiguration} objects created by this
  *        builder
  */
-public class BasicConfigurationBuilder<T extends Configuration> implements
+public class BasicConfigurationBuilder<T extends ImmutableConfiguration> implements
         ConfigurationBuilder<T>
 {
     /** The class of the objects produced by this builder instance. */
@@ -165,7 +165,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      * @param resCls the result class (must not be <b>null</b>
      * @param params a map with initialization parameters
      * @param allowFailOnInit a flag whether exceptions on initializing a newly
-     *        created {@code Configuration} object are allowed
+     *        created {@code ImmutableConfiguration} object are allowed
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
     public BasicConfigurationBuilder(Class<? extends T> resCls,
@@ -325,7 +325,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
 
     /**
      * Clears an existing result object. An invocation of this method causes a
-     * new {@code Configuration} object to be created the next time
+     * new {@code ImmutableConfiguration} object to be created the next time
      * {@link #getConfiguration()} is called.
      */
     public void resetResult()
