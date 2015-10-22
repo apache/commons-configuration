@@ -143,8 +143,8 @@ public class DefaultFileSystem extends FileSystem
                     if (getLogger().isDebugEnabled())
                     {
                         getLogger().debug(String.format("Could not determine URL for "
-                                + "basePath = %s, fileName = %s.", basePath,
-                                fileName), e);
+                                + "basePath = %s, fileName = %s: %s", basePath,
+                                fileName, e));
                     }
                 }
             }

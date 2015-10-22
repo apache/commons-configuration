@@ -22,9 +22,8 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.commons.configuration2.ConfigurationLogger;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.impl.NoOpLog;
 
 /**
  * Abstract layer to allow various types of file systems.
@@ -36,10 +35,10 @@ import org.apache.commons.logging.impl.NoOpLog;
 public abstract class FileSystem
 {
     /** Constant for the default logger. */
-    private static final Log DEFAULT_LOG = new NoOpLog();
+    private static final ConfigurationLogger DEFAULT_LOG = ConfigurationLogger.newDummyLogger();
 
     /** The Logger */
-    private volatile Log log;
+    private volatile ConfigurationLogger log;
 
     /** FileSystem options provider */
     private volatile FileOptionsProvider optionsProvider;
@@ -49,22 +48,23 @@ public abstract class FileSystem
      *
      * @return the logger
      */
-    public Log getLogger()
+    public ConfigurationLogger getLogger()
     {
-        Log result = log;
+        ConfigurationLogger result = log;
         return (result != null) ? result : DEFAULT_LOG;
     }
 
     /**
-     * Allows to set the logger to be used by this FileSystem. This
+     * Allows setting the logger to be used by this FileSystem. This
      * method makes it possible for clients to exactly control logging behavior.
      * Per default a logger is set that will ignore all log messages. Derived
      * classes that want to enable logging should call this method during their
-     * initialization with the logger to be used.
+     * initialization with the logger to be used. Passing in a <b>null</b> argument
+     * disables logging.
      *
      * @param log the new logger
      */
-    public void setLogger(Log log)
+    public void setLogger(ConfigurationLogger log)
     {
         this.log = log;
     }

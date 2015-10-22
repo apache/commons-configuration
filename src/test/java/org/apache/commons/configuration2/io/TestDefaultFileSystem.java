@@ -16,15 +16,13 @@
  */
 package org.apache.commons.configuration2.io;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import org.apache.commons.configuration2.ConfigurationLogger;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.impl.NoOpLog;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,8 +50,7 @@ public class TestDefaultFileSystem
     @Test
     public void testDefaultLogger()
     {
-        assertTrue("Wrong default logger",
-                fileSystem.getLogger() instanceof NoOpLog);
+        assertNotNull("No default logger", fileSystem.getLogger());
     }
 
     /**
@@ -62,7 +59,7 @@ public class TestDefaultFileSystem
     @Test
     public void testSetLogger()
     {
-        Log log = LogFactory.getLog(getClass());
+        ConfigurationLogger log = new ConfigurationLogger(getClass());
         fileSystem.setLogger(log);
         assertSame("Logger not set", log, fileSystem.getLogger());
     }
