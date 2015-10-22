@@ -18,6 +18,7 @@ package org.apache.commons.configuration2.interpol;
 
 import java.util.ArrayList;
 
+import org.apache.commons.configuration2.ConfigurationLogger;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.jexl2.Expression;
 import org.apache.commons.jexl2.JexlContext;
@@ -27,7 +28,6 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrLookup;
 import org.apache.commons.lang3.text.StrSubstitutor;
-import org.apache.commons.logging.Log;
 
 /**
  * Lookup that allows expressions to be evaluated.
@@ -82,7 +82,7 @@ public class ExprLookup implements Lookup
     private StrSubstitutor substitutor;
 
     /** The logger used by this instance. */
-    private Log logger;
+    private ConfigurationLogger logger;
 
     /** The engine. */
     private final JexlEngine engine = new JexlEngine();
@@ -170,7 +170,7 @@ public class ExprLookup implements Lookup
      * @return the {@code Log}
      * @since 2.0
      */
-    public Log getLogger()
+    public ConfigurationLogger getLogger()
     {
         return logger;
     }
@@ -182,7 +182,7 @@ public class ExprLookup implements Lookup
      * @param logger the {@code Log}
      * @since 2.0
      */
-    public void setLogger(Log logger)
+    public void setLogger(ConfigurationLogger logger)
     {
         this.logger = logger;
     }
@@ -232,10 +232,10 @@ public class ExprLookup implements Lookup
         }
         catch (Exception e)
         {
-            Log l = getLogger();
+            ConfigurationLogger l = getLogger();
             if (l != null)
             {
-                l.debug("Error encountered evaluating " + result, e);
+                l.debug("Error encountered evaluating " + result + ": " + e);
             }
         }
 

@@ -64,10 +64,11 @@ public class TestExprLookup
         XMLConfiguration config = new XMLConfiguration();
         FileHandler handler = new FileHandler(config);
         handler.load(TEST_FILE);
-        config.setLogger(new ConfigurationLogger("TestLogger"));
+        ConfigurationLogger testLogger = new ConfigurationLogger("TestLogger");
+        config.setLogger(testLogger);
         ExprLookup lookup = new ExprLookup(vars);
         lookup.setInterpolator(config.getInterpolator());
-        lookup.setLogger(log);
+        lookup.setLogger(testLogger);
         String str = lookup.lookup(PATTERN1);
         assertTrue(str.startsWith("Goodbye"));
         str = lookup.lookup(PATTERN2);
