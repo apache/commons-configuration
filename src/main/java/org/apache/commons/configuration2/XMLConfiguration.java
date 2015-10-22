@@ -51,7 +51,6 @@ import org.apache.commons.configuration2.tree.NodeTreeWalker;
 import org.apache.commons.configuration2.tree.ReferenceNodeHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -235,7 +234,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     public XMLConfiguration()
     {
         super();
-        setLogger(LogFactory.getLog(XMLConfiguration.class));
+        initLogger(new ConfigurationLogger(XMLConfiguration.class));
     }
 
     /**
@@ -253,7 +252,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         super(c);
         rootElementName =
                 (c != null) ? c.getRootElementName() : null;
-        setLogger(LogFactory.getLog(XMLConfiguration.class));
+        initLogger(new ConfigurationLogger(XMLConfiguration.class));
     }
 
     /**
@@ -973,7 +972,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         }
         catch (Exception e)
         {
-            this.getLogger().debug("Unable to load the configuration", e);
+            this.getLogger().debug("Unable to load the configuration: " + e);
             throw new ConfigurationException("Unable to load the configuration", e);
         }
     }

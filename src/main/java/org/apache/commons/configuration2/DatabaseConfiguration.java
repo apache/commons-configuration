@@ -35,7 +35,6 @@ import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.EventType;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Configuration stored in a database. The properties are retrieved from a
@@ -162,7 +161,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      */
     public DatabaseConfiguration()
     {
-        setLogger(LogFactory.getLog(getClass()));
+        initLogger(new ConfigurationLogger(DatabaseConfiguration.class));
         addErrorLogListener();
     }
 

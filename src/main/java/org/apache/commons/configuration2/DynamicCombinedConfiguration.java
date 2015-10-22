@@ -38,8 +38,6 @@ import org.apache.commons.configuration2.interpol.Lookup;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.NodeCombiner;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>
@@ -106,7 +104,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     {
         super();
         setNodeCombiner(comb);
-        setLogger(LogFactory.getLog(DynamicCombinedConfiguration.class));
+        initLogger(new ConfigurationLogger(DynamicCombinedConfiguration.class));
         localSubst = initLocalInterpolator();
     }
 
@@ -119,7 +117,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     public DynamicCombinedConfiguration()
     {
         super();
-        setLogger(LogFactory.getLog(DynamicCombinedConfiguration.class));
+        initLogger(new ConfigurationLogger(DynamicCombinedConfiguration.class));
         localSubst = initLocalInterpolator();
     }
 
@@ -922,11 +920,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     {
         if (loggerName != null)
         {
-            Log log = LogFactory.getLog(loggerName);
-            if (log != null)
-            {
-                config.setLogger(log);
-            }
+            config.setLogger(new ConfigurationLogger(loggerName));
         }
         config.setExpressionEngine(this.getExpressionEngine());
         config.setConversionExpressionEngine(getConversionExpressionEngine());

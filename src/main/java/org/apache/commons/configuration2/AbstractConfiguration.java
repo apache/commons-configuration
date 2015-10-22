@@ -47,8 +47,6 @@ import org.apache.commons.configuration2.sync.NoOpSynchronizer;
 import org.apache.commons.configuration2.sync.Synchronizer;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.impl.NoOpLog;
 
 /**
  * <p>Abstract configuration class. Provides basic functionality but does not
@@ -124,7 +122,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     private ConfigurationDecoder configurationDecoder;
 
     /** Stores the logger.*/
-    private Log log;
+    private ConfigurationLogger log;
 
     /**
      * Creates a new instance of {@code AbstractConfiguration}.
@@ -132,7 +130,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     public AbstractConfiguration()
     {
         interpolator = new AtomicReference<ConfigurationInterpolator>();
-        setLogger(null);
+        initLogger(null);
         installDefaultInterpolator();
         listDelimiterHandler = DisabledListDelimiterHandler.INSTANCE;
         conversionHandler = DefaultConversionHandler.INSTANCE;
@@ -492,26 +490,27 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Returns the logger used by this configuration object.
      *
      * @return the logger
-     * @since 1.4
+     * @since 2.0
      */
-    public Log getLogger()
+    public ConfigurationLogger getLogger()
     {
         return log;
     }
 
     /**
-     * Allows to set the logger to be used by this configuration object. This
+     * Allows setting the logger to be used by this configuration object. This
      * method makes it possible for clients to exactly control logging behavior.
      * Per default a logger is set that will ignore all log messages. Derived
      * classes that want to enable logging should call this method during their
-     * initialization with the logger to be used.
+     * initialization with the logger to be used. It is legal to pass a
+     * <b>null</b> logger; in this case, logging will be disabled.
      *
      * @param log the new logger
-     * @since 1.4
+     * @since 2.0
      */
-    public void setLogger(Log log)
+    public void setLogger(ConfigurationLogger log)
     {
-        this.log = (log != null) ? log : new NoOpLog();
+        initLogger(log);
     }
 
     /**
@@ -1682,6 +1681,18 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
         c.setListDelimiterHandler(getListDelimiterHandler());
         return c;
+    }
+
+    /**
+     * Initializes the logger. Supports <b>null</b> input. This method can be
+     * called by derived classes in order to enable logging.
+     *
+     * @param log the logger
+     * @since 2.0
+     */
+    protected final void initLogger(ConfigurationLogger log)
+    {
+        this.log = (log != null) ? log : ConfigurationLogger.newDummyLogger();
     }
 
     /**

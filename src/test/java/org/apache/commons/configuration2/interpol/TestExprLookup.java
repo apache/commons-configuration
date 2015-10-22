@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
+import org.apache.commons.configuration2.ConfigurationLogger;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.logging.Log;
@@ -63,7 +64,7 @@ public class TestExprLookup
         XMLConfiguration config = new XMLConfiguration();
         FileHandler handler = new FileHandler(config);
         handler.load(TEST_FILE);
-        config.setLogger(log);
+        config.setLogger(new ConfigurationLogger("TestLogger"));
         ExprLookup lookup = new ExprLookup(vars);
         lookup.setInterpolator(config.getInterpolator());
         lookup.setLogger(log);

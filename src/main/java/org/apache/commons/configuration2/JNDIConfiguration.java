@@ -33,7 +33,6 @@ import java.util.Set;
 
 import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This Configuration class allows you to interface with a JNDI datasource.
@@ -104,7 +103,7 @@ public class JNDIConfiguration extends AbstractConfiguration
     {
         this.context = context;
         this.prefix = prefix;
-        setLogger(LogFactory.getLog(getClass()));
+        initLogger(new ConfigurationLogger(JNDIConfiguration.class));
         addErrorLogListener();
     }
 

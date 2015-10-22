@@ -31,10 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import junitx.framework.ListAssert;
-
 import org.apache.commons.configuration2.ex.ConversionException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
 /**
@@ -181,7 +178,7 @@ public abstract class TestAbstractConfiguration
     {
         AbstractConfiguration config = getEmptyConfiguration();
         assertNotNull("Default logger is null", config.getLogger());
-        Log log = LogFactory.getLog(config.getClass());
+        ConfigurationLogger log = new ConfigurationLogger(config.getClass());
         config.setLogger(log);
         assertSame("Logger was not set", log, config.getLogger());
     }

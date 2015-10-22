@@ -127,7 +127,7 @@ public class CombinedConfigurationBuilderProvider extends
             BasicBuilderParameters params)
     {
         params.setListDelimiterHandler(config.getListDelimiterHandler())
-                .setLogger(config.getLogger())
+                //TODO handle logger.setLogger(config.getLogger())
                 .setThrowExceptionOnMissing(config.isThrowExceptionOnMissing())
                 .setConfigurationDecoder(config.getConfigurationDecoder());
     }
