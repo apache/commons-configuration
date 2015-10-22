@@ -23,13 +23,12 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Vector;
 
+import org.apache.commons.configuration2.ConfigurationLogger;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.io.FileLocator;
 import org.apache.commons.configuration2.io.FileLocatorUtils;
 import org.apache.commons.configuration2.io.FileSystem;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.xml.resolver.CatalogException;
 import org.apache.xml.resolver.readers.CatalogReader;
 import org.xml.sax.EntityResolver;
@@ -80,7 +79,7 @@ public class CatalogResolver implements EntityResolver
     /**
      * Stores the logger.
      */
-    private Log log;
+    private ConfigurationLogger log;
 
     /**
      * Constructs the CatalogResolver
@@ -90,7 +89,7 @@ public class CatalogResolver implements EntityResolver
         manager.setIgnoreMissingProperties(true);
         manager.setUseStaticCatalog(false);
         manager.setFileSystem(fs);
-        setLogger(null);
+        initLogger(null);
     }
 
     /**
@@ -218,23 +217,34 @@ public class CatalogResolver implements EntityResolver
      *
      * @return the logger
      */
-    public Log getLogger()
+    public ConfigurationLogger getLogger()
     {
         return log;
     }
 
     /**
-     * Allows to set the logger to be used by this configuration object. This
+     * Allows setting the logger to be used by this object. This
      * method makes it possible for clients to exactly control logging behavior.
      * Per default a logger is set that will ignore all log messages. Derived
      * classes that want to enable logging should call this method during their
-     * initialization with the logger to be used.
+     * initialization with the logger to be used. Passing in <b>null</b> as
+     * argument disables logging.
      *
      * @param log the new logger
      */
-    public void setLogger(Log log)
+    public void setLogger(ConfigurationLogger log)
     {
-        this.log = (log != null) ? log : LogFactory.getLog(CatalogResolver.class);
+        initLogger(log);
+    }
+
+    /**
+     * Initializes the logger. Checks for null parameters.
+     *
+     * @param log the new logger
+     */
+    private void initLogger(ConfigurationLogger log)
+    {
+        this.log = (log != null) ? log : ConfigurationLogger.newDummyLogger();
     }
 
     private synchronized org.apache.xml.resolver.tools.CatalogResolver getResolver()

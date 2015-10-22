@@ -18,13 +18,11 @@
 package org.apache.commons.configuration2;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.resolver.CatalogResolver;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -107,10 +105,10 @@ public class TestCatalogResolver
     @Test
     public void testLogger() throws Exception
     {
-        Log log = LogFactory.getLog(this.getClass());
+        ConfigurationLogger log = new ConfigurationLogger(this.getClass());
         resolver.setLogger(log);
         assertNotNull("No Logger returned", resolver.getLogger());
-        assertTrue("Incorrect Logger", log == resolver.getLogger());
+        assertSame("Incorrect Logger", log, resolver.getLogger());
     }
 
 }
