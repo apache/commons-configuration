@@ -20,13 +20,13 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.apache.commons.configuration2.ConfigurationDecoder;
+import org.apache.commons.configuration2.ConfigurationLogger;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.convert.ConversionHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.Lookup;
 import org.apache.commons.configuration2.sync.Synchronizer;
-import org.apache.commons.logging.Log;
 
 /**
  * <p>
@@ -53,13 +53,13 @@ public interface BasicBuilderProperties<T>
 {
     /**
      * Sets the <em>logger</em> property. With this property a concrete
-     * {@code Log} object can be set for the configuration. Thus logging
-     * behavior can be controlled.
+     * {@code ConfigurationLogger} object can be set for the configuration. Thus
+     * logging behavior can be controlled.
      *
      * @param log the {@code Log} for the configuration produced by this builder
      * @return a reference to this object for method chaining
      */
-    T setLogger(Log log);
+    T setLogger(ConfigurationLogger log);
 
     /**
      * Sets the value of the <em>throwExceptionOnMissing</em> property. This

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.configuration2.ConfigurationDecoder;
+import org.apache.commons.configuration2.ConfigurationLogger;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.convert.ConversionHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
@@ -29,7 +30,6 @@ import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.InterpolatorSpecification;
 import org.apache.commons.configuration2.interpol.Lookup;
 import org.apache.commons.configuration2.sync.Synchronizer;
-import org.apache.commons.logging.Log;
 
 /**
  * <p>
@@ -132,7 +132,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @return a reference to this object for method chaining
      */
     @Override
-    public BasicBuilderParameters setLogger(Log log)
+    public BasicBuilderParameters setLogger(ConfigurationLogger log)
     {
         return setProperty(PROP_LOGGER, log);
     }

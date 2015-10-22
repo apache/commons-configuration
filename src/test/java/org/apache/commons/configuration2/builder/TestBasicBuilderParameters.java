@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.configuration2.ConfigurationDecoder;
+import org.apache.commons.configuration2.ConfigurationLogger;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.convert.ConversionHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
@@ -37,7 +38,6 @@ import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.InterpolatorSpecification;
 import org.apache.commons.configuration2.interpol.Lookup;
 import org.apache.commons.configuration2.sync.Synchronizer;
-import org.apache.commons.logging.Log;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -89,7 +89,7 @@ public class TestBasicBuilderParameters
     @Test
     public void testSetLogger()
     {
-        Log log = EasyMock.createMock(Log.class);
+        ConfigurationLogger log = EasyMock.createMock(ConfigurationLogger.class);
         EasyMock.replay(log);
         assertSame("Wrong result", params, params.setLogger(log));
         assertSame("Wrong logger parameter", log,
@@ -403,7 +403,7 @@ public class TestBasicBuilderParameters
     @Test
     public void testCloneValues()
     {
-        Log log = EasyMock.createMock(Log.class);
+        ConfigurationLogger log = EasyMock.createMock(ConfigurationLogger.class);
         ConfigurationInterpolator ci =
                 EasyMock.createMock(ConfigurationInterpolator.class);
         ListDelimiterHandler handler1 = EasyMock.createMock(ListDelimiterHandler.class);
