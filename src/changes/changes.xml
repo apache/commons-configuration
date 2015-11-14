@@ -27,6 +27,11 @@
   <body>
     <release version="2.0-beta2" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-614">
+        References to Commons Logging have been removed from the Configuration
+        API. It is still possible to influence logging by making use of the new
+        ConfigurationLogger abstraction.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-612" due-to="Jon Weygand">
         The return type of ConfigurationBuilder.getConfiguration() was changed
         from Configuration to ImmutableConfiguration because this is the base
