@@ -60,8 +60,8 @@ window.height = 300
         </p>
         <source><![CDATA[
 Parameters params = new Parameters();
-FileBasedConfigurationBuilder<Configuration> builder =
-    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+FileBasedConfigurationBuilder<FileBasedConfiguration> builder =
+    new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
     .configure(params.properties()
         .setFileName("usergui.properties"));
 try
@@ -177,8 +177,8 @@ colors.pie = #0000FF;
         </p>
         <source><![CDATA[
 Parameters params = new Parameters();
-FileBasedConfigurationBuilder<Configuration> builder =
-    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+FileBasedConfigurationBuilder<FileBasedConfiguration> builder =
+    new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
     .configure(params.properties()
         .setFileName("usergui.properties")
         .setListDelimiterHandler(new DefaultListDelimiterHandler(','));
