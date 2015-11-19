@@ -206,6 +206,13 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * the {@code lock()} and {@code unlock()} methods manually to ensure that
  * other threads see your changes.
  * </p>
+ * <p>
+ * As this class extends {@link AbstractConfiguration}, all basic features
+ * like variable interpolation, list handling, or data type conversions are
+ * available as well. This is described in the chapter
+ * <a href="http://commons.apache.org/proper/commons-configuration/userguide/howto_basicfeatures.html">
+ * Basic features and AbstractConfiguration</a> of the user's guide.
+ * </p>
  *
  * @author <a
  *         href="http://commons.apache.org/configuration/team-list.html">Commons

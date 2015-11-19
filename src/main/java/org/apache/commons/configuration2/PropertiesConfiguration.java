@@ -181,6 +181,14 @@ import org.apache.commons.lang3.text.translate.UnicodeEscaper;
  * change such properties during life time of an instance, you have to use
  * the {@code lock()} and {@code unlock()} methods manually to ensure that
  * other threads see your changes.
+ * <p>As this class extends {@link AbstractConfiguration}, all basic features
+ * like variable interpolation, list handling, or data type conversions are
+ * available as well. This is described in the chapter
+ * <a href="http://commons.apache.org/proper/commons-configuration/userguide/howto_basicfeatures.html">
+ * Basic features and AbstractConfiguration</a> of the user's guide. There is
+ * also a separate chapter dealing with
+ * <a href="commons.apache.org/proper/commons-configuration/userguide/howto_properties.html">
+ * Properties files</a> in special.
  *
  * @see java.util.Properties#load
  *
