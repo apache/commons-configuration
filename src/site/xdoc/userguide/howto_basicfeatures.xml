@@ -238,9 +238,25 @@ action.key = ${const:java.awt.event.KeyEvent.VK_CANCEL}
 java.home = ${env:JAVA_HOME}
 ]]></source>
     <p>
-      If a variable cannot be resolved, e.g. because the name is invalid or an
-      unknown prefix is used, it won't be replaced, but is returned as is
-      including the dollar sign and the curly braces.
+      Below is some more information related to variable interpolation users
+      should be aware of:
+      <ul>
+        <li>If a variable cannot be resolved, e.g. because the name is invalid
+        or an unknown prefix is used, it won't be replaced, but is returned as
+        is including the dollar sign and the curly braces.</li>
+        <li>References to variables can be nested; a variable can refer to a
+        variable which in turn can have references to other variables and so
+        on.</li>
+        <li>Cyclic references are detected. In this case, no interpolation is
+        done.</li>
+        <li>Variable interpolation happens when properties are queried from the
+        configuration, not at creation time. Therefore, the mechanism is quite
+        dynamic: changes on one property can impact the value of another
+        property that references the first one.</li>
+        <li>Variable interpolation is done by all property access methods. One
+        exception is the generic <code>getProperty()</code> method which
+        returns the raw property value.</li>
+      </ul>
     </p>
     </subsection>
 
