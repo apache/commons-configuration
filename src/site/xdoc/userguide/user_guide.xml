@@ -38,6 +38,7 @@
 
     <section name="Table of contents">
     <ul>
+      <li><a href="quick_start.html">Quick start guide</a></li>
       <li><a href="overview.html#Using_Configuration">Using Configuration</a></li>
       <ul>
         <li><a href="overview.html#Configuration_Sources">Configuration Sources</a></li>

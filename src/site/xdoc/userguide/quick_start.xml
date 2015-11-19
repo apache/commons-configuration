@@ -1,0 +1,261 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Quick start</title>
+ </properties>
+
+<body>
+    <section name="Quick start guide">
+    <p>
+      This document is a short introduction into the basic use cases of
+      <em>Commons Configuration</em> for the impatient. Later chapters of this
+      user's guide explain the concepts presented here in more detail.
+    </p>
+
+    <subsection name="Reading a properties file">
+    <p>
+      Configuration information is frequently stored in properties files.
+      Consider the following simple file that defines some properties related
+      to accessing a database. We assume that it is stored as
+      <code>database.properties</code> in the local file system:
+    </p>
+    <source><![CDATA[
+database.host = db.acme.com
+database.port = 8199
+database.user = admin
+database.password = ???
+database.timeout = 60000
+]]></source>
+    <p>
+      The easiest way to read this file is via the
+      <code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/Configurations.html">
+      Configurations</a></code> helper class. This class offers a bunch of
+      convenience methods for creating configuration objects from different
+      sources. For reading a properties file the code looks as follows:
+    </p>
+    <source><![CDATA[
+Configurations configs = new Configurations();
+try
+{
+    Configuration config = configs.properties(new File("config.properties"));
+    // access configuration properties
+    ...
+}
+catch (ConfigurationException cex)
+{
+    // Something went wrong
+}
+]]></source>
+    </subsection>
+
+    <subsection name="Accessing properties">
+    <p>
+      The <code><a href="../apidocs/org/apache/commons/configuration2/Configuration.html">
+      Configuration</a></code> object obtained in the last step can now be used
+      to query the values for the stored configuration properties. For this
+      purpose, numerous get methods for different property types are available.
+      For the properties contained in the example file the following methods
+      can be used:
+    </p>
+    <source><![CDATA[
+String dbHost = config.getString("database.host");
+int dbPort = config.getInt("database.port");
+String dbUser = config.getString("database.user");
+String dbPassword = config.getString("database.password", "secret");  // provide a default
+long dbTimeout = config.getLong("database.timeout");
+]]></source>
+    <p>
+      Note that the keys passed to the get methods match the keys contained in
+      the properties file. If a key cannot be resolved, the default behavior of
+      a configuration is to return <strong>null</strong>. (Methods that return
+      a primitive type throw an exception because in this case there is no
+      <strong>null</strong> value.) It is possible to provide a default value
+      which is used when the key cannot be found.
+    </p>
+    </subsection>
+
+    <subsection name="Reading an XML file">
+    <p>
+      XML is also a suitable format for storing configuration information,
+      especially if the data becomes more complex. For instance, lists of
+      values can be stored in a natural way by just repeating tags. The
+      example file for this section defines some directory paths that are to be
+      processed by an application. It is named <code>paths.xml</code> and looks
+      as follows:
+    </p>
+    <source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<configuration>
+  <processing stage="qa">
+    <paths>
+      <path>/data/path1</path>
+      <path>/data/otherpath</path>
+      <path>/var/log</path>
+    </paths>
+  </processing>
+</configuration>
+]]></source>
+    <p>
+      Reading this file works analogously to reading a properties file. Again a
+      <code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/Configurations.html">
+      Configurations</a></code> instance is needed (by the way, this class is
+      thread-safe, and an instance can be shared and reused to read multiple
+      configuration sources), but this time we use the <code>xml()</code>
+      method rather than <code>properties()</code>:
+    </p>
+    <source><![CDATA[
+Configurations configs = new Configurations();
+try
+{
+    XMLConfiguration config = configs.xml("paths.xml");
+    // access configuration properties
+    ...
+}
+catch (ConfigurationException cex)
+{
+    // Something went wrong
+}
+]]></source>
+    <p>
+      The <code>xml()</code> method returns an object of type
+      <code><a href="../apidocs/org/apache/commons/configuration2/XMLConfiguration.html">
+      XMLConfiguration</a></code>. This class implements the
+      <code>Configuration</code> interface, but offers some more functionality
+      to access properties in a more structured manner. The reader may also have
+      noticed that we passed a string to <code>xml()</code> while we used a
+      <code>java.io.File</code> object in the properties example. All these
+      methods come in several overloaded variants allowing the caller to specify
+      the configuration source in different ways: as a file, as a URL, or as a
+      string. In the latter case, the file is searched for in various places,
+      including at an absolute file path, at a relative file path, as a resource
+      in the classpath, or in the current user's home directory.
+    </p>
+    </subsection>
+
+    <subsection name="Accessing properties from XML">
+    <p>
+      Accessing properties in a XML configuration (or any other hierarchical
+      configuration) supports the same query methods as for regular
+      configurations. There are some additional facilities that take the
+      hierarchical nature of these sources into account. The properties in the
+      example configuration can be read in the following way:
+    </p>
+    <source><![CDATA[
+String stage = config.getString("processing[@stage]");
+List<String> paths = config.getList(String.class, "processing.paths.path");
+]]></source>
+    <p>
+      The keys for properties are generated by concatening the possibly nested
+      tag names in the XML document (ignoring the root element). For attributes,
+      there is a special syntax as shown for the <em>stage</em> property.
+      Because the <em>path</em> element appears multiple times it actually
+      defines a list. With the <code>getList()</code> method all values can be
+      queried at once.
+    </p>
+    <p>
+      Hierarchical configurations support an advanced syntax for keys that
+      allows a navigation to a specific element in the source document. This is
+      achieved by adding numeric indices in parentheses after the single key parts. For
+      instance, in order to reference the second <em>path</em> element in the
+      list, the following key can be used (indices are 0-based):
+    </p>
+    <source><![CDATA[
+String secondPath = config.getString("processing.paths.path(1)");
+]]></source>
+    <p>
+      For elements which are not repeated such indices can be dropped. It is
+      also possible to set an alternative <em>expression engine</em> - the
+      component that evaluates and interprets configuration keys. There is an
+      implementation available which can deal with XPath expressions. Refer to
+      <a href="howto_hierarchical.html#Expression_engines">Expression engines</a>
+      for further details.
+    </p>
+    </subsection>
+
+    <subsection name="Updating a configuration">
+    <p>
+      The <code>Configuration</code> interface defines some methods for
+      manipulating configuration properties. Typical CRUD operations are
+      available for all properties. The following code fragment shows how the
+      example properties configuration can be changed. The port of the database
+      is changed to a new value, and a new property is added:
+    </p>
+<source><![CDATA[
+config.setProperty("database.port", 8200);
+config.addProperty("database.type", "production");
+]]></source>
+    <p>
+      <code>addProperty()</code> always adds a new value to the configuration.
+      If the affected key already exists, the value is added to this key, so
+      that it becomes a list. <code>setProperty()</code> in contrast overrides
+      an existing value (or creates a new one if the key does not exist). Both
+      methods can be passed an arbitrary value object. This can also be an
+      array or a collection, which makes it possible to add multiple values in a
+      single step.
+    </p>
+    </subsection>
+
+    <subsection name="Saving a configuration">
+    <p>
+      After a configuration has been manipulated, it should probably be saved
+      again to make the changes persistent. Otherwise, the changes are only in
+      memory. If configurations are to be changed, it is preferrable to obtain
+      them via a different mechanism: a <em>configuration builder</em>.
+      Builders are the most powerful and flexible way to construct
+      configurations. They support many settings that impact the way the
+      configuration data is loaded and the resulting configuration object
+      behaves. Builders for file-based configurations also offer a
+      <code>save()</code> method that writes all configuration data back to
+      disk. Configuration builders are typically created using a fluent API
+      which allows a convenient and flexible configuration of the builder. This
+      API is described in the section
+      <a href="howto_builders.html#Configuration_Builders">Configuration
+      builders</a>. For simple use cases, the
+      <code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/Configurations.html">
+      Configurations</a></code> class we have already used has again some convenience
+      methods. The following code fragment shows how a configuration is read via
+      a builder, manipulated, and finally saved again:
+    </p>
+<source><![CDATA[
+Configurations configs = new Configurations();
+try
+{
+    // obtain the configuration
+    FileBasedConfigurationBuilder<XMLConfiguration> builder = configs.xmlBuilder("paths.xml");
+    XMLConfiguration config = builder.getConfiguration();
+    
+    // update property
+    config.addProperty("newProperty", "newValue");
+
+    // save configuration
+    builder.save();
+}
+catch (ConfigurationException cex)
+{
+    // Something went wrong
+}
+]]></source>
+    </subsection>
+
+  </section>
+</body>
+
+</document>
