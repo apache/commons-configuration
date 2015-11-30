@@ -1,7 +1,7 @@
 $Id$
 
                         Commons Configuration Package
-                             Version 2.0-beta1
+                             Version 2.0-beta2
                                 Release Notes
 
 INTRODUCTION
@@ -12,6 +12,59 @@ Configuration component. It describes the changes since the previous version.
 The Commons Configuration software library provides a generic configuration
 interface which enables an application to read configuration data from a variety
 of sources.
+
+After the first beta release in June 2015 there has been some feedback from the
+community resulting in (minor) adaptations of the API. In most cases, the
+return values of methods have been changed to be more generic. There has also
+been a change in the support for logging. Therefore, this second beta release
+is provided to make these changes more "official".
+
+This release also includes some bug fixes. The bugs addressed here have partly
+existed already in the Configuration 1.0 code base; so these fixes are not all
+related to changes introduced in the 2.0 version.
+
+Below is a list of all changes in this version. Please refer to the clirr
+report at http://commons.apache.org/proper/commons-configuration/clirr-report.html
+for information about changes which break binary compatibility.
+
+Changes:
+========
+o CONFIGURATION-614:
+  References to Commons Logging have been removed from the Configuration API.
+  It is still possible to influence logging by making use of the new
+  ConfigurationLogger abstraction.
+o CONFIGURATION-612:
+  The return type of ConfigurationBuilder.getConfiguration() was changed from
+  Configuration to ImmutableConfiguration because this is the base interface
+  for all configuration objects. Thanks to Jon Weygand.
+o CONFIGURATION-608:
+  Adapted the return type of ReloadingFileBasedConfigurationBuilder.configure().
+
+Fixed Bugs:
+===========
+o CONFIGURATION-609:
+  Fixed a bug in PropertiesConfiguration related to the loading of include
+  files. The FileHandler used for this purpose was not fully initialized.
+o CONFIGURATION-605:
+  XMLConfiguration no longer drops keys when list delimiter characters occur
+  in element values.
+o CONFIGURATION-604:
+  Fixed a problem in the conversion of a flat configuration to a hierarchical
+  one that could cause the loss of properties in a combined configuration
+  constructed by an override combiner.
+
+Commons Configuration 2.0-beta2 requires Java 1.6 or higher.
+
+Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+
+For complete information on Apache Commons Configuration, including instructions
+on how to submit bug reports, patches, or suggestions for improvement, see the
+Apache Commons Configuration website:
+http://commons.apache.org/proper/commons-configuration/
+
+                        Commons Configuration Package
+                             Version 2.0-beta1
+                                Release Notes
 
 This is the first beta release of Commons Configuration 2.0 after two alpha
 versions. There has not been much feedback so far and no requests for API
@@ -28,11 +81,6 @@ Changes:
 ========
 o CONFIGURATION-598: Removed obsolete ConfigurationBuilder interface in the
                      base package.
-
-Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
-
-For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
 
 
                         Commons Configuration Package
@@ -68,7 +116,7 @@ o CONFIGURATION-427:  XMLPropertyListConfiguration can now save arrays in the co
 Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
 
 For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
+patches, or suggestions for improvement, see the Apache Commons Configuration website:
 
 http://commons.apache.org/proper/commons-configuration/
 
@@ -273,6 +321,6 @@ o CONFIGURATION-26:   It is now possible to influence the conversion from a cont
 Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
 
 For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
-patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
+patches, or suggestions for improvement, see the Apache Commons Configuration website:
 
 http://commons.apache.org/proper/commons-configuration/
