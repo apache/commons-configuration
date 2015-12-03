@@ -76,6 +76,7 @@ class TrackedNodeHandler extends AbstractImmutableNodeHandler
      * {@inheritDoc} This implementation delegates to the handler with the
      * parent mapping.
      */
+    @Override
     public ImmutableNode getParent(ImmutableNode node)
     {
         return getParentHandler().getParent(node);
@@ -85,6 +86,7 @@ class TrackedNodeHandler extends AbstractImmutableNodeHandler
      * {@inheritDoc} This implementation returns the root node passed at
      * construction time.
      */
+    @Override
     public ImmutableNode getRootNode()
     {
         return rootNode;

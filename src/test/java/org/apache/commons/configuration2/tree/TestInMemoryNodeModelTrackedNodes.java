@@ -550,6 +550,7 @@ public class TestInMemoryNodeModelTrackedNodes
                         EasyMock.anyString(), EasyMock.anyObject(),
                         EasyMock.anyObject(TreeData.class)))
                 .andAnswer(new IAnswer<NodeUpdateData<ImmutableNode>>() {
+                    @Override
                     public NodeUpdateData<ImmutableNode> answer()
                             throws Throwable {
                         ImmutableNode root =

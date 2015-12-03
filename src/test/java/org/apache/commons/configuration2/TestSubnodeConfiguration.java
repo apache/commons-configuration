@@ -444,6 +444,7 @@ public class TestSubnodeConfiguration
         ConfigurationInterpolator interpolator = parent.getInterpolator();
         interpolator.registerLookup("brackets", new Lookup() {
 
+            @Override
             public String lookup(String key) {
                 return "(" + key + ")";
             }

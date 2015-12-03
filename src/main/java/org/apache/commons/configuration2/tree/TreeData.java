@@ -76,6 +76,7 @@ class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHand
         referenceTracker = refTracker;
     }
 
+    @Override
     public ImmutableNode getRootNode()
     {
         return root;
@@ -110,6 +111,7 @@ class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHand
      * @return the parent node for this node
      * @throws IllegalArgumentException if the node cannot be resolved
      */
+    @Override
     public ImmutableNode getParent(ImmutableNode node)
     {
         if (node == getRootNode())

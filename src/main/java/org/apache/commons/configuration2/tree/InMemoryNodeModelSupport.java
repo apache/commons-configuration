@@ -37,5 +37,6 @@ public interface InMemoryNodeModelSupport extends
      * {@inheritDoc} This variant specializes the return type to
      * {@code InMemoryNodeModel}.
      */
+    @Override
     InMemoryNodeModel getNodeModel();
 }

@@ -291,18 +291,21 @@ public class TestNodeTreeWalker
             this.maxNodeCount = maxNodeCount;
         }
 
+        @Override
         public void visitBeforeChildren(ImmutableNode node,
                 NodeHandler<ImmutableNode> handler)
         {
             visitedNodes.add(handler.nodeName(node));
         }
 
+        @Override
         public void visitAfterChildren(ImmutableNode node,
                 NodeHandler<ImmutableNode> handler)
         {
             visitedNodes.add(visitAfterName(handler.nodeName(node)));
         }
 
+        @Override
         public boolean terminate()
         {
             return visitedNodes.size() >= getMaxNodeCount();

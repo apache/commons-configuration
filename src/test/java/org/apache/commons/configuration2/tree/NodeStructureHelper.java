@@ -379,6 +379,7 @@ public class NodeStructureHelper
                         (NodeHandler<ImmutableNode>) EasyMock
                                 .anyObject(NoHandler.class)))
                 .andAnswer(new IAnswer<List<QueryResult<ImmutableNode>>>() {
+                    @Override
                     public List<QueryResult<ImmutableNode>> answer()
                             throws Throwable {
                         ImmutableNode root =
@@ -407,6 +408,7 @@ public class NodeStructureHelper
                         EasyMock.anyString(),
                         EasyMock.anyObject(TreeData.class)))
                 .andAnswer(new IAnswer<NodeAddData<ImmutableNode>>() {
+                    @Override
                     public NodeAddData<ImmutableNode> answer() throws Throwable {
                         ImmutableNode root =
                                 (ImmutableNode) EasyMock.getCurrentArguments()[0];

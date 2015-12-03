@@ -226,6 +226,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @throws ConfigurationRuntimeException if the key does not select a single
      *         node
      */
+    @Override
     public HierarchicalConfiguration<ImmutableNode> configurationAt(String key,
             boolean supportUpdates)
     {
@@ -405,6 +406,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * by delegating to {@code configurationAt()}. Then an immutable wrapper
      * is created and returned.
      */
+    @Override
     public ImmutableHierarchicalConfiguration immutableConfigurationAt(
             String key, boolean supportUpdates)
     {
@@ -417,6 +419,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * <b>false</b>)}.
      * @throws ConfigurationRuntimeException if the key does not select a single node
      */
+    @Override
     public HierarchicalConfiguration<ImmutableNode> configurationAt(String key)
     {
         return configurationAt(key, false);
@@ -428,6 +431,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * is created and returned.
      * @throws ConfigurationRuntimeException if the key does not select a single node
      */
+    @Override
     public ImmutableHierarchicalConfiguration immutableConfigurationAt(
             String key)
     {
@@ -439,6 +443,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * {@inheritDoc} This implementation creates sub configurations in the same
      * way as described for {@link #configurationAt(String)}.
      */
+    @Override
     public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(
             String key)
     {
@@ -470,6 +475,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * {@inheritDoc} This implementation creates tracked nodes for the specified
      * key. Then sub configurations for these nodes are created and returned.
      */
+    @Override
     public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(
             String key, boolean supportUpdates)
     {
@@ -500,6 +506,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * {@code SubnodeConfiguration} objects. Then for each element of this list
      * an unmodifiable wrapper is created.
      */
+    @Override
     public List<ImmutableHierarchicalConfiguration> immutableConfigurationsAt(
             String key)
     {
@@ -511,6 +518,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * given key. If not a single node is selected, an empty list is returned.
      * Otherwise, sub configurations for each child of the node are created.
      */
+    @Override
     public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(
             String key)
     {
@@ -548,6 +556,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * of the {@code supportUpdates} flag, connected sub configurations may be
      * created.
      */
+    @Override
     public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(
             String key, boolean supportUpdates)
     {
@@ -567,6 +576,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * configurations. Then a list with immutable wrapper configurations is
      * created.
      */
+    @Override
     public List<ImmutableHierarchicalConfiguration> immutableChildConfigurationsAt(
             String key)
     {

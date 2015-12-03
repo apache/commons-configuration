@@ -606,6 +606,7 @@ public class TestInMemoryNodeModel
                             EasyMock.eq(KEY),
                             EasyMock.anyObject(TreeData.class))).andAnswer(
                     new IAnswer<NodeAddData<ImmutableNode>>() {
+                        @Override
                         public NodeAddData<ImmutableNode> answer()
                                 throws Throwable {
                             assertSame("Wrong root node", model.getRootNode(),
@@ -648,6 +649,7 @@ public class TestInMemoryNodeModel
                         EasyMock.eq(KEY), EasyMock.anyObject(TreeData.class)))
                 .andAnswer(new IAnswer<NodeAddData<ImmutableNode>>()
                 {
+                    @Override
                     public NodeAddData<ImmutableNode> answer() throws Throwable
                     {
                         ImmutableNode addParent =

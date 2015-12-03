@@ -164,40 +164,47 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode>
         return releaseTrackedNodeOnFinalize;
     }
 
+    @Override
     public void setRootNode(ImmutableNode newRoot)
     {
         getParentModel().replaceTrackedNode(getSelector(), newRoot);
     }
 
+    @Override
     public NodeHandler<ImmutableNode> getNodeHandler()
     {
         return getParentModel().getTrackedNodeHandler(getSelector());
     }
 
+    @Override
     public void addProperty(String key, Iterable<?> values,
             NodeKeyResolver<ImmutableNode> resolver)
     {
         getParentModel().addProperty(key, getSelector(), values, resolver);
     }
 
+    @Override
     public void addNodes(String key, Collection<? extends ImmutableNode> nodes,
             NodeKeyResolver<ImmutableNode> resolver)
     {
         getParentModel().addNodes(key, getSelector(), nodes, resolver);
     }
 
+    @Override
     public void setProperty(String key, Object value,
             NodeKeyResolver<ImmutableNode> resolver)
     {
         getParentModel().setProperty(key, getSelector(), value, resolver);
     }
 
+    @Override
     public List<QueryResult<ImmutableNode>> clearTree(String key,
             NodeKeyResolver<ImmutableNode> resolver)
     {
         return getParentModel().clearTree(key, getSelector(), resolver);
     }
 
+    @Override
     public void clearProperty(String key,
             NodeKeyResolver<ImmutableNode> resolver)
     {
@@ -211,6 +218,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode>
      *
      * @param resolver
      */
+    @Override
     public void clear(NodeKeyResolver<ImmutableNode> resolver)
     {
         getParentModel().clearTree(null, getSelector(), resolver);
