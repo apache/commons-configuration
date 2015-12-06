@@ -136,6 +136,13 @@
         <revision>2.0-beta1</revision>
       </Version>
     </release>
+    <release>
+      <Version>
+        <name>Commons Configuration 2.0-beta2</name>
+        <created>2015-12-05</created>
+        <revision>2.0-beta2</revision>
+      </Version>
+    </release>
 
     <mailing-list rdf:resource="http://commons.apache.org/mail-lists.html"/>
   </Project>
