@@ -1425,7 +1425,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     @Override
-    public List<Object> getList(String key, List<Object> defaultValue)
+    public List<Object> getList(String key, List<?> defaultValue)
     {
         Object value = getProperty(key);
         List<Object> list;
@@ -1448,7 +1448,10 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         }
         else if (value == null)
         {
-            list = defaultValue;
+            // This is okay because we just return this list to the caller
+            @SuppressWarnings("unchecked")
+            List<Object> resultList = (List<Object>) defaultValue;
+            list = resultList;
         }
         else if (value.getClass().isArray())
         {

@@ -225,7 +225,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public List<Object> getList(String key, List<Object> defaultValue)
+    public List<Object> getList(String key, List<?> defaultValue)
     {
         return config.getList(makePath(key), defaultValue);
     }

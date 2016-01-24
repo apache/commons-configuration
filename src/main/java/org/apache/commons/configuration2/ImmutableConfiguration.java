@@ -533,7 +533,7 @@ public interface ImmutableConfiguration
      *         object that is not a List.
      * @see #getList(Class, String, List)
      */
-    List<Object> getList(String key, List<Object> defaultValue);
+    List<Object> getList(String key, List<?> defaultValue);
 
     /**
      * Get an object of the specified type associated with the given

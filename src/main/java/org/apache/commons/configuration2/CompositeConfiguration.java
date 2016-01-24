@@ -380,7 +380,7 @@ implements Cloneable
     }
 
     @Override
-    public List<Object> getList(String key, List<Object> defaultValue)
+    public List<Object> getList(String key, List<?> defaultValue)
     {
         List<Object> list = new ArrayList<Object>();
 
@@ -400,7 +400,10 @@ implements Cloneable
 
         if (list.isEmpty())
         {
-            return defaultValue;
+            // This is okay because we just return this list to the caller
+            @SuppressWarnings("unchecked")
+            List<Object> resultList = (List<Object>) defaultValue;
+            return resultList;
         }
 
         ListIterator<Object> lit = list.listIterator();
