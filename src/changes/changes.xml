@@ -27,6 +27,12 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-615">
+        Changed generic types in the signatures of a MapConfiguration
+        constructor and AbstractConfiguration.getList(String, List). These
+        changes were made in version 1.10 as fixes for CONFIGURATION-557 and
+        CONFIGURATION-558. But it had been missed to merge them to trunk.
+      </action>
     </release>
 
     <release version="2.0-beta2" date="2015-12-05"
