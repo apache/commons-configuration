@@ -103,9 +103,9 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      *
      * @param map the map
      */
-    public MapConfiguration(Map<String, Object> map)
+    public MapConfiguration(Map<String, ?> map)
     {
-        this.map = map;
+        this.map = (Map<String, Object>) map;
     }
 
     /**
