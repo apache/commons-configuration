@@ -27,6 +27,11 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-618">
+        When using immutable configurations exceptions thrown by the wrapped
+        configuration came out as UndeclaredThrowableException. This has been
+        fixed; now the correct original exception is thrown.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-615">
         Changed generic types in the signatures of a MapConfiguration
         constructor and AbstractConfiguration.getList(String, List). These
