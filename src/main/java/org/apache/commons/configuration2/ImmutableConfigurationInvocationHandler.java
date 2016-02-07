@@ -17,6 +17,7 @@
 package org.apache.commons.configuration2;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
@@ -76,7 +77,15 @@ class ImmutableConfigurationInvocationHandler implements InvocationHandler
     public Object invoke(Object proxy, Method method, Object[] args)
             throws Throwable
     {
-        return handleResult(method.invoke(wrappedConfiguration, args));
+        try
+        {
+            return handleResult(method.invoke(wrappedConfiguration, args));
+        }
+        catch (InvocationTargetException e)
+        {
+            // unwrap
+            throw e.getCause();
+        }
     }
 
     /**

@@ -16,12 +16,16 @@
  */
 package org.apache.commons.configuration2;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
@@ -205,5 +209,29 @@ public class TestImmutableConfiguration
                 ConfigurationUtils.unmodifiableConfiguration(conf);
         assertTrue("Property not found", ihc.getBoolean(key));
         assertEquals("Wrong max index", 0, ihc.getMaxIndex(key));
+    }
+
+    /**
+     * Tests that exceptions thrown by the wrapped configuration are handled
+     * correctly.
+     */
+    @Test
+    public void testExceptionHandling()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        final String property = "nonExistingProperty";
+        config.setThrowExceptionOnMissing(true);
+        ImmutableConfiguration ic =
+                ConfigurationUtils.unmodifiableConfiguration(config);
+        try
+        {
+            ic.getString(property);
+            fail("Exception for missing property not thrown!");
+        }
+        catch (NoSuchElementException e)
+        {
+            assertThat("Wrong message", e.getMessage(),
+                    containsString(property));
+        }
     }
 }
