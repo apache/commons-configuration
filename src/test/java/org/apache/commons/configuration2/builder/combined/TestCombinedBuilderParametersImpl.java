@@ -366,37 +366,45 @@ public class TestCombinedBuilderParametersImpl
     }
 
     /**
-     * Tests whether a default parameters manager is dynamically created if it has not
-     * been set.
+     * Tests whether a default parameters manager is dynamically created if it
+     * has not been set.
      */
     @Test
-    public void testGetChildDefaultParametersManagerUndefined() {
-        CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        assertNotNull("No default manager", params.getChildDefaultParametersManager());
+    public void testGetChildDefaultParametersManagerUndefined()
+    {
+        CombinedBuilderParametersImpl params =
+                new CombinedBuilderParametersImpl();
+        assertNotNull("No default manager",
+                params.getChildDefaultParametersManager());
     }
 
     /**
      * Tests whether a default parameters manager can be set and queried.
      */
     @Test
-    public void testGetChildDefaultParametersManagerSpecific() {
-        DefaultParametersManager manager = EasyMock
-                .createMock(DefaultParametersManager.class);
+    public void testGetChildDefaultParametersManagerSpecific()
+    {
+        DefaultParametersManager manager =
+                EasyMock.createMock(DefaultParametersManager.class);
         EasyMock.replay(manager);
-        CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        CombinedBuilderParametersImpl params =
+                new CombinedBuilderParametersImpl();
         assertSame("Wrong result", params,
                 params.setChildDefaultParametersManager(manager));
-        assertSame("Wrong manager", manager, params.getChildDefaultParametersManager());
+        assertSame("Wrong manager", manager,
+                params.getChildDefaultParametersManager());
     }
 
     /**
      * Creates a mock for a defaults handler.
+     *
      * @return the handler mock
      */
     private static DefaultParametersHandler<BuilderParameters> createDefaultsHandlerMock()
     {
         @SuppressWarnings("unchecked")
-        DefaultParametersHandler<BuilderParameters> mock = EasyMock.createMock(DefaultParametersHandler.class);
+        DefaultParametersHandler<BuilderParameters> mock =
+                EasyMock.createMock(DefaultParametersHandler.class);
         return mock;
     }
 
@@ -406,29 +414,40 @@ public class TestCombinedBuilderParametersImpl
     @Test
     public void testRegisterChildDefaultsHandler()
     {
-        DefaultParametersManager manager = EasyMock.createMock(DefaultParametersManager.class);
-        DefaultParametersHandler<BuilderParameters> handler = createDefaultsHandlerMock();
+        DefaultParametersManager manager =
+                EasyMock.createMock(DefaultParametersManager.class);
+        DefaultParametersHandler<BuilderParameters> handler =
+                createDefaultsHandlerMock();
         manager.registerDefaultsHandler(BuilderParameters.class, handler);
         EasyMock.replay(manager, handler);
-        CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        CombinedBuilderParametersImpl params =
+                new CombinedBuilderParametersImpl();
         params.setChildDefaultParametersManager(manager);
-        assertSame("Wrong result", params, params.registerChildDefaultsHandler(BuilderParameters.class, handler));
+        assertSame("Wrong result", params, params.registerChildDefaultsHandler(
+                BuilderParameters.class, handler));
         EasyMock.verify(manager);
     }
 
     /**
-     * Tests whether a defaults handler for a child source with a class restriction can be registered.
+     * Tests whether a defaults handler for a child source with a class
+     * restriction can be registered.
      */
     @Test
     public void testRegisterChildDefaultsHandlerWithStartClass()
     {
-        DefaultParametersManager manager = EasyMock.createMock(DefaultParametersManager.class);
-        DefaultParametersHandler<BuilderParameters> handler = createDefaultsHandlerMock();
-        manager.registerDefaultsHandler(BuilderParameters.class, handler, FileBasedBuilderParameters.class);
+        DefaultParametersManager manager =
+                EasyMock.createMock(DefaultParametersManager.class);
+        DefaultParametersHandler<BuilderParameters> handler =
+                createDefaultsHandlerMock();
+        manager.registerDefaultsHandler(BuilderParameters.class, handler,
+                FileBasedBuilderParameters.class);
         EasyMock.replay(manager, handler);
-        CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        CombinedBuilderParametersImpl params =
+                new CombinedBuilderParametersImpl();
         params.setChildDefaultParametersManager(manager);
-        assertSame("Wrong result", params, params.registerChildDefaultsHandler(BuilderParameters.class, handler, FileBasedBuilderParameters.class));
+        assertSame("Wrong result", params,
+                params.registerChildDefaultsHandler(BuilderParameters.class,
+                        handler, FileBasedBuilderParameters.class));
         EasyMock.verify(manager);
     }
 }
