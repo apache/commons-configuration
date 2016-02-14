@@ -19,9 +19,8 @@ package org.apache.commons.configuration2.builder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
-import java.util.Map;
-
 import javax.xml.parsers.DocumentBuilder;
+import java.util.Map;
 
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.easymock.EasyMock;
@@ -139,5 +138,32 @@ public class TestXMLBuilderParametersImpl
                 paramsMap.get("throwExceptionOnMissing"));
         assertSame("Wrong resolver", resolver, paramsMap.get("entityResolver"));
         assertSame("Wrong builder", builder, paramsMap.get("documentBuilder"));
+    }
+
+    /**
+     * Tests whether properties can be inherited.
+     */
+    @Test
+    public void testInheritFrom()
+    {
+        EntityResolver resolver = EasyMock.createMock(EntityResolver.class);
+        DocumentBuilder builder = EasyMock.createMock(DocumentBuilder.class);
+        params.setDocumentBuilder(builder).setEntityResolver(resolver)
+                .setSchemaValidation(true).setValidating(true);
+        params.setThrowExceptionOnMissing(true);
+        XMLBuilderParametersImpl params2 = new XMLBuilderParametersImpl();
+
+        params2.inheritFrom(params.getParameters());
+        Map<String, Object> parameters = params2.getParameters();
+        assertEquals("Exception flag not set", Boolean.TRUE,
+                parameters.get("throwExceptionOnMissing"));
+        assertEquals("Entity resolver not set", resolver,
+                parameters.get("entityResolver"));
+        assertEquals("Document builder not set", builder,
+                parameters.get("documentBuilder"));
+        assertEquals("Validation flag not set", Boolean.TRUE,
+                parameters.get("validating"));
+        assertEquals("Schema flag not set", Boolean.TRUE,
+                parameters.get("schemaValidation"));
     }
 }

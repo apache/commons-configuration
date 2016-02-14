@@ -18,6 +18,8 @@ package org.apache.commons.configuration2.builder;
 
 import javax.xml.parsers.DocumentBuilder;
 
+import java.util.Map;
+
 import org.xml.sax.EntityResolver;
 
 /**
@@ -58,6 +60,14 @@ public class XMLBuilderParametersImpl extends HierarchicalBuilderParametersImpl
 
     /** The key for the schema validation flag. */
     private static final String PROP_SCHEMA_VALIDATION = "schemaValidation";
+
+    @Override
+    public void inheritFrom(Map<String, ?> source)
+    {
+        super.inheritFrom(source);
+        copyPropertiesFrom(source, PROP_DOCUMENT_BUILDER, PROP_ENTITY_RESOLVER,
+                PROP_SCHEMA_VALIDATION, PROP_VALIDATING);
+    }
 
     @Override
     public XMLBuilderParametersImpl setDocumentBuilder(
