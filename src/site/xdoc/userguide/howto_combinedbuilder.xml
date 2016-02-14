@@ -227,7 +227,10 @@ CombinedConfiguration config = builder.getConfiguration();
       the native format for listing configuration sources and defining
       additional meta data (as described in the following sections). But
       making use of the <code>definitionBuilder</code> property allows at least
-      passing in a specially configured builder object.
+      passing in a specially configured builder object. Please refer to the
+      section <a href="#Builder_Configuration_Related_to_Combined_Configurations">
+      Builder Configuration Related to Combined Configurations</a> for
+      additional parameters supported by builders for combined configurations.
     </p>
     <p>
       If you do not need any specific initialization and just want to read the
@@ -1316,8 +1319,97 @@ CombinedConfiguration config = builder.getConfiguration();
         but only impact the configuration sources defined in the current
         definition file. For instance, it is possible to define default settings
         for all XML configuration sources. These are applied for every XML
-        source defined in the definition file unless they are overridden there.</li>
+        source defined in the definition file unless they are overridden there.
+        See below for an example.</li>
+        <li>controlling the inheritance of builder parameters to child
+        configuration builders (see below).</li>
       </ul>
+    </p>
+    <p>
+      Specifying default settings for the configuration sources to be included
+      is a convenient feature. Often the configuration files to be included
+      share similar conventions, and thus can be read using similar
+      parameters. Rather than repeating these settings in the configuration
+      definition file for each configuration source, there are ways to define
+      default settings.
+    </p>
+    <p>
+      One option is to use a mechanism similar to
+      <a href="howto_builders.html#Default_Initialization_Parameters">default
+      initialization parameters</a>: The parameters object for a combined
+      configuration builder allows defining default parameter objects for
+      specific types of configuration sources. In the following example all
+      XML configuration sources are configured to make use of a specific list
+      delimiter handler:
+    </p>
+    <source><![CDATA[
+DefaultListDelimiterHandler listDelimiterHandler = new DefaultListDelimiterHandler(',');
+Parameters params = new Parameters();
+XMLBuilderParameters xmlParams = params.xml()
+    .setListDelimiterHandler(listDelimiterHandler);
+XMLBuilderParameters definitionParams = params.xml()
+    .setFile(new File("configDefinition.xml"));
+CombinedBuilderParameters combinedParameters = params.combined()
+    .setDefinitionBuilderParameters(definitionParams)
+    .registerChildDefaultsHandler(XMLBuilderProperties.class,
+        new CopyObjectDefaultHandler(xmlParams));
+builder.configure(combinedParameters);
+CombinedConfiguration config = builder.getConfiguration();
+]]></source>
+    <p>
+      Here the <code>xmlParams</code> object defines default settings for all
+      XML configuration sources to be included. Note how it is used to register
+      a defaults handler using the <code>registerChildDefaultsHandler()</code>
+      method of the parameters object for the combined builder. This mechanism
+      of default parameters is very flexible because it allows setting
+      different options for different types of configuration sources. However,
+      as the example demonstrates, the initialization of the builder becomes
+      complex; multiple parameter objects have to be dealt with.
+    </p>
+    <p>
+      A more lite-weight alternative is the ability of a combined configuration
+      builder to inherit its parameters to the child configurations created by
+      it. This feature is enabled by default and it works as follows: Whenever
+      a parameter object for a child configuration source is created, it is
+      first populated with compatible parameters set for the combined builder.
+      Then the specific settings as defined by the configuration definition
+      file are applied. So the settings defined for the combined builder as a
+      whole serve as a kind of default parameters. With this mechanism the
+      following code can be used to set a special list delimiter handler for
+      all child configurations and a special expression engine for all
+      hierarchical child configurations:
+    </p>
+    <source><![CDATA[
+Parameters params = new Parameters();
+DefaultExpressionEngineSymbols symbols = new DefaultExpressionEngineSymbols.Builder(
+    DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
+    .setPropertyDelimiter("/").create();
+DefaultExpressionEngine engine = new DefaultExpressionEngine(symbols);
+DefaultListDelimiterHandler listDelimiterHandler = new DefaultListDelimiterHandler(',');
+XMLBuilderParameters xmlParams = params.xml()
+    .setExpressionEngine(engine)
+    .setListDelimiterHandler(listDelimiterHandler)
+    .setFile(new File("configDefinition.xml"));
+builder.configure(xmlParams);
+CombinedConfiguration config = builder.getConfiguration();
+]]></source>
+    <p>
+      So here the builder is configured with an XML parameters object which
+      defines some default settings and also the file to be loaded. The default
+      settings are applied automatically to child configuration sources where
+      applicable. This is often a natural approach; for many use cases it makes
+      sense that settings defined for the parent combined builder are also
+      applied to child configuration sources. Only if child configuration
+      sources follow different conventions - maybe some files from a legacy
+      system need to be integrated that use a different list delimiter
+      character -, inheritance does not help. But in such cases it is often
+      possible to use settings inheritance by default and override specific
+      settings in affected child configuration sources; of course, the settings
+      defined for a configuration source in the configuration definition file
+      take precedence over inherited settings. The inheritance mechanism can
+      also be turned off completely by invoking
+      <code>CombinedBuilderParameters.setInheritSettings()</code> with a
+      value of <strong>false</strong>.
     </p>
     </subsection>
     </section>
