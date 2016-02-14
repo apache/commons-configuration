@@ -17,6 +17,7 @@
 package org.apache.commons.configuration2.builder;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 import java.util.Map;
@@ -102,5 +103,29 @@ public class TestPropertiesBuilderParametersImpl
                 paramsMap.get("throwExceptionOnMissing"));
         assertSame("Factory not set", factory,
                 params.getParameters().get("iOFactory"));
+    }
+
+    /**
+     * Tests whether properties can be inherited.
+     */
+    @Test
+    public void testInheritFrom()
+    {
+        PropertiesConfiguration.IOFactory factory =
+                EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
+        params.setIOFactory(factory).setIncludesAllowed(false)
+                .setLayout(new PropertiesConfigurationLayout());
+        params.setThrowExceptionOnMissing(true);
+        PropertiesBuilderParametersImpl params2 =
+                new PropertiesBuilderParametersImpl();
+
+        params2.inheritFrom(params.getParameters());
+        Map<String, Object> parameters = params2.getParameters();
+        assertEquals("Exception flag not set", Boolean.TRUE,
+                parameters.get("throwExceptionOnMissing"));
+        assertEquals("IOFactory not set", factory, parameters.get("iOFactory"));
+        assertEquals("Include flag not set", Boolean.FALSE,
+                parameters.get("includesAllowed"));
+        assertNull("Layout was copied", parameters.get("layout"));
     }
 }

@@ -16,6 +16,8 @@
  */
 package org.apache.commons.configuration2.builder;
 
+import java.util.Map;
+
 import org.apache.commons.configuration2.PropertiesConfiguration.IOFactory;
 import org.apache.commons.configuration2.PropertiesConfigurationLayout;
 
@@ -57,6 +59,17 @@ public class PropertiesBuilderParametersImpl extends
     {
         storeProperty(PROP_INCLUDES_ALLOWED, Boolean.valueOf(f));
         return this;
+    }
+
+    /**
+     * {@inheritDoc} This implementation takes some more properties into account
+     * that are defined in this class.
+     */
+    @Override
+    public void inheritFrom(Map<String, ?> source)
+    {
+        super.inheritFrom(source);
+        copyPropertiesFrom(source, PROP_INCLUDES_ALLOWED, PROP_IO_FACTORY);
     }
 
     @Override
