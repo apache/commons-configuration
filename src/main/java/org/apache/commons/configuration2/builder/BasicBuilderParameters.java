@@ -309,6 +309,37 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
     }
 
     /**
+     * Inherits properties from the specified map. This can be used for instance
+     * to reuse parameters from one builder in another builder - also in
+     * parent-child relations in which a parent builder creates child builders.
+     * The purpose of this method is to let a concrete implementation decide
+     * which properties can be inherited. Because parameters are basically
+     * organized as a map it would be possible to simply copy over all
+     * properties from the source object. However, this is not appropriate in
+     * all cases. For instance, some properties - like a
+     * {@code ConfigurationInterpolator} - are tightly connected to a
+     * configuration and cannot be reused in a different context. For other
+     * properties, e.g. a file name, it does not make sense to copy it.
+     * Therefore, an implementation has to be explicit in the properties it
+     * wants to take over.
+     *
+     * @param source the source properties to inherit from
+     * @throws IllegalArgumentException if the source map is <b>null</b>
+     */
+    public void inheritFrom(Map<String, ?> source)
+    {
+        if (source == null)
+        {
+            throw new IllegalArgumentException(
+                    "Source properties must not be null!");
+        }
+        copyPropertiesFrom(source, PROP_BEAN_HELPER, PROP_CONFIGURATION_DECODER,
+                PROP_CONVERSION_HANDLER, PROP_LIST_DELIMITER_HANDLER,
+                PROP_LOGGER, PROP_SYNCHRONIZER,
+                PROP_THROW_EXCEPTION_ON_MISSING);
+    }
+
+    /**
      * Obtains a specification for a {@link ConfigurationInterpolator} from the
      * specified map with parameters. All properties related to interpolation
      * are evaluated and added to the specification object.
@@ -413,6 +444,25 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
     protected Object fetchProperty(String key)
     {
         return properties.get(key);
+    }
+
+    /**
+     * Copies a number of properties from the given map into this object.
+     * Properties are only copied if they are defined in the source map.
+     *
+     * @param source the source map
+     * @param keys the keys to be copied
+     */
+    protected void copyPropertiesFrom(Map<String, ?> source, String... keys)
+    {
+        for (String key : keys)
+        {
+            Object value = source.get(key);
+            if (value != null)
+            {
+                storeProperty(key, value);
+            }
+        }
     }
 
     /**

@@ -33,10 +33,13 @@ import org.apache.commons.configuration2.ConfigurationDecoder;
 import org.apache.commons.configuration2.ConfigurationLogger;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.convert.ConversionHandler;
+import org.apache.commons.configuration2.convert.DefaultConversionHandler;
+import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.InterpolatorSpecification;
 import org.apache.commons.configuration2.interpol.Lookup;
+import org.apache.commons.configuration2.sync.ReadWriteSynchronizer;
 import org.apache.commons.configuration2.sync.Synchronizer;
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -530,5 +533,67 @@ public class TestBasicBuilderParameters
                 params.setConfigurationDecoder(decoder));
         assertSame("Decoder not set", decoder,
                 params.getParameters().get("configurationDecoder"));
+    }
+
+    /**
+     * Tests whether null input is handled by inheritFrom().
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testInheritFromNull()
+    {
+        params.inheritFrom(null);
+    }
+
+    /**
+     * Tests whether properties can be inherited from another parameters map.
+     */
+    @Test
+    public void testInheritFrom()
+    {
+        BeanHelper beanHelper = new BeanHelper();
+        ConfigurationDecoder decoder =
+                EasyMock.createMock(ConfigurationDecoder.class);
+        ConversionHandler conversionHandler = new DefaultConversionHandler();
+        ListDelimiterHandler listDelimiterHandler =
+                new DefaultListDelimiterHandler('#');
+        ConfigurationLogger logger = new ConfigurationLogger("test");
+        Synchronizer synchronizer = new ReadWriteSynchronizer();
+        params.setBeanHelper(beanHelper).setConfigurationDecoder(decoder)
+                .setConversionHandler(conversionHandler)
+                .setListDelimiterHandler(listDelimiterHandler).setLogger(logger)
+                .setSynchronizer(synchronizer).setThrowExceptionOnMissing(true);
+        BasicBuilderParameters p2 = new BasicBuilderParameters();
+
+        p2.inheritFrom(params.getParameters());
+        Map<String, Object> parameters = p2.getParameters();
+        assertEquals("Bean helper not set", beanHelper,
+                parameters.get("config-BeanHelper"));
+        assertEquals("Decoder not set", decoder,
+                parameters.get("configurationDecoder"));
+        assertEquals("Conversion handler not set", conversionHandler,
+                parameters.get("conversionHandler"));
+        assertEquals("Delimiter handler not set", listDelimiterHandler,
+                parameters.get("listDelimiterHandler"));
+        assertEquals("Logger not set", logger, parameters.get("logger"));
+        assertEquals("Synchronizer not set", synchronizer,
+                parameters.get("synchronizer"));
+        assertEquals("Exception flag not set", Boolean.TRUE,
+                parameters.get("throwExceptionOnMissing"));
+    }
+
+    /**
+     * Tests that undefined properties are not copied over by inheritFrom().
+     */
+    @Test
+    public void testInheritFromUndefinedProperties()
+    {
+        BasicBuilderParameters p2 =
+                new BasicBuilderParameters().setThrowExceptionOnMissing(true);
+
+        p2.inheritFrom(Collections.<String, Object> emptyMap());
+        Map<String, Object> parameters = p2.getParameters();
+        assertEquals("Wrong number of properties", 1, parameters.size());
+        assertEquals("Exception flag not set", Boolean.TRUE,
+                parameters.get("throwExceptionOnMissing"));
     }
 }
