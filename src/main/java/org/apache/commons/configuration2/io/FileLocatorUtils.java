@@ -179,7 +179,7 @@ public final class FileLocatorUtils
      * @return the new {@code FileLocator}
      * @throws ClassCastException if the map contains invalid data
      */
-    public static FileLocator fromMap(Map<String, Object> map)
+    public static FileLocator fromMap(Map<String, ?> map)
     {
         FileLocator.FileLocatorBuilder builder = fileLocator();
         if (map != null)

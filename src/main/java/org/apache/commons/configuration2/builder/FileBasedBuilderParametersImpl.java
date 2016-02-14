@@ -101,7 +101,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
      * @throws IllegalArgumentException if the map is <b>null</b>
      */
     public static FileBasedBuilderParametersImpl fromParameters(
-            Map<String, Object> params)
+            Map<String, ?> params)
     {
         return fromParameters(params, false);
     }
@@ -120,7 +120,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
      * @throws IllegalArgumentException if the map is <b>null</b>
      */
     public static FileBasedBuilderParametersImpl fromParameters(
-            Map<String, Object> params, boolean createIfMissing)
+            Map<String, ?> params, boolean createIfMissing)
     {
         if (params == null)
         {
@@ -150,7 +150,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
      * @return the newly created instance
      * @throws ClassCastException if the map contains invalid data
      */
-    public static FileBasedBuilderParametersImpl fromMap(Map<String, Object> map)
+    public static FileBasedBuilderParametersImpl fromMap(Map<String, ?> map)
     {
         FileBasedBuilderParametersImpl params =
                 new FileBasedBuilderParametersImpl(FileHandler.fromMap(map));

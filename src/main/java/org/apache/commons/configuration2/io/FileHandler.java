@@ -228,7 +228,7 @@ public class FileHandler
      * @return the newly created {@code FileHandler}
      * @see FileLocatorUtils#fromMap(Map)
      */
-    public static FileHandler fromMap(Map<String, Object> map)
+    public static FileHandler fromMap(Map<String, ?> map)
     {
         return new FileHandler(null, FileLocatorUtils.fromMap(map));
     }
