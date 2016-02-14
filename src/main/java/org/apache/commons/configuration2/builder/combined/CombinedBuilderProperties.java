@@ -45,6 +45,19 @@ import org.apache.commons.configuration2.builder.DefaultParametersManager;
 public interface CombinedBuilderProperties<T>
 {
     /**
+     * Sets a flag whether the child configurations created by a
+     * {@code CombinedConfigurationBuilder} should inherit the settings defined
+     * for the builder. This is typically useful because for configurations
+     * coming from homogeneous sources often similar conventions are used.
+     * Therefore, this flag is <b>true</b> per default.
+     *
+     * @param f the flag whether settings should be inherited by child
+     *        configurations
+     * @return a reference to this object for method chaining
+     */
+    T setInheritSettings(boolean f);
+
+    /**
      * Sets the {@code ConfigurationBuilder} for the definition configuration.
      * This is the configuration which contains the configuration sources that
      * form the combined configuration.

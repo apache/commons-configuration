@@ -75,6 +75,9 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
     /** The base path for configuration sources to be loaded. */
     private String basePath;
 
+    /** A flag whether settings should be inherited by child builders. */
+    private boolean inheritSettings;
+
     /**
      * Creates a new instance of {@code CombinedBuilderParametersImpl}.
      */
@@ -82,6 +85,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
     {
         providers = new HashMap<String, ConfigurationBuilderProvider>();
         childParameters = new LinkedList<BuilderParameters>();
+        inheritSettings = true;
     }
 
     /**
@@ -121,6 +125,27 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
             result = new CombinedBuilderParametersImpl();
         }
         return result;
+    }
+
+    /**
+     * Returns the current value of the flag that controls whether the settings
+     * of the parent combined configuration builder should be inherited by its
+     * child configurations.
+     *
+     * @return the flag whether settings should be inherited by child
+     *         configurations
+     */
+    public boolean isInheritSettings()
+    {
+        return inheritSettings;
+    }
+
+    @Override
+    public CombinedBuilderParametersImpl setInheritSettings(
+            boolean inheritSettings)
+    {
+        this.inheritSettings = inheritSettings;
+        return this;
     }
 
     /**

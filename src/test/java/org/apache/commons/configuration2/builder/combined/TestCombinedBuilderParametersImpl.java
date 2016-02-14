@@ -17,6 +17,7 @@
 package org.apache.commons.configuration2.builder.combined;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
@@ -95,6 +96,19 @@ public class TestCombinedBuilderParametersImpl
         Map<String, Object> map = params.getParameters();
         assertEquals("Exception flag not found", Boolean.TRUE,
                 map.get("throwExceptionOnMissing"));
+    }
+
+    /**
+     * Tests whether the flag that controls settings inheritance can be set.
+     */
+    @Test
+    public void testSetInheritSettings()
+    {
+        CombinedBuilderParametersImpl params =
+                new CombinedBuilderParametersImpl();
+        assertTrue("Wrong initial value", params.isInheritSettings());
+        assertSame("Wrong result", params, params.setInheritSettings(false));
+        assertFalse("Property not set", params.isInheritSettings());
     }
 
     /**
@@ -318,9 +332,11 @@ public class TestCombinedBuilderParametersImpl
         BeanHelper.setProperty(params, "basePath", "testPath");
         BeanHelper.setProperty(params, "definitionBuilderParameters",
                 defparams);
+        BeanHelper.setProperty(params, "inheritSettings", false);
         assertEquals("Wrong path", "testPath", params.getBasePath());
         assertSame("Wrong def parameters", defparams,
                 params.getDefinitionBuilderParameters());
+        assertFalse("Wrong inherit flag", params.isInheritSettings());
     }
 
     /**
