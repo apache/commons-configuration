@@ -16,6 +16,8 @@
  */
 package org.apache.commons.configuration2.builder;
 
+import java.util.Map;
+
 import org.apache.commons.configuration2.tree.ExpressionEngine;
 
 /**
@@ -37,6 +39,17 @@ public class HierarchicalBuilderParametersImpl extends
 {
     /** Constant for the expression engine property. */
     private static final String PROP_EXPRESSION_ENGINE = "expressionEngine";
+
+    /**
+     * {@inheritDoc} This implementation copies some more properties defined by
+     * this class.
+     */
+    @Override
+    public void inheritFrom(Map<String, ?> source)
+    {
+        super.inheritFrom(source);
+        copyPropertiesFrom(source, PROP_EXPRESSION_ENGINE);
+    }
 
     /**
      * {@inheritDoc} This implementation stores the expression engine in the

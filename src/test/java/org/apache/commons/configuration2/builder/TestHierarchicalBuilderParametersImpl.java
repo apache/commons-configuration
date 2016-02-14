@@ -72,4 +72,26 @@ public class TestHierarchicalBuilderParametersImpl
         assertEquals("Wrong exception flag", Boolean.TRUE,
                 map.get("throwExceptionOnMissing"));
     }
+
+    /**
+     * Tests whether inheritFrom() copies additional properties.
+     */
+    @Test
+    public void testInheritFrom()
+    {
+        ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
+        HierarchicalBuilderParametersImpl params =
+                new HierarchicalBuilderParametersImpl();
+        params.setExpressionEngine(engine);
+        params.setThrowExceptionOnMissing(true);
+        HierarchicalBuilderParametersImpl params2 =
+                new HierarchicalBuilderParametersImpl();
+
+        params2.inheritFrom(params.getParameters());
+        Map<String, Object> parameters = params2.getParameters();
+        assertEquals("Exception flag not set", Boolean.TRUE,
+                parameters.get("throwExceptionOnMissing"));
+        assertEquals("Expression engine not set", engine,
+                parameters.get("expressionEngine"));
+    }
 }
