@@ -18,6 +18,7 @@ package org.apache.commons.configuration2.builder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -353,5 +354,84 @@ public class TestFileBasedBuilderParameters
                 FileBasedBuilderParametersImpl.fromMap(null);
         assertNull("Got refresh delay", params.getReloadingRefreshDelay());
         assertNull("Got a file name", params.getFileHandler().getFileName());
+    }
+
+    /**
+     * Tests whether properties can be inherited from another object.
+     */
+    @Test
+    public void testInheritFrom()
+    {
+        FileBasedBuilderParametersImpl params =
+                new FileBasedBuilderParametersImpl();
+        params.setEncoding("ISO-8856-1");
+        params.setPath("A path");
+        params.setReloadingDetectorFactory(
+                EasyMock.createMock(ReloadingDetectorFactory.class));
+        params.setFileSystem(EasyMock.createMock(FileSystem.class));
+        params.setLocationStrategy(EasyMock.createMock(FileLocationStrategy.class));
+        params.setReloadingRefreshDelay(20160213171737L);
+        params.setThrowExceptionOnMissing(true);
+        FileBasedBuilderParametersImpl params2 =
+                new FileBasedBuilderParametersImpl();
+
+        params2.inheritFrom(params.getParameters());
+        assertEquals("Encoding not set", params.getFileHandler().getEncoding(),
+                params2.getFileHandler().getEncoding());
+        assertEquals("File system not set",
+                params.getFileHandler().getFileSystem(),
+                params2.getFileHandler().getFileSystem());
+        assertEquals("Location strategy not set",
+                params.getFileHandler().getLocationStrategy(),
+                params2.getFileHandler().getLocationStrategy());
+        assertEquals("Detector factory not set",
+                params.getReloadingDetectorFactory(),
+                params2.getReloadingDetectorFactory());
+        assertEquals("Refresh delay not set", params.getReloadingRefreshDelay(),
+                params2.getReloadingRefreshDelay());
+        assertNull("Path was copied", params2.getFileHandler().getPath());
+        assertEquals("Base properties not set", Boolean.TRUE,
+                params2.getParameters().get("throwExceptionOnMissing"));
+    }
+
+    /**
+     * Tests that missing properties in the passed in map are skipped by
+     * inheritFrom().
+     */
+    @Test
+    public void testInheritFromSkipMissingProperties()
+    {
+        String encoding = "UTF-16";
+        ReloadingDetectorFactory factory =
+                EasyMock.createMock(ReloadingDetectorFactory.class);
+        Long refreshDelay = 20160213172611L;
+        FileBasedBuilderParametersImpl params =
+                new FileBasedBuilderParametersImpl().setEncoding(encoding)
+                        .setReloadingDetectorFactory(factory)
+                        .setReloadingRefreshDelay(refreshDelay);
+
+        params.inheritFrom(
+                new FileBasedBuilderParametersImpl().getParameters());
+        assertEquals("Encoding overwritten", encoding,
+                params.getFileHandler().getEncoding());
+        assertEquals("Detector factory overwritten", factory,
+                params.getReloadingDetectorFactory());
+        assertEquals("Refresh delay overwritten", refreshDelay,
+                params.getReloadingRefreshDelay());
+    }
+
+    /**
+     * Tests inheritFrom() if no parameters object can be found in the map.
+     */
+    @Test
+    public void testInheritFromNoParametersObject()
+    {
+        FileBasedBuilderParametersImpl params =
+                new FileBasedBuilderParametersImpl()
+                        .setReloadingRefreshDelay(20160213211429L);
+
+        params.inheritFrom(new HashMap<String, Object>());
+        assertNotNull("Properties were overwritten",
+                params.getReloadingRefreshDelay());
     }
 }

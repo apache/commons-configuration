@@ -164,6 +164,37 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
     }
 
     /**
+     * {@inheritDoc} This implementation takes some properties defined in this
+     * class into account.
+     */
+    @Override
+    public void inheritFrom(Map<String, ?> source)
+    {
+        super.inheritFrom(source);
+
+        FileBasedBuilderParametersImpl srcParams = fromParameters(source);
+        if (srcParams != null)
+        {
+            setFileSystem(srcParams.getFileHandler().getFileSystem());
+            setLocationStrategy(
+                    srcParams.getFileHandler().getLocationStrategy());
+            if (srcParams.getFileHandler().getEncoding() != null)
+            {
+                setEncoding(srcParams.getFileHandler().getEncoding());
+            }
+            if (srcParams.getReloadingDetectorFactory() != null)
+            {
+                setReloadingDetectorFactory(
+                        srcParams.getReloadingDetectorFactory());
+            }
+            if (srcParams.getReloadingRefreshDelay() != null)
+            {
+                setReloadingRefreshDelay(srcParams.getReloadingRefreshDelay());
+            }
+        }
+    }
+
+    /**
      * Returns the {@code FileHandler} managed by this object. This object is
      * updated every time the file location is changed.
      *
