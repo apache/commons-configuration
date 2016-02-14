@@ -30,6 +30,7 @@ import java.util.Map;
 import org.apache.commons.configuration2.ConfigurationAssert;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
+import org.apache.commons.configuration2.builder.BasicBuilderParameters;
 import org.apache.commons.configuration2.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration2.builder.BuilderParameters;
 import org.apache.commons.configuration2.builder.ConfigurationBuilder;
@@ -449,5 +450,47 @@ public class TestCombinedBuilderParametersImpl
                 params.registerChildDefaultsHandler(BuilderParameters.class,
                         handler, FileBasedBuilderParameters.class));
         EasyMock.verify(manager);
+    }
+
+    /**
+     * Tests whether properties can be inherited.
+     */
+    @Test
+    public void testInheritFrom()
+    {
+        DefaultParametersManager manager =
+                EasyMock.createMock(DefaultParametersManager.class);
+        CombinedBuilderParametersImpl params =
+                new CombinedBuilderParametersImpl().setInheritSettings(false)
+                        .setChildDefaultParametersManager(manager);
+        params.setThrowExceptionOnMissing(true);
+        CombinedBuilderParametersImpl params2 =
+                new CombinedBuilderParametersImpl();
+
+        params2.inheritFrom(params.getParameters());
+        Map<String, Object> parameters = params2.getParameters();
+        assertEquals("Exception flag not set", Boolean.TRUE,
+                parameters.get("throwExceptionOnMissing"));
+        assertEquals("Default manager not set", manager,
+                params2.getChildDefaultParametersManager());
+        assertFalse("Inherit flag not set", params2.isInheritSettings());
+    }
+
+    /**
+     * Tests that inheritFrom() can handle a map which does not contain a
+     * parameters object.
+     */
+    @Test
+    public void testInheritFromNoParametersInMap()
+    {
+        BasicBuilderParameters params =
+                new BasicBuilderParameters().setThrowExceptionOnMissing(true);
+        CombinedBuilderParametersImpl params2 =
+                new CombinedBuilderParametersImpl();
+
+        params2.inheritFrom(params.getParameters());
+        Map<String, Object> parameters = params2.getParameters();
+        assertEquals("Exception flag not set", Boolean.TRUE,
+                parameters.get("throwExceptionOnMissing"));
     }
 }

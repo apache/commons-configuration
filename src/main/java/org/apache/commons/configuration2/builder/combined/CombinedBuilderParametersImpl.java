@@ -97,7 +97,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      * @throws NullPointerException if the map is <b>null</b>
      */
     public static CombinedBuilderParametersImpl fromParameters(
-            Map<String, Object> params)
+            Map<String, ?> params)
     {
         return fromParameters(params, false);
     }
@@ -116,7 +116,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      * @throws NullPointerException if the map is <b>null</b>
      */
     public static CombinedBuilderParametersImpl fromParameters(
-            Map<String, Object> params, boolean createIfMissing)
+            Map<String, ?> params, boolean createIfMissing)
     {
         CombinedBuilderParametersImpl result =
                 (CombinedBuilderParametersImpl) params.get(PARAM_KEY);
@@ -125,6 +125,24 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
             result = new CombinedBuilderParametersImpl();
         }
         return result;
+    }
+
+    /**
+     * {@inheritDoc} This implementation additionally copies some properties
+     * defined by this class.
+     */
+    @Override
+    public void inheritFrom(Map<String, ?> source)
+    {
+        super.inheritFrom(source);
+
+        CombinedBuilderParametersImpl srcParams = fromParameters(source);
+        if (srcParams != null)
+        {
+            setChildDefaultParametersManager(
+                    srcParams.getChildDefaultParametersManager());
+            setInheritSettings(srcParams.isInheritSettings());
+        }
     }
 
     /**
