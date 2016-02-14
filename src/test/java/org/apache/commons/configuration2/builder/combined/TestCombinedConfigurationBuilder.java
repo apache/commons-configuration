@@ -58,8 +58,10 @@ import org.apache.commons.configuration2.builder.PropertiesBuilderParametersImpl
 import org.apache.commons.configuration2.builder.ReloadingFileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.XMLBuilderProperties;
+import org.apache.commons.configuration2.builder.fluent.CombinedBuilderParameters;
 import org.apache.commons.configuration2.builder.fluent.FileBasedBuilderParameters;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.builder.fluent.XMLBuilderParameters;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
@@ -75,6 +77,8 @@ import org.apache.commons.configuration2.io.FileSystem;
 import org.apache.commons.configuration2.reloading.ReloadingController;
 import org.apache.commons.configuration2.reloading.ReloadingControllerSupport;
 import org.apache.commons.configuration2.resolver.CatalogResolver;
+import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
+import org.apache.commons.configuration2.tree.DefaultExpressionEngineSymbols;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 import org.easymock.EasyMock;
@@ -1325,6 +1329,64 @@ public class TestCombinedConfigurationBuilder
         {
             t.verify();
         }
+    }
+
+    /**
+     * Prepares a parameters object for a test for properties inheritance.
+     * @param params the {@code Parameters} object
+     * @return the builder parameters
+     */
+    private static XMLBuilderParameters prepareParamsForInheritanceTest(Parameters params) {
+        DefaultExpressionEngineSymbols symbols = new DefaultExpressionEngineSymbols.Builder(
+                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
+                .setPropertyDelimiter("/").create();
+        DefaultExpressionEngine engine = new DefaultExpressionEngine(symbols);
+        DefaultListDelimiterHandler listDelimiterHandler = new DefaultListDelimiterHandler(',');
+        return params.xml()
+                .setExpressionEngine(engine)
+                .setListDelimiterHandler(listDelimiterHandler).setFile(TEST_FILE);
+    }
+
+    /**
+     * Tests whether builder properties can be inherited by child builders.
+     */
+    @Test
+    public void testInheritProperties() throws ConfigurationException
+    {
+        Parameters params = new Parameters();
+        XMLBuilderParameters xmlParams =
+                prepareParamsForInheritanceTest(params);
+        builder.configure(xmlParams);
+        CombinedConfiguration config = builder.getConfiguration();
+
+        List<String> list = config.getList(String.class, "test/mixed/array");
+        assertTrue("Wrong number of elements in list", list.size() > 2);
+        String[] stringArray = config.getStringArray("test/mixed/array");
+        assertTrue("Wrong number of elements in array", stringArray.length > 2);
+        XMLConfiguration xmlConfig =
+                (XMLConfiguration) config.getConfiguration("xml");
+        list = xmlConfig.getList(String.class, "split/list1");
+        assertEquals("Wrong number of elements in XML list", 3, list.size());
+    }
+
+    /**
+     * Tests whether the inheritance of builder properties can be disabled.
+     */
+    @Test
+    public void testSuppressChildBuilderPropertyInheritance()
+            throws ConfigurationException
+    {
+        Parameters params = new Parameters();
+        CombinedBuilderParameters combinedParams =
+                params.combined().setInheritSettings(false);
+        builder.configure(combinedParams,
+                prepareParamsForInheritanceTest(params));
+        CombinedConfiguration config = builder.getConfiguration();
+
+        XMLConfiguration xmlConfig =
+                (XMLConfiguration) config.getConfiguration("xml");
+        List<String> list = xmlConfig.getList(String.class, "split.list1");
+        assertEquals("Wrong number of elements in XML list", 1, list.size());
     }
 
     /**

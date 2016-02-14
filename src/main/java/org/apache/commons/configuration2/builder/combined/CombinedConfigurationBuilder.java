@@ -1157,6 +1157,10 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     {
         params.setPrefixLookups(fetchPrefixLookups());
         params.setParentInterpolator(parentInterpolator);
+        if (currentParameters.isInheritSettings())
+        {
+            params.inheritFrom(getParameters());
+        }
     }
 
     /**
