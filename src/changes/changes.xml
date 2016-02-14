@@ -27,6 +27,10 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="add" issue="CONFIGURATION-619">
+        CombinedConfigurationBuilder now supports inheritance of its parameters
+        to child configuration sources. This is enabled by default.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-618">
         When using immutable configurations exceptions thrown by the wrapped
         configuration came out as UndeclaredThrowableException. This has been
