@@ -89,8 +89,8 @@ Parameters params = new Parameters();
 // Read data from this file
 File propertiesFile = new File("config.properties");
 
-FileBasedConfigurationBuilder<Configuration> builder =
-    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+FileBasedConfigurationBuilder<FileBasedConfiguration> builder =
+    new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
     .configure(params.fileBased()
         .setFile(propertiesFile));
 try
@@ -156,8 +156,8 @@ catch(ConfigurationException cex)
 	  <code>setAutoSave()</code> method as shown in the following example:
 	</p>
         <source><![CDATA[
-FileBasedConfigurationBuilder<Configuration> builder =
-    new FileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+FileBasedConfigurationBuilder<FileBasedConfiguration> builder =
+    new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
     .configure(params.fileBased()
         .setFile(new File("config.properties")));
 // enable auto save mode
