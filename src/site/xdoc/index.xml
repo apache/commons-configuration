@@ -68,28 +68,46 @@ Integer integer = config.getInteger("number");
       <p>
         The full Javadoc API documentation is available <a href="apidocs/index.html">here</a>.
       </p>
-    </section>  	
-    
-    <section name="Commons Configuration 2.0 beta2">
+    </section>
+
+    <section name="Commons Configuration 1.x and 2.x">
     <p>
-      The latest stable release of Apache Commons Configuration is version 1.10. It is available from the
-      <a href="http://commons.apache.org/configuration/download_configuration.cgi">Apache download area</a>. 
-      It is also available from the <a href="http://repo1.maven.org/maven2/commons-configuration/commons-configuration/">Maven repository</a>.
-      The <a href="changes-report.html">Changes Report</a> explains all of the changes and bug fixes that have been made.
+      After its initial release in 2004, Apache Commons Configuration has been steadily improved,
+      and a series of feature releases has been published over the years. All of these releases
+      were binary backwards-compatible. The latest release of this series is version 1.10. This code
+      base is now pretty mature and does what it is expected to do.
     </p>
     <p>
-      In the meantime, work has been spent on a major redesign of the library
-      addressing some of the weaknesses of the 1.x version series. The results
-      are now made available as a series of alpha and beta releases. These releases aim at gaining
-      feedback from the community regarding changed and new concepts implemented
-      for version 2.0. They are not yet production ready! The current beta version is also
-      available from the <a href="http://commons.apache.org/configuration/download_configuration.cgi">Download
-      page</a>; however, it was decided to <strong>not</strong> publish it to
-      Maven central. (We want to prevent the problematic scenario of having
-      multiple incompatible artifacts with the same Maven coordinates.) There is
+      Nevertheless, there have been some design decisions made in the past which are problematic
+      in retrospect. For instance, access to configuration objects is always synchronized which
+      might be a performance issue in some use cases, or support for reloading of configuration
+      data is very limited - just to mention a few pain points. These problems could not be
+      fixed without breaking backwards compatibility in the affected areas.
+    </p>
+    <p>
+      Therefore, work has been spent on a major redesign of the library
+      addressing some of the weaknesses of the 1.x versions. The results
+      have been made available over a longer period as a series of alpha and beta releases.
+      Now the final version 2.0 is available incorporating feedback from the community. Note that
+      this is not a drop-in replacement for Commons Configuration 1.x! Changes on client code
+      are required to make use of the new version. There is
       a <a href="userguide/upgradeto2_0.html">Migration guide</a> that can be
       used as guideline when upgrading from version 1.x to 2.0. It describes the
-      most important changes.
+      most important changes. A good source of information is also the
+      <a href="changes-report.html">Changes Report</a> that explains all of the changes and bug
+      fixes that have been applied.
+    </p>
+    <p>
+      Both Commons Configuration 1.10 and the most recent 2.x release can be downloaded from the
+      <a href="http://commons.apache.org/configuration/download_configuration.cgi">Apache download area</a>.
+      The artifacts have also been deployed to
+      <a href="http://repo1.maven.org/maven2/">Maven central</a> (with different coordinates for
+      both versions to avoid conflicts). Which version should you use? Well, if you are a
+      long-term user of Commons Configuration 1.x and happy with its functionality, there is
+      no urgent pressure to upgrade to the newest version. New projects, however, should start
+      with the new API as it offers more functionality and makes some tasks easier and cleaner.
+      Also note that development currently focuses exclusively on the 2.x branch, so that the
+      probability for bug-fix releases for version 1.x is pretty low.
     </p>
     </section>
 
