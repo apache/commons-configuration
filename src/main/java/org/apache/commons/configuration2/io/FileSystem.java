@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.configuration2.ConfigurationLogger;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 
 /**

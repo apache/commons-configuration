@@ -27,6 +27,10 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-621">
+        Moved ConfigurationLogger class to io package to avoid cyclic
+        dependencies between packages.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-620" due-to="Mark Vedder">
         Fixed two invalid examples in the user's guide for file-based
         configurations.

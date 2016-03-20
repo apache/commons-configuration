@@ -39,6 +39,9 @@ http://commons.apache.org/configuration/userguide/user_guide.html
 
 Changes:
 ========
+o CONFIGURATION-621:
+  Moved ConfigurationLogger class to io package to avoid cyclic dependencies
+  between packages.
 o CONFIGURATION-619:
   CombinedConfigurationBuilder now supports inheritance of its parameters to
   child configuration sources. This is enabled by default.
