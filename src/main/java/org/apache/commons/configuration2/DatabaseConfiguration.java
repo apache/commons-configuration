@@ -34,6 +34,7 @@ import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.EventType;
+import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.lang3.StringUtils;
 
 /**

@@ -42,6 +42,7 @@ import org.apache.commons.configuration2.ex.ConversionException;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.InterpolatorSpecification;
 import org.apache.commons.configuration2.interpol.Lookup;
+import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.configuration2.sync.LockMode;
 import org.apache.commons.configuration2.sync.NoOpSynchronizer;
 import org.apache.commons.configuration2.sync.Synchronizer;

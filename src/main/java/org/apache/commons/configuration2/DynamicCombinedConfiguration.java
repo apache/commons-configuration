@@ -35,6 +35,7 @@ import org.apache.commons.configuration2.event.EventListener;
 import org.apache.commons.configuration2.event.EventType;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.Lookup;
+import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.NodeCombiner;

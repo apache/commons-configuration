@@ -16,13 +16,10 @@
  */
 package org.apache.commons.configuration2;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -44,7 +41,6 @@ import org.apache.commons.configuration2.event.EventListener;
 import org.apache.commons.configuration2.event.EventType;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.Lookup;
-import org.apache.commons.logging.impl.NoOpLog;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
@@ -64,42 +60,6 @@ public class TestAbstractConfigurationBasicFeatures
 
     /** Constant for the number of properties in tests for copy operations.*/
     private static final int PROP_COUNT = 12;
-
-    /**
-     * Tests the logger set per default.
-     */
-    @Test
-    public void testDefaultLogger()
-    {
-        AbstractConfiguration config = new BaseConfiguration();
-        assertThat("Wrong default logger", config.getLogger().getLog(), instanceOf(NoOpLog.class));
-    }
-
-    /**
-     * Tests whether the logger can be set.
-     */
-    @Test
-    public void testSetLogger()
-    {
-        ConfigurationLogger logger = new ConfigurationLogger(getClass());
-        AbstractConfiguration config = new BaseConfiguration();
-
-        config.setLogger(logger);
-        assertThat("Logger not set", config.getLogger(), sameInstance(logger));
-    }
-
-    /**
-     * Tests that the logger can be disabled by setting it to null.
-     */
-    @Test
-    public void testSetLoggerNull()
-    {
-        AbstractConfiguration config = new BaseConfiguration();
-        config.setLogger(new ConfigurationLogger(getClass()));
-
-        config.setLogger(null);
-        assertThat("Logger not disabled", config.getLogger().getLog(), instanceOf(NoOpLog.class));
-    }
 
     /**
      * Tests the clear() implementation of AbstractConfiguration if the iterator

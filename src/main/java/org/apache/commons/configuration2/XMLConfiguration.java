@@ -42,6 +42,7 @@ import java.util.Map;
 
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.configuration2.io.FileLocator;
 import org.apache.commons.configuration2.io.FileLocatorAware;
 import org.apache.commons.configuration2.io.InputStreamSupport;

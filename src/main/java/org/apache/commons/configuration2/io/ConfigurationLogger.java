@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.configuration2;
+package org.apache.commons.configuration2.io;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,7 +30,8 @@ import org.apache.commons.logging.impl.NoOpLog;
  * useful for diagnostic purposes. Therefore, <em>Commons Configuration</em>
  * produces some logging output. As concrete projects have different
  * requirements on the amount and detail of logging, there is a way of
- * configuring logging: All classes derived from {@link AbstractConfiguration}
+ * configuring logging: All classes derived from
+ * {@link org.apache.commons.configuration2.AbstractConfiguration}
  * can be assigned a logger which is then used for all log statements generated.
  * </p>
  * <p>

@@ -21,7 +21,6 @@ import static org.junit.Assert.assertSame;
 
 import java.io.File;
 
-import org.apache.commons.configuration2.ConfigurationLogger;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.Before;
 import org.junit.Test;

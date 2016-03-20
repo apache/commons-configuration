@@ -15,9 +15,10 @@
  * limitations under the License.
  */
 
-package org.apache.commons.configuration2;
+package org.apache.commons.configuration2.io;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -25,6 +26,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.commons.configuration2.AbstractConfiguration;
+import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.NoOpLog;
 import org.easymock.EasyMock;
@@ -226,5 +229,41 @@ public class TestConfigurationLogger
         assertNull("Got an internal logger", logger.getLog());
         logger.info(MSG);
         assertEquals("Message not logged", MSG, buf.toString());
+    }
+
+    /**
+     * Tests the logger set per default.
+     */
+    @Test
+    public void testAbstractConfigurationDefaultLogger()
+    {
+        AbstractConfiguration config = new BaseConfiguration();
+        assertThat("Wrong default logger", config.getLogger().getLog(), instanceOf(NoOpLog.class));
+    }
+
+    /**
+     * Tests whether the logger can be set.
+     */
+    @Test
+    public void testAbstractConfigurationSetLogger()
+    {
+        ConfigurationLogger logger = new ConfigurationLogger(getClass());
+        AbstractConfiguration config = new BaseConfiguration();
+
+        config.setLogger(logger);
+        assertThat("Logger not set", config.getLogger(), sameInstance(logger));
+    }
+
+    /**
+     * Tests that the logger can be disabled by setting it to null.
+     */
+    @Test
+    public void testAbstractConfigurationSetLoggerNull()
+    {
+        AbstractConfiguration config = new BaseConfiguration();
+        config.setLogger(new ConfigurationLogger(getClass()));
+
+        config.setLogger(null);
+        assertThat("Logger not disabled", config.getLogger().getLog(), instanceOf(NoOpLog.class));
     }
 }

@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
-import org.apache.commons.configuration2.ConfigurationLogger;
+import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.logging.Log;

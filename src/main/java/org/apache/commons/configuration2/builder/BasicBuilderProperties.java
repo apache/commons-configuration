@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.apache.commons.configuration2.ConfigurationDecoder;
-import org.apache.commons.configuration2.ConfigurationLogger;
+import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.convert.ConversionHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
