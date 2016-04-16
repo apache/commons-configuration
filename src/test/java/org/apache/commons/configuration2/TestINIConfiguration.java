@@ -17,8 +17,10 @@
 
 package org.apache.commons.configuration2;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -828,6 +830,23 @@ public class TestINIConfiguration
         conf.read(new StringReader(writer.toString()));
         assertEquals("Wrong value (1)", "test1", conf.getString(section + ".test1"));
         assertEquals("Wrong value (2)", "test2", conf.getString(section + ".test2"));
+    }
+
+    /**
+     * Tests that loading and saving a configuration that contains keys with
+     * delimiter characters works correctly. This test is related to
+     * CONFIGURATION-622.
+     */
+    @Test
+    public void testPropertyWithDelimiter() throws ConfigurationException
+    {
+        String data = INI_DATA + "key.dot = dotValue";
+        INIConfiguration conf = new INIConfiguration();
+        load(conf, data);
+        assertEquals("Wrong property value", "dotValue",
+                conf.getString("section3.key..dot"));
+        String output = saveToString(conf);
+        assertThat(output, containsString("key.dot = dotValue"));
     }
 
     /**
