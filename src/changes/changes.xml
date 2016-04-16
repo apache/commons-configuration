@@ -27,6 +27,11 @@
   <body>
     <release version="2.1" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-622">
+        Fixed a problem in INIConfiguration.write() with keys containing a
+        separator character. This separator had been duplicated. Such keys
+        are now handled correctly when the configuration is saved.
+      </action>
     </release>
 
     <release version="2.0" date="2016-03-24"
