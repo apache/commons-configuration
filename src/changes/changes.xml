@@ -27,6 +27,9 @@
   <body>
     <release version="2.1" date="in SVN"
       description="TBD">
+      <action dev="deki" type="add" issue="CONFIGURATION-624">
+        Support Commons Configuration as PropertySource in Spring.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-622">
         Fixed a problem in INIConfiguration.write() with keys containing a
         separator character. This separator had been duplicated. Such keys

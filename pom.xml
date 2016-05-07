@@ -210,6 +210,12 @@
           <name>Oliver Kopp</name>
           <email>koppdev@gmail.com</email>
         </contributor>
+
+        <contributor>
+          <name>Dennis Kieselhorst</name>
+          <email>deki@apache.org</email>
+          <organization>IRIAN Deutschland</organization>
+        </contributor>
     </contributors>
 
   <dependencies>
@@ -285,6 +291,29 @@
       <artifactId>xml-resolver</artifactId>
       <version>1.2</version>
       <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring.version}</version>
+      <optional>true</optional>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>${spring.version}</version>
+      <optional>true</optional>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -445,6 +474,7 @@
       *
     </commons.osgi.import>
     <slf4j.version>1.7.7</slf4j.version>
+    <spring.version>4.2.5.RELEASE</spring.version>
   </properties>
 
   <build>

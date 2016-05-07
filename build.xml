@@ -71,6 +71,7 @@
         <pathelement location="${lib}/org/apache/ant/ant-launcher/1.8.2/ant-launcher-1.8.2.jar"/>
         <pathelement location="${lib}/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar"/>
         <pathelement location="${lib}/log4j/log4j/1.2.8/log4j-1.2.8.jar"/>
+        <pathelement location="${lib}/org/springframework/spring-core/4.2.5.RELEASE/spring-core-4.2.5.RELEASE.jar"/>
 	</path>
 	<path id="build.test.classpath">
 	    <pathelement location="${lib}/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar"/>
@@ -110,6 +111,12 @@
 	    <pathelement location="${lib}/org/slf4j/slf4j-api/1.5.6/slf4j-api-1.5.6.jar"/>
 	    <pathelement location="${lib}/org/slf4j/slf4j-ext/1.5.6/slf4j-ext-1.5.6.jar"/>
 	    <pathelement location="${lib}/org/slf4j/slf4j-log4j12/1.5.6/slf4j-log4j12-1.5.6.jar"/>
+        <pathelement location="${lib}/org/springframework/spring-core/4.2.5.RELEASE/spring-core-4.2.5.RELEASE.jar"/>
+        <pathelement location="${lib}/org/springframework/spring-context/4.2.5.RELEASE/spring-context-4.2.5.RELEASE.jar"/>
+        <pathelement location="${lib}/org/springframework/spring-beans/4.2.5.RELEASE/spring-beans-4.2.5.RELEASE.jar"/>
+        <pathelement location="${lib}/org/springframework/spring-test/4.2.5.RELEASE/spring-test-4.2.5.RELEASE.jar"/>
+        <pathelement location="${lib}/org/springframework/spring-aop/4.2.5.RELEASE/spring-aop-4.2.5.RELEASE.jar"/>
+        <pathelement location="${lib}/org/springframework/spring-expression/4.2.5.RELEASE/spring-expression-4.2.5.RELEASE.jar"/>
 	</path>
   </target>
 	
@@ -451,6 +458,11 @@
          dest="${lib}/log4j/log4j/1.2.8/log4j-1.2.8.jar"
          usetimestamp="true"
          ignoreerrors="true"/>
+    <mkdir dir="${lib}/org/springframework/spring-core/4.2.5.RELEASE"/>
+    <get src="http://repo1.maven.org/maven2/org/springframework/spring-core/4.2.5.RELEASE/spring-core-4.2.5.RELEASE.jar"
+         dest="${lib}/org/springframework/spring-core/4.2.5.RELEASE/spring-core-4.2.5.RELEASE.jar"
+         usetimestamp="true"
+         ignoreerrors="true"/>
     <mkdir dir="${lib}/org/slf4j/slf4j-api/1.5.6"/>
     <get src="http://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.5.6/slf4j-api-1.5.6.jar" 
          dest="${lib}/org/slf4j/slf4j-api/1.5.6/slf4j-api-1.5.6.jar" 
@@ -460,6 +472,31 @@
     <get src="http://repo1.maven.org/maven2/org/slf4j/slf4j-ext/1.5.6/slf4j-ext-1.5.6.jar" 
          dest="${lib}/org/slf4j/slf4j-ext/1.5.6/slf4j-ext-1.5.6.jar" 
          usetimestamp="true" 
+         ignoreerrors="true"/>
+    <mkdir dir="${lib}/org/springframework/spring-context/4.2.5.RELEASE"/>
+    <get src="http://repo1.maven.org/maven2/org/springframework/spring-context/4.2.5.RELEASE/spring-context-4.2.5.RELEASE.jar"
+         dest="${lib}/org/springframework/spring-context/4.2.5.RELEASE/spring-context-4.2.5.RELEASE.jar"
+         usetimestamp="true"
+         ignoreerrors="true"/>
+    <mkdir dir="${lib}/org/springframework/spring-beans/4.2.5.RELEASE"/>
+    <get src="http://repo1.maven.org/maven2/org/springframework/spring-beans/4.2.5.RELEASE/spring-beans-4.2.5.RELEASE.jar"
+         dest="${lib}/org/springframework/spring-beans/4.2.5.RELEASE/spring-beans-4.2.5.RELEASE.jar"
+         usetimestamp="true"
+         ignoreerrors="true"/>
+    <mkdir dir="${lib}/org/springframework/spring-test/4.2.5.RELEASE"/>
+    <get src="http://repo1.maven.org/maven2/org/springframework/spring-test/4.2.5.RELEASE/spring-test-4.2.5.RELEASE.jar"
+         dest="${lib}/org/springframework/spring-test/4.2.5.RELEASE/spring-test-4.2.5.RELEASE.jar"
+         usetimestamp="true"
+         ignoreerrors="true"/>
+    <mkdir dir="${lib}/org/springframework/spring-aop/4.2.5.RELEASE"/>
+    <get src="http://repo1.maven.org/maven2/org/springframework/spring-aop/4.2.5.RELEASE/spring-aop-4.2.5.RELEASE.jar"
+         dest="${lib}/org/springframework/spring-aop/4.2.5.RELEASE/spring-aop-4.2.5.RELEASE.jar"
+         usetimestamp="true"
+         ignoreerrors="true"/>
+    <mkdir dir="${lib}/org/springframework/spring-expression/4.2.5.RELEASE"/>
+    <get src="http://repo1.maven.org/maven2/org/springframework/spring-expression/4.2.5.RELEASE/spring-expression-4.2.5.RELEASE.jar"
+         dest="${lib}/org/springframework/spring-expression/4.2.5.RELEASE/spring-expression-4.2.5.RELEASE.jar"
+         usetimestamp="true"
          ignoreerrors="true"/>
     <mkdir dir="${lib}/org/slf4j/slf4j-log4j12/1.5.6"/>
     <get src="http://repo1.maven.org/maven2/org/slf4j/slf4j-log4j12/1.5.6/slf4j-log4j12-1.5.6.jar" 

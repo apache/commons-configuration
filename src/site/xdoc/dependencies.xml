@@ -91,6 +91,10 @@
                         <td>VFSFileSystem, VFSFileChangedReloadingStrategy</td>
                         <td>commons-vfs</td>
                     </tr>
+                    <tr>
+                        <td>ConfigPropertySource</td>
+                        <td>spring-core</td>
+                    </tr>
                 </tbody>
             </table>
 
