@@ -72,6 +72,7 @@
         <pathelement location="${lib}/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar"/>
         <pathelement location="${lib}/log4j/log4j/1.2.8/log4j-1.2.8.jar"/>
         <pathelement location="${lib}/org/springframework/spring-core/4.2.5.RELEASE/spring-core-4.2.5.RELEASE.jar"/>
+        <pathelement location="${lib}/org/springframework/spring-beans/4.2.5.RELEASE/spring-beans-4.2.5.RELEASE.jar"/>
 	</path>
 	<path id="build.test.classpath">
 	    <pathelement location="${lib}/commons-collections/commons-collections/3.2.2/commons-collections-3.2.2.jar"/>
