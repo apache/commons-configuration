@@ -17,7 +17,7 @@ import java.util.Properties;
  * Spring FactoryBean test.
  *
  */
-public class ConfigFactoryBeanTest {
+public class TestConfigFactoryBean {
 
     private ConfigFactoryBean configurationFactory;
 

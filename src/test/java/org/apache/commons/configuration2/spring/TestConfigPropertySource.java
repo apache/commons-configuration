@@ -36,7 +36,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
-public class ConfigPropertySourceTest {
+public class TestConfigPropertySource {
 
     private static final String TEST_PROPERTY = "test.property";
     private static final String TEST_VALUE = "testVALUE";
