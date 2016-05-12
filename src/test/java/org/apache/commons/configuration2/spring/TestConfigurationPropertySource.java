@@ -32,11 +32,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
 /**
- * test for ConfigPropertySource
+ * test for ConfigurationPropertySource
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
-public class TestConfigPropertySource {
+public class TestConfigurationPropertySource {
 
     private static final String TEST_PROPERTY = "test.property";
     private static final String TEST_VALUE = "testVALUE";
@@ -64,10 +64,10 @@ public class TestConfigPropertySource {
         }
     }
 
-    private static ConfigPropertySource createConfigPropertySource() {
+    private static ConfigurationPropertySource createConfigPropertySource() {
         PropertiesConfiguration propertiesConfiguration = new PropertiesConfiguration();
         propertiesConfiguration.addProperty(TEST_PROPERTY, TEST_VALUE);
-        return new ConfigPropertySource("test configuration", propertiesConfiguration);
+        return new ConfigurationPropertySource("test configuration", propertiesConfiguration);
     }
 
 }

@@ -43,7 +43,7 @@ import java.util.Properties;
  * @see org.springframework.core.io.support.PropertiesLoaderSupport
  *
  */
-public class ConfigFactoryBean implements InitializingBean, FactoryBean<Properties>
+public class ConfigurationPropertiesFactoryBean implements InitializingBean, FactoryBean<Properties>
 {
 
     /** internal CompositeConfiguration containing the merged configuration objects **/
@@ -58,11 +58,11 @@ public class ConfigFactoryBean implements InitializingBean, FactoryBean<Properti
     /** @see org.apache.commons.configuration2.AbstractConfiguration#throwExceptionOnMissing **/
     private boolean throwExceptionOnMissing = true;
 
-    public ConfigFactoryBean()
+    public ConfigurationPropertiesFactoryBean()
     {
     }
 
-    public ConfigFactoryBean(Configuration configuration)
+    public ConfigurationPropertiesFactoryBean(Configuration configuration)
     {
         Assert.notNull(configuration);
         this.compositeConfiguration = new CompositeConfiguration(configuration);

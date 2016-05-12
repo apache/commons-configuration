@@ -27,15 +27,15 @@ import org.springframework.core.env.EnumerablePropertySource;
 /**
  * Allow use of Apache Commons Configuration Objects as Spring PropertySources
  */
-public class ConfigPropertySource extends EnumerablePropertySource<Configuration>
+public class ConfigurationPropertySource extends EnumerablePropertySource<Configuration>
 {
 
-    public ConfigPropertySource(String name, Configuration source)
+    public ConfigurationPropertySource(String name, Configuration source)
     {
        super(name, source);
     }
 
-    protected ConfigPropertySource(String name)
+    protected ConfigurationPropertySource(String name)
     {
        super(name);
     }

@@ -17,13 +17,13 @@ import java.util.Properties;
  * Spring FactoryBean test.
  *
  */
-public class TestConfigFactoryBean {
+public class TestConfigurationPropertiesFactoryBean {
 
-    private ConfigFactoryBean configurationFactory;
+    private ConfigurationPropertiesFactoryBean configurationFactory;
 
     @Before
     public void setUp() {
-        configurationFactory = new ConfigFactoryBean();
+        configurationFactory = new ConfigurationPropertiesFactoryBean();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -68,7 +68,7 @@ public class TestConfigFactoryBean {
 
     @Test
     public void testInitialConfiguration() throws Exception {
-        configurationFactory = new ConfigFactoryBean(new BaseConfiguration());
+        configurationFactory = new ConfigurationPropertiesFactoryBean(new BaseConfiguration());
         configurationFactory.afterPropertiesSet();
         Assert.assertNotNull(configurationFactory.getConfiguration());
     }
