@@ -356,6 +356,63 @@ Configuration config = wrapperFactory.createBuilderConfigurationWrapper(
     Configuration.class, builder);
 ]]></source>
     </subsection>
+
+    <subsection name="Use Configuration in Spring">
+      <p>
+        Commons Configuration integrates with the Spring framework.
+        A <code>FactoryBean</code> wraps a <code>CompositeConfiguration</code> object for usage
+        with Spring's <code>PropertiesLoaderSupport</code>.
+
+        This allows a configuration object to behave
+        <ul>
+          <li>like a normal <code>java.util.Properties</code> object which can be passed on to</li>
+          <li><code>setProperties()</code> method allowing <code>PropertyOverrideConfigurer</code> and</li>
+          <li><code>PropertyPlaceholderConfigurer</code> to take advantage of Commons Configuration.</li>
+        </ul>
+
+        Previously this functionality was provided by the spring-modules-jakarta-commons library (<code>CommonsConfigurationFactoryBean</code>).
+        As this library is no longer maintained, this is now supported directly by Commons Configuration.
+        If you've used this with Commons Configuration 1.x, just replace the spring-modules-jakarta-commons classname with
+        <code>ConfigurationPropertiesFactoryBean</code>.
+
+        Here is a sample xml configuration:
+      </p>
+      <source><![CDATA[
+<bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+  <property name="properties">
+      <bean class="org.apache.commons.configuration2.spring.ConfigurationPropertiesFactoryBean">
+          <constructor-arg>
+              <ref local="xmlConfiguration" />
+          </constructor-arg>
+      </bean>
+  </property>
+</bean>
+]]></source>
+      <p>
+        In addition support as a <code>PropertySource</code> was added.
+        The <code>ConfigurationPropertySource</code> can be used with e.g. with <code>ApplicationContextInitializer</code>
+        or simply added in a bean definition as follows:
+      </p>
+      <source>
+@Value("${aPropertyKey}")
+private String configurationValue;
+
+@Configuration
+static class Config {
+
+  @Bean
+  public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer(ConfigurableEnvironment env)
+    throws ConfigurationException {
+    PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+    MutablePropertySources sources = new MutablePropertySources();
+    sources.addLast(new ConfigurationPropertySource("xml configuration", new Configurations().xml("aXmlConfigFile.xml")));
+    configurer.setPropertySources(sources);
+    configurer.setEnvironment(env);
+    return configurer;
+  }
+}
+      </source>
+    </subsection>
     </section>
 </body>
 
