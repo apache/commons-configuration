@@ -35,6 +35,9 @@
         separator character. This separator had been duplicated. Such keys
         are now handled correctly when the configuration is saved.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-631">
+        Update Apache Commons VFS from 2.0 to 2.1.
+      </action>
     </release>
 
     <release version="2.0" date="2016-03-24"

@@ -58,7 +58,7 @@
         <pathelement location="${lib}/commons-beanutils/commons-beanutils/1.9.2/commons-beanutils-1.9.2.jar"/>
         <pathelement location="${lib}/commons-codec/commons-codec/1.9/commons-codec-1.9.jar"/>
         <pathelement location="${lib}/org/apache/commons/commons-jexl/2.1.1/commons-jexl-2.1.1.jar"/>
-        <pathelement location="${lib}/org/apache/commons/commons-vfs2/2.0/commons-vfs2-2.0.jar"/>
+        <pathelement location="${lib}/org/apache/commons/commons-vfs2/2.1/commons-vfs2-2.1.jar"/>
         <pathelement location="${lib}/org/apache/maven/scm/maven-scm-api/1.4/maven-scm-api-1.4.jar"/>
         <pathelement location="${lib}/org/codehaus/plexus/plexus-utils/1.5.6/plexus-utils-1.5.6.jar"/>
         <pathelement location="${lib}/org/apache/maven/scm/maven-scm-provider-svnexe/1.4/maven-scm-provider-svnexe-1.4.jar"/>
