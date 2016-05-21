@@ -445,13 +445,21 @@ int theAnswer = config.getInt("answer");
       Generic conversion methods are also available for obtaining arrays or
       collections. For instance, it is possible to obtain the value of a
       property as an array of <b>int</b> or a list of <code>java.lang.Long</code>
-      objects. This can be achieved using the following methods:
+      objects. For arrays these conversions are directly supported by the generic
+      <code>get()</code> methods: if the target type passed to the method is an
+      array class, an array conversion is done automatically. So to obtain an
+      array of <strong>int</strong> from a configuration, the following code
+      can be used:
+    </p>
+      <source><![CDATA[
+int[] result = config.getInt(int[].class, "myIntArrayKey");
+]]></source>
+    <p>
+      For conversions to collections specific methods are provided (this is
+      necessary because the element type of the collection cannot be
+      determined automatically as in case of arrays). These are the following
+      ones:
       <dl>
-        <dt>Object getArray(Class&lt;?&gt; cls, String key);</dt>
-        <dd>Returns an array of the specified element class. This method can
-        handle both object and primitive arrays. (Therefore, the return type
-        is just <code>Object</code> because there is no common base class for
-        all kinds of arrays.)</dd>
         <dt>&lt;T&gt; List&lt;T&gt; getList(Class&lt;T&gt; cls, String key);</dt>
         <dd>Returns a list of the specified element class.</dd>
         <dt>&lt;T&gt; Collection&lt;T&gt; getCollection(Class&lt;T&gt; cls,
@@ -613,7 +621,7 @@ config.setConversionHandler(handler);
       AbstractConfiguration</a></code> offers a property named
       <em>configurationDecoder</em>. Making use of this property simplifies
       access to encoded properties: When the central configuration object is
-      created the decoder is initialized. Other parts of the application do not 
+      created the decoder is initialized. Other parts of the application do not
       need any knowledge about the decoding algorithm to be applied; rather, it
       is sufficient to call the simple variant of <code>getEncodedString()</code>
       to obtain a property value which can be processed immediately.
