@@ -46,6 +46,11 @@
     <url>http://issues.apache.org/jira/browse/CONFIGURATION</url>
   </issueManagement>
 
+  <ciManagement>
+    <system>jenkins</system>
+    <url>https://builds.apache.org/job/Commons-configuration/</url>
+  </ciManagement>
+
   <scm>
     <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/configuration/trunk</connection>
     <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/configuration/trunk</developerConnection>
