@@ -31,6 +31,11 @@
         Interpolation was improved to better support properties with multiple
         values.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-632">
+        The methods getStringArray() and getList() of CompositeConfiguration
+        now support the interpolation of variables that reference properties
+        with multiple values.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-626">
         ImmutableConfiguration.getArray() has been deprecated. Arrays can now
         be queried using the generic get() method in a type-safe way.
