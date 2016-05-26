@@ -27,6 +27,10 @@
   <body>
     <release version="2.1" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-633">
+        Interpolation was improved to better support properties with multiple
+        values.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-626">
         ImmutableConfiguration.getArray() has been deprecated. Arrays can now
         be queried using the generic get() method in a type-safe way.

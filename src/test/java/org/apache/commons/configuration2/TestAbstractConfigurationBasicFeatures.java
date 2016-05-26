@@ -461,6 +461,38 @@ public class TestAbstractConfigurationBasicFeatures
     }
 
     /**
+     * Tests whether a property can reference an array using interpolation.
+     * This is related to CONFIGURATION-633.
+     */
+    @Test
+    public void testInterpolateArray()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        String[] values = {"some", "test", "values"};
+        final String keyArray = "testArray";
+        config.addProperty(keyArray, values);
+        config.addProperty(KEY_PREFIX, "${" + keyArray + "}");
+
+        assertArrayEquals("Wrong property", values, config.getStringArray(KEY_PREFIX));
+    }
+
+    /**
+     * Tests whether a property can reference a list using interpolation.
+     * This is related to CONFIGURATION-633.
+     */
+    @Test
+    public void testInterpolateList()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        List<String> values = Arrays.asList("some", "test", "values");
+        final String keyList = "testList";
+        config.addProperty(keyList, values);
+        config.addProperty(KEY_PREFIX, "${" + keyList + "}");
+
+        assertEquals("Wrong property", values, config.getList(String.class, KEY_PREFIX));
+    }
+
+    /**
      * Tests getList() for single non-string values.
      */
     @Test

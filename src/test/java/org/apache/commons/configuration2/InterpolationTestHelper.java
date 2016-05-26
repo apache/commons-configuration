@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -61,11 +62,10 @@ public class InterpolationTestHelper
         assertEquals("check first entry was interpolated",
                 "/home/applicationRoot/1", arrayInt[0]);
 
-        config.addProperty("path", "/temp,C:\\Temp,/usr/local/tmp");
+        config.addProperty("path", Arrays.asList("/temp", "C:\\Temp","/usr/local/tmp"));
         config.setProperty("path.current", "${path}");
         assertEquals("Interpolation with multi-valued property",
-                String.valueOf(config.getProperty("path")),
-                config.getString("path.current"));
+                "/temp", config.getString("path.current"));
     }
 
     /**

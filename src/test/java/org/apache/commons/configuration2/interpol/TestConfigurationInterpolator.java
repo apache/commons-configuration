@@ -77,7 +77,7 @@ public class TestConfigurationInterpolator
      * @param value the value of this variable
      * @return the test lookup object
      */
-    private static Lookup setUpTestLookup(final String var, final String value)
+    private static Lookup setUpTestLookup(final String var, final Object value)
     {
         Lookup lookup = EasyMock.createMock(Lookup.class);
         EasyMock.expect(lookup.lookup(EasyMock.anyObject(String.class)))
@@ -484,6 +484,53 @@ public class TestConfigurationInterpolator
                 interpolator.isEnableSubstitutionInVariables());
         assertEquals("Wrong result (2)", "C:\\java\\1.4",
                 interpolator.interpolate(var));
+    }
+
+    /**
+     * Tests a property value consisting of multiple variables.
+     */
+    @Test
+    public void testInterpolationMultipleVariables()
+    {
+        String value = "The ${subject} jumps over ${object}.";
+        interpolator.addDefaultLookup(setUpTestLookup("subject", "quick brown fox"));
+        interpolator.addDefaultLookup(setUpTestLookup("object", "the lazy dog"));
+        assertEquals("Wrong result", "The quick brown fox jumps over the lazy dog.",
+                interpolator.interpolate(value));
+    }
+
+    /**
+     * Tests an interpolation that consists of a single variable only. The
+     * variable's value should be returned verbatim.
+     */
+    @Test
+    public void testInterpolationSingleVariable()
+    {
+        Object value = 42;
+        interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
+        assertEquals("Wrong result", value,
+                interpolator.interpolate("${" + TEST_NAME + "}"));
+    }
+
+    /**
+     * Tests a variable declaration which lacks the trailing closing bracket.
+     */
+    @Test
+    public void testInterpolationVariableIncomplete()
+    {
+        String value = "${" + TEST_NAME;
+        interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, "someValue"));
+        assertEquals("Wrong result", value, interpolator.interpolate(value));
+    }
+
+    /**
+     * Tests that an empty variable definition does not cause problems.
+     */
+    @Test
+    public void testInterpolateEmptyVariable()
+    {
+        String value = "${}";
+        assertEquals("Wrong result", value, interpolator.interpolate(value));
     }
 
     /**
