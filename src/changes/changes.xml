@@ -52,7 +52,7 @@
         Update Apache Commons VFS from 2.0 to 2.1.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-635">
-        Update optional dependency Apache Commons Code from 1.9 to 1.10.
+        Update optional dependency Apache Commons Codec from 1.9 to 1.10.
       </action>
     </release>
 
