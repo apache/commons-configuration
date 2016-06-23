@@ -258,13 +258,10 @@ public final class FileLocatorUtils
      * @return a flag whether all components describing the referenced file are
      *         initialized
      */
-    public static boolean isFullyInitialized(FileLocator locator)
-    {
-        if (locator == null)
-        {
-            return false;
-        }
-        return locator.getBasePath() != null && locator.getFileName() != null
+    public static boolean isFullyInitialized(FileLocator locator) {
+        return locator != null
+                && locator.getBasePath() != null
+                && locator.getFileName() != null
                 && locator.getSourceURL() != null;
     }
 
@@ -650,8 +647,17 @@ public final class FileLocatorUtils
     private static FileLocator createFullyInitializedLocatorFromURL(FileLocator src,
             URL url)
     {
-        return fileLocator(src).sourceURL(url).fileName(getFileName(url))
-                .basePath(getBasePath(url)).create();
+        FileLocator.FileLocatorBuilder fileLocatorBuilder = fileLocator(src);
+        if(src.getSourceURL() == null) {
+            fileLocatorBuilder.sourceURL(url);
+        }
+        if (StringUtils.isBlank(src.getFileName())){
+            fileLocatorBuilder.fileName(getFileName(url));
+        }
+        if (StringUtils.isBlank(src.getBasePath())) {
+            fileLocatorBuilder.basePath(getBasePath(url));
+        }
+        return fileLocatorBuilder.create();
     }
 
     /**
