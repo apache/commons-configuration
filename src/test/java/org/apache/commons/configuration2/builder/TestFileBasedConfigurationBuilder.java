@@ -33,14 +33,18 @@ import java.util.Map;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationAssert;
+import org.apache.commons.configuration2.FileBasedConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.XMLPropertiesConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Parameters;
+import org.apache.commons.configuration2.builder.fluent.PropertiesBuilderParameters;
+import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.io.FileLocator;
 import org.apache.commons.configuration2.io.FileLocatorUtils;
+import org.apache.commons.configuration2.io.HomeDirectoryLocationStrategy;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -507,5 +511,39 @@ public class TestFileBasedConfigurationBuilder
         handler.setEncoding(encoding);
         builder.initFileHandler(handler);
         assertEquals("Encoding was changed", encoding, handler.getEncoding());
+    }
+
+    /**
+     * Tests whether HomeDirectoryLocationStrategy can be properly initialized
+     * and that it shouldn't throw <code>ConfigurationException</code> when
+     * everything is correctly in place. Without the code fix for
+     * <a href="https://issues.apache.org/jira/browse/CONFIGURATION-634">CONFIGURATION-634</a>,
+     * this test will throw <code>ConfigurationException</code>
+     * @throws IOException              Shouldn't happen
+     * @throws ConfigurationException   Shouldn't happen
+     */
+    @Test
+    public void testFileBasedConfigurationBuilderWithHomeDirectoryLocationStrategy()
+            throws IOException, ConfigurationException
+    {
+        String folderName = "test";
+        String fileName = "sample.properties";
+        folder.newFolder(folderName);
+        folder.newFile(folderName + File.separatorChar + fileName);
+        FileBasedConfigurationBuilder<FileBasedConfiguration> homeDirConfigurationBuilder =
+                new FileBasedConfigurationBuilder<FileBasedConfiguration>(
+                        PropertiesConfiguration.class);
+        PropertiesBuilderParameters homeDirProperties =
+                new Parameters().properties();
+        HomeDirectoryLocationStrategy strategy =
+                new HomeDirectoryLocationStrategy(
+                        folder.getRoot().getAbsolutePath(), true);
+        FileBasedConfigurationBuilder<FileBasedConfiguration> builder =
+                homeDirConfigurationBuilder.configure(homeDirProperties
+                        .setLocationStrategy(strategy).setBasePath(folderName)
+                        .setListDelimiterHandler(
+                                new DefaultListDelimiterHandler(','))
+                        .setFileName(fileName));
+        builder.getConfiguration();
     }
 }
