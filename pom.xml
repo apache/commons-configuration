@@ -221,6 +221,11 @@
           <email>deki@apache.org</email>
           <organization>IRIAN Deutschland</organization>
         </contributor>
+
+        <contributor>
+          <name>Raviteja Lokineni</name>
+          <email>raviteja.lokineni@gmail.com</email>
+        </contributor>
     </contributors>
 
   <dependencies>
