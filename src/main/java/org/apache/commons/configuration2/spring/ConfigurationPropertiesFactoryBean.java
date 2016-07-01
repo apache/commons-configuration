@@ -17,6 +17,9 @@
 
 package org.apache.commons.configuration2.spring;
 
+import java.net.URL;
+import java.util.Properties;
+
 import org.apache.commons.configuration2.CompositeConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationConverter;
@@ -27,17 +30,15 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 
-import java.net.URL;
-import java.util.Properties;
-
 /**
- * FactoryBean which wraps a Commons CompositeConfiguration object for usage
+ * <p>FactoryBean which wraps a Commons CompositeConfiguration object for usage
  * with PropertiesLoaderSupport. This allows the compositeConfiguration object to behave
  * like a normal java.util.Properties object which can be passed on to
  * setProperties() method allowing PropertyOverrideConfigurer and
  * PropertyPlaceholderConfigurer to take advantage of Commons Configuration.
- * <p/> Internally a CompositeConfiguration object is used for merging multiple
- * Configuration objects.
+ * </p>
+ * <p>Internally a CompositeConfiguration object is used for merging multiple
+ * Configuration objects.</p>
  *
  * @see java.util.Properties
  * @see org.springframework.core.io.support.PropertiesLoaderSupport
