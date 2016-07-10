@@ -27,6 +27,10 @@
   <body>
     <release version="2.1" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-636"  due-to="Tim Lark">
+        PropertiesConfigurationLayout now allows manipulating the order of keys
+        when the properties file is written.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-634"  due-to="Raviteja Lokineni">
         HomeDirectoryLocationStrategy now works correctly in the mode that
         evaluates the FileLocator's base path.
