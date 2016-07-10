@@ -561,7 +561,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
                 writer.writeln(null);
             }
 
-            for (String key : layoutData.keySet())
+            for (String key : getKeys())
             {
                 if (config.containsKeyInternal(key))
                 {
