@@ -30,13 +30,13 @@ import org.springframework.core.env.MutablePropertySources;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-
 /**
  * test for ConfigurationPropertySource
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
-public class TestConfigurationPropertySource {
+public class TestConfigurationPropertySource
+{
 
     private static final String TEST_PROPERTY = "test.property";
     private static final String TEST_VALUE = "testVALUE";
@@ -45,18 +45,23 @@ public class TestConfigurationPropertySource {
     private String value;
 
     @Test
-    public void testValueInjection() {
+    public void testValueInjection()
+    {
         Assert.assertEquals(TEST_VALUE, value);
     }
 
     @Configuration
-    static class Config {
+    static class Config
+    {
 
         @Bean
-        public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer(ConfigurableEnvironment
-                                                                                                        env) {
-            PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
-            // https://jira.spring.io/browse/SPR-9631 may simplify this in future
+        public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer(
+                ConfigurableEnvironment env)
+        {
+            PropertySourcesPlaceholderConfigurer configurer =
+                    new PropertySourcesPlaceholderConfigurer();
+            // https://jira.spring.io/browse/SPR-9631 may simplify this in
+            // future
             MutablePropertySources sources = new MutablePropertySources();
             sources.addLast(createConfigPropertySource());
             configurer.setPropertySources(sources);
@@ -65,10 +70,13 @@ public class TestConfigurationPropertySource {
         }
     }
 
-    private static ConfigurationPropertySource createConfigPropertySource() {
-        PropertiesConfiguration propertiesConfiguration = new PropertiesConfiguration();
+    private static ConfigurationPropertySource createConfigPropertySource()
+    {
+        PropertiesConfiguration propertiesConfiguration =
+                new PropertiesConfiguration();
         propertiesConfiguration.addProperty(TEST_PROPERTY, TEST_VALUE);
-        return new ConfigurationPropertySource("test configuration", propertiesConfiguration);
+        return new ConfigurationPropertySource("test configuration",
+                propertiesConfiguration);
     }
 
 }
