@@ -16,6 +16,9 @@
  */
 package org.apache.commons.configuration2.spring;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNull;
+
 import java.io.StringReader;
 import java.util.Properties;
 
@@ -23,6 +26,7 @@ import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.PropertiesConfigurationLayout;
+import org.apache.commons.configuration2.XMLConfiguration;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -104,5 +108,68 @@ public class TestConfigurationPropertiesFactoryBean
                 new ConfigurationPropertiesFactoryBean(new BaseConfiguration());
         configurationFactory.afterPropertiesSet();
         Assert.assertNotNull(configurationFactory.getConfiguration());
+    }
+
+    @Test
+    public void testSetLocationsDefensiveCopy()
+    {
+        Resource[] locations = {
+                new ClassPathResource("f1"), new ClassPathResource("f2")
+        };
+        Resource[] locationsUpdate = locations.clone();
+
+        configurationFactory.setLocations(locationsUpdate);
+        locationsUpdate[0] = new ClassPathResource("other");
+        assertArrayEquals("Locations were changed", locations,
+                configurationFactory.getLocations());
+    }
+
+    @Test
+    public void testSetLocationsNull()
+    {
+        configurationFactory.setLocations(null);
+        assertNull("Got locations", configurationFactory.getLocations());
+    }
+
+    @Test
+    public void testGetLocationsDefensiveCopy()
+    {
+        Resource[] locations = {
+                new ClassPathResource("f1"), new ClassPathResource("f2")
+        };
+        configurationFactory.setLocations(locations);
+
+        Resource[] locationsGet = configurationFactory.getLocations();
+        locationsGet[1] = null;
+        assertArrayEquals("Locations were changed", locations,
+                configurationFactory.getLocations());
+    }
+
+    @Test
+    public void testSetConfigurationsDefensiveCopy()
+    {
+        Configuration[] configs = {
+                new PropertiesConfiguration(), new XMLConfiguration()
+        };
+        Configuration[] configsUpdate = configs.clone();
+
+        configurationFactory.setConfigurations(configsUpdate);
+        configsUpdate[0] = null;
+        assertArrayEquals("Configurations were changed", configs,
+                configurationFactory.getConfigurations());
+    }
+
+    @Test
+    public void testGetConfigurationDefensiveCopy()
+    {
+        Configuration[] configs = {
+                new PropertiesConfiguration(), new XMLConfiguration()
+        };
+        configurationFactory.setConfigurations(configs);
+
+        Configuration[] configsGet = configurationFactory.getConfigurations();
+        configsGet[0] = null;
+        assertArrayEquals("Configurations were changed", configs,
+                configurationFactory.getConfigurations());
     }
 }

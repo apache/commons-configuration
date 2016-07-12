@@ -135,7 +135,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
 
     public Configuration[] getConfigurations()
     {
-        return configurations;
+        return defensiveCopy(configurations);
     }
 
     /**
@@ -145,12 +145,12 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      */
     public void setConfigurations(Configuration[] configurations)
     {
-        this.configurations = configurations;
+        this.configurations = defensiveCopy(configurations);
     }
 
     public Resource[] getLocations()
     {
-        return locations;
+        return defensiveCopy(locations);
     }
 
     /**
@@ -162,7 +162,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      */
     public void setLocations(Resource[] locations)
     {
-        this.locations = locations;
+        this.locations = defensiveCopy(locations);
     }
 
     public boolean isThrowExceptionOnMissing()
@@ -186,4 +186,16 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
         return compositeConfiguration;
     }
 
+    /**
+     * Creates a defensive copy of the specified array. Handles null values
+     * correctly.
+     *
+     * @param src the source array
+     * @param <T> the type of the array
+     * @return the defensive copy of the array
+     */
+    private static <T> T[] defensiveCopy(T[] src)
+    {
+        return (src != null) ? src.clone() : null;
+    }
 }
