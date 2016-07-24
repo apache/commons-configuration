@@ -1,7 +1,7 @@
 $Id$
 
                         Commons Configuration Package
-                                 Version 2.0
+                                 Version 2.1
                                 Release Notes
 
 INTRODUCTION
@@ -12,6 +12,78 @@ Configuration component. It describes the changes since the previous version.
 The Commons Configuration software library provides a generic configuration
 interface which enables an application to read configuration data from a variety
 of sources.
+
+Version 2.1 is a first bug-fix release for the Configuration 2.x series and
+also adds a new feature related to the integration with the Spring framework.
+A list of all changes can be found below.
+
+The release is fully source and binary compatible with version 2.0.
+
+Commons Configuration 2.1 requires Java 1.6 or higher.
+
+New Features
+============
+o CONFIGURATION-636
+  PropertiesConfigurationLayout now allows manipulating the order of keys when
+  the properties file is written.
+
+o CONFIGURATION-624
+  Support Commons Configuration as PropertySource in Spring.
+
+Fixed Bugs
+==========
+o CONFIGURATION-634
+  HomeDirectoryLocationStrategy now works correctly in the mode that evaluates
+  the FileLocator's base path.
+
+o CONFIGURATION-633
+  Interpolation was improved to better support properties with multiple values.
+
+o CONFIGURATION-632
+  The methods getStringArray() and getList() of CompositeConfiguration now
+  support the interpolation of variables that reference properties with
+  multiple values.
+
+o CONFIGURATION-622
+  Fixed a problem in INIConfiguration.write() with keys containing a separator
+  character. This separator had been duplicated. Such keys are now handled
+  correctly when the configuration is saved.
+
+Other changes
+=============
+o CONFIGURATION-628
+  Support for the ant build was dropped.
+
+o CONFIGURATION-626
+  ImmutableConfiguration.getArray() has been deprecated. Arrays can now be
+  queried using the generic get() method in a type-safe way.
+
+o CONFIGURATION-631
+  Updated optional dependency to Apache Commons VFS from 2.0 to 2.1. (The older
+  version still works.)
+
+o CONFIGURATION-635
+  Updated optional dependency to Apache Commons Codec from 1.9 to 1.10. (The
+  older version still works.)
+
+
+Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+
+For complete information on Apache Commons Configuration, including instructions
+on how to submit bug reports, patches, or suggestions for improvement, see the
+Apache Commons Configuration website:
+http://commons.apache.org/proper/commons-configuration/
+
+
+Older release notes
+===================
+
+                        Commons Configuration Package
+                                 Version 2.0
+                                Release Notes
+
+INTRODUCTION
+============
 
 After a series of alpha and beta releases (please consult the corresponding
 release notes below), this is the first final release for Apache Commons
@@ -61,16 +133,6 @@ o CONFIGURATION-618:
   now the correct original exception is thrown.
 
 Commons Configuration 2.0 requires Java 1.6 or higher.
-
-Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
-
-For complete information on Apache Commons Configuration, including instructions
-on how to submit bug reports, patches, or suggestions for improvement, see the
-Apache Commons Configuration website:
-http://commons.apache.org/proper/commons-configuration/
-
-Older release notes
-===================
 
                         Commons Configuration Package
                              Version 2.0-beta2
