@@ -24,15 +24,15 @@
 
   <body>
     <menu name="Configuration">
-      <item name="Overview"                     href="/index.html"/>  
-      <item name="Download"                     href="http://commons.apache.org/configuration/download_configuration.cgi"/>  
+      <item name="Overview"                     href="/index.html"/>
+      <item name="Download"                     href="http://commons.apache.org/configuration/download_configuration.cgi"/>
       <item name="Issue Tracking"               href="issue-tracking.html"/>
     </menu>
 
     <menu name="Documentation">
       <item name="Building"                     href="/building.html"/>
       <item name="Release History"              href="/changes-report.html"/>
-      <item name="2.0" collapse="true"          href="/index.html">
+      <item name="2.1" collapse="true"          href="/index.html">
         <item name="User's Guide"               href="/userguide/user_guide.html"/>
         <item name="Upgrade Guide"              href="/userguide/upgradeto2_0.html"/>
         <item name="Javadoc"                    href="/apidocs/index.html"/>
