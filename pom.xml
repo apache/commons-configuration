@@ -540,6 +540,7 @@
               <sourceDirectories>
                   <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
               </sourceDirectories>
+              <excludes>**/org/apache/commons/configuration2/plist/*.java</excludes>
           </configuration>
         </plugin>
       </plugins>
@@ -691,7 +692,7 @@
         <artifactId>apache-rat-plugin</artifactId>
         <configuration>
           <excludes>
-            <exclude>src/java/org/apache/commons/configuration/plist/*.java</exclude>
+            <exclude>src/java/org/apache/commons/configuration2/plist/*.java</exclude>
             <exclude>velocity.log</exclude>
           </excludes>
         </configuration>
@@ -717,7 +718,7 @@
         <version>2.4</version>
         <configuration>
           <excludes>
-            <exclude>org/apache/commons/configuration/plist/PropertyListParser*</exclude>
+            <exclude>org/apache/commons/configuration2/plist/PropertyListParser*</exclude>
           </excludes>
         </configuration>
       </plugin>
