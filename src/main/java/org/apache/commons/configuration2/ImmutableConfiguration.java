@@ -602,7 +602,13 @@ public interface ImmutableConfiguration
      * @throws IllegalArgumentException if the default value is not an array of the specified type
      *
      * @since 2.0
+     * @deprecated This method should not be used any more because its signature
+     * does not allow type-safe invocations; use {@link #get(Class, String, Object)}
+     * instead which offers the same functionality; for instance, to query for an
+     * array of ints use
+     * {@code int[] result = config.get(int[].class, "myArrayKey", someDefault);}.
      */
+    @Deprecated
     Object getArray(Class<?> cls, String key, Object defaultValue);
 
     /**

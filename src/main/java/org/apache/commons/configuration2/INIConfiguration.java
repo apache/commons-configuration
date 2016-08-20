@@ -23,7 +23,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -280,47 +279,44 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
     public void write(Writer writer) throws ConfigurationException, IOException
     {
         PrintWriter out = new PrintWriter(writer);
-        for (String section : getSections())
-        {
-            if (section != null)
-            {
-                out.print("[");
-                out.print(section);
-                out.print("]");
-                out.println();
-            }
-            Configuration subset = getSection(section);
+        boolean first = true;
 
-            Iterator<String> keys = subset.getKeys();
-            while (keys.hasNext())
+        beginRead(false);
+        try
+        {
+            for (ImmutableNode node : getModel().getNodeHandler().getRootNode()
+                    .getChildren())
             {
-                String key = keys.next();
-                Object value = subset.getProperty(key);
-                if (value instanceof Collection)
+                if (isSectionNode(node))
                 {
-                    Iterator<?> values = ((Collection<?>) value).iterator();
-                    while (values.hasNext())
+                    if (!first)
                     {
-                        value = values.next();
-                        out.print(key);
-                        out.print(" = ");
-                        out.print(escapeValue(value.toString()));
                         out.println();
+                    }
+                    out.print("[");
+                    out.print(node.getNodeName());
+                    out.print("]");
+                    out.println();
+
+                    for (ImmutableNode child : node.getChildren())
+                    {
+                        writeProperty(out, child.getNodeName(),
+                                child.getValue());
                     }
                 }
                 else
                 {
-                    out.print(key);
-                    out.print(" = ");
-                    out.print(escapeValue(value.toString()));
-                    out.println();
+                    writeProperty(out, node.getNodeName(), node.getValue());
                 }
+                first = false;
             }
-
             out.println();
+            out.flush();
         }
-
-        out.flush();
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -446,6 +442,21 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
             sectionBuilder.addChild(new ImmutableNode.Builder().name(key)
                     .value(v).create());
         }
+    }
+
+    /**
+     * Writes data about a property into the given stream.
+     *
+     * @param out the output stream
+     * @param key the key
+     * @param value the value
+     */
+    private void writeProperty(PrintWriter out, String key, Object value)
+    {
+        out.print(key);
+        out.print(" = ");
+        out.print(escapeValue(value.toString()));
+        out.println();
     }
 
     /**

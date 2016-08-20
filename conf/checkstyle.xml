@@ -124,7 +124,9 @@
         <!-- Modifier Checks                                    -->
         <!-- See http://checkstyle.sf.net/config_modifiers.html -->
         <module name="ModifierOrder"/>
-        <module name="RedundantModifier"/>
+        <module name="RedundantModifier">
+            <property name="tokens" value="METHOD_DEF, VARIABLE_DEF, ANNOTATION_FIELD_DEF, INTERFACE_DEF, CLASS_DEF, ENUM_DEF"/>
+        </module>
 
 
         <!-- Checks for blocks. You know, those {}'s         -->
@@ -147,9 +149,6 @@
         <module name="IllegalInstantiation"/>
         <module name="MagicNumber">
             <property name="ignoreNumbers" value="-1,0,1,2,3"/>
-        </module>
-        <module name="RedundantThrows">
-            <property name="allowUnchecked" value="true"/>
         </module>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>

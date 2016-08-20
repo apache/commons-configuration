@@ -597,10 +597,10 @@ implements Cloneable
      * @param config the configuration to query
      * @param key the key of the property
      */
-    private static void appendListProperty(List<Object> dest, Configuration config,
+    private  void appendListProperty(List<Object> dest, Configuration config,
             String key)
     {
-        Object value = config.getProperty(key);
+        Object value = interpolate(config.getProperty(key));
         if (value != null)
         {
             if (value instanceof Collection)

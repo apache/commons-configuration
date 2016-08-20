@@ -1505,10 +1505,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     @Override
     public Object getArray(Class<?> cls, String key, Object defaultValue)
     {
-        checkDefaultValueArray(cls, defaultValue);
-        return ObjectUtils.defaultIfNull(
-                getConversionHandler().toArray(getProperty(key), cls,
-                        getInterpolator()), defaultValue);
+        return convertToArray(cls, key, defaultValue);
     }
 
     @Override
@@ -1780,6 +1777,11 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     private <T> T convert(Class<T> cls, String key, T defValue,
             boolean throwOnMissing)
     {
+        if (cls.isArray())
+        {
+            return cls.cast(convertToArray(cls.getComponentType(), key, defValue));
+        }
+
         T result = getAndConvertProperty(cls, key, defValue);
         if (result == null)
         {
@@ -1791,6 +1793,28 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         }
 
         return result;
+    }
+
+    /**
+     * Performs a conversion to an array result class. This implementation
+     * delegates to the {@link ConversionHandler} to perform the actual type
+     * conversion. If this results in a <b>null</b> result (because the property
+     * is undefined), the default value is returned. It is checked whether the
+     * default value is an array with the correct component type. If not, an
+     * exception is thrown.
+     *
+     * @param cls the component class of the array
+     * @param key the configuration key
+     * @param defaultValue an optional default value
+     * @return the converted array
+     * @throws IllegalArgumentException if the default value is not a compatible
+     *         array
+     */
+    private Object convertToArray(Class<?> cls, String key, Object defaultValue)
+    {
+        checkDefaultValueArray(cls, defaultValue);
+        return ObjectUtils.defaultIfNull(getConversionHandler().toArray(
+                getProperty(key), cls, getInterpolator()), defaultValue);
     }
 
     /**

@@ -17,6 +17,7 @@
 
 package org.apache.commons.configuration2;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -792,6 +793,22 @@ public class TestCompositeConfiguration
         cc.addConfiguration(c2);
         assertEquals("Wrong interpolated value", "one",
                 cc.getString("property.one.ref"));
+    }
+
+    /**
+     * Tests whether interpolation works if a variable references a property
+     * with multiple values. This test is related to CONFIGURATION-632.
+     */
+    @Test
+    public void testInterpolationArrayReference()
+    {
+        Configuration props = new PropertiesConfiguration();
+        String[] values = { "a", "property", "with", "multiple", "values" };
+        props.addProperty("keyMultiValues", values);
+        props.addProperty("keyReference", "${keyMultiValues}");
+        cc.addConfiguration(props);
+        assertArrayEquals("Wrong interpolated value", values,
+                cc.getStringArray("keyReference"));
     }
 
     /**

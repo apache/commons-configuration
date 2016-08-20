@@ -461,6 +461,38 @@ public class TestAbstractConfigurationBasicFeatures
     }
 
     /**
+     * Tests whether a property can reference an array using interpolation.
+     * This is related to CONFIGURATION-633.
+     */
+    @Test
+    public void testInterpolateArray()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        String[] values = {"some", "test", "values"};
+        final String keyArray = "testArray";
+        config.addProperty(keyArray, values);
+        config.addProperty(KEY_PREFIX, "${" + keyArray + "}");
+
+        assertArrayEquals("Wrong property", values, config.getStringArray(KEY_PREFIX));
+    }
+
+    /**
+     * Tests whether a property can reference a list using interpolation.
+     * This is related to CONFIGURATION-633.
+     */
+    @Test
+    public void testInterpolateList()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        List<String> values = Arrays.asList("some", "test", "values");
+        final String keyList = "testList";
+        config.addProperty(keyList, values);
+        config.addProperty(KEY_PREFIX, "${" + keyList + "}");
+
+        assertEquals("Wrong property", values, config.getList(String.class, KEY_PREFIX));
+    }
+
+    /**
      * Tests getList() for single non-string values.
      */
     @Test
@@ -765,8 +797,7 @@ public class TestAbstractConfigurationBasicFeatures
             config.addProperty(KEY_PREFIX, String.valueOf(i));
             expected[i] = Integer.valueOf(i);
         }
-        Integer[] result =
-                (Integer[]) config.getArray(Integer.class, KEY_PREFIX);
+        Integer[] result = config.get(Integer[].class, KEY_PREFIX);
         assertArrayEquals("Wrong result", expected, result);
     }
 
@@ -784,22 +815,22 @@ public class TestAbstractConfigurationBasicFeatures
             expected[i] = (short) i;
         }
         short[] result =
-                (short[]) config.getArray(Short.TYPE, KEY_PREFIX, new short[0]);
+                config.get(short[].class, KEY_PREFIX, new short[0]);
         assertArrayEquals("Wrong result", expected, result);
     }
 
     /**
-     * Tests getArray() for an unknown property if no default value is provided.
+     * Tests get() for an unknown array property if no default value is provided.
      */
     @Test
     public void testGetArrayUnknownNoDefault()
     {
         PropertiesConfiguration config = new PropertiesConfiguration();
-        assertNull("Wrong result", config.getArray(Integer.class, KEY_PREFIX));
+        assertNull("Wrong result", config.get(Integer[].class, KEY_PREFIX));
     }
 
     /**
-     * Tests getArray() for an unknown property if a default value is provided.
+     * Tests get() for an unknown array property if a default value is provided.
      */
     @Test
     public void testGetArrayUnknownWithDefault()
@@ -809,7 +840,7 @@ public class TestAbstractConfigurationBasicFeatures
                 1, 2, 3
         };
         assertArrayEquals("Wrong result", defValue,
-                (int[]) config.getArray(Integer.TYPE, KEY_PREFIX, defValue));
+                config.get(int[].class, KEY_PREFIX, defValue));
     }
 
     /**

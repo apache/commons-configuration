@@ -91,6 +91,12 @@ public class ConfigurationInterpolator
     /** Constant for the prefix separator. */
     private static final char PREFIX_SEPARATOR = ':';
 
+    /** The variable prefix. */
+    private static final String VAR_START = "${";
+
+    /** The variable suffix. */
+    private static final String VAR_END = "}";
+
     /** A map containing the default prefix lookups. */
     private static final Map<String, Lookup> DEFAULT_PREFIX_LOOKUPS;
 
@@ -378,7 +384,20 @@ public class ConfigurationInterpolator
     {
         if (value instanceof String)
         {
-            return substitutor.replace((String) value);
+            String strValue = (String) value;
+            if (looksLikeSingleVariable(strValue))
+            {
+                Object resolvedValue = resolveSingleVariable(strValue);
+                if (resolvedValue != null && !(resolvedValue instanceof String))
+                {
+                    // If the value is again a string, it needs no special
+                    // treatment; it may also contain further variables which
+                    // must be resolved; therefore, the default mechanism is
+                    // applied.
+                    return resolvedValue;
+                }
+            }
+            return substitutor.replace(strValue);
         }
         return value;
     }
@@ -466,6 +485,45 @@ public class ConfigurationInterpolator
                 return (result != null) ? result.toString() : null;
             }
         });
+    }
+
+    /**
+     * Interpolates a string value that seems to be a single variable.
+     *
+     * @param strValue the string to be interpolated
+     * @return the resolved value or <b>null</b> if resolving failed
+     */
+    private Object resolveSingleVariable(String strValue)
+    {
+        return resolve(extractVariableName(strValue));
+    }
+
+    /**
+     * Checks whether a value to be interpolated seems to be a single variable.
+     * In this case, it is resolved directly without using the
+     * {@code StrSubstitutor}. Note that it is okay if this method returns a
+     * false positive: In this case, resolving is going to fail, and standard
+     * mechanism is used.
+     *
+     * @param strValue the value to be interpolated
+     * @return a flag whether this value seems to be a single variable
+     */
+    private static boolean looksLikeSingleVariable(String strValue)
+    {
+        return strValue.startsWith(VAR_START) && strValue.endsWith(VAR_END);
+    }
+
+    /**
+     * Extracts the variable name from a value that consists of a single
+     * variable.
+     *
+     * @param strValue the value
+     * @return the extracted variable name
+     */
+    private static String extractVariableName(String strValue)
+    {
+        return strValue.substring(VAR_START.length(),
+                strValue.length() - VAR_END.length());
     }
 
     /**

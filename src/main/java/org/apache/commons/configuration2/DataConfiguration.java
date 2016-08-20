@@ -51,7 +51,7 @@ import org.apache.commons.lang3.StringUtils;
  * Lists and arrays are available for all types.<br>
  * Note that this class is only a thin wrapper over functionality already
  * provided by {@link AbstractConfiguration}. Basically, the generic
- * {@code get()}, {@code getCollection()}, and {@code getArray()} methods are
+ * {@code get()}, and {@code getCollection()} methods are
  * used to actually perform data conversions.
  *
  * <p><strong>Example</strong></p>
@@ -264,7 +264,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public boolean[] getBooleanArray(String key, boolean[] defaultValue)
     {
-        return (boolean[]) getArray(Boolean.TYPE, key, defaultValue);
+        return get(boolean[].class, key, defaultValue);
     }
 
     /**
@@ -329,7 +329,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public byte[] getByteArray(String key, byte[] defaultValue)
     {
-        return (byte[]) getArray(Byte.TYPE, key, defaultValue);
+        return get(byte[].class, key, defaultValue);
     }
 
     /**
@@ -394,7 +394,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public short[] getShortArray(String key, short[] defaultValue)
     {
-        return (short[]) getArray(Short.TYPE, key, defaultValue);
+        return get(short[].class, key, defaultValue);
     }
 
     /**
@@ -460,7 +460,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public int[] getIntArray(String key, int[] defaultValue)
     {
-        return (int[]) getArray(Integer.TYPE, key, defaultValue);
+        return get(int[].class, key, defaultValue);
     }
 
     /**
@@ -525,7 +525,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public long[] getLongArray(String key, long[] defaultValue)
     {
-        return (long[]) getArray(Long.TYPE, key, defaultValue);
+        return get(long[].class, key, defaultValue);
     }
 
     /**
@@ -590,7 +590,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public float[] getFloatArray(String key, float[] defaultValue)
     {
-        return (float[]) getArray(Float.TYPE, key, defaultValue);
+        return get(float[].class, key, defaultValue);
     }
 
     /**
@@ -656,7 +656,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public double[] getDoubleArray(String key, double[] defaultValue)
     {
-        return (double[]) getArray(Double.TYPE, key, defaultValue);
+        return get(double[].class, key, defaultValue);
     }
 
     /**
@@ -721,7 +721,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public BigInteger[] getBigIntegerArray(String key, BigInteger[] defaultValue)
     {
-        return (BigInteger[]) getArray(BigInteger.class, key, defaultValue);
+        return get(BigInteger[].class, key, defaultValue);
     }
 
     /**
@@ -786,7 +786,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public BigDecimal[] getBigDecimalArray(String key, BigDecimal[] defaultValue)
     {
-        return (BigDecimal[]) getArray(BigDecimal.class, key, defaultValue);
+        return get(BigDecimal[].class, key, defaultValue);
     }
 
     /**
@@ -880,7 +880,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public URL[] getURLArray(String key, URL[] defaultValue)
     {
-        return (URL[]) getArray(URL.class, key, defaultValue);
+        return get(URL[].class, key, defaultValue);
     }
 
     /**
@@ -1118,7 +1118,7 @@ public class DataConfiguration extends AbstractConfiguration
         TEMP_DATE_FORMAT.set(format);
         try
         {
-            return (Date[]) getArray(Date.class, key, defaultValue);
+            return get(Date[].class, key, defaultValue);
         }
         finally
         {
@@ -1375,7 +1375,7 @@ public class DataConfiguration extends AbstractConfiguration
         TEMP_DATE_FORMAT.set(format);
         try
         {
-            return (Calendar[]) getArray(Calendar.class, key, defaultValue);
+            return get(Calendar[].class, key, defaultValue);
         }
         finally
         {
@@ -1487,7 +1487,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public Locale[] getLocaleArray(String key, Locale[] defaultValue)
     {
-        return (Locale[]) getArray(Locale.class, key, defaultValue);
+        return get(Locale[].class, key, defaultValue);
     }
 
     /**
@@ -1583,7 +1583,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public Color[] getColorArray(String key, Color[] defaultValue)
     {
-        return (Color[]) getArray(Color.class, key, defaultValue);
+        return get(Color[].class, key, defaultValue);
     }
 
     /**

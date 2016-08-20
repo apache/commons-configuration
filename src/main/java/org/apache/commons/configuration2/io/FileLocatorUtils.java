@@ -650,8 +650,20 @@ public final class FileLocatorUtils
     private static FileLocator createFullyInitializedLocatorFromURL(FileLocator src,
             URL url)
     {
-        return fileLocator(src).sourceURL(url).fileName(getFileName(url))
-                .basePath(getBasePath(url)).create();
+        FileLocator.FileLocatorBuilder fileLocatorBuilder = fileLocator(src);
+        if (src.getSourceURL() == null)
+        {
+            fileLocatorBuilder.sourceURL(url);
+        }
+        if (StringUtils.isBlank(src.getFileName()))
+        {
+            fileLocatorBuilder.fileName(getFileName(url));
+        }
+        if (StringUtils.isBlank(src.getBasePath()))
+        {
+            fileLocatorBuilder.basePath(getBasePath(url));
+        }
+        return fileLocatorBuilder.create();
     }
 
     /**

@@ -13,7 +13,5 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-# $Id:$
-
-# Points to the installation of JavaCC.
-javacc_home=D:\\data\\tools\\javacc-5.0
+robin=hood
+java=duke

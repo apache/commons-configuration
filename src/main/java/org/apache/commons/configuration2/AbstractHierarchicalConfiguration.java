@@ -841,6 +841,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * &quot;Defined&quot; in this terms means that the node or at least one of
      * its sub nodes is associated with a value.
      *
+     * @param <T> the type of the nodes managed by this hierarchical configuration
      */
     private static class DefinedVisitor<T> extends
             ConfigurationNodeVisitorAdapter<T>
