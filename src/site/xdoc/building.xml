@@ -40,6 +40,8 @@
           <p>
             To build the web site run "mvn site". When it completes the web site will reside in
             the target/site directory and may be viewed by opening target/site/index.html.
+            Note that due to a dependency to a maven reporting plugin, the build of the site
+            requires JDK 1.7 or higher.
           </p>
         </section>
         <section name="Running Functional Tests">
