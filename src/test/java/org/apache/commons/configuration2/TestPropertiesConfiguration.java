@@ -68,6 +68,8 @@ import org.apache.commons.configuration2.io.FileSystem;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * Test for loading and saving properties files.
@@ -94,6 +96,10 @@ public class TestPropertiesConfiguration
     private static String testBasePath = ConfigurationAssert.TEST_DIR.getAbsolutePath();
     private static String testBasePath2 = ConfigurationAssert.TEST_DIR.getParentFile().getAbsolutePath();
     private static File testSavePropertiesFile = ConfigurationAssert.getOutFile("testsave.properties");
+
+    /** Helper object for creating temporary files. */
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     @Before
     public void setUp() throws Exception
@@ -297,7 +303,7 @@ public class TestPropertiesConfiguration
     public void testSaveToCustomURL() throws Exception
     {
         // save the configuration to a custom URL
-        URL url = new URL("foo", "", 0, "./target/testsave-custom-url.properties", new FileURLStreamHandler());
+        URL url = new URL("foo", "", 0, folder.newFile("testsave-custom-url.properties").getAbsolutePath(), new FileURLStreamHandler());
         FileHandler handlerSave = new FileHandler(conf);
         handlerSave.save(url);
 
@@ -778,8 +784,7 @@ public class TestPropertiesConfiguration
     @Test
     public void testFileWithSharpSymbol() throws Exception
     {
-        File file = new File("target/sharp#1.properties");
-        file.createNewFile();
+        File file = folder.newFile("sharp#1.properties");
 
         PropertiesConfiguration conf = new PropertiesConfiguration();
         FileHandler handler = new FileHandler(conf);

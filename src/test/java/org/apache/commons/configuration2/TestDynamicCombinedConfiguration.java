@@ -52,6 +52,8 @@ import org.apache.commons.configuration2.sync.ReadWriteSynchronizer;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
 
 public class TestDynamicCombinedConfiguration
 {
@@ -71,6 +73,10 @@ public class TestDynamicCombinedConfiguration
 
     /** A helper object for creating builder parameters. */
     private static Parameters parameters;
+
+    /** Helper object for creating temporary files. */
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     @BeforeClass
     public static void setUpOnce()
@@ -342,9 +348,10 @@ public class TestDynamicCombinedConfiguration
     {
         final int threadCount = 25;
         System.getProperties().remove("Id");
+        System.setProperty("TemporaryFolder", folder.getRoot().getAbsolutePath());
         // create a new configuration
         File input = new File("target/test-classes/testMultiDynamic_default.xml");
-        File output = new File("target/test-classes/testwrite/testMultiDynamic_default.xml");
+        File output = folder.newFile("testMultiDynamic_default.xml");
         output.delete();
         output.getParentFile().mkdir();
         copyFile(input, output);

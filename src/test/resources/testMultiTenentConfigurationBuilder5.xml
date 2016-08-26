@@ -32,13 +32,13 @@
     <entity-resolver catalogFiles="catalog.xml"/>
   </header>
   <override>
-    <multiFile filePattern="testwrite/testMultiConfiguration_$${sys:Id}.xml"
+    <multiFile filePattern="${sys:TemporaryFolder}/testMultiConfiguration_$${sys:Id}.xml"
                config-name="clientConfig" config-optional="true"
                config-forceCreate="true" schemaValidation="false">
        <expressionEngine
           config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </multiFile>
-    <xml fileName="testwrite/testMultiDynamic_default.xml"
+    <xml fileName="${sys:TemporaryFolder}/testMultiDynamic_default.xml"
          config-name="defaultConfig" config-reload="true"
          schemaValidation="false">
       <expressionEngine

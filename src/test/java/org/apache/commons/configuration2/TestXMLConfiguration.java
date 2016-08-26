@@ -54,6 +54,8 @@ import org.apache.commons.configuration2.tree.NodeStructureHelper;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -87,11 +89,15 @@ public class TestXMLConfiguration
     /** Constant for the transformer factory property.*/
     static final String PROP_FACTORY = "javax.xml.transform.TransformerFactory";
 
+    /** Helper object for creating temporary files. */
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+
     /** The File that we test with */
     private final String testProperties = ConfigurationAssert.getTestFile("test.xml").getAbsolutePath();
     private final String testProperties2 = ConfigurationAssert.getTestFile("testDigesterConfigurationInclude1.xml").getAbsolutePath();
-    private final File testSaveConf = ConfigurationAssert.getOutFile("testsave.xml");
-    private final File testSaveFile = ConfigurationAssert.getOutFile("testsample2.xml");
+    private File testSaveConf;
+    private File testSaveFile;
     private final String testFile2 = ConfigurationAssert.getTestFile("sample.xml").getAbsolutePath();
 
     /** Constant for the number of test threads. */
@@ -105,6 +111,8 @@ public class TestXMLConfiguration
     @Before
     public void setUp() throws Exception
     {
+        testSaveConf = folder.newFile("testsave.xml");
+        testSaveFile = folder.newFile("testsample2.xml");
         conf = createFromFile(testProperties);
         removeTestFile();
     }
