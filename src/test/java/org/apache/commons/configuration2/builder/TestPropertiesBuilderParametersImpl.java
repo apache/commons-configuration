@@ -92,7 +92,7 @@ public class TestPropertiesBuilderParametersImpl
         PropertiesConfiguration.IOFactory factory =
                 EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
         EasyMock.replay(factory);
-        BeanHelper.setProperty(params, "iOFactory", factory);
+        BeanHelper.setProperty(params, "IOFactory", factory);
         BeanHelper.setProperty(params, "throwExceptionOnMissing",
                 Boolean.TRUE);
         BeanHelper.setProperty(params, "fileName", "test.properties");
