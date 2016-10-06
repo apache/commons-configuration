@@ -30,6 +30,11 @@
       <action dev="oheger" type="update" issue="CONFIGURATION-638"  due-to="Ahmet Celik">
         Improved handling of temporary files and folders in unit tests.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-627">
+        Updated dependency to Commons BeanUtils to version 1.9.3. This fixes an
+        issue with an exception stacktrace that was logged when a
+        ConfigurationBuilder was used.
+      </action>
     </release>
 
     <release version="2.1" date="2016-08-20"
