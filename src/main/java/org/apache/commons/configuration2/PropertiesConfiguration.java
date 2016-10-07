@@ -229,6 +229,13 @@ public class PropertiesConfiguration extends BaseConfiguration
     private static final IOFactory DEFAULT_IO_FACTORY = new DefaultIOFactory();
 
     /**
+     * A string with special characters that need to be unescaped when reading
+     * a properties file. {@code java.util.Properties} escapes these characters
+     * when writing out a properties file.
+     */
+    private static final String UNESCAPE_CHARACTERS = ":#=!\\\'\"";
+
+    /**
      * This is the name of the property that can point to other
      * properties file for including other properties files.
      */
@@ -1332,19 +1339,7 @@ public class PropertiesConfiguration extends BaseConfiguration
                 // handle an escaped value
                 hadSlash = false;
 
-                if (ch == '\\')
-                {
-                    out.append('\\');
-                }
-                else if (ch == '\'')
-                {
-                    out.append('\'');
-                }
-                else if (ch == '\"')
-                {
-                    out.append('"');
-                }
-                else if (ch == 'r')
+                if (ch == 'r')
                 {
                     out.append('\r');
                 }
@@ -1368,6 +1363,10 @@ public class PropertiesConfiguration extends BaseConfiguration
                 {
                     // uh-oh, we're in unicode country....
                     inUnicode = true;
+                }
+                else if (needsUnescape(ch))
+                {
+                    out.append(ch);
                 }
                 else
                 {
@@ -1393,6 +1392,21 @@ public class PropertiesConfiguration extends BaseConfiguration
         }
 
         return out.toString();
+    }
+
+    /**
+     * Checks whether the specified character needs to be unescaped. This method
+     * is called when during reading a property file an escape character ('\')
+     * is detected. If the character following the escape character is
+     * recognized as a special character which is escaped per default in a Java
+     * properties file, it has to be unescaped.
+     *
+     * @param ch the character in question
+     * @return a flag whether this character has to be unescaped
+     */
+    private static boolean needsUnescape(char ch)
+    {
+        return UNESCAPE_CHARACTERS.indexOf(ch) >= 0;
     }
 
     /**

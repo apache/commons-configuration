@@ -1179,6 +1179,17 @@ public class TestPropertiesConfiguration
     }
 
     /**
+     * Tests whether special characters in a property value are un-escaped. This
+     * test is related to CONFIGURATION-640.
+     */
+    @Test
+    public void testUnEscapeCharacters()
+    {
+        assertEquals("Wrong value", "#1 =: me!",
+                conf.getString("test.unescape.characters"));
+    }
+
+    /**
      * Helper method for testing the content of a list with elements that
      * contain backslashes.
      *
