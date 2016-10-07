@@ -27,6 +27,10 @@
   <body>
     <release version="2.2" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-640">
+        PropertiesConfiguration now correctly unescapes some special characters
+        that are always escaped in Java properties files.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-638"  due-to="Ahmet Celik">
         Improved handling of temporary files and folders in unit tests.
       </action>
