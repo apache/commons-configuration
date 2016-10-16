@@ -488,6 +488,7 @@
       javax.servlet.*;resolution:=optional,
       org.apache.commons.jexl2.*;resolution:=optional,
       org.apache.commons.vfs2.*;resolution:=optional,
+      org.springframework.*;resolution:=optional,
       *
     </commons.osgi.import>
     <slf4j.version>1.7.7</slf4j.version>
