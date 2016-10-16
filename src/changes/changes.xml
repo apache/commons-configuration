@@ -31,6 +31,10 @@
         PropertiesConfiguration now correctly unescapes some special characters
         that are always escaped in Java properties files.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-639"  due-to="Rico Neubauer">
+        In the OSGi bundle manifest of the Commons Configuration bundle the
+        package imports for Spring packages are now marked as optional.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-638"  due-to="Ahmet Celik">
         Improved handling of temporary files and folders in unit tests.
       </action>
