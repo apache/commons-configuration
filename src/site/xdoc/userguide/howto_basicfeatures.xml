@@ -264,33 +264,34 @@ java.home = ${env:JAVA_HOME}
     <p>
       This sub section goes a bit behind the scenes of interpolation and
       explains some approaches how you can add your own interpolation facilities.
-      Under the hood interpolation is implemented using the
-      <code>StrSubstitutor</code> class of the <code>text</code> package of
-      <a href="http://commons.apache.org/lang/">Commons Lang</a>. This
-      class uses objects derived from the <code>StrLookup</code> class for
-      resolving variables. <code>StrLookup</code> defines a simple
+      Under the hood the implementation of interpolation relies on objects
+      implementing the
+      <code><a href="../apidocs/org/apache/commons/configuration2/interpol/Lookup.html">
+      Lookup</a></code> interface. <code>Lookup</code> defines a simple
       <code>lookup()</code> method that must be implemented by custom
       implementations; it expects the name of a variable as argument and
-      returns the corresponding value (further details can be found in the
-      documentation of Commons Lang). The standard prefixes for variables we
-      have covered so far are indeed realized by special classes derived from
-      <code>StrLookup</code>.
+      returns the corresponding value. The standard prefixes for variables we
+      have covered so far are indeed provided by special classes implementing
+      <code>Lookup</code>.
     </p>
     <p>
-      It is now possible to create your own implementation of <code>StrLookup</code>
-      and make it available for all configuration objects under a custom
+      It is now possible to create your own implementation of <code>Lookup</code>
+      and configure a <a href="howto_builder.html">configuration builder</a>
+      (builders are introduced in the next chapter of this user's guide) to
+      make it available for all configuration objects it creates under a custom
       prefix. We will show how this can be achieved. The first step is to
-      create a new class derived from <code>StrLookup</code>, which must
-      implement the <code>lookup()</code> method. As an example we implement a
+      create a new class implementing <code>Lookup</code>, which must
+      define the <code>lookup()</code> method. As an example we implement a
       rather dull lookup object that simply returns a kind of &quot;echo&quot;
       for the variable passed in:
     </p>
     <source><![CDATA[
-import org.apache.commons.lang.text.StrLookup;
+import org.apache.commons.configuration2.interpol.Lookup;
 
-public class EchoLookup extends StrLookup
+public class EchoLookup implements Lookup
 {
-    public String lookup(String varName)
+    @Override
+    public Object lookup(String varName)
     {
         return "Value of variable " + varName;
     }
@@ -301,30 +302,52 @@ public class EchoLookup extends StrLookup
       <code>echo</code>. For this purpose the <code>EchoLookup</code> class
       has to be registered at the
       <code><a href="../apidocs/org/apache/commons/configuration2/interpol/ConfigurationInterpolator.html">
-      ConfigurationInterpolator</a></code> class with the desired prefix.
-      <code>ConfigurationInterpolator</code> implements a thin wrapper over the
-      <code>StrLookup</code> API defined by Commons Lang. It has a static
-      <code>registerGlobalLookup()</code> method, which we have to call as
-      follows:
-    </p>
-    <source><![CDATA[
-// Place this code somewhere in an initialization section of your application
-ConfigurationInterpolator.registerGlobalLookup("echo", new EchoLookup());
-    ]]></source>
-    <p>
-      Each <code>AbstractConfiguration</code> object that is created after this
-      line is executed will contain the new lookup class and can thus resolve
-      variables of the form <code>${echo:my_variable}</code>.
+      ConfigurationInterpolator</a></code> instance of our configuration with
+      the desired prefix. Each <code>Configuration</code> object is associated
+      with a <code>ConfigurationInterpolator</code> object that handles variable
+      interpolation. It manages the <code>Lookup</code> objects that should be
+      used to resolve variables.
     </p>
     <p>
-      Each instance of <code>AbstractConfiguration</code> is associated with a
-      <code>ConfigurationInterpolator</code> object. This object is created by
-      the <code>createInterpolator()</code> method on first access of one of
-      the interpolation features. By overriding this method even deeper
-      intervention in the interpolation mechanism is possible. For instance
-      a custom implementation can add further lookup objects to the interpolator,
-      which are then only used by this configuration instance.
+      There are multiple ways to make a <code>Lookup</code> object known to a
+      <code>ConfigurationInterpolator</code>. The most direct way is to call
+      the interpolator's <code>registerLookup()</code> method passing in the
+      <code>Lookup</code> and the desired prefix:
     </p>
+<source><![CDATA[
+// simple, but not recommended approach
+ConfigurationInterpolator interpolator = config.getInterpolator();
+interpolator.registerLookup("echo", new EchoLookup());
+]]></source>
+    <p>
+      This approach works, but has some drawbacks, especially when used with
+      advanced features like reloading of configurations. The recommended way
+      is to set custom lookup objects via the builder which creates the
+      configuration object; this ensures that every <code>Configuration</code>
+      instance created via the builder has a correctly initialized
+      <code>ConfigurationInterpolator</code> object. To achieve this, create
+      a map using the variable prefixes as keys and the associated
+      <code>Lookup</code> objects as values. This map can then be passed to the
+      <code>setPrefixLookup()</code> method of a parameters object for the
+      builder. Note that the lookups for the default prefixes are added
+      explicitly; ommitting a lookup would remove support for the corresponding
+      prefix:
+    </p>
+<source><![CDATA[
+// Create a map with defaults and one additional lookup
+Map<String, Lookup> lookups = new HashMap<String, Lookup>(
+    ConfigurationInterpolator.getDefaultPrefixLookups());
+lookups.put("echo", new EchoLookup());
+
+// Configure builder with lookups
+Parameters params = new Parameters();
+BasicConfigurationBuilder<PropertiesConfiguration> builder =
+        new BasicConfigurationBuilder<PropertiesConfiguration>(
+                PropertiesConfiguration.class)
+                .configure(params.basic()
+                        .setPrefixLookups(lookups);
+PropertiesConfiguration config = builder.getConfiguration();
+]]></source>
     </subsection>
 
     <subsection name="Using Expressions">
