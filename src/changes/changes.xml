@@ -27,6 +27,9 @@
   <body>
     <release version="2.2" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-643">
+        Documentation improvements for the user's guide.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-640">
         PropertiesConfiguration now correctly unescapes some special characters
         that are always escaped in Java properties files.
