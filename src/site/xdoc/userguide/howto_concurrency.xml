@@ -94,6 +94,24 @@
 config.setSynchronizer(new ReadWriteSynchronizer());
 ]]></source>
     <p>
+      Rather than setting the synchronizer on an existing
+      <code>Configuration</code> instance, it is usually better to configure
+      the <a href="howto_builder.html">configuration builder</a> responsible
+      for the creation of the configuration to set the correct synchronizer
+      directly after a new instance has been created. This is done in the usual
+      way by setting the corresponding property of a parameters object passed
+      to the builder's <code>configure()</code> method, for instance:
+    </p>
+<source><![CDATA[
+Parameters params = new Parameters();
+BasicConfigurationBuilder<PropertiesConfiguration> builder =
+        new BasicConfigurationBuilder<PropertiesConfiguration>(
+                PropertiesConfiguration.class)
+                .configure(params.basic()
+                        .setSynchronizer(new ReadWriteSynchronizer());
+PropertiesConfiguration config = builder.getConfiguration();
+]]></source>
+    <p>
       It is also possible to set the synchronizer to <strong>null</strong>. In
       this case, the default <code>NoOpSynchronizer</code> is installed, which
       means that the configuration is no longer protected against concurrent
