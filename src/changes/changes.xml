@@ -27,6 +27,10 @@
   <body>
     <release version="2.2" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-644" due-to="Andrew DeMaria">
+        PropertiesConfigurationLayout no longer duplicates a header comment
+        if a file with another comment is loaded.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-643">
         Documentation improvements for the user's guide.
       </action>
