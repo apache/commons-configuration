@@ -796,8 +796,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      */
     private int checkHeaderComment(List<String> commentLines)
     {
-        if (loadCounter == 1 && getHeaderComment() == null
-                && layoutData.isEmpty())
+        if (loadCounter == 1 && layoutData.isEmpty())
         {
             // This is the first comment. Search for blanc lines.
             int index = commentLines.size() - 1;
@@ -806,7 +805,10 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
             {
                 index--;
             }
-            setHeaderComment(extractComment(commentLines, 0, index - 1));
+            if (getHeaderComment() == null)
+            {
+                setHeaderComment(extractComment(commentLines, 0, index - 1));
+            }
             return index + 1;
         }
         else

@@ -230,6 +230,26 @@ public class TestPropertiesConfigurationLayout
     }
 
     /**
+     * Tests if a header comment containing blanc lines is correctly detected and doesn't overflow into the property
+     * comment in the case that the header comment is already set
+     */
+    @Test
+    public void testHeaderCommentWithBlancsAndPresetHeaderComment() throws ConfigurationException
+    {
+        String presetHeaderComment = "preset" + TEST_COMMENT + CRNORM + CRNORM + TEST_COMMENT;
+        builder.addComment(TEST_COMMENT);
+        builder.addComment(null);
+        builder.addComment(TEST_COMMENT);
+        builder.addComment(null);
+        builder.addProperty(TEST_KEY, TEST_VALUE);
+        layout.setHeaderComment(presetHeaderComment);
+        layout.load(config, builder.getReader());
+        assertEquals("Wrong header comment", presetHeaderComment,
+                     layout.getCanonicalHeaderComment(false));
+        assertNull("Wrong comment for property", layout.getComment(TEST_KEY));
+    }
+
+    /**
      * Tests if a header comment is correctly detected when it contains blanc
      * lines and the first property has a comment, too.
      */
