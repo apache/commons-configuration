@@ -1622,6 +1622,28 @@ public class TestXMLConfiguration
     }
 
     /**
+     * Tests a direct invocation of the read() method. This is not allowed
+     * because certain initializations have not been done. This test is
+     * related to CONFIGURATION-641.
+     */
+    @Test
+    public void testReadCalledDirectly() throws IOException, ConfigurationException
+    {
+        conf = new XMLConfiguration();
+        String content = "<configuration><test>1</test></configuration>";
+        ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes());
+        try
+        {
+            conf.read(bis);
+            fail("No exception thrown!");
+        }
+        catch (ConfigurationException e)
+        {
+            assertThat(e.getMessage(), containsString("FileHandler"));
+        }
+    }
+
+    /**
      * Removes the test output file if it exists.
      */
     private void removeTestFile()

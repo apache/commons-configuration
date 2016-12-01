@@ -962,6 +962,13 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     private void load(InputSource source) throws ConfigurationException
     {
+        if (locator == null)
+        {
+            throw new ConfigurationException("Load operation not properly "
+                    + "initialized! Do not call read(InputStream) directly,"
+                    + " but use a FileHandler to load a configuration.");
+        }
+
         try
         {
             URL sourceURL = locator.getSourceURL();
