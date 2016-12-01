@@ -17,29 +17,7 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -70,6 +48,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.*;
 
 /**
  * Test for loading and saving properties files.
@@ -1187,6 +1168,31 @@ public class TestPropertiesConfiguration
     {
         assertEquals("Wrong value", "#1 =: me!",
                 conf.getString("test.unescape.characters"));
+    }
+
+    /**
+     * Tests a direct invocation of the read() method. This is not allowed
+     * because certain initializations have not been done. This test is
+     * related to CONFIGURATION-641.
+     */
+    @Test
+    public void testReadCalledDirectly() throws IOException
+    {
+        conf = new PropertiesConfiguration();
+        Reader in = new FileReader(ConfigurationAssert.getTestFile("test.properties"));
+        try
+        {
+            conf.read(in);
+            fail("No exception thrown!");
+        }
+        catch (ConfigurationException e)
+        {
+            assertThat(e.getMessage(), containsString("FileHandler"));
+        }
+        finally
+        {
+            in.close();
+        }
     }
 
     /**

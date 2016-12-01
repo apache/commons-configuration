@@ -1421,7 +1421,13 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     private void loadIncludeFile(String fileName) throws ConfigurationException
     {
-        assert locator != null : "Locator has not been set!";
+        if (locator == null)
+        {
+            throw new ConfigurationException("Load operation not properly "
+                    + "initialized! Do not call read(InputStream) directly,"
+                    + " but use a FileHandler to load a configuration.");
+        }
+
         URL url = locateIncludeFile(locator.getBasePath(), fileName);
         if (url == null)
         {
