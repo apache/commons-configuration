@@ -23,18 +23,19 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
-import junitx.framework.ArrayAssert;
-import junitx.framework.ListAssert;
-import junitx.framework.ObjectAssert;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationAssert;
 import org.apache.commons.configuration2.ConfigurationComparator;
@@ -45,6 +46,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
+import junitx.framework.ArrayAssert;
+import junitx.framework.ListAssert;
+import junitx.framework.ObjectAssert;
 
 /**
  * @author Emmanuel Bourg
@@ -507,5 +512,31 @@ public class TestXMLPropertyListConfiguration
         config.addProperty("array", elems);
 
         checkArrayProperty(Arrays.asList(elems));
+    }
+
+    /**
+     * Tests a direct invocation of the write() method. This test is
+     * related to CONFIGURATION-641.
+     */
+    @Test
+    public void testWriteCalledDirectly() throws IOException
+    {
+        config = new XMLPropertyListConfiguration();
+        config.addProperty("foo", "bar");
+
+        Writer out = new FileWriter(folder.newFile());
+        try
+        {
+            config.write(out);
+            fail("No exception thrown!");
+        }
+        catch (ConfigurationException e)
+        {
+            assertThat(e.getMessage(), containsString("FileHandler"));
+        }
+        finally
+        {
+            out.close();
+        }
     }
 }

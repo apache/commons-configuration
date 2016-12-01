@@ -261,6 +261,12 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
     @Override
     public void write(Writer out) throws ConfigurationException
     {
+        if (locator == null)
+        {
+            throw new ConfigurationException("Save operation not properly "
+                    + "initialized! Do not call write(Writer) directly,"
+                    + " but use a FileHandler to save a configuration.");
+        }
         PrintWriter writer = new PrintWriter(out);
 
         if (locator.getEncoding() != null)
