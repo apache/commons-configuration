@@ -34,6 +34,12 @@
       <action dev="oheger" type="fix" issue="CONFIGURATION-643">
         Documentation improvements for the user's guide.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-641">
+        Improved documentation of FileBased interface. The Javadocs now state
+        explicitly that the methods should not be called by client code.
+        Exception handling in configuration classes implementing
+        FileLocatorAware has been improved.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-640">
         PropertiesConfiguration now correctly unescapes some special characters
         that are always escaped in Java properties files.
