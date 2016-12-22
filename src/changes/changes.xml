@@ -27,6 +27,9 @@
   <body>
     <release version="2.2" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-646">
+        PropertiesConfiguration now works correctly with the auto-save mode.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-644" due-to="Andrew DeMaria">
         PropertiesConfigurationLayout no longer duplicates a header comment
         if a file with another comment is loaded.
