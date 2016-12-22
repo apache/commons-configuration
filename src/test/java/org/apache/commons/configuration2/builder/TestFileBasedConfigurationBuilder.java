@@ -409,6 +409,26 @@ public class TestFileBasedConfigurationBuilder
     }
 
     /**
+     * Tests whether auto save mode works with a properties configuration.
+     * This is related to CONFIGURATION-646.
+     */
+    @Test
+    public void testAutoSaveWithPropertiesConfiguration() throws ConfigurationException,
+            IOException
+    {
+        File file = folder.newFile();
+        FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class)
+                        .configure(new FileBasedBuilderParametersImpl()
+                                .setFile(file));
+        builder.setAutoSave(true);
+        PropertiesConfiguration config = builder.getConfiguration();
+        config.setProperty(PROP, 1);
+        checkSavedConfig(file, 1);
+    }
+
+    /**
      * Tries to set a default encoding for a null class.
      */
     @Test(expected = IllegalArgumentException.class)

@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.EventListener;
@@ -133,7 +134,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     private String lineSeparator;
 
     /** A counter for determining nested load calls. */
-    private int loadCounter;
+    private final AtomicInteger loadCounter;
 
     /** Stores the force single line flag. */
     private boolean forceSingleLine;
@@ -154,6 +155,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      */
     public PropertiesConfigurationLayout(PropertiesConfigurationLayout c)
     {
+        loadCounter = new AtomicInteger();
         layoutData = new LinkedHashMap<String, PropertyLayoutData>();
 
         if (c != null)
@@ -476,10 +478,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     public void load(PropertiesConfiguration config, Reader in)
             throws ConfigurationException
     {
-        if (++loadCounter == 1)
-        {
-            config.removeEventListener(ConfigurationEvent.ANY, this);
-        }
+        loadCounter.incrementAndGet();
         PropertiesConfiguration.PropertiesReader reader =
                 config.getIOFactory().createPropertiesReader(in);
 
@@ -527,10 +526,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         }
         finally
         {
-            if (--loadCounter == 0)
-            {
-                config.addEventListener(ConfigurationEvent.ANY, this);
-            }
+            loadCounter.decrementAndGet();
         }
     }
 
@@ -601,7 +597,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     @Override
     public void onEvent(ConfigurationEvent event)
     {
-        if (!event.isBeforeUpdate())
+        if (!event.isBeforeUpdate() && loadCounter.get() == 0)
         {
             if (ConfigurationEvent.ADD_PROPERTY.equals(event.getEventType()))
             {
@@ -796,7 +792,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      */
     private int checkHeaderComment(List<String> commentLines)
     {
-        if (loadCounter == 1 && layoutData.isEmpty())
+        if (loadCounter.get() == 1 && layoutData.isEmpty())
         {
             // This is the first comment. Search for blanc lines.
             int index = commentLines.size() - 1;
