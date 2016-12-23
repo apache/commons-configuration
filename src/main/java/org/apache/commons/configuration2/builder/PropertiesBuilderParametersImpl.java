@@ -52,7 +52,7 @@ public class PropertiesBuilderParametersImpl extends
     private static final String PROP_LAYOUT = "layout";
 
     /** The key for the IO factory property. */
-    private static final String PROP_IO_FACTORY = "iOFactory";
+    private static final String PROP_IO_FACTORY = "IOFactory";
 
     @Override
     public PropertiesBuilderParametersImpl setIncludesAllowed(boolean f)

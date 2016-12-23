@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.PropertiesConfigurationLayout;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -80,7 +81,7 @@ public class TestPropertiesBuilderParametersImpl
         EasyMock.replay(factory);
         assertSame("Wrong result", params, params.setIOFactory(factory));
         assertSame("Factory not set", factory,
-                params.getParameters().get("iOFactory"));
+                params.getParameters().get("IOFactory"));
     }
 
     /**
@@ -102,7 +103,7 @@ public class TestPropertiesBuilderParametersImpl
         assertEquals("Wrong exception flag", Boolean.TRUE,
                 paramsMap.get("throwExceptionOnMissing"));
         assertSame("Factory not set", factory,
-                params.getParameters().get("iOFactory"));
+                params.getParameters().get("IOFactory"));
     }
 
     /**
@@ -123,9 +124,27 @@ public class TestPropertiesBuilderParametersImpl
         Map<String, Object> parameters = params2.getParameters();
         assertEquals("Exception flag not set", Boolean.TRUE,
                 parameters.get("throwExceptionOnMissing"));
-        assertEquals("IOFactory not set", factory, parameters.get("iOFactory"));
+        assertEquals("IOFactory not set", factory, parameters.get("IOFactory"));
         assertEquals("Include flag not set", Boolean.FALSE,
                 parameters.get("includesAllowed"));
         assertNull("Layout was copied", parameters.get("layout"));
+    }
+
+    /**
+     * Tests whether the IOFactory property can be correctly set. This test is
+     * related to CONFIGURATION-648.
+     */
+    @Test
+    public void testSetIOFactoryProperty() throws ConfigurationException
+    {
+        PropertiesConfiguration.IOFactory factory =
+                new PropertiesConfiguration.DefaultIOFactory();
+        ConfigurationBuilder<PropertiesConfiguration> builder =
+                new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class)
+                .configure(params.setIOFactory(factory));
+
+        PropertiesConfiguration config = builder.getConfiguration();
+        assertEquals("Wrong IO factory", factory, config.getIOFactory());
     }
 }

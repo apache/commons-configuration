@@ -285,7 +285,7 @@ public class TestParameters
                 .getFileName());
         assertEquals("Wrong includes flag", Boolean.FALSE,
                 map.get("includesAllowed"));
-        assertSame("Wrong factory", factory, map.get("iOFactory"));
+        assertSame("Wrong factory", factory, map.get("IOFactory"));
     }
 
     /**
