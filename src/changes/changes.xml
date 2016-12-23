@@ -27,6 +27,12 @@
   <body>
     <release version="2.2" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-648">
+        Made the IOFactory property of PropertiesBuilderParameter compatible
+        with the most recent version of Commons BeanUtils. This version
+        changed the handling of properties starting with multiple uppercase
+        letters.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-646">
         PropertiesConfiguration now works correctly with the auto-save mode.
       </action>
