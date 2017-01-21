@@ -1583,6 +1583,7 @@ public class TestXMLConfiguration
     public void testAddPropertyListWithDelimiterParsingDisabled()
             throws ConfigurationException
     {
+        conf.clear();
         String prop = "delimiterListProp";
         conf.setListDelimiterHandler(DisabledListDelimiterHandler.INSTANCE);
         List<String> list = Arrays.asList("val", "val2", "val3");

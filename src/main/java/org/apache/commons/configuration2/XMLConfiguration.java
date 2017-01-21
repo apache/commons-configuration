@@ -614,10 +614,10 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
                 Boolean childTrim = Boolean.valueOf(attrmap.remove(ATTR_SPACE_INTERNAL));
                 childNode.addAttributes(attrmap);
                 ImmutableNode newChild =
-                        createChildNodeWithValue(node, childNode,
+                        createChildNodeWithValue(node, childNode, child,
                                 refChildValue.getValue(),
-                                childTrim.booleanValue(), attrmap);
-                if (elemRefs != null)
+                                childTrim.booleanValue(), attrmap, elemRefs);
+                if (elemRefs != null && !elemRefs.containsKey(newChild))
                 {
                     elemRefs.put(newChild, child);
                 }
@@ -692,14 +692,18 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      *
      * @param parent the builder for the parent element
      * @param child the builder for the child element
+     * @param elem the associated XML element
      * @param value the value of the child element
      * @param trim flag whether texts of elements should be trimmed
      * @param attrmap a map with the attributes of the current node
+     * @param elemRefs a map for assigning references objects to nodes; can be
+     *        <b>null</b>, then reference objects are irrelevant
      * @return the first child node added to the parent
      */
-    private ImmutableNode createChildNodeWithValue(
-            ImmutableNode.Builder parent, ImmutableNode.Builder child,
-            String value, boolean trim, Map<String, String> attrmap)
+    private ImmutableNode createChildNodeWithValue(ImmutableNode.Builder parent,
+            ImmutableNode.Builder child, Element elem, String value,
+            boolean trim, Map<String, String> attrmap,
+            Map<ImmutableNode, Object> elemRefs)
     {
         ImmutableNode addedChildNode;
         Collection<String> values;
@@ -715,11 +719,13 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
 
         if (values.size() > 1)
         {
+            Map<ImmutableNode, Object> refs = isSingleElementList(elem) ? elemRefs : null;
             Iterator<String> it = values.iterator();
             // Create new node for the original child's first value
             child.value(it.next());
             addedChildNode = child.create();
             parent.addChild(addedChildNode);
+            XMLListReference.assignListReference(refs, addedChildNode, elem);
 
             // add multiple new children
             while (it.hasNext())
@@ -728,7 +734,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
                 c.name(addedChildNode.getNodeName());
                 c.value(it.next());
                 c.addAttributes(attrmap);
-                parent.addChild(c.create());
+                ImmutableNode newChild = c.create();
+                parent.addChild(newChild);
+                XMLListReference.assignListReference(refs, newChild, null);
             }
         }
         else if (values.size() == 1)
@@ -746,6 +754,45 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         }
 
         return addedChildNode;
+    }
+
+    /**
+     * Checks whether an element defines a complete list. If this is the case,
+     * extended list handling can be applied.
+     *
+     * @param element the element to be checked
+     * @return a flag whether this is the only element defining the list
+     */
+    private static boolean isSingleElementList(Element element)
+    {
+        Node parentNode = element.getParentNode();
+        return countChildElements(parentNode, element.getTagName()) == 1;
+    }
+
+    /**
+     * Determines the number of child elements of this given node with the
+     * specified node name.
+     *
+     * @param parent the parent node
+     * @param name the name in question
+     * @return the number of child elements with this name
+     */
+    private static int countChildElements(Node parent, String name)
+    {
+        NodeList childNodes = parent.getChildNodes();
+        int count = 0;
+        for (int i = 0; i < childNodes.getLength(); i++)
+        {
+            Node item = childNodes.item(i);
+            if (item instanceof Element)
+            {
+                if (name.equals(((Element) item).getTagName()))
+                {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     /**
@@ -1102,8 +1149,11 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         {
             for (Object ref : refHandler.removedReferences())
             {
-                Node removedElem = (Node) ref;
-                removeReference((Element) elementMapping.get(removedElem));
+                if (ref instanceof Node)
+                {
+                    Node removedElem = (Node) ref;
+                    removeReference((Element) elementMapping.get(removedElem));
+                }
             }
         }
 
@@ -1116,6 +1166,11 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
                 ImmutableNode sibling1, ImmutableNode sibling2,
                 ReferenceNodeHandler refHandler)
         {
+            if(XMLListReference.isListNode(newNode, refHandler))
+            {
+                return;
+            }
+
             Element elem = document.createElement(newNode.getNodeName());
             newElements.put(newNode, elem);
             updateAttributes(newNode, elem);
@@ -1152,8 +1207,27 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         protected void update(ImmutableNode node, Object reference,
                 ReferenceNodeHandler refHandler)
         {
+            if(XMLListReference.isListNode(node, refHandler))
+            {
+                if(XMLListReference.isFirstListItem(node, refHandler))
+                {
+                    String value = XMLListReference.listValue(node, refHandler, listDelimiterHandler);
+                    updateElement(node, refHandler, value);
+                }
+            }
+            else
+            {
+                Object value = listDelimiterHandler.escape(refHandler.getValue(node),
+                        ListDelimiterHandler.NOOP_TRANSFORMER);
+                updateElement(node, refHandler, value);
+            }
+        }
+
+        private void updateElement(ImmutableNode node, ReferenceNodeHandler refHandler,
+                                   Object value)
+        {
             Element element = getElement(node, refHandler);
-            updateElement(element, refHandler.getValue(node));
+            updateElement(element, value);
             updateAttributes(node, element);
         }
 
@@ -1176,9 +1250,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             }
             else
             {
-                String newValue =
-                        String.valueOf(listDelimiterHandler.escape(value,
-                                ListDelimiterHandler.NOOP_TRANSFORMER));
+                String newValue = String.valueOf(value);
                 if (txtNode == null)
                 {
                     txtNode = document.createTextNode(newValue);
@@ -1235,6 +1307,10 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
                 element =
                         ((XMLDocumentHelper) reference).getDocument()
                                 .getDocumentElement();
+            }
+            else if(reference instanceof XMLListReference)
+            {
+                element = ((XMLListReference) reference).getElement();
             }
             else
             {
