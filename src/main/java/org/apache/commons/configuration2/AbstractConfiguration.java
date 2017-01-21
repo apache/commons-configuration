@@ -149,6 +149,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
+     * <p>
      * Sets the {@code ListDelimiterHandler} to be used by this instance. This
      * object is invoked every time when dealing with string properties that may
      * contain a list delimiter and thus have to be split to multiple values.
@@ -156,6 +157,15 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * does not support list splitting. This can be changed for instance by
      * setting a {@link org.apache.commons.configuration2.convert.DefaultListDelimiterHandler
      * DefaultListDelimiterHandler} object.
+     * </p>
+     * <p>
+     * <strong>Warning:</strong> Be careful when changing the list delimiter
+     * handler when the configuration has already been loaded/populated. List
+     * handling is typically applied already when properties are added to the
+     * configuration. If later another handler is set which processes lists
+     * differently, results may be unexpected; some operations may even cause
+     * exceptions.
+     * </p>
      *
      * @param listDelimiterHandler the {@code ListDelimiterHandler} to be used
      *        (must not be <b>null</b>)

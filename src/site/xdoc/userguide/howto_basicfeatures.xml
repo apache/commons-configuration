@@ -173,6 +173,14 @@ String firstPieColor = config.getString("colors.pie");
       <code>getString()</code> method is called for a property that has
       multiple values. This call will return the first value of the list.
     </p>
+    <p>
+      One word of warning at the end: Be careful when changing the list
+      delimiter handler on a configuration which already contains values. List
+      handling is typically applied already when properties are added to the
+      configuration. If later another handler is set which processes lists
+      differently, results may be unexpected; some operations may even cause
+      exceptions!
+    </p>
     </subsection>
 
     <subsection name="Variable Interpolation">
