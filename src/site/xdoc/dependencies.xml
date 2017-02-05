@@ -27,10 +27,10 @@
 
     <body>
 
-        <section name="Runtime dependencies for Commons Configuration 2.0">
+        <section name="Runtime dependencies for Commons Configuration 2.1.1">
 
             <p>
-              Commons Configuration 2.0 requires Java 6 or later.
+              Commons Configuration 2.1.1 requires Java 6 or later.
             </p>
             <p>
               A lot of dependencies are declared in the Maven POM. These are all
