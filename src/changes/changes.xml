@@ -25,8 +25,8 @@
   </properties>
 
   <body>
-    <release version="2.2" date="in SVN"
-      description="TBD">
+    <release version="2.1.1" date="2017-02-05"
+      description="Bugfix release for 2.1">
       <action dev="oheger" type="fix" issue="CONFIGURATION-649">
         Improved the handling of lists defined by a string with delimiter
         characters in XMLConfiguration. Such lists now retain their original
