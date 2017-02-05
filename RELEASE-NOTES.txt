@@ -1,5 +1,83 @@
 $Id$
 
+                        Apache Commons Configuration
+                               Version 2.1.1
+                               Release Notes
+
+
+INTRODUCTION:
+=============
+
+This document contains the release notes for this version of the Commons
+Configuration component. It describes the changes since the previous version.
+The Commons Configuration software library provides a generic configuration
+interface which enables an application to read configuration data from a
+variety of sources.
+
+The release is fully source and binary compatible with version 2.1.
+
+Commons Configuration 2.1 requires Java 1.6 or higher.
+
+Fixed Bugs
+==========
+o CONFIGURATION-649
+  Improved the handling of lists defined by a string with delimiter characters
+  in XMLConfiguration. Such lists now retain their original format when the
+  configuration is saved.
+
+o CONFIGURATION-648
+  Made the IOFactory property of PropertiesBuilderParameter compatible with the
+  most recent version of Commons BeanUtils. This version changed the handling
+  of properties starting with multiple uppercase letters.
+
+o CONFIGURATION-646
+  PropertiesConfiguration now works correctly with the auto-save mode.
+
+o CONFIGURATION-644
+  PropertiesConfigurationLayout no longer duplicates a header comment if a file
+  with another comment is loaded. Thanks to Andrew DeMaria.
+
+o CONFIGURATION-643
+  Documentation improvements for the user's guide.
+
+o CONFIGURATION-641
+  Improved documentation of FileBased interface. The Javadocs now state
+  explicitly that the methods should not be called by client code. Exception
+  handling in configuration classes implementing FileLocatorAware has been
+  improved.
+
+o CONFIGURATION-640
+  PropertiesConfiguration now correctly unescapes some special characters that
+  are always escaped in Java properties files.
+
+Other changes
+=============
+o CONFIGURATION-639
+  In the OSGi bundle manifest of the Commons Configuration bundle the package
+  imports for Spring packages are now marked as optional.
+  Thanks to Rico Neubauer.
+
+o CONFIGURATION-638
+  Improved handling of temporary files and folders in unit tests.
+  Thanks to Ahmet Celik.
+
+o CONFIGURATION-627
+  Updated dependency to Commons BeanUtils to version 1.9.3. This fixes an issue
+  with an exception stacktrace that was logged when a ConfigurationBuilder was
+  used.
+
+
+Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+
+For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
+
+http://commons.apache.org/proper/commons-configuration/
+
+
+Older release notes
+===================
+
                         Commons Configuration Package
                                  Version 2.1
                                 Release Notes
@@ -73,10 +151,6 @@ For complete information on Apache Commons Configuration, including instructions
 on how to submit bug reports, patches, or suggestions for improvement, see the
 Apache Commons Configuration website:
 http://commons.apache.org/proper/commons-configuration/
-
-
-Older release notes
-===================
 
                         Commons Configuration Package
                                  Version 2.0
