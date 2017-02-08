@@ -25,6 +25,11 @@
   </properties>
 
   <body>
+    <release version="2.2" date="TBA"
+             description="TBA">
+
+    </release>
+
     <release version="2.1.1" date="2017-02-05"
       description="Bugfix release for 2.1">
       <action dev="oheger" type="fix" issue="CONFIGURATION-649">
