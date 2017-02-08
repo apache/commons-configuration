@@ -30,7 +30,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-configuration2</artifactId>
-  <version>2.1.1-SNAPSHOT</version>
+  <version>2.2-SNAPSHOT</version>
   <name>Apache Commons Configuration</name>
 
   <inceptionYear>2001</inceptionYear>
