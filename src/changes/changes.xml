@@ -27,7 +27,10 @@
   <body>
     <release version="2.2" date="TBA"
              description="TBA">
-
+      <action dev="oheger" type="add" issue="CONFIGURATION-647" due-to="Vladimir Martinek">
+        INIConfiguration can now be configured to use a custom separator
+        between properties and values when writing an ini file.
+      </action>
     </release>
 
     <release version="2.1.1" date="2017-02-05"
