@@ -27,6 +27,7 @@ import org.apache.commons.configuration2.builder.DefaultParametersHandler;
 import org.apache.commons.configuration2.builder.DefaultParametersManager;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.HierarchicalBuilderParametersImpl;
+import org.apache.commons.configuration2.builder.INIBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.JndiBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.PropertiesBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.XMLBuilderParametersImpl;
@@ -269,6 +270,18 @@ public final class Parameters
     {
         return createParametersProxy(new DatabaseBuilderParametersImpl(),
                 DatabaseBuilderParameters.class);
+    }
+
+    /**
+     * Creates a new instance of a parameters object for INI configurations.
+     *
+     * @return the new parameters object
+     */
+    public INIBuilderParameters ini()
+    {
+        return createParametersProxy(new INIBuilderParametersImpl(),
+                INIBuilderParameters.class, FileBasedBuilderParameters.class,
+                HierarchicalBuilderParameters.class);
     }
 
     /**

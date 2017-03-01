@@ -248,6 +248,11 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
     private static final String LINE_CONT = "\\";
 
     /**
+     * The separator used when writing an INI file.
+     */
+    private String separatorUsedInOutput = " = ";
+
+    /**
      * Create a new empty INI Configuration.
      */
     public INIConfiguration()
@@ -268,6 +273,46 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
     }
 
     /**
+     * Get separator used in INI output. see {@code setSeparatorUsedInOutput}
+     * for further explanation
+     *
+     * @return the current separator for writing the INI output
+     * @since 2.2
+     */
+    public String getSeparatorUsedInOutput()
+    {
+        beginRead(false);
+        try
+        {
+            return separatorUsedInOutput;
+        }
+        finally
+        {
+            endRead();
+        }
+    }
+
+    /**
+     * Allows setting the key and value separator which is used for the creation
+     * of the resulting INI output
+     *
+     * @param separator String of the new separator for INI output
+     * @since 2.2
+     */
+    public void setSeparatorUsedInOutput(String separator)
+    {
+        beginWrite(false);
+        try
+        {
+            this.separatorUsedInOutput = separator;
+        }
+        finally
+        {
+            endWrite();
+        }
+    }
+
+    /**
      * Save the configuration to the specified writer.
      *
      * @param writer - The writer to save the configuration to.
@@ -280,6 +325,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
     {
         PrintWriter out = new PrintWriter(writer);
         boolean first = true;
+        final String separator = getSeparatorUsedInOutput();
 
         beginRead(false);
         try
@@ -301,12 +347,12 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
                     for (ImmutableNode child : node.getChildren())
                     {
                         writeProperty(out, child.getNodeName(),
-                                child.getValue());
+                                child.getValue(), separator);
                     }
                 }
                 else
                 {
-                    writeProperty(out, node.getNodeName(), node.getValue());
+                    writeProperty(out, node.getNodeName(), node.getValue(), separator);
                 }
                 first = false;
             }
@@ -451,10 +497,10 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param key the key
      * @param value the value
      */
-    private void writeProperty(PrintWriter out, String key, Object value)
+    private void writeProperty(PrintWriter out, String key, Object value, String separator)
     {
         out.print(key);
-        out.print(" = ");
+        out.print(separator);
         out.print(escapeValue(value.toString()));
         out.println();
     }

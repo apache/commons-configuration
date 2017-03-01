@@ -31,6 +31,7 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -40,6 +41,7 @@ import java.util.Set;
 import org.apache.commons.configuration2.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration2.builder.fluent.Parameters;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.sync.ReadWriteSynchronizer;
@@ -94,6 +96,12 @@ public class TestINIConfiguration
             + "noFirstLine = \\" + LINE_SEPARATOR
             + "  line 2" + LINE_SEPARATOR
             + "continueNoLine = one \\" + LINE_SEPARATOR;
+
+    private static final String INI_DATA4 = "[section6]" + LINE_SEPARATOR
+    		+ "key1{0}value1" + LINE_SEPARATOR
+    		+ "key2{0}value2" + LINE_SEPARATOR + LINE_SEPARATOR
+    		+ "[section7]" + LINE_SEPARATOR
+    		+ "key3{0}value3" + LINE_SEPARATOR;
 
     private static final String INI_DATA_SEPARATORS = "[section]"
             + LINE_SEPARATOR + "var1 = value1" + LINE_SEPARATOR
@@ -220,6 +228,29 @@ public class TestINIConfiguration
         instance.write(writer);
 
         assertEquals("Wrong content of ini file", INI_DATA, writer.toString());
+    }
+
+    /**
+     * Test of save method with changed separator
+     */
+    @Test
+    public void testSeparatorUsedInINIOutput() throws Exception
+    {
+    	final String outputSeparator = ": ";
+    	String input = MessageFormat.format(INI_DATA4, "=").trim();
+    	String expectedOutput = MessageFormat.format(INI_DATA4, outputSeparator).trim();
+
+    	INIConfiguration instance = new FileBasedConfigurationBuilder<INIConfiguration>(
+    	        INIConfiguration.class)
+                .configure(new Parameters().ini().setSeparatorUsedInOutput(outputSeparator))
+                .getConfiguration();
+        load(instance, input);
+
+        Writer writer = new StringWriter();
+        instance.write(writer);
+        String result = writer.toString().trim();
+
+        assertEquals("Wrong content of ini file", expectedOutput, result);
     }
 
     /**
