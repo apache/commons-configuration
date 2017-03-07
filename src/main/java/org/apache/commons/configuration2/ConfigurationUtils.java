@@ -105,9 +105,21 @@ public final class ConfigurationUtils
      * @param configuration the configuration
      * @param out the output stream to dump the configuration to
      */
-    public static void dump(Configuration configuration, PrintStream out)
+    public static void dump(ImmutableConfiguration configuration, PrintStream out)
     {
         dump(configuration, new PrintWriter(out));
+    }
+
+    /**
+     * Dump the configuration key/value mappings to some ouput stream.
+     * This version of the method exists only for backwards compatibility reason.
+     *
+     * @param configuration the configuration
+     * @param out the output stream to dump the configuration to
+     */
+    public static void dump(Configuration configuration, PrintStream out)
+    {
+        dump((ImmutableConfiguration) configuration, out);
     }
 
     /**
@@ -116,7 +128,7 @@ public final class ConfigurationUtils
      * @param configuration the configuration
      * @param out the writer to dump the configuration to
      */
-    public static void dump(Configuration configuration, PrintWriter out)
+    public static void dump(ImmutableConfiguration configuration, PrintWriter out)
     {
         for (Iterator<String> keys = configuration.getKeys(); keys.hasNext();)
         {
@@ -136,17 +148,65 @@ public final class ConfigurationUtils
     }
 
     /**
+     * Dump the configuration key/value mappings to some writer.
+     * This version of the method exists only for backwards compatibility reason.
+     *
+     * @param configuration the configuration
+     * @param out the writer to dump the configuration to
+     */
+    public static void dump(Configuration configuration, PrintWriter out)
+    {
+        dump((ImmutableConfiguration) configuration, out);
+    }
+
+    /**
      * Get a string representation of the key/value mappings of a
      * configuration.
      *
      * @param configuration the configuration
      * @return a string representation of the configuration
      */
-    public static String toString(Configuration configuration)
+    public static String toString(ImmutableConfiguration configuration)
     {
         StringWriter writer = new StringWriter();
         dump(configuration, new PrintWriter(writer));
         return writer.toString();
+    }
+
+    /**
+     * Get a string representation of the key/value mappings of a
+     * configuration.
+     * This version of the method exists only for backwards compatibility reason.
+     *
+     * @param configuration the configuration
+     * @return a string representation of the configuration
+     */
+    public static String toString(Configuration configuration)
+    {
+        return toString((ImmutableConfiguration) configuration);
+    }
+
+    /**
+     * <p>Copy all properties from the source configuration to the target
+     * configuration. Properties in the target configuration are replaced with
+     * the properties with the same key in the source configuration.</p>
+     * <p><em>Note:</em> This method is not able to handle some specifics of
+     * configurations derived from {@code AbstractConfiguration} (e.g.
+     * list delimiters). For a full support of all of these features the
+     * {@code copy()} method of {@code AbstractConfiguration} should
+     * be used. In a future release this method might become deprecated.</p>
+     *
+     * @param source the source configuration
+     * @param target the target configuration
+     * @since 1.1
+     */
+    public static void copy(ImmutableConfiguration source, Configuration target)
+    {
+        for (Iterator<String> keys = source.getKeys(); keys.hasNext();)
+        {
+            String key = keys.next();
+            target.setProperty(key, source.getProperty(key));
+        }
     }
 
     /**
@@ -165,10 +225,29 @@ public final class ConfigurationUtils
      */
     public static void copy(Configuration source, Configuration target)
     {
+        copy((ImmutableConfiguration) source, target);
+    }
+
+    /**
+     * <p>Append all properties from the source configuration to the target
+     * configuration. Properties in the source configuration are appended to
+     * the properties with the same key in the target configuration.</p>
+     * <p><em>Note:</em> This method is not able to handle some specifics of
+     * configurations derived from {@code AbstractConfiguration} (e.g.
+     * list delimiters). For a full support of all of these features the
+     * {@code copy()} method of {@code AbstractConfiguration} should
+     * be used. In a future release this method might become deprecated.</p>
+     *
+     * @param source the source configuration
+     * @param target the target configuration
+     * @since 1.1
+     */
+    public static void append(ImmutableConfiguration source, Configuration target)
+    {
         for (Iterator<String> keys = source.getKeys(); keys.hasNext();)
         {
             String key = keys.next();
-            target.setProperty(key, source.getProperty(key));
+            target.addProperty(key, source.getProperty(key));
         }
     }
 
@@ -188,11 +267,7 @@ public final class ConfigurationUtils
      */
     public static void append(Configuration source, Configuration target)
     {
-        for (Iterator<String> keys = source.getKeys(); keys.hasNext();)
-        {
-            String key = keys.next();
-            target.addProperty(key, source.getProperty(key));
-        }
+        append((ImmutableConfiguration) source, target);
     }
 
     /**

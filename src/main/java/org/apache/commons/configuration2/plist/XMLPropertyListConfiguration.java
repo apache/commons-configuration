@@ -45,6 +45,7 @@ import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.FileBasedConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apache.commons.configuration2.MapConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
@@ -387,12 +388,12 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
             printNode(out, indentLevel, config.getNodeModel().getNodeHandler()
                     .getRootNode());
         }
-        else if (value instanceof Configuration)
+        else if (value instanceof ImmutableConfiguration)
         {
             // display a flat Configuration as a dictionary
             out.println(padding + "<dict>");
 
-            Configuration config = (Configuration) value;
+            ImmutableConfiguration config = (ImmutableConfiguration) value;
             Iterator<String> it = config.getKeys();
             while (it.hasNext())
             {

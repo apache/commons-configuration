@@ -62,10 +62,10 @@ public final class ConfigurationConverter
      * configuration (if it extends AbstractConfiguration) or with a comma as
      * delimiter otherwise.
      *
-     * @param config Configuration object to convert
+     * @param config ImmutableConfiguration object to convert
      * @return Properties created from the Configuration
      */
-    public static Properties getProperties(Configuration config)
+    public static Properties getProperties(ImmutableConfiguration config)
     {
         Properties props = new Properties();
         ListDelimiterHandler listHandler;
@@ -112,6 +112,21 @@ public final class ConfigurationConverter
         }
 
         return props;
+    }
+
+    /**
+     * Convert a Configuration class into a Properties class. List properties
+     * are joined into a string using either the list delimiter handler of the
+     * configuration (if it extends AbstractConfiguration) or with a comma as
+     * delimiter otherwise.
+     * This version of the method exists only for backwards compatibility reason.
+     *
+     * @param config Configuration object to convert
+     * @return Properties created from the Configuration
+     */
+    public static Properties getProperties(Configuration config)
+    {
+        return getProperties((ImmutableConfiguration) config);
     }
 
     /**

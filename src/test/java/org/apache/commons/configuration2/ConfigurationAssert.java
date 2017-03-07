@@ -59,7 +59,7 @@ public class ConfigurationAssert
      * @param expected the expected properties
      * @param actual the configuration to check
      */
-    public static void assertConfigurationEquals(Configuration expected, Configuration actual)
+    public static void assertConfigurationEquals(ImmutableConfiguration expected, ImmutableConfiguration actual)
     {
         // check that the actual configuration contains all the properties of the expected configuration
         for (Iterator<String> it = expected.getKeys(); it.hasNext();)
@@ -150,7 +150,7 @@ public class ConfigurationAssert
      * @param config the configuration
      * @return a list with all keys of this configuration
      */
-    public static List<String> keysToList(Configuration config)
+    public static List<String> keysToList(ImmutableConfiguration config)
     {
         List<String> keyList = new LinkedList<String>();
         appendKeys(config, keyList);
@@ -163,7 +163,7 @@ public class ConfigurationAssert
      * @param config the configuration
      * @return a set with all keys of this configuration
      */
-    public static Set<String> keysToSet(Configuration config)
+    public static Set<String> keysToSet(ImmutableConfiguration config)
     {
         Set<String> keySet = new HashSet<String>();
         appendKeys(config, keySet);
@@ -176,7 +176,7 @@ public class ConfigurationAssert
      * @param config the configuration
      * @param collection the target collection
      */
-    public static void appendKeys(Configuration config,
+    public static void appendKeys(ImmutableConfiguration config,
             Collection<String> collection)
     {
         for (Iterator<String> it = config.getKeys(); it.hasNext();)
