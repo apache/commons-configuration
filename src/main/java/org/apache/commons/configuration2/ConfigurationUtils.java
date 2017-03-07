@@ -104,6 +104,7 @@ public final class ConfigurationUtils
      *
      * @param configuration the configuration
      * @param out the output stream to dump the configuration to
+     * @since 2.2
      */
     public static void dump(ImmutableConfiguration configuration, PrintStream out)
     {
@@ -127,6 +128,7 @@ public final class ConfigurationUtils
      *
      * @param configuration the configuration
      * @param out the writer to dump the configuration to
+     * @since 2.2
      */
     public static void dump(ImmutableConfiguration configuration, PrintWriter out)
     {
@@ -165,6 +167,7 @@ public final class ConfigurationUtils
      *
      * @param configuration the configuration
      * @return a string representation of the configuration
+     * @since 2.2
      */
     public static String toString(ImmutableConfiguration configuration)
     {
@@ -198,7 +201,7 @@ public final class ConfigurationUtils
      *
      * @param source the source configuration
      * @param target the target configuration
-     * @since 1.1
+     * @since 2.2
      */
     public static void copy(ImmutableConfiguration source, Configuration target)
     {
@@ -240,7 +243,7 @@ public final class ConfigurationUtils
      *
      * @param source the source configuration
      * @param target the target configuration
-     * @since 1.1
+     * @since 2.2
      */
     public static void append(ImmutableConfiguration source, Configuration target)
     {

@@ -64,6 +64,7 @@ public final class ConfigurationConverter
      *
      * @param config ImmutableConfiguration object to convert
      * @return Properties created from the Configuration
+     * @since 2.2
      */
     public static Properties getProperties(ImmutableConfiguration config)
     {
