@@ -226,6 +226,12 @@
           <name>Raviteja Lokineni</name>
           <email>raviteja.lokineni@gmail.com</email>
         </contributor>
+
+        <contributor>
+          <name>Vincent Maurin</name>
+          <email>vincent.maurin.fr@gmail.com</email>
+          <organization>glispa GmbH</organization>
+        </contributor>
     </contributors>
 
   <dependencies>
