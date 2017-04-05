@@ -25,8 +25,8 @@
   </properties>
 
   <body>
-    <release version="2.2" date="TBA"
-             description="TBA">
+    <release version="2.2" date="2017-MM-DD"
+             description="Minor release with new APIs and bug fixes.">
       <action dev="oheger" type="add" issue="CONFIGURATION-653" due-to="Vincent Maurin">
         ConfigurationUtils and ConfigurationConverter now offer better support
         for immutable configurations.
