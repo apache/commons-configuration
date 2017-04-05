@@ -38,6 +38,9 @@
       <action dev="ggregory" type="add" issue="CONFIGURATION-658">
         Add API org.apache.commons.configuration2.ImmutableConfiguration.getURI(String).
       </action>
+      <action dev="ggregory" type="add" issue="CONFIGURATION-659">
+        Add API org.apache.commons.configuration2.ImmutableConfiguration.getURL(String).
+      </action>
     </release>
 
     <release version="2.1.1" date="2017-02-05"
