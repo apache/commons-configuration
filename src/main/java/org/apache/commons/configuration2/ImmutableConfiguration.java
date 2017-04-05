@@ -18,6 +18,7 @@ package org.apache.commons.configuration2;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -461,6 +462,32 @@ public interface ImmutableConfiguration
     String getString(String key, String defaultValue);
 
     /**
+     * Gets a URI associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     * @return The associated string.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
+     *         is not a String.
+     */
+    URI getURI(String key);
+
+    /**
+     * Gets a URI associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated URI if key is found and has valid
+     *         format, default value otherwise.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
+     *         is not a String.
+     */
+    URI getURI(String key, URI defaultValue);
+
+    /**
      * Get the value of a string property that is stored in encoded form in this
      * configuration. This method obtains the value of the string property
      * identified by the given key. This value is then passed to the provided
@@ -723,4 +750,6 @@ public interface ImmutableConfiguration
      * @return a subset immutable configuration
      */
     ImmutableConfiguration immutableSubset(String prefix);
+
+
 }

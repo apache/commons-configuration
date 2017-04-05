@@ -19,6 +19,7 @@ package org.apache.commons.configuration2;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1352,6 +1353,18 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     public String getString(String key)
     {
         return convert(String.class, key, null, true);
+    }
+
+    @Override
+    public URI getURI(String key)
+    {
+        return convert(URI.class, key, null, true);
+    }
+
+    @Override
+    public URI getURI(String key, URI defaultValue)
+    {
+        return convert(URI.class, key, defaultValue, false);
     }
 
     @Override
