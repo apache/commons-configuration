@@ -650,4 +650,9 @@ public final class ImmutableNode
             return result;
         }
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "(" + nodeName + ")";
+    }
 }

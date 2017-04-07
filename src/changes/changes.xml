@@ -41,6 +41,9 @@
       <action dev="ggregory" type="add" issue="CONFIGURATION-659">
         Add API org.apache.commons.configuration2.ImmutableConfiguration.getURL(String).
       </action>
+      <action dev="ggregory" type="add" issue="CONFIGURATION-660">
+        Add toString() methods here and there to help debugging.
+      </action>
     </release>
 
     <release version="2.1.1" date="2017-02-05"
