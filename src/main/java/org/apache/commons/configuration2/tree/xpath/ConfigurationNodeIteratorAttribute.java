@@ -38,10 +38,10 @@ class ConfigurationNodeIteratorAttribute<T> extends
     private static final String WILDCARD = "*";
 
     /** Stores the parent node pointer. */
-    private ConfigurationNodePointer<T> parentPointer;
+    private final ConfigurationNodePointer<T> parentPointer;
 
     /** A list with the names of the managed attributes. */
-    private List<String> attributeNames;
+    private final List<String> attributeNames;
 
     /**
      * Creates a new instance of {@code ConfigurationNodeIteratorAttribute}.
