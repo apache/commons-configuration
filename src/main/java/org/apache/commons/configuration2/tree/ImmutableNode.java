@@ -550,17 +550,11 @@ public final class ImmutableNode
             {
                 return directChildren;
             }
-            else
+            if (children != null)
             {
-                if (children != null)
-                {
-                    return Collections.unmodifiableList(children);
-                }
-                else
-                {
-                    return Collections.emptyList();
-                }
+                return Collections.unmodifiableList(children);
             }
+            return Collections.emptyList();
         }
 
         /**
@@ -577,17 +571,11 @@ public final class ImmutableNode
             {
                 return directAttributes;
             }
-            else
+            if (attributes != null)
             {
-                if (attributes != null)
-                {
-                    return Collections.unmodifiableMap(attributes);
-                }
-                else
-                {
-                    return Collections.emptyMap();
-                }
+                return Collections.unmodifiableMap(attributes);
             }
+            return Collections.emptyMap();
         }
 
         /**
