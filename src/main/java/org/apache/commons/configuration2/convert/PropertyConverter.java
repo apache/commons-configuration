@@ -24,6 +24,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.text.ParseException;
@@ -149,6 +151,10 @@ final class PropertyConverter
         else if (Calendar.class.equals(cls))
         {
             return toCalendar(value, convHandler.getDateFormat());
+        }
+        else if (URI.class.equals(cls))
+        {
+            return toURI(value);
         }
         else if (URL.class.equals(cls))
         {
@@ -466,6 +472,36 @@ final class PropertyConverter
                         "Conversion error when trying to convert " + str
                                 + " to " + targetClass.getName(), ex);
             }
+        }
+    }
+
+    /**
+     * Convert the specified object into an URI.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to an URI
+     */
+    public static URI toURI(Object value) throws ConversionException
+    {
+        if (value instanceof URI)
+        {
+            return (URI) value;
+        }
+        else if (value instanceof String)
+        {
+            try
+            {
+                return new URI((String) value);
+            }
+            catch (URISyntaxException e)
+            {
+                throw new ConversionException("The value " + value + " can't be converted to an URI", e);
+            }
+        }
+        else
+        {
+            throw new ConversionException("The value " + value + " can't be converted to an URI");
         }
     }
 

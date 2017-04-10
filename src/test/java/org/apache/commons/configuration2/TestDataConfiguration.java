@@ -28,6 +28,7 @@ import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.InetAddress;
+import java.net.URI;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -40,15 +41,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
-import junitx.framework.ArrayAssert;
-import junitx.framework.ListAssert;
-
 import org.apache.commons.configuration2.convert.DefaultConversionHandler;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConversionException;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
+
+import junitx.framework.ArrayAssert;
+import junitx.framework.ListAssert;
 
 /**
  * @author Emmanuel Bourg
@@ -213,6 +214,24 @@ public class TestDataConfiguration
         conf.addProperty("bigdecimal.string", "1");
         conf.addProperty("bigdecimal.object", new BigDecimal("1"));
         conf.addProperty("bigdecimal.list.interpolated", "${bigdecimal.string},2");
+
+        // URIs
+        String uri1 = "http://jakarta.apache.org";
+        String uri2 = "http://www.apache.org";
+        conf.addProperty("uri.string", uri1);
+        conf.addProperty("uri.string.interpolated", "${uri.string}");
+        conf.addProperty("uri.object", new URI(uri1));
+        conf.addProperty("uri.list1", uri1);
+        conf.addProperty("uri.list1", uri2);
+        conf.addProperty("uri.list2", uri1 + ", " + uri2);
+        conf.addProperty("uri.list3", new URI(uri1));
+        conf.addProperty("uri.list3", new URI(uri2));
+        conf.addPropertyDirect("uri.list4", new URI[] { new URI(uri1), new URI(uri2) });
+        List<Object> uris = new ArrayList<Object>();
+        uris.add(new URI(uri1));
+        uris.add(new URI(uri2));
+        conf.addProperty("uri.list6", uris);
+        conf.addProperty("uri.list.interpolated", "${uri.string}," + uri2);
 
         // URLs
         String url1 = "http://jakarta.apache.org";
@@ -1101,6 +1120,98 @@ public class TestDataConfiguration
 
         // empty list
         ListAssert.assertEquals(new ArrayList<Object>(), conf.getBigDecimalList("empty"));
+    }
+
+    @Test
+    public void testGetURI() throws Exception
+    {
+        // missing URI
+        URI defaultValue = new URI("http://www.google.com");
+        assertEquals(defaultValue, conf.getURI("url", defaultValue));
+
+        URI expected = new URI("http://jakarta.apache.org");
+
+        // URI string
+        assertEquals(expected, conf.getURI("uri.string"));
+
+        // URI object
+        assertEquals(expected, conf.getURI("uri.object"));
+
+        // interpolated value
+        assertEquals(expected, conf.getURI("uri.string.interpolated"));
+    }
+
+    @Test
+    public void testGetURIArray() throws Exception
+    {
+        // missing list
+        URI[] defaultValue = new URI[] { new URI("http://www.apache.org"), new URI("http://jakarta.apache.org") };
+        ArrayAssert.assertEquals(defaultValue, conf.getURIArray("url.list", defaultValue));
+
+        URI[] expected = new URI[] { new URI("http://jakarta.apache.org"), new URI("http://www.apache.org") };
+
+        // list of strings
+        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list1"));
+
+        // list of strings, comma separated
+        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list2"));
+
+        // list of URI objects
+        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list3"));
+
+        // array of URI objects
+        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list4"));
+
+        // list of URI objects
+        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list.interpolated"));
+
+        // single URI values
+        ArrayAssert.assertEquals(new URI[] { new URI("http://jakarta.apache.org") }, conf.getURIArray("uri.string"));
+        ArrayAssert.assertEquals(new URI[] { new URI("http://jakarta.apache.org") }, conf.getURIArray("uri.object"));
+
+        // empty array
+        ArrayAssert.assertEquals(new URI[] { }, conf.getURIArray("empty"));
+    }
+
+    @Test
+    public void testGetURIList() throws Exception
+    {
+        // missing list
+        ListAssert.assertEquals(null, conf.getURIList("uri.list", null));
+
+        List<Object> expected = new ArrayList<Object>();
+        expected.add(new URI("http://jakarta.apache.org"));
+        expected.add(new URI("http://www.apache.org"));
+
+        // list of strings
+        ListAssert.assertEquals(expected, conf.getURIList("uri.list1"));
+
+        // list of strings, comma separated
+        ListAssert.assertEquals(expected, conf.getURIList("uri.list2"));
+
+        // list of URI objects
+        ListAssert.assertEquals(expected, conf.getURIList("uri.list3"));
+
+        // array of URI objects
+        ListAssert.assertEquals(expected, conf.getURIList("uri.list4"));
+
+        // list of URI objects
+        ListAssert.assertEquals(expected, conf.getURIList("uri.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getURIList("uri.list.interpolated"));
+
+        // single URI values
+        expected = new ArrayList<Object>();
+        expected.add(new URI("http://jakarta.apache.org"));
+        ListAssert.assertEquals(expected, conf.getURIList("uri.string"));
+        ListAssert.assertEquals(expected, conf.getURIList("uri.object"));
+
+        // empty list
+        ListAssert.assertEquals(new ArrayList<Object>(), conf.getURIList("empty"));
     }
 
     @Test

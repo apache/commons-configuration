@@ -20,6 +20,7 @@ package org.apache.commons.configuration2;
 import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -787,6 +788,100 @@ public class DataConfiguration extends AbstractConfiguration
     public BigDecimal[] getBigDecimalArray(String key, BigDecimal[] defaultValue)
     {
         return get(BigDecimal[].class, key, defaultValue);
+    }
+
+    /**
+     * Get an URI associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     * @return The associated URI.
+     *
+     * @throws ConversionException is thrown if the key maps to an
+     *         object that is not an URI.
+     */
+    public URI getURI(String key)
+    {
+        return get(URI.class, key);
+    }
+
+    /**
+     * Get an URI associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
+     *
+     * @param key          The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated URI.
+     *
+     * @throws ConversionException is thrown if the key maps to an
+     *         object that is not an URI.
+     */
+    public URI getURI(String key, URI defaultValue)
+    {
+        return get(URI.class, key, defaultValue);
+    }
+
+    /**
+     * Get an array of URIs associated with the given configuration key.
+     * If the key doesn't map to an existing object an empty array is returned.
+     *
+     * @param key The configuration key.
+     * @return The associated URI array if the key is found.
+     *
+     * @throws ConversionException is thrown if the key maps to an
+     *         object that is not a list of URIs.
+     */
+    public URI[] getURIArray(String key)
+    {
+        return getURIArray(key, new URI[0]);
+    }
+
+    /**
+     * Get an array of URIs associated with the given configuration key.
+     * If the key doesn't map to an existing object an empty array is returned.
+     *
+     * @param key The configuration key.
+     * @param defaultValue the default value, which will be returned if the property is not found
+     * @return The associated URI array if the key is found.
+     *
+     * @throws ConversionException is thrown if the key maps to an
+     *         object that is not a list of URIs.
+     */
+    public URI[] getURIArray(String key, URI[] defaultValue)
+    {
+        return get(URI[].class, key, defaultValue);
+    }
+
+    /**
+     * Get a list of URIs associated with the given configuration key.
+     * If the key doesn't map to an existing object an empty list is returned.
+     *
+     * @param key The configuration key.
+     * @return The associated URI list if the key is found.
+     *
+     * @throws ConversionException is thrown if the key maps to an
+     *         object that is not a list of URIs.
+     */
+    public List<URI> getURIList(String key)
+    {
+        return getURIList(key, new ArrayList<URI>());
+    }
+
+    /**
+     * Get a list of URIs associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value is
+     * returned.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated List of URIs.
+     *
+     * @throws ConversionException is thrown if the key maps to an
+     *         object that is not a list of URIs.
+     */
+    public List<URI> getURIList(String key, List<URI> defaultValue)
+    {
+        return getList(URI.class, key, defaultValue);
     }
 
     /**
