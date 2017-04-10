@@ -73,7 +73,7 @@ public class TestInMemoryNodeModelReferences
         Collection<ImmutableNode> nodes =
                 collectNodes(NodeStructureHelper.ROOT_AUTHORS_TREE);
         nodes.remove(NodeStructureHelper.ROOT_AUTHORS_TREE);
-        Map<ImmutableNode, String> refs = new HashMap<ImmutableNode, String>();
+        Map<ImmutableNode, String> refs = new HashMap<>();
         for (ImmutableNode node : nodes)
         {
             refs.put(node, node.getNodeName());
@@ -90,7 +90,7 @@ public class TestInMemoryNodeModelReferences
      */
     private Collection<ImmutableNode> collectNodes(ImmutableNode root)
     {
-        final Set<ImmutableNode> nodes = new HashSet<ImmutableNode>();
+        final Set<ImmutableNode> nodes = new HashSet<>();
         NodeTreeWalker.INSTANCE.walkBFS(root,
                 new ConfigurationNodeVisitorAdapter<ImmutableNode>()
                 {

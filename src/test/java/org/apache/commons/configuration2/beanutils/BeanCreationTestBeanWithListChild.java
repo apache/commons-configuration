@@ -31,7 +31,7 @@ public class BeanCreationTestBeanWithListChild
 
     private int intValue;
 
-    private final List<BeanCreationTestBean> children = new ArrayList<BeanCreationTestBean>();
+    private final List<BeanCreationTestBean> children = new ArrayList<>();
 
     public List<BeanCreationTestBean> getChildren()
     {

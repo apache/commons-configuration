@@ -211,9 +211,9 @@ public class TestCombinedBeanDeclaration
     @Test
     public void testGetBeanProperties()
     {
-        Map<String, Object> props1 = new HashMap<String, Object>();
-        Map<String, Object> props2 = new HashMap<String, Object>();
-        Map<String, Object> props3 = new HashMap<String, Object>();
+        Map<String, Object> props1 = new HashMap<>();
+        Map<String, Object> props2 = new HashMap<>();
+        Map<String, Object> props3 = new HashMap<>();
         props1.put("param1", "value1");
         props1.put("param2", "value2");
         props2.put("param2", "othervalue");
@@ -254,9 +254,9 @@ public class TestCombinedBeanDeclaration
     @Test
     public void testGetNestedBeanDeclarations()
     {
-        Map<String, Object> decls1 = new HashMap<String, Object>();
-        Map<String, Object> decls2 = new HashMap<String, Object>();
-        Map<String, Object> decls3 = new HashMap<String, Object>();
+        Map<String, Object> decls1 = new HashMap<>();
+        Map<String, Object> decls2 = new HashMap<>();
+        Map<String, Object> decls3 = new HashMap<>();
         decls1.put("param1", "value1");
         decls1.put("param2", "value2");
         decls2.put("param2", "othervalue");

@@ -337,7 +337,7 @@ public class TestBaseConfiguration
         config.addProperty("array", "${number}");
         config.addProperty("array", "${number}");
 
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         list.add("1");
         list.add("1");
 
@@ -396,7 +396,7 @@ public class TestBaseConfiguration
     @Test
     public void testAddProperty() throws Exception
     {
-        Collection<Object> props = new ArrayList<Object>();
+        Collection<Object> props = new ArrayList<>();
         props.add("one");
         props.add("two,three,four");
         props.add(new String[] { "5.1", "5.2", "5.3,5.4", "5.5" });
@@ -408,7 +408,7 @@ public class TestBaseConfiguration
         Collection<?> col = (Collection<?>) val;
         assertEquals(10, col.size());
 
-        props = new ArrayList<Object>();
+        props = new ArrayList<>();
         props.add("quick");
         props.add("brown");
         props.add("fox,jumps");
@@ -600,9 +600,9 @@ public class TestBaseConfiguration
         Lookup prefixLookup = EasyMock.createMock(Lookup.class);
         Lookup defLookup = EasyMock.createMock(Lookup.class);
         EasyMock.replay(prefixLookup, defLookup);
-        Map<String, Lookup> prefixLookups = new HashMap<String, Lookup>();
+        Map<String, Lookup> prefixLookups = new HashMap<>();
         prefixLookups.put("test", prefixLookup);
-        List<Lookup> defLookups = new ArrayList<Lookup>();
+        List<Lookup> defLookups = new ArrayList<>();
         defLookups.add(defLookup);
         config.installInterpolator(prefixLookups, defLookups);
         ConfigurationInterpolator interpolator = config.getInterpolator();

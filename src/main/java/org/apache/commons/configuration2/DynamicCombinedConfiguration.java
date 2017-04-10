@@ -69,18 +69,18 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * set at the beginning of an operation and removed at the end.
      */
     private static final ThreadLocal<CurrentConfigHolder> CURRENT_CONFIG =
-            new ThreadLocal<CurrentConfigHolder>();
+            new ThreadLocal<>();
 
     /** The CombinedConfigurations */
     private final ConcurrentMap<String, CombinedConfiguration> configs =
-            new ConcurrentHashMap<String, CombinedConfiguration>();
+            new ConcurrentHashMap<>();
 
     /** Stores a list with the contained configurations. */
-    private final List<ConfigData> configurations = new ArrayList<ConfigData>();
+    private final List<ConfigData> configurations = new ArrayList<>();
 
     /** Stores a map with the named configurations. */
     private final Map<String, Configuration> namedConfigurations =
-            new HashMap<String, Configuration>();
+            new HashMap<>();
 
     /** The key pattern for the CombinedConfiguration map */
     private String keyPattern;

@@ -359,7 +359,7 @@ public class XPathExpressionEngine implements ExpressionEngine
         {
             invalidPath(path, " cannot add properties to an attribute.");
         }
-        List<String> pathNodes = new LinkedList<String>();
+        List<String> pathNodes = new LinkedList<>();
         String lastComponent = null;
         boolean attr = false;
         boolean first = true;
@@ -417,7 +417,7 @@ public class XPathExpressionEngine implements ExpressionEngine
             invalidPath(path, "contains no components.");
         }
 
-        return new NodeAddData<T>(parentNodeResult.getNode(), lastComponent,
+        return new NodeAddData<>(parentNodeResult.getNode(), lastComponent,
                 attr, pathNodes);
     }
 
@@ -521,7 +521,7 @@ public class XPathExpressionEngine implements ExpressionEngine
     private static <T> List<QueryResult<T>> convertResults(List<?> results)
     {
         List<QueryResult<T>> queryResults =
-                new ArrayList<QueryResult<T>>(results.size());
+                new ArrayList<>(results.size());
         for (Object res : results)
         {
             QueryResult<T> queryResult = createResult(res);

@@ -61,7 +61,7 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
                 orgNode.setAttribute(TEST_ATTR, "yes").setAttribute(NS_ATTR,
                         "configuration");
         pointer =
-                new ConfigurationNodePointer<ImmutableNode>(testNode,
+                new ConfigurationNodePointer<>(testNode,
                         Locale.getDefault(), handler);
     }
 
@@ -72,11 +72,11 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
     public void testIterateAllAttributes()
     {
         ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<ImmutableNode>(pointer,
+                new ConfigurationNodeIteratorAttribute<>(pointer,
                         new QName(null, "*"));
         assertEquals("Wrong number of attributes", 3, iteratorSize(it));
         List<NodePointer> attrs = iterationElements(it);
-        Set<String> attrNames = new HashSet<String>();
+        Set<String> attrNames = new HashSet<>();
         for (NodePointer np : attrs)
         {
             attrNames.add(np.getName().getName());
@@ -93,7 +93,7 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
     public void testIterateSpecificAttribute()
     {
         ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<ImmutableNode>(pointer,
+                new ConfigurationNodeIteratorAttribute<>(pointer,
                         new QName(null, TEST_ATTR));
         assertEquals("Wrong number of attributes", 1, iteratorSize(it));
         assertEquals("Wrong attribute", TEST_ATTR, iterationElements(it).get(0)
@@ -107,7 +107,7 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
     public void testIterateUnknownAttribute()
     {
         ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<ImmutableNode>(pointer,
+                new ConfigurationNodeIteratorAttribute<>(pointer,
                         new QName(null, "unknown"));
         assertEquals("Found attributes", 0, iteratorSize(it));
     }
@@ -119,7 +119,7 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
     public void testIterateNamespaceUnknown()
     {
         ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<ImmutableNode>(pointer,
+                new ConfigurationNodeIteratorAttribute<>(pointer,
                         new QName("test", "*"));
         assertEquals("Found attributes", 0, iteratorSize(it));
     }
@@ -131,7 +131,7 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
     public void testIterateNamespaceAttribute()
     {
         ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<ImmutableNode>(pointer,
+                new ConfigurationNodeIteratorAttribute<>(pointer,
                         new QName(NAMESPACE, "attr"));
         assertEquals("Wrong number of attributes", 1, iteratorSize(it));
         assertEquals("Wrong attribute", NS_ATTR, iterationElements(it).get(0)
@@ -145,7 +145,7 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
     public void testIterateNamespaceWildcard()
     {
         ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<ImmutableNode>(pointer,
+                new ConfigurationNodeIteratorAttribute<>(pointer,
                         new QName(NAMESPACE, "*"));
         assertEquals("Wrong number of attributes", 1, iteratorSize(it));
         assertEquals("Wrong attribute", NS_ATTR, iterationElements(it).get(0)

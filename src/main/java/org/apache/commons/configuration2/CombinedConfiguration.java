@@ -191,7 +191,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * @since 2.0
      */
     public static final EventType<ConfigurationEvent> COMBINED_INVALIDATE =
-            new EventType<ConfigurationEvent>(ConfigurationEvent.ANY,
+            new EventType<>(ConfigurationEvent.ANY,
                     "COMBINED_INVALIDATE");
 
     /** Constant for the expression engine for parsing the at path. */
@@ -498,7 +498,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         try
         {
             List<Configuration> list =
-                    new ArrayList<Configuration>(getNumberOfConfigurationsInternal());
+                    new ArrayList<>(getNumberOfConfigurationsInternal());
             for (ConfigData cd : configurations)
             {
                 list.add(cd.getConfiguration());
@@ -523,7 +523,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         beginRead(true);
         try
         {
-            List<String> list = new ArrayList<String>(getNumberOfConfigurationsInternal());
+            List<String> list = new ArrayList<>(getNumberOfConfigurationsInternal());
             for (ConfigData cd : configurations)
             {
                 list.add(cd.getName());
@@ -760,7 +760,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         try
         {
             List<QueryResult<ImmutableNode>> results = fetchNodeList(key);
-            Set<Configuration> sources = new HashSet<Configuration>();
+            Set<Configuration> sources = new HashSet<>();
 
             for (QueryResult<ImmutableNode> result : results)
             {
@@ -877,8 +877,8 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     private void initChildCollections()
     {
-        configurations = new ArrayList<ConfigData>();
-        namedConfigurations = new HashMap<String, Configuration>();
+        configurations = new ArrayList<>();
+        namedConfigurations = new HashMap<>();
     }
 
     /**
@@ -926,9 +926,9 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     private Set<Configuration> findSourceConfigurations(ImmutableNode node)
     {
-        Set<Configuration> result = new HashSet<Configuration>();
+        Set<Configuration> result = new HashSet<>();
         FindNodeVisitor<ImmutableNode> visitor =
-                new FindNodeVisitor<ImmutableNode>(node);
+                new FindNodeVisitor<>(node);
 
         for (ConfigData cd : configurations)
         {
@@ -1178,7 +1178,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
                 return null;
             }
 
-            Collection<String> result = new ArrayList<String>();
+            Collection<String> result = new ArrayList<>();
             DefaultConfigurationKey.KeyIterator it = new DefaultConfigurationKey(
                     AT_ENGINE, at).iterator();
             while (it.hasNext())

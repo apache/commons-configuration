@@ -97,7 +97,7 @@ class ReferenceTracker
     public ReferenceTracker addReferences(Map<ImmutableNode, ?> refs)
     {
         Map<ImmutableNode, Object> newRefs =
-                new HashMap<ImmutableNode, Object>(references);
+                new HashMap<>(references);
         newRefs.putAll(refs);
         return new ReferenceTracker(newRefs, removedReferences);
     }
@@ -128,7 +128,7 @@ class ReferenceTracker
                     if (newRefs == null)
                     {
                         newRefs =
-                                new HashMap<ImmutableNode, Object>(references);
+                                new HashMap<>(references);
                     }
                     newRefs.put(e.getValue(), ref);
                     newRefs.remove(e.getKey());
@@ -136,7 +136,7 @@ class ReferenceTracker
             }
 
             List<Object> newRemovedRefs =
-                    (newRefs != null) ? new LinkedList<Object>(
+                    (newRefs != null) ? new LinkedList<>(
                             removedReferences) : null;
             for (ImmutableNode node : removedNodes)
             {
@@ -146,13 +146,13 @@ class ReferenceTracker
                     if (newRefs == null)
                     {
                         newRefs =
-                                new HashMap<ImmutableNode, Object>(references);
+                                new HashMap<>(references);
                     }
                     newRefs.remove(node);
                     if (newRemovedRefs == null)
                     {
                         newRemovedRefs =
-                                new LinkedList<Object>(removedReferences);
+                                new LinkedList<>(removedReferences);
                     }
                     newRemovedRefs.add(ref);
                 }

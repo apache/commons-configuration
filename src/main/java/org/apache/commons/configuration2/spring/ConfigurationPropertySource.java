@@ -43,7 +43,7 @@ public class ConfigurationPropertySource extends EnumerablePropertySource<Config
     @Override
     public String[] getPropertyNames()
     {
-       final List<String> keys = new ArrayList<String>();
+       final List<String> keys = new ArrayList<>();
        final Iterator<String> keysIterator = source.getKeys();
        while (keysIterator.hasNext())
        {

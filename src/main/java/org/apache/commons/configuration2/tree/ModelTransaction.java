@@ -140,12 +140,12 @@ class ModelTransaction
         currentData = treeData;
         this.resolver = resolver;
         replacementMapping = getCurrentData().copyReplacementMapping();
-        replacedNodes = new HashMap<ImmutableNode, ImmutableNode>();
+        replacedNodes = new HashMap<>();
         parentMapping = getCurrentData().copyParentMapping();
-        operations = new TreeMap<Integer, Map<ImmutableNode, Operations>>();
-        addedNodes = new LinkedList<ImmutableNode>();
-        removedNodes = new LinkedList<ImmutableNode>();
-        allRemovedNodes = new LinkedList<ImmutableNode>();
+        operations = new TreeMap<>();
+        addedNodes = new LinkedList<>();
+        removedNodes = new LinkedList<>();
+        allRemovedNodes = new LinkedList<>();
         queryRoot = initQueryRoot(treeData, selector);
         rootNodeSelector = selector;
     }
@@ -365,7 +365,7 @@ class ModelTransaction
                 operations.get(nodeLevel);
         if (levelOperations == null)
         {
-            levelOperations = new HashMap<ImmutableNode, Operations>();
+            levelOperations = new HashMap<>();
             operations.put(nodeLevel, levelOperations);
         }
         Operations ops = levelOperations.get(target);
@@ -545,7 +545,7 @@ class ModelTransaction
     {
         if (newReferences == null)
         {
-            newReferences = new HashMap<ImmutableNode, Object>();
+            newReferences = new HashMap<>();
         }
         return newReferences;
     }
@@ -775,7 +775,7 @@ class ModelTransaction
             Map<ImmutableNode, ImmutableNode> replacements =
                     fetchReplacementMap();
             Set<ImmutableNode> removals = fetchRemovalSet();
-            List<ImmutableNode> resultNodes = new LinkedList<ImmutableNode>();
+            List<ImmutableNode> resultNodes = new LinkedList<>();
 
             for (ImmutableNode nd : target.getChildren())
             {

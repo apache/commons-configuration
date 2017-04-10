@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
 public class DefaultEntityResolver implements EntityResolver, EntityRegistry
 {
     /** Stores a map with the registered public IDs.*/
-    private final Map<String, URL> registeredEntities = new HashMap<String, URL>();
+    private final Map<String, URL> registeredEntities = new HashMap<>();
 
     /**
      * <p>

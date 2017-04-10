@@ -60,7 +60,7 @@ public class TestCombinedConfigurationBuilderVFS extends
     public void testSetConfigurationBasePath() throws ConfigurationException
     {
         File deepDir = new File(ConfigurationAssert.TEST_DIR, "config/deep");
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("fileName", "test.properties");
         BaseHierarchicalConfiguration defConfig =
                 createDefinitionConfig("properties", params);

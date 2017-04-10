@@ -280,7 +280,7 @@ public class TestNullCompositeConfiguration
         // we should get 3 packages here
         assertEquals(3, packages.size());
 
-        List<Object> defaultList = new ArrayList<Object>();
+        List<Object> defaultList = new ArrayList<>();
         defaultList.add("1");
         defaultList.add("2");
 
@@ -371,12 +371,12 @@ public class TestNullCompositeConfiguration
     public void testGetKeysPreservesOrder() throws Exception
     {
         cc.addConfiguration(conf1);
-        List<String> orderedList = new ArrayList<String>();
+        List<String> orderedList = new ArrayList<>();
         for (Iterator<String> keys = conf1.getKeys(); keys.hasNext();)
         {
             orderedList.add(keys.next());
         }
-        List<String> iteratedList = new ArrayList<String>();
+        List<String> iteratedList = new ArrayList<>();
         for (Iterator<String> keys = cc.getKeys(); keys.hasNext();)
         {
             iteratedList.add(keys.next());
@@ -395,12 +395,12 @@ public class TestNullCompositeConfiguration
     public void testGetKeys2PreservesOrder() throws Exception
     {
         cc.addConfiguration(conf1);
-        List<String> orderedList = new ArrayList<String>();
+        List<String> orderedList = new ArrayList<>();
         for (Iterator<String> keys = conf1.getKeys("test"); keys.hasNext();)
         {
             orderedList.add(keys.next());
         }
-        List<String> iteratedList = new ArrayList<String>();
+        List<String> iteratedList = new ArrayList<>();
         for (Iterator<String> keys = cc.getKeys("test"); keys.hasNext();)
         {
             iteratedList.add(keys.next());

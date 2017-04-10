@@ -139,7 +139,7 @@ public class DefaultListDelimiterHandler extends AbstractListDelimiterHandler
     @Override
     protected Collection<String> splitString(String s, boolean trim)
     {
-        List<String> list = new LinkedList<String>();
+        List<String> list = new LinkedList<>();
         StringBuilder token = new StringBuilder();
         boolean inEscape = false;
 

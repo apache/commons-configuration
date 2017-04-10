@@ -135,7 +135,7 @@ public class CombinedReloadingController extends ReloadingController
                     "Collection with sub controllers must not be null!");
         }
         Collection<ReloadingController> ctrls =
-                new ArrayList<ReloadingController>(subCtrls);
+                new ArrayList<>(subCtrls);
         for (ReloadingController rc : ctrls)
         {
             if (rc == null)

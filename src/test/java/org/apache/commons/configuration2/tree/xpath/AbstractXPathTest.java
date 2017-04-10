@@ -127,7 +127,7 @@ public abstract class AbstractXPathTest
      */
     protected List<NodePointer> iterationElements(NodeIterator iterator)
     {
-        List<NodePointer> result = new ArrayList<NodePointer>();
+        List<NodePointer> result = new ArrayList<>();
         for (int pos = 1; iterator.setPosition(pos); pos++)
         {
             result.add(iterator.getNodePointer());

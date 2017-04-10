@@ -121,7 +121,7 @@ public class TestCombinedBuilderParametersImpl
         CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         assertNull("Got a definition builder", params.getDefinitionBuilder());
         ConfigurationBuilder<XMLConfiguration> builder =
-                new BasicConfigurationBuilder<XMLConfiguration>(
+                new BasicConfigurationBuilder<>(
                         XMLConfiguration.class);
         assertSame("Wrong result", params, params.setDefinitionBuilder(builder));
         assertSame("Builder was not set", builder,
@@ -205,7 +205,7 @@ public class TestCombinedBuilderParametersImpl
         CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         params.registerProvider(tagPrefix, provider1);
         Map<String, ConfigurationBuilderProvider> map =
-                new HashMap<String, ConfigurationBuilderProvider>();
+                new HashMap<>();
         map.put(tagPrefix, provider2);
         map.put(tagPrefix + 1, provider3);
         assertSame("Wrong result", params, params.registerMissingProviders(map));
@@ -234,7 +234,7 @@ public class TestCombinedBuilderParametersImpl
     public void testRegisterMissingProvidersNullEntry()
     {
         Map<String, ConfigurationBuilderProvider> map =
-                new HashMap<String, ConfigurationBuilderProvider>();
+                new HashMap<>();
         map.put("tag", null);
         new CombinedBuilderParametersImpl().registerMissingProviders(map);
     }

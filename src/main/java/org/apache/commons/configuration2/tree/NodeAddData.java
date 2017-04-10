@@ -149,7 +149,7 @@ public class NodeAddData<T>
         }
         else
         {
-            return Collections.unmodifiableList(new ArrayList<String>(
+            return Collections.unmodifiableList(new ArrayList<>(
                     intermediateNodes));
         }
     }

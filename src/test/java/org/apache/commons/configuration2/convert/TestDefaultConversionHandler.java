@@ -158,7 +158,7 @@ public class TestDefaultConversionHandler
     @Test
     public void testToFromEmptyCollection()
     {
-        assertNull("Wrong result", handler.to(new ArrayList<Object>(),
+        assertNull("Wrong result", handler.to(new ArrayList<>(),
                 Integer.class, createInterpolator()));
     }
 
@@ -177,7 +177,7 @@ public class TestDefaultConversionHandler
     @Test
     public void testToCollectionNullInput()
     {
-        ArrayList<Integer> col = new ArrayList<Integer>();
+        ArrayList<Integer> col = new ArrayList<>();
         handler.toCollection(null, Integer.class, null, col);
         assertTrue("Got elements", col.isEmpty());
     }
@@ -200,7 +200,7 @@ public class TestDefaultConversionHandler
         Object[] src = new Object[] {
                 VAR, "100"
         };
-        List<Integer> col = new ArrayList<Integer>(src.length);
+        List<Integer> col = new ArrayList<>(src.length);
         handler.toCollection(src, Integer.class, createInterpolator(), col);
         assertEquals("Wrong number of elements", src.length, col.size());
         assertEquals("Wrong element (1)", Integer.parseInt(REPLACEMENT), col
@@ -216,7 +216,7 @@ public class TestDefaultConversionHandler
     @Test
     public void testToCollectionEmptyString()
     {
-        List<Integer> col = new ArrayList<Integer>(1);
+        List<Integer> col = new ArrayList<>(1);
         handler.toCollection("", Integer.class, null, col);
         assertTrue("Got elements", col.isEmpty());
     }

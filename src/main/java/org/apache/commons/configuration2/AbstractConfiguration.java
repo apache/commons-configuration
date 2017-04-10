@@ -130,7 +130,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public AbstractConfiguration()
     {
-        interpolator = new AtomicReference<ConfigurationInterpolator>();
+        interpolator = new AtomicReference<>();
         initLogger(null);
         installDefaultInterpolator();
         listDelimiterHandler = DisabledListDelimiterHandler.INSTANCE;
@@ -434,7 +434,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     protected void cloneInterpolator(AbstractConfiguration orgConfig)
     {
-        interpolator = new AtomicReference<ConfigurationInterpolator>();
+        interpolator = new AtomicReference<>();
         ConfigurationInterpolator orgInterpolator = orgConfig.getInterpolator();
         List<Lookup> defaultLookups = orgInterpolator.getDefaultLookups();
         Lookup lookup = findConfigurationLookup(orgInterpolator, orgConfig);
@@ -1432,7 +1432,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     @Override
     public List<Object> getList(String key)
     {
-        return getList(key, new ArrayList<Object>());
+        return getList(key, new ArrayList<>());
     }
 
     @Override
@@ -1443,12 +1443,12 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
         if (value instanceof String)
         {
-            list = new ArrayList<Object>(1);
+            list = new ArrayList<>(1);
             list.add(interpolate((String) value));
         }
         else if (value instanceof List)
         {
-            list = new ArrayList<Object>();
+            list = new ArrayList<>();
             List<?> l = (List<?>) value;
 
             // add the interpolated elements in the new list
@@ -1532,7 +1532,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     @Override
     public <T> List<T> getList(Class<T> cls, String key, List<T> defaultValue)
     {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         if (getCollection(cls, key, result, defaultValue) == null)
         {
             return null;
@@ -1735,7 +1735,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     private Object encodeListForCopy(Collection<?> values)
     {
-        List<Object> result = new ArrayList<Object>(values.size());
+        List<Object> result = new ArrayList<>(values.size());
         for (Object value : values)
         {
             result.add(encodeForCopy(value));
@@ -1870,7 +1870,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         Collection<T> result;
         if (target == null)
         {
-            result = new ArrayList<T>(defaultValue);
+            result = new ArrayList<>(defaultValue);
         }
         else
         {

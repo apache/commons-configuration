@@ -83,7 +83,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     public InMemoryNodeModel(ImmutableNode root)
     {
         structure =
-                new AtomicReference<TreeData>(
+                new AtomicReference<>(
                         createTreeData(initialRootNode(root), null));
     }
 
@@ -300,7 +300,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             NodeSelector selector, final NodeKeyResolver<ImmutableNode> resolver)
     {
         final List<QueryResult<ImmutableNode>> removedElements =
-                new LinkedList<QueryResult<ImmutableNode>>();
+                new LinkedList<>();
         updateModel(new TransactionInitializer()
         {
             @Override
@@ -553,7 +553,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             NodeKeyResolver<ImmutableNode> resolver)
     {
         Mutable<Collection<NodeSelector>> refSelectors =
-                new MutableObject<Collection<NodeSelector>>();
+                new MutableObject<>();
         boolean done;
         do
         {
@@ -590,7 +590,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             NodeKeyResolver<ImmutableNode> resolver)
     {
         Mutable<Collection<NodeSelector>> refSelectors =
-                new MutableObject<Collection<NodeSelector>>();
+                new MutableObject<>();
         boolean done;
         do
         {
@@ -635,7 +635,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             String childName, NodeKeyResolver<ImmutableNode> resolver)
     {
         MutableObject<NodeSelector> refSelector =
-                new MutableObject<NodeSelector>();
+                new MutableObject<>();
         boolean done;
 
         do
@@ -980,7 +980,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     private static Collection<ImmutableNode> createNodesToAdd(
             String newNodeName, Iterable<?> values)
     {
-        Collection<ImmutableNode> nodes = new LinkedList<ImmutableNode>();
+        Collection<ImmutableNode> nodes = new LinkedList<>();
         for (Object value : values)
         {
             nodes.add(new ImmutableNode.Builder().name(newNodeName)
@@ -1139,7 +1139,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             ImmutableNode root)
     {
         Map<ImmutableNode, ImmutableNode> parents =
-                new HashMap<ImmutableNode, ImmutableNode>();
+                new HashMap<>();
         updateParentMapping(parents, root);
         return parents;
     }
@@ -1289,8 +1289,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             NodeKeyResolver<ImmutableNode> resolver)
     {
         List<NodeSelector> selectors =
-                new ArrayList<NodeSelector>(nodes.size());
-        Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
+                new ArrayList<>(nodes.size());
+        Map<ImmutableNode, String> cache = new HashMap<>();
         for (ImmutableNode node : nodes)
         {
             selectors.add(new NodeSelector(resolver.nodeKey(node, cache,

@@ -40,7 +40,7 @@ public class Event extends EventObject
      * event types have this type as super direct (directly or indirectly).
      */
     public static final EventType<Event> ANY =
-            new EventType<Event>(null, "ANY");
+            new EventType<>(null, "ANY");
 
     /**
      * Constant for the format used in toString() for a property representation.

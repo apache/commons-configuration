@@ -88,18 +88,18 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
 
     /** A cache for already created managed builders. */
     private final ConcurrentMap<String, FileBasedConfigurationBuilder<T>> managedBuilders =
-            new ConcurrentHashMap<String, FileBasedConfigurationBuilder<T>>();
+            new ConcurrentHashMap<>();
 
     /** Stores the {@code ConfigurationInterpolator} object. */
     private final AtomicReference<ConfigurationInterpolator> interpolator =
-            new AtomicReference<ConfigurationInterpolator>();
+            new AtomicReference<>();
 
     /**
      * A flag for preventing reentrant access to managed builders on
      * interpolation of the file name pattern.
      */
     private final ThreadLocal<Boolean> inInterpolation =
-            new ThreadLocal<Boolean>();
+            new ThreadLocal<>();
 
     /** A list for the event listeners to be passed to managed builders. */
     private final EventListenerList configurationListeners = new EventListenerList();
@@ -375,7 +375,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
             String fileName, Map<String, Object> params)
             throws ConfigurationException
     {
-        return new FileBasedConfigurationBuilder<T>(getResultClass(), params,
+        return new FileBasedConfigurationBuilder<>(getResultClass(), params,
                 isAllowFailOnInit());
     }
 
@@ -524,7 +524,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
             Map<String, Object> params,
             MultiFileBuilderParametersImpl multiParams)
     {
-        Map<String, Object> newParams = new HashMap<String, Object>(params);
+        Map<String, Object> newParams = new HashMap<>(params);
         newParams.remove(KEY_INTERPOLATOR);
         BuilderParameters managedBuilderParameters =
                 multiParams.getManagedBuilderParameters();

@@ -88,7 +88,7 @@ public class NodeSelector
             NodeKeyResolver<ImmutableNode> resolver,
             NodeHandler<ImmutableNode> handler)
     {
-        List<ImmutableNode> nodes = new LinkedList<ImmutableNode>();
+        List<ImmutableNode> nodes = new LinkedList<>();
         Iterator<String> itKeys = nodeKeys.iterator();
         getFilteredResults(root, resolver, handler, itKeys.next(), nodes);
 
@@ -96,7 +96,7 @@ public class NodeSelector
         {
             String currentKey = itKeys.next();
             List<ImmutableNode> currentResults =
-                    new LinkedList<ImmutableNode>();
+                    new LinkedList<>();
             for (ImmutableNode currentRoot : nodes)
             {
                 getFilteredResults(currentRoot, resolver, handler, currentKey,
@@ -119,7 +119,7 @@ public class NodeSelector
      */
     public NodeSelector subSelector(String subKey)
     {
-        List<String> keys = new ArrayList<String>(nodeKeys.size() + 1);
+        List<String> keys = new ArrayList<>(nodeKeys.size() + 1);
         keys.addAll(nodeKeys);
         keys.add(subKey);
         return new NodeSelector(keys);

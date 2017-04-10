@@ -94,7 +94,7 @@ public class TestDynamicCombinedConfiguration
         config.setExpressionEngine(engine);
         config.setKeyPattern(PATTERN);
         ConfigurationBuilder<XMLConfiguration> multiBuilder =
-                new MultiFileConfigurationBuilder<XMLConfiguration>(
+                new MultiFileConfigurationBuilder<>(
                         XMLConfiguration.class).configure(parameters
                         .multiFile()
                         .setFilePattern(PATTERN1)
@@ -548,7 +548,7 @@ public class TestDynamicCombinedConfiguration
 
     public static class ThreadLookup implements Lookup
     {
-        private static ThreadLocal<String> id = new ThreadLocal<String>();
+        private static ThreadLocal<String> id = new ThreadLocal<>();
 
         public ThreadLookup()
         {

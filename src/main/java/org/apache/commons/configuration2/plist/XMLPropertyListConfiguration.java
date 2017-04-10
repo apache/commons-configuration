@@ -452,7 +452,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
      */
     private static Map<String, Object> transformMap(Map<?, ?> src)
     {
-        Map<String, Object> dest = new HashMap<String, Object>();
+        Map<String, Object> dest = new HashMap<>();
         for (Map.Entry<?, ?> e : src.entrySet())
         {
             if (e.getKey() instanceof String)
@@ -472,7 +472,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         private final StringBuilder buffer = new StringBuilder();
 
         /** The stack of configuration nodes */
-        private final List<PListNodeBuilder> stack = new ArrayList<PListNodeBuilder>();
+        private final List<PListNodeBuilder> stack = new ArrayList<>();
 
         /** The builder for the resulting node. */
         private final PListNodeBuilder resultBuilder;
@@ -679,7 +679,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
 
         /** A collection with child builders of this builder. */
         private final Collection<PListNodeBuilder> childBuilders =
-                new LinkedList<PListNodeBuilder>();
+                new LinkedList<>();
 
         /** The name of the represented node. */
         private String name;
@@ -710,7 +710,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
             }
             else
             {
-                List<Object> list = new ArrayList<Object>();
+                List<Object> list = new ArrayList<>();
                 list.add(value);
                 list.add(v);
                 value = list;
@@ -872,7 +872,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
     private static class ArrayNodeBuilder extends PListNodeBuilder
     {
         /** The list of values in the array. */
-        private final List<Object> list = new ArrayList<Object>();
+        private final List<Object> list = new ArrayList<>();
 
         /**
          * Add an object to the array.

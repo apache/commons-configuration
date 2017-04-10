@@ -80,7 +80,7 @@ public class TestEventListenerParameters
     public void testAddEventListenerRegistration()
     {
         EventListenerRegistrationData<ConfigurationEvent> reg =
-                new EventListenerRegistrationData<ConfigurationEvent>(
+                new EventListenerRegistrationData<>(
                         ConfigurationEvent.SET_PROPERTY,
                         new EventListenerTestImpl(null));
         EventListenerParameters parameters = new EventListenerParameters();

@@ -52,7 +52,7 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 public class BaseConfiguration extends AbstractConfiguration implements Cloneable
 {
     /** stores the configuration key-value pairs */
-    private Map<String, Object> store = new LinkedHashMap<String, Object>();
+    private Map<String, Object> store = new LinkedHashMap<>();
 
     /**
      * Adds a key/value pair to the map.  This routine does no magic morphing.
@@ -81,7 +81,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
         else
         {
             // the previous value is replaced by a list containing the previous value and the new value
-            List<Object> list = new ArrayList<Object>();
+            List<Object> list = new ArrayList<>();
             list.add(previousValue);
             list.add(value);
 
@@ -215,7 +215,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
                 // This is safe because the collections were created by ourselves
                 @SuppressWarnings("unchecked")
                 Collection<String> strList = (Collection<String>) e.getValue();
-                copy.store.put(e.getKey(), new ArrayList<String>(strList));
+                copy.store.put(e.getKey(), new ArrayList<>(strList));
             }
         }
     }

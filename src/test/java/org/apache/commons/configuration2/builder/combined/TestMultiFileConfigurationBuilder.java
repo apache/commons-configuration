@@ -70,7 +70,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     private static MultiFileConfigurationBuilder<XMLConfiguration> createTestBuilder(
             BuilderParameters managedParams)
     {
-        return new MultiFileConfigurationBuilder<XMLConfiguration>(
+        return new MultiFileConfigurationBuilder<>(
                 XMLConfiguration.class)
                 .configure(createTestBuilderParameters(managedParams));
     }
@@ -144,7 +144,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
                                         DefaultLookups.SYSTEM_PROPERTIES
                                                 .getLookup()));
         MultiFileConfigurationBuilder<XMLConfiguration> builder =
-                new MultiFileConfigurationBuilder<XMLConfiguration>(
+                new MultiFileConfigurationBuilder<>(
                         XMLConfiguration.class);
         builder.configure(params);
         switchToConfig(1);
@@ -160,7 +160,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
             throws ConfigurationException
     {
         MultiFileConfigurationBuilder<XMLConfiguration> builder =
-                new MultiFileConfigurationBuilder<XMLConfiguration>(
+                new MultiFileConfigurationBuilder<>(
                         XMLConfiguration.class);
         ExpressionEngine engine = new XPathExpressionEngine();
         BuilderParameters xmlParams =
@@ -229,7 +229,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     {
         BasicBuilderParameters params = createTestBuilderParameters(null);
         MultiFileConfigurationBuilder<XMLConfiguration> builder =
-                new MultiFileConfigurationBuilder<XMLConfiguration>(
+                new MultiFileConfigurationBuilder<>(
                         XMLConfiguration.class, params.getParameters(), true);
         switchToConfig("unknown configuration ID");
         XMLConfiguration config = builder.getConfiguration();
@@ -246,7 +246,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
                 new MultiFileBuilderParametersImpl()
                         .setInterpolator(createInterpolator());
         MultiFileConfigurationBuilder<XMLConfiguration> builder =
-                new MultiFileConfigurationBuilder<XMLConfiguration>(
+                new MultiFileConfigurationBuilder<>(
                         XMLConfiguration.class, params.getParameters(), true);
         switchToConfig(1);
         builder.getConfiguration();
@@ -291,7 +291,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     public void testCaching() throws ConfigurationException
     {
         Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders =
-                new ArrayList<FileBasedConfigurationBuilder<XMLConfiguration>>();
+                new ArrayList<>();
         MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createBuilderWithAccessToManagedBuilders(managedBuilders);
         switchToConfig(1);
@@ -315,7 +315,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     public void testCachingWithReset() throws ConfigurationException
     {
         Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders =
-                new ArrayList<FileBasedConfigurationBuilder<XMLConfiguration>>();
+                new ArrayList<>();
         MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createBuilderWithAccessToManagedBuilders(managedBuilders);
         switchToConfig(1);
@@ -336,7 +336,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         BasicBuilderParameters params =
                 new MultiFileBuilderParametersImpl().setFilePattern(PATTERN);
         MultiFileConfigurationBuilder<XMLConfiguration> builder =
-                new MultiFileConfigurationBuilder<XMLConfiguration>(
+                new MultiFileConfigurationBuilder<>(
                         XMLConfiguration.class);
         builder.configure(params);
         ConfigurationInterpolator interpolator = builder.getInterpolator();
@@ -354,7 +354,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     {
         BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
         Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders =
-                new ArrayList<FileBasedConfigurationBuilder<XMLConfiguration>>();
+                new ArrayList<>();
         MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createBuilderWithAccessToManagedBuilders(managedBuilders);
         switchToConfig(1);
@@ -378,7 +378,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     {
         BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
         Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders =
-                new ArrayList<FileBasedConfigurationBuilder<XMLConfiguration>>();
+                new ArrayList<>();
         MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createBuilderWithAccessToManagedBuilders(managedBuilders);
         switchToConfig(1);
@@ -450,7 +450,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         ci.addDefaultLookup(new ConfigurationLookup(config));
         params.setInterpolator(ci);
         MultiFileConfigurationBuilder<XMLConfiguration> builder =
-                new MultiFileConfigurationBuilder<XMLConfiguration>(
+                new MultiFileConfigurationBuilder<>(
                         XMLConfiguration.class, null, true);
         builder.configure(params);
         BuilderConfigurationWrapperFactory wrapFactory =

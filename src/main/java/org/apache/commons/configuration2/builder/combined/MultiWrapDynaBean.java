@@ -60,9 +60,9 @@ class MultiWrapDynaBean implements DynaBean
      */
     public MultiWrapDynaBean(Collection<?> beans)
     {
-        propsToBeans = new HashMap<String, DynaBean>();
+        propsToBeans = new HashMap<>();
         Collection<DynaClass> beanClasses =
-                new ArrayList<DynaClass>(beans.size());
+                new ArrayList<>(beans.size());
 
         for (Object bean : beans)
         {

@@ -80,10 +80,10 @@ public final class InterpolatorSpecification
         interpolator = builder.interpolator;
         parentInterpolator = builder.parentInterpolator;
         prefixLookups =
-                Collections.unmodifiableMap(new HashMap<String, Lookup>(
+                Collections.unmodifiableMap(new HashMap<>(
                         builder.prefixLookups));
         defaultLookups =
-                Collections.unmodifiableCollection(new ArrayList<Lookup>(
+                Collections.unmodifiableCollection(new ArrayList<>(
                         builder.defLookups));
     }
 
@@ -156,8 +156,8 @@ public final class InterpolatorSpecification
 
         public Builder()
         {
-            prefixLookups = new HashMap<String, Lookup>();
-            defLookups = new LinkedList<Lookup>();
+            prefixLookups = new HashMap<>();
+            defLookups = new LinkedList<>();
         }
 
         /**

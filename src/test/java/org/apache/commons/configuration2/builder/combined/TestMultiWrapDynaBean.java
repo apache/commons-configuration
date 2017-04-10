@@ -64,7 +64,7 @@ public class TestMultiWrapDynaBean
     {
         params = new BasicBuilderParameters();
         wrapBean = new WrappedBeanTestImpl();
-        Collection<Object> beans = new ArrayList<Object>();
+        Collection<Object> beans = new ArrayList<>();
         beans.add(params);
         beans.add(wrapBean);
         if (withDynaBean)
@@ -217,7 +217,7 @@ public class TestMultiWrapDynaBean
     @Test
     public void testOrderOfProperties() throws Exception
     {
-        Collection<Object> beans = new ArrayList<Object>();
+        Collection<Object> beans = new ArrayList<>();
         params = new BasicBuilderParameters();
         beans.add(params);
         beans.add(new FileBasedBuilderParametersImpl());
@@ -245,7 +245,7 @@ public class TestMultiWrapDynaBean
     {
         /** Stores mapped properties. */
         private final Map<String, String> mapProperties =
-                new HashMap<String, String>();
+                new HashMap<>();
 
         /** Stores indexed properties. */
         private final int[] indexedValues = new int[8];

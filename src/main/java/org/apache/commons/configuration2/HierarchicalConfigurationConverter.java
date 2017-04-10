@@ -65,7 +65,7 @@ abstract class HierarchicalConfigurationConverter
             DefaultConfigurationKey keyEmpty =
                     new DefaultConfigurationKey(exprEngine);
             DefaultConfigurationKey keyLast = keyEmpty;
-            Set<String> keySet = new HashSet<String>();
+            Set<String> keySet = new HashSet<>();
 
             for (Iterator<String> it = config.getKeys(); it.hasNext();)
             {
@@ -145,7 +145,7 @@ abstract class HierarchicalConfigurationConverter
      */
     protected Iterator<String> reverseIterator(DefaultConfigurationKey key)
     {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         for (DefaultConfigurationKey.KeyIterator it = key.iterator(); it.hasNext();)
         {
             list.add(it.nextKey());

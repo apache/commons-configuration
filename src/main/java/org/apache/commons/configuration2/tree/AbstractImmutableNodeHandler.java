@@ -73,7 +73,7 @@ abstract class AbstractImmutableNodeHandler implements
             NodeMatcher<C> matcher, C criterion)
     {
         List<ImmutableNode> result =
-                new ArrayList<ImmutableNode>(node.getChildren().size());
+                new ArrayList<>(node.getChildren().size());
         for (ImmutableNode c : node.getChildren())
         {
             if (matcher.matches(c, this, criterion))

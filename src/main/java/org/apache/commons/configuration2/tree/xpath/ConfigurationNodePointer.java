@@ -224,7 +224,7 @@ class ConfigurationNodePointer<T> extends NodePointer
     @Override
     public NodeIterator attributeIterator(QName name)
     {
-        return new ConfigurationNodeIteratorAttribute<T>(this, name);
+        return new ConfigurationNodeIteratorAttribute<>(this, name);
     }
 
     /**
@@ -239,7 +239,7 @@ class ConfigurationNodePointer<T> extends NodePointer
     public NodeIterator childIterator(NodeTest test, boolean reverse,
             NodePointer startWith)
     {
-        return new ConfigurationNodeIteratorChildren<T>(this, test, reverse,
+        return new ConfigurationNodeIteratorChildren<>(this, test, reverse,
                 castPointer(startWith));
     }
 

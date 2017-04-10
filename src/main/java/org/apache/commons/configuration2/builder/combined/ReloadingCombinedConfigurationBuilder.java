@@ -130,7 +130,7 @@ public class ReloadingCombinedConfigurationBuilder extends
     protected ConfigurationBuilder<? extends HierarchicalConfiguration<?>> createXMLDefinitionBuilder(
             BuilderParameters builderParams)
     {
-        return new ReloadingFileBasedConfigurationBuilder<XMLConfiguration>(
+        return new ReloadingFileBasedConfigurationBuilder<>(
                 XMLConfiguration.class).configure(builderParams);
     }
 
@@ -161,7 +161,7 @@ public class ReloadingCombinedConfigurationBuilder extends
             throws ConfigurationException
     {
         Collection<ReloadingController> subControllers =
-                new LinkedList<ReloadingController>();
+                new LinkedList<>();
         ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder =
                 getDefinitionBuilder();
         obtainReloadingController(subControllers, defBuilder);

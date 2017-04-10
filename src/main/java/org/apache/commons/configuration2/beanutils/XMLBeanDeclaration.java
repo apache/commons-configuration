@@ -345,7 +345,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
     @Override
     public Map<String, Object> getBeanProperties()
     {
-        Map<String, Object> props = new HashMap<String, Object>();
+        Map<String, Object> props = new HashMap<>();
         for (String key : getAttributeNames())
         {
             if (!isReservedAttributeName(key))
@@ -367,7 +367,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
     @Override
     public Map<String, Object> getNestedBeanDeclarations()
     {
-        Map<String, Object> nested = new HashMap<String, Object>();
+        Map<String, Object> nested = new HashMap<>();
         for (NodeData<?> child : getNode().getChildren())
         {
             if (!isReservedChildName(child.nodeName()))
@@ -385,7 +385,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
                     }
                     else
                     {
-                        list = new ArrayList<BeanDeclaration>();
+                        list = new ArrayList<>();
                         list.add((BeanDeclaration) obj);
                         nested.put(child.nodeName(), list);
                     }
@@ -411,7 +411,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
     @Override
     public Collection<ConstructorArg> getConstructorArgs()
     {
-        Collection<ConstructorArg> args = new LinkedList<ConstructorArg>();
+        Collection<ConstructorArg> args = new LinkedList<>();
         for (NodeData<?> child : getNode().getChildren(ELEM_CTOR_ARG))
         {
             args.add(createConstructorArg(child));
@@ -600,7 +600,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
             HierarchicalConfiguration<T> config)
     {
         NodeHandler<T> handler = config.getNodeModel().getNodeHandler();
-        return new NodeData<T>(handler.getRootNode(), handler);
+        return new NodeData<>(handler.getRootNode(), handler);
     }
 
     /**
@@ -720,10 +720,10 @@ public class XMLBeanDeclaration implements BeanDeclaration
          */
         private List<NodeData<T>> wrapInNodeData(List<T> nodes)
         {
-            List<NodeData<T>> result = new ArrayList<NodeData<T>>(nodes.size());
+            List<NodeData<T>> result = new ArrayList<>(nodes.size());
             for (T node : nodes)
             {
-                result.add(new NodeData<T>(node, handler));
+                result.add(new NodeData<>(node, handler));
             }
             return result;
         }

@@ -160,7 +160,7 @@ public class TestSubsetConfiguration
         conf.addProperty("test.abc", "value3");
 
         Configuration subset = new SubsetConfiguration(conf, "test", ".");
-        List<Object> list = subset.getList("abc", new ArrayList<Object>());
+        List<Object> list = subset.getList("abc", new ArrayList<>());
         assertEquals(3, list.size());
     }
 
@@ -238,7 +238,7 @@ public class TestSubsetConfiguration
         assertTrue(subConf.getKeys().hasNext());
         Configuration subSubConf = subConf.subset("fields.field(1)");
         Iterator<String> itKeys = subSubConf.getKeys();
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
         keys.add("name");
         keys.add("type");
         while(itKeys.hasNext())

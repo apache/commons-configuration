@@ -34,7 +34,7 @@ public class TestEventType
     @Before
     public void setUp() throws Exception
     {
-        eventType = new EventType<Event>(null, "TEST");
+        eventType = new EventType<>(null, "TEST");
     }
 
     /**

@@ -72,7 +72,7 @@ public final class QueryResult<T>
      */
     public static <T> QueryResult<T> createNodeResult(T resultNode)
     {
-        return new QueryResult<T>(resultNode, null);
+        return new QueryResult<>(resultNode, null);
     }
 
     /**
@@ -88,7 +88,7 @@ public final class QueryResult<T>
     public static <T> QueryResult<T> createAttributeResult(T parentNode,
                                                            String attrName)
     {
-        return new QueryResult<T>(parentNode, attrName);
+        return new QueryResult<>(parentNode, attrName);
     }
 
     /**

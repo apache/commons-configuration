@@ -156,7 +156,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     public PropertiesConfigurationLayout(PropertiesConfigurationLayout c)
     {
         loadCounter = new AtomicInteger();
-        layoutData = new LinkedHashMap<String, PropertyLayoutData>();
+        layoutData = new LinkedHashMap<>();
 
         if (c != null)
         {

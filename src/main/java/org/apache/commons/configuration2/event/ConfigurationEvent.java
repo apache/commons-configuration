@@ -78,7 +78,7 @@ public class ConfigurationEvent extends Event
      * @since 2.0
      */
     public static final EventType<ConfigurationEvent> ANY =
-            new EventType<ConfigurationEvent>(Event.ANY, "CONFIGURATION_UPDATE");
+            new EventType<>(Event.ANY, "CONFIGURATION_UPDATE");
 
     /**
      * Constant for the event type for an add property operation.
@@ -86,7 +86,7 @@ public class ConfigurationEvent extends Event
      * @since 2.0
      */
     public static final EventType<ConfigurationEvent> ADD_PROPERTY =
-            new EventType<ConfigurationEvent>(ANY, "ADD_PROPERTY");
+            new EventType<>(ANY, "ADD_PROPERTY");
 
     /**
      * Constant for the event type for a set property operation.
@@ -94,7 +94,7 @@ public class ConfigurationEvent extends Event
      * @since 2.0
      */
     public static final EventType<ConfigurationEvent> SET_PROPERTY =
-            new EventType<ConfigurationEvent>(ANY, "SET_PROPERTY");
+            new EventType<>(ANY, "SET_PROPERTY");
 
     /**
      * Constant for the event type for a clear property operation.
@@ -102,7 +102,7 @@ public class ConfigurationEvent extends Event
      * @since 2.0
      */
     public static final EventType<ConfigurationEvent> CLEAR_PROPERTY =
-            new EventType<ConfigurationEvent>(ANY, "CLEAR_PROPERTY");
+            new EventType<>(ANY, "CLEAR_PROPERTY");
 
     /**
      * Constant for the event type for a clear operation.
@@ -110,7 +110,7 @@ public class ConfigurationEvent extends Event
      * @since 2.0
      */
     public static final EventType<ConfigurationEvent> CLEAR =
-            new EventType<ConfigurationEvent>(ANY, "CLEAR");
+            new EventType<>(ANY, "CLEAR");
 
     /**
      * Constant for the common base event type for all hierarchical update
@@ -120,7 +120,7 @@ public class ConfigurationEvent extends Event
      * @since 2.0
      */
     public static final EventType<ConfigurationEvent> ANY_HIERARCHICAL =
-            new EventType<ConfigurationEvent>(ANY, "HIERARCHICAL");
+            new EventType<>(ANY, "HIERARCHICAL");
 
     /**
      * Constant for the event type for an add nodes operation.
@@ -128,7 +128,7 @@ public class ConfigurationEvent extends Event
      * @since 2.0
      */
     public static final EventType<ConfigurationEvent> ADD_NODES =
-            new EventType<ConfigurationEvent>(ANY_HIERARCHICAL, "ADD_NODES");
+            new EventType<>(ANY_HIERARCHICAL, "ADD_NODES");
 
     /**
      * Constant for the event type for a clear tree operation.
@@ -136,7 +136,7 @@ public class ConfigurationEvent extends Event
      * @since 2.0
      */
     public static final EventType<ConfigurationEvent> CLEAR_TREE =
-            new EventType<ConfigurationEvent>(ANY_HIERARCHICAL, "CLEAR_TREE");
+            new EventType<>(ANY_HIERARCHICAL, "CLEAR_TREE");
 
     /**
      * Constant for the event type indicating a change on a sub configuration.
@@ -144,7 +144,7 @@ public class ConfigurationEvent extends Event
      * @since 2.0
      */
     public static final EventType<ConfigurationEvent> SUBNODE_CHANGED =
-            new EventType<ConfigurationEvent>(ANY_HIERARCHICAL,
+            new EventType<>(ANY_HIERARCHICAL,
                     "SUBNODE_CHANGED");
 
     /**

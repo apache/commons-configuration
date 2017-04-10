@@ -57,7 +57,7 @@ public class TestReloadingMultiFileConfigurationBuilder extends
                 createTestBuilderParameters(new XMLBuilderParametersImpl()
                         .setExpressionEngine(engine));
         ReloadingMultiFileConfigurationBuilder<XMLConfiguration> builder =
-                new ReloadingMultiFileConfigurationBuilder<XMLConfiguration>(
+                new ReloadingMultiFileConfigurationBuilder<>(
                         XMLConfiguration.class, params.getParameters());
         switchToConfig(1);
         XMLConfiguration config = builder.getConfiguration();
@@ -72,7 +72,7 @@ public class TestReloadingMultiFileConfigurationBuilder extends
     public void testCreateManagedBuilder() throws ConfigurationException
     {
         ReloadingMultiFileConfigurationBuilder<XMLConfiguration> builder =
-                new ReloadingMultiFileConfigurationBuilder<XMLConfiguration>(
+                new ReloadingMultiFileConfigurationBuilder<>(
                         XMLConfiguration.class);
         FileBasedConfigurationBuilder<XMLConfiguration> managedBuilder =
                 builder.createManagedBuilder("test.xml",
@@ -92,7 +92,7 @@ public class TestReloadingMultiFileConfigurationBuilder extends
             throws ConfigurationException
     {
         ReloadingMultiFileConfigurationBuilder<XMLConfiguration> builder =
-                new ReloadingMultiFileConfigurationBuilder<XMLConfiguration>(
+                new ReloadingMultiFileConfigurationBuilder<>(
                         XMLConfiguration.class, null, true);
         FileBasedConfigurationBuilder<XMLConfiguration> managedBuilder =
                 builder.createManagedBuilder("test.xml",
@@ -203,7 +203,7 @@ public class TestReloadingMultiFileConfigurationBuilder extends
         {
             super(XMLConfiguration.class, createTestBuilderParameters(null)
                     .getParameters());
-            reloadingControllers = new ArrayList<ReloadingController>();
+            reloadingControllers = new ArrayList<>();
         }
 
         /**

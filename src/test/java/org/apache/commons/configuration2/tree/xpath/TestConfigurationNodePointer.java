@@ -45,7 +45,7 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
     {
         super.setUp();
         pointer =
-                new ConfigurationNodePointer<ImmutableNode>(root,
+                new ConfigurationNodePointer<>(root,
                         Locale.getDefault(), handler);
     }
 
@@ -55,9 +55,9 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
     @Test
     public void testCompareChildNodePointersChildren()
     {
-        NodePointer p1 = new ConfigurationNodePointer<ImmutableNode>(
+        NodePointer p1 = new ConfigurationNodePointer<>(
                 pointer, root.getChildren().get(1), handler);
-        NodePointer p2 = new ConfigurationNodePointer<ImmutableNode>(
+        NodePointer p2 = new ConfigurationNodePointer<>(
                 pointer, root.getChildren().get(3), handler);
         assertEquals("Incorrect order", -1, pointer.compareChildNodePointers(
                 p1, p2));
@@ -75,10 +75,10 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
         ImmutableNode n1 = new ImmutableNode.Builder().name("n1").create();
         ImmutableNode n2 = new ImmutableNode.Builder().name("n2").create();
         NodePointer p1 =
-                new ConfigurationNodePointer<ImmutableNode>(pointer, n1,
+                new ConfigurationNodePointer<>(pointer, n1,
                         handler);
         NodePointer p2 =
-                new ConfigurationNodePointer<ImmutableNode>(pointer, n2,
+                new ConfigurationNodePointer<>(pointer, n2,
                         handler);
         assertEquals("Incorrect order", 0,
                 pointer.compareChildNodePointers(p1, p2));
@@ -113,7 +113,7 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
         ImmutableNode leafNode =
                 new ImmutableNode.Builder().name("leafNode").create();
         pointer =
-                new ConfigurationNodePointer<ImmutableNode>(pointer, leafNode,
+                new ConfigurationNodePointer<>(pointer, leafNode,
                         handler);
         assertTrue("Not a leaf node", pointer.isLeaf());
     }

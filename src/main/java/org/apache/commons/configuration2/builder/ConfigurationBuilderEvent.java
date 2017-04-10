@@ -37,14 +37,14 @@ public class ConfigurationBuilderEvent extends Event
 {
     /** The common super type for all events related to configuration builders. */
     public static final EventType<ConfigurationBuilderEvent> ANY =
-            new EventType<ConfigurationBuilderEvent>(Event.ANY, "BUILDER");
+            new EventType<>(Event.ANY, "BUILDER");
 
     /**
      * The specific event type for builder reset events. Events of this type are
      * generated each time the builder's {@code resetResult()} method is called.
      */
     public static final EventType<ConfigurationBuilderEvent> RESET =
-            new EventType<ConfigurationBuilderEvent>(ANY, "RESET");
+            new EventType<>(ANY, "RESET");
 
     /**
      * The specific event type for configuration request events. Events of this
@@ -59,7 +59,7 @@ public class ConfigurationBuilderEvent extends Event
      * @see ConfigurationBuilder#getConfiguration()
      */
     public static final EventType<ConfigurationBuilderEvent> CONFIGURATION_REQUEST =
-            new EventType<ConfigurationBuilderEvent>(ANY,
+            new EventType<>(ANY,
                     "CONFIGURATION_REQUEST");
 
     /**

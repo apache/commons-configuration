@@ -63,7 +63,7 @@ public class CombinedBeanDeclaration implements BeanDeclaration
      */
     public CombinedBeanDeclaration(BeanDeclaration... decl)
     {
-        childDeclarations = new ArrayList<BeanDeclaration>(Arrays.asList(decl));
+        childDeclarations = new ArrayList<>(Arrays.asList(decl));
     }
 
     /**
@@ -135,7 +135,7 @@ public class CombinedBeanDeclaration implements BeanDeclaration
     @Override
     public Map<String, Object> getBeanProperties()
     {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         for (int i = childDeclarations.size() - 1; i >= 0; i--)
         {
             Map<String, Object> props =
@@ -157,7 +157,7 @@ public class CombinedBeanDeclaration implements BeanDeclaration
     @Override
     public Map<String, Object> getNestedBeanDeclarations()
     {
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         for (int i = childDeclarations.size() - 1; i >= 0; i--)
         {
             Map<String, Object> decls =

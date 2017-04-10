@@ -116,7 +116,7 @@ public class TestNodeSelector
         NodeKeyResolver<ImmutableNode> resolverMock =
                 NodeStructureHelper.createResolverMock();
         List<QueryResult<ImmutableNode>> results =
-                new LinkedList<QueryResult<ImmutableNode>>();
+                new LinkedList<>();
         results.add(QueryResult.createAttributeResult(
                 NodeStructureHelper.nodeForKey(root, "tables/table(0)"), "type"));
         ImmutableNode target =

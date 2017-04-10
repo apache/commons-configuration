@@ -131,7 +131,7 @@ public class TestNodeTreeWalker
      */
     private List<String> expectDFS()
     {
-        List<String> expected = new LinkedList<String>();
+        List<String> expected = new LinkedList<>();
         expected.add(NodeStructureHelper.ROOT_AUTHORS_TREE.getNodeName());
         for (int authorIdx = 0; authorIdx < NodeStructureHelper.authorsLength(); authorIdx++)
         {
@@ -206,9 +206,9 @@ public class TestNodeTreeWalker
      */
     private List<String> expectBFS()
     {
-        List<String> expected = new LinkedList<String>();
-        List<String> works = new LinkedList<String>();
-        List<String> personae = new LinkedList<String>();
+        List<String> expected = new LinkedList<>();
+        List<String> works = new LinkedList<>();
+        List<String> personae = new LinkedList<>();
         expected.add(NodeStructureHelper.ROOT_AUTHORS_TREE.getNodeName());
         for (int authorIdx = 0; authorIdx < NodeStructureHelper.authorsLength(); authorIdx++)
         {
@@ -255,7 +255,7 @@ public class TestNodeTreeWalker
             ConfigurationNodeVisitor<ImmutableNode>
     {
         /** A list with the names of the visited nodes. */
-        private final List<String> visitedNodes = new LinkedList<String>();
+        private final List<String> visitedNodes = new LinkedList<>();
 
         /** The maximum number of nodes to be visited. */
         private int maxNodeCount = Integer.MAX_VALUE;

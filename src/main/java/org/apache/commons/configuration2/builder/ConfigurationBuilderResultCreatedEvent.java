@@ -48,7 +48,7 @@ public class ConfigurationBuilderResultCreatedEvent extends
      * result configuration has been created.
      */
     public static final EventType<ConfigurationBuilderResultCreatedEvent> RESULT_CREATED =
-            new EventType<ConfigurationBuilderResultCreatedEvent>(ANY,
+            new EventType<>(ANY,
                     "RESULT_CREATED");
 
     /** The newly created configuration object. */

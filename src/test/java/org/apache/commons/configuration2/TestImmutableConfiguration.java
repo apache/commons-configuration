@@ -61,7 +61,7 @@ public class TestImmutableConfiguration
     private static PropertiesConfiguration createTestConfig()
             throws ConfigurationException
     {
-        return new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+        return new FileBasedConfigurationBuilder<>(
                 PropertiesConfiguration.class).configure(
                 new FileBasedBuilderParametersImpl().setFile(ConfigurationAssert
                         .getTestFile(TEST_FILE))).getConfiguration();
@@ -114,7 +114,7 @@ public class TestImmutableConfiguration
      */
     private static Set<String> fetchKeys(Iterator<String> it)
     {
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
         while (it.hasNext())
         {
             keys.add(it.next());

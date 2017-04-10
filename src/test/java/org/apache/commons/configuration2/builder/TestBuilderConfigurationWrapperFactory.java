@@ -151,7 +151,7 @@ public class TestBuilderConfigurationWrapperFactory
     public void testEventSourceSupportBuilder() throws ConfigurationException
     {
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         EventListener<ConfigurationEvent> l1 = new EventListenerTestImpl(null);
         EventListener<ConfigurationEvent> l2 = new EventListenerTestImpl(null);

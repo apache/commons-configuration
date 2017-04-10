@@ -136,7 +136,7 @@ class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHand
      */
     public Map<ImmutableNode, ImmutableNode> copyParentMapping()
     {
-        return new HashMap<ImmutableNode, ImmutableNode>(parentMapping);
+        return new HashMap<>(parentMapping);
     }
 
     /**
@@ -146,7 +146,7 @@ class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHand
      */
     public Map<ImmutableNode, ImmutableNode> copyReplacementMapping()
     {
-        return new HashMap<ImmutableNode, ImmutableNode>(replacementMapping);
+        return new HashMap<>(replacementMapping);
     }
 
     /**
@@ -234,7 +234,7 @@ class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHand
             Map<ImmutableNode, ImmutableNode> replacements)
     {
         Map<ImmutableNode, ImmutableNode> inverseMapping =
-                new HashMap<ImmutableNode, ImmutableNode>();
+                new HashMap<>();
         for (Map.Entry<ImmutableNode, ImmutableNode> e : replacements
                 .entrySet())
         {

@@ -195,7 +195,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
         else
         {
             // the previous value is replaced by a list containing the previous value and the new value
-            List<Object> list = new ArrayList<Object>();
+            List<Object> list = new ArrayList<>();
             list.add(previousValue);
             list.add(value);
 

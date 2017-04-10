@@ -81,7 +81,7 @@ public class TestDataConfiguration
         conf.addProperty("boolean.list3", Boolean.FALSE);
         conf.addPropertyDirect("boolean.list4", new Boolean[] { Boolean.TRUE, Boolean.FALSE });
         conf.addPropertyDirect("boolean.list5", new boolean[] { true, false });
-        List<Object> booleans = new ArrayList<Object>();
+        List<Object> booleans = new ArrayList<>();
         booleans.add(Boolean.TRUE);
         booleans.add(Boolean.FALSE);
         conf.addProperty("boolean.list6", booleans);
@@ -97,7 +97,7 @@ public class TestDataConfiguration
         conf.addProperty("byte.list3", new Byte("2"));
         conf.addPropertyDirect("byte.list4", new Byte[] { new Byte("1"), new Byte("2") });
         conf.addPropertyDirect("byte.list5", new byte[] { 1, 2 });
-        List<Object> bytes = new ArrayList<Object>();
+        List<Object> bytes = new ArrayList<>();
         bytes.add(new Byte("1"));
         bytes.add(new Byte("2"));
         conf.addProperty("byte.list6", bytes);
@@ -113,7 +113,7 @@ public class TestDataConfiguration
         conf.addProperty("short.list3", new Short("2"));
         conf.addPropertyDirect("short.list4", new Short[] { new Short("1"), new Short("2") });
         conf.addPropertyDirect("short.list5", new short[] { 1, 2 });
-        List<Object> shorts = new ArrayList<Object>();
+        List<Object> shorts = new ArrayList<>();
         shorts.add(new Short("1"));
         shorts.add(new Short("2"));
         conf.addProperty("short.list6", shorts);
@@ -129,7 +129,7 @@ public class TestDataConfiguration
         conf.addProperty("integer.list3", new Integer("2"));
         conf.addPropertyDirect("integer.list4", new Integer[] { new Integer("1"), new Integer("2") });
         conf.addPropertyDirect("integer.list5", new int[] { 1, 2 });
-        List<Object> integers = new ArrayList<Object>();
+        List<Object> integers = new ArrayList<>();
         integers.add(new Integer("1"));
         integers.add(new Integer("2"));
         conf.addProperty("integer.list6", integers);
@@ -145,7 +145,7 @@ public class TestDataConfiguration
         conf.addProperty("long.list3", new Long("2"));
         conf.addPropertyDirect("long.list4", new Long[] { new Long("1"), new Long("2") });
         conf.addPropertyDirect("long.list5", new long[] { 1, 2 });
-        List<Object> longs = new ArrayList<Object>();
+        List<Object> longs = new ArrayList<>();
         longs.add(new Long("1"));
         longs.add(new Long("2"));
         conf.addProperty("long.list6", longs);
@@ -161,7 +161,7 @@ public class TestDataConfiguration
         conf.addProperty("float.list3", new Float("2"));
         conf.addPropertyDirect("float.list4", new Float[] { new Float("1"), new Float("2") });
         conf.addPropertyDirect("float.list5", new float[] { 1, 2 });
-        List<Object> floats = new ArrayList<Object>();
+        List<Object> floats = new ArrayList<>();
         floats.add(new Float("1"));
         floats.add(new Float("2"));
         conf.addProperty("float.list6", floats);
@@ -177,7 +177,7 @@ public class TestDataConfiguration
         conf.addProperty("double.list3", new Double("2"));
         conf.addPropertyDirect("double.list4", new Double[] { new Double("1"), new Double("2") });
         conf.addPropertyDirect("double.list5", new double[] { 1, 2 });
-        List<Object> doubles = new ArrayList<Object>();
+        List<Object> doubles = new ArrayList<>();
         doubles.add(new Double("1"));
         doubles.add(new Double("2"));
         conf.addProperty("double.list6", doubles);
@@ -192,7 +192,7 @@ public class TestDataConfiguration
         conf.addProperty("biginteger.list3", new BigInteger("1"));
         conf.addProperty("biginteger.list3", new BigInteger("2"));
         conf.addPropertyDirect("biginteger.list4", new BigInteger[] { new BigInteger("1"), new BigInteger("2") });
-        List<Object> bigintegers = new ArrayList<Object>();
+        List<Object> bigintegers = new ArrayList<>();
         bigintegers.add(new BigInteger("1"));
         bigintegers.add(new BigInteger("2"));
         conf.addProperty("biginteger.list6", bigintegers);
@@ -207,7 +207,7 @@ public class TestDataConfiguration
         conf.addProperty("bigdecimal.list3", new BigDecimal("1"));
         conf.addProperty("bigdecimal.list3", new BigDecimal("2"));
         conf.addPropertyDirect("bigdecimal.list4", new BigDecimal[] { new BigDecimal("1"), new BigDecimal("2") });
-        List<Object> bigdecimals = new ArrayList<Object>();
+        List<Object> bigdecimals = new ArrayList<>();
         bigdecimals.add(new BigDecimal("1"));
         bigdecimals.add(new BigDecimal("2"));
         conf.addProperty("bigdecimal.list6", bigdecimals);
@@ -227,7 +227,7 @@ public class TestDataConfiguration
         conf.addProperty("uri.list3", new URI(uri1));
         conf.addProperty("uri.list3", new URI(uri2));
         conf.addPropertyDirect("uri.list4", new URI[] { new URI(uri1), new URI(uri2) });
-        List<Object> uris = new ArrayList<Object>();
+        List<Object> uris = new ArrayList<>();
         uris.add(new URI(uri1));
         uris.add(new URI(uri2));
         conf.addProperty("uri.list6", uris);
@@ -245,7 +245,7 @@ public class TestDataConfiguration
         conf.addProperty("url.list3", new URL(url1));
         conf.addProperty("url.list3", new URL(url2));
         conf.addPropertyDirect("url.list4", new URL[] { new URL(url1), new URL(url2) });
-        List<Object> urls = new ArrayList<Object>();
+        List<Object> urls = new ArrayList<>();
         urls.add(new URL(url1));
         urls.add(new URL(url2));
         conf.addProperty("url.list6", urls);
@@ -261,7 +261,7 @@ public class TestDataConfiguration
         conf.addProperty("locale.list3", Locale.FRENCH);
         conf.addProperty("locale.list3", Locale.GERMAN);
         conf.addPropertyDirect("locale.list4", new Locale[] { Locale.FRENCH, Locale.GERMAN });
-        List<Object> locales = new ArrayList<Object>();
+        List<Object> locales = new ArrayList<>();
         locales.add(Locale.FRENCH);
         locales.add(Locale.GERMAN);
         conf.addProperty("locale.list6", locales);
@@ -279,7 +279,7 @@ public class TestDataConfiguration
         conf.addProperty("color.list3", Color.red);
         conf.addProperty("color.list3", Color.blue);
         conf.addPropertyDirect("color.list4", new Color[] { Color.red, Color.blue });
-        List<Object> colors = new ArrayList<Object>();
+        List<Object> colors = new ArrayList<>();
         colors.add(Color.red);
         colors.add(Color.blue);
         conf.addProperty("color.list6", colors);
@@ -307,7 +307,7 @@ public class TestDataConfiguration
         conf.addProperty("date.list3", date2);
         conf.addPropertyDirect("date.list4", new Date[] { date1, date2 });
         conf.addPropertyDirect("date.list5", new Calendar[] { calendar1, calendar2 });
-        List<Object> dates = new ArrayList<Object>();
+        List<Object> dates = new ArrayList<>();
         dates.add(date1);
         dates.add(date2);
         conf.addProperty("date.list6", dates);
@@ -324,7 +324,7 @@ public class TestDataConfiguration
         conf.addProperty("calendar.list3", calendar2);
         conf.addPropertyDirect("calendar.list4", new Calendar[] { calendar1, calendar2 });
         conf.addPropertyDirect("calendar.list5", new Date[] { date1, date2 });
-        List<Object> calendars = new ArrayList<Object>();
+        List<Object> calendars = new ArrayList<>();
         calendars.add(date1);
         calendars.add(date2);
         conf.addProperty("calendar.list6", calendars);
@@ -466,7 +466,7 @@ public class TestDataConfiguration
         // missing list
         ListAssert.assertEquals(null, conf.getBooleanList("boolean.list", null));
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add(Boolean.TRUE);
         expected.add(Boolean.FALSE);
 
@@ -492,13 +492,13 @@ public class TestDataConfiguration
         ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list.interpolated"));
 
         // single boolean values
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         expected.add(Boolean.TRUE);
         ListAssert.assertEquals(expected, conf.getBooleanList("boolean.string"));
         ListAssert.assertEquals(expected, conf.getBooleanList("boolean.object"));
 
         // empty list
-        ListAssert.assertEquals(new ArrayList<Object>(), conf.getBooleanList("empty"));
+        ListAssert.assertEquals(new ArrayList<>(), conf.getBooleanList("empty"));
     }
 
     @Test
@@ -545,7 +545,7 @@ public class TestDataConfiguration
         // missing list
         ListAssert.assertEquals(null, conf.getByteList("byte.list", null));
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add(new Byte("1"));
         expected.add(new Byte("2"));
 
@@ -571,13 +571,13 @@ public class TestDataConfiguration
         ListAssert.assertEquals(expected, conf.getByteList("byte.list.interpolated"));
 
         // single byte values
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         expected.add(new Byte("1"));
         ListAssert.assertEquals(expected, conf.getByteList("byte.string"));
         ListAssert.assertEquals(expected, conf.getByteList("byte.object"));
 
         // empty list
-        ListAssert.assertEquals(new ArrayList<Object>(), conf.getByteList("empty"));
+        ListAssert.assertEquals(new ArrayList<>(), conf.getByteList("empty"));
     }
 
     @Test
@@ -624,7 +624,7 @@ public class TestDataConfiguration
         // missing list
         ListAssert.assertEquals(null, conf.getShortList("short.list", null));
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add(new Short("1"));
         expected.add(new Short("2"));
 
@@ -650,13 +650,13 @@ public class TestDataConfiguration
         ListAssert.assertEquals(expected, conf.getShortList("short.list.interpolated"));
 
         // single short values
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         expected.add(new Short("1"));
         ListAssert.assertEquals(expected, conf.getShortList("short.string"));
         ListAssert.assertEquals(expected, conf.getShortList("short.object"));
 
         // empty list
-        ListAssert.assertEquals(new ArrayList<Object>(), conf.getShortList("empty"));
+        ListAssert.assertEquals(new ArrayList<>(), conf.getShortList("empty"));
     }
 
     @Test
@@ -703,7 +703,7 @@ public class TestDataConfiguration
         // missing list
         ListAssert.assertEquals(null, conf.getIntegerList("integer.list", null));
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add(new Integer("1"));
         expected.add(new Integer("2"));
 
@@ -729,13 +729,13 @@ public class TestDataConfiguration
         ListAssert.assertEquals(expected, conf.getIntegerList("integer.list.interpolated"));
 
         // single int values
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         expected.add(new Integer("1"));
         ListAssert.assertEquals(expected, conf.getIntegerList("integer.string"));
         ListAssert.assertEquals(expected, conf.getIntegerList("integer.object"));
 
         // empty list
-        ListAssert.assertEquals(new ArrayList<Object>(), conf.getIntegerList("empty"));
+        ListAssert.assertEquals(new ArrayList<>(), conf.getIntegerList("empty"));
     }
 
     @Test
@@ -782,7 +782,7 @@ public class TestDataConfiguration
         // missing list
         ListAssert.assertEquals(null, conf.getLongList("long.list", null));
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add(new Long("1"));
         expected.add(new Long("2"));
 
@@ -808,13 +808,13 @@ public class TestDataConfiguration
         ListAssert.assertEquals(expected, conf.getLongList("long.list.interpolated"));
 
         // single long values
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         expected.add(new Long("1"));
         ListAssert.assertEquals(expected, conf.getLongList("long.string"));
         ListAssert.assertEquals(expected, conf.getLongList("long.object"));
 
         // empty list
-        ListAssert.assertEquals(new ArrayList<Object>(), conf.getLongList("empty"));
+        ListAssert.assertEquals(new ArrayList<>(), conf.getLongList("empty"));
     }
 
     @Test
@@ -861,7 +861,7 @@ public class TestDataConfiguration
         // missing list
         ListAssert.assertEquals(null, conf.getFloatList("float.list", null));
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add(new Float("1"));
         expected.add(new Float("2"));
 
@@ -887,13 +887,13 @@ public class TestDataConfiguration
         ListAssert.assertEquals(expected, conf.getFloatList("float.list.interpolated"));
 
         // single float values
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         expected.add(new Float("1"));
         ListAssert.assertEquals(expected, conf.getFloatList("float.string"));
         ListAssert.assertEquals(expected, conf.getFloatList("float.object"));
 
         // empty list
-        ListAssert.assertEquals(new ArrayList<Object>(), conf.getFloatList("empty"));
+        ListAssert.assertEquals(new ArrayList<>(), conf.getFloatList("empty"));
     }
 
     @Test
@@ -940,7 +940,7 @@ public class TestDataConfiguration
         // missing list
         ListAssert.assertEquals(null, conf.getDoubleList("double.list", null));
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add(new Double("1"));
         expected.add(new Double("2"));
 
@@ -966,13 +966,13 @@ public class TestDataConfiguration
         ListAssert.assertEquals(expected, conf.getDoubleList("double.list.interpolated"));
 
         // single double values
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         expected.add(new Double("1"));
         ListAssert.assertEquals(expected, conf.getDoubleList("double.string"));
         ListAssert.assertEquals(expected, conf.getDoubleList("double.object"));
 
         // empty list
-        ListAssert.assertEquals(new ArrayList<Object>(), conf.getDoubleList("empty"));
+        ListAssert.assertEquals(new ArrayList<>(), conf.getDoubleList("empty"));
     }
 
     @Test
@@ -1017,7 +1017,7 @@ public class TestDataConfiguration
         List<BigInteger> bigIntegerList = conf.getBigIntegerList("biginteger.list", null);
         ListAssert.assertEquals(null, bigIntegerList);
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add(new BigInteger("1"));
         expected.add(new BigInteger("2"));
 
@@ -1040,13 +1040,13 @@ public class TestDataConfiguration
         ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.list.interpolated"));
 
         // single BigInteger values
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         expected.add(new BigInteger("1"));
         ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.string"));
         ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.object"));
 
         // empty list
-        ListAssert.assertEquals(new ArrayList<Object>(), conf.getBigIntegerList("empty"));
+        ListAssert.assertEquals(new ArrayList<>(), conf.getBigIntegerList("empty"));
     }
 
     @Test
@@ -1090,7 +1090,7 @@ public class TestDataConfiguration
         // missing list
         ListAssert.assertEquals(null, conf.getBigDecimalList("bigdecimal.list", null));
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add(new BigDecimal("1"));
         expected.add(new BigDecimal("2"));
 
@@ -1113,13 +1113,13 @@ public class TestDataConfiguration
         ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.list.interpolated"));
 
         // single BigDecimal values
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         expected.add(new BigDecimal("1"));
         ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.string"));
         ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.object"));
 
         // empty list
-        ListAssert.assertEquals(new ArrayList<Object>(), conf.getBigDecimalList("empty"));
+        ListAssert.assertEquals(new ArrayList<>(), conf.getBigDecimalList("empty"));
     }
 
     @Test
@@ -1182,7 +1182,7 @@ public class TestDataConfiguration
         // missing list
         ListAssert.assertEquals(null, conf.getURIList("uri.list", null));
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add(new URI("http://jakarta.apache.org"));
         expected.add(new URI("http://www.apache.org"));
 
@@ -1205,13 +1205,13 @@ public class TestDataConfiguration
         ListAssert.assertEquals(expected, conf.getURIList("uri.list.interpolated"));
 
         // single URI values
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         expected.add(new URI("http://jakarta.apache.org"));
         ListAssert.assertEquals(expected, conf.getURIList("uri.string"));
         ListAssert.assertEquals(expected, conf.getURIList("uri.object"));
 
         // empty list
-        ListAssert.assertEquals(new ArrayList<Object>(), conf.getURIList("empty"));
+        ListAssert.assertEquals(new ArrayList<>(), conf.getURIList("empty"));
     }
 
     @Test
@@ -1274,7 +1274,7 @@ public class TestDataConfiguration
         // missing list
         ListAssert.assertEquals(null, conf.getURLList("url.list", null));
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add(new URL("http://jakarta.apache.org"));
         expected.add(new URL("http://www.apache.org"));
 
@@ -1297,13 +1297,13 @@ public class TestDataConfiguration
         ListAssert.assertEquals(expected, conf.getURLList("url.list.interpolated"));
 
         // single URL values
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         expected.add(new URL("http://jakarta.apache.org"));
         ListAssert.assertEquals(expected, conf.getURLList("url.string"));
         ListAssert.assertEquals(expected, conf.getURLList("url.object"));
 
         // empty list
-        ListAssert.assertEquals(new ArrayList<Object>(), conf.getURLList("empty"));
+        ListAssert.assertEquals(new ArrayList<>(), conf.getURLList("empty"));
     }
 
     @Test
@@ -1383,7 +1383,7 @@ public class TestDataConfiguration
         // missing list
         ListAssert.assertEquals(null, conf.getLocaleList("locale.list", null));
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add(Locale.FRENCH);
         expected.add(Locale.GERMAN);
 
@@ -1406,13 +1406,13 @@ public class TestDataConfiguration
         ListAssert.assertEquals(expected, conf.getLocaleList("locale.list.interpolated"));
 
         // single Locale values
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         expected.add(Locale.FRENCH);
         ListAssert.assertEquals(expected, conf.getLocaleList("locale.string"));
         ListAssert.assertEquals(expected, conf.getLocaleList("locale.object"));
 
         // empty list
-        ListAssert.assertEquals(new ArrayList<Object>(), conf.getLocaleList("empty"));
+        ListAssert.assertEquals(new ArrayList<>(), conf.getLocaleList("empty"));
     }
 
     @Test
@@ -1483,7 +1483,7 @@ public class TestDataConfiguration
         // missing list
         ListAssert.assertEquals(null, conf.getColorList("color.list", null));
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add(Color.red);
         expected.add(Color.blue);
 
@@ -1506,13 +1506,13 @@ public class TestDataConfiguration
         ListAssert.assertEquals(expected, conf.getColorList("color.list.interpolated"));
 
         // single Color values
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         expected.add(Color.red);
         ListAssert.assertEquals(expected, conf.getColorList("color.string"));
         ListAssert.assertEquals(expected, conf.getColorList("color.object"));
 
         // empty list
-        ListAssert.assertEquals(new ArrayList<Object>(), conf.getColorList("empty"));
+        ListAssert.assertEquals(new ArrayList<>(), conf.getColorList("empty"));
     }
 
     /**
@@ -1655,7 +1655,7 @@ public class TestDataConfiguration
         List<Date> nullList = null;
         ListAssert.assertEquals(null, conf.getDateList("date.list", nullList));
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add(date1);
         expected.add(date2);
 
@@ -1685,13 +1685,13 @@ public class TestDataConfiguration
         ListAssert.assertEquals(expected, conf.getDateList("date.list.interpolated"));
 
         // single Date values
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         expected.add(date1);
         ListAssert.assertEquals(expected, conf.getDateList("date.string"));
         ListAssert.assertEquals(expected, conf.getDateList("date.object"));
 
         // empty list
-        ListAssert.assertEquals(new ArrayList<Object>(), conf.getDateList("empty"));
+        ListAssert.assertEquals(new ArrayList<>(), conf.getDateList("empty"));
     }
 
     @Test
@@ -1813,7 +1813,7 @@ public class TestDataConfiguration
         List<Calendar> nullList = null;
         ListAssert.assertEquals(null, conf.getCalendarList("calendar.list", nullList));
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add(calendar1);
         expected.add(calendar2);
 
@@ -1843,13 +1843,13 @@ public class TestDataConfiguration
         ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list.interpolated"));
 
         // single Calendar values
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         expected.add(calendar1);
         ListAssert.assertEquals(expected, conf.getCalendarList("date.string"));
         ListAssert.assertEquals(expected, conf.getCalendarList("date.object"));
 
         // empty list
-        ListAssert.assertEquals(new ArrayList<Object>(), conf.getCalendarList("empty"));
+        ListAssert.assertEquals(new ArrayList<>(), conf.getCalendarList("empty"));
     }
 
     @Test

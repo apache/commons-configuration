@@ -60,10 +60,10 @@ public class TestConfigurationAttributePointer
         ndBuilder.name("parent").addAttribute(ATTR_NAME, ATTR_VALUE);
         ImmutableNode nd = ndBuilder.create();
         parent =
-                new ConfigurationNodePointer<ImmutableNode>(nd, Locale.ENGLISH,
+                new ConfigurationNodePointer<>(nd, Locale.ENGLISH,
                         new InMemoryNodeModel(nd).getNodeHandler());
         pointer =
-                new ConfigurationAttributePointer<ImmutableNode>(parent,
+                new ConfigurationAttributePointer<>(parent,
                         ATTR_NAME);
     }
 

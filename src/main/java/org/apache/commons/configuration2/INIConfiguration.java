@@ -379,7 +379,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
     public void read(Reader in) throws ConfigurationException, IOException
     {
         BufferedReader bufferedReader = new BufferedReader(in);
-        Map<String, ImmutableNode.Builder> sectionBuilders = new LinkedHashMap<String, ImmutableNode.Builder>();
+        Map<String, ImmutableNode.Builder> sectionBuilders = new LinkedHashMap<>();
         ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
 
         createNodeBuilders(bufferedReader, rootBuilder, sectionBuilders);
@@ -833,7 +833,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      */
     public Set<String> getSections()
     {
-        Set<String> sections = new LinkedHashSet<String>();
+        Set<String> sections = new LinkedHashSet<>();
         boolean globalSection = false;
         boolean inSection = false;
 
@@ -1037,7 +1037,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
                     if (node == getRootNode())
                     {
                         filteredList =
-                                new ArrayList<ImmutableNode>(children.size());
+                                new ArrayList<>(children.size());
                         for (ImmutableNode child : children)
                         {
                             if (!isSectionNode(child))

@@ -64,7 +64,7 @@ public class EventListenerList
     public EventListenerList()
     {
         listeners =
-                new CopyOnWriteArrayList<EventListenerRegistrationData<?>>();
+                new CopyOnWriteArrayList<>();
     }
 
     /**
@@ -79,7 +79,7 @@ public class EventListenerList
     public <T extends Event> void addEventListener(EventType<T> type,
             EventListener<? super T> listener)
     {
-        listeners.add(new EventListenerRegistrationData<T>(type, listener));
+        listeners.add(new EventListenerRegistrationData<>(type, listener));
     }
 
     /**
@@ -120,7 +120,7 @@ public class EventListenerList
             EventType<T> eventType, EventListener<? super T> listener)
     {
         return !(listener == null || eventType == null)
-                && removeEventListener(new EventListenerRegistrationData<T>(
+                && removeEventListener(new EventListenerRegistrationData<>(
                         eventType, listener));
     }
 
@@ -194,7 +194,7 @@ public class EventListenerList
     public <T extends Event> EventListenerIterator<T> getEventListenerIterator(
             EventType<T> eventType)
     {
-        return new EventListenerIterator<T>(listeners.iterator(), eventType);
+        return new EventListenerIterator<>(listeners.iterator(), eventType);
     }
 
     /**
@@ -225,9 +225,9 @@ public class EventListenerList
             EventType<T> eventType)
     {
         Map<EventType<?>, Set<EventType<?>>> superTypes =
-                new HashMap<EventType<?>, Set<EventType<?>>>();
+                new HashMap<>();
         List<EventListenerRegistrationData<? extends T>> results =
-                new LinkedList<EventListenerRegistrationData<? extends T>>();
+                new LinkedList<>();
 
         for (EventListenerRegistrationData<?> reg : listeners)
         {

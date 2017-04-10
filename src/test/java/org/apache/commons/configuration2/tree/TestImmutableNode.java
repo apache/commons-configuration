@@ -137,7 +137,7 @@ public class TestImmutableNode
     public void testNodeWithChildren()
     {
         final int childCount = 8;
-        List<ImmutableNode> childNodes = new ArrayList<ImmutableNode>(childCount);
+        List<ImmutableNode> childNodes = new ArrayList<>(childCount);
         ImmutableNode.Builder builder = new ImmutableNode.Builder(childCount);
         for (int i = 0; i < childCount; i++)
         {
@@ -158,7 +158,7 @@ public class TestImmutableNode
     {
         final int childCount = 4;
         List<ImmutableNode> childNodes =
-                new ArrayList<ImmutableNode>(childCount);
+                new ArrayList<>(childCount);
         for (int i = 0; i < childCount; i++)
         {
             ImmutableNode.Builder childBuilder = new ImmutableNode.Builder();
@@ -231,7 +231,7 @@ public class TestImmutableNode
     {
         ImmutableNode.Builder builder = setUpBuilder();
         final int attrCount = 4;
-        Map<String, Object> attrs = new HashMap<String, Object>();
+        Map<String, Object> attrs = new HashMap<>();
         for (int i = 0; i < attrCount; i++)
         {
             String attrName = NAME + i;
@@ -284,7 +284,7 @@ public class TestImmutableNode
     {
         ImmutableNode.Builder builder = setUpBuilder();
         final int attrCount = 4;
-        Map<String, Object> attrs = new HashMap<String, Object>();
+        Map<String, Object> attrs = new HashMap<>();
         for (int i = 0; i < attrCount; i++)
         {
             String attrName = NAME + i;
@@ -496,7 +496,7 @@ public class TestImmutableNode
         checkUpdatedNode(node, node2);
         assertSame("Wrong children", node.getChildren(), node2.getChildren());
         Map<String, Object> newAttrs =
-                new HashMap<String, Object>(node.getAttributes());
+                new HashMap<>(node.getAttributes());
         newAttrs.put(ATTR, ATTR_VALUE);
         checkAttributes(node2, newAttrs);
     }
@@ -509,7 +509,7 @@ public class TestImmutableNode
     {
         ImmutableNode.Builder builder = setUpBuilder();
         final String attr2 = ATTR + "_other";
-        Map<String, Object> attrs = new HashMap<String, Object>();
+        Map<String, Object> attrs = new HashMap<>();
         attrs.put(ATTR, ATTR_VALUE);
         attrs.put(attr2, "someValue");
         ImmutableNode node = builder.addAttributes(attrs).create();
@@ -525,7 +525,7 @@ public class TestImmutableNode
     public void testSetAttributes()
     {
         ImmutableNode node = createDefaultNode(VALUE);
-        Map<String, Object> attributes = new HashMap<String, Object>();
+        Map<String, Object> attributes = new HashMap<>();
         attributes.put("newAttribute1", "value1");
         attributes.put("newAttribute2", "value2");
         ImmutableNode node2 = node.setAttributes(attributes);
@@ -614,7 +614,7 @@ public class TestImmutableNode
     {
         final int childCount = 8;
         Collection<ImmutableNode> newChildren =
-                new ArrayList<ImmutableNode>(childCount);
+                new ArrayList<>(childCount);
         for (int i = 0; i < childCount; i++)
         {
             newChildren.add(createChild());

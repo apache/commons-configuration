@@ -265,7 +265,7 @@ public class TestPropertiesConfiguration
     {
         // add an array of strings to the configuration
         conf.addProperty("string", "value1");
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         for (int i = 1; i < 5; i++)
         {
             list.add("value" + i);
@@ -301,7 +301,7 @@ public class TestPropertiesConfiguration
         conf = new PropertiesConfiguration();
         // add an array of strings to the configuration
         conf.addProperty("string", "value1");
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         for (int i = 1; i < 5; i++)
         {
             list.add("value" + i);
@@ -894,7 +894,7 @@ public class TestPropertiesConfiguration
     @Test
     public void testSetIOFactoryWriter() throws ConfigurationException, IOException
     {
-        final MutableObject<Writer> propertiesWriter = new MutableObject<Writer>();
+        final MutableObject<Writer> propertiesWriter = new MutableObject<>();
         conf.setIOFactory(new PropertiesConfiguration.IOFactory()
         {
             @Override
@@ -938,7 +938,7 @@ public class TestPropertiesConfiguration
                 "test.separator.tab\tfoo", "test.separator.whitespace foo",
                 "test.separator.no.space=foo"
         };
-        Set<String> foundLines = new HashSet<String>();
+        Set<String> foundLines = new HashSet<>();
         BufferedReader in = new BufferedReader(new FileReader(
                 testSavePropertiesFile));
         try
@@ -1150,7 +1150,7 @@ public class TestPropertiesConfiguration
         };
         Parameters params = new Parameters();
         FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-                new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+                new FileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         builder.configure(params.fileBased().setFile(testSavePropertiesFile)
                 .setBasePath(ConfigurationAssert.OUT_DIR.toURI().toString())

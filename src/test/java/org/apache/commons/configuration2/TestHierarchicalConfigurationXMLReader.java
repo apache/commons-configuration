@@ -51,7 +51,7 @@ public class TestHierarchicalConfigurationXMLReader
         XMLConfiguration config = new XMLConfiguration();
         FileHandler handler = new FileHandler(config);
         handler.load(TEST_FILE);
-        parser = new HierarchicalConfigurationXMLReader<ImmutableNode>(config);
+        parser = new HierarchicalConfigurationXMLReader<>(config);
     }
 
     @Test

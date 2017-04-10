@@ -71,7 +71,7 @@ public class TestHierarchicalConfigurationEvents extends
     public void testAddNodesEvent()
     {
         BaseHierarchicalConfiguration hc = (BaseHierarchicalConfiguration) config;
-        Collection<ImmutableNode> nodes = new ArrayList<ImmutableNode>(1);
+        Collection<ImmutableNode> nodes = new ArrayList<>(1);
         nodes.add(NodeStructureHelper.createNode("a_key", TEST_PROPVALUE));
         hc.addNodes(TEST_PROPNAME, nodes);
         listener.checkEvent(ConfigurationEvent.ADD_NODES, TEST_PROPNAME,

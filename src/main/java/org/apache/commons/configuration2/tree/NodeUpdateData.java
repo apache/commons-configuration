@@ -141,7 +141,7 @@ public class NodeUpdateData<T>
         }
         else
         {
-            return Collections.unmodifiableMap(new HashMap<K, V>(map));
+            return Collections.unmodifiableMap(new HashMap<>(map));
         }
     }
 
@@ -161,7 +161,7 @@ public class NodeUpdateData<T>
         }
         else
         {
-            return Collections.unmodifiableCollection(new ArrayList<T>(col));
+            return Collections.unmodifiableCollection(new ArrayList<>(col));
         }
     }
 }

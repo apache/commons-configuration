@@ -353,7 +353,7 @@ class XMLDocumentHelper
     private static Map<Node, Node> createElementMapping(Document doc1,
             Document doc2)
     {
-        Map<Node, Node> mapping = new HashMap<Node, Node>();
+        Map<Node, Node> mapping = new HashMap<>();
         createElementMappingForNodes(doc1.getDocumentElement(),
                 doc2.getDocumentElement(), mapping);
         return mapping;

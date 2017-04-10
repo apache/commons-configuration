@@ -218,7 +218,7 @@ public class BaseConfigurationBuilderProvider implements
             throws Exception
     {
         Collection<BuilderParameters> params =
-                new ArrayList<BuilderParameters>(
+                new ArrayList<>(
                         getParameterClasses().size());
         for (String paramcls : getParameterClasses())
         {
@@ -393,7 +393,7 @@ public class BaseConfigurationBuilderProvider implements
         }
         else
         {
-            return Collections.unmodifiableCollection(new ArrayList<String>(
+            return Collections.unmodifiableCollection(new ArrayList<>(
                     paramCls));
         }
     }

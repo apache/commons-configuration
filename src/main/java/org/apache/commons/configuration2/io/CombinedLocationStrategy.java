@@ -72,7 +72,7 @@ public class CombinedLocationStrategy implements FileLocationStrategy
         }
         subStrategies =
                 Collections
-                        .unmodifiableCollection(new ArrayList<FileLocationStrategy>(
+                        .unmodifiableCollection(new ArrayList<>(
                                 subs));
         if (subStrategies.contains(null))
         {

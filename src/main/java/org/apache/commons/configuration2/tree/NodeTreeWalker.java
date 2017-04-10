@@ -140,7 +140,7 @@ public class NodeTreeWalker
     private static <T> void bfs(T root, ConfigurationNodeVisitor<T> visitor,
             NodeHandler<T> handler)
     {
-        List<T> pendingNodes = new LinkedList<T>();
+        List<T> pendingNodes = new LinkedList<>();
         pendingNodes.add(root);
         boolean cancel = false;
 

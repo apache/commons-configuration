@@ -268,14 +268,14 @@ public class TestBaseHierarchicalConfigurationSynchronization
             throws ConfigurationException
     {
         FileBasedConfigurationBuilder<XMLConfiguration> builder =
-                new FileBasedConfigurationBuilder<XMLConfiguration>(
+                new FileBasedConfigurationBuilder<>(
                         XMLConfiguration.class);
         builder.configure(new Parameters().fileBased().setFile(testFile));
         config = builder.getConfiguration();
 
         CountDownLatch startLatch = new CountDownLatch(1);
         Collection<SubNodeAccessThread> threads =
-                new ArrayList<SubNodeAccessThread>();
+                new ArrayList<>();
         for (int i = 0; i < 4; i++)
         {
             SubNodeAccessThread t =

@@ -211,7 +211,7 @@ public class TestDisabledListDelimiterHandler
     @Test
     public void testFlattenCollectionWithArrayWithLimit()
     {
-        Collection<Object> src = new ArrayList<Object>(2);
+        Collection<Object> src = new ArrayList<>(2);
         src.add(STR_VALUE);
         src.add(VALUES);
         Collection<?> res = handler.flatten(src, 2);

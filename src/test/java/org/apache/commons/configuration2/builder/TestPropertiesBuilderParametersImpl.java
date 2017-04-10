@@ -140,7 +140,7 @@ public class TestPropertiesBuilderParametersImpl
         PropertiesConfiguration.IOFactory factory =
                 new PropertiesConfiguration.DefaultIOFactory();
         ConfigurationBuilder<PropertiesConfiguration> builder =
-                new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+                new FileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class)
                 .configure(params.setIOFactory(factory));
 

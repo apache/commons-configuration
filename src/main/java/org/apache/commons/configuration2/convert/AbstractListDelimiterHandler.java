@@ -74,7 +74,7 @@ public abstract class AbstractListDelimiterHandler implements
     {
         if (s == null)
         {
-            return new ArrayList<String>(0);
+            return new ArrayList<>(0);
         }
         return splitString(s, trim);
     }
@@ -140,7 +140,7 @@ public abstract class AbstractListDelimiterHandler implements
             return split((String) value, true);
         }
 
-        Collection<Object> result = new LinkedList<Object>();
+        Collection<Object> result = new LinkedList<>();
         if (value instanceof Iterable)
         {
             flattenIterator(result, ((Iterable<?>) value).iterator(), limit);

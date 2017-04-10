@@ -706,7 +706,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     protected ConfigurationBuilder<? extends HierarchicalConfiguration<?>> createXMLDefinitionBuilder(
             BuilderParameters builderParams)
     {
-        return new FileBasedConfigurationBuilder<XMLConfiguration>(
+        return new FileBasedConfigurationBuilder<>(
                 XMLConfiguration.class).configure(builderParams);
     }
 
@@ -848,7 +848,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             HierarchicalConfiguration<?> defConfig, Configuration resultConfig)
             throws ConfigurationException
     {
-        Map<String, Lookup> lookups = new HashMap<String, Lookup>();
+        Map<String, Lookup> lookups = new HashMap<>();
 
         List<? extends HierarchicalConfiguration<?>> nodes =
                 defConfig.configurationsAt(KEY_CONFIGURATION_LOOKUPS);
@@ -1341,7 +1341,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     private static Map<String, ConfigurationBuilderProvider> createDefaultProviders()
     {
         Map<String, ConfigurationBuilderProvider> providers =
-                new HashMap<String, ConfigurationBuilderProvider>();
+                new HashMap<>();
         for (int i = 0; i < DEFAULT_TAGS.length; i++)
         {
             providers.put(DEFAULT_TAGS[i], DEFAULT_PROVIDERS[i]);
@@ -1381,13 +1381,13 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         public ConfigurationSourceData()
         {
             overrideBuilders =
-                    new LinkedList<HierarchicalConfiguration<?>>();
+                    new LinkedList<>();
             unionBuilders =
-                    new LinkedList<HierarchicalConfiguration<?>>();
+                    new LinkedList<>();
             namedBuilders =
-                    new HashMap<String, ConfigurationBuilder<? extends Configuration>>();
+                    new HashMap<>();
             allBuilders =
-                    new LinkedList<ConfigurationBuilder<? extends Configuration>>();
+                    new LinkedList<>();
         }
 
         /**

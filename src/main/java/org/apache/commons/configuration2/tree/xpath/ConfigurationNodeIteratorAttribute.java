@@ -65,7 +65,7 @@ class ConfigurationNodeIteratorAttribute<T> extends
     @Override
     protected NodePointer createNodePointer(int position)
     {
-        return new ConfigurationAttributePointer<T>(parentPointer,
+        return new ConfigurationAttributePointer<>(parentPointer,
                 attributeNames.get(position));
     }
 
@@ -91,7 +91,7 @@ class ConfigurationNodeIteratorAttribute<T> extends
     private List<String> createAttributeDataList(
             ConfigurationNodePointer<T> parent, QName name)
     {
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
         if (!WILDCARD.equals(name.getName()))
         {
             addAttributeData(parent, result, qualifiedName(name));
@@ -99,7 +99,7 @@ class ConfigurationNodeIteratorAttribute<T> extends
         else
         {
             Set<String> names =
-                    new LinkedHashSet<String>(parent.getNodeHandler()
+                    new LinkedHashSet<>(parent.getNodeHandler()
                             .getAttributes(parent.getConfigurationNode()));
             String prefix =
                     (name.getPrefix() != null) ? prefixName(name.getPrefix(),

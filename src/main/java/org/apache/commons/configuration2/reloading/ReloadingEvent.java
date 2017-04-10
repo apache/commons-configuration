@@ -36,7 +36,7 @@ public class ReloadingEvent extends Event
 {
     /** The common event super type for all reloading events. */
     public static final EventType<ReloadingEvent> ANY =
-            new EventType<ReloadingEvent>(Event.ANY, "RELOAD");
+            new EventType<>(Event.ANY, "RELOAD");
 
     /**
      * The serial version UID.

@@ -303,7 +303,7 @@ public class TestXMLDocumentHelper
      */
     private static Collection<Node> findTextElements(Document document)
     {
-        Collection<Node> texts = new HashSet<Node>();
+        Collection<Node> texts = new HashSet<>();
         findTextElementsForNode(document.getDocumentElement(), texts);
         return texts;
     }

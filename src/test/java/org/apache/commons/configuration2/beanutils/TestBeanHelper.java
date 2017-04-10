@@ -413,18 +413,18 @@ public class TestBeanHelper
     private BeanDeclarationTestImpl setUpBeanDeclaration()
     {
         BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
-        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put("stringValue", TEST_STRING);
         properties.put("intValue", String.valueOf(TEST_INT));
         data.setBeanProperties(properties);
         BeanDeclarationTestImpl buddyData = new BeanDeclarationTestImpl();
-        Map<String, Object> properties2 = new HashMap<String, Object>();
+        Map<String, Object> properties2 = new HashMap<>();
         properties2.put("stringValue", "Another test string");
         properties2.put("intValue", new Integer(100));
         buddyData.setBeanProperties(properties2);
         buddyData.setBeanClassName(BeanCreationTestBean.class.getName());
 
-        Map<String, Object> nested = new HashMap<String, Object>();
+        Map<String, Object> nested = new HashMap<>();
         nested.put("buddy", buddyData);
         data.setNestedBeanDeclarations(nested);
         return data;
@@ -440,15 +440,15 @@ public class TestBeanHelper
     private BeanDeclarationTestImpl setUpBeanDeclarationWithListChild()
     {
         BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
-        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put("stringValue", TEST_STRING);
         properties.put("intValue", String.valueOf(TEST_INT));
         data.setBeanProperties(properties);
 
-        List<BeanDeclaration> childData = new ArrayList<BeanDeclaration>();
+        List<BeanDeclaration> childData = new ArrayList<>();
         childData.add(createChildBean("child1"));
         childData.add(createChildBean("child2"));
-        Map<String, Object> nested = new HashMap<String, Object>();
+        Map<String, Object> nested = new HashMap<>();
         nested.put("children", childData);
         data.setNestedBeanDeclarations(nested);
         return data;
@@ -464,7 +464,7 @@ public class TestBeanHelper
     private BeanDeclarationTestImpl createChildBean(String name)
     {
         BeanDeclarationTestImpl childBean = new BeanDeclarationTestImpl();
-        Map<String, Object> properties2 = new HashMap<String, Object>();
+        Map<String, Object> properties2 = new HashMap<>();
         properties2.put("stringValue", name + " Another test string");
         properties2.put("intValue", new Integer(100));
         childBean.setBeanProperties(properties2);

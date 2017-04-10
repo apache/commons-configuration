@@ -338,7 +338,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
             Collection<NodeSelector> selectors)
     {
         List<HierarchicalConfiguration<ImmutableNode>> configs =
-                new ArrayList<HierarchicalConfiguration<ImmutableNode>>(
+                new ArrayList<>(
                         selectors.size());
         for (NodeSelector selector : selectors)
         {
@@ -459,7 +459,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         }
 
         List<HierarchicalConfiguration<ImmutableNode>> results =
-                new ArrayList<HierarchicalConfiguration<ImmutableNode>>(
+                new ArrayList<>(
                         nodes.size());
         for (ImmutableNode node : nodes)
         {
@@ -540,7 +540,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
 
         ImmutableNode parent = nodes.get(0);
         List<HierarchicalConfiguration<ImmutableNode>> subs =
-                new ArrayList<HierarchicalConfiguration<ImmutableNode>>(parent
+                new ArrayList<>(parent
                         .getChildren().size());
         for (ImmutableNode node : parent.getChildren())
         {
@@ -678,7 +678,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
             List<? extends HierarchicalConfiguration<?>> subs)
     {
         List<ImmutableHierarchicalConfiguration> res =
-                new ArrayList<ImmutableHierarchicalConfiguration>(subs.size());
+                new ArrayList<>(subs.size());
         for (HierarchicalConfiguration<?> sub : subs)
         {
             res.add(ConfigurationUtils.unmodifiableConfiguration(sub));
@@ -803,7 +803,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
                 ReferenceNodeHandler refHandler)
         {
             Collection<ImmutableNode> subNodes =
-                    new LinkedList<ImmutableNode>(refHandler.getChildren(node));
+                    new LinkedList<>(refHandler.getChildren(node));
             Iterator<ImmutableNode> children = subNodes.iterator();
             ImmutableNode sibling1;
             ImmutableNode nd = null;
@@ -822,7 +822,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
                 {
                     // find all following new nodes
                     List<ImmutableNode> newNodes =
-                            new LinkedList<ImmutableNode>();
+                            new LinkedList<>();
                     newNodes.add(nd);
                     while (children.hasNext())
                     {
@@ -872,7 +872,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          */
         public InterpolatedVisitor()
         {
-            builderStack = new LinkedList<ImmutableNode.Builder>();
+            builderStack = new LinkedList<>();
         }
 
         /**
@@ -976,7 +976,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         {
             Object value = interpolate(node.getValue());
             Map<String, Object> interpolatedAttributes =
-                    new HashMap<String, Object>();
+                    new HashMap<>();
             boolean attributeChanged =
                     interpolateAttributes(node, handler, interpolatedAttributes);
             ImmutableNode newNode =
@@ -1044,7 +1044,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         private Map<String, Object> interpolateAttributes(ImmutableNode node,
                 NodeHandler<ImmutableNode> handler)
         {
-            Map<String, Object> attributes = new HashMap<String, Object>();
+            Map<String, Object> attributes = new HashMap<>();
             interpolateAttributes(node, handler, attributes);
             return attributes;
         }

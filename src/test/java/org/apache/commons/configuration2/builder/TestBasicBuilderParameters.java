@@ -79,7 +79,7 @@ public class TestBasicBuilderParameters
     public void testGetParametersDefensiveCopy()
     {
         Map<String, Object> map1 = params.getParameters();
-        Map<String, Object> mapCopy = new HashMap<String, Object>(map1);
+        Map<String, Object> mapCopy = new HashMap<>(map1);
         map1.put("otherProperty", "value");
         Map<String, Object> map2 = params.getParameters();
         assertNotSame("Same map returned", map1, map2);
@@ -255,7 +255,7 @@ public class TestBasicBuilderParameters
     {
         ListDelimiterHandler handler1 = EasyMock.createMock(ListDelimiterHandler.class);
         ListDelimiterHandler handler2 = EasyMock.createMock(ListDelimiterHandler.class);
-        Map<String, Object> props = new HashMap<String, Object>();
+        Map<String, Object> props = new HashMap<>();
         props.put("throwExceptionOnMissing", Boolean.TRUE);
         props.put("listDelimiterHandler", handler1);
         props.put("other", "test");
@@ -289,7 +289,7 @@ public class TestBasicBuilderParameters
         Lookup l1 = EasyMock.createMock(Lookup.class);
         Lookup l2 = EasyMock.createMock(Lookup.class);
         Lookup l3 = EasyMock.createMock(Lookup.class);
-        Map<String, Lookup> prefixLookups = new HashMap<String, Lookup>();
+        Map<String, Lookup> prefixLookups = new HashMap<>();
         prefixLookups.put("p1", l1);
         prefixLookups.put("p2", l2);
         Collection<Lookup> defLookups = Collections.singleton(l3);
@@ -332,7 +332,7 @@ public class TestBasicBuilderParameters
     @Test(expected = IllegalArgumentException.class)
     public void testFetchInterpolatorSpecificationInvalidDataType()
     {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("interpolator", this);
         BasicBuilderParameters.fetchInterpolatorSpecification(map);
     }
@@ -344,8 +344,8 @@ public class TestBasicBuilderParameters
     @Test(expected = IllegalArgumentException.class)
     public void testFetchInterpolatorSpecificationInvalidMapKey()
     {
-        Map<String, Object> map = new HashMap<String, Object>();
-        Map<Object, Object> prefix = new HashMap<Object, Object>();
+        Map<String, Object> map = new HashMap<>();
+        Map<Object, Object> prefix = new HashMap<>();
         prefix.put(42, EasyMock.createMock(Lookup.class));
         map.put("prefixLookups", prefix);
         BasicBuilderParameters.fetchInterpolatorSpecification(map);
@@ -358,8 +358,8 @@ public class TestBasicBuilderParameters
     @Test(expected = IllegalArgumentException.class)
     public void testFetchInterpolatorSpecificationInvalidMapValue()
     {
-        Map<String, Object> map = new HashMap<String, Object>();
-        Map<Object, Object> prefix = new HashMap<Object, Object>();
+        Map<String, Object> map = new HashMap<>();
+        Map<Object, Object> prefix = new HashMap<>();
         prefix.put("test", this);
         map.put("prefixLookups", prefix);
         BasicBuilderParameters.fetchInterpolatorSpecification(map);
@@ -372,7 +372,7 @@ public class TestBasicBuilderParameters
     @Test(expected = IllegalArgumentException.class)
     public void testFetchInterpolatorSpecificationInvalidCollectionValue()
     {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("defaultLookups", Collections.singleton("not a lookup"));
         BasicBuilderParameters.fetchInterpolatorSpecification(map);
     }

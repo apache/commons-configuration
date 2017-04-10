@@ -240,7 +240,7 @@ public class TestINIConfiguration
     	String input = MessageFormat.format(INI_DATA4, "=").trim();
     	String expectedOutput = MessageFormat.format(INI_DATA4, outputSeparator).trim();
 
-    	INIConfiguration instance = new FileBasedConfigurationBuilder<INIConfiguration>(
+    	INIConfiguration instance = new FileBasedConfigurationBuilder<>(
     	        INIConfiguration.class)
                 .configure(new Parameters().ini().setSeparatorUsedInOutput(outputSeparator))
                 .getConfiguration();
@@ -336,7 +336,7 @@ public class TestINIConfiguration
     {
         File file = writeTestFile(INI_DATA);
         FileBasedConfigurationBuilder<INIConfiguration> builder =
-                new FileBasedConfigurationBuilder<INIConfiguration>(
+                new FileBasedConfigurationBuilder<>(
                         INIConfiguration.class);
         builder.configure(new FileBasedBuilderParametersImpl()
                 .setFile(file));
@@ -417,7 +417,7 @@ public class TestINIConfiguration
         INIConfiguration instance = new INIConfiguration();
         instance.addProperty("test1.foo", "bar");
         instance.addProperty("test2.foo", "abc");
-        Set<String> expResult = new HashSet<String>();
+        Set<String> expResult = new HashSet<>();
         expResult.add("test1");
         expResult.add("test2");
         Set<String> result = instance.getSections();

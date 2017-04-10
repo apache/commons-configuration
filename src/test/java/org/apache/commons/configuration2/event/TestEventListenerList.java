@@ -58,9 +58,9 @@ public class TestEventListenerList
     @BeforeClass
     public static void setUpBeforeClass() throws Exception
     {
-        typeBase = new EventType<EventBase>(Event.ANY, "BASE");
-        typeSub1 = new EventType<EventSub1>(typeBase, "SUB1");
-        typeSub2 = new EventType<EventSub2>(typeBase, "SUB2");
+        typeBase = new EventType<>(Event.ANY, "BASE");
+        typeSub1 = new EventType<>(typeBase, "SUB1");
+        typeSub2 = new EventType<>(typeBase, "SUB2");
     }
 
     @Before
@@ -178,7 +178,7 @@ public class TestEventListenerList
     {
         ListenerTestImpl listener = new ListenerTestImpl();
         EventListenerRegistrationData<EventSub1> regData =
-                new EventListenerRegistrationData<EventSub1>(typeSub1, listener);
+                new EventListenerRegistrationData<>(typeSub1, listener);
         list.addEventListener(regData);
 
         list.fire(new EventSub1(this, typeSub1, MESSAGE));
@@ -286,7 +286,7 @@ public class TestEventListenerList
      */
     private static <T> List<T> fetchElements(Iterable<? extends T> iterable)
     {
-        List<T> elems = new LinkedList<T>();
+        List<T> elems = new LinkedList<>();
         for (T listener : iterable)
         {
             elems.add(listener);
@@ -433,10 +433,10 @@ public class TestEventListenerList
     public void testGetRegistrations()
     {
         EventListenerRegistrationData<EventSub1> reg1 =
-                new EventListenerRegistrationData<EventSub1>(typeSub1,
+                new EventListenerRegistrationData<>(typeSub1,
                         new ListenerTestImpl());
         EventListenerRegistrationData<EventSub2> reg2 =
-                new EventListenerRegistrationData<EventSub2>(typeSub2,
+                new EventListenerRegistrationData<>(typeSub2,
                         new ListenerTestImpl());
         list.addEventListener(reg1);
         list.addEventListener(reg2);
@@ -455,7 +455,7 @@ public class TestEventListenerList
     public void testGetRegistrationsModify()
     {
         list.getRegistrations().add(
-                new EventListenerRegistrationData<EventBase>(typeBase,
+                new EventListenerRegistrationData<>(typeBase,
                         new ListenerTestImpl()));
     }
 

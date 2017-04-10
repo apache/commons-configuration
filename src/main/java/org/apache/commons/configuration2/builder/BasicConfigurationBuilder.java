@@ -231,7 +231,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
             Map<String, Object> params)
     {
         Map<String, Object> newParams =
-                new HashMap<String, Object>(getParameters());
+                new HashMap<>(getParameters());
         if (params != null)
         {
             newParams.putAll(params);
@@ -251,7 +251,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      */
     public BasicConfigurationBuilder<T> configure(BuilderParameters... params)
     {
-        Map<String, Object> newParams = new HashMap<String, Object>();
+        Map<String, Object> newParams = new HashMap<>();
         for (BuilderParameters p : params)
         {
             newParams.putAll(p.getParameters());
@@ -643,7 +643,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      */
     private void updateParameters(Map<String, Object> newParams)
     {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         if (newParams != null)
         {
             map.putAll(newParams);
@@ -739,7 +739,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     private Map<String, Object> getFilteredParameters()
     {
         Map<String, Object> filteredMap =
-                new HashMap<String, Object>(getParameters());
+                new HashMap<>(getParameters());
         for (Iterator<String> it = filteredMap.keySet().iterator(); it
                 .hasNext();)
         {

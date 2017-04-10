@@ -55,7 +55,7 @@ public class TestNodeAddData
     public void testPathNodesNull()
     {
         NodeAddData<ImmutableNode> data =
-                new NodeAddData<ImmutableNode>(parentNode, TEST_NODENAME,
+                new NodeAddData<>(parentNode, TEST_NODENAME,
                         false, null);
         assertTrue("Got path nodes", data.getPathNodes().isEmpty());
     }
@@ -68,7 +68,7 @@ public class TestNodeAddData
     public void testPathNodesNullModify()
     {
         NodeAddData<ImmutableNode> data =
-                new NodeAddData<ImmutableNode>(parentNode, TEST_NODENAME,
+                new NodeAddData<>(parentNode, TEST_NODENAME,
                         false, null);
         data.getPathNodes().add("test");
     }
@@ -80,10 +80,10 @@ public class TestNodeAddData
     @Test
     public void testInitPathNodesDefensiveCopy()
     {
-        List<String> pathNodes = new ArrayList<String>();
+        List<String> pathNodes = new ArrayList<>();
         pathNodes.add(PATH_NODE_NAME);
         NodeAddData<ImmutableNode> data =
-                new NodeAddData<ImmutableNode>(parentNode, TEST_NODENAME,
+                new NodeAddData<>(parentNode, TEST_NODENAME,
                         false, pathNodes);
         pathNodes.add("anotherNode");
         assertEquals("Wrong number of path nodes", 1, data.getPathNodes()
@@ -100,7 +100,7 @@ public class TestNodeAddData
     public void testPathNodesDefinedModify()
     {
         NodeAddData<ImmutableNode> data =
-                new NodeAddData<ImmutableNode>(parentNode, TEST_NODENAME,
+                new NodeAddData<>(parentNode, TEST_NODENAME,
                         false, Collections.singleton(PATH_NODE_NAME));
         data.getPathNodes().add("anotherNode");
     }

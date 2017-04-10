@@ -235,7 +235,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
             out.print(padding + quoteString(node.getNodeName()) + " = ");
         }
 
-        List<ImmutableNode> children = new ArrayList<ImmutableNode>(node.getChildren());
+        List<ImmutableNode> children = new ArrayList<>(node.getChildren());
         if (!children.isEmpty())
         {
             // skip a line, except for the root dictionary
@@ -471,7 +471,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
      */
     private static Map<String, Object> transformMap(Map<?, ?> src)
     {
-        Map<String, Object> dest = new HashMap<String, Object>();
+        Map<String, Object> dest = new HashMap<>();
         for (Map.Entry<?, ?> e : src.entrySet())
         {
             if (e.getKey() instanceof String)

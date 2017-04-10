@@ -70,7 +70,7 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
             @Override
             public Map<?, ?> getParameterMap()
             {
-                return new HashMap<Object, Object>();
+                return new HashMap<>();
             }
         };
 

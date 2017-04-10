@@ -103,7 +103,7 @@ public abstract class TestAbstractConfiguration
         List<Object> list = config.getList("key3");
         assertNotNull("no list found for the 'key3' property", list);
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add("value3");
         expected.add("value4");
         expected.add("value5");
@@ -153,7 +153,7 @@ public abstract class TestAbstractConfiguration
         Configuration config = getConfiguration();
         Iterator<String> keys = config.getKeys();
 
-        List<String> expectedKeys = new ArrayList<String>();
+        List<String> expectedKeys = new ArrayList<>();
         expectedKeys.add("key1");
         expectedKeys.add("key2");
         expectedKeys.add("list");
@@ -162,7 +162,7 @@ public abstract class TestAbstractConfiguration
         assertNotNull("null iterator", keys);
         assertTrue("empty iterator", keys.hasNext());
 
-        List<String> actualKeys = new ArrayList<String>();
+        List<String> actualKeys = new ArrayList<>();
         while (keys.hasNext())
         {
             actualKeys.add(keys.next());

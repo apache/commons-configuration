@@ -47,10 +47,10 @@ public class TestReloadingFileBasedConfigurationBuilder
     @Test
     public void testGetConfigurationNoLocation() throws ConfigurationException
     {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("throwExceptionOnMissing", Boolean.TRUE);
         ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-                new ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration>(
+                new ReloadingFileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class, params);
         PropertiesConfiguration conf = builder.getConfiguration();
         assertTrue("Property not set", conf.isThrowExceptionOnMissing());
@@ -65,7 +65,7 @@ public class TestReloadingFileBasedConfigurationBuilder
     public void testCreateReloadingDetectorDefaultFactory() throws ConfigurationException
     {
         ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-                new ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration>(
+                new ReloadingFileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         FileHandler handler = new FileHandler();
         FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
@@ -98,7 +98,7 @@ public class TestReloadingFileBasedConfigurationBuilder
         EasyMock.replay(detector, factory);
         params.setReloadingDetectorFactory(factory);
         ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-                new ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration>(
+                new ReloadingFileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         assertSame("Wrong detector", detector,
                 builder.createReloadingDetector(handler, params));
@@ -160,7 +160,7 @@ public class TestReloadingFileBasedConfigurationBuilder
     public void testReloadingDetectorNoFileHandler()
     {
         ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-                new ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration>(
+                new ReloadingFileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         ReloadingDetector ctrlDetector =
                 builder.getReloadingController().getDetector();
@@ -221,7 +221,7 @@ public class TestReloadingFileBasedConfigurationBuilder
     public void testInitAllowFailOnInitFlag()
     {
         ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-                new ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration>(
+                new ReloadingFileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class, null, true);
         assertTrue("Flag not set", builder.isAllowFailOnInit());
     }

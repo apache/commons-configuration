@@ -63,7 +63,7 @@ public class TestReloadingCombinedConfigurationBuilder
                         .getTestFile("testDigesterConfiguration.xml");
         builder.configure(new CombinedBuilderParametersImpl()
                 .setDefinitionBuilder(
-                        new FileBasedConfigurationBuilder<XMLConfiguration>(
+                        new FileBasedConfigurationBuilder<>(
                                 XMLConfiguration.class))
                 .setDefinitionBuilderParameters(
                         new FileBasedBuilderParametersImpl().setFile(testFile)));

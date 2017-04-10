@@ -290,7 +290,7 @@ public class TestConfigurationInterpolator
     {
         Lookup l1 = setUpTestLookup();
         Lookup l2 = setUpTestLookup("someVar", "someValue");
-        Map<String, Lookup> lookups = new HashMap<String, Lookup>();
+        Map<String, Lookup> lookups = new HashMap<>();
         lookups.put(TEST_PREFIX, l1);
         String prefix2 = TEST_PREFIX + "_other";
         lookups.put(prefix2, l2);
@@ -328,7 +328,7 @@ public class TestConfigurationInterpolator
     @Test
     public void testAddDefaultLookups()
     {
-        List<Lookup> lookups = new ArrayList<Lookup>();
+        List<Lookup> lookups = new ArrayList<>();
         lookups.add(setUpTestLookup());
         lookups.add(setUpTestLookup("test", "value"));
         interpolator.addDefaultLookups(lookups);
@@ -367,7 +367,7 @@ public class TestConfigurationInterpolator
     @Test
     public void testRemoveDefaultLookup()
     {
-        List<Lookup> lookups = new ArrayList<Lookup>();
+        List<Lookup> lookups = new ArrayList<>();
         lookups.add(setUpTestLookup());
         lookups.add(setUpTestLookup("test", "value"));
         interpolator.addDefaultLookups(lookups);

@@ -314,7 +314,7 @@ public class TestJNDIConfiguration {
     @Test
     public void testGetKeysWithCycles() throws NamingException
     {
-        Hashtable<Object, Object> env = new Hashtable<Object, Object>();
+        Hashtable<Object, Object> env = new Hashtable<>();
         env.put(MockInitialContextFactory.PROP_CYCLES, Boolean.TRUE);
         InitialContext initCtx = new InitialContext(env);
         JNDIConfiguration c = new JNDIConfiguration(initCtx);

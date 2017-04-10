@@ -97,7 +97,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      */
     public BasicBuilderParameters()
     {
-        properties = new HashMap<String, Object>();
+        properties = new HashMap<>();
     }
 
     /**
@@ -110,7 +110,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
     public Map<String, Object> getParameters()
     {
         HashMap<String, Object> result =
-                new HashMap<String, Object>(properties);
+                new HashMap<>(properties);
         if (result.containsKey(PROP_INTERPOLATOR))
         {
             // A custom ConfigurationInterpolator overrides lookups
@@ -199,7 +199,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
         else
         {
             return setProperty(PROP_PREFIX_LOOKUPS,
-                    new HashMap<String, Lookup>(lookups));
+                    new HashMap<>(lookups));
         }
     }
 
@@ -219,7 +219,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
         }
         else
         {
-            return setProperty(PROP_DEFAULT_LOOKUPS, new ArrayList<Lookup>(
+            return setProperty(PROP_DEFAULT_LOOKUPS, new ArrayList<>(
                     lookups));
         }
     }
@@ -491,13 +491,13 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
                 fetchPrefixLookups(params);
         if (prefixLookups != null)
         {
-            params.put(PROP_PREFIX_LOOKUPS, new HashMap<String, Lookup>(
+            params.put(PROP_PREFIX_LOOKUPS, new HashMap<>(
                     prefixLookups));
         }
         Collection<? extends Lookup> defLookups = fetchDefaultLookups(params);
         if (defLookups != null)
         {
-            params.put(PROP_DEFAULT_LOOKUPS, new ArrayList<Lookup>(defLookups));
+            params.put(PROP_DEFAULT_LOOKUPS, new ArrayList<>(defLookups));
         }
     }
 

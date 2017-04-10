@@ -59,7 +59,7 @@ public class ConfigurationErrorEvent extends Event
      * @since 2.0
      */
     public static final EventType<ConfigurationErrorEvent> ANY =
-            new EventType<ConfigurationErrorEvent>(Event.ANY, "ERROR");
+            new EventType<>(Event.ANY, "ERROR");
 
     /**
      * Constant for the event type indicating a read error. Errors of this type
@@ -69,7 +69,7 @@ public class ConfigurationErrorEvent extends Event
      * @since 2.0
      */
     public static final EventType<ConfigurationErrorEvent> READ =
-            new EventType<ConfigurationErrorEvent>(ANY, "READ_ERROR");
+            new EventType<>(ANY, "READ_ERROR");
 
     /**
      * Constant for the event type indicating a write error. Errors of this type
@@ -79,7 +79,7 @@ public class ConfigurationErrorEvent extends Event
      * @since 2.0
      */
     public static final EventType<ConfigurationErrorEvent> WRITE =
-            new EventType<ConfigurationErrorEvent>(ANY, "WRITE_ERROR");
+            new EventType<>(ANY, "WRITE_ERROR");
 
     /**
      * The serial version UID.

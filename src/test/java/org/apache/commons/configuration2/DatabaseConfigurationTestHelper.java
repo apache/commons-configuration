@@ -179,7 +179,7 @@ public class DatabaseConfigurationTestHelper
     public <T extends DatabaseConfiguration> T createConfig(Class<T> configCls,
             DatabaseBuilderParameters params) throws ConfigurationException
     {
-        return new BasicConfigurationBuilder<T>(configCls).configure(params)
+        return new BasicConfigurationBuilder<>(configCls).configure(params)
                 .getConfiguration();
     }
 

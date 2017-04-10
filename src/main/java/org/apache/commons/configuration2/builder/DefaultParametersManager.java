@@ -56,7 +56,7 @@ public class DefaultParametersManager
      */
     public DefaultParametersManager()
     {
-        defaultHandlers = new CopyOnWriteArrayList<DefaultHandlerData>();
+        defaultHandlers = new CopyOnWriteArrayList<>();
     }
 
     /**
@@ -170,7 +170,7 @@ public class DefaultParametersManager
             Class<?> startClass)
     {
         Collection<DefaultHandlerData> toRemove =
-                new LinkedList<DefaultHandlerData>();
+                new LinkedList<>();
         for (DefaultHandlerData dhd : defaultHandlers)
         {
             if (dhd.isOccurrence(handler, startClass))

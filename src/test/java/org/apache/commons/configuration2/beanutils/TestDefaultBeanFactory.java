@@ -152,7 +152,7 @@ public class TestDefaultBeanFactory
     public void testCreateBean() throws Exception
     {
         BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
-        Map<String, Object> props = new HashMap<String, Object>();
+        Map<String, Object> props = new HashMap<>();
         props.put("throwExceptionOnMissing", Boolean.TRUE);
         decl.setBeanProperties(props);
         Object bean = factory.createBean(createBcc(PropertiesConfiguration.class, decl));
@@ -171,7 +171,7 @@ public class TestDefaultBeanFactory
     public void testCreateBeanConstructor() throws Exception
     {
         BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
-        Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
+        Collection<ConstructorArg> args = new ArrayList<>();
         args.add(ConstructorArg.forValue("test"));
         args.add(ConstructorArg.forValue("42"));
         decl.setConstructorArgs(args);
@@ -190,7 +190,7 @@ public class TestDefaultBeanFactory
     public void testCreateBeanConstructorNestedBean() throws Exception
     {
         BeanDeclarationTestImpl declNested = new BeanDeclarationTestImpl();
-        Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
+        Collection<ConstructorArg> args = new ArrayList<>();
         args.add(ConstructorArg.forValue("test", String.class.getName()));
         declNested.setConstructorArgs(args);
         declNested.setBeanClassName(BeanCreationTestCtorBean.class.getName());
@@ -227,7 +227,7 @@ public class TestDefaultBeanFactory
     public void testFindMatchingConstructorArgCount()
     {
         BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
-        Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
+        Collection<ConstructorArg> args = new ArrayList<>();
         args.add(ConstructorArg.forValue(TEST_STRING));
         args.add(ConstructorArg.forValue(String.valueOf(TEST_INT)));
         decl.setConstructorArgs(args);
@@ -246,7 +246,7 @@ public class TestDefaultBeanFactory
     public void testFindMatchingConstructorAmbiguous()
     {
         BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
-        Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
+        Collection<ConstructorArg> args = new ArrayList<>();
         args.add(ConstructorArg.forValue(TEST_STRING));
         decl.setConstructorArgs(args);
         DefaultBeanFactory.findMatchingConstructor(BeanCreationTestCtorBean.class, decl);
@@ -260,7 +260,7 @@ public class TestDefaultBeanFactory
     public void testFindMatchingConstructorExplicitType()
     {
         BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
-        Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
+        Collection<ConstructorArg> args = new ArrayList<>();
         args.add(ConstructorArg.forBeanDeclaration(setUpBeanDeclaration(),
                 BeanCreationTestBean.class.getName()));
         decl.setConstructorArgs(args);
@@ -279,18 +279,18 @@ public class TestDefaultBeanFactory
     private static BeanDeclarationTestImpl setUpBeanDeclaration()
     {
         BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
-        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put("stringValue", TEST_STRING);
         properties.put("intValue", String.valueOf(TEST_INT));
         data.setBeanProperties(properties);
         BeanDeclarationTestImpl buddyData = new BeanDeclarationTestImpl();
-        Map<String, Object> properties2 = new HashMap<String, Object>();
+        Map<String, Object> properties2 = new HashMap<>();
         properties2.put("stringValue", "Another test string");
         properties2.put("intValue", new Integer(100));
         buddyData.setBeanProperties(properties2);
         buddyData.setBeanClassName(BeanCreationTestBean.class.getName());
 
-        Map<String, Object> nested = new HashMap<String, Object>();
+        Map<String, Object> nested = new HashMap<>();
         nested.put("buddy", buddyData);
         data.setNestedBeanDeclarations(nested);
         return data;
@@ -303,7 +303,7 @@ public class TestDefaultBeanFactory
     public void testFindMatchingConstructorNoMatch()
     {
         BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
-        Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
+        Collection<ConstructorArg> args = new ArrayList<>();
         args.add(ConstructorArg.forValue(TEST_STRING, getClass().getName()));
         decl.setConstructorArgs(args);
         try

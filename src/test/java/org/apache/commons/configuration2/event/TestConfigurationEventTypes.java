@@ -68,7 +68,7 @@ public class TestConfigurationEventTypes
         Set<EventType<?>> superTypes =
                 EventType.fetchSuperEventTypes(ConfigurationEvent.ADD_NODES);
         List<EventType<? extends Event>> expected =
-                new LinkedList<EventType<? extends Event>>();
+                new LinkedList<>();
         expected.add(ConfigurationEvent.ADD_NODES);
         expected.add(ConfigurationEvent.ANY_HIERARCHICAL);
         expected.add(ConfigurationEvent.ANY);

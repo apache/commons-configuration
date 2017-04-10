@@ -315,7 +315,7 @@ public class TestAbstractHierarchicalConfiguration
     @Test
     public void testGetKeys()
     {
-        List<String> keys = new ArrayList<String>();
+        List<String> keys = new ArrayList<>();
         for (Iterator<String> it = config.getKeys(); it.hasNext();)
         {
             keys.add(it.next());
@@ -349,7 +349,7 @@ public class TestAbstractHierarchicalConfiguration
     public void testGetKeysAttribute()
     {
         config.addProperty("tables.table(0)[@type]", "system");
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
         for (Iterator<String> it = config.getKeys(); it.hasNext();)
         {
             keys.add(it.next());
@@ -559,7 +559,7 @@ public class TestAbstractHierarchicalConfiguration
     @Test
     public void testAddNodes()
     {
-        Collection<ImmutableNode> nodes = new ArrayList<ImmutableNode>();
+        Collection<ImmutableNode> nodes = new ArrayList<>();
         nodes.add(NodeStructureHelper.createFieldNode("birthDate"));
         nodes.add(NodeStructureHelper.createFieldNode("lastLogin"));
         nodes.add(NodeStructureHelper.createFieldNode("language"));
@@ -577,7 +577,7 @@ public class TestAbstractHierarchicalConfiguration
     @Test
     public void testAddNodesForNonExistingKey()
     {
-        Collection<ImmutableNode> nodes = new ArrayList<ImmutableNode>();
+        Collection<ImmutableNode> nodes = new ArrayList<>();
         ImmutableNode newNode =
                 new ImmutableNode.Builder().name("usr").value("scott")
                         .addAttribute("pwd", "tiger").create();
@@ -597,7 +597,7 @@ public class TestAbstractHierarchicalConfiguration
     @Test(expected = IllegalArgumentException.class)
     public void testAddNodesWithAttributeKey()
     {
-        Collection<ImmutableNode> nodes = new ArrayList<ImmutableNode>();
+        Collection<ImmutableNode> nodes = new ArrayList<>();
         nodes.add(NodeStructureHelper.createNode("testNode", "yes"));
         config.addNodes("database.connection[@settings]", nodes);
     }
@@ -854,7 +854,7 @@ public class TestAbstractHierarchicalConfiguration
     @Test
     public void testNodeKeyEmptyCache()
     {
-        Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
+        Map<ImmutableNode, String> cache = new HashMap<>();
         ImmutableNode nodeTabName =
                 NodeStructureHelper.nodeForKey(getRootNode(),
                         "tables/table(0)/name");
@@ -876,7 +876,7 @@ public class TestAbstractHierarchicalConfiguration
     @Test
     public void testNodeKeyCachePopulated()
     {
-        Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
+        Map<ImmutableNode, String> cache = new HashMap<>();
         ImmutableNode nodeTabName =
                 NodeStructureHelper.nodeForKey(getRootNode(),
                         "tables/table(0)/name");
@@ -898,7 +898,7 @@ public class TestAbstractHierarchicalConfiguration
     @Test
     public void testNodeKeyCacheUsage()
     {
-        Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
+        Map<ImmutableNode, String> cache = new HashMap<>();
         ImmutableNode nodeTabName =
                 NodeStructureHelper.nodeForKey(getRootNode(),
                         "tables/table(0)/name");
@@ -914,7 +914,7 @@ public class TestAbstractHierarchicalConfiguration
     @Test
     public void testNodeKeyRootNode()
     {
-        Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
+        Map<ImmutableNode, String> cache = new HashMap<>();
         assertEquals("Wrong root node key", "",
                 config.nodeKey(getRootNode(), cache, config.getModel()
                         .getNodeHandler()));
@@ -926,7 +926,7 @@ public class TestAbstractHierarchicalConfiguration
     @Test
     public void testNodeKeyCacheHit()
     {
-        Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
+        Map<ImmutableNode, String> cache = new HashMap<>();
         final String key = "someResultKey";
         cache.put(getRootNode(), key);
         assertEquals("Wrong result", key, config.nodeKey(getRootNode(),
@@ -962,7 +962,7 @@ public class TestAbstractHierarchicalConfiguration
      */
     private void checkKeys(String prefix, String[] expected)
     {
-        Set<String> values = new HashSet<String>();
+        Set<String> values = new HashSet<>();
         for (String anExpected : expected) {
             values.add((anExpected.startsWith(prefix)) ? anExpected : prefix + "." + anExpected);
         }

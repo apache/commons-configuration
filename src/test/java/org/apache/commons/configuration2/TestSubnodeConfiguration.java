@@ -234,7 +234,7 @@ public class TestSubnodeConfiguration
     public void testGetKeys()
     {
         setUpSubnodeConfig();
-        Set<String> keys = new HashSet<String>();
+        Set<String> keys = new HashSet<>();
         keys.addAll(ConfigurationAssert.keysToList(config));
         assertEquals("Incorrect number of keys", 2, keys.size());
         assertTrue("Key 1 not contained", keys.contains("name"));

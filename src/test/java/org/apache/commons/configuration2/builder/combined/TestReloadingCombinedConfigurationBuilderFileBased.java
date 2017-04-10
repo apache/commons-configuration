@@ -332,7 +332,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
     {
         File defFile = folder.newFile();
         builder.configure(parameters.combined().setDefinitionBuilder(
-                new ReloadingFileBasedConfigurationBuilder<XMLConfiguration>(
+                new ReloadingFileBasedConfigurationBuilder<>(
                         XMLConfiguration.class).configure(parameters.xml()
                         .setReloadingRefreshDelay(0L).setFile(defFile))));
         checkReloadDefinitionFile(defFile);

@@ -152,7 +152,7 @@ public class ConfigurationAssert
      */
     public static List<String> keysToList(ImmutableConfiguration config)
     {
-        List<String> keyList = new LinkedList<String>();
+        List<String> keyList = new LinkedList<>();
         appendKeys(config, keyList);
         return keyList;
     }
@@ -165,7 +165,7 @@ public class ConfigurationAssert
      */
     public static Set<String> keysToSet(ImmutableConfiguration config)
     {
-        Set<String> keySet = new HashSet<String>();
+        Set<String> keySet = new HashSet<>();
         appendKeys(config, keySet);
         return keySet;
     }

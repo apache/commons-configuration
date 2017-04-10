@@ -370,7 +370,7 @@ public class TestParameters
     {
         DefaultParametersManager manager =
                 EasyMock.createMock(DefaultParametersManager.class);
-        final List<Object> initializedParams = new ArrayList<Object>(1);
+        final List<Object> initializedParams = new ArrayList<>(1);
         manager.initializeParameters(EasyMock
                 .anyObject(BuilderParameters.class));
         EasyMock.expectLastCall().andAnswer(new IAnswer<Object>()

@@ -56,7 +56,7 @@ public class JNDIConfiguration extends AbstractConfiguration
     private Context baseContext;
 
     /** The Set of keys that have been virtually cleared. */
-    private final Set<String> clearedProperties = new HashSet<String>();
+    private final Set<String> clearedProperties = new HashSet<>();
 
     /**
      * Creates a JNDIConfiguration using the default initial context as the
@@ -204,7 +204,7 @@ public class JNDIConfiguration extends AbstractConfiguration
             Context context = getContext(path, getBaseContext());
 
             // return all the keys under the context found
-            Set<String> keys = new HashSet<String>();
+            Set<String> keys = new HashSet<>();
             if (context != null)
             {
                 recursiveGetKeys(keys, context, prefix, new HashSet<Context>());

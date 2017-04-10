@@ -133,7 +133,7 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
             String fileName, Map<String, Object> params)
             throws ConfigurationException
     {
-        return new ReloadingFileBasedConfigurationBuilder<T>(getResultClass(),
+        return new ReloadingFileBasedConfigurationBuilder<>(getResultClass(),
                 params, isAllowFailOnInit());
     }
 
@@ -155,7 +155,7 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
                 Collection<FileBasedConfigurationBuilder<T>> builders =
                         getManagedBuilders().values();
                 Collection<ReloadingController> controllers =
-                        new ArrayList<ReloadingController>(builders.size());
+                        new ArrayList<>(builders.size());
                 for (FileBasedConfigurationBuilder<T> b : builders)
                 {
                     controllers.add(((ReloadingControllerSupport) b)

@@ -1014,7 +1014,7 @@ public class TestCombinedConfiguration
         final int writeCount = 3000;
         CountDownLatch latch = new CountDownLatch(1);
         AtomicInteger errorCount = new AtomicInteger();
-        Collection<Thread> threads = new ArrayList<Thread>(numberOfReaders + 1);
+        Collection<Thread> threads = new ArrayList<>(numberOfReaders + 1);
         Thread writeThread =
                 new WriteThread(config, latch, errorCount, writeCount);
         writeThread.start();

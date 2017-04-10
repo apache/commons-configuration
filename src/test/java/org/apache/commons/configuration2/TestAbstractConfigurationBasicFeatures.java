@@ -75,7 +75,7 @@ public class TestAbstractConfigurationBasicFeatures
             @Override
             protected Iterator<String> getKeysInternal()
             {
-                Collection<String> keyCol = new ArrayList<String>();
+                Collection<String> keyCol = new ArrayList<>();
                 ConfigurationAssert.appendKeys(getUnderlyingConfiguration(), keyCol);
                 String[] keys = keyCol.toArray(new String[keyCol.size()]);
                 return Arrays.asList(keys).iterator();
@@ -338,7 +338,7 @@ public class TestAbstractConfigurationBasicFeatures
         AbstractConfiguration config =
                 new TestConfigurationImpl(new PropertiesConfiguration());
         int count = config.getInterpolator().getLookups().size();
-        Map<String, Lookup> lookups = new HashMap<String, Lookup>();
+        Map<String, Lookup> lookups = new HashMap<>();
         lookups.put("test", look);
         config.setPrefixLookups(lookups);
         Map<String, Lookup> lookups2 = config.getInterpolator().getLookups();
@@ -874,7 +874,7 @@ public class TestAbstractConfigurationBasicFeatures
      */
     private static List<Integer> prepareListTest(PropertiesConfiguration config)
     {
-        List<Integer> expected = new ArrayList<Integer>(PROP_COUNT);
+        List<Integer> expected = new ArrayList<>(PROP_COUNT);
         for (int i = 0; i < PROP_COUNT; i++)
         {
             config.addProperty(KEY_PREFIX, String.valueOf(i));
@@ -926,7 +926,7 @@ public class TestAbstractConfigurationBasicFeatures
     {
         PropertiesConfiguration config = new PropertiesConfiguration();
         List<Integer> expected = prepareListTest(config);
-        List<Integer> result = new ArrayList<Integer>(PROP_COUNT);
+        List<Integer> result = new ArrayList<>(PROP_COUNT);
         assertSame("Wrong result", result, config.getCollection(Integer.class, KEY_PREFIX, result));
         assertEquals("Wrong converted content", expected, result);
     }
@@ -951,7 +951,7 @@ public class TestAbstractConfigurationBasicFeatures
     {
         PropertiesConfiguration config = new PropertiesConfiguration();
         config.addProperty(KEY_PREFIX, "1");
-        List<Integer> result = new ArrayList<Integer>(1);
+        List<Integer> result = new ArrayList<>(1);
         config.getCollection(Integer.class, KEY_PREFIX, result);
         assertEquals("Wrong number of elements", 1, result.size());
         assertEquals("Wrong element", Integer.valueOf(1), result.get(0));
@@ -965,7 +965,7 @@ public class TestAbstractConfigurationBasicFeatures
     public void testGetCollectionUnknownNoDefault()
     {
         PropertiesConfiguration config = new PropertiesConfiguration();
-        List<Integer> result = new ArrayList<Integer>();
+        List<Integer> result = new ArrayList<>();
         assertNull("Wrong result", config.getCollection(Integer.class, KEY_PREFIX, result));
         assertTrue("Got elements", result.isEmpty());
     }
@@ -1135,7 +1135,7 @@ public class TestAbstractConfigurationBasicFeatures
     private void checkCopyEvents(CollectingConfigurationListener l,
             Configuration src, EventType<?> eventType)
     {
-        Map<String, ConfigurationEvent> events = new HashMap<String, ConfigurationEvent>();
+        Map<String, ConfigurationEvent> events = new HashMap<>();
         for (ConfigurationEvent e : l.events)
         {
             assertEquals("Wrong event type", eventType, e.getEventType());
@@ -1226,7 +1226,7 @@ public class TestAbstractConfigurationBasicFeatures
     private static class CollectingConfigurationListener implements
             EventListener<ConfigurationEvent>
     {
-        final List<ConfigurationEvent> events = new ArrayList<ConfigurationEvent>();
+        final List<ConfigurationEvent> events = new ArrayList<>();
 
         @Override
         public void onEvent(ConfigurationEvent event)

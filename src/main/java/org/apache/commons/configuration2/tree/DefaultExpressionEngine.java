@@ -186,7 +186,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
     public <T> List<QueryResult<T>> query(T root, String key,
             NodeHandler<T> handler)
     {
-        List<QueryResult<T>> results = new LinkedList<QueryResult<T>>();
+        List<QueryResult<T>> results = new LinkedList<>();
         findNodesForKey(new DefaultConfigurationKey(this, key).iterator(),
                 root, results, handler);
         return results;
@@ -344,7 +344,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
         }
 
         T parent = findLastPathNode(it, root, handler);
-        List<String> pathNodes = new LinkedList<String>();
+        List<String> pathNodes = new LinkedList<>();
 
         while (it.hasNext())
         {
@@ -358,7 +358,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
             it.next();
         }
 
-        return new NodeAddData<T>(parent, it.currentKey(), !it.isPropertyKey(),
+        return new NodeAddData<>(parent, it.currentKey(), !it.isPropertyKey(),
                 pathNodes);
     }
 

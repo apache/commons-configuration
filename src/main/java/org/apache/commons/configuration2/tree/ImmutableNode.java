@@ -244,7 +244,7 @@ public final class ImmutableNode
      */
     public ImmutableNode setAttribute(String name, Object value)
     {
-        Map<String, Object> newAttrs = new HashMap<String, Object>(attributes);
+        Map<String, Object> newAttrs = new HashMap<>(attributes);
         newAttrs.put(name, value);
         return createWithNewAttributes(newAttrs);
     }
@@ -266,7 +266,7 @@ public final class ImmutableNode
             return this;
         }
 
-        Map<String, Object> newAttrs = new HashMap<String, Object>(attributes);
+        Map<String, Object> newAttrs = new HashMap<>(attributes);
         newAttrs.putAll(newAttributes);
         return createWithNewAttributes(newAttrs);
     }
@@ -281,7 +281,7 @@ public final class ImmutableNode
      */
     public ImmutableNode removeAttribute(String name)
     {
-        Map<String, Object> newAttrs = new HashMap<String, Object>(attributes);
+        Map<String, Object> newAttrs = new HashMap<>(attributes);
         if (newAttrs.remove(name) != null)
         {
             return createWithNewAttributes(newAttrs);
@@ -586,7 +586,7 @@ public final class ImmutableNode
         {
             if (children == null)
             {
-                children = new LinkedList<ImmutableNode>();
+                children = new LinkedList<>();
             }
         }
 
@@ -598,7 +598,7 @@ public final class ImmutableNode
         {
             if (attributes == null)
             {
-                attributes = new HashMap<String, Object>();
+                attributes = new HashMap<>();
             }
         }
 
@@ -612,7 +612,7 @@ public final class ImmutableNode
         {
             if (childCount > 0)
             {
-                children = new ArrayList<ImmutableNode>(childCount);
+                children = new ArrayList<>(childCount);
             }
         }
 
@@ -627,7 +627,7 @@ public final class ImmutableNode
                 Collection<? extends ImmutableNode> children)
         {
             List<ImmutableNode> result =
-                    new ArrayList<ImmutableNode>(children.size());
+                    new ArrayList<>(children.size());
             for (ImmutableNode c : children)
             {
                 if (c != null)

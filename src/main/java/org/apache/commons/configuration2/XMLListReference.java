@@ -172,7 +172,7 @@ class XMLListReference
         ImmutableNode parent = nodeHandler.getParent(node);
         List<ImmutableNode> items =
                 nodeHandler.getChildren(parent, node.getNodeName());
-        List<Object> values = new ArrayList<Object>(items.size());
+        List<Object> values = new ArrayList<>(items.size());
         for (ImmutableNode n : items)
         {
             values.add(n.getValue());

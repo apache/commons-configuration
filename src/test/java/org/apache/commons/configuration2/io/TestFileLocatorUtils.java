@@ -576,7 +576,7 @@ public class TestFileLocatorUtils
                         .encoding(ENCODING).fileName(FILE_NAME)
                         .fileSystem(fileSystem).locationStrategy(strategy)
                         .sourceURL(sourceURL).create();
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         FileLocatorUtils.put(locator, map);
         FileLocator locator2 = FileLocatorUtils.fromMap(map);
         assertEquals("Different locators", locator, locator2);
@@ -588,7 +588,7 @@ public class TestFileLocatorUtils
     @Test
     public void testPutNoLocator()
     {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         FileLocatorUtils.put(null, map);
         assertTrue("Got properties", map.isEmpty());
     }

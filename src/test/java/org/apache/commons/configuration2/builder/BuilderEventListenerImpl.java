@@ -39,7 +39,7 @@ public class BuilderEventListenerImpl implements
 {
     /** A list with the received events. */
     private final List<ConfigurationBuilderEvent> events =
-            new LinkedList<ConfigurationBuilderEvent>();
+            new LinkedList<>();
 
     /** An iterator for inspecting the received events. */
     private Iterator<ConfigurationBuilderEvent> iterator;

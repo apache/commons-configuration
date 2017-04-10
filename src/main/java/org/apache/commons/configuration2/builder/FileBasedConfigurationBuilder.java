@@ -390,7 +390,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      */
     private static Map<Class<?>, String> initializeDefaultEncodings()
     {
-        Map<Class<?>, String> enc = new ConcurrentHashMap<Class<?>, String>();
+        Map<Class<?>, String> enc = new ConcurrentHashMap<>();
         enc.put(PropertiesConfiguration.class,
                 PropertiesConfiguration.DEFAULT_ENCODING);
         enc.put(XMLPropertiesConfiguration.class,

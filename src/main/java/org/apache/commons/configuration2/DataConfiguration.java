@@ -107,7 +107,7 @@ public class DataConfiguration extends AbstractConfiguration
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /** Stores temporary date formats. */
-    private static final ThreadLocal<String> TEMP_DATE_FORMAT = new ThreadLocal<String>();
+    private static final ThreadLocal<String> TEMP_DATE_FORMAT = new ThreadLocal<>();
 
     /** Stores the wrapped configuration.*/
     private final Configuration configuration;

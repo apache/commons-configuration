@@ -117,8 +117,8 @@ public class ConfigurationInterpolator
      */
     public ConfigurationInterpolator()
     {
-        prefixLookups = new ConcurrentHashMap<String, Lookup>();
-        defaultLookups = new CopyOnWriteArrayList<Lookup>();
+        prefixLookups = new ConcurrentHashMap<>();
+        defaultLookups = new CopyOnWriteArrayList<>();
         substitutor = initSubstitutor();
     }
 
@@ -193,7 +193,7 @@ public class ConfigurationInterpolator
      */
     public Map<String, Lookup> getLookups()
     {
-        return new HashMap<String, Lookup>(prefixLookups);
+        return new HashMap<>(prefixLookups);
     }
 
     /**
@@ -275,7 +275,7 @@ public class ConfigurationInterpolator
      */
     public List<Lookup> getDefaultLookups()
     {
-        return new ArrayList<Lookup>(defaultLookups);
+        return new ArrayList<>(defaultLookups);
     }
 
     /**
@@ -545,7 +545,7 @@ public class ConfigurationInterpolator
 
     static
     {
-        Map<String, Lookup> lookups = new HashMap<String, Lookup>();
+        Map<String, Lookup> lookups = new HashMap<>();
         for (DefaultLookups l : DefaultLookups.values())
         {
             lookups.put(l.getPrefix(), l.getLookup());

@@ -123,7 +123,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
      */
     public static <T> Object wrapNode(T node, NodeHandler<T> handler)
     {
-        return new NodeWrapper<T>(node, handler);
+        return new NodeWrapper<>(node, handler);
     }
 
     /**

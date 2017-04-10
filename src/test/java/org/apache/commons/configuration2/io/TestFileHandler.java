@@ -1526,7 +1526,7 @@ public class TestFileHandler
                 FileLocatorUtils.fileLocator().fileName(TEST_FILENAME)
                         .basePath("someBasePath").encoding("someEncoding")
                         .create();
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         FileLocatorUtils.put(locator, map);
         FileHandler handler = FileHandler.fromMap(map);
         assertEquals("Wrong locator", locator, handler.getFileLocator());

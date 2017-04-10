@@ -154,7 +154,7 @@ public class TestCombinedLocationStrategy
     public void testInitCollectionWithNullEntries()
     {
         Collection<FileLocationStrategy> col =
-                new LinkedList<FileLocationStrategy>(
+                new LinkedList<>(
                         Arrays.asList(getSubStrategies()));
         col.add(null);
         new CombinedLocationStrategy(col);
@@ -168,7 +168,7 @@ public class TestCombinedLocationStrategy
     public void testInitDefensiveCopy()
     {
         Collection<FileLocationStrategy> col =
-                new LinkedList<FileLocationStrategy>(
+                new LinkedList<>(
                         Arrays.asList(getSubStrategies()));
         CombinedLocationStrategy strategy = new CombinedLocationStrategy(col);
         col.add(EasyMock.createMock(FileLocationStrategy.class));

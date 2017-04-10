@@ -360,8 +360,8 @@ public class TestInMemoryNodeModelTrackedNodes
         assertEquals("Field not removed",
                 NodeStructureHelper.fieldsLength(1) - 1, nodeFields
                         .getChildren().size());
-        Set<String> expectedNames = new HashSet<String>();
-        Set<String> actualNames = new HashSet<String>();
+        Set<String> expectedNames = new HashSet<>();
+        Set<String> actualNames = new HashSet<>();
         for (int i = 0; i < NodeStructureHelper.fieldsLength(1); i++)
         {
             if (idx != i)
@@ -563,7 +563,7 @@ public class TestInMemoryNodeModelTrackedNodes
                                         key, handler);
                         assertEquals("Wrong number of query results", 1,
                                 results.size());
-                        return new NodeUpdateData<ImmutableNode>(Collections
+                        return new NodeUpdateData<>(Collections
                                 .singletonMap(results.get(0),
                                         EasyMock.getCurrentArguments()[2]),
                                 null, null, null);
@@ -737,7 +737,7 @@ public class TestInMemoryNodeModelTrackedNodes
     private void expectNodeKey(NodeKeyResolver<ImmutableNode> resolver,
             ImmutableNode node, String key)
     {
-        Map<ImmutableNode, String> cache = new HashMap<ImmutableNode, String>();
+        Map<ImmutableNode, String> cache = new HashMap<>();
         EasyMock.expect(resolver.nodeKey(node, cache, model.getNodeHandler()))
                 .andReturn(key);
     }

@@ -556,7 +556,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         setSystemID(docHelper.getSourceSystemID());
 
         ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
-        MutableObject<String> rootValue = new MutableObject<String>();
+        MutableObject<String> rootValue = new MutableObject<>();
         Map<ImmutableNode, Object> elemRefMap =
                 elemRefs ? new HashMap<ImmutableNode, Object>() : null;
         Map<String, String> attributes =
@@ -607,7 +607,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
                 ImmutableNode.Builder childNode = new ImmutableNode.Builder();
                 childNode.name(child.getTagName());
                 MutableObject<String> refChildValue =
-                        new MutableObject<String>();
+                        new MutableObject<>();
                 Map<String, String> attrmap =
                         constructHierarchy(childNode, refChildValue, child,
                                 elemRefs, trimFlag, level + 1);
@@ -669,7 +669,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     private static Map<String, String> processAttributes(Element element)
     {
         NamedNodeMap attributes = element.getAttributes();
-        Map<String, String> attrmap = new HashMap<String, String>();
+        Map<String, String> attrmap = new HashMap<>();
 
         for (int i = 0; i < attributes.getLength(); ++i)
         {
@@ -1124,7 +1124,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             document = docHelper.getDocument();
             elementMapping = docHelper.getElementMapping();
             listDelimiterHandler = handler;
-            newElements = new HashMap<ImmutableNode, Element>();
+            newElements = new HashMap<>();
         }
 
         /**
@@ -1372,7 +1372,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             // Find all Text nodes
             NodeList children = elem.getChildNodes();
             Collection<org.w3c.dom.Node> textNodes =
-                    new ArrayList<org.w3c.dom.Node>();
+                    new ArrayList<>();
             for (int i = 0; i < children.getLength(); i++)
             {
                 org.w3c.dom.Node nd = children.item(i);

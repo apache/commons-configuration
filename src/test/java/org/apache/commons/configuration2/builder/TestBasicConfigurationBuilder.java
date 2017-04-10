@@ -90,7 +90,7 @@ public class TestBasicConfigurationBuilder
      */
     private static Map<String, Object> createTestParameters()
     {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("throwExceptionOnMissing", Boolean.TRUE);
         params.put("listDelimiterHandler", listHandler);
         return params;
@@ -107,7 +107,7 @@ public class TestBasicConfigurationBuilder
                 new BasicConfigurationBuilder<Configuration>(
                         PropertiesConfiguration.class, params);
         Map<String, Object> params2 =
-                new HashMap<String, Object>(builder.getParameters());
+                new HashMap<>(builder.getParameters());
         assertEquals("Wrong parameters", createTestParameters(), params2);
     }
 
@@ -119,11 +119,11 @@ public class TestBasicConfigurationBuilder
     {
         Map<String, Object> params = createTestParameters();
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class, params);
         params.put("anotherParameter", "value");
         Map<String, Object> params2 =
-                new HashMap<String, Object>(builder.getParameters());
+                new HashMap<>(builder.getParameters());
         assertEquals("Wrong parameters", createTestParameters(), params2);
     }
 
@@ -134,7 +134,7 @@ public class TestBasicConfigurationBuilder
     public void testInitWithParametersNull()
     {
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class, null);
         assertTrue("Got parameters", builder.getParameters().isEmpty());
     }
@@ -146,7 +146,7 @@ public class TestBasicConfigurationBuilder
     public void testGetParametersModify()
     {
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class, createTestParameters());
         builder.getParameters().clear();
     }
@@ -158,13 +158,13 @@ public class TestBasicConfigurationBuilder
     public void testConfigure()
     {
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class)
                         .configure(new BasicBuilderParameters()
                                 .setListDelimiterHandler(listHandler)
                                 .setThrowExceptionOnMissing(true));
         Map<String, Object> params2 =
-                new HashMap<String, Object>(builder.getParameters());
+                new HashMap<>(builder.getParameters());
         assertEquals("Wrong parameters", createTestParameters(), params2);
     }
 
@@ -174,15 +174,15 @@ public class TestBasicConfigurationBuilder
     @Test
     public void testSetParameters()
     {
-        Map<String, Object> params1 = new HashMap<String, Object>();
+        Map<String, Object> params1 = new HashMap<>();
         params1.put("someParameter", "value");
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class, params1);
         assertSame("Wrong result", builder,
                 builder.setParameters(createTestParameters()));
         Map<String, Object> params2 =
-                new HashMap<String, Object>(builder.getParameters());
+                new HashMap<>(builder.getParameters());
         assertEquals("Wrong parameters", createTestParameters(), params2);
     }
 
@@ -193,7 +193,7 @@ public class TestBasicConfigurationBuilder
     public void testAddParameters()
     {
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class, createTestParameters());
         Map<String, Object> params = createTestParameters();
         params.put("anotherParameter", "value");
@@ -212,7 +212,7 @@ public class TestBasicConfigurationBuilder
     public void testAddParametersNull()
     {
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class, createTestParameters());
         Map<String, Object> params = builder.getParameters();
         builder.addParameters(null);
@@ -226,7 +226,7 @@ public class TestBasicConfigurationBuilder
     public void testResetParameters()
     {
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class, createTestParameters());
         builder.resetParameters();
         assertTrue("Still got parameters", builder.getParameters().isEmpty());
@@ -240,7 +240,7 @@ public class TestBasicConfigurationBuilder
     public void testGetConfiguration() throws ConfigurationException
     {
         PropertiesConfiguration config =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class).configure(
                         new BasicBuilderParameters().setListDelimiterHandler(
                                 listHandler).setThrowExceptionOnMissing(true))
@@ -261,7 +261,7 @@ public class TestBasicConfigurationBuilder
         CountDownLatch startLatch = new CountDownLatch(1);
         CountDownLatch endLatch = new CountDownLatch(threadCount);
         ConfigurationBuilder<?> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         AccessBuilderThread[] threads = new AccessBuilderThread[threadCount];
         for (int i = 0; i < threadCount; i++)
@@ -271,7 +271,7 @@ public class TestBasicConfigurationBuilder
         }
         startLatch.countDown();
         assertTrue("Timeout", endLatch.await(5, TimeUnit.SECONDS));
-        Set<Object> results = new HashSet<Object>();
+        Set<Object> results = new HashSet<>();
         for (AccessBuilderThread t : threads)
         {
             results.add(t.result);
@@ -286,7 +286,7 @@ public class TestBasicConfigurationBuilder
     public void testResetResult() throws ConfigurationException
     {
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class, createTestParameters());
         PropertiesConfiguration config = builder.getConfiguration();
         builder.resetResult();
@@ -302,7 +302,7 @@ public class TestBasicConfigurationBuilder
     public void testReset() throws ConfigurationException
     {
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class, createTestParameters());
         PropertiesConfiguration config = builder.getConfiguration();
         builder.reset();
@@ -357,7 +357,7 @@ public class TestBasicConfigurationBuilder
         EventListener<ConfigurationEvent> l2 = createEventListener();
         EasyMock.replay(l1, l2);
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         builder.addEventListener(ConfigurationEvent.ANY, l1);
         PropertiesConfiguration config = builder.getConfiguration();
@@ -378,7 +378,7 @@ public class TestBasicConfigurationBuilder
         EventListener<ConfigurationEvent> l2 = createEventListener();
         EasyMock.replay(l1, l2);
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         builder.addEventListener(ConfigurationEvent.ANY_HIERARCHICAL,
                 l1);
@@ -408,13 +408,13 @@ public class TestBasicConfigurationBuilder
         EventListener<ConfigurationEvent> l2 = createEventListener();
         EventListener<ConfigurationErrorEvent> l3 = new ErrorListenerTestImpl(null);
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         builder.addEventListener(ConfigurationEvent.ANY, l1);
         builder.addEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2);
         builder.addEventListener(ConfigurationErrorEvent.ANY, l3);
         BasicConfigurationBuilder<XMLConfiguration> builder2 =
-                new BasicConfigurationBuilder<XMLConfiguration>(
+                new BasicConfigurationBuilder<>(
                         XMLConfiguration.class);
         builder.copyEventListeners(builder2);
         XMLConfiguration config = builder2.getConfiguration();
@@ -443,11 +443,11 @@ public class TestBasicConfigurationBuilder
     {
         EventListenerTestImpl listener1 = new EventListenerTestImpl(null);
         EventListenerRegistrationData<ConfigurationErrorEvent> regData =
-                new EventListenerRegistrationData<ConfigurationErrorEvent>(
+                new EventListenerRegistrationData<>(
                         ConfigurationErrorEvent.WRITE,
                         new ErrorListenerTestImpl(null));
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class)
                         .configure(new EventListenerParameters()
                                 .addEventListener(ConfigurationEvent.ANY,
@@ -471,7 +471,7 @@ public class TestBasicConfigurationBuilder
     {
         EventListenerTestImpl listener = new EventListenerTestImpl(null);
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class)
                         .configure(new EventListenerParameters()
                                 .addEventListener(ConfigurationEvent.ANY,
@@ -489,11 +489,11 @@ public class TestBasicConfigurationBuilder
     @Test
     public void testReservedParameter() throws ConfigurationException
     {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("throwExceptionOnMissing", Boolean.TRUE);
         params.put("config-test", "a test");
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class, params);
         PropertiesConfiguration config = builder.getConfiguration();
         assertTrue("Flag not set", config.isThrowExceptionOnMissing());
@@ -533,7 +533,7 @@ public class TestBasicConfigurationBuilder
     public void testInitializableCalled() throws ConfigurationException
     {
         BasicConfigurationBuilder<InitializableConfiguration> builder =
-                new BasicConfigurationBuilder<InitializableConfiguration>(
+                new BasicConfigurationBuilder<>(
                         InitializableConfiguration.class);
         builder.configure(new BasicBuilderParameters()
                 .setThrowExceptionOnMissing(true));
@@ -548,7 +548,7 @@ public class TestBasicConfigurationBuilder
     @Test
     public void testBeanHelperInConfiguration() throws ConfigurationException
     {
-        final Set<Class<?>> classesPassedToFactory = new HashSet<Class<?>>();
+        final Set<Class<?>> classesPassedToFactory = new HashSet<>();
         BeanFactory factory = new DefaultBeanFactory()
         {
             @Override
@@ -560,7 +560,7 @@ public class TestBasicConfigurationBuilder
         };
         BeanHelper helper = new BeanHelper(factory);
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         builder.configure(new BasicBuilderParameters().setBeanHelper(helper));
         PropertiesConfiguration config = builder.getConfiguration();

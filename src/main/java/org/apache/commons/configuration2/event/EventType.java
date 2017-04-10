@@ -120,7 +120,7 @@ public class EventType<T extends Event> implements Serializable
      */
     public static Set<EventType<?>> fetchSuperEventTypes(EventType<?> eventType)
     {
-        Set<EventType<?>> types = new HashSet<EventType<?>>();
+        Set<EventType<?>> types = new HashSet<>();
         EventType<?> currentType = eventType;
         while (currentType != null)
         {

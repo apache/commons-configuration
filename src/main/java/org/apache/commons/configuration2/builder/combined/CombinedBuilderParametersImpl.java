@@ -83,8 +83,8 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      */
     public CombinedBuilderParametersImpl()
     {
-        providers = new HashMap<String, ConfigurationBuilderProvider>();
-        childParameters = new LinkedList<BuilderParameters>();
+        providers = new HashMap<>();
+        childParameters = new LinkedList<>();
         inheritSettings = true;
     }
 
@@ -377,7 +377,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      */
     public Collection<? extends BuilderParameters> getDefaultChildParameters()
     {
-        return new ArrayList<BuilderParameters>(childParameters);
+        return new ArrayList<>(childParameters);
     }
 
     /**

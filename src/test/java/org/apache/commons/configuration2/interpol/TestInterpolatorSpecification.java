@@ -149,7 +149,7 @@ public class TestInterpolatorSpecification
         Lookup prefLook2 = createLookup();
         Lookup defLook1 = createLookup();
         Lookup defLook2 = createLookup();
-        Map<String, Lookup> prefixLookups = new HashMap<String, Lookup>();
+        Map<String, Lookup> prefixLookups = new HashMap<>();
         prefixLookups.put(PREFIX1, prefLook1);
         prefixLookups.put(PREFIX2, prefLook2);
         InterpolatorSpecification spec =

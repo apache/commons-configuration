@@ -105,7 +105,7 @@ class NodeTracker
             NodeHandler<ImmutableNode> handler)
     {
         Map<NodeSelector, TrackedNodeData> newState =
-                new HashMap<NodeSelector, TrackedNodeData>(trackedNodes);
+                new HashMap<>(trackedNodes);
         TrackedNodeData trackData = newState.get(selector);
         newState.put(
                 selector,
@@ -126,7 +126,7 @@ class NodeTracker
             Collection<ImmutableNode> nodes)
     {
         Map<NodeSelector, TrackedNodeData> newState =
-                new HashMap<NodeSelector, TrackedNodeData>(trackedNodes);
+                new HashMap<>(trackedNodes);
         Iterator<ImmutableNode> itNodes = nodes.iterator();
         for (NodeSelector selector : selectors)
         {
@@ -161,7 +161,7 @@ class NodeTracker
         TrackedNodeData trackData = getTrackedNodeData(selector);
 
         Map<NodeSelector, TrackedNodeData> newState =
-                new HashMap<NodeSelector, TrackedNodeData>(trackedNodes);
+                new HashMap<>(trackedNodes);
         TrackedNodeData newTrackData = trackData.observerRemoved();
         if (newTrackData == null)
         {
@@ -249,7 +249,7 @@ class NodeTracker
         }
 
         Map<NodeSelector, TrackedNodeData> newState =
-                new HashMap<NodeSelector, TrackedNodeData>();
+                new HashMap<>();
         for (Map.Entry<NodeSelector, TrackedNodeData> e : trackedNodes
                 .entrySet())
         {
@@ -278,7 +278,7 @@ class NodeTracker
         }
 
         Map<NodeSelector, TrackedNodeData> newState =
-                new HashMap<NodeSelector, TrackedNodeData>();
+                new HashMap<>();
         for (Map.Entry<NodeSelector, TrackedNodeData> e : trackedNodes
                 .entrySet())
         {
@@ -304,7 +304,7 @@ class NodeTracker
             ImmutableNode newNode)
     {
         Map<NodeSelector, TrackedNodeData> newState =
-                new HashMap<NodeSelector, TrackedNodeData>(trackedNodes);
+                new HashMap<>(trackedNodes);
         newState.put(selector, getTrackedNodeData(selector).detach(newNode));
         return new NodeTracker(newState);
     }

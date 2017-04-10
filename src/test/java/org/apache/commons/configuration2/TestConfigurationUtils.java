@@ -132,12 +132,12 @@ public class TestConfigurationUtils
         // append the source configuration to the target configuration
         ConfigurationUtils.append(conf1, conf2);
 
-        List<Object> expected = new ArrayList<Object>();
+        List<Object> expected = new ArrayList<>();
         expected.add("value3");
         expected.add("value1");
         ListAssert.assertEquals("'key1' property", expected, conf2.getList("key1"));
 
-        expected = new ArrayList<Object>();
+        expected = new ArrayList<>();
         expected.add("value4");
         expected.add("value2");
         ListAssert.assertEquals("'key2' property", expected, conf2.getList("key2"));

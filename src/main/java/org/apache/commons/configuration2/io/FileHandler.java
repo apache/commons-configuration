@@ -164,7 +164,7 @@ public class FileHandler
 
     /** A collection with the registered listeners. */
     private final List<FileHandlerListener> listeners =
-            new CopyOnWriteArrayList<FileHandlerListener>();
+            new CopyOnWriteArrayList<>();
 
     /**
      * Creates a new instance of {@code FileHandler} which is not associated
@@ -216,7 +216,7 @@ public class FileHandler
     private FileHandler(FileBased obj, FileLocator locator)
     {
         content = obj;
-        fileLocator = new AtomicReference<FileLocator>(locator);
+        fileLocator = new AtomicReference<>(locator);
     }
 
     /**

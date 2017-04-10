@@ -391,11 +391,11 @@ public final class BeanHelper
 
         if (List.class.isAssignableFrom(propertyClass))
         {
-            beanCollection = new ArrayList<Object>();
+            beanCollection = new ArrayList<>();
         }
         else if (Set.class.isAssignableFrom(propertyClass))
         {
-            beanCollection = new TreeSet<Object>();
+            beanCollection = new TreeSet<>();
         }
         else
         {

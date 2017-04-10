@@ -587,7 +587,7 @@ public class Configurations
     private <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> createFileBasedBuilder(
             Class<T> configClass, FileBasedBuilderParameters params)
     {
-        return new FileBasedConfigurationBuilder<T>(configClass)
+        return new FileBasedConfigurationBuilder<>(configClass)
                 .configure(params);
     }
 

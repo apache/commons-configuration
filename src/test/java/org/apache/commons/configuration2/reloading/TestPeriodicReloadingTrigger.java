@@ -134,7 +134,7 @@ public class TestPeriodicReloadingTrigger
     public void testStart()
     {
         final ScheduledFuture<Void> future = createFutureMock();
-        final MutableObject<Runnable> refTask = new MutableObject<Runnable>();
+        final MutableObject<Runnable> refTask = new MutableObject<>();
         expectSchedule(null);
         EasyMock.expectLastCall().andAnswer(
                 new IAnswer<ScheduledFuture<Void>>()

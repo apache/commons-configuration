@@ -66,7 +66,7 @@ public abstract class NodeCombiner
      */
     public NodeCombiner()
     {
-        listNodes = new HashSet<String>();
+        listNodes = new HashSet<>();
     }
 
     /**

@@ -72,7 +72,7 @@ public class DisabledListDelimiterHandler extends AbstractListDelimiterHandler
     @Override
     protected Collection<String> splitString(String s, boolean trim)
     {
-        Collection<String> result = new ArrayList<String>(1);
+        Collection<String> result = new ArrayList<>(1);
         result.add(s);
         return result;
     }

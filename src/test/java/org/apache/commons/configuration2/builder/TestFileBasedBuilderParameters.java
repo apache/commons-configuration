@@ -323,7 +323,7 @@ public class TestFileBasedBuilderParameters
         ReloadingDetectorFactory factory =
                 EasyMock.createMock(ReloadingDetectorFactory.class);
         EasyMock.replay(factory);
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         final String fileName = "someFileName";
         final String basePath = "someBasePath";
         final Long refreshDelay = 20140628222302L;

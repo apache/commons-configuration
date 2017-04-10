@@ -245,7 +245,7 @@ public class DefaultBeanFactory implements BeanFactory
     private static <T> List<Constructor<T>> findMatchingConstructors(
             Class<T> beanClass, BeanDeclaration data)
     {
-        List<Constructor<T>> result = new LinkedList<Constructor<T>>();
+        List<Constructor<T>> result = new LinkedList<>();
         Collection<ConstructorArg> args = getConstructorArgs(data);
         for (Constructor<?> ctor : beanClass.getConstructors())
         {

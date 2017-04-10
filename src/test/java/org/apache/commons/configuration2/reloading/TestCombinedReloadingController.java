@@ -75,7 +75,7 @@ public class TestCombinedReloadingController
     {
         initSubControllers();
         List<ReloadingController> lstCtrls =
-                new ArrayList<ReloadingController>(
+                new ArrayList<>(
                         Arrays.asList(subControllers));
         CombinedReloadingController result =
                 new CombinedReloadingController(lstCtrls);
@@ -101,7 +101,7 @@ public class TestCombinedReloadingController
     {
         initSubControllers();
         Collection<ReloadingController> ctrls =
-                new ArrayList<ReloadingController>(
+                new ArrayList<>(
                         Arrays.asList(subControllers));
         ctrls.add(null);
         new CombinedReloadingController(ctrls);

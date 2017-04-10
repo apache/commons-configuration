@@ -70,7 +70,7 @@ public class TestBasicConfigurationBuilderEvents
     {
         BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
 
@@ -92,7 +92,7 @@ public class TestBasicConfigurationBuilderEvents
     {
         BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
 
@@ -111,7 +111,7 @@ public class TestBasicConfigurationBuilderEvents
     public void testRemoveEventListenerNotExisting()
     {
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
         builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
@@ -139,7 +139,7 @@ public class TestBasicConfigurationBuilderEvents
     public void testConfigurationRequestEvent() throws ConfigurationException
     {
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         builder.getConfiguration();
         BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
@@ -161,7 +161,7 @@ public class TestBasicConfigurationBuilderEvents
             throws ConfigurationException
     {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         PropertiesConfiguration configuration = builder.getConfiguration();
         BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
@@ -191,7 +191,7 @@ public class TestBasicConfigurationBuilderEvents
     public void testResultCreatedEventNoConfiguration()
     {
         new ConfigurationBuilderResultCreatedEvent(
-                new BasicConfigurationBuilder<Configuration>(
+                new BasicConfigurationBuilder<>(
                         Configuration.class),
                 ConfigurationBuilderResultCreatedEvent.RESULT_CREATED, null);
     }
@@ -214,7 +214,7 @@ public class TestBasicConfigurationBuilderEvents
     public void testResultCreatedEvent() throws ConfigurationException
     {
         BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
         builder.addEventListener(ConfigurationBuilderEvent.ANY, listener);

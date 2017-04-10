@@ -292,7 +292,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         else
         {
             NodeHandler<T> handler = getModel().getNodeHandler();
-            List<Object> list = new ArrayList<Object>();
+            List<Object> list = new ArrayList<>();
             for (QueryResult<T> result : results)
             {
                 Object value = valueFromResult(result, handler);
@@ -463,7 +463,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     public List<T> resolveNodeKey(T root, String key, NodeHandler<T> handler)
     {
         List<QueryResult<T>> results = resolveKey(root, key, handler);
-        List<T> targetNodes = new LinkedList<T>();
+        List<T> targetNodes = new LinkedList<>();
         for (QueryResult<T> result : results)
         {
             if (!result.isAttributeResult())
@@ -497,7 +497,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         Iterator<QueryResult<T>> itNodes = fetchNodeList(key).iterator();
         Iterator<?> itValues = getListDelimiterHandler().parse(newValue).iterator();
         Map<QueryResult<T>, Object> changedValues =
-                new HashMap<QueryResult<T>, Object>();
+                new HashMap<>();
         Collection<Object> additionalValues = null;
         Collection<QueryResult<T>> removedItems = null;
 
@@ -509,7 +509,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         // Add additional nodes if necessary
         if (itValues.hasNext())
         {
-            additionalValues = new LinkedList<Object>();
+            additionalValues = new LinkedList<>();
             while (itValues.hasNext())
             {
                 additionalValues.add(itValues.next());
@@ -519,14 +519,14 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         // Remove remaining nodes
         if (itNodes.hasNext())
         {
-            removedItems = new LinkedList<QueryResult<T>>();
+            removedItems = new LinkedList<>();
             while (itNodes.hasNext())
             {
                 removedItems.add(itNodes.next());
             }
         }
 
-        return new NodeUpdateData<T>(changedValues, additionalValues,
+        return new NodeUpdateData<>(changedValues, additionalValues,
                 removedItems, key);
     }
 
@@ -539,7 +539,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     @Override
     public String nodeKey(T node, Map<T, String> cache, NodeHandler<T> handler)
     {
-        List<T> path = new LinkedList<T>();
+        List<T> path = new LinkedList<>();
         T currentNode = node;
         String key = cache.get(node);
         while (key == null && currentNode != null)
@@ -804,7 +804,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     protected boolean nodeDefined(T node)
     {
-        DefinedVisitor<T> visitor = new DefinedVisitor<T>();
+        DefinedVisitor<T> visitor = new DefinedVisitor<>();
         NodeTreeWalker.INSTANCE.walkBFS(node, visitor, getModel().getNodeHandler());
         return visitor.isDefined();
     }
@@ -903,8 +903,8 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
          */
         public DefinedKeysVisitor()
         {
-            keyList = new LinkedHashSet<String>();
-            parentKeys = new Stack<String>();
+            keyList = new LinkedHashSet<>();
+            parentKeys = new Stack<>();
         }
 
         /**

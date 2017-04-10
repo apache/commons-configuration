@@ -333,7 +333,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
                         openResultSet(String.format(SQL_GET_PROPERTY,
                                 table, keyColumn), true, key);
 
-                List<Object> results = new ArrayList<Object>();
+                List<Object> results = new ArrayList<>();
                 while (rs.next())
                 {
                     Object value = extractPropertyValue(rs);
@@ -559,7 +559,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
     @Override
     protected Iterator<String> getKeysInternal()
     {
-        final Collection<String> keys = new ArrayList<String>();
+        final Collection<String> keys = new ArrayList<>();
         new JdbcOperation<Collection<String>>(ConfigurationErrorEvent.READ,
                 ConfigurationErrorEvent.READ, null, null)
         {

@@ -145,7 +145,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler
             return Collections.singleton(s);
         }
 
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
 
         StringBuilder token = new StringBuilder();
         int begin = 0;

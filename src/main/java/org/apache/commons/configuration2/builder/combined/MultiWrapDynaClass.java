@@ -53,8 +53,8 @@ class MultiWrapDynaClass implements DynaClass
      */
     public MultiWrapDynaClass(Collection<? extends DynaClass> wrappedCls)
     {
-        properties = new LinkedList<DynaProperty>();
-        namedProperties = new HashMap<String, DynaProperty>();
+        properties = new LinkedList<>();
+        namedProperties = new HashMap<>();
         initProperties(wrappedCls);
     }
 

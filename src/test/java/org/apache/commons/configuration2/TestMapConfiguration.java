@@ -51,7 +51,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration
     @Override
     protected AbstractConfiguration getConfiguration()
     {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put(KEY, "value1");
         map.put("key2", "value2");
         map.put("list", "value1, value2");
@@ -71,7 +71,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration
     @Test
     public void testGetMap()
     {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
 
         MapConfiguration conf = new MapConfiguration(map);
         assertEquals(map, conf.getMap());

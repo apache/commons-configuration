@@ -675,7 +675,7 @@ public class PropertiesConfiguration extends BaseConfiguration
         public PropertiesReader(Reader reader)
         {
             super(reader);
-            commentLines = new ArrayList<String>();
+            commentLines = new ArrayList<>();
         }
 
         /**

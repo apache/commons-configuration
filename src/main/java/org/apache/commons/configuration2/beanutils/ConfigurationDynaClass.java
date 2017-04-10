@@ -128,7 +128,7 @@ public class ConfigurationDynaClass implements DynaClass
         }
 
         Iterator<String> keys = configuration.getKeys();
-        List<DynaProperty> properties = new ArrayList<DynaProperty>();
+        List<DynaProperty> properties = new ArrayList<>();
         while (keys.hasNext())
         {
             String key = keys.next();

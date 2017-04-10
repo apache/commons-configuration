@@ -344,7 +344,7 @@ public class TestCombinedConfigurationBuilder
     public void testLoadOptionalForceCreate() throws ConfigurationException
     {
         String name = "optionalConfig";
-        Map<String, Object> attrs = new HashMap<String, Object>();
+        Map<String, Object> attrs = new HashMap<>();
         attrs.put("fileName", "nonExisting.xml");
         attrs.put("config-name", name);
         attrs.put("config-optional", Boolean.TRUE);
@@ -477,7 +477,7 @@ public class TestCombinedConfigurationBuilder
     @Test
     public void testResetBuilder() throws ConfigurationException
     {
-        Map<String, Object> attrs = new HashMap<String, Object>();
+        Map<String, Object> attrs = new HashMap<>();
         BasicConfigurationBuilder<? extends HierarchicalConfiguration<ImmutableNode>> defBuilder =
                 prepareSubBuilderTest(attrs);
         CombinedConfiguration cc = builder.getConfiguration();
@@ -497,7 +497,7 @@ public class TestCombinedConfigurationBuilder
     @Test
     public void testReloadingBuilder() throws ConfigurationException
     {
-        Map<String, Object> attrs = new HashMap<String, Object>();
+        Map<String, Object> attrs = new HashMap<>();
         attrs.put("config-reload", Boolean.TRUE);
         prepareSubBuilderTest(attrs);
         builder.getConfiguration();
@@ -513,7 +513,7 @@ public class TestCombinedConfigurationBuilder
     @Test
     public void testReactOnSubBuilderChange() throws ConfigurationException
     {
-        Map<String, Object> attrs = new HashMap<String, Object>();
+        Map<String, Object> attrs = new HashMap<>();
         prepareSubBuilderTest(attrs);
         CombinedConfiguration cc = builder.getConfiguration();
         BasicConfigurationBuilder<?> subBuilder =
@@ -531,7 +531,7 @@ public class TestCombinedConfigurationBuilder
     @Test
     public void testRemoveSubBuilderListener() throws ConfigurationException
     {
-        Map<String, Object> attrs = new HashMap<String, Object>();
+        Map<String, Object> attrs = new HashMap<>();
         prepareSubBuilderTest(attrs);
         builder.getConfiguration();
         BasicConfigurationBuilder<?> subBuilder =
@@ -636,7 +636,7 @@ public class TestCombinedConfigurationBuilder
         final BaseHierarchicalConfiguration dataConf =
                 new BaseHierarchicalConfiguration();
         dataConf.addProperty(tagName, Boolean.TRUE);
-        Map<String, Object> attrs = new HashMap<String, Object>();
+        Map<String, Object> attrs = new HashMap<>();
         attrs.put("config-name", BUILDER_NAME);
         attrs.put("config-at", "tests");
         builder.configure(new CombinedBuilderParametersImpl()
@@ -1519,7 +1519,7 @@ public class TestCombinedConfigurationBuilder
      */
     public static class TestLookup implements Lookup
     {
-        private final Map<String, String> map = new HashMap<String, String>();
+        private final Map<String, String> map = new HashMap<>();
 
         public TestLookup()
         {

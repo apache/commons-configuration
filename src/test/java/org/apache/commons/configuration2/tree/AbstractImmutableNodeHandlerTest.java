@@ -162,7 +162,7 @@ public abstract class AbstractImmutableNodeHandlerTest
         NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
         String name = "Achilles";
         Set<ImmutableNode> children =
-                new HashSet<ImmutableNode>(handler.getChildren(
+                new HashSet<>(handler.getChildren(
                         ROOT_PERSONAE_TREE, name));
         assertEquals("Wrong number of children", 3, children.size());
         for (ImmutableNode c : children)
@@ -369,7 +369,7 @@ public abstract class AbstractImmutableNodeHandlerTest
         final ImmutableNode target =
                 NodeStructureHelper.nodeForKey(ROOT_AUTHORS_TREE,
                         NodeStructureHelper.author(1));
-        final Set<String> encounteredAuthors = new HashSet<String>();
+        final Set<String> encounteredAuthors = new HashSet<>();
 
         NodeMatcher<ImmutableNode> matcher = new NodeMatcher<ImmutableNode>()
         {

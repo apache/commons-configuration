@@ -64,7 +64,7 @@ public class ServletRequestConfiguration extends BaseWebConfiguration
         else
         {
             // ensure that escape characters in all list elements are removed
-            List<Object> result = new ArrayList<Object>(values.length);
+            List<Object> result = new ArrayList<>(values.length);
             for (String value : values)
             {
                 Object val = handleDelimiters(value);

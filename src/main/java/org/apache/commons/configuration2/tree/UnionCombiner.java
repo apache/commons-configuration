@@ -134,7 +134,7 @@ public class UnionCombiner extends NodeCombiner
         result.addAttributes(node1.getAttributes());
 
         // Check if nodes can be combined
-        List<ImmutableNode> children2 = new LinkedList<ImmutableNode>(node2.getChildren());
+        List<ImmutableNode> children2 = new LinkedList<>(node2.getChildren());
         for (ImmutableNode child1 : node1.getChildren())
         {
             ImmutableNode child2 = findCombineNode(node1, node2, child1

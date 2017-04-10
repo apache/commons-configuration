@@ -71,7 +71,7 @@ public class CompositeConfiguration extends AbstractConfiguration
 implements Cloneable
 {
     /** List holding all the configuration */
-    private List<Configuration> configList = new LinkedList<Configuration>();
+    private List<Configuration> configList = new LinkedList<>();
 
     /**
      * Configuration that holds in memory stuff.  Inserted as first so any
@@ -316,7 +316,7 @@ implements Cloneable
     @Override
     protected Iterator<String> getKeysInternal()
     {
-        Set<String> keys = new LinkedHashSet<String>();
+        Set<String> keys = new LinkedHashSet<>();
         for (Configuration config : configList)
         {
             for (Iterator<String> it = config.getKeys(); it.hasNext();)
@@ -331,7 +331,7 @@ implements Cloneable
     @Override
     protected Iterator<String> getKeysInternal(String key)
     {
-        Set<String> keys = new LinkedHashSet<String>();
+        Set<String> keys = new LinkedHashSet<>();
         for (Configuration config : configList)
         {
             for (Iterator<String> it = config.getKeys(key); it.hasNext();)
@@ -382,7 +382,7 @@ implements Cloneable
     @Override
     public List<Object> getList(String key, List<?> defaultValue)
     {
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
 
         // add all elements from the first configuration containing the requested key
         Iterator<Configuration> it = configList.iterator();
@@ -486,7 +486,7 @@ implements Cloneable
         {
             CompositeConfiguration copy = (CompositeConfiguration) super
                     .clone();
-            copy.configList = new LinkedList<Configuration>();
+            copy.configList = new LinkedList<>();
             copy.inMemoryConfiguration = ConfigurationUtils
                     .cloneConfiguration(getInMemoryConfiguration());
             copy.configList.add(copy.inMemoryConfiguration);

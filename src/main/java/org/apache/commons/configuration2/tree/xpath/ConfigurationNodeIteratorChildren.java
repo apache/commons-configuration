@@ -83,7 +83,7 @@ class ConfigurationNodeIteratorChildren<T> extends
     @Override
     protected NodePointer createNodePointer(int position)
     {
-        return new ConfigurationNodePointer<T>(getParent(), subNodes
+        return new ConfigurationNodePointer<>(getParent(), subNodes
                 .get(position), getNodeHandler());
     }
 
@@ -149,7 +149,7 @@ class ConfigurationNodeIteratorChildren<T> extends
     private List<T> createSubNodeListForName(T node, QName name)
     {
         String compareName = qualifiedName(name);
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         for (T child : getNodeHandler().getChildren(node))
         {
             if (StringUtils.equals(compareName, getNodeHandler()
@@ -178,7 +178,7 @@ class ConfigurationNodeIteratorChildren<T> extends
         }
         else
         {
-            List<T> prefixChildren = new ArrayList<T>(children.size());
+            List<T> prefixChildren = new ArrayList<>(children.size());
             String prefix = prefixName(name.getPrefix(), null);
             for (T child : children)
             {

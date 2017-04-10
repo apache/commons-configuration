@@ -426,7 +426,7 @@ public class TestXMLConfiguration
         // If the file does not exist, an empty config is created
         assertFalse("File exists", testSaveConf.exists());
         FileBasedConfigurationBuilder<XMLConfiguration> builder =
-                new FileBasedConfigurationBuilder<XMLConfiguration>(
+                new FileBasedConfigurationBuilder<>(
                         XMLConfiguration.class, null, true);
         builder.configure(new FileBasedBuilderParametersImpl()
                 .setFile(testSaveConf));
@@ -1132,7 +1132,7 @@ public class TestXMLConfiguration
     public void testAutoSaveWithSubnodeConfig() throws ConfigurationException
     {
         FileBasedConfigurationBuilder<XMLConfiguration> builder =
-                new FileBasedConfigurationBuilder<XMLConfiguration>(
+                new FileBasedConfigurationBuilder<>(
                         XMLConfiguration.class);
         builder.configure(new FileBasedBuilderParametersImpl()
                 .setFileName(testProperties));
@@ -1158,7 +1158,7 @@ public class TestXMLConfiguration
     public void testAutoSaveWithSubSubnodeConfig() throws ConfigurationException
     {
         FileBasedConfigurationBuilder<XMLConfiguration> builder =
-                new FileBasedConfigurationBuilder<XMLConfiguration>(
+                new FileBasedConfigurationBuilder<>(
                         XMLConfiguration.class);
         builder.configure(new FileBasedBuilderParametersImpl()
                 .setFileName(testProperties));
@@ -1260,7 +1260,7 @@ public class TestXMLConfiguration
     public void testAutoSaveAddNodes() throws ConfigurationException
     {
         FileBasedConfigurationBuilder<XMLConfiguration> builder =
-                new FileBasedConfigurationBuilder<XMLConfiguration>(
+                new FileBasedConfigurationBuilder<>(
                         XMLConfiguration.class);
         builder.configure(new FileBasedBuilderParametersImpl()
                 .setFileName(testProperties));
@@ -1269,7 +1269,7 @@ public class TestXMLConfiguration
         builder.setAutoSave(true);
         ImmutableNode node = NodeStructureHelper.createNode(
                 "addNodesTest", Boolean.TRUE);
-        Collection<ImmutableNode> nodes = new ArrayList<ImmutableNode>(1);
+        Collection<ImmutableNode> nodes = new ArrayList<>(1);
         nodes.add(node);
         conf.addNodes("test.autosave", nodes);
         XMLConfiguration c2 = new XMLConfiguration();
@@ -1477,7 +1477,7 @@ public class TestXMLConfiguration
             InterruptedException
     {
         FileBasedConfigurationBuilder<XMLConfiguration> builder =
-                new FileBasedConfigurationBuilder<XMLConfiguration>(
+                new FileBasedConfigurationBuilder<>(
                         XMLConfiguration.class);
         builder.configure(new FileBasedBuilderParametersImpl()
                 .setFileName(testProperties));

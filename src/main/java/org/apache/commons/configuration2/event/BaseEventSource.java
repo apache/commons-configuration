@@ -97,7 +97,7 @@ public class BaseEventSource implements EventSource
             EventType<T> eventType)
     {
         List<EventListener<? super T>> result =
-                new LinkedList<EventListener<? super T>>();
+                new LinkedList<>();
         for (EventListener<? super T> l : eventListeners
                 .getEventListeners(eventType))
         {

@@ -49,7 +49,7 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements
     protected AbstractEventListenerTestImpl(Object source)
     {
         expectedSource = source;
-        events = new LinkedList<T>();
+        events = new LinkedList<>();
     }
 
     @Override

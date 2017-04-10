@@ -325,7 +325,7 @@ public class DefaultConversionHandler implements ConversionHandler
     private <T> T[] toObjectArray(Object src, Class<T> elemClass,
             ConfigurationInterpolator ci)
     {
-        Collection<T> convertedCol = new LinkedList<T>();
+        Collection<T> convertedCol = new LinkedList<>();
         convertToCollection(src, elemClass, ci, convertedCol);
         // Safe to cast because the element class is specified
         @SuppressWarnings("unchecked")
