@@ -25,9 +25,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -278,30 +275,6 @@ public class TestBaseConfiguration
         assertEquals("Existing key", string, config.getString("testString"));
         assertEquals("Existing key with default value", string, config.getString("testString", defaultValue));
         assertEquals("Missing key with default value", defaultValue, config.getString("stringNotInConfig", defaultValue));
-    }
-
-    @Test
-    public void testGetURI()
-    {
-        config.setProperty("testURI", URI.create("http://example.com"));
-        URI uri = URI.create("http://example.com");
-        URI defaultValue = URI.create("http://localhost");
-
-        assertEquals("Existing key", uri, config.getURI("testURI"));
-        assertEquals("Existing key with default value", uri, config.getURI("testURI", defaultValue));
-        assertEquals("Missing key with default value", defaultValue, config.getURI("stringNotInConfig", defaultValue));
-    }
-
-    @Test
-    public void testGetURL() throws MalformedURLException
-    {
-        config.setProperty("testURL", new URL("http://example.com"));
-        URL uri = new URL("http://example.com");
-        URL defaultValue = new URL("http://localhost");
-
-        assertEquals("Existing key", uri, config.getURL("testURL"));
-        assertEquals("Existing key with default value", uri, config.getURL("testURL", defaultValue));
-        assertEquals("Missing key with default value", defaultValue, config.getURL("stringNotInConfig", defaultValue));
     }
 
     @Test(expected = NoSuchElementException.class)

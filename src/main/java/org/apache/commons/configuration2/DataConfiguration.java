@@ -798,7 +798,6 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not an URL.
      */
-    @Override
     public URL getURL(String key)
     {
         return get(URL.class, key);
@@ -816,7 +815,6 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not an URL.
      */
-    @Override
     public URL getURL(String key, URL defaultValue)
     {
         return get(URL.class, key, defaultValue);
