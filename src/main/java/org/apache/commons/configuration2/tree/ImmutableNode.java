@@ -640,7 +640,8 @@ public final class ImmutableNode
     }
 
     @Override
-    public String toString() {
+    public String toString() 
+    {
         return super.toString() + "(" + nodeName + ")";
     }
 }
