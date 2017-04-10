@@ -41,6 +41,9 @@
       <action dev="ggregory" type="add" issue="CONFIGURATION-658">
         Add API org.apache.commons.configuration2.DataConfiguration.getURI(String) methods.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-661">
+        Update platform requirement from Java 6 to 7.
+      </action>
     </release>
 
     <release version="2.1.1" date="2017-02-05"

@@ -481,8 +481,8 @@
     <commons.rc.version>RC1</commons.rc.version>
     <commons.jira.id>CONFIGURATION</commons.jira.id>
     <commons.jira.pid>12310467</commons.jira.pid>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
 
     <commons.scmPubUrl>https://svn.apache.org/repos/infra/websites/production/commons/content/proper/commons-configuration</commons.scmPubUrl>
 
