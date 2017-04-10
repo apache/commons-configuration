@@ -77,7 +77,7 @@ public class DefaultConversionHandler implements ConversionHandler
                 public Object interpolate(Object value)
                 {
                     return value;
-                };
+                }
             };
 
     /** The current date format. */
