@@ -27,6 +27,9 @@
   <body>
     <release version="2.2" date="2017-MM-DD"
              description="Minor release with new APIs and bug fixes.">
+      <action dev="oheger" type="update" issue="CONFIGURATION-663">
+        Fixed a typo in the upgrade to 2.0 guide.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-653" due-to="Vincent Maurin">
         ConfigurationUtils and ConfigurationConverter now offer better support
         for immutable configurations.
