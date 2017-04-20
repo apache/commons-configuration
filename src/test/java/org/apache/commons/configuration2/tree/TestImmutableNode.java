@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -401,6 +402,49 @@ public class TestImmutableNode
         ImmutableNode node2 = node.addChild(child2);
         checkUpdatedNode(node, node2);
         checkChildNodes(node2, node.getChildren().get(0), child2);
+    }
+
+    /**
+     * Tests getting named children.
+     */
+    @Test
+    public void testGetChildrenByName()
+    {
+        ImmutableNode node = createDefaultNode(VALUE);
+        ImmutableNode child2 =
+                new ImmutableNode.Builder().name("child2").create();
+        ImmutableNode node2 = node.addChild(child2);
+        checkUpdatedNode(node, node2);
+        assertEquals("child2", node2.getChildren("child2").get(0).getNodeName());
+        assertEquals(child2, node2.getChildren("child2").get(0));
+    }
+
+    /**
+     * Tests getting named children.
+     */
+    @Test
+    public void testGetChildrenByNullName()
+    {
+        ImmutableNode node = createDefaultNode(VALUE);
+        ImmutableNode child2 =
+                new ImmutableNode.Builder().name("child2").create();
+        ImmutableNode node2 = node.addChild(child2);
+        checkUpdatedNode(node, node2);
+        assertTrue(node2.getChildren(null).isEmpty());
+    }
+
+    /**
+     * Tests getting named children.
+     */
+    @Test
+    public void testGetChildrenByMissingName()
+    {
+        ImmutableNode node = createDefaultNode(VALUE);
+        ImmutableNode child2 =
+                new ImmutableNode.Builder().name("child2").create();
+        ImmutableNode node2 = node.addChild(child2);
+        checkUpdatedNode(node, node2);
+        assertTrue(node2.getChildren("NotFound").isEmpty());
     }
 
     /**

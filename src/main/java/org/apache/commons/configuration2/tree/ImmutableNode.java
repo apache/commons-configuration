@@ -102,6 +102,29 @@ public final class ImmutableNode
     }
 
     /**
+     * Returns a list with the children of this node. This list cannot be
+     * modified.
+     * @param name the node name to find
+     *
+     * @return a list with the child nodes
+     */
+    public List<ImmutableNode> getChildren(final String name)
+    {
+        final List<ImmutableNode> list = new ArrayList<>();
+        if (name == null) {
+            return list;
+        }
+        for (final ImmutableNode node : children) 
+        {
+            if (name.equals(node.getNodeName()))
+            {
+                list.add(node);
+            }
+        }
+        return list;
+    }
+
+    /**
      * Returns a map with the attributes of this node. This map cannot be
      * modified.
      *
