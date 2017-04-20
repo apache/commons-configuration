@@ -172,7 +172,7 @@
       <a href="howto_hierarchical.html#Internal_Representation">Internal Representation</a>
       for further information. The node objects a hierarchical configuration
       deals with are now exposed as a generic type parameter; for instance,
-      <code>BasieHierarchicalConfiguration</code> is actually an
+      <code>BaseHierarchicalConfiguration</code> is actually an
       <code>AbstractHierarchicalConfiguration&lt;ImmutableNode&gt;</code>.
       For most applications only interested in accessing configuration data via
       the typical access methods, this parameter is not relevant and can be
