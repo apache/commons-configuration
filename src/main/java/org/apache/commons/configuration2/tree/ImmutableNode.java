@@ -102,8 +102,8 @@ public final class ImmutableNode
     }
 
     /**
-     * Returns a list with the children of this node. This list cannot be
-     * modified.
+     * Returns a list with the children of this node.
+     * 
      * @param name the node name to find
      *
      * @return a list with the child nodes
