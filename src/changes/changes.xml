@@ -47,6 +47,9 @@
       <action dev="ggregory" type="add" issue="CONFIGURATION-664">
         Add API org.apache.commons.configuration2.tree.ImmutableNode.getChildren(String).
       </action>
+      <action dev="ggregory" type="add" issue="CONFIGURATION-665">
+        Add org.apache.commons.configuration2.AbstractHierarchicalConfiguration.toString().
+      </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-661">
         Update platform requirement from Java 6 to 7.
       </action>

@@ -973,4 +973,9 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
             }
         }
     }
+    
+    @Override
+    public String toString() {
+        return super.toString() + "(" + getRootElementName() + ")";
+    }
 }
