@@ -346,7 +346,7 @@ public class DefaultBeanFactory implements BeanFactory
     private static ConfigurationRuntimeException constructorMatchingException(
             Class<?> beanClass, BeanDeclaration data, String msg)
     {
-        return new ConfigurationRuntimeException(String.format(FMT_CTOR_ERROR,
-                msg, beanClass.getName(), getConstructorArgs(data).toString()));
+        return new ConfigurationRuntimeException(FMT_CTOR_ERROR,
+                msg, beanClass.getName(), getConstructorArgs(data).toString());
     }
 }
