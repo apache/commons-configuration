@@ -50,6 +50,9 @@
       <action dev="ggregory" type="add" issue="CONFIGURATION-665">
         Add org.apache.commons.configuration2.AbstractHierarchicalConfiguration.toString().
       </action>
+      <action dev="ggregory" type="add" issue="CONFIGURATION-666">
+        Add convenience ctor ConfigurationRuntimeException(String, Object...).
+      </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-661">
         Update platform requirement from Java 6 to 7.
       </action>

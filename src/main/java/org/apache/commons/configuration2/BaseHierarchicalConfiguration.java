@@ -360,10 +360,11 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
             String key)
     {
         List<ImmutableNode> targetNodes = fetchFilteredNodeResults(key);
-        if (targetNodes.size() != 1)
+        int size = targetNodes.size();
+        if (size != 1)
         {
             throw new ConfigurationRuntimeException(
-                    "Passed in key must select exactly one node: " + key);
+                    "Passed in key must select exactly one node (found %,d): %s", size, key);
         }
         BaseHierarchicalConfiguration sub =
                 new BaseHierarchicalConfiguration(new InMemoryNodeModel(
