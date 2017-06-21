@@ -48,6 +48,19 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
     }
 
     /**
+     * Creates a new instance of {@code AbstractYAMLBasedConfiguration} as a
+     * copy of the specified configuration.
+     *
+     * @param c the configuration to be copied
+     */
+    protected AbstractYAMLBasedConfiguration(
+            HierarchicalConfiguration<ImmutableNode> c)
+    {
+        super(c);
+        initLogger(new ConfigurationLogger(getClass()));
+    }
+
+    /**
      * Loads this configuration from the content of the specified map. The data
      * in the map is transformed into a hierarchy of {@link ImmutableNode}
      * objects.

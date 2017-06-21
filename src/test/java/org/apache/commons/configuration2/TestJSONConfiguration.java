@@ -130,4 +130,13 @@ public class TestJSONConfiguration
         assertEquals("Elite", jsonConfiguration.getProperty("martin.skill"));
     }
 
+    @Test
+    public void testCopyConstructor()
+    {
+        BaseHierarchicalConfiguration c = new BaseHierarchicalConfiguration();
+        c.addProperty("foo", "bar");
+
+        jsonConfiguration = new JSONConfiguration(c);
+        assertEquals("bar", jsonConfiguration.getString("foo"));
+    }
 }

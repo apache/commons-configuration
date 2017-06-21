@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.InputStreamSupport;
+import org.apache.commons.configuration2.tree.ImmutableNode;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,6 +50,17 @@ public class JSONConfiguration extends AbstractYAMLBasedConfiguration
     public JSONConfiguration()
     {
         super();
+    }
+
+    /**
+     * Creates a new instance of {@code JSONConfiguration} as a copy of the
+     * specified configuration.
+     *
+     * @param c the configuration to be copied
+     */
+    public JSONConfiguration(HierarchicalConfiguration<ImmutableNode> c)
+    {
+        super(c);
     }
 
     @Override

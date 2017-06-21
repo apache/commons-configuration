@@ -110,4 +110,14 @@ public class TestYAMLConfiguration
         assertEquals("Developer", yamlConfiguration.getProperty("martin.job"));
         assertEquals("Elite", yamlConfiguration.getProperty("martin.skill"));
     }
+
+    @Test
+    public void testCopyConstructor()
+    {
+        BaseHierarchicalConfiguration c = new BaseHierarchicalConfiguration();
+        c.addProperty("foo", "bar");
+
+        yamlConfiguration = new YAMLConfiguration(c);
+        assertEquals("bar", yamlConfiguration.getString("foo"));
+    }
 }

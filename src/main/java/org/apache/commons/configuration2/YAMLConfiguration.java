@@ -19,6 +19,7 @@ package org.apache.commons.configuration2;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.InputStreamSupport;
+import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -46,6 +47,17 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration
     public YAMLConfiguration()
     {
         super();
+    }
+
+    /**
+     * Creates a new instance of {@code YAMLConfiguration} as a copy of the
+     * specified configuration.
+     *
+     * @param c the configuration to be copied
+     */
+    public YAMLConfiguration(HierarchicalConfiguration<ImmutableNode> c)
+    {
+        super(c);
     }
 
     @Override
