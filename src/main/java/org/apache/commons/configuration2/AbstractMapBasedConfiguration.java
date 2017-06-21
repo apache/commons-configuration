@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.apache.commons.configuration2;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -10,30 +27,31 @@ import java.util.Map;
 /**
  * @author The-Alchemist
  */
-public class AbstractMapBasedConfiguration extends BaseHierarchicalConfiguration {
-
-    public AbstractMapBasedConfiguration() {
-        super();
-
+public class AbstractMapBasedConfiguration extends BaseHierarchicalConfiguration
+{
+    protected AbstractMapBasedConfiguration()
+    {
         initLogger(new ConfigurationLogger(getClass()));
     }
 
-    protected void load(Map<String, Object> map) {
+    protected void load(Map<String, Object> map)
+    {
         ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
         ImmutableNode top = constructHierarchy(rootBuilder, map);
         getNodeModel().setRootNode(top);
     }
 
     /**
-     * Constructs a YAML map, i.e. String -> Object from a given
-     * configuration node.
+     * Constructs a YAML map, i.e. String -> Object from a given configuration
+     * node.
      *
      * @param node The configuration node to create a map from.
      * @return A Map that contains the configuration node information.
      */
     protected Map<String, Object> constructMap(ImmutableNode node)
     {
-        Map<String, Object> map = new HashMap<String, Object>(node.getChildren().size());
+        Map<String, Object> map =
+                new HashMap<>(node.getChildren().size());
         for (ImmutableNode cNode : node.getChildren())
         {
             if (cNode.getChildren().isEmpty())
@@ -50,10 +68,14 @@ public class AbstractMapBasedConfiguration extends BaseHierarchicalConfiguration
 
     /**
      * Constructs the internal configuration nodes hierarchy.
-     *  @param parent The configuration node that is the root of the current configuration section.
-     * @param map The map with the yaml configurations nodes, i.e. String -> Object.
+     *
+     * @param parent The configuration node that is the root of the current
+     *        configuration section.
+     * @param map The map with the yaml configurations nodes, i.e. String ->
+     *        Object.
      */
-    protected ImmutableNode constructHierarchy(ImmutableNode.Builder parent, Map<String, Object> map)
+    private ImmutableNode constructHierarchy(ImmutableNode.Builder parent,
+            Map<String, Object> map)
     {
         for (Map.Entry<String, Object> entry : map.entrySet())
         {
@@ -61,32 +83,32 @@ public class AbstractMapBasedConfiguration extends BaseHierarchicalConfiguration
             Object value = entry.getValue();
             if (value instanceof Map)
             {
-                ImmutableNode.Builder subtree = new ImmutableNode.Builder()
-                        .name(key);
-                ImmutableNode children = constructHierarchy(subtree, (Map) value);
+                ImmutableNode.Builder subtree =
+                        new ImmutableNode.Builder().name(key);
+                ImmutableNode children =
+                        constructHierarchy(subtree, (Map) value);
                 parent.addChild(children);
             }
             else
             {
-                ImmutableNode leaf = new ImmutableNode.Builder()
-                        .name(key)
-                        .value(value)
-                        .create();
+                ImmutableNode leaf = new ImmutableNode.Builder().name(key)
+                        .value(value).create();
                 parent.addChild(leaf);
             }
         }
         return parent.create();
     }
 
-
-    static void rethrowException(Exception e) throws ConfigurationException {
-        if(e instanceof ClassCastException)
+    static void rethrowException(Exception e) throws ConfigurationException
+    {
+        if (e instanceof ClassCastException)
         {
             throw new ConfigurationException("Error parsing", e);
         }
         else
         {
-            throw new ConfigurationException("Unable to load the configuration", e);
+            throw new ConfigurationException("Unable to load the configuration",
+                    e);
         }
     }
 }

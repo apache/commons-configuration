@@ -18,9 +18,7 @@
 package org.apache.commons.configuration2;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.configuration2.io.InputStreamSupport;
-import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -29,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -38,16 +35,11 @@ import java.util.Map;
  * documents.
  * </p>
  *
- * @author  The-Alchemist
- *
- * @since commons-configuration2 2.2.?
- * @version $$
+ * @since 2.2
  */
-
-public class YAMLConfiguration extends AbstractMapBasedConfiguration implements
-        FileBasedConfiguration, InputStreamSupport
+public class YAMLConfiguration extends AbstractMapBasedConfiguration
+        implements FileBasedConfiguration, InputStreamSupport
 {
-
     /**
      * Creates a new instance of {@code YAMLConfiguration}.
      */
@@ -55,7 +47,6 @@ public class YAMLConfiguration extends AbstractMapBasedConfiguration implements
     {
         super();
     }
-
 
     @Override
     public void read(Reader in) throws ConfigurationException
@@ -72,8 +63,8 @@ public class YAMLConfiguration extends AbstractMapBasedConfiguration implements
         }
     }
 
-
-    public void read(Reader in, LoaderOptions options) throws ConfigurationException
+    public void read(Reader in, LoaderOptions options)
+            throws ConfigurationException
     {
         try
         {
@@ -95,12 +86,13 @@ public class YAMLConfiguration extends AbstractMapBasedConfiguration implements
         dump(out, options);
     }
 
-    public void dump(Writer out, DumperOptions options) throws ConfigurationException, IOException
+    public void dump(Writer out, DumperOptions options)
+            throws ConfigurationException, IOException
     {
         Yaml yaml = new Yaml(options);
-        yaml.dump(constructMap(getNodeModel().getNodeHandler().getRootNode()), out);
+        yaml.dump(constructMap(getNodeModel().getNodeHandler().getRootNode()),
+                out);
     }
-
 
     /**
      * Loads the configuration from the given input stream.
@@ -123,7 +115,8 @@ public class YAMLConfiguration extends AbstractMapBasedConfiguration implements
         }
     }
 
-    public void read(InputStream in, LoaderOptions options) throws ConfigurationException
+    public void read(InputStream in, LoaderOptions options)
+            throws ConfigurationException
     {
         try
         {
@@ -136,6 +129,5 @@ public class YAMLConfiguration extends AbstractMapBasedConfiguration implements
             rethrowException(e);
         }
     }
-
 
 }

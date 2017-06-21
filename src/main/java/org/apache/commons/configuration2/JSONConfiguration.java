@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.type.MapType;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.InputStreamSupport;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -35,24 +34,20 @@ import java.util.Map;
  * documents.
  * </p>
  *
- * @author  The-Alchemist
- *
- * @since commons-configuration2 2.2.?
- * @version $$
+ * @since 2.2
  */
-
-public class JSONConfiguration extends AbstractMapBasedConfiguration implements
-        FileBasedConfiguration, InputStreamSupport
+public class JSONConfiguration extends AbstractMapBasedConfiguration
+        implements FileBasedConfiguration, InputStreamSupport
 {
-
     private final ObjectMapper mapper = new ObjectMapper();
-    private final MapType type = mapper.getTypeFactory().constructMapType(Map.class, String.class, Object.class);
-
+    private final MapType type = mapper.getTypeFactory()
+            .constructMapType(Map.class, String.class, Object.class);
 
     /**
-     * Creates a new instance of {@code YAMLConfiguration}.
+     * Creates a new instance of {@code JSONConfiguration}.
      */
-    public JSONConfiguration() {
+    public JSONConfiguration()
+    {
         super();
     }
 
@@ -70,27 +65,12 @@ public class JSONConfiguration extends AbstractMapBasedConfiguration implements
         }
     }
 
-    private String readFully(Reader in) {
-        try (BufferedReader r = new BufferedReader(in)) {
-            String str = null;
-            StringBuilder sb = new StringBuilder();
-            while((str =r.readLine())!=null)
-            {
-                sb.append(str);
-            }
-            return sb.toString();
-        } catch(IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
     @Override
     public void write(Writer out) throws ConfigurationException, IOException
     {
-        this.mapper.writer().writeValue(out, constructMap(this.getNodeModel().getNodeHandler().getRootNode()));
+        this.mapper.writer().writeValue(out, constructMap(
+                this.getNodeModel().getNodeHandler().getRootNode()));
     }
-
 
     /**
      * Loads the configuration from the given input stream.
@@ -111,7 +91,5 @@ public class JSONConfiguration extends AbstractMapBasedConfiguration implements
             rethrowException(e);
         }
     }
-
-
 
 }

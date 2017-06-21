@@ -16,16 +16,14 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-
 /**
  * Unit test for {@link YAMLConfiguration}
- *
- * @author The-Alchemist
  */
 public class TestYAMLConfiguration
 {
     /** The files that we test with. */
-    private String testYaml = ConfigurationAssert.getTestFile("test.yaml").getAbsolutePath();
+    private String testYaml =
+            ConfigurationAssert.getTestFile("test.yaml").getAbsolutePath();
     private File testSaveConf = ConfigurationAssert.getOutFile("testsave.yaml");
 
     private YAMLConfiguration yamlConfiguration;
@@ -53,7 +51,8 @@ public class TestYAMLConfiguration
     @Test
     public void testGetProperty_nested_with_list()
     {
-        assertEquals(Arrays.asList("col1", "col2"), yamlConfiguration.getProperty("key4.key5"));
+        assertEquals(Arrays.asList("col1", "col2"),
+                yamlConfiguration.getProperty("key4.key5"));
     }
 
     @Test
@@ -63,11 +62,11 @@ public class TestYAMLConfiguration
         assertEquals(Arrays.asList("col1", "col2"), subset.getProperty("key5"));
     }
 
-
     @Test
     public void testGetProperty_very_nested_properties()
     {
-        Object property = yamlConfiguration.getProperty("very.nested.properties");
+        Object property =
+                yamlConfiguration.getProperty("very.nested.properties");
         assertEquals(Arrays.asList("nested1", "nested2", "nested3"), property);
     }
 
@@ -75,10 +74,10 @@ public class TestYAMLConfiguration
     public void testGetProperty_integer()
     {
         Object property = yamlConfiguration.getProperty("int1");
-        assertTrue("property should be an Integer", property instanceof Integer);
+        assertTrue("property should be an Integer",
+                property instanceof Integer);
         assertEquals(37, property);
     }
-
 
     @Test
     public void testSave() throws IOException, ConfigurationException
@@ -96,7 +95,8 @@ public class TestYAMLConfiguration
         Map key2 = (Map) parsed.get("key2");
         assertEquals("value23", key2.get("key3"));
 
-        List<String> key5 = (List<String>) ((Map) parsed.get("key4")).get("key5");
+        List<String> key5 =
+                (List<String>) ((Map) parsed.get("key4")).get("key5");
         assertEquals(2, key5.size());
         assertEquals("col1", key5.get(0));
         assertEquals("col2", key5.get(1));
@@ -105,7 +105,8 @@ public class TestYAMLConfiguration
     @Test
     public void testGetProperty_dictionary()
     {
-        assertEquals("Martin D'vloper", yamlConfiguration.getProperty("martin.name"));
+        assertEquals("Martin D'vloper",
+                yamlConfiguration.getProperty("martin.name"));
         assertEquals("Developer", yamlConfiguration.getProperty("martin.job"));
         assertEquals("Elite", yamlConfiguration.getProperty("martin.skill"));
     }
