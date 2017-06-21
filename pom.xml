@@ -469,6 +469,22 @@
       <version>${slf4j.version}</version>
       <scope>test</scope>
     </dependency>
+
+
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <version>1.18</version>
+      <optional>true</optional>
+    </dependency>
+
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.5.3</version>
+      <optional>true</optional>
+    </dependency>
   </dependencies>
 
   <properties>
