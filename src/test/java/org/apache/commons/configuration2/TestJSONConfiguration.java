@@ -23,7 +23,6 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -31,7 +30,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test for {@link JSONConfiguration} Not ideal: it uses the Jackson JSON
@@ -42,7 +42,6 @@ public class TestJSONConfiguration
     /** The files that we test with. */
     private String testJson =
             ConfigurationAssert.getTestFile("test.json").getAbsolutePath();
-    private File testSaveConf = ConfigurationAssert.getOutFile("testsave.json");
 
     private JSONConfiguration jsonConfiguration;
 
@@ -51,7 +50,6 @@ public class TestJSONConfiguration
     {
         jsonConfiguration = new JSONConfiguration();
         jsonConfiguration.read(new FileReader(testJson));
-        removeTestFile();
     }
 
     @Test
@@ -130,17 +128,6 @@ public class TestJSONConfiguration
                 jsonConfiguration.getProperty("martin.name"));
         assertEquals("Developer", jsonConfiguration.getProperty("martin.job"));
         assertEquals("Elite", jsonConfiguration.getProperty("martin.skill"));
-    }
-
-    /**
-     * Removes the test output file if it exists.
-     */
-    private void removeTestFile()
-    {
-        if (testSaveConf.exists())
-        {
-            assertTrue(testSaveConf.delete());
-        }
     }
 
 }

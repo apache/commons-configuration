@@ -2,7 +2,9 @@ package org.apache.commons.configuration2;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -24,7 +26,6 @@ public class TestYAMLConfiguration
     /** The files that we test with. */
     private String testYaml =
             ConfigurationAssert.getTestFile("test.yaml").getAbsolutePath();
-    private File testSaveConf = ConfigurationAssert.getOutFile("testsave.yaml");
 
     private YAMLConfiguration yamlConfiguration;
 
@@ -33,7 +34,6 @@ public class TestYAMLConfiguration
     {
         yamlConfiguration = new YAMLConfiguration();
         yamlConfiguration.read(new FileReader(testYaml));
-        removeTestFile();
     }
 
     @Test
@@ -109,16 +109,5 @@ public class TestYAMLConfiguration
                 yamlConfiguration.getProperty("martin.name"));
         assertEquals("Developer", yamlConfiguration.getProperty("martin.job"));
         assertEquals("Elite", yamlConfiguration.getProperty("martin.skill"));
-    }
-
-    /**
-     * Removes the test output file if it exists.
-     */
-    private void removeTestFile()
-    {
-        if (testSaveConf.exists())
-        {
-            assertTrue(testSaveConf.delete());
-        }
     }
 }
