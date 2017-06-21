@@ -54,6 +54,10 @@
         INIConfiguration</a></code></li>
         <li><code><a href="../apidocs/org/apache/commons/configuration2/plist/PropertyListConfiguration.html">
         PropertyListConfiguration</a></code></li>
+        <li><code><a href="../apidocs/org/apache/commons/configuration2/JSONConfiguration.html">
+        JSONConfiguration</a></code></li>
+        <li><code><a href="../apidocs/org/apache/commons/configuration2/YAMLConfiguration.html">
+        YAMLConfiguration</a></code></li>
       </ul>
     </p>
 

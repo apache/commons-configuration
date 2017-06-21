@@ -68,6 +68,14 @@
                         <td>commons-codec</td>
                     </tr>
                     <tr>
+                        <td>JSONConfiguration</td>
+                        <td>com.fasterxml.jackson.core:jackson-databind</td>
+                    </tr>
+                    <tr>
+                        <td>YAMLConfiguration</td>
+                        <td>org.yaml:snakeyaml</td>
+                    </tr>
+                    <tr>
                         <td>ConfigurationDynaBean</td>
                         <td>commons-beanutils</td>
                     </tr>
