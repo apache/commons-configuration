@@ -56,6 +56,14 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-661">
         Update platform requirement from Java 6 to 7.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-656" due-to="The Alchemist">
+        Added new YAMLConfiguration class to support configuration files in
+        YAML format.
+      </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-258" due-to="The Alchemist">
+        Added new JSONConfiguration class to support configuration files in
+        JSON format.
+      </action>
     </release>
 
     <release version="2.1.1" date="2017-02-05"
