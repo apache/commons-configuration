@@ -25,15 +25,35 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author The-Alchemist
+ * <p>
+ * A base class for configuration implementations based on YAML structures.
+ * </p>
+ * <p>
+ * This base class offers functionality related to YAML-like data structures
+ * based on maps. Such a map has strings as keys and arbitrary objects as
+ * values. The class offers methods to transform such a map into a hierarchy
+ * of {@link ImmutableNode} objects and vice versa.
+ * </p>
+ *
+ * @since 2.2
  */
-public class AbstractMapBasedConfiguration extends BaseHierarchicalConfiguration
+public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguration
 {
-    protected AbstractMapBasedConfiguration()
+    /**
+     * Creates a new instance of {@code AbstractYAMLBasedConfiguration}.
+     */
+    protected AbstractYAMLBasedConfiguration()
     {
         initLogger(new ConfigurationLogger(getClass()));
     }
 
+    /**
+     * Loads this configuration from the content of the specified map. The data
+     * in the map is transformed into a hierarchy of {@link ImmutableNode}
+     * objects.
+     *
+     * @param map the map to be processed
+     */
     protected void load(Map<String, Object> map)
     {
         ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
@@ -99,6 +119,12 @@ public class AbstractMapBasedConfiguration extends BaseHierarchicalConfiguration
         return parent.create();
     }
 
+    /**
+     * Internal helper method to wrap an exception in a
+     * {@code ConfigurationException}.
+     * @param e the exception to be wrapped
+     * @throws ConfigurationException the resulting exception
+     */
     static void rethrowException(Exception e) throws ConfigurationException
     {
         if (e instanceof ClassCastException)

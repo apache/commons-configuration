@@ -37,7 +37,7 @@ import java.util.Map;
  *
  * @since 2.2
  */
-public class YAMLConfiguration extends AbstractMapBasedConfiguration
+public class YAMLConfiguration extends AbstractYAMLBasedConfiguration
         implements FileBasedConfiguration, InputStreamSupport
 {
     /**

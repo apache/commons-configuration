@@ -36,7 +36,7 @@ import java.util.Map;
  *
  * @since 2.2
  */
-public class JSONConfiguration extends AbstractMapBasedConfiguration
+public class JSONConfiguration extends AbstractYAMLBasedConfiguration
         implements FileBasedConfiguration, InputStreamSupport
 {
     private final ObjectMapper mapper = new ObjectMapper();
