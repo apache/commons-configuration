@@ -410,9 +410,9 @@
     </dependency>
 
     <dependency>
-      <groupId>dbunit</groupId>
+      <groupId>org.dbunit</groupId>
       <artifactId>dbunit</artifactId>
-      <version>2.1</version>
+      <version>2.3.0</version>
       <scope>test</scope>
     </dependency>
 
@@ -495,6 +495,14 @@
       <version>${slf4j.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-nop</artifactId>
+      <version>${slf4j.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <properties>
@@ -525,7 +533,7 @@
       org.springframework.*;resolution:=optional,
       *
     </commons.osgi.import>
-    <slf4j.version>1.7.7</slf4j.version>
+    <slf4j.version>1.7.25</slf4j.version>
     <spring.version>4.2.5.RELEASE</spring.version>
   </properties>
 
