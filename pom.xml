@@ -461,10 +461,11 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- javax.mail only contains the API, no impl. -->
     <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <version>1.4</version>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>mailapi</artifactId>
+      <version>1.5.6</version>
       <scope>test</scope>
     </dependency>
 
