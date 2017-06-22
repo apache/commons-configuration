@@ -534,7 +534,7 @@
       *
     </commons.osgi.import>
     <slf4j.version>1.7.25</slf4j.version>
-    <spring.version>4.2.5.RELEASE</spring.version>
+    <spring.version>4.3.9.RELEASE</spring.version>
   </properties>
 
   <build>

@@ -67,6 +67,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-667">
         Update Apache Commons Lang from 3.3.2 to 3.6.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-669">
+        Update optional Spring dependency from 4.2.5.RELEASE to 4.3.9.RELEASE.
+      </action>
     </release>
 
     <release version="2.1.1" date="2017-02-05"
