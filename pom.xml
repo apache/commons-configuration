@@ -178,6 +178,17 @@
             <role>Java Developer</role>
           </roles>
         </developer>
+
+        <developer>
+          <name>Gary Gregory</name>
+          <id>ggregory</id>
+          <email>ggregory@apache.org</email>
+          <organization>Rocket Software</organization>
+          <timezone>-8</timezone>
+          <roles>
+            <role>Java Developer</role>
+          </roles>
+        </developer>
     </developers>
 
     <contributors>
