@@ -40,7 +40,15 @@ import java.util.Map;
 public class JSONConfiguration extends AbstractYAMLBasedConfiguration
         implements FileBasedConfiguration, InputStreamSupport
 {
+
+    /**
+     * The object mapper used by the {@code JSONConfiguration}.
+     */
     private final ObjectMapper mapper = new ObjectMapper();
+
+    /**
+     * The {@code MapType} used to convert types.
+     */
     private final MapType type = mapper.getTypeFactory()
             .constructMapType(Map.class, String.class, Object.class);
 
