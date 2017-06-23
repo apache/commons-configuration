@@ -103,7 +103,7 @@ public final class ImmutableNode
 
     /**
      * Returns a list with the children of this node.
-     * 
+     *
      * @param name the node name to find
      *
      * @return a list with the child nodes
@@ -111,10 +111,11 @@ public final class ImmutableNode
     public List<ImmutableNode> getChildren(final String name)
     {
         final List<ImmutableNode> list = new ArrayList<>();
-        if (name == null) {
+        if (name == null)
+        {
             return list;
         }
-        for (final ImmutableNode node : children) 
+        for (final ImmutableNode node : children)
         {
             if (name.equals(node.getNodeName()))
             {
@@ -663,7 +664,7 @@ public final class ImmutableNode
     }
 
     @Override
-    public String toString() 
+    public String toString()
     {
         return super.toString() + "(" + nodeName + ")";
     }

@@ -1166,7 +1166,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
                 ImmutableNode sibling1, ImmutableNode sibling2,
                 ReferenceNodeHandler refHandler)
         {
-            if(XMLListReference.isListNode(newNode, refHandler))
+            if (XMLListReference.isListNode(newNode, refHandler))
             {
                 return;
             }
@@ -1207,9 +1207,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         protected void update(ImmutableNode node, Object reference,
                 ReferenceNodeHandler refHandler)
         {
-            if(XMLListReference.isListNode(node, refHandler))
+            if (XMLListReference.isListNode(node, refHandler))
             {
-                if(XMLListReference.isFirstListItem(node, refHandler))
+                if (XMLListReference.isFirstListItem(node, refHandler))
                 {
                     String value = XMLListReference.listValue(node, refHandler, listDelimiterHandler);
                     updateElement(node, refHandler, value);
@@ -1308,7 +1308,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
                         ((XMLDocumentHelper) reference).getDocument()
                                 .getDocumentElement();
             }
-            else if(reference instanceof XMLListReference)
+            else if (reference instanceof XMLListReference)
             {
                 element = ((XMLListReference) reference).getElement();
             }

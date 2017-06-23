@@ -65,7 +65,7 @@ public class ConfigurationRuntimeException extends RuntimeException
     {
         super(String.format(message, args));
     }
-    
+
     /**
      * Constructs a new {@code ConfigurationRuntimeException} with
      * specified nested {@code Throwable}.
