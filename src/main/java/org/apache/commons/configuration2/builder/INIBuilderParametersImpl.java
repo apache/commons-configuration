@@ -39,7 +39,7 @@ public class INIBuilderParametersImpl extends HierarchicalBuilderParametersImpl
 {
     /** The key for the separatorUsedInINIOutput property. */
     private static final String PROP_SEPARATOR_USED_IN_INI_OUTPUT
-    	= "separatorUsedInOutput";
+        = "separatorUsedInOutput";
 
     @Override
     public void inheritFrom(Map<String, ?> source)
@@ -48,9 +48,10 @@ public class INIBuilderParametersImpl extends HierarchicalBuilderParametersImpl
         copyPropertiesFrom(source, PROP_SEPARATOR_USED_IN_INI_OUTPUT);
     }
 
-	@Override
-	public INIBuilderParametersImpl setSeparatorUsedInOutput(String separator) {
-		storeProperty(PROP_SEPARATOR_USED_IN_INI_OUTPUT, separator);
-		return this;
-	}
+    @Override
+    public INIBuilderParametersImpl setSeparatorUsedInOutput(String separator)
+    {
+        storeProperty(PROP_SEPARATOR_USED_IN_INI_OUTPUT, separator);
+        return this;
+    }
 }

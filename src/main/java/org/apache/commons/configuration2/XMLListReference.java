@@ -42,7 +42,7 @@ import java.util.Map;
  * that the original format can be restored when the configuration is saved.
  * </p>
  */
-class XMLListReference
+final class XMLListReference
 {
     /** The wrapped XML element. */
     private final Element element;
