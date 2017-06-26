@@ -75,7 +75,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
     }
 
     /**
-     * Constructs a YAML map, i.e. String -> Object from a given configuration
+     * Constructs a YAML map, i.e. String -&gt; Object from a given configuration
      * node.
      *
      * @param node The configuration node to create a map from.
@@ -104,7 +104,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      *
      * @param parent The configuration node that is the root of the current
      *        configuration section.
-     * @param map The map with the yaml configurations nodes, i.e. String ->
+     * @param map The map with the yaml configurations nodes, i.e. String -&gt;
      *        Object.
      */
     private ImmutableNode constructHierarchy(ImmutableNode.Builder parent,
