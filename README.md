@@ -43,6 +43,9 @@
 Apache Commons Configuration
 ============================
 
+[![Build Status](https://travis-ci.org/apache/commons-configuration.svg?branch=trunk)](https://travis-ci.org/apache/commons-configuration)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-configuration2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-configuration2/)
+
 Tools to assist in the reading of configuration/preferences files in various formats
 
 Documentation
