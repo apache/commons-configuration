@@ -132,7 +132,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * initializes it with the given result class. No initialization properties
      * are set.
      *
-     * @param resCls the result class (must not be <b>null</b>
+     * @param resCls the result class (must not be <b>null</b>)
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
     public BasicConfigurationBuilder(Class<? extends T> resCls)
@@ -146,7 +146,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * parameters. The <em>allowFailOnInit</em> flag is set to
      * <strong>false</strong>.
      *
-     * @param resCls the result class (must not be <b>null</b>
+     * @param resCls the result class (must not be <b>null</b>)
      * @param params a map with initialization parameters
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
@@ -162,7 +162,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * parameters may be <b>null</b>, in this case no initialization parameters
      * are set.
      *
-     * @param resCls the result class (must not be <b>null</b>
+     * @param resCls the result class (must not be <b>null</b>)
      * @param params a map with initialization parameters
      * @param allowFailOnInit a flag whether exceptions on initializing a newly
      *        created {@code ImmutableConfiguration} object are allowed
