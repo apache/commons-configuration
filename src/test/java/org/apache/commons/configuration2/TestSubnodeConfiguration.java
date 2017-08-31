@@ -519,4 +519,18 @@ public class TestSubnodeConfiguration
         config.close();
         EasyMock.verify(model);
     }
+
+    /**
+     * Tests whether a correct node model is returned for the sub
+     * configuration. This test is related to CONFIGURATION-670.
+     */
+    @Test
+    public void testGetNodeModel()
+    {
+        setUpSubnodeConfig();
+        InMemoryNodeModel nodeModel = config.getNodeModel();
+
+        assertEquals("Wrong root node", "table",
+                nodeModel.getNodeHandler().getRootNode().getNodeName());
+    }
 }

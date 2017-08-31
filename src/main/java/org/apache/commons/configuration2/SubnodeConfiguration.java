@@ -18,6 +18,7 @@ package org.apache.commons.configuration2;
 
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.InMemoryNodeModel;
+import org.apache.commons.configuration2.tree.InMemoryNodeModelSupport;
 import org.apache.commons.configuration2.tree.NodeModel;
 import org.apache.commons.configuration2.tree.NodeSelector;
 import org.apache.commons.configuration2.tree.TrackedNodeModel;
@@ -174,14 +175,42 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
     }
 
     /**
-     * {@inheritDoc} This implementation returns the node model of the parent
-     * configuration. This is necessary because this sub configuration does not
-     * have an {@code InMemoryNodeModel} object.
+     * {@inheritDoc} This implementation returns a newly created node model
+     * with the correct root node set. Note that this model is not used for
+     * property access, but only made available to clients that need to
+     * operate on the node structure of this {@code SubnodeConfiguration}.
+     * Be aware that the implementation of this method is not very efficient.
      */
     @Override
     public InMemoryNodeModel getNodeModel()
     {
-        return getParent().getNodeModel();
+        ImmutableNode root =
+                getParent().getNodeModel().getTrackedNode(getRootSelector());
+        return new InMemoryNodeModel(root);
+    }
+
+    /**
+     * Returns the node model of the root configuration.
+     * {@code SubnodeConfiguration} instances created from a hierarchical
+     * configuration operate on the same node model, using different nodes as
+     * their local root nodes. With this method the top-level node model can be
+     * obtained. It works even in constellations where a
+     * {@code SubnodeConfiguration} has been created from another
+     * {@code SubnodeConfiguration}.
+     *
+     * @return the root node model
+     * @since 2.2
+     */
+    public InMemoryNodeModel getRootNodeModel()
+    {
+        if (getParent() instanceof SubnodeConfiguration)
+        {
+            return ((SubnodeConfiguration) getParent()).getRootNodeModel();
+        }
+        else
+        {
+            return getParent().getNodeModel();
+        }
     }
 
     /**
@@ -218,6 +247,17 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
     protected InMemoryNodeModel getSubConfigurationParentModel()
     {
         return getTrackedModel().getParentModel();
+    }
+
+    /**
+     * {@inheritDoc} This implementation makes sure that the correct node model
+     * (the one of the parent) is used for the new sub configuration.
+     */
+    @Override
+    protected SubnodeConfiguration createSubConfigurationForTrackedNode(
+            NodeSelector selector, InMemoryNodeModelSupport parentModelSupport)
+    {
+        return super.createSubConfigurationForTrackedNode(selector, getParent());
     }
 
     /**

@@ -185,8 +185,8 @@ public class TestBaseHierarchicalConfigurationSynchronization
     private static boolean isDetached(HierarchicalConfiguration<ImmutableNode> c)
     {
         assertTrue("Not a sub configuration", c instanceof SubnodeConfiguration);
-        return ((InMemoryNodeModel) c.getNodeModel())
-                .isTrackedNodeDetached(((SubnodeConfiguration) c)
+        InMemoryNodeModel nodeModel = ((SubnodeConfiguration) c).getRootNodeModel();
+        return nodeModel.isTrackedNodeDetached(((SubnodeConfiguration) c)
                         .getRootSelector());
     }
 
