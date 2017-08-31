@@ -70,6 +70,10 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-669">
         Update optional Spring dependency from 4.2.5.RELEASE to 4.3.9.RELEASE.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-671">
+        Fixed a NPE in INIConfiguration when saving a configuration with an
+        empty section.
+      </action>
     </release>
 
     <release version="2.1.1" date="2017-02-05"
