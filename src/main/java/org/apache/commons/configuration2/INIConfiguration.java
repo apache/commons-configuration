@@ -212,6 +212,10 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * <a href="http://commons.apache.org/proper/commons-configuration/userguide/howto_basicfeatures.html">
  * Basic features and AbstractConfiguration</a> of the user's guide.
  * </p>
+ * <p>
+ * Note that this configuration does not support properties with null values.
+ * Such properties are considered to be section nodes.
+ * </p>
  *
  * @author <a
  *         href="http://commons.apache.org/configuration/team-list.html">Commons
@@ -942,7 +946,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      */
     private static boolean isSectionNode(ImmutableNode node)
     {
-        return !node.getChildren().isEmpty();
+        return node.getValue() == null;
     }
 
     /**

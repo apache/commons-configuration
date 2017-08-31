@@ -1224,6 +1224,27 @@ public class TestINIConfiguration
     }
 
     /**
+     * Tests whether an empty section can be saved. This is related to
+     * CONFIGURATION-671.
+     */
+    @Test
+    public void testWriteEmptySection()
+            throws ConfigurationException, IOException
+    {
+        final String section = "[EmptySection]";
+        INIConfiguration config = setUpConfig(section);
+        assertEquals("Wrong number of sections", 1,
+                config.getSections().size());
+        assertTrue("Section not found",
+                config.getSections().contains("EmptySection"));
+
+        StringWriter writer = new StringWriter();
+        config.write(writer);
+        assertEquals("Wrong saved configuration",
+                section + LINE_SEPARATOR + LINE_SEPARATOR, writer.toString());
+    }
+
+    /**
      * A thread class for testing concurrent access to the global section.
      */
     private static class GlobalSectionTestThread extends Thread
