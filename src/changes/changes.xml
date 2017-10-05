@@ -78,6 +78,10 @@
         Fixed a NPE in INIConfiguration when saving a configuration with an
         empty section.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-673" due-to="Andreas Kuhtz ">
+        Added an Automatic-Module-Name header to the manifest for compatibility
+        with the Java 9 module system.
+      </action>
     </release>
 
     <release version="2.1.1" date="2017-02-05"
