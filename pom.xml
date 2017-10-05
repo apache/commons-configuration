@@ -537,6 +537,8 @@
       org.apache.commons.jexl2.*;resolution:=optional,
       org.apache.commons.vfs2.*;resolution:=optional,
       org.springframework.*;resolution:=optional,
+      com.fasterxml.jackson.*;resolution:=optional,
+      org.yaml.snakeyaml.*;resolution:=optional,
       *
     </commons.osgi.import>
     <slf4j.version>1.7.25</slf4j.version>
