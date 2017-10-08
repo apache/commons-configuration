@@ -1,4 +1,98 @@
 $Id$
+                        Apache Commons Configuration
+                               Version 2.2
+                               Release Notes
+
+
+INTRODUCTION:
+=============
+
+This document contains the release notes for this version of the Commons
+Configuration component. It describes the changes since the previous version.
+The Commons Configuration software library provides a generic configuration
+interface which enables an application to read configuration data from a
+variety of sources.
+
+Version 2.2 is another maintenance release for the Configuration 2.x series. It
+contains a number of bug fixes and also some new features. Among the highlights
+is the new support for JSON and YAML configurations. The release is fully
+source and binary compatible with version 2.1.1.
+
+Commons Configuration 2.2 requires Java 1.7 or higher.
+
+New features
+============
+o CONFIGURATION-666
+  Add convenience ctor ConfigurationRuntimeException(String, Object...).
+
+o CONFIGURATION-665
+  Add org.apache.commons.configuration2.AbstractHierarchicalConfiguration.toString().
+
+o CONFIGURATION-664
+  Add API org.apache.commons.configuration2.tree.ImmutableNode.getChildren(String).
+
+o CONFIGURATION-660
+  Add toString() methods here and there to help debugging.
+
+o CONFIGURATION-658
+  Add API org.apache.commons.configuration2.DataConfiguration.getURI(String)
+  methods.
+
+o CONFIGURATION-656
+  Added new YAMLConfiguration class to support configuration files in YAML
+  format.
+
+o CONFIGURATION-653
+  ConfigurationUtils and ConfigurationConverter now offer better support for
+  immutable configurations.
+
+o CONFIGURATION-647
+  INIConfiguration can now be configured to use a custom separator between
+  properties and values when writing an ini file.
+
+o CONFIGURATION-258
+  Added new JSONConfiguration class to support configuration files in JSON
+  format.
+
+Fixed Bugs
+==========
+o CONFIGURATION-671
+  Fixed a NPE in INIConfiguration when saving a configuration with an empty
+  section.
+
+o CONFIGURATION-669
+  The node model returned by SubnodeConfiguration.getNodeModel() has now the
+  correct root node set.
+
+Other changes
+=============
+o CONFIGURATION-673
+  Added an Automatic-Module-Name header to the manifest for compatibility with
+  the Java 9 module system.
+
+o CONFIGURATION-669
+  Update optional Spring dependency from 4.2.5.RELEASE to 4.3.9.RELEASE.
+
+o CONFIGURATION-667
+  Update Apache Commons Lang dependency from 3.3.2 to 3.6.
+
+o CONFIGURATION-663
+  Fixed a typo in the upgrade to 2.0 guide.
+
+o CONFIGURATION-661
+  Update platform requirement from Java 6 to 7.
+
+
+Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+
+For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
+
+http://commons.apache.org/proper/commons-configuration/
+
+
+Older release notes
+===================
 
                         Apache Commons Configuration
                                Version 2.1.1
@@ -74,9 +168,6 @@ patches, or suggestions for improvement, see the Apache Apache Commons Configura
 
 http://commons.apache.org/proper/commons-configuration/
 
-
-Older release notes
-===================
 
                         Commons Configuration Package
                                  Version 2.1
