@@ -27,8 +27,48 @@
   <body>
     <release version="2.2" date="2017-MM-DD"
              description="Minor release with new APIs and bug fixes.">
+      <action dev="oheger" type="add" issue="CONFIGURATION-673" due-to="Andreas Kuhtz ">
+        Added an Automatic-Module-Name header to the manifest for compatibility
+        with the Java 9 module system.
+      </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-671">
+        Fixed a NPE in INIConfiguration when saving a configuration with an
+        empty section.
+      </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-670">
+        The node model returned by SubnodeConfiguration.getNodeModel() has now
+        the correct root node set.
+      </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-669">
+        Update optional Spring dependency from 4.2.5.RELEASE to 4.3.9.RELEASE.
+      </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-667">
+        Update Apache Commons Lang from 3.3.2 to 3.6.
+      </action>
+      <action dev="ggregory" type="add" issue="CONFIGURATION-666">
+        Add convenience ctor ConfigurationRuntimeException(String, Object...).
+      </action>
+      <action dev="ggregory" type="add" issue="CONFIGURATION-665">
+        Add org.apache.commons.configuration2.AbstractHierarchicalConfiguration.toString().
+      </action>
+      <action dev="ggregory" type="add" issue="CONFIGURATION-664">
+        Add API org.apache.commons.configuration2.tree.ImmutableNode.getChildren(String).
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-663">
         Fixed a typo in the upgrade to 2.0 guide.
+      </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-661">
+        Update platform requirement from Java 6 to 7.
+      </action>
+      <action dev="ggregory" type="add" issue="CONFIGURATION-660">
+        Add toString() methods here and there to help debugging.
+      </action>
+      <action dev="ggregory" type="add" issue="CONFIGURATION-658">
+        Add API org.apache.commons.configuration2.DataConfiguration.getURI(String) methods.
+      </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-656" due-to="The Alchemist">
+        Added new YAMLConfiguration class to support configuration files in
+        YAML format.
       </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-653" due-to="Vincent Maurin">
         ConfigurationUtils and ConfigurationConverter now offer better support
@@ -38,49 +78,9 @@
         INIConfiguration can now be configured to use a custom separator
         between properties and values when writing an ini file.
       </action>
-      <action dev="ggregory" type="add" issue="CONFIGURATION-660">
-        Add toString() methods here and there to help debugging.
-      </action>
-      <action dev="ggregory" type="add" issue="CONFIGURATION-658">
-        Add API org.apache.commons.configuration2.DataConfiguration.getURI(String) methods.
-      </action>
-      <action dev="ggregory" type="add" issue="CONFIGURATION-664">
-        Add API org.apache.commons.configuration2.tree.ImmutableNode.getChildren(String).
-      </action>
-      <action dev="ggregory" type="add" issue="CONFIGURATION-665">
-        Add org.apache.commons.configuration2.AbstractHierarchicalConfiguration.toString().
-      </action>
-      <action dev="ggregory" type="add" issue="CONFIGURATION-666">
-        Add convenience ctor ConfigurationRuntimeException(String, Object...).
-      </action>
-      <action dev="ggregory" type="update" issue="CONFIGURATION-661">
-        Update platform requirement from Java 6 to 7.
-      </action>
-      <action dev="oheger" type="add" issue="CONFIGURATION-656" due-to="The Alchemist">
-        Added new YAMLConfiguration class to support configuration files in
-        YAML format.
-      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-258" due-to="The Alchemist">
         Added new JSONConfiguration class to support configuration files in
         JSON format.
-      </action>
-      <action dev="ggregory" type="update" issue="CONFIGURATION-667">
-        Update Apache Commons Lang from 3.3.2 to 3.6.
-      </action>
-      <action dev="ggregory" type="update" issue="CONFIGURATION-669">
-        Update optional Spring dependency from 4.2.5.RELEASE to 4.3.9.RELEASE.
-      </action>
-      <action dev="oheger" type="fix" issue="CONFIGURATION-670">
-        The node model returned by SubnodeConfiguration.getNodeModel() has now
-        the correct root node set.
-      </action>
-      <action dev="oheger" type="fix" issue="CONFIGURATION-671">
-        Fixed a NPE in INIConfiguration when saving a configuration with an
-        empty section.
-      </action>
-      <action dev="oheger" type="add" issue="CONFIGURATION-673" due-to="Andreas Kuhtz ">
-        Added an Automatic-Module-Name header to the manifest for compatibility
-        with the Java 9 module system.
       </action>
     </release>
 
