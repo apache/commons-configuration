@@ -25,7 +25,7 @@
   </properties>
 
   <body>
-    <release version="2.2" date="2017-MM-DD"
+    <release version="2.2" date="2017-10-12"
              description="Minor release with new APIs and bug fixes.">
       <action dev="oheger" type="add" issue="CONFIGURATION-673" due-to="Andreas Kuhtz ">
         Added an Automatic-Module-Name header to the manifest for compatibility
