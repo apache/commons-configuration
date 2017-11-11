@@ -27,6 +27,9 @@
   <body>
     <release version="2.3" date="in SVN"
              description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-675">
+        Added a .gitignore file to the project.
+      </action>
     </release>
 
     <release version="2.2" date="2017-10-12"
