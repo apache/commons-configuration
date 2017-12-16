@@ -33,6 +33,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-678">
         Update Apache Commons Codec from 1.10 to 1.11.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-679">
+        Update Jackson from 2.8.9 to 2.9.3.
+      </action>
     </release>
 
     <release version="2.2" date="2017-10-12"
