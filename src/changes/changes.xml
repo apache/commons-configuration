@@ -30,6 +30,9 @@
       <action dev="oheger" type="update" issue="CONFIGURATION-675">
         Added a .gitignore file to the project.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-678">
+        Update Apache Commons Codec from 1.10 to 1.11.
+      </action>
     </release>
 
     <release version="2.2" date="2017-10-12"
