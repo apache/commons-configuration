@@ -39,6 +39,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-680">
         Update Apache Commons Lang from 3.6 to 3.7.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-681">
+        Update Apache Commons VFS from 2.1 to 2.2.
+      </action>
     </release>
 
     <release version="2.2" date="2017-10-12"
