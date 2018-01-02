@@ -108,7 +108,7 @@ public class TestJSONConfiguration
         MapType type = mapper.getTypeFactory().constructMapType(Map.class,
                 String.class, Object.class);
         Map<String, Object> parsed = mapper.readValue(output, type);
-        assertEquals(6, parsed.entrySet().size());
+        assertEquals(7, parsed.entrySet().size());
         assertEquals("value1", parsed.get("key1"));
 
         Map key2 = (Map) parsed.get("key2");
@@ -119,6 +119,10 @@ public class TestJSONConfiguration
         assertEquals(2, key5.size());
         assertEquals("col1", key5.get(0));
         assertEquals("col2", key5.get(1));
+
+        List<?> capitals = (List<?>) parsed.get("capitals");
+        Map<?, ?> capUk = (Map<?, ?>) capitals.get(1);
+        assertEquals("London", capUk.get("capital"));
     }
 
     @Test
@@ -128,6 +132,13 @@ public class TestJSONConfiguration
                 jsonConfiguration.getProperty("martin.name"));
         assertEquals("Developer", jsonConfiguration.getProperty("martin.job"));
         assertEquals("Elite", jsonConfiguration.getProperty("martin.skill"));
+    }
+
+    @Test
+    public void testGetProperty_dictionaryInList()
+    {
+        assertEquals("UK", jsonConfiguration.getString("capitals(1).country"));
+        assertEquals("Washington", jsonConfiguration.getString("capitals(0).capital"));
     }
 
     @Test

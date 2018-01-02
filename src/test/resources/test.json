@@ -23,5 +23,15 @@
     "name": "Martin D'vloper",
     "job": "Developer",
     "skill": "Elite"
-  }
+  },
+  "capitals": [
+    {
+      "country": "USA",
+      "capital": "Washington"
+    },
+    {
+      "country": "UK",
+      "capital": "London"
+    }
+  ]
 }
