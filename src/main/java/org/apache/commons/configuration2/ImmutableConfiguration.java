@@ -120,7 +120,9 @@ public interface ImmutableConfiguration
      * Get the list of the keys contained in the configuration. The returned
      * iterator can be used to obtain all defined keys. It does not allow
      * removing elements from this configuration via its {@code remove()}
-     * method.
+     * method. Note that the keys of this configuration are returned in a form,
+     * so that they can be directly evaluated; escaping of special characters
+     * (if necessary) has already been performed.
      *
      * @return An Iterator.
      */
