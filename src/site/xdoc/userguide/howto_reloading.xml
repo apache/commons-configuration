@@ -178,8 +178,8 @@ Parameters params = new Parameters();
 // Read data from this file
 File propertiesFile = new File("config.properties");
 
-ReloadingFileBasedConfigurationBuilder<Configuration> builder =
-    new ReloadingFileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+ReloadingFileBasedConfigurationBuilder<FileBasedConfiguration> builder =
+    new ReloadingFileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
     .configure(params.fileBased()
         .setFile(propertiesFile));
 PeriodicReloadingTrigger trigger = new PeriodicReloadingTrigger(builder.getReloadingController(),
@@ -355,8 +355,8 @@ trigger.start();
     </p>
     <source><![CDATA[
 // Create and initialize the builder
-final ReloadingFileBasedConfigurationBuilder<Configuration> builder =
-    new ReloadingFileBasedConfigurationBuilder<Configuration>(PropertiesConfiguration.class)
+final ReloadingFileBasedConfigurationBuilder<FileBasedConfiguration> builder =
+    new ReloadingFileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
     .configure(...);
 
 // Register an event listener for triggering reloading checks
@@ -364,7 +364,7 @@ builder.addEventListener(ConfigurationBuilderEvent.CONFIGURATION_REQUEST,
     new EventListener()
     {
         @Override
-        public void onEvent(ConfigurationBuilderEvent event)
+        public void onEvent(Event event)
         {
             builder.getReloadingController().checkForReloading(null);
         }
