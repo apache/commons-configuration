@@ -52,6 +52,10 @@
         JSONConfiguration can now handle list structures with complex objects
         as elements.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-688">
+        Fixed a bug related to the handling of multiple include files in
+        PropertiesConfiguration.
+      </action>
     </release>
 
     <release version="2.2" date="2017-10-12"
