@@ -1446,7 +1446,15 @@ public class PropertiesConfiguration extends BaseConfiguration
 
         FileHandler fh = new FileHandler(this);
         fh.setFileLocator(locator);
-        fh.load(url);
+        FileLocator orgLocator = locator;
+        try
+        {
+            fh.load(url);
+        }
+        finally
+        {
+            locator = orgLocator; // reset locator which is changed by load
+        }
     }
 
     /**
