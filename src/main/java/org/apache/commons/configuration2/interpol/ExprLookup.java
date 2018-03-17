@@ -157,11 +157,14 @@ public class ExprLookup implements Lookup
 
     /**
      * Returns the list of Variables that are accessible within expressions.
+     * This method returns a copy of the variables managed by this lookup; so
+     * modifying this object has no impact on this lookup.
+     *
      * @return the List of Variables that are accessible within expressions.
      */
     public Variables getVariables()
     {
-        return null;
+        return new Variables(variables);
     }
 
     /**

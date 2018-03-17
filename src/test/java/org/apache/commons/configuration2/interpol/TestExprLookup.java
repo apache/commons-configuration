@@ -89,6 +89,32 @@ public class TestExprLookup
         assertEquals("Wrong result", value, lookup.lookup(value));
     }
 
+    /**
+     * Tests whether variables can be queried.
+     */
+    @Test
+    public void testGetVariables()
+    {
+        ExprLookup.Variables vars = new ExprLookup.Variables();
+        vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
+        ExprLookup lookup = new ExprLookup(vars);
+        assertEquals("Wrong variables", vars, lookup.getVariables());
+    }
+
+    /**
+     * Tests that getVariables() returns a copy of the original variables.
+     */
+    @Test
+    public void testGetVariablesDefensiveCopy()
+    {
+        ExprLookup.Variables vars = new ExprLookup.Variables();
+        vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
+        ExprLookup lookup = new ExprLookup(vars);
+        ExprLookup.Variables vars2 = lookup.getVariables();
+        vars2.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
+        assertEquals("Modified variables", vars, lookup.getVariables());
+    }
+
     public static class Utility
     {
         String message;
