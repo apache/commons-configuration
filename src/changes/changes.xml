@@ -56,6 +56,10 @@
         Fixed a bug related to the handling of multiple include files in
         PropertiesConfiguration.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-690">
+        ExprLookup.getVariables() no longer returns null, but a copy of the
+        current variables of this lookup object.
+      </action>
     </release>
 
     <release version="2.2" date="2017-10-12"
