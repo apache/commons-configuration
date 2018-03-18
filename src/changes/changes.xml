@@ -60,6 +60,10 @@
         ExprLookup.getVariables() no longer returns null, but a copy of the
         current variables of this lookup object.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-691">
+        ExprLookup now handles expressions that do not return a string result
+        by converting them to string.
+      </action>
     </release>
 
     <release version="2.2" date="2017-10-12"
