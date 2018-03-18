@@ -17,11 +17,14 @@
 package org.apache.commons.configuration2.interpol;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.io.FileHandler;
@@ -48,6 +51,20 @@ public class TestExprLookup
     private static String PATTERN2 =
         "'$[element] ' + String.trimToEmpty('$[space.description]')";
 
+    /**
+     * Loads the test configuration.
+     *
+     * @return the test configuration
+     * @throws ConfigurationException if an error occurs
+     */
+    private static XMLConfiguration loadConfig() throws ConfigurationException
+    {
+        XMLConfiguration config = new XMLConfiguration();
+        FileHandler handler = new FileHandler(config);
+        handler.load(TEST_FILE);
+        return config;
+    }
+
     @Test
     public void testLookup() throws Exception
     {
@@ -61,9 +78,7 @@ public class TestExprLookup
         vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
         vars.add(new ExprLookup.Variable("Util", new Utility("Hello")));
         vars.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
-        XMLConfiguration config = new XMLConfiguration();
-        FileHandler handler = new FileHandler(config);
-        handler.load(TEST_FILE);
+        XMLConfiguration config = loadConfig();
         ConfigurationLogger testLogger = new ConfigurationLogger("TestLogger");
         config.setLogger(testLogger);
         ExprLookup lookup = new ExprLookup(vars);
@@ -113,6 +128,37 @@ public class TestExprLookup
         ExprLookup.Variables vars2 = lookup.getVariables();
         vars2.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
         assertEquals("Modified variables", vars, lookup.getVariables());
+    }
+
+    /**
+     * Tests an expression that does not yield a string.
+     */
+    @Test
+    public void testLookupNonStringExpression() throws ConfigurationException
+    {
+        ExprLookup.Variables vars = new ExprLookup.Variables();
+        vars.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
+        ExprLookup lookup = new ExprLookup(vars);
+        XMLConfiguration config = loadConfig();
+        lookup.setInterpolator(config.getInterpolator());
+        String pattern = "System.currentTimeMillis()";
+        String result = lookup.lookup(pattern);
+        assertNotEquals("Not replaced", pattern, result);
+    }
+
+    /**
+     * Tests an expression that yields a null value.
+     */
+    @Test
+    public void testLookupNullExpression() throws ConfigurationException
+    {
+        ExprLookup.Variables vars = new ExprLookup.Variables();
+        vars.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
+        ExprLookup lookup = new ExprLookup(vars);
+        XMLConfiguration config = loadConfig();
+        lookup.setInterpolator(config.getInterpolator());
+        assertNull("Wrong result",
+                lookup.lookup("System.getProperty('undefined.property')"));
     }
 
     public static class Utility

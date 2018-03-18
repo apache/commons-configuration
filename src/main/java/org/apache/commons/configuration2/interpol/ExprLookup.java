@@ -231,7 +231,8 @@ public class ExprLookup implements Lookup
         try
         {
             Expression exp = engine.createExpression(result);
-            result = (String) exp.evaluate(createContext());
+            Object exprResult = exp.evaluate(createContext());
+            result = (exprResult != null) ? String.valueOf(exprResult) : null;
         }
         catch (Exception e)
         {
