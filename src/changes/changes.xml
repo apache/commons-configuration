@@ -64,6 +64,10 @@
         ExprLookup now handles expressions that do not return a string result
         by converting them to string.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-692">
+        ConversionExceptions thrown when accessing the properties of a
+        configuration now contain the original cause of the exception.
+      </action>
     </release>
 
     <release version="2.2" date="2017-10-12"
