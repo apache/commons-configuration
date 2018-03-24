@@ -2598,4 +2598,22 @@ public class TestDataConfiguration
         conf.clearPropertyDirect(key);
         EasyMock.verify(wrapped);
     }
+
+    /**
+     * Tests that the cause of a conversion exception is kept.
+     */
+    @Test
+    public void testConversionExceptionCause()
+    {
+        try
+        {
+            conf.get(Integer.TYPE, "uri.string");
+            fail("No conversion exception thrown!");
+        }
+        catch (ConversionException cex)
+        {
+            assertTrue("Wrong cause",
+                    cex.getCause() instanceof NumberFormatException);
+        }
+    }
 }

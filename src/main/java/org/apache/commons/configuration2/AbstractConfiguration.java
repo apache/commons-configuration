@@ -1769,7 +1769,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
             throw new ConversionException(
                     String.format(
                             "Key '%s' cannot be converted to class %s. Value is: '%s'.",
-                            key, cls.getName(), String.valueOf(value)));
+                            key, cls.getName(), String.valueOf(value)), cex.getCause());
         }
     }
 
