@@ -18,6 +18,7 @@
 package org.apache.commons.configuration2.convert;
 
 import java.awt.Color;
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
@@ -28,6 +29,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -151,6 +154,14 @@ final class PropertyConverter
         else if (Calendar.class.equals(cls))
         {
             return toCalendar(value, convHandler.getDateFormat());
+        }
+        else if (File.class.equals(cls))
+        {
+            return toFile(value);
+        }
+        else if (Path.class.equals(cls))
+        {
+            return toPath(value);
         }
         else if (URI.class.equals(cls))
         {
@@ -472,6 +483,62 @@ final class PropertyConverter
                         "Conversion error when trying to convert " + str
                                 + " to " + targetClass.getName(), ex);
             }
+        }
+    }
+
+    /**
+     * Convert the specified object into a File.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to a File
+     * @since 2.3
+     */
+    public static File toFile(Object value) throws ConversionException
+    {
+        if (value instanceof File)
+        {
+            return (File) value;
+        }
+        else if (value instanceof Path)
+        {
+            return ((Path) value).toFile();
+        }
+        else if (value instanceof String)
+        {
+            return new File((String) value);
+        }
+        else
+        {
+            throw new ConversionException("The value " + value + " can't be converted to a File");
+        }
+    }
+
+    /**
+     * Convert the specified object into a Path.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to a Path
+     * @since 2.3
+     */
+    public static Path toPath(Object value) throws ConversionException
+    {
+        if (value instanceof File)
+        {
+            return ((File) value).toPath();
+        }
+        else if (value instanceof Path)
+        {
+            return (Path) value;
+        }
+        else if (value instanceof String)
+        {
+            return Paths.get((String) value);
+        }
+        else
+        {
+            throw new ConversionException("The value " + value + " can't be converted to a Path");
         }
     }
 

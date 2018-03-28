@@ -20,8 +20,11 @@ package org.apache.commons.configuration2.convert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
+import java.io.File;
 import java.lang.annotation.ElementType;
 import java.math.BigDecimal;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.commons.configuration2.ex.ConversionException;
 import org.junit.Test;
@@ -36,6 +39,68 @@ public class TestPropertyConverter
 {
     /** Constant for an enumeration class used by some tests. */
     private static final Class<ElementType> ENUM_CLASS = ElementType.class;
+
+    /**
+     * Tests conversion to files when the passed in objects are already
+     * files.
+     */
+    @Test
+    public void testToFileDirect()
+    {
+        File f = new File("dir", "file");
+        assertSame("Wrong file", f, PropertyConverter.toFile(f));
+    }
+
+    /**
+     * Tests conversion to file when the passed in objects have a compatible
+     * string representation.
+     */
+    @Test
+    public void testToFileFromString()
+    {
+        assertEquals("Wrong conversion result", new File("dir", "file"), PropertyConverter.toFile("dir/file"));
+    }
+
+    /**
+     * Tests conversion to file when the passed in objects are paths.
+     */
+    @Test
+    public void testToFileFromPath()
+    {
+        Path p = Paths.get("dir", "file");
+        assertEquals("Wrong conversion result", new File("dir", "file"), PropertyConverter.toFile(p));
+    }
+
+    /**
+     * Tests conversion to paths when the passed in objects are already
+     * paths.
+     */
+    @Test
+    public void testToPathDirect()
+    {
+        Path p = Paths.get("dir", "file");
+        assertSame("Wrong path", p, PropertyConverter.toPath(p));
+    }
+
+    /**
+     * Tests conversion to file when the passed in objects have a compatible
+     * string representation.
+     */
+    @Test
+    public void testToPathFromString()
+    {
+        assertEquals("Wrong conversion result", Paths.get("dir", "file"), PropertyConverter.toPath("dir/file"));
+    }
+
+    /**
+     * Tests conversion to path when the passed in objects are files.
+     */
+    @Test
+    public void testToPathFromFile()
+    {
+        File f =  new File("dir", "file");
+        assertEquals("Wrong conversion result", Paths.get("dir", "file"), PropertyConverter.toPath(f));
+    }
 
     /**
      * Tests conversion to numbers when the passed in objects are already
