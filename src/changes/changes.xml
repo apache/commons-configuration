@@ -68,6 +68,10 @@
         ConversionExceptions thrown when accessing the properties of a
         configuration now contain the original cause of the exception.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-693" due-to="Lars W">
+        Configuration properties can now be converted to the data types File
+        and Path.
+      </action>
     </release>
 
     <release version="2.2" date="2017-10-12"
