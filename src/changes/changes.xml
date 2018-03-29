@@ -51,6 +51,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-683">
         Update Spring from 4.3.9.RELEASE to 4.3.13.RELEASE.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-695">
+        Update optional dependency Jackson from 2.9.3 to 2.9.5.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-686">
         JSONConfiguration can now handle list structures with complex objects
         as elements.
