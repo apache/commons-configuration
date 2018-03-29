@@ -48,6 +48,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-682">
         Update Snakeyaml from 1.18 to 1.19.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-696">
+        Update optional dependency snakeyaml from 1.19 to 1.20.
+      </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-683">
         Update Spring from 4.3.9.RELEASE to 4.3.13.RELEASE.
       </action>
