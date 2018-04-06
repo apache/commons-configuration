@@ -276,4 +276,14 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
         Map map = props;
         return map;
     }
+
+    /**
+     * Converts this object to a String suitable for debugging and logging.
+     * 
+     * @since 2.3
+     */
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + " [map=" + map + ", trimmingDisabled=" + trimmingDisabled + "]";
+    }
 }

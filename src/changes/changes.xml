@@ -84,6 +84,9 @@
         Configuration properties can now be converted to the data types File
         and Path.
       </action>
+      <action dev="ggregory" type="add" issue="CONFIGURATION-698">
+        Add org.apache.commons.configuration2.MapConfiguration.toString().
+      </action>
     </release>
 
     <release version="2.2" date="2017-10-12"
