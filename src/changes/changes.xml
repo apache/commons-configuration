@@ -27,6 +27,10 @@
   <body>
     <release version="2.3" date="in SVN"
              description="Minor release with new features and updated dependencies.">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-652" due-to="Claude Warren">
+        Root node attributes are now updated correctly when loading XML
+        configuration files.
+      </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-694">
         Update Java requirement from version 7 to 8.
       </action>
