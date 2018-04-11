@@ -398,6 +398,20 @@ public class TestXMLConfiguration
     }
 
     @Test
+    public void testSetRootNamespace() throws ConfigurationException
+    {
+        conf.addProperty(  "[@xmlns:foo]",  "http://example.com/" );
+        conf.addProperty(  "foo:bar", "foobar" );
+        assertEquals("Root attribute not set", "http://example.com/", conf
+                .getString("[@xmlns:foo]"));
+        saveTestConfig();
+        XMLConfiguration checkConf = checkSavedConfig();
+        assertTrue("Attribute not found after save", checkConf
+                .containsKey("[@xmlns:foo]"));
+        checkConf.setProperty("[@xmlns:foo]", "http://example.net/");
+    }
+
+    @Test
     public void testAddList()
     {
         conf.addProperty("test.array", "value1");
@@ -918,6 +932,23 @@ public class TestXMLConfiguration
         assertEquals("test3_yoge", conf.getString("yoge"));
     }
 
+
+    @Test
+    public void testLoadWithRootNamespace() throws ConfigurationException
+    {
+        conf = new XMLConfiguration();
+        new FileHandler(conf).load(ConfigurationAssert.getTestFile("testRootNamespace.xml"));
+        assertEquals("http://example.com/", conf.getString("[@xmlns:foo]"));
+    }
+
+    @Test
+    public void testLoadChildNamespace() throws ConfigurationException
+    {
+        conf = new XMLConfiguration();
+        new FileHandler(conf).load(ConfigurationAssert.getTestFile("testChildNamespace.xml"));
+        assertEquals("http://example.com/", conf.getString("foo:bar.[@xmlns:foo]"));
+    }
+
     /**
      * Tests whether the encoding is written to the generated XML file.
      */
@@ -933,6 +964,35 @@ public class TestXMLConfiguration
         handler.save(out);
         assertThat("Encoding was not written to file", out.toString(),
                 containsString("encoding=\"" + ENCODING + "\""));
+    }
+
+    @Test
+    public void testSaveWithRootAttributes() throws ConfigurationException
+    {
+        conf.setProperty("[@xmlns:ex]", "http://example.com/");
+        assertEquals("Root attribute not set", "http://example.com/", conf
+                .getString("[@xmlns:ex]"));
+        FileHandler handler = new FileHandler(conf);
+
+        StringWriter out = new StringWriter();
+        handler.save(out);
+        assertThat("Encoding was not written to file", out.toString(),
+                containsString("testconfig xmlns:ex=\"http://example.com/\""));
+    }
+
+    @Test
+    public void testSaveWithRootAttributes_ByHand() throws ConfigurationException
+    {
+        conf = new XMLConfiguration();
+        conf.addProperty(  "[@xmlns:foo]",  "http://example.com/" );
+        assertEquals("Root attribute not set", "http://example.com/", conf
+                .getString("[@xmlns:foo]"));
+        FileHandler handler = new FileHandler(conf);
+
+        StringWriter out = new StringWriter();
+        handler.save(out);
+        assertThat("Encoding was not written to file", out.toString(),
+                containsString("configuration xmlns:foo=\"http://example.com/\""));
     }
 
     /**

@@ -1135,6 +1135,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
          */
         public void processDocument(ReferenceNodeHandler refHandler)
         {
+            updateAttributes(refHandler.getRootNode(), document.getDocumentElement() );
             NodeTreeWalker.INSTANCE.walkDFS(refHandler.getRootNode(), this,
                     refHandler);
         }
