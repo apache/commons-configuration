@@ -186,6 +186,16 @@
         <role>Java Developer</role>
       </roles>
     </developer>
+
+    <developer>
+      <name>Claude Warren</name>
+      <id>claudenw</id>
+      <email>claude@apache.org</email>
+      <timezone>0</timezone>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
   </developers>
 
   <contributors>
