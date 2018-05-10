@@ -68,6 +68,14 @@
         JSONConfiguration can now handle list structures with complex objects
         as elements.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-687">
+        Fixed a memory leak in CombinedConfigurationBuilder. Builder for the
+        child sources were created each time a new result configuration was
+        requested; thus the list with child builders got longer and longer.
+        This also had an impact on reloading because unnecessary reloading
+        operations could be triggered. Now it is guaranteed that child builders
+        are created only once.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-688">
         Fixed a bug related to the handling of multiple include files in
         PropertiesConfiguration.
