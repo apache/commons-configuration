@@ -799,15 +799,26 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         setUpParentInterpolator(currentConfiguration, config);
 
         ConfigurationSourceData data = getSourceData();
-        data.createAndAddConfigurations(result, data.getOverrideSources(),
-                data.overrideBuilders);
+        boolean createBuilders = data.getChildBuilders().isEmpty();
+        List<ConfigurationBuilder<? extends Configuration>> overrideBuilders =
+                data.createAndAddConfigurations(result,
+                        data.getOverrideSources(), data.overrideBuilders);
+        if (createBuilders)
+        {
+            data.overrideBuilders.addAll(overrideBuilders);
+        }
         if (!data.getUnionSources().isEmpty())
         {
             CombinedConfiguration addConfig = createAdditionalsConfiguration(result);
             result.addConfiguration(addConfig, ADDITIONAL_NAME);
             initNodeCombinerListNodes(addConfig, config, KEY_ADDITIONAL_LIST);
-            data.createAndAddConfigurations(addConfig, data.unionDeclarations,
-                    data.unionBuilders);
+            List<ConfigurationBuilder<? extends Configuration>> unionBuilders =
+                    data.createAndAddConfigurations(addConfig,
+                            data.unionDeclarations, data.unionBuilders);
+            if (createBuilders)
+            {
+                data.unionBuilders.addAll(unionBuilders);
+            }
         }
 
         result.isEmpty();  // this sets up the node structure
@@ -1429,36 +1440,44 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             overrideDeclarations.addAll(createDeclarations(fetchTopLevelOverrideConfigs(config)));
             overrideDeclarations.addAll(createDeclarations(config.childConfigurationsAt(KEY_OVERRIDE)));
             unionDeclarations.addAll(createDeclarations(config.childConfigurationsAt(KEY_UNION)));
-
-            for (ConfigurationDeclaration cd : overrideDeclarations)
-            {
-                overrideBuilders.add(createConfigurationBuilder(cd));
-            }
-            for (ConfigurationDeclaration cd : unionDeclarations)
-            {
-                unionBuilders.add(createConfigurationBuilder(cd));
-            }
         }
 
         /**
          * Processes the declaration of configuration builder providers, creates
-         * the corresponding builder, obtains configurations, and adds them to
-         * the specified result configuration.
+         * the corresponding builder if necessary, obtains configurations, and
+         * adds them to the specified result configuration.
          *
          * @param ccResult the result configuration
          * @param srcDecl the collection with the declarations of configuration
          *        sources to process
+         * @return a list with configuration builders
          * @throws ConfigurationException if an error occurs
          */
-        public void createAndAddConfigurations(CombinedConfiguration ccResult,
+        public List<ConfigurationBuilder<? extends Configuration>> createAndAddConfigurations(
+                CombinedConfiguration ccResult,
                 List<ConfigurationDeclaration> srcDecl,
                 List<ConfigurationBuilder<? extends Configuration>> builders)
                 throws ConfigurationException
         {
+            boolean createBuilders = builders.isEmpty();
+            List<ConfigurationBuilder<? extends Configuration>> newBuilders =
+                    createBuilders ? new ArrayList<>(srcDecl.size()) : builders;
             for (int i = 0; i < srcDecl.size(); i++)
             {
-                addChildConfiguration(ccResult, srcDecl.get(i), builders.get(i));
+                ConfigurationBuilder<? extends Configuration> b;
+                if (createBuilders)
+                {
+                    b = createConfigurationBuilder(srcDecl.get(i));
+                    newBuilders.add(b);
+                }
+                else
+                {
+                    b = builders.get(i);
+                }
+                addChildConfiguration(ccResult, srcDecl.get(i), b);
             }
+
+            return newBuilders;
         }
 
         /**
