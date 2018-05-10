@@ -172,20 +172,23 @@ public class CombinedReloadingController extends ReloadingController
 
         /**
          * {@inheritDoc} This implementation delegates to the managed
-         * controllers. If one of them returns <b>true</b> from its check
-         * method, iteration is aborted, and result is <b>true</b>.
+         * controllers. For all of them the {@code checkForReloading()}
+         * method is called, giving them the chance to trigger a reload if
+         * necessary. If one of these calls returns <b>true</b>, the result of
+         * this method is <b>true</b>, otherwise <b>false</b>.
          */
         @Override
         public boolean isReloadingRequired()
         {
+            boolean result = false;
             for (ReloadingController rc : owner.getSubControllers())
             {
                 if (rc.checkForReloading(null))
                 {
-                    return true;
+                    result = true;
                 }
             }
-            return false;
+            return result;
         }
 
         /**

@@ -123,6 +123,21 @@ public class ReloadingCombinedConfigurationBuilder extends
     }
 
     /**
+     * {@inheritDoc} This implementation makes sure that the reloading state of
+     * the managed reloading controller is reset. Note that this has to be done
+     * here and not in {@link #initResultInstance(CombinedConfiguration)}
+     * because it must be outside of a synchronized block; otherwise, a
+     * dead-lock situation can occur.
+     */
+    @Override
+    public CombinedConfiguration getConfiguration() throws ConfigurationException
+    {
+        CombinedConfiguration result = super.getConfiguration();
+        reloadingController.resetReloadingState();
+        return result;
+    }
+
+    /**
      * {@inheritDoc} This implementation creates a builder for XML
      * configurations with reloading support.
      */
@@ -145,7 +160,10 @@ public class ReloadingCombinedConfigurationBuilder extends
             throws ConfigurationException
     {
         super.initResultInstance(result);
-        reloadingController = createReloadingController();
+        if (reloadingController == null)
+        {
+            reloadingController = createReloadingController();
+        }
     }
 
     /**
