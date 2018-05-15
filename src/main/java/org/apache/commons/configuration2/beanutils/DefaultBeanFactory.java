@@ -251,7 +251,7 @@ public class DefaultBeanFactory implements BeanFactory
         {
             if (matchesConstructor(ctor, args))
             {
-                // cast should be okay according to the JavaDocs of
+                // cast should be okay according to the Javadocs of
                 // getConstructors()
                 @SuppressWarnings("unchecked")
                 Constructor<T> match = (Constructor<T>) ctor;

@@ -212,7 +212,7 @@ WindowManager wm = (WindowManager) BeanHelper.INSTANCE.createBean(decl);
           <code>BeanFactory</code> objects that are registered under a specific
           key. The <code>BeanDeclaration</code> can contain the key of the
           <code>BeanFactory</code> to be used. Please refer to the
-          JavaDocs of <code><a href="../apidocs/org/apache/commons/configuration2/beanutils/XMLBeanDeclaration.html">
+          Javadocs of <code><a href="../apidocs/org/apache/commons/configuration2/beanutils/XMLBeanDeclaration.html">
           XMLBeanDeclaration</a></code> for further information.</li>
           <li>When a <code>BeanHelper</code> object is constructed a default
           <code>BeanFactory</code> is set. This one is used if no specific
