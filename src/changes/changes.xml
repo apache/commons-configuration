@@ -99,6 +99,10 @@
       <action dev="ggregory" type="add" issue="CONFIGURATION-698">
         Add org.apache.commons.configuration2.MapConfiguration.toString().
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-701" due-to="Nicholas Verbeck">
+        CompositeConfiguration now supports an addConfigurationFirst() method
+        to add child configurations with a higher priority.
+      </action>
     </release>
 
     <release version="2.2" date="2017-10-12"
