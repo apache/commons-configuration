@@ -1398,7 +1398,10 @@ public class TestXMLConfiguration
     @Test
     public void testPreserveSpaceOnElement()
     {
-        assertEquals("Wrong value", " preserved ", conf.getString("spaceElement"));
+        assertEquals("Wrong value spaceElement", 
+                " preserved ", conf.getString("spaceElement"));
+        assertEquals("Wrong value of spaceBlankElement", 
+                "   ", conf.getString("spaceBlankElement"));
     }
 
     /**

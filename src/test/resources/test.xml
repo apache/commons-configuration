@@ -116,4 +116,5 @@ And even longer.
       <testInvalid xml:space="invalid">     Some other text </testInvalid>
     </space>
     <spaceElement xml:space="preserve"> preserved </spaceElement>
+    <spaceBlankElement xml:space="preserve">   </spaceBlankElement>
 </testconfig>
