@@ -21,7 +21,11 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -69,9 +73,8 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      */
     protected void load(Map<String, Object> map)
     {
-        ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
-        ImmutableNode top = constructHierarchy(rootBuilder, map);
-        getNodeModel().setRootNode(top);
+        List<ImmutableNode> roots = constructHierarchy("", map);
+        getNodeModel().setRootNode(roots.get(0));
     }
 
     /**
@@ -83,53 +86,116 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      */
     protected Map<String, Object> constructMap(ImmutableNode node)
     {
-        Map<String, Object> map =
-                new HashMap<>(node.getChildren().size());
+        Map<String, Object> map = new HashMap<>(node.getChildren().size());
         for (ImmutableNode cNode : node.getChildren())
         {
-            if (cNode.getChildren().isEmpty())
-            {
-                map.put(cNode.getNodeName(), cNode.getValue());
-            }
-            else
-            {
-                map.put(cNode.getNodeName(), constructMap(cNode));
-            }
+            Object value = cNode.getChildren().isEmpty() ? cNode.getValue()
+                    : constructMap(cNode);
+            addEntry(map, cNode.getNodeName(), value);
         }
         return map;
     }
 
     /**
-     * Constructs the internal configuration nodes hierarchy.
+     * Adds a key value pair to a map, taking list structures into account. If a
+     * key is added which is already present in the map, this method ensures
+     * that a list is created.
      *
-     * @param parent The configuration node that is the root of the current
-     *        configuration section.
-     * @param map The map with the yaml configurations nodes, i.e. String -&gt;
-     *        Object.
+     * @param map the map
+     * @param key the key
+     * @param value the value
      */
-    private ImmutableNode constructHierarchy(ImmutableNode.Builder parent,
-            Map<String, Object> map)
+    private static void addEntry(Map<String, Object> map, String key,
+            Object value)
     {
+        Object oldValue = map.get(key);
+        if (oldValue == null)
+        {
+            map.put(key, value);
+        }
+        else if (oldValue instanceof Collection)
+        {
+            // safe case because the collection was created by ourselves
+            @SuppressWarnings("unchecked")
+            Collection<Object> values = (Collection<Object>) oldValue;
+            values.add(value);
+        }
+        else
+        {
+            Collection<Object> values = new ArrayList<>();
+            values.add(oldValue);
+            values.add(value);
+            map.put(key, values);
+        }
+    }
+
+    /**
+     * Creates a part of the hierarchical nodes structure of the resulting
+     * configuration. The passed in element is converted into one or multiple
+     * configuration nodes. (If list structures are involved, multiple nodes are
+     * returned.)
+     *
+     * @param key the key of the new node(s)
+     * @param elem the element to be processed
+     * @return a list with configuration nodes representing the element
+     */
+    private static List<ImmutableNode> constructHierarchy(String key,
+            Object elem)
+    {
+        if (elem instanceof Map)
+        {
+            return parseMap((Map<String, Object>) elem, key);
+        }
+        else if (elem instanceof Collection)
+        {
+            return parseCollection((Collection<Object>) elem, key);
+        }
+        else
+        {
+            return Collections.singletonList(
+                    new ImmutableNode.Builder().name(key).value(elem).create());
+        }
+    }
+
+    /**
+     * Parses a map structure. The single keys of the map are processed
+     * recursively.
+     *
+     * @param map the map to be processed
+     * @param key the key under which this map is to be stored
+     * @return a node representing this map
+     */
+    private static List<ImmutableNode> parseMap(Map<String, Object> map, String key)
+    {
+        ImmutableNode.Builder subtree = new ImmutableNode.Builder().name(key);
         for (Map.Entry<String, Object> entry : map.entrySet())
         {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            if (value instanceof Map)
+            List<ImmutableNode> children =
+                    constructHierarchy(entry.getKey(), entry.getValue());
+            for (ImmutableNode child : children)
             {
-                ImmutableNode.Builder subtree =
-                        new ImmutableNode.Builder().name(key);
-                ImmutableNode children =
-                        constructHierarchy(subtree, (Map) value);
-                parent.addChild(children);
-            }
-            else
-            {
-                ImmutableNode leaf = new ImmutableNode.Builder().name(key)
-                        .value(value).create();
-                parent.addChild(leaf);
+                subtree.addChild(child);
             }
         }
-        return parent.create();
+        return Collections.singletonList(subtree.create());
+    }
+
+    /**
+     * Parses a collection structure. The elements of the collection are
+     * processed recursively.
+     *
+     * @param col the collection to be processed
+     * @param key the key under which this collection is to be stored
+     * @return a node representing this collection
+     */
+    private static List<ImmutableNode> parseCollection(Collection<Object> col, String key)
+    {
+        List<ImmutableNode> nodes = new ArrayList<>(col.size());
+        for (Object elem : col)
+        {
+            nodes.addAll(constructHierarchy(key, elem));
+        }
+        return nodes;
     }
 
     /**

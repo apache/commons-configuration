@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.dbunit.dataset.csv.handlers.NoHandler;
+import org.dbunit.dataset.common.handlers.NoHandler;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 

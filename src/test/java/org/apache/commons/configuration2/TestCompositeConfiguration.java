@@ -112,6 +112,21 @@ public class TestCompositeConfiguration
     }
 
     @Test
+    public void testAddFirstRemoveConfigurations() throws Exception
+    {
+        cc.addConfigurationFirst(conf1);
+        assertEquals("Number of configurations", 2, cc.getNumberOfConfigurations());
+        cc.addConfigurationFirst(conf1);
+        assertEquals("Number of configurations", 2, cc.getNumberOfConfigurations());
+        cc.addConfigurationFirst(conf2);
+        assertEquals("Number of configurations", 3, cc.getNumberOfConfigurations());
+        cc.removeConfiguration(conf1);
+        assertEquals("Number of configurations", 2, cc.getNumberOfConfigurations());
+        cc.clear();
+        assertEquals("Number of configurations", 1, cc.getNumberOfConfigurations());
+    }
+
+    @Test
     public void testGetPropertyWIncludes() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -131,6 +146,12 @@ public class TestCompositeConfiguration
         cc.addConfiguration(conf2);
         cc.addConfiguration(conf1);
         assertEquals("Make sure we get the property from conf2 first", "test2.properties", cc.getString("propertyInOrder"));
+        cc.clear();
+
+        cc.addConfiguration(conf1);
+        cc.addConfigurationFirst(conf2);
+        assertEquals("Make sure we get the property from conf2 first", "test2.properties", cc.getString("propertyInOrder"));
+        cc.clear();
     }
 
     @Test

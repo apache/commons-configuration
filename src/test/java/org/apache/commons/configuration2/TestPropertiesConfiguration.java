@@ -233,6 +233,23 @@ public class TestPropertiesConfiguration
         assertEquals("Data not loaded", PROP_VALUE, conf.getString(PROP_NAME));
     }
 
+    /**
+     * Tests whether multiple include files can be resolved.
+     */
+    @Test
+    public void testMultipleIncludeFiles() throws ConfigurationException
+    {
+        conf = new PropertiesConfiguration();
+        FileHandler handler = new FileHandler(conf);
+        handler.load(ConfigurationAssert.getTestFile("config/testMultiInclude.properties"));
+        assertEquals("Wrong top-level property", "topValue",
+                conf.getString("top"));
+        assertEquals("Wrong included property (1)", 100,
+                conf.getInt("property.c"));
+        assertEquals("Wrong included property (2)", true,
+                conf.getBoolean("include.loaded"));
+    }
+
     @Test
     public void testSetInclude() throws Exception
     {

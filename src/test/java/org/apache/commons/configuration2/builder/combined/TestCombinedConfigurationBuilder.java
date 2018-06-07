@@ -1146,6 +1146,23 @@ public class TestCombinedConfigurationBuilder
     }
 
     /**
+     * Tests that child configuration builders are not initialized multiple
+     * times. This test is releated to CONFIGURATION-687.
+     */
+    @Test
+    public void testChildBuildersAreInitializedOnlyOnce()
+            throws ConfigurationException
+    {
+        builder.configure(createParameters().setFile(TEST_FILE));
+        builder.getConfiguration();
+        builder.resetResult();
+        builder.getConfiguration();
+        Collection<ConfigurationBuilder<? extends Configuration>> childBuilders =
+                builder.getChildBuilders();
+        assertEquals("Wrong number of child builders", 3, childBuilders.size());
+    }
+
+    /**
      * Loads a test file which includes a MultiFileConfigurationBuilder
      * declaration and returns the resulting configuration.
      *

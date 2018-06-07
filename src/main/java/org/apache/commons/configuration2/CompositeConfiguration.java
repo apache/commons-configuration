@@ -214,6 +214,58 @@ implements Cloneable
     }
 
     /**
+     * Add a configuration to the start of the list of child configurations.
+     *
+     * @param config the configuration to add
+     * @since 2.3
+     */
+    public void addConfigurationFirst(Configuration config)
+    {
+        addConfigurationFirst(config, false);
+    }
+
+    /**
+     * Adds a child configuration to the start of the collection and optionally
+     * makes it the <em>in-memory configuration</em>. This means that all future
+     * property write operations are executed on this configuration. Note that
+     * the current in-memory configuration is replaced by the new one. If it was
+     * created automatically or passed to the constructor, it is removed from the
+     * list of child configurations! Otherwise, it stays in the list of child configurations
+     * at its current position, but it passes its role as in-memory configuration to the new one.
+     *
+     * @param config the configuration to be added
+     * @param asInMemory <b>true</b> if this configuration becomes the new
+     *        <em>in-memory</em> configuration, <b>false</b> otherwise
+     * @since 2.3
+     */
+    public void addConfigurationFirst(Configuration config, boolean asInMemory)
+    {
+        beginWrite(false);
+        try
+        {
+            if (!configList.contains(config))
+            {
+                if (asInMemory)
+                {
+                    replaceInMemoryConfiguration(config);
+                    inMemoryConfigIsChild = true;
+                }
+                configList.add(0, config);
+
+                if (config instanceof AbstractConfiguration)
+                {
+                    ((AbstractConfiguration) config)
+                            .setThrowExceptionOnMissing(isThrowExceptionOnMissing());
+                }
+            }
+        }
+        finally
+        {
+            endWrite();
+        }
+    }
+
+    /**
      * Remove a configuration. The in memory configuration cannot be removed.
      *
      * @param config The configuration to remove

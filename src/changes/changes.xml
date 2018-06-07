@@ -25,7 +25,87 @@
   </properties>
 
   <body>
-    <release version="2.2" date="2017-MM-DD"
+    <release version="2.3" date="in SVN"
+             description="Minor release with new features and updated dependencies.">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-652" due-to="Claude Warren">
+        Root node attributes are now updated correctly when loading XML
+        configuration files.
+      </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-694">
+        Update Java requirement from version 7 to 8.
+      </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-675">
+        Added a .gitignore file to the project.
+      </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-678">
+        Update Apache Commons Codec from 1.10 to 1.11.
+      </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-679">
+        Update Jackson from 2.8.9 to 2.9.3.
+      </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-680">
+        Update Apache Commons Lang from 3.6 to 3.7.
+      </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-681">
+        Update Apache Commons VFS from 2.1 to 2.2.
+      </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-682">
+        Update Snakeyaml from 1.18 to 1.19.
+      </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-696">
+        Update optional dependency snakeyaml from 1.19 to 1.20.
+      </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-683">
+        Update Spring from 4.3.9.RELEASE to 4.3.13.RELEASE.
+      </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-695">
+        Update optional dependency Jackson from 2.9.3 to 2.9.5.
+      </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-697">
+        Update optional dependency Spring from 4.3.13.RELEASE to 4.3.14.RELEASE.
+      </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-686">
+        JSONConfiguration can now handle list structures with complex objects
+        as elements.
+      </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-687">
+        Fixed a memory leak in CombinedConfigurationBuilder. Builder for the
+        child sources were created each time a new result configuration was
+        requested; thus the list with child builders got longer and longer.
+        This also had an impact on reloading because unnecessary reloading
+        operations could be triggered. Now it is guaranteed that child builders
+        are created only once.
+      </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-688">
+        Fixed a bug related to the handling of multiple include files in
+        PropertiesConfiguration.
+      </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-690">
+        ExprLookup.getVariables() no longer returns null, but a copy of the
+        current variables of this lookup object.
+      </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-691">
+        ExprLookup now handles expressions that do not return a string result
+        by converting them to string.
+      </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-692">
+        ConversionExceptions thrown when accessing the properties of a
+        configuration now contain the original cause of the exception.
+      </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-693" due-to="Lars W">
+        Configuration properties can now be converted to the data types File
+        and Path.
+      </action>
+      <action dev="ggregory" type="add" issue="CONFIGURATION-698">
+        Add org.apache.commons.configuration2.MapConfiguration.toString().
+      </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-701" due-to="Nicholas Verbeck">
+        CompositeConfiguration now supports an addConfigurationFirst() method
+        to add child configurations with a higher priority.
+      </action>
+    </release>
+
+    <release version="2.2" date="2017-10-12"
              description="Minor release with new APIs and bug fixes.">
       <action dev="oheger" type="add" issue="CONFIGURATION-673" due-to="Andreas Kuhtz ">
         Added an Automatic-Module-Name header to the manifest for compatibility
