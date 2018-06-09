@@ -40,7 +40,7 @@ And even longer.
     <test>
         <short>8</short>
     </test>
-	
+
 	<!-- list properties -->
 	<list>
 		<item name="one">one</item>
@@ -54,7 +54,7 @@ And even longer.
 			<item>six</item>
 		</sublist>
 	</list>
-    
+
     <!-- Comma delimited lists (work in elements, but not in attributes) -->
     <split>
       <list1>a,b,c</list1>
@@ -82,19 +82,19 @@ And even longer.
 			<item id="4">four</item>
 		</list>
 	</clear>
-    
+
     <!-- Complex property names -->
     <complexNames>
       <my.elem>Name with dot
         <sub.elem>Another dot</sub.elem>
       </my.elem>
     </complexNames>
-    
+
     <!-- An empty element. This should occur in the configuration with an
          empty string as value.
     -->
     <empty/>
-    
+
     <!-- List nodes with attributes -->
     <attrList>
       <a name="x">ABC</a>
@@ -116,4 +116,5 @@ And even longer.
       <testInvalid xml:space="invalid">     Some other text </testInvalid>
     </space>
     <spaceElement xml:space="preserve"> preserved </spaceElement>
+    <spaceBlankElement xml:space="preserve">   </spaceBlankElement>
 </testconfig>
