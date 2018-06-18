@@ -103,6 +103,10 @@
         CompositeConfiguration now supports an addConfigurationFirst() method
         to add child configurations with a higher priority.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-703" due-to="Pascal Essiembre">
+        XMLConfiguration now handles elements correctly whose value consists
+        only of whitespace if the xml:space attribute is set to preserve.
+      </action>
     </release>
 
     <release version="2.2" date="2017-10-12"

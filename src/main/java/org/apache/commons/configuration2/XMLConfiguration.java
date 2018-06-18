@@ -631,7 +631,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         }
 
         boolean childrenFlag = false;
-        if (hasChildren || trimFlag) {
+        if (hasChildren || trimFlag)
+        {
             childrenFlag = hasChildren || attributes.size() > 1;
         }
         String text = determineValue(buffer.toString(), childrenFlag, trimFlag);
