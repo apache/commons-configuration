@@ -559,7 +559,7 @@
       *
     </commons.osgi.import>
     <slf4j.version>1.7.25</slf4j.version>
-    <spring.version>4.3.14.RELEASE</spring.version>
+    <spring.version>4.3.18.RELEASE</spring.version>
     <commons.japicmp.version>0.11.1</commons.japicmp.version>
   </properties>
 
