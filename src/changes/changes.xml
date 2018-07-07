@@ -27,6 +27,9 @@
   <body>
     <release version="2.3" date="in SVN"
              description="Minor release with new features and updated dependencies.">
+      <action dev="ggregory" type="update" issue="CONFIGURATION-706">
+        Update optional dependency snakeyaml from 1.20 to 1.21.
+      </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-705">
         Update Jackson from 2.9.5 to 2.9.6.
       </action>
