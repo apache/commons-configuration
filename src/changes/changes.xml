@@ -40,9 +40,6 @@
         Root node attributes are now updated correctly when loading XML
         configuration files.
       </action>
-      <action dev="ggregory" type="update" issue="CONFIGURATION-694">
-        Update Java requirement from version 7 to 8.
-      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-675">
         Added a .gitignore file to the project.
       </action>
