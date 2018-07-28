@@ -561,6 +561,9 @@
     <slf4j.version>1.7.25</slf4j.version>
     <spring.version>4.3.18.RELEASE</spring.version>
     <commons.japicmp.version>0.11.1</commons.japicmp.version>
+
+    <commons.release.isDistModule>true</commons.release.isDistModule>
+    <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/configuration</commons.distSvnStagingUrl>
   </properties>
 
   <build>
