@@ -1,5 +1,106 @@
 $Id$
                         Apache Commons Configuration
+                               Version 2.3
+                               Release Notes
+
+
+INTRODUCTION:
+=============
+
+This document contains the release notes for this version of the Commons
+Configuration component. It describes the changes since the previous version.
+The Commons Configuration software library provides a generic configuration
+interface which enables an application to read configuration data from a
+variety of sources.
+
+Version 2.3 is another maintenance release for the Configuration 2.x series. It
+contains bug fixes and also a few new features like support for File and Path
+as data types. The release is fully source and binary compatible with version
+2.2.
+
+Commons Configuration 2.3 requires Java 1.7 or higher.
+
+New features
+============
+o CONFIGURATION-692
+  ConversionExceptions thrown when accessing the properties of a configuration
+  now contain the original cause of the exception.
+
+o CONFIGURATION-693
+  Configuration properties can now be converted to the data types File and
+  Path.
+
+o CONFIGURATION-698
+  Add org.apache.commons.configuration2.MapConfiguration.toString().
+
+o CONFIGURATION-698
+  Add toString() methods here and there to help debugging.
+
+o CONFIGURATION-701
+  CompositeConfiguration now supports an addConfigurationFirst() method to add
+  child configurations with a higher priority.
+
+Fixed Bugs
+==========
+o CONFIGURATION-652
+  Root node attributes are now updated correctly when loading XML configuration
+  files.
+
+o CONFIGURATION-686
+  JSONConfiguration can now handle list structures with complex objects as
+  elements.
+
+o CONFIGURATION-687
+  Fixed a memory leak in CombinedConfigurationBuilder. Builder for the child
+  sources were created each time a new result configuration was requested; thus
+  the list with child builders got longer and longer. This also had an impact
+  on reloading because unnecessary reloading operations could be triggered. Now
+  it is guaranteed that child builders are created only once.
+
+o CONFIGURATION-688
+  Fixed a bug related to the handling of multiple include files in
+  PropertiesConfiguration.
+
+o CONFIGURATION-690
+  ExprLookup.getVariables() no longer returns null, but a copy of the current
+  variables of this lookup object.
+
+o CONFIGURATION-691
+  ExprLookup now handles expressions that do not return a string result by
+  converting them to string.
+
+o CONFIGURATION-703
+  XMLConfiguration now handles elements correctly whose value consists only of
+  whitespace if the xml:space attribute is set to preserve.
+
+Other changes
+=============
+o CONFIGURATION-675
+  Added a .gitignore file to the project.
+
+o Some dependencies have been updated to their most recent versions. However,
+  as no new features of these dependencies are used, the older versions should
+  still work. The following dependencies are affected:
+  o Update Apache Commons Lang dependency from 3.6 to 3.7.
+  o Update Apache Commons VFS from 2.1 to 2.2.
+  o Update Apache Commons Codec from 1.10 to 1.11.
+  o Update Spring from 4.3.9.RELEASE to 4.3.18.RELEASE
+  o Update optional dependency snakeyaml from 1.18 to 1.21.
+  o Update optional dependency Jackson from 2.8.9 to 2.9.6.
+
+
+Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+
+For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
+
+http://commons.apache.org/proper/commons-configuration/
+
+
+Older release notes
+===================
+
+                        Apache Commons Configuration
                                Version 2.2
                                Release Notes
 
@@ -90,9 +191,6 @@ patches, or suggestions for improvement, see the Apache Apache Commons Configura
 
 http://commons.apache.org/proper/commons-configuration/
 
-
-Older release notes
-===================
 
                         Apache Commons Configuration
                                Version 2.1.1
