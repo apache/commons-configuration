@@ -279,11 +279,12 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
 
     /**
      * Converts this object to a String suitable for debugging and logging.
-     * 
+     *
      * @since 2.3
      */
     @Override
-    public String toString() {
+    public String toString()
+    {
         return getClass().getSimpleName() + " [map=" + map + ", trimmingDisabled=" + trimmingDisabled + "]";
     }
 }
