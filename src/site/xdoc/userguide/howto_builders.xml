@@ -165,7 +165,7 @@ PropertiesConfiguration config = builder.getConfiguration();
       parameter objects for special <code>Configuration</code> classes. On
       the objects returned by these methods fluent <code>set</code> methods can
       be invoked in order to set the single properties. As an example consider
-      the following code fragement which defines some properties for an
+      the following code fragment which defines some properties for an
       <code>XMLConfiguration</code>:
     </p>
     <source><![CDATA[
@@ -229,7 +229,7 @@ XMLBuilderParams xmlParams = params.xml()
         <td><code>hierarchical()</code></td>
         <td><code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/HierarchicalBuilderParameters.html">
         HierarchicalBuilderParameters</a></code></td>
-        <td>Here special parameters common to all hierarchical configuratios are
+        <td>Here special parameters common to all hierarchical configurations are
         defined, for instance the expression engine.</td>
       </tr>
       <tr>
@@ -311,7 +311,7 @@ XMLBuilderParams xmlParams = params.xml()
       already shown how an instance of the
       <code><a href="../apidocs/org/apache/commons/configuration2/builder/fluent/Parameters.html">
       Parameters</a></code> class is used to create initialization parameter
-      objects for various types of configuration sources. In addtion to the
+      objects for various types of configuration sources. In addition to the
       methods for creating these objects, <code>Parameters</code> also deals
       with default values for them. The mechanisms are as follows:
     </p>
@@ -397,9 +397,9 @@ params.registerDefaultsHandler(PropertiesBuilderParameters.class, propsHandler);
       This registration of defaults handlers could be done in the startup phase
       of an application. The <code>Parameters</code> class is thread-safe, so
       an application can create and configure a single instance and use it
-      accross all modules to create parameter objects. The actual functionality
+      across all modules to create parameter objects. The actual functionality
       of managing and invoking <code>DefaultParametersHandler</code> objects is
-      implememented by the
+      implemented by the
       <code><a href="../apidocs/org/apache/commons/configuration2/builder/DefaultParametersHandler.html">
       DefaultParametersManager</a></code> class - <code>Parameters</code> just
       delegates to a wrapped instance. In some usage scenarios it may make sense

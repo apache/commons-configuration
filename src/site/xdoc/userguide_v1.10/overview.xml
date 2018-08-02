@@ -203,7 +203,7 @@ Configuration config = factory.getConfiguration();
         They can be accessed concurrently in a read-only manner. However if one
         thread modifies a configuration object, manual synchronization has to be
         performed to ensure correctness of data. Notes about the thread
-        safety of conrete implementation classes can be found in the Javadocs
+        safety of concrete implementation classes can be found in the Javadocs
         for these classes.
       </p>
       </subsection>

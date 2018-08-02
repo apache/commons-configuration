@@ -150,7 +150,7 @@
       generic type. For instance, it would be called for an event of type
       <code>ConfigurationEvent.ADD_PROPERTY</code>. In contrast, if a specific
       event type is used for the event listener registration, only events of
-      this type trigger this listener. The following code fragement shows how
+      this type trigger this listener. The following code fragment shows how
       an event listener is registered at a configuration object for a specific
       event type:
     </p>
@@ -352,7 +352,7 @@ config.clearProperty("removedProperty"); // but this one will
           <li><strong>ConfigurationErrorEvent.READ</strong> A sub type indicating
           that the error occurred while reading a property.</li>
           <li><strong>ConfigurationErrorEvent.WRITE</strong> A sub type
-          indicating that the error occured on an update operation. In this
+          indicating that the error occurred on an update operation. In this
           case, an additional property of the event can be used to find out
           which operation was performed: <code>errorOperationType</code>
           returns an <code>EventType</code> object corresponding to the failed
@@ -406,7 +406,7 @@ config.clearProperty("removedProperty"); // but this one will
         that a <a href="howto_reloading.html">reloading configuration builder</a>
         is used. When a need for a reload is detected the managed configuration
         is replaced by a new instance. Event listener registrations directly
-        done at the old instance are no longer active. In contranst, for event
+        done at the old instance are no longer active. In contrast, for event
         listener registrations done via the configuration builder, the builder
         ensures that all listeners are automatically added to a newly created
         configuration instance and removed from an obsolete instance.</li>
@@ -509,7 +509,7 @@ builder.addEventListener(ConfigurationBuilderResultCreatedEvent.RESULT_CREATED,
       listeners are correctly registered and unregistered. In section
       <a href="#Configuration_Update_Events">Configuration Update Events</a>
       we created a simple configuration event listener which just logged
-      occuring update events. We can now show how this listener is
+      occurring update events. We can now show how this listener is
       registered via the configuration builder:
     </p>
     <source><![CDATA[

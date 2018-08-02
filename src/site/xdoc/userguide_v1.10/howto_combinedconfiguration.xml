@@ -35,7 +35,7 @@
     </p>
     <p>
       <ul>
-        <li>A <code>CombinedConfiguration</code> is a truely
+        <li>A <code>CombinedConfiguration</code> is a truly
         <a href="howto_xml.html#Hierarchical properties">hierarchical
         configuration</a>. This means that all the enhanced facilities
         provided by <code>HierarchicalConfiguration</code> (e.g. expression
@@ -215,7 +215,7 @@
       node is necessary only in situations where there is ambiguity. If in one
       of our example configuration sources multiple tables had been defined, the
       node combiner would have concluded itself that <code>table</code> is a list
-      node and would have acted correspondigly.
+      node and would have acted correspondingly.
     </p>
     <p>
       The examples the follow are provided to further illustrate the differences
@@ -729,7 +729,7 @@ cc.addConfiguration(conf2);
     <p>
       Typical node combiners work by copying parts of the node structures of
       the source configurations into the target structure and linking them
-      togehter using special link nodes. So updates of the combined node structure
+      together using special link nodes. So updates of the combined node structure
       will either effect nodes from one of the contained configuration (then
       the changes are directly visible in this configuration) or one of the link
       nodes (then they cannot really be saved).
@@ -747,7 +747,7 @@ cc.addConfiguration(conf2);
     <p>
       Because of that it is recommended that changes are not done at the
       combined configuration, but only at contained configurations. This way
-      the correct configuration to be updated can unambigously be identified.
+      the correct configuration to be updated can unambiguously be identified.
       Obtaining the configuration to be updated from the combined configuration
       is easy when it was given a name.
     </p>

@@ -31,7 +31,7 @@
         that each client have its own unique configuration. The simplest
         approach to enable an application to be multi-tenant is for it
         to not really be aware of it at all. This requires that the
-        configuration framework take on some of the responsility for
+        configuration framework take on some of the responsibility for
         making the application work correctly.
       </p>
       <p>
@@ -51,7 +51,7 @@
           on each call to a method in the class. The configuration file will then
           be located using the resolved pattern and a new XMLConfiguration
           will be created and cached for subsequent requests. The ExpressionEngine,
-          ReloadingStrategy and listeners will be propogated to each of the
+          ReloadingStrategy and listeners will be propagated to each of the
           created configurations.
         </p>
         <p>
@@ -120,7 +120,7 @@
       <subsection name="PatternSubtreeConfigurationWrapper">
         <p>
           Applications are often composed of many components each of which need their
-          own configuration. This can be accomodated by having a configuration file
+          own configuration. This can be accommodated by having a configuration file
           per component, but this can make things hard to manage when there are many
           clients and many components. A second approach is to combine them into
           a single configuration file. However, this either means the subcomponent

@@ -268,7 +268,7 @@ public class WindowStyleDefinition
         In order to create an instance of <code>WindowStyleDefinition</code>,
         we have to pass the foreground and background colors and a standard
         font to the constructor. The colors are simple strings while a font is
-        again a complex object. The following code fragement shows the complete
+        again a complex object. The following code fragment shows the complete
         bean declaration for this scenario:
       </p>
 <source><![CDATA[
@@ -451,7 +451,7 @@ public class MyBean
         class already an instance exists. If this is the case, it is directly
         returned. Otherwise we call the inherited <code>createBean()</code> method
         and store its result in the map. (Note that this implementation is a bit
-        simplicistic. A real world implementation would also have to take
+        simplistic. A real world implementation would also have to take
         initialization parameters into account and use a more sophisticated
         approach to deal with concurrency issues. But for the purpose of an
         example it should be good enough). Here is the code:
