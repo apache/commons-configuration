@@ -27,7 +27,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>commons-configuration2</artifactId>
-  <version>2.3-SNAPSHOT</version>
+  <version>2.3</version>
   <name>Apache Commons Configuration</name>
 
   <inceptionYear>2001</inceptionYear>
@@ -49,9 +49,9 @@
   </ciManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/configuration/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/configuration/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/configuration/trunk</url>
+    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/configuration/tags/CONFIGURATION_2_3</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/configuration/tags/CONFIGURATION_2_3</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/configuration/tags/CONFIGURATION_2_3</url>
   </scm>
 
   <distributionManagement>
