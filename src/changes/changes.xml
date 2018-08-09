@@ -25,6 +25,10 @@
   </properties>
 
   <body>
+    <release version="2.4" date="in SVN"
+             description="Minor release with new features and updated dependencies.">
+    </release>
+
     <release version="2.3" date="2018-08-04"
              description="Minor release with new features and updated dependencies.">
       <action dev="ggregory" type="update" issue="CONFIGURATION-707">
