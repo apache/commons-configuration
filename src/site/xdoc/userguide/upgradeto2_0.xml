@@ -56,7 +56,7 @@
       changes to some of the problematic concepts or even replaced them by
       alternative approaches. This has lead to an ambivalent situation: On one
       hand, you will recognize many similarities to the old version - classes
-      with familar names that continue to do what they have done before. On
+      with familiar names that continue to do what they have done before. On
       the other hand, completely new approaches have been introduced; in the
       affected areas <em>Commons Configuration</em> 2.0 will look like a
       completely new product rather than a plain upgrade.
@@ -90,7 +90,7 @@
       is real trouble: The class path then contains classes with identical
       names in different versions - results will be unpredictable! The change
       of the package name solves this problem because the new version can now
-      co-exist with an old version without interfering. The very first step
+      coexist with an old version without interfering. The very first step
       you have to when migrating to version 2.0 is to reorganize your imports
       to adapt them to the new package name. Modern IDEs will support you with
       this task.
@@ -109,7 +109,7 @@
 ]]></source>
     <p>
       So for Maven version 2.0 is a completely different artifact. This
-      allows a peaceful co-existence of <em>Commons Configuration</em> 1.x and
+      allows a peaceful coexistence of <em>Commons Configuration</em> 1.x and
       2.0 in the dependency set of a project.
     </p>
     </subsection>
@@ -408,7 +408,7 @@ PropertiesConfiguration config = builder.getConfiguration();
       when executing operations on this configuration. By changing the
       synchronizer, an application can adapt the locking behavior to its specific
       needs. For instance, if a configuration is only accessed by a single
-      thread, there is no need for any synchronization. Typcical usage modes are
+      thread, there is no need for any synchronization. Typical usage modes are
       reflected by different default implementations of the
       <code>Synchronizer</code> interface:
       <ul>
@@ -431,7 +431,7 @@ PropertiesConfiguration config = builder.getConfiguration();
       configuration data by multiple threads. Access to a builder is always
       thread-safe. By shifting the responsibility for reloading operations from
       the configuration to the builder, the need for intensive locking on each
-      property access could be eleminated.
+      property access could be eliminated.
     </p>
     <p>
       Hierarchical configurations derived from

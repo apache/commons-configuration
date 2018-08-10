@@ -278,7 +278,7 @@ WindowManager wm = (WindowManager) BeanHelper.createBean(decl);
         class already an instance exists. If this is the case, it is directly
         returned. Otherwise we call the inherited <code>createBean()</code> method
         and store its result in the map. (Note that this implementation is a bit
-        simplicistic; a real world implementation would also have to take the
+        simplistic; a real world implementation would also have to take the
         initialization parameters into account. But for the purpose of an example
         it should be good enough). Here is the code:
       </p>

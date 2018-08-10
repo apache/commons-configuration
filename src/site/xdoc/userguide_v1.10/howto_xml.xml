@@ -518,7 +518,7 @@ config.addProperty("tables.table.fields.field.name", "size");
 				<code>first</code> and <code>test</code>.)
 			</p>
 			<p>
-				If we want a different behavior, we must explicitely tell
+				If we want a different behavior, we must explicitly tell
 				<code>addProperty()</code> what to do. In our example with the
 				new field our intension was to create a new branch for the
 				<code>field</code> part in the key, so that a new <code>field</code>
@@ -612,7 +612,7 @@ int testVal = config.getInt("test..value");
 String complex = config.getString("test..complex.test..sub..element");
 ]]></source>
             <p>
-                Note the duplicated dots whereever the dot does not act as
+                Note the duplicated dots wherever the dot does not act as
                 delimiter. This way it is possible to access properties containing
                 dots in arbitrary combination. However, as you can see, the
                 escaping can be confusing sometimes. So if you have a choice,
@@ -656,7 +656,7 @@ String complex = config.getString("test..complex.test..sub..element");
                 stick to this approach in the 1.x series though.
             </p>
             <p>
-                In the next major release the handling of lists will propably be
+                In the next major release the handling of lists will probably be
                 reworked. Therefore it is recommended not to use this feature.
                 You are save if you disable it immediately after the creation of
                 an <code>XMLConfiguration</code> object (and before a file is
@@ -742,7 +742,7 @@ config.load("config.xml");
                 <code>DefaultExpressionEngine</code> class. But it can do a
                 little bit more for you: it defines a bunch of properties,
                 which can be used to customize most tokens that can appear in a
-                valid property key. You prefer curly brackets over paranthesis
+                valid property key. You prefer curly brackets over parenthesis
                 as index markers? You find the duplicated dot as escaped
                 property delimiter counter-intuitive? Well, simply go ahead and
                 change it! The following example shows how the syntax of a
@@ -1091,7 +1091,7 @@ config.load();
         <p>
             <a href="http://xml.apache.org/commons/components/resolver/resolver-article.html#s.whats.wrong">XML
             Entity and URI Resolvers</a> describes using a set of catalog files to
-            resolve enitities. Commons Configuration provides support for
+            resolve entities. Commons Configuration provides support for
             this Catalog Resolver through its own CatalogResolver class.
         </p>
          <source><![CDATA[
@@ -1139,7 +1139,7 @@ config.load();
             where they are not. XMLConfiguration provides two extension mechanisms
             that should provide applications with all the flexibility they may
             need. The first, registering a custom Entity Resolver has already been
-            discussed in the preceeding section. The second is that XMLConfiguration
+            discussed in the preceding section. The second is that XMLConfiguration
             provides a generic way of setting up the XML parser to use: A preconfigured
             <code>DocumentBuilder</code> object can be passed to the
             <code>setDocumentBuilder()</code> method.

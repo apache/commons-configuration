@@ -124,7 +124,7 @@ XMLConfiguration config = builder.getConfiguration();
             DefaultEntityResolver</a></code> class. This implementation is initialized
             by calling the <code>registerEntityId()</code> method with the
             public IDs of the entities to be retrieved and their corresponding
-            local URLs. Then the instance is passed to the configuation builder's
+            local URLs. Then the instance is passed to the configuration builder's
             initialization parameters. As an example, consider that the DTD file for
             our example document is stored on the class path. We can register it
             at <code>XMLConfiguration</code> using the following code:
@@ -165,7 +165,7 @@ XMLConfiguration config = builder.getConfiguration();
         <p>
             <a href="http://xml.apache.org/commons/components/resolver/resolver-article.html#s.whats.wrong">XML
             Entity and URI Resolvers</a> describes using a set of catalog files to
-            resolve enitities. <em>Commons Configuration</em> provides support for
+            resolve entities. <em>Commons Configuration</em> provides support for
             this Catalog Resolver through its own
             <code><a href="../apidocs/org/apache/commons/configuration2/resolver/CatalogResolver.html">
             CatalogResolver</a></code> class.
@@ -221,7 +221,7 @@ XMLConfiguration config = builder.getConfiguration();
             where they are not. <code>XMLConfiguration</code> provides two extension mechanisms
             that should provide applications with all the flexibility they may
             need. The first, registering a custom Entity Resolver has already been
-            discussed in the preceeding section. The second is that <code>XMLConfiguration</code>
+            discussed in the preceding section. The second is that <code>XMLConfiguration</code>
             provides a generic way of setting up the XML parser to use: A preconfigured
             <code>DocumentBuilder</code> object can be passed to the
             initialization parameters of the configuration builder.

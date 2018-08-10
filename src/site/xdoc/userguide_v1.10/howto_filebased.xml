@@ -63,7 +63,7 @@
           </p>
           <p>
             While a <code>File</code> or a URL uniquely identify a file, the
-            situation is a bit ambigous when only a base path and a file name are
+            situation is a bit ambiguous when only a base path and a file name are
             set. These can be arbitrary strings (even full URLs) whose exact
             meaning must be detected when the file is loaded. For this purpose
             file-based configurations perform the following checks (in this
@@ -104,7 +104,7 @@
             be aware of two things:
             <ol>
               <li>They do not change the configuration's file name. To do this
-              you have to explicitely call one of the setter methods.</li>
+              you have to explicitly call one of the setter methods.</li>
               <li>The <code>load()</code> methods do not empty the
               configuration before new data is loaded. This makes it easy to
               construct union configurations by simply calling <code>load()</code>
@@ -154,7 +154,7 @@ config.save("usergui.backup.properties);
         <subsection name="Automatic Saving">
           <p>
             If you want to ensure that every modification of a configuration
-            object is immideately written to disk, you can enable the automatic
+            object is immediately written to disk, you can enable the automatic
             saving mode. This is done through the <code>setAutoSave()</code>
             method as shown in the following example:
           </p>

@@ -31,7 +31,7 @@
         that each client has its own unique configuration. The easiest
         approach to enable an application to be multi-tenant is for it
         to not really be aware of it at all. This requires that the
-        configuration framework takes on some of the responsility for
+        configuration framework takes on some of the responsibility for
         making the application work correctly.
       </p>
       <p>
@@ -218,7 +218,7 @@ XMLConfiguration config = builder.getConfiguration();
       <subsection name="PatternSubtreeConfigurationWrapper">
         <p>
           Applications are often composed of many components each of which need their
-          own configuration. This can be accomodated by having a configuration file
+          own configuration. This can be accommodated by having a configuration file
           per component, but this can make things hard to manage when there are many
           clients and many components. A second approach is to combine them into
           a single configuration file. However, this either means the subcomponent

@@ -243,7 +243,7 @@ config.dirs = \\\\\\\\share1,\\\\\\\\share2
         way of defining a list: just use the same key multiple times. In this
         case no additional escaping of backslashes (beyond the usual duplicating
         required by properties files) is needed because there is no list
-        delimter character involved. Using this syntax the list of network
+        delimiter character involved. Using this syntax the list of network
         shares looks like the following:
       </p>
       <source><![CDATA[
@@ -285,7 +285,7 @@ config.dirs = \\\\share2
         <li><code>setBlancLinesBefore()</code><br/>
         This methods allows defining the number of empty lines to be written
         before the specified property. It can be used, for instance, to
-        devide the properties file into multiple logical sections.</li>
+        divide the properties file into multiple logical sections.</li>
         <li><code>setSingleLine()</code><br/>
         If a property has multiple values, with <code>setSingleLine()</code> it
         can be specified that all these values should be written into a single

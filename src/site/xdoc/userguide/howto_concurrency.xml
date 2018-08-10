@@ -313,7 +313,7 @@ finally
       <code>Synchronizer</code> object. However, the builders dealing with
       affected classes are implemented in a way that they take care about these
       special cases and perform extra initialization steps which make write
-      locks for later read operations unneccessary.
+      locks for later read operations unnecessary.
     </p>
     <p>
       For instance, the builder for combined configurations explicitly accesses

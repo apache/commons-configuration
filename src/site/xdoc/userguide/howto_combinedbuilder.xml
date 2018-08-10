@@ -33,7 +33,7 @@
       files each of which is related to a specific sub-domain. This makes it
       easier for users or administrators to adapt specific configuration
       settings. However, rather than reading multiple files and dealing with
-      multiple <code>Configuration</code> objects, an application propably
+      multiple <code>Configuration</code> objects, an application probably
       prefers a combined view on its configuration data. <em>Commons
       Configuration</em> supports this use case with a special configuration
       builder implementation:
@@ -177,7 +177,7 @@ CombinedConfiguration config = builder.getConfiguration();
       Just defining the configuration definition file
       via a file-based parameters object is a special case. Internally, a builder
       for an <code>XMLConfiguration</code> object is constructed which is then
-      used to load and interprete the definition file. This should be appropriate
+      used to load and interpret the definition file. This should be appropriate
       for many cases. A drawback of this method is that there is no way to set
       additional initialization parameters for the
       <code>CombinedConfigurationBuilder</code>. For this purpose, a special
@@ -254,7 +254,7 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
       Using <code>CombinedConfigurationBuilder</code> to collect configuration
       sources does not make much sense if there is only a single source to be
       loaded. So let's add another one to the example definition file used
-      before! This time we will embedd a XML file: <em>gui.xml</em> which is
+      before! This time we will embed a XML file: <em>gui.xml</em> which is
       shown in the next listing:
     </p>
     <source><![CDATA[
@@ -312,7 +312,7 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
       settings in another. Then in the configuration definition file the file
       with the user settings is included first and after that the file with the
       default values. The application code that queries these settings does not
-      have to bother whether a property was overriden by the user. <code>CombinedConfigurationBuilder</code>
+      have to bother whether a property was overridden by the user. <code>CombinedConfigurationBuilder</code>
       takes care that properties defined in the first file (the user file) are
       found; other properties which the user has not changed will still be
       returned from the second file (the defaults file).
@@ -396,7 +396,7 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
     <p>
       In an earlier section about the configuration definition file for
       <code>CombinedConfigurationBuilder</code> it was stated that configuration
-      files included first can override properties in configuraton files
+      files included first can override properties in configuration files
       included later, and an example use case for this behaviour was given. There
       may be cases when there are other requirements.
     </p>
@@ -500,11 +500,11 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
       this section are treated as if they were children of the root element, i.e.
       properties in the included configuration sources override properties in
       sources included later. So the <code>&lt;override&gt;</code> tags could have
-      been ommitted, but for the sake of clearity it is recommended to use them
+      been omitted, but for the sake of clarity it is recommended to use them
       if there is also an <code>&lt;additional&gt;</code> section.
     </p>
     <p>
-      It is the <code>&lt;additonal&gt;</code> section that introduces a new behaviour.
+      It is the <code>&lt;additional&gt;</code> section that introduces a new behaviour.
       All configuration sources listed here are combined to a union configuration.
       In our example we have put two <code>xml</code> elements in this area
       that load the available files with database table definitions. The syntax
@@ -514,7 +514,7 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
       configuration where the included properties are to be added. Here it is set
       for the second element to the value <em>tables</em>. This is because the
       file starts with a <code>&lt;table&gt;</code> element, but to be compatible
-      with the other table definition file it should be accessable under the key
+      with the other table definition file it should be accessible under the key
       <code>tables.table</code>.
     </p>
     <p>
@@ -526,7 +526,7 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
     </p>
     <p>
       Note that it is also possible to override properties defined in an
-      <code>additonal</code> section. This can be done by placing a configuration
+      <code>additional</code> section. This can be done by placing a configuration
       source in the <code>override</code> section that defines properties that
       are also defined in one of the sources listed in the <code>additional</code>
       section. The example does not make use of that. Note also that the order of
@@ -923,7 +923,7 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
       document type definition or a schema defining exactly the structure of a
       configuration definition file. Frankly, the answer is no. This is due to
       the fact that the format is extensible. As will be shown below, it is
-      possible to register your own tags in order to embedd custom configuration
+      possible to register your own tags in order to embed custom configuration
       sources.
     </p>
     </subsection>
@@ -955,7 +955,7 @@ CombinedConfigurationBuilder builder = configs.combinedBuilder("path/to/definiti
       <code><a href="../apidocs/org/apache/commons/configuration2/reloading/ReloadingController.html">
       ReloadingController</a></code> that can be used to trigger reloading
       checks. (Please refer to the chapter about <a href="howto_reloading.html">reloading</a>
-      for a detailed describtion of the reloading implementation in <em>Commons
+      for a detailed description of the reloading implementation in <em>Commons
       Configuration</em> and the components involved.)
     </p>
     <p>
@@ -1367,7 +1367,7 @@ CombinedConfiguration config = builder.getConfiguration();
       complex; multiple parameter objects have to be dealt with.
     </p>
     <p>
-      A more lite-weight alternative is the ability of a combined configuration
+      A more lightweight alternative is the ability of a combined configuration
       builder to inherit its parameters to the child configurations created by
       it. This feature is enabled by default and it works as follows: Whenever
       a parameter object for a child configuration source is created, it is

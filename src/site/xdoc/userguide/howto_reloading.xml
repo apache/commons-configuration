@@ -226,7 +226,7 @@ trigger.start();
       from there every time configuration data is needed.
     </p>
     <p>
-      Users familar with older versions of <em>Commons Configuration</em> will
+      Users familiar with older versions of <em>Commons Configuration</em> will
       notice that this is a fundamental change compared to the old reloading
       implementation. In the old implementation a reload could happen at any
       time on a configuration the application was operating on. This had the
