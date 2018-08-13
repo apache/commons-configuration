@@ -48,7 +48,7 @@
         modified.</li>
         <li>The event's type. This is a numeric value that corresponds to
         constant declarations in concrete configuration classes. It describes
-        what exactly has happended.</li>
+        what exactly has happened.</li>
         <li>If available, the name of the property whose modification caused the
         event.</li>
         <li>If available, the value of the property that caused this event.</li>
@@ -195,7 +195,7 @@ public class ConfigurationLogListener
       // remains unchanged, see above
       ...
     }
-    
+
     <b>public void configurationError(ConfigurationErrorEvent event)
     {
         System.out.println("An internal error occurred!");

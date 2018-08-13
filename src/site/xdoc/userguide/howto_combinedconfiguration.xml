@@ -36,7 +36,7 @@
     </p>
     <p>
       <ul>
-        <li>A <code>CombinedConfiguration</code> is a truely
+        <li>A <code>CombinedConfiguration</code> is a truly
         <a href="howto_xml.html#Hierarchical properties">hierarchical
         configuration</a>. This means that all the enhanced facilities
         provided by <code>HierarchicalConfiguration</code> (e.g. expression
@@ -215,7 +215,7 @@
       node is necessary only in situations where there is ambiguity. If in one
       of our example configuration sources multiple tables had been defined, the
       node combiner would have concluded itself that <code>table</code> is a list
-      node and would have acted correspondigly.
+      node and would have acted correspondingly.
     </p>
     <p>
       The examples that follow are provided to further illustrate the differences

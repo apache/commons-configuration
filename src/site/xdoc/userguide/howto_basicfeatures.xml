@@ -338,7 +338,7 @@ interpolator.registerLookup("echo", new EchoLookup());
       <code>Lookup</code> objects as values. This map can then be passed to the
       <code>setPrefixLookup()</code> method of a parameters object for the
       builder. Note that the lookups for the default prefixes are added
-      explicitly; ommitting a lookup would remove support for the corresponding
+      explicitly; omitting a lookup would remove support for the corresponding
       prefix:
     </p>
 <source><![CDATA[
@@ -360,7 +360,7 @@ PropertiesConfiguration config = builder.getConfiguration();
 
     <subsection name="Using Expressions">
       <p>
-        In addition to the simple lookup mechanisms previously described, Commond Configuration
+        In addition to the simple lookup mechanisms previously described, Commons Configuration
         provides <code>ExprLookup</code> which uses <a href="http://commons.apache.org/jexl">Apache
         Commons Jexl</a> to allow expressions to be resolved wherever a StrLookup is allowed. This
         example shows an alternate way of obtaining a system property if the ExprLookup is

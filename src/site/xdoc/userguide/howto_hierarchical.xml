@@ -96,7 +96,7 @@
       <a href="howto_filebased.html">file-based</a>  configuration classes
       a <code><a href="../apidocs/org/apache/commons/configuration2/builder/FileBasedConfigurationBuilder.html">
       FileBasedConfigurationBuilder</a></code> is used for reading the source
-      file as shown in the following code fragement:
+      file as shown in the following code fragment:
     </p>
 <source><![CDATA[
 Parameters params = new Parameters();
@@ -594,7 +594,7 @@ config.addProperty("tables.table.fields.field.name", "size");
       <code>first</code> and <code>test</code>.)
     </p>
     <p>
-      If we want a different behavior, we must explicitely tell
+      If we want a different behavior, we must explicitly tell
       <code>addProperty()</code> what to do. In our example with the
       new field our intension was to create a new branch for the
       <code>field</code> part in the key, so that a new <code>field</code>
@@ -690,7 +690,7 @@ int testVal = config.getInt("test..value");
 String complex = config.getString("test..complex.test..sub..element");
 ]]></source>
     <p>
-      Note the duplicated dots whereever the dot does not act as
+      Note the duplicated dots wherever the dot does not act as
       delimiter. This way it is possible to access properties containing
       dots in arbitrary combination. However, as you can see, the
       escaping can be confusing sometimes. So if you have a choice,

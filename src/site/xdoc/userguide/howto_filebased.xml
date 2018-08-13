@@ -152,7 +152,7 @@ catch(ConfigurationException cex)
 	  <code>FileBasedConfigurationBuilder</code> offers functionality for
 	  automatically saving changes on its managed configuration. This can
 	  be used to ensure that every modification of a configuration object is
-	  immideately written to disk. This feature is enabled via the
+	  immediately written to disk. This feature is enabled via the
 	  <code>setAutoSave()</code> method as shown in the following example:
 	</p>
         <source><![CDATA[
@@ -370,7 +370,7 @@ FileHandler handler = new FileHandler(config);
 // Load another configuration source, for instance from a relative path
 handler.load("user.properties");
 
-// Store the resulting configuguration in a new file
+// Store the resulting configuration in a new file
 File out = new File("union.properties");
 handler.save(out);
 ]]></source>

@@ -95,7 +95,7 @@
         provided, which in many cases can be used out of the box.
       </p>
       </subsection>
-      
+
       <subsection name="An Example">
       <p>
         After this theory let's get into practice using an example. Consider a
@@ -122,13 +122,13 @@ public class DefaultWindowManager implements WindowManager
     private boolean resizable;
     // do windows have a close button?
     private boolean closable;
-    
+
     // Default size of new windows
     private int defaultWidth;
     private int defaultHeight;
-    
+
     WindowStyleDefinition styleDefinition;
-    
+
     // getters and setters ommitted, also the WindowManager methods
 }
 ]]></source>
@@ -204,7 +204,7 @@ WindowManager wm = (WindowManager) BeanHelper.createBean(decl);
         will be thrown.
       </p>
       </subsection>
-      
+
       <subsection name="Extending the Basic Mechanism">
       <p>
         As was pointed out in the introduction of this chapter support for creating
@@ -278,7 +278,7 @@ WindowManager wm = (WindowManager) BeanHelper.createBean(decl);
         class already an instance exists. If this is the case, it is directly
         returned. Otherwise we call the inherited <code>createBean()</code> method
         and store its result in the map. (Note that this implementation is a bit
-        simplicistic; a real world implementation would also have to take the
+        simplistic; a real world implementation would also have to take the
         initialization parameters into account. But for the purpose of an example
         it should be good enough). Here is the code:
       </p>
@@ -287,13 +287,13 @@ public class SingletonBeanFactory extends DefaultBeanFactory
 {
     /** A map for the so far created instances.*/
     private Map beans;
-    
+
     public SingletonBeanFactory()
     {
         super();
         beans = new HashMap();
     }
-    
+
     // Creates the bean. Checks if already an instance exists.
     public synchronized Object createBean(Class beanClass, BeanDeclaration decl,
         Object param) throws Exception

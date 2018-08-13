@@ -29,7 +29,7 @@
       <p>
         Properties files are a popular mean of configuring applications. Of course Commons Configuration
         supports this format and enhances significantly the basic <code>java.util.Properties</code> class.
-        This section introduces the features of the 
+        This section introduces the features of the
         <code><a href="../javadocs/v1.10/apidocs/org/apache/commons/configuration/PropertiesConfiguration.html">PropertiesConfiguration</a></code> class.
         Note that <code>PropertiesConfiguration</code> is a very typical example
         for an implementation of the <code>Configuration</code> interface and
@@ -243,7 +243,7 @@ config.dirs = \\\\\\\\share1,\\\\\\\\share2
         way of defining a list: just use the same key multiple times. In this
         case no additional escaping of backslashes (beyond the usual duplicating
         required by properties files) is needed because there is no list
-        delimter character involved. Using this syntax the list of network
+        delimiter character involved. Using this syntax the list of network
         shares looks like the following:
       </p>
       <source><![CDATA[
@@ -285,7 +285,7 @@ config.dirs = \\\\share2
         <li><code>setBlancLinesBefore()</code><br/>
         This methods allows defining the number of empty lines to be written
         before the specified property. It can be used, for instance, to
-        devide the properties file into multiple logical sections.</li>
+        divide the properties file into multiple logical sections.</li>
         <li><code>setSingleLine()</code><br/>
         If a property has multiple values, with <code>setSingleLine()</code> it
         can be specified that all these values should be written into a single
@@ -383,7 +383,7 @@ public class WhitespacePropertiesReader extends PropertiesConfiguration.Properti
     {
         super(in, delimiter);
     }
-    
+
     /**
      * Special algorithm for parsing properties keys with whitespace. This
      * method is called for each non-comment line read from the properties

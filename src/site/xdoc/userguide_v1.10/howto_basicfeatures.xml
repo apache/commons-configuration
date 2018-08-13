@@ -98,7 +98,7 @@ long longValue = config.getLong("NonExistingProperty");
       to these methods can be a list or an array resulting in a property
       with multiple values. If the property value is a string, it is checked
       whether it contains the <em>list delimiter character</em>. If this is
-      the case, the string is splitted, and its single parts are added one
+      the case, the string is split, and its single parts are added one
       by one. The list delimiter character is the comma by default. It is
       also taken into account when the configuration source is loaded
       (i.e. string values of properties will be checked whether they contain
@@ -347,7 +347,7 @@ user.file = ${expr:System.getProperty("user.home"}/settings.xml
     </lookups>
   </header>
   <override>
-    <xml fileName="${expr:$[sys:basePath] + 
+    <xml fileName="${expr:$[sys:basePath] +
          String.lowercase(net.localHost.hostName) + '/testMultiConfiguration_default.xml'}"
          config-name="defaultConfig" delimiterParsingDisabled="true">
     </xml>
