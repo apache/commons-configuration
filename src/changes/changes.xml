@@ -30,6 +30,9 @@
       <action dev="oheger" type="fix" issue="CONFIGURATION-710" due-to="thc202">
         Fixed numerous typos in user guides.
       </action>
+      <action dev="ggregory" type="fix" issue="CONFIGURATION-711">
+        Update Apache Commons Lang from 3.7 to 3.8.
+      </action>
     </release>
 
     <release version="2.3" date="2018-08-04"
