@@ -33,6 +33,9 @@
       <action dev="ggregory" type="fix" issue="CONFIGURATION-711">
         Update Apache Commons Lang from 3.7 to 3.8.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-713" due-to="Lars W">
+        Configuration properties can now be converted to regular expressions.
+      </action>
     </release>
 
     <release version="2.3" date="2018-08-04"
