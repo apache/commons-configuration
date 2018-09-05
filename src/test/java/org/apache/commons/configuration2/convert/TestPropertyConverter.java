@@ -25,6 +25,7 @@ import java.lang.annotation.ElementType;
 import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Pattern;
 
 import org.apache.commons.configuration2.ex.ConversionException;
 import org.junit.Test;
@@ -186,6 +187,28 @@ public class TestPropertyConverter
     public void testToNumberWithInvalidClass()
     {
         PropertyConverter.toNumber("42", Object.class);
+    }
+
+    /**
+     * Tests conversion to patterns when the passed in objects are already
+     * patterns.
+     */
+    @Test
+    public void testToPatternDirect()
+    {
+        Pattern p = Pattern.compile(".+");
+        assertSame("Wrong pattern", p, PropertyConverter.toPattern(p));
+    }
+
+    /**
+     * Tests conversion to patterns when the passed in objects have a compatible
+     * string representation.
+     */
+    @Test
+    public void testToPatternFromString()
+    {
+        Pattern p = Pattern.compile(".+");
+        assertEquals("Wrong conversion result", p.pattern(), PropertyConverter.toPattern(".+").pattern());
     }
 
     @Test

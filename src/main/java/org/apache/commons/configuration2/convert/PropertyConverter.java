@@ -36,6 +36,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import org.apache.commons.configuration2.ex.ConversionException;
 import org.apache.commons.lang3.BooleanUtils;
@@ -170,6 +172,10 @@ final class PropertyConverter
         else if (URL.class.equals(cls))
         {
             return toURL(value);
+        }
+        else if (Pattern.class.equals(cls))
+        {
+            return toPattern(value);
         }
         else if (Locale.class.equals(cls))
         {
@@ -599,6 +605,36 @@ final class PropertyConverter
         else
         {
             throw new ConversionException("The value " + value + " can't be converted to an URL");
+        }
+    }
+
+    /**
+     * Convert the specified object into a Pattern.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to a Pattern
+     */
+    public static Pattern toPattern(Object value) throws ConversionException
+    {
+        if (value instanceof Pattern)
+        {
+            return (Pattern) value;
+        }
+        else if (value instanceof String)
+        {
+            try
+            {
+                return Pattern.compile((String) value);
+            }
+            catch (PatternSyntaxException e)
+            {
+                throw new ConversionException("The value " + value + " can't be converted to a Pattern", e);
+            }
+        }
+        else
+        {
+            throw new ConversionException("The value " + value + " can't be converted to a Pattern");
         }
     }
 
