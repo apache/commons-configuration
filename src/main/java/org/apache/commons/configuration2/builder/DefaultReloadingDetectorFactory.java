@@ -42,8 +42,14 @@ public class DefaultReloadingDetectorFactory implements
             throws ConfigurationException
     {
         Long refreshDelay = params.getReloadingRefreshDelay();
-        return (refreshDelay != null) ? new FileHandlerReloadingDetector(
+
+        FileHandlerReloadingDetector fileHandlerReloadingDetector =
+                (refreshDelay != null) ? new FileHandlerReloadingDetector(
                 handler, refreshDelay) : new FileHandlerReloadingDetector(
                 handler);
+
+        fileHandlerReloadingDetector.refresh();
+
+        return fileHandlerReloadingDetector;
     }
 }

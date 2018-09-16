@@ -122,6 +122,46 @@ public class TestFileHandlerReloadingDetector
     }
 
     /**
+     * Tests whether a changed file is detected after initialization and invoking
+     * refresh.
+     */
+    @Test
+    public void testRefreshIsReloadingRequiredTrue() throws Exception
+    {
+        File f = EasyMock.createMock(File.class);
+        EasyMock.expect(f.exists()).andReturn(Boolean.TRUE).anyTimes();
+        EasyMock.expect(f.lastModified()).andReturn(LAST_MODIFIED);
+        EasyMock.expect(f.lastModified()).andReturn(LAST_MODIFIED + 1);
+        EasyMock.replay(f);
+        FileHandlerReloadingDetector detector = new FileHandlerReloadingDetectorTestImpl(f);
+        detector.refresh();
+        assertTrue("Reloading not detected", detector.isReloadingRequired());
+    }
+
+    /**
+     * Tests a refresh cycle with a detected reload operation and a notification that
+     * reloading was performed.
+     */
+    @Test
+    public void testRefreshReloadingAndReset() throws Exception
+    {
+        File f = EasyMock.createMock(File.class);
+        EasyMock.expect(f.exists()).andReturn(Boolean.TRUE).anyTimes();
+        EasyMock.expect(f.lastModified()).andReturn(LAST_MODIFIED).times(2);
+        EasyMock.expect(f.lastModified()).andReturn(LAST_MODIFIED + 1).times(3);
+        EasyMock.expect(f.lastModified()).andReturn(LAST_MODIFIED + 2);
+        EasyMock.replay(f);
+        FileHandlerReloadingDetector detector = new FileHandlerReloadingDetectorTestImpl(f);
+        detector.refresh();
+        assertFalse("Reloading required", detector.isReloadingRequired());
+        assertTrue("Reloading not detected", detector.isReloadingRequired());
+        detector.reloadingPerformed();
+        assertFalse("Still reloading required", detector.isReloadingRequired());
+        assertTrue("Next reloading not detected",
+                detector.isReloadingRequired());
+    }
+
+    /**
      * Tests whether the refresh delay is taken into account.
      */
     @Test

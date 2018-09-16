@@ -188,6 +188,16 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
     }
 
     /**
+     * Tells this implementation that the internally stored state should be
+     * refreshed. This method is intended to be called after the creation
+     * of an instance.
+     */
+    public void refresh()
+    {
+        updateLastModified(getLastModificationDate());
+    }
+
+    /**
      * Returns the date of the last modification of the monitored file. A return
      * value of 0 indicates, that the monitored file does not exist.
      *
