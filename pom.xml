@@ -606,7 +606,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>2.15</version>
+          <version>3.0.0</version>
           <configuration>
             <configLocation>${basedir}/conf/checkstyle.xml</configLocation>
             <suppressionsLocation>${basedir}/conf/checkstyle-suppressions.xml</suppressionsLocation>

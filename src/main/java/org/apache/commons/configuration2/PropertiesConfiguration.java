@@ -911,7 +911,8 @@ public class PropertiesConfiguration extends BaseConfiguration
          * Properties escape map.
          */
         private static final Map<CharSequence, CharSequence> PROPERTIES_CHARS_ESCAPE;
-        static {
+        static
+        {
             final Map<CharSequence, CharSequence> initialMap = new HashMap<>();
             initialMap.put("\\", "\\\\");
             PROPERTIES_CHARS_ESCAPE = Collections.unmodifiableMap(initialMap);
