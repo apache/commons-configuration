@@ -368,7 +368,7 @@ public class ConfigurationInterpolator
     /**
      * Sets the flag whether variable names can contain other variables. This
      * flag corresponds to the {@code enableSubstitutionInVariables} property of
-     * the underlying {@code StrSubstitutor} object.
+     * the underlying {@code StringSubstitutor} object.
      *
      * @param f the new value of the flag
      */
@@ -473,12 +473,12 @@ public class ConfigurationInterpolator
     }
 
     /**
-     * Creates and initializes a {@code StrSubstitutor} object which is used for
-     * variable substitution. This {@code StrSubstitutor} is assigned a
+     * Creates and initializes a {@code StringSubstitutor} object which is used for
+     * variable substitution. This {@code StringSubstitutor} is assigned a
      * specialized lookup object implementing the correct variable resolving
      * algorithm.
      *
-     * @return the {@code StrSubstitutor} used by this object
+     * @return the {@code StringSubstitutor} used by this object
      */
     private StringSubstitutor initSubstitutor()
     {
@@ -507,7 +507,7 @@ public class ConfigurationInterpolator
     /**
      * Checks whether a value to be interpolated seems to be a single variable.
      * In this case, it is resolved directly without using the
-     * {@code StrSubstitutor}. Note that it is okay if this method returns a
+     * {@code StringSubstitutor}. Note that it is okay if this method returns a
      * false positive: In this case, resolving is going to fail, and standard
      * mechanism is used.
      *

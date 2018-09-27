@@ -78,7 +78,7 @@ public class ExprLookup implements Lookup
     /** The ConfigurationInterpolator used by this object. */
     private ConfigurationInterpolator interpolator;
 
-    /** The StrSubstitutor for performing replace operations. */
+    /** The StringSubstitutor for performing replace operations. */
     private StringSubstitutor substitutor;
 
     /** The logger used by this instance. */
@@ -247,7 +247,7 @@ public class ExprLookup implements Lookup
     }
 
     /**
-     * Creates a {@code StrSubstitutor} object which uses the passed in
+     * Creates a {@code StringSubstitutor} object which uses the passed in
      * {@code ConfigurationInterpolator} as lookup object.
      *
      * @param ip the {@code ConfigurationInterpolator} to be used
