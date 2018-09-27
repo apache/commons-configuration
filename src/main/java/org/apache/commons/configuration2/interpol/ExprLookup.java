@@ -266,7 +266,7 @@ public class ExprLookup implements Lookup
                 public String lookup(final String key)
                 {
                     final Object value = ip.resolve(key);
-                    return (value != null) ? value.toString() : null;
+                    return value != null ? value.toString() : null;
                 }
             };
             substitutor =
