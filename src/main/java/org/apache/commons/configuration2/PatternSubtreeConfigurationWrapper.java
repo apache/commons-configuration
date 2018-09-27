@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.commons.configuration2.event.Event;
@@ -469,8 +470,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
      */
     private String substitute(String pattern)
     {
-        Object value = getInterpolator().interpolate(pattern);
-        return value != null ? value.toString() : null;
+        return Objects.toString(getInterpolator().interpolate(pattern), null);
     }
 
     /**
