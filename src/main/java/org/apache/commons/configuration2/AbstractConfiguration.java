@@ -1563,7 +1563,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         }
 
         Collection<T> targetCol =
-                (target != null) ? target : new ArrayList<T>();
+                (target != null) ? target : new ArrayList<>();
         getConversionHandler().toCollection(src, cls, getInterpolator(),
                 targetCol);
         return targetCol;

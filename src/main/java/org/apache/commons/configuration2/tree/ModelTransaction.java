@@ -567,7 +567,7 @@ class ModelTransaction
         }
 
         Collection<E> result =
-                (col1 != null) ? col1 : new ArrayList<E>(col2.size());
+                (col1 != null) ? col1 : new ArrayList<>(col2.size());
         result.addAll(col2);
         return result;
     }
@@ -587,7 +587,7 @@ class ModelTransaction
             return set1;
         }
 
-        Set<E> result = (set1 != null) ? set1 : new HashSet<E>();
+        Set<E> result = (set1 != null) ? set1 : new HashSet<>();
         result.addAll(set2);
         return result;
     }
@@ -609,7 +609,7 @@ class ModelTransaction
             return map1;
         }
 
-        Map<K, V> result = (map1 != null) ? map1 : new HashMap<K, V>();
+        Map<K, V> result = (map1 != null) ? map1 : new HashMap<>();
         result.putAll(map2);
         return result;
     }
@@ -625,7 +625,7 @@ class ModelTransaction
      */
     private static <E> Collection<E> append(Collection<E> col, E node)
     {
-        Collection<E> result = (col != null) ? col : new LinkedList<E>();
+        Collection<E> result = (col != null) ? col : new LinkedList<>();
         result.add(node);
         return result;
     }
@@ -641,7 +641,7 @@ class ModelTransaction
      */
     private static <E> Set<E> append(Set<E> col, E elem)
     {
-        Set<E> result = (col != null) ? col : new HashSet<E>();
+        Set<E> result = (col != null) ? col : new HashSet<>();
         result.add(elem);
         return result;
     }
@@ -659,7 +659,7 @@ class ModelTransaction
      */
     private static <K, V> Map<K, V> append(Map<K, V> map, K key, V value)
     {
-        Map<K, V> result = (map != null) ? map : new HashMap<K, V>();
+        Map<K, V> result = (map != null) ? map : new HashMap<>();
         result.put(key, value);
         return result;
     }

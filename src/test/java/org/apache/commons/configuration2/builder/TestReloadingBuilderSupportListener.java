@@ -46,7 +46,7 @@ public class TestReloadingBuilderSupportListener
         EasyMock.replay(detector);
         ReloadingController controller = new ReloadingController(detector);
         BasicConfigurationBuilder<Configuration> builder =
-                new BasicConfigurationBuilder<Configuration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         BuilderEventListenerImpl builderListener =
                 new BuilderEventListenerImpl();
@@ -76,7 +76,7 @@ public class TestReloadingBuilderSupportListener
         controller.resetReloadingState();
         EasyMock.replay(controller);
         BasicConfigurationBuilder<Configuration> builder =
-                new BasicConfigurationBuilder<Configuration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
 
         ReloadingBuilderSupportListener listener =

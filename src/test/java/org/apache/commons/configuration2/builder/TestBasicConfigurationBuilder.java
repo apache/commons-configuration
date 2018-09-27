@@ -104,7 +104,7 @@ public class TestBasicConfigurationBuilder
     {
         Map<String, Object> params = createTestParameters();
         BasicConfigurationBuilder<Configuration> builder =
-                new BasicConfigurationBuilder<Configuration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class, params);
         Map<String, Object> params2 =
                 new HashMap<>(builder.getParameters());
@@ -581,7 +581,7 @@ public class TestBasicConfigurationBuilder
         EasyMock.replay(detector);
         ReloadingController controller = new ReloadingController(detector);
         BasicConfigurationBuilder<Configuration> builder =
-                new BasicConfigurationBuilder<Configuration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         Configuration configuration = builder.getConfiguration();
 
@@ -600,7 +600,7 @@ public class TestBasicConfigurationBuilder
     public void testConnectToReloadingControllerNull()
     {
         BasicConfigurationBuilder<Configuration> builder =
-                new BasicConfigurationBuilder<Configuration>(
+                new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         builder.connectToReloadingController(null);
     }

@@ -551,7 +551,7 @@ public class TestFileBasedConfigurationBuilder
         folder.newFolder(folderName);
         folder.newFile(folderName + File.separatorChar + fileName);
         FileBasedConfigurationBuilder<FileBasedConfiguration> homeDirConfigurationBuilder =
-                new FileBasedConfigurationBuilder<FileBasedConfiguration>(
+                new FileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         PropertiesBuilderParameters homeDirProperties =
                 new Parameters().properties();

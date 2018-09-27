@@ -555,7 +555,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
         MutableObject<String> rootValue = new MutableObject<>();
         Map<ImmutableNode, Object> elemRefMap =
-                elemRefs ? new HashMap<ImmutableNode, Object>() : null;
+                elemRefs ? new HashMap<>() : null;
         Map<String, String> attributes =
                 constructHierarchy(rootBuilder, rootValue,
                         document.getDocumentElement(), elemRefMap, true, 0);
