@@ -441,9 +441,9 @@ public class ConfigurationInterpolator
             }
         }
 
-        for (Lookup l : defaultLookups)
+        for (Lookup lookup : defaultLookups)
         {
-            Object value = l.lookup(var);
+            Object value = lookup.lookup(var);
             if (value != null)
             {
                 return value;
