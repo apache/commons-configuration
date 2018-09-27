@@ -56,13 +56,13 @@ public enum DefaultLookups
      * Creates a new instance of {@code DefaultLookups} and sets the prefix and
      * the associated lookup instance.
      *
-     * @param prfx the prefix
-     * @param look the {@code Lookup} instance
+     * @param prefix the prefix
+     * @param lookup the {@code Lookup} instance
      */
-    private DefaultLookups(final String prfx, final Lookup look)
+    private DefaultLookups(final String prefix, final Lookup lookup)
     {
-        prefix = prfx;
-        lookup = look;
+        this.prefix = prefix;
+        this.lookup = lookup;
     }
 
     /**
