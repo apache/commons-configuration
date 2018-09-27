@@ -907,6 +907,9 @@ public class PropertiesConfiguration extends BaseConfiguration
     public static class PropertiesWriter extends FilterWriter
     {
 
+        /**
+         * Properties escape map.
+         */
         private static final Map<CharSequence, CharSequence> PROPERTIES_CHARS_ESCAPE;
         static {
             final Map<CharSequence, CharSequence> initialMap = new HashMap<>();
