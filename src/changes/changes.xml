@@ -47,6 +47,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-720">
         Replace use of deprecated Commons Lang string substitution code for Commons Text.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-694">
+        Update Java requirement from version 7 to 8.
+      </action>
     </release>
 
     <release version="2.3" date="2018-08-04"
