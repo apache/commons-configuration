@@ -732,7 +732,7 @@ public class TestAbstractHierarchicalConfiguration
      * Tests interpolation with system properties.
      */
     @Test
-    public void testInterpolationSysProperties()
+    public void testInterpolationSystemProperties()
     {
         InterpolationTestHelper.testInterpolationSystemProperties(config);
     }
