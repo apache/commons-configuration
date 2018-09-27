@@ -202,8 +202,7 @@ public class TestPropertiesConfiguration
      * read from a reader.
      */
     @Test
-    public void testLoadIncludeFromReader() throws ConfigurationException,
-            IOException
+    public void testLoadIncludeFromReader() throws ConfigurationException
     {
         StringReader in =
                 new StringReader(PropertiesConfiguration.getInclude() + " = "
@@ -560,7 +559,7 @@ public class TestPropertiesConfiguration
      * Tests if included files are loaded when the source lies in the class path.
      */
     @Test
-    public void testLoadIncludeFromClassPath() throws ConfigurationException
+    public void testLoadIncludeFromClassPath()
     {
         assertEquals("true", conf.getString("include.loaded"));
     }

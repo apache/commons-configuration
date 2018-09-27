@@ -188,7 +188,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
      * Tests whether XML schema validation can be enabled.
      */
     @Test
-    public void testSchemaValidationError() throws ConfigurationException
+    public void testSchemaValidationError()
     {
         MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createTestBuilder(new XMLBuilderParametersImpl().setValidating(
@@ -440,7 +440,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
      * of the builder's configuration.
      */
     @Test
-    public void testRecursiveInterpolation() throws ConfigurationException
+    public void testRecursiveInterpolation()
     {
         DynamicCombinedConfiguration config =
                 new DynamicCombinedConfiguration();

@@ -1691,7 +1691,7 @@ public class TestXMLConfiguration
      * related to CONFIGURATION-641.
      */
     @Test
-    public void testReadCalledDirectly() throws IOException, ConfigurationException
+    public void testReadCalledDirectly() throws IOException
     {
         conf = new XMLConfiguration();
         String content = "<configuration><test>1</test></configuration>";

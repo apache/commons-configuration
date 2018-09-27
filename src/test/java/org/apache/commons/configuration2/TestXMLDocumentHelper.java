@@ -135,7 +135,7 @@ public class TestXMLDocumentHelper
      */
     @Test
     public void testCreateTransformerFactoryException()
-            throws TransformerConfigurationException, ConfigurationException
+            throws TransformerConfigurationException
     {
         final TransformerFactory factory =
                 EasyMock.createMock(TransformerFactory.class);

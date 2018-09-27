@@ -345,7 +345,6 @@ public class TestJNDIConfiguration {
         private NamingException exception;
 
         public PotentialErrorJNDIConfiguration(Context ctx)
-                throws NamingException
         {
             super(ctx);
         }

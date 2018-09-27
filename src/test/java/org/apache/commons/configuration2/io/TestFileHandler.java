@@ -506,7 +506,7 @@ public class TestFileHandler
      * Tries to load data from a File if no content object was set.
      */
     @Test
-    public void testLoadFromFileNoContent() throws ConfigurationException
+    public void testLoadFromFileNoContent()
     {
         FileHandler handler = new FileHandler();
         File file = createTestFile();
@@ -792,8 +792,7 @@ public class TestFileHandler
      * name.
      */
     @Test
-    public void testSaveToFileNameURLException() throws ConfigurationException,
-            IOException
+    public void testSaveToFileNameURLException() throws IOException
     {
         FileSystem fs = EasyMock.createMock(FileSystem.class);
         File file = folder.newFile();
@@ -822,7 +821,7 @@ public class TestFileHandler
      */
     @Test
     public void testSaveToFileNameURLNotResolved()
-            throws ConfigurationException, IOException
+            throws IOException
     {
         FileSystem fs = EasyMock.createMock(FileSystem.class);
         File file = folder.newFile();
@@ -1058,8 +1057,7 @@ public class TestFileHandler
      * stream.
      */
     @Test
-    public void testLoadFileLocatorAwareStream() throws ConfigurationException,
-            IOException
+    public void testLoadFileLocatorAwareStream() throws ConfigurationException
     {
         FileBasedFileLocatorAwareTestImpl content =
                 new FileBasedFileLocatorAwareTestImpl();
@@ -1074,8 +1072,7 @@ public class TestFileHandler
      * from a reader.
      */
     @Test
-    public void testLoadFileLocatorAwareReader() throws ConfigurationException,
-            IOException
+    public void testLoadFileLocatorAwareReader() throws ConfigurationException
     {
         FileBasedFileLocatorAwareTestImpl content =
                 new FileBasedFileLocatorAwareTestImpl();
@@ -1106,7 +1103,7 @@ public class TestFileHandler
      */
     @Test
     public void testSaveFileLocatorAwareToStream()
-            throws ConfigurationException, IOException
+            throws ConfigurationException
     {
         FileBasedFileLocatorAwareTestImpl content =
                 new FileBasedFileLocatorAwareTestImpl();
@@ -1121,7 +1118,7 @@ public class TestFileHandler
      */
     @Test
     public void testSaveFileLocatorAwareToWriter()
-            throws ConfigurationException, IOException
+            throws ConfigurationException
     {
         FileBasedFileLocatorAwareTestImpl content =
                 new FileBasedFileLocatorAwareTestImpl();

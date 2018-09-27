@@ -17,14 +17,9 @@
 
 package org.apache.commons.configuration2;
 
-import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.yaml.snakeyaml.Yaml;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -32,8 +27,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.junit.Before;
+import org.junit.Test;
+import org.yaml.snakeyaml.Yaml;
 
 /**
  * Unit test for {@link YAMLConfiguration}
