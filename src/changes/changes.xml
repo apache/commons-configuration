@@ -31,7 +31,7 @@
         Fixed numerous typos in user guides.
       </action>
       <action dev="ggregory" type="fix" issue="CONFIGURATION-711">
-        Update Apache Commons Lang from 3.7 to 3.8.
+        Update Apache Commons Lang from 3.7 to 3.8.1.
       </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-712" due-to="Rolland Hobbie">
         FileHandlerReloadingDetector now has a new refresh() method to
