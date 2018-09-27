@@ -112,11 +112,8 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry
                 throw new SAXException(e);
             }
         }
-        else
-        {
-            // default processing behavior
-            return null;
-        }
+        // default processing behavior
+        return null;
     }
 
     /**

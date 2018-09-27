@@ -67,35 +67,32 @@ public class DefaultFileSystem extends FileSystem
         {
             return getOutputStream(file);
         }
-        else
+        // for non file URLs save through an URLConnection
+        OutputStream out;
+        try
         {
-            // for non file URLs save through an URLConnection
-            OutputStream out;
-            try
+            URLConnection connection = url.openConnection();
+            connection.setDoOutput(true);
+
+            // use the PUT method for http URLs
+            if (connection instanceof HttpURLConnection)
             {
-                URLConnection connection = url.openConnection();
-                connection.setDoOutput(true);
-
-                // use the PUT method for http URLs
-                if (connection instanceof HttpURLConnection)
-                {
-                    HttpURLConnection conn = (HttpURLConnection) connection;
-                    conn.setRequestMethod("PUT");
-                }
-
-                out = connection.getOutputStream();
-
-                // check the response code for http URLs and throw an exception if an error occured
-                if (connection instanceof HttpURLConnection)
-                {
-                    out = new HttpOutputStream(out, (HttpURLConnection) connection);
-                }
-                return out;
+                HttpURLConnection conn = (HttpURLConnection) connection;
+                conn.setRequestMethod("PUT");
             }
-            catch (IOException e)
+
+            out = connection.getOutputStream();
+
+            // check the response code for http URLs and throw an exception if an error occured
+            if (connection instanceof HttpURLConnection)
             {
-                throw new ConfigurationException("Could not save to URL " + url, e);
+                out = new HttpOutputStream(out, (HttpURLConnection) connection);
             }
+            return out;
+        }
+        catch (IOException e)
+        {
+            throw new ConfigurationException("Could not save to URL " + url, e);
         }
     }
 
@@ -199,11 +196,8 @@ public class DefaultFileSystem extends FileSystem
             {
                 return new URL(file);
             }
-            else
-            {
-                URL base = new URL(basePath);
-                return new URL(base, file);
-            }
+            URL base = new URL(basePath);
+            return new URL(base, file);
         }
         catch (MalformedURLException uex)
         {
@@ -223,26 +217,23 @@ public class DefaultFileSystem extends FileSystem
                 return new URL(fileName);
                 //url = new URL(name);
             }
-            else
-            {
-                URL baseURL = new URL(basePath);
-                url = new URL(baseURL, fileName);
+            URL baseURL = new URL(basePath);
+            url = new URL(baseURL, fileName);
 
-                // check if the file exists
-                InputStream in = null;
-                try
-                {
-                    in = url.openStream();
-                }
-                finally
-                {
-                    if (in != null)
-                    {
-                        in.close();
-                    }
-                }
-                return url;
+            // check if the file exists
+            InputStream in = null;
+            try
+            {
+                in = url.openStream();
             }
+            finally
+            {
+                if (in != null)
+                {
+                    in.close();
+                }
+            }
+            return url;
         }
         catch (IOException e)
         {

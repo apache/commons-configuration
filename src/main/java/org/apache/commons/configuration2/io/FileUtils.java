@@ -54,11 +54,10 @@ class FileUtils {
     public static File toFile(final URL url) {
         if (url == null || !"file".equalsIgnoreCase(url.getProtocol())) {
             return null;
-        } else {
-            String filename = url.getFile().replace('/', File.separatorChar);
-            filename = decodeUrl(filename);
-            return new File(filename);
         }
+        String filename = url.getFile().replace('/', File.separatorChar);
+        filename = decodeUrl(filename);
+        return new File(filename);
     }
 
     /**

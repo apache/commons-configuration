@@ -720,35 +720,28 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         {
             return s;
         }
-
-        else
+        if (!comment)
         {
-            if (!comment)
+            int pos = 0;
+            // find first comment character
+            while (PropertiesConfiguration.COMMENT_CHARS.indexOf(s
+                    .charAt(pos)) < 0)
             {
-                int pos = 0;
-                // find first comment character
-                while (PropertiesConfiguration.COMMENT_CHARS.indexOf(s
-                        .charAt(pos)) < 0)
-                {
-                    pos++;
-                }
-
-                // Remove leading spaces
                 pos++;
-                while (pos < s.length()
-                        && Character.isWhitespace(s.charAt(pos)))
-                {
-                    pos++;
-                }
+            }
 
-                return (pos < s.length()) ? s.substring(pos)
-                        : StringUtils.EMPTY;
-            }
-            else
+            // Remove leading spaces
+            pos++;
+            while (pos < s.length()
+                    && Character.isWhitespace(s.charAt(pos)))
             {
-                return COMMENT_PREFIX + s;
+                pos++;
             }
+
+            return (pos < s.length()) ? s.substring(pos)
+                    : StringUtils.EMPTY;
         }
+        return COMMENT_PREFIX + s;
     }
 
     /**
@@ -766,17 +759,13 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         {
             return null;
         }
-
-        else
+        StringBuilder buf = new StringBuilder(commentLines.get(from));
+        for (int i = from + 1; i <= to; i++)
         {
-            StringBuilder buf = new StringBuilder(commentLines.get(from));
-            for (int i = from + 1; i <= to; i++)
-            {
-                buf.append(CR);
-                buf.append(commentLines.get(i));
-            }
-            return buf.toString();
+            buf.append(CR);
+            buf.append(commentLines.get(i));
         }
+        return buf.toString();
     }
 
     /**
@@ -807,10 +796,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
             }
             return index + 1;
         }
-        else
-        {
-            return 0;
-        }
+        return 0;
     }
 
     /**

@@ -90,10 +90,7 @@ public class SubsetConfiguration extends AbstractConfiguration
         {
             return prefix;
         }
-        else
-        {
-            return delimiter == null ? prefix + key : prefix + delimiter + key;
-        }
+        return delimiter == null ? prefix + key : prefix + delimiter + key;
     }
 
     /**
@@ -109,21 +106,18 @@ public class SubsetConfiguration extends AbstractConfiguration
         {
             throw new IllegalArgumentException("The parent key '" + key + "' is not in the subset.");
         }
+        String modifiedKey = null;
+        if (key.length() == prefix.length())
+        {
+            modifiedKey = "";
+        }
         else
         {
-            String modifiedKey = null;
-            if (key.length() == prefix.length())
-            {
-                modifiedKey = "";
-            }
-            else
-            {
-                int i = prefix.length() + (delimiter != null ? delimiter.length() : 0);
-                modifiedKey = key.substring(i);
-            }
-
-            return modifiedKey;
+            int i = prefix.length() + (delimiter != null ? delimiter.length() : 0);
+            modifiedKey = key.substring(i);
         }
+
+        return modifiedKey;
     }
 
     /**
@@ -234,10 +228,7 @@ public class SubsetConfiguration extends AbstractConfiguration
         {
             return ((AbstractConfiguration) parent).isThrowExceptionOnMissing();
         }
-        else
-        {
-            return super.isThrowExceptionOnMissing();
-        }
+        return super.isThrowExceptionOnMissing();
     }
 
     /**

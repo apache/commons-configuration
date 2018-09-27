@@ -330,19 +330,16 @@ public final class ConfigurationUtils
 
             return hc;
         }
-        else
+        BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
+        if (engine != null)
         {
-            BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
-            if (engine != null)
-            {
-                hc.setExpressionEngine(engine);
-            }
-
-            // Per default, a DisabledListDelimiterHandler is set.
-            // So list delimiters in property values are not an issue.
-            hc.copy(conf);
-            return hc;
+            hc.setExpressionEngine(engine);
         }
+
+        // Per default, a DisabledListDelimiterHandler is set.
+        // So list delimiters in property values are not an issue.
+        hc.copy(conf);
+        return hc;
     }
 
     /**
@@ -365,16 +362,13 @@ public final class ConfigurationUtils
         {
             return null;
         }
-        else
+        try
         {
-            try
-            {
-                return (Configuration) clone(config);
-            }
-            catch (CloneNotSupportedException cnex)
-            {
-                throw new ConfigurationRuntimeException(cnex);
-            }
+            return (Configuration) clone(config);
+        }
+        catch (CloneNotSupportedException cnex)
+        {
+            throw new ConfigurationRuntimeException(cnex);
         }
     }
 
@@ -439,11 +433,8 @@ public final class ConfigurationUtils
                 throw new ConfigurationRuntimeException(itex);
             }
         }
-        else
-        {
-            throw new CloneNotSupportedException(obj.getClass().getName()
-                    + " does not implement Cloneable");
-        }
+        throw new CloneNotSupportedException(obj.getClass().getName()
+                + " does not implement Cloneable");
     }
 
     /**

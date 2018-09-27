@@ -253,13 +253,10 @@ final class PropertyConverter
         {
             return Character.valueOf(strValue.charAt(0));
         }
-        else
-        {
-            throw new ConversionException(
-                    String.format(
-                            "The value '%s' cannot be converted to a Character object!",
-                            strValue));
-        }
+        throw new ConversionException(
+                String.format(
+                        "The value '%s' cannot be converted to a Character object!",
+                        strValue));
     }
 
     /**
@@ -276,10 +273,7 @@ final class PropertyConverter
         {
             return (Byte) n;
         }
-        else
-        {
-            return n.byteValue();
-        }
+        return n.byteValue();
     }
 
     /**
@@ -296,10 +290,7 @@ final class PropertyConverter
         {
             return (Short) n;
         }
-        else
-        {
-            return n.shortValue();
-        }
+        return n.shortValue();
     }
 
     /**
@@ -316,10 +307,7 @@ final class PropertyConverter
         {
             return (Integer) n;
         }
-        else
-        {
-            return n.intValue();
-        }
+        return n.intValue();
     }
 
     /**
@@ -336,10 +324,7 @@ final class PropertyConverter
         {
             return (Long) n;
         }
-        else
-        {
-            return n.longValue();
-        }
+        return n.longValue();
     }
 
     /**
@@ -356,10 +341,7 @@ final class PropertyConverter
         {
             return (Float) n;
         }
-        else
-        {
-            return new Float(n.floatValue());
-        }
+        return new Float(n.floatValue());
     }
 
     /**
@@ -376,10 +358,7 @@ final class PropertyConverter
         {
             return (Double) n;
         }
-        else
-        {
-            return new Double(n.doubleValue());
-        }
+        return new Double(n.doubleValue());
     }
 
     /**
@@ -396,10 +375,7 @@ final class PropertyConverter
         {
             return (BigInteger) n;
         }
-        else
-        {
-            return BigInteger.valueOf(n.longValue());
-        }
+        return BigInteger.valueOf(n.longValue());
     }
 
     /**
@@ -416,10 +392,7 @@ final class PropertyConverter
         {
             return (BigDecimal) n;
         }
-        else
-        {
-            return new BigDecimal(n.doubleValue());
-        }
+        return new BigDecimal(n.doubleValue());
     }
 
     /**
@@ -440,55 +413,52 @@ final class PropertyConverter
         {
             return (Number) value;
         }
-        else
+        String str = value.toString();
+        if (str.startsWith(HEX_PREFIX))
         {
-            String str = value.toString();
-            if (str.startsWith(HEX_PREFIX))
-            {
-                try
-                {
-                    return new BigInteger(str.substring(HEX_PREFIX.length()), HEX_RADIX);
-                }
-                catch (NumberFormatException nex)
-                {
-                    throw new ConversionException("Could not convert " + str
-                            + " to " + targetClass.getName()
-                            + "! Invalid hex number.", nex);
-                }
-            }
-
-            if (str.startsWith(BIN_PREFIX))
-            {
-                try
-                {
-                    return new BigInteger(str.substring(BIN_PREFIX.length()), BIN_RADIX);
-                }
-                catch (NumberFormatException nex)
-                {
-                    throw new ConversionException("Could not convert " + str
-                            + " to " + targetClass.getName()
-                            + "! Invalid binary number.", nex);
-                }
-            }
-
             try
             {
-                Constructor<?> constr = targetClass.getConstructor(CONSTR_ARGS);
-                return (Number) constr.newInstance(str);
+                return new BigInteger(str.substring(HEX_PREFIX.length()), HEX_RADIX);
             }
-            catch (InvocationTargetException itex)
+            catch (NumberFormatException nex)
             {
                 throw new ConversionException("Could not convert " + str
-                        + " to " + targetClass.getName(), itex
-                        .getTargetException());
+                        + " to " + targetClass.getName()
+                        + "! Invalid hex number.", nex);
             }
-            catch (Exception ex)
+        }
+
+        if (str.startsWith(BIN_PREFIX))
+        {
+            try
             {
-                // Treat all possible exceptions the same way
-                throw new ConversionException(
-                        "Conversion error when trying to convert " + str
-                                + " to " + targetClass.getName(), ex);
+                return new BigInteger(str.substring(BIN_PREFIX.length()), BIN_RADIX);
             }
+            catch (NumberFormatException nex)
+            {
+                throw new ConversionException("Could not convert " + str
+                        + " to " + targetClass.getName()
+                        + "! Invalid binary number.", nex);
+            }
+        }
+
+        try
+        {
+            Constructor<?> constr = targetClass.getConstructor(CONSTR_ARGS);
+            return (Number) constr.newInstance(str);
+        }
+        catch (InvocationTargetException itex)
+        {
+            throw new ConversionException("Could not convert " + str
+                    + " to " + targetClass.getName(), itex
+                    .getTargetException());
+        }
+        catch (Exception ex)
+        {
+            // Treat all possible exceptions the same way
+            throw new ConversionException(
+                    "Conversion error when trying to convert " + str
+                            + " to " + targetClass.getName(), ex);
         }
     }
 
@@ -664,10 +634,7 @@ final class PropertyConverter
 
                 return new Locale(language, country, variant);
             }
-            else
-            {
-                throw new ConversionException("The value " + value + " can't be converted to a Locale");
-            }
+            throw new ConversionException("The value " + value + " can't be converted to a Locale");
         }
         else
         {

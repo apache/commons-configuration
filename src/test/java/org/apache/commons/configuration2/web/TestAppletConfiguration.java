@@ -118,10 +118,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
         {
             return new AppletConfiguration(new Applet());
         }
-        else
-        {
-            return new BaseConfiguration();
-        }
+        return new BaseConfiguration();
     }
 
     @Override

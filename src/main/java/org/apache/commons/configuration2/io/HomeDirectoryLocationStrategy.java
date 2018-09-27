@@ -152,10 +152,7 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy
             return FileLocatorUtils.appendPath(getHomeDirectory(),
                     locator.getBasePath());
         }
-        else
-        {
-            return getHomeDirectory();
-        }
+        return getHomeDirectory();
     }
 
     /**

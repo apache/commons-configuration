@@ -126,10 +126,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler
             }
             return buf.toString();
         }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 
     /**

@@ -791,10 +791,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
         {
             return '"' + value.replaceAll("\"", "\\\\\\\"") + '"';
         }
-        else
-        {
-            return value;
-        }
+        return value;
     }
 
     /**
@@ -902,21 +899,17 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
         {
             return getGlobalSection();
         }
-
-        else
+        try
         {
-            try
-            {
-                return (SubnodeConfiguration) configurationAt(name, true);
-            }
-            catch (ConfigurationRuntimeException iex)
-            {
-                // the passed in key does not map to exactly one node
-                // obtain the node for the section, create it on demand
-                InMemoryNodeModel parentModel = getSubConfigurationParentModel();
-                NodeSelector selector = parentModel.trackChildNodeWithCreation(null, name, this);
-                return createSubConfigurationForTrackedNode(selector, this);
-            }
+            return (SubnodeConfiguration) configurationAt(name, true);
+        }
+        catch (ConfigurationRuntimeException iex)
+        {
+            // the passed in key does not map to exactly one node
+            // obtain the node for the section, create it on demand
+            InMemoryNodeModel parentModel = getSubConfigurationParentModel();
+            NodeSelector selector = parentModel.trackChildNodeWithCreation(null, name, this);
+            return createSubConfigurationForTrackedNode(selector, this);
         }
     }
 

@@ -359,10 +359,7 @@ implements Cloneable
         {
             return firstMatchingConfiguration.getProperty(key);
         }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 
     @Override

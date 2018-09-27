@@ -896,25 +896,21 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             }
             return EMPTY_ROOT;
         }
-
-        else
+        Iterator<ConfigData> it = configurations.iterator();
+        ImmutableNode node = it.next().getTransformedRoot();
+        while (it.hasNext())
         {
-            Iterator<ConfigData> it = configurations.iterator();
-            ImmutableNode node = it.next().getTransformedRoot();
-            while (it.hasNext())
-            {
-                node = nodeCombiner.combine(node,
-                        it.next().getTransformedRoot());
-            }
-            if (getLogger().isDebugEnabled())
-            {
-                ByteArrayOutputStream os = new ByteArrayOutputStream();
-                PrintStream stream = new PrintStream(os);
-                TreeUtils.printTree(stream, node);
-                getLogger().debug(os.toString());
-            }
-            return node;
+            node = nodeCombiner.combine(node,
+                    it.next().getTransformedRoot());
         }
+        if (getLogger().isDebugEnabled())
+        {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            PrintStream stream = new PrintStream(os);
+            TreeUtils.printTree(stream, node);
+            getLogger().debug(os.toString());
+        }
+        return node;
     }
 
     /**

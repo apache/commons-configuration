@@ -143,10 +143,7 @@ public class MultiFileConfigurationBuilderProvider extends
         {
             return new ReloadableWrapperBuilder(wrapConfig, multiBuilder);
         }
-        else
-        {
-            return new WrapperBuilder(wrapConfig, multiBuilder);
-        }
+        return new WrapperBuilder(wrapConfig, multiBuilder);
     }
 
     /**

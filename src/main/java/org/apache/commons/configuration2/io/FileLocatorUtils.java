@@ -372,10 +372,7 @@ public final class FileLocatorUtils
         {
             return s;
         }
-        else
-        {
-            return s.substring(0, s.lastIndexOf("/") + 1);
-        }
+        return s.substring(0, s.lastIndexOf("/") + 1);
     }
 
     /**
@@ -397,10 +394,7 @@ public final class FileLocatorUtils
         {
             return null;
         }
-        else
-        {
-            return path.substring(path.lastIndexOf("/") + 1);
-        }
+        return path.substring(path.lastIndexOf("/") + 1);
     }
 
     /**

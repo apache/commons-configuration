@@ -210,10 +210,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
         {
             throw new ConfigurationException("Error parsing", e);
         }
-        else
-        {
-            throw new ConfigurationException("Unable to load the configuration",
-                    e);
-        }
+        throw new ConfigurationException("Unable to load the configuration",
+                e);
     }
 }

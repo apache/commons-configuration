@@ -281,10 +281,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         {
             return (rootElementName == null) ? DEFAULT_ROOT_NAME : rootElementName;
         }
-        else
-        {
-            return doc.getDocumentElement().getNodeName();
-        }
+        return doc.getDocumentElement().getNodeName();
     }
 
     /**
@@ -818,10 +815,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         {
             return currentTrim;
         }
-        else
-        {
-            return !VALUE_PRESERVE.equals(attr.getValue());
-        }
+        return !VALUE_PRESERVE.equals(attr.getValue());
     }
 
     /**
@@ -844,37 +838,34 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         {
             return getDocumentBuilder();
         }
-        else
+        DocumentBuilderFactory factory = DocumentBuilderFactory
+                .newInstance();
+        if (isValidating())
         {
-            DocumentBuilderFactory factory = DocumentBuilderFactory
-                    .newInstance();
-            if (isValidating())
+            factory.setValidating(true);
+            if (isSchemaValidation())
             {
-                factory.setValidating(true);
-                if (isSchemaValidation())
-                {
-                    factory.setNamespaceAware(true);
-                    factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
-                }
+                factory.setNamespaceAware(true);
+                factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
             }
-
-            DocumentBuilder result = factory.newDocumentBuilder();
-            result.setEntityResolver(this.entityResolver);
-
-            if (isValidating())
-            {
-                // register an error handler which detects validation errors
-                result.setErrorHandler(new DefaultHandler()
-                {
-                    @Override
-                    public void error(SAXParseException ex) throws SAXException
-                    {
-                        throw ex;
-                    }
-                });
-            }
-            return result;
         }
+
+        DocumentBuilder result = factory.newDocumentBuilder();
+        result.setEntityResolver(this.entityResolver);
+
+        if (isValidating())
+        {
+            // register an error handler which detects validation errors
+            result.setErrorHandler(new DefaultHandler()
+            {
+                @Override
+                public void error(SAXParseException ex) throws SAXException
+                {
+                    throw ex;
+                }
+            });
+        }
+        return result;
     }
 
     /**

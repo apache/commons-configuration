@@ -207,10 +207,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
         {
             return ((SubnodeConfiguration) getParent()).getRootNodeModel();
         }
-        else
-        {
-            return getParent().getNodeModel();
-        }
+        return getParent().getNodeModel();
     }
 
     /**

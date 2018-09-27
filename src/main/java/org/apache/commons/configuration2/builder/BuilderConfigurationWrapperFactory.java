@@ -270,10 +270,7 @@ public class BuilderConfigurationWrapperFactory
             {
                 return handleEventSourceInvocation(method, args);
             }
-            else
-            {
-                return handleConfigurationInvocation(method, args);
-            }
+            return handleConfigurationInvocation(method, args);
         }
 
         /**

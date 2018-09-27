@@ -349,10 +349,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
                     return (results.size() > 1) ? results : results
                             .get(0);
                 }
-                else
-                {
-                    return null;
-                }
+                return null;
             }
         };
 

@@ -511,11 +511,8 @@ public class CatalogResolver implements EntityResolver
                     {
                         break;
                     }
-                    else
-                    {
-                        // try again!
-                        continue;
-                    }
+                    // try again!
+                    continue;
                 }
                 finally
                 {

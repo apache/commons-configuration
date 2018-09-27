@@ -171,10 +171,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
             Collection<String> list = getListDelimiterHandler().split((String) value, !isTrimmingDisabled());
             return list.size() > 1 ? list : list.iterator().next();
         }
-        else
-        {
-            return value;
-        }
+        return value;
     }
 
     @Override

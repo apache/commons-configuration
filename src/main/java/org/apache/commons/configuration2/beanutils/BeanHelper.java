@@ -584,15 +584,9 @@ public final class BeanHelper
                 throw new ConfigurationRuntimeException(
                         "Unknown bean factory: " + factoryName);
             }
-            else
-            {
-                return factory;
-            }
+            return factory;
         }
-        else
-        {
-            return getDefaultBeanFactory();
-        }
+        return getDefaultBeanFactory();
     }
 
     /**

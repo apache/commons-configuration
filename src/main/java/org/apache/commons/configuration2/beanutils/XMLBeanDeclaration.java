@@ -555,11 +555,8 @@ public class XMLBeanDeclaration implements BeanDeclaration
             return ConstructorArg.forValue(
                     getAttribute(child, ATTR_CTOR_VALUE), type);
         }
-        else
-        {
-            return ConstructorArg.forBeanDeclaration(
-                    createBeanDeclaration(child), type);
-        }
+        return ConstructorArg.forBeanDeclaration(
+                createBeanDeclaration(child), type);
     }
 
     /**

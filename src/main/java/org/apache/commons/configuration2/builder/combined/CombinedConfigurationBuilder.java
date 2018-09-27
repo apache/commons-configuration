@@ -619,10 +619,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         {
             return Collections.emptySet();
         }
-        else
-        {
-            return Collections.unmodifiableSet(sourceData.builderNames());
-        }
+        return Collections.unmodifiableSet(sourceData.builderNames());
     }
 
     /**

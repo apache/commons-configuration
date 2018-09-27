@@ -391,10 +391,7 @@ public class BaseConfigurationBuilderProvider implements
         {
             return Collections.emptySet();
         }
-        else
-        {
-            return Collections.unmodifiableCollection(new ArrayList<>(
-                    paramCls));
-        }
+        return Collections.unmodifiableCollection(new ArrayList<>(
+                paramCls));
     }
 }

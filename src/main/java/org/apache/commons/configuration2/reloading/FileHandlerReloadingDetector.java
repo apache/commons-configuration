@@ -274,9 +274,6 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
                 return null;
             }
         }
-        else
-        {
-            return FileLocatorUtils.fileFromURL(url);
-        }
+        return FileLocatorUtils.fileFromURL(url);
     }
 }

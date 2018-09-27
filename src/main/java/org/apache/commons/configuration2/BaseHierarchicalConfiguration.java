@@ -155,11 +155,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
             {
                 return new BaseHierarchicalConfiguration();
             }
-            else
-            {
-                result.setSynchronizer(getSynchronizer());
-                return result;
-            }
+            result.setSynchronizer(getSynchronizer());
+            return result;
         }
         finally
         {

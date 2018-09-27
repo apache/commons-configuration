@@ -196,11 +196,8 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
             properties.remove(PROP_PREFIX_LOOKUPS);
             return this;
         }
-        else
-        {
-            return setProperty(PROP_PREFIX_LOOKUPS,
-                    new HashMap<>(lookups));
-        }
+        return setProperty(PROP_PREFIX_LOOKUPS,
+                new HashMap<>(lookups));
     }
 
     /**
@@ -217,11 +214,8 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
             properties.remove(PROP_DEFAULT_LOOKUPS);
             return this;
         }
-        else
-        {
-            return setProperty(PROP_DEFAULT_LOOKUPS, new ArrayList<>(
-                    lookups));
-        }
+        return setProperty(PROP_DEFAULT_LOOKUPS, new ArrayList<>(
+                lookups));
     }
 
     /**

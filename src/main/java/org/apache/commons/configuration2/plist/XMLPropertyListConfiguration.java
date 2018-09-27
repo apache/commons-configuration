@@ -502,10 +502,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
             {
                 return stack.get(stack.size() - 1);
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         /**
@@ -534,10 +531,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
             {
                 return stack.remove(stack.size() - 1);
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
 
         /**

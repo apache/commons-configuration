@@ -842,18 +842,12 @@ public class TestPropertiesConfigurationLayout
             {
                 return super.propertyLoaded(key, value);
             }
-            else
+            if (PropertiesConfiguration.getInclude().equals(key))
             {
-                if (PropertiesConfiguration.getInclude().equals(key))
-                {
-                    getLayout().load(this, builder.getReader());
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                getLayout().load(this, builder.getReader());
+                return false;
             }
+            return true;
         }
     }
 }
