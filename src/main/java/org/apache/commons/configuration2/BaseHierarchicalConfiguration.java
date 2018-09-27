@@ -52,7 +52,7 @@ import org.apache.commons.lang3.ObjectUtils;
  * @version $Id$
  */
 public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfiguration<ImmutableNode>
-    implements Cloneable, InMemoryNodeModelSupport
+    implements InMemoryNodeModelSupport
 {
     /** A listener for reacting on changes caused by sub configurations. */
     private final EventListener<ConfigurationEvent> changeListener;
