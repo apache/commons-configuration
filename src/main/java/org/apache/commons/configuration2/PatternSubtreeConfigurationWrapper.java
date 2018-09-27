@@ -470,7 +470,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     private String substitute(String pattern)
     {
         Object value = getInterpolator().interpolate(pattern);
-        return (value != null) ? value.toString() : null;
+        return value != null ? value.toString() : null;
     }
 
     /**
