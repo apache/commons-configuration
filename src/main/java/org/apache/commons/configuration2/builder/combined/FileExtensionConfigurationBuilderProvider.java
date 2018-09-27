@@ -80,9 +80,9 @@ public class FileExtensionConfigurationBuilderProvider extends
      *        are needed
      * @throws IllegalArgumentException if a required parameter is missing
      */
-    public FileExtensionConfigurationBuilderProvider(String bldrCls,
-            String reloadBldrCls, String matchingConfigCls,
-            String defConfigClass, String ext, Collection<String> paramCls)
+    public FileExtensionConfigurationBuilderProvider(final String bldrCls,
+            final String reloadBldrCls, final String matchingConfigCls,
+            final String defConfigClass, final String ext, final Collection<String> paramCls)
     {
         super(bldrCls, reloadBldrCls, defConfigClass, paramCls);
         if (matchingConfigCls == null)
@@ -129,10 +129,10 @@ public class FileExtensionConfigurationBuilderProvider extends
      * configuration class is selected, otherwise the default one.
      */
     @Override
-    protected String determineConfigurationClass(ConfigurationDeclaration decl,
-            Collection<BuilderParameters> params) throws ConfigurationException
+    protected String determineConfigurationClass(final ConfigurationDeclaration decl,
+            final Collection<BuilderParameters> params) throws ConfigurationException
     {
-        String currentExt = extractExtension(fetchCurrentFileName(params));
+        final String currentExt = extractExtension(fetchCurrentFileName(params));
         return getExtension().equalsIgnoreCase(currentExt) ? getMatchingConfigurationClass()
                 : getConfigurationClass();
     }
@@ -145,13 +145,13 @@ public class FileExtensionConfigurationBuilderProvider extends
      * @return the file name or <b>null</b> if unspecified
      */
     private static String fetchCurrentFileName(
-            Collection<BuilderParameters> params)
+            final Collection<BuilderParameters> params)
     {
-        for (BuilderParameters p : params)
+        for (final BuilderParameters p : params)
         {
             if (p instanceof FileBasedBuilderParametersImpl)
             {
-                FileBasedBuilderParametersImpl fp = (FileBasedBuilderParametersImpl) p;
+                final FileBasedBuilderParametersImpl fp = (FileBasedBuilderParametersImpl) p;
                 return fp.getFileHandler().getFileName();
             }
         }
@@ -165,14 +165,14 @@ public class FileExtensionConfigurationBuilderProvider extends
      * @param fileName the file name
      * @return the extension (<b>null</b> if there is none)
      */
-    private static String extractExtension(String fileName)
+    private static String extractExtension(final String fileName)
     {
         if (fileName == null)
         {
             return null;
         }
 
-        int pos = fileName.lastIndexOf(EXT_SEPARATOR);
+        final int pos = fileName.lastIndexOf(EXT_SEPARATOR);
         return (pos < 0) ? null : fileName.substring(pos + 1);
     }
 }

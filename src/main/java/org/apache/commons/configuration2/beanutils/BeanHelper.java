@@ -114,7 +114,7 @@ public final class BeanHelper
      * @param defFactory the default {@code BeanFactory} (can be <b>null</b>,
      *        then a default instance is used)
      */
-    public BeanHelper(BeanFactory defFactory)
+    public BeanHelper(final BeanFactory defFactory)
     {
         defaultBeanFactory =
                 (defFactory != null) ? defFactory : DefaultBeanFactory.INSTANCE;
@@ -129,7 +129,7 @@ public final class BeanHelper
      * @param name the name of the factory
      * @param factory the factory to be registered
      */
-    public void registerBeanFactory(String name, BeanFactory factory)
+    public void registerBeanFactory(final String name, final BeanFactory factory)
     {
         if (name == null)
         {
@@ -152,7 +152,7 @@ public final class BeanHelper
      * @return the factory that was registered under this name; <b>null</b> if
      * there was no such factory
      */
-    public BeanFactory deregisterBeanFactory(String name)
+    public BeanFactory deregisterBeanFactory(final String name)
     {
         return beanFactories.remove(name);
     }
@@ -187,11 +187,11 @@ public final class BeanHelper
      * @param data the bean declaration
      * @throws ConfigurationRuntimeException if a property cannot be set
      */
-    public void initBean(Object bean, BeanDeclaration data)
+    public void initBean(final Object bean, final BeanDeclaration data)
     {
         initBeanProperties(bean, data);
 
-        Map<String, Object> nestedBeans = data.getNestedBeanDeclarations();
+        final Map<String, Object> nestedBeans = data.getNestedBeanDeclarations();
         if (nestedBeans != null)
         {
             if (bean instanceof Collection)
@@ -199,45 +199,47 @@ public final class BeanHelper
                 // This is safe because the collection stores the values of the
                 // nested beans.
                 @SuppressWarnings("unchecked")
+                final
                 Collection<Object> coll = (Collection<Object>) bean;
                 if (nestedBeans.size() == 1)
                 {
-                    Map.Entry<String, Object> e = nestedBeans.entrySet().iterator().next();
-                    String propName = e.getKey();
-                    Class<?> defaultClass = getDefaultClass(bean, propName);
+                    final Map.Entry<String, Object> e = nestedBeans.entrySet().iterator().next();
+                    final String propName = e.getKey();
+                    final Class<?> defaultClass = getDefaultClass(bean, propName);
                     if (e.getValue() instanceof List)
                     {
                         // This is safe, provided that the bean declaration is implemented
                         // correctly.
                         @SuppressWarnings("unchecked")
+                        final
                         List<BeanDeclaration> decls = (List<BeanDeclaration>) e.getValue();
-                        for (BeanDeclaration decl : decls)
+                        for (final BeanDeclaration decl : decls)
                         {
                             coll.add(createBean(decl, defaultClass));
                         }
                     }
                     else
                     {
-                        BeanDeclaration decl = (BeanDeclaration) e.getValue();
+                        final BeanDeclaration decl = (BeanDeclaration) e.getValue();
                         coll.add(createBean(decl, defaultClass));
                     }
                 }
             }
             else
             {
-                for (Map.Entry<String, Object> e : nestedBeans.entrySet())
+                for (final Map.Entry<String, Object> e : nestedBeans.entrySet())
                 {
-                    String propName = e.getKey();
-                    Class<?> defaultClass = getDefaultClass(bean, propName);
+                    final String propName = e.getKey();
+                    final Class<?> defaultClass = getDefaultClass(bean, propName);
 
-                    Object prop = e.getValue();
+                    final Object prop = e.getValue();
 
                     if (prop instanceof Collection)
                     {
-                        Collection<Object> beanCollection =
+                        final Collection<Object> beanCollection =
                                 createPropertyCollection(propName, defaultClass);
 
-                        for (Object elemDef : (Collection<?>) prop)
+                        for (final Object elemDef : (Collection<?>) prop)
                         {
                             beanCollection
                                     .add(createBean((BeanDeclaration) elemDef));
@@ -262,14 +264,14 @@ public final class BeanHelper
      * @param data the bean declaration
      * @throws ConfigurationRuntimeException if a property cannot be set
      */
-    public static void initBeanProperties(Object bean, BeanDeclaration data)
+    public static void initBeanProperties(final Object bean, final BeanDeclaration data)
     {
-        Map<String, Object> properties = data.getBeanProperties();
+        final Map<String, Object> properties = data.getBeanProperties();
         if (properties != null)
         {
-            for (Map.Entry<String, Object> e : properties.entrySet())
+            for (final Map.Entry<String, Object> e : properties.entrySet())
             {
-                String propName = e.getKey();
+                final String propName = e.getKey();
                 initProperty(bean, propName, e.getValue());
             }
         }
@@ -283,13 +285,13 @@ public final class BeanHelper
      * @throws IllegalArgumentException if the bean is <b>null</b>
      * @since 2.0
      */
-    public static DynaBean createWrapDynaBean(Object bean)
+    public static DynaBean createWrapDynaBean(final Object bean)
     {
         if (bean == null)
         {
             throw new IllegalArgumentException("Bean must not be null!");
         }
-        WrapDynaClass dynaClass =
+        final WrapDynaClass dynaClass =
                 WrapDynaClass.createDynaClass(bean.getClass(),
                         BEAN_UTILS_BEAN.getPropertyUtils());
         return new WrapDynaBean(bean, dynaClass);
@@ -311,7 +313,7 @@ public final class BeanHelper
      *         {@code PropertyUtilsBean}
      * @since 2.0
      */
-    public static void copyProperties(Object dest, Object orig)
+    public static void copyProperties(final Object dest, final Object orig)
             throws IllegalAccessException, InvocationTargetException,
             NoSuchMethodException
     {
@@ -324,11 +326,11 @@ public final class BeanHelper
      * @param propName The name of the property.
      * @return The class associated with the property or null.
      */
-    private static Class<?> getDefaultClass(Object bean, String propName)
+    private static Class<?> getDefaultClass(final Object bean, final String propName)
     {
         try
         {
-            PropertyDescriptor desc =
+            final PropertyDescriptor desc =
                     BEAN_UTILS_BEAN.getPropertyUtils().getPropertyDescriptor(
                             bean, propName);
             if (desc == null)
@@ -337,7 +339,7 @@ public final class BeanHelper
             }
             return desc.getPropertyType();
         }
-        catch (Exception ex)
+        catch (final Exception ex)
         {
             return null;
         }
@@ -352,7 +354,7 @@ public final class BeanHelper
      * @throws ConfigurationRuntimeException if the property is not writeable or
      * an error occurred
      */
-    private static void initProperty(Object bean, String propName, Object value)
+    private static void initProperty(final Object bean, final String propName, final Object value)
     {
         if (!isPropertyWriteable(bean, propName))
         {
@@ -364,11 +366,11 @@ public final class BeanHelper
         {
             BEAN_UTILS_BEAN.setProperty(bean, propName, value);
         }
-        catch (IllegalAccessException iaex)
+        catch (final IllegalAccessException iaex)
         {
             throw new ConfigurationRuntimeException(iaex);
         }
-        catch (InvocationTargetException itex)
+        catch (final InvocationTargetException itex)
         {
             throw new ConfigurationRuntimeException(itex);
         }
@@ -384,8 +386,8 @@ public final class BeanHelper
      * @param propertyClass the type of the property
      * @return the newly created collection
      */
-    private static Collection<Object> createPropertyCollection(String propName,
-            Class<?> propertyClass)
+    private static Collection<Object> createPropertyCollection(final String propName,
+            final Class<?> propertyClass)
     {
         Collection<Object> beanCollection;
 
@@ -416,7 +418,7 @@ public final class BeanHelper
      * @throws ConfigurationRuntimeException if the property is not writeable or
      *         an error occurred
      */
-    public static void setProperty(Object bean, String propName, Object value)
+    public static void setProperty(final Object bean, final String propName, final Object value)
     {
         if (isPropertyWriteable(bean, propName))
         {
@@ -442,8 +444,8 @@ public final class BeanHelper
      * @return the new bean
      * @throws ConfigurationRuntimeException if an error occurs
      */
-    public Object createBean(BeanDeclaration data, Class<?> defaultClass,
-            Object param)
+    public Object createBean(final BeanDeclaration data, final Class<?> defaultClass,
+            final Object param)
     {
         if (data == null)
         {
@@ -451,14 +453,14 @@ public final class BeanHelper
                     "Bean declaration must not be null!");
         }
 
-        BeanFactory factory = fetchBeanFactory(data);
-        BeanCreationContext bcc =
+        final BeanFactory factory = fetchBeanFactory(data);
+        final BeanCreationContext bcc =
                 createBeanCreationContext(data, defaultClass, param, factory);
         try
         {
             return factory.createBean(bcc);
         }
-        catch (Exception ex)
+        catch (final Exception ex)
         {
             throw new ConfigurationRuntimeException(ex);
         }
@@ -474,7 +476,7 @@ public final class BeanHelper
      * @return the new bean
      * @throws ConfigurationRuntimeException if an error occurs
      */
-    public Object createBean(BeanDeclaration data, Class<?> defaultClass)
+    public Object createBean(final BeanDeclaration data, final Class<?> defaultClass)
     {
         return createBean(data, defaultClass, null);
     }
@@ -487,7 +489,7 @@ public final class BeanHelper
      * @return the new bean
      * @throws ConfigurationRuntimeException if an error occurs
      */
-    public Object createBean(BeanDeclaration data)
+    public Object createBean(final BeanDeclaration data)
     {
         return createBean(data, null);
     }
@@ -502,7 +504,7 @@ public final class BeanHelper
      * @return the class object for the specified name
      * @throws ClassNotFoundException if the class cannot be loaded
      */
-    static Class<?> loadClass(String name) throws ClassNotFoundException
+    static Class<?> loadClass(final String name) throws ClassNotFoundException
     {
         return ClassUtils.getClass(name);
     }
@@ -516,7 +518,7 @@ public final class BeanHelper
      * @return <b>true</b> if this property can be written, <b>false</b>
      *         otherwise
      */
-    private static boolean isPropertyWriteable(Object bean, String propName)
+    private static boolean isPropertyWriteable(final Object bean, final String propName)
     {
         return BEAN_UTILS_BEAN.getPropertyUtils().isWriteable(bean, propName);
     }
@@ -534,17 +536,17 @@ public final class BeanHelper
      * @return the class of the bean to be created
      * @throws ConfigurationRuntimeException if the class cannot be determined
      */
-    private static Class<?> fetchBeanClass(BeanDeclaration data,
-            Class<?> defaultClass, BeanFactory factory)
+    private static Class<?> fetchBeanClass(final BeanDeclaration data,
+            final Class<?> defaultClass, final BeanFactory factory)
     {
-        String clsName = data.getBeanClassName();
+        final String clsName = data.getBeanClassName();
         if (clsName != null)
         {
             try
             {
                 return loadClass(clsName);
             }
-            catch (ClassNotFoundException cex)
+            catch (final ClassNotFoundException cex)
             {
                 throw new ConfigurationRuntimeException(cex);
             }
@@ -555,7 +557,7 @@ public final class BeanHelper
             return defaultClass;
         }
 
-        Class<?> clazz = factory.getDefaultBeanClass();
+        final Class<?> clazz = factory.getDefaultBeanClass();
         if (clazz == null)
         {
             throw new ConfigurationRuntimeException(
@@ -573,12 +575,12 @@ public final class BeanHelper
      * @return the bean factory to use
      * @throws ConfigurationRuntimeException if the factory cannot be determined
      */
-    private BeanFactory fetchBeanFactory(BeanDeclaration data)
+    private BeanFactory fetchBeanFactory(final BeanDeclaration data)
     {
-        String factoryName = data.getBeanFactoryName();
+        final String factoryName = data.getBeanFactoryName();
         if (factoryName != null)
         {
-            BeanFactory factory = beanFactories.get(factoryName);
+            final BeanFactory factory = beanFactories.get(factoryName);
             if (factory == null)
             {
                 throw new ConfigurationRuntimeException(
@@ -604,8 +606,8 @@ public final class BeanHelper
      *         determined
      */
     private BeanCreationContext createBeanCreationContext(
-            final BeanDeclaration data, Class<?> defaultClass,
-            final Object param, BeanFactory factory)
+            final BeanDeclaration data, final Class<?> defaultClass,
+            final Object param, final BeanFactory factory)
     {
         final Class<?> beanClass = fetchBeanClass(data, defaultClass, factory);
         return new BeanCreationContextImpl(this, beanClass, data, param);
@@ -621,7 +623,7 @@ public final class BeanHelper
      */
     private static BeanUtilsBean initBeanUtilsBean()
     {
-        PropertyUtilsBean propUtilsBean = new PropertyUtilsBean();
+        final PropertyUtilsBean propUtilsBean = new PropertyUtilsBean();
         propUtilsBean.addBeanIntrospector(new FluentPropertyBeanIntrospector());
         return new BeanUtilsBean(new ConvertUtilsBean(), propUtilsBean);
     }
@@ -648,8 +650,8 @@ public final class BeanHelper
         /** The parameter for the bean factory. */
         private final Object param;
 
-        private BeanCreationContextImpl(BeanHelper helper, Class<?> beanClass,
-                BeanDeclaration data, Object param)
+        private BeanCreationContextImpl(final BeanHelper helper, final Class<?> beanClass,
+                final BeanDeclaration data, final Object param)
         {
             beanHelper = helper;
             this.beanClass = beanClass;
@@ -658,7 +660,7 @@ public final class BeanHelper
         }
 
         @Override
-        public void initBean(Object bean, BeanDeclaration data)
+        public void initBean(final Object bean, final BeanDeclaration data)
         {
             beanHelper.initBean(bean, data);
         }
@@ -682,7 +684,7 @@ public final class BeanHelper
         }
 
         @Override
-        public Object createBean(BeanDeclaration data)
+        public Object createBean(final BeanDeclaration data)
         {
             return beanHelper.createBean(data);
         }

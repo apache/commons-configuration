@@ -40,7 +40,7 @@ public class TestNodeNameMatchers
     @Before
     public void setUp() throws Exception
     {
-        InMemoryNodeModel model = new InMemoryNodeModel();
+        final InMemoryNodeModel model = new InMemoryNodeModel();
         handler = model.getNodeHandler();
     }
 
@@ -50,7 +50,7 @@ public class TestNodeNameMatchers
      * @param name the name
      * @return the newly created node
      */
-    private static ImmutableNode createNode(String name)
+    private static ImmutableNode createNode(final String name)
     {
         return new ImmutableNode.Builder().name(name).create();
     }
@@ -61,7 +61,7 @@ public class TestNodeNameMatchers
     @Test
     public void testEqualsMatch()
     {
-        ImmutableNode node = createNode(NODE_NAME);
+        final ImmutableNode node = createNode(NODE_NAME);
         assertTrue("No match",
                 NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME));
     }
@@ -72,7 +72,7 @@ public class TestNodeNameMatchers
     @Test
     public void testEqualsNoMatch()
     {
-        ImmutableNode node = createNode(NODE_NAME);
+        final ImmutableNode node = createNode(NODE_NAME);
         assertFalse(
                 "Match (1)",
                 NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME
@@ -88,7 +88,7 @@ public class TestNodeNameMatchers
      *
      * @param matcher the matcher to be tested
      */
-    private void checkMatcherWithNullInput(NodeMatcher<String> matcher)
+    private void checkMatcherWithNullInput(final NodeMatcher<String> matcher)
     {
         assertFalse("Match (1)",
                 matcher.matches(createNode(NODE_NAME), handler, null));
@@ -111,7 +111,7 @@ public class TestNodeNameMatchers
     @Test
     public void testEqualsIgnoreCaseMatch()
     {
-        ImmutableNode node = createNode(NODE_NAME);
+        final ImmutableNode node = createNode(NODE_NAME);
         assertTrue("No match (1)", NodeNameMatchers.EQUALS_IGNORE_CASE.matches(
                 node, handler, NODE_NAME));
         assertTrue("No match (2)", NodeNameMatchers.EQUALS_IGNORE_CASE.matches(
@@ -126,7 +126,7 @@ public class TestNodeNameMatchers
     @Test
     public void testEqualsIgnoreCaseNoMatch()
     {
-        ImmutableNode node = createNode(NODE_NAME);
+        final ImmutableNode node = createNode(NODE_NAME);
         assertFalse("Match", NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node,
                 handler, NODE_NAME + "_other"));
     }

@@ -45,7 +45,7 @@ import org.apache.commons.text.lookup.StringLookupFactory;
 public class SystemPropertiesLookup implements Lookup
 {
     @Override
-    public Object lookup(String variable)
+    public Object lookup(final String variable)
     {
         return StringLookupFactory.INSTANCE.systemPropertyStringLookup().lookup(variable);
     }

@@ -55,9 +55,9 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
     @Test
     public void testCompareChildNodePointersChildren()
     {
-        NodePointer p1 = new ConfigurationNodePointer<>(
+        final NodePointer p1 = new ConfigurationNodePointer<>(
                 pointer, root.getChildren().get(1), handler);
-        NodePointer p2 = new ConfigurationNodePointer<>(
+        final NodePointer p2 = new ConfigurationNodePointer<>(
                 pointer, root.getChildren().get(3), handler);
         assertEquals("Incorrect order", -1, pointer.compareChildNodePointers(
                 p1, p2));
@@ -72,12 +72,12 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
     @Test
     public void testCompareChildNodePointersAttributes()
     {
-        ImmutableNode n1 = new ImmutableNode.Builder().name("n1").create();
-        ImmutableNode n2 = new ImmutableNode.Builder().name("n2").create();
-        NodePointer p1 =
+        final ImmutableNode n1 = new ImmutableNode.Builder().name("n1").create();
+        final ImmutableNode n2 = new ImmutableNode.Builder().name("n2").create();
+        final NodePointer p1 =
                 new ConfigurationNodePointer<>(pointer, n1,
                         handler);
-        NodePointer p2 =
+        final NodePointer p2 =
                 new ConfigurationNodePointer<>(pointer, n2,
                         handler);
         assertEquals("Incorrect order", 0,
@@ -110,7 +110,7 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
     @Test
     public void testIsLeafTrue()
     {
-        ImmutableNode leafNode =
+        final ImmutableNode leafNode =
                 new ImmutableNode.Builder().name("leafNode").create();
         pointer =
                 new ConfigurationNodePointer<>(pointer, leafNode,
@@ -132,16 +132,16 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
      *
      * @param p the node pointer to test
      */
-    private void checkIterators(NodePointer p)
+    private void checkIterators(final NodePointer p)
     {
-        ImmutableNode node = (ImmutableNode) p.getNode();
+        final ImmutableNode node = (ImmutableNode) p.getNode();
         NodeIterator it = p.childIterator(null, false, null);
         assertEquals("Iterator count differs from children count", node
                 .getChildren().size(), iteratorSize(it));
 
         for (int index = 1; it.setPosition(index); index++)
         {
-            NodePointer pchild = it.getNodePointer();
+            final NodePointer pchild = it.getNodePointer();
             assertEquals("Wrong child", node.getChildren().get(index - 1),
                     pchild.getNode());
             checkIterators(pchild);
@@ -152,7 +152,7 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
                 .getAttributes().size(), iteratorSize(it));
         for (int index = 1; it.setPosition(index); index++)
         {
-            NodePointer pattr = it.getNodePointer();
+            final NodePointer pattr = it.getNodePointer();
             assertTrue("Node pointer is no attribute", pattr.isAttribute());
             assertTrue("Wrong attribute name", node.getAttributes()
                     .containsKey(pattr.getName().getName()));

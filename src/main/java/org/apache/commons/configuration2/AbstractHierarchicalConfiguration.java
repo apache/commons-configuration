@@ -188,7 +188,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      *
      * @param nodeModel the {@code NodeModel}
      */
-    protected AbstractHierarchicalConfiguration(NodeModel<T> nodeModel)
+    protected AbstractHierarchicalConfiguration(final NodeModel<T> nodeModel)
     {
         model = nodeModel;
     }
@@ -221,7 +221,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     protected String getRootElementNameInternal()
     {
-        NodeHandler<T> nodeHandler = getModel().getNodeHandler();
+        final NodeHandler<T> nodeHandler = getModel().getNodeHandler();
         return nodeHandler.nodeName(nodeHandler.getRootNode());
     }
 
@@ -268,7 +268,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @since 1.3
      */
     @Override
-    public void setExpressionEngine(ExpressionEngine expressionEngine)
+    public void setExpressionEngine(final ExpressionEngine expressionEngine)
     {
         this.expressionEngine = expressionEngine;
     }
@@ -281,19 +281,19 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @return the found value
      */
     @Override
-    protected Object getPropertyInternal(String key)
+    protected Object getPropertyInternal(final String key)
     {
-        List<QueryResult<T>> results = fetchNodeList(key);
+        final List<QueryResult<T>> results = fetchNodeList(key);
 
         if (results.isEmpty())
         {
             return null;
         }
-        NodeHandler<T> handler = getModel().getNodeHandler();
-        List<Object> list = new ArrayList<>();
-        for (QueryResult<T> result : results)
+        final NodeHandler<T> handler = getModel().getNodeHandler();
+        final List<Object> list = new ArrayList<>();
+        for (final QueryResult<T> result : results)
         {
-            Object value = valueFromResult(result, handler);
+            final Object value = valueFromResult(result, handler);
             if (value != null)
             {
                 list.add(value);
@@ -316,7 +316,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param obj the value of the new property
      */
     @Override
-    protected void addPropertyInternal(String key, Object obj)
+    protected void addPropertyInternal(final String key, final Object obj)
     {
         addPropertyToModel(key, getListDelimiterHandler().parse(obj));
     }
@@ -330,7 +330,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * is not parsed as a list, but passed directly as only value to the model.
      */
     @Override
-    protected void addPropertyDirect(String key, Object value)
+    protected void addPropertyDirect(final String key, final Object value)
     {
         addPropertyToModel(key, Collections.singleton(value));
     }
@@ -341,7 +341,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param key the key of the new property
      * @param values the values to be added for this property
      */
-    private void addPropertyToModel(String key, Iterable<?> values)
+    private void addPropertyToModel(final String key, final Iterable<?> values)
     {
         getModel().addProperty(key, values, this);
     }
@@ -364,7 +364,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * added
      */
     @Override
-    public final void addNodes(String key, Collection<? extends T> nodes)
+    public final void addNodes(final String key, final Collection<? extends T> nodes)
     {
         if (nodes == null || nodes.isEmpty())
         {
@@ -394,7 +394,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param nodes a collection with the {@code Node} objects to be added
      * @since 2.0
      */
-    protected void addNodesInternal(String key, Collection<? extends T> nodes)
+    protected void addNodesInternal(final String key, final Collection<? extends T> nodes)
     {
         getModel().addNodes(key, nodes, this);
     }
@@ -422,7 +422,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @return a flag if this key is contained in this configuration
      */
     @Override
-    protected boolean containsKeyInternal(String key)
+    protected boolean containsKeyInternal(final String key)
     {
         return getPropertyInternal(key) != null;
     }
@@ -434,7 +434,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param value the new value of this property
      */
     @Override
-    protected void setPropertyInternal(String key, Object value)
+    protected void setPropertyInternal(final String key, final Object value)
     {
         getModel().setProperty(key, value, this);
     }
@@ -443,8 +443,8 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * {@inheritDoc} This implementation delegates to the expression engine.
      */
     @Override
-    public List<QueryResult<T>> resolveKey(T root, String key,
-            NodeHandler<T> handler)
+    public List<QueryResult<T>> resolveKey(final T root, final String key,
+            final NodeHandler<T> handler)
     {
         return getExpressionEngine().query(root, key, handler);
     }
@@ -454,11 +454,11 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * then filters out attribute results.
      */
     @Override
-    public List<T> resolveNodeKey(T root, String key, NodeHandler<T> handler)
+    public List<T> resolveNodeKey(final T root, final String key, final NodeHandler<T> handler)
     {
-        List<QueryResult<T>> results = resolveKey(root, key, handler);
-        List<T> targetNodes = new LinkedList<>();
-        for (QueryResult<T> result : results)
+        final List<QueryResult<T>> results = resolveKey(root, key, handler);
+        final List<T> targetNodes = new LinkedList<>();
+        for (final QueryResult<T> result : results)
         {
             if (!result.isAttributeResult())
             {
@@ -472,8 +472,8 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * {@inheritDoc} This implementation delegates to the expression engine.
      */
     @Override
-    public NodeAddData<T> resolveAddKey(T root, String key,
-            NodeHandler<T> handler)
+    public NodeAddData<T> resolveAddKey(final T root, final String key,
+            final NodeHandler<T> handler)
     {
         return getExpressionEngine().prepareAdd(root, key, handler);
     }
@@ -485,12 +485,12 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * added or existing ones need to be removed.
      */
     @Override
-    public NodeUpdateData<T> resolveUpdateKey(T root, String key,
-            Object newValue, NodeHandler<T> handler)
+    public NodeUpdateData<T> resolveUpdateKey(final T root, final String key,
+            final Object newValue, final NodeHandler<T> handler)
     {
-        Iterator<QueryResult<T>> itNodes = fetchNodeList(key).iterator();
-        Iterator<?> itValues = getListDelimiterHandler().parse(newValue).iterator();
-        Map<QueryResult<T>, Object> changedValues =
+        final Iterator<QueryResult<T>> itNodes = fetchNodeList(key).iterator();
+        final Iterator<?> itValues = getListDelimiterHandler().parse(newValue).iterator();
+        final Map<QueryResult<T>, Object> changedValues =
                 new HashMap<>();
         Collection<Object> additionalValues = null;
         Collection<QueryResult<T>> removedItems = null;
@@ -531,9 +531,9 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * for nodes encountered on the path.
      */
     @Override
-    public String nodeKey(T node, Map<T, String> cache, NodeHandler<T> handler)
+    public String nodeKey(final T node, final Map<T, String> cache, final NodeHandler<T> handler)
     {
-        List<T> path = new LinkedList<>();
+        final List<T> path = new LinkedList<>();
         T currentNode = node;
         String key = cache.get(node);
         while (key == null && currentNode != null)
@@ -543,9 +543,9 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
             key = cache.get(currentNode);
         }
 
-        for (T n : path)
+        for (final T n : path)
         {
-            String currentKey = getExpressionEngine().canonicalKey(n, key, handler);
+            final String currentKey = getExpressionEngine().canonicalKey(n, key, handler);
             cache.put(n, currentKey);
             key = currentKey;
         }
@@ -572,13 +572,13 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param key the key of the property to be removed
      */
     @Override
-    public final void clearTree(String key)
+    public final void clearTree(final String key)
     {
         beginWrite(false);
         try
         {
             fireEvent(ConfigurationEvent.CLEAR_TREE, key, null, true);
-            Object nodes = clearTreeInternal(key);
+            final Object nodes = clearTreeInternal(key);
             fireEvent(ConfigurationEvent.CLEAR_TREE, key, nodes, false);
         }
         finally
@@ -599,7 +599,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      *         CLEAR_TREE)
      * @since 2.0
      */
-    protected Object clearTreeInternal(String key)
+    protected Object clearTreeInternal(final String key)
     {
         return getModel().clearTree(key, this);
     }
@@ -613,7 +613,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param key the key of the property to be removed
      */
     @Override
-    protected void clearPropertyDirect(String key)
+    protected void clearPropertyDirect(final String key)
     {
         getModel().clearProperty(key, this);
     }
@@ -650,8 +650,8 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     private DefinedKeysVisitor visitDefinedKeys()
     {
-        DefinedKeysVisitor visitor = new DefinedKeysVisitor();
-        NodeHandler<T> nodeHandler = getModel().getNodeHandler();
+        final DefinedKeysVisitor visitor = new DefinedKeysVisitor();
+        final NodeHandler<T> nodeHandler = getModel().getNodeHandler();
         NodeTreeWalker.INSTANCE.walkDFS(nodeHandler.getRootNode(), visitor,
                 nodeHandler);
         return visitor;
@@ -669,23 +669,23 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @return an iterator with the found keys
      */
     @Override
-    protected Iterator<String> getKeysInternal(String prefix)
+    protected Iterator<String> getKeysInternal(final String prefix)
     {
-        DefinedKeysVisitor visitor = new DefinedKeysVisitor(prefix);
+        final DefinedKeysVisitor visitor = new DefinedKeysVisitor(prefix);
         if (containsKey(prefix))
         {
             // explicitly add the prefix
             visitor.getKeyList().add(prefix);
         }
 
-        List<QueryResult<T>> results = fetchNodeList(prefix);
-        NodeHandler<T> handler = getModel().getNodeHandler();
+        final List<QueryResult<T>> results = fetchNodeList(prefix);
+        final NodeHandler<T> handler = getModel().getNodeHandler();
 
-        for (QueryResult<T> result : results)
+        for (final QueryResult<T> result : results)
         {
             if (!result.isAttributeResult())
             {
-                for (T c : handler.getChildren(result.getNode()))
+                for (final T c : handler.getChildren(result.getNode()))
                 {
                     NodeTreeWalker.INSTANCE.walkDFS(c, visitor, handler);
                 }
@@ -707,7 +707,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @return the maximum defined index for this key
      */
     @Override
-    public final int getMaxIndex(String key)
+    public final int getMaxIndex(final String key)
     {
         beginRead(false);
         try
@@ -729,7 +729,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @return the maximum defined index for this key
      * @since 2.0
      */
-    protected int getMaxIndexInternal(String key)
+    protected int getMaxIndexInternal(final String key)
     {
         return fetchNodeList(key).size() - 1;
     }
@@ -749,6 +749,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         try
         {
             @SuppressWarnings("unchecked") // clone returns the same type
+            final
             AbstractHierarchicalConfiguration<T> copy =
                     (AbstractHierarchicalConfiguration<T>) super.clone();
             copy.setSynchronizer(NoOpSynchronizer.INSTANCE);
@@ -758,7 +759,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
 
             return copy;
         }
-        catch (CloneNotSupportedException cex)
+        catch (final CloneNotSupportedException cex)
         {
             // should not happen
             throw new ConfigurationRuntimeException(cex);
@@ -784,9 +785,9 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param key the key
      * @return a list with all results selected by this key
      */
-    protected List<QueryResult<T>> fetchNodeList(String key)
+    protected List<QueryResult<T>> fetchNodeList(final String key)
     {
-        NodeHandler<T> nodeHandler = getModel().getNodeHandler();
+        final NodeHandler<T> nodeHandler = getModel().getNodeHandler();
         return resolveKey(nodeHandler.getRootNode(), key, nodeHandler);
     }
 
@@ -796,9 +797,9 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param node the node to be checked
      * @return a flag if this node is defined
      */
-    protected boolean nodeDefined(T node)
+    protected boolean nodeDefined(final T node)
     {
-        DefinedVisitor<T> visitor = new DefinedVisitor<>();
+        final DefinedVisitor<T> visitor = new DefinedVisitor<>();
         NodeTreeWalker.INSTANCE.walkBFS(node, visitor, getModel().getNodeHandler());
         return visitor.isDefined();
     }
@@ -824,7 +825,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param handler the {@code NodeHandler}
      * @return the value of this result (may be <b>null</b>)
      */
-    private Object valueFromResult(QueryResult<T> result, NodeHandler<T> handler)
+    private Object valueFromResult(final QueryResult<T> result, final NodeHandler<T> handler)
     {
         return result.isAttributeResult() ? result.getAttributeValue(handler)
                 : handler.getValue(result.getNode());
@@ -861,7 +862,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
          * @param node the actual node
          */
         @Override
-        public void visitBeforeChildren(T node, NodeHandler<T> handler)
+        public void visitBeforeChildren(final T node, final NodeHandler<T> handler)
         {
             defined =
                     handler.getValue(node) != null
@@ -907,7 +908,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
          *
          * @param prefix the prefix
          */
-        public DefinedKeysVisitor(String prefix)
+        public DefinedKeysVisitor(final String prefix)
         {
             this();
             parentKeys.push(prefix);
@@ -928,7 +929,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
          * node's key from the stack.
          */
         @Override
-        public void visitAfterChildren(T node, NodeHandler<T> handler)
+        public void visitAfterChildren(final T node, final NodeHandler<T> handler)
         {
             parentKeys.pop();
         }
@@ -938,11 +939,11 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
          * to the internal list.
          */
         @Override
-        public void visitBeforeChildren(T node, NodeHandler<T> handler)
+        public void visitBeforeChildren(final T node, final NodeHandler<T> handler)
         {
-            String parentKey = parentKeys.isEmpty() ? null
+            final String parentKey = parentKeys.isEmpty() ? null
                     : parentKeys.peek();
-            String key = getExpressionEngine().nodeKey(node, parentKey, handler);
+            final String key = getExpressionEngine().nodeKey(node, parentKey, handler);
             parentKeys.push(key);
             if (handler.getValue(node) != null)
             {
@@ -958,10 +959,10 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
          * @param node the current node
          * @param handler the {@code NodeHandler}
          */
-        public void handleAttributeKeys(String parentKey, T node,
-                NodeHandler<T> handler)
+        public void handleAttributeKeys(final String parentKey, final T node,
+                final NodeHandler<T> handler)
         {
-            for (String attr : handler.getAttributes(node))
+            for (final String attr : handler.getAttributes(node))
             {
                 keyList.add(getExpressionEngine().attributeKey(parentKey, attr));
             }

@@ -37,7 +37,7 @@ public class ConfigurationNodeVisitorAdapter<T> implements
      * {@inheritDoc} Empty dummy implementation of this interface method.
      */
     @Override
-    public void visitBeforeChildren(T node, NodeHandler<T> handler)
+    public void visitBeforeChildren(final T node, final NodeHandler<T> handler)
     {
     }
 
@@ -45,7 +45,7 @@ public class ConfigurationNodeVisitorAdapter<T> implements
      * {@inheritDoc} Empty dummy implementation of this interface method.
      */
     @Override
-    public void visitAfterChildren(T node, NodeHandler<T> handler)
+    public void visitAfterChildren(final T node, final NodeHandler<T> handler)
     {
     }
 

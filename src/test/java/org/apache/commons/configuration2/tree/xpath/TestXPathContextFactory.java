@@ -48,14 +48,14 @@ public class TestXPathContextFactory
     @Test
     public void testCreateContext()
     {
-        ImmutableNode node =
+        final ImmutableNode node =
                 new ImmutableNode.Builder().name("testRoot").create();
-        NodeHandler<ImmutableNode> handler =
+        final NodeHandler<ImmutableNode> handler =
                 new InMemoryNodeModel(node).getNodeHandler();
-        JXPathContext context = factory.createContext(node, handler);
+        final JXPathContext context = factory.createContext(node, handler);
 
         assertTrue("No lenient mode", context.isLenient());
-        ConfigurationNodePointerFactory.NodeWrapper<?> wrapper =
+        final ConfigurationNodePointerFactory.NodeWrapper<?> wrapper =
                 (ConfigurationNodePointerFactory.NodeWrapper<?>) context
                         .getContextBean();
         assertSame("Wrong node", node, wrapper.getNode());

@@ -49,7 +49,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object>
      * @param configuration {@code Configuration}
      * instance.
      */
-    public ConfigurationMap(Configuration configuration)
+    public ConfigurationMap(final Configuration configuration)
     {
         this.configuration = configuration;
     }
@@ -87,10 +87,10 @@ public class ConfigurationMap extends AbstractMap<Object, Object>
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */
     @Override
-    public Object put(Object key, Object value)
+    public Object put(final Object key, final Object value)
     {
-        String strKey = String.valueOf(key);
-        Object old = configuration.getProperty(strKey);
+        final String strKey = String.valueOf(key);
+        final Object old = configuration.getProperty(strKey);
         configuration.setProperty(strKey, value);
         return old;
     }
@@ -104,7 +104,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object>
      * @see java.util.Map#get(java.lang.Object)
      */
     @Override
-    public Object get(Object key)
+    public Object get(final Object key)
     {
         return configuration.getProperty(String.valueOf(key));
     }
@@ -125,7 +125,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object>
             /** The key of the map entry. */
             private final Object key;
 
-            private Entry(Object key)
+            private Entry(final Object key)
             {
                 this.key = key;
             }
@@ -143,9 +143,9 @@ public class ConfigurationMap extends AbstractMap<Object, Object>
             }
 
             @Override
-            public Object setValue(Object value)
+            public Object setValue(final Object value)
             {
-                Object old = getValue();
+                final Object old = getValue();
                 configuration.setProperty((String) key, value);
                 return old;
             }
@@ -183,7 +183,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object>
             }
         }
 
-        ConfigurationSet(Configuration configuration)
+        ConfigurationSet(final Configuration configuration)
         {
             this.configuration = configuration;
         }
@@ -196,7 +196,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object>
         {
             // Ouch. Now _that_ one is expensive...
             int count = 0;
-            for (Iterator<String> iterator = configuration.getKeys(); iterator.hasNext();)
+            for (final Iterator<String> iterator = configuration.getKeys(); iterator.hasNext();)
             {
                 iterator.next();
                 count++;

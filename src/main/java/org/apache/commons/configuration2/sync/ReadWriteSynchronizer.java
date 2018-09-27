@@ -52,7 +52,7 @@ public class ReadWriteSynchronizer implements Synchronizer
      *
      * @param l the lock object to be used (can be <b>null</b>)
      */
-    public ReadWriteSynchronizer(ReadWriteLock l)
+    public ReadWriteSynchronizer(final ReadWriteLock l)
     {
         lock = (l != null) ? l : createDefaultLock();
     }

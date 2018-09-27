@@ -75,8 +75,8 @@ public class NodeAddData<T>
      * @param isAttr flag whether the new node is an attribute
      * @param intermediateNodes an optional collection with path nodes
      */
-    public NodeAddData(T parentNode, String newName, boolean isAttr,
-            Collection<String> intermediateNodes)
+    public NodeAddData(final T parentNode, final String newName, final boolean isAttr,
+            final Collection<String> intermediateNodes)
     {
         parent = parentNode;
         newNodeName = newName;
@@ -141,7 +141,7 @@ public class NodeAddData<T>
      * @return an unmodifiable list of path nodes
      */
     private static List<String> createPathNodes(
-            Collection<String> intermediateNodes)
+            final Collection<String> intermediateNodes)
     {
         if (intermediateNodes == null)
         {

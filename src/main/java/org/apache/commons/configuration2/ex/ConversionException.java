@@ -48,7 +48,7 @@ public class ConversionException extends ConfigurationRuntimeException
      *
      * @param message  the error message
      */
-    public ConversionException(String message)
+    public ConversionException(final String message)
     {
         super(message);
     }
@@ -59,7 +59,7 @@ public class ConversionException extends ConfigurationRuntimeException
      *
      * @param cause  the exception or error that caused this exception to be thrown
      */
-    public ConversionException(Throwable cause)
+    public ConversionException(final Throwable cause)
     {
         super(cause);
     }
@@ -71,7 +71,7 @@ public class ConversionException extends ConfigurationRuntimeException
      * @param message  the error message
      * @param cause    the exception or error that caused this exception to be thrown
      */
-    public ConversionException(String message, Throwable cause)
+    public ConversionException(final String message, final Throwable cause)
     {
         super(message, cause);
     }

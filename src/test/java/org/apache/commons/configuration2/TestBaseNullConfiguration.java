@@ -75,8 +75,8 @@ public class TestBaseNullConfiguration
     public void testGetByte()
     {
         config.setProperty("number", "1");
-        byte oneB = 1;
-        byte twoB = 2;
+        final byte oneB = 1;
+        final byte twoB = 2;
         assertEquals("This returns 1(byte)", oneB, config.getByte("number"));
         assertEquals("This returns 1(byte)", oneB, config.getByte("number", twoB));
         assertEquals("This returns 2(default byte)", twoB, config.getByte("numberNotInConfig", twoB));
@@ -100,8 +100,8 @@ public class TestBaseNullConfiguration
     public void testGetShort()
     {
         config.setProperty("numberS", "1");
-        short oneS = 1;
-        short twoS = 2;
+        final short oneS = 1;
+        final short twoS = 2;
         assertEquals("This returns 1(short)", oneS, config.getShort("numberS"));
         assertEquals("This returns 1(short)", oneS, config.getShort("numberS", twoS));
         assertEquals("This returns 2(default short)", twoS, config.getShort("numberNotInConfig", twoS));
@@ -125,8 +125,8 @@ public class TestBaseNullConfiguration
     public void testGetLong()
     {
         config.setProperty("numberL", "1");
-        long oneL = 1;
-        long twoL = 2;
+        final long oneL = 1;
+        final long twoL = 2;
         assertEquals("This returns 1(long)", oneL, config.getLong("numberL"));
         assertEquals("This returns 1(long)", oneL, config.getLong("numberL", twoL));
         assertEquals("This returns 2(default long)", twoL, config.getLong("numberNotInConfig", twoL));
@@ -150,8 +150,8 @@ public class TestBaseNullConfiguration
     public void testGetFloat()
     {
         config.setProperty("numberF", "1.0");
-        float oneF = 1;
-        float twoF = 2;
+        final float oneF = 1;
+        final float twoF = 2;
         assertEquals("This returns 1(float)", oneF, config.getFloat("numberF"), 0);
         assertEquals("This returns 1(float)", oneF, config.getFloat("numberF", twoF), 0);
         assertEquals("This returns 2(default float)", twoF, config.getFloat("numberNotInConfig", twoF), 0);
@@ -175,8 +175,8 @@ public class TestBaseNullConfiguration
     public void testGetDouble()
     {
         config.setProperty("numberD", "1.0");
-        double oneD = 1;
-        double twoD = 2;
+        final double oneD = 1;
+        final double twoD = 2;
         assertEquals("This returns 1(double)", oneD, config.getDouble("numberD"), 0);
         assertEquals("This returns 1(double)", oneD, config.getDouble("numberD", twoD), 0);
         assertEquals("This returns 2(default double)", twoD, config.getDouble("numberNotInConfig", twoD), 0);
@@ -200,8 +200,8 @@ public class TestBaseNullConfiguration
     public void testGetBigDecimal()
     {
         config.setProperty("numberBigD", "123.456");
-        BigDecimal number = new BigDecimal("123.456");
-        BigDecimal defaultValue = new BigDecimal("654.321");
+        final BigDecimal number = new BigDecimal("123.456");
+        final BigDecimal defaultValue = new BigDecimal("654.321");
 
         assertEquals("Existing key", number, config.getBigDecimal("numberBigD"));
         assertEquals("Existing key with default value", number, config.getBigDecimal("numberBigD", defaultValue));
@@ -225,8 +225,8 @@ public class TestBaseNullConfiguration
     public void testGetBigInteger()
     {
         config.setProperty("numberBigI", "1234567890");
-        BigInteger number = new BigInteger("1234567890");
-        BigInteger defaultValue = new BigInteger("654321");
+        final BigInteger number = new BigInteger("1234567890");
+        final BigInteger defaultValue = new BigInteger("654321");
 
         assertEquals("Existing key", number, config.getBigInteger("numberBigI"));
         assertEquals("Existing key with default value", number, config.getBigInteger("numberBigI", defaultValue));
@@ -251,8 +251,8 @@ public class TestBaseNullConfiguration
     public void testGetString()
     {
         config.setProperty("testString", "The quick brown fox");
-        String string = new String("The quick brown fox");
-        String defaultValue = new String("jumps over the lazy dog");
+        final String string = new String("The quick brown fox");
+        final String defaultValue = new String("jumps over the lazy dog");
 
         assertEquals("Existing key", string, config.getString("testString"));
         assertEquals("Existing key with default value", string, config.getString("testString", defaultValue));
@@ -269,7 +269,7 @@ public class TestBaseNullConfiguration
     public void testGetBoolean()
     {
         config.setProperty("boolA", Boolean.TRUE);
-        boolean boolT = true, boolF = false;
+        final boolean boolT = true, boolF = false;
         assertEquals("This returns true", boolT, config.getBoolean("boolA"));
         assertEquals("This returns true, not the default", boolT, config.getBoolean("boolA", boolF));
         assertEquals("This returns false(default)", boolF, config.getBoolean("boolNotInConfig", boolF));
@@ -294,7 +294,7 @@ public class TestBaseNullConfiguration
     {
         config.addProperty("number", "1");
         config.addProperty("number", "2");
-        List<Object> list = config.getList("number");
+        final List<Object> list = config.getList("number");
         assertNotNull("The list is null", list);
         assertEquals("List size", 2, list.size());
         assertTrue("The number 1 is missing from the list", list.contains("1"));
@@ -312,9 +312,9 @@ public class TestBaseNullConfiguration
     @Test
     public void testCommaSeparatedString()
     {
-        String prop = "hey, that's a test";
+        final String prop = "hey, that's a test";
         config.setProperty("prop.string", prop);
-        List<Object> list = config.getList("prop.string");
+        final List<Object> list = config.getList("prop.string");
         assertEquals("Wrong number of elements", 2, list.size());
         assertEquals("Wrong element 1", "hey", list.get(0));
     }
@@ -322,7 +322,7 @@ public class TestBaseNullConfiguration
     @Test
     public void testCommaSeparatedStringEscaped()
     {
-        String prop2 = "hey\\, that's a test";
+        final String prop2 = "hey\\, that's a test";
         config.clearProperty("prop.string");
         config.setProperty("prop.string", prop2);
         assertEquals("Wrong value", "hey, that's a test", config.getString("prop.string"));
@@ -340,7 +340,7 @@ public class TestBaseNullConfiguration
         config.clearProperty("prop.properties");
         config.setProperty("prop.properties", "foo=bar, baz=moo, seal=clubber");
 
-        Properties p = new Properties();
+        final Properties p = new Properties();
         p.setProperty("foo", "bar");
         p.setProperty("baz", "moo");
         p.setProperty("seal", "clubber");
@@ -358,8 +358,8 @@ public class TestBaseNullConfiguration
          * when generating the subset
          */
 
-        String prop = "hey, that's a test";
-        String prop2 = "hey\\, that's a test";
+        final String prop = "hey, that's a test";
+        final String prop2 = "hey\\, that's a test";
         config.setProperty("prop.string", prop2);
         config.setProperty("property.string", "hello");
 
@@ -385,12 +385,12 @@ public class TestBaseNullConfiguration
     {
         config.setProperty("applicationRoot", "/home/applicationRoot");
         config.setProperty("db", "${applicationRoot}/db/hypersonic");
-        String unInterpolatedValue = "${applicationRoot2}/db/hypersonic";
+        final String unInterpolatedValue = "${applicationRoot2}/db/hypersonic";
         config.setProperty("dbFailedInterpolate", unInterpolatedValue);
-        String dbProp = "/home/applicationRoot/db/hypersonic";
+        final String dbProp = "/home/applicationRoot/db/hypersonic";
 
         //construct a new config, using config as the defaults config for it.
-        BaseConfiguration superProp = config;
+        final BaseConfiguration superProp = config;
 
         assertEquals(
             "Checking interpolated variable",dbProp,
@@ -401,7 +401,7 @@ public class TestBaseNullConfiguration
             unInterpolatedValue);
 
         superProp.setProperty("arrayInt", "${applicationRoot}/1");
-        String[] arrayInt = superProp.getStringArray("arrayInt");
+        final String[] arrayInt = superProp.getStringArray("arrayInt");
         assertEquals(
             "check first entry was interpolated",
             "/home/applicationRoot/1",
@@ -420,7 +420,7 @@ public class TestBaseNullConfiguration
             "test.third-level",
             "${test.second-level}/third-level");
 
-        String expectedValue =
+        final String expectedValue =
             "/base-level/first-level/second-level/third-level";
 
         assertEquals(config.getString("test.third-level"), expectedValue);

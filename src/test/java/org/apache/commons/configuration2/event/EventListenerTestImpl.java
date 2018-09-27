@@ -33,7 +33,7 @@ public class EventListenerTestImpl extends AbstractEventListenerTestImpl<Configu
      * @param source the event source (<b>null</b> if the source need not to be
      *        checked)
      */
-    public EventListenerTestImpl(Object source)
+    public EventListenerTestImpl(final Object source)
     {
         super(source);
     }
@@ -46,10 +46,10 @@ public class EventListenerTestImpl extends AbstractEventListenerTestImpl<Configu
      * @param propValue the expected property value
      * @param before the expected before flag
      */
-    public void checkEvent(EventType<?> type, String propName, Object propValue,
-            boolean before)
+    public void checkEvent(final EventType<?> type, final String propName, final Object propValue,
+            final boolean before)
     {
-        ConfigurationEvent e = nextEvent(type);
+        final ConfigurationEvent e = nextEvent(type);
         assertEquals("Wrong property name", propName, e.getPropertyName());
         assertEquals("Wrong property value", propValue, e.getPropertyValue());
         assertEquals("Wrong before flag", before, e.isBeforeUpdate());

@@ -41,7 +41,7 @@ public class ProvidedURLLocationStrategy implements FileLocationStrategy
      * given {@code FileLocator}.
      */
     @Override
-    public URL locate(FileSystem fileSystem, FileLocator locator)
+    public URL locate(final FileSystem fileSystem, final FileLocator locator)
     {
         return locator.getSourceURL();
     }

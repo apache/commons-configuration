@@ -103,9 +103,9 @@ public class TestInMemoryNodeModelTrackedNodes
      * @param replay the replay flag
      * @return the resolver mock
      */
-    private static NodeKeyResolver<ImmutableNode> createResolver(boolean replay)
+    private static NodeKeyResolver<ImmutableNode> createResolver(final boolean replay)
     {
-        NodeKeyResolver<ImmutableNode> resolver =
+        final NodeKeyResolver<ImmutableNode> resolver =
                 NodeStructureHelper.createResolverMock();
         NodeStructureHelper.expectResolveKeyForQueries(resolver);
         if (replay)
@@ -140,7 +140,7 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testGetTrackedNodeExisting()
     {
-        ImmutableNode node =
+        final ImmutableNode node =
                 NodeStructureHelper.nodeForKey(model, "tables/table(1)");
         model.trackNode(selector, createResolver());
         assertSame("Wrong node", node, model.getTrackedNode(selector));
@@ -161,10 +161,10 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testGetTrackedNodeAfterUpdate()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         model.clearProperty("tables.table(1).fields.field(1).name", resolver);
-        ImmutableNode node = model.getTrackedNode(selector);
+        final ImmutableNode node = model.getTrackedNode(selector);
         assertEquals("Wrong node", NodeStructureHelper.table(1), node
                 .getChildren().get(0).getValue());
     }
@@ -176,9 +176,9 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testGetTrackedNodeAfterUpdateNoLongerExisting()
     {
-        ImmutableNode node =
+        final ImmutableNode node =
                 NodeStructureHelper.nodeForKey(model, "tables/table(1)");
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         initDetachedNode(resolver);
         assertSame("Wrong node", node, model.getTrackedNode(selector));
     }
@@ -189,7 +189,7 @@ public class TestInMemoryNodeModelTrackedNodes
      *
      * @param resolver the {@code NodeKeyResolver}
      */
-    private void initDetachedNode(NodeKeyResolver<ImmutableNode> resolver)
+    private void initDetachedNode(final NodeKeyResolver<ImmutableNode> resolver)
     {
         model.trackNode(selector, resolver);
         model.clearTree("tables.table(0)", resolver);
@@ -202,9 +202,9 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testGetTrackedNodeAfterClear()
     {
-        ImmutableNode node =
+        final ImmutableNode node =
                 NodeStructureHelper.nodeForKey(model, "tables/table(1)");
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         model.clear(resolver);
         assertSame("Wrong node", node, model.getTrackedNode(selector));
@@ -217,9 +217,9 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testGetTrackedNodeAfterSetRootNode()
     {
-        ImmutableNode node =
+        final ImmutableNode node =
                 NodeStructureHelper.nodeForKey(model, "tables/table(1)");
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         model.setRootNode(root);
         assertSame("Wrong node", node, model.getTrackedNode(selector));
@@ -247,7 +247,7 @@ public class TestInMemoryNodeModelTrackedNodes
             model.getTrackedNode(selector);
             fail("Could get untracked node!");
         }
-        catch (ConfigurationRuntimeException crex)
+        catch (final ConfigurationRuntimeException crex)
         {
             // expected
         }
@@ -259,7 +259,7 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testTrackNodeMultipleTimes()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         model.trackNode(selector, resolver);
         model.untrackNode(selector);
@@ -272,7 +272,7 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testIsDetachedFalseNoUpdates()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         assertFalse("Node is detached", model.isTrackedNodeDetached(selector));
     }
@@ -283,7 +283,7 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testIsDetachedFalseAfterUpdate()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         model.clearProperty("tables.table(1).fields.field(1).name", resolver);
         assertFalse("Node is detached", model.isTrackedNodeDetached(selector));
@@ -295,7 +295,7 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testIsDetachedTrue()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         initDetachedNode(resolver);
         assertTrue("Node is not detached",
                 model.isTrackedNodeDetached(selector));
@@ -307,7 +307,7 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testIsDetachedAfterClear()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         model.clear(resolver);
         assertTrue("Node is not detached",
@@ -320,7 +320,7 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testIsDetachedAfterSetRoot()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         model.clearProperty("tables.table(1).fields.field(1).name", resolver);
         model.setRootNode(root);
@@ -355,13 +355,13 @@ public class TestInMemoryNodeModelTrackedNodes
      * @param nodeFields the fields node
      * @param idx the index of the removed field
      */
-    private static void checkForRemovedField(ImmutableNode nodeFields, int idx)
+    private static void checkForRemovedField(final ImmutableNode nodeFields, final int idx)
     {
         assertEquals("Field not removed",
                 NodeStructureHelper.fieldsLength(1) - 1, nodeFields
                         .getChildren().size());
-        Set<String> expectedNames = new HashSet<>();
-        Set<String> actualNames = new HashSet<>();
+        final Set<String> expectedNames = new HashSet<>();
+        final Set<String> actualNames = new HashSet<>();
         for (int i = 0; i < NodeStructureHelper.fieldsLength(1); i++)
         {
             if (idx != i)
@@ -369,9 +369,9 @@ public class TestInMemoryNodeModelTrackedNodes
                 expectedNames.add(NodeStructureHelper.field(1, i));
             }
         }
-        for (ImmutableNode field : nodeFields.getChildren())
+        for (final ImmutableNode field : nodeFields.getChildren())
         {
-            ImmutableNode nodeName = field.getChildren().get(0);
+            final ImmutableNode nodeName = field.getChildren().get(0);
             actualNames.add(String.valueOf(nodeName.getValue()));
         }
         assertEquals("Wrong field names", expectedNames, actualNames);
@@ -383,10 +383,10 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testClearPropertyOnTrackedNode()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         model.clearProperty("fields.field(0).name", selector, resolver);
-        ImmutableNode nodeFields = fieldsNodeFromModel();
+        final ImmutableNode nodeFields = fieldsNodeFromModel();
         checkForRemovedField(nodeFields, 0);
     }
 
@@ -396,12 +396,12 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testClearPropertyOnDetachedNode()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         initDetachedNode(resolver);
-        ImmutableNode rootNode = model.getRootNode();
+        final ImmutableNode rootNode = model.getRootNode();
         model.clearProperty("fields.field(0).name", selector, resolver);
         assertSame("Model root was changed", rootNode, model.getRootNode());
-        ImmutableNode nodeFields = fieldsNodeFromTrackedNode();
+        final ImmutableNode nodeFields = fieldsNodeFromTrackedNode();
         checkForRemovedField(nodeFields, 0);
     }
 
@@ -411,10 +411,10 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testClearTreeOnTrackedNode()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         model.clearTree("fields.field(1)", selector, resolver);
-        ImmutableNode nodeFields = fieldsNodeFromModel();
+        final ImmutableNode nodeFields = fieldsNodeFromModel();
         checkForRemovedField(nodeFields, 1);
     }
 
@@ -424,12 +424,12 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testClearTreeOnDetachedNode()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         initDetachedNode(resolver);
-        ImmutableNode rootNode = model.getRootNode();
+        final ImmutableNode rootNode = model.getRootNode();
         model.clearTree("fields.field(1)", selector, resolver);
         assertSame("Model root was changed", rootNode, model.getRootNode());
-        ImmutableNode nodeFields = fieldsNodeFromTrackedNode();
+        final ImmutableNode nodeFields = fieldsNodeFromTrackedNode();
         checkForRemovedField(nodeFields, 1);
     }
 
@@ -438,12 +438,12 @@ public class TestInMemoryNodeModelTrackedNodes
      *
      * @param nodeFields the fields node
      */
-    private static void checkForAddedField(ImmutableNode nodeFields)
+    private static void checkForAddedField(final ImmutableNode nodeFields)
     {
         assertEquals("Wrong number of children",
                 NodeStructureHelper.fieldsLength(1) + 1, nodeFields
                         .getChildren().size());
-        ImmutableNode nodeField =
+        final ImmutableNode nodeField =
                 nodeFields.getChildren().get(
                         NodeStructureHelper.fieldsLength(1));
         checkFieldNode(nodeField, NEW_FIELD);
@@ -455,12 +455,12 @@ public class TestInMemoryNodeModelTrackedNodes
      * @param nodeField the field node to be checked
      * @param name the expected name of this field
      */
-    private static void checkFieldNode(ImmutableNode nodeField, String name)
+    private static void checkFieldNode(final ImmutableNode nodeField, final String name)
     {
         assertEquals("Wrong node name", "field", nodeField.getNodeName());
         assertEquals("Wrong number of children of field node", 1, nodeField
                 .getChildren().size());
-        ImmutableNode nodeName = nodeField.getChildren().get(0);
+        final ImmutableNode nodeName = nodeField.getChildren().get(0);
         assertEquals("Wrong name of name node", "name", nodeName.getNodeName());
         assertEquals("Wrong node value", name, nodeName.getValue());
     }
@@ -471,7 +471,7 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testAddPropertyOnTrackedNode()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
         NodeStructureHelper.expectResolveAddKeys(resolver);
         EasyMock.replay(resolver);
         model.trackNode(selector, resolver);
@@ -487,12 +487,12 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testAddPropertyOnDetachedNode()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
         NodeStructureHelper.expectResolveAddKeys(resolver);
         EasyMock.replay(resolver);
         model.trackNode(selector, resolver);
         initDetachedNode(resolver);
-        ImmutableNode rootNode = model.getRootNode();
+        final ImmutableNode rootNode = model.getRootNode();
         model.addProperty("fields.field(-1).name", selector,
                 Collections.singleton(NEW_FIELD), resolver);
         assertSame("Root node was changed", rootNode, model.getRootNode());
@@ -505,7 +505,7 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testAddNodesOnTrackedNode()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
         NodeStructureHelper.expectResolveAddKeys(resolver);
         EasyMock.replay(resolver);
         model.trackNode(selector, resolver);
@@ -522,12 +522,12 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testAddNodesOnDetachedNode()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
         NodeStructureHelper.expectResolveAddKeys(resolver);
         EasyMock.replay(resolver);
         model.trackNode(selector, resolver);
         initDetachedNode(resolver);
-        ImmutableNode rootNode = model.getRootNode();
+        final ImmutableNode rootNode = model.getRootNode();
         model.addNodes("fields", selector, Collections
                 .singleton(NodeStructureHelper.createFieldNode(NEW_FIELD)),
                 resolver);
@@ -542,7 +542,7 @@ public class TestInMemoryNodeModelTrackedNodes
      * @param resolver the {@code NodeKeyResolver} mock
      */
     private static void prepareResolverForUpdateKeys(
-            NodeKeyResolver<ImmutableNode> resolver)
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         EasyMock.expect(
                 resolver.resolveUpdateKey(
@@ -553,12 +553,12 @@ public class TestInMemoryNodeModelTrackedNodes
                     @Override
                     public NodeUpdateData<ImmutableNode> answer()
                             throws Throwable {
-                        ImmutableNode root =
+                        final ImmutableNode root =
                                 (ImmutableNode) EasyMock.getCurrentArguments()[0];
-                        String key = (String) EasyMock.getCurrentArguments()[1];
-                        TreeData handler =
+                        final String key = (String) EasyMock.getCurrentArguments()[1];
+                        final TreeData handler =
                                 (TreeData) EasyMock.getCurrentArguments()[3];
-                        List<QueryResult<ImmutableNode>> results =
+                        final List<QueryResult<ImmutableNode>> results =
                                 DefaultExpressionEngine.INSTANCE.query(root,
                                         key, handler);
                         assertEquals("Wrong number of query results", 1,
@@ -578,15 +578,15 @@ public class TestInMemoryNodeModelTrackedNodes
      * @param nodeFields the fields node
      * @param idx the index of the changed node
      */
-    private static void checkedForChangedField(ImmutableNode nodeFields, int idx)
+    private static void checkedForChangedField(final ImmutableNode nodeFields, final int idx)
     {
         assertEquals("Wrong number of field nodes",
                 NodeStructureHelper.fieldsLength(1), nodeFields.getChildren()
                 .size());
         int childIndex = 0;
-        for (ImmutableNode field : nodeFields.getChildren())
+        for (final ImmutableNode field : nodeFields.getChildren())
         {
-            String expName =
+            final String expName =
                     (childIndex == idx) ? NEW_FIELD : NodeStructureHelper
                             .field(1, childIndex);
             checkFieldNode(field, expName);
@@ -600,7 +600,7 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testSetPropertyOnTrackedNode()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
         prepareResolverForUpdateKeys(resolver);
         EasyMock.replay(resolver);
         model.trackNode(selector, resolver);
@@ -615,12 +615,12 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testSetPropertyOnDetachedNode()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
         prepareResolverForUpdateKeys(resolver);
         EasyMock.replay(resolver);
         model.trackNode(selector, resolver);
         initDetachedNode(resolver);
-        ImmutableNode rootNode = model.getRootNode();
+        final ImmutableNode rootNode = model.getRootNode();
         model.setProperty("fields.field(0).name", selector, NEW_FIELD, resolver);
         assertSame("Root node of model was changed", rootNode,
                 model.getRootNode());
@@ -636,11 +636,11 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testTrackedNodeClearedInOperation()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         model.clearTree(null, selector, resolver);
         assertTrue("Node not detached", model.isTrackedNodeDetached(selector));
-        ImmutableNode node = model.getTrackedNode(selector);
+        final ImmutableNode node = model.getTrackedNode(selector);
         assertEquals("Name was changed", "table", node.getNodeName());
         assertFalse("Node is defined", model.getNodeHandler().isDefined(node));
     }
@@ -652,15 +652,15 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testGetTrackedNodeHandlerActive()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
-        NodeHandler<ImmutableNode> handler =
+        final NodeHandler<ImmutableNode> handler =
                 model.getTrackedNodeHandler(selector);
         assertTrue("Wrong node handler: " + handler,
                 handler instanceof TrackedNodeHandler);
         assertSame("Wrong root node", model.getTrackedNode(selector),
                 handler.getRootNode());
-        TrackedNodeHandler tnh = (TrackedNodeHandler) handler;
+        final TrackedNodeHandler tnh = (TrackedNodeHandler) handler;
         assertSame("Wrong parent handler", model.getTreeData(),
                 tnh.getParentHandler());
     }
@@ -671,10 +671,10 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testGetTrackedNodeHandlerDetached()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         initDetachedNode(resolver);
-        NodeHandler<ImmutableNode> handler =
+        final NodeHandler<ImmutableNode> handler =
                 model.getTrackedNodeHandler(selector);
         assertSame("Wrong root node", model.getTrackedNode(selector),
                 handler.getRootNode());
@@ -687,7 +687,7 @@ public class TestInMemoryNodeModelTrackedNodes
      */
     private void checkReplaceTrackedNode()
     {
-        ImmutableNode newNode =
+        final ImmutableNode newNode =
                 new ImmutableNode.Builder().name("newNode").create();
         model.replaceTrackedNode(selector, newNode);
         assertSame("Node not changed", newNode, model.getTrackedNode(selector));
@@ -700,7 +700,7 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testReplaceTrackedNodeForActiveTrackedNode()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         checkReplaceTrackedNode();
     }
@@ -711,7 +711,7 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testReplaceTrackedNodeForDetachedNode()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver();
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         initDetachedNode(resolver);
         checkReplaceTrackedNode();
@@ -734,10 +734,10 @@ public class TestInMemoryNodeModelTrackedNodes
      * @param node the node whose name is to be resolved
      * @param key the key to be returned for this node
      */
-    private void expectNodeKey(NodeKeyResolver<ImmutableNode> resolver,
-            ImmutableNode node, String key)
+    private void expectNodeKey(final NodeKeyResolver<ImmutableNode> resolver,
+            final ImmutableNode node, final String key)
     {
-        Map<ImmutableNode, String> cache = new HashMap<>();
+        final Map<ImmutableNode, String> cache = new HashMap<>();
         EasyMock.expect(resolver.nodeKey(node, cache, model.getNodeHandler()))
                 .andReturn(key);
     }
@@ -748,11 +748,11 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testSelectAndTrackNodes()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
-        String nodeKey1 = "tables/table(0)";
-        String nodeKey2 = "tables/table(1)";
-        ImmutableNode node1 = NodeStructureHelper.nodeForKey(root, nodeKey1);
-        ImmutableNode node2 = NodeStructureHelper.nodeForKey(root, nodeKey2);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final String nodeKey1 = "tables/table(0)";
+        final String nodeKey2 = "tables/table(1)";
+        final ImmutableNode node1 = NodeStructureHelper.nodeForKey(root, nodeKey1);
+        final ImmutableNode node2 = NodeStructureHelper.nodeForKey(root, nodeKey2);
         EasyMock.expect(
                 resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler()))
                 .andReturn(Arrays.asList(node1, node2));
@@ -760,9 +760,9 @@ public class TestInMemoryNodeModelTrackedNodes
         expectNodeKey(resolver, node2, nodeKey2);
         EasyMock.replay(resolver);
 
-        Collection<NodeSelector> selectors =
+        final Collection<NodeSelector> selectors =
                 model.selectAndTrackNodes(TEST_KEY, resolver);
-        Iterator<NodeSelector> it = selectors.iterator();
+        final Iterator<NodeSelector> it = selectors.iterator();
         NodeSelector sel = it.next();
         assertEquals("Wrong selector 1", new NodeSelector(nodeKey1), sel);
         assertSame("Wrong tracked node 1", node1, model.getTrackedNode(sel));
@@ -778,7 +778,7 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testSelectAndTrackNodesNoSelection()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
         EasyMock.expect(
                 resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler()))
                 .andReturn(Collections.<ImmutableNode>emptyList());
@@ -798,14 +798,14 @@ public class TestInMemoryNodeModelTrackedNodes
         NodeKeyResolver<ImmutableNode> resolver = createResolver();
         model.trackNode(selector, resolver);
         resolver = createResolver(false);
-        ImmutableNode node = model.getTrackedNode(selector);
+        final ImmutableNode node = model.getTrackedNode(selector);
         EasyMock.expect(
                 resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler()))
                 .andReturn(Collections.singletonList(node));
         expectNodeKey(resolver, node, SELECTOR_KEY);
         EasyMock.replay(resolver);
 
-        Collection<NodeSelector> selectors =
+        final Collection<NodeSelector> selectors =
                 model.selectAndTrackNodes(TEST_KEY, resolver);
         assertEquals("Wrong number of selectors", 1, selectors.size());
         assertEquals("Wrong selector", selector, selectors.iterator().next());
@@ -819,12 +819,12 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testTrackChildNodes()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
-        ImmutableNode node = NodeStructureHelper.nodeForKey(root, "tables");
-        String[] keys = new String[node.getChildren().size()];
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final ImmutableNode node = NodeStructureHelper.nodeForKey(root, "tables");
+        final String[] keys = new String[node.getChildren().size()];
         for (int i = 0; i < keys.length; i++)
         {
-            ImmutableNode child = node.getChildren().get(i);
+            final ImmutableNode child = node.getChildren().get(i);
             keys[i] =
                     String.format("%s.%s(%d)", node.getNodeName(),
                             child.getNodeName(), i);
@@ -835,12 +835,12 @@ public class TestInMemoryNodeModelTrackedNodes
                 .andReturn(Collections.singletonList(node));
         EasyMock.replay(resolver);
 
-        Collection<NodeSelector> selectors =
+        final Collection<NodeSelector> selectors =
                 model.trackChildNodes(TEST_KEY, resolver);
         assertEquals("Wrong number of selectors", node.getChildren().size(),
                 selectors.size());
         int idx = 0;
-        for (NodeSelector sel : selectors)
+        for (final NodeSelector sel : selectors)
         {
             assertEquals("Wrong selector", new NodeSelector(keys[idx]), sel);
             assertEquals("Wrong tracked node for " + sel, node.getChildren()
@@ -855,14 +855,14 @@ public class TestInMemoryNodeModelTrackedNodes
      *
      * @param queryResult the result set of the key
      */
-    private void checkTrackChildNodesNoResult(List<ImmutableNode> queryResult)
+    private void checkTrackChildNodesNoResult(final List<ImmutableNode> queryResult)
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
         EasyMock.expect(
                 resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler()))
                 .andReturn(queryResult);
         EasyMock.replay(resolver);
-        TreeData oldData = model.getTreeData();
+        final TreeData oldData = model.getTreeData();
 
         assertTrue("Got selectors", model.trackChildNodes(TEST_KEY, resolver)
                 .isEmpty());
@@ -906,19 +906,19 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testTrackChildNodeWithCreationExisting()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
-        String childName = "name";
-        String parentKey = "tables/table(0)";
-        String childKey = parentKey + "/" + childName;
-        ImmutableNode node = NodeStructureHelper.nodeForKey(model, parentKey);
-        ImmutableNode child = NodeStructureHelper.nodeForKey(node, childName);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final String childName = "name";
+        final String parentKey = "tables/table(0)";
+        final String childKey = parentKey + "/" + childName;
+        final ImmutableNode node = NodeStructureHelper.nodeForKey(model, parentKey);
+        final ImmutableNode child = NodeStructureHelper.nodeForKey(node, childName);
         EasyMock.expect(
                 resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler()))
                 .andReturn(Collections.singletonList(node));
         expectNodeKey(resolver, child, childKey);
         EasyMock.replay(resolver);
 
-        NodeSelector childSelector =
+        final NodeSelector childSelector =
                 model.trackChildNodeWithCreation(TEST_KEY, childName, resolver);
         assertEquals("Wrong selector", new NodeSelector(childKey),
                 childSelector);
@@ -932,11 +932,11 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test
     public void testTrackChildNodeWithCreationNonExisting()
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
-        String childName = "space";
-        String parentKey = "tables/table(0)";
-        String childKey = parentKey + "/" + childName;
-        ImmutableNode node = NodeStructureHelper.nodeForKey(model, parentKey);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final String childName = "space";
+        final String parentKey = "tables/table(0)";
+        final String childKey = parentKey + "/" + childName;
+        final ImmutableNode node = NodeStructureHelper.nodeForKey(model, parentKey);
         EasyMock.expect(
                 resolver.resolveNodeKey(root, TEST_KEY, model.getNodeHandler()))
                 .andReturn(Collections.singletonList(node));
@@ -947,14 +947,14 @@ public class TestInMemoryNodeModelTrackedNodes
                 .andReturn(childKey);
         EasyMock.replay(resolver);
 
-        NodeSelector childSelector =
+        final NodeSelector childSelector =
                 model.trackChildNodeWithCreation(TEST_KEY, childName, resolver);
         assertEquals("Wrong selector", new NodeSelector(childKey),
                 childSelector);
-        ImmutableNode child = model.getTrackedNode(childSelector);
+        final ImmutableNode child = model.getTrackedNode(childSelector);
         assertEquals("Wrong child name", childName, child.getNodeName());
         assertNull("Got a value", child.getValue());
-        ImmutableNode parent = model.getNodeHandler().getParent(child);
+        final ImmutableNode parent = model.getNodeHandler().getParent(child);
         assertEquals("Wrong parent node", "table", parent.getNodeName());
         assertEquals("Wrong node path", child,
                 NodeStructureHelper.nodeForKey(model, childKey));
@@ -967,9 +967,9 @@ public class TestInMemoryNodeModelTrackedNodes
      * @param queryResult the result set of the key
      */
     private void checkTrackChildNodeWithCreationInvalidKey(
-            List<ImmutableNode> queryResult)
+            final List<ImmutableNode> queryResult)
     {
-        NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
+        final NodeKeyResolver<ImmutableNode> resolver = createResolver(false);
         EasyMock.expect(
                 resolver.resolveNodeKey(model.getRootNode(), TEST_KEY,
                         model.getNodeHandler())).andReturn(queryResult);
@@ -994,7 +994,7 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test(expected = ConfigurationRuntimeException.class)
     public void testTrackChildNodeWithCreationMultipleResults()
     {
-        List<ImmutableNode> nodes =
+        final List<ImmutableNode> nodes =
                 Arrays.asList(
                         NodeStructureHelper.nodeForKey(root, "tables/table(0)"),
                         NodeStructureHelper.nodeForKey(root, "tables/table(1)"));

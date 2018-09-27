@@ -66,7 +66,7 @@ public class EventType<T extends Event> implements Serializable
      * @param superEventType the super event type
      * @param typeName the name of this event type
      */
-    public EventType(EventType<? super T> superEventType, String typeName)
+    public EventType(final EventType<? super T> superEventType, final String typeName)
     {
         superType = superEventType;
         name = typeName;
@@ -118,9 +118,9 @@ public class EventType<T extends Event> implements Serializable
      * @param eventType the event type in question
      * @return a set with all super event types
      */
-    public static Set<EventType<?>> fetchSuperEventTypes(EventType<?> eventType)
+    public static Set<EventType<?>> fetchSuperEventTypes(final EventType<?> eventType)
     {
-        Set<EventType<?>> types = new HashSet<>();
+        final Set<EventType<?>> types = new HashSet<>();
         EventType<?> currentType = eventType;
         while (currentType != null)
         {
@@ -141,8 +141,8 @@ public class EventType<T extends Event> implements Serializable
      * @return <b>true</b> if the derived type is an instance of the base type,
      *         <b>false</b> otherwise
      */
-    public static boolean isInstanceOf(EventType<?> derivedType,
-            EventType<?> baseType)
+    public static boolean isInstanceOf(final EventType<?> derivedType,
+            final EventType<?> baseType)
     {
         EventType<?> currentType = derivedType;
         while (currentType != null)

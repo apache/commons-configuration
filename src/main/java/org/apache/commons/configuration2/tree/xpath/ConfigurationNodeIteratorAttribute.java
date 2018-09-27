@@ -49,7 +49,7 @@ class ConfigurationNodeIteratorAttribute<T> extends
      * @param name the name of the selected attribute
      */
     public ConfigurationNodeIteratorAttribute(
-            ConfigurationNodePointer<T> parent, QName name)
+            final ConfigurationNodePointer<T> parent, final QName name)
     {
         super(parent, false);
         parentPointer = parent;
@@ -63,7 +63,7 @@ class ConfigurationNodeIteratorAttribute<T> extends
      * @return a pointer for the attribute at this position
      */
     @Override
-    protected NodePointer createNodePointer(int position)
+    protected NodePointer createNodePointer(final int position)
     {
         return new ConfigurationAttributePointer<>(parentPointer,
                 attributeNames.get(position));
@@ -89,22 +89,22 @@ class ConfigurationNodeIteratorAttribute<T> extends
      * @return a list with the selected attributes
      */
     private List<String> createAttributeDataList(
-            ConfigurationNodePointer<T> parent, QName name)
+            final ConfigurationNodePointer<T> parent, final QName name)
     {
-        List<String> result = new ArrayList<>();
+        final List<String> result = new ArrayList<>();
         if (!WILDCARD.equals(name.getName()))
         {
             addAttributeData(parent, result, qualifiedName(name));
         }
         else
         {
-            Set<String> names =
+            final Set<String> names =
                     new LinkedHashSet<>(parent.getNodeHandler()
                             .getAttributes(parent.getConfigurationNode()));
-            String prefix =
+            final String prefix =
                     (name.getPrefix() != null) ? prefixName(name.getPrefix(),
                             null) : null;
-            for (String n : names)
+            for (final String n : names)
             {
                 if (prefix == null || StringUtils.startsWith(n, prefix))
                 {
@@ -124,8 +124,8 @@ class ConfigurationNodeIteratorAttribute<T> extends
      * @param result the result list
      * @param name the name of the current attribute
      */
-    private void addAttributeData(ConfigurationNodePointer<T> parent,
-            List<String> result, String name)
+    private void addAttributeData(final ConfigurationNodePointer<T> parent,
+            final List<String> result, final String name)
     {
         if (parent.getNodeHandler().getAttributeValue(
                 parent.getConfigurationNode(), name) != null)

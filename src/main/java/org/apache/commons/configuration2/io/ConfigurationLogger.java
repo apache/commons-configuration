@@ -63,7 +63,7 @@ public class ConfigurationLogger
      * @param loggerName the logger name (must not be <b>null</b>)
      * @throws IllegalArgumentException if the logger name is <b>null</b>
      */
-    public ConfigurationLogger(String loggerName)
+    public ConfigurationLogger(final String loggerName)
     {
         this(createLoggerForName(loggerName));
     }
@@ -76,7 +76,7 @@ public class ConfigurationLogger
      *        <b>null</b>)
      * @throws IllegalArgumentException if the logger class is <b>null</b>
      */
-    public ConfigurationLogger(Class<?> logCls)
+    public ConfigurationLogger(final Class<?> logCls)
     {
         this(createLoggerForClass(logCls));
     }
@@ -99,7 +99,7 @@ public class ConfigurationLogger
      *
      * @param wrapped the logger to be wrapped
      */
-    ConfigurationLogger(Log wrapped)
+    ConfigurationLogger(final Log wrapped)
     {
         log = wrapped;
     }
@@ -130,7 +130,7 @@ public class ConfigurationLogger
      *
      * @param msg the message to be logged
      */
-    public void debug(String msg)
+    public void debug(final String msg)
     {
         getLog().debug(msg);
     }
@@ -150,7 +150,7 @@ public class ConfigurationLogger
      *
      * @param msg the message to be logged
      */
-    public void info(String msg)
+    public void info(final String msg)
     {
         getLog().info(msg);
     }
@@ -160,7 +160,7 @@ public class ConfigurationLogger
      *
      * @param msg the message to be logged
      */
-    public void warn(String msg)
+    public void warn(final String msg)
     {
         getLog().warn(msg);
     }
@@ -171,7 +171,7 @@ public class ConfigurationLogger
      * @param msg the message to be logged
      * @param ex the exception to be logged
      */
-    public void warn(String msg, Throwable ex)
+    public void warn(final String msg, final Throwable ex)
     {
         getLog().warn(msg, ex);
     }
@@ -181,7 +181,7 @@ public class ConfigurationLogger
      *
      * @param msg the message to be logged
      */
-    public void error(String msg)
+    public void error(final String msg)
     {
         getLog().error(msg);
     }
@@ -192,7 +192,7 @@ public class ConfigurationLogger
      * @param msg the message to be logged
      * @param ex the exception to be logged
      */
-    public void error(String msg, Throwable ex)
+    public void error(final String msg, final Throwable ex)
     {
         getLog().error(msg, ex);
     }
@@ -215,7 +215,7 @@ public class ConfigurationLogger
      * @return the logger object
      * @throws IllegalArgumentException if the logger name is undefined
      */
-    private static Log createLoggerForName(String name)
+    private static Log createLoggerForName(final String name)
     {
         if (name == null)
         {
@@ -232,7 +232,7 @@ public class ConfigurationLogger
      * @return the logger object
      * @throws IllegalArgumentException if the logger class is undefined
      */
-    private static Log createLoggerForClass(Class<?> cls)
+    private static Log createLoggerForClass(final Class<?> cls)
     {
         if (cls == null)
         {

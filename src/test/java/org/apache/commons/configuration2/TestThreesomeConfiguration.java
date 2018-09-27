@@ -40,9 +40,9 @@ public class TestThreesomeConfiguration
     @Before
     public void setUp() throws Exception
     {
-        PropertiesConfiguration c = new PropertiesConfiguration();
+        final PropertiesConfiguration c = new PropertiesConfiguration();
         c.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
-        FileHandler handler = new FileHandler(c);
+        final FileHandler handler = new FileHandler(c);
         handler.setFileName("threesome.properties");
         handler.load();
         conf = c;
@@ -51,7 +51,7 @@ public class TestThreesomeConfiguration
     @Test
     public void testList1() throws Exception
     {
-        List<Object> packages = conf.getList("test.threesome.one");
+        final List<Object> packages = conf.getList("test.threesome.one");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }
@@ -59,7 +59,7 @@ public class TestThreesomeConfiguration
     @Test
     public void testList2() throws Exception
     {
-        List<Object> packages = conf.getList("test.threesome.two");
+        final List<Object> packages = conf.getList("test.threesome.two");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }
@@ -67,7 +67,7 @@ public class TestThreesomeConfiguration
     @Test
     public void testList3() throws Exception
     {
-        List<Object> packages = conf.getList("test.threesome.three");
+        final List<Object> packages = conf.getList("test.threesome.three");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }

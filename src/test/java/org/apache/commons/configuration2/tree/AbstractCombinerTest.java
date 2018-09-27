@@ -71,16 +71,16 @@ public abstract class AbstractCombinerTest
     protected BaseHierarchicalConfiguration createCombinedConfiguration()
             throws ConfigurationException
     {
-        XMLConfiguration conf1 = new XMLConfiguration();
+        final XMLConfiguration conf1 = new XMLConfiguration();
         new FileHandler(conf1).load(CONF1);
-        XMLConfiguration conf2 = new XMLConfiguration();
+        final XMLConfiguration conf2 = new XMLConfiguration();
         new FileHandler(conf2).load(CONF2);
-        ImmutableNode cn =
+        final ImmutableNode cn =
                 combiner.combine(conf1.getNodeModel().getNodeHandler()
                         .getRootNode(), conf2.getNodeModel().getNodeHandler()
                         .getRootNode());
 
-        BaseHierarchicalConfiguration result = new BaseHierarchicalConfiguration();
+        final BaseHierarchicalConfiguration result = new BaseHierarchicalConfiguration();
         result.getNodeModel().setRootNode(cn);
 
         return result;

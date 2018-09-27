@@ -38,89 +38,89 @@ import java.util.Set;
 public abstract class NodeHandlerDecorator<T> implements NodeHandler<T>
 {
     @Override
-    public String nodeName(T node)
+    public String nodeName(final T node)
     {
         return getDecoratedNodeHandler().nodeName(node);
     }
 
     @Override
-    public Object getValue(T node)
+    public Object getValue(final T node)
     {
         return getDecoratedNodeHandler().getValue(node);
     }
 
     @Override
-    public T getParent(T node)
+    public T getParent(final T node)
     {
         return getDecoratedNodeHandler().getParent(node);
     }
 
     @Override
-    public List<T> getChildren(T node)
+    public List<T> getChildren(final T node)
     {
         return getDecoratedNodeHandler().getChildren(node);
     }
 
     @Override
-    public <C> List<T> getMatchingChildren(T node, NodeMatcher<C> matcher,
-            C criterion)
+    public <C> List<T> getMatchingChildren(final T node, final NodeMatcher<C> matcher,
+            final C criterion)
     {
         return getDecoratedNodeHandler().getMatchingChildren(node, matcher,
                 criterion);
     }
 
     @Override
-    public <C> int getMatchingChildrenCount(T node, NodeMatcher<C> matcher,
-            C criterion)
+    public <C> int getMatchingChildrenCount(final T node, final NodeMatcher<C> matcher,
+            final C criterion)
     {
         return getDecoratedNodeHandler().getMatchingChildrenCount(node,
                 matcher, criterion);
     }
 
     @Override
-    public List<T> getChildren(T node, String name)
+    public List<T> getChildren(final T node, final String name)
     {
         return getDecoratedNodeHandler().getChildren(node, name);
     }
 
     @Override
-    public T getChild(T node, int index)
+    public T getChild(final T node, final int index)
     {
         return getDecoratedNodeHandler().getChild(node, index);
     }
 
     @Override
-    public int indexOfChild(T parent, T child)
+    public int indexOfChild(final T parent, final T child)
     {
         return getDecoratedNodeHandler().indexOfChild(parent, child);
     }
 
     @Override
-    public int getChildrenCount(T node, String name)
+    public int getChildrenCount(final T node, final String name)
     {
         return getDecoratedNodeHandler().getChildrenCount(node, name);
     }
 
     @Override
-    public Set<String> getAttributes(T node)
+    public Set<String> getAttributes(final T node)
     {
         return getDecoratedNodeHandler().getAttributes(node);
     }
 
     @Override
-    public boolean hasAttributes(T node)
+    public boolean hasAttributes(final T node)
     {
         return getDecoratedNodeHandler().hasAttributes(node);
     }
 
     @Override
-    public Object getAttributeValue(T node, String name)
+    public Object getAttributeValue(final T node, final String name)
     {
         return getDecoratedNodeHandler().getAttributeValue(node, name);
     }
 
     @Override
-    public boolean isDefined(T node)
+    public boolean isDefined(final T node)
     {
         return getDecoratedNodeHandler().isDefined(node);
     }

@@ -43,11 +43,11 @@ public class AbsoluteNameLocationStrategy implements FileLocationStrategy
      * name pointing to an existing file, the corresponding URL is returned.
      */
     @Override
-    public URL locate(FileSystem fileSystem, FileLocator locator)
+    public URL locate(final FileSystem fileSystem, final FileLocator locator)
     {
         if (StringUtils.isNotEmpty(locator.getFileName()))
         {
-            File file = new File(locator.getFileName());
+            final File file = new File(locator.getFileName());
             if (file.isAbsolute() && file.exists())
             {
                 return FileLocatorUtils.convertFileToURL(file);

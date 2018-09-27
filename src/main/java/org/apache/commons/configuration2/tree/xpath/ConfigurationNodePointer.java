@@ -59,8 +59,8 @@ class ConfigurationNodePointer<T> extends NodePointer
      * @param locale the locale
      * @param handler the {@code NodeHandler}
      */
-    public ConfigurationNodePointer(T node, Locale locale,
-            NodeHandler<T> handler)
+    public ConfigurationNodePointer(final T node, final Locale locale,
+            final NodeHandler<T> handler)
     {
         super(null, locale);
         this.node = node;
@@ -75,8 +75,8 @@ class ConfigurationNodePointer<T> extends NodePointer
      * @param node the associated node
      * @param handler the {@code NodeHandler}
      */
-    public ConfigurationNodePointer(ConfigurationNodePointer<T> parent, T node,
-            NodeHandler<T> handler)
+    public ConfigurationNodePointer(final ConfigurationNodePointer<T> parent, final T node,
+            final NodeHandler<T> handler)
     {
         super(parent);
         this.node = node;
@@ -181,7 +181,7 @@ class ConfigurationNodePointer<T> extends NodePointer
      * @param value the new value
      */
     @Override
-    public void setValue(Object value)
+    public void setValue(final Object value)
     {
         throw new UnsupportedOperationException("Node value cannot be set!");
     }
@@ -194,14 +194,14 @@ class ConfigurationNodePointer<T> extends NodePointer
      * @return a flag, which pointer should be sorted first
      */
     @Override
-    public int compareChildNodePointers(NodePointer pointer1,
-            NodePointer pointer2)
+    public int compareChildNodePointers(final NodePointer pointer1,
+            final NodePointer pointer2)
     {
-        Object node1 = pointer1.getBaseValue();
-        Object node2 = pointer2.getBaseValue();
+        final Object node1 = pointer1.getBaseValue();
+        final Object node2 = pointer2.getBaseValue();
 
         // sort based on the occurrence in the sub node list
-        for (T child : getNodeHandler().getChildren(node))
+        for (final T child : getNodeHandler().getChildren(node))
         {
             if (child == node1)
             {
@@ -222,7 +222,7 @@ class ConfigurationNodePointer<T> extends NodePointer
      * @return the iterator for the attributes
      */
     @Override
-    public NodeIterator attributeIterator(QName name)
+    public NodeIterator attributeIterator(final QName name)
     {
         return new ConfigurationNodeIteratorAttribute<>(this, name);
     }
@@ -236,8 +236,8 @@ class ConfigurationNodePointer<T> extends NodePointer
      * @param startWith the start value of the iteration
      */
     @Override
-    public NodeIterator childIterator(NodeTest test, boolean reverse,
-            NodePointer startWith)
+    public NodeIterator childIterator(final NodeTest test, final boolean reverse,
+            final NodePointer startWith)
     {
         return new ConfigurationNodeIteratorChildren<>(this, test, reverse,
                 castPointer(startWith));
@@ -251,7 +251,7 @@ class ConfigurationNodePointer<T> extends NodePointer
      * @return a flag if this node corresponds to the test
      */
     @Override
-    public boolean testNode(NodeTest test)
+    public boolean testNode(final NodeTest test)
     {
         if (test instanceof NodeTypeTest
                 && ((NodeTypeTest) test).getNodeType() == Compiler.NODE_TYPE_TEXT)
@@ -290,9 +290,10 @@ class ConfigurationNodePointer<T> extends NodePointer
      * @param p the {@code NodePointer} to cast
      * @return the resulting {@code ConfigurationNodePointer}
      */
-    private ConfigurationNodePointer<T> castPointer(NodePointer p)
+    private ConfigurationNodePointer<T> castPointer(final NodePointer p)
     {
         @SuppressWarnings("unchecked") // see method comment
+        final
         ConfigurationNodePointer<T> result = (ConfigurationNodePointer<T>) p;
         return result;
     }

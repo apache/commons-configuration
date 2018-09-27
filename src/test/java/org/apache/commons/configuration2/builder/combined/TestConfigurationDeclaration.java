@@ -41,9 +41,9 @@ public class TestConfigurationDeclaration
      * @return the test object
      */
     private static ConfigurationDeclaration createDeclaration(
-            HierarchicalConfiguration<?> conf)
+            final HierarchicalConfiguration<?> conf)
     {
-        HierarchicalConfiguration<?> config =
+        final HierarchicalConfiguration<?> config =
                 (conf != null) ? conf : new BaseHierarchicalConfiguration();
         return new ConfigurationDeclaration(null, config);
     }
@@ -54,7 +54,7 @@ public class TestConfigurationDeclaration
     @Test
     public void testConfigurationDeclarationIsReserved()
     {
-        ConfigurationDeclaration decl = createDeclaration(null);
+        final ConfigurationDeclaration decl = createDeclaration(null);
         assertTrue("Attribute at not recognized", decl.isReservedAttributeName("at"));
         assertTrue("Attribute optional not recognized", decl.isReservedAttributeName("optional"));
         assertTrue("Inherited attribute not recognized",
@@ -89,12 +89,12 @@ public class TestConfigurationDeclaration
      *
      * @param name the attribute name
      */
-    private void checkOldReservedAttribute(String name)
+    private void checkOldReservedAttribute(final String name)
     {
-        String prefixName = "config-" + name;
-        BaseHierarchicalConfiguration config = new BaseHierarchicalConfiguration();
+        final String prefixName = "config-" + name;
+        final BaseHierarchicalConfiguration config = new BaseHierarchicalConfiguration();
         config.addProperty(String.format("[@%s]", prefixName), Boolean.TRUE);
-        ConfigurationDeclaration decl = createDeclaration(config);
+        final ConfigurationDeclaration decl = createDeclaration(config);
         assertTrue(prefixName + " attribute not recognized",
                 decl.isReservedAttributeName(prefixName));
         config.addProperty(String.format("[@%s]", name), Boolean.TRUE);
@@ -111,7 +111,7 @@ public class TestConfigurationDeclaration
     @Test
     public void testConfigurationDeclarationGetAttributes()
     {
-        HierarchicalConfiguration<?> config = new BaseHierarchicalConfiguration();
+        final HierarchicalConfiguration<?> config = new BaseHierarchicalConfiguration();
         config.addProperty("xml.fileName", "test.xml");
         ConfigurationDeclaration decl =
                 createDeclaration(config.configurationAt("xml"));
@@ -146,10 +146,10 @@ public class TestConfigurationDeclaration
     @Test(expected = ConfigurationRuntimeException.class)
     public void testConfigurationDeclarationOptionalAttributeInvalid()
     {
-        HierarchicalConfiguration<?> factory = new BaseHierarchicalConfiguration();
+        final HierarchicalConfiguration<?> factory = new BaseHierarchicalConfiguration();
         factory.addProperty("xml.fileName", "test.xml");
         factory.setProperty("xml[@optional]", "invalid value");
-        ConfigurationDeclaration decl =
+        final ConfigurationDeclaration decl =
                 createDeclaration(factory.configurationAt("xml"));
         decl.isOptional();
     }

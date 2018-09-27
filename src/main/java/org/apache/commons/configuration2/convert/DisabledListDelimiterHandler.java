@@ -56,7 +56,7 @@ public class DisabledListDelimiterHandler extends AbstractListDelimiterHandler
      * {@code UnsupportedOperationException} exception.
      */
     @Override
-    public Object escapeList(List<?> values, ValueTransformer transformer)
+    public Object escapeList(final List<?> values, final ValueTransformer transformer)
     {
         throw new UnsupportedOperationException(
                 "Escaping lists is not supported!");
@@ -70,9 +70,9 @@ public class DisabledListDelimiterHandler extends AbstractListDelimiterHandler
      * nothing is trimmed.)
      */
     @Override
-    protected Collection<String> splitString(String s, boolean trim)
+    protected Collection<String> splitString(final String s, final boolean trim)
     {
-        Collection<String> result = new ArrayList<>(1);
+        final Collection<String> result = new ArrayList<>(1);
         result.add(s);
         return result;
     }
@@ -82,7 +82,7 @@ public class DisabledListDelimiterHandler extends AbstractListDelimiterHandler
      * any changes.
      */
     @Override
-    protected String escapeString(String s)
+    protected String escapeString(final String s)
     {
         return s;
     }

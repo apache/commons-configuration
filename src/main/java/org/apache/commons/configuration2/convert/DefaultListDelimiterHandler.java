@@ -86,7 +86,7 @@ public class DefaultListDelimiterHandler extends AbstractListDelimiterHandler
      *
      * @param listDelimiter the list delimiter character
      */
-    public DefaultListDelimiterHandler(char listDelimiter)
+    public DefaultListDelimiterHandler(final char listDelimiter)
     {
         delimiter = listDelimiter;
     }
@@ -102,11 +102,11 @@ public class DefaultListDelimiterHandler extends AbstractListDelimiterHandler
     }
 
     @Override
-    public Object escapeList(List<?> values, ValueTransformer transformer)
+    public Object escapeList(final List<?> values, final ValueTransformer transformer)
     {
-        Object[] escapedValues = new String[values.size()];
+        final Object[] escapedValues = new String[values.size()];
         int idx = 0;
-        for (Object v : values)
+        for (final Object v : values)
         {
             escapedValues[idx++] = escape(v, transformer);
         }
@@ -114,12 +114,12 @@ public class DefaultListDelimiterHandler extends AbstractListDelimiterHandler
     }
 
     @Override
-    protected String escapeString(String s)
+    protected String escapeString(final String s)
     {
-        StringBuilder buf = new StringBuilder(s.length() + BUF_SIZE);
+        final StringBuilder buf = new StringBuilder(s.length() + BUF_SIZE);
         for (int i = 0; i < s.length(); i++)
         {
-            char c = s.charAt(i);
+            final char c = s.charAt(i);
             if (c == getDelimiter() || c == ESCAPE)
             {
                 buf.append(ESCAPE);
@@ -137,15 +137,15 @@ public class DefaultListDelimiterHandler extends AbstractListDelimiterHandler
      * are output.
      */
     @Override
-    protected Collection<String> splitString(String s, boolean trim)
+    protected Collection<String> splitString(final String s, final boolean trim)
     {
-        List<String> list = new LinkedList<>();
+        final List<String> list = new LinkedList<>();
         StringBuilder token = new StringBuilder();
         boolean inEscape = false;
 
         for (int i = 0; i < s.length(); i++)
         {
-            char c = s.charAt(i);
+            final char c = s.charAt(i);
             if (inEscape)
             {
                 // last character was the escape marker

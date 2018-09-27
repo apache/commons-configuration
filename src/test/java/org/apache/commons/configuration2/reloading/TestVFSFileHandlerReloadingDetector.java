@@ -63,9 +63,9 @@ public class TestVFSFileHandlerReloadingDetector
      * @param value the value of the test property
      * @throws IOException if an error occurs
      */
-    private void writeTestFile(File file, String value) throws IOException
+    private void writeTestFile(final File file, final String value) throws IOException
     {
-        FileWriter out = new FileWriter(file);
+        final FileWriter out = new FileWriter(file);
         out.write(String.format(FMT_XML, value));
         out.close();
     }
@@ -77,13 +77,13 @@ public class TestVFSFileHandlerReloadingDetector
     @Test
     public void testLastModificationDateExisting() throws IOException
     {
-        File file = folder.newFile();
+        final File file = folder.newFile();
         writeTestFile(file, "value1");
-        VFSFileHandlerReloadingDetector strategy =
+        final VFSFileHandlerReloadingDetector strategy =
                 new VFSFileHandlerReloadingDetector();
         strategy.getFileHandler().setFile(file);
         strategy.getFileHandler().setFileSystem(new VFSFileSystem());
-        long modificationDate = strategy.getLastModificationDate();
+        final long modificationDate = strategy.getLastModificationDate();
         assertEquals("Wrong modification date", file.lastModified(),
                 modificationDate);
     }
@@ -94,11 +94,11 @@ public class TestVFSFileHandlerReloadingDetector
     @Test
     public void testLastModificationDateNonExisting()
     {
-        File file = ConfigurationAssert.getOutFile("NonExistingFile.xml");
-        FileHandler handler = new FileHandler();
+        final File file = ConfigurationAssert.getOutFile("NonExistingFile.xml");
+        final FileHandler handler = new FileHandler();
         handler.setFileSystem(new VFSFileSystem());
         handler.setFile(file);
-        VFSFileHandlerReloadingDetector strategy =
+        final VFSFileHandlerReloadingDetector strategy =
                 new VFSFileHandlerReloadingDetector(handler);
         assertEquals("Got a modification date", 0,
                 strategy.getLastModificationDate());
@@ -110,7 +110,7 @@ public class TestVFSFileHandlerReloadingDetector
     @Test
     public void testLastModificationDateUndefinedHandler()
     {
-        VFSFileHandlerReloadingDetector strategy =
+        final VFSFileHandlerReloadingDetector strategy =
                 new VFSFileHandlerReloadingDetector();
         assertEquals("Got a modification date", 0,
                 strategy.getLastModificationDate());
@@ -125,14 +125,14 @@ public class TestVFSFileHandlerReloadingDetector
             throws FileSystemException
     {
         final FileObject fo = EasyMock.createMock(FileObject.class);
-        FileName name = EasyMock.createMock(FileName.class);
+        final FileName name = EasyMock.createMock(FileName.class);
         EasyMock.expect(fo.exists()).andReturn(Boolean.TRUE);
         EasyMock.expect(fo.getContent()).andThrow(
                 new FileSystemException("error"));
         EasyMock.expect(fo.getName()).andReturn(name);
         EasyMock.expect(name.getURI()).andReturn("someURI");
         EasyMock.replay(fo, name);
-        VFSFileHandlerReloadingDetector strategy =
+        final VFSFileHandlerReloadingDetector strategy =
                 new VFSFileHandlerReloadingDetector()
                 {
                     @Override
@@ -152,7 +152,7 @@ public class TestVFSFileHandlerReloadingDetector
     @Test(expected = ConfigurationRuntimeException.class)
     public void testLastModificationDateUnresolvableURI()
     {
-        VFSFileHandlerReloadingDetector strategy =
+        final VFSFileHandlerReloadingDetector strategy =
                 new VFSFileHandlerReloadingDetector()
                 {
                     @Override
@@ -173,7 +173,7 @@ public class TestVFSFileHandlerReloadingDetector
     public void testGetRefreshDelay() throws Exception
     {
         final long delay = 20130325L;
-        VFSFileHandlerReloadingDetector strategy =
+        final VFSFileHandlerReloadingDetector strategy =
                 new VFSFileHandlerReloadingDetector(null, delay);
         assertNotNull("No file handler was created", strategy.getFileHandler());
         assertEquals("Wrong refresh delay", delay, strategy.getRefreshDelay());

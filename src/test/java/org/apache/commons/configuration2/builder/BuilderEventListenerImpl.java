@@ -48,7 +48,7 @@ public class BuilderEventListenerImpl implements
      * {@inheritDoc} This implementation just records the event.
      */
     @Override
-    public void onEvent(ConfigurationBuilderEvent event)
+    public void onEvent(final ConfigurationBuilderEvent event)
     {
         events.add(event);
     }
@@ -63,14 +63,15 @@ public class BuilderEventListenerImpl implements
      * @return the next received event
      */
     public <T extends ConfigurationBuilderEvent> T nextEvent(
-            EventType<T> eventType)
+            final EventType<T> eventType)
     {
-        Iterator<ConfigurationBuilderEvent> it = initIterator();
+        final Iterator<ConfigurationBuilderEvent> it = initIterator();
         assertTrue("Too few events received", it.hasNext());
-        ConfigurationBuilderEvent nextEvent = it.next();
+        final ConfigurationBuilderEvent nextEvent = it.next();
         assertEquals("Wrong event type", eventType, nextEvent.getEventType());
         // Safe cast because of the comparison of the event type
         @SuppressWarnings("unchecked")
+        final
         T resultEvent = (T) nextEvent;
         return resultEvent;
     }

@@ -153,7 +153,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      *
      * @param c the layout object to be copied
      */
-    public PropertiesConfigurationLayout(PropertiesConfigurationLayout c)
+    public PropertiesConfigurationLayout(final PropertiesConfigurationLayout c)
     {
         loadCounter = new AtomicInteger();
         layoutData = new LinkedHashMap<>();
@@ -178,7 +178,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * characters or not
      * @return the canonical comment for this key (can be <b>null</b>)
      */
-    public String getCanonicalComment(String key, boolean commentChar)
+    public String getCanonicalComment(final String key, final boolean commentChar)
     {
         return constructCanonicalComment(getComment(key), commentChar);
     }
@@ -192,7 +192,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param key the key of the property
      * @return the comment for this key (can be <b>null</b>)
      */
-    public String getComment(String key)
+    public String getComment(final String key)
     {
         return fetchLayoutData(key).getComment();
     }
@@ -207,7 +207,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param comment the comment for this key (can be <b>null</b>, then the
      * comment will be removed)
      */
-    public void setComment(String key, String comment)
+    public void setComment(final String key, final String comment)
     {
         fetchLayoutData(key).setComment(comment);
     }
@@ -220,7 +220,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @return the number of blanc lines before the property definition for this
      * key
      */
-    public int getBlancLinesBefore(String key)
+    public int getBlancLinesBefore(final String key)
     {
         return fetchLayoutData(key).getBlancLines();
     }
@@ -233,7 +233,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param number the number of blanc lines to add before this property
      * definition
      */
-    public void setBlancLinesBefore(String key, int number)
+    public void setBlancLinesBefore(final String key, final int number)
     {
         fetchLayoutData(key).setBlancLines(number);
     }
@@ -247,7 +247,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param commentChar determines the presence of comment characters
      * @return the header comment (can be <b>null</b>)
      */
-    public String getCanonicalHeaderComment(boolean commentChar)
+    public String getCanonicalHeaderComment(final boolean commentChar)
     {
         return constructCanonicalComment(getHeaderComment(), commentChar);
     }
@@ -271,7 +271,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      *
      * @param comment the comment
      */
-    public void setHeaderComment(String comment)
+    public void setHeaderComment(final String comment)
     {
         headerComment = comment;
     }
@@ -286,7 +286,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @see #getCanonicalHeaderComment(boolean)
      * @since 2.0
      */
-    public String getCanonicalFooterCooment(boolean commentChar)
+    public String getCanonicalFooterCooment(final boolean commentChar)
     {
         return constructCanonicalComment(getFooterComment(), commentChar);
     }
@@ -312,7 +312,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param footerComment the footer comment
      * @since 2.0
      */
-    public void setFooterComment(String footerComment)
+    public void setFooterComment(final String footerComment)
     {
         this.footerComment = footerComment;
     }
@@ -324,7 +324,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param key the property key
      * @return a flag if this property is defined on a single line
      */
-    public boolean isSingleLine(String key)
+    public boolean isSingleLine(final String key)
     {
         return fetchLayoutData(key).isSingleLine();
     }
@@ -340,7 +340,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param key the property key
      * @param f the single line flag
      */
-    public void setSingleLine(String key, boolean f)
+    public void setSingleLine(final String key, final boolean f)
     {
         fetchLayoutData(key).setSingleLine(f);
     }
@@ -365,7 +365,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      *
      * @param f the force single line flag
      */
-    public void setForceSingleLine(boolean f)
+    public void setForceSingleLine(final boolean f)
     {
         forceSingleLine = f;
     }
@@ -377,7 +377,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @return the property separator for this property
      * @since 1.7
      */
-    public String getSeparator(String key)
+    public String getSeparator(final String key)
     {
         return fetchLayoutData(key).getSeparator();
     }
@@ -398,7 +398,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param sep the separator to be used for this property
      * @since 1.7
      */
-    public void setSeparator(String key, String sep)
+    public void setSeparator(final String key, final String sep)
     {
         fetchLayoutData(key).setSeparator(sep);
     }
@@ -428,7 +428,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param globalSeparator the separator to be used for all properties
      * @since 1.7
      */
-    public void setGlobalSeparator(String globalSeparator)
+    public void setGlobalSeparator(final String globalSeparator)
     {
         this.globalSeparator = globalSeparator;
     }
@@ -452,7 +452,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param lineSeparator the line separator
      * @since 1.7
      */
-    public void setLineSeparator(String lineSeparator)
+    public void setLineSeparator(final String lineSeparator)
     {
         this.lineSeparator = lineSeparator;
     }
@@ -475,11 +475,11 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param in the reader to the properties file
      * @throws ConfigurationException if an error occurs
      */
-    public void load(PropertiesConfiguration config, Reader in)
+    public void load(final PropertiesConfiguration config, final Reader in)
             throws ConfigurationException
     {
         loadCounter.incrementAndGet();
-        PropertiesConfiguration.PropertiesReader reader =
+        final PropertiesConfiguration.PropertiesReader reader =
                 config.getIOFactory().createPropertiesReader(in);
 
         try
@@ -489,7 +489,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
                 if (config.propertyLoaded(reader.getPropertyName(),
                         reader.getPropertyValue()))
                 {
-                    boolean contained = layoutData.containsKey(reader
+                    final boolean contained = layoutData.containsKey(reader
                             .getPropertyName());
                     int blancLines = 0;
                     int idx = checkHeaderComment(reader.getCommentLines());
@@ -499,9 +499,9 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
                         idx++;
                         blancLines++;
                     }
-                    String comment = extractComment(reader.getCommentLines(),
+                    final String comment = extractComment(reader.getCommentLines(),
                             idx, reader.getCommentLines().size() - 1);
-                    PropertyLayoutData data = fetchLayoutData(reader
+                    final PropertyLayoutData data = fetchLayoutData(reader
                             .getPropertyName());
                     if (contained)
                     {
@@ -520,7 +520,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
             setFooterComment(extractComment(reader.getCommentLines(), 0, reader
                     .getCommentLines().size() - 1));
         }
-        catch (IOException ioex)
+        catch (final IOException ioex)
         {
             throw new ConfigurationException(ioex);
         }
@@ -538,11 +538,11 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param out the writer
      * @throws ConfigurationException if an error occurs
      */
-    public void save(PropertiesConfiguration config, Writer out) throws ConfigurationException
+    public void save(final PropertiesConfiguration config, final Writer out) throws ConfigurationException
     {
         try
         {
-            PropertiesConfiguration.PropertiesWriter writer =
+            final PropertiesConfiguration.PropertiesWriter writer =
                     config.getIOFactory().createPropertiesWriter(out,
                             config.getListDelimiterHandler());
             writer.setGlobalSeparator(getGlobalSeparator());
@@ -557,7 +557,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
                 writer.writeln(null);
             }
 
-            for (String key : getKeys())
+            for (final String key : getKeys())
             {
                 if (config.containsKeyInternal(key))
                 {
@@ -572,7 +572,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
                     writeComment(writer, getCanonicalComment(key, true));
 
                     // Output the property and its value
-                    boolean singleLine = isForceSingleLine() || isSingleLine(key);
+                    final boolean singleLine = isForceSingleLine() || isSingleLine(key);
                     writer.setCurrentSeparator(getSeparator(key));
                     writer.writeProperty(key, config.getPropertyInternal(
                             key), singleLine);
@@ -582,7 +582,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
             writeComment(writer, getCanonicalFooterCooment(true));
             writer.flush();
         }
-        catch (IOException ioex)
+        catch (final IOException ioex)
         {
             throw new ConfigurationException(ioex);
         }
@@ -595,15 +595,15 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param event the event object
      */
     @Override
-    public void onEvent(ConfigurationEvent event)
+    public void onEvent(final ConfigurationEvent event)
     {
         if (!event.isBeforeUpdate() && loadCounter.get() == 0)
         {
             if (ConfigurationEvent.ADD_PROPERTY.equals(event.getEventType()))
             {
-                boolean contained =
+                final boolean contained =
                         layoutData.containsKey(event.getPropertyName());
-                PropertyLayoutData data =
+                final PropertyLayoutData data =
                         fetchLayoutData(event.getPropertyName());
                 data.setSingleLine(!contained);
             }
@@ -631,7 +631,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param key the key
      * @return the corresponding layout data object
      */
-    private PropertyLayoutData fetchLayoutData(String key)
+    private PropertyLayoutData fetchLayoutData(final String key)
     {
         if (key == null)
         {
@@ -666,7 +666,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param line the line
      * @return a flag if this is a comment line
      */
-    static boolean isCommentLine(String line)
+    static boolean isCommentLine(final String line)
     {
         return PropertiesConfiguration.isCommentLine(line);
     }
@@ -681,9 +681,9 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * enforced; if <b>false</b>, it will be removed
      * @return the trimmed comment
      */
-    static String trimComment(String s, boolean comment)
+    static String trimComment(final String s, final boolean comment)
     {
-        StringBuilder buf = new StringBuilder(s.length());
+        final StringBuilder buf = new StringBuilder(s.length());
         int lastPos = 0;
         int pos;
 
@@ -692,7 +692,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
             pos = s.indexOf(CR, lastPos);
             if (pos >= 0)
             {
-                String line = s.substring(lastPos, pos);
+                final String line = s.substring(lastPos, pos);
                 buf.append(stripCommentChar(line, comment)).append(CR);
                 lastPos = pos + CR.length();
             }
@@ -714,7 +714,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * enforced; if <b>false</b>, it will be removed
      * @return the line without comment character
      */
-    static String stripCommentChar(String s, boolean comment)
+    static String stripCommentChar(final String s, final boolean comment)
     {
         if (StringUtils.isBlank(s) || (isCommentLine(s) == comment))
         {
@@ -753,13 +753,13 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param to the end index (inclusive)
      * @return the comment string (<b>null</b> if it is undefined)
      */
-    private String extractComment(List<String> commentLines, int from, int to)
+    private String extractComment(final List<String> commentLines, final int from, final int to)
     {
         if (to < from)
         {
             return null;
         }
-        StringBuilder buf = new StringBuilder(commentLines.get(from));
+        final StringBuilder buf = new StringBuilder(commentLines.get(from));
         for (int i = from + 1; i <= to; i++)
         {
             buf.append(CR);
@@ -779,7 +779,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param commentLines the comment lines
      * @return the index of the next line after the header comment
      */
-    private int checkHeaderComment(List<String> commentLines)
+    private int checkHeaderComment(final List<String> commentLines)
     {
         if (loadCounter.get() == 1 && layoutData.isEmpty())
         {
@@ -804,11 +804,11 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      *
      * @param c the layout object to copy
      */
-    private void copyFrom(PropertiesConfigurationLayout c)
+    private void copyFrom(final PropertiesConfigurationLayout c)
     {
-        for (String key : c.getKeys())
+        for (final String key : c.getKeys())
         {
-            PropertyLayoutData data = c.layoutData.get(key);
+            final PropertyLayoutData data = c.layoutData.get(key);
             layoutData.put(key, data.clone());
         }
 
@@ -825,7 +825,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @throws IOException if an IO error occurs
      */
     private static void writeComment(
-            PropertiesConfiguration.PropertiesWriter writer, String comment)
+            final PropertiesConfiguration.PropertiesWriter writer, final String comment)
             throws IOException
     {
         if (comment != null)
@@ -844,8 +844,8 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param commentChar determines the presence of comment characters
      * @return the canonical comment string (can be <b>null</b>)
      */
-    private static String constructCanonicalComment(String comment,
-            boolean commentChar)
+    private static String constructCanonicalComment(final String comment,
+            final boolean commentChar)
     {
         return (comment == null) ? null : trimComment(comment, commentChar);
     }
@@ -892,7 +892,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
          *
          * @param blancLines the number of properties before this property
          */
-        public void setBlancLines(int blancLines)
+        public void setBlancLines(final int blancLines)
         {
             this.blancLines = blancLines;
         }
@@ -912,7 +912,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
          *
          * @param singleLine the single line flag
          */
-        public void setSingleLine(boolean singleLine)
+        public void setSingleLine(final boolean singleLine)
         {
             this.singleLine = singleLine;
         }
@@ -923,7 +923,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
          *
          * @param s the comment to add
          */
-        public void addComment(String s)
+        public void addComment(final String s)
         {
             if (s != null)
             {
@@ -943,7 +943,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
          *
          * @param s the new comment (can be <b>null</b>)
          */
-        public void setComment(String s)
+        public void setComment(final String s)
         {
             if (s == null)
             {
@@ -981,7 +981,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
          *
          * @param separator the property separator
          */
-        public void setSeparator(String separator)
+        public void setSeparator(final String separator)
         {
             this.separator = separator;
         }
@@ -996,7 +996,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         {
             try
             {
-                PropertyLayoutData copy = (PropertyLayoutData) super.clone();
+                final PropertyLayoutData copy = (PropertyLayoutData) super.clone();
                 if (comment != null)
                 {
                     // must copy string buffer, too
@@ -1004,7 +1004,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
                 }
                 return copy;
             }
-            catch (CloneNotSupportedException cnex)
+            catch (final CloneNotSupportedException cnex)
             {
                 // This cannot happen!
                 throw new ConfigurationRuntimeException(cnex);

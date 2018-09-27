@@ -53,7 +53,7 @@ public class TestOverrideCombiner extends AbstractCombinerTest
     @Test
     public void testSimpleValues() throws ConfigurationException
     {
-        BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong number of bgcolors", 0, config
                 .getMaxIndex("gui.bgcolor"));
         assertEquals("Wrong bgcolor", "green", config.getString("gui.bgcolor"));
@@ -69,7 +69,7 @@ public class TestOverrideCombiner extends AbstractCombinerTest
     @Test
     public void testAttributes() throws ConfigurationException
     {
-        BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong value of min attribute", 1, config
                 .getInt("gui.level[@min]"));
         assertEquals("Wrong value of default attribute", 2, config
@@ -86,7 +86,7 @@ public class TestOverrideCombiner extends AbstractCombinerTest
     @Test
     public void testOverrideValues() throws ConfigurationException
     {
-        BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong user", "Admin", config
                 .getString("base.services.security.login.user"));
         assertEquals("Wrong user type", "default", config
@@ -104,7 +104,7 @@ public class TestOverrideCombiner extends AbstractCombinerTest
     @Test
     public void testListFromFirstStructure() throws ConfigurationException
     {
-        BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong number of services", 0, config
                 .getMaxIndex("net.service.url"));
         assertEquals("Wrong service", "http://service1.org", config
@@ -120,7 +120,7 @@ public class TestOverrideCombiner extends AbstractCombinerTest
     @Test
     public void testListFromSecondStructure() throws ConfigurationException
     {
-        BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong number of servers", 3, config
                 .getMaxIndex("net.server.url"));
         assertEquals("Wrong server", "http://testsvr.com", config
@@ -158,11 +158,11 @@ public class TestOverrideCombiner extends AbstractCombinerTest
      * @param config the config
      * @return the node for the table element
      */
-    private ImmutableNode checkTable(BaseHierarchicalConfiguration config)
+    private ImmutableNode checkTable(final BaseHierarchicalConfiguration config)
     {
         assertEquals("Wrong number of tables", 0, config
                 .getMaxIndex("database.tables.table"));
-        HierarchicalConfiguration<ImmutableNode> c = config
+        final HierarchicalConfiguration<ImmutableNode> c = config
                 .configurationAt("database.tables.table");
         assertEquals("Wrong table name", "documents", c.getString("name"));
         assertEquals("Wrong number of fields", 2, c
@@ -170,8 +170,8 @@ public class TestOverrideCombiner extends AbstractCombinerTest
         assertEquals("Wrong field", "docname", c
                 .getString("fields.field(1).name"));
 
-        NodeHandler<ImmutableNode> nodeHandler = config.getNodeModel().getNodeHandler();
-        List<QueryResult<ImmutableNode>> nds =
+        final NodeHandler<ImmutableNode> nodeHandler = config.getNodeModel().getNodeHandler();
+        final List<QueryResult<ImmutableNode>> nds =
                 config.getExpressionEngine().query(nodeHandler.getRootNode(),
                         "database.tables.table",
                         nodeHandler);
@@ -187,12 +187,12 @@ public class TestOverrideCombiner extends AbstractCombinerTest
     @Test
     public void testCombineProperties()
     {
-        PropertiesConfiguration c1 = new PropertiesConfiguration();
+        final PropertiesConfiguration c1 = new PropertiesConfiguration();
         c1.addProperty("x.y.simpleCase", false);
         c1.addProperty("x.y.between", false);
         c1.addProperty("x.y.isDistinctFrom",false);
         c1.addProperty("x.y",false);
-        PropertiesConfiguration c2 = new PropertiesConfiguration();
+        final PropertiesConfiguration c2 = new PropertiesConfiguration();
         c2.addProperty("x.y", true);
         c2.addProperty("x.y.between",true);
         c2.addProperty("x.y.comparison",true);
@@ -200,7 +200,7 @@ public class TestOverrideCombiner extends AbstractCombinerTest
         c2.addProperty("x.y.isDistinctFrom",true);
         c2.addProperty("x.y.simpleCase", true);
 
-        CombinedConfiguration config = new CombinedConfiguration(new OverrideCombiner());
+        final CombinedConfiguration config = new CombinedConfiguration(new OverrideCombiner());
         config.addConfiguration(c1);
         config.addConfiguration(c2);
         assertFalse("Wrong value for x.y", config.getBoolean("x.y"));

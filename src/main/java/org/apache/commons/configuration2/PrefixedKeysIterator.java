@@ -51,7 +51,7 @@ class PrefixedKeysIterator implements Iterator<String>
      * @param wrappedIterator the wrapped iterator
      * @param keyPrefix the prefix of the allowed keys
      */
-    public PrefixedKeysIterator(Iterator<String> wrappedIterator, String keyPrefix)
+    public PrefixedKeysIterator(final Iterator<String> wrappedIterator, final String keyPrefix)
     {
         iterator = wrappedIterator;
         prefix = keyPrefix;
@@ -115,7 +115,7 @@ class PrefixedKeysIterator implements Iterator<String>
     {
         while (iterator.hasNext())
         {
-            String key = iterator.next();
+            final String key = iterator.next();
             if (key.startsWith(prefix + ".") || key.equals(prefix))
             {
                 nextElement = key;

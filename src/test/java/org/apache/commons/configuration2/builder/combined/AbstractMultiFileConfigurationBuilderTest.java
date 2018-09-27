@@ -49,7 +49,7 @@ public class AbstractMultiFileConfigurationBuilderTest
      *
      * @param id the ID of the managed configuration to load
      */
-    protected static void switchToConfig(String id)
+    protected static void switchToConfig(final String id)
     {
         if (id != null)
         {
@@ -73,7 +73,7 @@ public class AbstractMultiFileConfigurationBuilderTest
      * @param index the index of the configuration to be accessed (valid indices
      *        are 1-3)
      */
-    protected static void switchToConfig(int index)
+    protected static void switchToConfig(final int index)
     {
         switchToConfig("100" + index);
     }
@@ -86,7 +86,7 @@ public class AbstractMultiFileConfigurationBuilderTest
      */
     protected static ConfigurationInterpolator createInterpolator()
     {
-        ConfigurationInterpolator ci = new ConfigurationInterpolator();
+        final ConfigurationInterpolator ci = new ConfigurationInterpolator();
         ci.registerLookup(DefaultLookups.SYSTEM_PROPERTIES.getPrefix(),
                 DefaultLookups.SYSTEM_PROPERTIES.getLookup());
         return ci;
@@ -100,7 +100,7 @@ public class AbstractMultiFileConfigurationBuilderTest
      * @return the test parameters
      */
     protected static BasicBuilderParameters createTestBuilderParameters(
-            BuilderParameters managedParams)
+            final BuilderParameters managedParams)
     {
         return new MultiFileBuilderParametersImpl().setFilePattern(PATTERN)
                 .setManagedBuilderParameters(managedParams)

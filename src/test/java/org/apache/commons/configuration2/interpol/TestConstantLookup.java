@@ -55,7 +55,7 @@ public class TestConstantLookup
      * @param field the field name
      * @return the variable for looking up this field
      */
-    private String variable(String field)
+    private String variable(final String field)
     {
         return getClass().getName() + '.' + field;
     }

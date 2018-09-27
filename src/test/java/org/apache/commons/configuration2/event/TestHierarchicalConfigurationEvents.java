@@ -51,10 +51,10 @@ public class TestHierarchicalConfigurationEvents extends
     @Test
     public void testClearTreeEvent()
     {
-        BaseHierarchicalConfiguration hc = (BaseHierarchicalConfiguration) config;
-        String key = EXIST_PROPERTY.substring(0, EXIST_PROPERTY.indexOf('.'));
-        NodeHandler<ImmutableNode> nodeHandler = hc.getNodeModel().getNodeHandler();
-        Collection<QueryResult<ImmutableNode>> nodes = hc.getExpressionEngine()
+        final BaseHierarchicalConfiguration hc = (BaseHierarchicalConfiguration) config;
+        final String key = EXIST_PROPERTY.substring(0, EXIST_PROPERTY.indexOf('.'));
+        final NodeHandler<ImmutableNode> nodeHandler = hc.getNodeModel().getNodeHandler();
+        final Collection<QueryResult<ImmutableNode>> nodes = hc.getExpressionEngine()
                 .query(nodeHandler.getRootNode(), key, nodeHandler);
         hc.clearTree(key);
         listener.checkEvent(ConfigurationEvent.CLEAR_TREE, key, null,
@@ -70,8 +70,8 @@ public class TestHierarchicalConfigurationEvents extends
     @Test
     public void testAddNodesEvent()
     {
-        BaseHierarchicalConfiguration hc = (BaseHierarchicalConfiguration) config;
-        Collection<ImmutableNode> nodes = new ArrayList<>(1);
+        final BaseHierarchicalConfiguration hc = (BaseHierarchicalConfiguration) config;
+        final Collection<ImmutableNode> nodes = new ArrayList<>(1);
         nodes.add(NodeStructureHelper.createNode("a_key", TEST_PROPVALUE));
         hc.addNodes(TEST_PROPNAME, nodes);
         listener.checkEvent(ConfigurationEvent.ADD_NODES, TEST_PROPNAME,
@@ -100,7 +100,7 @@ public class TestHierarchicalConfigurationEvents extends
     @Test
     public void testSubConfigurationChangedEventConnected()
     {
-        HierarchicalConfiguration<ImmutableNode> sub =
+        final HierarchicalConfiguration<ImmutableNode> sub =
                 ((BaseHierarchicalConfiguration) config)
                         .configurationAt(EXIST_PROPERTY, true);
         sub.addProperty("newProp", "newValue");
@@ -119,7 +119,7 @@ public class TestHierarchicalConfigurationEvents extends
     @Test
     public void testSubConfigurationChangedEventNotConnected()
     {
-        HierarchicalConfiguration<ImmutableNode> sub =
+        final HierarchicalConfiguration<ImmutableNode> sub =
                 ((BaseHierarchicalConfiguration) config)
                         .configurationAt(EXIST_PROPERTY);
         sub.addProperty("newProp", "newValue");
@@ -132,13 +132,13 @@ public class TestHierarchicalConfigurationEvents extends
      * @param event the event object
      * @param before the expected before flag
      */
-    private void checkSubnodeEvent(ConfigurationEvent event, boolean before)
+    private void checkSubnodeEvent(final ConfigurationEvent event, final boolean before)
     {
         assertEquals("Wrong before flag of nesting event", before, event
                 .isBeforeUpdate());
         assertTrue("No subnode event found in value",
                 event.getPropertyValue() instanceof ConfigurationEvent);
-        ConfigurationEvent evSub = (ConfigurationEvent) event
+        final ConfigurationEvent evSub = (ConfigurationEvent) event
                 .getPropertyValue();
         assertEquals("Wrong event type",
                 ConfigurationEvent.ADD_PROPERTY, evSub.getEventType());

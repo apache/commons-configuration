@@ -49,7 +49,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
      *
      * @param conf the configuration to be parsed
      */
-    public BaseConfigurationXMLReader(Configuration conf)
+    public BaseConfigurationXMLReader(final Configuration conf)
     {
         this();
         setConfiguration(conf);
@@ -70,7 +70,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
      *
      * @param conf the configuration
      */
-    public void setConfiguration(Configuration conf)
+    public void setConfiguration(final Configuration conf)
     {
         config = conf;
     }
@@ -114,7 +114,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
          * @param value the element value
          */
         @Override
-        protected void elementStart(String name, Object value)
+        protected void elementStart(final String name, final Object value)
         {
             fireElementStart(name, null);
             if (value != null)
@@ -129,7 +129,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
          * @param name the element name
          */
         @Override
-        protected void elementEnd(String name)
+        protected void elementEnd(final String name)
         {
             fireElementEnd(name);
         }

@@ -58,10 +58,10 @@ public class TestDisabledListDelimiterHandler
      *
      * @param container the iterator to test
      */
-    private static void checkIterator(Iterable<?> container)
+    private static void checkIterator(final Iterable<?> container)
     {
-        Iterator<?> it = container.iterator();
-        for (Object o : VALUES)
+        final Iterator<?> it = container.iterator();
+        for (final Object o : VALUES)
         {
             assertEquals("Wrong value", o, it.next());
         }
@@ -101,7 +101,7 @@ public class TestDisabledListDelimiterHandler
     @Test
     public void testParseSimpleValue()
     {
-        Iterator<?> it = handler.parse(STR_VALUE).iterator();
+        final Iterator<?> it = handler.parse(STR_VALUE).iterator();
         assertEquals("Wrong value", STR_VALUE, it.next());
         assertFalse("Too many values", it.hasNext());
     }
@@ -133,8 +133,8 @@ public class TestDisabledListDelimiterHandler
     @Test
     public void testEscapeStringValueTransformer()
     {
-        ValueTransformer trans = EasyMock.createMock(ValueTransformer.class);
-        String testStr = "Some other string";
+        final ValueTransformer trans = EasyMock.createMock(ValueTransformer.class);
+        final String testStr = "Some other string";
         EasyMock.expect(trans.transformValue(testStr)).andReturn(STR_VALUE);
         EasyMock.replay(trans);
         assertEquals("Wrong escaped string", STR_VALUE,
@@ -149,7 +149,7 @@ public class TestDisabledListDelimiterHandler
     @Test
     public void testEscapeNonStringValue()
     {
-        Object value = 42;
+        final Object value = 42;
         assertEquals("Wrong escaped object", value,
                 handler.escape(value, ListDelimiterHandler.NOOP_TRANSFORMER));
     }
@@ -161,8 +161,8 @@ public class TestDisabledListDelimiterHandler
     @Test
     public void testEscapeNonStringValueTransformer()
     {
-        ValueTransformer trans = EasyMock.createMock(ValueTransformer.class);
-        Object value = 42;
+        final ValueTransformer trans = EasyMock.createMock(ValueTransformer.class);
+        final Object value = 42;
         EasyMock.expect(trans.transformValue(value)).andReturn(STR_VALUE);
         EasyMock.replay(trans);
         assertEquals("Wrong escaped object", STR_VALUE,
@@ -186,7 +186,7 @@ public class TestDisabledListDelimiterHandler
     @Test
     public void testFlattenArrayWithLimit()
     {
-        Collection<?> res = handler.flatten(VALUES, 1);
+        final Collection<?> res = handler.flatten(VALUES, 1);
         assertEquals("Wrong collection size", 1, res.size());
         assertEquals("Wrong element", VALUES[0], res.iterator().next());
     }
@@ -198,8 +198,8 @@ public class TestDisabledListDelimiterHandler
     @Test
     public void testFlattenCollectionWithLimit()
     {
-        Collection<Object> src = Arrays.asList(VALUES);
-        Collection<?> res = handler.flatten(src, 1);
+        final Collection<Object> src = Arrays.asList(VALUES);
+        final Collection<?> res = handler.flatten(src, 1);
         assertEquals("Wrong collection size", 1, res.size());
         assertEquals("Wrong element", VALUES[0], res.iterator().next());
     }
@@ -211,12 +211,12 @@ public class TestDisabledListDelimiterHandler
     @Test
     public void testFlattenCollectionWithArrayWithLimit()
     {
-        Collection<Object> src = new ArrayList<>(2);
+        final Collection<Object> src = new ArrayList<>(2);
         src.add(STR_VALUE);
         src.add(VALUES);
-        Collection<?> res = handler.flatten(src, 2);
+        final Collection<?> res = handler.flatten(src, 2);
         assertEquals("Wrong collection size", 2, res.size());
-        Iterator<?> it = res.iterator();
+        final Iterator<?> it = res.iterator();
         assertEquals("Wrong element (1)", STR_VALUE, it.next());
         assertEquals("Wrong element (2)", VALUES[0], it.next());
     }

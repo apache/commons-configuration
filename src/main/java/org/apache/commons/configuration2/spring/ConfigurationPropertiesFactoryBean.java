@@ -63,7 +63,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
     {
     }
 
-    public ConfigurationPropertiesFactoryBean(Configuration configuration)
+    public ConfigurationPropertiesFactoryBean(final Configuration configuration)
     {
         Assert.notNull(configuration, "configuration");
         this.compositeConfiguration = new CompositeConfiguration(configuration);
@@ -116,7 +116,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
 
         if (configurations != null)
         {
-            for (Configuration configuration : configurations)
+            for (final Configuration configuration : configurations)
             {
                 compositeConfiguration.addConfiguration(configuration);
             }
@@ -124,10 +124,10 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
 
         if (locations != null)
         {
-            for (Resource location : locations)
+            for (final Resource location : locations)
             {
-                URL url = location.getURL();
-                Configuration props = new Configurations().properties(url);
+                final URL url = location.getURL();
+                final Configuration props = new Configurations().properties(url);
                 compositeConfiguration.addConfiguration(props);
             }
         }
@@ -143,7 +143,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      *
      * @param configurations commons configurations objects which will be used as properties.
      */
-    public void setConfigurations(Configuration[] configurations)
+    public void setConfigurations(final Configuration[] configurations)
     {
         this.configurations = defensiveCopy(configurations);
     }
@@ -160,7 +160,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      *
      * @param locations resources of configuration files
      */
-    public void setLocations(Resource[] locations)
+    public void setLocations(final Resource[] locations)
     {
         this.locations = defensiveCopy(locations);
     }
@@ -176,7 +176,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      * @see org.apache.commons.configuration2.AbstractConfiguration#setThrowExceptionOnMissing(boolean)
      * @param throwExceptionOnMissing The new value for the property
      */
-    public void setThrowExceptionOnMissing(boolean throwExceptionOnMissing)
+    public void setThrowExceptionOnMissing(final boolean throwExceptionOnMissing)
     {
         this.throwExceptionOnMissing = throwExceptionOnMissing;
     }
@@ -194,7 +194,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      * @param <T> the type of the array
      * @return the defensive copy of the array
      */
-    private static <T> T[] defensiveCopy(T[] src)
+    private static <T> T[] defensiveCopy(final T[] src)
     {
         return (src != null) ? src.clone() : null;
     }

@@ -61,49 +61,49 @@ public class DatabaseBuilderParametersImpl extends BasicBuilderParameters
     private static final String PROP_AUTO_COMMIT = "autoCommit";
 
     @Override
-    public DatabaseBuilderParametersImpl setDataSource(DataSource src)
+    public DatabaseBuilderParametersImpl setDataSource(final DataSource src)
     {
         storeProperty(PROP_DATA_SOURCE, src);
         return this;
     }
 
     @Override
-    public DatabaseBuilderParametersImpl setTable(String tname)
+    public DatabaseBuilderParametersImpl setTable(final String tname)
     {
         storeProperty(PROP_TABLE, tname);
         return this;
     }
 
     @Override
-    public DatabaseBuilderParametersImpl setKeyColumn(String name)
+    public DatabaseBuilderParametersImpl setKeyColumn(final String name)
     {
         storeProperty(PROP_KEY_COLUMN, name);
         return this;
     }
 
     @Override
-    public DatabaseBuilderParametersImpl setValueColumn(String name)
+    public DatabaseBuilderParametersImpl setValueColumn(final String name)
     {
         storeProperty(PROP_VALUE_COLUMN, name);
         return this;
     }
 
     @Override
-    public DatabaseBuilderParametersImpl setConfigurationNameColumn(String name)
+    public DatabaseBuilderParametersImpl setConfigurationNameColumn(final String name)
     {
         storeProperty(PROP_CONFIG_NAME_COLUMN, name);
         return this;
     }
 
     @Override
-    public DatabaseBuilderParametersImpl setConfigurationName(String name)
+    public DatabaseBuilderParametersImpl setConfigurationName(final String name)
     {
         storeProperty(PROP_CONFIG_NAME, name);
         return this;
     }
 
     @Override
-    public DatabaseBuilderParametersImpl setAutoCommit(boolean f)
+    public DatabaseBuilderParametersImpl setAutoCommit(final boolean f)
     {
         storeProperty(PROP_AUTO_COMMIT, Boolean.valueOf(f));
         return this;

@@ -69,8 +69,8 @@ class ReferenceTracker
      * @param refs the references
      * @param removedRefs the removed references
      */
-    private ReferenceTracker(Map<ImmutableNode, Object> refs,
-            List<Object> removedRefs)
+    private ReferenceTracker(final Map<ImmutableNode, Object> refs,
+            final List<Object> removedRefs)
     {
         references = refs;
         removedReferences = removedRefs;
@@ -94,9 +94,9 @@ class ReferenceTracker
      * @param refs the references to be added
      * @return the new instance
      */
-    public ReferenceTracker addReferences(Map<ImmutableNode, ?> refs)
+    public ReferenceTracker addReferences(final Map<ImmutableNode, ?> refs)
     {
-        Map<ImmutableNode, Object> newRefs =
+        final Map<ImmutableNode, Object> newRefs =
                 new HashMap<>(references);
         newRefs.putAll(refs);
         return new ReferenceTracker(newRefs, removedReferences);
@@ -113,16 +113,16 @@ class ReferenceTracker
      * @return the new instance
      */
     public ReferenceTracker updateReferences(
-            Map<ImmutableNode, ImmutableNode> replacedNodes,
-            Collection<ImmutableNode> removedNodes)
+            final Map<ImmutableNode, ImmutableNode> replacedNodes,
+            final Collection<ImmutableNode> removedNodes)
     {
         if (!references.isEmpty())
         {
             Map<ImmutableNode, Object> newRefs = null;
-            for (Map.Entry<ImmutableNode, ImmutableNode> e : replacedNodes
+            for (final Map.Entry<ImmutableNode, ImmutableNode> e : replacedNodes
                     .entrySet())
             {
-                Object ref = references.get(e.getKey());
+                final Object ref = references.get(e.getKey());
                 if (ref != null)
                 {
                     if (newRefs == null)
@@ -138,9 +138,9 @@ class ReferenceTracker
             List<Object> newRemovedRefs =
                     (newRefs != null) ? new LinkedList<>(
                             removedReferences) : null;
-            for (ImmutableNode node : removedNodes)
+            for (final ImmutableNode node : removedNodes)
             {
-                Object ref = references.get(node);
+                final Object ref = references.get(node);
                 if (ref != null)
                 {
                     if (newRefs == null)
@@ -173,7 +173,7 @@ class ReferenceTracker
      * @param node the node
      * @return the reference object for this node or <b>null</b>
      */
-    public Object getReference(ImmutableNode node)
+    public Object getReference(final ImmutableNode node)
     {
         return references.get(node);
     }

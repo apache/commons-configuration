@@ -53,7 +53,7 @@ public class TestAbstractConfigurationSynchronization
     public void setUp() throws Exception
     {
         // any concrete class will do
-        PropertiesConfiguration c = new PropertiesConfiguration();
+        final PropertiesConfiguration c = new PropertiesConfiguration();
         new FileHandler(c).load(ConfigurationAssert
                 .getTestFile("test.properties"));
         sync = new SynchronizerTestImpl();
@@ -230,7 +230,7 @@ public class TestAbstractConfigurationSynchronization
     @Test
     public void testSubsetSynchronized()
     {
-        AbstractConfiguration subset =
+        final AbstractConfiguration subset =
                 (AbstractConfiguration) config.subset("configuration");
         sync.verify();
         assertEquals("Wrong synchronizer for subset",
@@ -244,7 +244,7 @@ public class TestAbstractConfigurationSynchronization
      */
     private static Configuration prepareConfigurationMockForCopy()
     {
-        Configuration config2 = EasyMock.createStrictMock(Configuration.class);
+        final Configuration config2 = EasyMock.createStrictMock(Configuration.class);
         config2.lock(LockMode.READ);
         EasyMock.expect(config2.getKeys()).andReturn(
                 Collections.<String> emptySet().iterator());
@@ -259,7 +259,7 @@ public class TestAbstractConfigurationSynchronization
     @Test
     public void testAppendSynchronized()
     {
-        Configuration config2 = prepareConfigurationMockForCopy();
+        final Configuration config2 = prepareConfigurationMockForCopy();
         config.append(config2);
         EasyMock.verify(config2);
     }
@@ -270,7 +270,7 @@ public class TestAbstractConfigurationSynchronization
     @Test
     public void testCopySynchronized()
     {
-        Configuration config2 = prepareConfigurationMockForCopy();
+        final Configuration config2 = prepareConfigurationMockForCopy();
         config.copy(config2);
         EasyMock.verify(config2);
     }

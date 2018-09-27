@@ -60,7 +60,7 @@ public class TestStrictConfigurationComparator
             comparator.compare(configuration, configuration));
 
         // Create the second configuration
-        Configuration other = new BaseConfiguration();
+        final Configuration other = new BaseConfiguration();
         assertFalse(
             "Compare a configuration with an empty one",
             comparator.compare(configuration, other));

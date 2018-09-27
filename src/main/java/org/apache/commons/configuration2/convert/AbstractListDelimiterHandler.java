@@ -59,7 +59,7 @@ public abstract class AbstractListDelimiterHandler implements
      * </ul>
      */
     @Override
-    public Iterable<?> parse(Object value)
+    public Iterable<?> parse(final Object value)
     {
         return flatten(value);
     }
@@ -70,7 +70,7 @@ public abstract class AbstractListDelimiterHandler implements
      * Otherwise, this method delegates to {@link #splitString(String, boolean)}.
      */
     @Override
-    public Collection<String> split(String s, boolean trim)
+    public Collection<String> split(final String s, final boolean trim)
     {
         if (s == null)
         {
@@ -86,9 +86,9 @@ public abstract class AbstractListDelimiterHandler implements
      * is invoked so that additional encoding can be performed.
      */
     @Override
-    public Object escape(Object value, ValueTransformer transformer)
+    public Object escape(final Object value, final ValueTransformer transformer)
     {
-        Object escValue =
+        final Object escValue =
                 (value instanceof String) ? escapeString((String) value)
                         : value;
         return transformer.transformValue(escValue);
@@ -133,14 +133,14 @@ public abstract class AbstractListDelimiterHandler implements
      * @return a &quot;flat&quot; collection containing all primitive values of
      *         the passed in object
      */
-    Collection<?> flatten(Object value, int limit)
+    Collection<?> flatten(final Object value, final int limit)
     {
         if (value instanceof String)
         {
             return split((String) value, true);
         }
 
-        Collection<Object> result = new LinkedList<>();
+        final Collection<Object> result = new LinkedList<>();
         if (value instanceof Iterable)
         {
             flattenIterator(result, ((Iterable<?>) value).iterator(), limit);
@@ -177,7 +177,7 @@ public abstract class AbstractListDelimiterHandler implements
      * @return a &quot;flat&quot; collection containing all primitive values of
      *         the passed in object
      */
-    private Collection<?> flatten(Object value)
+    private Collection<?> flatten(final Object value)
     {
         return flatten(value, Integer.MAX_VALUE);
     }
@@ -190,7 +190,7 @@ public abstract class AbstractListDelimiterHandler implements
      * @param it the iterator to process
      * @param limit a limit for the number of elements to extract
      */
-    private void flattenIterator(Collection<Object> target, Iterator<?> it, int limit)
+    private void flattenIterator(final Collection<Object> target, final Iterator<?> it, final int limit)
     {
         int size = target.size();
         while (size < limit && it.hasNext())

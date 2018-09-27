@@ -78,7 +78,7 @@ public class TestXMLPropertyListConfiguration
      * @param file the test file to be loaded
      * @throws ConfigurationException if an error occurs
      */
-    private static void load(XMLPropertyListConfiguration c, File file)
+    private static void load(final XMLPropertyListConfiguration c, final File file)
             throws ConfigurationException
     {
         new FileHandler(c).load(file);
@@ -90,7 +90,7 @@ public class TestXMLPropertyListConfiguration
      * @param file the target file
      * @throws ConfigurationException if an error occurs
      */
-    private void save(File file) throws ConfigurationException
+    private void save(final File file) throws ConfigurationException
     {
         new FileHandler(config).save(file);
     }
@@ -131,7 +131,7 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testDate() throws Exception
     {
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.clear();
         calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
         calendar.set(2005, Calendar.JANUARY, 1, 12, 0, 0);
@@ -147,8 +147,8 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testSubset()
     {
-        Configuration subset = config.subset("dictionary");
-        Iterator<String> keys = subset.getKeys();
+        final Configuration subset = config.subset("dictionary");
+        final Iterator<String> keys = subset.getKeys();
 
         String key = keys.next();
         assertEquals("1st key", "key1", key);
@@ -168,11 +168,11 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testArray()
     {
-        Object array = config.getProperty("array");
+        final Object array = config.getProperty("array");
 
         assertNotNull("array not found", array);
         ObjectAssert.assertInstanceOf("the array element is not parsed as a List", List.class, array);
-        List<?> list = config.getList("array");
+        final List<?> list = config.getList("array");
 
         assertFalse("empty array", list.isEmpty());
         assertEquals("size", 3, list.size());
@@ -184,21 +184,21 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testNestedArray()
     {
-        String key = "nested-array";
+        final String key = "nested-array";
 
-        Object array = config.getProperty(key);
+        final Object array = config.getProperty(key);
 
         // root array
         assertNotNull("array not found", array);
         ObjectAssert.assertInstanceOf("the array element is not parsed as a List", List.class, array);
-        List<?> list = config.getList(key);
+        final List<?> list = config.getList(key);
 
         assertFalse("empty array", list.isEmpty());
         assertEquals("size", 2, list.size());
 
         // 1st array
         ObjectAssert.assertInstanceOf("the array element is not parsed as a List", List.class, list.get(0));
-        List<?> list1 = (List<?>) list.get(0);
+        final List<?> list1 = (List<?>) list.get(0);
         assertFalse("nested array 1 is empty", list1.isEmpty());
         assertEquals("size", 2, list1.size());
         assertEquals("1st element", "a", list1.get(0));
@@ -206,7 +206,7 @@ public class TestXMLPropertyListConfiguration
 
         // 2nd array
         ObjectAssert.assertInstanceOf("the array element is not parsed as a List", List.class, list.get(1));
-        List<?> list2 = (List<?>) list.get(1);
+        final List<?> list2 = (List<?>) list.get(1);
         assertFalse("nested array 2 is empty", list2.isEmpty());
         assertEquals("size", 2, list2.size());
         assertEquals("1st element", "c", list2.get(0));
@@ -216,27 +216,27 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testDictionaryArray()
     {
-        String key = "dictionary-array";
+        final String key = "dictionary-array";
 
-        Object array = config.getProperty(key);
+        final Object array = config.getProperty(key);
 
         // root array
         assertNotNull("array not found", array);
         ObjectAssert.assertInstanceOf("the array element is not parsed as a List", List.class, array);
-        List<?> list = config.getList(key);
+        final List<?> list = config.getList(key);
 
         assertFalse("empty array", list.isEmpty());
         assertEquals("size", 2, list.size());
 
         // 1st dictionary
         ObjectAssert.assertInstanceOf("the dict element is not parsed as a Configuration", Configuration.class, list.get(0));
-        Configuration conf1 = (Configuration) list.get(0);
+        final Configuration conf1 = (Configuration) list.get(0);
         assertFalse("configuration 1 is empty", conf1.isEmpty());
         assertEquals("configuration element", "bar", conf1.getProperty("foo"));
 
         // 2nd dictionary
         ObjectAssert.assertInstanceOf("the dict element is not parsed as a Configuration", Configuration.class, list.get(1));
-        Configuration conf2 = (Configuration) list.get(1);
+        final Configuration conf2 = (Configuration) list.get(1);
         assertFalse("configuration 2 is empty", conf2.isEmpty());
         assertEquals("configuration element", "value", conf2.getProperty("key"));
     }
@@ -250,7 +250,7 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testSave() throws Exception
     {
-        File savedFile = folder.newFile();
+        final File savedFile = folder.newFile();
 
         // add an array of strings to the configuration
         /*
@@ -277,36 +277,36 @@ public class TestXMLPropertyListConfiguration
         assertTrue("The saved file doesn't exist", savedFile.exists());
 
         // read the configuration and compare the properties
-        XMLPropertyListConfiguration checkConfig = new XMLPropertyListConfiguration();
+        final XMLPropertyListConfiguration checkConfig = new XMLPropertyListConfiguration();
         load(checkConfig, savedFile);
 
-        Iterator<String> it = config.getKeys();
+        final Iterator<String> it = config.getKeys();
         while (it.hasNext())
         {
-            String key = it.next();
+            final String key = it.next();
             assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
 
-            Object value = checkConfig.getProperty(key);
+            final Object value = checkConfig.getProperty(key);
             if (value instanceof byte[])
             {
-                byte[] array = (byte[]) value;
+                final byte[] array = (byte[]) value;
                 ArrayAssert.assertEquals("Value of the '" + key + "' property", (byte[]) config.getProperty(key), array);
             }
             else if (value instanceof List)
             {
-                List<?> list1 = (List<?>) config.getProperty(key);
-                List<?> list2 = (List<?>) value;
+                final List<?> list1 = (List<?>) config.getProperty(key);
+                final List<?> list2 = (List<?>) value;
 
                 assertEquals("The size of the list for the key '" + key + "' doesn't match", list1.size(), list2.size());
 
                 for (int i = 0; i < list2.size(); i++)
                 {
-                    Object value1 = list1.get(i);
-                    Object value2 = list2.get(i);
+                    final Object value1 = list1.get(i);
+                    final Object value2 = list2.get(i);
 
                     if (value1 instanceof Configuration)
                     {
-                        ConfigurationComparator comparator = new StrictConfigurationComparator();
+                        final ConfigurationComparator comparator = new StrictConfigurationComparator();
                         assertTrue("The dictionnary at index " + i + " for the key '" + key + "' doesn't match", comparator.compare((Configuration) value1, (Configuration) value2));
                     }
                     else
@@ -328,14 +328,14 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testSaveEmptyDictionary() throws Exception
     {
-        File savedFile = folder.newFile();
+        final File savedFile = folder.newFile();
 
         // save the configuration
         save(savedFile);
         assertTrue("The saved file doesn't exist", savedFile.exists());
 
         // read the configuration and compare the properties
-        XMLPropertyListConfiguration checkConfig = new XMLPropertyListConfiguration();
+        final XMLPropertyListConfiguration checkConfig = new XMLPropertyListConfiguration();
         load(checkConfig, savedFile);
 
         assertEquals(null, config.getProperty("empty-dictionary"));
@@ -349,15 +349,15 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testSetDataProperty() throws Exception
     {
-        File savedFile = folder.newFile();
-        byte[] expected = new byte[]{1, 2, 3, 4};
+        final File savedFile = folder.newFile();
+        final byte[] expected = new byte[]{1, 2, 3, 4};
         config = new XMLPropertyListConfiguration();
         config.setProperty("foo", expected);
         save(savedFile);
 
-        XMLPropertyListConfiguration config2 = new XMLPropertyListConfiguration();
+        final XMLPropertyListConfiguration config2 = new XMLPropertyListConfiguration();
         load(config2, savedFile);
-        Object array = config2.getProperty("foo");
+        final Object array = config2.getProperty("foo");
 
         assertNotNull("data not found", array);
         assertEquals("property type", byte[].class, array.getClass());
@@ -370,15 +370,15 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testAddDataProperty() throws Exception
     {
-        File savedFile = folder.newFile();
-        byte[] expected = new byte[]{1, 2, 3, 4};
+        final File savedFile = folder.newFile();
+        final byte[] expected = new byte[]{1, 2, 3, 4};
         config = new XMLPropertyListConfiguration();
         config.addProperty("foo", expected);
         save(savedFile);
 
-        XMLPropertyListConfiguration config2 = new XMLPropertyListConfiguration();
+        final XMLPropertyListConfiguration config2 = new XMLPropertyListConfiguration();
         load(config2, savedFile);
-        Object array = config2.getProperty("foo");
+        final Object array = config2.getProperty("foo");
 
         assertNotNull("data not found", array);
         assertEquals("property type", byte[].class, array.getClass());
@@ -388,8 +388,8 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testInitCopy()
     {
-        XMLPropertyListConfiguration copy = new XMLPropertyListConfiguration(config);
-        StrictConfigurationComparator comp = new StrictConfigurationComparator();
+        final XMLPropertyListConfiguration copy = new XMLPropertyListConfiguration(config);
+        final StrictConfigurationComparator comp = new StrictConfigurationComparator();
         assertTrue("Configurations are not equal", comp.compare(config, copy));
     }
 
@@ -401,7 +401,7 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testLoadNoDict() throws ConfigurationException
     {
-        XMLPropertyListConfiguration plist = new XMLPropertyListConfiguration();
+        final XMLPropertyListConfiguration plist = new XMLPropertyListConfiguration();
         load(plist, ConfigurationAssert.getTestFile("test2.plist.xml"));
         assertFalse("Configuration is empty", plist.isEmpty());
     }
@@ -414,7 +414,7 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testLoadNoDictConstr() throws ConfigurationException
     {
-        XMLPropertyListConfiguration plist = new XMLPropertyListConfiguration();
+        final XMLPropertyListConfiguration plist = new XMLPropertyListConfiguration();
         load(plist, ConfigurationAssert.getTestFile("test2.plist.xml"));
         assertFalse("Configuration is empty", plist.isEmpty());
     }
@@ -438,7 +438,7 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testSaveNoEncoding() throws ConfigurationException
     {
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         new FileHandler(config).save(writer);
         assertTrue("Wrong document header",
                 writer.toString().indexOf("<?xml version=\"1.0\"?>") >= 0);
@@ -450,10 +450,10 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testSaveWithEncoding() throws ConfigurationException
     {
-        String encoding = "UTF-8";
-        FileHandler handler = new FileHandler(config);
+        final String encoding = "UTF-8";
+        final FileHandler handler = new FileHandler(config);
         handler.setEncoding(encoding);
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         handler.save(writer);
         assertTrue(
                 "Encoding not found",
@@ -468,17 +468,17 @@ public class TestXMLPropertyListConfiguration
      *
      * @param expectedValues the expected values
      */
-    private void checkArrayProperty(List<?> expectedValues)
+    private void checkArrayProperty(final List<?> expectedValues)
             throws ConfigurationException
     {
-        StringWriter out = new StringWriter();
+        final StringWriter out = new StringWriter();
         new FileHandler(config).save(out);
-        StringBuilder values = new StringBuilder();
-        for (Object v : expectedValues)
+        final StringBuilder values = new StringBuilder();
+        for (final Object v : expectedValues)
         {
             values.append("<string>").append(v).append("</string>");
         }
-        String content = out.toString().replaceAll("[ \n\r]", "");
+        final String content = out.toString().replaceAll("[ \n\r]", "");
         assertThat(content, containsString(String.format(
                 "<key>array</key><array>%s</array>", values)));
     }
@@ -490,7 +490,7 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testSaveList() throws ConfigurationException
     {
-        List<String> elems =
+        final List<String> elems =
                 Arrays.asList("element1", "element2", "anotherElement");
         config = new XMLPropertyListConfiguration();
         config.addProperty("array", elems);
@@ -505,7 +505,7 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testSaveArray() throws ConfigurationException
     {
-        Object[] elems = {
+        final Object[] elems = {
                 "arrayElem1", "arrayElem2", "arrayElem3"
         };
         config = new XMLPropertyListConfiguration();
@@ -524,13 +524,13 @@ public class TestXMLPropertyListConfiguration
         config = new XMLPropertyListConfiguration();
         config.addProperty("foo", "bar");
 
-        Writer out = new FileWriter(folder.newFile());
+        final Writer out = new FileWriter(folder.newFile());
         try
         {
             config.write(out);
             fail("No exception thrown!");
         }
-        catch (ConfigurationException e)
+        catch (final ConfigurationException e)
         {
             assertThat(e.getMessage(), containsString("FileHandler"));
         }

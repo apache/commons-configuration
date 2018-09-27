@@ -37,7 +37,7 @@ import java.net.URLStreamHandler;
 public class FileURLStreamHandler extends URLStreamHandler
 {
     @Override
-    protected URLConnection openConnection(URL u) throws IOException
+    protected URLConnection openConnection(final URL u) throws IOException
     {
         final File file = new File(u.getFile());
 

@@ -46,7 +46,7 @@ public class ConfigurationLookup implements Lookup
      *        <b>null</b>)
      * @throws IllegalArgumentException if the configuration is <b>null</b>
      */
-    public ConfigurationLookup(ImmutableConfiguration config)
+    public ConfigurationLookup(final ImmutableConfiguration config)
     {
         if (config == null)
         {
@@ -72,7 +72,7 @@ public class ConfigurationLookup implements Lookup
      * that this may be a complex object, e.g. a collection or an array.
      */
     @Override
-    public Object lookup(String variable)
+    public Object lookup(final String variable)
     {
         return getConfiguration().getProperty(variable);
     }

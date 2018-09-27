@@ -94,8 +94,8 @@ final class PropertyConverter
      * @throws ConversionException if the value is not compatible with the
      *         requested type
      */
-    public static Object to(Class<?> cls, Object value,
-            DefaultConversionHandler convHandler) throws ConversionException
+    public static Object to(final Class<?> cls, final Object value,
+            final DefaultConversionHandler convHandler) throws ConversionException
     {
         if (cls.isInstance(value))
         {
@@ -215,7 +215,7 @@ final class PropertyConverter
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a boolean
      */
-    public static Boolean toBoolean(Object value) throws ConversionException
+    public static Boolean toBoolean(final Object value) throws ConversionException
     {
         if (value instanceof Boolean)
         {
@@ -223,7 +223,7 @@ final class PropertyConverter
         }
         else if (value instanceof String)
         {
-            Boolean b = BooleanUtils.toBooleanObject((String) value);
+            final Boolean b = BooleanUtils.toBooleanObject((String) value);
             if (b == null)
             {
                 throw new ConversionException("The value " + value + " can't be converted to a Boolean object");
@@ -246,9 +246,9 @@ final class PropertyConverter
      * @return the resulting {@code Character} object
      * @throws ConversionException if the conversion is not possible
      */
-    public static Character toCharacter(Object value) throws ConversionException
+    public static Character toCharacter(final Object value) throws ConversionException
     {
-        String strValue = String.valueOf(value);
+        final String strValue = String.valueOf(value);
         if (strValue.length() == 1)
         {
             return Character.valueOf(strValue.charAt(0));
@@ -266,9 +266,9 @@ final class PropertyConverter
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a byte
      */
-    public static Byte toByte(Object value) throws ConversionException
+    public static Byte toByte(final Object value) throws ConversionException
     {
-        Number n = toNumber(value, Byte.class);
+        final Number n = toNumber(value, Byte.class);
         if (n instanceof Byte)
         {
             return (Byte) n;
@@ -283,9 +283,9 @@ final class PropertyConverter
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a short
      */
-    public static Short toShort(Object value) throws ConversionException
+    public static Short toShort(final Object value) throws ConversionException
     {
-        Number n = toNumber(value, Short.class);
+        final Number n = toNumber(value, Short.class);
         if (n instanceof Short)
         {
             return (Short) n;
@@ -300,9 +300,9 @@ final class PropertyConverter
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to an integer
      */
-    public static Integer toInteger(Object value) throws ConversionException
+    public static Integer toInteger(final Object value) throws ConversionException
     {
-        Number n = toNumber(value, Integer.class);
+        final Number n = toNumber(value, Integer.class);
         if (n instanceof Integer)
         {
             return (Integer) n;
@@ -317,9 +317,9 @@ final class PropertyConverter
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a Long
      */
-    public static Long toLong(Object value) throws ConversionException
+    public static Long toLong(final Object value) throws ConversionException
     {
-        Number n = toNumber(value, Long.class);
+        final Number n = toNumber(value, Long.class);
         if (n instanceof Long)
         {
             return (Long) n;
@@ -334,9 +334,9 @@ final class PropertyConverter
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a Float
      */
-    public static Float toFloat(Object value) throws ConversionException
+    public static Float toFloat(final Object value) throws ConversionException
     {
-        Number n = toNumber(value, Float.class);
+        final Number n = toNumber(value, Float.class);
         if (n instanceof Float)
         {
             return (Float) n;
@@ -351,9 +351,9 @@ final class PropertyConverter
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a Double
      */
-    public static Double toDouble(Object value) throws ConversionException
+    public static Double toDouble(final Object value) throws ConversionException
     {
-        Number n = toNumber(value, Double.class);
+        final Number n = toNumber(value, Double.class);
         if (n instanceof Double)
         {
             return (Double) n;
@@ -368,9 +368,9 @@ final class PropertyConverter
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a BigInteger
      */
-    public static BigInteger toBigInteger(Object value) throws ConversionException
+    public static BigInteger toBigInteger(final Object value) throws ConversionException
     {
-        Number n = toNumber(value, BigInteger.class);
+        final Number n = toNumber(value, BigInteger.class);
         if (n instanceof BigInteger)
         {
             return (BigInteger) n;
@@ -385,9 +385,9 @@ final class PropertyConverter
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a BigDecimal
      */
-    public static BigDecimal toBigDecimal(Object value) throws ConversionException
+    public static BigDecimal toBigDecimal(final Object value) throws ConversionException
     {
-        Number n = toNumber(value, BigDecimal.class);
+        final Number n = toNumber(value, BigDecimal.class);
         if (n instanceof BigDecimal)
         {
             return (BigDecimal) n;
@@ -407,20 +407,20 @@ final class PropertyConverter
      * @return the converted number
      * @throws ConversionException if the object cannot be converted
      */
-    static Number toNumber(Object value, Class<?> targetClass) throws ConversionException
+    static Number toNumber(final Object value, final Class<?> targetClass) throws ConversionException
     {
         if (value instanceof Number)
         {
             return (Number) value;
         }
-        String str = value.toString();
+        final String str = value.toString();
         if (str.startsWith(HEX_PREFIX))
         {
             try
             {
                 return new BigInteger(str.substring(HEX_PREFIX.length()), HEX_RADIX);
             }
-            catch (NumberFormatException nex)
+            catch (final NumberFormatException nex)
             {
                 throw new ConversionException("Could not convert " + str
                         + " to " + targetClass.getName()
@@ -434,7 +434,7 @@ final class PropertyConverter
             {
                 return new BigInteger(str.substring(BIN_PREFIX.length()), BIN_RADIX);
             }
-            catch (NumberFormatException nex)
+            catch (final NumberFormatException nex)
             {
                 throw new ConversionException("Could not convert " + str
                         + " to " + targetClass.getName()
@@ -444,16 +444,16 @@ final class PropertyConverter
 
         try
         {
-            Constructor<?> constr = targetClass.getConstructor(CONSTR_ARGS);
+            final Constructor<?> constr = targetClass.getConstructor(CONSTR_ARGS);
             return (Number) constr.newInstance(str);
         }
-        catch (InvocationTargetException itex)
+        catch (final InvocationTargetException itex)
         {
             throw new ConversionException("Could not convert " + str
                     + " to " + targetClass.getName(), itex
                     .getTargetException());
         }
-        catch (Exception ex)
+        catch (final Exception ex)
         {
             // Treat all possible exceptions the same way
             throw new ConversionException(
@@ -470,7 +470,7 @@ final class PropertyConverter
      * @throws ConversionException thrown if the value cannot be converted to a File
      * @since 2.3
      */
-    public static File toFile(Object value) throws ConversionException
+    public static File toFile(final Object value) throws ConversionException
     {
         if (value instanceof File)
         {
@@ -498,7 +498,7 @@ final class PropertyConverter
      * @throws ConversionException thrown if the value cannot be converted to a Path
      * @since 2.3
      */
-    public static Path toPath(Object value) throws ConversionException
+    public static Path toPath(final Object value) throws ConversionException
     {
         if (value instanceof File)
         {
@@ -525,7 +525,7 @@ final class PropertyConverter
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to an URI
      */
-    public static URI toURI(Object value) throws ConversionException
+    public static URI toURI(final Object value) throws ConversionException
     {
         if (value instanceof URI)
         {
@@ -537,7 +537,7 @@ final class PropertyConverter
             {
                 return new URI((String) value);
             }
-            catch (URISyntaxException e)
+            catch (final URISyntaxException e)
             {
                 throw new ConversionException("The value " + value + " can't be converted to an URI", e);
             }
@@ -555,7 +555,7 @@ final class PropertyConverter
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to an URL
      */
-    public static URL toURL(Object value) throws ConversionException
+    public static URL toURL(final Object value) throws ConversionException
     {
         if (value instanceof URL)
         {
@@ -567,7 +567,7 @@ final class PropertyConverter
             {
                 return new URL((String) value);
             }
-            catch (MalformedURLException e)
+            catch (final MalformedURLException e)
             {
                 throw new ConversionException("The value " + value + " can't be converted to an URL", e);
             }
@@ -585,7 +585,7 @@ final class PropertyConverter
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a Pattern
      */
-    public static Pattern toPattern(Object value) throws ConversionException
+    public static Pattern toPattern(final Object value) throws ConversionException
     {
         if (value instanceof Pattern)
         {
@@ -597,7 +597,7 @@ final class PropertyConverter
             {
                 return Pattern.compile((String) value);
             }
-            catch (PatternSyntaxException e)
+            catch (final PatternSyntaxException e)
             {
                 throw new ConversionException("The value " + value + " can't be converted to a Pattern", e);
             }
@@ -615,7 +615,7 @@ final class PropertyConverter
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a Locale
      */
-    public static Locale toLocale(Object value) throws ConversionException
+    public static Locale toLocale(final Object value) throws ConversionException
     {
         if (value instanceof Locale)
         {
@@ -623,14 +623,14 @@ final class PropertyConverter
         }
         else if (value instanceof String)
         {
-            String[] elements = ((String) value).split("_");
-            int size = elements.length;
+            final String[] elements = ((String) value).split("_");
+            final int size = elements.length;
 
             if (size >= 1 && ((elements[0]).length() == 2 || (elements[0]).length() == 0))
             {
-                String language = elements[0];
-                String country = (size >= 2) ? elements[1] : "";
-                String variant = (size >= 3) ? elements[2] : "";
+                final String language = elements[0];
+                final String country = (size >= 2) ? elements[1] : "";
+                final String variant = (size >= 3) ? elements[2] : "";
 
                 return new Locale(language, country, variant);
             }
@@ -656,7 +656,7 @@ final class PropertyConverter
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a Color
      */
-    public static Color toColor(Object value) throws ConversionException
+    public static Color toColor(final Object value) throws ConversionException
     {
         if (value instanceof Color)
         {
@@ -666,10 +666,10 @@ final class PropertyConverter
         {
             String color = ((String) value).trim();
 
-            int[] components = new int[3];
+            final int[] components = new int[3];
 
             // check the size of the string
-            int minlength = components.length * 2;
+            final int minlength = components.length * 2;
             if (color.length() < minlength)
             {
                 throw new ConversionException("The value " + value + " can't be converted to a Color");
@@ -702,7 +702,7 @@ final class PropertyConverter
 
                 return new Color(components[0], components[1], components[2], alpha);
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 throw new ConversionException("The value " + value + " can't be converted to a Color", e);
             }
@@ -722,7 +722,7 @@ final class PropertyConverter
      *
      * @since 1.5
      */
-    static InetAddress toInetAddress(Object value) throws ConversionException
+    static InetAddress toInetAddress(final Object value) throws ConversionException
     {
         if (value instanceof InetAddress)
         {
@@ -734,7 +734,7 @@ final class PropertyConverter
             {
                 return InetAddress.getByName((String) value);
             }
-            catch (UnknownHostException e)
+            catch (final UnknownHostException e)
             {
                 throw new ConversionException("The value " + value + " can't be converted to a InetAddress", e);
             }
@@ -754,7 +754,7 @@ final class PropertyConverter
      *
      * @since 1.5
      */
-    static Object toInternetAddress(Object value) throws ConversionException
+    static Object toInternetAddress(final Object value) throws ConversionException
     {
         if (value.getClass().getName().equals(INTERNET_ADDRESS_CLASSNAME))
         {
@@ -764,11 +764,11 @@ final class PropertyConverter
         {
             try
             {
-                Constructor<?> ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME)
+                final Constructor<?> ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME)
                         .getConstructor(String.class);
                 return ctor.newInstance(value);
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 throw new ConversionException("The value " + value + " can't be converted to a InternetAddress", e);
             }
@@ -782,7 +782,7 @@ final class PropertyConverter
     /**
      * Calls Class.isEnum() on Java 5, returns false on older JRE.
      */
-    static boolean isEnum(Class<?> cls)
+    static boolean isEnum(final Class<?> cls)
     {
         return cls.isEnum();
     }
@@ -797,7 +797,7 @@ final class PropertyConverter
      *
      * @since 1.5
      */
-    static <E extends Enum<E>> E toEnum(Object value, Class<E> cls) throws ConversionException
+    static <E extends Enum<E>> E toEnum(final Object value, final Class<E> cls) throws ConversionException
     {
         if (value.getClass().equals(cls))
         {
@@ -809,7 +809,7 @@ final class PropertyConverter
             {
                 return Enum.valueOf(cls, (String) value);
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 throw new ConversionException("The value " + value + " can't be converted to a " + cls.getName());
             }
@@ -818,10 +818,10 @@ final class PropertyConverter
         {
             try
             {
-                E[] enumConstants = cls.getEnumConstants();
+                final E[] enumConstants = cls.getEnumConstants();
                 return enumConstants[((Number) value).intValue()];
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 throw new ConversionException("The value " + value + " can't be converted to a " + cls.getName());
             }
@@ -840,7 +840,7 @@ final class PropertyConverter
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a Calendar
      */
-    public static Date toDate(Object value, String format) throws ConversionException
+    public static Date toDate(final Object value, final String format) throws ConversionException
     {
         if (value instanceof Date)
         {
@@ -856,7 +856,7 @@ final class PropertyConverter
             {
                 return new SimpleDateFormat(format).parse((String) value);
             }
-            catch (ParseException e)
+            catch (final ParseException e)
             {
                 throw new ConversionException("The value " + value + " can't be converted to a Date", e);
             }
@@ -875,7 +875,7 @@ final class PropertyConverter
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a Calendar
      */
-    public static Calendar toCalendar(Object value, String format) throws ConversionException
+    public static Calendar toCalendar(final Object value, final String format) throws ConversionException
     {
         if (value instanceof Calendar)
         {
@@ -883,7 +883,7 @@ final class PropertyConverter
         }
         else if (value instanceof Date)
         {
-            Calendar calendar = Calendar.getInstance();
+            final Calendar calendar = Calendar.getInstance();
             calendar.setTime((Date) value);
             return calendar;
         }
@@ -891,11 +891,11 @@ final class PropertyConverter
         {
             try
             {
-                Calendar calendar = Calendar.getInstance();
+                final Calendar calendar = Calendar.getInstance();
                 calendar.setTime(new SimpleDateFormat(format).parse((String) value));
                 return calendar;
             }
-            catch (ParseException e)
+            catch (final ParseException e)
             {
                 throw new ConversionException("The value " + value + " can't be converted to a Calendar", e);
             }
@@ -916,7 +916,7 @@ final class PropertyConverter
      */
     @SuppressWarnings("unchecked")
     // conversion is safe because we know that the class is an Enum class
-    private static Object convertToEnum(Class<?> enumClass, Object value)
+    private static Object convertToEnum(final Class<?> enumClass, final Object value)
     {
         return toEnum(value, enumClass.asSubclass(Enum.class));
     }

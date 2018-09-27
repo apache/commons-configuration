@@ -39,9 +39,9 @@ class XPathContextFactory
      * @param <T> the type of the nodes to be handled
      * @return the newly created context
      */
-    public <T> JXPathContext createContext(T root, NodeHandler<T> handler)
+    public <T> JXPathContext createContext(final T root, final NodeHandler<T> handler)
     {
-        JXPathContext context =
+        final JXPathContext context =
                 JXPathContext.newContext(ConfigurationNodePointerFactory
                         .wrapNode(root, handler));
         context.setLenient(true);

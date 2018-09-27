@@ -155,7 +155,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
      * @param configuration the configuration to copy
      * @since 1.4
      */
-    public XMLPropertyListConfiguration(HierarchicalConfiguration<ImmutableNode> configuration)
+    public XMLPropertyListConfiguration(final HierarchicalConfiguration<ImmutableNode> configuration)
     {
         super(configuration);
     }
@@ -166,13 +166,13 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
      *
      * @param root the root node
      */
-    XMLPropertyListConfiguration(ImmutableNode root)
+    XMLPropertyListConfiguration(final ImmutableNode root)
     {
         super(new InMemoryNodeModel(root));
     }
 
     @Override
-    protected void setPropertyInternal(String key, Object value)
+    protected void setPropertyInternal(final String key, final Object value)
     {
         // special case for byte arrays, they must be stored as is in the configuration
         if (value instanceof byte[])
@@ -195,7 +195,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
     }
 
     @Override
-    protected void addPropertyInternal(String key, Object value)
+    protected void addPropertyInternal(final String key, final Object value)
     {
         if (value instanceof byte[] || value instanceof List)
         {
@@ -218,19 +218,19 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
      * @param locator the current {@code FileLocator}
      */
     @Override
-    public void initFileLocator(FileLocator locator)
+    public void initFileLocator(final FileLocator locator)
     {
         this.locator = locator;
     }
 
     @Override
-    public void read(Reader in) throws ConfigurationException
+    public void read(final Reader in) throws ConfigurationException
     {
         // set up the DTD validation
-        EntityResolver resolver = new EntityResolver()
+        final EntityResolver resolver = new EntityResolver()
         {
             @Override
-            public InputSource resolveEntity(String publicId, String systemId)
+            public InputSource resolveEntity(final String publicId, final String systemId)
             {
                 return new InputSource(getClass().getClassLoader()
                         .getResourceAsStream("PropertyList-1.0.dtd"));
@@ -238,13 +238,13 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         };
 
         // parse the file
-        XMLPropertyListHandler handler = new XMLPropertyListHandler();
+        final XMLPropertyListHandler handler = new XMLPropertyListHandler();
         try
         {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
+            final SAXParserFactory factory = SAXParserFactory.newInstance();
             factory.setValidating(true);
 
-            SAXParser parser = factory.newSAXParser();
+            final SAXParser parser = factory.newSAXParser();
             parser.getXMLReader().setEntityResolver(resolver);
             parser.getXMLReader().setContentHandler(handler);
             parser.getXMLReader().parse(new InputSource(in));
@@ -252,7 +252,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
             getNodeModel().mergeRoot(handler.getResultBuilder().createNode(),
                     null, null, null, this);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ConfigurationException(
                     "Unable to parse the configuration file", e);
@@ -260,7 +260,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
     }
 
     @Override
-    public void write(Writer out) throws ConfigurationException
+    public void write(final Writer out) throws ConfigurationException
     {
         if (locator == null)
         {
@@ -268,7 +268,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
                     + "initialized! Do not call write(Writer) directly,"
                     + " but use a FileHandler to save a configuration.");
         }
-        PrintWriter writer = new PrintWriter(out);
+        final PrintWriter writer = new PrintWriter(out);
 
         if (locator.getEncoding() != null)
         {
@@ -291,24 +291,24 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
     /**
      * Append a node to the writer, indented according to a specific level.
      */
-    private void printNode(PrintWriter out, int indentLevel, ImmutableNode node)
+    private void printNode(final PrintWriter out, final int indentLevel, final ImmutableNode node)
     {
-        String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
+        final String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
 
         if (node.getNodeName() != null)
         {
             out.println(padding + "<key>" + StringEscapeUtils.escapeXml10(node.getNodeName()) + "</key>");
         }
 
-        List<ImmutableNode> children = node.getChildren();
+        final List<ImmutableNode> children = node.getChildren();
         if (!children.isEmpty())
         {
             out.println(padding + "<dict>");
 
-            Iterator<ImmutableNode> it = children.iterator();
+            final Iterator<ImmutableNode> it = children.iterator();
             while (it.hasNext())
             {
-                ImmutableNode child = it.next();
+                final ImmutableNode child = it.next();
                 printNode(out, indentLevel + 1, child);
 
                 if (it.hasNext())
@@ -325,7 +325,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         }
         else
         {
-            Object value = node.getValue();
+            final Object value = node.getValue();
             printValue(out, indentLevel, value);
         }
     }
@@ -333,9 +333,9 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
     /**
      * Append a value to the writer, indented according to a specific level.
      */
-    private void printValue(PrintWriter out, int indentLevel, Object value)
+    private void printValue(final PrintWriter out, final int indentLevel, final Object value)
     {
-        String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
+        final String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
 
         if (value instanceof Date)
         {
@@ -373,7 +373,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         else if (value instanceof List)
         {
             out.println(padding + "<array>");
-            for (Object o : (List<?>) value)
+            for (final Object o : (List<?>) value)
             {
                 printValue(out, indentLevel + 1, o);
             }
@@ -383,6 +383,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         {
             // This is safe because we have created this configuration
             @SuppressWarnings("unchecked")
+            final
             HierarchicalConfiguration<ImmutableNode> config =
                     (HierarchicalConfiguration<ImmutableNode>) value;
             printNode(out, indentLevel, config.getNodeModel().getNodeHandler()
@@ -393,13 +394,13 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
             // display a flat Configuration as a dictionary
             out.println(padding + "<dict>");
 
-            ImmutableConfiguration config = (ImmutableConfiguration) value;
-            Iterator<String> it = config.getKeys();
+            final ImmutableConfiguration config = (ImmutableConfiguration) value;
+            final Iterator<String> it = config.getKeys();
             while (it.hasNext())
             {
                 // create a node for each property
-                String key = it.next();
-                ImmutableNode node =
+                final String key = it.next();
+                final ImmutableNode node =
                         new ImmutableNode.Builder().name(key)
                                 .value(config.getProperty(key)).create();
 
@@ -416,7 +417,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         else if (value instanceof Map)
         {
             // display a Map as a dictionary
-            Map<String, Object> map = transformMap((Map<?, ?>) value);
+            final Map<String, Object> map = transformMap((Map<?, ?>) value);
             printValue(out, indentLevel, new MapConfiguration(map));
         }
         else if (value instanceof byte[])
@@ -426,7 +427,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
             {
                 base64 = new String(Base64.encodeBase64((byte[]) value), DATA_ENCODING);
             }
-            catch (UnsupportedEncodingException e)
+            catch (final UnsupportedEncodingException e)
             {
                 // Cannot happen as UTF-8 is a standard encoding
                 throw new AssertionError(e);
@@ -451,10 +452,10 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
      * @param src the map to be converted
      * @return the resulting map
      */
-    private static Map<String, Object> transformMap(Map<?, ?> src)
+    private static Map<String, Object> transformMap(final Map<?, ?> src)
     {
-        Map<String, Object> dest = new HashMap<>();
-        for (Map.Entry<?, ?> e : src.entrySet())
+        final Map<String, Object> dest = new HashMap<>();
+        for (final Map.Entry<?, ?> e : src.entrySet())
         {
             if (e.getKey() instanceof String)
             {
@@ -515,7 +516,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
          */
         private PListNodeBuilder peekNE()
         {
-            PListNodeBuilder result = peek();
+            final PListNodeBuilder result = peek();
             if (result == null)
             {
                 throw new ConfigurationRuntimeException("Access to empty stack!");
@@ -538,13 +539,13 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         /**
          * Put a node on the top of the stack.
          */
-        private void push(PListNodeBuilder node)
+        private void push(final PListNodeBuilder node)
         {
             stack.add(node);
         }
 
         @Override
-        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
+        public void startElement(final String uri, final String localName, final String qName, final Attributes attributes) throws SAXException
         {
             if ("array".equals(qName))
             {
@@ -561,12 +562,12 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         }
 
         @Override
-        public void endElement(String uri, String localName, String qName) throws SAXException
+        public void endElement(final String uri, final String localName, final String qName) throws SAXException
         {
             if ("key".equals(qName))
             {
                 // create a new node, link it to its parent and push it on the stack
-                PListNodeBuilder node = new PListNodeBuilder();
+                final PListNodeBuilder node = new PListNodeBuilder();
                 node.setName(buffer.toString());
                 peekNE().addChild(node);
                 push(node);
@@ -574,15 +575,15 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
             else if ("dict".equals(qName))
             {
                 // remove the root of the XMLPropertyListConfiguration previously pushed on the stack
-                PListNodeBuilder builder = pop();
+                final PListNodeBuilder builder = pop();
                 assert builder != null : "Stack was empty!";
                 if (peek() instanceof ArrayNodeBuilder)
                 {
                     // create the configuration
-                    XMLPropertyListConfiguration config = new XMLPropertyListConfiguration(builder.createNode());
+                    final XMLPropertyListConfiguration config = new XMLPropertyListConfiguration(builder.createNode());
 
                     // add it to the ArrayNodeBuilder
-                    ArrayNodeBuilder node = (ArrayNodeBuilder) peekNE();
+                    final ArrayNodeBuilder node = (ArrayNodeBuilder) peekNE();
                     node.addValue(config);
                 }
             }
@@ -618,7 +619,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
                     {
                         peekNE().addDateValue(buffer.toString());
                     }
-                    catch (IllegalArgumentException iex)
+                    catch (final IllegalArgumentException iex)
                     {
                         getLogger().warn(
                                 "Ignoring invalid date property " + buffer);
@@ -626,7 +627,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
                 }
                 else if ("array".equals(qName))
                 {
-                    ArrayNodeBuilder array = (ArrayNodeBuilder) pop();
+                    final ArrayNodeBuilder array = (ArrayNodeBuilder) pop();
                     peekNE().addList(array);
                 }
 
@@ -642,7 +643,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         }
 
         @Override
-        public void characters(char[] ch, int start, int length) throws SAXException
+        public void characters(final char[] ch, final int start, final int length) throws SAXException
         {
             buffer.append(ch, start, length);
         }
@@ -690,7 +691,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
          *
          * @param v the value to be added
          */
-        public void addValue(Object v)
+        public void addValue(final Object v)
         {
             if (value == null)
             {
@@ -700,12 +701,13 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
             {
                 // This is safe because we create the collections ourselves
                 @SuppressWarnings("unchecked")
+                final
                 Collection<Object> collection = (Collection<Object>) value;
                 collection.add(v);
             }
             else
             {
-                List<Object> list = new ArrayList<>();
+                final List<Object> list = new ArrayList<>();
                 list.add(value);
                 list.add(v);
                 value = list;
@@ -718,7 +720,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
          * @param value the value to be added
          * @throws IllegalArgumentException if the date string cannot be parsed
          */
-        public void addDateValue(String value)
+        public void addDateValue(final String value)
         {
             try
             {
@@ -739,7 +741,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
                     }
                 }
             }
-            catch (ParseException e)
+            catch (final ParseException e)
             {
                 throw new IllegalArgumentException(String.format(
                         "'%s' cannot be parsed to a date!", value), e);
@@ -752,13 +754,13 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
          *
          * @param value the value to be added
          */
-        public void addDataValue(String value)
+        public void addDataValue(final String value)
         {
             try
             {
                 addValue(Base64.decodeBase64(value.getBytes(DATA_ENCODING)));
             }
-            catch (UnsupportedEncodingException e)
+            catch (final UnsupportedEncodingException e)
             {
                 //Cannot happen as UTF-8 is a default encoding
                 throw new AssertionError(e);
@@ -770,7 +772,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
          *
          * @param value the value to be added
          */
-        public void addIntegerValue(String value)
+        public void addIntegerValue(final String value)
         {
             addValue(new BigInteger(value));
         }
@@ -780,7 +782,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
          *
          * @param value the value to be added
          */
-        public void addRealValue(String value)
+        public void addRealValue(final String value)
         {
             addValue(new BigDecimal(value));
         }
@@ -806,7 +808,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
          *
          * @param node the node whose value will be added to the current node value
          */
-        public void addList(ArrayNodeBuilder node)
+        public void addList(final ArrayNodeBuilder node)
         {
             addValue(node.getNodeValue());
         }
@@ -816,7 +818,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
          *
          * @param nodeName the node name
          */
-        public void setName(String nodeName)
+        public void setName(final String nodeName)
         {
             name = nodeName;
         }
@@ -826,7 +828,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
          *
          * @param child the child builder to be added
          */
-        public void addChild(PListNodeBuilder child)
+        public void addChild(final PListNodeBuilder child)
         {
             childBuilders.add(child);
         }
@@ -838,9 +840,9 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
          */
         public ImmutableNode createNode()
         {
-            ImmutableNode.Builder nodeBuilder =
+            final ImmutableNode.Builder nodeBuilder =
                     new ImmutableNode.Builder(childBuilders.size());
-            for (PListNodeBuilder child : childBuilders)
+            for (final PListNodeBuilder child : childBuilders)
             {
                 nodeBuilder.addChild(child.createNode());
             }
@@ -875,7 +877,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
          * @param value the value to be added
          */
         @Override
-        public void addValue(Object value)
+        public void addValue(final Object value)
         {
             list.add(value);
         }

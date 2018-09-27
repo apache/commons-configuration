@@ -47,7 +47,7 @@ public class TestUnionCombiner extends AbstractCombinerTest
     @Test
     public void testSimpleValues() throws ConfigurationException
     {
-        BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Too few bgcolors", 1, config.getMaxIndex("gui.bgcolor"));
         assertEquals("Wrong first color", "green", config
                 .getString("gui.bgcolor(0)"));
@@ -65,7 +65,7 @@ public class TestUnionCombiner extends AbstractCombinerTest
     @Test
     public void testSimpleValuesWithAttributes() throws ConfigurationException
     {
-        BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Too few level elements", 1, config
                 .getMaxIndex("gui.level"));
         assertEquals("Wrong value of first element", 1, config
@@ -86,7 +86,7 @@ public class TestUnionCombiner extends AbstractCombinerTest
     @Test
     public void testAttributes() throws ConfigurationException
     {
-        BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong number of attributes", 0, config
                 .getMaxIndex("database.tables.table(0)[@id]"));
         assertEquals("Wrong value of attribute", 1, config
@@ -99,7 +99,7 @@ public class TestUnionCombiner extends AbstractCombinerTest
     @Test
     public void testLists() throws ConfigurationException
     {
-        BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Too few list elements", 2, config
                 .getMaxIndex("net.service.url"));
         assertEquals("Wrong first service", "http://service1.org", config
@@ -121,7 +121,7 @@ public class TestUnionCombiner extends AbstractCombinerTest
     public void testTableList() throws ConfigurationException
     {
         combiner.addListNode("table");
-        BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong name of first table", "documents", config
                 .getString("database.tables.table(0).name"));
         assertEquals("Wrong id of first table", 1, config

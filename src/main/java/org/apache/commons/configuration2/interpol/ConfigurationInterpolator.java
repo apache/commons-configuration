@@ -143,7 +143,7 @@ public class ConfigurationInterpolator
      * @since 2.0
      */
     public static ConfigurationInterpolator fromSpecification(
-            InterpolatorSpecification spec)
+            final InterpolatorSpecification spec)
     {
         if (spec == null)
         {
@@ -213,7 +213,7 @@ public class ConfigurationInterpolator
      * @throws IllegalArgumentException if either the prefix or the
      *         {@code Lookup} object is <b>null</b>
      */
-    public void registerLookup(String prefix, Lookup lookup)
+    public void registerLookup(final String prefix, final Lookup lookup)
     {
         if (prefix == null)
         {
@@ -237,7 +237,7 @@ public class ConfigurationInterpolator
      * @param lookups the map with lookups to register (may be <b>null</b>)
      * @throws IllegalArgumentException if the map contains <b>entries</b>
      */
-    public void registerLookups(Map<String, ? extends Lookup> lookups)
+    public void registerLookups(final Map<String, ? extends Lookup> lookups)
     {
         if (lookups != null)
         {
@@ -253,7 +253,7 @@ public class ConfigurationInterpolator
      * @return a flag whether for this prefix a lookup object had been
      *         registered
      */
-    public boolean deregisterLookup(String prefix)
+    public boolean deregisterLookup(final String prefix)
     {
         return prefixLookups.remove(prefix) != null;
     }
@@ -295,7 +295,7 @@ public class ConfigurationInterpolator
      * @throws IllegalArgumentException if the {@code Lookup} object is
      *         <b>null</b>
      */
-    public void addDefaultLookup(Lookup defaultLookup)
+    public void addDefaultLookup(final Lookup defaultLookup)
     {
         defaultLookups.add(defaultLookup);
     }
@@ -309,7 +309,7 @@ public class ConfigurationInterpolator
      * @throws IllegalArgumentException if the collection contains a <b>null</b>
      *         entry
      */
-    public void addDefaultLookups(Collection<? extends Lookup> lookups)
+    public void addDefaultLookups(final Collection<? extends Lookup> lookups)
     {
         if (lookups != null)
         {
@@ -325,7 +325,7 @@ public class ConfigurationInterpolator
      * @return a flag whether this {@code Lookup} object actually existed and
      *         was removed
      */
-    public boolean removeDefaultLookup(Lookup lookup)
+    public boolean removeDefaultLookup(final Lookup lookup)
     {
         return defaultLookups.remove(lookup);
     }
@@ -339,7 +339,7 @@ public class ConfigurationInterpolator
      *        object (can be <b>null</b>)
      */
     public void setParentInterpolator(
-            ConfigurationInterpolator parentInterpolator)
+            final ConfigurationInterpolator parentInterpolator)
     {
         this.parentInterpolator = parentInterpolator;
     }
@@ -372,7 +372,7 @@ public class ConfigurationInterpolator
      *
      * @param f the new value of the flag
      */
-    public void setEnableSubstitutionInVariables(boolean f)
+    public void setEnableSubstitutionInVariables(final boolean f)
     {
         substitutor.setEnableSubstitutionInVariables(f);
     }
@@ -386,14 +386,14 @@ public class ConfigurationInterpolator
      * @param value the value to be interpolated
      * @return the interpolated value
      */
-    public Object interpolate(Object value)
+    public Object interpolate(final Object value)
     {
         if (value instanceof String)
         {
-            String strValue = (String) value;
+            final String strValue = (String) value;
             if (looksLikeSingleVariable(strValue))
             {
-                Object resolvedValue = resolveSingleVariable(strValue);
+                final Object resolvedValue = resolveSingleVariable(strValue);
                 if (resolvedValue != null && !(resolvedValue instanceof String))
                 {
                     // If the value is again a string, it needs no special
@@ -422,35 +422,35 @@ public class ConfigurationInterpolator
      * @return the value of this variable or <b>null</b> if it cannot be
      * resolved
      */
-    public Object resolve(String var)
+    public Object resolve(final String var)
     {
         if (var == null)
         {
             return null;
         }
 
-        int prefixPos = var.indexOf(PREFIX_SEPARATOR);
+        final int prefixPos = var.indexOf(PREFIX_SEPARATOR);
         if (prefixPos >= 0)
         {
-            String prefix = var.substring(0, prefixPos);
-            String name = var.substring(prefixPos + 1);
-            Object value = fetchLookupForPrefix(prefix).lookup(name);
+            final String prefix = var.substring(0, prefixPos);
+            final String name = var.substring(prefixPos + 1);
+            final Object value = fetchLookupForPrefix(prefix).lookup(name);
             if (value != null)
             {
                 return value;
             }
         }
 
-        for (Lookup lookup : defaultLookups)
+        for (final Lookup lookup : defaultLookups)
         {
-            Object value = lookup.lookup(var);
+            final Object value = lookup.lookup(var);
             if (value != null)
             {
                 return value;
             }
         }
 
-        ConfigurationInterpolator parent = getParentInterpolator();
+        final ConfigurationInterpolator parent = getParentInterpolator();
         if (parent != null)
         {
             return getParentInterpolator().resolve(var);
@@ -467,7 +467,7 @@ public class ConfigurationInterpolator
      * @param prefix the prefix
      * @return the lookup object to be used for this prefix
      */
-    protected Lookup fetchLookupForPrefix(String prefix)
+    protected Lookup fetchLookupForPrefix(final String prefix)
     {
         return nullSafeLookup(prefixLookups.get(prefix));
     }
@@ -485,9 +485,9 @@ public class ConfigurationInterpolator
         return new StringSubstitutor(new StringLookup()
         {
             @Override
-            public String lookup(String key)
+            public String lookup(final String key)
             {
-                Object result = resolve(key);
+                final Object result = resolve(key);
                 return result != null ? result.toString() : null;
             }
         });
@@ -499,7 +499,7 @@ public class ConfigurationInterpolator
      * @param strValue the string to be interpolated
      * @return the resolved value or <b>null</b> if resolving failed
      */
-    private Object resolveSingleVariable(String strValue)
+    private Object resolveSingleVariable(final String strValue)
     {
         return resolve(extractVariableName(strValue));
     }
@@ -514,7 +514,7 @@ public class ConfigurationInterpolator
      * @param strValue the value to be interpolated
      * @return a flag whether this value seems to be a single variable
      */
-    private static boolean looksLikeSingleVariable(String strValue)
+    private static boolean looksLikeSingleVariable(final String strValue)
     {
         return strValue.startsWith(VAR_START) && strValue.endsWith(VAR_END);
     }
@@ -526,7 +526,7 @@ public class ConfigurationInterpolator
      * @param strValue the value
      * @return the extracted variable name
      */
-    private static String extractVariableName(String strValue)
+    private static String extractVariableName(final String strValue)
     {
         return strValue.substring(VAR_START_LENGTH,
                 strValue.length() - VAR_END_LENGTH);
@@ -540,9 +540,9 @@ public class ConfigurationInterpolator
      * @return the newly created instance
      */
     private static ConfigurationInterpolator createInterpolator(
-            InterpolatorSpecification spec)
+            final InterpolatorSpecification spec)
     {
-        ConfigurationInterpolator ci = new ConfigurationInterpolator();
+        final ConfigurationInterpolator ci = new ConfigurationInterpolator();
         ci.addDefaultLookups(spec.getDefaultLookups());
         ci.registerLookups(spec.getPrefixLookups());
         ci.setParentInterpolator(spec.getParentInterpolator());
@@ -551,8 +551,8 @@ public class ConfigurationInterpolator
 
     static
     {
-        Map<String, Lookup> lookups = new HashMap<>();
-        for (DefaultLookups l : DefaultLookups.values())
+        final Map<String, Lookup> lookups = new HashMap<>();
+        for (final DefaultLookups l : DefaultLookups.values())
         {
             lookups.put(l.getPrefix(), l.getLookup());
         }

@@ -43,8 +43,8 @@ public enum NodeNameMatchers implements NodeMatcher<String>
     EQUALS
     {
         @Override
-        public <T> boolean matches(T node, NodeHandler<T> handler,
-                String criterion)
+        public <T> boolean matches(final T node, final NodeHandler<T> handler,
+                final String criterion)
         {
             return StringUtils.equals(criterion, handler.nodeName(node));
         }
@@ -57,8 +57,8 @@ public enum NodeNameMatchers implements NodeMatcher<String>
     EQUALS_IGNORE_CASE
     {
         @Override
-        public <T> boolean matches(T node, NodeHandler<T> handler,
-                String criterion)
+        public <T> boolean matches(final T node, final NodeHandler<T> handler,
+                final String criterion)
         {
             return StringUtils.equalsIgnoreCase(criterion,
                     handler.nodeName(node));

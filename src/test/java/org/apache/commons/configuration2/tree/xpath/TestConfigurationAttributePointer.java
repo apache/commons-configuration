@@ -56,9 +56,9 @@ public class TestConfigurationAttributePointer
     @Before
     public void setUp() throws Exception
     {
-        ImmutableNode.Builder ndBuilder = new ImmutableNode.Builder();
+        final ImmutableNode.Builder ndBuilder = new ImmutableNode.Builder();
         ndBuilder.name("parent").addAttribute(ATTR_NAME, ATTR_VALUE);
-        ImmutableNode nd = ndBuilder.create();
+        final ImmutableNode nd = ndBuilder.create();
         parent =
                 new ConfigurationNodePointer<>(nd, Locale.ENGLISH,
                         new InMemoryNodeModel(nd).getNodeHandler());
@@ -92,9 +92,9 @@ public class TestConfigurationAttributePointer
     @Test
     public void testGetImmediateNode()
     {
-        Object node = pointer.getImmediateNode();
+        final Object node = pointer.getImmediateNode();
         assertTrue("Wrong node class", node instanceof QueryResult);
-        QueryResult<?> proxy = (QueryResult<?>) node;
+        final QueryResult<?> proxy = (QueryResult<?>) node;
         assertTrue("No attribute result", proxy.isAttributeResult());
         assertEquals("Wrong parent node", parent.getConfigurationNode(),
                 proxy.getNode());
@@ -117,7 +117,7 @@ public class TestConfigurationAttributePointer
     @Test
     public void testGetName()
     {
-        QName name = pointer.getName();
+        final QName name = pointer.getName();
         assertEquals("Wrong name", ATTR_NAME, name.getName());
         assertNull("Prefix not null", name.getPrefix());
     }

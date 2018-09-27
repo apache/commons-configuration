@@ -104,7 +104,7 @@ public class DatabaseConfigurationTestHelper
      *
      * @param autoCommit the auto-commit mode
      */
-    public void setAutoCommit(boolean autoCommit)
+    public void setAutoCommit(final boolean autoCommit)
     {
         this.autoCommit = autoCommit;
     }
@@ -118,7 +118,7 @@ public class DatabaseConfigurationTestHelper
      */
     public void setUp() throws Exception
     {
-        File script = ConfigurationAssert.getTestFile("testdb.script");
+        final File script = ConfigurationAssert.getTestFile("testdb.script");
         hsqlDB = new HsqlDB(DATABASE_URL, DATABASE_DRIVER, script.getAbsolutePath());
     }
 
@@ -157,7 +157,7 @@ public class DatabaseConfigurationTestHelper
      *        for the default name
      * @return the parameters object
      */
-    public DatabaseBuilderParameters setUpMultiParameters(String configName)
+    public DatabaseBuilderParameters setUpMultiParameters(final String configName)
     {
         return setUpDefaultParameters()
                 .setTable(TABLE_MULTI)
@@ -176,8 +176,8 @@ public class DatabaseConfigurationTestHelper
      * @return the newly created configuration instance
      * @throws ConfigurationException if an error occurs
      */
-    public <T extends DatabaseConfiguration> T createConfig(Class<T> configCls,
-            DatabaseBuilderParameters params) throws ConfigurationException
+    public <T extends DatabaseConfiguration> T createConfig(final Class<T> configCls,
+            final DatabaseBuilderParameters params) throws ConfigurationException
     {
         return new BasicConfigurationBuilder<>(configCls).configure(params)
                 .getConfiguration();
@@ -192,7 +192,7 @@ public class DatabaseConfigurationTestHelper
      * @return the newly created configuration instance
      * @throws ConfigurationException if an error occurs
      */
-    public <T extends DatabaseConfiguration> T setUpConfig(Class<T> configCls)
+    public <T extends DatabaseConfiguration> T setUpConfig(final Class<T> configCls)
             throws ConfigurationException
     {
         return createConfig(configCls, setUpDefaultParameters());
@@ -221,7 +221,7 @@ public class DatabaseConfigurationTestHelper
      * @throws ConfigurationException if an error occurs
      */
     public <T extends DatabaseConfiguration> T setUpMultiConfig(
-            Class<T> configCls, String configName)
+            final Class<T> configCls, final String configName)
             throws ConfigurationException
     {
         return createConfig(configCls, setUpMultiParameters(configName));
@@ -253,7 +253,7 @@ public class DatabaseConfigurationTestHelper
             {
                 datasource = setUpDataSource();
             }
-            catch (Exception ex)
+            catch (final Exception ex)
             {
                 throw new ConfigurationRuntimeException(
                         "Could not create data source", ex);
@@ -271,7 +271,7 @@ public class DatabaseConfigurationTestHelper
      */
     private DataSource setUpDataSource() throws Exception
     {
-        BasicDataSource ds = new BasicDataSource();
+        final BasicDataSource ds = new BasicDataSource();
         ds.setDriverClassName(DATABASE_DRIVER);
         ds.setUrl(DATABASE_URL);
         ds.setUsername(DATABASE_USERNAME);
@@ -279,9 +279,9 @@ public class DatabaseConfigurationTestHelper
         ds.setDefaultAutoCommit(!isAutoCommit());
 
         // prepare the database
-        Connection conn = ds.getConnection();
-        IDatabaseConnection connection = new DatabaseConnection(conn);
-        IDataSet dataSet = new XmlDataSet(new FileInputStream(
+        final Connection conn = ds.getConnection();
+        final IDatabaseConnection connection = new DatabaseConnection(conn);
+        final IDataSet dataSet = new XmlDataSet(new FileInputStream(
                 ConfigurationAssert.getTestFile("dataset.xml")));
 
         try

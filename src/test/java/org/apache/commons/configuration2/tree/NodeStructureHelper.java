@@ -135,7 +135,7 @@ public class NodeStructureHelper
      * @param idx the index
      * @return the name of this author
      */
-    public static String author(int idx)
+    public static String author(final int idx)
     {
         return AUTHORS[idx];
     }
@@ -146,7 +146,7 @@ public class NodeStructureHelper
      * @param authorIdx the author index
      * @return the number of works of this author
      */
-    public static int worksLength(int authorIdx)
+    public static int worksLength(final int authorIdx)
     {
         return WORKS[authorIdx].length;
     }
@@ -158,7 +158,7 @@ public class NodeStructureHelper
      * @param idx the index of the work
      * @return the desired work
      */
-    public static String work(int authorIdx, int idx)
+    public static String work(final int authorIdx, final int idx)
     {
         return WORKS[authorIdx][idx];
     }
@@ -170,7 +170,7 @@ public class NodeStructureHelper
      * @param workIdx the index of the work
      * @return the number of personae in this work
      */
-    public static int personaeLength(int authorIdx, int workIdx)
+    public static int personaeLength(final int authorIdx, final int workIdx)
     {
         return PERSONAE[authorIdx][workIdx].length;
     }
@@ -183,7 +183,7 @@ public class NodeStructureHelper
      * @param personaIdx the index of the persona
      * @return the name of this persona
      */
-    public static String persona(int authorIdx, int workIdx, int personaIdx)
+    public static String persona(final int authorIdx, final int workIdx, final int personaIdx)
     {
         return PERSONAE[authorIdx][workIdx][personaIdx];
     }
@@ -204,7 +204,7 @@ public class NodeStructureHelper
      * @param idx the index of the table
      * @return the name of the test table with this index
      */
-    public static String table(int idx)
+    public static String table(final int idx)
     {
         return TABLES[idx];
     }
@@ -215,7 +215,7 @@ public class NodeStructureHelper
      * @param tabIdx the index of the table
      * @return the number of fields in this table
      */
-    public static int fieldsLength(int tabIdx)
+    public static int fieldsLength(final int tabIdx)
     {
         return FIELDS[tabIdx].length;
     }
@@ -227,7 +227,7 @@ public class NodeStructureHelper
      * @param fldIdx the index of the field
      * @return the name of this field
      */
-    public static String field(int tabIdx, int fldIdx)
+    public static String field(final int tabIdx, final int fldIdx)
     {
         return FIELDS[tabIdx][fldIdx];
     }
@@ -240,9 +240,9 @@ public class NodeStructureHelper
      * @param component the component to be added
      * @return the resulting path
      */
-    public static String appendPath(String path, String component)
+    public static String appendPath(final String path, final String component)
     {
-        StringBuilder buf =
+        final StringBuilder buf =
                 new StringBuilder(StringUtils.length(path)
                         + StringUtils.length(component) + 1);
         buf.append(path).append(PATH_SEPARATOR).append(component);
@@ -260,9 +260,9 @@ public class NodeStructureHelper
      * @return the node with this key
      * @throws NoSuchElementException if the key cannot be resolved
      */
-    public static ImmutableNode nodeForKey(ImmutableNode root, String key)
+    public static ImmutableNode nodeForKey(final ImmutableNode root, final String key)
     {
-        String[] components = key.split(PATH_SEPARATOR);
+        final String[] components = key.split(PATH_SEPARATOR);
         return findNode(root, components, 0);
     }
 
@@ -277,7 +277,7 @@ public class NodeStructureHelper
      * @return the found target node
      * @throws NoSuchElementException if the desired node cannot be found
      */
-    public static ImmutableNode nodeForKey(InMemoryNodeModel model, String key)
+    public static ImmutableNode nodeForKey(final InMemoryNodeModel model, final String key)
     {
         return nodeForKey(model.getRootNode(), key);
     }
@@ -293,8 +293,8 @@ public class NodeStructureHelper
      * @return the found target node
      * @throws NoSuchElementException if the desired node cannot be found
      */
-    public static ImmutableNode nodeForKey(NodeHandler<ImmutableNode> handler,
-            String key)
+    public static ImmutableNode nodeForKey(final NodeHandler<ImmutableNode> handler,
+            final String key)
     {
         return nodeForKey(handler.getRootNode(), key);
     }
@@ -306,7 +306,7 @@ public class NodeStructureHelper
      * @param path an array with the expected node names on the path
      * @return the resulting path as string
      */
-    public static String nodePath(String... path)
+    public static String nodePath(final String... path)
     {
         return StringUtils.join(path, PATH_SEPARATOR);
     }
@@ -318,7 +318,7 @@ public class NodeStructureHelper
      * @param path an array with the expected node names on the path
      * @return the resulting path as string
      */
-    public static String nodePathWithEndNode(String endNode, String... path)
+    public static String nodePathWithEndNode(final String endNode, final String... path)
     {
         return nodePath(path) + PATH_SEPARATOR + endNode;
     }
@@ -330,7 +330,7 @@ public class NodeStructureHelper
      * @param value the node's value
      * @return the new node
      */
-    public static ImmutableNode createNode(String name, Object value)
+    public static ImmutableNode createNode(final String name, final Object value)
     {
         return new ImmutableNode.Builder().name(name).value(value).create();
     }
@@ -343,9 +343,9 @@ public class NodeStructureHelper
      * @param name the name of the field
      * @return the field node
      */
-    public static ImmutableNode createFieldNode(String name)
+    public static ImmutableNode createFieldNode(final String name)
     {
-        ImmutableNode.Builder fldBuilder = new ImmutableNode.Builder(1);
+        final ImmutableNode.Builder fldBuilder = new ImmutableNode.Builder(1);
         fldBuilder.addChild(createNode("name", name));
         return fldBuilder.name("field").create();
     }
@@ -358,6 +358,7 @@ public class NodeStructureHelper
     public static NodeKeyResolver<ImmutableNode> createResolverMock()
     {
         @SuppressWarnings("unchecked")
+        final
         NodeKeyResolver<ImmutableNode> mock =
                 EasyMock.createMock(NodeKeyResolver.class);
         return mock;
@@ -371,7 +372,7 @@ public class NodeStructureHelper
      */
     @SuppressWarnings("unchecked")
     public static void expectResolveKeyForQueries(
-            NodeKeyResolver<ImmutableNode> resolver)
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         EasyMock.expect(
                 resolver.resolveKey(EasyMock.anyObject(ImmutableNode.class),
@@ -382,10 +383,10 @@ public class NodeStructureHelper
                     @Override
                     public List<QueryResult<ImmutableNode>> answer()
                             throws Throwable {
-                        ImmutableNode root =
+                        final ImmutableNode root =
                                 (ImmutableNode) EasyMock.getCurrentArguments()[0];
-                        String key = (String) EasyMock.getCurrentArguments()[1];
-                        NodeHandler<ImmutableNode> handler =
+                        final String key = (String) EasyMock.getCurrentArguments()[1];
+                        final NodeHandler<ImmutableNode> handler =
                                 (NodeHandler<ImmutableNode>) EasyMock
                                         .getCurrentArguments()[2];
                         return DefaultExpressionEngine.INSTANCE.query(root,
@@ -401,7 +402,7 @@ public class NodeStructureHelper
      * @param resolver the {@code NodeKeyResolver} mock
      */
     public static void expectResolveAddKeys(
-            NodeKeyResolver<ImmutableNode> resolver)
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         EasyMock.expect(
                 resolver.resolveAddKey(EasyMock.anyObject(ImmutableNode.class),
@@ -410,10 +411,10 @@ public class NodeStructureHelper
                 .andAnswer(new IAnswer<NodeAddData<ImmutableNode>>() {
                     @Override
                     public NodeAddData<ImmutableNode> answer() throws Throwable {
-                        ImmutableNode root =
+                        final ImmutableNode root =
                                 (ImmutableNode) EasyMock.getCurrentArguments()[0];
-                        String key = (String) EasyMock.getCurrentArguments()[1];
-                        TreeData handler =
+                        final String key = (String) EasyMock.getCurrentArguments()[1];
+                        final TreeData handler =
                                 (TreeData) EasyMock.getCurrentArguments()[2];
                         return DefaultExpressionEngine.INSTANCE.prepareAdd(
                                 root, key, handler);
@@ -430,17 +431,17 @@ public class NodeStructureHelper
      * @param fields an array with the fields of the single tables
      * @return the resulting nodes structure
      */
-    public static ImmutableNode createTablesTree(String[] tables,
-                                                 String[][] fields)
+    public static ImmutableNode createTablesTree(final String[] tables,
+                                                 final String[][] fields)
     {
-        ImmutableNode.Builder bldTables =
+        final ImmutableNode.Builder bldTables =
                 new ImmutableNode.Builder(tables.length);
         bldTables.name("tables");
         for (int i = 0; i < tables.length; i++)
         {
-            ImmutableNode.Builder bldTable = new ImmutableNode.Builder(2);
+            final ImmutableNode.Builder bldTable = new ImmutableNode.Builder(2);
             bldTable.addChild(createNode("name", tables[i]));
-            ImmutableNode.Builder bldFields =
+            final ImmutableNode.Builder bldFields =
                     new ImmutableNode.Builder(fields[i].length);
             bldFields.name("fields");
 
@@ -473,7 +474,7 @@ public class NodeStructureHelper
      */
     public static String[][] getClonedFields()
     {
-        String[][] fieldNamesNew = new String[FIELDS.length][];
+        final String[][] fieldNamesNew = new String[FIELDS.length][];
         for (int i = 0; i < FIELDS.length; i++)
         {
             fieldNamesNew[i] = FIELDS[i].clone();
@@ -490,17 +491,17 @@ public class NodeStructureHelper
      */
     private static ImmutableNode createAuthorsTree()
     {
-        ImmutableNode.Builder rootBuilder =
+        final ImmutableNode.Builder rootBuilder =
                 new ImmutableNode.Builder(AUTHORS.length);
         for (int author = 0; author < AUTHORS.length; author++)
         {
-            ImmutableNode.Builder authorBuilder = new ImmutableNode.Builder();
+            final ImmutableNode.Builder authorBuilder = new ImmutableNode.Builder();
             authorBuilder.name(AUTHORS[author]);
             for (int work = 0; work < WORKS[author].length; work++)
             {
-                ImmutableNode.Builder workBuilder = new ImmutableNode.Builder();
+                final ImmutableNode.Builder workBuilder = new ImmutableNode.Builder();
                 workBuilder.name(WORKS[author][work]);
-                for (String person : PERSONAE[author][work])
+                for (final String person : PERSONAE[author][work])
                 {
                     workBuilder.addChild(new ImmutableNode.Builder().name(
                             person).create());
@@ -522,23 +523,23 @@ public class NodeStructureHelper
      */
     private static ImmutableNode createPersonaeTree()
     {
-        ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
+        final ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
         for (int author = 0; author < AUTHORS.length; author++)
         {
             for (int work = 0; work < WORKS[author].length; work++)
             {
-                for (String person : PERSONAE[author][work])
+                for (final String person : PERSONAE[author][work])
                 {
-                    ImmutableNode orgValue =
+                    final ImmutableNode orgValue =
                             new ImmutableNode.Builder().name(ELEM_ORG_VALUE)
                                     .value("yes")
                                     .addAttribute(ATTR_TESTED, Boolean.FALSE)
                                     .create();
-                    ImmutableNode workNode =
+                    final ImmutableNode workNode =
                             new ImmutableNode.Builder(1)
                                     .name(WORKS[author][work])
                                     .addChild(orgValue).create();
-                    ImmutableNode personNode =
+                    final ImmutableNode personNode =
                             new ImmutableNode.Builder(1).name(person)
                                     .addAttribute(ATTR_AUTHOR, AUTHORS[author])
                                     .addChild(workNode).create();
@@ -576,15 +577,15 @@ public class NodeStructureHelper
      * @return the found target node
      * @throws NoSuchElementException if the desired node cannot be found
      */
-    private static ImmutableNode findNode(ImmutableNode parent,
-            String[] components, int currentIdx)
+    private static ImmutableNode findNode(final ImmutableNode parent,
+            final String[] components, final int currentIdx)
     {
         if (currentIdx >= components.length)
         {
             return parent;
         }
 
-        Matcher m = PAT_KEY_WITH_INDEX.matcher(components[currentIdx]);
+        final Matcher m = PAT_KEY_WITH_INDEX.matcher(components[currentIdx]);
         String childName;
         int childIndex;
         if (m.matches())
@@ -599,7 +600,7 @@ public class NodeStructureHelper
         }
 
         int foundIdx = 0;
-        for (ImmutableNode node : parent.getChildren())
+        for (final ImmutableNode node : parent.getChildren())
         {
             if (childName.equals(node.getNodeName()))
             {

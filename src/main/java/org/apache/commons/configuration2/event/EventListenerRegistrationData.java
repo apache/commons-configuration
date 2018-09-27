@@ -53,8 +53,8 @@ public final class EventListenerRegistrationData<T extends Event>
      * @param lstnr the event listener (must not be <b>null</b>)
      * @throws IllegalArgumentException if a required parameter is <b>null</b>
      */
-    public EventListenerRegistrationData(EventType<T> type,
-            EventListener<? super T> lstnr)
+    public EventListenerRegistrationData(final EventType<T> type,
+            final EventListener<? super T> lstnr)
     {
         if (type == null)
         {
@@ -107,7 +107,7 @@ public final class EventListenerRegistrationData<T extends Event>
      * @return a flag whether these objects are equal
      */
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(final Object obj)
     {
         if (this == obj)
         {
@@ -118,7 +118,7 @@ public final class EventListenerRegistrationData<T extends Event>
             return false;
         }
 
-        EventListenerRegistrationData<?> c =
+        final EventListenerRegistrationData<?> c =
                 (EventListenerRegistrationData<?>) obj;
         return getListener() == c.getListener()
                 && getEventType().equals(c.getEventType());

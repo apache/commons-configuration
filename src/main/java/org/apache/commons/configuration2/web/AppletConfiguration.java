@@ -41,13 +41,13 @@ public class AppletConfiguration extends BaseWebConfiguration
      *
      * @param applet the applet
      */
-    public AppletConfiguration(Applet applet)
+    public AppletConfiguration(final Applet applet)
     {
         this.applet = applet;
     }
 
     @Override
-    protected Object getPropertyInternal(String key)
+    protected Object getPropertyInternal(final String key)
     {
         return handleDelimiters(applet.getParameter(key));
     }
@@ -55,8 +55,8 @@ public class AppletConfiguration extends BaseWebConfiguration
     @Override
     protected Iterator<String> getKeysInternal()
     {
-        String[][] paramsInfo = applet.getParameterInfo();
-        String[] keys = new String[paramsInfo != null ? paramsInfo.length : 0];
+        final String[][] paramsInfo = applet.getParameterInfo();
+        final String[] keys = new String[paramsInfo != null ? paramsInfo.length : 0];
         for (int i = 0; i < keys.length; i++)
         {
             keys[i] = paramsInfo[i][0];

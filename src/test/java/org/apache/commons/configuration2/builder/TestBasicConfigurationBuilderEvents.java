@@ -44,7 +44,7 @@ public class TestBasicConfigurationBuilderEvents
     @Test
     public void testBuilderEventType()
     {
-        EventType<ConfigurationBuilderEvent> builderEventType =
+        final EventType<ConfigurationBuilderEvent> builderEventType =
                 ConfigurationBuilderEvent.ANY;
         assertEquals("Wrong super type", Event.ANY,
                 builderEventType.getSuperType());
@@ -56,7 +56,7 @@ public class TestBasicConfigurationBuilderEvents
     @Test
     public void testBuilderResetEventType()
     {
-        EventType<ConfigurationBuilderEvent> builderResetType =
+        final EventType<ConfigurationBuilderEvent> builderResetType =
                 ConfigurationBuilderEvent.RESET;
         assertEquals("Wrong super type", ConfigurationBuilderEvent.ANY,
                 builderResetType.getSuperType());
@@ -68,8 +68,8 @@ public class TestBasicConfigurationBuilderEvents
     @Test
     public void testBuilderResetEvent()
     {
-        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
-        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+        final BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        final BasicConfigurationBuilder<PropertiesConfiguration> builder =
                 new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
@@ -90,8 +90,8 @@ public class TestBasicConfigurationBuilderEvents
     @Test
     public void testRemoveEventListener()
     {
-        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
-        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+        final BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        final BasicConfigurationBuilder<PropertiesConfiguration> builder =
                 new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
@@ -110,10 +110,10 @@ public class TestBasicConfigurationBuilderEvents
     @Test
     public void testRemoveEventListenerNotExisting()
     {
-        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+        final BasicConfigurationBuilder<PropertiesConfiguration> builder =
                 new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
-        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        final BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
         builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
         assertFalse("Wrong result", builder.removeEventListener(
                 ConfigurationBuilderEvent.CONFIGURATION_REQUEST, listener));
@@ -126,7 +126,7 @@ public class TestBasicConfigurationBuilderEvents
     @Test
     public void testConfigurationRequestEventType()
     {
-        EventType<ConfigurationBuilderEvent> eventType =
+        final EventType<ConfigurationBuilderEvent> eventType =
                 ConfigurationBuilderEvent.CONFIGURATION_REQUEST;
         assertEquals("Wrong super type", ConfigurationBuilderEvent.ANY,
                 eventType.getSuperType());
@@ -138,15 +138,15 @@ public class TestBasicConfigurationBuilderEvents
     @Test
     public void testConfigurationRequestEvent() throws ConfigurationException
     {
-        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+        final BasicConfigurationBuilder<PropertiesConfiguration> builder =
                 new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         builder.getConfiguration();
-        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        final BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
         builder.addEventListener(ConfigurationBuilderEvent.ANY, listener);
 
         builder.getConfiguration();
-        ConfigurationBuilderEvent event =
+        final ConfigurationBuilderEvent event =
                 listener.nextEvent(ConfigurationBuilderEvent.CONFIGURATION_REQUEST);
         assertSame("Wrong builder", builder, event.getSource());
         listener.assertNoMoreEvents();
@@ -163,21 +163,21 @@ public class TestBasicConfigurationBuilderEvents
         final BasicConfigurationBuilder<PropertiesConfiguration> builder =
                 new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
-        PropertiesConfiguration configuration = builder.getConfiguration();
-        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        final PropertiesConfiguration configuration = builder.getConfiguration();
+        final BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
         builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
         builder.addEventListener(
                 ConfigurationBuilderEvent.CONFIGURATION_REQUEST,
                 new EventListener<ConfigurationBuilderEvent>()
                 {
                     @Override
-                    public void onEvent(ConfigurationBuilderEvent event)
+                    public void onEvent(final ConfigurationBuilderEvent event)
                     {
                         builder.resetResult();
                     }
                 });
 
-        PropertiesConfiguration configuration2 = builder.getConfiguration();
+        final PropertiesConfiguration configuration2 = builder.getConfiguration();
         assertNotSame("Configuration not reset", configuration, configuration2);
         listener.nextEvent(ConfigurationBuilderEvent.RESET);
         listener.assertNoMoreEvents();
@@ -213,15 +213,15 @@ public class TestBasicConfigurationBuilderEvents
     @Test
     public void testResultCreatedEvent() throws ConfigurationException
     {
-        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+        final BasicConfigurationBuilder<PropertiesConfiguration> builder =
                 new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
-        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        final BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
         builder.addEventListener(ConfigurationBuilderEvent.ANY, listener);
 
-        PropertiesConfiguration configuration = builder.getConfiguration();
+        final PropertiesConfiguration configuration = builder.getConfiguration();
         listener.nextEvent(ConfigurationBuilderEvent.CONFIGURATION_REQUEST);
-        ConfigurationBuilderResultCreatedEvent event =
+        final ConfigurationBuilderResultCreatedEvent event =
                 listener.nextEvent(ConfigurationBuilderResultCreatedEvent.RESULT_CREATED);
         assertSame("Wrong builder", builder, event.getSource());
         assertSame("Wrong configuration", configuration,

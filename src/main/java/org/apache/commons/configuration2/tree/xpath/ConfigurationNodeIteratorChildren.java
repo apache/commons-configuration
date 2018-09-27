@@ -53,11 +53,11 @@ class ConfigurationNodeIteratorChildren<T> extends
      * @param startsWith the first element of the iteration
      */
     public ConfigurationNodeIteratorChildren(
-            ConfigurationNodePointer<T> parent, NodeTest nodeTest,
-            boolean reverse, ConfigurationNodePointer<T> startsWith)
+            final ConfigurationNodePointer<T> parent, final NodeTest nodeTest,
+            final boolean reverse, final ConfigurationNodePointer<T> startsWith)
     {
         super(parent, reverse);
-        T root = parent.getConfigurationNode();
+        final T root = parent.getConfigurationNode();
         subNodes = createSubNodeList(root, nodeTest);
 
         if (startsWith != null)
@@ -81,7 +81,7 @@ class ConfigurationNodeIteratorChildren<T> extends
      * @return the node pointer
      */
     @Override
-    protected NodePointer createNodePointer(int position)
+    protected NodePointer createNodePointer(final int position)
     {
         return new ConfigurationNodePointer<>(getParent(), subNodes
                 .get(position), getNodeHandler());
@@ -108,7 +108,7 @@ class ConfigurationNodeIteratorChildren<T> extends
      * @param test the test object
      * @return a list with the matching nodes
      */
-    private List<T> createSubNodeList(T node, NodeTest test)
+    private List<T> createSubNodeList(final T node, final NodeTest test)
     {
         if (test == null)
         {
@@ -116,15 +116,15 @@ class ConfigurationNodeIteratorChildren<T> extends
         }
         if (test instanceof NodeNameTest)
         {
-            NodeNameTest nameTest = (NodeNameTest) test;
-            QName name = nameTest.getNodeName();
+            final NodeNameTest nameTest = (NodeNameTest) test;
+            final QName name = nameTest.getNodeName();
             return nameTest.isWildcard() ? createSubNodeListForWildcardName(
                     node, name) : createSubNodeListForName(node, name);
         }
 
         else if (test instanceof NodeTypeTest)
         {
-            NodeTypeTest typeTest = (NodeTypeTest) test;
+            final NodeTypeTest typeTest = (NodeTypeTest) test;
             if (typeTest.getNodeType() == Compiler.NODE_TYPE_NODE
                     || typeTest.getNodeType() == Compiler.NODE_TYPE_TEXT)
             {
@@ -143,11 +143,11 @@ class ConfigurationNodeIteratorChildren<T> extends
      * @param name the name to be selected
      * @return the list with selected sub nodes
      */
-    private List<T> createSubNodeListForName(T node, QName name)
+    private List<T> createSubNodeListForName(final T node, final QName name)
     {
-        String compareName = qualifiedName(name);
-        List<T> result = new ArrayList<>();
-        for (T child : getNodeHandler().getChildren(node))
+        final String compareName = qualifiedName(name);
+        final List<T> result = new ArrayList<>();
+        for (final T child : getNodeHandler().getChildren(node))
         {
             if (StringUtils.equals(compareName, getNodeHandler()
                     .nodeName(child)))
@@ -166,16 +166,16 @@ class ConfigurationNodeIteratorChildren<T> extends
      * @param name the name to be selected
      * @return the list with selected sub nodes
      */
-    private List<T> createSubNodeListForWildcardName(T node, QName name)
+    private List<T> createSubNodeListForWildcardName(final T node, final QName name)
     {
-        List<T> children = getNodeHandler().getChildren(node);
+        final List<T> children = getNodeHandler().getChildren(node);
         if (name.getPrefix() == null)
         {
             return children;
         }
-        List<T> prefixChildren = new ArrayList<>(children.size());
-        String prefix = prefixName(name.getPrefix(), null);
-        for (T child : children)
+        final List<T> prefixChildren = new ArrayList<>(children.size());
+        final String prefix = prefixName(name.getPrefix(), null);
+        for (final T child : children)
         {
             if (StringUtils.startsWith(getNodeHandler().nodeName(child),
                     prefix))
@@ -194,10 +194,10 @@ class ConfigurationNodeIteratorChildren<T> extends
      * @param startNode the start node
      * @return the start node's index
      */
-    private int findStartIndex(List<T> children, T startNode)
+    private int findStartIndex(final List<T> children, final T startNode)
     {
         int index = 0;
-        for (T child : children)
+        for (final T child : children)
         {
             if (child == startNode)
             {

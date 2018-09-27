@@ -38,7 +38,7 @@ public class TestNodeTreeWalker
      * @param name the node name to be decorated
      * @return the name with the after indicator
      */
-    private static String visitAfterName(String name)
+    private static String visitAfterName(final String name)
     {
         return "->" + name;
     }
@@ -51,6 +51,7 @@ public class TestNodeTreeWalker
     private static ConfigurationNodeVisitor<ImmutableNode> visitorMock()
     {
         @SuppressWarnings("unchecked")
+        final
         ConfigurationNodeVisitor<ImmutableNode> visitor =
                 EasyMock.createMock(ConfigurationNodeVisitor.class);
         return visitor;
@@ -64,6 +65,7 @@ public class TestNodeTreeWalker
     private static NodeHandler<ImmutableNode> handlerMock()
     {
         @SuppressWarnings("unchecked")
+        final
         NodeHandler<ImmutableNode> handler =
                 EasyMock.createMock(NodeHandler.class);
         return handler;
@@ -105,8 +107,8 @@ public class TestNodeTreeWalker
     @Test
     public void testWalkDFSNoNode()
     {
-        ConfigurationNodeVisitor<ImmutableNode> visitor = visitorMock();
-        NodeHandler<ImmutableNode> handler = handlerMock();
+        final ConfigurationNodeVisitor<ImmutableNode> visitor = visitorMock();
+        final NodeHandler<ImmutableNode> handler = handlerMock();
         EasyMock.replay(visitor, handler);
         NodeTreeWalker.INSTANCE.walkDFS(null, visitor, handler);
     }
@@ -117,8 +119,8 @@ public class TestNodeTreeWalker
     @Test
     public void testWalkDFS()
     {
-        List<String> expected = expectDFS();
-        TestVisitor visitor = new TestVisitor();
+        final List<String> expected = expectDFS();
+        final TestVisitor visitor = new TestVisitor();
         NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE,
                 visitor, createHandler());
         assertEquals("Wrong visited nodes", expected, visitor.getVisitedNodes());
@@ -131,7 +133,7 @@ public class TestNodeTreeWalker
      */
     private List<String> expectDFS()
     {
-        List<String> expected = new LinkedList<>();
+        final List<String> expected = new LinkedList<>();
         expected.add(NodeStructureHelper.ROOT_AUTHORS_TREE.getNodeName());
         for (int authorIdx = 0; authorIdx < NodeStructureHelper.authorsLength(); authorIdx++)
         {
@@ -143,7 +145,7 @@ public class TestNodeTreeWalker
                 for (int personaIdx = 0; personaIdx < NodeStructureHelper
                         .personaeLength(authorIdx, workIdx); personaIdx++)
                 {
-                    String persona =
+                    final String persona =
                             NodeStructureHelper.persona(authorIdx, workIdx,
                                     personaIdx);
                     expected.add(persona);
@@ -165,7 +167,7 @@ public class TestNodeTreeWalker
     @Test
     public void testWalkDFSTerminate()
     {
-        TestVisitor visitor = new TestVisitor();
+        final TestVisitor visitor = new TestVisitor();
         final int nodeCount = 5;
         visitor.setMaxNodeCount(nodeCount);
         NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE,
@@ -180,8 +182,8 @@ public class TestNodeTreeWalker
     @Test
     public void testWalkBFSNoNode()
     {
-        ConfigurationNodeVisitor<ImmutableNode> visitor = visitorMock();
-        NodeHandler<ImmutableNode> handler = handlerMock();
+        final ConfigurationNodeVisitor<ImmutableNode> visitor = visitorMock();
+        final NodeHandler<ImmutableNode> handler = handlerMock();
         EasyMock.replay(visitor, handler);
         NodeTreeWalker.INSTANCE.walkBFS(null, visitor, handler);
     }
@@ -192,8 +194,8 @@ public class TestNodeTreeWalker
     @Test
     public void testWalkBFS()
     {
-        List<String> expected = expectBFS();
-        TestVisitor visitor = new TestVisitor();
+        final List<String> expected = expectBFS();
+        final TestVisitor visitor = new TestVisitor();
         NodeTreeWalker.INSTANCE.walkBFS(NodeStructureHelper.ROOT_AUTHORS_TREE,
                 visitor, createHandler());
         assertEquals("Wrong visited nodes", expected, visitor.getVisitedNodes());
@@ -206,9 +208,9 @@ public class TestNodeTreeWalker
      */
     private List<String> expectBFS()
     {
-        List<String> expected = new LinkedList<>();
-        List<String> works = new LinkedList<>();
-        List<String> personae = new LinkedList<>();
+        final List<String> expected = new LinkedList<>();
+        final List<String> works = new LinkedList<>();
+        final List<String> personae = new LinkedList<>();
         expected.add(NodeStructureHelper.ROOT_AUTHORS_TREE.getNodeName());
         for (int authorIdx = 0; authorIdx < NodeStructureHelper.authorsLength(); authorIdx++)
         {
@@ -236,7 +238,7 @@ public class TestNodeTreeWalker
     @Test
     public void testWalkBFSTerminate()
     {
-        TestVisitor visitor = new TestVisitor();
+        final TestVisitor visitor = new TestVisitor();
         final int nodeCount = 9;
         visitor.setMaxNodeCount(nodeCount);
         NodeTreeWalker.INSTANCE.walkBFS(NodeStructureHelper.ROOT_AUTHORS_TREE,
@@ -286,21 +288,21 @@ public class TestNodeTreeWalker
          *
          * @param maxNodeCount the maximum number of nodes
          */
-        public void setMaxNodeCount(int maxNodeCount)
+        public void setMaxNodeCount(final int maxNodeCount)
         {
             this.maxNodeCount = maxNodeCount;
         }
 
         @Override
-        public void visitBeforeChildren(ImmutableNode node,
-                NodeHandler<ImmutableNode> handler)
+        public void visitBeforeChildren(final ImmutableNode node,
+                final NodeHandler<ImmutableNode> handler)
         {
             visitedNodes.add(handler.nodeName(node));
         }
 
         @Override
-        public void visitAfterChildren(ImmutableNode node,
-                NodeHandler<ImmutableNode> handler)
+        public void visitAfterChildren(final ImmutableNode node,
+                final NodeHandler<ImmutableNode> handler)
         {
             visitedNodes.add(visitAfterName(handler.nodeName(node)));
         }

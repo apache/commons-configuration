@@ -114,7 +114,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
             new EventListener<ConfigurationBuilderEvent>()
             {
                 @Override
-                public void onEvent(ConfigurationBuilderEvent event)
+                public void onEvent(final ConfigurationBuilderEvent event)
                 {
                     handleManagedBuilderEvent(event);
                 }
@@ -131,8 +131,8 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      *        ignored
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public MultiFileConfigurationBuilder(Class<? extends T> resCls,
-            Map<String, Object> params, boolean allowFailOnInit)
+    public MultiFileConfigurationBuilder(final Class<? extends T> resCls,
+            final Map<String, Object> params, final boolean allowFailOnInit)
     {
         super(resCls, params, allowFailOnInit);
     }
@@ -145,8 +145,8 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * @param params a map with initialization parameters
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public MultiFileConfigurationBuilder(Class<? extends T> resCls,
-            Map<String, Object> params)
+    public MultiFileConfigurationBuilder(final Class<? extends T> resCls,
+            final Map<String, Object> params)
     {
         super(resCls, params);
     }
@@ -158,7 +158,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * @param resCls the result configuration class
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public MultiFileConfigurationBuilder(Class<? extends T> resCls)
+    public MultiFileConfigurationBuilder(final Class<? extends T> resCls)
     {
         super(resCls);
     }
@@ -167,7 +167,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * {@inheritDoc} This method is overridden to adapt the return type.
      */
     @Override
-    public MultiFileConfigurationBuilder<T> configure(BuilderParameters... params)
+    public MultiFileConfigurationBuilder<T> configure(final BuilderParameters... params)
     {
         super.configure(params);
         return this;
@@ -200,14 +200,14 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
     public FileBasedConfigurationBuilder<T> getManagedBuilder()
             throws ConfigurationException
     {
-        Map<String, Object> params = getParameters();
-        MultiFileBuilderParametersImpl multiParams =
+        final Map<String, Object> params = getParameters();
+        final MultiFileBuilderParametersImpl multiParams =
                 MultiFileBuilderParametersImpl.fromParameters(params, true);
         if (multiParams.getFilePattern() == null)
         {
             throw new ConfigurationException("No file name pattern is set!");
         }
-        String fileName = fetchFileName(multiParams);
+        final String fileName = fetchFileName(multiParams);
 
         FileBasedConfigurationBuilder<T> builder =
                 getManagedBuilders().get(fileName);
@@ -216,7 +216,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
             builder =
                     createInitializedManagedBuilder(fileName,
                             createManagedBuilderParameters(params, multiParams));
-            FileBasedConfigurationBuilder<T> newBuilder =
+            final FileBasedConfigurationBuilder<T> newBuilder =
                     ConcurrentUtils.putIfAbsent(getManagedBuilders(), fileName,
                             builder);
             if (newBuilder == builder)
@@ -239,12 +239,12 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      */
     @Override
     public synchronized <E extends Event> void addEventListener(
-            EventType<E> eventType, EventListener<? super E> l)
+            final EventType<E> eventType, final EventListener<? super E> l)
     {
         super.addEventListener(eventType, l);
         if (isEventTypeForManagedBuilders(eventType))
         {
-            for (FileBasedConfigurationBuilder<T> b : getManagedBuilders()
+            for (final FileBasedConfigurationBuilder<T> b : getManagedBuilders()
                     .values())
             {
                 b.addEventListener(eventType, l);
@@ -259,12 +259,12 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      */
     @Override
     public synchronized <E extends Event> boolean removeEventListener(
-            EventType<E> eventType, EventListener<? super E> l)
+            final EventType<E> eventType, final EventListener<? super E> l)
     {
-        boolean result = super.removeEventListener(eventType, l);
+        final boolean result = super.removeEventListener(eventType, l);
         if (isEventTypeForManagedBuilders(eventType))
         {
-            for (FileBasedConfigurationBuilder<T> b : getManagedBuilders()
+            for (final FileBasedConfigurationBuilder<T> b : getManagedBuilders()
                     .values())
             {
                 b.removeEventListener(eventType, l);
@@ -281,7 +281,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
     @Override
     public synchronized void resetParameters()
     {
-        for (FileBasedConfigurationBuilder<T> b : getManagedBuilders().values())
+        for (final FileBasedConfigurationBuilder<T> b : getManagedBuilders().values())
         {
             b.removeEventListener(ConfigurationBuilderEvent.ANY,
                     managedBuilderDelegationListener);
@@ -335,7 +335,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      */
     protected ConfigurationInterpolator createInterpolator()
     {
-        InterpolatorSpecification spec =
+        final InterpolatorSpecification spec =
                 BasicBuilderParameters
                         .fetchInterpolatorSpecification(getParameters());
         return ConfigurationInterpolator.fromSpecification(spec);
@@ -351,9 +351,9 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * @return the name of the configuration file to be loaded
      */
     protected String constructFileName(
-            MultiFileBuilderParametersImpl multiParams)
+            final MultiFileBuilderParametersImpl multiParams)
     {
-        ConfigurationInterpolator ci = getInterpolator();
+        final ConfigurationInterpolator ci = getInterpolator();
         return String.valueOf(ci.interpolate(multiParams.getFilePattern()));
     }
 
@@ -372,7 +372,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * @throws ConfigurationException if an error occurs
      */
     protected FileBasedConfigurationBuilder<T> createManagedBuilder(
-            String fileName, Map<String, Object> params)
+            final String fileName, final Map<String, Object> params)
             throws ConfigurationException
     {
         return new FileBasedConfigurationBuilder<>(getResultClass(), params,
@@ -392,10 +392,10 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * @throws ConfigurationException if an error occurs
      */
     protected FileBasedConfigurationBuilder<T> createInitializedManagedBuilder(
-            String fileName, Map<String, Object> params)
+            final String fileName, final Map<String, Object> params)
             throws ConfigurationException
     {
-        FileBasedConfigurationBuilder<T> managedBuilder =
+        final FileBasedConfigurationBuilder<T> managedBuilder =
                 createManagedBuilder(fileName, params);
         managedBuilder.getFileHandler().setFileName(fileName);
         return managedBuilder;
@@ -423,7 +423,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      *
      * @param newBuilder the builder to be initialized
      */
-    private void initListeners(FileBasedConfigurationBuilder<T> newBuilder)
+    private void initListeners(final FileBasedConfigurationBuilder<T> newBuilder)
     {
         copyEventListeners(newBuilder, configurationListeners);
         newBuilder.addEventListener(ConfigurationBuilderEvent.ANY,
@@ -440,10 +440,10 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * @param multiParams the current builder parameters
      * @return the file name for a managed builder
      */
-    private String fetchFileName(MultiFileBuilderParametersImpl multiParams)
+    private String fetchFileName(final MultiFileBuilderParametersImpl multiParams)
     {
         String fileName;
-        Boolean reentrant = inInterpolation.get();
+        final Boolean reentrant = inInterpolation.get();
         if (reentrant != null && reentrant.booleanValue())
         {
             fileName = multiParams.getFilePattern();
@@ -470,7 +470,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      *
      * @param event the event received from a managed builder
      */
-    private void handleManagedBuilderEvent(ConfigurationBuilderEvent event)
+    private void handleManagedBuilderEvent(final ConfigurationBuilderEvent event)
     {
         if (ConfigurationBuilderEvent.RESET.equals(event.getEventType()))
         {
@@ -493,7 +493,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * @return the event to be propagated
      */
     private ConfigurationBuilderEvent createEventWithChangedSource(
-            ConfigurationBuilderEvent event)
+            final ConfigurationBuilderEvent event)
     {
         if (ConfigurationBuilderResultCreatedEvent.RESULT_CREATED.equals(event
                 .getEventType()))
@@ -504,6 +504,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
                             .getConfiguration());
         }
         @SuppressWarnings("unchecked")
+        final
         // This is safe due to the constructor of ConfigurationBuilderEvent
         EventType<? extends ConfigurationBuilderEvent> type =
                 (EventType<? extends ConfigurationBuilderEvent>) event
@@ -521,17 +522,17 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * @return the parameters for a new managed builder
      */
     private static Map<String, Object> createManagedBuilderParameters(
-            Map<String, Object> params,
-            MultiFileBuilderParametersImpl multiParams)
+            final Map<String, Object> params,
+            final MultiFileBuilderParametersImpl multiParams)
     {
-        Map<String, Object> newParams = new HashMap<>(params);
+        final Map<String, Object> newParams = new HashMap<>(params);
         newParams.remove(KEY_INTERPOLATOR);
-        BuilderParameters managedBuilderParameters =
+        final BuilderParameters managedBuilderParameters =
                 multiParams.getManagedBuilderParameters();
         if (managedBuilderParameters != null)
         {
             // clone parameters as they are applied to multiple builders
-            BuilderParameters copy =
+            final BuilderParameters copy =
                     (BuilderParameters) ConfigurationUtils
                             .cloneIfPossible(managedBuilderParameters);
             newParams.putAll(copy.getParameters());
@@ -549,7 +550,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * @return a flag whether this event type is of interest for managed
      *         builders
      */
-    private static boolean isEventTypeForManagedBuilders(EventType<?> eventType)
+    private static boolean isEventTypeForManagedBuilders(final EventType<?> eventType)
     {
         return !EventType
                 .isInstanceOf(eventType, ConfigurationBuilderEvent.ANY);

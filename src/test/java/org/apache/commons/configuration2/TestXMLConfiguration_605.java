@@ -39,7 +39,7 @@ public class TestXMLConfiguration_605
      *
      * @param config the configuration to be checked
      */
-    private static void checkConfiguration(Configuration config)
+    private static void checkConfiguration(final Configuration config)
     {
         assertTrue("Configuration has key key0", config.containsKey("key0"));
         assertTrue("Configuration has key key1", config.containsKey("key1"));
@@ -55,11 +55,11 @@ public class TestXMLConfiguration_605
      * @param content the XML content
      * @return the newly created configuration
      */
-    private static Configuration create(String content) throws ConfigurationException
+    private static Configuration create(final String content) throws ConfigurationException
     {
-        XMLConfiguration config = new XMLConfiguration();
+        final XMLConfiguration config = new XMLConfiguration();
         config.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
-        FileHandler handler = new FileHandler(config);
+        final FileHandler handler = new FileHandler(config);
         handler.load(new StringReader(content));
         return config;
     }
@@ -72,12 +72,12 @@ public class TestXMLConfiguration_605
      * @param delimiterHandler the list delimiter handler
      * @return the newly created configuration
      */
-    private static Configuration create(String content, ListDelimiterHandler delimiterHandler)
+    private static Configuration create(final String content, final ListDelimiterHandler delimiterHandler)
             throws ConfigurationException
     {
-        XMLConfiguration config = new XMLConfiguration();
+        final XMLConfiguration config = new XMLConfiguration();
         config.setListDelimiterHandler(delimiterHandler);
-        FileHandler handler = new FileHandler(config);
+        final FileHandler handler = new FileHandler(config);
         handler.load(new StringReader(content));
         return config;
     }
@@ -85,49 +85,49 @@ public class TestXMLConfiguration_605
     @Test
     public void testWithNoComma() throws Exception
     {
-        String source = "<configuration><key0></key0><key1></key1><key2></key2><key3></key3></configuration>";
+        final String source = "<configuration><key0></key0><key1></key1><key2></key2><key3></key3></configuration>";
         checkConfiguration(create(source));
     }
 
     @Test
     public void testWithOnlyComma() throws Exception
     {
-        String source = "<configuration><key0></key0><key1>,</key1><key2></key2><key3></key3></configuration>";
+        final String source = "<configuration><key0></key0><key1>,</key1><key2></key2><key3></key3></configuration>";
         checkConfiguration(create(source));
     }
 
     @Test
     public void testWithCommaSeparatedList() throws Exception
     {
-        String source = "<configuration><key0></key0><key1>a,b</key1><key2></key2><key3></key3></configuration>";
+        final String source = "<configuration><key0></key0><key1>a,b</key1><key2></key2><key3></key3></configuration>";
         checkConfiguration(create(source));
     }
 
     @Test
     public void testWithSeparatingWhitespace() throws Exception
     {
-        String source = "<configuration><key0></key0><key1>,</key1> <key2></key2><key3></key3></configuration>";
+        final String source = "<configuration><key0></key0><key1>,</key1> <key2></key2><key3></key3></configuration>";
         checkConfiguration(create(source));
     }
 
     @Test
     public void testWithSeparatingNonWhitespace() throws Exception
     {
-        String source = "<configuration><key0></key0><key1>,</key1>A<key2></key2><key3></key3></configuration>";
+        final String source = "<configuration><key0></key0><key1>,</key1>A<key2></key2><key3></key3></configuration>";
         checkConfiguration(create(source));
     }
 
     @Test
     public void testWithOnlyCommaWithoutDelimiterParsing() throws Exception
     {
-        String source = "<configuration><key0></key0><key1>,</key1><key2></key2><key3></key3></configuration>";
+        final String source = "<configuration><key0></key0><key1>,</key1><key2></key2><key3></key3></configuration>";
         checkConfiguration(create(source, DisabledListDelimiterHandler.INSTANCE));
     }
 
     @Test
     public void testWithOnlyCommaWithStringBuilder() throws Exception
     {
-        StringBuilder sourceBuilder = new StringBuilder("<configuration>");
+        final StringBuilder sourceBuilder = new StringBuilder("<configuration>");
         sourceBuilder.append("<key0></key0>");
         sourceBuilder.append("<key1>,</key1>");
         sourceBuilder.append("<key2></key2>");
@@ -139,7 +139,7 @@ public class TestXMLConfiguration_605
     @Test
     public void testWithOnlyCommaWithStringBuilderWithoutDelimiterParsing() throws Exception
     {
-        StringBuilder sourceBuilder = new StringBuilder("<configuration>");
+        final StringBuilder sourceBuilder = new StringBuilder("<configuration>");
         sourceBuilder.append("<key0></key0>");
         sourceBuilder.append("<key1>,</key1>");
         sourceBuilder.append("<key2></key2>");

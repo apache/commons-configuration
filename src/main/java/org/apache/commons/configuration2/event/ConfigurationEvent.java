@@ -171,9 +171,9 @@ public class ConfigurationEvent extends Event
      * @param propertyValue the value of the affected property
      * @param beforeUpdate the before update flag
      */
-    public ConfigurationEvent(Object source,
-            EventType<? extends ConfigurationEvent> type, String propertyName,
-            Object propertyValue, boolean beforeUpdate)
+    public ConfigurationEvent(final Object source,
+            final EventType<? extends ConfigurationEvent> type, final String propertyName,
+            final Object propertyValue, final boolean beforeUpdate)
     {
         super(source, type);
         this.propertyName = propertyName;

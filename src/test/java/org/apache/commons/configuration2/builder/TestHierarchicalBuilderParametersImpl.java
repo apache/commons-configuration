@@ -49,7 +49,7 @@ public class TestHierarchicalBuilderParametersImpl
     @Test
     public void testSetExpressionEngine()
     {
-        ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
+        final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
         EasyMock.replay(engine);
         assertSame("Wrong result", params, params.setExpressionEngine(engine));
         assertSame("Wrong expression engine", engine, params.getParameters()
@@ -62,11 +62,11 @@ public class TestHierarchicalBuilderParametersImpl
     @Test
     public void testBeanPropertiesAccess() throws Exception
     {
-        ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
+        final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
         BeanHelper.setProperty(params, "expressionEngine", engine);
         BeanHelper.setProperty(params, "throwExceptionOnMissing",
                 Boolean.TRUE);
-        Map<String, Object> map = params.getParameters();
+        final Map<String, Object> map = params.getParameters();
         assertSame("Wrong expression engine", engine,
                 map.get("expressionEngine"));
         assertEquals("Wrong exception flag", Boolean.TRUE,
@@ -79,16 +79,16 @@ public class TestHierarchicalBuilderParametersImpl
     @Test
     public void testInheritFrom()
     {
-        ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
-        HierarchicalBuilderParametersImpl params =
+        final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
+        final HierarchicalBuilderParametersImpl params =
                 new HierarchicalBuilderParametersImpl();
         params.setExpressionEngine(engine);
         params.setThrowExceptionOnMissing(true);
-        HierarchicalBuilderParametersImpl params2 =
+        final HierarchicalBuilderParametersImpl params2 =
                 new HierarchicalBuilderParametersImpl();
 
         params2.inheritFrom(params.getParameters());
-        Map<String, Object> parameters = params2.getParameters();
+        final Map<String, Object> parameters = params2.getParameters();
         assertEquals("Exception flag not set", Boolean.TRUE,
                 parameters.get("throwExceptionOnMissing"));
         assertEquals("Expression engine not set", engine,

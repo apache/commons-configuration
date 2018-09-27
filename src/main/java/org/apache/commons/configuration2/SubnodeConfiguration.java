@@ -123,8 +123,8 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
      * @param model the {@code TrackedNodeModel} to be used for this configuration
      * @throws IllegalArgumentException if a required argument is missing
      */
-    public SubnodeConfiguration(BaseHierarchicalConfiguration parent,
-                                TrackedNodeModel model)
+    public SubnodeConfiguration(final BaseHierarchicalConfiguration parent,
+                                final TrackedNodeModel model)
     {
         super(model);
         if (parent == null)
@@ -184,7 +184,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
     @Override
     public InMemoryNodeModel getNodeModel()
     {
-        ImmutableNode root =
+        final ImmutableNode root =
                 getParent().getNodeModel().getTrackedNode(getRootSelector());
         return new InMemoryNodeModel(root);
     }
@@ -220,7 +220,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
     @Override
     protected NodeModel<ImmutableNode> cloneNodeModel()
     {
-        InMemoryNodeModel parentModel =
+        final InMemoryNodeModel parentModel =
                 (InMemoryNodeModel) getParent().getModel();
         parentModel.trackNode(getRootSelector(), getParent());
         return new TrackedNodeModel(getParent(), getRootSelector(), true);
@@ -231,7 +231,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
      * of this configuration.
      */
     @Override
-    protected NodeSelector getSubConfigurationNodeSelector(String key)
+    protected NodeSelector getSubConfigurationNodeSelector(final String key)
     {
         return getRootSelector().subSelector(key);
     }
@@ -252,7 +252,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
      */
     @Override
     protected SubnodeConfiguration createSubConfigurationForTrackedNode(
-            NodeSelector selector, InMemoryNodeModelSupport parentModelSupport)
+            final NodeSelector selector, final InMemoryNodeModelSupport parentModelSupport)
     {
         return super.createSubConfigurationForTrackedNode(selector, getParent());
     }

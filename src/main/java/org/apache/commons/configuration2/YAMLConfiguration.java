@@ -55,53 +55,53 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration
      *
      * @param c the configuration to be copied
      */
-    public YAMLConfiguration(HierarchicalConfiguration<ImmutableNode> c)
+    public YAMLConfiguration(final HierarchicalConfiguration<ImmutableNode> c)
     {
         super(c);
     }
 
     @Override
-    public void read(Reader in) throws ConfigurationException
+    public void read(final Reader in) throws ConfigurationException
     {
         try
         {
-            Yaml yaml = new Yaml();
-            Map<String, Object> map = (Map) yaml.load(in);
+            final Yaml yaml = new Yaml();
+            final Map<String, Object> map = (Map) yaml.load(in);
             load(map);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             rethrowException(e);
         }
     }
 
-    public void read(Reader in, LoaderOptions options)
+    public void read(final Reader in, final LoaderOptions options)
             throws ConfigurationException
     {
         try
         {
-            Yaml yaml = new Yaml(options);
-            Map<String, Object> map = (Map) yaml.load(in);
+            final Yaml yaml = new Yaml(options);
+            final Map<String, Object> map = (Map) yaml.load(in);
             load(map);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             rethrowException(e);
         }
     }
 
     @Override
-    public void write(Writer out) throws ConfigurationException, IOException
+    public void write(final Writer out) throws ConfigurationException, IOException
     {
-        DumperOptions options = new DumperOptions();
+        final DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         dump(out, options);
     }
 
-    public void dump(Writer out, DumperOptions options)
+    public void dump(final Writer out, final DumperOptions options)
             throws ConfigurationException, IOException
     {
-        Yaml yaml = new Yaml(options);
+        final Yaml yaml = new Yaml(options);
         yaml.dump(constructMap(getNodeModel().getNodeHandler().getRootNode()),
                 out);
     }
@@ -113,30 +113,30 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration
      * @throws ConfigurationException if an error occurs
      */
     @Override
-    public void read(InputStream in) throws ConfigurationException
+    public void read(final InputStream in) throws ConfigurationException
     {
         try
         {
-            Yaml yaml = new Yaml();
-            Map<String, Object> map = (Map) yaml.load(in);
+            final Yaml yaml = new Yaml();
+            final Map<String, Object> map = (Map) yaml.load(in);
             load(map);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             rethrowException(e);
         }
     }
 
-    public void read(InputStream in, LoaderOptions options)
+    public void read(final InputStream in, final LoaderOptions options)
             throws ConfigurationException
     {
         try
         {
-            Yaml yaml = new Yaml(options);
-            Map<String, Object> map = (Map) yaml.load(in);
+            final Yaml yaml = new Yaml(options);
+            final Map<String, Object> map = (Map) yaml.load(in);
             load(map);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             rethrowException(e);
         }

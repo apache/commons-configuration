@@ -61,7 +61,7 @@ public class TestDefaultExpressionEngineSymbols
      * @param o1 object 1
      * @param o2 object 2
      */
-    private static void expEqual(Object o1, Object o2)
+    private static void expEqual(final Object o1, final Object o2)
     {
         assertTrue("Not equal", o1.equals(o2));
         assertTrue("Not symmetric", o2.equals(o1));
@@ -74,7 +74,7 @@ public class TestDefaultExpressionEngineSymbols
      * @param o1 object 1
      * @param o2 object 2
      */
-    private static void expNE(Object o1, Object o2)
+    private static void expNE(final Object o1, final Object o2)
     {
         assertFalse("Equal", o1.equals(o2));
         if (o2 != null)
@@ -91,7 +91,7 @@ public class TestDefaultExpressionEngineSymbols
     {
         expEqual(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS,
                 DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
-        DefaultExpressionEngineSymbols s2 =
+        final DefaultExpressionEngineSymbols s2 =
                 new DefaultExpressionEngineSymbols.Builder(
                         DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
                         .create();
@@ -116,7 +116,7 @@ public class TestDefaultExpressionEngineSymbols
     @Test
     public void testEqualsFalse()
     {
-        DefaultExpressionEngineSymbols s1 =
+        final DefaultExpressionEngineSymbols s1 =
                 DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS;
         DefaultExpressionEngineSymbols s2 =
                 builder().setPropertyDelimiter("/").create();
@@ -157,8 +157,8 @@ public class TestDefaultExpressionEngineSymbols
     @Test
     public void testToString()
     {
-        DefaultExpressionEngineSymbols symbols = builder().create();
-        String s = symbols.toString();
+        final DefaultExpressionEngineSymbols symbols = builder().create();
+        final String s = symbols.toString();
         assertThat(
                 s,
                 containsString("propertyDelimiter="

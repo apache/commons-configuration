@@ -47,7 +47,7 @@ public class ConfigurationException extends Exception
      *
      * @param message  the error message
      */
-    public ConfigurationException(String message)
+    public ConfigurationException(final String message)
     {
         super(message);
     }
@@ -58,7 +58,7 @@ public class ConfigurationException extends Exception
      *
      * @param cause  the exception or error that caused this exception to be thrown
      */
-    public ConfigurationException(Throwable cause)
+    public ConfigurationException(final Throwable cause)
     {
         super(cause);
     }
@@ -70,7 +70,7 @@ public class ConfigurationException extends Exception
      * @param message  the error message
      * @param cause    the exception or error that caused this exception to be thrown
      */
-    public ConfigurationException(String message, Throwable cause)
+    public ConfigurationException(final String message, final Throwable cause)
     {
         super(message, cause);
     }

@@ -40,23 +40,23 @@ public class TestPropertiesSequence
     @Test
     public void testConfigurationValuesInSameOrderFromFile() throws Exception
     {
-        String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
-        String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
+        final String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
+        final String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
-        PropertiesConfiguration simpleConfiguration = new PropertiesConfiguration();
-        FileHandler handler = new FileHandler(simpleConfiguration);
+        final PropertiesConfiguration simpleConfiguration = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(simpleConfiguration);
         handler.setFileName(simpleConfigurationFile);
         handler.load();
 
-        CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
+        final CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
         builder.configure(new FileBasedBuilderParametersImpl().setFileName(compositeConfigurationFile));
-        Configuration compositeConfiguration = builder.getConfiguration();
+        final Configuration compositeConfiguration = builder.getConfiguration();
 
-        Configuration a = simpleConfiguration.subset("prefix");
-        Configuration b = compositeConfiguration.subset("prefix");
+        final Configuration a = simpleConfiguration.subset("prefix");
+        final Configuration b = compositeConfiguration.subset("prefix");
 
-        List<String> keysSimpleConfiguration = ConfigurationAssert.keysToList(a);
-        List<String> keysCompositeConfiguration = ConfigurationAssert.keysToList(b);
+        final List<String> keysSimpleConfiguration = ConfigurationAssert.keysToList(a);
+        final List<String> keysCompositeConfiguration = ConfigurationAssert.keysToList(b);
 
         assertTrue("Size:" + keysSimpleConfiguration.size(), keysSimpleConfiguration.size() > 0);
         assertEquals(keysSimpleConfiguration.size(), keysCompositeConfiguration.size());
@@ -70,17 +70,17 @@ public class TestPropertiesSequence
     @Test
     public void testConfigurationValuesInSameOrderWithManualAdd() throws Exception
     {
-        String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
-        String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
+        final String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
+        final String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
-        PropertiesConfiguration simpleConfiguration = new PropertiesConfiguration();
-        FileHandler handler = new FileHandler(simpleConfiguration);
+        final PropertiesConfiguration simpleConfiguration = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(simpleConfiguration);
         handler.setFileName(simpleConfigurationFile);
         handler.load();
 
-        CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
+        final CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
         builder.configure(new FileBasedBuilderParametersImpl().setFileName(compositeConfigurationFile));
-        Configuration compositeConfiguration = builder.getConfiguration();
+        final Configuration compositeConfiguration = builder.getConfiguration();
 
         simpleConfiguration.setProperty("prefix.Co.test", Boolean.TRUE);
         simpleConfiguration.setProperty("prefix.Av.test", Boolean.TRUE);
@@ -88,11 +88,11 @@ public class TestPropertiesSequence
         compositeConfiguration.setProperty("prefix.Co.test", Boolean.TRUE);
         compositeConfiguration.setProperty("prefix.Av.test", Boolean.TRUE);
 
-        Configuration a = simpleConfiguration.subset("prefix");
-        Configuration b = compositeConfiguration.subset("prefix");
+        final Configuration a = simpleConfiguration.subset("prefix");
+        final Configuration b = compositeConfiguration.subset("prefix");
 
-        List<String> keysSimpleConfiguration = ConfigurationAssert.keysToList(a);
-        List<String> keysCompositeConfiguration = ConfigurationAssert.keysToList(b);
+        final List<String> keysSimpleConfiguration = ConfigurationAssert.keysToList(a);
+        final List<String> keysCompositeConfiguration = ConfigurationAssert.keysToList(b);
 
         assertTrue("Size:" + keysSimpleConfiguration.size(), keysSimpleConfiguration.size() > 0);
         assertEquals(keysSimpleConfiguration.size(), keysCompositeConfiguration.size());
@@ -106,29 +106,29 @@ public class TestPropertiesSequence
     @Test
     public void testMappingInSameOrder() throws Exception
     {
-        String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
-        String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
+        final String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
+        final String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
-        PropertiesConfiguration simpleConfiguration = new PropertiesConfiguration();
-        FileHandler handler = new FileHandler(simpleConfiguration);
+        final PropertiesConfiguration simpleConfiguration = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(simpleConfiguration);
         handler.setFileName(simpleConfigurationFile);
         handler.load();
 
-        CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
+        final CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
         builder.configure(new FileBasedBuilderParametersImpl().setFileName(compositeConfigurationFile));
-        Configuration compositeConfiguration = builder.getConfiguration();
+        final Configuration compositeConfiguration = builder.getConfiguration();
 
-        Configuration mapping = new BaseConfiguration();
-        Configuration mapping2 = new BaseConfiguration();
+        final Configuration mapping = new BaseConfiguration();
+        final Configuration mapping2 = new BaseConfiguration();
 
-        for (Iterator<String> keys = simpleConfiguration.getKeys(); keys.hasNext();)
+        for (final Iterator<String> keys = simpleConfiguration.getKeys(); keys.hasNext();)
         {
-            String key = keys.next();
-            String[] keyParts = StringUtils.split(key, ".");
+            final String key = keys.next();
+            final String[] keyParts = StringUtils.split(key, ".");
 
             if ((keyParts.length == 3) && keyParts[0].equals("prefix") && keyParts[2].equals("postfix"))
             {
-                String serviceKey = keyParts[1];
+                final String serviceKey = keyParts[1];
 
                 if (!mapping.containsKey(serviceKey))
                 {
@@ -137,14 +137,14 @@ public class TestPropertiesSequence
             }
         }
 
-        for (Iterator<String> keys = compositeConfiguration.getKeys(); keys.hasNext();)
+        for (final Iterator<String> keys = compositeConfiguration.getKeys(); keys.hasNext();)
         {
-            String key = keys.next();
-            String[] keyParts = StringUtils.split(key, ".");
+            final String key = keys.next();
+            final String[] keyParts = StringUtils.split(key, ".");
 
             if ((keyParts.length == 3) && keyParts[0].equals("prefix") && keyParts[2].equals("postfix"))
             {
-                String serviceKey = keyParts[1];
+                final String serviceKey = keyParts[1];
 
                 if (!mapping2.containsKey(serviceKey))
                 {

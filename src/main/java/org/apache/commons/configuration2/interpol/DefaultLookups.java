@@ -59,7 +59,7 @@ public enum DefaultLookups
      * @param prfx the prefix
      * @param look the {@code Lookup} instance
      */
-    private DefaultLookups(String prfx, Lookup look)
+    private DefaultLookups(final String prfx, final Lookup look)
     {
         prefix = prfx;
         lookup = look;

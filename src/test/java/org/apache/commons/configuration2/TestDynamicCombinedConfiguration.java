@@ -87,13 +87,13 @@ public class TestDynamicCombinedConfiguration
     @Test
     public void testConfiguration() throws Exception
     {
-        DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
-        DefaultListDelimiterHandler listHandler = new DefaultListDelimiterHandler(',');
+        final DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
+        final DefaultListDelimiterHandler listHandler = new DefaultListDelimiterHandler(',');
         config.setListDelimiterHandler(listHandler);
-        XPathExpressionEngine engine = new XPathExpressionEngine();
+        final XPathExpressionEngine engine = new XPathExpressionEngine();
         config.setExpressionEngine(engine);
         config.setKeyPattern(PATTERN);
-        ConfigurationBuilder<XMLConfiguration> multiBuilder =
+        final ConfigurationBuilder<XMLConfiguration> multiBuilder =
                 new MultiFileConfigurationBuilder<>(
                         XMLConfiguration.class).configure(parameters
                         .multiFile()
@@ -104,13 +104,13 @@ public class TestDynamicCombinedConfiguration
                         .setManagedBuilderParameters(
                                 parameters.xml().setExpressionEngine(engine)
                                         .setListDelimiterHandler(listHandler)));
-        BuilderConfigurationWrapperFactory wrapFactory =
+        final BuilderConfigurationWrapperFactory wrapFactory =
                 new BuilderConfigurationWrapperFactory();
         config.addConfiguration(wrapFactory.createBuilderConfigurationWrapper(
                 HierarchicalConfiguration.class, multiBuilder), "Multi");
-        XMLConfiguration xml = new XMLConfiguration();
+        final XMLConfiguration xml = new XMLConfiguration();
         xml.setExpressionEngine(engine);
-        FileHandler handler = new FileHandler(xml);
+        final FileHandler handler = new FileHandler(xml);
         handler.setFile(new File(DEFAULT_FILE));
         handler.load();
         config.addConfiguration(xml, "Default");
@@ -137,11 +137,11 @@ public class TestDynamicCombinedConfiguration
     public void testUpdateConfiguration() throws ConfigurationException
     {
         System.getProperties().remove("Id");
-        CombinedConfigurationBuilder builder =
+        final CombinedConfigurationBuilder builder =
                 new CombinedConfigurationBuilder();
         builder.configure(parameters.fileBased().setFile(MULTI_TENENT_FILE)
                 .setSynchronizer(new ReadWriteSynchronizer()));
-        CombinedConfiguration config = builder.getConfiguration();
+        final CombinedConfiguration config = builder.getConfiguration();
         config.getConfiguration(1).setProperty("rowsPerPage", "25");
         assertEquals("Value not changed", "25", config.getString("rowsPerPage"));
     }
@@ -153,9 +153,9 @@ public class TestDynamicCombinedConfiguration
      * @param config the configuration
      * @return the test Synchronizer
      */
-    private SynchronizerTestImpl prepareSynchronizerTest(Configuration config)
+    private SynchronizerTestImpl prepareSynchronizerTest(final Configuration config)
     {
-        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        final SynchronizerTestImpl sync = new SynchronizerTestImpl();
         config.setSynchronizer(sync);
         config.lock(LockMode.READ);
         config.unlock(LockMode.READ); // ensure that root node is constructed
@@ -169,9 +169,9 @@ public class TestDynamicCombinedConfiguration
     @Test
     public void testAddConfigurationSynchronized()
     {
-        DynamicCombinedConfiguration config =
+        final DynamicCombinedConfiguration config =
                 new DynamicCombinedConfiguration();
-        SynchronizerTestImpl sync = prepareSynchronizerTest(config);
+        final SynchronizerTestImpl sync = prepareSynchronizerTest(config);
         config.addConfiguration(new PropertiesConfiguration());
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
     }
@@ -182,9 +182,9 @@ public class TestDynamicCombinedConfiguration
     @Test
     public void testGetNumberOfConfigurationsSynchronized()
     {
-        DynamicCombinedConfiguration config =
+        final DynamicCombinedConfiguration config =
                 new DynamicCombinedConfiguration();
-        SynchronizerTestImpl sync = prepareSynchronizerTest(config);
+        final SynchronizerTestImpl sync = prepareSynchronizerTest(config);
         config.getNumberOfConfigurations();
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
@@ -195,11 +195,11 @@ public class TestDynamicCombinedConfiguration
     @Test
     public void testGetConfigurationByIdxSynchronized()
     {
-        DynamicCombinedConfiguration config =
+        final DynamicCombinedConfiguration config =
                 new DynamicCombinedConfiguration();
-        Configuration child = new PropertiesConfiguration();
+        final Configuration child = new PropertiesConfiguration();
         config.addConfiguration(child);
-        SynchronizerTestImpl sync = prepareSynchronizerTest(config);
+        final SynchronizerTestImpl sync = prepareSynchronizerTest(config);
         assertSame("Wrong configuration", child, config.getConfiguration(0));
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
@@ -210,9 +210,9 @@ public class TestDynamicCombinedConfiguration
     @Test
     public void testGetConfigurationByNameSynchronized()
     {
-        DynamicCombinedConfiguration config =
+        final DynamicCombinedConfiguration config =
                 new DynamicCombinedConfiguration();
-        SynchronizerTestImpl sync = prepareSynchronizerTest(config);
+        final SynchronizerTestImpl sync = prepareSynchronizerTest(config);
         assertNull("Wrong result", config.getConfiguration("unknown config"));
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
@@ -223,9 +223,9 @@ public class TestDynamicCombinedConfiguration
     @Test
     public void testGetConfigurationNamesSynchronized()
     {
-        DynamicCombinedConfiguration config =
+        final DynamicCombinedConfiguration config =
                 new DynamicCombinedConfiguration();
-        SynchronizerTestImpl sync = prepareSynchronizerTest(config);
+        final SynchronizerTestImpl sync = prepareSynchronizerTest(config);
         config.getConfigurationNames();
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
@@ -236,11 +236,11 @@ public class TestDynamicCombinedConfiguration
     @Test
     public void testRemoveConfigurationSynchronized()
     {
-        DynamicCombinedConfiguration config =
+        final DynamicCombinedConfiguration config =
                 new DynamicCombinedConfiguration();
-        String configName = "testConfig";
+        final String configName = "testConfig";
         config.addConfiguration(new PropertiesConfiguration(), configName);
-        SynchronizerTestImpl sync = prepareSynchronizerTest(config);
+        final SynchronizerTestImpl sync = prepareSynchronizerTest(config);
         config.removeConfiguration(configName);
         sync.verifyContains(Methods.BEGIN_WRITE);
     }
@@ -249,14 +249,14 @@ public class TestDynamicCombinedConfiguration
     public void testConcurrentGetAndReload() throws Exception
     {
         System.getProperties().remove("Id");
-        CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
+        final CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
         builder.configure(parameters.fileBased().setFile(MULTI_TENENT_FILE)
                 .setSynchronizer(new ReadWriteSynchronizer()));
-        CombinedConfiguration config = builder.getConfiguration();
+        final CombinedConfiguration config = builder.getConfiguration();
 
         assertEquals("Wrong value", "50", config.getString("rowsPerPage"));
-        Thread testThreads[] = new Thread[THREAD_COUNT];
-        int failures[] = new int[THREAD_COUNT];
+        final Thread testThreads[] = new Thread[THREAD_COUNT];
+        final int failures[] = new int[THREAD_COUNT];
 
         for (int i = 0; i < testThreads.length; ++i)
         {
@@ -277,15 +277,15 @@ public class TestDynamicCombinedConfiguration
     public void testConcurrentGetAndReload2() throws Exception
     {
         System.getProperties().remove("Id");
-        CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
+        final CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
         builder.configure(parameters.fileBased().setFile(MULTI_TENENT_FILE)
                 .setSynchronizer(new ReadWriteSynchronizer()));
-        CombinedConfiguration config = builder.getConfiguration();
+        final CombinedConfiguration config = builder.getConfiguration();
 
         assertEquals(config.getString("rowsPerPage"), "50");
 
-        Thread testThreads[] = new Thread[THREAD_COUNT];
-        int failures[] = new int[THREAD_COUNT];
+        final Thread testThreads[] = new Thread[THREAD_COUNT];
+        final int failures[] = new int[THREAD_COUNT];
         System.setProperty("Id", "2002");
         assertEquals("Wrong value", "25", config.getString("rowsPerPage"));
         for (int i = 0; i < testThreads.length; ++i)
@@ -308,17 +308,17 @@ public class TestDynamicCombinedConfiguration
     public void testConcurrentGetAndReloadMultipleClients() throws Exception
     {
         System.getProperties().remove("Id");
-        CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
+        final CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
         builder.configure(parameters.fileBased().setFile(MULTI_TENENT_FILE)
                 .setSynchronizer(new ReadWriteSynchronizer()));
-        CombinedConfiguration config = builder.getConfiguration();
+        final CombinedConfiguration config = builder.getConfiguration();
 
         assertEquals(config.getString("rowsPerPage"), "50");
 
-        Thread testThreads[] = new Thread[THREAD_COUNT];
-        int failures[] = new int[THREAD_COUNT];
-        String[] ids = new String[] {null, "2002", "3001", "3002", "3003"};
-        String[] expected = new String[] {"50", "25", "15", "25", "50"};
+        final Thread testThreads[] = new Thread[THREAD_COUNT];
+        final int failures[] = new int[THREAD_COUNT];
+        final String[] ids = new String[] {null, "2002", "3001", "3002", "3003"};
+        final String[] expected = new String[] {"50", "25", "15", "25", "50"};
         for (int i = 0; i < testThreads.length; ++i)
         {
             testThreads[i] = new ReloadThread(builder, failures, i, LOOP_COUNT, true, ids[i], expected[i]);
@@ -351,12 +351,12 @@ public class TestDynamicCombinedConfiguration
         System.setProperty("TemporaryFolder", folder.getRoot().getAbsolutePath());
         // create a new configuration
         File input = new File("target/test-classes/testMultiDynamic_default.xml");
-        File output = folder.newFile("testMultiDynamic_default.xml");
+        final File output = folder.newFile("testMultiDynamic_default.xml");
         output.delete();
         output.getParentFile().mkdir();
         copyFile(input, output);
 
-        ReloadingCombinedConfigurationBuilder builder =
+        final ReloadingCombinedConfigurationBuilder builder =
                 new ReloadingCombinedConfigurationBuilder();
         builder.configure(parameters
                 .combined()
@@ -373,7 +373,7 @@ public class TestDynamicCombinedConfiguration
         assertEquals("Wrong property value (1)", "ID0001",
                 config.getString("Product/FIIndex/FI[@id='123456781']"));
 
-        ReaderThread testThreads[] = new ReaderThread[threadCount];
+        final ReaderThread testThreads[] = new ReaderThread[threadCount];
         for (int i = 0; i < testThreads.length; ++i)
         {
             testThreads[i] = new ReaderThread(builder);
@@ -390,16 +390,16 @@ public class TestDynamicCombinedConfiguration
         assertTrue("Changed file not detected", builder
                 .getReloadingController().checkForReloading(null));
         config = builder.getConfiguration();
-        String id = config.getString("Product/FIIndex/FI[@id='123456782']");
+        final String id = config.getString("Product/FIIndex/FI[@id='123456782']");
         assertNotNull("File did not reload, id is null", id);
-        String rows = config.getString("rowsPerPage");
+        final String rows = config.getString("rowsPerPage");
         assertEquals("Incorrect value for rowsPerPage", "25", rows);
 
-        for (ReaderThread testThread : testThreads) {
+        for (final ReaderThread testThread : testThreads) {
             testThread.shutdown();
             testThread.join();
         }
-        for (ReaderThread testThread : testThreads) {
+        for (final ReaderThread testThread : testThreads) {
             assertFalse(testThread.failed());
         }
         assertEquals("ID0002", config.getString("Product/FIIndex/FI[@id='123456782']"));
@@ -418,8 +418,8 @@ public class TestDynamicCombinedConfiguration
         private final boolean useId;
         private final Random random;
 
-        ReloadThread(CombinedConfigurationBuilder b, int[] failures, int index, int count,
-                     boolean useId, String id, String expected)
+        ReloadThread(final CombinedConfigurationBuilder b, final int[] failures, final int index, final int count,
+                     final boolean useId, final String id, final String expected)
         {
             builder = b;
             this.failures = failures;
@@ -449,14 +449,14 @@ public class TestDynamicCombinedConfiguration
                         // simulate a reload
                         builder.resetResult();
                     }
-                    CombinedConfiguration combined = builder.getConfiguration();
-                    String value = combined.getString("rowsPerPage", null);
+                    final CombinedConfiguration combined = builder.getConfiguration();
+                    final String value = combined.getString("rowsPerPage", null);
                     if (value == null || !value.equals(expected))
                     {
                         ++failures[index];
                     }
                 }
-                catch (Exception ex)
+                catch (final Exception ex)
                 {
                     ++failures[index];
                 }
@@ -471,7 +471,7 @@ public class TestDynamicCombinedConfiguration
         private final CombinedConfigurationBuilder builder;
         private final Random random;
 
-        public ReaderThread(CombinedConfigurationBuilder b)
+        public ReaderThread(final CombinedConfigurationBuilder b)
         {
             builder = b;
             random = new Random();
@@ -484,8 +484,8 @@ public class TestDynamicCombinedConfiguration
             {
                 while (running)
                 {
-                    CombinedConfiguration combined = builder.getConfiguration();
-                    String bcId =
+                    final CombinedConfiguration combined = builder.getConfiguration();
+                    final String bcId =
                             combined.getString("Product/FIIndex/FI[@id='123456781']");
                     if ("ID0001".equalsIgnoreCase(bcId))
                     {
@@ -499,15 +499,15 @@ public class TestDynamicCombinedConfiguration
                     {
                         failed = true;
                     }
-                    int sleepTime = random.nextInt(75);
+                    final int sleepTime = random.nextInt(75);
                     Thread.sleep(sleepTime);
                 }
             }
-            catch (ConfigurationException cex)
+            catch (final ConfigurationException cex)
             {
                 failed = true;
             }
-            catch(InterruptedException iex)
+            catch(final InterruptedException iex)
             {
                 Thread.currentThread().interrupt();
             }
@@ -526,17 +526,17 @@ public class TestDynamicCombinedConfiguration
 
     }
 
-    private void verify(String key, DynamicCombinedConfiguration config, int rows)
+    private void verify(final String key, final DynamicCombinedConfiguration config, final int rows)
     {
         System.setProperty("Id", key);
         assertTrue(config.getInt("rowsPerPage") == rows);
     }
 
-    private void copyFile(File input, File output) throws IOException
+    private void copyFile(final File input, final File output) throws IOException
     {
-        Reader reader = new FileReader(input);
-        Writer writer = new FileWriter(output);
-        char[] buffer = new char[4096];
+        final Reader reader = new FileReader(input);
+        final Writer writer = new FileWriter(output);
+        final char[] buffer = new char[4096];
         int n = 0;
         while (-1 != (n = reader.read(buffer)))
         {
@@ -554,19 +554,19 @@ public class TestDynamicCombinedConfiguration
         {
         }
 
-        public static void setId(String value)
+        public static void setId(final String value)
         {
             id.set(value);
         }
 
         @Override
-        public String lookup(String key)
+        public String lookup(final String key)
         {
             if (key == null || !key.equals("Id"))
             {
                 return null;
             }
-            String value = System.getProperty("Id");
+            final String value = System.getProperty("Id");
             if (value != null)
             {
                 return value;

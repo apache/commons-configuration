@@ -38,7 +38,7 @@ import org.yaml.snakeyaml.Yaml;
 public class TestYAMLConfiguration
 {
     /** The files that we test with. */
-    private String testYaml =
+    private final String testYaml =
             ConfigurationAssert.getTestFile("test.yaml").getAbsolutePath();
 
     private YAMLConfiguration yamlConfiguration;
@@ -72,14 +72,14 @@ public class TestYAMLConfiguration
     @Test
     public void testGetProperty_subset()
     {
-        Configuration subset = yamlConfiguration.subset("key4");
+        final Configuration subset = yamlConfiguration.subset("key4");
         assertEquals(Arrays.asList("col1", "col2"), subset.getProperty("key5"));
     }
 
     @Test
     public void testGetProperty_very_nested_properties()
     {
-        Object property =
+        final Object property =
                 yamlConfiguration.getProperty("very.nested.properties");
         assertEquals(Arrays.asList("nested1", "nested2", "nested3"), property);
     }
@@ -87,7 +87,7 @@ public class TestYAMLConfiguration
     @Test
     public void testGetProperty_integer()
     {
-        Object property = yamlConfiguration.getProperty("int1");
+        final Object property = yamlConfiguration.getProperty("int1");
         assertTrue("property should be an Integer",
                 property instanceof Integer);
         assertEquals(37, property);
@@ -97,19 +97,19 @@ public class TestYAMLConfiguration
     public void testSave() throws IOException, ConfigurationException
     {
         // save the YAMLConfiguration as a String...
-        StringWriter sw = new StringWriter();
+        final StringWriter sw = new StringWriter();
         yamlConfiguration.write(sw);
-        String output = sw.toString();
+        final String output = sw.toString();
 
         // ..and then try parsing it back as using SnakeYAML
-        Map parsed = new Yaml().loadAs(output, Map.class);
+        final Map parsed = new Yaml().loadAs(output, Map.class);
         assertEquals(6, parsed.entrySet().size());
         assertEquals("value1", parsed.get("key1"));
 
-        Map key2 = (Map) parsed.get("key2");
+        final Map key2 = (Map) parsed.get("key2");
         assertEquals("value23", key2.get("key3"));
 
-        List<String> key5 =
+        final List<String> key5 =
                 (List<String>) ((Map) parsed.get("key4")).get("key5");
         assertEquals(2, key5.size());
         assertEquals("col1", key5.get(0));
@@ -128,7 +128,7 @@ public class TestYAMLConfiguration
     @Test
     public void testCopyConstructor()
     {
-        BaseHierarchicalConfiguration c = new BaseHierarchicalConfiguration();
+        final BaseHierarchicalConfiguration c = new BaseHierarchicalConfiguration();
         c.addProperty("foo", "bar");
 
         yamlConfiguration = new YAMLConfiguration(c);

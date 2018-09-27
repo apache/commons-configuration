@@ -271,7 +271,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param c the configuration to be copied
      * @since 2.0
      */
-    public INIConfiguration(HierarchicalConfiguration<ImmutableNode> c)
+    public INIConfiguration(final HierarchicalConfiguration<ImmutableNode> c)
     {
         super(c);
     }
@@ -303,7 +303,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param separator String of the new separator for INI output
      * @since 2.2
      */
-    public void setSeparatorUsedInOutput(String separator)
+    public void setSeparatorUsedInOutput(final String separator)
     {
         beginWrite(false);
         try
@@ -325,16 +325,16 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @throws IOException if an I/O error occurs
      */
     @Override
-    public void write(Writer writer) throws ConfigurationException, IOException
+    public void write(final Writer writer) throws ConfigurationException, IOException
     {
-        PrintWriter out = new PrintWriter(writer);
+        final PrintWriter out = new PrintWriter(writer);
         boolean first = true;
         final String separator = getSeparatorUsedInOutput();
 
         beginRead(false);
         try
         {
-            for (ImmutableNode node : getModel().getNodeHandler().getRootNode()
+            for (final ImmutableNode node : getModel().getNodeHandler().getRootNode()
                     .getChildren())
             {
                 if (isSectionNode(node))
@@ -348,7 +348,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
                     out.print("]");
                     out.println();
 
-                    for (ImmutableNode child : node.getChildren())
+                    for (final ImmutableNode child : node.getChildren())
                     {
                         writeProperty(out, child.getNodeName(),
                                 child.getValue(), separator);
@@ -380,14 +380,14 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @throws IOException if an I/O error occurs
      */
     @Override
-    public void read(Reader in) throws ConfigurationException, IOException
+    public void read(final Reader in) throws ConfigurationException, IOException
     {
-        BufferedReader bufferedReader = new BufferedReader(in);
-        Map<String, ImmutableNode.Builder> sectionBuilders = new LinkedHashMap<>();
-        ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
+        final BufferedReader bufferedReader = new BufferedReader(in);
+        final Map<String, ImmutableNode.Builder> sectionBuilders = new LinkedHashMap<>();
+        final ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
 
         createNodeBuilders(bufferedReader, rootBuilder, sectionBuilders);
-        ImmutableNode rootNode = createNewRootNode(rootBuilder, sectionBuilders);
+        final ImmutableNode rootNode = createNewRootNode(rootBuilder, sectionBuilders);
         addNodes(null, rootNode.getChildren());
     }
 
@@ -400,10 +400,10 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @return the root node of the newly created hierarchy
      */
     private static ImmutableNode createNewRootNode(
-            ImmutableNode.Builder rootBuilder,
-            Map<String, ImmutableNode.Builder> sectionBuilders)
+            final ImmutableNode.Builder rootBuilder,
+            final Map<String, ImmutableNode.Builder> sectionBuilders)
     {
-        for (Map.Entry<String, ImmutableNode.Builder> e : sectionBuilders
+        for (final Map.Entry<String, ImmutableNode.Builder> e : sectionBuilders
                 .entrySet())
         {
             rootBuilder.addChild(e.getValue().name(e.getKey()).create());
@@ -421,9 +421,9 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param sectionBuilders a map storing the section builders
      * @throws IOException if an I/O error occurs
      */
-    private void createNodeBuilders(BufferedReader in,
-            ImmutableNode.Builder rootBuilder,
-            Map<String, ImmutableNode.Builder> sectionBuilders)
+    private void createNodeBuilders(final BufferedReader in,
+            final ImmutableNode.Builder rootBuilder,
+            final Map<String, ImmutableNode.Builder> sectionBuilders)
             throws IOException
     {
         ImmutableNode.Builder sectionBuilder = rootBuilder;
@@ -435,7 +435,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
             {
                 if (isSectionLine(line))
                 {
-                    String section = line.substring(1, line.length() - 1);
+                    final String section = line.substring(1, line.length() - 1);
                     sectionBuilder = sectionBuilders.get(section);
                     if (sectionBuilder == null)
                     {
@@ -448,7 +448,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
                 {
                     String key;
                     String value = "";
-                    int index = findSeparator(line);
+                    final int index = findSeparator(line);
                     if (index >= 0)
                     {
                         key = line.substring(0, index);
@@ -481,13 +481,13 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param key the key
      * @param value the value string
      */
-    private void createValueNodes(ImmutableNode.Builder sectionBuilder,
-            String key, String value)
+    private void createValueNodes(final ImmutableNode.Builder sectionBuilder,
+            final String key, final String value)
     {
-        Collection<String> values =
+        final Collection<String> values =
                 getListDelimiterHandler().split(value, false);
 
-        for (String v : values)
+        for (final String v : values)
         {
             sectionBuilder.addChild(new ImmutableNode.Builder().name(key)
                     .value(v).create());
@@ -501,7 +501,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param key the key
      * @param value the value
      */
-    private void writeProperty(PrintWriter out, String key, Object value, String separator)
+    private void writeProperty(final PrintWriter out, final String key, final Object value, final String separator)
     {
         out.print(key);
         out.print(separator);
@@ -530,27 +530,27 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param reader the reader (needed if multiple lines have to be read)
      * @throws IOException if an IO error occurs
      */
-    private static String parseValue(String val, BufferedReader reader) throws IOException
+    private static String parseValue(final String val, final BufferedReader reader) throws IOException
     {
-        StringBuilder propertyValue = new StringBuilder();
+        final StringBuilder propertyValue = new StringBuilder();
         boolean lineContinues;
         String value = val.trim();
 
         do
         {
-            boolean quoted = value.startsWith("\"") || value.startsWith("'");
+            final boolean quoted = value.startsWith("\"") || value.startsWith("'");
             boolean stop = false;
             boolean escape = false;
 
-            char quote = quoted ? value.charAt(0) : 0;
+            final char quote = quoted ? value.charAt(0) : 0;
 
             int i = quoted ? 1 : 0;
 
-            StringBuilder result = new StringBuilder();
+            final StringBuilder result = new StringBuilder();
             char lastChar = 0;
             while (i < value.length() && !stop)
             {
-                char c = value.charAt(i);
+                final char c = value.charAt(i);
 
                 if (quoted)
                 {
@@ -627,9 +627,9 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param line the string to check
      * @return a flag whether this line continues
      */
-    private static boolean lineContinues(String line)
+    private static boolean lineContinues(final String line)
     {
-        String s = line.trim();
+        final String s = line.trim();
         return s.equals(LINE_CONT)
                 || (s.length() > 2 && s.endsWith(LINE_CONT) && Character
                         .isWhitespace(s.charAt(s.length() - 2)));
@@ -645,7 +645,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param pos the start position
      * @return a flag whether this line continues
      */
-    private static boolean lineContinues(String line, int pos)
+    private static boolean lineContinues(final String line, final int pos)
     {
         String s;
 
@@ -672,7 +672,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param c the character
      * @return a flag whether this character starts a comment
      */
-    private static boolean isCommentChar(char c)
+    private static boolean isCommentChar(final char c)
     {
         return COMMENT_CHARS.indexOf(c) >= 0;
     }
@@ -687,7 +687,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param line the line to be checked
      * @return the index of the separator character or -1 if none is found
      */
-    private static int findSeparator(String line)
+    private static int findSeparator(final String line)
     {
         int index =
                 findSeparatorBeforeQuote(line,
@@ -708,14 +708,14 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @return the lowest index of a separator character or -1 if no separator
      *         is found
      */
-    private static int findFirstOccurrence(String line, String separators)
+    private static int findFirstOccurrence(final String line, final String separators)
     {
         int index = -1;
 
         for (int i = 0; i < separators.length(); i++)
         {
-            char sep = separators.charAt(i);
-            int pos = line.indexOf(sep);
+            final char sep = separators.charAt(i);
+            final int pos = line.indexOf(sep);
             if (pos >= 0)
             {
                 if (index < 0 || pos < index)
@@ -739,7 +739,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @return the index of the separator before the quote or &lt; 0 if there is
      *         none
      */
-    private static int findSeparatorBeforeQuote(String line, int quoteIndex)
+    private static int findSeparatorBeforeQuote(final String line, final int quoteIndex)
     {
         int index = quoteIndex - 1;
         while (index >= 0 && Character.isWhitespace(line.charAt(index)))
@@ -762,7 +762,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      *
      * @param value the string to be escaped
      */
-    private String escapeValue(String value)
+    private String escapeValue(final String value)
     {
         return String.valueOf(getListDelimiterHandler().escape(
                 escapeComments(value), ListDelimiterHandler.NOOP_TRANSFORMER));
@@ -774,13 +774,13 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param value the value to be escaped
      * @return the value with comment characters escaped
      */
-    private static String escapeComments(String value)
+    private static String escapeComments(final String value)
     {
         boolean quoted = false;
 
         for (int i = 0; i < COMMENT_CHARS.length() && !quoted; i++)
         {
-            char c = COMMENT_CHARS.charAt(i);
+            final char c = COMMENT_CHARS.charAt(i);
             if (value.indexOf(c) != -1)
             {
                 quoted = true;
@@ -801,7 +801,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @return true if the line is empty or starts with one of the comment
      *         characters
      */
-    protected boolean isCommentLine(String line)
+    protected boolean isCommentLine(final String line)
     {
         if (line == null)
         {
@@ -817,7 +817,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param line The line to check.
      * @return true if the line contains a section
      */
-    protected boolean isSectionLine(String line)
+    protected boolean isSectionLine(final String line)
     {
         if (line == null)
         {
@@ -834,14 +834,14 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      */
     public Set<String> getSections()
     {
-        Set<String> sections = new LinkedHashSet<>();
+        final Set<String> sections = new LinkedHashSet<>();
         boolean globalSection = false;
         boolean inSection = false;
 
         beginRead(false);
         try
         {
-            for (ImmutableNode node : getModel().getNodeHandler().getRootNode()
+            for (final ImmutableNode node : getModel().getNodeHandler().getRootNode()
                     .getChildren())
             {
                 if (isSectionNode(node))
@@ -893,7 +893,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @return a configuration containing only the properties of the specified
      *         section
      */
-    public SubnodeConfiguration getSection(String name)
+    public SubnodeConfiguration getSection(final String name)
     {
         if (name == null)
         {
@@ -903,12 +903,12 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
         {
             return (SubnodeConfiguration) configurationAt(name, true);
         }
-        catch (ConfigurationRuntimeException iex)
+        catch (final ConfigurationRuntimeException iex)
         {
             // the passed in key does not map to exactly one node
             // obtain the node for the section, create it on demand
-            InMemoryNodeModel parentModel = getSubConfigurationParentModel();
-            NodeSelector selector = parentModel.trackChildNodeWithCreation(null, name, this);
+            final InMemoryNodeModel parentModel = getSubConfigurationParentModel();
+            final NodeSelector selector = parentModel.trackChildNodeWithCreation(null, name, this);
             return createSubConfigurationForTrackedNode(selector, this);
         }
     }
@@ -921,12 +921,12 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      */
     private SubnodeConfiguration getGlobalSection()
     {
-        InMemoryNodeModel parentModel = getSubConfigurationParentModel();
-        NodeSelector selector = new NodeSelector(null); // selects parent
+        final InMemoryNodeModel parentModel = getSubConfigurationParentModel();
+        final NodeSelector selector = new NodeSelector(null); // selects parent
         parentModel.trackNode(selector, this);
-        GlobalSectionNodeModel model =
+        final GlobalSectionNodeModel model =
                 new GlobalSectionNodeModel(this, selector);
-        SubnodeConfiguration sub = new SubnodeConfiguration(this, model);
+        final SubnodeConfiguration sub = new SubnodeConfiguration(this, model);
         initSubConfigurationForThisParent(sub);
         return sub;
     }
@@ -937,7 +937,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param node the node in question
      * @return a flag whether this node represents a section
      */
-    private static boolean isSectionNode(ImmutableNode node)
+    private static boolean isSectionNode(final ImmutableNode node)
     {
         return node.getValue() == null;
     }
@@ -958,8 +958,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
          * @param modelSupport the underlying {@code InMemoryNodeModel}
          * @param selector the {@code NodeSelector}
          */
-        public GlobalSectionNodeModel(InMemoryNodeModelSupport modelSupport,
-                NodeSelector selector)
+        public GlobalSectionNodeModel(final InMemoryNodeModelSupport modelSupport,
+                final NodeSelector selector)
         {
             super(modelSupport, selector, true);
         }
@@ -970,43 +970,43 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
             return new NodeHandlerDecorator<ImmutableNode>()
             {
                 @Override
-                public List<ImmutableNode> getChildren(ImmutableNode node)
+                public List<ImmutableNode> getChildren(final ImmutableNode node)
                 {
-                    List<ImmutableNode> children = super.getChildren(node);
+                    final List<ImmutableNode> children = super.getChildren(node);
                     return filterChildrenOfGlobalSection(node, children);
                 }
 
                 @Override
-                public List<ImmutableNode> getChildren(ImmutableNode node,
-                        String name)
+                public List<ImmutableNode> getChildren(final ImmutableNode node,
+                        final String name)
                 {
-                    List<ImmutableNode> children =
+                    final List<ImmutableNode> children =
                             super.getChildren(node, name);
                     return filterChildrenOfGlobalSection(node, children);
                 }
 
                 @Override
-                public int getChildrenCount(ImmutableNode node, String name)
+                public int getChildrenCount(final ImmutableNode node, final String name)
                 {
-                    List<ImmutableNode> children =
+                    final List<ImmutableNode> children =
                             (name != null) ? super.getChildren(node, name)
                                     : super.getChildren(node);
                     return filterChildrenOfGlobalSection(node, children).size();
                 }
 
                 @Override
-                public ImmutableNode getChild(ImmutableNode node, int index)
+                public ImmutableNode getChild(final ImmutableNode node, final int index)
                 {
-                    List<ImmutableNode> children = super.getChildren(node);
+                    final List<ImmutableNode> children = super.getChildren(node);
                     return filterChildrenOfGlobalSection(node, children).get(
                             index);
                 }
 
                 @Override
-                public int indexOfChild(ImmutableNode parent,
-                        ImmutableNode child)
+                public int indexOfChild(final ImmutableNode parent,
+                        final ImmutableNode child)
                 {
-                    List<ImmutableNode> children = super.getChildren(parent);
+                    final List<ImmutableNode> children = super.getChildren(parent);
                     return filterChildrenOfGlobalSection(parent, children)
                             .indexOf(child);
                 }
@@ -1028,14 +1028,14 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
                  * @return a list with the filtered children
                  */
                 private List<ImmutableNode> filterChildrenOfGlobalSection(
-                        ImmutableNode node, List<ImmutableNode> children)
+                        final ImmutableNode node, final List<ImmutableNode> children)
                 {
                     List<ImmutableNode> filteredList;
                     if (node == getRootNode())
                     {
                         filteredList =
                                 new ArrayList<>(children.size());
-                        for (ImmutableNode child : children)
+                        for (final ImmutableNode child : children)
                         {
                             if (!isSectionNode(child))
                             {

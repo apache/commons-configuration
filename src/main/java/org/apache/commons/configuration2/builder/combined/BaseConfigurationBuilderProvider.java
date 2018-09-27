@@ -98,8 +98,8 @@ public class BaseConfigurationBuilderProvider implements
      * @param paramCls a collection with the names of parameters classes
      * @throws IllegalArgumentException if a required parameter is missing
      */
-    public BaseConfigurationBuilderProvider(String bldrCls,
-            String reloadBldrCls, String configCls, Collection<String> paramCls)
+    public BaseConfigurationBuilderProvider(final String bldrCls,
+            final String reloadBldrCls, final String configCls, final Collection<String> paramCls)
     {
         if (bldrCls == null)
         {
@@ -169,22 +169,22 @@ public class BaseConfigurationBuilderProvider implements
      */
     @Override
     public ConfigurationBuilder<? extends Configuration> getConfigurationBuilder(
-            ConfigurationDeclaration decl) throws ConfigurationException
+            final ConfigurationDeclaration decl) throws ConfigurationException
     {
         try
         {
-            Collection<BuilderParameters> params = createParameterObjects();
+            final Collection<BuilderParameters> params = createParameterObjects();
             initializeParameterObjects(decl, params);
-            BasicConfigurationBuilder<? extends Configuration> builder =
+            final BasicConfigurationBuilder<? extends Configuration> builder =
                     createBuilder(decl, params);
             configureBuilder(builder, decl, params);
             return builder;
         }
-        catch (ConfigurationException cex)
+        catch (final ConfigurationException cex)
         {
             throw cex;
         }
-        catch (Exception ex)
+        catch (final Exception ex)
         {
             throw new ConfigurationException(ex);
         }
@@ -200,7 +200,7 @@ public class BaseConfigurationBuilderProvider implements
      * @param decl the current {@code ConfigurationDeclaration}
      * @return the value of the <em>allowFailOnInit</em> flag
      */
-    protected boolean isAllowFailOnInit(ConfigurationDeclaration decl)
+    protected boolean isAllowFailOnInit(final ConfigurationDeclaration decl)
     {
         return decl.isOptional() && decl.isForceCreate();
     }
@@ -217,10 +217,10 @@ public class BaseConfigurationBuilderProvider implements
     protected Collection<BuilderParameters> createParameterObjects()
             throws Exception
     {
-        Collection<BuilderParameters> params =
+        final Collection<BuilderParameters> params =
                 new ArrayList<>(
                         getParameterClasses().size());
-        for (String paramcls : getParameterClasses())
+        for (final String paramcls : getParameterClasses())
         {
             params.add(createParameterObject(paramcls));
         }
@@ -240,11 +240,11 @@ public class BaseConfigurationBuilderProvider implements
      * @param params the collection with (uninitialized) parameter objects
      * @throws Exception if an error occurs
      */
-    protected void initializeParameterObjects(ConfigurationDeclaration decl,
-            Collection<BuilderParameters> params) throws Exception
+    protected void initializeParameterObjects(final ConfigurationDeclaration decl,
+            final Collection<BuilderParameters> params) throws Exception
     {
         inheritParentBuilderProperties(decl, params);
-        MultiWrapDynaBean wrapBean = new MultiWrapDynaBean(params);
+        final MultiWrapDynaBean wrapBean = new MultiWrapDynaBean(params);
         decl.getConfigurationBuilder().initBean(wrapBean, decl);
     }
 
@@ -260,9 +260,9 @@ public class BaseConfigurationBuilderProvider implements
      * @param params the collection with (uninitialized) parameter objects
      */
     protected void inheritParentBuilderProperties(
-            ConfigurationDeclaration decl, Collection<BuilderParameters> params)
+            final ConfigurationDeclaration decl, final Collection<BuilderParameters> params)
     {
-        for (BuilderParameters p : params)
+        for (final BuilderParameters p : params)
         {
             decl.getConfigurationBuilder().initChildBuilderParameters(p);
         }
@@ -281,17 +281,18 @@ public class BaseConfigurationBuilderProvider implements
      * @throws Exception if an error occurs
      */
     protected BasicConfigurationBuilder<? extends Configuration> createBuilder(
-            ConfigurationDeclaration decl, Collection<BuilderParameters> params)
+            final ConfigurationDeclaration decl, final Collection<BuilderParameters> params)
             throws Exception
     {
-        Class<?> bldCls =
+        final Class<?> bldCls =
                 ConfigurationUtils.loadClass(determineBuilderClass(decl));
-        Class<?> configCls =
+        final Class<?> configCls =
                 ConfigurationUtils.loadClass(determineConfigurationClass(decl,
                         params));
-        Constructor<?> ctor = bldCls.getConstructor(CTOR_PARAM_TYPES);
+        final Constructor<?> ctor = bldCls.getConstructor(CTOR_PARAM_TYPES);
         // ? extends Configuration is the minimum constraint
         @SuppressWarnings("unchecked")
+        final
         BasicConfigurationBuilder<? extends Configuration> builder =
                 (BasicConfigurationBuilder<? extends Configuration>) ctor
                         .newInstance(configCls, null, isAllowFailOnInit(decl));
@@ -310,8 +311,8 @@ public class BaseConfigurationBuilderProvider implements
      * @throws Exception if an error occurs
      */
     protected void configureBuilder(
-            BasicConfigurationBuilder<? extends Configuration> builder,
-            ConfigurationDeclaration decl, Collection<BuilderParameters> params)
+            final BasicConfigurationBuilder<? extends Configuration> builder,
+            final ConfigurationDeclaration decl, final Collection<BuilderParameters> params)
             throws Exception
     {
         builder.configure(params.toArray(new BuilderParameters[params.size()]));
@@ -328,7 +329,7 @@ public class BaseConfigurationBuilderProvider implements
      * @return the name of the builder class
      * @throws ConfigurationException if the builder class cannot be determined
      */
-    protected String determineBuilderClass(ConfigurationDeclaration decl)
+    protected String determineBuilderClass(final ConfigurationDeclaration decl)
             throws ConfigurationException
     {
         if (decl.isReload())
@@ -356,8 +357,8 @@ public class BaseConfigurationBuilderProvider implements
      * @return the name of the builder's result configuration class
      * @throws ConfigurationException if an error occurs
      */
-    protected String determineConfigurationClass(ConfigurationDeclaration decl,
-            Collection<BuilderParameters> params) throws ConfigurationException
+    protected String determineConfigurationClass(final ConfigurationDeclaration decl,
+            final Collection<BuilderParameters> params) throws ConfigurationException
     {
         return getConfigurationClass();
     }
@@ -369,11 +370,11 @@ public class BaseConfigurationBuilderProvider implements
      * @return the newly created instance
      * @throws Exception if an error occurs
      */
-    private static BuilderParameters createParameterObject(String paramcls)
+    private static BuilderParameters createParameterObject(final String paramcls)
             throws Exception
     {
-        Class<?> cls = ConfigurationUtils.loadClass(paramcls);
-        BuilderParameters p = (BuilderParameters) cls.newInstance();
+        final Class<?> cls = ConfigurationUtils.loadClass(paramcls);
+        final BuilderParameters p = (BuilderParameters) cls.newInstance();
         return p;
     }
 
@@ -385,7 +386,7 @@ public class BaseConfigurationBuilderProvider implements
      * @return the collection to be stored
      */
     private static Collection<String> initParameterClasses(
-            Collection<String> paramCls)
+            final Collection<String> paramCls)
     {
         if (paramCls == null)
         {

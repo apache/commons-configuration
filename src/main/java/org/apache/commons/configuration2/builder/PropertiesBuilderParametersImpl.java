@@ -55,7 +55,7 @@ public class PropertiesBuilderParametersImpl extends
     private static final String PROP_IO_FACTORY = "IOFactory";
 
     @Override
-    public PropertiesBuilderParametersImpl setIncludesAllowed(boolean f)
+    public PropertiesBuilderParametersImpl setIncludesAllowed(final boolean f)
     {
         storeProperty(PROP_INCLUDES_ALLOWED, Boolean.valueOf(f));
         return this;
@@ -66,7 +66,7 @@ public class PropertiesBuilderParametersImpl extends
      * that are defined in this class.
      */
     @Override
-    public void inheritFrom(Map<String, ?> source)
+    public void inheritFrom(final Map<String, ?> source)
     {
         super.inheritFrom(source);
         copyPropertiesFrom(source, PROP_INCLUDES_ALLOWED, PROP_IO_FACTORY);
@@ -74,14 +74,14 @@ public class PropertiesBuilderParametersImpl extends
 
     @Override
     public PropertiesBuilderParametersImpl setLayout(
-            PropertiesConfigurationLayout layout)
+            final PropertiesConfigurationLayout layout)
     {
         storeProperty(PROP_LAYOUT, layout);
         return this;
     }
 
     @Override
-    public PropertiesBuilderParametersImpl setIOFactory(IOFactory factory)
+    public PropertiesBuilderParametersImpl setIOFactory(final IOFactory factory)
     {
         storeProperty(PROP_IO_FACTORY, factory);
         return this;

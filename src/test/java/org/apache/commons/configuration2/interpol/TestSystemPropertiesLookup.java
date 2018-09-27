@@ -46,7 +46,7 @@ public class TestSystemPropertiesLookup
     @Test
     public void testLookupProperties()
     {
-        for(Map.Entry<Object, Object> e : System.getProperties().entrySet())
+        for(final Map.Entry<Object, Object> e : System.getProperties().entrySet())
         {
             assertEquals("Wrong property value for " + e.getKey(), e.getValue(), lookup.lookup(String.valueOf(e.getKey())));
         }

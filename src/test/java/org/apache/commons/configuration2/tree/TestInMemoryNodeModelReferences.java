@@ -58,7 +58,7 @@ public class TestInMemoryNodeModelReferences
         NodeStructureHelper.expectResolveAddKeys(resolver);
         EasyMock.replay(resolver);
         model = new InMemoryNodeModel();
-        Map<ImmutableNode, String> references = createReferences();
+        final Map<ImmutableNode, String> references = createReferences();
         model.mergeRoot(NodeStructureHelper.ROOT_AUTHORS_TREE, null,
                 references, NodeStructureHelper.ROOT_AUTHORS_TREE.getNodeName(), resolver);
     }
@@ -70,11 +70,11 @@ public class TestInMemoryNodeModelReferences
      */
     private Map<ImmutableNode, String> createReferences()
     {
-        Collection<ImmutableNode> nodes =
+        final Collection<ImmutableNode> nodes =
                 collectNodes(NodeStructureHelper.ROOT_AUTHORS_TREE);
         nodes.remove(NodeStructureHelper.ROOT_AUTHORS_TREE);
-        Map<ImmutableNode, String> refs = new HashMap<>();
-        for (ImmutableNode node : nodes)
+        final Map<ImmutableNode, String> refs = new HashMap<>();
+        for (final ImmutableNode node : nodes)
         {
             refs.put(node, node.getNodeName());
         }
@@ -88,15 +88,15 @@ public class TestInMemoryNodeModelReferences
      * @param root the root node of the hierarchy
      * @return a collection with all nodes in this hierarchy
      */
-    private Collection<ImmutableNode> collectNodes(ImmutableNode root)
+    private Collection<ImmutableNode> collectNodes(final ImmutableNode root)
     {
         final Set<ImmutableNode> nodes = new HashSet<>();
         NodeTreeWalker.INSTANCE.walkBFS(root,
                 new ConfigurationNodeVisitorAdapter<ImmutableNode>()
                 {
                     @Override
-                    public void visitBeforeChildren(ImmutableNode node,
-                            NodeHandler<ImmutableNode> handler)
+                    public void visitBeforeChildren(final ImmutableNode node,
+                            final NodeHandler<ImmutableNode> handler)
                     {
                         nodes.add(node);
                     }
@@ -110,9 +110,9 @@ public class TestInMemoryNodeModelReferences
     @Test
     public void testQueryReferences()
     {
-        ReferenceNodeHandler handler = model.getReferenceNodeHandler();
-        Collection<ImmutableNode> nodes = collectNodes(handler.getRootNode());
-        for (ImmutableNode node : nodes)
+        final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
+        final Collection<ImmutableNode> nodes = collectNodes(handler.getRootNode());
+        for (final ImmutableNode node : nodes)
         {
             assertEquals("Wrong reference", node.getNodeName(),
                     handler.getReference(node));
@@ -125,7 +125,7 @@ public class TestInMemoryNodeModelReferences
     @Test
     public void testQueryReferenceUnknown()
     {
-        ReferenceNodeHandler handler = model.getReferenceNodeHandler();
+        final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
         assertNull("Got a reference",
                 handler.getReference(new ImmutableNode.Builder().create()));
     }
@@ -138,7 +138,7 @@ public class TestInMemoryNodeModelReferences
     {
         model.addProperty("Simmons.Hyperion", Collections.singleton("Lamia"),
                 resolver);
-        ReferenceNodeHandler handler = model.getReferenceNodeHandler();
+        final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
         assertEquals("Wrong reference 1", "Hyperion",
                 handler.getReference(NodeStructureHelper.nodeForKey(model,
                         "Simmons/Hyperion")));
@@ -153,7 +153,7 @@ public class TestInMemoryNodeModelReferences
     @Test
     public void testQueryRemovedReferencesEmpty()
     {
-        ReferenceNodeHandler handler = model.getReferenceNodeHandler();
+        final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
         assertTrue("Got removed references", handler.removedReferences()
                 .isEmpty());
     }
@@ -165,9 +165,9 @@ public class TestInMemoryNodeModelReferences
     public void testQueryRemovedReferencesAfterRemove()
     {
         model.clearTree("Simmons", resolver);
-        ReferenceNodeHandler handler = model.getReferenceNodeHandler();
-        List<Object> removedRefs = handler.removedReferences();
-        int authorIdx = 2;
+        final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
+        final List<Object> removedRefs = handler.removedReferences();
+        final int authorIdx = 2;
         for (int i = 0; i < NodeStructureHelper.worksLength(authorIdx); i++)
         {
             assertTrue(
@@ -190,8 +190,8 @@ public class TestInMemoryNodeModelReferences
     public void testRemovedReferencesModify()
     {
         model.clearTree("Simmons", resolver);
-        ReferenceNodeHandler handler = model.getReferenceNodeHandler();
-        List<Object> removedRefs = handler.removedReferences();
+        final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
+        final List<Object> removedRefs = handler.removedReferences();
         removedRefs.add("another one");
     }
 
@@ -201,9 +201,9 @@ public class TestInMemoryNodeModelReferences
     @Test
     public void testMergeRootWithValue()
     {
-        ImmutableNode node = NodeStructureHelper.createNode("newNode", "test");
+        final ImmutableNode node = NodeStructureHelper.createNode("newNode", "test");
         model.mergeRoot(node, null, null, null, resolver);
-        ImmutableNode root = model.getNodeHandler().getRootNode();
+        final ImmutableNode root = model.getNodeHandler().getRootNode();
         assertEquals("Wrong node name",
                 NodeStructureHelper.ROOT_AUTHORS_TREE.getNodeName(),
                 root.getNodeName());
@@ -217,11 +217,11 @@ public class TestInMemoryNodeModelReferences
     @Test
     public void testMergeRootOverrideName()
     {
-        ImmutableNode node = NodeStructureHelper.createNode("newNode", null);
+        final ImmutableNode node = NodeStructureHelper.createNode("newNode", null);
         final String newName = "newRootNode";
 
         model.mergeRoot(node, newName, null, null, resolver);
-        ImmutableNode root = model.getNodeHandler().getRootNode();
+        final ImmutableNode root = model.getNodeHandler().getRootNode();
         assertEquals("Wrong root name", newName, root.getNodeName());
     }
 
@@ -231,11 +231,11 @@ public class TestInMemoryNodeModelReferences
     @Test
     public void testMergeRootWithAttributes()
     {
-        ImmutableNode node =
+        final ImmutableNode node =
                 new ImmutableNode.Builder().addAttribute("key", "value")
                         .create();
         model.mergeRoot(node, null, null, null, resolver);
-        ImmutableNode root = model.getNodeHandler().getRootNode();
+        final ImmutableNode root = model.getNodeHandler().getRootNode();
         assertEquals("Wrong number of attributes", 1, root.getAttributes()
                 .size());
         assertEquals("Wrong attribute", "value", root.getAttributes()
@@ -250,11 +250,11 @@ public class TestInMemoryNodeModelReferences
     public void testMergeRootReference()
     {
         final Object rootRef = 20140404210508L;
-        ImmutableNode node = NodeStructureHelper.createNode("newNode", null);
+        final ImmutableNode node = NodeStructureHelper.createNode("newNode", null);
 
         model.mergeRoot(node, null, null, rootRef, resolver);
-        ReferenceNodeHandler refHandler = model.getReferenceNodeHandler();
-        ImmutableNode checkNode =
+        final ReferenceNodeHandler refHandler = model.getReferenceNodeHandler();
+        final ImmutableNode checkNode =
                 NodeStructureHelper.nodeForKey(model, "Simmons/Ilium");
         assertEquals("Wrong reference for node", checkNode.getNodeName(),
                 refHandler.getReference(checkNode));
@@ -268,14 +268,14 @@ public class TestInMemoryNodeModelReferences
     @Test
     public void testReplaceRoot()
     {
-        NodeSelector selector = new NodeSelector("Simmons.Hyperion");
+        final NodeSelector selector = new NodeSelector("Simmons.Hyperion");
         model.trackNode(selector, resolver);
-        ImmutableNode trackedNode = model.getTrackedNode(selector);
+        final ImmutableNode trackedNode = model.getTrackedNode(selector);
         model.addProperty("Simmons.Hyperion.Lamia",
                 Collections.singleton("new person"), resolver);
 
         model.replaceRoot(NodeStructureHelper.ROOT_AUTHORS_TREE, resolver);
-        ImmutableNode node = model.getTrackedNode(selector);
+        final ImmutableNode node = model.getTrackedNode(selector);
         assertEquals("Wrong tracked node", trackedNode, node);
         assertFalse("Node is detached", model.isTrackedNodeDetached(selector));
         assertNull("Reference not cleared", model.getReferenceNodeHandler()

@@ -43,7 +43,7 @@ public class TestEventType
     @Test
     public void testToString()
     {
-        String s = eventType.toString();
+        final String s = eventType.toString();
         assertEquals("Wrong string", "EventType [ TEST ]", s);
     }
 }

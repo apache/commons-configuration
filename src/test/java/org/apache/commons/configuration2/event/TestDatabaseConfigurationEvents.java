@@ -56,7 +56,7 @@ public class TestDatabaseConfigurationEvents extends
         {
             return helper.setUpConfig();
         }
-        catch (ConfigurationException e)
+        catch (final ConfigurationException e)
         {
             throw new AssertionError(e);
         }

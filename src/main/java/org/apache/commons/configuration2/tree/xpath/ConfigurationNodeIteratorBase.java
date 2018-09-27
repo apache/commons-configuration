@@ -63,8 +63,8 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
      * @param parent the parent pointer
      * @param reverse the reverse flag
      */
-    protected ConfigurationNodeIteratorBase(ConfigurationNodePointer<T> parent,
-            boolean reverse)
+    protected ConfigurationNodeIteratorBase(final ConfigurationNodePointer<T> parent,
+            final boolean reverse)
     {
         this.parent = parent;
         this.reverse = reverse;
@@ -88,7 +88,7 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
      * @return a flag if this is a valid position
      */
     @Override
-    public boolean setPosition(int pos)
+    public boolean setPosition(final int pos)
     {
         position = pos;
         return pos >= 1 && pos <= getMaxPosition();
@@ -147,7 +147,7 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
      *
      * @param startOffset the start offset
      */
-    protected void setStartOffset(int startOffset)
+    protected void setStartOffset(final int startOffset)
     {
         this.startOffset = startOffset;
         if (reverse)
@@ -177,7 +177,7 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
      * @param pos the position (1-based)
      * @return the corresponding list index
      */
-    protected int positionToIndex(int pos)
+    protected int positionToIndex(final int pos)
     {
         return (reverse ? 1 - pos : pos - 1) + getStartOffset();
     }
@@ -206,7 +206,7 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
      * @param name the name (may be <b>null</b>)
      * @return the qualified name
      */
-    protected static String prefixName(String prefix, String name)
+    protected static String prefixName(final String prefix, final String name)
     {
         return String.format(FMT_NAMESPACE, prefix,
                 StringUtils.defaultString(name));
@@ -220,7 +220,7 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
      * @param name the {@code QName}
      * @return the qualified name
      */
-    protected static String qualifiedName(QName name)
+    protected static String qualifiedName(final QName name)
     {
         return (name.getPrefix() == null) ? name.getName() : prefixName(
                 name.getPrefix(), name.getName());

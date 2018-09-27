@@ -78,8 +78,8 @@ public class MultiFileConfigurationBuilderProvider extends
      * @param paramCls the name of the class of the parameters object to
      *        configure the managed configuration
      */
-    public MultiFileConfigurationBuilderProvider(String configCls,
-            String paramCls)
+    public MultiFileConfigurationBuilderProvider(final String configCls,
+            final String paramCls)
     {
         super(BUILDER_CLASS, RELOADING_BUILDER_CLASS, configCls, Arrays.asList(
                 paramCls, PARAM_CLASS));
@@ -91,11 +91,11 @@ public class MultiFileConfigurationBuilderProvider extends
      */
     @Override
     public ConfigurationBuilder<? extends Configuration> getConfigurationBuilder(
-            ConfigurationDeclaration decl) throws ConfigurationException
+            final ConfigurationDeclaration decl) throws ConfigurationException
     {
-        ConfigurationBuilder<? extends Configuration> multiBuilder =
+        final ConfigurationBuilder<? extends Configuration> multiBuilder =
                 super.getConfigurationBuilder(decl);
-        Configuration wrapConfig = createWrapperConfiguration(multiBuilder);
+        final Configuration wrapConfig = createWrapperConfiguration(multiBuilder);
         return createWrapperBuilder(multiBuilder, wrapConfig);
     }
 
@@ -111,11 +111,11 @@ public class MultiFileConfigurationBuilderProvider extends
             "unchecked", "rawtypes"
     })
     private Configuration createWrapperConfiguration(
-            ConfigurationBuilder builder)
+            final ConfigurationBuilder builder)
     {
-        Class<?> configClass =
+        final Class<?> configClass =
                 ConfigurationUtils.loadClassNoEx(getConfigurationClass());
-        Class ifcClass =
+        final Class ifcClass =
                 HierarchicalConfiguration.class.isAssignableFrom(configClass) ? HierarchicalConfiguration.class
                         : Configuration.class;
         return (Configuration) BuilderConfigurationWrapperFactory
@@ -136,8 +136,8 @@ public class MultiFileConfigurationBuilderProvider extends
      * @return the wrapper builder
      */
     private static ConfigurationBuilder<? extends Configuration> createWrapperBuilder(
-            ConfigurationBuilder<? extends Configuration> multiBuilder,
-            Configuration wrapConfig)
+            final ConfigurationBuilder<? extends Configuration> multiBuilder,
+            final Configuration wrapConfig)
     {
         if (multiBuilder instanceof ReloadingControllerSupport)
         {
@@ -166,8 +166,8 @@ public class MultiFileConfigurationBuilderProvider extends
          * @param conf the managed configuration
          * @param bldr the underlying builder
          */
-        public WrapperBuilder(Configuration conf,
-                ConfigurationBuilder<? extends Configuration> bldr)
+        public WrapperBuilder(final Configuration conf,
+                final ConfigurationBuilder<? extends Configuration> bldr)
         {
             configuration = conf;
             builder = bldr;
@@ -181,14 +181,14 @@ public class MultiFileConfigurationBuilderProvider extends
 
         @Override
         public <T extends Event> void addEventListener(
-                EventType<T> eventType, EventListener<? super T> listener)
+                final EventType<T> eventType, final EventListener<? super T> listener)
         {
             builder.addEventListener(eventType, listener);
         }
 
         @Override
         public <T extends Event> boolean removeEventListener(
-                EventType<T> eventType, EventListener<? super T> listener)
+                final EventType<T> eventType, final EventListener<? super T> listener)
         {
             return builder.removeEventListener(eventType, listener);
         }
@@ -213,8 +213,8 @@ public class MultiFileConfigurationBuilderProvider extends
          * @param bldr the underlying builder (must implement
          *        {@code ReloadingControllerSupport})
          */
-        public ReloadableWrapperBuilder(Configuration conf,
-                ConfigurationBuilder<? extends Configuration> bldr)
+        public ReloadableWrapperBuilder(final Configuration conf,
+                final ConfigurationBuilder<? extends Configuration> bldr)
         {
             super(conf, bldr);
             ctrlSupport = (ReloadingControllerSupport) bldr;

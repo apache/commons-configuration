@@ -63,7 +63,7 @@ public class CombinedLocationStrategy implements FileLocationStrategy
      *         <b>null</b> elements
      */
     public CombinedLocationStrategy(
-            Collection<? extends FileLocationStrategy> subs)
+            final Collection<? extends FileLocationStrategy> subs)
     {
         if (subs == null)
         {
@@ -97,11 +97,11 @@ public class CombinedLocationStrategy implements FileLocationStrategy
      * to the managed sub strategies.
      */
     @Override
-    public URL locate(FileSystem fileSystem, FileLocator locator)
+    public URL locate(final FileSystem fileSystem, final FileLocator locator)
     {
-        for (FileLocationStrategy sub : getSubStrategies())
+        for (final FileLocationStrategy sub : getSubStrategies())
         {
-            URL url = sub.locate(fileSystem, locator);
+            final URL url = sub.locate(fileSystem, locator);
             if (url != null)
             {
                 return url;

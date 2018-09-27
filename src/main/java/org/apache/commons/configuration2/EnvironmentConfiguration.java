@@ -61,7 +61,7 @@ public class EnvironmentConfiguration extends MapConfiguration
      * @param value the property value
      */
     @Override
-    protected void addPropertyDirect(String key, Object value)
+    protected void addPropertyDirect(final String key, final Object value)
     {
         throw new UnsupportedOperationException("EnvironmentConfiguration is read-only!");
     }
@@ -73,7 +73,7 @@ public class EnvironmentConfiguration extends MapConfiguration
      * @param key the key of the property to be removed
      */
     @Override
-    protected void clearPropertyDirect(String key)
+    protected void clearPropertyDirect(final String key)
     {
         throw new UnsupportedOperationException("EnvironmentConfiguration is read-only!");
     }

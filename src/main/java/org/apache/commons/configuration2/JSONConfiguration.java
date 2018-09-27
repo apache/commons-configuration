@@ -66,27 +66,27 @@ public class JSONConfiguration extends AbstractYAMLBasedConfiguration
      *
      * @param c the configuration to be copied
      */
-    public JSONConfiguration(HierarchicalConfiguration<ImmutableNode> c)
+    public JSONConfiguration(final HierarchicalConfiguration<ImmutableNode> c)
     {
         super(c);
     }
 
     @Override
-    public void read(Reader in) throws ConfigurationException
+    public void read(final Reader in) throws ConfigurationException
     {
         try
         {
-            Map<String, Object> map = mapper.readValue(in, this.type);
+            final Map<String, Object> map = mapper.readValue(in, this.type);
             load(map);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             rethrowException(e);
         }
     }
 
     @Override
-    public void write(Writer out) throws ConfigurationException, IOException
+    public void write(final Writer out) throws ConfigurationException, IOException
     {
         this.mapper.writer().writeValue(out, constructMap(
                 this.getNodeModel().getNodeHandler().getRootNode()));
@@ -99,14 +99,14 @@ public class JSONConfiguration extends AbstractYAMLBasedConfiguration
      * @throws ConfigurationException if an error occurs
      */
     @Override
-    public void read(InputStream in) throws ConfigurationException
+    public void read(final InputStream in) throws ConfigurationException
     {
         try
         {
-            Map<String, Object> map = mapper.readValue(in, this.type);
+            final Map<String, Object> map = mapper.readValue(in, this.type);
             load(map);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             rethrowException(e);
         }

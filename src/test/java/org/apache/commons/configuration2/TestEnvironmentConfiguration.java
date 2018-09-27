@@ -54,9 +54,9 @@ public class TestEnvironmentConfiguration
     {
         boolean found = false;
         assertFalse("No properties found", config.isEmpty());
-        for (Iterator<String> it = config.getKeys(); it.hasNext();)
+        for (final Iterator<String> it = config.getKeys(); it.hasNext();)
         {
-            String key = it.next();
+            final String key = it.next();
             assertTrue("Key not found: " + key, config.containsKey(key));
             assertNotNull("No value for property " + key, config.getString(key));
             found = true;
@@ -70,7 +70,7 @@ public class TestEnvironmentConfiguration
     @Test(expected = UnsupportedOperationException.class)
     public void testClearProperty()
     {
-        String key = config.getKeys().next();
+        final String key = config.getKeys().next();
         config.clearProperty(key);
     }
 

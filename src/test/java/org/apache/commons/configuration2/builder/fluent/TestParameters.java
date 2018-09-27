@@ -67,7 +67,7 @@ public class TestParameters
     @Test
     public void testDefaultParametersManager()
     {
-        Parameters parameters = new Parameters();
+        final Parameters parameters = new Parameters();
         assertNotNull("No default manager",
                 parameters.getDefaultParametersManager());
     }
@@ -78,7 +78,7 @@ public class TestParameters
     @Test
     public void testBasic()
     {
-        BasicBuilderParameters basic = new Parameters().basic();
+        final BasicBuilderParameters basic = new Parameters().basic();
         assertNotNull("No result object", basic);
     }
 
@@ -88,7 +88,7 @@ public class TestParameters
      *
      * @param map the map to be tested
      */
-    private static void checkBasicProperties(Map<String, Object> map)
+    private static void checkBasicProperties(final Map<String, Object> map)
     {
         assertEquals("Wrong delimiter handler", listHandler,
                 map.get("listDelimiterHandler"));
@@ -102,11 +102,11 @@ public class TestParameters
     @Test
     public void testFileBased()
     {
-        Map<String, Object> map =
+        final Map<String, Object> map =
                 new Parameters().fileBased().setThrowExceptionOnMissing(true)
                         .setEncoding(DEF_ENCODING).setListDelimiterHandler(listHandler)
                         .setFileName("test.xml").getParameters();
-        FileBasedBuilderParametersImpl fbparams =
+        final FileBasedBuilderParametersImpl fbparams =
                 FileBasedBuilderParametersImpl.fromParameters(map);
         assertEquals("Wrong file name", "test.xml", fbparams.getFileHandler()
                 .getFileName());
@@ -122,7 +122,7 @@ public class TestParameters
      * @param obj the object to be checked
      * @param cls the class
      */
-    private static void checkInstanceOf(Object obj, Class<?> cls)
+    private static void checkInstanceOf(final Object obj, final Class<?> cls)
     {
         assertTrue(obj + " is not an instance of " + cls, cls.isInstance(obj));
     }
@@ -134,10 +134,10 @@ public class TestParameters
      * @param params the parameters object to check
      * @param ifcClasses the interface classes to be implemented
      */
-    private static void checkInheritance(Object params, Class<?>... ifcClasses)
+    private static void checkInheritance(final Object params, final Class<?>... ifcClasses)
     {
         checkInstanceOf(params, BasicBuilderProperties.class);
-        for (Class<?> c : ifcClasses)
+        for (final Class<?> c : ifcClasses)
         {
             checkInstanceOf(params, c);
         }
@@ -159,8 +159,8 @@ public class TestParameters
     @Test
     public void testProxyObjectMethods()
     {
-        FileBasedBuilderParameters params = new Parameters().fileBased();
-        String s = params.toString();
+        final FileBasedBuilderParameters params = new Parameters().fileBased();
+        final String s = params.toString();
         assertTrue(
                 "Wrong string: " + s,
                 s.indexOf(FileBasedBuilderParametersImpl.class.getSimpleName()) >= 0);
@@ -173,11 +173,11 @@ public class TestParameters
     @Test
     public void testCombined()
     {
-        Map<String, Object> map =
+        final Map<String, Object> map =
                 new Parameters().combined().setThrowExceptionOnMissing(true)
                         .setBasePath("test").setListDelimiterHandler(listHandler)
                         .getParameters();
-        CombinedBuilderParametersImpl cparams =
+        final CombinedBuilderParametersImpl cparams =
                 CombinedBuilderParametersImpl.fromParameters(map);
         assertEquals("Wrong base path", "test", cparams.getBasePath());
         checkBasicProperties(map);
@@ -189,7 +189,7 @@ public class TestParameters
     @Test
     public void testJndi()
     {
-        Map<String, Object> map =
+        final Map<String, Object> map =
                 new Parameters().jndi().setThrowExceptionOnMissing(true)
                         .setPrefix("test").setListDelimiterHandler(listHandler)
                         .getParameters();
@@ -204,13 +204,13 @@ public class TestParameters
     @Test
     public void testHierarchical()
     {
-        ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
-        Map<String, Object> map =
+        final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
+        final Map<String, Object> map =
                 new Parameters().hierarchical().setThrowExceptionOnMissing(true)
                         .setExpressionEngine(engine).setFileName("test.xml")
                         .setListDelimiterHandler(listHandler).getParameters();
         checkBasicProperties(map);
-        FileBasedBuilderParametersImpl fbp =
+        final FileBasedBuilderParametersImpl fbp =
                 FileBasedBuilderParametersImpl.fromParameters(map);
         assertEquals("Wrong file name", "test.xml", fbp.getFileHandler()
                 .getFileName());
@@ -235,14 +235,14 @@ public class TestParameters
     @Test
     public void testXml()
     {
-        ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
-        Map<String, Object> map =
+        final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
+        final Map<String, Object> map =
                 new Parameters().xml().setThrowExceptionOnMissing(true)
                         .setFileName("test.xml").setValidating(true)
                         .setExpressionEngine(engine).setListDelimiterHandler(listHandler)
                         .setSchemaValidation(true).getParameters();
         checkBasicProperties(map);
-        FileBasedBuilderParametersImpl fbp =
+        final FileBasedBuilderParametersImpl fbp =
                 FileBasedBuilderParametersImpl.fromParameters(map);
         assertEquals("Wrong file name", "test.xml", fbp.getFileHandler()
                 .getFileName());
@@ -271,15 +271,15 @@ public class TestParameters
     @Test
     public void testProperties()
     {
-        PropertiesConfiguration.IOFactory factory =
+        final PropertiesConfiguration.IOFactory factory =
                 EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
-        Map<String, Object> map =
+        final Map<String, Object> map =
                 new Parameters().properties().setThrowExceptionOnMissing(true)
                         .setFileName("test.properties").setIOFactory(factory)
                         .setListDelimiterHandler(listHandler).setIncludesAllowed(false)
                         .getParameters();
         checkBasicProperties(map);
-        FileBasedBuilderParametersImpl fbp =
+        final FileBasedBuilderParametersImpl fbp =
                 FileBasedBuilderParametersImpl.fromParameters(map);
         assertEquals("Wrong file name", "test.properties", fbp.getFileHandler()
                 .getFileName());
@@ -304,14 +304,14 @@ public class TestParameters
     @Test
     public void testMultiFile()
     {
-        BuilderParameters bp = EasyMock.createMock(BuilderParameters.class);
-        String pattern = "a pattern";
-        Map<String, Object> map =
+        final BuilderParameters bp = EasyMock.createMock(BuilderParameters.class);
+        final String pattern = "a pattern";
+        final Map<String, Object> map =
                 new Parameters().multiFile().setThrowExceptionOnMissing(true)
                         .setFilePattern(pattern).setListDelimiterHandler(listHandler)
                         .setManagedBuilderParameters(bp).getParameters();
         checkBasicProperties(map);
-        MultiFileBuilderParametersImpl params =
+        final MultiFileBuilderParametersImpl params =
                 MultiFileBuilderParametersImpl.fromParameters(map);
         assertSame("Wrong builder parameters", bp,
                 params.getManagedBuilderParameters());
@@ -325,7 +325,7 @@ public class TestParameters
     @Test
     public void testDatabase()
     {
-        Map<String, Object> map =
+        final Map<String, Object> map =
                 new Parameters().database().setThrowExceptionOnMissing(true)
                         .setAutoCommit(true).setTable("table")
                         .setListDelimiterHandler(listHandler).setKeyColumn("keyColumn")
@@ -345,18 +345,18 @@ public class TestParameters
     @Test
     public void testInheritance()
     {
-        Object params = new Parameters().xml();
+        final Object params = new Parameters().xml();
         assertTrue("No instance of base interface",
                 params instanceof FileBasedBuilderParameters);
         assertTrue("No instance of base interface (dynamic)",
                 FileBasedBuilderParameters.class.isInstance(params));
-        FileBasedBuilderParameters fbParams =
+        final FileBasedBuilderParameters fbParams =
                 (FileBasedBuilderParameters) params;
         fbParams.setListDelimiterHandler(listHandler).setFileName("test.xml")
                 .setThrowExceptionOnMissing(true);
-        ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
+        final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
         ((HierarchicalBuilderParameters) params).setExpressionEngine(engine);
-        Map<String, Object> map = fbParams.getParameters();
+        final Map<String, Object> map = fbParams.getParameters();
         checkBasicProperties(map);
         assertSame("Wrong expression engine", engine, map.get("expressionEngine"));
     }
@@ -368,7 +368,7 @@ public class TestParameters
     @Test
     public void testApplyDefaults()
     {
-        DefaultParametersManager manager =
+        final DefaultParametersManager manager =
                 EasyMock.createMock(DefaultParametersManager.class);
         final List<Object> initializedParams = new ArrayList<>(1);
         manager.initializeParameters(EasyMock
@@ -384,8 +384,8 @@ public class TestParameters
         });
         EasyMock.replay(manager);
 
-        Parameters params = new Parameters(manager);
-        XMLBuilderParameters xmlParams = params.xml();
+        final Parameters params = new Parameters(manager);
+        final XMLBuilderParameters xmlParams = params.xml();
         assertEquals("Wrong number of initializations", 1,
                 initializedParams.size());
         assertSame("Wrong initialized object", xmlParams,
@@ -400,6 +400,7 @@ public class TestParameters
     private static DefaultParametersHandler<XMLBuilderParameters> createHandlerMock()
     {
         @SuppressWarnings("unchecked")
+        final
         DefaultParametersHandler<XMLBuilderParameters> handler =
                 EasyMock.createMock(DefaultParametersHandler.class);
         return handler;
@@ -411,15 +412,15 @@ public class TestParameters
     @Test
     public void testRegisterDefaultsHandlerWithStartClass()
     {
-        DefaultParametersManager manager =
+        final DefaultParametersManager manager =
                 EasyMock.createMock(DefaultParametersManager.class);
-        DefaultParametersHandler<XMLBuilderParameters> handler =
+        final DefaultParametersHandler<XMLBuilderParameters> handler =
                 createHandlerMock();
         manager.registerDefaultsHandler(XMLBuilderParameters.class, handler,
                 FileBasedBuilderParameters.class);
         EasyMock.replay(manager, handler);
 
-        Parameters params = new Parameters(manager);
+        final Parameters params = new Parameters(manager);
         params.registerDefaultsHandler(XMLBuilderParameters.class, handler,
                 FileBasedBuilderParameters.class);
         EasyMock.verify(manager);
@@ -432,14 +433,14 @@ public class TestParameters
     @Test
     public void testRegisterDefaultsHandlerNoStartClass()
     {
-        DefaultParametersManager manager =
+        final DefaultParametersManager manager =
                 EasyMock.createMock(DefaultParametersManager.class);
-        DefaultParametersHandler<XMLBuilderParameters> handler =
+        final DefaultParametersHandler<XMLBuilderParameters> handler =
                 createHandlerMock();
         manager.registerDefaultsHandler(XMLBuilderParameters.class, handler);
         EasyMock.replay(manager, handler);
 
-        Parameters params = new Parameters(manager);
+        final Parameters params = new Parameters(manager);
         params.registerDefaultsHandler(XMLBuilderParameters.class, handler);
         EasyMock.verify(manager);
     }

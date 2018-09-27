@@ -42,13 +42,13 @@ public class ServletFilterConfiguration extends BaseWebConfiguration
      *
      * @param config the filter configuration
      */
-    public ServletFilterConfiguration(FilterConfig config)
+    public ServletFilterConfiguration(final FilterConfig config)
     {
         this.config = config;
     }
 
     @Override
-    protected Object getPropertyInternal(String key)
+    protected Object getPropertyInternal(final String key)
     {
         return handleDelimiters(config.getInitParameter(key));
     }
@@ -58,7 +58,7 @@ public class ServletFilterConfiguration extends BaseWebConfiguration
     {
         // According to the documentation of getInitParameterNames() the
         // enumeration is of type String.
-        Enumeration<String> en = config.getInitParameterNames();
+        final Enumeration<String> en = config.getInitParameterNames();
         return Collections.list(en).iterator();
     }
 }

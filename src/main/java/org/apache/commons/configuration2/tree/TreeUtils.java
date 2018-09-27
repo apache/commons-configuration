@@ -37,7 +37,7 @@ public final class TreeUtils
      * @param stream The OutputStream.
      * @param result The root node of the tree.
      */
-    public static void printTree(PrintStream stream, ImmutableNode result)
+    public static void printTree(final PrintStream stream, final ImmutableNode result)
     {
         if (stream != null)
         {
@@ -45,10 +45,10 @@ public final class TreeUtils
         }
     }
 
-    private static void printTree(PrintStream stream, String indent, ImmutableNode result)
+    private static void printTree(final PrintStream stream, final String indent, final ImmutableNode result)
     {
-        StringBuilder buffer = new StringBuilder(indent).append("<").append(result.getNodeName());
-        for (Map.Entry<String, Object> e : result.getAttributes().entrySet())
+        final StringBuilder buffer = new StringBuilder(indent).append("<").append(result.getNodeName());
+        for (final Map.Entry<String, Object> e : result.getAttributes().entrySet())
         {
             buffer.append(' ').append(e.getKey()).append("='").append(e.getValue()).append("'");
         }
@@ -62,7 +62,7 @@ public final class TreeUtils
         if (!result.getChildren().isEmpty())
         {
             stream.print("\n");
-            for (ImmutableNode child : result.getChildren())
+            for (final ImmutableNode child : result.getChildren())
             {
                 printTree(stream, indent + "  ", child);
             }

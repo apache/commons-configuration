@@ -75,7 +75,7 @@ public final class InterpolatorSpecification
      *
      * @param builder the builder
      */
-    private InterpolatorSpecification(Builder builder)
+    private InterpolatorSpecification(final Builder builder)
     {
         interpolator = builder.interpolator;
         parentInterpolator = builder.parentInterpolator;
@@ -168,7 +168,7 @@ public final class InterpolatorSpecification
          * @return a reference to this builder for method chaining
          * @throws IllegalArgumentException if a required parameter is missing
          */
-        public Builder withPrefixLookup(String prefix, Lookup lookup)
+        public Builder withPrefixLookup(final String prefix, final Lookup lookup)
         {
             if (prefix == null)
             {
@@ -189,11 +189,11 @@ public final class InterpolatorSpecification
          * @throws IllegalArgumentException if the map contains <b>null</b>
          *         values
          */
-        public Builder withPrefixLookups(Map<String, ? extends Lookup> lookups)
+        public Builder withPrefixLookups(final Map<String, ? extends Lookup> lookups)
         {
             if (lookups != null)
             {
-                for (Map.Entry<String, ? extends Lookup> e : lookups.entrySet())
+                for (final Map.Entry<String, ? extends Lookup> e : lookups.entrySet())
                 {
                     withPrefixLookup(e.getKey(), e.getValue());
                 }
@@ -208,7 +208,7 @@ public final class InterpolatorSpecification
          * @return a reference to this builder for method chaining
          * @throws IllegalArgumentException if the {@code Lookup} is <b>null</b>
          */
-        public Builder withDefaultLookup(Lookup lookup)
+        public Builder withDefaultLookup(final Lookup lookup)
         {
             checkLookup(lookup);
             defLookups.add(lookup);
@@ -225,11 +225,11 @@ public final class InterpolatorSpecification
          * @throws IllegalArgumentException if the collection contains
          *         <b>null</b> entries
          */
-        public Builder withDefaultLookups(Collection<? extends Lookup> lookups)
+        public Builder withDefaultLookups(final Collection<? extends Lookup> lookups)
         {
             if (lookups != null)
             {
-                for (Lookup l : lookups)
+                for (final Lookup l : lookups)
                 {
                     withDefaultLookup(l);
                 }
@@ -246,7 +246,7 @@ public final class InterpolatorSpecification
          * @param ci the {@code ConfigurationInterpolator} (can be <b>null</b>)
          * @return a reference to this builder for method chaining
          */
-        public Builder withInterpolator(ConfigurationInterpolator ci)
+        public Builder withInterpolator(final ConfigurationInterpolator ci)
         {
             interpolator = ci;
             return this;
@@ -261,7 +261,7 @@ public final class InterpolatorSpecification
          *        <b>null</b>)
          * @return a reference to this builder for method chaining
          */
-        public Builder withParentInterpolator(ConfigurationInterpolator parent)
+        public Builder withParentInterpolator(final ConfigurationInterpolator parent)
         {
             parentInterpolator = parent;
             return this;
@@ -276,7 +276,7 @@ public final class InterpolatorSpecification
          */
         public InterpolatorSpecification create()
         {
-            InterpolatorSpecification spec =
+            final InterpolatorSpecification spec =
                     new InterpolatorSpecification(this);
             reset();
             return spec;
@@ -301,7 +301,7 @@ public final class InterpolatorSpecification
          * @param lookup the lookup to be checked
          * @throws IllegalArgumentException if the lookup is <b>null</b>
          */
-        private static void checkLookup(Lookup lookup)
+        private static void checkLookup(final Lookup lookup)
         {
             if (lookup == null)
             {

@@ -97,7 +97,7 @@ public class CatalogResolver implements EntityResolver
      *
      * @param catalogs The delimited list of catalog files.
      */
-    public void setCatalogFiles(String catalogs)
+    public void setCatalogFiles(final String catalogs)
     {
         manager.setCatalogFiles(catalogs);
     }
@@ -106,7 +106,7 @@ public class CatalogResolver implements EntityResolver
      * Set the FileSystem.
      * @param fileSystem The FileSystem.
      */
-    public void setFileSystem(FileSystem fileSystem)
+    public void setFileSystem(final FileSystem fileSystem)
     {
         this.fs = fileSystem;
         manager.setFileSystem(fileSystem);
@@ -116,7 +116,7 @@ public class CatalogResolver implements EntityResolver
      * Set the base path.
      * @param baseDir The base path String.
      */
-    public void setBaseDir(String baseDir)
+    public void setBaseDir(final String baseDir)
     {
         manager.setBaseDir(baseDir);
     }
@@ -125,7 +125,7 @@ public class CatalogResolver implements EntityResolver
      * Set the {@code ConfigurationInterpolator}.
      * @param ci the {@code ConfigurationInterpolator}
      */
-    public void setInterpolator(ConfigurationInterpolator ci)
+    public void setInterpolator(final ConfigurationInterpolator ci)
     {
         manager.setInterpolator(ci);
     }
@@ -134,7 +134,7 @@ public class CatalogResolver implements EntityResolver
      * Enables debug logging of xml-commons Catalog processing.
      * @param debug True if debugging should be enabled, false otherwise.
      */
-    public void setDebug(boolean debug)
+    public void setDebug(final boolean debug)
     {
         if (debug)
         {
@@ -172,15 +172,15 @@ public class CatalogResolver implements EntityResolver
      * @throws SAXException if an error occurs.
      */
     @Override
-    public InputSource resolveEntity(String publicId, String systemId)
+    public InputSource resolveEntity(final String publicId, final String systemId)
             throws SAXException
     {
         String resolved = getResolver().getResolvedEntity(publicId, systemId);
 
         if (resolved != null)
         {
-            String badFilePrefix = "file://";
-            String correctFilePrefix = "file:///";
+            final String badFilePrefix = "file://";
+            final String correctFilePrefix = "file:///";
 
             // Java 5 has a bug when constructing file URLS
             if (resolved.startsWith(badFilePrefix) && !resolved.startsWith(correctFilePrefix))
@@ -190,19 +190,19 @@ public class CatalogResolver implements EntityResolver
 
             try
             {
-                URL url = locate(fs, null, resolved);
+                final URL url = locate(fs, null, resolved);
                 if (url == null)
                 {
                     throw new ConfigurationException("Could not locate "
                             + resolved);
                 }
-                InputStream is = fs.getInputStream(url);
-                InputSource iSource = new InputSource(resolved);
+                final InputStream is = fs.getInputStream(url);
+                final InputSource iSource = new InputSource(resolved);
                 iSource.setPublicId(publicId);
                 iSource.setByteStream(is);
                 return iSource;
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 log.warn("Failed to create InputSource for " + resolved, e);
                 return null;
@@ -232,7 +232,7 @@ public class CatalogResolver implements EntityResolver
      *
      * @param log the new logger
      */
-    public void setLogger(ConfigurationLogger log)
+    public void setLogger(final ConfigurationLogger log)
     {
         initLogger(log);
     }
@@ -242,7 +242,7 @@ public class CatalogResolver implements EntityResolver
      *
      * @param log the new logger
      */
-    private void initLogger(ConfigurationLogger log)
+    private void initLogger(final ConfigurationLogger log)
     {
         this.log = (log != null) ? log : ConfigurationLogger.newDummyLogger();
     }
@@ -265,9 +265,9 @@ public class CatalogResolver implements EntityResolver
      * @param name the file name
      * @return the URL pointing to the file
      */
-    private static URL locate(FileSystem fs, String basePath, String name)
+    private static URL locate(final FileSystem fs, final String basePath, final String name)
     {
-        FileLocator locator =
+        final FileLocator locator =
                 FileLocatorUtils.fileLocator().fileSystem(fs)
                         .basePath(basePath).fileName(name).create();
         return FileLocatorUtils.locate(locator);
@@ -294,7 +294,7 @@ public class CatalogResolver implements EntityResolver
          * Set the FileSystem
          * @param fileSystem The FileSystem in use.
          */
-        public void setFileSystem(FileSystem fileSystem)
+        public void setFileSystem(final FileSystem fileSystem)
         {
             this.fs = fileSystem;
         }
@@ -312,7 +312,7 @@ public class CatalogResolver implements EntityResolver
          * Set the base directory.
          * @param baseDir The base directory.
          */
-        public void setBaseDir(String baseDir)
+        public void setBaseDir(final String baseDir)
         {
             if (baseDir != null)
             {
@@ -329,7 +329,7 @@ public class CatalogResolver implements EntityResolver
             return this.baseDir;
         }
 
-        public void setInterpolator(ConfigurationInterpolator ci)
+        public void setInterpolator(final ConfigurationInterpolator ci)
         {
             interpolator = ci;
         }
@@ -362,7 +362,7 @@ public class CatalogResolver implements EntityResolver
                     catalog.setupReaders();
                     catalog.loadSystemCatalogs();
                 }
-                catch (Exception ex)
+                catch (final Exception ex)
                 {
                     ex.printStackTrace();
                 }
@@ -409,16 +409,17 @@ public class CatalogResolver implements EntityResolver
         public void loadSystemCatalogs() throws IOException
         {
             fs = ((CatalogManager) catalogManager).getFileSystem();
-            String base = ((CatalogManager) catalogManager).getBaseDir();
+            final String base = ((CatalogManager) catalogManager).getBaseDir();
 
             // This is safe because the catalog manager returns a vector of strings.
             @SuppressWarnings("unchecked")
+            final
             Vector<String> catalogs = catalogManager.getCatalogFiles();
             if (catalogs != null)
             {
                 for (int count = 0; count < catalogs.size(); count++)
                 {
-                    String fileName = catalogs.elementAt(count);
+                    final String fileName = catalogs.elementAt(count);
 
                     URL url = null;
                     InputStream is = null;
@@ -431,16 +432,16 @@ public class CatalogResolver implements EntityResolver
                             is = fs.getInputStream(url);
                         }
                     }
-                    catch (ConfigurationException ce)
+                    catch (final ConfigurationException ce)
                     {
-                        String name = url.toString();
+                        final String name = url.toString();
                         // Ignore the exception.
                         catalogManager.debug.message(DEBUG_ALL,
                             "Unable to get input stream for " + name + ". " + ce.getMessage());
                     }
                     if (is != null)
                     {
-                        String mimeType = fileNameMap.getContentTypeFor(fileName);
+                        final String mimeType = fileNameMap.getContentTypeFor(fileName);
                         try
                         {
                             if (mimeType != null)
@@ -449,7 +450,7 @@ public class CatalogResolver implements EntityResolver
                                 continue;
                             }
                         }
-                        catch (Exception ex)
+                        catch (final Exception ex)
                         {
                             // Ignore the exception.
                             catalogManager.debug.message(DEBUG_ALL,
@@ -473,7 +474,7 @@ public class CatalogResolver implements EntityResolver
          * @param fileName The catalog file. May be a full URI String.
          * @throws IOException If an error occurs.
          */
-        public void parseCatalog(String baseDir, String fileName) throws IOException
+        public void parseCatalog(final String baseDir, final String fileName) throws IOException
         {
             base = locate(fs, baseDir, fileName);
             catalogCwd = base;
@@ -484,14 +485,14 @@ public class CatalogResolver implements EntityResolver
 
             for (int count = 0; !parsed && count < readerArr.size(); count++)
             {
-                CatalogReader reader = (CatalogReader) readerArr.get(count);
+                final CatalogReader reader = (CatalogReader) readerArr.get(count);
                 InputStream inStream;
 
                 try
                 {
                     inStream = fs.getInputStream(base);
                 }
-                catch (Exception ex)
+                catch (final Exception ex)
                 {
                     catalogManager.debug.message(DEBUG_NORMAL, "Unable to access " + base
                         + ex.getMessage());
@@ -503,7 +504,7 @@ public class CatalogResolver implements EntityResolver
                     reader.readCatalog(this, inStream);
                     parsed = true;
                 }
-                catch (CatalogException ce)
+                catch (final CatalogException ce)
                 {
                     catalogManager.debug.message(DEBUG_NORMAL, "Parse failed for " + fileName
                             + ce.getMessage());
@@ -520,7 +521,7 @@ public class CatalogResolver implements EntityResolver
                     {
                         inStream.close();
                     }
-                    catch (IOException ioe)
+                    catch (final IOException ioe)
                     {
                         // Ignore the exception.
                         inStream = null;
@@ -541,10 +542,10 @@ public class CatalogResolver implements EntityResolver
          * @return The normalized URI reference.
          */
         @Override
-        protected String normalizeURI(String uriref)
+        protected String normalizeURI(final String uriref)
         {
-            ConfigurationInterpolator ci = ((CatalogManager) catalogManager).getInterpolator();
-            String resolved = ci != null ? String.valueOf(ci.interpolate(uriref)) : uriref;
+            final ConfigurationInterpolator ci = ((CatalogManager) catalogManager).getInterpolator();
+            final String resolved = ci != null ? String.valueOf(ci.interpolate(uriref)) : uriref;
             return super.normalizeURI(resolved);
         }
     }

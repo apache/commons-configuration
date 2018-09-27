@@ -62,7 +62,7 @@ public class TestQueryResult
     @Test
     public void testIsAttributeResultTrue()
     {
-        QueryResult<ImmutableNode> result =
+        final QueryResult<ImmutableNode> result =
                 QueryResult.createAttributeResult(attributeNode, ATTR);
         assertTrue("Not an attribute result", result.isAttributeResult());
     }
@@ -73,7 +73,7 @@ public class TestQueryResult
     @Test
     public void testIsAttributeResultFalse()
     {
-        QueryResult<ImmutableNode> result =
+        final QueryResult<ImmutableNode> result =
                 QueryResult.createNodeResult(resultNode);
         assertFalse("An attribute result", result.isAttributeResult());
     }
@@ -84,7 +84,7 @@ public class TestQueryResult
     @Test
     public void testGetAttributeValue()
     {
-        QueryResult<ImmutableNode> result =
+        final QueryResult<ImmutableNode> result =
                 QueryResult.createAttributeResult(attributeNode, ATTR);
         assertEquals("Wrong value", VALUE,
                 result.getAttributeValue(new InMemoryNodeModel()
@@ -97,7 +97,7 @@ public class TestQueryResult
     @Test(expected = IllegalStateException.class)
     public void testGetAttributeValueNoAttributeResult()
     {
-        QueryResult<ImmutableNode> result =
+        final QueryResult<ImmutableNode> result =
                 QueryResult.createNodeResult(resultNode);
         result.getAttributeValue(new InMemoryNodeModel().getNodeHandler());
     }
@@ -125,9 +125,9 @@ public class TestQueryResult
     @Test
     public void testEqualsFalse()
     {
-        QueryResult<ImmutableNode> nodeRes =
+        final QueryResult<ImmutableNode> nodeRes =
                 QueryResult.createNodeResult(resultNode);
-        QueryResult<ImmutableNode> attrRes =
+        final QueryResult<ImmutableNode> attrRes =
                 QueryResult.createAttributeResult(attributeNode, ATTR);
         checkEquals(nodeRes, attrRes, false);
         QueryResult<ImmutableNode> res =
@@ -145,7 +145,7 @@ public class TestQueryResult
     @Test
     public void testEqualsOtherObjects()
     {
-        QueryResult<ImmutableNode> result =
+        final QueryResult<ImmutableNode> result =
                 QueryResult.createNodeResult(resultNode);
         checkEquals(result, null, false);
         checkEquals(result, this, false);
@@ -157,7 +157,7 @@ public class TestQueryResult
     @Test
     public void testToStringNodeResult()
     {
-        QueryResult<ImmutableNode> result =
+        final QueryResult<ImmutableNode> result =
                 QueryResult.createNodeResult(resultNode);
         assertThat(result.toString(),
                 containsString("resultNode=" + resultNode));
@@ -169,9 +169,9 @@ public class TestQueryResult
     @Test
     public void testToStringAttributeResult()
     {
-        QueryResult<ImmutableNode> result =
+        final QueryResult<ImmutableNode> result =
                 QueryResult.createAttributeResult(attributeNode, ATTR);
-        String s = result.toString();
+        final String s = result.toString();
         assertThat(s, containsString("attribute=" + ATTR));
         assertThat(s, containsString("parentNode=" + attributeNode));
     }

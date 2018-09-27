@@ -50,8 +50,8 @@ class ConfigurationAttributePointer<T> extends NodePointer
      * @param parent the parent node pointer
      * @param attrName the name of the managed attribute
      */
-    public ConfigurationAttributePointer(ConfigurationNodePointer<T> parent,
-            String attrName)
+    public ConfigurationAttributePointer(final ConfigurationNodePointer<T> parent,
+            final String attrName)
     {
         super(parent);
         attributeResult =
@@ -69,6 +69,7 @@ class ConfigurationAttributePointer<T> extends NodePointer
         // safe to cast because the constructor only expects pointers of this
         // type
         @SuppressWarnings("unchecked")
+        final
         ConfigurationNodePointer<T> configurationNodePointer =
                 (ConfigurationNodePointer<T>) getParent();
         return configurationNodePointer;
@@ -83,7 +84,7 @@ class ConfigurationAttributePointer<T> extends NodePointer
      * @return the order of these pointers
      */
     @Override
-    public int compareChildNodePointers(NodePointer p1, NodePointer p2)
+    public int compareChildNodePointers(final NodePointer p1, final NodePointer p2)
     {
         return 0;
     }
@@ -188,7 +189,7 @@ class ConfigurationAttributePointer<T> extends NodePointer
      * @param value the new value
      */
     @Override
-    public void setValue(Object value)
+    public void setValue(final Object value)
     {
         throw new UnsupportedOperationException(
                 "Updating the value is not supported!");
@@ -202,7 +203,7 @@ class ConfigurationAttributePointer<T> extends NodePointer
      * @return a flag if this node corresponds to the test
      */
     @Override
-    public boolean testNode(NodeTest test)
+    public boolean testNode(final NodeTest test)
     {
         if (test instanceof NodeTypeTest
                 && ((NodeTypeTest) test).getNodeType() == Compiler.NODE_TYPE_TEXT)

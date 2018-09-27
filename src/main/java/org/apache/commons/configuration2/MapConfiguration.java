@@ -103,7 +103,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      *
      * @param map the map
      */
-    public MapConfiguration(Map<String, ?> map)
+    public MapConfiguration(final Map<String, ?> map)
     {
         this.map = (Map<String, Object>) map;
     }
@@ -121,7 +121,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      *        configuration
      * @since 1.8
      */
-    public MapConfiguration(Properties props)
+    public MapConfiguration(final Properties props)
     {
         map = convertPropertiesToMap(props);
     }
@@ -157,27 +157,27 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      *        be disabled
      * @since 1.7
      */
-    public void setTrimmingDisabled(boolean trimmingDisabled)
+    public void setTrimmingDisabled(final boolean trimmingDisabled)
     {
         this.trimmingDisabled = trimmingDisabled;
     }
 
     @Override
-    protected Object getPropertyInternal(String key)
+    protected Object getPropertyInternal(final String key)
     {
-        Object value = map.get(key);
+        final Object value = map.get(key);
         if (value instanceof String)
         {
-            Collection<String> list = getListDelimiterHandler().split((String) value, !isTrimmingDisabled());
+            final Collection<String> list = getListDelimiterHandler().split((String) value, !isTrimmingDisabled());
             return list.size() > 1 ? list : list.iterator().next();
         }
         return value;
     }
 
     @Override
-    protected void addPropertyDirect(String key, Object value)
+    protected void addPropertyDirect(final String key, final Object value)
     {
-        Object previousValue = getProperty(key);
+        final Object previousValue = getProperty(key);
 
         if (previousValue == null)
         {
@@ -192,7 +192,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
         else
         {
             // the previous value is replaced by a list containing the previous value and the new value
-            List<Object> list = new ArrayList<>();
+            final List<Object> list = new ArrayList<>();
             list.add(previousValue);
             list.add(value);
 
@@ -207,13 +207,13 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
     }
 
     @Override
-    protected boolean containsKeyInternal(String key)
+    protected boolean containsKeyInternal(final String key)
     {
         return map.containsKey(key);
     }
 
     @Override
-    protected void clearPropertyDirect(String key)
+    protected void clearPropertyDirect(final String key)
     {
         map.remove(key);
     }
@@ -242,15 +242,16 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
     {
         try
         {
-            MapConfiguration copy = (MapConfiguration) super.clone();
+            final MapConfiguration copy = (MapConfiguration) super.clone();
             // Safe because ConfigurationUtils returns a map of the same types.
             @SuppressWarnings("unchecked")
+            final
             Map<String, Object> clonedMap = (Map<String, Object>) ConfigurationUtils.clone(map);
             copy.map = clonedMap;
             copy.cloneInterpolator(this);
             return copy;
         }
-        catch (CloneNotSupportedException cex)
+        catch (final CloneNotSupportedException cex)
         {
             // cannot happen
             throw new ConfigurationRuntimeException(cex);
@@ -267,9 +268,10 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      * @return a newly created map with all string keys of the properties
      */
     @SuppressWarnings("unchecked")
-    private static Map<String, Object> convertPropertiesToMap(Properties props)
+    private static Map<String, Object> convertPropertiesToMap(final Properties props)
     {
         @SuppressWarnings("rawtypes")
+        final
         Map map = props;
         return map;
     }

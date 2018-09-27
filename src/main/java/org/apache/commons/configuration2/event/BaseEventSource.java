@@ -94,11 +94,11 @@ public class BaseEventSource implements EventSource
      *         listeners; it cannot be manipulated)
      */
     public <T extends Event> Collection<EventListener<? super T>> getEventListeners(
-            EventType<T> eventType)
+            final EventType<T> eventType)
     {
-        List<EventListener<? super T>> result =
+        final List<EventListener<? super T>> result =
                 new LinkedList<>();
-        for (EventListener<? super T> l : eventListeners
+        for (final EventListener<? super T> l : eventListeners
                 .getEventListeners(eventType))
         {
             result.add(l);
@@ -137,7 +137,7 @@ public class BaseEventSource implements EventSource
      *
      * @param enable a flag if detail events should be enabled or disabled
      */
-    public void setDetailEvents(boolean enable)
+    public void setDetailEvents(final boolean enable)
     {
         synchronized (lockDetailEventsCount)
         {
@@ -153,15 +153,15 @@ public class BaseEventSource implements EventSource
     }
 
     @Override
-    public <T extends Event> void addEventListener(EventType<T> eventType,
-            EventListener<? super T> listener)
+    public <T extends Event> void addEventListener(final EventType<T> eventType,
+            final EventListener<? super T> listener)
     {
         eventListeners.addEventListener(eventType, listener);
     }
 
     @Override
     public <T extends Event> boolean removeEventListener(
-            EventType<T> eventType, EventListener<? super T> listener)
+            final EventType<T> eventType, final EventListener<? super T> listener)
     {
         return eventListeners.removeEventListener(eventType, listener);
     }
@@ -181,7 +181,7 @@ public class BaseEventSource implements EventSource
      */
     public void clearErrorListeners()
     {
-        for (EventListenerRegistrationData<? extends ConfigurationErrorEvent> reg : eventListeners
+        for (final EventListenerRegistrationData<? extends ConfigurationErrorEvent> reg : eventListeners
                 .getRegistrationsForSuperType(ConfigurationErrorEvent.ANY))
         {
             eventListeners.removeEventListener(reg);
@@ -197,7 +197,7 @@ public class BaseEventSource implements EventSource
      * @throws IllegalArgumentException if the target source is <b>null</b>
      * @since 2.0
      */
-    public void copyEventListeners(BaseEventSource source)
+    public void copyEventListeners(final BaseEventSource source)
     {
         if (source == null)
         {
@@ -219,16 +219,16 @@ public class BaseEventSource implements EventSource
      * @param before the before update flag
      * @param <T> the type of the event to be fired
      */
-    protected <T extends ConfigurationEvent> void fireEvent(EventType<T> type,
-            String propName, Object propValue, boolean before)
+    protected <T extends ConfigurationEvent> void fireEvent(final EventType<T> type,
+            final String propName, final Object propValue, final boolean before)
     {
         if (checkDetailEvents(-1))
         {
-            EventListenerList.EventListenerIterator<T> it =
+            final EventListenerList.EventListenerIterator<T> it =
                     eventListeners.getEventListenerIterator(type);
             if (it.hasNext())
             {
-                ConfigurationEvent event =
+                final ConfigurationEvent event =
                         createEvent(type, propName, propValue, before);
                 while (it.hasNext())
                 {
@@ -251,7 +251,7 @@ public class BaseEventSource implements EventSource
      * @return the newly created event object
      */
     protected <T extends ConfigurationEvent> ConfigurationEvent createEvent(
-            EventType<T> type, String propName, Object propValue, boolean before)
+            final EventType<T> type, final String propName, final Object propValue, final boolean before)
     {
         return new ConfigurationEvent(this, type, propName, propValue, before);
     }
@@ -270,14 +270,14 @@ public class BaseEventSource implements EventSource
      * @param <T> the event type
      */
     public <T extends ConfigurationErrorEvent> void fireError(
-            EventType<T> eventType, EventType<?> operationType,
-            String propertyName, Object propertyValue, Throwable cause)
+            final EventType<T> eventType, final EventType<?> operationType,
+            final String propertyName, final Object propertyValue, final Throwable cause)
     {
-        EventListenerList.EventListenerIterator<T> iterator =
+        final EventListenerList.EventListenerIterator<T> iterator =
                 eventListeners.getEventListenerIterator(eventType);
         if (iterator.hasNext())
         {
-            ConfigurationErrorEvent event =
+            final ConfigurationErrorEvent event =
                     createErrorEvent(eventType, operationType, propertyName,
                             propertyValue, cause);
             while (iterator.hasNext())
@@ -300,8 +300,8 @@ public class BaseEventSource implements EventSource
      * @return the event object
      */
     protected ConfigurationErrorEvent createErrorEvent(
-            EventType<? extends ConfigurationErrorEvent> type,
-            EventType<?> opType, String propName, Object propValue, Throwable ex)
+            final EventType<? extends ConfigurationErrorEvent> type,
+            final EventType<?> opType, final String propName, final Object propValue, final Throwable ex)
     {
         return new ConfigurationErrorEvent(this, type, opType, propName,
                 propValue, ex);
@@ -320,7 +320,7 @@ public class BaseEventSource implements EventSource
     @Override
     protected Object clone() throws CloneNotSupportedException
     {
-        BaseEventSource copy = (BaseEventSource) super.clone();
+        final BaseEventSource copy = (BaseEventSource) super.clone();
         copy.initListeners();
         return copy;
     }
@@ -341,7 +341,7 @@ public class BaseEventSource implements EventSource
      * @return <b>true</b> if the counter is greater than the limit,
      *         <b>false</b> otherwise
      */
-    private boolean checkDetailEvents(int limit)
+    private boolean checkDetailEvents(final int limit)
     {
         synchronized (lockDetailEventsCount)
         {

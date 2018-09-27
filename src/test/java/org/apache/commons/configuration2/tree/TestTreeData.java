@@ -28,9 +28,9 @@ public class TestTreeData extends AbstractImmutableNodeHandlerTest
      * with the given root node.
      */
     @Override
-    protected NodeHandler<ImmutableNode> createHandler(ImmutableNode root)
+    protected NodeHandler<ImmutableNode> createHandler(final ImmutableNode root)
     {
-        InMemoryNodeModel model = new InMemoryNodeModel(root);
+        final InMemoryNodeModel model = new InMemoryNodeModel(root);
         return model.getTreeData();
     }
 }

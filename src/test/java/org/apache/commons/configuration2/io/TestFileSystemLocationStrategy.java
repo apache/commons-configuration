@@ -47,13 +47,13 @@ public class TestFileSystemLocationStrategy
     @Test
     public void testLocate()
     {
-        FileSystem fs = EasyMock.createMock(FileSystem.class);
-        URL url = ConfigurationAssert.getTestURL("test.xml");
+        final FileSystem fs = EasyMock.createMock(FileSystem.class);
+        final URL url = ConfigurationAssert.getTestURL("test.xml");
         final String basePath = "testBasePath";
         final String fileName = "testFileName.txt";
         EasyMock.expect(fs.locateFromURL(basePath, fileName)).andReturn(url);
         EasyMock.replay(fs);
-        FileLocator locator =
+        final FileLocator locator =
                 FileLocatorUtils
                         .fileLocator()
                         .basePath(basePath)

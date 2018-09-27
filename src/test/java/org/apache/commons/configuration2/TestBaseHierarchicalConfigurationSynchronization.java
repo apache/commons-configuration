@@ -62,7 +62,7 @@ public class TestBaseHierarchicalConfigurationSynchronization
     @Before
     public void setUp() throws Exception
     {
-        XMLConfiguration c = new XMLConfiguration();
+        final XMLConfiguration c = new XMLConfiguration();
         testFile = ConfigurationAssert.getTestFile("test.xml");
         new FileHandler(c).load(testFile);
         sync = new SynchronizerTestImpl();
@@ -97,7 +97,7 @@ public class TestBaseHierarchicalConfigurationSynchronization
     @Test
     public void testCloneSynchronized()
     {
-        BaseHierarchicalConfiguration clone =
+        final BaseHierarchicalConfiguration clone =
                 (BaseHierarchicalConfiguration) config.clone();
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         assertNotSame("Synchronizer was not cloned", config.getSynchronizer(),
@@ -110,7 +110,7 @@ public class TestBaseHierarchicalConfigurationSynchronization
     @Test
     public void testAddNodesSynchronized()
     {
-        ImmutableNode node = NodeStructureHelper.createNode("newNode", "true");
+        final ImmutableNode node = NodeStructureHelper.createNode("newNode", "true");
         config.addNodes("test.addNodes", Collections.singleton(node));
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
     }
@@ -131,7 +131,7 @@ public class TestBaseHierarchicalConfigurationSynchronization
     @Test
     public void testCopyConstructorSynchronized()
     {
-        BaseHierarchicalConfiguration copy =
+        final BaseHierarchicalConfiguration copy =
                 new BaseHierarchicalConfiguration(config);
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         assertNotSame("Synchronizer was copied", sync, copy.getSynchronizer());
@@ -144,7 +144,7 @@ public class TestBaseHierarchicalConfigurationSynchronization
     @Test
     public void testConfigurationAtSynchronized()
     {
-        HierarchicalConfiguration<ImmutableNode> sub = config.configurationAt("element2");
+        final HierarchicalConfiguration<ImmutableNode> sub = config.configurationAt("element2");
         assertEquals("Wrong property", "I'm complex!",
                 sub.getString("subelement.subsubelement"));
         sync.verify(Methods.BEGIN_READ, Methods.END_READ, Methods.BEGIN_READ,
@@ -158,7 +158,7 @@ public class TestBaseHierarchicalConfigurationSynchronization
     @Test
     public void testConfigurationsAtSynchronized()
     {
-        List<HierarchicalConfiguration<ImmutableNode>> subs =
+        final List<HierarchicalConfiguration<ImmutableNode>> subs =
                 config.configurationsAt("list.item");
         assertFalse("No subnode configurations", subs.isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
@@ -170,7 +170,7 @@ public class TestBaseHierarchicalConfigurationSynchronization
     @Test
     public void testChildConfigurationsAtSynchronized()
     {
-        List<HierarchicalConfiguration<ImmutableNode>> subs =
+        final List<HierarchicalConfiguration<ImmutableNode>> subs =
                 config.childConfigurationsAt("clear");
         assertFalse("No subnode configurations", subs.isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
@@ -182,10 +182,10 @@ public class TestBaseHierarchicalConfigurationSynchronization
      * @param c the configuration to test
      * @return a flag whether the root node of this configuration is detached
      */
-    private static boolean isDetached(HierarchicalConfiguration<ImmutableNode> c)
+    private static boolean isDetached(final HierarchicalConfiguration<ImmutableNode> c)
     {
         assertTrue("Not a sub configuration", c instanceof SubnodeConfiguration);
-        InMemoryNodeModel nodeModel = ((SubnodeConfiguration) c).getRootNodeModel();
+        final InMemoryNodeModel nodeModel = ((SubnodeConfiguration) c).getRootNodeModel();
         return nodeModel.isTrackedNodeDetached(((SubnodeConfiguration) c)
                         .getRootSelector());
     }
@@ -198,9 +198,9 @@ public class TestBaseHierarchicalConfigurationSynchronization
     public void testSubnodeUpdate()
     {
         config.addProperty("element2.test", Boolean.TRUE);
-        HierarchicalConfiguration<ImmutableNode> sub =
+        final HierarchicalConfiguration<ImmutableNode> sub =
                 config.configurationAt("element2", true);
-        HierarchicalConfiguration<ImmutableNode> subsub =
+        final HierarchicalConfiguration<ImmutableNode> subsub =
                 sub.configurationAt("subelement", true);
         config.clearTree("element2.subelement");
         assertFalse("Sub1 detached", isDetached(sub));
@@ -214,11 +214,11 @@ public class TestBaseHierarchicalConfigurationSynchronization
     @Test
     public void testSubnodeUpdateBySubnode()
     {
-        HierarchicalConfiguration<ImmutableNode> sub =
+        final HierarchicalConfiguration<ImmutableNode> sub =
                 config.configurationAt("element2", true);
-        HierarchicalConfiguration<ImmutableNode> subsub =
+        final HierarchicalConfiguration<ImmutableNode> subsub =
                 sub.configurationAt("subelement", true);
-        HierarchicalConfiguration<ImmutableNode> sub2 =
+        final HierarchicalConfiguration<ImmutableNode> sub2 =
                 config.configurationAt("element2.subelement", true);
         sub.clearTree("subelement");
         assertTrue("Sub2 still attached", isDetached(sub2));
@@ -232,15 +232,16 @@ public class TestBaseHierarchicalConfigurationSynchronization
     @Test
     public void testCloneCopySubnodeData()
     {
-        BaseHierarchicalConfiguration conf2 =
+        final BaseHierarchicalConfiguration conf2 =
                 new BaseHierarchicalConfiguration(config);
 
-        HierarchicalConfiguration<ImmutableNode> sub =
+        final HierarchicalConfiguration<ImmutableNode> sub =
                 conf2.configurationAt("element2.subelement", true);
         @SuppressWarnings("unchecked") // clone retains the type
+        final
         HierarchicalConfiguration<ImmutableNode> copy =
                 (HierarchicalConfiguration<ImmutableNode>) conf2.clone();
-        HierarchicalConfiguration<ImmutableNode> sub2 =
+        final HierarchicalConfiguration<ImmutableNode> sub2 =
                 copy.configurationAt("element2.subelement", true);
         // This must not cause a validate operation on sub1, but on sub2
         copy.clearTree("element2");
@@ -254,7 +255,7 @@ public class TestBaseHierarchicalConfigurationSynchronization
     @Test
     public void testSubsetSynchronized()
     {
-        Configuration subset = config.subset("test");
+        final Configuration subset = config.subset("test");
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         assertSame("Wrong Synchronizer", sync, subset.getSynchronizer());
     }
@@ -267,18 +268,18 @@ public class TestBaseHierarchicalConfigurationSynchronization
     public void testReadOnlyAccessToSubConfigurations()
             throws ConfigurationException
     {
-        FileBasedConfigurationBuilder<XMLConfiguration> builder =
+        final FileBasedConfigurationBuilder<XMLConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
                         XMLConfiguration.class);
         builder.configure(new Parameters().fileBased().setFile(testFile));
         config = builder.getConfiguration();
 
-        CountDownLatch startLatch = new CountDownLatch(1);
-        Collection<SubNodeAccessThread> threads =
+        final CountDownLatch startLatch = new CountDownLatch(1);
+        final Collection<SubNodeAccessThread> threads =
                 new ArrayList<>();
         for (int i = 0; i < 4; i++)
         {
-            SubNodeAccessThread t =
+            final SubNodeAccessThread t =
                     new SubNodeAccessThread(config, startLatch, "element2",
                             "subelement.subsubelement");
             t.start();
@@ -286,7 +287,7 @@ public class TestBaseHierarchicalConfigurationSynchronization
         }
         for (int i = 0; i < 4; i++)
         {
-            SubNodeAccessThread t =
+            final SubNodeAccessThread t =
                     new SubNodeAccessThread(config, startLatch,
                             "element2.subelement", "subsubelement");
             t.start();
@@ -294,7 +295,7 @@ public class TestBaseHierarchicalConfigurationSynchronization
         }
 
         startLatch.countDown();
-        for (SubNodeAccessThread t : threads)
+        for (final SubNodeAccessThread t : threads)
         {
             t.verify();
         }
@@ -328,9 +329,9 @@ public class TestBaseHierarchicalConfigurationSynchronization
          * @param keySubConfig the key for the sub configuration
          * @param keyProperty the key for the property
          */
-        public SubNodeAccessThread(HierarchicalConfiguration<ImmutableNode> c,
-                CountDownLatch startLatch, String keySubConfig,
-                String keyProperty)
+        public SubNodeAccessThread(final HierarchicalConfiguration<ImmutableNode> c,
+                final CountDownLatch startLatch, final String keySubConfig,
+                final String keyProperty)
         {
             config = c;
             latch = startLatch;
@@ -344,11 +345,11 @@ public class TestBaseHierarchicalConfigurationSynchronization
             try
             {
                 latch.await();
-                HierarchicalConfiguration<ImmutableNode> subConfig =
+                final HierarchicalConfiguration<ImmutableNode> subConfig =
                         config.configurationAt(keySub, true);
                 value = subConfig.getString(keyProp);
             }
-            catch (InterruptedException iex)
+            catch (final InterruptedException iex)
             {
                 // ignore
             }
@@ -363,7 +364,7 @@ public class TestBaseHierarchicalConfigurationSynchronization
             {
                 join();
             }
-            catch (InterruptedException e)
+            catch (final InterruptedException e)
             {
                 fail("Waiting was interrupted: " + e);
             }

@@ -133,10 +133,10 @@ public class TestINIConfiguration
      * @return the initialized configuration
      * @throws ConfigurationException if an error occurs
      */
-    private static INIConfiguration setUpConfig(String data)
+    private static INIConfiguration setUpConfig(final String data)
             throws ConfigurationException
     {
-        INIConfiguration instance = new INIConfiguration();
+        final INIConfiguration instance = new INIConfiguration();
         instance.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         load(instance, data);
         return instance;
@@ -149,15 +149,15 @@ public class TestINIConfiguration
      * @param data the data to be loaded
      * @throws ConfigurationException if an error occurs
      */
-    private static void load(INIConfiguration instance, String data)
+    private static void load(final INIConfiguration instance, final String data)
             throws ConfigurationException
     {
-        StringReader reader = new StringReader(data);
+        final StringReader reader = new StringReader(data);
         try
         {
             instance.read(reader);
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new ConfigurationException(e);
         }
@@ -172,15 +172,15 @@ public class TestINIConfiguration
      * @return the content of this configuration saved to a string
      * @throws ConfigurationException if an error occurs
      */
-    private static String saveToString(INIConfiguration config)
+    private static String saveToString(final INIConfiguration config)
             throws ConfigurationException
     {
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         try
         {
             config.write(writer);
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new ConfigurationException(e);
         }
@@ -194,10 +194,10 @@ public class TestINIConfiguration
      * @return the newly created file
      * @throws IOException if an error occurs
      */
-    private File writeTestFile(String content) throws IOException
+    private File writeTestFile(final String content) throws IOException
     {
-        File file = folder.newFile();
-        PrintWriter out = new PrintWriter(new FileWriter(file));
+        final File file = folder.newFile();
+        final PrintWriter out = new PrintWriter(new FileWriter(file));
         try
         {
             out.println(content);
@@ -215,8 +215,8 @@ public class TestINIConfiguration
     @Test
     public void testSave() throws Exception
     {
-        Writer writer = new StringWriter();
-        INIConfiguration instance = new INIConfiguration();
+        final Writer writer = new StringWriter();
+        final INIConfiguration instance = new INIConfiguration();
         instance.addProperty("section1.var1", "foo");
         instance.addProperty("section1.var2", "451");
         instance.addProperty("section2.var1", "123.45");
@@ -237,18 +237,18 @@ public class TestINIConfiguration
     public void testSeparatorUsedInINIOutput() throws Exception
     {
     	final String outputSeparator = ": ";
-    	String input = MessageFormat.format(INI_DATA4, "=").trim();
-    	String expectedOutput = MessageFormat.format(INI_DATA4, outputSeparator).trim();
+    	final String input = MessageFormat.format(INI_DATA4, "=").trim();
+    	final String expectedOutput = MessageFormat.format(INI_DATA4, outputSeparator).trim();
 
-    	INIConfiguration instance = new FileBasedConfigurationBuilder<>(
+    	final INIConfiguration instance = new FileBasedConfigurationBuilder<>(
     	        INIConfiguration.class)
                 .configure(new Parameters().ini().setSeparatorUsedInOutput(outputSeparator))
                 .getConfiguration();
         load(instance, input);
 
-        Writer writer = new StringWriter();
+        final Writer writer = new StringWriter();
         instance.write(writer);
-        String result = writer.toString().trim();
+        final String result = writer.toString().trim();
 
         assertEquals("Wrong content of ini file", expectedOutput, result);
     }
@@ -261,10 +261,10 @@ public class TestINIConfiguration
      * @param content the content of the configuration
      * @throws ConfigurationException if an error occurs
      */
-    private void checkSave(String content) throws ConfigurationException
+    private void checkSave(final String content) throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(content);
-        String sOutput = saveToString(config);
+        final INIConfiguration config = setUpConfig(content);
+        final String sOutput = saveToString(config);
         assertEquals("Wrong content of ini file", content, sOutput);
     }
 
@@ -294,15 +294,15 @@ public class TestINIConfiguration
     public void testSaveWithDelimiterParsingDisabled()
             throws ConfigurationException
     {
-        INIConfiguration config = new INIConfiguration();
-        String data =
+        final INIConfiguration config = new INIConfiguration();
+        final String data =
                 INI_DATA.substring(0, INI_DATA.length() - LINE_SEPARATOR.length())
                         + "nolist = 1,2, 3";
         load(config, data);
         assertEquals("Wrong property value", "1,2, 3",
                 config.getString("section3.nolist"));
-        String content = saveToString(config);
-        INIConfiguration config2 = new INIConfiguration();
+        final String content = saveToString(config);
+        final INIConfiguration config2 = new INIConfiguration();
         load(config2, content);
         assertEquals("Wrong property value after reload", "1,2, 3",
                 config2.getString("section3.nolist"));
@@ -334,13 +334,13 @@ public class TestINIConfiguration
     public void testLoadFromBuilder() throws ConfigurationException,
             IOException
     {
-        File file = writeTestFile(INI_DATA);
-        FileBasedConfigurationBuilder<INIConfiguration> builder =
+        final File file = writeTestFile(INI_DATA);
+        final FileBasedConfigurationBuilder<INIConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
                         INIConfiguration.class);
         builder.configure(new FileBasedBuilderParametersImpl()
                 .setFile(file));
-        INIConfiguration config = builder.getConfiguration();
+        final INIConfiguration config = builder.getConfiguration();
         checkContent(config);
     }
 
@@ -350,7 +350,7 @@ public class TestINIConfiguration
      *
      * @param instance the configuration to check
      */
-    private void checkContent(INIConfiguration instance)
+    private void checkContent(final INIConfiguration instance)
     {
         assertEquals("var1", "foo", instance.getString("section1.var1"));
         assertEquals("var2", 451, instance.getInt("section1.var2"));
@@ -374,9 +374,9 @@ public class TestINIConfiguration
      *
      * @param data the data to load
      */
-    private void checkLoad(String data) throws ConfigurationException
+    private void checkLoad(final String data) throws ConfigurationException
     {
-        INIConfiguration instance = setUpConfig(data);
+        final INIConfiguration instance = setUpConfig(data);
         checkContent(instance);
     }
 
@@ -387,7 +387,7 @@ public class TestINIConfiguration
     @Test
     public void testIsCommentLine()
     {
-        INIConfiguration instance = new INIConfiguration();
+        final INIConfiguration instance = new INIConfiguration();
         assertTrue(instance.isCommentLine("#comment1"));
         assertTrue(instance.isCommentLine(";comment1"));
         assertFalse(instance.isCommentLine("nocomment=true"));
@@ -401,7 +401,7 @@ public class TestINIConfiguration
     @Test
     public void testIsSectionLine()
     {
-        INIConfiguration instance = new INIConfiguration();
+        final INIConfiguration instance = new INIConfiguration();
         assertTrue(instance.isSectionLine("[section]"));
         assertFalse(instance.isSectionLine("nosection=true"));
         assertFalse(instance.isSectionLine(null));
@@ -414,27 +414,27 @@ public class TestINIConfiguration
     @Test
     public void testGetSections()
     {
-        INIConfiguration instance = new INIConfiguration();
+        final INIConfiguration instance = new INIConfiguration();
         instance.addProperty("test1.foo", "bar");
         instance.addProperty("test2.foo", "abc");
-        Set<String> expResult = new HashSet<>();
+        final Set<String> expResult = new HashSet<>();
         expResult.add("test1");
         expResult.add("test2");
-        Set<String> result = instance.getSections();
+        final Set<String> result = instance.getSections();
         assertEquals(expResult, result);
     }
 
     @Test
     public void testQuotedValue() throws Exception
     {
-        INIConfiguration config = setUpConfig(INI_DATA2);
+        final INIConfiguration config = setUpConfig(INI_DATA2);
         assertEquals("value", "quoted value", config.getString("section4.var1"));
     }
 
     @Test
     public void testQuotedValueWithQuotes() throws Exception
     {
-        INIConfiguration config = setUpConfig(INI_DATA2);
+        final INIConfiguration config = setUpConfig(INI_DATA2);
         assertEquals("value", "quoted value\\nwith \"quotes\"", config
                 .getString("section4.var2"));
     }
@@ -442,21 +442,21 @@ public class TestINIConfiguration
     @Test
     public void testValueWithComment() throws Exception
     {
-        INIConfiguration config = setUpConfig(INI_DATA2);
+        final INIConfiguration config = setUpConfig(INI_DATA2);
         assertEquals("value", "123", config.getString("section4.var3"));
     }
 
     @Test
     public void testQuotedValueWithComment() throws Exception
     {
-        INIConfiguration config = setUpConfig(INI_DATA2);
+        final INIConfiguration config = setUpConfig(INI_DATA2);
         assertEquals("value", "1;2;3", config.getString("section4.var4"));
     }
 
     @Test
     public void testQuotedValueWithSingleQuotes() throws Exception
     {
-        INIConfiguration config = setUpConfig(INI_DATA2);
+        final INIConfiguration config = setUpConfig(INI_DATA2);
         assertEquals("value", "'quoted' \"value\"", config
                 .getString("section4.var5"));
     }
@@ -464,13 +464,13 @@ public class TestINIConfiguration
     @Test
     public void testWriteValueWithCommentChar() throws Exception
     {
-        INIConfiguration config = new INIConfiguration();
+        final INIConfiguration config = new INIConfiguration();
         config.setProperty("section.key1", "1;2;3");
 
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         config.write(writer);
 
-        INIConfiguration config2 = new INIConfiguration();
+        final INIConfiguration config2 = new INIConfiguration();
         config2.read(new StringReader(writer.toString()));
 
         assertEquals("value", "1;2;3", config2.getString("section.key1"));
@@ -483,7 +483,7 @@ public class TestINIConfiguration
     public void testQuotedValueWithWhitespace() throws Exception
     {
         final String content = "CmdPrompt = \" [test@cmd ~]$ \"";
-        INIConfiguration config = setUpConfig(content);
+        final INIConfiguration config = setUpConfig(content);
         assertEquals("Wrong propert value", " [test@cmd ~]$ ", config
                 .getString("CmdPrompt"));
     }
@@ -495,7 +495,7 @@ public class TestINIConfiguration
     public void testQuotedValueWithWhitespaceAndComment() throws Exception
     {
         final String content = "CmdPrompt = \" [test@cmd ~]$ \" ; a comment";
-        INIConfiguration config = setUpConfig(content);
+        final INIConfiguration config = setUpConfig(content);
         assertEquals("Wrong propert value", " [test@cmd ~]$ ", config
                 .getString("CmdPrompt"));
     }
@@ -506,7 +506,7 @@ public class TestINIConfiguration
     @Test
     public void testQuotedValueEmpty() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA2);
+        final INIConfiguration config = setUpConfig(INI_DATA2);
         assertEquals("Wrong value for empty property", "", config
                 .getString("section4.var6"));
     }
@@ -519,7 +519,7 @@ public class TestINIConfiguration
     {
         final String data = INI_DATA2 + LINE_SEPARATOR + "noValue ="
                 + LINE_SEPARATOR;
-        INIConfiguration config = setUpConfig(data);
+        final INIConfiguration config = setUpConfig(data);
         assertEquals("Wrong value of key", "", config
                 .getString("section4.noValue"));
     }
@@ -532,7 +532,7 @@ public class TestINIConfiguration
     {
         final String data = INI_DATA2 + LINE_SEPARATOR + "= noKey"
                 + LINE_SEPARATOR;
-        INIConfiguration config = setUpConfig(data);
+        final INIConfiguration config = setUpConfig(data);
         assertEquals("Cannot find property with no key", "noKey", config
                 .getString("section4. "));
     }
@@ -543,7 +543,7 @@ public class TestINIConfiguration
     @Test
     public void testGlobalProperty() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
+        final INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
         assertEquals("Wrong value of global property", "testGlobal", config
                 .getString("globalVar"));
     }
@@ -555,8 +555,8 @@ public class TestINIConfiguration
     @Test
     public void testGlobalSectionConnected() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
-        HierarchicalConfiguration<ImmutableNode> sub = config.getSection(null);
+        final INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
+        final HierarchicalConfiguration<ImmutableNode> sub = config.getSection(null);
         config.setProperty("globalVar", "changed");
         assertEquals("Wrong value in sub", "changed",
                 sub.getString("globalVar"));
@@ -569,11 +569,11 @@ public class TestINIConfiguration
      * @param config the configuration to check
      * @param expected an array with the expected sections
      */
-    private void checkSectionNames(INIConfiguration config,
-            String[] expected)
+    private void checkSectionNames(final INIConfiguration config,
+            final String[] expected)
     {
-        Set<String> sectionNames = config.getSections();
-        Iterator<String> it = sectionNames.iterator();
+        final Set<String> sectionNames = config.getSections();
+        final Iterator<String> it = sectionNames.iterator();
         for (int idx = 0; idx < expected.length; idx++)
         {
             assertEquals("Wrong section at " + idx, expected[idx], it.next());
@@ -588,10 +588,10 @@ public class TestINIConfiguration
      * @param expected the expected section names
      * @return the configuration instance
      */
-    private INIConfiguration checkSectionNames(String data,
-            String[] expected) throws ConfigurationException
+    private INIConfiguration checkSectionNames(final String data,
+            final String[] expected) throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(data);
+        final INIConfiguration config = setUpConfig(data);
         checkSectionNames(config, expected);
         return config;
     }
@@ -638,7 +638,7 @@ public class TestINIConfiguration
     public void testGetSectionsDottedVar() throws ConfigurationException
     {
         final String data = "dotted.var = 1" + LINE_SEPARATOR + INI_DATA_GLOBAL;
-        INIConfiguration config = checkSectionNames(data,
+        final INIConfiguration config = checkSectionNames(data,
                 new String[] {
                         null, "section1", "section2", "section3"
                 });
@@ -652,7 +652,7 @@ public class TestINIConfiguration
     @Test
     public void testGetSectionsAdded() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA2);
+        final INIConfiguration config = setUpConfig(INI_DATA2);
         config.addProperty("section5.test", Boolean.TRUE);
         checkSectionNames(config, new String[]{
                 "section4", "section5"
@@ -665,8 +665,8 @@ public class TestINIConfiguration
     @Test
     public void testGetSectionExisting() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA);
-        HierarchicalConfiguration<ImmutableNode> section =
+        final INIConfiguration config = setUpConfig(INI_DATA);
+        final HierarchicalConfiguration<ImmutableNode> section =
                 config.getSection("section1");
         assertEquals("Wrong value of var1", "foo", section.getString("var1"));
         assertEquals("Wrong value of var2", "451", section.getString("var2"));
@@ -679,8 +679,8 @@ public class TestINIConfiguration
     @Test
     public void testGetSectionConnected() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA);
-        HierarchicalConfiguration<ImmutableNode> section =
+        final INIConfiguration config = setUpConfig(INI_DATA);
+        final HierarchicalConfiguration<ImmutableNode> section =
                 config.getSection("section1");
         section.setProperty("var1", "foo2");
         assertEquals("Not connected to parent", "foo2",
@@ -696,8 +696,8 @@ public class TestINIConfiguration
     {
         final String data = INI_DATA + "[section1]" + LINE_SEPARATOR
                 + "var3 = merged" + LINE_SEPARATOR;
-        INIConfiguration config = setUpConfig(data);
-        HierarchicalConfiguration<ImmutableNode> section = config.getSection("section1");
+        final INIConfiguration config = setUpConfig(data);
+        final HierarchicalConfiguration<ImmutableNode> section = config.getSection("section1");
         assertEquals("Wrong value of var1", "foo", section.getString("var1"));
         assertEquals("Wrong value of var2", "451", section.getString("var2"));
         assertEquals("Wrong value of var3", "merged", section.getString("var3"));
@@ -709,8 +709,8 @@ public class TestINIConfiguration
     @Test
     public void testGetSectionGlobal() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
-        HierarchicalConfiguration<ImmutableNode> section = config.getSection(null);
+        final INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
+        final HierarchicalConfiguration<ImmutableNode> section = config.getSection(null);
         assertEquals("Wrong value of global variable", "testGlobal", section
                 .getString("globalVar"));
     }
@@ -722,10 +722,10 @@ public class TestINIConfiguration
     public void testGetSectionGloabalMultiThreaded()
             throws ConfigurationException, InterruptedException
     {
-        INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
+        final INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
         config.setSynchronizer(new ReadWriteSynchronizer());
         final int threadCount = 10;
-        GlobalSectionTestThread[] threads = new GlobalSectionTestThread[threadCount];
+        final GlobalSectionTestThread[] threads = new GlobalSectionTestThread[threadCount];
         for (int i = 0; i < threadCount; i++)
         {
             threads[i] = new GlobalSectionTestThread(config);
@@ -744,8 +744,8 @@ public class TestINIConfiguration
     @Test
     public void testGetSectionGlobalNonExisting() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA);
-        HierarchicalConfiguration<ImmutableNode> section = config.getSection(null);
+        final INIConfiguration config = setUpConfig(INI_DATA);
+        final HierarchicalConfiguration<ImmutableNode> section = config.getSection(null);
         assertTrue("Sub config not empty", section.isEmpty());
     }
 
@@ -755,8 +755,8 @@ public class TestINIConfiguration
     @Test
     public void testGetSectionNonExisting() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA);
-        HierarchicalConfiguration<ImmutableNode> section = config
+        final INIConfiguration config = setUpConfig(INI_DATA);
+        final HierarchicalConfiguration<ImmutableNode> section = config
                 .getSection("Non existing section");
         assertTrue("Sub config not empty", section.isEmpty());
     }
@@ -767,7 +767,7 @@ public class TestINIConfiguration
     @Test
     public void testLineContinuation() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA3);
+        final INIConfiguration config = setUpConfig(INI_DATA3);
         assertEquals("Wrong value", "one" + LINE_SEPARATOR + "two"
                 + LINE_SEPARATOR + "three", config
                 .getString("section5.multiLine"));
@@ -780,7 +780,7 @@ public class TestINIConfiguration
     @Test
     public void testLineContinuationNone() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA3);
+        final INIConfiguration config = setUpConfig(INI_DATA3);
         assertEquals("Wrong value", "C:\\Temp\\", config
                 .getString("section5.singleLine"));
     }
@@ -792,7 +792,7 @@ public class TestINIConfiguration
     @Test
     public void testLineContinuationQuoted() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA3);
+        final INIConfiguration config = setUpConfig(INI_DATA3);
         assertEquals("Wrong value", "one" + LINE_SEPARATOR + "  two  "
                 + LINE_SEPARATOR + "three", config
                 .getString("section5.multiQuoted"));
@@ -804,7 +804,7 @@ public class TestINIConfiguration
     @Test
     public void testLineContinuationComment() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA3);
+        final INIConfiguration config = setUpConfig(INI_DATA3);
         assertEquals("Wrong value", "one" + LINE_SEPARATOR + "two", config
                 .getString("section5.multiComment"));
     }
@@ -817,7 +817,7 @@ public class TestINIConfiguration
     public void testLineContinuationQuotedComment()
             throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA3);
+        final INIConfiguration config = setUpConfig(INI_DATA3);
         assertEquals("Wrong value", " one " + LINE_SEPARATOR + "two", config
                 .getString("section5.multiQuotedComment"));
     }
@@ -828,7 +828,7 @@ public class TestINIConfiguration
     @Test
     public void testLineContinuationEmptyLine() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA3);
+        final INIConfiguration config = setUpConfig(INI_DATA3);
         assertEquals("Wrong value", LINE_SEPARATOR + "line 2", config
                 .getString("section5.noFirstLine"));
     }
@@ -839,7 +839,7 @@ public class TestINIConfiguration
     @Test
     public void testLineContinuationAtEnd() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA3);
+        final INIConfiguration config = setUpConfig(INI_DATA3);
         assertEquals("Wrong value", "one" + LINE_SEPARATOR, config
                 .getString("section5.continueNoLine"));
     }
@@ -855,7 +855,7 @@ public class TestINIConfiguration
         final String section = "Section..with..dots";
         conf.addProperty(section + ".test1", "test1");
         conf.addProperty(section + ".test2", "test2");
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         conf.write(writer);
         conf = new INIConfiguration();
         conf.read(new StringReader(writer.toString()));
@@ -871,12 +871,12 @@ public class TestINIConfiguration
     @Test
     public void testPropertyWithDelimiter() throws ConfigurationException
     {
-        String data = INI_DATA + "key.dot = dotValue";
-        INIConfiguration conf = new INIConfiguration();
+        final String data = INI_DATA + "key.dot = dotValue";
+        final INIConfiguration conf = new INIConfiguration();
         load(conf, data);
         assertEquals("Wrong property value", "dotValue",
                 conf.getString("section3.key..dot"));
-        String output = saveToString(conf);
+        final String output = saveToString(conf);
         assertThat(output, containsString("key.dot = dotValue"));
     }
 
@@ -895,7 +895,7 @@ public class TestINIConfiguration
                         + LINE_SEPARATOR + "Class Path=" + path + "  ;comment"
                         + LINE_SEPARATOR + "Path=" + path
                         + "\t; another comment";
-        INIConfiguration config = setUpConfig(content);
+        final INIConfiguration config = setUpConfig(content);
         assertEquals("Wrong class path", path,
                 config.getString("Environment.Class Path"));
         assertEquals("Wrong path", path, config.getString("Environment.Path"));
@@ -908,7 +908,7 @@ public class TestINIConfiguration
     @Test
     public void testSeparators() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
+        final INIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
         for (int i = 1; i <= 4; i++)
         {
             assertEquals("Wrong value", "value" + i,
@@ -922,7 +922,7 @@ public class TestINIConfiguration
     @Test
     public void testMultipleSeparators() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
+        final INIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
         assertEquals("Wrong value for var5", "value=5",
                 config.getString("section.var5"));
         assertEquals("Wrong value for var6", "6=value",
@@ -936,7 +936,7 @@ public class TestINIConfiguration
     @Test
     public void testMultipleSeparatorsQuoted() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
+        final INIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
         assertEquals("Wrong value for var7", "value7",
                 config.getString("section.var:7"));
         assertEquals("Wrong value for var8", "value8",
@@ -951,16 +951,16 @@ public class TestINIConfiguration
     public void testSaveClearedSection() throws ConfigurationException, IOException
     {
         final String data = "[section]\ntest = failed\n";
-        INIConfiguration config = setUpConfig(data);
+        final INIConfiguration config = setUpConfig(data);
         SubnodeConfiguration sub = config.getSection("section");
         assertFalse("No content", sub.isEmpty());
         sub.clear();
         sub.close();
         sub = config.getSection("section");
         sub.setProperty("test", "success");
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         config.write(writer);
-        HierarchicalConfiguration<?> config2 = setUpConfig(writer.toString());
+        final HierarchicalConfiguration<?> config2 = setUpConfig(writer.toString());
         assertEquals("Wrong value", "success",
                 config2.getString("section.test"));
     }
@@ -973,16 +973,16 @@ public class TestINIConfiguration
     {
         final String data =
                 "[section]\nvar1 = sec1\n\n" + "[section]\nvar2 = sec2\n";
-        INIConfiguration config = setUpConfig(data);
+        final INIConfiguration config = setUpConfig(data);
         assertEquals("Wrong value 1", "sec1", config.getString("section.var1"));
         assertEquals("Wrong value 2", "sec2", config.getString("section.var2"));
-        HierarchicalConfiguration<ImmutableNode> sub = config.getSection("section");
+        final HierarchicalConfiguration<ImmutableNode> sub = config.getSection("section");
         assertEquals("Wrong sub value 1", "sec1", sub.getString("var1"));
         assertEquals("Wrong sub value 2", "sec2", sub.getString("var2"));
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         config.write(writer);
-        String content = writer.toString();
-        int pos = content.indexOf("[section]");
+        final String content = writer.toString();
+        final int pos = content.indexOf("[section]");
         assertTrue("Section not found: " + content, pos >= 0);
         assertTrue("Section found multiple times: " + content,
                 content.indexOf("[section]", pos + 1) < 0);
@@ -996,14 +996,14 @@ public class TestINIConfiguration
     public void testGetSectionNonExistingManipulate()
             throws ConfigurationException, IOException
     {
-        INIConfiguration config = setUpConfig(INI_DATA);
+        final INIConfiguration config = setUpConfig(INI_DATA);
         HierarchicalConfiguration<ImmutableNode> section = config.getSection("newSection");
         section.addProperty("test", "success");
         assertEquals("Main config not updated", "success",
                 config.getString("newSection.test"));
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         config.write(writer);
-        INIConfiguration config2 = setUpConfig(writer.toString());
+        final INIConfiguration config2 = setUpConfig(writer.toString());
         section = config2.getSection("newSection");
         assertEquals("Wrong value", "success", section.getString("test"));
     }
@@ -1014,12 +1014,12 @@ public class TestINIConfiguration
     @Test
     public void testGetSectionDuplicate()
     {
-        INIConfiguration config =
+        final INIConfiguration config =
                 new INIConfiguration();
         config.addProperty("section.var1", "value1");
         config.addProperty("section(-1).var2", "value2");
-        HierarchicalConfiguration<ImmutableNode> section = config.getSection("section");
-        Iterator<String> keys = section.getKeys();
+        final HierarchicalConfiguration<ImmutableNode> section = config.getSection("section");
+        final Iterator<String> keys = section.getKeys();
         assertEquals("Wrong key", "var1", keys.next());
         assertFalse("Too many keys", keys.hasNext());
     }
@@ -1030,10 +1030,10 @@ public class TestINIConfiguration
     @Test
     public void testValueWithDelimiters() throws ConfigurationException
     {
-        INIConfiguration config =
+        final INIConfiguration config =
                 setUpConfig("[test]" + LINE_SEPARATOR + "list=1,2,3"
                         + LINE_SEPARATOR);
-        List<Object> list = config.getList("test.list");
+        final List<Object> list = config.getList("test.list");
         assertEquals("Wrong number of elements", 3, list.size());
         assertEquals("Wrong element at 1", "1", list.get(0));
         assertEquals("Wrong element at 2", "2", list.get(1));
@@ -1046,7 +1046,7 @@ public class TestINIConfiguration
     @Test
     public void testListParsingDisabled() throws ConfigurationException
     {
-        INIConfiguration config =
+        final INIConfiguration config =
                 new INIConfiguration();
         load(config, "[test]" + LINE_SEPARATOR + "nolist=1,2,3");
         assertEquals("Wrong value", "1,2,3", config.getString("test.nolist"));
@@ -1059,8 +1059,8 @@ public class TestINIConfiguration
     @Test
     public void testGetSectionsSynchronized() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA);
-        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        final INIConfiguration config = setUpConfig(INI_DATA);
+        final SynchronizerTestImpl sync = new SynchronizerTestImpl();
         config.setSynchronizer(sync);
         assertFalse("No sections", config.getSections().isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
@@ -1072,12 +1072,12 @@ public class TestINIConfiguration
     @Test
     public void testListDelimiterHandling() throws ConfigurationException
     {
-        INIConfiguration config = new INIConfiguration();
+        final INIConfiguration config = new INIConfiguration();
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         config.addProperty("list", "a,b,c");
         config.addProperty("listesc", "3\\,1415");
-        String output = saveToString(config);
-        INIConfiguration config2 = setUpConfig(output);
+        final String output = saveToString(config);
+        final INIConfiguration config2 = setUpConfig(output);
         assertEquals("Wrong list size", 3, config2.getList("list").size());
         assertEquals("Wrong list element", "b", config2.getList("list").get(1));
         assertEquals("Wrong escaped list element", "3,1415",
@@ -1091,12 +1091,12 @@ public class TestINIConfiguration
     @Test
     public void testListDelimiterHandlingInList() throws ConfigurationException
     {
-        String data =
+        final String data =
                 INI_DATA + "[sectest]" + LINE_SEPARATOR
                         + "list = 3\\,1415,pi,\\\\Test\\,5" + LINE_SEPARATOR;
-        INIConfiguration config = setUpConfig(data);
-        INIConfiguration config2 = setUpConfig(saveToString(config));
-        List<Object> list = config2.getList("sectest.list");
+        final INIConfiguration config = setUpConfig(data);
+        final INIConfiguration config2 = setUpConfig(saveToString(config));
+        final List<Object> list = config2.getList("sectest.list");
         assertEquals("Wrong number of values", 3, list.size());
         assertEquals("Wrong element 1", "3,1415", list.get(0));
         assertEquals("Wrong element 3", "\\Test,5", list.get(2));
@@ -1109,13 +1109,13 @@ public class TestINIConfiguration
     @Test
     public void testKeysOfGlobalSection() throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
-        HierarchicalConfiguration<ImmutableNode> sub = config.getSection(null);
-        Iterator<String> keys = sub.getKeys();
+        final INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
+        final HierarchicalConfiguration<ImmutableNode> sub = config.getSection(null);
+        final Iterator<String> keys = sub.getKeys();
         assertEquals("Wrong key", "globalVar", keys.next());
         if (keys.hasNext())
         {
-            StringBuilder buf = new StringBuilder();
+            final StringBuilder buf = new StringBuilder();
             do
             {
                 buf.append(keys.next()).append(' ');
@@ -1132,9 +1132,9 @@ public class TestINIConfiguration
     public void testGlobalSectionNodeHandlerGetChildrenByName()
             throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
-        SubnodeConfiguration sub = config.getSection(null);
-        NodeHandler<ImmutableNode> handler = sub.getModel().getNodeHandler();
+        final INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
+        final SubnodeConfiguration sub = config.getSection(null);
+        final NodeHandler<ImmutableNode> handler = sub.getModel().getNodeHandler();
         assertTrue(
                 "Sections not filtered",
                 handler.getChildren(
@@ -1150,9 +1150,9 @@ public class TestINIConfiguration
     public void testGlobalSectionNodeHandlerGetChildrenCount()
             throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
-        SubnodeConfiguration sub = config.getSection(null);
-        NodeHandler<ImmutableNode> handler = sub.getModel().getNodeHandler();
+        final INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
+        final SubnodeConfiguration sub = config.getSection(null);
+        final NodeHandler<ImmutableNode> handler = sub.getModel().getNodeHandler();
         assertEquals("Wrong number of children", 1,
                 handler.getChildrenCount(handler.getRootNode(), null));
     }
@@ -1165,17 +1165,17 @@ public class TestINIConfiguration
     public void testGlobalSectionNodeHandlerGetChildByIndex()
             throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
-        SubnodeConfiguration sub = config.getSection(null);
-        NodeHandler<ImmutableNode> handler = sub.getModel().getNodeHandler();
-        ImmutableNode child = handler.getChild(handler.getRootNode(), 0);
+        final INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
+        final SubnodeConfiguration sub = config.getSection(null);
+        final NodeHandler<ImmutableNode> handler = sub.getModel().getNodeHandler();
+        final ImmutableNode child = handler.getChild(handler.getRootNode(), 0);
         assertEquals("Wrong child", "globalVar", child.getNodeName());
         try
         {
             handler.getChild(handler.getRootNode(), 1);
             fail("Could obtain child with invalid index!");
         }
-        catch (IndexOutOfBoundsException iex)
+        catch (final IndexOutOfBoundsException iex)
         {
             // ok
         }
@@ -1189,10 +1189,10 @@ public class TestINIConfiguration
     public void testGlobalSectionNodeHandlerIndexOfChild()
             throws ConfigurationException
     {
-        INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
-        SubnodeConfiguration sub = config.getSection(null);
-        NodeHandler<ImmutableNode> handler = sub.getModel().getNodeHandler();
-        List<ImmutableNode> children = handler.getRootNode().getChildren();
+        final INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
+        final SubnodeConfiguration sub = config.getSection(null);
+        final NodeHandler<ImmutableNode> handler = sub.getModel().getNodeHandler();
+        final List<ImmutableNode> children = handler.getRootNode().getChildren();
         assertEquals("Wrong index", 0,
                 handler.indexOfChild(handler.getRootNode(), children.get(0)));
         assertEquals("Wrong index of section child", -1,
@@ -1206,11 +1206,11 @@ public class TestINIConfiguration
     public void testExpressionEngineIgnoringCase()
             throws ConfigurationException
     {
-        DefaultExpressionEngine engine =
+        final DefaultExpressionEngine engine =
                 new DefaultExpressionEngine(
                         DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS,
                         NodeNameMatchers.EQUALS_IGNORE_CASE);
-        INIConfiguration config = new INIConfiguration();
+        final INIConfiguration config = new INIConfiguration();
         config.setExpressionEngine(engine);
         load(config, INI_DATA);
 
@@ -1232,13 +1232,13 @@ public class TestINIConfiguration
             throws ConfigurationException, IOException
     {
         final String section = "[EmptySection]";
-        INIConfiguration config = setUpConfig(section);
+        final INIConfiguration config = setUpConfig(section);
         assertEquals("Wrong number of sections", 1,
                 config.getSections().size());
         assertTrue("Section not found",
                 config.getSections().contains("EmptySection"));
 
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         config.write(writer);
         assertEquals("Wrong saved configuration",
                 section + LINE_SEPARATOR + LINE_SEPARATOR, writer.toString());
@@ -1261,7 +1261,7 @@ public class TestINIConfiguration
          *
          * @param conf the configuration object
          */
-        public GlobalSectionTestThread(INIConfiguration conf)
+        public GlobalSectionTestThread(final INIConfiguration conf)
         {
             config = conf;
         }
@@ -1281,7 +1281,7 @@ public class TestINIConfiguration
                 {
                     config.getSection(null);
                 }
-                catch (IllegalStateException istex)
+                catch (final IllegalStateException istex)
                 {
                     error = true;
                 }

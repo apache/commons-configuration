@@ -298,7 +298,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      *
      * @param inc A String.
      */
-    public static void setInclude(String inc)
+    public static void setInclude(final String inc)
     {
         PropertiesConfiguration.include = inc;
     }
@@ -309,7 +309,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      *
      * @param includesAllowed True if Includes are allowed.
      */
-    public void setIncludesAllowed(boolean includesAllowed)
+    public void setIncludesAllowed(final boolean includesAllowed)
     {
         this.includesAllowed = includesAllowed;
     }
@@ -349,7 +349,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @param header the header to use
      * @since 1.1
      */
-    public void setHeader(String header)
+    public void setHeader(final String header)
     {
         beginWrite(false);
         try
@@ -389,7 +389,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @param footer the footer comment
      * @since 2.0
      */
-    public void setFooter(String footer)
+    public void setFooter(final String footer)
     {
         beginWrite(false);
         try
@@ -420,7 +420,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      * layout object will be created
      * @since 1.3
      */
-    public void setLayout(PropertiesConfigurationLayout layout)
+    public void setLayout(final PropertiesConfigurationLayout layout)
     {
         installLayout(layout);
     }
@@ -432,7 +432,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      *
      * @param layout the layout object to be installed
      */
-    private void installLayout(PropertiesConfigurationLayout layout)
+    private void installLayout(final PropertiesConfigurationLayout layout)
     {
         // only one layout must exist
         if (this.layout != null)
@@ -489,7 +489,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      *         <b>null</b>
      * @since 1.7
      */
-    public void setIOFactory(IOFactory ioFactory)
+    public void setIOFactory(final IOFactory ioFactory)
     {
         if (ioFactory == null)
         {
@@ -508,7 +508,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @since 2.0
      */
     @Override
-    public void initFileLocator(FileLocator locator)
+    public void initFileLocator(final FileLocator locator)
     {
         this.locator = locator;
     }
@@ -523,7 +523,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @since 2.0
      */
     @Override
-    public void read(Reader in) throws ConfigurationException, IOException
+    public void read(final Reader in) throws ConfigurationException, IOException
     {
         getLayout().load(this, in);
     }
@@ -536,7 +536,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @since 2.0
      */
     @Override
-    public void write(Writer out) throws ConfigurationException, IOException
+    public void write(final Writer out) throws ConfigurationException, IOException
     {
         getLayout().save(this, out);
     }
@@ -549,7 +549,7 @@ public class PropertiesConfiguration extends BaseConfiguration
     @Override
     public Object clone()
     {
-        PropertiesConfiguration copy = (PropertiesConfiguration) super.clone();
+        final PropertiesConfiguration copy = (PropertiesConfiguration) super.clone();
         if (layout != null)
         {
             copy.setLayout(new PropertiesConfigurationLayout(layout));
@@ -573,7 +573,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @throws ConfigurationException if an error occurs
      * @since 1.3
      */
-    boolean propertyLoaded(String key, String value)
+    boolean propertyLoaded(final String key, final String value)
             throws ConfigurationException
     {
         boolean result;
@@ -583,9 +583,9 @@ public class PropertiesConfiguration extends BaseConfiguration
         {
             if (isIncludesAllowed())
             {
-                Collection<String> files =
+                final Collection<String> files =
                         getListDelimiterHandler().split(value, true);
-                for (String f : files)
+                for (final String f : files)
                 {
                     loadIncludeFile(interpolate(f));
                 }
@@ -610,9 +610,9 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @return a flag if this is a comment line
      * @since 1.3
      */
-    static boolean isCommentLine(String line)
+    static boolean isCommentLine(final String line)
     {
-        String s = line.trim();
+        final String s = line.trim();
         // blanc lines are also treated as comment lines
         return s.length() < 1 || COMMENT_CHARS.indexOf(s.charAt(0)) >= 0;
     }
@@ -624,7 +624,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @param line the string to investigate
      * @return the number of trailing backslashes
      */
-    private static int countTrailingBS(String line)
+    private static int countTrailingBS(final String line)
     {
         int bsCount = 0;
         for (int idx = line.length() - 1; idx >= 0 && line.charAt(idx) == '\\'; idx--)
@@ -675,7 +675,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          *
          * @param reader A Reader.
          */
-        public PropertiesReader(Reader reader)
+        public PropertiesReader(final Reader reader)
         {
             super(reader);
             commentLines = new ArrayList<>();
@@ -695,7 +695,7 @@ public class PropertiesConfiguration extends BaseConfiguration
         public String readProperty() throws IOException
         {
             commentLines.clear();
-            StringBuilder buffer = new StringBuilder();
+            final StringBuilder buffer = new StringBuilder();
 
             while (true)
             {
@@ -741,7 +741,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          */
         public boolean nextProperty() throws IOException
         {
-            String line = readProperty();
+            final String line = readProperty();
 
             if (line == null)
             {
@@ -814,9 +814,9 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param line the line read from the properties file
          * @since 1.7
          */
-        protected void parseProperty(String line)
+        protected void parseProperty(final String line)
         {
-            String[] property = doParseProperty(line);
+            final String[] property = doParseProperty(line);
             initPropertyName(property[0]);
             initPropertyValue(property[1]);
             initPropertySeparator(property[2]);
@@ -831,7 +831,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param name the name of the current property
          * @since 1.7
          */
-        protected void initPropertyName(String name)
+        protected void initPropertyName(final String name)
         {
             propertyName = StringEscapeUtils.unescapeJava(name);
         }
@@ -845,7 +845,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param value the value of the current property
          * @since 1.7
          */
-        protected void initPropertyValue(String value)
+        protected void initPropertyValue(final String value)
         {
             propertyValue = unescapeJava(value);
         }
@@ -859,7 +859,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param value the separator used for the current property
          * @since 1.7
          */
-        protected void initPropertySeparator(String value)
+        protected void initPropertySeparator(final String value)
         {
             propertySeparator = value;
         }
@@ -871,7 +871,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param line the line
          * @return a flag if the lines should be combined
          */
-        private static boolean checkCombineLines(String line)
+        private static boolean checkCombineLines(final String line)
         {
             return countTrailingBS(line) % 2 != 0;
         }
@@ -882,11 +882,11 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param line the line to parse
          * @return an array with the property's key, value, and separator
          */
-        private static String[] doParseProperty(String line)
+        private static String[] doParseProperty(final String line)
         {
-            Matcher matcher = PROPERTY_PATTERN.matcher(line);
+            final Matcher matcher = PROPERTY_PATTERN.matcher(line);
 
-            String[] result = {"", "", ""};
+            final String[] result = {"", "", ""};
 
             if (matcher.matches())
             {
@@ -938,9 +938,9 @@ public class PropertiesConfiguration extends BaseConfiguration
                 new ValueTransformer()
                 {
                     @Override
-                    public Object transformValue(Object value)
+                    public Object transformValue(final Object value)
                     {
-                        String strVal = String.valueOf(value);
+                        final String strVal = String.valueOf(value);
                         return ESCAPE_PROPERTIES.translate(strVal);
                     }
                 };
@@ -964,7 +964,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param delHandler the delimiter handler for dealing with properties
          *        with multiple values
          */
-        public PropertiesWriter(Writer writer, ListDelimiterHandler delHandler)
+        public PropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler)
         {
             super(writer);
             delimiterHandler = delHandler;
@@ -1001,7 +1001,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param currentSeparator the current property separator
          * @since 1.7
          */
-        public void setCurrentSeparator(String currentSeparator)
+        public void setCurrentSeparator(final String currentSeparator)
         {
             this.currentSeparator = currentSeparator;
         }
@@ -1027,7 +1027,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param globalSeparator the global property separator
          * @since 1.7
          */
-        public void setGlobalSeparator(String globalSeparator)
+        public void setGlobalSeparator(final String globalSeparator)
         {
             this.globalSeparator = globalSeparator;
         }
@@ -1051,7 +1051,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param lineSeparator the line separator to be used
          * @since 1.7
          */
-        public void setLineSeparator(String lineSeparator)
+        public void setLineSeparator(final String lineSeparator)
         {
             this.lineSeparator = lineSeparator;
         }
@@ -1064,7 +1064,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          *
          * @throws IOException if an I/O error occurs
          */
-        public void writeProperty(String key, Object value) throws IOException
+        public void writeProperty(final String key, final Object value) throws IOException
         {
             writeProperty(key, value, false);
         }
@@ -1077,7 +1077,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          *
          * @throws IOException if an I/O error occurs
          */
-        public void writeProperty(String key, List<?> values) throws IOException
+        public void writeProperty(final String key, final List<?> values) throws IOException
         {
             for (int i = 0; i < values.size(); i++)
             {
@@ -1097,15 +1097,15 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @throws IOException if an error occurs
          * @since 1.3
          */
-        public void writeProperty(String key, Object value,
-                boolean forceSingleLine) throws IOException
+        public void writeProperty(final String key, final Object value,
+                final boolean forceSingleLine) throws IOException
         {
             String v;
 
             if (value instanceof List)
             {
                 v = null;
-                List<?> values = (List<?>) value;
+                final List<?> values = (List<?>) value;
                 if (forceSingleLine)
                 {
                     try
@@ -1113,7 +1113,7 @@ public class PropertiesConfiguration extends BaseConfiguration
                         v = String.valueOf(getDelimiterHandler()
                                         .escapeList(values, TRANSFORMER));
                     }
-                    catch (UnsupportedOperationException uoex)
+                    catch (final UnsupportedOperationException uoex)
                     {
                         // the handler may not support escaping lists,
                         // then the list is written in multiple lines
@@ -1143,7 +1143,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param comment the comment to write
          * @throws IOException if an I/O error occurs
          */
-        public void writeComment(String comment) throws IOException
+        public void writeComment(final String comment) throws IOException
         {
             writeln("# " + comment);
         }
@@ -1158,13 +1158,13 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @return the escaped key
          * @since 2.0
          */
-        protected String escapeKey(String key)
+        protected String escapeKey(final String key)
         {
-            StringBuilder newkey = new StringBuilder();
+            final StringBuilder newkey = new StringBuilder();
 
             for (int i = 0; i < key.length(); i++)
             {
-                char c = key.charAt(i);
+                final char c = key.charAt(i);
 
                 if (ArrayUtils.contains(SEPARATORS, c) || ArrayUtils.contains(WHITE_SPACE, c))
                 {
@@ -1189,7 +1189,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @throws IOException if an error occurs
          * @since 1.3
          */
-        public void writeln(String s) throws IOException
+        public void writeln(final String s) throws IOException
         {
             if (s != null)
             {
@@ -1213,7 +1213,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @return the separator to be used
          * @since 1.7
          */
-        protected String fetchSeparator(String key, Object value)
+        protected String fetchSeparator(final String key, final Object value)
         {
             return (getGlobalSeparator() != null) ? getGlobalSeparator()
                     : StringUtils.defaultString(getCurrentSeparator());
@@ -1287,14 +1287,14 @@ public class PropertiesConfiguration extends BaseConfiguration
     public static class DefaultIOFactory implements IOFactory
     {
         @Override
-        public PropertiesReader createPropertiesReader(Reader in)
+        public PropertiesReader createPropertiesReader(final Reader in)
         {
             return new PropertiesReader(in);
         }
 
         @Override
-        public PropertiesWriter createPropertiesWriter(Writer out,
-                ListDelimiterHandler handler)
+        public PropertiesWriter createPropertiesWriter(final Writer out,
+                final ListDelimiterHandler handler)
         {
             return new PropertiesWriter(out, handler);
         }
@@ -1310,20 +1310,20 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @return the processed string
      * @throws IllegalArgumentException if the Writer is {@code null}
      */
-    protected static String unescapeJava(String str)
+    protected static String unescapeJava(final String str)
     {
         if (str == null)
         {
             return null;
         }
-        int sz = str.length();
-        StringBuilder out = new StringBuilder(sz);
-        StringBuilder unicode = new StringBuilder(UNICODE_LEN);
+        final int sz = str.length();
+        final StringBuilder out = new StringBuilder(sz);
+        final StringBuilder unicode = new StringBuilder(UNICODE_LEN);
         boolean hadSlash = false;
         boolean inUnicode = false;
         for (int i = 0; i < sz; i++)
         {
-            char ch = str.charAt(i);
+            final char ch = str.charAt(i);
             if (inUnicode)
             {
                 // if in unicode, then we're reading unicode
@@ -1335,13 +1335,13 @@ public class PropertiesConfiguration extends BaseConfiguration
                     // which represents our unicode character
                     try
                     {
-                        int value = Integer.parseInt(unicode.toString(), HEX_RADIX);
+                        final int value = Integer.parseInt(unicode.toString(), HEX_RADIX);
                         out.append((char) value);
                         unicode.setLength(0);
                         inUnicode = false;
                         hadSlash = false;
                     }
-                    catch (NumberFormatException nfe)
+                    catch (final NumberFormatException nfe)
                     {
                         throw new ConfigurationRuntimeException("Unable to parse unicode value: " + unicode, nfe);
                     }
@@ -1419,7 +1419,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @param ch the character in question
      * @return a flag whether this character has to be unescaped
      */
-    private static boolean needsUnescape(char ch)
+    private static boolean needsUnescape(final char ch)
     {
         return UNESCAPE_CHARACTERS.indexOf(ch) >= 0;
     }
@@ -1434,7 +1434,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @param fileName the name of the file to load
      * @throws ConfigurationException if loading fails
      */
-    private void loadIncludeFile(String fileName) throws ConfigurationException
+    private void loadIncludeFile(final String fileName) throws ConfigurationException
     {
         if (locator == null)
         {
@@ -1446,7 +1446,7 @@ public class PropertiesConfiguration extends BaseConfiguration
         URL url = locateIncludeFile(locator.getBasePath(), fileName);
         if (url == null)
         {
-            URL baseURL = locator.getSourceURL();
+            final URL baseURL = locator.getSourceURL();
             if (baseURL != null)
             {
                 url = locateIncludeFile(baseURL.toString(), fileName);
@@ -1459,9 +1459,9 @@ public class PropertiesConfiguration extends BaseConfiguration
                     + fileName);
         }
 
-        FileHandler fh = new FileHandler(this);
+        final FileHandler fh = new FileHandler(this);
         fh.setFileLocator(locator);
-        FileLocator orgLocator = locator;
+        final FileLocator orgLocator = locator;
         try
         {
             fh.load(url);
@@ -1481,9 +1481,9 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @return the URL of the include file or <b>null</b> if it cannot be
      *         resolved
      */
-    private URL locateIncludeFile(String basePath, String fileName)
+    private URL locateIncludeFile(final String basePath, final String fileName)
     {
-        FileLocator includeLocator =
+        final FileLocator includeLocator =
                 FileLocatorUtils.fileLocator(locator).sourceURL(null)
                         .basePath(basePath).fileName(fileName).create();
         return FileLocatorUtils.locate(includeLocator);

@@ -65,7 +65,7 @@ public class HierarchicalConfigurationXMLReader<T> extends
      * @param config the configuration object
      */
     public HierarchicalConfigurationXMLReader(
-            HierarchicalConfiguration<T> config)
+            final HierarchicalConfiguration<T> config)
     {
         this();
         setConfiguration(config);
@@ -86,7 +86,7 @@ public class HierarchicalConfigurationXMLReader<T> extends
      *
      * @param config the configuration object to be parsed
      */
-    public void setConfiguration(HierarchicalConfiguration<T> config)
+    public void setConfiguration(final HierarchicalConfiguration<T> config)
     {
         configuration = config;
     }
@@ -108,7 +108,7 @@ public class HierarchicalConfigurationXMLReader<T> extends
     @Override
     protected void processKeys()
     {
-        NodeHandler<T> nodeHandler =
+        final NodeHandler<T> nodeHandler =
                 getConfiguration().getNodeModel().getNodeHandler();
         NodeTreeWalker.INSTANCE.walkDFS(nodeHandler.getRootNode(),
                 new SAXVisitor(), nodeHandler);
@@ -130,7 +130,7 @@ public class HierarchicalConfigurationXMLReader<T> extends
          * @param handler the node handler
          */
         @Override
-        public void visitAfterChildren(T node, NodeHandler<T> handler)
+        public void visitAfterChildren(final T node, final NodeHandler<T> handler)
         {
             fireElementEnd(nodeName(node, handler));
         }
@@ -142,12 +142,12 @@ public class HierarchicalConfigurationXMLReader<T> extends
          * @param handler the node handler
          */
         @Override
-        public void visitBeforeChildren(T node, NodeHandler<T> handler)
+        public void visitBeforeChildren(final T node, final NodeHandler<T> handler)
         {
             fireElementStart(nodeName(node, handler),
                     fetchAttributes(node, handler));
 
-            Object value = handler.getValue(node);
+            final Object value = handler.getValue(node);
             if (value != null)
             {
                 fireCharacters(value.toString());
@@ -173,13 +173,13 @@ public class HierarchicalConfigurationXMLReader<T> extends
          * @param handler the node handler
          * @return an object with all attributes of this node
          */
-        protected Attributes fetchAttributes(T node, NodeHandler<T> handler)
+        protected Attributes fetchAttributes(final T node, final NodeHandler<T> handler)
         {
-            AttributesImpl attrs = new AttributesImpl();
+            final AttributesImpl attrs = new AttributesImpl();
 
-            for (String attr : handler.getAttributes(node))
+            for (final String attr : handler.getAttributes(node))
             {
-                Object value = handler.getAttributeValue(node, attr);
+                final Object value = handler.getAttributeValue(node, attr);
                 if (value != null)
                 {
                     attrs.addAttribute(NS_URI, attr, attr, ATTR_TYPE,
@@ -199,9 +199,9 @@ public class HierarchicalConfigurationXMLReader<T> extends
          * @param handler the node handler
          * @return the name for this node
          */
-        private String nodeName(T node, NodeHandler<T> handler)
+        private String nodeName(final T node, final NodeHandler<T> handler)
         {
-            String nodeName = handler.nodeName(node);
+            final String nodeName = handler.nodeName(node);
             return (nodeName == null) ? getRootName() : nodeName;
         }
     }

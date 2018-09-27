@@ -50,18 +50,18 @@ public class Logging extends Log4JLogger
         {
             traceLevel = (Priority) Level.class.getDeclaredField("TRACE").get(null);
         }
-        catch (Exception ex)
+        catch (final Exception ex)
         {
             // ok, trace not available
             traceLevel = Level.DEBUG;
         }
 
-        String level = System.getProperty("LogLevel");
+        final String level = System.getProperty("LogLevel");
         if (level != null)
         {
-            org.apache.log4j.Logger log = org.apache.log4j.Logger.getRootLogger();
+            final org.apache.log4j.Logger log = org.apache.log4j.Logger.getRootLogger();
             log.setLevel(Level.toLevel(level));
-            Appender appender = new ConsoleAppender(new PatternLayout("%p %l - %m%n"), ConsoleAppender.SYSTEM_OUT);
+            final Appender appender = new ConsoleAppender(new PatternLayout("%p %l - %m%n"), ConsoleAppender.SYSTEM_OUT);
             log.addAppender(appender);
         }
     }
@@ -75,7 +75,7 @@ public class Logging extends Log4JLogger
     /**
      * Base constructor.
      */
-    public Logging(String name)
+    public Logging(final String name)
     {
         super(name);
     }
@@ -83,7 +83,7 @@ public class Logging extends Log4JLogger
     /**
      * For use with a log4j factory.
      */
-    public Logging(org.apache.log4j.Logger logger)
+    public Logging(final org.apache.log4j.Logger logger)
     {
         super(logger);
     }
@@ -115,7 +115,7 @@ public class Logging extends Log4JLogger
      * @see org.apache.commons.logging.Log#trace(Object)
      */
     @Override
-    public void trace(Object message)
+    public void trace(final Object message)
     {
         getLogger().log(FQCN, traceLevel, message, null);
     }
@@ -131,7 +131,7 @@ public class Logging extends Log4JLogger
      * @see org.apache.commons.logging.Log#trace(Object, Throwable)
      */
     @Override
-    public void trace(Object message, Throwable t)
+    public void trace(final Object message, final Throwable t)
     {
         getLogger().log(FQCN, traceLevel, message, t);
     }
@@ -144,7 +144,7 @@ public class Logging extends Log4JLogger
      * @see org.apache.commons.logging.Log#debug(Object)
      */
     @Override
-    public void debug(Object message)
+    public void debug(final Object message)
     {
         getLogger().log(FQCN, Level.DEBUG, message, null);
     }
@@ -157,7 +157,7 @@ public class Logging extends Log4JLogger
      * @see org.apache.commons.logging.Log#debug(Object, Throwable)
      */
     @Override
-    public void debug(Object message, Throwable t)
+    public void debug(final Object message, final Throwable t)
     {
         getLogger().log(FQCN, Level.DEBUG, message, t);
     }
@@ -170,7 +170,7 @@ public class Logging extends Log4JLogger
      * @see org.apache.commons.logging.Log#info(Object)
      */
     @Override
-    public void info(Object message)
+    public void info(final Object message)
     {
         getLogger().log(FQCN, Level.INFO, message, null);
     }
@@ -184,7 +184,7 @@ public class Logging extends Log4JLogger
      * @see org.apache.commons.logging.Log#info(Object, Throwable)
      */
     @Override
-    public void info(Object message, Throwable t)
+    public void info(final Object message, final Throwable t)
     {
         getLogger().log(FQCN, Level.INFO, message, t);
     }
@@ -197,7 +197,7 @@ public class Logging extends Log4JLogger
      * @see org.apache.commons.logging.Log#warn(Object)
      */
     @Override
-    public void warn(Object message)
+    public void warn(final Object message)
     {
         getLogger().log(FQCN, Level.WARN, message, null);
     }
@@ -211,7 +211,7 @@ public class Logging extends Log4JLogger
      * @see org.apache.commons.logging.Log#warn(Object, Throwable)
      */
     @Override
-    public void warn(Object message, Throwable t)
+    public void warn(final Object message, final Throwable t)
     {
         getLogger().log(FQCN, Level.WARN, message, t);
     }
@@ -224,7 +224,7 @@ public class Logging extends Log4JLogger
      * @see org.apache.commons.logging.Log#error(Object)
      */
     @Override
-    public void error(Object message)
+    public void error(final Object message)
     {
         getLogger().log(FQCN, Level.ERROR, message, null);
     }
@@ -238,7 +238,7 @@ public class Logging extends Log4JLogger
      * @see org.apache.commons.logging.Log#error(Object, Throwable)
      */
     @Override
-    public void error(Object message, Throwable t)
+    public void error(final Object message, final Throwable t)
     {
         getLogger().log(FQCN, Level.ERROR, message, t);
     }
@@ -251,7 +251,7 @@ public class Logging extends Log4JLogger
      * @see org.apache.commons.logging.Log#fatal(Object)
      */
     @Override
-    public void fatal(Object message)
+    public void fatal(final Object message)
     {
         getLogger().log(FQCN, Level.FATAL, message, null);
     }
@@ -265,7 +265,7 @@ public class Logging extends Log4JLogger
      * @see org.apache.commons.logging.Log#fatal(Object, Throwable)
      */
     @Override
-    public void fatal(Object message, Throwable t)
+    public void fatal(final Object message, final Throwable t)
     {
         getLogger().log(FQCN, Level.FATAL, message, t);
     }

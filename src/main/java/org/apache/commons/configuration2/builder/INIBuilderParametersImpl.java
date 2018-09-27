@@ -42,14 +42,14 @@ public class INIBuilderParametersImpl extends HierarchicalBuilderParametersImpl
         = "separatorUsedInOutput";
 
     @Override
-    public void inheritFrom(Map<String, ?> source)
+    public void inheritFrom(final Map<String, ?> source)
     {
         super.inheritFrom(source);
         copyPropertiesFrom(source, PROP_SEPARATOR_USED_IN_INI_OUTPUT);
     }
 
     @Override
-    public INIBuilderParametersImpl setSeparatorUsedInOutput(String separator)
+    public INIBuilderParametersImpl setSeparatorUsedInOutput(final String separator)
     {
         storeProperty(PROP_SEPARATOR_USED_IN_INI_OUTPUT, separator);
         return this;

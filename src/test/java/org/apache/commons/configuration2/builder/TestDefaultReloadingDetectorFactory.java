@@ -48,12 +48,12 @@ public class TestDefaultReloadingDetectorFactory
     @Test
     public void testCreateReloadingDetector() throws ConfigurationException
     {
-        FileHandler handler = new FileHandler();
-        FileBasedBuilderParametersImpl params =
+        final FileHandler handler = new FileHandler();
+        final FileBasedBuilderParametersImpl params =
                 new FileBasedBuilderParametersImpl();
         final Long refreshDelay = 10000L;
         params.setReloadingRefreshDelay(refreshDelay);
-        FileHandlerReloadingDetector detector =
+        final FileHandlerReloadingDetector detector =
                 (FileHandlerReloadingDetector) factory.createReloadingDetector(
                         handler, params);
         assertSame("Wrong file handler", handler, detector.getFileHandler());
@@ -68,10 +68,10 @@ public class TestDefaultReloadingDetectorFactory
     public void testCreateReloadingDetectorDefaultRefreshDelay()
             throws ConfigurationException
     {
-        FileHandler handler = new FileHandler();
-        FileBasedBuilderParametersImpl params =
+        final FileHandler handler = new FileHandler();
+        final FileBasedBuilderParametersImpl params =
                 new FileBasedBuilderParametersImpl();
-        FileHandlerReloadingDetector detector =
+        final FileHandlerReloadingDetector detector =
                 (FileHandlerReloadingDetector) factory.createReloadingDetector(
                         handler, params);
         assertTrue("No default refresh delay", detector.getRefreshDelay() != 0);

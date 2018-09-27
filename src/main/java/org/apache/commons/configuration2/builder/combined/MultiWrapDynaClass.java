@@ -51,7 +51,7 @@ class MultiWrapDynaClass implements DynaClass
      *
      * @param wrappedCls the collection with wrapped classes
      */
-    public MultiWrapDynaClass(Collection<? extends DynaClass> wrappedCls)
+    public MultiWrapDynaClass(final Collection<? extends DynaClass> wrappedCls)
     {
         properties = new LinkedList<>();
         namedProperties = new HashMap<>();
@@ -68,7 +68,7 @@ class MultiWrapDynaClass implements DynaClass
     }
 
     @Override
-    public DynaProperty getDynaProperty(String name)
+    public DynaProperty getDynaProperty(final String name)
     {
         return namedProperties.get(name);
     }
@@ -96,12 +96,12 @@ class MultiWrapDynaClass implements DynaClass
      *
      * @param wrappedCls the collection with the wrapped classes
      */
-    private void initProperties(Collection<? extends DynaClass> wrappedCls)
+    private void initProperties(final Collection<? extends DynaClass> wrappedCls)
     {
-        for (DynaClass cls : wrappedCls)
+        for (final DynaClass cls : wrappedCls)
         {
-            DynaProperty[] props = cls.getDynaProperties();
-            for (DynaProperty p : props)
+            final DynaProperty[] props = cls.getDynaProperties();
+            for (final DynaProperty p : props)
             {
                 properties.add(p);
                 namedProperties.put(p.getName(), p);

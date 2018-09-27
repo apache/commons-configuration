@@ -38,10 +38,10 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 public class DefaultFileSystem extends FileSystem
 {
     @Override
-    public InputStream getInputStream(URL url) throws ConfigurationException
+    public InputStream getInputStream(final URL url) throws ConfigurationException
     {
         // throw an exception if the target URL is a directory
-        File file = FileLocatorUtils.fileFromURL(url);
+        final File file = FileLocatorUtils.fileFromURL(url);
         if (file != null && file.isDirectory())
         {
             throw new ConfigurationException("Cannot load a configuration from a directory");
@@ -51,18 +51,18 @@ public class DefaultFileSystem extends FileSystem
         {
             return url.openStream();
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ConfigurationException("Unable to load the configuration from the URL " + url, e);
         }
     }
 
     @Override
-    public OutputStream getOutputStream(URL url) throws ConfigurationException
+    public OutputStream getOutputStream(final URL url) throws ConfigurationException
     {
         // file URLs have to be converted to Files since FileURLConnection is
         // read only (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4191800)
-        File file = FileLocatorUtils.fileFromURL(url);
+        final File file = FileLocatorUtils.fileFromURL(url);
         if (file != null)
         {
             return getOutputStream(file);
@@ -71,13 +71,13 @@ public class DefaultFileSystem extends FileSystem
         OutputStream out;
         try
         {
-            URLConnection connection = url.openConnection();
+            final URLConnection connection = url.openConnection();
             connection.setDoOutput(true);
 
             // use the PUT method for http URLs
             if (connection instanceof HttpURLConnection)
             {
-                HttpURLConnection conn = (HttpURLConnection) connection;
+                final HttpURLConnection conn = (HttpURLConnection) connection;
                 conn.setRequestMethod("PUT");
             }
 
@@ -90,14 +90,14 @@ public class DefaultFileSystem extends FileSystem
             }
             return out;
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new ConfigurationException("Could not save to URL " + url, e);
         }
     }
 
     @Override
-    public OutputStream getOutputStream(File file) throws ConfigurationException
+    public OutputStream getOutputStream(final File file) throws ConfigurationException
     {
         try
         {
@@ -105,14 +105,14 @@ public class DefaultFileSystem extends FileSystem
             createPath(file);
             return new FileOutputStream(file);
         }
-        catch (FileNotFoundException e)
+        catch (final FileNotFoundException e)
         {
             throw new ConfigurationException("Unable to save to file " + file, e);
         }
     }
 
     @Override
-    public String getPath(File file, URL url, String basePath, String fileName)
+    public String getPath(final File file, final URL url, final String basePath, final String fileName)
     {
         String path = null;
         // if resource was loaded from jar file may be null
@@ -134,7 +134,7 @@ public class DefaultFileSystem extends FileSystem
                 {
                     path = getURL(basePath, fileName).getPath();
                 }
-                catch (Exception e)
+                catch (final Exception e)
                 {
                     // simply ignore it and return null
                     if (getLogger().isDebugEnabled())
@@ -151,7 +151,7 @@ public class DefaultFileSystem extends FileSystem
     }
 
     @Override
-    public String getBasePath(String path)
+    public String getBasePath(final String path)
     {
         URL url;
         try
@@ -159,14 +159,14 @@ public class DefaultFileSystem extends FileSystem
             url = getURL(null, path);
             return FileLocatorUtils.getBasePath(url);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             return null;
         }
     }
 
     @Override
-    public String getFileName(String path)
+    public String getFileName(final String path)
     {
         URL url;
         try
@@ -174,7 +174,7 @@ public class DefaultFileSystem extends FileSystem
             url = getURL(null, path);
             return FileLocatorUtils.getFileName(url);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             return null;
         }
@@ -182,9 +182,9 @@ public class DefaultFileSystem extends FileSystem
 
 
     @Override
-    public URL getURL(String basePath, String file) throws MalformedURLException
+    public URL getURL(final String basePath, final String file) throws MalformedURLException
     {
-        File f = new File(file);
+        final File f = new File(file);
         if (f.isAbsolute()) // already absolute?
         {
             return FileLocatorUtils.toURL(f);
@@ -196,10 +196,10 @@ public class DefaultFileSystem extends FileSystem
             {
                 return new URL(file);
             }
-            URL base = new URL(basePath);
+            final URL base = new URL(basePath);
             return new URL(base, file);
         }
-        catch (MalformedURLException uex)
+        catch (final MalformedURLException uex)
         {
             return FileLocatorUtils.toURL(FileLocatorUtils.constructFile(basePath, file));
         }
@@ -207,7 +207,7 @@ public class DefaultFileSystem extends FileSystem
 
 
     @Override
-    public URL locateFromURL(String basePath, String fileName)
+    public URL locateFromURL(final String basePath, final String fileName)
     {
         try
         {
@@ -217,7 +217,7 @@ public class DefaultFileSystem extends FileSystem
                 return new URL(fileName);
                 //url = new URL(name);
             }
-            URL baseURL = new URL(basePath);
+            final URL baseURL = new URL(basePath);
             url = new URL(baseURL, fileName);
 
             // check if the file exists
@@ -235,7 +235,7 @@ public class DefaultFileSystem extends FileSystem
             }
             return url;
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             if (getLogger().isDebugEnabled())
             {
@@ -251,14 +251,14 @@ public class DefaultFileSystem extends FileSystem
      * @param file the target file
      * @throws ConfigurationException if the path cannot be created
      */
-    private void createPath(File file) throws ConfigurationException
+    private void createPath(final File file) throws ConfigurationException
     {
         if (file != null)
         {
             // create the path to the file if the file doesn't exist
             if (!file.exists())
             {
-                File parent = file.getParentFile();
+                final File parent = file.getParentFile();
                 if (parent != null && !parent.exists())
                 {
                     if (!parent.mkdirs())
@@ -283,20 +283,20 @@ public class DefaultFileSystem extends FileSystem
         /** The HttpURLConnection */
         private final HttpURLConnection connection;
 
-        public HttpOutputStream(OutputStream stream, HttpURLConnection connection)
+        public HttpOutputStream(final OutputStream stream, final HttpURLConnection connection)
         {
             this.stream = stream;
             this.connection = connection;
         }
 
         @Override
-        public void write(byte[] bytes) throws IOException
+        public void write(final byte[] bytes) throws IOException
         {
             stream.write(bytes);
         }
 
         @Override
-        public void write(byte[] bytes, int i, int i1) throws IOException
+        public void write(final byte[] bytes, final int i, final int i1) throws IOException
         {
             stream.write(bytes, i, i1);
         }
@@ -314,7 +314,7 @@ public class DefaultFileSystem extends FileSystem
         }
 
         @Override
-        public void write(int i) throws IOException
+        public void write(final int i) throws IOException
         {
             stream.write(i);
         }

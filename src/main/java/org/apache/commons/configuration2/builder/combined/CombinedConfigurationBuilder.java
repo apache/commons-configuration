@@ -514,7 +514,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * the specified initialization parameters.
      * @param params a map with initialization parameters
      */
-    public CombinedConfigurationBuilder(Map<String, Object> params)
+    public CombinedConfigurationBuilder(final Map<String, Object> params)
     {
         super(CombinedConfiguration.class, params);
     }
@@ -526,7 +526,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @param params a map with initialization parameters
      * @param allowFailOnInit the <em>allowFailOnInit</em> flag
      */
-    public CombinedConfigurationBuilder(Map<String, Object> params, boolean allowFailOnInit)
+    public CombinedConfigurationBuilder(final Map<String, Object> params, final boolean allowFailOnInit)
     {
         super(CombinedConfiguration.class, params, allowFailOnInit);
     }
@@ -553,7 +553,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * {@inheritDoc} This method is overridden to adapt the return type.
      */
     @Override
-    public CombinedConfigurationBuilder configure(BuilderParameters... params)
+    public CombinedConfigurationBuilder configure(final BuilderParameters... params)
     {
         super.configure(params);
         return this;
@@ -578,14 +578,14 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      *         yet available or no builder with this name exists
      */
     public synchronized ConfigurationBuilder<? extends Configuration> getNamedBuilder(
-            String name) throws ConfigurationException
+            final String name) throws ConfigurationException
     {
         if (sourceData == null)
         {
             throw new ConfigurationException("Information about child builders"
                     + " has not been setup yet! Call getConfiguration() first.");
         }
-        ConfigurationBuilder<? extends Configuration> builder =
+        final ConfigurationBuilder<? extends Configuration> builder =
                 sourceData.getNamedBuilder(name);
         if (builder == null)
         {
@@ -659,13 +659,13 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @throws ConfigurationException if an error occurs
      */
     protected ConfigurationBuilder<? extends HierarchicalConfiguration<?>> setupDefinitionBuilder(
-            Map<String, Object> params) throws ConfigurationException
+            final Map<String, Object> params) throws ConfigurationException
     {
-        CombinedBuilderParametersImpl cbParams =
+        final CombinedBuilderParametersImpl cbParams =
                 CombinedBuilderParametersImpl.fromParameters(params);
         if (cbParams != null)
         {
-            ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder =
+            final ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder =
                     cbParams.getDefinitionBuilder();
             if (defBuilder != null)
             {
@@ -679,7 +679,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             }
         }
 
-        BuilderParameters fileParams =
+        final BuilderParameters fileParams =
                 FileBasedBuilderParametersImpl.fromParameters(params);
         if (fileParams != null)
         {
@@ -702,7 +702,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @return the standard builder for the definition configuration
      */
     protected ConfigurationBuilder<? extends HierarchicalConfiguration<?>> createXMLDefinitionBuilder(
-            BuilderParameters builderParams)
+            final BuilderParameters builderParams)
     {
         return new FileBasedConfigurationBuilder<>(
                 XMLConfiguration.class).configure(builderParams);
@@ -752,11 +752,11 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * properties defined as initialization parameters.
      */
     @Override
-    protected BeanDeclaration createResultDeclaration(Map<String, Object> params)
+    protected BeanDeclaration createResultDeclaration(final Map<String, Object> params)
             throws ConfigurationException
     {
-        BeanDeclaration paramsDecl = super.createResultDeclaration(params);
-        XMLBeanDeclaration resultDecl =
+        final BeanDeclaration paramsDecl = super.createResultDeclaration(params);
+        final XMLBeanDeclaration resultDecl =
                 new XMLBeanDeclaration(getDefinitionConfiguration(),
                         KEY_RESULT, true, CombinedConfiguration.class.getName());
         return new CombinedBeanDeclaration(resultDecl, paramsDecl);
@@ -772,13 +772,13 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * </ul>
      */
     @Override
-    protected void initResultInstance(CombinedConfiguration result)
+    protected void initResultInstance(final CombinedConfiguration result)
             throws ConfigurationException
     {
         super.initResultInstance(result);
 
         currentConfiguration = result;
-        HierarchicalConfiguration<?> config = getDefinitionConfiguration();
+        final HierarchicalConfiguration<?> config = getDefinitionConfiguration();
         if (config.getMaxIndex(KEY_COMBINER) < 0)
         {
             // No combiner defined => set default
@@ -795,9 +795,9 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         configureEntityResolver(config, currentXMLParameters);
         setUpParentInterpolator(currentConfiguration, config);
 
-        ConfigurationSourceData data = getSourceData();
-        boolean createBuilders = data.getChildBuilders().isEmpty();
-        List<ConfigurationBuilder<? extends Configuration>> overrideBuilders =
+        final ConfigurationSourceData data = getSourceData();
+        final boolean createBuilders = data.getChildBuilders().isEmpty();
+        final List<ConfigurationBuilder<? extends Configuration>> overrideBuilders =
                 data.createAndAddConfigurations(result,
                         data.getOverrideSources(), data.overrideBuilders);
         if (createBuilders)
@@ -806,10 +806,10 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         }
         if (!data.getUnionSources().isEmpty())
         {
-            CombinedConfiguration addConfig = createAdditionalsConfiguration(result);
+            final CombinedConfiguration addConfig = createAdditionalsConfiguration(result);
             result.addConfiguration(addConfig, ADDITIONAL_NAME);
             initNodeCombinerListNodes(addConfig, config, KEY_ADDITIONAL_LIST);
-            List<ConfigurationBuilder<? extends Configuration>> unionBuilders =
+            final List<ConfigurationBuilder<? extends Configuration>> unionBuilders =
                     data.createAndAddConfigurations(addConfig,
                             data.unionDeclarations, data.unionBuilders);
             if (createBuilders)
@@ -836,9 +836,9 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @since 1.7
      */
     protected CombinedConfiguration createAdditionalsConfiguration(
-            CombinedConfiguration resultConfig)
+            final CombinedConfiguration resultConfig)
     {
-        CombinedConfiguration addConfig =
+        final CombinedConfiguration addConfig =
                 new CombinedConfiguration(new UnionCombiner());
         addConfig.setListDelimiterHandler(resultConfig.getListDelimiterHandler());
         return addConfig;
@@ -856,24 +856,24 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @throws ConfigurationException if an error occurs
      */
     protected void registerConfiguredLookups(
-            HierarchicalConfiguration<?> defConfig, Configuration resultConfig)
+            final HierarchicalConfiguration<?> defConfig, final Configuration resultConfig)
             throws ConfigurationException
     {
-        Map<String, Lookup> lookups = new HashMap<>();
+        final Map<String, Lookup> lookups = new HashMap<>();
 
-        List<? extends HierarchicalConfiguration<?>> nodes =
+        final List<? extends HierarchicalConfiguration<?>> nodes =
                 defConfig.configurationsAt(KEY_CONFIGURATION_LOOKUPS);
-        for (HierarchicalConfiguration<?> config : nodes)
+        for (final HierarchicalConfiguration<?> config : nodes)
         {
-            XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
-            String key = config.getString(KEY_LOOKUP_KEY);
-            Lookup lookup = (Lookup) fetchBeanHelper().createBean(decl);
+            final XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
+            final String key = config.getString(KEY_LOOKUP_KEY);
+            final Lookup lookup = (Lookup) fetchBeanHelper().createBean(decl);
             lookups.put(key, lookup);
         }
 
         if (!lookups.isEmpty())
         {
-            ConfigurationInterpolator defCI = defConfig.getInterpolator();
+            final ConfigurationInterpolator defCI = defConfig.getInterpolator();
             if (defCI != null)
             {
                 defCI.registerLookups(lookups);
@@ -892,12 +892,12 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @return the default {@code FileSystem} (may be <b>null</b>)
      * @throws ConfigurationException if an error occurs
      */
-    protected FileSystem initFileSystem(HierarchicalConfiguration<?> config)
+    protected FileSystem initFileSystem(final HierarchicalConfiguration<?> config)
             throws ConfigurationException
     {
         if (config.getMaxIndex(FILE_SYSTEM) == 0)
         {
-            XMLBeanDeclaration decl =
+            final XMLBeanDeclaration decl =
                     new XMLBeanDeclaration(config, FILE_SYSTEM);
             return (FileSystem) fetchBeanHelper().createBean(decl);
         }
@@ -914,17 +914,17 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      *        <b>null</b>)
      * @throws ConfigurationException if an error occurs.
      */
-    protected void initSystemProperties(HierarchicalConfiguration<?> config,
-            String basePath) throws ConfigurationException
+    protected void initSystemProperties(final HierarchicalConfiguration<?> config,
+            final String basePath) throws ConfigurationException
     {
-        String fileName = config.getString(KEY_SYSTEM_PROPS);
+        final String fileName = config.getString(KEY_SYSTEM_PROPS);
         if (fileName != null)
         {
             try
             {
                 SystemConfiguration.setSystemProperties(basePath, fileName);
             }
-            catch (Exception ex)
+            catch (final Exception ex)
             {
                 throw new ConfigurationException(
                         "Error setting system properties from " + fileName, ex);
@@ -941,27 +941,27 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      *        parameters; here the new resolver is to be stored
      * @throws ConfigurationException if an error occurs
      */
-    protected void configureEntityResolver(HierarchicalConfiguration<?> config,
-            XMLBuilderParametersImpl xmlParams) throws ConfigurationException
+    protected void configureEntityResolver(final HierarchicalConfiguration<?> config,
+            final XMLBuilderParametersImpl xmlParams) throws ConfigurationException
     {
         if (config.getMaxIndex(KEY_ENTITY_RESOLVER) == 0)
         {
-            XMLBeanDeclaration decl =
+            final XMLBeanDeclaration decl =
                     new XMLBeanDeclaration(config, KEY_ENTITY_RESOLVER, true);
-            EntityResolver resolver =
+            final EntityResolver resolver =
                     (EntityResolver) fetchBeanHelper().createBean(decl,
                             CatalogResolver.class);
-            FileSystem fileSystem = xmlParams.getFileHandler().getFileSystem();
+            final FileSystem fileSystem = xmlParams.getFileHandler().getFileSystem();
             if (fileSystem != null)
             {
                 BeanHelper.setProperty(resolver, "fileSystem", fileSystem);
             }
-            String basePath = xmlParams.getFileHandler().getBasePath();
+            final String basePath = xmlParams.getFileHandler().getBasePath();
             if (basePath != null)
             {
                 BeanHelper.setProperty(resolver, "baseDir", basePath);
             }
-            ConfigurationInterpolator ci = new ConfigurationInterpolator();
+            final ConfigurationInterpolator ci = new ConfigurationInterpolator();
             ci.registerLookups(fetchPrefixLookups());
             BeanHelper.setProperty(resolver, "interpolator", ci);
 
@@ -980,7 +980,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @return the provider that was registered for this tag or <b>null</b> if
      *         there is none
      */
-    protected ConfigurationBuilderProvider providerForTag(String tagName)
+    protected ConfigurationBuilderProvider providerForTag(final String tagName)
     {
         return currentParameters.providerForTag(tagName);
     }
@@ -996,7 +996,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      *
      * @param params the parameters object to be initialized
      */
-    protected void initChildBuilderParameters(BuilderParameters params)
+    protected void initChildBuilderParameters(final BuilderParameters params)
     {
         initDefaultChildParameters(params);
 
@@ -1026,7 +1026,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @param dest the destination builder object which is to be initialized
      */
     void initChildEventListeners(
-            BasicConfigurationBuilder<? extends Configuration> dest)
+            final BasicConfigurationBuilder<? extends Configuration> dest)
     {
         copyEventListeners(dest);
     }
@@ -1052,7 +1052,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @param bean the bean to be initialized
      * @param decl the {@code BeanDeclaration}
      */
-    void initBean(Object bean, BeanDeclaration decl)
+    void initBean(final Object bean, final BeanDeclaration decl)
     {
         fetchBeanHelper().initBean(bean, decl);
     }
@@ -1092,13 +1092,13 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @param resultConfig the result configuration
      * @param defConfig the definition configuration
      */
-    private void setUpParentInterpolator(Configuration resultConfig,
-            Configuration defConfig)
+    private void setUpParentInterpolator(final Configuration resultConfig,
+            final Configuration defConfig)
     {
         parentInterpolator = new ConfigurationInterpolator();
         parentInterpolator.addDefaultLookup(new ConfigurationLookup(
                 resultConfig));
-        ConfigurationInterpolator defInterpolator = defConfig.getInterpolator();
+        final ConfigurationInterpolator defInterpolator = defConfig.getInterpolator();
         if (defInterpolator != null)
         {
             defInterpolator.setParentInterpolator(parentInterpolator);
@@ -1122,14 +1122,15 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         }
         else
         {
-            ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder =
+            final ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder =
                     getDefinitionBuilder();
             if (defBuilder instanceof FileBasedConfigurationBuilder)
             {
                 @SuppressWarnings("rawtypes")
+                final
                 FileBasedConfigurationBuilder fileBuilder =
                         (FileBasedConfigurationBuilder) defBuilder;
-                URL url = fileBuilder.getFileHandler().getURL();
+                final URL url = fileBuilder.getFileHandler().getURL();
                 currentXMLParameters.setBasePath((url != null) ? url
                         .toExternalForm() : fileBuilder.getFileHandler()
                         .getBasePath());
@@ -1150,7 +1151,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @throws org.apache.commons.configuration2.ex.ConfigurationRuntimeException if an error
      *         occurs when copying properties
      */
-    private void initDefaultChildParameters(BuilderParameters params)
+    private void initDefaultChildParameters(final BuilderParameters params)
     {
         currentParameters.getChildDefaultParametersManager()
                 .initializeParameters(params);
@@ -1164,7 +1165,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      *
      * @param params the parameters object
      */
-    private void initChildBasicParameters(BasicBuilderParameters params)
+    private void initChildBasicParameters(final BasicBuilderParameters params)
     {
         params.setPrefixLookups(fetchPrefixLookups());
         params.setParentInterpolator(parentInterpolator);
@@ -1182,7 +1183,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @param params the parameters object
      */
     private void initChildFileBasedParameters(
-            FileBasedBuilderProperties<?> params)
+            final FileBasedBuilderProperties<?> params)
     {
         params.setBasePath(getBasePath());
         params.setFileSystem(currentXMLParameters.getFileHandler()
@@ -1195,7 +1196,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      *
      * @param params the parameters object
      */
-    private void initChildXMLParameters(XMLBuilderProperties<?> params)
+    private void initChildXMLParameters(final XMLBuilderProperties<?> params)
     {
         params.setEntityResolver(currentXMLParameters.getEntityResolver());
     }
@@ -1209,7 +1210,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @param params the parameters object
      */
     private void initChildCombinedParameters(
-            CombinedBuilderParametersImpl params)
+            final CombinedBuilderParametersImpl params)
     {
         params.registerMissingProviders(currentParameters);
         params.setBasePath(getBasePath());
@@ -1249,7 +1250,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     private ConfigurationSourceData createSourceData()
             throws ConfigurationException
     {
-        ConfigurationSourceData result = new ConfigurationSourceData();
+        final ConfigurationSourceData result = new ConfigurationSourceData();
         result.initFromDefinitionConfiguration(getDefinitionConfiguration());
         return result;
     }
@@ -1271,15 +1272,15 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @param defConfig the definition configuration
      * @throws ConfigurationException if an error occurs
      */
-    private void registerConfiguredProviders(HierarchicalConfiguration<?> defConfig)
+    private void registerConfiguredProviders(final HierarchicalConfiguration<?> defConfig)
             throws ConfigurationException
     {
-        List<? extends HierarchicalConfiguration<?>> nodes =
+        final List<? extends HierarchicalConfiguration<?>> nodes =
                 defConfig.configurationsAt(KEY_CONFIGURATION_PROVIDERS);
-        for (HierarchicalConfiguration<?> config : nodes)
+        for (final HierarchicalConfiguration<?> config : nodes)
         {
-            XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
-            String key = config.getString(KEY_PROVIDER_KEY);
+            final XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
+            final String key = config.getString(KEY_PROVIDER_KEY);
             currentParameters.registerProvider(key,
                     (ConfigurationBuilderProvider) fetchBeanHelper().createBean(decl));
         }
@@ -1300,7 +1301,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                 new EventListener<ConfigurationBuilderEvent>()
                 {
             @Override
-            public void onEvent(ConfigurationBuilderEvent event)
+            public void onEvent(final ConfigurationBuilderEvent event)
             {
                 synchronized (CombinedConfigurationBuilder.this)
                 {
@@ -1320,7 +1321,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      */
     private Map<String, ? extends Lookup> fetchPrefixLookups()
     {
-        CombinedConfiguration cc = getConfigurationUnderConstruction();
+        final CombinedConfiguration cc = getConfigurationUnderConstruction();
         return (cc != null) ? cc.getInterpolator().getLookups() : null;
     }
 
@@ -1332,11 +1333,11 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @return a collection with corresponding declarations
      */
     private Collection<ConfigurationDeclaration> createDeclarations(
-            Collection<? extends HierarchicalConfiguration<?>> configs)
+            final Collection<? extends HierarchicalConfiguration<?>> configs)
     {
-        Collection<ConfigurationDeclaration> declarations =
+        final Collection<ConfigurationDeclaration> declarations =
                 new ArrayList<>(configs.size());
-        for (HierarchicalConfiguration<?> c : configs)
+        for (final HierarchicalConfiguration<?> c : configs)
         {
             declarations.add(new ConfigurationDeclaration(this, c));
         }
@@ -1353,11 +1354,11 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * @param defConfig the definition configuration
      * @param key the key for the list nodes
      */
-    private static void initNodeCombinerListNodes(CombinedConfiguration cc,
-            HierarchicalConfiguration<?> defConfig, String key)
+    private static void initNodeCombinerListNodes(final CombinedConfiguration cc,
+            final HierarchicalConfiguration<?> defConfig, final String key)
     {
-        List<Object> listNodes = defConfig.getList(key);
-        for (Object listNode : listNodes)
+        final List<Object> listNodes = defConfig.getList(key);
+        for (final Object listNode : listNodes)
         {
             cc.getNodeCombiner().addListNode((String) listNode);
         }
@@ -1370,7 +1371,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      */
     private static Map<String, ConfigurationBuilderProvider> createDefaultProviders()
     {
-        Map<String, ConfigurationBuilderProvider> providers =
+        final Map<String, ConfigurationBuilderProvider> providers =
                 new HashMap<>();
         for (int i = 0; i < DEFAULT_TAGS.length; i++)
         {
@@ -1432,7 +1433,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          * @throws ConfigurationException if an error occurs
          */
         public void initFromDefinitionConfiguration(
-                HierarchicalConfiguration<?> config) throws ConfigurationException
+                final HierarchicalConfiguration<?> config) throws ConfigurationException
         {
             overrideDeclarations.addAll(createDeclarations(fetchTopLevelOverrideConfigs(config)));
             overrideDeclarations.addAll(createDeclarations(config.childConfigurationsAt(KEY_OVERRIDE)));
@@ -1451,12 +1452,12 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          * @throws ConfigurationException if an error occurs
          */
         public List<ConfigurationBuilder<? extends Configuration>> createAndAddConfigurations(
-                CombinedConfiguration ccResult,
-                List<ConfigurationDeclaration> srcDecl,
-                List<ConfigurationBuilder<? extends Configuration>> builders)
+                final CombinedConfiguration ccResult,
+                final List<ConfigurationDeclaration> srcDecl,
+                final List<ConfigurationBuilder<? extends Configuration>> builders)
                 throws ConfigurationException
         {
-            boolean createBuilders = builders.isEmpty();
+            final boolean createBuilders = builders.isEmpty();
             List<ConfigurationBuilder<? extends Configuration>> newBuilders;
             if (createBuilders)
             {
@@ -1491,7 +1492,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          */
         public void cleanUp()
         {
-            for (ConfigurationBuilder<?> b : getChildBuilders())
+            for (final ConfigurationBuilder<?> b : getChildBuilders())
             {
                 b.removeEventListener(ConfigurationBuilderEvent.RESET,
                         changeListener);
@@ -1541,7 +1542,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          * @return the builder with this name or <b>null</b>
          */
         public ConfigurationBuilder<? extends Configuration> getNamedBuilder(
-                String name)
+                final String name)
         {
             return namedBuilders.get(name);
         }
@@ -1565,9 +1566,9 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          * @throws ConfigurationException if an error occurs
          */
         private ConfigurationBuilder<? extends Configuration> createConfigurationBuilder(
-                ConfigurationDeclaration decl) throws ConfigurationException
+                final ConfigurationDeclaration decl) throws ConfigurationException
         {
-            ConfigurationBuilderProvider provider =
+            final ConfigurationBuilderProvider provider =
                     providerForTag(decl.getConfiguration().getRootElementName());
             if (provider == null)
             {
@@ -1576,7 +1577,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                                 + decl.getConfiguration().getRootElementName());
             }
 
-            ConfigurationBuilder<? extends Configuration> builder =
+            final ConfigurationBuilder<? extends Configuration> builder =
                     provider.getConfigurationBuilder(decl);
             if (decl.getName() != null)
             {
@@ -1597,9 +1598,9 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          * @param builder the configuration builder
          * @throws ConfigurationException if an error occurs
          */
-        private void addChildConfiguration(CombinedConfiguration ccResult,
-                ConfigurationDeclaration decl,
-                ConfigurationBuilder<? extends Configuration> builder)
+        private void addChildConfiguration(final CombinedConfiguration ccResult,
+                final ConfigurationDeclaration decl,
+                final ConfigurationBuilder<? extends Configuration> builder)
                 throws ConfigurationException
         {
             try
@@ -1608,7 +1609,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                         builder.getConfiguration(),
                         decl.getName(), decl.getAt());
             }
-            catch (ConfigurationException cex)
+            catch (final ConfigurationException cex)
             {
                 // ignore exceptions for optional configurations
                 if (!decl.isOptional())
@@ -1627,7 +1628,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             return new EventListener<ConfigurationBuilderEvent>()
             {
                 @Override
-                public void onEvent(ConfigurationBuilderEvent event)
+                public void onEvent(final ConfigurationBuilderEvent event)
                 {
                     resetResult();
                 }
@@ -1646,16 +1647,16 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          *         configurations
          */
         private List<? extends HierarchicalConfiguration<?>> fetchTopLevelOverrideConfigs(
-                HierarchicalConfiguration<?> config)
+                final HierarchicalConfiguration<?> config)
         {
 
-            List<? extends HierarchicalConfiguration<?>> configs =
+            final List<? extends HierarchicalConfiguration<?>> configs =
                     config.childConfigurationsAt(null);
-            for (Iterator<? extends HierarchicalConfiguration<?>> it =
+            for (final Iterator<? extends HierarchicalConfiguration<?>> it =
                     configs.iterator(); it.hasNext();)
             {
-                String nodeName = it.next().getRootElementName();
-                for (String element : CONFIG_SECTIONS)
+                final String nodeName = it.next().getRootElementName();
+                for (final String element : CONFIG_SECTIONS)
                 {
                     if (element.equals(nodeName))
                     {

@@ -50,10 +50,10 @@ public class TestEnvironmentLookup
     @Test
     public void testLookup()
     {
-        EnvironmentConfiguration envConf = new EnvironmentConfiguration();
-        for (Iterator<String> it = envConf.getKeys(); it.hasNext();)
+        final EnvironmentConfiguration envConf = new EnvironmentConfiguration();
+        for (final Iterator<String> it = envConf.getKeys(); it.hasNext();)
         {
-            String var = it.next();
+            final String var = it.next();
             assertEquals("Wrong value for " + var, envConf.getString(var),
                     lookup.lookup(var));
         }

@@ -90,7 +90,7 @@ public class TestDefaultListDelimiterHandler
     @Test
     public void testEscapeWithTransformer()
     {
-        ValueTransformer trans = EasyMock.createMock(ValueTransformer.class);
+        final ValueTransformer trans = EasyMock.createMock(ValueTransformer.class);
         EasyMock.expect(trans.transformValue("a\\,b")).andReturn("ok");
         EasyMock.replay(trans);
         assertEquals("Wrong result", "ok", handler.escape("a,b", trans));
@@ -103,15 +103,15 @@ public class TestDefaultListDelimiterHandler
     @Test
     public void testEscapeList()
     {
-        ValueTransformer trans = new ValueTransformer()
+        final ValueTransformer trans = new ValueTransformer()
         {
             @Override
-            public Object transformValue(Object value)
+            public Object transformValue(final Object value)
             {
                 return String.valueOf(value) + "_trans";
             }
         };
-        List<String> data =
+        final List<String> data =
                 Arrays.asList("simple", "Hello,world!", "\\,\\", "end");
         assertEquals("Wrong result", "simple_trans,Hello\\,world!_trans,"
                 + "\\\\\\,\\\\_trans,end_trans",
@@ -127,14 +127,14 @@ public class TestDefaultListDelimiterHandler
      * @param trim the trim flag
      * @param expectedElements the expected results
      */
-    private void checkSplit(String value, boolean trim,
-            String... expectedElements)
+    private void checkSplit(final String value, final boolean trim,
+            final String... expectedElements)
     {
-        Collection<String> elems = handler.split(value, trim);
+        final Collection<String> elems = handler.split(value, trim);
         assertEquals("Wrong number of elements", expectedElements.length,
                 elems.size());
         int idx = 0;
-        for (String elem : elems)
+        for (final String elem : elems)
         {
             assertEquals("Wrong value at " + idx, expectedElements[idx++], elem);
         }

@@ -77,7 +77,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      *
      * @throws NamingException thrown if an error occurs when initializing the default context
      */
-    public JNDIConfiguration(String prefix) throws NamingException
+    public JNDIConfiguration(final String prefix) throws NamingException
     {
         this(new InitialContext(), prefix);
     }
@@ -88,7 +88,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      *
      * @param context the initial context
      */
-    public JNDIConfiguration(Context context)
+    public JNDIConfiguration(final Context context)
     {
         this(context, null);
     }
@@ -100,7 +100,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @param context the initial context
      * @param prefix the prefix
      */
-    public JNDIConfiguration(Context context, String prefix)
+    public JNDIConfiguration(final Context context, final String prefix)
     {
         this.context = context;
         this.prefix = prefix;
@@ -119,8 +119,8 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @param processedCtx a set with the so far processed objects
      * @throws NamingException If JNDI has an issue.
      */
-    private void recursiveGetKeys(Set<String> keys, Context context, String prefix,
-            Set<Context> processedCtx) throws NamingException
+    private void recursiveGetKeys(final Set<String> keys, final Context context, final String prefix,
+            final Set<Context> processedCtx) throws NamingException
     {
         processedCtx.add(context);
         NamingEnumeration<NameClassPair> elements = null;
@@ -132,12 +132,12 @@ public class JNDIConfiguration extends AbstractConfiguration
             // iterates through the context's elements
             while (elements.hasMore())
             {
-                NameClassPair nameClassPair = elements.next();
-                String name = nameClassPair.getName();
-                Object object = context.lookup(name);
+                final NameClassPair nameClassPair = elements.next();
+                final String name = nameClassPair.getName();
+                final Object object = context.lookup(name);
 
                 // build the key
-                StringBuilder key = new StringBuilder();
+                final StringBuilder key = new StringBuilder();
                 key.append(prefix);
                 if (key.length() > 0)
                 {
@@ -148,7 +148,7 @@ public class JNDIConfiguration extends AbstractConfiguration
                 if (object instanceof Context)
                 {
                     // add the keys of the sub context
-                    Context subcontext = (Context) object;
+                    final Context subcontext = (Context) object;
                     if (!processedCtx.contains(subcontext))
                     {
                         recursiveGetKeys(keys, subcontext, key.toString(),
@@ -191,20 +191,20 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @return an iterator with the selected keys
      */
     @Override
-    protected Iterator<String> getKeysInternal(String prefix)
+    protected Iterator<String> getKeysInternal(final String prefix)
     {
         // build the path
-        String[] splitPath = StringUtils.split(prefix, ".");
+        final String[] splitPath = StringUtils.split(prefix, ".");
 
-        List<String> path = Arrays.asList(splitPath);
+        final List<String> path = Arrays.asList(splitPath);
 
         try
         {
             // find the context matching the specified path
-            Context context = getContext(path, getBaseContext());
+            final Context context = getContext(path, getBaseContext());
 
             // return all the keys under the context found
-            Set<String> keys = new HashSet<>();
+            final Set<String> keys = new HashSet<>();
             if (context != null)
             {
                 recursiveGetKeys(keys, context, prefix, new HashSet<Context>());
@@ -217,12 +217,12 @@ public class JNDIConfiguration extends AbstractConfiguration
 
             return keys.iterator();
         }
-        catch (NameNotFoundException e)
+        catch (final NameNotFoundException e)
         {
             // expected exception, no need to log it
             return new ArrayList<String>().iterator();
         }
-        catch (NamingException e)
+        catch (final NamingException e)
         {
             fireError(ConfigurationErrorEvent.READ,
                     ConfigurationErrorEvent.READ, null, null, e);
@@ -240,7 +240,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @return The context at that key's location in the JNDI tree, or null if not found
      * @throws NamingException if JNDI has an issue
      */
-    private Context getContext(List<String> path, Context context) throws NamingException
+    private Context getContext(final List<String> path, final Context context) throws NamingException
     {
         // return the current context if the path is empty
         if (path == null || path.isEmpty())
@@ -248,7 +248,7 @@ public class JNDIConfiguration extends AbstractConfiguration
             return context;
         }
 
-        String key = path.get(0);
+        final String key = path.get(0);
 
         // search a context matching the key in the context's elements
         NamingEnumeration<NameClassPair> elements = null;
@@ -258,13 +258,13 @@ public class JNDIConfiguration extends AbstractConfiguration
             elements = context.list("");
             while (elements.hasMore())
             {
-                NameClassPair nameClassPair = elements.next();
-                String name = nameClassPair.getName();
-                Object object = context.lookup(name);
+                final NameClassPair nameClassPair = elements.next();
+                final String name = nameClassPair.getName();
+                final Object object = context.lookup(name);
 
                 if (object instanceof Context && name.equals(key))
                 {
-                    Context subcontext = (Context) object;
+                    final Context subcontext = (Context) object;
 
                     // recursive search in the sub context
                     return getContext(path.subList(1, path.size()), subcontext);
@@ -308,7 +308,7 @@ public class JNDIConfiguration extends AbstractConfiguration
                 }
             }
         }
-        catch (NamingException e)
+        catch (final NamingException e)
         {
             fireError(ConfigurationErrorEvent.READ,
                     ConfigurationErrorEvent.READ, null, null, e);
@@ -325,7 +325,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @throws UnsupportedOperationException always thrown as this method is not supported
      */
     @Override
-    protected void setPropertyInternal(String key, Object value)
+    protected void setPropertyInternal(final String key, final Object value)
     {
         throw new UnsupportedOperationException("This operation is not supported");
     }
@@ -336,7 +336,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @param key the key of the property to remove
      */
     @Override
-    protected void clearPropertyDirect(String key)
+    protected void clearPropertyDirect(final String key)
     {
         clearedProperties.add(key);
     }
@@ -361,12 +361,12 @@ public class JNDIConfiguration extends AbstractConfiguration
             getBaseContext().lookup(key);
             return true;
         }
-        catch (NameNotFoundException e)
+        catch (final NameNotFoundException e)
         {
             // expected exception, no need to log it
             return false;
         }
-        catch (NamingException e)
+        catch (final NamingException e)
         {
             fireError(ConfigurationErrorEvent.READ,
                     ConfigurationErrorEvent.READ, key, null, e);
@@ -388,7 +388,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      *
      * @param prefix The prefix to set
      */
-    public void setPrefix(String prefix)
+    public void setPrefix(final String prefix)
     {
         this.prefix = prefix;
 
@@ -415,17 +415,17 @@ public class JNDIConfiguration extends AbstractConfiguration
             key = key.replaceAll("\\.", "/");
             return getBaseContext().lookup(key);
         }
-        catch (NameNotFoundException e)
+        catch (final NameNotFoundException e)
         {
             // expected exception, no need to log it
             return null;
         }
-        catch (NotContextException nctxex)
+        catch (final NotContextException nctxex)
         {
             // expected exception, no need to log it
             return null;
         }
-        catch (NamingException e)
+        catch (final NamingException e)
         {
             fireError(ConfigurationErrorEvent.READ,
                     ConfigurationErrorEvent.READ, key, null, e);
@@ -442,7 +442,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @throws UnsupportedOperationException always thrown as this method is not supported
      */
     @Override
-    protected void addPropertyDirect(String key, Object obj)
+    protected void addPropertyDirect(final String key, final Object obj)
     {
         throw new UnsupportedOperationException("This operation is not supported");
     }
@@ -479,7 +479,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      *
      * @param context the context
      */
-    public void setContext(Context context)
+    public void setContext(final Context context)
     {
         // forget the removed properties
         clearedProperties.clear();

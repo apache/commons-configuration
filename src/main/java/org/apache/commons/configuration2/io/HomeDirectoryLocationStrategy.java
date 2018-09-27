@@ -63,7 +63,7 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy
      * @param homeDir the path to the home directory (can be <b>null</b>)
      * @param withBasePath a flag whether the base path should be evaluated
      */
-    public HomeDirectoryLocationStrategy(String homeDir, boolean withBasePath)
+    public HomeDirectoryLocationStrategy(final String homeDir, final boolean withBasePath)
     {
         homeDirectory = fetchHomeDirectory(homeDir);
         evaluateBasePath = withBasePath;
@@ -76,7 +76,7 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy
      *
      * @param withBasePath a flag whether the base path should be evaluated
      */
-    public HomeDirectoryLocationStrategy(boolean withBasePath)
+    public HomeDirectoryLocationStrategy(final boolean withBasePath)
     {
         this(null, withBasePath);
     }
@@ -121,12 +121,12 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy
      * <b>true</b>, a sub directory of the home directory is searched.
      */
     @Override
-    public URL locate(FileSystem fileSystem, FileLocator locator)
+    public URL locate(final FileSystem fileSystem, final FileLocator locator)
     {
         if (StringUtils.isNotEmpty(locator.getFileName()))
         {
-            String basePath = fetchBasePath(locator);
-            File file =
+            final String basePath = fetchBasePath(locator);
+            final File file =
                     FileLocatorUtils.constructFile(basePath,
                             locator.getFileName());
             if (file.isFile())
@@ -144,7 +144,7 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy
      * @param locator the {@code FileLocator}
      * @return the base path to be used
      */
-    private String fetchBasePath(FileLocator locator)
+    private String fetchBasePath(final FileLocator locator)
     {
         if (isEvaluateBasePath()
                 && StringUtils.isNotEmpty(locator.getBasePath()))
@@ -163,7 +163,7 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy
      * @param homeDir the passed in home directory
      * @return the directory to be used
      */
-    private static String fetchHomeDirectory(String homeDir)
+    private static String fetchHomeDirectory(final String homeDir)
     {
         return (homeDir != null) ? homeDir : System.getProperty(PROP_HOME);
     }

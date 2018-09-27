@@ -90,13 +90,13 @@ public class TestDefaultParametersManager
      *
      * @param map the map with parameters
      */
-    private static void checkDefaultValues(Map<String, Object> map)
+    private static void checkDefaultValues(final Map<String, Object> map)
     {
         assertEquals("Wrong delimiter handler", listHandler,
                 map.get("listDelimiterHandler"));
         assertEquals("Wrong exception flag value", Boolean.TRUE,
                 map.get("throwExceptionOnMissing"));
-        FileBasedBuilderParametersImpl fbparams =
+        final FileBasedBuilderParametersImpl fbparams =
                 FileBasedBuilderParametersImpl.fromParameters(map);
         assertEquals("Wrong encoding", DEF_ENCODING, fbparams.getFileHandler()
                 .getEncoding());
@@ -107,11 +107,11 @@ public class TestDefaultParametersManager
      *
      * @param map the map with parameters
      */
-    private static void checkNoDefaultValues(Map<String, Object> map)
+    private static void checkNoDefaultValues(final Map<String, Object> map)
     {
         assertFalse("Got base properties",
                 map.containsKey("throwExceptionOnMissing"));
-        FileBasedBuilderParametersImpl fbParams =
+        final FileBasedBuilderParametersImpl fbParams =
                 FileBasedBuilderParametersImpl.fromParameters(map, true);
         assertNull("Got an encoding", fbParams.getFileHandler().getEncoding());
     }
@@ -125,9 +125,9 @@ public class TestDefaultParametersManager
     {
         manager.registerDefaultsHandler(FileBasedBuilderParameters.class,
                 new FileBasedDefaultsHandler());
-        FileBasedBuilderParameters params = parameters.fileBased();
+        final FileBasedBuilderParameters params = parameters.fileBased();
         manager.initializeParameters(params);
-        Map<String, Object> map = params.getParameters();
+        final Map<String, Object> map = params.getParameters();
         checkDefaultValues(map);
     }
 
@@ -140,9 +140,9 @@ public class TestDefaultParametersManager
     {
         manager.registerDefaultsHandler(FileBasedBuilderParameters.class,
                 new FileBasedDefaultsHandler());
-        XMLBuilderParameters params = parameters.xml();
+        final XMLBuilderParameters params = parameters.xml();
         manager.initializeParameters(params);
-        Map<String, Object> map = params.getParameters();
+        final Map<String, Object> map = params.getParameters();
         checkDefaultValues(map);
     }
 
@@ -155,11 +155,11 @@ public class TestDefaultParametersManager
     {
         manager.registerDefaultsHandler(FileBasedBuilderParameters.class,
                 new FileBasedDefaultsHandler(), XMLBuilderParameters.class);
-        XMLBuilderParameters paramsXml = parameters.xml();
+        final XMLBuilderParameters paramsXml = parameters.xml();
         manager.initializeParameters(paramsXml);
         Map<String, Object> map = paramsXml.getParameters();
         checkDefaultValues(map);
-        PropertiesBuilderParameters paramsProps = parameters.properties();
+        final PropertiesBuilderParameters paramsProps = parameters.properties();
         manager.initializeParameters(paramsProps);
         map = paramsProps.getParameters();
         checkNoDefaultValues(map);
@@ -179,7 +179,7 @@ public class TestDefaultParametersManager
                 {
                     @Override
                     public void initializeDefaults(
-                            XMLBuilderParameters parameters)
+                            final XMLBuilderParameters parameters)
                     {
                         parameters
                                 .setThrowExceptionOnMissing(false)
@@ -190,9 +190,9 @@ public class TestDefaultParametersManager
                 });
         manager.registerDefaultsHandler(FileBasedBuilderParameters.class,
                 new FileBasedDefaultsHandler());
-        XMLBuilderParameters params = parameters.xml();
+        final XMLBuilderParameters params = parameters.xml();
         manager.initializeParameters(params);
-        Map<String, Object> map = params.getParameters();
+        final Map<String, Object> map = params.getParameters();
         checkDefaultValues(map);
         assertSame("Expression engine not set", engine,
                 map.get("expressionEngine"));
@@ -216,17 +216,17 @@ public class TestDefaultParametersManager
     @Test
     public void testUnregisterDefaultsHandlerAll()
     {
-        FileBasedDefaultsHandler handler = new FileBasedDefaultsHandler();
+        final FileBasedDefaultsHandler handler = new FileBasedDefaultsHandler();
         manager.registerDefaultsHandler(FileBasedBuilderParameters.class,
                 handler, XMLBuilderParameters.class);
         manager.registerDefaultsHandler(FileBasedBuilderParameters.class,
                 handler, PropertiesBuilderParameters.class);
         manager.unregisterDefaultsHandler(handler);
 
-        XMLBuilderParameters paramsXml = parameters.xml();
+        final XMLBuilderParameters paramsXml = parameters.xml();
         manager.initializeParameters(paramsXml);
         checkNoDefaultValues(paramsXml.getParameters());
-        PropertiesBuilderParameters paramsProps = parameters.properties();
+        final PropertiesBuilderParameters paramsProps = parameters.properties();
         manager.initializeParameters(paramsProps);
         checkNoDefaultValues(paramsProps.getParameters());
     }
@@ -237,17 +237,17 @@ public class TestDefaultParametersManager
     @Test
     public void testUnregisterDefaultsHandlerSpecific()
     {
-        FileBasedDefaultsHandler handler = new FileBasedDefaultsHandler();
+        final FileBasedDefaultsHandler handler = new FileBasedDefaultsHandler();
         manager.registerDefaultsHandler(FileBasedBuilderParameters.class,
                 handler, XMLBuilderParameters.class);
         manager.registerDefaultsHandler(FileBasedBuilderParameters.class,
                 handler, PropertiesBuilderParameters.class);
         manager.unregisterDefaultsHandler(handler,
                 PropertiesBuilderParameters.class);
-        XMLBuilderParameters paramsXml = parameters.xml();
+        final XMLBuilderParameters paramsXml = parameters.xml();
         manager.initializeParameters(paramsXml);
         checkDefaultValues(paramsXml.getParameters());
-        PropertiesBuilderParameters paramsProps = parameters.properties();
+        final PropertiesBuilderParameters paramsProps = parameters.properties();
         manager.initializeParameters(paramsProps);
         checkNoDefaultValues(paramsProps.getParameters());
     }
@@ -261,7 +261,7 @@ public class TestDefaultParametersManager
             DefaultParametersHandler<FileBasedBuilderParameters>
     {
         @Override
-        public void initializeDefaults(FileBasedBuilderParameters parameters)
+        public void initializeDefaults(final FileBasedBuilderParameters parameters)
         {
             parameters.setThrowExceptionOnMissing(true)
                     .setEncoding(DEF_ENCODING)

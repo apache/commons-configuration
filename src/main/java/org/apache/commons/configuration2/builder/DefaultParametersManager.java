@@ -77,8 +77,8 @@ public class DefaultParametersManager
      *        (must not be <b>null</b>)
      * @throws IllegalArgumentException if a required parameter is missing
      */
-    public <T> void registerDefaultsHandler(Class<T> paramsClass,
-            DefaultParametersHandler<? super T> handler)
+    public <T> void registerDefaultsHandler(final Class<T> paramsClass,
+            final DefaultParametersHandler<? super T> handler)
     {
         registerDefaultsHandler(paramsClass, handler, null);
     }
@@ -126,8 +126,8 @@ public class DefaultParametersManager
      *        objects for which this handler should be applied
      * @throws IllegalArgumentException if a required parameter is missing
      */
-    public <T> void registerDefaultsHandler(Class<T> paramsClass,
-            DefaultParametersHandler<? super T> handler, Class<?> startClass)
+    public <T> void registerDefaultsHandler(final Class<T> paramsClass,
+            final DefaultParametersHandler<? super T> handler, final Class<?> startClass)
     {
         if (paramsClass == null)
         {
@@ -150,7 +150,7 @@ public class DefaultParametersManager
      *
      * @param handler the {@code DefaultParametersHandler} to be removed
      */
-    public void unregisterDefaultsHandler(DefaultParametersHandler<?> handler)
+    public void unregisterDefaultsHandler(final DefaultParametersHandler<?> handler)
     {
         unregisterDefaultsHandler(handler, null);
     }
@@ -166,12 +166,12 @@ public class DefaultParametersManager
      * @param handler the {@code DefaultParametersHandler} to be removed
      * @param startClass the start class for which this handler is to be removed
      */
-    public void unregisterDefaultsHandler(DefaultParametersHandler<?> handler,
-            Class<?> startClass)
+    public void unregisterDefaultsHandler(final DefaultParametersHandler<?> handler,
+            final Class<?> startClass)
     {
-        Collection<DefaultHandlerData> toRemove =
+        final Collection<DefaultHandlerData> toRemove =
                 new LinkedList<>();
-        for (DefaultHandlerData dhd : defaultHandlers)
+        for (final DefaultHandlerData dhd : defaultHandlers)
         {
             if (dhd.isOccurrence(handler, startClass))
             {
@@ -191,11 +191,11 @@ public class DefaultParametersManager
      * @param params the parameters object to be initialized (may be
      *        <b>null</b>, then this method has no effect)
      */
-    public void initializeParameters(BuilderParameters params)
+    public void initializeParameters(final BuilderParameters params)
     {
         if (params != null)
         {
-            for (DefaultHandlerData dhd : defaultHandlers)
+            for (final DefaultHandlerData dhd : defaultHandlers)
             {
                 dhd.applyHandlerIfMatching(params);
             }
@@ -226,8 +226,8 @@ public class DefaultParametersManager
          * @param cls the handler's data class
          * @param startCls the start class
          */
-        public DefaultHandlerData(DefaultParametersHandler<?> h, Class<?> cls,
-                Class<?> startCls)
+        public DefaultHandlerData(final DefaultParametersHandler<?> h, final Class<?> cls,
+                final Class<?> startCls)
         {
             handler = h;
             parameterClass = cls;
@@ -244,12 +244,13 @@ public class DefaultParametersManager
         @SuppressWarnings("unchecked")
         // There are explicit isInstance() checks, so there won't be
         // ClassCastExceptions
-        public void applyHandlerIfMatching(BuilderParameters obj)
+        public void applyHandlerIfMatching(final BuilderParameters obj)
         {
             if (parameterClass.isInstance(obj)
                     && (startClass == null || startClass.isInstance(obj)))
             {
                 @SuppressWarnings("rawtypes")
+                final
                 DefaultParametersHandler handlerUntyped = handler;
                 handlerUntyped.initializeDefaults(obj);
             }
@@ -264,8 +265,8 @@ public class DefaultParametersManager
          * @return <b>true</b> if this instance refers to this occurrence,
          *         <b>false</b> otherwise
          */
-        public boolean isOccurrence(DefaultParametersHandler<?> h,
-                Class<?> startCls)
+        public boolean isOccurrence(final DefaultParametersHandler<?> h,
+                final Class<?> startCls)
         {
             return h == handler
                     && (startCls == null || startCls.equals(startClass));

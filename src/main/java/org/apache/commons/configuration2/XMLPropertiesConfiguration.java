@@ -109,7 +109,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
      * @throws ConfigurationException Error while loading the properties file
      * @since 2.0
      */
-    public XMLPropertiesConfiguration(Element element) throws ConfigurationException
+    public XMLPropertiesConfiguration(final Element element) throws ConfigurationException
     {
         super();
         this.load(element);
@@ -130,27 +130,27 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
      *
      * @param header the header comment
      */
-    public void setHeader(String header)
+    public void setHeader(final String header)
     {
         this.header = header;
     }
 
     @Override
-    public void read(Reader in) throws ConfigurationException
+    public void read(final Reader in) throws ConfigurationException
     {
-        SAXParserFactory factory = SAXParserFactory.newInstance();
+        final SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(false);
         factory.setValidating(true);
 
         try
         {
-            SAXParser parser = factory.newSAXParser();
+            final SAXParser parser = factory.newSAXParser();
 
-            XMLReader xmlReader = parser.getXMLReader();
+            final XMLReader xmlReader = parser.getXMLReader();
             xmlReader.setEntityResolver(new EntityResolver()
             {
                 @Override
-                public InputSource resolveEntity(String publicId, String systemId)
+                public InputSource resolveEntity(final String publicId, final String systemId)
                 {
                     return new InputSource(getClass().getClassLoader().getResourceAsStream("properties.dtd"));
                 }
@@ -158,7 +158,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
             xmlReader.setContentHandler(new XMLPropertiesHandler());
             xmlReader.parse(new InputSource(in));
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ConfigurationException("Unable to parse the configuration file", e);
         }
@@ -175,16 +175,16 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
      * @throws ConfigurationException Error while interpreting the DOM
      * @since 2.0
      */
-    public void load(Element element) throws ConfigurationException
+    public void load(final Element element) throws ConfigurationException
     {
         if (!element.getNodeName().equals("properties"))
         {
             throw new ConfigurationException(MALFORMED_XML_EXCEPTION);
         }
-        NodeList childNodes = element.getChildNodes();
+        final NodeList childNodes = element.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++)
         {
-            Node item = childNodes.item(i);
+            final Node item = childNodes.item(i);
             if (item instanceof Element)
             {
                 if (item.getNodeName().equals("comment"))
@@ -193,7 +193,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
                 }
                 else if (item.getNodeName().equals("entry"))
                 {
-                    String key = ((Element) item).getAttribute("key");
+                    final String key = ((Element) item).getAttribute("key");
                     addProperty(key, item.getTextContent());
                 }
                 else
@@ -205,9 +205,9 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
     }
 
     @Override
-    public void write(Writer out) throws ConfigurationException
+    public void write(final Writer out) throws ConfigurationException
     {
-        PrintWriter writer = new PrintWriter(out);
+        final PrintWriter writer = new PrintWriter(out);
 
         String encoding = (locator != null) ? locator.getEncoding() : null;
         if (encoding == null)
@@ -223,11 +223,11 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
             writer.println("  <comment>" + StringEscapeUtils.escapeXml10(getHeader()) + "</comment>");
         }
 
-        Iterator<String> keys = getKeys();
+        final Iterator<String> keys = getKeys();
         while (keys.hasNext())
         {
-            String key = keys.next();
-            Object value = getProperty(key);
+            final String key = keys.next();
+            final Object value = getProperty(key);
 
             if (value instanceof List)
             {
@@ -250,14 +250,14 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
      * @param key the key of the property
      * @param value the value of the property
      */
-    private void writeProperty(PrintWriter out, String key, Object value)
+    private void writeProperty(final PrintWriter out, final String key, final Object value)
     {
         // escape the key
-        String k = StringEscapeUtils.escapeXml10(key);
+        final String k = StringEscapeUtils.escapeXml10(key);
 
         if (value != null)
         {
-            String v = escapeValue(value);
+            final String v = escapeValue(value);
             out.println("  <entry key=\"" + k + "\">" + v + "</entry>");
         }
         else
@@ -273,9 +273,9 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
      * @param key the key of the property
      * @param values a list with all property values
      */
-    private void writeProperty(PrintWriter out, String key, List<?> values)
+    private void writeProperty(final PrintWriter out, final String key, final List<?> values)
     {
-        for (Object value : values)
+        for (final Object value : values)
         {
             writeProperty(out, key, value);
         }
@@ -288,22 +288,22 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
      * @param parent The DOM parent node
      * @since 2.0
      */
-    public void save(Document document, Node parent)
+    public void save(final Document document, final Node parent)
     {
-        Element properties = document.createElement("properties");
+        final Element properties = document.createElement("properties");
         parent.appendChild(properties);
         if (getHeader() != null)
         {
-            Element comment = document.createElement("comment");
+            final Element comment = document.createElement("comment");
             properties.appendChild(comment);
             comment.setTextContent(StringEscapeUtils.escapeXml10(getHeader()));
         }
 
-        Iterator<String> keys = getKeys();
+        final Iterator<String> keys = getKeys();
         while (keys.hasNext())
         {
-            String key = keys.next();
-            Object value = getProperty(key);
+            final String key = keys.next();
+            final Object value = getProperty(key);
 
             if (value instanceof List)
             {
@@ -323,30 +323,30 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
      * @param locator the associated {@code FileLocator}
      */
     @Override
-    public void initFileLocator(FileLocator locator)
+    public void initFileLocator(final FileLocator locator)
     {
         this.locator = locator;
     }
 
-    private void writeProperty(Document document, Node properties, String key, Object value)
+    private void writeProperty(final Document document, final Node properties, final String key, final Object value)
     {
-        Element entry = document.createElement("entry");
+        final Element entry = document.createElement("entry");
         properties.appendChild(entry);
 
         // escape the key
-        String k = StringEscapeUtils.escapeXml10(key);
+        final String k = StringEscapeUtils.escapeXml10(key);
         entry.setAttribute("key", k);
 
         if (value != null)
         {
-            String v = escapeValue(value);
+            final String v = escapeValue(value);
             entry.setTextContent(v);
         }
     }
 
-    private void writeProperty(Document document, Node properties, String key, List<?> values)
+    private void writeProperty(final Document document, final Node properties, final String key, final List<?> values)
     {
-        for (Object value : values)
+        for (final Object value : values)
         {
             writeProperty(document, properties, key, value);
         }
@@ -358,9 +358,9 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
      * @param value the value to be escaped
      * @return the escaped value
      */
-    private String escapeValue(Object value)
+    private String escapeValue(final Object value)
     {
-        String v = StringEscapeUtils.escapeXml10(String.valueOf(value));
+        final String v = StringEscapeUtils.escapeXml10(String.valueOf(value));
         return String.valueOf(getListDelimiterHandler().escape(v,
                 ListDelimiterHandler.NOOP_TRANSFORMER));
     }
@@ -386,7 +386,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
         private boolean inEntryElement;
 
         @Override
-        public void startElement(String uri, String localName, String qName, Attributes attrs)
+        public void startElement(final String uri, final String localName, final String qName, final Attributes attrs)
         {
             if ("comment".equals(qName))
             {
@@ -401,7 +401,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
         }
 
         @Override
-        public void endElement(String uri, String localName, String qName)
+        public void endElement(final String uri, final String localName, final String qName)
         {
             if (inCommentElement)
             {
@@ -422,7 +422,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
         }
 
         @Override
-        public void characters(char[] chars, int start, int length)
+        public void characters(final char[] chars, final int start, final int length)
         {
             /**
              * We're currently processing an element. All character data from now until

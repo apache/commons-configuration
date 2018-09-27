@@ -75,7 +75,7 @@ public class CombinedReloadingController extends ReloadingController
      *         <b>null</b> or contains <b>null</b> entries
      */
     public CombinedReloadingController(
-            Collection<? extends ReloadingController> subCtrls)
+            final Collection<? extends ReloadingController> subCtrls)
     {
         super(DUMMY);
         controllers = checkManagedControllers(subCtrls);
@@ -127,16 +127,16 @@ public class CombinedReloadingController extends ReloadingController
      *         <b>null</b> or contains <b>null</b> entries
      */
     private static Collection<ReloadingController> checkManagedControllers(
-            Collection<? extends ReloadingController> subCtrls)
+            final Collection<? extends ReloadingController> subCtrls)
     {
         if (subCtrls == null)
         {
             throw new IllegalArgumentException(
                     "Collection with sub controllers must not be null!");
         }
-        Collection<ReloadingController> ctrls =
+        final Collection<ReloadingController> ctrls =
                 new ArrayList<>(subCtrls);
-        for (ReloadingController rc : ctrls)
+        for (final ReloadingController rc : ctrls)
         {
             if (rc == null)
             {
@@ -165,7 +165,7 @@ public class CombinedReloadingController extends ReloadingController
          *
          * @param o the owner
          */
-        public MultiReloadingControllerDetector(CombinedReloadingController o)
+        public MultiReloadingControllerDetector(final CombinedReloadingController o)
         {
             owner = o;
         }
@@ -181,7 +181,7 @@ public class CombinedReloadingController extends ReloadingController
         public boolean isReloadingRequired()
         {
             boolean result = false;
-            for (ReloadingController rc : owner.getSubControllers())
+            for (final ReloadingController rc : owner.getSubControllers())
             {
                 if (rc.checkForReloading(null))
                 {
@@ -198,7 +198,7 @@ public class CombinedReloadingController extends ReloadingController
         @Override
         public void reloadingPerformed()
         {
-            for (ReloadingController rc : owner.getSubControllers())
+            for (final ReloadingController rc : owner.getSubControllers())
             {
                 rc.resetReloadingState();
             }

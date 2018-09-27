@@ -41,17 +41,17 @@ public class TestConfigurationConverter
     @Test
     public void testPropertiesToConfiguration()
     {
-        Properties props = new Properties();
+        final Properties props = new Properties();
         props.setProperty("string", "teststring");
         props.setProperty("int", "123");
         props.setProperty("list", "item 1, item 2");
 
-        AbstractConfiguration config =
+        final AbstractConfiguration config =
                 (AbstractConfiguration) ConfigurationConverter.getConfiguration(props);
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
 
         assertEquals("This returns 'teststring'", "teststring", config.getString("string"));
-        List<Object> item1 = config.getList("list");
+        final List<Object> item1 = config.getList("list");
         assertEquals("This returns 'item 1'", "item 1", item1.get(0));
 
         assertEquals("This returns 123", 123, config.getInt("int"));
@@ -63,7 +63,7 @@ public class TestConfigurationConverter
      */
     private static BaseConfiguration createTestConfiguration()
     {
-        BaseConfiguration config = new BaseConfiguration();
+        final BaseConfiguration config = new BaseConfiguration();
         config.addProperty("string", "teststring");
         config.addProperty("array", "item 1");
         config.addProperty("array", "item 2");
@@ -80,8 +80,8 @@ public class TestConfigurationConverter
     @Test
     public void testConfigurationToPropertiesDefaultListHandling()
     {
-        BaseConfiguration config = createTestConfiguration();
-        Properties props = ConfigurationConverter.getProperties(config);
+        final BaseConfiguration config = createTestConfiguration();
+        final Properties props = ConfigurationConverter.getProperties(config);
 
         assertNotNull("null properties", props);
         assertEquals("'string' property", "teststring", props.getProperty("string"));
@@ -97,9 +97,9 @@ public class TestConfigurationConverter
     @Test
     public void testConfigurationToPropertiesListDelimiterHandler()
     {
-        BaseConfiguration config = createTestConfiguration();
+        final BaseConfiguration config = createTestConfiguration();
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(';'));
-        Properties props = ConfigurationConverter.getProperties(config);
+        final Properties props = ConfigurationConverter.getProperties(config);
         assertEquals("'array' property", "item 1;item 2", props.getProperty("array"));
     }
 
@@ -111,7 +111,7 @@ public class TestConfigurationConverter
     @Test
     public void testConfigurationToPropertiesNoAbstractConfiguration()
     {
-        Configuration src = EasyMock.createMock(Configuration.class);
+        final Configuration src = EasyMock.createMock(Configuration.class);
         final BaseConfiguration config = createTestConfiguration();
         EasyMock.expect(src.getKeys()).andReturn(config.getKeys());
         src.getList(EasyMock.anyObject(String.class));
@@ -120,12 +120,12 @@ public class TestConfigurationConverter
             @Override
             public Object answer() throws Throwable
             {
-                String key = (String) EasyMock.getCurrentArguments()[0];
+                final String key = (String) EasyMock.getCurrentArguments()[0];
                 return config.getList(key);
             }
         }).anyTimes();
         EasyMock.replay(src);
-        Properties props = ConfigurationConverter.getProperties(src);
+        final Properties props = ConfigurationConverter.getProperties(src);
         assertEquals("'array' property", "item 1,item 2",
                 props.getProperty("array"));
     }
@@ -137,19 +137,19 @@ public class TestConfigurationConverter
     @Test
     public void testConfigurationToPropertiesScalarValue()
     {
-        BaseConfiguration config = new BaseConfiguration();
+        final BaseConfiguration config = new BaseConfiguration();
         config.addProperty("scalar", new Integer(42));
-        Properties props = ConfigurationConverter.getProperties(config);
+        final Properties props = ConfigurationConverter.getProperties(config);
         assertEquals("Wrong value", "42", props.getProperty("scalar"));
     }
 
     @Test
     public void testConfigurationToMap()
     {
-        Configuration config = new BaseConfiguration();
+        final Configuration config = new BaseConfiguration();
         config.addProperty("string", "teststring");
 
-        Map<Object, Object> map = ConfigurationConverter.getMap(config);
+        final Map<Object, Object> map = ConfigurationConverter.getMap(config);
 
         assertNotNull("null map", map);
         assertEquals("'string' property", "teststring", map.get("string"));

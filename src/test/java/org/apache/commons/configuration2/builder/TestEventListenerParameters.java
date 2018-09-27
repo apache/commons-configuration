@@ -38,7 +38,7 @@ public class TestEventListenerParameters
     @Test
     public void testGetParameters()
     {
-        EventListenerParameters parameters = new EventListenerParameters();
+        final EventListenerParameters parameters = new EventListenerParameters();
         assertTrue("Got parameters", parameters.getParameters().isEmpty());
     }
 
@@ -49,7 +49,7 @@ public class TestEventListenerParameters
     @Test
     public void testRegistrationsAfterCreation()
     {
-        EventListenerParameters parameters = new EventListenerParameters();
+        final EventListenerParameters parameters = new EventListenerParameters();
         assertTrue("Got registrations", parameters.getListeners()
                 .getRegistrations().isEmpty());
     }
@@ -60,13 +60,13 @@ public class TestEventListenerParameters
     @Test
     public void testAddEventListener()
     {
-        EventListenerTestImpl listener = new EventListenerTestImpl(null);
-        EventListenerParameters parameters = new EventListenerParameters();
+        final EventListenerTestImpl listener = new EventListenerTestImpl(null);
+        final EventListenerParameters parameters = new EventListenerParameters();
         assertSame("Wrong result", parameters, parameters.addEventListener(
                 ConfigurationEvent.ADD_PROPERTY, listener));
         assertEquals("Wrong number of registrations", 1, parameters
                 .getListeners().getRegistrations().size());
-        EventListenerRegistrationData<?> reg =
+        final EventListenerRegistrationData<?> reg =
                 parameters.getListeners().getRegistrations().get(0);
         assertEquals("Wrong event type", ConfigurationEvent.ADD_PROPERTY,
                 reg.getEventType());
@@ -79,11 +79,11 @@ public class TestEventListenerParameters
     @Test
     public void testAddEventListenerRegistration()
     {
-        EventListenerRegistrationData<ConfigurationEvent> reg =
+        final EventListenerRegistrationData<ConfigurationEvent> reg =
                 new EventListenerRegistrationData<>(
                         ConfigurationEvent.SET_PROPERTY,
                         new EventListenerTestImpl(null));
-        EventListenerParameters parameters = new EventListenerParameters();
+        final EventListenerParameters parameters = new EventListenerParameters();
         assertSame("Wrong result", parameters, parameters.addEventListener(reg));
         assertEquals("Wrong number of registrations", 1, parameters
                 .getListeners().getRegistrations().size());

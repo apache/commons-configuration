@@ -68,7 +68,7 @@ public class TestDefaultConversionHandler
         return new ConfigurationInterpolator()
         {
             @Override
-            public Object interpolate(Object value)
+            public Object interpolate(final Object value)
             {
                 if (VAR.equals(value))
                 {
@@ -84,7 +84,7 @@ public class TestDefaultConversionHandler
      *
      * @param expResult the expected result
      */
-    private void checkSingleValue(Integer expResult)
+    private void checkSingleValue(final Integer expResult)
     {
         assertEquals("Wrong result", Integer.parseInt(REPLACEMENT),
                 expResult.intValue());
@@ -96,7 +96,7 @@ public class TestDefaultConversionHandler
     @Test
     public void testToWithInterpolator()
     {
-        Integer result = handler.to(VAR, Integer.class, createInterpolator());
+        final Integer result = handler.to(VAR, Integer.class, createInterpolator());
         checkSingleValue(result);
     }
 
@@ -106,7 +106,7 @@ public class TestDefaultConversionHandler
     @Test
     public void testToNoInterpolator()
     {
-        Integer result = handler.to(REPLACEMENT, Integer.class, null);
+        final Integer result = handler.to(REPLACEMENT, Integer.class, null);
         checkSingleValue(result);
     }
 
@@ -125,7 +125,7 @@ public class TestDefaultConversionHandler
     @Test
     public void testToFromArray()
     {
-        Object[] src = {
+        final Object[] src = {
                 VAR, true, 20130808221759L
         };
         checkSingleValue(handler.to(src, Integer.class, createInterpolator()));
@@ -137,7 +137,7 @@ public class TestDefaultConversionHandler
     @Test
     public void testToFromCollection()
     {
-        Collection<String> src = Arrays.asList(VAR, "true", "1000");
+        final Collection<String> src = Arrays.asList(VAR, "true", "1000");
         checkSingleValue(handler.to(src, Integer.class, createInterpolator()));
     }
 
@@ -147,7 +147,7 @@ public class TestDefaultConversionHandler
     @Test
     public void testToFromIterator()
     {
-        Iterator<String> src = Arrays.asList(VAR, "true", "1000").iterator();
+        final Iterator<String> src = Arrays.asList(VAR, "true", "1000").iterator();
         checkSingleValue(handler.to(src, Integer.class, createInterpolator()));
     }
 
@@ -177,7 +177,7 @@ public class TestDefaultConversionHandler
     @Test
     public void testToCollectionNullInput()
     {
-        ArrayList<Integer> col = new ArrayList<>();
+        final ArrayList<Integer> col = new ArrayList<>();
         handler.toCollection(null, Integer.class, null, col);
         assertTrue("Got elements", col.isEmpty());
     }
@@ -197,10 +197,10 @@ public class TestDefaultConversionHandler
     @Test
     public void testToCollectionSuccess()
     {
-        Object[] src = new Object[] {
+        final Object[] src = new Object[] {
                 VAR, "100"
         };
-        List<Integer> col = new ArrayList<>(src.length);
+        final List<Integer> col = new ArrayList<>(src.length);
         handler.toCollection(src, Integer.class, createInterpolator(), col);
         assertEquals("Wrong number of elements", src.length, col.size());
         assertEquals("Wrong element (1)", Integer.parseInt(REPLACEMENT), col
@@ -216,7 +216,7 @@ public class TestDefaultConversionHandler
     @Test
     public void testToCollectionEmptyString()
     {
-        List<Integer> col = new ArrayList<>(1);
+        final List<Integer> col = new ArrayList<>(1);
         handler.toCollection("", Integer.class, null, col);
         assertTrue("Got elements", col.isEmpty());
     }
@@ -236,8 +236,8 @@ public class TestDefaultConversionHandler
     @Test
     public void testToArrayObject()
     {
-        List<String> src = Arrays.asList(VAR, "100");
-        Integer[] array =
+        final List<String> src = Arrays.asList(VAR, "100");
+        final Integer[] array =
                 (Integer[]) handler.toArray(src, Integer.class,
                         createInterpolator());
         assertEquals("Wrong number of elements", src.size(), array.length);
@@ -253,10 +253,10 @@ public class TestDefaultConversionHandler
     @Test
     public void testToArrayPrimitiveSameType()
     {
-        int[] src = new int[] {
+        final int[] src = new int[] {
                 1, 2, 3, 4, 5, 6
         };
-        int[] array =
+        final int[] array =
                 (int[]) handler
                         .toArray(src, Integer.TYPE, createInterpolator());
         Assert.assertArrayEquals("Wrong array result", src, array);
@@ -269,10 +269,10 @@ public class TestDefaultConversionHandler
     @Test
     public void testToArrayPrimitiveWrapperType()
     {
-        Integer[] src = new Integer[] {
+        final Integer[] src = new Integer[] {
                 0, 1, 2, 4, 8, 16, 32, 64, 128
         };
-        int[] array =
+        final int[] array =
                 (int[]) handler
                         .toArray(src, Integer.TYPE, createInterpolator());
         assertEquals("Wrong array length", src.length, array.length);
@@ -289,8 +289,8 @@ public class TestDefaultConversionHandler
     @Test
     public void testToArrayPrimitiveOtherType()
     {
-        List<String> src = Arrays.asList(VAR, "100");
-        int[] array =
+        final List<String> src = Arrays.asList(VAR, "100");
+        final int[] array =
                 (int[]) handler
                         .toArray(src, Integer.TYPE, createInterpolator());
         assertEquals("Wrong element (1)", Integer.parseInt(REPLACEMENT),
@@ -306,7 +306,7 @@ public class TestDefaultConversionHandler
     @Test
     public void testToArrayEmptyString()
     {
-        int[] array = (int[]) handler.toArray("", Integer.TYPE, null);
+        final int[] array = (int[]) handler.toArray("", Integer.TYPE, null);
         assertEquals("Got elements", 0, array.length);
     }
 
@@ -327,7 +327,7 @@ public class TestDefaultConversionHandler
     @Test
     public void testSetDateFormat()
     {
-        String dateFormat = "dd.MM.yyyy";
+        final String dateFormat = "dd.MM.yyyy";
         handler.setDateFormat(dateFormat);
         assertEquals("Date format not changed", dateFormat,
                 handler.getDateFormat());
@@ -341,8 +341,8 @@ public class TestDefaultConversionHandler
     public void testToDateWithFormat()
     {
         handler.setDateFormat("dd.MM.yyyy");
-        Date dt = handler.to("19.08.2013", Date.class, null);
-        Calendar cal = Calendar.getInstance();
+        final Date dt = handler.to("19.08.2013", Date.class, null);
+        final Calendar cal = Calendar.getInstance();
         cal.setTime(dt);
         assertEquals("Wrong day", 19, cal.get(Calendar.DATE));
         assertEquals("Wrong month", Calendar.AUGUST, cal.get(Calendar.MONTH));
@@ -355,7 +355,7 @@ public class TestDefaultConversionHandler
     @Test
     public void testToCalendarWithDefaultFormat()
     {
-        Calendar cal = handler.to("2013-08-19 21:17:22", Calendar.class, null);
+        final Calendar cal = handler.to("2013-08-19 21:17:22", Calendar.class, null);
         assertEquals("Wrong day", 19, cal.get(Calendar.DATE));
         assertEquals("Wrong month", Calendar.AUGUST, cal.get(Calendar.MONTH));
         assertEquals("Wrong year", 2013, cal.get(Calendar.YEAR));
@@ -370,8 +370,8 @@ public class TestDefaultConversionHandler
     @Test
     public void testToPrimitive()
     {
-        Long value = 20130819214935L;
-        Object result = handler.to(value.toString(), Long.TYPE, null);
+        final Long value = 20130819214935L;
+        final Object result = handler.to(value.toString(), Long.TYPE, null);
         assertEquals("Wrong conversion result", value, result);
     }
 }

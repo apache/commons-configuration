@@ -50,10 +50,10 @@ public class TestJndiBuilderParametersImpl
     @Test
     public void testSetContext()
     {
-        Context ctx = EasyMock.createMock(Context.class);
+        final Context ctx = EasyMock.createMock(Context.class);
         EasyMock.replay(ctx);
         assertSame("Wrong result", params, params.setContext(ctx));
-        Map<String, Object> paramsMap = params.getParameters();
+        final Map<String, Object> paramsMap = params.getParameters();
         assertSame("Context not in map", ctx, paramsMap.get("context"));
     }
 
@@ -63,9 +63,9 @@ public class TestJndiBuilderParametersImpl
     @Test
     public void testSetPrefix()
     {
-        String prefix = "testJndiPrefix";
+        final String prefix = "testJndiPrefix";
         assertSame("Wrong result", params, params.setPrefix(prefix));
-        Map<String, Object> paramsMap = params.getParameters();
+        final Map<String, Object> paramsMap = params.getParameters();
         assertEquals("Prefix not in map", prefix, paramsMap.get("prefix"));
     }
 
@@ -77,7 +77,7 @@ public class TestJndiBuilderParametersImpl
     {
         params.setPrefix("somePrefix");
         params.setThrowExceptionOnMissing(true);
-        Map<String, Object> paramsMap = params.getParameters();
+        final Map<String, Object> paramsMap = params.getParameters();
         assertEquals("Wrong exception flag", Boolean.TRUE,
                 paramsMap.get("throwExceptionOnMissing"));
     }
@@ -88,12 +88,12 @@ public class TestJndiBuilderParametersImpl
     @Test
     public void testSetBeanProperties() throws Exception
     {
-        Context ctx = EasyMock.createMock(Context.class);
+        final Context ctx = EasyMock.createMock(Context.class);
         EasyMock.replay(ctx);
-        String prefix = "testJndiPrefix";
+        final String prefix = "testJndiPrefix";
         BeanHelper.setProperty(params, "context", ctx);
         BeanHelper.setProperty(params, "prefix", prefix);
-        Map<String, Object> paramsMap = params.getParameters();
+        final Map<String, Object> paramsMap = params.getParameters();
         assertSame("Context not in map", ctx, paramsMap.get("context"));
         assertEquals("Prefix not in map", prefix, paramsMap.get("prefix"));
     }

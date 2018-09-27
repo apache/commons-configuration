@@ -87,9 +87,9 @@ public abstract class AbstractXPathTest
      * @param levels the number of levels in the hierarchy
      * @return the root node of the hierarchy
      */
-    protected ImmutableNode constructHierarchy(int levels)
+    protected ImmutableNode constructHierarchy(final int levels)
     {
-        ImmutableNode.Builder resultBuilder = new ImmutableNode.Builder();
+        final ImmutableNode.Builder resultBuilder = new ImmutableNode.Builder();
         createLevel(resultBuilder, null, levels);
         resultBuilder.addAttribute(ATTR_ROOT, String.valueOf(true));
         return resultBuilder.create();
@@ -101,7 +101,7 @@ public abstract class AbstractXPathTest
      * @param iterator the iterator
      * @return the number of elements in this iteration
      */
-    protected int iteratorSize(NodeIterator iterator)
+    protected int iteratorSize(final NodeIterator iterator)
     {
         int cnt = 0;
         boolean ok;
@@ -125,9 +125,9 @@ public abstract class AbstractXPathTest
      * @param iterator the iterator
      * @return a list with the node pointers obtained from the iterator
      */
-    protected List<NodePointer> iterationElements(NodeIterator iterator)
+    protected List<NodePointer> iterationElements(final NodeIterator iterator)
     {
-        List<NodePointer> result = new ArrayList<>();
+        final List<NodePointer> result = new ArrayList<>();
         for (int pos = 1; iterator.setPosition(pos); pos++)
         {
             result.add(iterator.getNodePointer());
@@ -142,18 +142,18 @@ public abstract class AbstractXPathTest
      * @param value the value of the parent node
      * @param level the level counter
      */
-    private void createLevel(ImmutableNode.Builder parentBuilder, String value,
-            int level)
+    private void createLevel(final ImmutableNode.Builder parentBuilder, final String value,
+            final int level)
     {
         if (level >= 0)
         {
-            String prefix = (value == null) ? "" : value + ".";
+            final String prefix = (value == null) ? "" : value + ".";
             for (int i = 1; i <= CHILD_COUNT; i++)
             {
-                ImmutableNode.Builder childBuilder =
+                final ImmutableNode.Builder childBuilder =
                         new ImmutableNode.Builder();
                 childBuilder.name((i % 2 == 0) ? CHILD_NAME1 : CHILD_NAME2);
-                String currentValue = prefix + i;
+                final String currentValue = prefix + i;
                 childBuilder.value(currentValue);
                 createLevel(childBuilder, currentValue, level - 1);
                 childBuilder.addAttribute(ATTR_NAME, String.valueOf(i));

@@ -101,7 +101,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @param comb the node combiner (can be <b>null</b>, then a union combiner
      * is used as default)
      */
-    public DynamicCombinedConfiguration(NodeCombiner comb)
+    public DynamicCombinedConfiguration(final NodeCombiner comb)
     {
         super();
         setNodeCombiner(comb);
@@ -122,7 +122,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         localSubst = initLocalInterpolator();
     }
 
-    public void setKeyPattern(String pattern)
+    public void setKeyPattern(final String pattern)
     {
         this.keyPattern = pattern;
     }
@@ -136,7 +136,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * Set the name of the Logger to use on each CombinedConfiguration.
      * @param name The Logger name.
      */
-    public void setLoggerName(String name)
+    public void setLoggerName(final String name)
     {
         this.loggerName = name;
     }
@@ -163,7 +163,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @param nodeCombiner the node combiner
      */
     @Override
-    public void setNodeCombiner(NodeCombiner nodeCombiner)
+    public void setNodeCombiner(final NodeCombiner nodeCombiner)
     {
         if (nodeCombiner == null)
         {
@@ -190,13 +190,13 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * <b>null</b>)
      */
     @Override
-    public void addConfiguration(Configuration config, String name,
-            String at)
+    public void addConfiguration(final Configuration config, final String name,
+            final String at)
     {
         beginWrite(true);
         try
         {
-            ConfigData cd = new ConfigData(config, name, at);
+            final ConfigData cd = new ConfigData(config, name, at);
             configurations.add(cd);
             if (name != null)
             {
@@ -240,12 +240,12 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @return the configuration at this index
      */
     @Override
-    public Configuration getConfiguration(int index)
+    public Configuration getConfiguration(final int index)
     {
         beginRead(false);
         try
         {
-            ConfigData cd = configurations.get(index);
+            final ConfigData cd = configurations.get(index);
             return cd.getConfiguration();
         }
         finally
@@ -262,7 +262,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @return the configuration with this name
      */
     @Override
-    public Configuration getConfiguration(String name)
+    public Configuration getConfiguration(final String name)
     {
         beginRead(false);
         try
@@ -305,9 +305,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * was not found)
      */
     @Override
-    public Configuration removeConfiguration(String name)
+    public Configuration removeConfiguration(final String name)
     {
-        Configuration conf = getConfiguration(name);
+        final Configuration conf = getConfiguration(name);
         if (conf != null)
         {
             removeConfiguration(conf);
@@ -322,7 +322,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @return a flag whether this configuration was found and could be removed
      */
     @Override
-    public boolean removeConfiguration(Configuration config)
+    public boolean removeConfiguration(final Configuration config)
     {
         beginWrite(false);
         try
@@ -351,12 +351,12 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @return the removed configuration
      */
     @Override
-    public Configuration removeConfigurationAt(int index)
+    public Configuration removeConfigurationAt(final int index)
     {
         beginWrite(false);
         try
         {
-            ConfigData cd = configurations.remove(index);
+            final ConfigData cd = configurations.remove(index);
             if (cd.getName() != null)
             {
                 namedConfigurations.remove(cd.getName());
@@ -370,7 +370,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    protected void addPropertyInternal(String key, Object value)
+    protected void addPropertyInternal(final String key, final Object value)
     {
         this.getCurrentConfig().addProperty(key, value);
     }
@@ -385,127 +385,127 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    protected void clearPropertyDirect(String key)
+    protected void clearPropertyDirect(final String key)
     {
         this.getCurrentConfig().clearProperty(key);
     }
 
     @Override
-    protected boolean containsKeyInternal(String key)
+    protected boolean containsKeyInternal(final String key)
     {
         return this.getCurrentConfig().containsKey(key);
     }
 
     @Override
-    public BigDecimal getBigDecimal(String key, BigDecimal defaultValue)
+    public BigDecimal getBigDecimal(final String key, final BigDecimal defaultValue)
     {
         return this.getCurrentConfig().getBigDecimal(key, defaultValue);
     }
 
     @Override
-    public BigDecimal getBigDecimal(String key)
+    public BigDecimal getBigDecimal(final String key)
     {
         return this.getCurrentConfig().getBigDecimal(key);
     }
 
     @Override
-    public BigInteger getBigInteger(String key, BigInteger defaultValue)
+    public BigInteger getBigInteger(final String key, final BigInteger defaultValue)
     {
         return this.getCurrentConfig().getBigInteger(key, defaultValue);
     }
 
     @Override
-    public BigInteger getBigInteger(String key)
+    public BigInteger getBigInteger(final String key)
     {
         return this.getCurrentConfig().getBigInteger(key);
     }
 
     @Override
-    public boolean getBoolean(String key, boolean defaultValue)
+    public boolean getBoolean(final String key, final boolean defaultValue)
     {
         return this.getCurrentConfig().getBoolean(key, defaultValue);
     }
 
     @Override
-    public Boolean getBoolean(String key, Boolean defaultValue)
+    public Boolean getBoolean(final String key, final Boolean defaultValue)
     {
         return this.getCurrentConfig().getBoolean(key, defaultValue);
     }
 
     @Override
-    public boolean getBoolean(String key)
+    public boolean getBoolean(final String key)
     {
         return this.getCurrentConfig().getBoolean(key);
     }
 
     @Override
-    public byte getByte(String key, byte defaultValue)
+    public byte getByte(final String key, final byte defaultValue)
     {
         return this.getCurrentConfig().getByte(key, defaultValue);
     }
 
     @Override
-    public Byte getByte(String key, Byte defaultValue)
+    public Byte getByte(final String key, final Byte defaultValue)
     {
         return this.getCurrentConfig().getByte(key, defaultValue);
     }
 
     @Override
-    public byte getByte(String key)
+    public byte getByte(final String key)
     {
         return this.getCurrentConfig().getByte(key);
     }
 
     @Override
-    public double getDouble(String key, double defaultValue)
+    public double getDouble(final String key, final double defaultValue)
     {
         return this.getCurrentConfig().getDouble(key, defaultValue);
     }
 
     @Override
-    public Double getDouble(String key, Double defaultValue)
+    public Double getDouble(final String key, final Double defaultValue)
     {
         return this.getCurrentConfig().getDouble(key, defaultValue);
     }
 
     @Override
-    public double getDouble(String key)
+    public double getDouble(final String key)
     {
         return this.getCurrentConfig().getDouble(key);
     }
 
     @Override
-    public float getFloat(String key, float defaultValue)
+    public float getFloat(final String key, final float defaultValue)
     {
         return this.getCurrentConfig().getFloat(key, defaultValue);
     }
 
     @Override
-    public Float getFloat(String key, Float defaultValue)
+    public Float getFloat(final String key, final Float defaultValue)
     {
         return this.getCurrentConfig().getFloat(key, defaultValue);
     }
 
     @Override
-    public float getFloat(String key)
+    public float getFloat(final String key)
     {
         return this.getCurrentConfig().getFloat(key);
     }
 
     @Override
-    public int getInt(String key, int defaultValue)
+    public int getInt(final String key, final int defaultValue)
     {
         return this.getCurrentConfig().getInt(key, defaultValue);
     }
 
     @Override
-    public int getInt(String key)
+    public int getInt(final String key)
     {
         return this.getCurrentConfig().getInt(key);
     }
 
     @Override
-    public Integer getInteger(String key, Integer defaultValue)
+    public Integer getInteger(final String key, final Integer defaultValue)
     {
         return this.getCurrentConfig().getInteger(key, defaultValue);
     }
@@ -517,85 +517,85 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    protected Iterator<String> getKeysInternal(String prefix)
+    protected Iterator<String> getKeysInternal(final String prefix)
     {
         return this.getCurrentConfig().getKeys(prefix);
     }
 
     @Override
-    public List<Object> getList(String key, List<?> defaultValue)
+    public List<Object> getList(final String key, final List<?> defaultValue)
     {
         return this.getCurrentConfig().getList(key, defaultValue);
     }
 
     @Override
-    public List<Object> getList(String key)
+    public List<Object> getList(final String key)
     {
         return this.getCurrentConfig().getList(key);
     }
 
     @Override
-    public long getLong(String key, long defaultValue)
+    public long getLong(final String key, final long defaultValue)
     {
         return this.getCurrentConfig().getLong(key, defaultValue);
     }
 
     @Override
-    public Long getLong(String key, Long defaultValue)
+    public Long getLong(final String key, final Long defaultValue)
     {
         return this.getCurrentConfig().getLong(key, defaultValue);
     }
 
     @Override
-    public long getLong(String key)
+    public long getLong(final String key)
     {
         return this.getCurrentConfig().getLong(key);
     }
 
     @Override
-    public Properties getProperties(String key)
+    public Properties getProperties(final String key)
     {
         return this.getCurrentConfig().getProperties(key);
     }
 
     @Override
-    protected Object getPropertyInternal(String key)
+    protected Object getPropertyInternal(final String key)
     {
         return this.getCurrentConfig().getProperty(key);
     }
 
     @Override
-    public short getShort(String key, short defaultValue)
+    public short getShort(final String key, final short defaultValue)
     {
         return this.getCurrentConfig().getShort(key, defaultValue);
     }
 
     @Override
-    public Short getShort(String key, Short defaultValue)
+    public Short getShort(final String key, final Short defaultValue)
     {
         return this.getCurrentConfig().getShort(key, defaultValue);
     }
 
     @Override
-    public short getShort(String key)
+    public short getShort(final String key)
     {
         return this.getCurrentConfig().getShort(key);
     }
 
     @Override
-    public String getString(String key, String defaultValue)
+    public String getString(final String key, final String defaultValue)
     {
         return this.getCurrentConfig().getString(key, defaultValue);
     }
 
     @Override
-    public String getString(String key)
+    public String getString(final String key)
     {
         return this.getCurrentConfig().getString(key);
     }
 
     @Override
-    public String[] getStringArray(String key)
+    public String[] getStringArray(final String key)
     {
         return this.getCurrentConfig().getStringArray(key);
     }
@@ -613,7 +613,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    protected void setPropertyInternal(String key, Object value)
+    protected void setPropertyInternal(final String key, final Object value)
     {
         if (configs != null)
         {
@@ -622,7 +622,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public Configuration subset(String prefix)
+    public Configuration subset(final String prefix)
     {
         return this.getCurrentConfig().subset(prefix);
     }
@@ -634,44 +634,44 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public void setExpressionEngine(ExpressionEngine expressionEngine)
+    public void setExpressionEngine(final ExpressionEngine expressionEngine)
     {
         super.setExpressionEngine(expressionEngine);
     }
 
     @Override
-    protected void addNodesInternal(String key, Collection<? extends ImmutableNode> nodes)
+    protected void addNodesInternal(final String key, final Collection<? extends ImmutableNode> nodes)
     {
         this.getCurrentConfig().addNodes(key, nodes);
     }
 
     @Override
-    public HierarchicalConfiguration<ImmutableNode> configurationAt(String key, boolean supportUpdates)
+    public HierarchicalConfiguration<ImmutableNode> configurationAt(final String key, final boolean supportUpdates)
     {
         return this.getCurrentConfig().configurationAt(key, supportUpdates);
     }
 
     @Override
-    public HierarchicalConfiguration<ImmutableNode> configurationAt(String key)
+    public HierarchicalConfiguration<ImmutableNode> configurationAt(final String key)
     {
         return this.getCurrentConfig().configurationAt(key);
     }
 
     @Override
-    public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(String key)
+    public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(final String key)
     {
         return this.getCurrentConfig().configurationsAt(key);
     }
 
     @Override
-    protected Object clearTreeInternal(String key)
+    protected Object clearTreeInternal(final String key)
     {
         this.getCurrentConfig().clearTree(key);
         return Collections.emptyList();
     }
 
     @Override
-    protected int getMaxIndexInternal(String key)
+    protected int getMaxIndexInternal(final String key)
     {
         return this.getCurrentConfig().getMaxIndex(key);
     }
@@ -706,7 +706,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * and the source cannot be determined, or if the key is <b>null</b>
      */
     @Override
-    public Configuration getSource(String key)
+    public Configuration getSource(final String key)
     {
         if (key == null)
         {
@@ -718,7 +718,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public void clearEventListeners()
     {
-        for (CombinedConfiguration cc : configs.values())
+        for (final CombinedConfiguration cc : configs.values())
         {
             cc.clearEventListeners();
         }
@@ -726,10 +726,10 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public <T extends Event> void addEventListener(EventType<T> eventType,
-            EventListener<? super T> listener)
+    public <T extends Event> void addEventListener(final EventType<T> eventType,
+            final EventListener<? super T> listener)
     {
-        for (CombinedConfiguration cc : configs.values())
+        for (final CombinedConfiguration cc : configs.values())
         {
             cc.addEventListener(eventType, listener);
         }
@@ -738,9 +738,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
 
     @Override
     public <T extends Event> boolean removeEventListener(
-            EventType<T> eventType, EventListener<? super T> listener)
+            final EventType<T> eventType, final EventListener<? super T> listener)
     {
-        for (CombinedConfiguration cc : configs.values())
+        for (final CombinedConfiguration cc : configs.values())
         {
             cc.removeEventListener(eventType, listener);
         }
@@ -750,7 +750,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public void clearErrorListeners()
     {
-        for (CombinedConfiguration cc : configs.values())
+        for (final CombinedConfiguration cc : configs.values())
         {
             cc.clearErrorListeners();
         }
@@ -788,7 +788,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
 
     public void invalidateAll()
     {
-        for (CombinedConfiguration cc : configs.values())
+        for (final CombinedConfiguration cc : configs.values())
         {
             cc.invalidate();
         }
@@ -799,9 +799,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * is initialized. The lock counter is increased.
      */
     @Override
-    protected void beginRead(boolean optimize)
+    protected void beginRead(final boolean optimize)
     {
-        CurrentConfigHolder cch = ensureCurrentConfiguration();
+        final CurrentConfigHolder cch = ensureCurrentConfiguration();
         cch.incrementLockCount();
         if (!optimize && cch.getCurrentConfiguration() == null)
         {
@@ -820,9 +820,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * created.
      */
     @Override
-    protected void beginWrite(boolean optimize)
+    protected void beginWrite(final boolean optimize)
     {
-        CurrentConfigHolder cch = ensureCurrentConfiguration();
+        final CurrentConfigHolder cch = ensureCurrentConfiguration();
         cch.incrementLockCount();
 
         super.beginWrite(optimize);
@@ -863,7 +863,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      */
     private void releaseLock()
     {
-        CurrentConfigHolder cch = CURRENT_CONFIG.get();
+        final CurrentConfigHolder cch = CURRENT_CONFIG.get();
         assert cch != null : "No current configuration!";
         if (cch.decrementLockCountAndCheckRelease())
         {
@@ -917,7 +917,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      *
      * @param config the child configuration to be initialized
      */
-    private void initChildConfiguration(CombinedConfiguration config)
+    private void initChildConfiguration(final CombinedConfiguration config)
     {
         if (loggerName != null)
         {
@@ -927,7 +927,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         config.setConversionExpressionEngine(getConversionExpressionEngine());
         config.setListDelimiterHandler(getListDelimiterHandler());
         copyEventListeners(config);
-        for (ConfigData data : configurations)
+        for (final ConfigData data : configurations)
         {
             config.addConfiguration(data.getConfiguration(), data.getName(),
                     data.getAt());
@@ -948,7 +948,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         return new ConfigurationInterpolator()
         {
             @Override
-            protected Lookup fetchLookupForPrefix(String prefix)
+            protected Lookup fetchLookupForPrefix(final String prefix)
             {
                 return ConfigurationInterpolator
                         .nullSafeLookup(getInterpolator().getLookups().get(
@@ -971,7 +971,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         CurrentConfigHolder cch = CURRENT_CONFIG.get();
         if (cch == null)
         {
-            String key = String.valueOf(localSubst.interpolate(keyPattern));
+            final String key = String.valueOf(localSubst.interpolate(keyPattern));
             cch = new CurrentConfigHolder(key);
             cch.setCurrentConfiguration(configs.get(key));
             CURRENT_CONFIG.set(cch);
@@ -1001,7 +1001,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
          * @param n the name
          * @param at the at position
          */
-        public ConfigData(Configuration config, String n, String at)
+        public ConfigData(final Configuration config, final String n, final String at)
         {
             configuration = config;
             name = n;
@@ -1064,7 +1064,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
          *
          * @param curKey the current key
          */
-        public CurrentConfigHolder(String curKey)
+        public CurrentConfigHolder(final String curKey)
         {
             key = curKey;
         }
@@ -1085,7 +1085,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
          * @param currentConfiguration the current configuration
          */
         public void setCurrentConfiguration(
-                CombinedConfiguration currentConfiguration)
+                final CombinedConfiguration currentConfiguration)
         {
             this.currentConfiguration = currentConfiguration;
         }

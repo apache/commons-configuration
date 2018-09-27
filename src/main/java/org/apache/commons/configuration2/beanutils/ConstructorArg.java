@@ -54,7 +54,7 @@ public final class ConstructorArg
      * @param val the value of the argument
      * @param type the type name
      */
-    private ConstructorArg(BeanDeclaration decl, Object val, String type)
+    private ConstructorArg(final BeanDeclaration decl, final Object val, final String type)
     {
         beanDeclaration = decl;
         value = val;
@@ -71,7 +71,7 @@ public final class ConstructorArg
      * @throws NullPointerException if the {@code BeanDeclaration} is
      *         <b>null</b>
      */
-    public static ConstructorArg forBeanDeclaration(BeanDeclaration decl)
+    public static ConstructorArg forBeanDeclaration(final BeanDeclaration decl)
     {
         return forBeanDeclaration(decl, null);
     }
@@ -88,8 +88,8 @@ public final class ConstructorArg
      * @throws NullPointerException if the {@code BeanDeclaration} is
      *         <b>null</b>
      */
-    public static ConstructorArg forBeanDeclaration(BeanDeclaration decl,
-            String typeName)
+    public static ConstructorArg forBeanDeclaration(final BeanDeclaration decl,
+            final String typeName)
     {
         if (decl == null)
         {
@@ -105,7 +105,7 @@ public final class ConstructorArg
      * @param value the value of this constructor argument (may be <b>null</b>)
      * @return the newly created instance of this class
      */
-    public static ConstructorArg forValue(Object value)
+    public static ConstructorArg forValue(final Object value)
     {
         return forValue(value, null);
     }
@@ -120,7 +120,7 @@ public final class ConstructorArg
      * @param typeName the name of the data type of this argument
      * @return the newly created instance of this class
      */
-    public static ConstructorArg forValue(Object value, String typeName)
+    public static ConstructorArg forValue(final Object value, final String typeName)
     {
         return new ConstructorArg(null, value, typeName);
     }
@@ -196,7 +196,7 @@ public final class ConstructorArg
      * @return <b>true</b> if this constructor argument is compatible with this
      *         class, <b>false</b> otherwise
      */
-    public boolean matches(Class<?> argCls)
+    public boolean matches(final Class<?> argCls)
     {
         if (argCls == null)
         {
@@ -215,7 +215,7 @@ public final class ConstructorArg
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append(getClass().getSimpleName());
         buf.append(" [ value = ");
         buf.append(isNestedBeanDeclaration() ? getBeanDeclaration()

@@ -75,7 +75,7 @@ public class TestSubnodeConfiguration
      */
     private static BaseHierarchicalConfiguration setUpParentConfig()
     {
-        BaseHierarchicalConfiguration conf =
+        final BaseHierarchicalConfiguration conf =
                 new BaseHierarchicalConfiguration();
         appendTree(conf, NodeStructureHelper.ROOT_TABLES_TREE);
         return conf;
@@ -87,8 +87,8 @@ public class TestSubnodeConfiguration
      * @param configuration the configuration
      * @param root the root of the tree structure to be added
      */
-    private static void appendTree(BaseHierarchicalConfiguration configuration,
-            ImmutableNode root)
+    private static void appendTree(final BaseHierarchicalConfiguration configuration,
+            final ImmutableNode root)
     {
         configuration.addNodes(null, Collections.singleton(root));
     }
@@ -106,7 +106,7 @@ public class TestSubnodeConfiguration
      *
      * @param key the key
      */
-    private void setUpSubnodeConfig(String key)
+    private void setUpSubnodeConfig(final String key)
     {
         config = (SubnodeConfiguration) parent.configurationAt(key, true);
     }
@@ -117,9 +117,9 @@ public class TestSubnodeConfiguration
      * @param selector the selector
      * @return the tracked model
      */
-    private TrackedNodeModel setUpTrackedModel(NodeSelector selector)
+    private TrackedNodeModel setUpTrackedModel(final NodeSelector selector)
     {
-        InMemoryNodeModel parentModel = (InMemoryNodeModel) parent.getModel();
+        final InMemoryNodeModel parentModel = (InMemoryNodeModel) parent.getModel();
         parentModel.trackNode(selector, parent);
         return new TrackedNodeModel(parent, selector, true);
     }
@@ -178,7 +178,7 @@ public class TestSubnodeConfiguration
     {
         assertEquals("Wrong table name", NodeStructureHelper.table(0),
                 config.getString("name"));
-        List<Object> fields = config.getList("fields.field.name");
+        final List<Object> fields = config.getList("fields.field.name");
         assertEquals("Wrong number of fields",
                 NodeStructureHelper.fieldsLength(0), fields.size());
         for (int i = 0; i < NodeStructureHelper.fieldsLength(0); i++)
@@ -220,7 +220,7 @@ public class TestSubnodeConfiguration
                 parent.getString("tables.table(0)[@table-type]"));
 
         parent.addProperty("tables.table(0).fields.field(-1).name", "newField");
-        List<Object> fields = config.getList("fields.field.name");
+        final List<Object> fields = config.getList("fields.field.name");
         assertEquals("New field was not added",
                 NodeStructureHelper.fieldsLength(0) + 1, fields.size());
         assertEquals("Wrong last field", "newField",
@@ -234,7 +234,7 @@ public class TestSubnodeConfiguration
     public void testGetKeys()
     {
         setUpSubnodeConfig();
-        Set<String> keys = new HashSet<>();
+        final Set<String> keys = new HashSet<>();
         keys.addAll(ConfigurationAssert.keysToList(config));
         assertEquals("Incorrect number of keys", 2, keys.size());
         assertTrue("Key 1 not contained", keys.contains("name"));
@@ -276,8 +276,8 @@ public class TestSubnodeConfiguration
     @Test
     public void testSetListDelimiterHandler()
     {
-        ListDelimiterHandler handler1 = new DefaultListDelimiterHandler('/');
-        ListDelimiterHandler handler2 = new DefaultListDelimiterHandler(';');
+        final ListDelimiterHandler handler1 = new DefaultListDelimiterHandler('/');
+        final ListDelimiterHandler handler2 = new DefaultListDelimiterHandler(';');
         parent.setListDelimiterHandler(handler1);
         setUpSubnodeConfig();
         parent.setListDelimiterHandler(handler2);
@@ -301,7 +301,7 @@ public class TestSubnodeConfiguration
         setUpSubnodeConfig("tables/table[1]");
         assertEquals("Wrong field name", NodeStructureHelper.field(0, 1),
                 config.getString("fields/field[2]/name"));
-        Set<String> keys = ConfigurationAssert.keysToSet(config);
+        final Set<String> keys = ConfigurationAssert.keysToSet(config);
         assertEquals("Wrong number of keys", 2, keys.size());
         assertTrue("Key 1 not contained", keys.contains("name"));
         assertTrue("Key 2 not contained", keys.contains("fields/field/name"));
@@ -317,7 +317,7 @@ public class TestSubnodeConfiguration
     public void testConfiguarationAtNoUpdates()
     {
         setUpSubnodeConfig();
-        HierarchicalConfiguration<ImmutableNode> sub2 =
+        final HierarchicalConfiguration<ImmutableNode> sub2 =
                 config.configurationAt("fields.field(1)");
         assertEquals("Wrong value of property",
                 NodeStructureHelper.field(0, 1), sub2.getString("name"));
@@ -333,7 +333,7 @@ public class TestSubnodeConfiguration
     public void testConfigurationAtWithUpdateSupport()
     {
         setUpSubnodeConfig();
-        SubnodeConfiguration sub2 =
+        final SubnodeConfiguration sub2 =
                 (SubnodeConfiguration) config.configurationAt("fields.field(1)", true);
         assertEquals("Wrong value of property",
                 NodeStructureHelper.field(0, 1), sub2.getString("name"));
@@ -365,14 +365,14 @@ public class TestSubnodeConfiguration
      *
      * @param withUpdates the supports updates flag
      */
-    private void checkInterpolationFromConfigurationAt(boolean withUpdates)
+    private void checkInterpolationFromConfigurationAt(final boolean withUpdates)
     {
         parent.addProperty("base.dir", "/home/foo");
         parent.addProperty("test.absolute.dir.dir1", "${base.dir}/path1");
         parent.addProperty("test.absolute.dir.dir2", "${base.dir}/path2");
         parent.addProperty("test.absolute.dir.dir3", "${base.dir}/path3");
 
-        Configuration sub =
+        final Configuration sub =
                 parent.configurationAt("test.absolute.dir", withUpdates);
         for (int i = 1; i < 4; i++)
         {
@@ -414,7 +414,7 @@ public class TestSubnodeConfiguration
         parent.addProperty("test.absolute.dir.dir1", "${base.dir}/path1");
         parent.addProperty("test.absolute.dir.dir2", "${dir1}");
 
-        Configuration sub = parent.configurationAt("test.absolute.dir");
+        final Configuration sub = parent.configurationAt("test.absolute.dir");
         assertEquals("Wrong interpolation in subnode", "/home/foo/path1",
                 sub.getString("dir1"));
         assertEquals("Wrong local interpolation in subnode", "/home/foo/path1",
@@ -441,11 +441,11 @@ public class TestSubnodeConfiguration
         parent.addProperty("tablespaces.tablespace(-1).name", "test");
         parent.addProperty("tables.table(0).var", "${brackets:x}");
 
-        ConfigurationInterpolator interpolator = parent.getInterpolator();
+        final ConfigurationInterpolator interpolator = parent.getInterpolator();
         interpolator.registerLookup("brackets", new Lookup() {
 
             @Override
-            public String lookup(String key) {
+            public String lookup(final String key) {
                 return "(" + key + ")";
             }
 
@@ -489,11 +489,11 @@ public class TestSubnodeConfiguration
     public void testClone()
     {
         setUpSubnodeConfig();
-        SubnodeConfiguration copy = (SubnodeConfiguration) config.clone();
+        final SubnodeConfiguration copy = (SubnodeConfiguration) config.clone();
         assertNotSame("Same model", config.getModel(), copy.getModel());
-        TrackedNodeModel subModel = (TrackedNodeModel) copy.getModel();
+        final TrackedNodeModel subModel = (TrackedNodeModel) copy.getModel();
         assertEquals("Wrong selector", SELECTOR, subModel.getSelector());
-        InMemoryNodeModel parentModel = (InMemoryNodeModel) parent.getModel();
+        final InMemoryNodeModel parentModel = (InMemoryNodeModel) parent.getModel();
         assertEquals("Wrong parent model", parentModel,
                 subModel.getParentModel());
 
@@ -510,12 +510,12 @@ public class TestSubnodeConfiguration
     @Test
     public void testClose()
     {
-        TrackedNodeModel model = EasyMock.createMock(TrackedNodeModel.class);
+        final TrackedNodeModel model = EasyMock.createMock(TrackedNodeModel.class);
         EasyMock.expect(model.getSelector()).andReturn(SELECTOR).anyTimes();
         model.close();
         EasyMock.replay(model);
 
-        SubnodeConfiguration config = new SubnodeConfiguration(parent, model);
+        final SubnodeConfiguration config = new SubnodeConfiguration(parent, model);
         config.close();
         EasyMock.verify(model);
     }
@@ -528,7 +528,7 @@ public class TestSubnodeConfiguration
     public void testGetNodeModel()
     {
         setUpSubnodeConfig();
-        InMemoryNodeModel nodeModel = config.getNodeModel();
+        final InMemoryNodeModel nodeModel = config.getNodeModel();
 
         assertEquals("Wrong root node", "table",
                 nodeModel.getNodeHandler().getRootNode().getNodeName());

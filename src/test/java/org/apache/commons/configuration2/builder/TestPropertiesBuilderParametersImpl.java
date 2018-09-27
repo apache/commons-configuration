@@ -63,7 +63,7 @@ public class TestPropertiesBuilderParametersImpl
     @Test
     public void testSetLayout()
     {
-        PropertiesConfigurationLayout layout =
+        final PropertiesConfigurationLayout layout =
                 new PropertiesConfigurationLayout();
         assertSame("Wrong result", params, params.setLayout(layout));
         assertSame("Layout not set", layout,
@@ -76,7 +76,7 @@ public class TestPropertiesBuilderParametersImpl
     @Test
     public void testSetIOFactory()
     {
-        PropertiesConfiguration.IOFactory factory =
+        final PropertiesConfiguration.IOFactory factory =
                 EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
         EasyMock.replay(factory);
         assertSame("Wrong result", params, params.setIOFactory(factory));
@@ -90,7 +90,7 @@ public class TestPropertiesBuilderParametersImpl
     @Test
     public void testBeanPropertiesAccess() throws Exception
     {
-        PropertiesConfiguration.IOFactory factory =
+        final PropertiesConfiguration.IOFactory factory =
                 EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
         EasyMock.replay(factory);
         BeanHelper.setProperty(params, "IOFactory", factory);
@@ -99,7 +99,7 @@ public class TestPropertiesBuilderParametersImpl
         BeanHelper.setProperty(params, "fileName", "test.properties");
         assertEquals("Wrong file name", "test.properties", params
                 .getFileHandler().getFileName());
-        Map<String, Object> paramsMap = params.getParameters();
+        final Map<String, Object> paramsMap = params.getParameters();
         assertEquals("Wrong exception flag", Boolean.TRUE,
                 paramsMap.get("throwExceptionOnMissing"));
         assertSame("Factory not set", factory,
@@ -112,16 +112,16 @@ public class TestPropertiesBuilderParametersImpl
     @Test
     public void testInheritFrom()
     {
-        PropertiesConfiguration.IOFactory factory =
+        final PropertiesConfiguration.IOFactory factory =
                 EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
         params.setIOFactory(factory).setIncludesAllowed(false)
                 .setLayout(new PropertiesConfigurationLayout());
         params.setThrowExceptionOnMissing(true);
-        PropertiesBuilderParametersImpl params2 =
+        final PropertiesBuilderParametersImpl params2 =
                 new PropertiesBuilderParametersImpl();
 
         params2.inheritFrom(params.getParameters());
-        Map<String, Object> parameters = params2.getParameters();
+        final Map<String, Object> parameters = params2.getParameters();
         assertEquals("Exception flag not set", Boolean.TRUE,
                 parameters.get("throwExceptionOnMissing"));
         assertEquals("IOFactory not set", factory, parameters.get("IOFactory"));
@@ -137,14 +137,14 @@ public class TestPropertiesBuilderParametersImpl
     @Test
     public void testSetIOFactoryProperty() throws ConfigurationException
     {
-        PropertiesConfiguration.IOFactory factory =
+        final PropertiesConfiguration.IOFactory factory =
                 new PropertiesConfiguration.DefaultIOFactory();
-        ConfigurationBuilder<PropertiesConfiguration> builder =
+        final ConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class)
                 .configure(params.setIOFactory(factory));
 
-        PropertiesConfiguration config = builder.getConfiguration();
+        final PropertiesConfiguration config = builder.getConfiguration();
         assertEquals("Wrong IO factory", factory, config.getIOFactory());
     }
 }

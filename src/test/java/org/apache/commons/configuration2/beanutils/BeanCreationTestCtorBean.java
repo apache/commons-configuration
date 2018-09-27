@@ -27,17 +27,17 @@ public class BeanCreationTestCtorBean extends BeanCreationTestBean
     {
     }
 
-    public BeanCreationTestCtorBean(BeanCreationTestBean buddy)
+    public BeanCreationTestCtorBean(final BeanCreationTestBean buddy)
     {
         setBuddy(buddy);
     }
 
-    public BeanCreationTestCtorBean(String s)
+    public BeanCreationTestCtorBean(final String s)
     {
         setStringValue(s);
     }
 
-    public BeanCreationTestCtorBean(String s, int i)
+    public BeanCreationTestCtorBean(final String s, final int i)
     {
         this(s);
         setIntValue(i);

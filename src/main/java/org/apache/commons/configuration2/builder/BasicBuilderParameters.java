@@ -109,7 +109,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
     @Override
     public Map<String, Object> getParameters()
     {
-        HashMap<String, Object> result =
+        final HashMap<String, Object> result =
                 new HashMap<>(properties);
         if (result.containsKey(PROP_INTERPOLATOR))
         {
@@ -132,7 +132,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @return a reference to this object for method chaining
      */
     @Override
-    public BasicBuilderParameters setLogger(ConfigurationLogger log)
+    public BasicBuilderParameters setLogger(final ConfigurationLogger log)
     {
         return setProperty(PROP_LOGGER, log);
     }
@@ -149,7 +149,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @return a reference to this object for method chaining
      */
     @Override
-    public BasicBuilderParameters setThrowExceptionOnMissing(boolean b)
+    public BasicBuilderParameters setThrowExceptionOnMissing(final boolean b)
     {
         return setProperty(PROP_THROW_EXCEPTION_ON_MISSING, Boolean.valueOf(b));
     }
@@ -167,7 +167,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      */
     @Override
     public BasicBuilderParameters setListDelimiterHandler(
-            ListDelimiterHandler handler)
+            final ListDelimiterHandler handler)
     {
         return setProperty(PROP_LIST_DELIMITER_HANDLER, handler);
     }
@@ -177,7 +177,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * without modifications.
      */
     @Override
-    public BasicBuilderParameters setInterpolator(ConfigurationInterpolator ci)
+    public BasicBuilderParameters setInterpolator(final ConfigurationInterpolator ci)
     {
         return setProperty(PROP_INTERPOLATOR, ci);
     }
@@ -189,7 +189,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      */
     @Override
     public BasicBuilderParameters setPrefixLookups(
-            Map<String, ? extends Lookup> lookups)
+            final Map<String, ? extends Lookup> lookups)
     {
         if (lookups == null)
         {
@@ -207,7 +207,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      */
     @Override
     public BasicBuilderParameters setDefaultLookups(
-            Collection<? extends Lookup> lookups)
+            final Collection<? extends Lookup> lookups)
     {
         if (lookups == null)
         {
@@ -224,7 +224,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      */
     @Override
     public BasicBuilderParameters setParentInterpolator(
-            ConfigurationInterpolator parent)
+            final ConfigurationInterpolator parent)
     {
         return setProperty(PROP_PARENT_INTERPOLATOR, parent);
     }
@@ -234,7 +234,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * {@code Synchronizer} object in the internal parameters map.
      */
     @Override
-    public BasicBuilderParameters setSynchronizer(Synchronizer sync)
+    public BasicBuilderParameters setSynchronizer(final Synchronizer sync)
     {
         return setProperty(PROP_SYNCHRONIZER, sync);
     }
@@ -244,7 +244,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * {@code ConversionHandler} object in the internal parameters map.
      */
     @Override
-    public BasicBuilderParameters setConversionHandler(ConversionHandler handler)
+    public BasicBuilderParameters setConversionHandler(final ConversionHandler handler)
     {
         return setProperty(PROP_CONVERSION_HANDLER, handler);
     }
@@ -257,7 +257,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * obtain the {@code BeanHelper} instance from a parameters map.
      */
     @Override
-    public BasicBuilderParameters setBeanHelper(BeanHelper beanHelper)
+    public BasicBuilderParameters setBeanHelper(final BeanHelper beanHelper)
     {
         return setProperty(PROP_BEAN_HELPER, beanHelper);
     }
@@ -268,7 +268,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      */
     @Override
     public BasicBuilderParameters setConfigurationDecoder(
-            ConfigurationDecoder decoder)
+            final ConfigurationDecoder decoder)
     {
         return setProperty(PROP_CONFIGURATION_DECODER, decoder);
     }
@@ -284,7 +284,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      *        <b>null</b>)
      * @throws IllegalArgumentException if the passed in object is <b>null</b>
      */
-    public void merge(BuilderParameters p)
+    public void merge(final BuilderParameters p)
     {
         if (p == null)
         {
@@ -292,7 +292,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
                     "Parameters to merge must not be null!");
         }
 
-        for (Map.Entry<String, Object> e : p.getParameters().entrySet())
+        for (final Map.Entry<String, Object> e : p.getParameters().entrySet())
         {
             if (!properties.containsKey(e.getKey())
                     && !e.getKey().startsWith(RESERVED_PARAMETER_PREFIX))
@@ -320,7 +320,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @param source the source properties to inherit from
      * @throws IllegalArgumentException if the source map is <b>null</b>
      */
-    public void inheritFrom(Map<String, ?> source)
+    public void inheritFrom(final Map<String, ?> source)
     {
         if (source == null)
         {
@@ -345,7 +345,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      *         invalid data
      */
     public static InterpolatorSpecification fetchInterpolatorSpecification(
-            Map<String, Object> params)
+            final Map<String, Object> params)
     {
         checkParameters(params);
         return new InterpolatorSpecification.Builder()
@@ -370,7 +370,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @return the {@code BeanHelper} stored in this map or <b>null</b>
      * @throws IllegalArgumentException if the map is <b>null</b>
      */
-    public static BeanHelper fetchBeanHelper(Map<String, Object> params)
+    public static BeanHelper fetchBeanHelper(final Map<String, Object> params)
     {
         checkParameters(params);
         return (BeanHelper) params.get(PROP_BEAN_HELPER);
@@ -394,12 +394,12 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
     {
         try
         {
-            BasicBuilderParameters copy =
+            final BasicBuilderParameters copy =
                     (BasicBuilderParameters) super.clone();
             copy.properties = getParameters();
             return copy;
         }
-        catch (CloneNotSupportedException cnex)
+        catch (final CloneNotSupportedException cnex)
         {
             // should not happen
             throw new AssertionError(cnex);
@@ -415,7 +415,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @param key the key of the property
      * @param value the value of the property
      */
-    protected void storeProperty(String key, Object value)
+    protected void storeProperty(final String key, final Object value)
     {
         if (value == null)
         {
@@ -435,7 +435,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @param key the key of the property in question
      * @return the value of the property with this key or <b>null</b>
      */
-    protected Object fetchProperty(String key)
+    protected Object fetchProperty(final String key)
     {
         return properties.get(key);
     }
@@ -447,11 +447,11 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @param source the source map
      * @param keys the keys to be copied
      */
-    protected void copyPropertiesFrom(Map<String, ?> source, String... keys)
+    protected void copyPropertiesFrom(final Map<String, ?> source, final String... keys)
     {
-        for (String key : keys)
+        for (final String key : keys)
         {
-            Object value = source.get(key);
+            final Object value = source.get(key);
             if (value != null)
             {
                 storeProperty(key, value);
@@ -466,7 +466,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @param value the value of the property
      * @return a reference to this object
      */
-    private BasicBuilderParameters setProperty(String key, Object value)
+    private BasicBuilderParameters setProperty(final String key, final Object value)
     {
         storeProperty(key, value);
         return this;
@@ -479,16 +479,16 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      *
      * @param params the map with parameters to be passed to the caller
      */
-    private static void createDefensiveCopies(HashMap<String, Object> params)
+    private static void createDefensiveCopies(final HashMap<String, Object> params)
     {
-        Map<String, ? extends Lookup> prefixLookups =
+        final Map<String, ? extends Lookup> prefixLookups =
                 fetchPrefixLookups(params);
         if (prefixLookups != null)
         {
             params.put(PROP_PREFIX_LOOKUPS, new HashMap<>(
                     prefixLookups));
         }
-        Collection<? extends Lookup> defLookups = fetchDefaultLookups(params);
+        final Collection<? extends Lookup> defLookups = fetchDefaultLookups(params);
         if (defLookups != null)
         {
             params.put(PROP_DEFAULT_LOOKUPS, new ArrayList<>(defLookups));
@@ -502,12 +502,13 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @return the map with prefix lookups (may be <b>null</b>)
      */
     private static Map<String, ? extends Lookup> fetchPrefixLookups(
-            Map<String, Object> params)
+            final Map<String, Object> params)
     {
         // This is safe to cast because we either have full control over the map
         // and thus know the types of the contained values or have checked
         // the content before
         @SuppressWarnings("unchecked")
+        final
         Map<String, ? extends Lookup> prefixLookups =
                 (Map<String, ? extends Lookup>) params.get(PROP_PREFIX_LOOKUPS);
         return prefixLookups;
@@ -525,16 +526,16 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @throws IllegalArgumentException if the map contains invalid data
      */
     private static Map<String, ? extends Lookup> fetchAndCheckPrefixLookups(
-            Map<String, Object> params)
+            final Map<String, Object> params)
     {
-        Map<?, ?> prefixes =
+        final Map<?, ?> prefixes =
                 fetchParameter(params, PROP_PREFIX_LOOKUPS, Map.class);
         if (prefixes == null)
         {
             return null;
         }
 
-        for (Map.Entry<?, ?> e : prefixes.entrySet())
+        for (final Map.Entry<?, ?> e : prefixes.entrySet())
         {
             if (!(e.getKey() instanceof String)
                     || !(e.getValue() instanceof Lookup))
@@ -554,12 +555,13 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @return the collection with default lookups (may be <b>null</b>)
      */
     private static Collection<? extends Lookup> fetchDefaultLookups(
-            Map<String, Object> params)
+            final Map<String, Object> params)
     {
         // This is safe to cast because we either have full control over the map
         // and thus know the types of the contained values or have checked
         // the content before
         @SuppressWarnings("unchecked")
+        final
         Collection<? extends Lookup> defLookups =
                 (Collection<? extends Lookup>) params.get(PROP_DEFAULT_LOOKUPS);
         return defLookups;
@@ -576,16 +578,16 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @throws IllegalArgumentException if invalid data is found
      */
     private static Collection<? extends Lookup> fetchAndCheckDefaultLookups(
-            Map<String, Object> params)
+            final Map<String, Object> params)
     {
-        Collection<?> col =
+        final Collection<?> col =
                 fetchParameter(params, PROP_DEFAULT_LOOKUPS, Collection.class);
         if (col == null)
         {
             return null;
         }
 
-        for (Object o : col)
+        for (final Object o : col)
         {
             if (!(o instanceof Lookup))
             {
@@ -608,10 +610,10 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @throws IllegalArgumentException if the parameter is not of the expected
      *         type
      */
-    private static <T> T fetchParameter(Map<String, Object> params, String key,
-            Class<T> expClass)
+    private static <T> T fetchParameter(final Map<String, Object> params, final String key,
+            final Class<T> expClass)
     {
-        Object value = params.get(key);
+        final Object value = params.get(key);
         if (value == null)
         {
             return null;
@@ -632,7 +634,7 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      * @param params the map with parameters to check
      * @throws IllegalArgumentException if the map is <b>null</b>
      */
-    private static void checkParameters(Map<String, Object> params)
+    private static void checkParameters(final Map<String, Object> params)
     {
         if (params == null)
         {

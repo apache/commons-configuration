@@ -58,17 +58,17 @@ class MultiWrapDynaBean implements DynaBean
      *
      * @param beans the wrapped beans
      */
-    public MultiWrapDynaBean(Collection<?> beans)
+    public MultiWrapDynaBean(final Collection<?> beans)
     {
         propsToBeans = new HashMap<>();
-        Collection<DynaClass> beanClasses =
+        final Collection<DynaClass> beanClasses =
                 new ArrayList<>(beans.size());
 
-        for (Object bean : beans)
+        for (final Object bean : beans)
         {
-            DynaBean dynaBean = createDynaBean(bean);
-            DynaClass beanClass = dynaBean.getDynaClass();
-            for (DynaProperty prop : beanClass.getDynaProperties())
+            final DynaBean dynaBean = createDynaBean(bean);
+            final DynaClass beanClass = dynaBean.getDynaClass();
+            for (final DynaProperty prop : beanClass.getDynaProperties())
             {
                 // ensure an order of properties
                 if (!propsToBeans.containsKey(prop.getName()))
@@ -88,26 +88,26 @@ class MultiWrapDynaBean implements DynaBean
      * thrown.
      */
     @Override
-    public boolean contains(String name, String key)
+    public boolean contains(final String name, final String key)
     {
         throw new UnsupportedOperationException(
                 "contains() operation not supported!");
     }
 
     @Override
-    public Object get(String name)
+    public Object get(final String name)
     {
         return fetchBean(name).get(name);
     }
 
     @Override
-    public Object get(String name, int index)
+    public Object get(final String name, final int index)
     {
         return fetchBean(name).get(name, index);
     }
 
     @Override
-    public Object get(String name, String key)
+    public Object get(final String name, final String key)
     {
         return fetchBean(name).get(name, key);
     }
@@ -128,26 +128,26 @@ class MultiWrapDynaBean implements DynaBean
      * thrown.
      */
     @Override
-    public void remove(String name, String key)
+    public void remove(final String name, final String key)
     {
         throw new UnsupportedOperationException(
                 "remove() operation not supported!");
     }
 
     @Override
-    public void set(String name, Object value)
+    public void set(final String name, final Object value)
     {
         fetchBean(name).set(name, value);
     }
 
     @Override
-    public void set(String name, int index, Object value)
+    public void set(final String name, final int index, final Object value)
     {
         fetchBean(name).set(name, index, value);
     }
 
     @Override
-    public void set(String name, String key, Object value)
+    public void set(final String name, final String key, final Object value)
     {
         fetchBean(name).set(name, key, value);
     }
@@ -160,7 +160,7 @@ class MultiWrapDynaBean implements DynaBean
      * @param property the property name
      * @return the bean defining this property
      */
-    private DynaBean fetchBean(String property)
+    private DynaBean fetchBean(final String property)
     {
         DynaBean dynaBean = propsToBeans.get(property);
         if (dynaBean == null)
@@ -176,7 +176,7 @@ class MultiWrapDynaBean implements DynaBean
      * @param bean the bean
      * @return the {@code DynaBean} for this bean
      */
-    private static DynaBean createDynaBean(Object bean)
+    private static DynaBean createDynaBean(final Object bean)
     {
         if (bean instanceof DynaBean)
         {

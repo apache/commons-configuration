@@ -96,8 +96,8 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode>
      *        released on finalization
      * @throws IllegalArgumentException if a required parameter is missing
      */
-    public TrackedNodeModel(InMemoryNodeModelSupport modelSupport, NodeSelector sel,
-            boolean untrackOnFinalize)
+    public TrackedNodeModel(final InMemoryNodeModelSupport modelSupport, final NodeSelector sel,
+            final boolean untrackOnFinalize)
     {
         if (modelSupport == null)
         {
@@ -165,7 +165,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode>
     }
 
     @Override
-    public void setRootNode(ImmutableNode newRoot)
+    public void setRootNode(final ImmutableNode newRoot)
     {
         getParentModel().replaceTrackedNode(getSelector(), newRoot);
     }
@@ -177,36 +177,36 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode>
     }
 
     @Override
-    public void addProperty(String key, Iterable<?> values,
-            NodeKeyResolver<ImmutableNode> resolver)
+    public void addProperty(final String key, final Iterable<?> values,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         getParentModel().addProperty(key, getSelector(), values, resolver);
     }
 
     @Override
-    public void addNodes(String key, Collection<? extends ImmutableNode> nodes,
-            NodeKeyResolver<ImmutableNode> resolver)
+    public void addNodes(final String key, final Collection<? extends ImmutableNode> nodes,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         getParentModel().addNodes(key, getSelector(), nodes, resolver);
     }
 
     @Override
-    public void setProperty(String key, Object value,
-            NodeKeyResolver<ImmutableNode> resolver)
+    public void setProperty(final String key, final Object value,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         getParentModel().setProperty(key, getSelector(), value, resolver);
     }
 
     @Override
-    public List<QueryResult<ImmutableNode>> clearTree(String key,
-            NodeKeyResolver<ImmutableNode> resolver)
+    public List<QueryResult<ImmutableNode>> clearTree(final String key,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         return getParentModel().clearTree(key, getSelector(), resolver);
     }
 
     @Override
-    public void clearProperty(String key,
-            NodeKeyResolver<ImmutableNode> resolver)
+    public void clearProperty(final String key,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         getParentModel().clearProperty(key, getSelector(), resolver);
     }
@@ -219,7 +219,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode>
      * @param resolver
      */
     @Override
-    public void clear(NodeKeyResolver<ImmutableNode> resolver)
+    public void clear(final NodeKeyResolver<ImmutableNode> resolver)
     {
         getParentModel().clearTree(null, getSelector(), resolver);
     }

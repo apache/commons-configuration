@@ -170,7 +170,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @throws IllegalArgumentException if required information is missing to
      *         construct the bean declaration
      */
-    public <T> XMLBeanDeclaration(HierarchicalConfiguration<T> config, String key)
+    public <T> XMLBeanDeclaration(final HierarchicalConfiguration<T> config, final String key)
     {
         this(config, key, false);
     }
@@ -188,8 +188,8 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @throws IllegalArgumentException if required information is missing to
      *         construct the bean declaration
      */
-    public <T> XMLBeanDeclaration(HierarchicalConfiguration<T> config, String key,
-            boolean optional)
+    public <T> XMLBeanDeclaration(final HierarchicalConfiguration<T> config, final String key,
+            final boolean optional)
     {
         this(config, key, optional, null);
     }
@@ -218,8 +218,8 @@ public class XMLBeanDeclaration implements BeanDeclaration
      *         construct the bean declaration
      * @since 2.0
      */
-    public <T> XMLBeanDeclaration(HierarchicalConfiguration<T> config, String key,
-            boolean optional, String defBeanClsName)
+    public <T> XMLBeanDeclaration(final HierarchicalConfiguration<T> config, final String key,
+            final boolean optional, final String defBeanClsName)
     {
         if (config == null)
         {
@@ -232,7 +232,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
         {
             tmpconfiguration = config.configurationAt(key);
         }
-        catch (ConfigurationRuntimeException iex)
+        catch (final ConfigurationRuntimeException iex)
         {
             // If we reach this block, the key does not have exactly one value
             if (!optional || config.getMaxIndex(key) > 0)
@@ -255,7 +255,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @param config the configuration with the bean declaration
      * @param <T> the node type of the configuration
      */
-    public <T> XMLBeanDeclaration(HierarchicalConfiguration<T> config)
+    public <T> XMLBeanDeclaration(final HierarchicalConfiguration<T> config)
     {
         this(config, (String) null);
     }
@@ -268,8 +268,8 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @param config the configuration
      * @param node the node with the bean declaration.
      */
-    XMLBeanDeclaration(HierarchicalConfiguration<?> config,
-            NodeData<?> node)
+    XMLBeanDeclaration(final HierarchicalConfiguration<?> config,
+            final NodeData<?> node)
     {
         this.node = node;
         configuration = config;
@@ -345,8 +345,8 @@ public class XMLBeanDeclaration implements BeanDeclaration
     @Override
     public Map<String, Object> getBeanProperties()
     {
-        Map<String, Object> props = new HashMap<>();
-        for (String key : getAttributeNames())
+        final Map<String, Object> props = new HashMap<>();
+        for (final String key : getAttributeNames())
         {
             if (!isReservedAttributeName(key))
             {
@@ -367,19 +367,20 @@ public class XMLBeanDeclaration implements BeanDeclaration
     @Override
     public Map<String, Object> getNestedBeanDeclarations()
     {
-        Map<String, Object> nested = new HashMap<>();
-        for (NodeData<?> child : getNode().getChildren())
+        final Map<String, Object> nested = new HashMap<>();
+        for (final NodeData<?> child : getNode().getChildren())
         {
             if (!isReservedChildName(child.nodeName()))
             {
                 if (nested.containsKey(child.nodeName()))
                 {
-                    Object obj = nested.get(child.nodeName());
+                    final Object obj = nested.get(child.nodeName());
                     List<BeanDeclaration> list;
                     if (obj instanceof List)
                     {
                         // Safe because we created the lists ourselves.
                         @SuppressWarnings("unchecked")
+                        final
                         List<BeanDeclaration> tmpList = (List<BeanDeclaration>) obj;
                         list = tmpList;
                     }
@@ -411,8 +412,8 @@ public class XMLBeanDeclaration implements BeanDeclaration
     @Override
     public Collection<ConstructorArg> getConstructorArgs()
     {
-        Collection<ConstructorArg> args = new LinkedList<>();
-        for (NodeData<?> child : getNode().getChildren(ELEM_CTOR_ARG))
+        final Collection<ConstructorArg> args = new LinkedList<>();
+        for (final NodeData<?> child : getNode().getChildren(ELEM_CTOR_ARG))
         {
             args.add(createConstructorArg(child));
         }
@@ -428,9 +429,9 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @param value the value that is to be interpolated
      * @return the interpolated value
      */
-    protected Object interpolate(Object value)
+    protected Object interpolate(final Object value)
     {
-        ConfigurationInterpolator interpolator =
+        final ConfigurationInterpolator interpolator =
                 getConfiguration().getInterpolator();
         return interpolator != null ? interpolator.interpolate(value) : value;
     }
@@ -446,7 +447,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @return a flag whether this name is reserved
      * @since 2.0
      */
-    protected boolean isReservedChildName(String name)
+    protected boolean isReservedChildName(final String name)
     {
         return isReservedName(name);
     }
@@ -462,7 +463,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @return a flag whether this name is reserved
      * @since 2.0
      */
-    protected boolean isReservedAttributeName(String name)
+    protected boolean isReservedAttributeName(final String name)
     {
         return isReservedName(name);
     }
@@ -476,7 +477,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @param name the name to be checked
      * @return a flag whether this name is reserved
      */
-    protected boolean isReservedName(String name)
+    protected boolean isReservedName(final String name)
     {
         return name == null || name.startsWith(RESERVED_PREFIX);
     }
@@ -515,9 +516,9 @@ public class XMLBeanDeclaration implements BeanDeclaration
      *        to be created
      * @return the {@code BeanDeclaration} for this child node
      */
-    BeanDeclaration createBeanDeclaration(NodeData<?> node)
+    BeanDeclaration createBeanDeclaration(final NodeData<?> node)
     {
-        for (HierarchicalConfiguration<?> config : getConfiguration()
+        for (final HierarchicalConfiguration<?> config : getConfiguration()
                 .configurationsAt(node.escapedNodeName(getConfiguration())))
         {
             if (node.matchesConfigRootNode(config))
@@ -535,7 +536,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      *
      * @param conf the configuration to initialize
      */
-    private void initSubnodeConfiguration(HierarchicalConfiguration<?> conf)
+    private void initSubnodeConfiguration(final HierarchicalConfiguration<?> conf)
     {
         conf.setExpressionEngine(null);
     }
@@ -547,9 +548,9 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @param child the configuration node
      * @return the corresponding {@code ConstructorArg} object
      */
-    private ConstructorArg createConstructorArg(NodeData<?> child)
+    private ConstructorArg createConstructorArg(final NodeData<?> child)
     {
-        String type = getAttribute(child, ATTR_CTOR_TYPE);
+        final String type = getAttribute(child, ATTR_CTOR_TYPE);
         if (isBeanDeclarationArgument(child))
         {
             return ConstructorArg.forValue(
@@ -567,9 +568,9 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @param attr the name of the attribute
      * @return the string value of this attribute (can be <b>null</b>)
      */
-    private String getAttribute(NodeData<?> nd, String attr)
+    private String getAttribute(final NodeData<?> nd, final String attr)
     {
-        Object value = nd.getAttribute(attr);
+        final Object value = nd.getAttribute(attr);
         return (value == null) ? null : String.valueOf(interpolate(value));
     }
 
@@ -580,7 +581,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @param nd the configuration node in question
      * @return a flag whether this constructor argument is a bean declaration
      */
-    private static boolean isBeanDeclarationArgument(NodeData<?> nd)
+    private static boolean isBeanDeclarationArgument(final NodeData<?> nd)
     {
         return !nd.getAttributes().contains(ATTR_BEAN_CLASS_NAME);
     }
@@ -594,9 +595,9 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @return the {@code NodeData} object
      */
     private static <T> NodeData<T> createNodeDataFromConfiguration(
-            HierarchicalConfiguration<T> config)
+            final HierarchicalConfiguration<T> config)
     {
-        NodeHandler<T> handler = config.getNodeModel().getNodeHandler();
+        final NodeHandler<T> handler = config.getNodeModel().getNodeHandler();
         return new NodeData<>(handler.getRootNode(), handler);
     }
 
@@ -620,7 +621,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
          * @param nd the node
          * @param hndlr the handler
          */
-        public NodeData(T nd, NodeHandler<T> hndlr)
+        public NodeData(final T nd, final NodeHandler<T> hndlr)
         {
             node = nd;
             handler = hndlr;
@@ -645,7 +646,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
          * @param config the configuration
          * @return the escaped node name
          */
-        public String escapedNodeName(HierarchicalConfiguration<?> config)
+        public String escapedNodeName(final HierarchicalConfiguration<?> config)
         {
             return config.getExpressionEngine().nodeKey(node,
                     StringUtils.EMPTY, handler);
@@ -669,7 +670,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
          * @param name the name of the desired child nodes
          * @return a list with the children with this name
          */
-        public List<NodeData<T>> getChildren(String name)
+        public List<NodeData<T>> getChildren(final String name)
         {
             return wrapInNodeData(handler.getChildren(node, name));
         }
@@ -691,7 +692,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
          * @param key the key of the attribute
          * @return the value of this attribute
          */
-        public Object getAttribute(String key)
+        public Object getAttribute(final String key)
         {
             return handler.getAttributeValue(node, key);
         }
@@ -703,7 +704,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
          * @param config the configuration
          * @return a flag whether this node is the configuration's root node
          */
-        public boolean matchesConfigRootNode(HierarchicalConfiguration<?> config)
+        public boolean matchesConfigRootNode(final HierarchicalConfiguration<?> config)
         {
             return config.getNodeModel().getNodeHandler().getRootNode()
                     .equals(node);
@@ -715,10 +716,10 @@ public class XMLBeanDeclaration implements BeanDeclaration
          * @param nodes the list with nodes
          * @return the wrapped nodes
          */
-        private List<NodeData<T>> wrapInNodeData(List<T> nodes)
+        private List<NodeData<T>> wrapInNodeData(final List<T> nodes)
         {
-            List<NodeData<T>> result = new ArrayList<>(nodes.size());
-            for (T node : nodes)
+            final List<NodeData<T>> result = new ArrayList<>(nodes.size());
+            for (final T node : nodes)
             {
                 result.add(new NodeData<>(node, handler));
             }

@@ -74,11 +74,11 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
     /* Type casts are safe here; because of the way the NodeWrapper was
        constructed the node handler must be compatible with the node.
      */
-    public NodePointer createNodePointer(QName name, Object bean, Locale locale)
+    public NodePointer createNodePointer(final QName name, final Object bean, final Locale locale)
     {
         if (bean instanceof NodeWrapper)
         {
-            NodeWrapper<?> wrapper = (NodeWrapper<?>) bean;
+            final NodeWrapper<?> wrapper = (NodeWrapper<?>) bean;
             return new ConfigurationNodePointer(wrapper.getNode(),
                     locale, wrapper.getNodeHandler());
         }
@@ -99,12 +99,12 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
     /* Type casts are safe here, see above. Also, the hierarchy of node
        pointers is consistent, so a parent is compatible to a child.
      */
-    public NodePointer createNodePointer(NodePointer parent, QName name,
-            Object bean)
+    public NodePointer createNodePointer(final NodePointer parent, final QName name,
+            final Object bean)
     {
         if (bean instanceof NodeWrapper)
         {
-            NodeWrapper<?> wrapper = (NodeWrapper<?>) bean;
+            final NodeWrapper<?> wrapper = (NodeWrapper<?>) bean;
             return new ConfigurationNodePointer((ConfigurationNodePointer) parent,
                     wrapper.getNode(), wrapper.getNodeHandler());
         }
@@ -121,7 +121,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
      * @param handler the corresponding node handler
      * @return a wrapper for this node
      */
-    public static <T> Object wrapNode(T node, NodeHandler<T> handler)
+    public static <T> Object wrapNode(final T node, final NodeHandler<T> handler)
     {
         return new NodeWrapper<>(node, handler);
     }
@@ -146,7 +146,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
          * @param nd the node
          * @param handler the node handler
          */
-        public NodeWrapper(T nd, NodeHandler<T> handler)
+        public NodeWrapper(final T nd, final NodeHandler<T> handler)
         {
             node = nd;
             nodeHandler = handler;

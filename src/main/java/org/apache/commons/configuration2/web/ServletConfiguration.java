@@ -44,7 +44,7 @@ public class ServletConfiguration extends BaseWebConfiguration
      *
      * @param servlet the servlet
      */
-    public ServletConfiguration(Servlet servlet)
+    public ServletConfiguration(final Servlet servlet)
     {
         this(servlet.getServletConfig());
     }
@@ -54,13 +54,13 @@ public class ServletConfiguration extends BaseWebConfiguration
      *
      * @param config the servlet configuration
      */
-    public ServletConfiguration(ServletConfig config)
+    public ServletConfiguration(final ServletConfig config)
     {
         this.config = config;
     }
 
     @Override
-    protected Object getPropertyInternal(String key)
+    protected Object getPropertyInternal(final String key)
     {
         return handleDelimiters(config.getInitParameter(key));
     }
@@ -70,7 +70,7 @@ public class ServletConfiguration extends BaseWebConfiguration
     {
         // According to the documentation of getInitParameterNames() the
         // enumeration is of type String.
-        Enumeration<String> en = config.getInitParameterNames();
+        final Enumeration<String> en = config.getInitParameterNames();
         return Collections.list(en).iterator();
     }
 }

@@ -41,12 +41,12 @@ public class TestReadWriteSynchronizer
     @Test
     public void testInitLock()
     {
-        ReadWriteLock lock = EasyMock.createMock(ReadWriteLock.class);
-        Lock readLock = EasyMock.createMock(Lock.class);
+        final ReadWriteLock lock = EasyMock.createMock(ReadWriteLock.class);
+        final Lock readLock = EasyMock.createMock(Lock.class);
         EasyMock.expect(lock.readLock()).andReturn(readLock);
         readLock.lock();
         EasyMock.replay(lock, readLock);
-        ReadWriteSynchronizer sync = new ReadWriteSynchronizer(lock);
+        final ReadWriteSynchronizer sync = new ReadWriteSynchronizer(lock);
         sync.beginRead();
         EasyMock.verify(lock, readLock);
     }
@@ -58,7 +58,7 @@ public class TestReadWriteSynchronizer
     @Test
     public void testReentrance()
     {
-        Synchronizer sync = new ReadWriteSynchronizer();
+        final Synchronizer sync = new ReadWriteSynchronizer();
         sync.beginWrite();
         sync.beginRead();
         sync.beginRead();
@@ -82,20 +82,20 @@ public class TestReadWriteSynchronizer
         final int readThreadCount = 3;
         final int updateThreadCount = 2;
 
-        Synchronizer sync = new ReadWriteSynchronizer();
-        Account account1 = new Account();
-        Account account2 = new Account();
+        final Synchronizer sync = new ReadWriteSynchronizer();
+        final Account account1 = new Account();
+        final Account account2 = new Account();
         account1.change(TOTAL_MONEY / 2);
         account2.change(TOTAL_MONEY / 2);
 
-        UpdateThread[] updateThreads = new UpdateThread[updateThreadCount];
+        final UpdateThread[] updateThreads = new UpdateThread[updateThreadCount];
         for (int i = 0; i < updateThreads.length; i++)
         {
             updateThreads[i] =
                     new UpdateThread(sync, numberOfUpdates, account1, account2);
             updateThreads[i].start();
         }
-        ReaderThread[] readerThreads = new ReaderThread[readThreadCount];
+        final ReaderThread[] readerThreads = new ReaderThread[readThreadCount];
         for (int i = 0; i < readerThreads.length; i++)
         {
             readerThreads[i] =
@@ -103,11 +103,11 @@ public class TestReadWriteSynchronizer
             readerThreads[i].start();
         }
 
-        for (UpdateThread t : updateThreads)
+        for (final UpdateThread t : updateThreads)
         {
             t.join();
         }
-        for (ReaderThread t : readerThreads)
+        for (final ReaderThread t : readerThreads)
         {
             t.join();
             assertEquals("Got read errors", 0, t.getErrors());
@@ -124,10 +124,10 @@ public class TestReadWriteSynchronizer
      * @param accounts the accounts to check
      * @return the sum of the money on these accounts
      */
-    private static long sumUpAccounts(Account... accounts)
+    private static long sumUpAccounts(final Account... accounts)
     {
         long sum = 0;
-        for (Account acc : accounts)
+        for (final Account acc : accounts)
         {
             sum += acc.getAmount();
         }
@@ -157,7 +157,7 @@ public class TestReadWriteSynchronizer
          *
          * @param delta the delta
          */
-        public void change(long delta)
+        public void change(final long delta)
         {
             amount += delta;
         }
@@ -188,7 +188,7 @@ public class TestReadWriteSynchronizer
          * @param readCount the number of read operations
          * @param accs the accounts to monitor
          */
-        public ReaderThread(Synchronizer s, int readCount, Account... accs)
+        public ReaderThread(final Synchronizer s, final int readCount, final Account... accs)
         {
             accounts = accs;
             sync = s;
@@ -204,7 +204,7 @@ public class TestReadWriteSynchronizer
             for (int i = 0; i < numberOfReads; i++)
             {
                 sync.beginRead();
-                long sum = sumUpAccounts(accounts);
+                final long sum = sumUpAccounts(accounts);
                 sync.endRead();
                 if (sum != TOTAL_MONEY)
                 {
@@ -255,8 +255,8 @@ public class TestReadWriteSynchronizer
          * @param ac1 account 1
          * @param ac2 account 2
          */
-        public UpdateThread(Synchronizer s, int updateCount, Account ac1,
-                Account ac2)
+        public UpdateThread(final Synchronizer s, final int updateCount, final Account ac1,
+                final Account ac2)
         {
             sync = s;
             account1 = ac1;
@@ -286,7 +286,7 @@ public class TestReadWriteSynchronizer
                     acSource = account2;
                     acDest = account1;
                 }
-                long x =
+                final long x =
                         Math.round(random.nextDouble()
                                 * (acSource.getAmount() - 1)) + 1;
                 acSource.change(-x);

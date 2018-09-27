@@ -53,7 +53,7 @@ public class TestPatternSubtreeConfiguration
     @Test
     public void testMultiConfiguration()
     {
-        PatternSubtreeConfigurationWrapper config = new PatternSubtreeConfigurationWrapper(this.conf, PATTERN);
+        final PatternSubtreeConfigurationWrapper config = new PatternSubtreeConfigurationWrapper(this.conf, PATTERN);
         config.setExpressionEngine(new XPathExpressionEngine());
 
         System.setProperty("Id", "1001");
@@ -73,8 +73,8 @@ public class TestPatternSubtreeConfiguration
     @Test(expected = ConfigurationException.class)
     public void testReadNotFileBased() throws ConfigurationException
     {
-        HierarchicalConfiguration<ImmutableNode> hc = new BaseHierarchicalConfiguration();
-        PatternSubtreeConfigurationWrapper config =
+        final HierarchicalConfiguration<ImmutableNode> hc = new BaseHierarchicalConfiguration();
+        final PatternSubtreeConfigurationWrapper config =
                 new PatternSubtreeConfigurationWrapper(hc, PATTERN);
         new FileHandler(config).load(CONFIG_FILE);
     }
@@ -86,8 +86,8 @@ public class TestPatternSubtreeConfiguration
     @Test(expected = ConfigurationException.class)
     public void testSaveNotFileBased() throws ConfigurationException
     {
-        HierarchicalConfiguration<ImmutableNode> hc = new BaseHierarchicalConfiguration();
-        PatternSubtreeConfigurationWrapper config =
+        final HierarchicalConfiguration<ImmutableNode> hc = new BaseHierarchicalConfiguration();
+        final PatternSubtreeConfigurationWrapper config =
                 new PatternSubtreeConfigurationWrapper(hc, PATTERN);
         new FileHandler(config).save(new StringWriter());
     }

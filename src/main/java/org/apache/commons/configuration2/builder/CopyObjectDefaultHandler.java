@@ -60,7 +60,7 @@ public class CopyObjectDefaultHandler implements
      * @param src the source object (must not be <b>null</b>)
      * @throws IllegalArgumentException if the source object is <b>null</b>
      */
-    public CopyObjectDefaultHandler(BuilderParameters src)
+    public CopyObjectDefaultHandler(final BuilderParameters src)
     {
         if (src == null)
         {
@@ -93,7 +93,7 @@ public class CopyObjectDefaultHandler implements
      * @see BuilderParameters#getParameters()
      */
     @Override
-    public void initializeDefaults(Object parameters)
+    public void initializeDefaults(final Object parameters)
     {
         try
         {
@@ -101,7 +101,7 @@ public class CopyObjectDefaultHandler implements
                     .getParameters());
             BeanHelper.copyProperties(parameters, getSource());
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             // Handle all reflection-related exceptions the same way
             throw new ConfigurationRuntimeException(e);

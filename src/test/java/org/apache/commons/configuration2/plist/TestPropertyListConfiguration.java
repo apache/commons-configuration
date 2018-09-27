@@ -77,7 +77,7 @@ public class TestPropertyListConfiguration
      * @param f the file to be loaded
      * @throws ConfigurationException if an error occurs
      */
-    private static void load(PropertyListConfiguration c, File f)
+    private static void load(final PropertyListConfiguration c, final File f)
             throws ConfigurationException
     {
         new FileHandler(c).load(f);
@@ -96,7 +96,7 @@ public class TestPropertyListConfiguration
         try {
             new FileHandler(config).load(new StringReader(""));
             fail("No exception thrown on loading an empty file");
-        } catch (ConfigurationException e) {
+        } catch (final ConfigurationException e) {
             // expected
             assertNotNull(e.getMessage());
         }
@@ -119,20 +119,20 @@ public class TestPropertyListConfiguration
     @Test
     public void testEmptyArray()
     {
-        String key = "empty-array";
+        final String key = "empty-array";
         assertNotNull("array null", config.getProperty(key));
 
-        List<?> list = (List<?>) config.getProperty(key);
+        final List<?> list = (List<?>) config.getProperty(key);
         assertTrue("array is not empty", list.isEmpty());
     }
 
     @Test
     public void testArray()
     {
-        String key = "array";
+        final String key = "array";
         assertNotNull("array null", config.getProperty(key));
 
-        List<?> list = (List<?>) config.getProperty(key);
+        final List<?> list = (List<?>) config.getProperty(key);
         assertFalse("array is empty", list.isEmpty());
 
         assertEquals("1st value", "value1", list.get(0));
@@ -143,21 +143,21 @@ public class TestPropertyListConfiguration
     @Test
     public void testNestedArrays()
     {
-        String key = "nested-arrays";
+        final String key = "nested-arrays";
 
-        Object array = config.getProperty(key);
+        final Object array = config.getProperty(key);
 
         // root array
         assertNotNull("array not found", array);
         ObjectAssert.assertInstanceOf("the array element is not parsed as a List", List.class, array);
-        List<?> list = config.getList(key);
+        final List<?> list = config.getList(key);
 
         assertFalse("empty array", list.isEmpty());
         assertEquals("size", 2, list.size());
 
         // 1st array
         ObjectAssert.assertInstanceOf("the array element is not parsed as a List", List.class, list.get(0));
-        List<?> list1 = (List<?>) list.get(0);
+        final List<?> list1 = (List<?>) list.get(0);
         assertFalse("nested array 1 is empty", list1.isEmpty());
         assertEquals("size", 2, list1.size());
         assertEquals("1st element", "a", list1.get(0));
@@ -165,7 +165,7 @@ public class TestPropertyListConfiguration
 
         // 2nd array
         ObjectAssert.assertInstanceOf("the array element is not parsed as a List", List.class, list.get(1));
-        List<?> list2 = (List<?>) list.get(1);
+        final List<?> list2 = (List<?>) list.get(1);
         assertFalse("nested array 2 is empty", list2.isEmpty());
         assertEquals("size", 2, list2.size());
         assertEquals("1st element", "c", list2.get(0));
@@ -182,27 +182,27 @@ public class TestPropertyListConfiguration
     @Test
     public void testDictionaryArray()
     {
-        String key = "dictionary-array";
+        final String key = "dictionary-array";
 
-        Object array = config.getProperty(key);
+        final Object array = config.getProperty(key);
 
         // root array
         assertNotNull("array not found", array);
         ObjectAssert.assertInstanceOf("the array element is not parsed as a List", List.class, array);
-        List<?> list = config.getList(key);
+        final List<?> list = config.getList(key);
 
         assertFalse("empty array", list.isEmpty());
         assertEquals("size", 2, list.size());
 
         // 1st dictionary
         ObjectAssert.assertInstanceOf("the dict element is not parsed as a Configuration", Configuration.class, list.get(0));
-        Configuration conf1 = (Configuration) list.get(0);
+        final Configuration conf1 = (Configuration) list.get(0);
         assertFalse("configuration 1 is empty", conf1.isEmpty());
         assertEquals("configuration element", "bar", conf1.getProperty("foo"));
 
         // 2nd dictionary
         ObjectAssert.assertInstanceOf("the dict element is not parsed as a Configuration", Configuration.class, list.get(1));
-        Configuration conf2 = (Configuration) list.get(1);
+        final Configuration conf2 = (Configuration) list.get(1);
         assertFalse("configuration 2 is empty", conf2.isEmpty());
         assertEquals("configuration element", "value", conf2.getProperty("key"));
     }
@@ -223,11 +223,11 @@ public class TestPropertyListConfiguration
     @Test
     public void testDate() throws Exception
     {
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.clear();
         cal.set(2002, Calendar.MARCH, 22, 11, 30, 0);
         cal.setTimeZone(TimeZone.getTimeZone("GMT+0100"));
-        Date date = cal.getTime();
+        final Date date = cal.getTime();
 
         assertEquals("date", date, config.getProperty("date"));
     }
@@ -238,7 +238,7 @@ public class TestPropertyListConfiguration
      * @param file the target file
      * @throws ConfigurationException if an error occurs
      */
-    private void saveConfig(File file) throws ConfigurationException
+    private void saveConfig(final File file) throws ConfigurationException
     {
         new FileHandler(config).save(file);
     }
@@ -246,43 +246,43 @@ public class TestPropertyListConfiguration
     @Test
     public void testSave() throws Exception
     {
-        File savedFile = folder.newFile("testsave.plist");
+        final File savedFile = folder.newFile("testsave.plist");
 
         // save the configuration
         saveConfig(savedFile);
         assertTrue("The saved file doesn't exist", savedFile.exists());
 
         // read the configuration and compare the properties
-        PropertyListConfiguration checkConfig = new PropertyListConfiguration();
+        final PropertyListConfiguration checkConfig = new PropertyListConfiguration();
         load(checkConfig, savedFile);
 
-        Iterator<String> it = config.getKeys();
+        final Iterator<String> it = config.getKeys();
         while (it.hasNext())
         {
-            String key = it.next();
+            final String key = it.next();
             assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
 
-            Object value = checkConfig.getProperty(key);
+            final Object value = checkConfig.getProperty(key);
             if (value instanceof byte[])
             {
-                byte[] array = (byte[]) value;
+                final byte[] array = (byte[]) value;
                 ArrayAssert.assertEquals("Value of the '" + key + "' property", (byte[]) config.getProperty(key), array);
             }
             else if (value instanceof List)
             {
-                List<?> list1 = (List<?>) config.getProperty(key);
-                List<?> list2 = (List<?>) value;
+                final List<?> list1 = (List<?>) config.getProperty(key);
+                final List<?> list2 = (List<?>) value;
 
                 assertEquals("The size of the list for the key '" + key + "' doesn't match", list1.size(), list2.size());
 
                 for (int i = 0; i < list2.size(); i++)
                 {
-                    Object value1 = list1.get(i);
-                    Object value2 = list2.get(i);
+                    final Object value1 = list1.get(i);
+                    final Object value2 = list2.get(i);
 
                     if (value1 instanceof Configuration)
                     {
-                        ConfigurationComparator comparator = new StrictConfigurationComparator();
+                        final ConfigurationComparator comparator = new StrictConfigurationComparator();
                         assertTrue("The dictionnary at index " + i + " for the key '" + key + "' doesn't match", comparator.compare((Configuration) value1, (Configuration) value2));
                     }
                     else
@@ -304,14 +304,14 @@ public class TestPropertyListConfiguration
     @Test
     public void testSaveEmptyDictionary() throws Exception
     {
-        File savedFile = folder.newFile("testsave.plist");
+        final File savedFile = folder.newFile("testsave.plist");
 
         // save the configuration
         saveConfig(savedFile);
         assertTrue("The saved file doesn't exist", savedFile.exists());
 
         // read the configuration and compare the properties
-        PropertyListConfiguration checkConfig = new PropertyListConfiguration();
+        final PropertyListConfiguration checkConfig = new PropertyListConfiguration();
         load(checkConfig, savedFile);
 
         assertFalse(getNamedChildren(config, "empty-dictionary").isEmpty());
@@ -327,9 +327,9 @@ public class TestPropertyListConfiguration
      * @return the list with the corresponding child nodes
      */
     private static List<ImmutableNode> getNamedChildren(
-            HierarchicalConfiguration<ImmutableNode> config, String name)
+            final HierarchicalConfiguration<ImmutableNode> config, final String name)
     {
-        NodeHandler<ImmutableNode> handler =
+        final NodeHandler<ImmutableNode> handler =
                 config.getNodeModel().getNodeHandler();
         return handler.getChildren(handler.getRootNode(), name);
     }
@@ -351,15 +351,15 @@ public class TestPropertyListConfiguration
     @Test
     public void testSetDataProperty() throws Exception
     {
-        File saveFile = folder.newFile();
-        byte[] expected = new byte[]{1, 2, 3, 4};
+        final File saveFile = folder.newFile();
+        final byte[] expected = new byte[]{1, 2, 3, 4};
         config = new PropertyListConfiguration();
         config.setProperty("foo", expected);
         saveConfig(saveFile);
 
-        PropertyListConfiguration config2 = new PropertyListConfiguration();
+        final PropertyListConfiguration config2 = new PropertyListConfiguration();
         load(config2, saveFile);
-        Object array = config2.getProperty("foo");
+        final Object array = config2.getProperty("foo");
 
         assertNotNull("data not found", array);
         assertEquals("property type", byte[].class, array.getClass());
@@ -372,15 +372,15 @@ public class TestPropertyListConfiguration
     @Test
     public void testAddDataProperty() throws Exception
     {
-        File saveFile = folder.newFile();
-        byte[] expected = new byte[]{1, 2, 3, 4};
+        final File saveFile = folder.newFile();
+        final byte[] expected = new byte[]{1, 2, 3, 4};
         config = new PropertyListConfiguration();
         config.addProperty("foo", expected);
         saveConfig(saveFile);
 
-        PropertyListConfiguration config2 = new PropertyListConfiguration();
+        final PropertyListConfiguration config2 = new PropertyListConfiguration();
         load(config2, saveFile);
-        Object array = config2.getProperty("foo");
+        final Object array = config2.getProperty("foo");
 
         assertNotNull("data not found", array);
         assertEquals("property type", byte[].class, array.getClass());
@@ -390,7 +390,7 @@ public class TestPropertyListConfiguration
     @Test
     public void testInitCopy()
     {
-        PropertyListConfiguration copy = new PropertyListConfiguration(config);
+        final PropertyListConfiguration copy = new PropertyListConfiguration(config);
         assertFalse("Nothing was copied", copy.isEmpty());
     }
 
@@ -438,7 +438,7 @@ public class TestPropertyListConfiguration
     @Test
     public void testFormatDate()
     {
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.clear();
         cal.set(2007, Calendar.OCTOBER, 29, 23, 4, 30);
         cal.setTimeZone(TimeZone.getTimeZone("GMT-0230"));

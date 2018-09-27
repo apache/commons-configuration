@@ -71,8 +71,8 @@ public class ConfigurationBuilderEvent extends Event
      * @param evType the type of this event (must not be <b>null</b>)
      * @throws IllegalArgumentException if a required parameter is null
      */
-    public ConfigurationBuilderEvent(ConfigurationBuilder<?> source,
-            EventType<? extends ConfigurationBuilderEvent> evType)
+    public ConfigurationBuilderEvent(final ConfigurationBuilder<?> source,
+            final EventType<? extends ConfigurationBuilderEvent> evType)
     {
         super(source, evType);
     }

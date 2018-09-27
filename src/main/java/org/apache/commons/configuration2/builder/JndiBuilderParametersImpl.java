@@ -49,14 +49,14 @@ public class JndiBuilderParametersImpl extends BasicBuilderParameters implements
     private static final String PROP_PREFIX = "prefix";
 
     @Override
-    public JndiBuilderParametersImpl setContext(Context ctx)
+    public JndiBuilderParametersImpl setContext(final Context ctx)
     {
         storeProperty(PROP_CONTEXT, ctx);
         return this;
     }
 
     @Override
-    public JndiBuilderParametersImpl setPrefix(String p)
+    public JndiBuilderParametersImpl setPrefix(final String p)
     {
         storeProperty(PROP_PREFIX, p);
         return this;

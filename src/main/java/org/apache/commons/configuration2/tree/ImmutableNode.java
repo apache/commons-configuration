@@ -62,7 +62,7 @@ public final class ImmutableNode
      *
      * @param b the {@code Builder}
      */
-    private ImmutableNode(Builder b)
+    private ImmutableNode(final Builder b)
     {
         children = b.createChildren();
         attributes = b.createAttributes();
@@ -143,7 +143,7 @@ public final class ImmutableNode
      * @param name the name of the newly created node
      * @return the new node with the changed name
      */
-    public ImmutableNode setName(String name)
+    public ImmutableNode setName(final String name)
     {
         return new Builder(children, attributes).name(name).value(value)
                 .create();
@@ -156,7 +156,7 @@ public final class ImmutableNode
      * @param newValue the value of the newly created node
      * @return the new node with the changed value
      */
-    public ImmutableNode setValue(Object newValue)
+    public ImmutableNode setValue(final Object newValue)
     {
         return new Builder(children, attributes).name(nodeName).value(newValue)
                 .create();
@@ -170,10 +170,10 @@ public final class ImmutableNode
      * @return the new node with the child node added
      * @throws IllegalArgumentException if the child node is <b>null</b>
      */
-    public ImmutableNode addChild(ImmutableNode child)
+    public ImmutableNode addChild(final ImmutableNode child)
     {
         checkChildNode(child);
-        Builder builder = new Builder(children.size() + 1, attributes);
+        final Builder builder = new Builder(children.size() + 1, attributes);
         builder.addChildren(children).addChild(child);
         return createWithBasicProperties(builder);
     }
@@ -186,12 +186,12 @@ public final class ImmutableNode
      * @param child the child node to be removed
      * @return the new node with the child node removed
      */
-    public ImmutableNode removeChild(ImmutableNode child)
+    public ImmutableNode removeChild(final ImmutableNode child)
     {
         // use same size of children in case the child does not exist
-        Builder builder = new Builder(children.size(), attributes);
+        final Builder builder = new Builder(children.size(), attributes);
         boolean foundChild = false;
-        for (ImmutableNode c : children)
+        for (final ImmutableNode c : children)
         {
             if (c == child)
             {
@@ -216,13 +216,13 @@ public final class ImmutableNode
      * @return the new node with the child replaced
      * @throws IllegalArgumentException if the new child node is <b>null</b>
      */
-    public ImmutableNode replaceChild(ImmutableNode oldChild,
-            ImmutableNode newChild)
+    public ImmutableNode replaceChild(final ImmutableNode oldChild,
+            final ImmutableNode newChild)
     {
         checkChildNode(newChild);
-        Builder builder = new Builder(children.size(), attributes);
+        final Builder builder = new Builder(children.size(), attributes);
         boolean foundChild = false;
-        for (ImmutableNode c : children)
+        for (final ImmutableNode c : children)
         {
             if (c == oldChild)
             {
@@ -249,9 +249,9 @@ public final class ImmutableNode
      *        <b>null</b>)
      * @return the new node with replaced children
      */
-    public ImmutableNode replaceChildren(Collection<ImmutableNode> newChildren)
+    public ImmutableNode replaceChildren(final Collection<ImmutableNode> newChildren)
     {
-        Builder builder = new Builder(null, attributes);
+        final Builder builder = new Builder(null, attributes);
         builder.addChildren(newChildren);
         return createWithBasicProperties(builder);
     }
@@ -266,9 +266,9 @@ public final class ImmutableNode
      * @param value the attribute value
      * @return the new node with this attribute
      */
-    public ImmutableNode setAttribute(String name, Object value)
+    public ImmutableNode setAttribute(final String name, final Object value)
     {
-        Map<String, Object> newAttrs = new HashMap<>(attributes);
+        final Map<String, Object> newAttrs = new HashMap<>(attributes);
         newAttrs.put(name, value);
         return createWithNewAttributes(newAttrs);
     }
@@ -283,14 +283,14 @@ public final class ImmutableNode
      * @param newAttributes the map with attributes to be added
      * @return the new node with these attributes
      */
-    public ImmutableNode setAttributes(Map<String, ?> newAttributes)
+    public ImmutableNode setAttributes(final Map<String, ?> newAttributes)
     {
         if (newAttributes == null || newAttributes.isEmpty())
         {
             return this;
         }
 
-        Map<String, Object> newAttrs = new HashMap<>(attributes);
+        final Map<String, Object> newAttrs = new HashMap<>(attributes);
         newAttrs.putAll(newAttributes);
         return createWithNewAttributes(newAttrs);
     }
@@ -303,9 +303,9 @@ public final class ImmutableNode
      * @param name the name of the attribute
      * @return the new node without this attribute
      */
-    public ImmutableNode removeAttribute(String name)
+    public ImmutableNode removeAttribute(final String name)
     {
-        Map<String, Object> newAttrs = new HashMap<>(attributes);
+        final Map<String, Object> newAttrs = new HashMap<>(attributes);
         if (newAttrs.remove(name) != null)
         {
             return createWithNewAttributes(newAttrs);
@@ -321,7 +321,7 @@ public final class ImmutableNode
      * @param builder the already prepared builder
      * @return the newly created node
      */
-    private ImmutableNode createWithBasicProperties(Builder builder)
+    private ImmutableNode createWithBasicProperties(final Builder builder)
     {
         return builder.name(nodeName).value(value).create();
     }
@@ -333,7 +333,7 @@ public final class ImmutableNode
      * @param newAttrs the new attributes
      * @return the new node instance
      */
-    private ImmutableNode createWithNewAttributes(Map<String, Object> newAttrs)
+    private ImmutableNode createWithNewAttributes(final Map<String, Object> newAttrs)
     {
         return createWithBasicProperties(new Builder(children, null)
                 .addAttributes(newAttrs));
@@ -347,7 +347,7 @@ public final class ImmutableNode
      * @param child the child node to be checked
      * @throws IllegalArgumentException if the child node is <b>null</b>
      */
-    private static void checkChildNode(ImmutableNode child)
+    private static void checkChildNode(final ImmutableNode child)
     {
         if (child == null)
         {
@@ -411,7 +411,7 @@ public final class ImmutableNode
          *
          * @param childCount the number of child nodes
          */
-        public Builder(int childCount)
+        public Builder(final int childCount)
         {
             this();
             initChildrenCollection(childCount);
@@ -429,8 +429,8 @@ public final class ImmutableNode
          * @param dirChildren the children of the new node
          * @param dirAttrs the attributes of the new node
          */
-        private Builder(List<ImmutableNode> dirChildren,
-                Map<String, Object> dirAttrs)
+        private Builder(final List<ImmutableNode> dirChildren,
+                final Map<String, Object> dirAttrs)
         {
             directChildren = dirChildren;
             directAttributes = dirAttrs;
@@ -447,7 +447,7 @@ public final class ImmutableNode
          * @param childCount the expected number of new children
          * @param dirAttrs the attributes of the new node
          */
-        private Builder(int childCount, Map<String, Object> dirAttrs)
+        private Builder(final int childCount, final Map<String, Object> dirAttrs)
         {
             this(null, dirAttrs);
             initChildrenCollection(childCount);
@@ -459,7 +459,7 @@ public final class ImmutableNode
          * @param n the node name
          * @return a reference to this object for method chaining
          */
-        public Builder name(String n)
+        public Builder name(final String n)
         {
             name = n;
             return this;
@@ -471,7 +471,7 @@ public final class ImmutableNode
          * @param v the value
          * @return a reference to this object for method chaining
          */
-        public Builder value(Object v)
+        public Builder value(final Object v)
         {
             value = v;
             return this;
@@ -484,7 +484,7 @@ public final class ImmutableNode
          * @param c the child node (must not be <b>null</b>)
          * @return a reference to this object for method chaining
          */
-        public Builder addChild(ImmutableNode c)
+        public Builder addChild(final ImmutableNode c)
         {
             if (c != null)
             {
@@ -503,7 +503,7 @@ public final class ImmutableNode
          * @param children a collection with the child nodes to be added
          * @return a reference to this object for method chaining
          */
-        public Builder addChildren(Collection<? extends ImmutableNode> children)
+        public Builder addChildren(final Collection<? extends ImmutableNode> children)
         {
             if (children != null)
             {
@@ -522,7 +522,7 @@ public final class ImmutableNode
          * @param value the attribute value
          * @return a reference to this object for method chaining
          */
-        public Builder addAttribute(String name, Object value)
+        public Builder addAttribute(final String name, final Object value)
         {
             ensureAttributesExist();
             attributes.put(name, value);
@@ -537,7 +537,7 @@ public final class ImmutableNode
          * @param attrs the map with attributes to be added (may be <b>null</b>
          * @return a reference to this object for method chaining
          */
-        public Builder addAttributes(Map<String, ?> attrs)
+        public Builder addAttributes(final Map<String, ?> attrs)
         {
             if (attrs != null)
             {
@@ -555,7 +555,7 @@ public final class ImmutableNode
          */
         public ImmutableNode create()
         {
-            ImmutableNode newNode = new ImmutableNode(this);
+            final ImmutableNode newNode = new ImmutableNode(this);
             children = null;
             attributes = null;
             return newNode;
@@ -632,7 +632,7 @@ public final class ImmutableNode
          *
          * @param childCount the expected number of new children
          */
-        private void initChildrenCollection(int childCount)
+        private void initChildrenCollection(final int childCount)
         {
             if (childCount > 0)
             {
@@ -648,11 +648,11 @@ public final class ImmutableNode
          * @return the collection with null entries removed
          */
         private static Collection<? extends ImmutableNode> filterNull(
-                Collection<? extends ImmutableNode> children)
+                final Collection<? extends ImmutableNode> children)
         {
-            List<ImmutableNode> result =
+            final List<ImmutableNode> result =
                     new ArrayList<>(children.size());
-            for (ImmutableNode c : children)
+            for (final ImmutableNode c : children)
             {
                 if (c != null)
                 {

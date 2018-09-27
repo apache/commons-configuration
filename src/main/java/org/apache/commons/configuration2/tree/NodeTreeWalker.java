@@ -63,8 +63,8 @@ public class NodeTreeWalker
      * @param <T> the type of the nodes involved
      * @throws IllegalArgumentException if a required parameter is <b>null</b>
      */
-    public <T> void walkDFS(T root, ConfigurationNodeVisitor<T> visitor,
-            NodeHandler<T> handler)
+    public <T> void walkDFS(final T root, final ConfigurationNodeVisitor<T> visitor,
+            final NodeHandler<T> handler)
     {
         if (checkParameters(root, visitor, handler))
         {
@@ -91,8 +91,8 @@ public class NodeTreeWalker
      * @param <T> the type of the nodes involved
      * @throws IllegalArgumentException if a required parameter is <b>null</b>
      */
-    public <T> void walkBFS(T root, ConfigurationNodeVisitor<T> visitor,
-            NodeHandler<T> handler)
+    public <T> void walkBFS(final T root, final ConfigurationNodeVisitor<T> visitor,
+            final NodeHandler<T> handler)
     {
         if (checkParameters(root, visitor, handler))
         {
@@ -108,13 +108,13 @@ public class NodeTreeWalker
      * @param handler the handler
      * @param <T> the type of the nodes involved
      */
-    private static <T> void dfs(T node, ConfigurationNodeVisitor<T> visitor,
-            NodeHandler<T> handler)
+    private static <T> void dfs(final T node, final ConfigurationNodeVisitor<T> visitor,
+            final NodeHandler<T> handler)
     {
         if (!visitor.terminate())
         {
             visitor.visitBeforeChildren(node, handler);
-            for (T c : handler.getChildren(node))
+            for (final T c : handler.getChildren(node))
             {
                 dfs(c, visitor, handler);
             }
@@ -137,19 +137,19 @@ public class NodeTreeWalker
      * @param handler the handler
      * @param <T> the type of the nodes involved
      */
-    private static <T> void bfs(T root, ConfigurationNodeVisitor<T> visitor,
-            NodeHandler<T> handler)
+    private static <T> void bfs(final T root, final ConfigurationNodeVisitor<T> visitor,
+            final NodeHandler<T> handler)
     {
-        List<T> pendingNodes = new LinkedList<>();
+        final List<T> pendingNodes = new LinkedList<>();
         pendingNodes.add(root);
         boolean cancel = false;
 
         while (!pendingNodes.isEmpty() && !cancel)
         {
-            T node = pendingNodes.remove(0);
+            final T node = pendingNodes.remove(0);
             visitor.visitBeforeChildren(node, handler);
             cancel = visitor.terminate();
-            for (T c : handler.getChildren(node))
+            for (final T c : handler.getChildren(node))
             {
                 pendingNodes.add(c);
             }
@@ -169,8 +169,8 @@ public class NodeTreeWalker
      *         otherwise
      * @throws IllegalArgumentException if a required parameter is missing
      */
-    private static <T> boolean checkParameters(T root,
-            ConfigurationNodeVisitor<T> visitor, NodeHandler<T> handler)
+    private static <T> boolean checkParameters(final T root,
+            final ConfigurationNodeVisitor<T> visitor, final NodeHandler<T> handler)
     {
         if (visitor == null)
         {

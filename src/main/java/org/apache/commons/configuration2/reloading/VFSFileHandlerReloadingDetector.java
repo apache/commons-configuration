@@ -70,8 +70,8 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
      * @param handler the {@code FileHandler}
      * @param refreshDelay the refresh delay
      */
-    public VFSFileHandlerReloadingDetector(FileHandler handler,
-            long refreshDelay)
+    public VFSFileHandlerReloadingDetector(final FileHandler handler,
+            final long refreshDelay)
     {
         super(handler, refreshDelay);
     }
@@ -82,7 +82,7 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
      *
      * @param handler the {@code FileHandler}
      */
-    public VFSFileHandlerReloadingDetector(FileHandler handler)
+    public VFSFileHandlerReloadingDetector(final FileHandler handler)
     {
         super(handler);
     }
@@ -94,7 +94,7 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
     @Override
     protected long getLastModificationDate()
     {
-        FileObject file = getFileObject();
+        final FileObject file = getFileObject();
         try
         {
             if (file == null || !file.exists())
@@ -104,7 +104,7 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
 
             return file.getContent().getLastModifiedTime();
         }
-        catch (FileSystemException ex)
+        catch (final FileSystemException ex)
         {
             log.error("Unable to get last modified time for"
                     + file.getName().getURI(), ex);
@@ -127,17 +127,17 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
 
         try
         {
-            FileSystemManager fsManager = VFS.getManager();
-            String uri = resolveFileURI();
+            final FileSystemManager fsManager = VFS.getManager();
+            final String uri = resolveFileURI();
             if (uri == null)
             {
                 throw new ConfigurationRuntimeException("Unable to determine file to monitor");
             }
             return fsManager.resolveFile(uri);
         }
-        catch (FileSystemException fse)
+        catch (final FileSystemException fse)
         {
-            String msg = "Unable to monitor " + getFileHandler().getURL().toString();
+            final String msg = "Unable to monitor " + getFileHandler().getURL().toString();
             log.error(msg);
             throw new ConfigurationRuntimeException(msg, fse);
         }
@@ -151,8 +151,8 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
      */
     protected String resolveFileURI()
     {
-        FileSystem fs = getFileHandler().getFileSystem();
-        String uri =
+        final FileSystem fs = getFileHandler().getFileSystem();
+        final String uri =
                 fs.getPath(null, getFileHandler().getURL(), getFileHandler()
                         .getBasePath(), getFileHandler().getFileName());
         return uri;

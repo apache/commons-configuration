@@ -46,14 +46,14 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements
      * @param source the event source (<b>null</b> if the source need not to be
      *        checked)
      */
-    protected AbstractEventListenerTestImpl(Object source)
+    protected AbstractEventListenerTestImpl(final Object source)
     {
         expectedSource = source;
         events = new LinkedList<>();
     }
 
     @Override
-    public void onEvent(T event)
+    public void onEvent(final T event)
     {
         events.add(event);
     }
@@ -63,7 +63,7 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements
      *
      * @param minEvents the minimum number of expected events
      */
-    public void checkEventCount(int minEvents)
+    public void checkEventCount(final int minEvents)
     {
         assertTrue("Too view events received", events.size() >= minEvents);
     }
@@ -74,10 +74,10 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements
      * @param expectedType the expected type of the event
      * @return the event object
      */
-    public T nextEvent(EventType<?> expectedType)
+    public T nextEvent(final EventType<?> expectedType)
     {
         assertFalse("Too few events received", events.isEmpty());
-        T e = events.remove(0);
+        final T e = events.remove(0);
         if (expectedSource != null)
         {
             assertEquals("Wrong event source", expectedSource, e.getSource());
@@ -93,11 +93,11 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements
      *
      * @param type the event type
      */
-    public void skipToLast(EventType<?> type)
+    public void skipToLast(final EventType<?> type)
     {
         while (events.size() > 1)
         {
-            T e = events.remove(0);
+            final T e = events.remove(0);
             assertTrue("Found end event in details", type != e.getEventType());
         }
     }

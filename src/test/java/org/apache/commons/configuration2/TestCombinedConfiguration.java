@@ -122,7 +122,7 @@ public class TestCombinedConfiguration
     @Test
     public void testAddConfiguration()
     {
-        AbstractConfiguration c = setUpTestConfiguration();
+        final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c);
         checkAddConfig(c);
         assertEquals("Wrong number of configs", 1, config
@@ -140,7 +140,7 @@ public class TestCombinedConfiguration
     @Test
     public void testAddConfigurationWithName()
     {
-        AbstractConfiguration c = setUpTestConfiguration();
+        final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c, TEST_NAME);
         checkAddConfig(c);
         assertEquals("Wrong number of configs", 1, config
@@ -148,7 +148,7 @@ public class TestCombinedConfiguration
         assertSame("Added config not found", c, config.getConfiguration(0));
         assertSame("Added config not found by name", c, config
                 .getConfiguration(TEST_NAME));
-        Set<String> names = config.getConfigurationNames();
+        final Set<String> names = config.getConfigurationNames();
         assertEquals("Wrong number of config names", 1, names.size());
         assertTrue("Name not found", names.contains(TEST_NAME));
         assertTrue("Wrong property value", config.getBoolean(TEST_KEY));
@@ -173,7 +173,7 @@ public class TestCombinedConfiguration
     @Test
     public void testAddConfigurationAt()
     {
-        AbstractConfiguration c = setUpTestConfiguration();
+        final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c, null, "my");
         checkAddConfig(c);
         assertTrue("Wrong property value", config.getBoolean("my." + TEST_KEY));
@@ -186,7 +186,7 @@ public class TestCombinedConfiguration
     @Test
     public void testAddConfigurationComplexAt()
     {
-        AbstractConfiguration c = setUpTestConfiguration();
+        final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c, null, "This..is.a.complex");
         checkAddConfig(c);
         assertTrue("Wrong property value", config
@@ -198,9 +198,9 @@ public class TestCombinedConfiguration
      *
      * @param c the config to check
      */
-    private void checkAddConfig(AbstractConfiguration c)
+    private void checkAddConfig(final AbstractConfiguration c)
     {
-        Collection<EventListener<? super ConfigurationEvent>> listeners =
+        final Collection<EventListener<? super ConfigurationEvent>> listeners =
                 c.getEventListeners(ConfigurationEvent.ANY);
         assertEquals("Wrong number of configuration listeners", 1, listeners
                 .size());
@@ -250,7 +250,7 @@ public class TestCombinedConfiguration
     @Test
     public void testRemoveConfiguration()
     {
-        AbstractConfiguration c = setUpTestConfiguration();
+        final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c);
         checkAddConfig(c);
         assertTrue("Config could not be removed", config.removeConfiguration(c));
@@ -263,7 +263,7 @@ public class TestCombinedConfiguration
     @Test
     public void testRemoveConfigurationAt()
     {
-        AbstractConfiguration c = setUpTestConfiguration();
+        final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c);
         assertSame("Wrong config removed", c, config.removeConfigurationAt(0));
         checkRemoveConfig(c);
@@ -275,7 +275,7 @@ public class TestCombinedConfiguration
     @Test
     public void testRemoveConfigurationByName()
     {
-        AbstractConfiguration c = setUpTestConfiguration();
+        final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c, TEST_NAME);
         assertSame("Wrong config removed", c, config
                 .removeConfiguration(TEST_NAME));
@@ -288,7 +288,7 @@ public class TestCombinedConfiguration
     @Test
     public void testRemoveNamedConfiguration()
     {
-        AbstractConfiguration c = setUpTestConfiguration();
+        final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c, TEST_NAME);
         config.removeConfiguration(c);
         checkRemoveConfig(c);
@@ -300,7 +300,7 @@ public class TestCombinedConfiguration
     @Test
     public void testRemoveNamedConfigurationAt()
     {
-        AbstractConfiguration c = setUpTestConfiguration();
+        final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c, TEST_NAME);
         assertSame("Wrong config removed", c, config.removeConfigurationAt(0));
         checkRemoveConfig(c);
@@ -333,7 +333,7 @@ public class TestCombinedConfiguration
      *
      * @param c the removed configuration
      */
-    private void checkRemoveConfig(AbstractConfiguration c)
+    private void checkRemoveConfig(final AbstractConfiguration c)
     {
         assertTrue("Listener was not removed",
                 c.getEventListeners(ConfigurationEvent.ANY).isEmpty());
@@ -351,7 +351,7 @@ public class TestCombinedConfiguration
     @Test
     public void testUpdateContainedConfiguration()
     {
-        AbstractConfiguration c = setUpTestConfiguration();
+        final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c);
         c.addProperty("test.otherTest", "yes");
         assertEquals("New property not found", "yes", config
@@ -365,7 +365,7 @@ public class TestCombinedConfiguration
     @Test
     public void testSetNodeCombiner()
     {
-        NodeCombiner combiner = new UnionCombiner();
+        final NodeCombiner combiner = new UnionCombiner();
         config.setNodeCombiner(combiner);
         assertSame("Node combiner was not set", combiner, config
                 .getNodeCombiner());
@@ -391,7 +391,7 @@ public class TestCombinedConfiguration
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
         config.addConfiguration(new PropertiesConfiguration(), "props");
 
-        CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
+        final CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
         assertNotNull("No root node", cc2.getModel().getNodeHandler()
                 .getRootNode());
         assertEquals("Wrong number of contained configurations", config
@@ -406,7 +406,7 @@ public class TestCombinedConfiguration
                         cc2.getEventListeners(ConfigurationEvent.ANY),
                         config.getEventListeners(ConfigurationEvent.ANY)));
 
-        StrictConfigurationComparator comp = new StrictConfigurationComparator();
+        final StrictConfigurationComparator comp = new StrictConfigurationComparator();
         for (int i = 0; i < config.getNumberOfConfigurations(); i++)
         {
             assertNotSame("Configuration at " + i + " was not cloned", config
@@ -427,7 +427,7 @@ public class TestCombinedConfiguration
     public void testCloneModify()
     {
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME);
-        CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
+        final CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
         assertTrue("Name is missing", cc2.getConfigurationNames().contains(
                 TEST_NAME));
         cc2.removeConfiguration(TEST_NAME);
@@ -463,11 +463,11 @@ public class TestCombinedConfiguration
     @Test
     public void testClearRemoveChildListener()
     {
-        AbstractConfiguration child = setUpTestConfiguration();
+        final AbstractConfiguration child = setUpTestConfiguration();
         config.addConfiguration(child);
 
         config.clear();
-        for (EventListener<?> listener : child
+        for (final EventListener<?> listener : child
                 .getEventListeners(ConfigurationEvent.ANY))
         {
             assertNotEquals("Still registered", config, listener);
@@ -479,8 +479,8 @@ public class TestCombinedConfiguration
      */
     private void setUpSourceTest()
     {
-        BaseHierarchicalConfiguration c1 = new BaseHierarchicalConfiguration();
-        PropertiesConfiguration c2 = new PropertiesConfiguration();
+        final BaseHierarchicalConfiguration c1 = new BaseHierarchicalConfiguration();
+        final PropertiesConfiguration c2 = new PropertiesConfiguration();
         c1.addProperty(TEST_KEY, TEST_NAME);
         c2.addProperty("another.key", "test");
         config.addConfiguration(c1, CHILD1);
@@ -581,7 +581,7 @@ public class TestCombinedConfiguration
     public void testGetSourceWithCombinedChildConfiguration()
     {
         setUpSourceTest();
-        CombinedConfiguration cc = new CombinedConfiguration();
+        final CombinedConfiguration cc = new CombinedConfiguration();
         cc.addConfiguration(config);
         assertEquals("Wrong source", config, cc.getSource(TEST_KEY));
     }
@@ -596,7 +596,7 @@ public class TestCombinedConfiguration
         final String key = "list.key";
         config.getConfiguration(CHILD1).addProperty(key, "1,2,3");
         config.getConfiguration(CHILD2).addProperty(key, "a,b,c");
-        Set<Configuration> sources = config.getSources(key);
+        final Set<Configuration> sources = config.getSources(key);
         assertEquals("Wrong number of sources", 2, sources.size());
         assertTrue("Source 1 not found",
                 sources.contains(config.getConfiguration(CHILD1)));
@@ -621,7 +621,7 @@ public class TestCombinedConfiguration
     @Test
     public void testEscapeListDelimiters()
     {
-        PropertiesConfiguration sub = new PropertiesConfiguration();
+        final PropertiesConfiguration sub = new PropertiesConfiguration();
         sub.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         sub.addProperty("test.pi", "3\\,1415");
         config.addConfiguration(sub);
@@ -652,17 +652,17 @@ public class TestCombinedConfiguration
     @Test
     public void testConversionExpressionEngine()
     {
-        PropertiesConfiguration child = new PropertiesConfiguration();
+        final PropertiesConfiguration child = new PropertiesConfiguration();
         child.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         child.addProperty("test(a)", "1,2,3");
         config.addConfiguration(child);
-        DefaultExpressionEngine engineQuery =
+        final DefaultExpressionEngine engineQuery =
                 new DefaultExpressionEngine(
                         new DefaultExpressionEngineSymbols.Builder(
                                 DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
                                 .setIndexStart("<").setIndexEnd(">").create());
         config.setExpressionEngine(engineQuery);
-        DefaultExpressionEngine engineConvert =
+        final DefaultExpressionEngine engineConvert =
                 new DefaultExpressionEngine(
                         new DefaultExpressionEngineSymbols.Builder(
                                 DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
@@ -678,12 +678,12 @@ public class TestCombinedConfiguration
     {
         config.addConfiguration(setUpTestConfiguration());
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
-        AbstractConfiguration pc = new PropertiesConfiguration();
+        final AbstractConfiguration pc = new PropertiesConfiguration();
         config.addConfiguration(pc, "props");
-        List<Configuration> list = config.getConfigurations();
+        final List<Configuration> list = config.getConfigurations();
         assertNotNull("No list of configurations returned", list);
         assertTrue("Incorrect number of configurations", list.size() == 3);
-        Configuration c = list.get(2);
+        final Configuration c = list.get(2);
         assertTrue("Incorrect configuration", c == pc);
     }
 
@@ -692,12 +692,12 @@ public class TestCombinedConfiguration
     {
         config.addConfiguration(setUpTestConfiguration());
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
-        AbstractConfiguration pc = new PropertiesConfiguration();
+        final AbstractConfiguration pc = new PropertiesConfiguration();
         config.addConfiguration(pc, "props");
-        List<String> list = config.getConfigurationNameList();
+        final List<String> list = config.getConfigurationNameList();
         assertNotNull("No list of configurations returned", list);
         assertTrue("Incorrect number of configurations", list.size() == 3);
-        String name = list.get(1);
+        final String name = list.get(1);
         assertNotNull("No name returned", name);
         assertTrue("Incorrect configuration name", TEST_NAME.equals(name));
     }
@@ -709,12 +709,12 @@ public class TestCombinedConfiguration
     @Test
     public void testCombinedCopyToXML() throws ConfigurationException
     {
-        XMLConfiguration x1 = new XMLConfiguration();
+        final XMLConfiguration x1 = new XMLConfiguration();
         x1.addProperty("key1", "value1");
         x1.addProperty("key1[@override]", "USER1");
         x1.addProperty("key2", "value2");
         x1.addProperty("key2[@override]", "USER2");
-        XMLConfiguration x2 = new XMLConfiguration();
+        final XMLConfiguration x2 = new XMLConfiguration();
         x2.addProperty("key2", "value2.2");
         x2.addProperty("key2[@override]", "USER2");
         config.setNodeCombiner(new OverrideCombiner());
@@ -724,9 +724,9 @@ public class TestCombinedConfiguration
         assertEquals("Wrong element value", "value2.2", x3.getString("key2"));
         assertEquals("Wrong attribute value", "USER2",
                 x3.getString("key2[@override]"));
-        StringWriter w = new StringWriter();
+        final StringWriter w = new StringWriter();
         new FileHandler(x3).save(w);
-        String s = w.toString();
+        final String s = w.toString();
         x3 = new XMLConfiguration();
         new FileHandler(x3).load(new StringReader(s));
         assertEquals("Wrong element value after load", "value2.2",
@@ -744,7 +744,7 @@ public class TestCombinedConfiguration
     private SynchronizerTestImpl setUpSynchronizerTest()
     {
         setUpSourceTest();
-        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        final SynchronizerTestImpl sync = new SynchronizerTestImpl();
         config.setSynchronizer(sync);
         return sync;
     }
@@ -755,7 +755,7 @@ public class TestCombinedConfiguration
     @Test
     public void testAddConfigurationSynchronized()
     {
-        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        final SynchronizerTestImpl sync = setUpSynchronizerTest();
         config.addConfiguration(new BaseHierarchicalConfiguration());
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
         checkCombinedRootNotConstructed();
@@ -767,7 +767,7 @@ public class TestCombinedConfiguration
     @Test
     public void testSetNodeCombinerSynchronized()
     {
-        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        final SynchronizerTestImpl sync = setUpSynchronizerTest();
         config.setNodeCombiner(new UnionCombiner());
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
         checkCombinedRootNotConstructed();
@@ -779,7 +779,7 @@ public class TestCombinedConfiguration
     @Test
     public void testGetNodeCombinerSynchronized()
     {
-        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        final SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertNotNull("No node combiner", config.getNodeCombiner());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         checkCombinedRootNotConstructed();
@@ -792,7 +792,7 @@ public class TestCombinedConfiguration
     @Test
     public void testGetConfigurationByIdxSynchronized()
     {
-        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        final SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertNotNull("No configuration", config.getConfiguration(0));
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         checkCombinedRootNotConstructed();
@@ -805,7 +805,7 @@ public class TestCombinedConfiguration
     @Test
     public void testGetConfigurationByNameSynchronized()
     {
-        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        final SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertNotNull("No configuration", config.getConfiguration(CHILD1));
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         checkCombinedRootNotConstructed();
@@ -818,7 +818,7 @@ public class TestCombinedConfiguration
     @Test
     public void testGetConfigurationNamesSynchronized()
     {
-        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        final SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertFalse("No child names", config.getConfigurationNames().isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         checkCombinedRootNotConstructed();
@@ -831,7 +831,7 @@ public class TestCombinedConfiguration
     @Test
     public void testGetConfigurationNameListSynchronized()
     {
-        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        final SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertFalse("No child names", config.getConfigurationNameList()
                 .isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
@@ -854,7 +854,7 @@ public class TestCombinedConfiguration
     @Test
     public void testGetConfigurationsSynchronized()
     {
-        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        final SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertFalse("No child configurations", config.getConfigurations()
                 .isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
@@ -868,7 +868,7 @@ public class TestCombinedConfiguration
     @Test
     public void testGetConversionExpressionEngineSynchronized()
     {
-        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        final SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertNull("Got a conversion engine",
                 config.getConversionExpressionEngine());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
@@ -882,7 +882,7 @@ public class TestCombinedConfiguration
     @Test
     public void testSetConversionExpressionEngineSynchronized()
     {
-        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        final SynchronizerTestImpl sync = setUpSynchronizerTest();
         config.setConversionExpressionEngine(new DefaultExpressionEngine(
                 DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS));
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
@@ -895,7 +895,7 @@ public class TestCombinedConfiguration
     @Test
     public void testInvalidateSynchronized()
     {
-        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        final SynchronizerTestImpl sync = setUpSynchronizerTest();
         config.invalidate();
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
     }
@@ -906,7 +906,7 @@ public class TestCombinedConfiguration
     @Test
     public void testGetSourceSynchronized()
     {
-        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        final SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertNotNull("No source found", config.getSource(TEST_KEY));
         sync.verifyStart(Methods.BEGIN_READ);
         sync.verifyEnd(Methods.END_READ);
@@ -919,7 +919,7 @@ public class TestCombinedConfiguration
     @Test
     public void testGetNumberOfConfigurationsSynchronized()
     {
-        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        final SynchronizerTestImpl sync = setUpSynchronizerTest();
         assertEquals("Wrong number of configurations", 2,
                 config.getNumberOfConfigurations());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
@@ -935,7 +935,7 @@ public class TestCombinedConfiguration
         setUpSourceTest();
         config.lock(LockMode.READ); // Causes the root node to be constructed
         config.unlock(LockMode.READ);
-        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        final SynchronizerTestImpl sync = new SynchronizerTestImpl();
         config.setSynchronizer(sync);
         config.clone();
         // clone() of base class is wrapped by another read lock
@@ -950,10 +950,10 @@ public class TestCombinedConfiguration
     @Test
     public void testLockHandlingWithExceptionWhenConstructingRootNode()
     {
-        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        final SynchronizerTestImpl sync = setUpSynchronizerTest();
         final RuntimeException testEx =
                 new ConfigurationRuntimeException("Test exception");
-        BaseHierarchicalConfiguration childEx =
+        final BaseHierarchicalConfiguration childEx =
                 new BaseHierarchicalConfiguration()
                 {
                     @Override
@@ -967,7 +967,7 @@ public class TestCombinedConfiguration
             config.lock(LockMode.READ);
             fail("Exception not detected!");
         }
-        catch (Exception ex)
+        catch (final Exception ex)
         {
             assertEquals("Unexpected exception", testEx, ex);
         }
@@ -987,11 +987,11 @@ public class TestCombinedConfiguration
     {
         // populate the test combined configuration
         setUpSourceTest();
-        XMLConfiguration xmlConf = new XMLConfiguration();
+        final XMLConfiguration xmlConf = new XMLConfiguration();
         new FileHandler(xmlConf).load(ConfigurationAssert
                 .getTestFile("test.xml"));
         config.addConfiguration(xmlConf);
-        PropertiesConfiguration propConf = new PropertiesConfiguration();
+        final PropertiesConfiguration propConf = new PropertiesConfiguration();
         new FileHandler(propConf).load(ConfigurationAssert
                 .getTestFile("test.properties"));
         for (int i = 0; i < 8; i++)
@@ -1001,9 +1001,9 @@ public class TestCombinedConfiguration
         config.getConfiguration(0).addProperty(KEY_CONCURRENT, TEST_NAME);
 
         // Set a single synchronizer for all involved configurations
-        Synchronizer sync = new ReadWriteSynchronizer();
+        final Synchronizer sync = new ReadWriteSynchronizer();
         config.setSynchronizer(sync);
-        for (Configuration c : config.getConfigurations())
+        for (final Configuration c : config.getConfigurations())
         {
             c.setSynchronizer(sync);
         }
@@ -1012,16 +1012,16 @@ public class TestCombinedConfiguration
         final int numberOfReaders = 3;
         final int readCount = 5000;
         final int writeCount = 3000;
-        CountDownLatch latch = new CountDownLatch(1);
-        AtomicInteger errorCount = new AtomicInteger();
-        Collection<Thread> threads = new ArrayList<>(numberOfReaders + 1);
-        Thread writeThread =
+        final CountDownLatch latch = new CountDownLatch(1);
+        final AtomicInteger errorCount = new AtomicInteger();
+        final Collection<Thread> threads = new ArrayList<>(numberOfReaders + 1);
+        final Thread writeThread =
                 new WriteThread(config, latch, errorCount, writeCount);
         writeThread.start();
         threads.add(writeThread);
         for (int i = 0; i < numberOfReaders; i++)
         {
-            Thread readThread =
+            final Thread readThread =
                     new ReadThread(config, latch, errorCount, readCount);
             readThread.start();
             threads.add(readThread);
@@ -1029,7 +1029,7 @@ public class TestCombinedConfiguration
 
         // perform test
         latch.countDown();
-        for (Thread t : threads)
+        for (final Thread t : threads)
         {
             t.join();
         }
@@ -1044,7 +1044,7 @@ public class TestCombinedConfiguration
      */
     private AbstractConfiguration setUpSubConfigTest()
     {
-        AbstractConfiguration srcConfig = setUpTestConfiguration();
+        final AbstractConfiguration srcConfig = setUpTestConfiguration();
         config.addConfiguration(srcConfig, "source", SUB_KEY);
         config.addConfiguration(setUpTestConfiguration());
         config.addConfiguration(setUpTestConfiguration(), "otherTest",
@@ -1058,8 +1058,8 @@ public class TestCombinedConfiguration
     @Test
     public void testSubConfigurationWithUpdates()
     {
-        AbstractConfiguration srcConfig = setUpSubConfigTest();
-        HierarchicalConfiguration<ImmutableNode> sub =
+        final AbstractConfiguration srcConfig = setUpSubConfigTest();
+        final HierarchicalConfiguration<ImmutableNode> sub =
                 config.configurationAt(SUB_KEY, true);
         assertTrue("Wrong value before update", sub.getBoolean(TEST_KEY));
         srcConfig.setProperty(TEST_KEY, Boolean.FALSE);
@@ -1072,10 +1072,10 @@ public class TestCombinedConfiguration
      * Checks the configurationsAt() method.
      * @param withUpdates flag whether updates are supported
      */
-    private void checkConfigurationsAt(boolean withUpdates)
+    private void checkConfigurationsAt(final boolean withUpdates)
     {
         setUpSubConfigTest();
-        List<HierarchicalConfiguration<ImmutableNode>> subs =
+        final List<HierarchicalConfiguration<ImmutableNode>> subs =
                 config.configurationsAt(SUB_KEY, withUpdates);
         assertEquals("Wrong number of sub configurations", 1, subs.size());
         assertTrue("Wrong value in sub configuration",
@@ -1108,7 +1108,7 @@ public class TestCombinedConfiguration
      */
     private static AbstractConfiguration setUpTestConfiguration()
     {
-        BaseHierarchicalConfiguration config = new BaseHierarchicalConfiguration();
+        final BaseHierarchicalConfiguration config = new BaseHierarchicalConfiguration();
         config.addProperty(TEST_KEY, Boolean.TRUE);
         config.addProperty("test.comment", "This is a test");
         return config;
@@ -1125,7 +1125,7 @@ public class TestCombinedConfiguration
         int otherEvents;
 
         @Override
-        public void onEvent(ConfigurationEvent event)
+        public void onEvent(final ConfigurationEvent event)
         {
             if (event.getEventType() == CombinedConfiguration.COMBINED_INVALIDATE)
             {
@@ -1143,7 +1143,7 @@ public class TestCombinedConfiguration
          * @param expectedInvalidate the expected number of invalidate events
          * @param expectedOthers the expected number of other events
          */
-        public void checkEvent(int expectedInvalidate, int expectedOthers)
+        public void checkEvent(final int expectedInvalidate, final int expectedOthers)
         {
             assertEquals("Wrong number of invalidate events",
                     expectedInvalidate, invalidateEvents);
@@ -1179,8 +1179,8 @@ public class TestCombinedConfiguration
          * @param errCnt the counter for read errors
          * @param readCount the number of reads to be performed
          */
-        public ReadThread(Configuration readConfig, CountDownLatch latch,
-                AtomicInteger errCnt, int readCount)
+        public ReadThread(final Configuration readConfig, final CountDownLatch latch,
+                final AtomicInteger errCnt, final int readCount)
         {
             config = readConfig;
             startLatch = latch;
@@ -1202,7 +1202,7 @@ public class TestCombinedConfiguration
                     readConfiguration();
                 }
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 errorCount.incrementAndGet();
             }
@@ -1214,7 +1214,7 @@ public class TestCombinedConfiguration
          */
         private void readConfiguration()
         {
-            List<Object> values = config.getList(KEY_CONCURRENT);
+            final List<Object> values = config.getList(KEY_CONCURRENT);
             if (values.size() < 1 || values.size() > 2)
             {
                 errorCount.incrementAndGet();
@@ -1222,7 +1222,7 @@ public class TestCombinedConfiguration
             else
             {
                 boolean ok = true;
-                for (Object value : values)
+                for (final Object value : values)
                 {
                     if (!TEST_NAME.equals(value))
                     {
@@ -1270,8 +1270,8 @@ public class TestCombinedConfiguration
          * @param errCnt a counter for errors
          * @param writeCount the number of writes to be performed
          */
-        public WriteThread(CombinedConfiguration cc, CountDownLatch latch,
-                AtomicInteger errCnt, int writeCount)
+        public WriteThread(final CombinedConfiguration cc, final CountDownLatch latch,
+                final AtomicInteger errCnt, final int writeCount)
         {
             testConfigs = cc.getConfigurations();
             startLatch = latch;
@@ -1290,7 +1290,7 @@ public class TestCombinedConfiguration
                     updateConfigurations();
                 }
             }
-            catch (InterruptedException e)
+            catch (final InterruptedException e)
             {
                 errorCount.incrementAndGet();
             }
@@ -1301,7 +1301,7 @@ public class TestCombinedConfiguration
          */
         private void updateConfigurations()
         {
-            int newIdx = (currentChildConfigIdx + 1) % testConfigs.size();
+            final int newIdx = (currentChildConfigIdx + 1) % testConfigs.size();
             testConfigs.get(newIdx).addProperty(KEY_CONCURRENT, TEST_NAME);
             testConfigs.get(currentChildConfigIdx)
                     .clearProperty(KEY_CONCURRENT);

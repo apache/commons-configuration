@@ -40,7 +40,7 @@ public class FileSystemLocationStrategy implements FileLocationStrategy
      * {@inheritDoc} This implementation delegates to the {@code FileSystem}.
      */
     @Override
-    public URL locate(FileSystem fileSystem, FileLocator locator)
+    public URL locate(final FileSystem fileSystem, final FileLocator locator)
     {
         return fileSystem.locateFromURL(locator.getBasePath(),
                 locator.getFileName());

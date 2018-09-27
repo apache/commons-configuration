@@ -48,7 +48,7 @@ public class TestPropertyConverter
     @Test
     public void testToFileDirect()
     {
-        File f = new File("dir", "file");
+        final File f = new File("dir", "file");
         assertSame("Wrong file", f, PropertyConverter.toFile(f));
     }
 
@@ -68,7 +68,7 @@ public class TestPropertyConverter
     @Test
     public void testToFileFromPath()
     {
-        Path p = Paths.get("dir", "file");
+        final Path p = Paths.get("dir", "file");
         assertEquals("Wrong conversion result", new File("dir", "file"), PropertyConverter.toFile(p));
     }
 
@@ -79,7 +79,7 @@ public class TestPropertyConverter
     @Test
     public void testToPathDirect()
     {
-        Path p = Paths.get("dir", "file");
+        final Path p = Paths.get("dir", "file");
         assertSame("Wrong path", p, PropertyConverter.toPath(p));
     }
 
@@ -99,7 +99,7 @@ public class TestPropertyConverter
     @Test
     public void testToPathFromFile()
     {
-        File f =  new File("dir", "file");
+        final File f =  new File("dir", "file");
         assertEquals("Wrong conversion result", Paths.get("dir", "file"), PropertyConverter.toPath(f));
     }
 
@@ -110,9 +110,9 @@ public class TestPropertyConverter
     @Test
     public void testToNumberDirect()
     {
-        Integer i = new Integer(42);
+        final Integer i = new Integer(42);
         assertSame("Wrong integer", i, PropertyConverter.toNumber(i, Integer.class));
-        BigDecimal d = new BigDecimal("3.1415");
+        final BigDecimal d = new BigDecimal("3.1415");
         assertSame("Wrong BigDecimal", d, PropertyConverter.toNumber(d, Integer.class));
     }
 
@@ -134,7 +134,7 @@ public class TestPropertyConverter
     @Test
     public void testToNumberFromHexString()
     {
-        Number n = PropertyConverter.toNumber("0x10", Integer.class);
+        final Number n = PropertyConverter.toNumber("0x10", Integer.class);
         assertEquals("Incorrect Integer value", 16, n.intValue());
     }
 
@@ -155,7 +155,7 @@ public class TestPropertyConverter
     @Test
     public void testToNumberFromBinaryString()
     {
-        Number n = PropertyConverter.toNumber("0b1111", Integer.class);
+        final Number n = PropertyConverter.toNumber("0b1111", Integer.class);
         assertEquals("Incorrect Integer value", 15, n.intValue());
     }
 
@@ -196,7 +196,7 @@ public class TestPropertyConverter
     @Test
     public void testToPatternDirect()
     {
-        Pattern p = Pattern.compile(".+");
+        final Pattern p = Pattern.compile(".+");
         assertSame("Wrong pattern", p, PropertyConverter.toPattern(p));
     }
 
@@ -207,7 +207,7 @@ public class TestPropertyConverter
     @Test
     public void testToPatternFromString()
     {
-        Pattern p = Pattern.compile(".+");
+        final Pattern p = Pattern.compile(".+");
         assertEquals("Wrong conversion result", p.pattern(), PropertyConverter.toPattern(".+").pattern());
     }
 
@@ -249,7 +249,7 @@ public class TestPropertyConverter
     @Test
     public void testToNoConversionNeeded()
     {
-        String value = "testValue";
+        final String value = "testValue";
         assertEquals("Wrong conversion result", value, PropertyConverter.to(
                 String.class, value, new DefaultConversionHandler()));
     }
@@ -272,7 +272,7 @@ public class TestPropertyConverter
     @Test
     public void testToCharViaToString()
     {
-        Object value = new Object()
+        final Object value = new Object()
         {
             @Override
             public String toString()
@@ -301,8 +301,8 @@ public class TestPropertyConverter
     @Test
     public void testToStringConversion()
     {
-        Integer src = 42;
-        Object result =
+        final Integer src = 42;
+        final Object result =
                 PropertyConverter.to(String.class, src,
                         new DefaultConversionHandler());
         assertEquals("Wrong resulting string", "42", result);

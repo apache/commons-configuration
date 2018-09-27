@@ -64,7 +64,7 @@ public class Event extends EventObject
      * @param evType the type of this event (must not be <b>null</b>)
      * @throws IllegalArgumentException if a required parameter is null
      */
-    public Event(Object source, EventType<? extends Event> evType)
+    public Event(final Object source, final EventType<? extends Event> evType)
     {
         super(source);
         if (evType == null)
@@ -93,7 +93,7 @@ public class Event extends EventObject
     @Override
     public String toString()
     {
-        StringBuilder buf = new StringBuilder(BUF_SIZE);
+        final StringBuilder buf = new StringBuilder(BUF_SIZE);
         buf.append(getClass().getSimpleName());
         buf.append(" [");
         appendPropertyRepresentation(buf, "source", getSource());
@@ -113,8 +113,8 @@ public class Event extends EventObject
      * @param property the name of the property
      * @param value the property value
      */
-    protected void appendPropertyRepresentation(StringBuilder buf,
-            String property, Object value)
+    protected void appendPropertyRepresentation(final StringBuilder buf,
+            final String property, final Object value)
     {
         buf.append(String.format(FMT_PROPERTY, property, String.valueOf(value)));
     }

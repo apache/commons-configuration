@@ -76,7 +76,7 @@ public class TestPeriodicReloadingTrigger
     @Test
     public void testDefaultExecutor()
     {
-        PeriodicReloadingTrigger trigger =
+        final PeriodicReloadingTrigger trigger =
                 new PeriodicReloadingTrigger(controller, CTRL_PARAM, PERIOD, UNIT);
         assertNotNull("No executor service", trigger.getExecutorService());
     }
@@ -107,6 +107,7 @@ public class TestPeriodicReloadingTrigger
     private static ScheduledFuture<Void> createFutureMock()
     {
         @SuppressWarnings("unchecked")
+        final
         ScheduledFuture<Void> mock = EasyMock.createMock(ScheduledFuture.class);
         return mock;
     }
@@ -117,7 +118,7 @@ public class TestPeriodicReloadingTrigger
      *
      * @param future the future object to return
      */
-    private void expectSchedule(ScheduledFuture<Void> future)
+    private void expectSchedule(final ScheduledFuture<Void> future)
     {
         executor.scheduleAtFixedRate(EasyMock.anyObject(Runnable.class),
                 EasyMock.eq(PERIOD), EasyMock.eq(PERIOD), EasyMock.eq(UNIT));
@@ -150,7 +151,7 @@ public class TestPeriodicReloadingTrigger
         EasyMock.expect(controller.checkForReloading(CTRL_PARAM)).andReturn(
                 Boolean.FALSE);
         EasyMock.replay(future, controller, executor);
-        PeriodicReloadingTrigger trigger = createTrigger();
+        final PeriodicReloadingTrigger trigger = createTrigger();
         trigger.start();
         assertTrue("Not started", trigger.isRunning());
         refTask.getValue().run();
@@ -163,10 +164,10 @@ public class TestPeriodicReloadingTrigger
     @Test
     public void testStartTwice()
     {
-        ScheduledFuture<Void> future = createFutureMock();
+        final ScheduledFuture<Void> future = createFutureMock();
         expectSchedule(future);
         EasyMock.replay(future, controller, executor);
-        PeriodicReloadingTrigger trigger = createTrigger();
+        final PeriodicReloadingTrigger trigger = createTrigger();
         trigger.start();
         trigger.start();
         EasyMock.verify(future, controller, executor);
@@ -188,11 +189,11 @@ public class TestPeriodicReloadingTrigger
     @Test
     public void testStop()
     {
-        ScheduledFuture<Void> future = createFutureMock();
+        final ScheduledFuture<Void> future = createFutureMock();
         expectSchedule(future);
         EasyMock.expect(future.cancel(false)).andReturn(Boolean.TRUE);
         EasyMock.replay(future, controller, executor);
-        PeriodicReloadingTrigger trigger = createTrigger();
+        final PeriodicReloadingTrigger trigger = createTrigger();
         trigger.start();
         trigger.stop();
         assertFalse("Still running", trigger.isRunning());
@@ -205,12 +206,12 @@ public class TestPeriodicReloadingTrigger
     @Test
     public void testShutdown()
     {
-        ScheduledFuture<Void> future = createFutureMock();
+        final ScheduledFuture<Void> future = createFutureMock();
         expectSchedule(future);
         EasyMock.expect(future.cancel(false)).andReturn(Boolean.TRUE);
         executor.shutdown();
         EasyMock.replay(future, controller, executor);
-        PeriodicReloadingTrigger trigger = createTrigger();
+        final PeriodicReloadingTrigger trigger = createTrigger();
         trigger.start();
         trigger.shutdown();
         EasyMock.verify(future, controller, executor);

@@ -53,7 +53,7 @@ public class ReloadingEvent extends Event
      * @param addData an arbitrary data object to be evaluated by event
      *        listeners
      */
-    public ReloadingEvent(ReloadingController source, Object addData)
+    public ReloadingEvent(final ReloadingController source, final Object addData)
     {
         super(source, ANY);
         data = addData;

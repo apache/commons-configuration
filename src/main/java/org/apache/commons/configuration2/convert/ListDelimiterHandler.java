@@ -65,7 +65,7 @@ public interface ListDelimiterHandler
     ValueTransformer NOOP_TRANSFORMER = new ValueTransformer()
     {
         @Override
-        public Object transformValue(Object value)
+        public Object transformValue(final Object value)
         {
             return value;
         }

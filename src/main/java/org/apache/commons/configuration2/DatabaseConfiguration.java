@@ -181,7 +181,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      *
      * @param dataSource the {@code DataSource}
      */
-    public void setDataSource(DataSource dataSource)
+    public void setDataSource(final DataSource dataSource)
     {
         this.dataSource = dataSource;
     }
@@ -201,7 +201,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      *
      * @param table the table name
      */
-    public void setTable(String table)
+    public void setTable(final String table)
     {
         this.table = table;
     }
@@ -222,7 +222,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @param configurationNameColumn the name of the column with the
      *        configuration name
      */
-    public void setConfigurationNameColumn(String configurationNameColumn)
+    public void setConfigurationNameColumn(final String configurationNameColumn)
     {
         this.configurationNameColumn = configurationNameColumn;
     }
@@ -242,7 +242,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      *
      * @param keyColumn the name of the key column
      */
-    public void setKeyColumn(String keyColumn)
+    public void setKeyColumn(final String keyColumn)
     {
         this.keyColumn = keyColumn;
     }
@@ -262,7 +262,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      *
      * @param valueColumn the name of the value column
      */
-    public void setValueColumn(String valueColumn)
+    public void setValueColumn(final String valueColumn)
     {
         this.valueColumn = valueColumn;
     }
@@ -282,7 +282,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      *
      * @param configurationName the name of this configuration
      */
-    public void setConfigurationName(String configurationName)
+    public void setConfigurationName(final String configurationName)
     {
         this.configurationName = configurationName;
     }
@@ -304,7 +304,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      *
      * @param autoCommit the auto commit flag
      */
-    public void setAutoCommit(boolean autoCommit)
+    public void setAutoCommit(final boolean autoCommit)
     {
         this.autoCommit = autoCommit;
     }
@@ -322,23 +322,23 @@ public class DatabaseConfiguration extends AbstractConfiguration
     @Override
     protected Object getPropertyInternal(final String key)
     {
-        JdbcOperation<Object> op =
+        final JdbcOperation<Object> op =
                 new JdbcOperation<Object>(ConfigurationErrorEvent.READ,
                         ConfigurationErrorEvent.READ, key, null)
         {
             @Override
             protected Object performOperation() throws SQLException
             {
-                ResultSet rs =
+                final ResultSet rs =
                         openResultSet(String.format(SQL_GET_PROPERTY,
                                 table, keyColumn), true, key);
 
-                List<Object> results = new ArrayList<>();
+                final List<Object> results = new ArrayList<>();
                 while (rs.next())
                 {
-                    Object value = extractPropertyValue(rs);
+                    final Object value = extractPropertyValue(rs);
                     // Split value if it contains the list delimiter
-                    for (Object o : getListDelimiterHandler().parse(value))
+                    for (final Object o : getListDelimiterHandler().parse(value))
                     {
                         results.add(o);
                     }
@@ -375,7 +375,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
             @Override
             protected Void performOperation() throws SQLException
             {
-                StringBuilder query = new StringBuilder("INSERT INTO ");
+                final StringBuilder query = new StringBuilder("INSERT INTO ");
                 query.append(table).append(" (");
                 query.append(keyColumn).append(", ");
                 query.append(valueColumn);
@@ -390,7 +390,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 }
                 query.append(")");
 
-                PreparedStatement pstmt = initStatement(query.toString(),
+                final PreparedStatement pstmt = initStatement(query.toString(),
                         false, key, String.valueOf(obj));
                 if (configurationNameColumn != null)
                 {
@@ -417,9 +417,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @param value the value to be added
      */
     @Override
-    protected void addPropertyInternal(String key, Object value)
+    protected void addPropertyInternal(final String key, final Object value)
     {
-        ListDelimiterHandler oldHandler = getListDelimiterHandler();
+        final ListDelimiterHandler oldHandler = getListDelimiterHandler();
         try
         {
             // temporarily disable delimiter parsing
@@ -443,21 +443,21 @@ public class DatabaseConfiguration extends AbstractConfiguration
     @Override
     protected boolean isEmptyInternal()
     {
-        JdbcOperation<Integer> op =
+        final JdbcOperation<Integer> op =
                 new JdbcOperation<Integer>(ConfigurationErrorEvent.READ,
                         ConfigurationErrorEvent.READ, null, null)
         {
             @Override
             protected Integer performOperation() throws SQLException
             {
-                ResultSet rs = openResultSet(String.format(
+                final ResultSet rs = openResultSet(String.format(
                         SQL_IS_EMPTY, table), true);
 
                 return rs.next() ? Integer.valueOf(rs.getInt(1)) : null;
             }
         };
 
-        Integer count = op.execute();
+        final Integer count = op.execute();
         return count == null || count.intValue() == 0;
     }
 
@@ -474,21 +474,21 @@ public class DatabaseConfiguration extends AbstractConfiguration
     @Override
     protected boolean containsKeyInternal(final String key)
     {
-        JdbcOperation<Boolean> op =
+        final JdbcOperation<Boolean> op =
                 new JdbcOperation<Boolean>(ConfigurationErrorEvent.READ,
                         ConfigurationErrorEvent.READ, key, null)
         {
             @Override
             protected Boolean performOperation() throws SQLException
             {
-                ResultSet rs = openResultSet(
+                final ResultSet rs = openResultSet(
                         String.format(SQL_GET_PROPERTY, table, keyColumn), true, key);
 
                 return rs.next();
             }
         };
 
-        Boolean result = op.execute();
+        final Boolean result = op.execute();
         return result != null && result.booleanValue();
     }
 
@@ -510,7 +510,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
             @Override
             protected Void performOperation() throws SQLException
             {
-                PreparedStatement ps = initStatement(String.format(
+                final PreparedStatement ps = initStatement(String.format(
                         SQL_CLEAR_PROPERTY, table, keyColumn), true, key);
                 ps.executeUpdate();
                 return null;
@@ -563,7 +563,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
             @Override
             protected Collection<String> performOperation() throws SQLException
             {
-                ResultSet rs = openResultSet(String.format(
+                final ResultSet rs = openResultSet(String.format(
                         SQL_GET_KEYS, keyColumn, table), true);
 
                 while (rs.next())
@@ -597,7 +597,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @param stmt The statement to close
      * @param rs the result set to close
      */
-    protected void close(Connection conn, Statement stmt, ResultSet rs)
+    protected void close(final Connection conn, final Statement stmt, final ResultSet rs)
     {
         try
         {
@@ -606,7 +606,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 rs.close();
             }
         }
-        catch (SQLException e)
+        catch (final SQLException e)
         {
             getLogger().error("An error occurred on closing the result set", e);
         }
@@ -618,7 +618,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 stmt.close();
             }
         }
-        catch (SQLException e)
+        catch (final SQLException e)
         {
             getLogger().error("An error occured on closing the statement", e);
         }
@@ -630,7 +630,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 conn.close();
             }
         }
-        catch (SQLException e)
+        catch (final SQLException e)
         {
             getLogger().error("An error occured on closing the connection", e);
         }
@@ -648,7 +648,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @return the value of the property column
      * @throws SQLException if an error occurs
      */
-    protected Object extractPropertyValue(ResultSet rs) throws SQLException
+    protected Object extractPropertyValue(final ResultSet rs) throws SQLException
     {
         Object value = rs.getObject(valueColumn);
         if (value instanceof Clob)
@@ -665,9 +665,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @return the extracted string value
      * @throws SQLException if an error occurs
      */
-    private static Object convertClob(Clob clob) throws SQLException
+    private static Object convertClob(final Clob clob) throws SQLException
     {
-        int len = (int) clob.length();
+        final int len = (int) clob.length();
         return (len > 0) ? clob.getSubString(1, len) : StringUtils.EMPTY;
     }
 
@@ -711,8 +711,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
          * @param errPropVal the property value for the error event
          */
         protected JdbcOperation(
-                EventType<? extends ConfigurationErrorEvent> errEvType,
-                EventType<?> opType, String errPropName, Object errPropVal)
+                final EventType<? extends ConfigurationErrorEvent> errEvType,
+                final EventType<?> opType, final String errPropName, final Object errPropVal)
         {
             errorEventType = errEvType;
             operationEventType = opType;
@@ -743,7 +743,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
                     conn.commit();
                 }
             }
-            catch (SQLException e)
+            catch (final SQLException e)
             {
                 fireError(errorEventType, operationEventType, errorPropertyName,
                         errorPropertyValue, e);
@@ -777,13 +777,13 @@ public class DatabaseConfiguration extends AbstractConfiguration
          * @return the prepared statement object
          * @throws SQLException if an SQL error occurs
          */
-        protected PreparedStatement createStatement(String sql, boolean nameCol)
+        protected PreparedStatement createStatement(final String sql, final boolean nameCol)
                 throws SQLException
         {
             String statement;
             if (nameCol && configurationNameColumn != null)
             {
-                StringBuilder buf = new StringBuilder(sql);
+                final StringBuilder buf = new StringBuilder(sql);
                 buf.append(" AND ").append(configurationNameColumn).append("=?");
                 statement = buf.toString();
             }
@@ -809,13 +809,13 @@ public class DatabaseConfiguration extends AbstractConfiguration
          * @return the initialized statement object
          * @throws SQLException if an SQL error occurs
          */
-        protected PreparedStatement initStatement(String sql, boolean nameCol,
-                Object... params) throws SQLException
+        protected PreparedStatement initStatement(final String sql, final boolean nameCol,
+                final Object... params) throws SQLException
         {
-            PreparedStatement ps = createStatement(sql, nameCol);
+            final PreparedStatement ps = createStatement(sql, nameCol);
 
             int idx = 1;
-            for (Object param : params)
+            for (final Object param : params)
             {
                 ps.setObject(idx++, param);
             }
@@ -838,8 +838,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
          * @return the {@code ResultSet} produced by the query
          * @throws SQLException if an SQL error occurs
          */
-        protected ResultSet openResultSet(String sql, boolean nameCol,
-                Object... params) throws SQLException
+        protected ResultSet openResultSet(final String sql, final boolean nameCol,
+                final Object... params) throws SQLException
         {
             resultSet = initStatement(sql, nameCol, params).executeQuery();
             return resultSet;

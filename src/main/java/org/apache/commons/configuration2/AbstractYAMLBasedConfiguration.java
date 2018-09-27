@@ -58,7 +58,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      * @param c the configuration to be copied
      */
     protected AbstractYAMLBasedConfiguration(
-            HierarchicalConfiguration<ImmutableNode> c)
+            final HierarchicalConfiguration<ImmutableNode> c)
     {
         super(c);
         initLogger(new ConfigurationLogger(getClass()));
@@ -71,9 +71,9 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      *
      * @param map the map to be processed
      */
-    protected void load(Map<String, Object> map)
+    protected void load(final Map<String, Object> map)
     {
-        List<ImmutableNode> roots = constructHierarchy("", map);
+        final List<ImmutableNode> roots = constructHierarchy("", map);
         getNodeModel().setRootNode(roots.get(0));
     }
 
@@ -84,12 +84,12 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      * @param node The configuration node to create a map from.
      * @return A Map that contains the configuration node information.
      */
-    protected Map<String, Object> constructMap(ImmutableNode node)
+    protected Map<String, Object> constructMap(final ImmutableNode node)
     {
-        Map<String, Object> map = new HashMap<>(node.getChildren().size());
-        for (ImmutableNode cNode : node.getChildren())
+        final Map<String, Object> map = new HashMap<>(node.getChildren().size());
+        for (final ImmutableNode cNode : node.getChildren())
         {
-            Object value = cNode.getChildren().isEmpty() ? cNode.getValue()
+            final Object value = cNode.getChildren().isEmpty() ? cNode.getValue()
                     : constructMap(cNode);
             addEntry(map, cNode.getNodeName(), value);
         }
@@ -105,10 +105,10 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      * @param key the key
      * @param value the value
      */
-    private static void addEntry(Map<String, Object> map, String key,
-            Object value)
+    private static void addEntry(final Map<String, Object> map, final String key,
+            final Object value)
     {
-        Object oldValue = map.get(key);
+        final Object oldValue = map.get(key);
         if (oldValue == null)
         {
             map.put(key, value);
@@ -117,12 +117,13 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
         {
             // safe case because the collection was created by ourselves
             @SuppressWarnings("unchecked")
+            final
             Collection<Object> values = (Collection<Object>) oldValue;
             values.add(value);
         }
         else
         {
-            Collection<Object> values = new ArrayList<>();
+            final Collection<Object> values = new ArrayList<>();
             values.add(oldValue);
             values.add(value);
             map.put(key, values);
@@ -139,8 +140,8 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      * @param elem the element to be processed
      * @return a list with configuration nodes representing the element
      */
-    private static List<ImmutableNode> constructHierarchy(String key,
-            Object elem)
+    private static List<ImmutableNode> constructHierarchy(final String key,
+            final Object elem)
     {
         if (elem instanceof Map)
         {
@@ -165,14 +166,14 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      * @param key the key under which this map is to be stored
      * @return a node representing this map
      */
-    private static List<ImmutableNode> parseMap(Map<String, Object> map, String key)
+    private static List<ImmutableNode> parseMap(final Map<String, Object> map, final String key)
     {
-        ImmutableNode.Builder subtree = new ImmutableNode.Builder().name(key);
-        for (Map.Entry<String, Object> entry : map.entrySet())
+        final ImmutableNode.Builder subtree = new ImmutableNode.Builder().name(key);
+        for (final Map.Entry<String, Object> entry : map.entrySet())
         {
-            List<ImmutableNode> children =
+            final List<ImmutableNode> children =
                     constructHierarchy(entry.getKey(), entry.getValue());
-            for (ImmutableNode child : children)
+            for (final ImmutableNode child : children)
             {
                 subtree.addChild(child);
             }
@@ -188,10 +189,10 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      * @param key the key under which this collection is to be stored
      * @return a node representing this collection
      */
-    private static List<ImmutableNode> parseCollection(Collection<Object> col, String key)
+    private static List<ImmutableNode> parseCollection(final Collection<Object> col, final String key)
     {
-        List<ImmutableNode> nodes = new ArrayList<>(col.size());
-        for (Object elem : col)
+        final List<ImmutableNode> nodes = new ArrayList<>(col.size());
+        for (final Object elem : col)
         {
             nodes.addAll(constructHierarchy(key, elem));
         }
@@ -204,7 +205,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
      * @param e the exception to be wrapped
      * @throws ConfigurationException the resulting exception
      */
-    static void rethrowException(Exception e) throws ConfigurationException
+    static void rethrowException(final Exception e) throws ConfigurationException
     {
         if (e instanceof ClassCastException)
         {

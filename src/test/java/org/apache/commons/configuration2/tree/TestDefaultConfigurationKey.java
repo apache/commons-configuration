@@ -63,7 +63,7 @@ public class TestDefaultConfigurationKey
      * @param k the key for initialization
      * @return the newly created {@code DefaultConfigurationKey} instance
      */
-    private DefaultConfigurationKey key(String k)
+    private DefaultConfigurationKey key(final String k)
     {
         return new DefaultConfigurationKey(expressionEngine, k);
     }
@@ -109,7 +109,7 @@ public class TestDefaultConfigurationKey
     @Test
     public void testIsAttributeKeyWithoutEndMarkers()
     {
-        DefaultExpressionEngineSymbols symbols =
+        final DefaultExpressionEngineSymbols symbols =
                 symbols()
                         .setAttributeEnd(null)
                         .setAttributeStart(
@@ -234,7 +234,7 @@ public class TestDefaultConfigurationKey
     @Test
     public void testConstructAttributeKeyWithoutEndMarkers()
     {
-        DefaultExpressionEngineSymbols symbols =
+        final DefaultExpressionEngineSymbols symbols =
                 symbols()
                         .setAttributeEnd(null)
                         .setAttributeStart(
@@ -326,9 +326,9 @@ public class TestDefaultConfigurationKey
     @Test
     public void testEquals()
     {
-        DefaultConfigurationKey k1 = key(TESTKEY);
+        final DefaultConfigurationKey k1 = key(TESTKEY);
         assertTrue("Key not equal to itself", k1.equals(k1));
-        DefaultConfigurationKey k2 = key(TESTKEY);
+        final DefaultConfigurationKey k2 = key(TESTKEY);
         assertTrue("Keys are not equal", k1.equals(k2));
         assertTrue("Not reflexiv", k2.equals(k1));
         assertEquals("Hash codes not equal", k1.hashCode(), k2.hashCode());
@@ -359,7 +359,7 @@ public class TestDefaultConfigurationKey
     public void testIterate()
     {
         key.append(TESTKEY);
-        DefaultConfigurationKey.KeyIterator it = key.iterator();
+        final DefaultConfigurationKey.KeyIterator it = key.iterator();
         assertTrue("No key parts", it.hasNext());
         assertEquals("Wrong key part", "tables", it.nextKey());
         assertEquals("Wrong key part", "table", it.nextKey());
@@ -381,7 +381,7 @@ public class TestDefaultConfigurationKey
             it.next();
             fail("Could iterate over the iteration's end!");
         }
-        catch (NoSuchElementException nex)
+        catch (final NoSuchElementException nex)
         {
             // ok
         }
@@ -396,7 +396,7 @@ public class TestDefaultConfigurationKey
     {
         assertFalse(key.iterator().hasNext());
         key.append("simple");
-        DefaultConfigurationKey.KeyIterator it = key.iterator();
+        final DefaultConfigurationKey.KeyIterator it = key.iterator();
         assertTrue(it.hasNext());
         assertEquals("simple", it.next());
         it.remove();
@@ -438,7 +438,7 @@ public class TestDefaultConfigurationKey
         key.append("trailing..dot..");
         key.append(".strange");
         assertEquals("my..elem.trailing..dot...strange", key.toString());
-        DefaultConfigurationKey.KeyIterator kit = key.iterator();
+        final DefaultConfigurationKey.KeyIterator kit = key.iterator();
         assertEquals("Wrong first part", "my.elem", kit.nextKey());
         assertEquals("Wrong second part", "trailing.dot.", kit.nextKey());
         assertEquals("Wrong third part", "strange", kit.nextKey());
@@ -459,7 +459,7 @@ public class TestDefaultConfigurationKey
         key.append("trailing\\.dot\\.");
         key.append(".strange");
         assertEquals("\\.my\\.elem.trailing\\.dot\\..strange", key.toString());
-        DefaultConfigurationKey.KeyIterator kit = key.iterator();
+        final DefaultConfigurationKey.KeyIterator kit = key.iterator();
         assertEquals("Wrong first part", ".my.elem", kit.nextKey());
         assertEquals("Wrong second part", "trailing.dot.", kit.nextKey());
         assertEquals("Wrong third part", "strange", kit.nextKey());
@@ -479,7 +479,7 @@ public class TestDefaultConfigurationKey
         key.append("..my..elem.trailing..dot...strange");
         assertEquals("Wrong key", "my..elem.trailing..dot...strange", key
                 .toString());
-        DefaultConfigurationKey.KeyIterator kit = key.iterator();
+        final DefaultConfigurationKey.KeyIterator kit = key.iterator();
         final String[] parts =
         { "my", "elem", "trailing", "dot", "strange"};
         for (int i = 0; i < parts.length; i++)
@@ -496,7 +496,7 @@ public class TestDefaultConfigurationKey
     public void testIterateWithBrackets()
     {
         key.append("directory.platform(x86).path");
-        DefaultConfigurationKey.KeyIterator kit = key.iterator();
+        final DefaultConfigurationKey.KeyIterator kit = key.iterator();
         String part = kit.nextKey();
         assertEquals("Wrong part 1", "directory", part);
         assertFalse("Has index 1", kit.hasIndex());
@@ -520,7 +520,7 @@ public class TestDefaultConfigurationKey
         assertEquals("Wrong attribute key with index", TESTATTR + "(0)", key
                 .toString());
 
-        DefaultConfigurationKey.KeyIterator it = key.iterator();
+        final DefaultConfigurationKey.KeyIterator it = key.iterator();
         assertTrue("No first element", it.hasNext());
         it.next();
         assertTrue("Index not found", it.hasIndex());
@@ -545,7 +545,7 @@ public class TestDefaultConfigurationKey
                                 .create());
         key = new DefaultConfigurationKey(expressionEngine);
         key.append("this.isa.key");
-        DefaultConfigurationKey.KeyIterator kit = key.iterator();
+        final DefaultConfigurationKey.KeyIterator kit = key.iterator();
         assertEquals("Wrong first key part", "this", kit.next());
         assertFalse("First part is an attribute", kit.isAttribute());
         assertTrue("First part is not a property key", kit.isPropertyKey());
@@ -564,7 +564,7 @@ public class TestDefaultConfigurationKey
     @Test
     public void testCommonKey()
     {
-        DefaultConfigurationKey k1 = key(TESTKEY);
+        final DefaultConfigurationKey k1 = key(TESTKEY);
         DefaultConfigurationKey k2 = key("tables.table(0).name");
         DefaultConfigurationKey kc = k1.commonKey(k2);
         assertEquals("Wrong common key (1)", key("tables.table(0)"), kc);
@@ -600,8 +600,8 @@ public class TestDefaultConfigurationKey
     @Test
     public void testDifferenceKeySame()
     {
-        DefaultConfigurationKey k1 = key(TESTKEY);
-        DefaultConfigurationKey kd = k1.differenceKey(k1);
+        final DefaultConfigurationKey k1 = key(TESTKEY);
+        final DefaultConfigurationKey kd = k1.differenceKey(k1);
         assertEquals("Got difference for same keys", 0, kd.length());
     }
 
@@ -611,7 +611,7 @@ public class TestDefaultConfigurationKey
     @Test
     public void testDifferenceKey()
     {
-        DefaultConfigurationKey k1 = key(TESTKEY);
+        final DefaultConfigurationKey k1 = key(TESTKEY);
         DefaultConfigurationKey k2 = key("tables.table(0).name");
         DefaultConfigurationKey kd = k1.differenceKey(k2);
         assertEquals("Wrong difference (1)", "name", kd.toString());

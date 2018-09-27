@@ -72,7 +72,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler
      *
      * @param listDelimiter the list delimiter character
      */
-    public LegacyListDelimiterHandler(char listDelimiter)
+    public LegacyListDelimiterHandler(final char listDelimiter)
     {
         delimiter = listDelimiter;
     }
@@ -92,7 +92,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler
      * single value (which is not part of a list).
      */
     @Override
-    public Object escape(Object value, ValueTransformer transformer)
+    public Object escape(final Object value, final ValueTransformer transformer)
     {
         return escapeValue(value, false, transformer);
     }
@@ -103,13 +103,13 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler
      * escape character for a following list delimiter.
      */
     @Override
-    public Object escapeList(List<?> values, ValueTransformer transformer)
+    public Object escapeList(final List<?> values, final ValueTransformer transformer)
     {
         if (!values.isEmpty())
         {
-            Iterator<?> it = values.iterator();
+            final Iterator<?> it = values.iterator();
             String lastValue = escapeValue(it.next(), true, transformer);
-            StringBuilder buf = new StringBuilder(lastValue);
+            final StringBuilder buf = new StringBuilder(lastValue);
             while (it.hasNext())
             {
                 // if the last value ended with an escape character, it has
@@ -135,23 +135,23 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler
      * the delimiter character is not found, the input is returned unchanged.
      */
     @Override
-    protected Collection<String> splitString(String s, boolean trim)
+    protected Collection<String> splitString(final String s, final boolean trim)
     {
         if (s.indexOf(getDelimiter()) < 0)
         {
             return Collections.singleton(s);
         }
 
-        List<String> list = new ArrayList<>();
+        final List<String> list = new ArrayList<>();
 
         StringBuilder token = new StringBuilder();
         int begin = 0;
         boolean inEscape = false;
-        char esc = ESCAPE.charAt(0);
+        final char esc = ESCAPE.charAt(0);
 
         while (begin < s.length())
         {
-            char c = s.charAt(begin);
+            final char c = s.charAt(begin);
             if (inEscape)
             {
                 // last character was the escape marker
@@ -213,7 +213,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler
      * {@inheritDoc} This is just a dummy implementation. It is never called.
      */
     @Override
-    protected String escapeString(String s)
+    protected String escapeString(final String s)
     {
         return null;
     }
@@ -230,7 +230,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler
      * @param inList a flag whether the value is part of a list
      * @return the value with escaped backslashes as string
      */
-    protected String escapeBackslashs(Object value, boolean inList)
+    protected String escapeBackslashs(final Object value, final boolean inList)
     {
         String strValue = String.valueOf(value);
 
@@ -253,8 +253,8 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler
      * @param transformer the {@code ValueTransformer}
      * @return the escaped property value
      */
-    protected String escapeValue(Object value, boolean inList,
-            ValueTransformer transformer)
+    protected String escapeValue(final Object value, final boolean inList,
+            final ValueTransformer transformer)
     {
         String escapedValue =
                 String.valueOf(transformer.transformValue(escapeBackslashs(
@@ -276,7 +276,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler
      * @param line the string to investigate
      * @return the number of trailing backslashes
      */
-    private static int countTrailingBS(String line)
+    private static int countTrailingBS(final String line)
     {
         int bsCount = 0;
         for (int idx = line.length() - 1; idx >= 0 && line.charAt(idx) == '\\'; idx--)

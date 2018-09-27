@@ -57,7 +57,7 @@ public class NodeSelector
      *
      * @param key the key
      */
-    public NodeSelector(String key)
+    public NodeSelector(final String key)
     {
         this(Collections.singletonList(key));
     }
@@ -68,7 +68,7 @@ public class NodeSelector
      *
      * @param keys the keys for selecting nodes
      */
-    private NodeSelector(List<String> keys)
+    private NodeSelector(final List<String> keys)
     {
         nodeKeys = keys;
     }
@@ -84,20 +84,20 @@ public class NodeSelector
      * @param handler the {@code NodeHandler}
      * @return the selected target node or <b>null</b>
      */
-    public ImmutableNode select(ImmutableNode root,
-            NodeKeyResolver<ImmutableNode> resolver,
-            NodeHandler<ImmutableNode> handler)
+    public ImmutableNode select(final ImmutableNode root,
+            final NodeKeyResolver<ImmutableNode> resolver,
+            final NodeHandler<ImmutableNode> handler)
     {
         List<ImmutableNode> nodes = new LinkedList<>();
-        Iterator<String> itKeys = nodeKeys.iterator();
+        final Iterator<String> itKeys = nodeKeys.iterator();
         getFilteredResults(root, resolver, handler, itKeys.next(), nodes);
 
         while (itKeys.hasNext())
         {
-            String currentKey = itKeys.next();
-            List<ImmutableNode> currentResults =
+            final String currentKey = itKeys.next();
+            final List<ImmutableNode> currentResults =
                     new LinkedList<>();
-            for (ImmutableNode currentRoot : nodes)
+            for (final ImmutableNode currentRoot : nodes)
             {
                 getFilteredResults(currentRoot, resolver, handler, currentKey,
                         currentResults);
@@ -117,9 +117,9 @@ public class NodeSelector
      * @param subKey the additional key for the sub selector
      * @return the sub {@code NodeSelector} instance
      */
-    public NodeSelector subSelector(String subKey)
+    public NodeSelector subSelector(final String subKey)
     {
-        List<String> keys = new ArrayList<>(nodeKeys.size() + 1);
+        final List<String> keys = new ArrayList<>(nodeKeys.size() + 1);
         keys.addAll(nodeKeys);
         keys.add(subKey);
         return new NodeSelector(keys);
@@ -134,7 +134,7 @@ public class NodeSelector
      * @return a flag whether these objects are equal
      */
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(final Object obj)
     {
         if (this == obj)
         {
@@ -145,7 +145,7 @@ public class NodeSelector
             return false;
         }
 
-        NodeSelector c = (NodeSelector) obj;
+        final NodeSelector c = (NodeSelector) obj;
         return nodeKeys.equals(c.nodeKeys);
     }
 
@@ -181,14 +181,14 @@ public class NodeSelector
      * @param key the key
      * @param nodes here the results are stored
      */
-    private void getFilteredResults(ImmutableNode root,
-            NodeKeyResolver<ImmutableNode> resolver,
-            NodeHandler<ImmutableNode> handler, String key,
-            List<ImmutableNode> nodes)
+    private void getFilteredResults(final ImmutableNode root,
+            final NodeKeyResolver<ImmutableNode> resolver,
+            final NodeHandler<ImmutableNode> handler, final String key,
+            final List<ImmutableNode> nodes)
     {
-        List<QueryResult<ImmutableNode>> results =
+        final List<QueryResult<ImmutableNode>> results =
                 resolver.resolveKey(root, key, handler);
-        for (QueryResult<ImmutableNode> result : results)
+        for (final QueryResult<ImmutableNode> result : results)
         {
             if (!result.isAttributeResult())
             {

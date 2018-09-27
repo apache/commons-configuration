@@ -54,7 +54,7 @@ public class SystemConfiguration extends MapConfiguration
      * @throws ConfigurationException if an error occurs.
      * @since 1.6
      */
-    public static void setSystemProperties(String fileName)
+    public static void setSystemProperties(final String fileName)
             throws ConfigurationException
     {
         setSystemProperties(null, fileName);
@@ -71,14 +71,14 @@ public class SystemConfiguration extends MapConfiguration
      * @throws ConfigurationException if an error occurs.
      * @since 1.6
      */
-    public static void setSystemProperties(String basePath, String fileName)
+    public static void setSystemProperties(final String basePath, final String fileName)
             throws ConfigurationException
     {
-        FileBasedConfiguration config =
+        final FileBasedConfiguration config =
                 fileName.endsWith(".xml") ? new XMLPropertiesConfiguration()
                         : new PropertiesConfiguration();
 
-        FileHandler handler = new FileHandler(config);
+        final FileHandler handler = new FileHandler(config);
         handler.setBasePath(basePath);
         handler.setFileName(fileName);
         handler.load();
@@ -90,13 +90,13 @@ public class SystemConfiguration extends MapConfiguration
      * @param systemConfig The configuration containing the properties to be set.
      * @since 1.6
      */
-    public static void setSystemProperties(Configuration systemConfig)
+    public static void setSystemProperties(final Configuration systemConfig)
     {
-        Iterator<String> iter = systemConfig.getKeys();
+        final Iterator<String> iter = systemConfig.getKeys();
         while (iter.hasNext())
         {
-            String key = iter.next();
-            String value = (String) systemConfig.getProperty(key);
+            final String key = iter.next();
+            final String value = (String) systemConfig.getProperty(key);
             if (log.isDebugEnabled())
             {
                 log.debug("Setting system property " + key + " to " + value);

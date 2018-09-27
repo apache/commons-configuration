@@ -42,7 +42,7 @@ public class TestConfigurationEventTypes
     @Test
     public void testFetchSuperEventTypesNull()
     {
-        Set<EventType<?>> superTypes = EventType.fetchSuperEventTypes(null);
+        final Set<EventType<?>> superTypes = EventType.fetchSuperEventTypes(null);
         assertTrue("Got super types", superTypes.isEmpty());
     }
 
@@ -53,7 +53,7 @@ public class TestConfigurationEventTypes
     @Test
     public void testFetchSuperEventTypesForBaseType()
     {
-        Set<EventType<?>> superTypes =
+        final Set<EventType<?>> superTypes =
                 EventType.fetchSuperEventTypes(Event.ANY);
         assertEquals("Wrong number of super types", 1, superTypes.size());
         assertTrue("Wrong super types", superTypes.contains(Event.ANY));
@@ -65,9 +65,9 @@ public class TestConfigurationEventTypes
     @Test
     public void testFetchSuperEventTypesOfType()
     {
-        Set<EventType<?>> superTypes =
+        final Set<EventType<?>> superTypes =
                 EventType.fetchSuperEventTypes(ConfigurationEvent.ADD_NODES);
-        List<EventType<? extends Event>> expected =
+        final List<EventType<? extends Event>> expected =
                 new LinkedList<>();
         expected.add(ConfigurationEvent.ADD_NODES);
         expected.add(ConfigurationEvent.ANY_HIERARCHICAL);
@@ -141,7 +141,7 @@ public class TestConfigurationEventTypes
      *
      * @param eventType the event type to check
      */
-    private void checkUpdateEvent(EventType<ConfigurationEvent> eventType)
+    private void checkUpdateEvent(final EventType<ConfigurationEvent> eventType)
     {
         assertSame("Wrong super type for " + eventType, ConfigurationEvent.ANY,
                 eventType.getSuperType());
@@ -198,7 +198,7 @@ public class TestConfigurationEventTypes
      *
      * @param eventType the event type to check
      */
-    private void checkHierarchicalEvent(EventType<ConfigurationEvent> eventType)
+    private void checkHierarchicalEvent(final EventType<ConfigurationEvent> eventType)
     {
         assertSame("Wrong super type for " + eventType,
                 ConfigurationEvent.ANY_HIERARCHICAL, eventType.getSuperType());
@@ -247,7 +247,7 @@ public class TestConfigurationEventTypes
      *
      * @param type the type to be checked
      */
-    private void checkErrorEvent(EventType<ConfigurationErrorEvent> type)
+    private void checkErrorEvent(final EventType<ConfigurationErrorEvent> type)
     {
         assertSame("Wrong super type for " + type, ConfigurationErrorEvent.ANY,
                 type.getSuperType());

@@ -87,8 +87,8 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * @param params a map with initialization parameters
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public ReloadingFileBasedConfigurationBuilder(Class<? extends T> resCls,
-            Map<String, Object> params)
+    public ReloadingFileBasedConfigurationBuilder(final Class<? extends T> resCls,
+            final Map<String, Object> params)
     {
         super(resCls, params);
         reloadingController = createReloadingController();
@@ -104,8 +104,8 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * @param allowFailOnInit the <em>allowFailOnInit</em> flag
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public ReloadingFileBasedConfigurationBuilder(Class<? extends T> resCls,
-            Map<String, Object> params, boolean allowFailOnInit)
+    public ReloadingFileBasedConfigurationBuilder(final Class<? extends T> resCls,
+            final Map<String, Object> params, final boolean allowFailOnInit)
     {
         super(resCls, params, allowFailOnInit);
         reloadingController = createReloadingController();
@@ -118,7 +118,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * @param resCls the result class (must not be <b>null</b>
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public ReloadingFileBasedConfigurationBuilder(Class<? extends T> resCls)
+    public ReloadingFileBasedConfigurationBuilder(final Class<? extends T> resCls)
     {
         super(resCls);
         reloadingController = createReloadingController();
@@ -143,7 +143,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      */
     @Override
     public ReloadingFileBasedConfigurationBuilder<T> configure(
-            BuilderParameters... params)
+            final BuilderParameters... params)
     {
         super.configure(params);
         return this;
@@ -163,8 +163,8 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * @return a {@code ReloadingDetector} for this {@code FileHandler}
      * @throws ConfigurationException if an error occurs
      */
-    protected ReloadingDetector createReloadingDetector(FileHandler handler,
-            FileBasedBuilderParametersImpl fbparams)
+    protected ReloadingDetector createReloadingDetector(final FileHandler handler,
+            final FileBasedBuilderParametersImpl fbparams)
             throws ConfigurationException
     {
         return fetchDetectorFactory(fbparams).createReloadingDetector(handler,
@@ -179,7 +179,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * underlying configuration source have to be monitored again.
      */
     @Override
-    protected void initFileHandler(FileHandler handler)
+    protected void initFileHandler(final FileHandler handler)
             throws ConfigurationException
     {
         super.initFileHandler(handler);
@@ -203,8 +203,8 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      */
     private ReloadingController createReloadingController()
     {
-        ReloadingDetector ctrlDetector = createReloadingDetectorForController();
-        ReloadingController ctrl = new ReloadingController(ctrlDetector);
+        final ReloadingDetector ctrlDetector = createReloadingDetectorForController();
+        final ReloadingController ctrl = new ReloadingController(ctrlDetector);
         connectToReloadingController(ctrl);
         return ctrl;
     }
@@ -223,7 +223,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
             @Override
             public void reloadingPerformed()
             {
-                ReloadingDetector detector = resultReloadingDetector;
+                final ReloadingDetector detector = resultReloadingDetector;
                 if (detector != null)
                 {
                     detector.reloadingPerformed();
@@ -233,7 +233,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
             @Override
             public boolean isReloadingRequired()
             {
-                ReloadingDetector detector = resultReloadingDetector;
+                final ReloadingDetector detector = resultReloadingDetector;
                 return (detector != null) && detector.isReloadingRequired();
             }
         };
@@ -247,9 +247,9 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * @return the {@code ReloadingDetectorFactory} to be used
      */
     private static ReloadingDetectorFactory fetchDetectorFactory(
-            FileBasedBuilderParametersImpl params)
+            final FileBasedBuilderParametersImpl params)
     {
-        ReloadingDetectorFactory factory = params.getReloadingDetectorFactory();
+        final ReloadingDetectorFactory factory = params.getReloadingDetectorFactory();
         return (factory != null) ? factory : DEFAULT_DETECTOR_FACTORY;
     }
 }

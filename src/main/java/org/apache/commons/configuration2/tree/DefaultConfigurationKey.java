@@ -69,7 +69,7 @@ public class DefaultConfigurationKey
      * @param engine the expression engine (must not be <b>null</b>)
      * @throws IllegalArgumentException if the expression engine is <b>null</b>
      */
-    public DefaultConfigurationKey(DefaultExpressionEngine engine)
+    public DefaultConfigurationKey(final DefaultExpressionEngine engine)
     {
         this(engine, null);
     }
@@ -82,7 +82,7 @@ public class DefaultConfigurationKey
      * @param key the key to be wrapped
      * @throws IllegalArgumentException if the expression engine is <b>null</b>
      */
-    public DefaultConfigurationKey(DefaultExpressionEngine engine, String key)
+    public DefaultConfigurationKey(final DefaultExpressionEngine engine, final String key)
     {
         if (engine == null)
         {
@@ -120,7 +120,7 @@ public class DefaultConfigurationKey
      * should be escaped
      * @return a reference to this object
      */
-    public DefaultConfigurationKey append(String property, boolean escape)
+    public DefaultConfigurationKey append(final String property, final boolean escape)
     {
         String key;
         if (escape && property != null)
@@ -151,7 +151,7 @@ public class DefaultConfigurationKey
      * @param property the name of the property to be added
      * @return a reference to this object
      */
-    public DefaultConfigurationKey append(String property)
+    public DefaultConfigurationKey append(final String property)
     {
         return append(property, false);
     }
@@ -162,7 +162,7 @@ public class DefaultConfigurationKey
      * @param index the index to be appended
      * @return a reference to this object
      */
-    public DefaultConfigurationKey appendIndex(int index)
+    public DefaultConfigurationKey appendIndex(final int index)
     {
         keyBuffer.append(getSymbols().getIndexStart());
         keyBuffer.append(index);
@@ -176,7 +176,7 @@ public class DefaultConfigurationKey
      * @param attr the name of the attribute to be appended
      * @return a reference to this object
      */
-    public DefaultConfigurationKey appendAttribute(String attr)
+    public DefaultConfigurationKey appendAttribute(final String attr)
     {
         keyBuffer.append(constructAttributeKey(attr));
         return this;
@@ -200,7 +200,7 @@ public class DefaultConfigurationKey
      *
      * @param len the new length of the key
      */
-    public void setLength(int len)
+    public void setLength(final int len)
     {
         keyBuffer.setLength(len);
     }
@@ -211,16 +211,16 @@ public class DefaultConfigurationKey
      * @param other the other key
      * @return a key object with the common key part
      */
-    public DefaultConfigurationKey commonKey(DefaultConfigurationKey other)
+    public DefaultConfigurationKey commonKey(final DefaultConfigurationKey other)
     {
         if (other == null)
         {
             throw new IllegalArgumentException("Other key must no be null!");
         }
 
-        DefaultConfigurationKey result = new DefaultConfigurationKey(getExpressionEngine());
-        KeyIterator it1 = iterator();
-        KeyIterator it2 = other.iterator();
+        final DefaultConfigurationKey result = new DefaultConfigurationKey(getExpressionEngine());
+        final KeyIterator it1 = iterator();
+        final KeyIterator it2 = other.iterator();
 
         while (it1.hasNext() && it2.hasNext() && partsEqual(it1, it2))
         {
@@ -251,14 +251,14 @@ public class DefaultConfigurationKey
      * @param other the key for which the difference is to be calculated
      * @return the difference key
      */
-    public DefaultConfigurationKey differenceKey(DefaultConfigurationKey other)
+    public DefaultConfigurationKey differenceKey(final DefaultConfigurationKey other)
     {
-        DefaultConfigurationKey common = commonKey(other);
-        DefaultConfigurationKey result = new DefaultConfigurationKey(getExpressionEngine());
+        final DefaultConfigurationKey common = commonKey(other);
+        final DefaultConfigurationKey result = new DefaultConfigurationKey(getExpressionEngine());
 
         if (common.length() < other.length())
         {
-            String k = other.toString().substring(common.length());
+            final String k = other.toString().substring(common.length());
             // skip trailing delimiters
             int i = 0;
             while (i < k.length()
@@ -287,7 +287,7 @@ public class DefaultConfigurationKey
      * @return a flag if both objects are equal
      */
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(final Object obj)
     {
         if (this == obj)
         {
@@ -298,7 +298,7 @@ public class DefaultConfigurationKey
             return false;
         }
 
-        DefaultConfigurationKey c = (DefaultConfigurationKey) obj;
+        final DefaultConfigurationKey c = (DefaultConfigurationKey) obj;
         return keyBuffer.toString().equals(c.toString());
     }
 
@@ -332,7 +332,7 @@ public class DefaultConfigurationKey
      * @param key the key to be checked
      * @return <b>true</b> if this is an attribute key, <b>false</b> otherwise
      */
-    public boolean isAttributeKey(String key)
+    public boolean isAttributeKey(final String key)
     {
         if (key == null)
         {
@@ -352,7 +352,7 @@ public class DefaultConfigurationKey
      * @param key the key to be decorated
      * @return the decorated attribute key
      */
-    public String constructAttributeKey(String key)
+    public String constructAttributeKey(final String key)
     {
         if (key == null)
         {
@@ -362,7 +362,7 @@ public class DefaultConfigurationKey
         {
             return key;
         }
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
         buf.append(getSymbols().getAttributeStart()).append(key);
         if (getSymbols().getAttributeEnd() != null)
         {
@@ -378,7 +378,7 @@ public class DefaultConfigurationKey
      * @param key the attribute key
      * @return the name of the corresponding attribute
      */
-    public String attributeName(String key)
+    public String attributeName(final String key)
     {
         return isAttributeKey(key) ? removeAttributeMarkers(key) : key;
     }
@@ -389,7 +389,7 @@ public class DefaultConfigurationKey
      * @param key the key
      * @return the key with removed leading property delimiters
      */
-    public String trimLeft(String key)
+    public String trimLeft(final String key)
     {
         if (key == null)
         {
@@ -410,7 +410,7 @@ public class DefaultConfigurationKey
      * @param key the key
      * @return the key with removed trailing property delimiters
      */
-    public String trimRight(String key)
+    public String trimRight(final String key)
     {
         if (key == null)
         {
@@ -433,7 +433,7 @@ public class DefaultConfigurationKey
      * @param key the key
      * @return the key with removed property delimiters
      */
-    public String trim(String key)
+    public String trim(final String key)
     {
         return trimRight(trimLeft(key));
     }
@@ -456,7 +456,7 @@ public class DefaultConfigurationKey
      * @param key the key to check
      * @return a flag if there is a trailing delimiter
      */
-    private boolean hasTrailingDelimiter(String key)
+    private boolean hasTrailingDelimiter(final String key)
     {
         return key.endsWith(getSymbols().getPropertyDelimiter())
                 && (getSymbols().getEscapedDelimiter() == null || !key
@@ -470,7 +470,7 @@ public class DefaultConfigurationKey
      * @param key the key to check
      * @return a flag if there is a leading delimiter
      */
-    private boolean hasLeadingDelimiter(String key)
+    private boolean hasLeadingDelimiter(final String key)
     {
         return key.startsWith(getSymbols().getPropertyDelimiter())
                 && (getSymbols().getEscapedDelimiter() == null || !key
@@ -483,7 +483,7 @@ public class DefaultConfigurationKey
      * @param key the key
      * @return the key with removed attribute markers
      */
-    private String removeAttributeMarkers(String key)
+    private String removeAttributeMarkers(final String key)
     {
         return key
                 .substring(
@@ -500,7 +500,7 @@ public class DefaultConfigurationKey
      * @param key the key to be unescaped
      * @return the unescaped key
      */
-    private String unescapeDelimiters(String key)
+    private String unescapeDelimiters(final String key)
     {
         return (getSymbols().getEscapedDelimiter() == null) ? key
                 : StringUtils.replace(key, getSymbols()
@@ -524,7 +524,7 @@ public class DefaultConfigurationKey
      * @param key the key to be escaped
      * @return the escaped key
      */
-    private String escapeDelimiters(String key)
+    private String escapeDelimiters(final String key)
     {
         return (getSymbols().getEscapedDelimiter() == null || key
                 .indexOf(getSymbols().getPropertyDelimiter()) < 0) ? key
@@ -540,7 +540,7 @@ public class DefaultConfigurationKey
      * @param it2 the iterator with the second part
      * @return a flag if both parts are equal
      */
-    private static boolean partsEqual(KeyIterator it1, KeyIterator it2)
+    private static boolean partsEqual(final KeyIterator it1, final KeyIterator it2)
     {
         return it1.nextKey().equals(it2.nextKey())
                 && it1.getIndex() == it2.getIndex()
@@ -593,7 +593,7 @@ public class DefaultConfigurationKey
          * @param decorated a flag if the decorated key is to be returned
          * @return the next key part
          */
-        public String nextKey(boolean decorated)
+        public String nextKey(final boolean decorated)
         {
             if (!hasNext())
             {
@@ -602,7 +602,7 @@ public class DefaultConfigurationKey
 
             hasIndex = false;
             indexValue = -1;
-            String key = findNextIndices();
+            final String key = findNextIndices();
 
             current = key;
             hasIndex = checkIndex(key);
@@ -665,7 +665,7 @@ public class DefaultConfigurationKey
          * @param decorated a flag if the decorated key is to be returned
          * @return the current key
          */
-        public String currentKey(boolean decorated)
+        public String currentKey(final boolean decorated)
         {
             return (decorated && !isPropertyKey()) ? constructAttributeKey(current)
                     : current;
@@ -734,7 +734,7 @@ public class DefaultConfigurationKey
             {
                 return super.clone();
             }
-            catch (CloneNotSupportedException cex)
+            catch (final CloneNotSupportedException cex)
             {
                 // should not happen
                 return null;
@@ -801,7 +801,7 @@ public class DefaultConfigurationKey
          * @param endPos the end position
          * @return the position of the next delimiter or -1 if there is none
          */
-        private int nextDelimiterPos(String key, int pos, int endPos)
+        private int nextDelimiterPos(final String key, final int pos, final int endPos)
         {
             int delimiterPos = pos;
             boolean found = false;
@@ -814,7 +814,7 @@ public class DefaultConfigurationKey
                 {
                     return -1;
                 }
-                int escapePos = escapedPosition(key, delimiterPos);
+                final int escapePos = escapedPosition(key, delimiterPos);
                 if (escapePos < 0)
                 {
                     found = true;
@@ -838,21 +838,21 @@ public class DefaultConfigurationKey
          * @param pos the position where a delimiter was found
          * @return information about escaped delimiters
          */
-        private int escapedPosition(String key, int pos)
+        private int escapedPosition(final String key, final int pos)
         {
             if (getSymbols().getEscapedDelimiter() == null)
             {
                 // nothing to escape
                 return -1;
             }
-            int escapeOffset = escapeOffset();
+            final int escapeOffset = escapeOffset();
             if (escapeOffset < 0 || escapeOffset > pos)
             {
                 // No escaping possible at this position
                 return -1;
             }
 
-            int escapePos = key.indexOf(getSymbols()
+            final int escapePos = key.indexOf(getSymbols()
                     .getEscapedDelimiter(), pos - escapeOffset);
             if (escapePos <= pos && escapePos >= 0)
             {
@@ -894,7 +894,7 @@ public class DefaultConfigurationKey
          * @param key the key to be checked
          * @return a flag if the key is an attribute
          */
-        private boolean checkAttribute(String key)
+        private boolean checkAttribute(final String key)
         {
             if (isAttributeKey(key))
             {
@@ -911,16 +911,16 @@ public class DefaultConfigurationKey
          * @param key the key to be checked
          * @return a flag if an index is defined
          */
-        private boolean checkIndex(String key)
+        private boolean checkIndex(final String key)
         {
             boolean result = false;
 
             try
             {
-                int idx = key.lastIndexOf(getSymbols().getIndexStart());
+                final int idx = key.lastIndexOf(getSymbols().getIndexStart());
                 if (idx > 0)
                 {
-                    int endidx = key.indexOf(getSymbols().getIndexEnd(),
+                    final int endidx = key.indexOf(getSymbols().getIndexEnd(),
                             idx);
 
                     if (endidx > idx + 1)
@@ -931,7 +931,7 @@ public class DefaultConfigurationKey
                     }
                 }
             }
-            catch (NumberFormatException nfe)
+            catch (final NumberFormatException nfe)
             {
                 result = false;
             }

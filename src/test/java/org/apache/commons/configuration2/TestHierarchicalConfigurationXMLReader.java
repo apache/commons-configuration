@@ -48,8 +48,8 @@ public class TestHierarchicalConfigurationXMLReader
     @Before
     public void setUp() throws Exception
     {
-        XMLConfiguration config = new XMLConfiguration();
-        FileHandler handler = new FileHandler(config);
+        final XMLConfiguration config = new XMLConfiguration();
+        final FileHandler handler = new FileHandler(config);
         handler.load(TEST_FILE);
         parser = new HierarchicalConfigurationXMLReader<>(config);
     }
@@ -57,12 +57,12 @@ public class TestHierarchicalConfigurationXMLReader
     @Test
     public void testParse() throws Exception
     {
-        SAXSource source = new SAXSource(parser, new InputSource());
-        DOMResult result = new DOMResult();
-        Transformer trans = TransformerFactory.newInstance().newTransformer();
+        final SAXSource source = new SAXSource(parser, new InputSource());
+        final DOMResult result = new DOMResult();
+        final Transformer trans = TransformerFactory.newInstance().newTransformer();
         trans.transform(source, result);
-        Node root = ((Document) result.getNode()).getDocumentElement();
-        JXPathContext ctx = JXPathContext.newContext(root);
+        final Node root = ((Document) result.getNode()).getDocumentElement();
+        final JXPathContext ctx = JXPathContext.newContext(root);
 
         assertEquals("Wrong name of root element", "database", root.getNodeName());
         assertEquals("Wrong number of children of root", 1, ctx.selectNodes(

@@ -37,13 +37,13 @@ public class DefaultReloadingDetectorFactory implements
         ReloadingDetectorFactory
 {
     @Override
-    public ReloadingDetector createReloadingDetector(FileHandler handler,
-            FileBasedBuilderParametersImpl params)
+    public ReloadingDetector createReloadingDetector(final FileHandler handler,
+            final FileBasedBuilderParametersImpl params)
             throws ConfigurationException
     {
-        Long refreshDelay = params.getReloadingRefreshDelay();
+        final Long refreshDelay = params.getReloadingRefreshDelay();
 
-        FileHandlerReloadingDetector fileHandlerReloadingDetector =
+        final FileHandlerReloadingDetector fileHandlerReloadingDetector =
                 (refreshDelay != null) ? new FileHandlerReloadingDetector(
                 handler, refreshDelay) : new FileHandlerReloadingDetector(
                 handler);

@@ -48,7 +48,7 @@ public class TestAutoSaveListener
      *
      * @param before flag whether the event is before the update
      */
-    private void fireChangeEvent(boolean before)
+    private void fireChangeEvent(final boolean before)
     {
         listener.onEvent(new ConfigurationEvent(this,
                 ConfigurationEvent.ADD_PROPERTY, "someProperty",
@@ -62,8 +62,8 @@ public class TestAutoSaveListener
     @Test
     public void testUpdateFileHandler()
     {
-        FileHandler handler = EasyMock.createMock(FileHandler.class);
-        FileHandler handler2 = EasyMock.createMock(FileHandler.class);
+        final FileHandler handler = EasyMock.createMock(FileHandler.class);
+        final FileHandler handler2 = EasyMock.createMock(FileHandler.class);
         handler.addFileHandlerListener(listener);
         handler.removeFileHandlerListener(listener);
         handler2.addFileHandlerListener(listener);
@@ -80,7 +80,7 @@ public class TestAutoSaveListener
     @Test
     public void testUpdateFileHandlerNull()
     {
-        FileHandler handler = EasyMock.createMock(FileHandler.class);
+        final FileHandler handler = EasyMock.createMock(FileHandler.class);
         handler.addFileHandlerListener(listener);
         handler.removeFileHandlerListener(listener);
         EasyMock.replay(handler);
@@ -150,7 +150,7 @@ public class TestAutoSaveListener
     {
         builder.save();
         EasyMock.replay(builder);
-        FileHandler handler = new FileHandler();
+        final FileHandler handler = new FileHandler();
         listener.loading(handler);
         fireChangeEvent(false);
         listener.loaded(handler);

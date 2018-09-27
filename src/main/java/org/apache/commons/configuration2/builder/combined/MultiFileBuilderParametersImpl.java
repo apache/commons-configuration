@@ -77,7 +77,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters
      * @throws NullPointerException if the map with parameters is <b>null</b>
      */
     public static MultiFileBuilderParametersImpl fromParameters(
-            Map<String, Object> params)
+            final Map<String, Object> params)
     {
         return fromParameters(params, false);
     }
@@ -97,7 +97,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters
      * @throws NullPointerException if the map with parameters is <b>null</b>
      */
     public static MultiFileBuilderParametersImpl fromParameters(
-            Map<String, Object> params, boolean createIfMissing)
+            final Map<String, Object> params, final boolean createIfMissing)
     {
         MultiFileBuilderParametersImpl instance =
                 (MultiFileBuilderParametersImpl) params.get(PARAM_KEY);
@@ -120,7 +120,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters
     }
 
     @Override
-    public MultiFileBuilderParametersImpl setFilePattern(String p)
+    public MultiFileBuilderParametersImpl setFilePattern(final String p)
     {
         filePattern = p;
         return this;
@@ -138,7 +138,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters
 
     @Override
     public MultiFileBuilderParametersImpl setManagedBuilderParameters(
-            BuilderParameters p)
+            final BuilderParameters p)
     {
         managedBuilderParameters = p;
         return this;
@@ -151,7 +151,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters
     @Override
     public Map<String, Object> getParameters()
     {
-        Map<String, Object> params = super.getParameters();
+        final Map<String, Object> params = super.getParameters();
         params.put(PARAM_KEY, this);
         return params;
     }
@@ -163,7 +163,7 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters
     @Override
     public MultiFileBuilderParametersImpl clone()
     {
-        MultiFileBuilderParametersImpl copy =
+        final MultiFileBuilderParametersImpl copy =
                 (MultiFileBuilderParametersImpl) super.clone();
         copy.setManagedBuilderParameters((BuilderParameters) ConfigurationUtils
                 .cloneIfPossible(getManagedBuilderParameters()));

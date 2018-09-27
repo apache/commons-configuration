@@ -182,7 +182,7 @@ public class XPathExpressionEngine implements ExpressionEngine
      *
      * @param factory the {@code XPathContextFactory}
      */
-    XPathExpressionEngine(XPathContextFactory factory)
+    XPathExpressionEngine(final XPathContextFactory factory)
     {
         contextFactory = factory;
     }
@@ -192,15 +192,15 @@ public class XPathExpressionEngine implements ExpressionEngine
      * expression.
      */
     @Override
-    public <T> List<QueryResult<T>> query(T root, String key,
-            NodeHandler<T> handler)
+    public <T> List<QueryResult<T>> query(final T root, final String key,
+            final NodeHandler<T> handler)
     {
         if (StringUtils.isEmpty(key))
         {
-            QueryResult<T> result = createResult(root);
+            final QueryResult<T> result = createResult(root);
             return Collections.singletonList(result);
         }
-        JXPathContext context = createContext(root, handler);
+        final JXPathContext context = createContext(root, handler);
         List<?> results = context.selectNodes(key);
         if (results == null)
         {
@@ -219,7 +219,7 @@ public class XPathExpressionEngine implements ExpressionEngine
      * key.
      */
     @Override
-    public <T> String nodeKey(T node, String parentKey, NodeHandler<T> handler)
+    public <T> String nodeKey(final T node, final String parentKey, final NodeHandler<T> handler)
     {
         if (parentKey == null)
         {
@@ -234,7 +234,7 @@ public class XPathExpressionEngine implements ExpressionEngine
 
         else
         {
-            StringBuilder buf =
+            final StringBuilder buf =
                     new StringBuilder(parentKey.length()
                             + handler.nodeName(node).length()
                             + PATH_DELIMITER.length());
@@ -249,9 +249,9 @@ public class XPathExpressionEngine implements ExpressionEngine
     }
 
     @Override
-    public String attributeKey(String parentKey, String attributeName)
+    public String attributeKey(final String parentKey, final String attributeName)
     {
-        StringBuilder buf =
+        final StringBuilder buf =
                 new StringBuilder(StringUtils.length(parentKey)
                         + StringUtils.length(attributeName)
                         + PATH_DELIMITER.length() + ATTR_DELIMITER.length());
@@ -268,17 +268,17 @@ public class XPathExpressionEngine implements ExpressionEngine
      * always adds an index expression to the resulting key.
      */
     @Override
-    public <T> String canonicalKey(T node, String parentKey,
-            NodeHandler<T> handler)
+    public <T> String canonicalKey(final T node, final String parentKey,
+            final NodeHandler<T> handler)
     {
-        T parent = handler.getParent(node);
+        final T parent = handler.getParent(node);
         if (parent == null)
         {
             // this is the root node
             return StringUtils.defaultString(parentKey);
         }
 
-        StringBuilder buf = new StringBuilder(BUF_SIZE);
+        final StringBuilder buf = new StringBuilder(BUF_SIZE);
         if (StringUtils.isNotEmpty(parentKey))
         {
             buf.append(parentKey).append(PATH_DELIMITER);
@@ -295,8 +295,8 @@ public class XPathExpressionEngine implements ExpressionEngine
      * the class comment.
      */
     @Override
-    public <T> NodeAddData<T> prepareAdd(T root, String key,
-            NodeHandler<T> handler)
+    public <T> NodeAddData<T> prepareAdd(final T root, final String key,
+            final NodeHandler<T> handler)
     {
         if (key == null)
         {
@@ -316,7 +316,7 @@ public class XPathExpressionEngine implements ExpressionEngine
             invalidPath(addKey, " new node path must not be empty.");
         }
 
-        List<QueryResult<T>> nodes =
+        final List<QueryResult<T>> nodes =
                 query(root, addKey.substring(0, index).trim(), handler);
         if (nodes.size() != 1)
         {
@@ -335,7 +335,7 @@ public class XPathExpressionEngine implements ExpressionEngine
      * @param handler the node handler
      * @return the new context
      */
-    private <T> JXPathContext createContext(T root, NodeHandler<T> handler)
+    private <T> JXPathContext createContext(final T root, final NodeHandler<T> handler)
     {
         return getContextFactory().createContext(root, handler);
     }
@@ -349,23 +349,23 @@ public class XPathExpressionEngine implements ExpressionEngine
      * @param parentNodeResult the parent node
      * @param <T> the type of the nodes involved
      */
-    <T> NodeAddData<T> createNodeAddData(String path,
-            QueryResult<T> parentNodeResult)
+    <T> NodeAddData<T> createNodeAddData(final String path,
+            final QueryResult<T> parentNodeResult)
     {
         if (parentNodeResult.isAttributeResult())
         {
             invalidPath(path, " cannot add properties to an attribute.");
         }
-        List<String> pathNodes = new LinkedList<>();
+        final List<String> pathNodes = new LinkedList<>();
         String lastComponent = null;
         boolean attr = false;
         boolean first = true;
 
-        StringTokenizer tok =
+        final StringTokenizer tok =
                 new StringTokenizer(path, NODE_PATH_DELIMITERS, true);
         while (tok.hasMoreTokens())
         {
-            String token = tok.nextToken();
+            final String token = tok.nextToken();
             if (PATH_DELIMITER.equals(token))
             {
                 if (attr)
@@ -440,17 +440,17 @@ public class XPathExpressionEngine implements ExpressionEngine
      * @param handler the node handler
      * @return the key to be used for adding the property
      */
-    private <T> String generateKeyForAdd(T root, String key,
-            NodeHandler<T> handler)
+    private <T> String generateKeyForAdd(final T root, final String key,
+            final NodeHandler<T> handler)
     {
         int pos = key.lastIndexOf(PATH_DELIMITER, key.length());
 
         while (pos >= 0)
         {
-            String keyExisting = key.substring(0, pos);
+            final String keyExisting = key.substring(0, pos);
             if (!query(root, keyExisting, handler).isEmpty())
             {
-                StringBuilder buf = new StringBuilder(key.length() + 1);
+                final StringBuilder buf = new StringBuilder(key.length() + 1);
                 buf.append(keyExisting).append(SPACE);
                 buf.append(key.substring(pos + 1));
                 return buf.toString();
@@ -471,8 +471,8 @@ public class XPathExpressionEngine implements ExpressionEngine
      * @param <T> the type of the nodes involved
      * @return the index of this child node
      */
-    private static <T> int determineIndex(T parent, T child,
-            NodeHandler<T> handler)
+    private static <T> int determineIndex(final T parent, final T child,
+            final NodeHandler<T> handler)
     {
         return handler.getChildren(parent, handler.nodeName(child)).indexOf(
                 child) + 1;
@@ -484,7 +484,7 @@ public class XPathExpressionEngine implements ExpressionEngine
      * @param path the invalid path
      * @param msg the exception message
      */
-    private static void invalidPath(String path, String msg)
+    private static void invalidPath(final String path, final String msg)
     {
         throw new IllegalArgumentException("Invalid node path: \"" + path
                 + "\" " + msg);
@@ -497,7 +497,7 @@ public class XPathExpressionEngine implements ExpressionEngine
      * @param key the key
      * @return the position of the delimiter
      */
-    private static int findKeySeparator(String key)
+    private static int findKeySeparator(final String key)
     {
         int index = key.length() - 1;
         while (index >= 0 && !Character.isWhitespace(key.charAt(index)))
@@ -515,13 +515,13 @@ public class XPathExpressionEngine implements ExpressionEngine
      * @param <T> the type of results to be produced
      * @return the result list
      */
-    private static <T> List<QueryResult<T>> convertResults(List<?> results)
+    private static <T> List<QueryResult<T>> convertResults(final List<?> results)
     {
-        List<QueryResult<T>> queryResults =
+        final List<QueryResult<T>> queryResults =
                 new ArrayList<>(results.size());
-        for (Object res : results)
+        for (final Object res : results)
         {
-            QueryResult<T> queryResult = createResult(res);
+            final QueryResult<T> queryResult = createResult(res);
             queryResults.add(queryResult);
         }
         return queryResults;
@@ -543,7 +543,7 @@ public class XPathExpressionEngine implements ExpressionEngine
      * @return the {@code QueryResult}
      */
     @SuppressWarnings("unchecked")
-    private static <T> QueryResult<T> createResult(Object resObj)
+    private static <T> QueryResult<T> createResult(final Object resObj)
     {
         if (resObj instanceof QueryResult)
         {

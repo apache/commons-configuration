@@ -44,7 +44,7 @@ public class ServletContextConfiguration extends BaseWebConfiguration
      *
      * @param servlet the servlet
      */
-    public ServletContextConfiguration(Servlet servlet)
+    public ServletContextConfiguration(final Servlet servlet)
     {
         this.context = servlet.getServletConfig().getServletContext();
     }
@@ -55,13 +55,13 @@ public class ServletContextConfiguration extends BaseWebConfiguration
      *
      * @param context the servlet context
      */
-    public ServletContextConfiguration(ServletContext context)
+    public ServletContextConfiguration(final ServletContext context)
     {
         this.context = context;
     }
 
     @Override
-    protected Object getPropertyInternal(String key)
+    protected Object getPropertyInternal(final String key)
     {
         return handleDelimiters(context.getInitParameter(key));
     }
@@ -71,7 +71,7 @@ public class ServletContextConfiguration extends BaseWebConfiguration
     {
         // According to the documentation of getInitParameterNames() the
         // enumeration is of type String.
-        Enumeration<String> en = context.getInitParameterNames();
+        final Enumeration<String> en = context.getInitParameterNames();
         return Collections.list(en).iterator();
     }
 }

@@ -136,7 +136,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param syms the object with the symbols (must not be <b>null</b>)
      * @throws IllegalArgumentException if the symbols are <b>null</b>
      */
-    public DefaultExpressionEngine(DefaultExpressionEngineSymbols syms)
+    public DefaultExpressionEngine(final DefaultExpressionEngineSymbols syms)
     {
         this(syms, null);
     }
@@ -152,8 +152,8 @@ public class DefaultExpressionEngine implements ExpressionEngine
      *        then a default matcher is used
      * @throws IllegalArgumentException if the symbols are <b>null</b>
      */
-    public DefaultExpressionEngine(DefaultExpressionEngineSymbols syms,
-            NodeMatcher<String> nodeNameMatcher)
+    public DefaultExpressionEngine(final DefaultExpressionEngineSymbols syms,
+            final NodeMatcher<String> nodeNameMatcher)
     {
         if (syms == null)
         {
@@ -183,10 +183,10 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * comment.
      */
     @Override
-    public <T> List<QueryResult<T>> query(T root, String key,
-            NodeHandler<T> handler)
+    public <T> List<QueryResult<T>> query(final T root, final String key,
+            final NodeHandler<T> handler)
     {
-        List<QueryResult<T>> results = new LinkedList<>();
+        final List<QueryResult<T>> results = new LinkedList<>();
         findNodesForKey(new DefaultConfigurationKey(this, key).iterator(),
                 root, results, handler);
         return results;
@@ -200,23 +200,23 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * returned.
      */
     @Override
-    public <T> String nodeKey(T node, String parentKey, NodeHandler<T> handler)
+    public <T> String nodeKey(final T node, final String parentKey, final NodeHandler<T> handler)
     {
         if (parentKey == null)
         {
             // this is the root node
             return StringUtils.EMPTY;
         }
-        DefaultConfigurationKey key = new DefaultConfigurationKey(this,
+        final DefaultConfigurationKey key = new DefaultConfigurationKey(this,
                 parentKey);
             key.append(handler.nodeName(node), true);
         return key.toString();
     }
 
     @Override
-    public String attributeKey(String parentKey, String attributeName)
+    public String attributeKey(final String parentKey, final String attributeName)
     {
-        DefaultConfigurationKey key =
+        final DefaultConfigurationKey key =
                 new DefaultConfigurationKey(this, parentKey);
         key.appendAttribute(attributeName);
         return key.toString();
@@ -230,12 +230,12 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * name of the current node with its index is returned.
      */
     @Override
-    public <T> String canonicalKey(T node, String parentKey,
-            NodeHandler<T> handler)
+    public <T> String canonicalKey(final T node, final String parentKey,
+            final NodeHandler<T> handler)
     {
-        String nodeName = handler.nodeName(node);
-        T parent = handler.getParent(node);
-        DefaultConfigurationKey key =
+        final String nodeName = handler.nodeName(node);
+        final T parent = handler.getParent(node);
+        final DefaultConfigurationKey key =
                 new DefaultConfigurationKey(this, parentKey);
         key.append(StringUtils.defaultString(nodeName));
 
@@ -329,9 +329,9 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @return a data object with information needed for the add operation
      */
     @Override
-    public <T> NodeAddData<T> prepareAdd(T root, String key, NodeHandler<T> handler)
+    public <T> NodeAddData<T> prepareAdd(final T root, final String key, final NodeHandler<T> handler)
     {
-        DefaultConfigurationKey.KeyIterator it = new DefaultConfigurationKey(
+        final DefaultConfigurationKey.KeyIterator it = new DefaultConfigurationKey(
                 this, key).iterator();
         if (!it.hasNext())
         {
@@ -339,8 +339,8 @@ public class DefaultExpressionEngine implements ExpressionEngine
                     "Key for add operation must be defined!");
         }
 
-        T parent = findLastPathNode(it, root, handler);
-        List<String> pathNodes = new LinkedList<>();
+        final T parent = findLastPathNode(it, root, handler);
+        final List<String> pathNodes = new LinkedList<>();
 
         while (it.hasNext())
         {
@@ -370,8 +370,8 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param handler the node handler
      */
     protected <T> void findNodesForKey(
-            DefaultConfigurationKey.KeyIterator keyPart, T node,
-            Collection<QueryResult<T>> results, NodeHandler<T> handler)
+            final DefaultConfigurationKey.KeyIterator keyPart, final T node,
+            final Collection<QueryResult<T>> results, final NodeHandler<T> handler)
     {
         if (!keyPart.hasNext())
         {
@@ -380,7 +380,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
 
         else
         {
-            String key = keyPart.nextKey(false);
+            final String key = keyPart.nextKey(false);
             if (keyPart.isPropertyKey())
             {
                 processSubNodes(keyPart, findChildNodesByName(handler, node, key),
@@ -407,10 +407,10 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param handler the node handler
      * @return the last existing node on the given path
      */
-    protected <T> T findLastPathNode(DefaultConfigurationKey.KeyIterator keyIt,
-            T node, NodeHandler<T> handler)
+    protected <T> T findLastPathNode(final DefaultConfigurationKey.KeyIterator keyIt,
+            final T node, final NodeHandler<T> handler)
     {
-        String keyPart = keyIt.nextKey(false);
+        final String keyPart = keyIt.nextKey(false);
 
         if (keyIt.hasNext())
         {
@@ -421,7 +421,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
                         "Invalid path for add operation: "
                                 + "Attribute key in the middle!");
             }
-            int idx =
+            final int idx =
                     keyIt.hasIndex() ? keyIt.getIndex() : handler
                             .getMatchingChildrenCount(node, nameMatcher,
                                     keyPart) - 1;
@@ -449,8 +449,8 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param nodes the target collection
      * @param handler the node handler
      */
-    private <T> void processSubNodes(DefaultConfigurationKey.KeyIterator keyPart,
-            List<T> subNodes, Collection<QueryResult<T>> nodes, NodeHandler<T> handler)
+    private <T> void processSubNodes(final DefaultConfigurationKey.KeyIterator keyPart,
+            final List<T> subNodes, final Collection<QueryResult<T>> nodes, final NodeHandler<T> handler)
     {
         if (keyPart.hasIndex())
         {
@@ -462,7 +462,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
         }
         else
         {
-            for (T node : subNodes)
+            for (final T node : subNodes)
             {
                 findNodesForKey((DefaultConfigurationKey.KeyIterator) keyPart
                         .clone(), node, nodes, handler);
@@ -480,8 +480,8 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param <T> the type of the nodes to be dealt with
      * @return the index of this node
      */
-    private <T> int determineIndex(T node, T parent, String nodeName,
-                                          NodeHandler<T> handler)
+    private <T> int determineIndex(final T node, final T parent, final String nodeName,
+                                          final NodeHandler<T> handler)
     {
         return findChildNodesByName(handler, parent, nodeName).indexOf(node);
     }
@@ -497,8 +497,8 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param <T> the type of the nodes to be dealt with
      * @return a list with all matching child nodes
      */
-    private <T> List<T> findChildNodesByName(NodeHandler<T> handler, T parent,
-            String nodeName)
+    private <T> List<T> findChildNodesByName(final NodeHandler<T> handler, final T parent,
+            final String nodeName)
     {
         return handler.getMatchingChildren(parent, nameMatcher, nodeName);
     }

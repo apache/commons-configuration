@@ -76,8 +76,8 @@ public class EventListenerList
      * @param <T> the type of events processed by this listener
      * @throws IllegalArgumentException if a required parameter is <b>null</b>
      */
-    public <T extends Event> void addEventListener(EventType<T> type,
-            EventListener<? super T> listener)
+    public <T extends Event> void addEventListener(final EventType<T> type,
+            final EventListener<? super T> listener)
     {
         listeners.add(new EventListenerRegistrationData<>(type, listener));
     }
@@ -93,7 +93,7 @@ public class EventListenerList
      *         <b>null</b>
      */
     public <T extends Event> void addEventListener(
-            EventListenerRegistrationData<T> regData)
+            final EventListenerRegistrationData<T> regData)
     {
         if (regData == null)
         {
@@ -117,7 +117,7 @@ public class EventListenerList
      * @return a flag whether a listener registration was removed
      */
     public <T extends Event> boolean removeEventListener(
-            EventType<T> eventType, EventListener<? super T> listener)
+            final EventType<T> eventType, final EventListener<? super T> listener)
     {
         return !(listener == null || eventType == null)
                 && removeEventListener(new EventListenerRegistrationData<>(
@@ -135,7 +135,7 @@ public class EventListenerList
      * @see #removeEventListener(EventType, EventListener)
      */
     public <T extends Event> boolean removeEventListener(
-            EventListenerRegistrationData<T> regData)
+            final EventListenerRegistrationData<T> regData)
     {
         return listeners.remove(regData);
     }
@@ -146,7 +146,7 @@ public class EventListenerList
      * @param event the event to be fired (must not be <b>null</b>)
      * @throws IllegalArgumentException if the event is <b>null</b>
      */
-    public void fire(Event event)
+    public void fire(final Event event)
     {
         if (event == null)
         {
@@ -154,7 +154,7 @@ public class EventListenerList
                     "Event to be fired must not be null!");
         }
 
-        for (EventListenerIterator<? extends Event> iterator =
+        for (final EventListenerIterator<? extends Event> iterator =
                 getEventListenerIterator(event.getEventType()); iterator
                 .hasNext();)
         {
@@ -192,7 +192,7 @@ public class EventListenerList
      * @return an {@code Iterator} with the selected event listeners
      */
     public <T extends Event> EventListenerIterator<T> getEventListenerIterator(
-            EventType<T> eventType)
+            final EventType<T> eventType)
     {
         return new EventListenerIterator<>(listeners.iterator(), eventType);
     }
@@ -222,14 +222,14 @@ public class EventListenerList
      * @return a list with the matching event listener registration objects
      */
     public <T extends Event> List<EventListenerRegistrationData<? extends T>> getRegistrationsForSuperType(
-            EventType<T> eventType)
+            final EventType<T> eventType)
     {
-        Map<EventType<?>, Set<EventType<?>>> superTypes =
+        final Map<EventType<?>, Set<EventType<?>>> superTypes =
                 new HashMap<>();
-        List<EventListenerRegistrationData<? extends T>> results =
+        final List<EventListenerRegistrationData<? extends T>> results =
                 new LinkedList<>();
 
-        for (EventListenerRegistrationData<?> reg : listeners)
+        for (final EventListenerRegistrationData<?> reg : listeners)
         {
             Set<EventType<?>> base = superTypes.get(reg.getEventType());
             if (base == null)
@@ -240,6 +240,7 @@ public class EventListenerList
             if (base.contains(eventType))
             {
                 @SuppressWarnings("unchecked")
+                final
                 // This is safe because we just did a check
                 EventListenerRegistrationData<? extends T> result =
                         (EventListenerRegistrationData<? extends T>) reg;
@@ -265,7 +266,7 @@ public class EventListenerList
      * @param c the list to be copied (must not be <b>null</b>)
      * @throws IllegalArgumentException if the list to be copied is <b>null</b>
      */
-    public void addAll(EventListenerList c)
+    public void addAll(final EventListenerList c)
     {
         if (c == null)
         {
@@ -273,7 +274,7 @@ public class EventListenerList
                     "List to be copied must not be null!");
         }
 
-        for (EventListenerRegistrationData<?> regData : c.getRegistrations())
+        for (final EventListenerRegistrationData<?> regData : c.getRegistrations())
         {
             addEventListener(regData);
         }
@@ -290,9 +291,10 @@ public class EventListenerList
      * @param event the event to be fired
      */
     @SuppressWarnings("unchecked")
-    private static void callListener(EventListener<?> listener, Event event)
+    private static void callListener(final EventListener<?> listener, final Event event)
     {
         @SuppressWarnings("rawtypes")
+        final
         EventListener rowListener = listener;
         rowListener.onEvent(event);
     }
@@ -321,7 +323,7 @@ public class EventListenerList
         private EventListener<? super T> nextElement;
 
         private EventListenerIterator(
-                Iterator<EventListenerRegistrationData<?>> it, EventType<T> base)
+                final Iterator<EventListenerRegistrationData<?>> it, final EventType<T> base)
         {
             underlyingIterator = it;
             baseEventType = base;
@@ -343,7 +345,7 @@ public class EventListenerList
                 throw new NoSuchElementException("No more event listeners!");
             }
 
-            EventListener<? super T> result = nextElement;
+            final EventListener<? super T> result = nextElement;
             initNextElement();
             return result;
         }
@@ -355,7 +357,7 @@ public class EventListenerList
          * @param event the event object
          * @throws NoSuchElementException if iteration is at its end
          */
-        public void invokeNext(Event event)
+        public void invokeNext(final Event event)
         {
             validateEvent(event);
             invokeNextListenerUnchecked(event);
@@ -380,7 +382,7 @@ public class EventListenerList
             nextElement = null;
             while (underlyingIterator.hasNext() && nextElement == null)
             {
-                EventListenerRegistrationData<?> regData =
+                final EventListenerRegistrationData<?> regData =
                         underlyingIterator.next();
                 if (acceptedTypes.contains(regData.getEventType()))
                 {
@@ -397,7 +399,7 @@ public class EventListenerList
          * @param event the event object
          * @throws IllegalArgumentException if the event is invalid
          */
-        private void validateEvent(Event event)
+        private void validateEvent(final Event event)
         {
             if (event == null
                     || !EventType.fetchSuperEventTypes(event.getEventType()).contains(
@@ -415,9 +417,9 @@ public class EventListenerList
          *
          * @param event the event object
          */
-        private void invokeNextListenerUnchecked(Event event)
+        private void invokeNextListenerUnchecked(final Event event)
         {
-            EventListener<? super T> listener = next();
+            final EventListener<? super T> listener = next();
             callListener(listener, event);
         }
 
@@ -431,9 +433,10 @@ public class EventListenerList
          */
         @SuppressWarnings("unchecked")
         private EventListener<? super T> castListener(
-                EventListenerRegistrationData<?> regData)
+                final EventListenerRegistrationData<?> regData)
         {
             @SuppressWarnings("rawtypes")
+            final
             EventListener listener = regData.getListener();
             return listener;
         }

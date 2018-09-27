@@ -94,8 +94,8 @@ public class TestBaseConfiguration
     public void testGetByte()
     {
         config.setProperty("number", "1");
-        byte oneB = 1;
-        byte twoB = 2;
+        final byte oneB = 1;
+        final byte twoB = 2;
         assertEquals("This returns 1(byte)", oneB, config.getByte("number"));
         assertEquals("This returns 1(byte)", oneB, config.getByte("number", twoB));
         assertEquals("This returns 2(default byte)", twoB, config.getByte("numberNotInConfig", twoB));
@@ -119,8 +119,8 @@ public class TestBaseConfiguration
     public void testGetShort()
     {
         config.setProperty("numberS", "1");
-        short oneS = 1;
-        short twoS = 2;
+        final short oneS = 1;
+        final short twoS = 2;
         assertEquals("This returns 1(short)", oneS, config.getShort("numberS"));
         assertEquals("This returns 1(short)", oneS, config.getShort("numberS", twoS));
         assertEquals("This returns 2(default short)", twoS, config.getShort("numberNotInConfig", twoS));
@@ -144,8 +144,8 @@ public class TestBaseConfiguration
     public void testGetLong()
     {
         config.setProperty("numberL", "1");
-        long oneL = 1;
-        long twoL = 2;
+        final long oneL = 1;
+        final long twoL = 2;
         assertEquals("This returns 1(long)", oneL, config.getLong("numberL"));
         assertEquals("This returns 1(long)", oneL, config.getLong("numberL", twoL));
         assertEquals("This returns 2(default long)", twoL, config.getLong("numberNotInConfig", twoL));
@@ -169,8 +169,8 @@ public class TestBaseConfiguration
     public void testGetFloat()
     {
         config.setProperty("numberF", "1.0");
-        float oneF = 1;
-        float twoF = 2;
+        final float oneF = 1;
+        final float twoF = 2;
         assertEquals("This returns 1(float)", oneF, config.getFloat("numberF"), 0);
         assertEquals("This returns 1(float)", oneF, config.getFloat("numberF", twoF), 0);
         assertEquals("This returns 2(default float)", twoF, config.getFloat("numberNotInConfig", twoF), 0);
@@ -194,8 +194,8 @@ public class TestBaseConfiguration
     public void testGetDouble()
     {
         config.setProperty("numberD", "1.0");
-        double oneD = 1;
-        double twoD = 2;
+        final double oneD = 1;
+        final double twoD = 2;
         assertEquals("This returns 1(double)", oneD, config.getDouble("numberD"), 0);
         assertEquals("This returns 1(double)", oneD, config.getDouble("numberD", twoD), 0);
         assertEquals("This returns 2(default double)", twoD, config.getDouble("numberNotInConfig", twoD), 0);
@@ -219,8 +219,8 @@ public class TestBaseConfiguration
     public void testGetBigDecimal()
     {
         config.setProperty("numberBigD", "123.456");
-        BigDecimal number = new BigDecimal("123.456");
-        BigDecimal defaultValue = new BigDecimal("654.321");
+        final BigDecimal number = new BigDecimal("123.456");
+        final BigDecimal defaultValue = new BigDecimal("654.321");
 
         assertEquals("Existing key", number, config.getBigDecimal("numberBigD"));
         assertEquals("Existing key with default value", number, config.getBigDecimal("numberBigD", defaultValue));
@@ -244,8 +244,8 @@ public class TestBaseConfiguration
     public void testGetBigInteger()
     {
         config.setProperty("numberBigI", "1234567890");
-        BigInteger number = new BigInteger("1234567890");
-        BigInteger defaultValue = new BigInteger("654321");
+        final BigInteger number = new BigInteger("1234567890");
+        final BigInteger defaultValue = new BigInteger("654321");
 
         assertEquals("Existing key", number, config.getBigInteger("numberBigI"));
         assertEquals("Existing key with default value", number, config.getBigInteger("numberBigI", defaultValue));
@@ -269,8 +269,8 @@ public class TestBaseConfiguration
     public void testGetString()
     {
         config.setProperty("testString", "The quick brown fox");
-        String string = "The quick brown fox";
-        String defaultValue = "jumps over the lazy dog";
+        final String string = "The quick brown fox";
+        final String defaultValue = "jumps over the lazy dog";
 
         assertEquals("Existing key", string, config.getString("testString"));
         assertEquals("Existing key with default value", string, config.getString("testString", defaultValue));
@@ -287,7 +287,7 @@ public class TestBaseConfiguration
     public void testGetBoolean()
     {
         config.setProperty("boolA", Boolean.TRUE);
-        boolean boolT = true, boolF = false;
+        final boolean boolT = true, boolF = false;
         assertEquals("This returns true", boolT, config.getBoolean("boolA"));
         assertEquals("This returns true, not the default", boolT, config.getBoolean("boolA", boolF));
         assertEquals("This returns false(default)", boolF, config.getBoolean("boolNotInConfig", boolF));
@@ -312,7 +312,7 @@ public class TestBaseConfiguration
     {
         config.addProperty("number", "1");
         config.addProperty("number", "2");
-        List<Object> list = config.getList("number");
+        final List<Object> list = config.getList("number");
         assertNotNull("The list is null", list);
         assertEquals("List size", 2, list.size());
         assertTrue("The number 1 is missing from the list", list.contains("1"));
@@ -337,7 +337,7 @@ public class TestBaseConfiguration
         config.addProperty("array", "${number}");
         config.addProperty("array", "${number}");
 
-        List<String> list = new ArrayList<>();
+        final List<String> list = new ArrayList<>();
         list.add("1");
         list.add("1");
 
@@ -378,9 +378,9 @@ public class TestBaseConfiguration
     @Test
     public void testCommaSeparatedString()
     {
-        String prop = "hey, that's a test";
+        final String prop = "hey, that's a test";
         config.setProperty("prop.string", prop);
-        List<Object> list = config.getList("prop.string");
+        final List<Object> list = config.getList("prop.string");
         assertEquals("Wrong number of list elements", 2, list.size());
         assertEquals("Wrong element 1", "hey", list.get(0));
     }
@@ -388,7 +388,7 @@ public class TestBaseConfiguration
     @Test
     public void testCommaSeparatedStringEscaped()
     {
-        String prop2 = "hey\\, that's a test";
+        final String prop2 = "hey\\, that's a test";
         config.setProperty("prop.string", prop2);
         assertEquals("Wrong value", "hey, that's a test", config.getString("prop.string"));
     }
@@ -412,15 +412,15 @@ public class TestBaseConfiguration
         props.add("quick");
         props.add("brown");
         props.add("fox,jumps");
-        Object[] data = new Object[] {
+        final Object[] data = new Object[] {
                 "The", props, "over,the", "lazy", "dog."
         };
         config.setProperty("complex.property", data);
         val = config.getProperty("complex.property");
         assertTrue(val instanceof Collection);
         col = (Collection<?>) val;
-        Iterator<?> it = col.iterator();
-        StringTokenizer tok = new StringTokenizer("The quick brown fox jumps over the lazy dog.", " ");
+        final Iterator<?> it = col.iterator();
+        final StringTokenizer tok = new StringTokenizer("The quick brown fox jumps over the lazy dog.", " ");
         while(tok.hasMoreTokens())
         {
             assertTrue(it.hasNext());
@@ -444,7 +444,7 @@ public class TestBaseConfiguration
         config.clearProperty("prop.properties");
         config.setProperty("prop.properties", "foo=bar, baz=moo, seal=clubber");
 
-        Properties p = new Properties();
+        final Properties p = new Properties();
         p.setProperty("foo", "bar");
         p.setProperty("baz", "moo");
         p.setProperty("seal", "clubber");
@@ -462,8 +462,8 @@ public class TestBaseConfiguration
          * when generating the subset
          */
 
-        String prop = "hey, that's a test";
-        String prop2 = "hey\\, that's a test";
+        final String prop = "hey, that's a test";
+        final String prop2 = "hey\\, that's a test";
         config.setProperty("prop.string", prop2);
         config.setProperty("property.string", "hello");
 
@@ -582,7 +582,7 @@ public class TestBaseConfiguration
     @Test
     public void testSetInterpolator()
     {
-        ConfigurationInterpolator interpolator =
+        final ConfigurationInterpolator interpolator =
                 EasyMock.createMock(ConfigurationInterpolator.class);
         EasyMock.replay(interpolator);
         config.setInterpolator(interpolator);
@@ -597,22 +597,22 @@ public class TestBaseConfiguration
     @Test
     public void testInstallInterpolator()
     {
-        Lookup prefixLookup = EasyMock.createMock(Lookup.class);
-        Lookup defLookup = EasyMock.createMock(Lookup.class);
+        final Lookup prefixLookup = EasyMock.createMock(Lookup.class);
+        final Lookup defLookup = EasyMock.createMock(Lookup.class);
         EasyMock.replay(prefixLookup, defLookup);
-        Map<String, Lookup> prefixLookups = new HashMap<>();
+        final Map<String, Lookup> prefixLookups = new HashMap<>();
         prefixLookups.put("test", prefixLookup);
-        List<Lookup> defLookups = new ArrayList<>();
+        final List<Lookup> defLookups = new ArrayList<>();
         defLookups.add(defLookup);
         config.installInterpolator(prefixLookups, defLookups);
-        ConfigurationInterpolator interpolator = config.getInterpolator();
+        final ConfigurationInterpolator interpolator = config.getInterpolator();
         assertEquals("Wrong prefix lookups", prefixLookups,
                 interpolator.getLookups());
-        List<Lookup> defLookups2 = interpolator.getDefaultLookups();
+        final List<Lookup> defLookups2 = interpolator.getDefaultLookups();
         assertEquals("Wrong number of default lookups", 2, defLookups2.size());
         assertSame("Wrong default lookup 1", defLookup, defLookups2.get(0));
-        String var = "testVariable";
-        Object value = 42;
+        final String var = "testVariable";
+        final Object value = 42;
         config.addProperty(var, value);
         assertEquals("Wrong lookup result", value,
                 defLookups2.get(1).lookup(var));
@@ -700,11 +700,11 @@ public class TestBaseConfiguration
         {
             config.addProperty("key" + i, new Integer(i));
         }
-        BaseConfiguration config2 = (BaseConfiguration) config.clone();
+        final BaseConfiguration config2 = (BaseConfiguration) config.clone();
 
-        for (Iterator<String> it = config.getKeys(); it.hasNext();)
+        for (final Iterator<String> it = config.getKeys(); it.hasNext();)
         {
-            String key = it.next();
+            final String key = it.next();
             assertTrue("Key not found: " + key, config2.containsKey(key));
             assertEquals("Wrong value for key " + key, config.getProperty(key),
                     config2.getProperty(key));
@@ -717,10 +717,10 @@ public class TestBaseConfiguration
     @Test
     public void testCloneModify()
     {
-        EventListener<ConfigurationEvent> l = new EventListenerTestImpl(config);
+        final EventListener<ConfigurationEvent> l = new EventListenerTestImpl(config);
         config.addEventListener(ConfigurationEvent.ANY, l);
         config.addProperty("original", Boolean.TRUE);
-        BaseConfiguration config2 = (BaseConfiguration) config.clone();
+        final BaseConfiguration config2 = (BaseConfiguration) config.clone();
 
         config2.addProperty("clone", Boolean.TRUE);
         assertFalse("New key appears in original", config.containsKey("clone"));
@@ -741,7 +741,7 @@ public class TestBaseConfiguration
         final String key = "list";
         config.addProperty(key, "value1");
         config.addProperty(key, "value2");
-        BaseConfiguration config2 = (BaseConfiguration) config.clone();
+        final BaseConfiguration config2 = (BaseConfiguration) config.clone();
         config2.addProperty(key, "value3");
         assertEquals("Wrong number of original properties", 2, config.getList(
                 key).size());
@@ -756,7 +756,7 @@ public class TestBaseConfiguration
         final String keyAnswer = "answer";
         config.addProperty(keyAnswer, "The answer is ${" + KEY_NUMBER + "}.");
         config.addProperty(KEY_NUMBER, 42);
-        BaseConfiguration clone = (BaseConfiguration) config.clone();
+        final BaseConfiguration clone = (BaseConfiguration) config.clone();
         clone.setProperty(KEY_NUMBER, 43);
         assertEquals("Wrong interpolation in original", "The answer is 42.",
                 config.getString(keyAnswer));

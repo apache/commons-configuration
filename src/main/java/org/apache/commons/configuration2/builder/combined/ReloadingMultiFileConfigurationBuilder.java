@@ -81,8 +81,8 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
      *        ignored
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public ReloadingMultiFileConfigurationBuilder(Class<T> resCls,
-            Map<String, Object> params, boolean allowFailOnInit)
+    public ReloadingMultiFileConfigurationBuilder(final Class<T> resCls,
+            final Map<String, Object> params, final boolean allowFailOnInit)
     {
         super(resCls, params, allowFailOnInit);
     }
@@ -95,8 +95,8 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
      * @param params a map with initialization parameters
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public ReloadingMultiFileConfigurationBuilder(Class<T> resCls,
-            Map<String, Object> params)
+    public ReloadingMultiFileConfigurationBuilder(final Class<T> resCls,
+            final Map<String, Object> params)
     {
         super(resCls, params);
     }
@@ -108,7 +108,7 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
      * @param resCls the result configuration class
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public ReloadingMultiFileConfigurationBuilder(Class<T> resCls)
+    public ReloadingMultiFileConfigurationBuilder(final Class<T> resCls)
     {
         super(resCls);
     }
@@ -130,7 +130,7 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
      */
     @Override
     protected FileBasedConfigurationBuilder<T> createManagedBuilder(
-            String fileName, Map<String, Object> params)
+            final String fileName, final Map<String, Object> params)
             throws ConfigurationException
     {
         return new ReloadingFileBasedConfigurationBuilder<>(getResultClass(),
@@ -146,17 +146,17 @@ public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfigura
      */
     private ReloadingController createReloadingController()
     {
-        Set<ReloadingController> empty = Collections.emptySet();
+        final Set<ReloadingController> empty = Collections.emptySet();
         return new CombinedReloadingController(empty)
         {
             @Override
             public Collection<ReloadingController> getSubControllers()
             {
-                Collection<FileBasedConfigurationBuilder<T>> builders =
+                final Collection<FileBasedConfigurationBuilder<T>> builders =
                         getManagedBuilders().values();
-                Collection<ReloadingController> controllers =
+                final Collection<ReloadingController> controllers =
                         new ArrayList<>(builders.size());
-                for (FileBasedConfigurationBuilder<T> b : builders)
+                for (final FileBasedConfigurationBuilder<T> b : builders)
                 {
                     controllers.add(((ReloadingControllerSupport) b)
                             .getReloadingController());

@@ -60,16 +60,16 @@ public class OverrideCombiner extends NodeCombiner
      * @return the resulting combined node structure
      */
     @Override
-    public ImmutableNode combine(ImmutableNode node1,
-            ImmutableNode node2)
+    public ImmutableNode combine(final ImmutableNode node1,
+            final ImmutableNode node2)
     {
-        ImmutableNode.Builder result = new ImmutableNode.Builder();
+        final ImmutableNode.Builder result = new ImmutableNode.Builder();
         result.name(node1.getNodeName());
 
         // Process nodes from the first structure, which override the second
-        for (ImmutableNode child : node1.getChildren())
+        for (final ImmutableNode child : node1.getChildren())
         {
-            ImmutableNode child2 = canCombine(node1, node2, child);
+            final ImmutableNode child2 = canCombine(node1, node2, child);
             if (child2 != null)
             {
                 result.addChild(combine(child, child2));
@@ -82,7 +82,7 @@ public class OverrideCombiner extends NodeCombiner
 
         // Process nodes from the second structure, which are not contained
         // in the first structure
-        for (ImmutableNode child : node2.getChildren())
+        for (final ImmutableNode child : node2.getChildren())
         {
             if (HANDLER.getChildrenCount(node1, child.getNodeName()) < 1)
             {
@@ -107,11 +107,11 @@ public class OverrideCombiner extends NodeCombiner
      * @param node1 the first node
      * @param node2 the second node
      */
-    protected void addAttributes(ImmutableNode.Builder result,
-            ImmutableNode node1, ImmutableNode node2)
+    protected void addAttributes(final ImmutableNode.Builder result,
+            final ImmutableNode node1, final ImmutableNode node2)
     {
         result.addAttributes(node1.getAttributes());
-        for (String attr : node2.getAttributes().keySet())
+        for (final String attr : node2.getAttributes().keySet())
         {
             if (!node1.getAttributes().containsKey(attr))
             {
@@ -133,8 +133,8 @@ public class OverrideCombiner extends NodeCombiner
      * @param child the child node (of the first node)
      * @return a child of the second node, with which a combination is possible
      */
-    protected ImmutableNode canCombine(ImmutableNode node1,
-            ImmutableNode node2, ImmutableNode child)
+    protected ImmutableNode canCombine(final ImmutableNode node1,
+            final ImmutableNode node2, final ImmutableNode child)
     {
         if (HANDLER.getChildrenCount(node2, child.getNodeName()) == 1
                 && HANDLER.getChildrenCount(node1, child.getNodeName()) == 1

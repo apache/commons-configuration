@@ -49,7 +49,7 @@ public abstract class FileSystem
      */
     public ConfigurationLogger getLogger()
     {
-        ConfigurationLogger result = log;
+        final ConfigurationLogger result = log;
         return (result != null) ? result : DEFAULT_LOG;
     }
 
@@ -63,7 +63,7 @@ public abstract class FileSystem
      *
      * @param log the new logger
      */
-    public void setLogger(ConfigurationLogger log)
+    public void setLogger(final ConfigurationLogger log)
     {
         this.log = log;
     }
@@ -72,7 +72,7 @@ public abstract class FileSystem
      * Set the FileOptionsProvider
      * @param provider The FileOptionsProvider
      */
-    public void setFileOptionsProvider(FileOptionsProvider provider)
+    public void setFileOptionsProvider(final FileOptionsProvider provider)
     {
         this.optionsProvider = provider;
     }

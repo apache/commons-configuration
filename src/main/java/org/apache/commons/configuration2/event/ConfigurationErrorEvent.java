@@ -109,10 +109,10 @@ public class ConfigurationErrorEvent extends Event
      * @param propValue the value of the affected property
      * @param cause the exception object that caused this event
      */
-    public ConfigurationErrorEvent(Object source,
-            EventType<? extends ConfigurationErrorEvent> eventType,
-            EventType<?> operationType, String propName, Object propValue,
-            Throwable cause)
+    public ConfigurationErrorEvent(final Object source,
+            final EventType<? extends ConfigurationErrorEvent> eventType,
+            final EventType<?> operationType, final String propName, final Object propValue,
+            final Throwable cause)
     {
         super(source, eventType);
         errorOperationType = operationType;

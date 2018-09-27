@@ -60,8 +60,8 @@ final class ReloadingBuilderSupportListener implements EventListener<Event>
      * @param controller the {@code ReloadingController}
      */
     private ReloadingBuilderSupportListener(
-            BasicConfigurationBuilder<?> configBuilder,
-            ReloadingController controller)
+            final BasicConfigurationBuilder<?> configBuilder,
+            final ReloadingController controller)
     {
         builder = configBuilder;
         reloadingController = controller;
@@ -79,10 +79,10 @@ final class ReloadingBuilderSupportListener implements EventListener<Event>
      * @return the newly created listener object
      */
     public static ReloadingBuilderSupportListener connect(
-            BasicConfigurationBuilder<?> configBuilder,
-            ReloadingController controller)
+            final BasicConfigurationBuilder<?> configBuilder,
+            final ReloadingController controller)
     {
-        ReloadingBuilderSupportListener listener =
+        final ReloadingBuilderSupportListener listener =
                 new ReloadingBuilderSupportListener(configBuilder, controller);
         controller.addEventListener(ReloadingEvent.ANY, listener);
         configBuilder
@@ -98,7 +98,7 @@ final class ReloadingBuilderSupportListener implements EventListener<Event>
      * of a reloading event, the builder's result object is reset.
      */
     @Override
-    public void onEvent(Event event)
+    public void onEvent(final Event event)
     {
         if (ConfigurationBuilderResultCreatedEvent.RESULT_CREATED.equals(event
                 .getEventType()))

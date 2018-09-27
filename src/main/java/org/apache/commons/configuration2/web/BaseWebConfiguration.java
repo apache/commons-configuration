@@ -58,7 +58,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
      * @return a flag whether this key exists in this configuration
      */
     @Override
-    protected boolean containsKeyInternal(String key)
+    protected boolean containsKeyInternal(final String key)
     {
         return getPropertyInternal(key) != null;
     }
@@ -72,7 +72,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
      * allowed
      */
     @Override
-    protected void clearPropertyDirect(String key)
+    protected void clearPropertyDirect(final String key)
     {
         throw new UnsupportedOperationException("Read only configuration");
     }
@@ -87,7 +87,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
      * allowed
      */
     @Override
-    protected void addPropertyDirect(String key, Object obj)
+    protected void addPropertyDirect(final String key, final Object obj)
     {
         throw new UnsupportedOperationException("Read only configuration");
     }
@@ -104,7 +104,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
     {
         if (value instanceof String)
         {
-            Collection<String> values =
+            final Collection<String> values =
                     getListDelimiterHandler().split((String) value, true);
             value = values.size() > 1 ? values : values.iterator().next();
         }

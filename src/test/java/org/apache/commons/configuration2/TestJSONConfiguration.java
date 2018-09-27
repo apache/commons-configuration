@@ -40,7 +40,7 @@ import static org.junit.Assert.assertTrue;
 public class TestJSONConfiguration
 {
     /** The files that we test with. */
-    private String testJson =
+    private final String testJson =
             ConfigurationAssert.getTestFile("test.json").getAbsolutePath();
 
     private JSONConfiguration jsonConfiguration;
@@ -74,14 +74,14 @@ public class TestJSONConfiguration
     @Test
     public void testGetProperty_subset()
     {
-        Configuration subset = jsonConfiguration.subset("key4");
+        final Configuration subset = jsonConfiguration.subset("key4");
         assertEquals(Arrays.asList("col1", "col2"), subset.getProperty("key5"));
     }
 
     @Test
     public void testGetProperty_very_nested_properties()
     {
-        Object property =
+        final Object property =
                 jsonConfiguration.getProperty("very.nested.properties");
         assertEquals(Arrays.asList("nested1", "nested2", "nested3"), property);
     }
@@ -89,7 +89,7 @@ public class TestJSONConfiguration
     @Test
     public void testGetProperty_integer()
     {
-        Object property = jsonConfiguration.getProperty("int1");
+        final Object property = jsonConfiguration.getProperty("int1");
         assertTrue("property should be an Integer",
                 property instanceof Integer);
         assertEquals(37, property);
@@ -99,29 +99,29 @@ public class TestJSONConfiguration
     public void testSave() throws IOException, ConfigurationException
     {
         // save the Configuration as a String...
-        StringWriter sw = new StringWriter();
+        final StringWriter sw = new StringWriter();
         jsonConfiguration.write(sw);
-        String output = sw.toString();
+        final String output = sw.toString();
 
         // ..and then try parsing it back
-        ObjectMapper mapper = new ObjectMapper();
-        MapType type = mapper.getTypeFactory().constructMapType(Map.class,
+        final ObjectMapper mapper = new ObjectMapper();
+        final MapType type = mapper.getTypeFactory().constructMapType(Map.class,
                 String.class, Object.class);
-        Map<String, Object> parsed = mapper.readValue(output, type);
+        final Map<String, Object> parsed = mapper.readValue(output, type);
         assertEquals(7, parsed.entrySet().size());
         assertEquals("value1", parsed.get("key1"));
 
-        Map key2 = (Map) parsed.get("key2");
+        final Map key2 = (Map) parsed.get("key2");
         assertEquals("value23", key2.get("key3"));
 
-        List<String> key5 =
+        final List<String> key5 =
                 (List<String>) ((Map) parsed.get("key4")).get("key5");
         assertEquals(2, key5.size());
         assertEquals("col1", key5.get(0));
         assertEquals("col2", key5.get(1));
 
-        List<?> capitals = (List<?>) parsed.get("capitals");
-        Map<?, ?> capUk = (Map<?, ?>) capitals.get(1);
+        final List<?> capitals = (List<?>) parsed.get("capitals");
+        final Map<?, ?> capUk = (Map<?, ?>) capitals.get(1);
         assertEquals("London", capUk.get("capital"));
     }
 
@@ -144,7 +144,7 @@ public class TestJSONConfiguration
     @Test
     public void testCopyConstructor()
     {
-        BaseHierarchicalConfiguration c = new BaseHierarchicalConfiguration();
+        final BaseHierarchicalConfiguration c = new BaseHierarchicalConfiguration();
         c.addProperty("foo", "bar");
 
         jsonConfiguration = new JSONConfiguration(c);

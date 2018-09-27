@@ -123,10 +123,10 @@ public class UnionCombiner extends NodeCombiner
      * @return the union node
      */
     @Override
-    public ImmutableNode combine(ImmutableNode node1,
-            ImmutableNode node2)
+    public ImmutableNode combine(final ImmutableNode node1,
+            final ImmutableNode node2)
     {
-        ImmutableNode.Builder result = new ImmutableNode.Builder();
+        final ImmutableNode.Builder result = new ImmutableNode.Builder();
         result.name(node1.getNodeName());
 
         // attributes of the first node take precedence
@@ -134,10 +134,10 @@ public class UnionCombiner extends NodeCombiner
         result.addAttributes(node1.getAttributes());
 
         // Check if nodes can be combined
-        List<ImmutableNode> children2 = new LinkedList<>(node2.getChildren());
-        for (ImmutableNode child1 : node1.getChildren())
+        final List<ImmutableNode> children2 = new LinkedList<>(node2.getChildren());
+        for (final ImmutableNode child1 : node1.getChildren())
         {
-            ImmutableNode child2 = findCombineNode(node1, node2, child1
+            final ImmutableNode child2 = findCombineNode(node1, node2, child1
             );
             if (child2 != null)
             {
@@ -151,7 +151,7 @@ public class UnionCombiner extends NodeCombiner
         }
 
         // Add remaining children of node 2
-        for (ImmutableNode c : children2)
+        for (final ImmutableNode c : children2)
         {
             result.addChild(c);
         }
@@ -189,14 +189,14 @@ public class UnionCombiner extends NodeCombiner
      * @return the matching child node of the second source node or <b>null</b>
      * if there is none
      */
-    protected ImmutableNode findCombineNode(ImmutableNode node1,
-            ImmutableNode node2, ImmutableNode child)
+    protected ImmutableNode findCombineNode(final ImmutableNode node1,
+            final ImmutableNode node2, final ImmutableNode child)
     {
         if (child.getValue() == null && !isListNode(child)
                 && HANDLER.getChildrenCount(node1, child.getNodeName()) == 1
                 && HANDLER.getChildrenCount(node2, child.getNodeName()) == 1)
         {
-            ImmutableNode child2 =
+            final ImmutableNode child2 =
                     HANDLER.getChildren(node2, child.getNodeName()).get(0);
             if (child2.getValue() == null)
             {

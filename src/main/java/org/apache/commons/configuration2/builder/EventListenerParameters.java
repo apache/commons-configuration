@@ -81,7 +81,7 @@ public class EventListenerParameters implements BuilderParameters,
      * @return a reference to this object for method chaining
      */
     public <T extends Event> EventListenerParameters addEventListener(
-            EventType<T> eventType, EventListener<? super T> listener)
+            final EventType<T> eventType, final EventListener<? super T> listener)
     {
         eventListeners.addEventListener(eventType, listener);
         return this;
@@ -96,7 +96,7 @@ public class EventListenerParameters implements BuilderParameters,
      * @return a reference to this object for method chaining
      */
     public <T extends Event> EventListenerParameters addEventListener(
-            EventListenerRegistrationData<T> registrationData)
+            final EventListenerRegistrationData<T> registrationData)
     {
         eventListeners.addEventListener(registrationData);
         return this;

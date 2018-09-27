@@ -49,15 +49,15 @@ public class TestCopyObjectDefaultHandler
     public void testInitializeDefaultsSameType()
     {
         final Long refresh = 50000L;
-        FileBasedBuilderParametersImpl source =
+        final FileBasedBuilderParametersImpl source =
                 new FileBasedBuilderParametersImpl();
         source.setReloadingRefreshDelay(refresh).setThrowExceptionOnMissing(
                 true);
-        CopyObjectDefaultHandler handler = new CopyObjectDefaultHandler(source);
-        FileBasedBuilderParametersImpl copy =
+        final CopyObjectDefaultHandler handler = new CopyObjectDefaultHandler(source);
+        final FileBasedBuilderParametersImpl copy =
                 new FileBasedBuilderParametersImpl();
         handler.initializeDefaults(copy);
-        Map<String, Object> map = copy.getParameters();
+        final Map<String, Object> map = copy.getParameters();
         assertEquals("Wrong exception flag", Boolean.TRUE,
                 map.get("throwExceptionOnMissing"));
         assertEquals("Wrong refresh", refresh, copy.getReloadingRefreshDelay());
@@ -71,15 +71,15 @@ public class TestCopyObjectDefaultHandler
     public void testInitializeDefaultsBaseType()
     {
         final Long refresh = 50000L;
-        XMLBuilderParametersImpl paramsXml = new XMLBuilderParametersImpl();
+        final XMLBuilderParametersImpl paramsXml = new XMLBuilderParametersImpl();
         paramsXml
                 .setValidating(true)
                 .setExpressionEngine(
                         EasyMock.createMock(ExpressionEngine.class))
                 .setReloadingRefreshDelay(refresh);
-        CopyObjectDefaultHandler handler =
+        final CopyObjectDefaultHandler handler =
                 new CopyObjectDefaultHandler(paramsXml);
-        FileBasedBuilderParametersImpl paramsFb =
+        final FileBasedBuilderParametersImpl paramsFb =
                 new FileBasedBuilderParametersImpl();
         handler.initializeDefaults(paramsFb);
         assertEquals("Wrong refresh", refresh,
@@ -93,20 +93,20 @@ public class TestCopyObjectDefaultHandler
     @Test(expected = ConfigurationRuntimeException.class)
     public void testInitializeDefaultsException()
     {
-        ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
-        XMLBuilderParametersImpl source = new XMLBuilderParametersImpl();
+        final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
+        final XMLBuilderParametersImpl source = new XMLBuilderParametersImpl();
         source.setExpressionEngine(engine);
-        XMLBuilderParametersImpl dest = new XMLBuilderParametersImpl()
+        final XMLBuilderParametersImpl dest = new XMLBuilderParametersImpl()
         {
             @Override
             public HierarchicalBuilderParametersImpl setExpressionEngine(
-                    ExpressionEngine engine)
+                    final ExpressionEngine engine)
             {
                 throw new ConfigurationRuntimeException("Test exception");
             }
         };
 
-        CopyObjectDefaultHandler handler = new CopyObjectDefaultHandler(source);
+        final CopyObjectDefaultHandler handler = new CopyObjectDefaultHandler(source);
         handler.initializeDefaults(dest);
     }
 }

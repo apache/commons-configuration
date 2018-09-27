@@ -50,14 +50,14 @@ public class TestNullJNDIEnvironmentValues
     @Test
     public void testSimpleGet() throws Exception
     {
-        String s = conf.getString("test.key");
+        final String s = conf.getString("test.key");
         assertEquals("jndivalue", s);
     }
 
     @Test
     public void testMoreGets() throws Exception
     {
-        String s = conf.getString("test.key");
+        final String s = conf.getString("test.key");
         assertEquals("jndivalue", s);
         assertEquals("jndivalue2", conf.getString("test.key2"));
         assertEquals(1, conf.getShort("test.short"));
@@ -72,7 +72,7 @@ public class TestNullJNDIEnvironmentValues
     @Test
     public void testGetMissingKeyWithDefault() throws Exception
     {
-        String result = conf.getString("test.imaginarykey", "bob");
+        final String result = conf.getString("test.imaginarykey", "bob");
         assertEquals("bob", result);
     }
 
@@ -101,7 +101,7 @@ public class TestNullJNDIEnvironmentValues
     public void testGetKeys() throws Exception
     {
         boolean found = false;
-        Iterator<String> it = conf.getKeys();
+        final Iterator<String> it = conf.getKeys();
 
         assertTrue("no key found", it.hasNext());
 
@@ -117,7 +117,7 @@ public class TestNullJNDIEnvironmentValues
     public void testGetKeysWithUnknownPrefix()
     {
         // test for a unknown prefix
-        Iterator<String> it = conf.getKeys("foo.bar");
+        final Iterator<String> it = conf.getKeys("foo.bar");
         assertFalse("no key should be found", it.hasNext());
     }
 
@@ -125,7 +125,7 @@ public class TestNullJNDIEnvironmentValues
     public void testGetKeysWithExistingPrefix()
     {
         // test for an existing prefix
-        Iterator<String> it = conf.getKeys("test");
+        final Iterator<String> it = conf.getKeys("test");
         boolean found = false;
         while (it.hasNext() && !found)
         {
@@ -139,7 +139,7 @@ public class TestNullJNDIEnvironmentValues
     public void testGetKeysWithKeyAsPrefix()
     {
         // test for a prefix matching exactly the key of a property
-        Iterator<String> it = conf.getKeys("test.boolean");
+        final Iterator<String> it = conf.getKeys("test.boolean");
         boolean found = false;
         while (it.hasNext() && !found)
         {

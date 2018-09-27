@@ -63,10 +63,10 @@ class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHand
      * @param tracker the {@code NodeTracker}
      * @param refTracker the {@code ReferenceTracker}
      */
-    public TreeData(ImmutableNode root,
-            Map<ImmutableNode, ImmutableNode> parentMapping,
-            Map<ImmutableNode, ImmutableNode> replacements,
-            NodeTracker tracker, ReferenceTracker refTracker)
+    public TreeData(final ImmutableNode root,
+            final Map<ImmutableNode, ImmutableNode> parentMapping,
+            final Map<ImmutableNode, ImmutableNode> replacements,
+            final NodeTracker tracker, final ReferenceTracker refTracker)
     {
         this.root = root;
         this.parentMapping = parentMapping;
@@ -112,15 +112,15 @@ class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHand
      * @throws IllegalArgumentException if the node cannot be resolved
      */
     @Override
-    public ImmutableNode getParent(ImmutableNode node)
+    public ImmutableNode getParent(final ImmutableNode node)
     {
         if (node == getRootNode())
         {
             return null;
         }
-        ImmutableNode org = handleReplacements(node, inverseReplacementMapping);
+        final ImmutableNode org = handleReplacements(node, inverseReplacementMapping);
 
-        ImmutableNode parent = parentMapping.get(org);
+        final ImmutableNode parent = parentMapping.get(org);
         if (parent == null)
         {
             throw new IllegalArgumentException("Cannot determine parent! "
@@ -157,7 +157,7 @@ class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHand
      * @param newTracker the new {@code NodeTracker}
      * @return the updated instance
      */
-    public TreeData updateNodeTracker(NodeTracker newTracker)
+    public TreeData updateNodeTracker(final NodeTracker newTracker)
     {
         return new TreeData(root, parentMapping, replacementMapping,
                 newTracker, referenceTracker);
@@ -171,7 +171,7 @@ class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHand
      * @param newTracker the new {@code ReferenceTracker}
      * @return the updated instance
      */
-    public TreeData updateReferenceTracker(ReferenceTracker newTracker)
+    public TreeData updateReferenceTracker(final ReferenceTracker newTracker)
     {
         return new TreeData(root, parentMapping, replacementMapping,
                 nodeTracker, newTracker);
@@ -181,7 +181,7 @@ class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHand
      * {@inheritDoc} This implementation delegates to the reference tracker.
      */
     @Override
-    public Object getReference(ImmutableNode node)
+    public Object getReference(final ImmutableNode node)
     {
         return getReferenceTracker().getReference(node);
     }
@@ -208,8 +208,8 @@ class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHand
      * @param mapping the replacement mapping
      * @return the corresponding node according to the mapping
      */
-    private static ImmutableNode handleReplacements(ImmutableNode replace,
-            Map<ImmutableNode, ImmutableNode> mapping)
+    private static ImmutableNode handleReplacements(final ImmutableNode replace,
+            final Map<ImmutableNode, ImmutableNode> mapping)
     {
         ImmutableNode node = replace;
         ImmutableNode org;
@@ -231,11 +231,11 @@ class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHand
      * @return the inverse replacement mapping
      */
     private Map<ImmutableNode, ImmutableNode> createInverseMapping(
-            Map<ImmutableNode, ImmutableNode> replacements)
+            final Map<ImmutableNode, ImmutableNode> replacements)
     {
-        Map<ImmutableNode, ImmutableNode> inverseMapping =
+        final Map<ImmutableNode, ImmutableNode> inverseMapping =
                 new HashMap<>();
-        for (Map.Entry<ImmutableNode, ImmutableNode> e : replacements
+        for (final Map.Entry<ImmutableNode, ImmutableNode> e : replacements
                 .entrySet())
         {
             inverseMapping.put(e.getValue(), e.getKey());

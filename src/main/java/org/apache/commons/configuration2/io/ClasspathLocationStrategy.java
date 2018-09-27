@@ -41,7 +41,7 @@ public class ClasspathLocationStrategy implements FileLocationStrategy
      * resource on the class path.
      */
     @Override
-    public URL locate(FileSystem fileSystem, FileLocator locator)
+    public URL locate(final FileSystem fileSystem, final FileLocator locator)
     {
         return StringUtils.isEmpty(locator.getFileName()) ? null
                 : FileLocatorUtils.locateFromClasspath(locator.getFileName());

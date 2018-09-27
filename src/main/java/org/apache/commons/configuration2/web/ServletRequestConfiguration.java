@@ -43,15 +43,15 @@ public class ServletRequestConfiguration extends BaseWebConfiguration
      *
      * @param request the servlet request
      */
-    public ServletRequestConfiguration(ServletRequest request)
+    public ServletRequestConfiguration(final ServletRequest request)
     {
         this.request = request;
     }
 
     @Override
-    protected Object getPropertyInternal(String key)
+    protected Object getPropertyInternal(final String key)
     {
-        String[] values = request.getParameterValues(key);
+        final String[] values = request.getParameterValues(key);
 
         if (values == null || values.length == 0)
         {
@@ -64,10 +64,10 @@ public class ServletRequestConfiguration extends BaseWebConfiguration
         else
         {
             // ensure that escape characters in all list elements are removed
-            List<Object> result = new ArrayList<>(values.length);
-            for (String value : values)
+            final List<Object> result = new ArrayList<>(values.length);
+            for (final String value : values)
             {
-                Object val = handleDelimiters(value);
+                final Object val = handleDelimiters(value);
                 if (val instanceof Collection)
                 {
                     result.addAll((Collection<?>) val);
@@ -85,7 +85,7 @@ public class ServletRequestConfiguration extends BaseWebConfiguration
     protected Iterator<String> getKeysInternal()
     {
         // According to the documentation of getParameterMap(), keys are Strings.
-        Map<String, ?> parameterMap = request.getParameterMap();
+        final Map<String, ?> parameterMap = request.getParameterMap();
         return parameterMap.keySet().iterator();
     }
 }

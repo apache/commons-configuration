@@ -51,7 +51,7 @@ public final class ConfigurationConverter
      * @param props properties object to convert
      * @return Configuration configuration created from the Properties
      */
-    public static Configuration getConfiguration(Properties props)
+    public static Configuration getConfiguration(final Properties props)
     {
         return new MapConfiguration(props);
     }
@@ -66,9 +66,9 @@ public final class ConfigurationConverter
      * @return Properties created from the Configuration
      * @since 2.2
      */
-    public static Properties getProperties(ImmutableConfiguration config)
+    public static Properties getProperties(final ImmutableConfiguration config)
     {
-        Properties props = new Properties();
+        final Properties props = new Properties();
         ListDelimiterHandler listHandler;
         boolean useDelimiterHandler;
 
@@ -83,10 +83,10 @@ public final class ConfigurationConverter
             useDelimiterHandler = false;
         }
 
-        for (Iterator<String> keys = config.getKeys(); keys.hasNext();)
+        for (final Iterator<String> keys = config.getKeys(); keys.hasNext();)
         {
-            String key = keys.next();
-            List<Object> list = config.getList(key);
+            final String key = keys.next();
+            final List<Object> list = config.getList(key);
 
             String propValue;
             if (useDelimiterHandler)
@@ -97,7 +97,7 @@ public final class ConfigurationConverter
                             String.valueOf(listHandler.escapeList(list,
                                     ListDelimiterHandler.NOOP_TRANSFORMER));
                 }
-                catch (Exception ex)
+                catch (final Exception ex)
                 {
                     // obviously, the list handler does not support splitting
                     useDelimiterHandler = false;
@@ -125,7 +125,7 @@ public final class ConfigurationConverter
      * @param config Configuration object to convert
      * @return Properties created from the Configuration
      */
-    public static Properties getProperties(Configuration config)
+    public static Properties getProperties(final Configuration config)
     {
         return getProperties((ImmutableConfiguration) config);
     }
@@ -136,7 +136,7 @@ public final class ConfigurationConverter
      * @param config Configuration object to convert
      * @return Map created from the Configuration
      */
-    public static Map<Object, Object> getMap(Configuration config)
+    public static Map<Object, Object> getMap(final Configuration config)
     {
         return new ConfigurationMap(config);
     }
@@ -148,7 +148,7 @@ public final class ConfigurationConverter
      * @param list the list
      * @return the resulting string
      */
-    private static String listToString(List<?> list)
+    private static String listToString(final List<?> list)
     {
         return StringUtils.join(list, DEFAULT_SEPARATOR);
     }

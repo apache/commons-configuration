@@ -51,9 +51,9 @@ public class TestBaseConfigurationBuilderProvider
      * @param reload a flag whether reload operations are supported
      * @return the configuration object
      */
-    private HierarchicalConfiguration<?> setUpConfig(boolean reload)
+    private HierarchicalConfiguration<?> setUpConfig(final boolean reload)
     {
-        HierarchicalConfiguration<?> config = new BaseHierarchicalConfiguration();
+        final HierarchicalConfiguration<?> config = new BaseHierarchicalConfiguration();
         config.addProperty(CombinedConfigurationBuilder.ATTR_RELOAD,
                 Boolean.valueOf(reload));
         config.addProperty("[@throwExceptionOnMissing]", Boolean.TRUE);
@@ -74,14 +74,14 @@ public class TestBaseConfigurationBuilderProvider
      * @return the declaration
      */
     private ConfigurationDeclaration createDeclaration(
-            HierarchicalConfiguration<?> declConfig)
+            final HierarchicalConfiguration<?> declConfig)
     {
-        CombinedConfigurationBuilder parentBuilder =
+        final CombinedConfigurationBuilder parentBuilder =
                 new CombinedConfigurationBuilder()
                 {
                     @Override
                     protected void initChildBuilderParameters(
-                            BuilderParameters params)
+                            final BuilderParameters params)
                     {
                         // set a property value; this should be overridden by
                         // child builders
@@ -92,11 +92,11 @@ public class TestBaseConfigurationBuilderProvider
                         }
                     }
                 };
-        ConfigurationDeclaration decl =
+        final ConfigurationDeclaration decl =
                 new ConfigurationDeclaration(parentBuilder, declConfig)
                 {
                     @Override
-                    protected Object interpolate(Object value)
+                    protected Object interpolate(final Object value)
                     {
                         return value;
                     }
@@ -127,19 +127,19 @@ public class TestBaseConfigurationBuilderProvider
      * @throws ConfigurationException if an error occurs
      */
     private ConfigurationBuilder<? extends Configuration> checkBuilder(
-            boolean reload) throws ConfigurationException
+            final boolean reload) throws ConfigurationException
     {
-        HierarchicalConfiguration<?> declConfig = setUpConfig(reload);
-        ConfigurationDeclaration decl = createDeclaration(declConfig);
-        ConfigurationBuilder<? extends Configuration> builder =
+        final HierarchicalConfiguration<?> declConfig = setUpConfig(reload);
+        final ConfigurationDeclaration decl = createDeclaration(declConfig);
+        final ConfigurationBuilder<? extends Configuration> builder =
                 createProvider().getConfigurationBuilder(decl);
-        Configuration config = builder.getConfiguration();
+        final Configuration config = builder.getConfiguration();
         assertEquals("Wrong configuration class",
                 PropertiesConfiguration.class, config.getClass());
-        PropertiesConfiguration pconfig = (PropertiesConfiguration) config;
+        final PropertiesConfiguration pconfig = (PropertiesConfiguration) config;
         assertTrue("Wrong exception flag",
                 pconfig.isThrowExceptionOnMissing());
-        DefaultListDelimiterHandler listHandler =
+        final DefaultListDelimiterHandler listHandler =
                 (DefaultListDelimiterHandler) pconfig.getListDelimiterHandler();
         assertEquals("Wrong list delimiter", ';', listHandler.getDelimiter());
         assertTrue("Configuration not loaded",
@@ -173,7 +173,7 @@ public class TestBaseConfigurationBuilderProvider
     @Test
     public void testGetBuilderNotReloading() throws ConfigurationException
     {
-        ConfigurationBuilder<? extends Configuration> builder =
+        final ConfigurationBuilder<? extends Configuration> builder =
                 checkBuilder(false);
         assertEquals("Wrong builder class",
                 FileBasedConfigurationBuilder.class, builder.getClass());
@@ -185,7 +185,7 @@ public class TestBaseConfigurationBuilderProvider
     @Test
     public void testGetBuilderReloading() throws ConfigurationException
     {
-        ConfigurationBuilder<? extends Configuration> builder =
+        final ConfigurationBuilder<? extends Configuration> builder =
                 checkBuilder(true);
         assertEquals("Wrong builder class",
                 ReloadingFileBasedConfigurationBuilder.class,
@@ -200,14 +200,14 @@ public class TestBaseConfigurationBuilderProvider
     public void testGetReloadingBuilderNotSupported()
             throws ConfigurationException
     {
-        BaseConfigurationBuilderProvider provider =
+        final BaseConfigurationBuilderProvider provider =
                 new BaseConfigurationBuilderProvider(
                         FileBasedConfigurationBuilder.class.getName(), null,
                         PropertiesConfiguration.class.getName(),
                         Arrays.asList(FileBasedBuilderParametersImpl.class
                                 .getName()));
-        HierarchicalConfiguration<?> declConfig = setUpConfig(true);
-        ConfigurationDeclaration decl = createDeclaration(declConfig);
+        final HierarchicalConfiguration<?> declConfig = setUpConfig(true);
+        final ConfigurationDeclaration decl = createDeclaration(declConfig);
         provider.getConfigurationBuilder(decl);
     }
 
@@ -220,16 +220,16 @@ public class TestBaseConfigurationBuilderProvider
      *        declaration
      * @throws ConfigurationException if an error occurs
      */
-    private void checkAllowFailOnInit(boolean expFlag, String... props)
+    private void checkAllowFailOnInit(final boolean expFlag, final String... props)
             throws ConfigurationException
     {
-        HierarchicalConfiguration<?> declConfig = setUpConfig(false);
-        for (String key : props)
+        final HierarchicalConfiguration<?> declConfig = setUpConfig(false);
+        for (final String key : props)
         {
             declConfig.addProperty(key, Boolean.TRUE);
         }
-        ConfigurationDeclaration decl = createDeclaration(declConfig);
-        BasicConfigurationBuilder<? extends Configuration> builder =
+        final ConfigurationDeclaration decl = createDeclaration(declConfig);
+        final BasicConfigurationBuilder<? extends Configuration> builder =
                 (BasicConfigurationBuilder<? extends Configuration>) createProvider()
                         .getConfigurationBuilder(decl);
         assertEquals("Wrong flag value", expFlag, builder.isAllowFailOnInit());
@@ -274,7 +274,7 @@ public class TestBaseConfigurationBuilderProvider
     @Test
     public void testInitNoParameterClasses()
     {
-        BaseConfigurationBuilderProvider provider =
+        final BaseConfigurationBuilderProvider provider =
                 new BaseConfigurationBuilderProvider(
                         BasicConfigurationBuilder.class.getName(), null,
                         PropertiesConfiguration.class.getName(), null);
@@ -288,7 +288,7 @@ public class TestBaseConfigurationBuilderProvider
     @Test(expected = UnsupportedOperationException.class)
     public void testGetParameterClassesModify()
     {
-        BaseConfigurationBuilderProvider provider =
+        final BaseConfigurationBuilderProvider provider =
                 new BaseConfigurationBuilderProvider(
                         BasicConfigurationBuilder.class.getName(), null,
                         PropertiesConfiguration.class.getName(),

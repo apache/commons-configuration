@@ -80,7 +80,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      * @param resCls the result class (must not be <b>null</b>
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public FileBasedConfigurationBuilder(Class<? extends T> resCls)
+    public FileBasedConfigurationBuilder(final Class<? extends T> resCls)
     {
         super(resCls);
     }
@@ -94,8 +94,8 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      * @param params a map with initialization parameters
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public FileBasedConfigurationBuilder(Class<? extends T> resCls,
-            Map<String, Object> params)
+    public FileBasedConfigurationBuilder(final Class<? extends T> resCls,
+            final Map<String, Object> params)
     {
         super(resCls, params);
     }
@@ -110,8 +110,8 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      * @param allowFailOnInit the <em>allowFailOnInit</em> flag
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public FileBasedConfigurationBuilder(Class<? extends T> resCls,
-            Map<String, Object> params, boolean allowFailOnInit)
+    public FileBasedConfigurationBuilder(final Class<? extends T> resCls,
+            final Map<String, Object> params, final boolean allowFailOnInit)
     {
         super(resCls, params, allowFailOnInit);
     }
@@ -124,7 +124,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      * @param configClass the configuration class in question
      * @return the default encoding for this class (may be <b>null</b>)
      */
-    public static String getDefaultEncoding(Class<?> configClass)
+    public static String getDefaultEncoding(final Class<?> configClass)
     {
         String enc = DEFAULT_ENCODINGS.get(configClass);
         if (enc != null || configClass == null)
@@ -132,9 +132,9 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
             return enc;
         }
 
-        List<Class<?>> superclasses =
+        final List<Class<?>> superclasses =
                 ClassUtils.getAllSuperclasses(configClass);
-        for (Class<?> cls : superclasses)
+        for (final Class<?> cls : superclasses)
         {
             enc = DEFAULT_ENCODINGS.get(cls);
             if (enc != null)
@@ -143,8 +143,8 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
             }
         }
 
-        List<Class<?>> interfaces = ClassUtils.getAllInterfaces(configClass);
-        for (Class<?> cls : interfaces)
+        final List<Class<?>> interfaces = ClassUtils.getAllInterfaces(configClass);
+        for (final Class<?> cls : interfaces)
         {
             enc = DEFAULT_ENCODINGS.get(cls);
             if (enc != null)
@@ -168,7 +168,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      * @param encoding the default encoding for this class
      * @throws IllegalArgumentException if the class is <b>null</b>
      */
-    public static void setDefaultEncoding(Class<?> configClass, String encoding)
+    public static void setDefaultEncoding(final Class<?> configClass, final String encoding)
     {
         if (configClass == null)
         {
@@ -191,7 +191,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      */
     @Override
     public FileBasedConfigurationBuilder<T> configure(
-            BuilderParameters... params)
+            final BuilderParameters... params)
     {
         super.configure(params);
         return this;
@@ -220,7 +220,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      */
     @Override
     public synchronized BasicConfigurationBuilder<T> setParameters(
-            Map<String, Object> params)
+            final Map<String, Object> params)
     {
         super.setParameters(params);
         resetParameters = true;
@@ -258,7 +258,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      * @param enabled <b>true</b> if auto save mode is to be enabled,
      *        <b>false</b> otherwise
      */
-    public synchronized void setAutoSave(boolean enabled)
+    public synchronized void setAutoSave(final boolean enabled)
     {
         if (enabled)
         {
@@ -276,10 +276,10 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      * object.
      */
     @Override
-    protected void initResultInstance(T obj) throws ConfigurationException
+    protected void initResultInstance(final T obj) throws ConfigurationException
     {
         super.initResultInstance(obj);
-        FileHandler srcHandler =
+        final FileHandler srcHandler =
                 (currentFileHandler != null && !resetParameters) ? currentFileHandler
                         : fetchFileHandlerFromParameters();
         currentFileHandler = new FileHandler(obj, srcHandler);
@@ -302,7 +302,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      * @param handler the new current {@code FileHandler}
      * @throws ConfigurationException if an error occurs
      */
-    protected void initFileHandler(FileHandler handler)
+    protected void initFileHandler(final FileHandler handler)
             throws ConfigurationException
     {
         initEncoding(handler);
@@ -370,11 +370,11 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      *
      * @param handler the handler to be initialized
      */
-    private void initEncoding(FileHandler handler)
+    private void initEncoding(final FileHandler handler)
     {
         if (StringUtils.isEmpty(handler.getEncoding()))
         {
-            String encoding = getDefaultEncoding(getResultClass());
+            final String encoding = getDefaultEncoding(getResultClass());
             if (encoding != null)
             {
                 handler.setEncoding(encoding);
@@ -390,7 +390,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      */
     private static Map<Class<?>, String> initializeDefaultEncodings()
     {
-        Map<Class<?>, String> enc = new ConcurrentHashMap<>();
+        final Map<Class<?>, String> enc = new ConcurrentHashMap<>();
         enc.put(PropertiesConfiguration.class,
                 PropertiesConfiguration.DEFAULT_ENCODING);
         enc.put(XMLPropertiesConfiguration.class,

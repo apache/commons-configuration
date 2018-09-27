@@ -34,7 +34,7 @@ public class ParametersBeanTestImpl extends BasicBuilderParameters
         return intProperty;
     }
 
-    public void setIntProperty(int intProperty)
+    public void setIntProperty(final int intProperty)
     {
         this.intProperty = intProperty;
     }
@@ -44,12 +44,12 @@ public class ParametersBeanTestImpl extends BasicBuilderParameters
         return stringProperty;
     }
 
-    public void setStringProperty(String stringProperty)
+    public void setStringProperty(final String stringProperty)
     {
         this.stringProperty = stringProperty;
     }
 
-    public ParametersBeanTestImpl setFluentProperty(String value)
+    public ParametersBeanTestImpl setFluentProperty(final String value)
     {
         setStringProperty(value);
         return this;
@@ -60,7 +60,7 @@ public class ParametersBeanTestImpl extends BasicBuilderParameters
         return fluentGetProperty;
     }
 
-    public ParametersBeanTestImpl setFluentPropertyWithGet(String s)
+    public ParametersBeanTestImpl setFluentPropertyWithGet(final String s)
     {
         fluentGetProperty = s;
         return this;

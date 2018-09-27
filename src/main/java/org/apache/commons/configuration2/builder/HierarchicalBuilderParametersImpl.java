@@ -45,7 +45,7 @@ public class HierarchicalBuilderParametersImpl extends
      * this class.
      */
     @Override
-    public void inheritFrom(Map<String, ?> source)
+    public void inheritFrom(final Map<String, ?> source)
     {
         super.inheritFrom(source);
         copyPropertiesFrom(source, PROP_EXPRESSION_ENGINE);
@@ -57,7 +57,7 @@ public class HierarchicalBuilderParametersImpl extends
      */
     @Override
     public HierarchicalBuilderParametersImpl setExpressionEngine(
-            ExpressionEngine engine)
+            final ExpressionEngine engine)
     {
         storeProperty(PROP_EXPRESSION_ENGINE, engine);
         return this;

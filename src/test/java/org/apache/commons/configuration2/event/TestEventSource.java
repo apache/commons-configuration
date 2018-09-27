@@ -68,9 +68,9 @@ public class TestEventSource
     @Test
     public void testAddEventListener()
     {
-        EventListenerTestImpl l = new EventListenerTestImpl(this);
+        final EventListenerTestImpl l = new EventListenerTestImpl(this);
         source.addEventListener(ConfigurationEvent.ANY, l);
-        Collection<EventListener<? super ConfigurationEvent>> listeners =
+        final Collection<EventListener<? super ConfigurationEvent>> listeners =
                 source.getEventListeners(ConfigurationEvent.ANY);
         assertEquals("Wrong number of listeners", 1, listeners.size());
         assertTrue("Listener not in list", listeners.contains(l));
@@ -92,7 +92,7 @@ public class TestEventSource
     @Test
     public void testRemoveEventListener()
     {
-        EventListenerTestImpl l = new EventListenerTestImpl(this);
+        final EventListenerTestImpl l = new EventListenerTestImpl(this);
         assertFalse("Listener can be removed?", source
                 .removeEventListener(ConfigurationEvent.ANY, l));
         source.addEventListener(ConfigurationEvent.ADD_NODES, new EventListenerTestImpl(this));
@@ -126,7 +126,7 @@ public class TestEventSource
     {
         source.addEventListener(ConfigurationEvent.ANY,
                 new EventListenerTestImpl(null));
-        Collection<EventListener<? super ConfigurationEvent>> list =
+        final Collection<EventListener<? super ConfigurationEvent>> list =
                 source.getEventListeners(ConfigurationEvent.ANY);
         list.clear();
     }
@@ -138,7 +138,7 @@ public class TestEventSource
     @Test
     public void testGetEventListenersAddNew()
     {
-        Collection<EventListener<? super ConfigurationEvent>> list =
+        final Collection<EventListener<? super ConfigurationEvent>> list =
                 source.getEventListeners(ConfigurationEvent.ANY);
         source.addEventListener(ConfigurationEvent.ANY,
                 new EventListenerTestImpl(null));
@@ -166,7 +166,7 @@ public class TestEventSource
     @Test
     public void testFireEvent()
     {
-        EventListenerTestImpl l = new EventListenerTestImpl(source);
+        final EventListenerTestImpl l = new EventListenerTestImpl(source);
         source.addEventListener(ConfigurationEvent.ANY, l);
         source.fireEvent(ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME,
                 TEST_PROPVALUE, true);
@@ -192,7 +192,7 @@ public class TestEventSource
     @Test
     public void testFireEventNoDetails()
     {
-        EventListenerTestImpl l = new EventListenerTestImpl(source);
+        final EventListenerTestImpl l = new EventListenerTestImpl(source);
         source.addEventListener(ConfigurationEvent.ANY, l);
         source.setDetailEvents(false);
         source.fireEvent(ConfigurationEvent.SET_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE, false);
@@ -207,17 +207,17 @@ public class TestEventSource
     @Test
     public void testRemoveListenerInFireEvent()
     {
-        EventListener<ConfigurationEvent> lstRemove = new EventListener<ConfigurationEvent>()
+        final EventListener<ConfigurationEvent> lstRemove = new EventListener<ConfigurationEvent>()
         {
             @Override
-            public void onEvent(ConfigurationEvent event)
+            public void onEvent(final ConfigurationEvent event)
             {
                 source.removeEventListener(ConfigurationEvent.ANY, this);
             }
         };
 
         source.addEventListener(ConfigurationEvent.ANY, lstRemove);
-        EventListenerTestImpl l = new EventListenerTestImpl(source);
+        final EventListenerTestImpl l = new EventListenerTestImpl(source);
         source.addEventListener(ConfigurationEvent.ANY, l);
         source.fireEvent(ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME,
                 TEST_PROPVALUE, false);
@@ -233,13 +233,13 @@ public class TestEventSource
     @Test
     public void testFireError()
     {
-        ErrorListenerTestImpl lstRead = new ErrorListenerTestImpl(source);
-        ErrorListenerTestImpl lstWrite = new ErrorListenerTestImpl(source);
-        ErrorListenerTestImpl lstAll = new ErrorListenerTestImpl(source);
+        final ErrorListenerTestImpl lstRead = new ErrorListenerTestImpl(source);
+        final ErrorListenerTestImpl lstWrite = new ErrorListenerTestImpl(source);
+        final ErrorListenerTestImpl lstAll = new ErrorListenerTestImpl(source);
         source.addEventListener(ConfigurationErrorEvent.READ, lstRead);
         source.addEventListener(ConfigurationErrorEvent.WRITE, lstWrite);
         source.addEventListener(ConfigurationErrorEvent.ANY, lstAll);
-        Exception testException = new Exception("A test");
+        final Exception testException = new Exception("A test");
 
         source.fireError(ConfigurationErrorEvent.WRITE,
                 ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE,
@@ -276,7 +276,7 @@ public class TestEventSource
     public void testClone() throws CloneNotSupportedException
     {
         source.addEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(source));
-        BaseEventSource copy = (BaseEventSource) source.clone();
+        final BaseEventSource copy = (BaseEventSource) source.clone();
         assertTrue("Configuration listeners registered for clone", copy
                 .getEventListenerRegistrations().isEmpty());
     }
@@ -306,12 +306,12 @@ public class TestEventSource
     @Test
     public void testCopyEventListeners()
     {
-        EventListenerTestImpl l1 = new EventListenerTestImpl(source);
-        EventListenerTestImpl l2 = new EventListenerTestImpl(source);
+        final EventListenerTestImpl l1 = new EventListenerTestImpl(source);
+        final EventListenerTestImpl l2 = new EventListenerTestImpl(source);
         source.addEventListener(ConfigurationEvent.ANY, l1);
         source.addEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2);
 
-        BaseEventSource source2 = new BaseEventSource();
+        final BaseEventSource source2 = new BaseEventSource();
         source.copyEventListeners(source2);
         Collection<EventListener<? super ConfigurationEvent>> listeners =
                 source2.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL);
@@ -338,17 +338,17 @@ public class TestEventSource
     @Test
     public void testClearErrorListeners()
     {
-        EventListener<ConfigurationEvent> cl = new EventListenerTestImpl(null);
-        ErrorListenerTestImpl el1 = new ErrorListenerTestImpl(null);
-        ErrorListenerTestImpl el2 = new ErrorListenerTestImpl(null);
-        ErrorListenerTestImpl el3 = new ErrorListenerTestImpl(null);
+        final EventListener<ConfigurationEvent> cl = new EventListenerTestImpl(null);
+        final ErrorListenerTestImpl el1 = new ErrorListenerTestImpl(null);
+        final ErrorListenerTestImpl el2 = new ErrorListenerTestImpl(null);
+        final ErrorListenerTestImpl el3 = new ErrorListenerTestImpl(null);
         source.addEventListener(ConfigurationErrorEvent.READ, el1);
         source.addEventListener(ConfigurationErrorEvent.ANY, el2);
         source.addEventListener(ConfigurationEvent.ANY, cl);
         source.addEventListener(ConfigurationErrorEvent.WRITE, el3);
 
         source.clearErrorListeners();
-        List<EventListenerRegistrationData<?>> regs =
+        final List<EventListenerRegistrationData<?>> regs =
                 source.getEventListenerRegistrations();
         assertEquals("Wrong number of event listener registrations", 1,
                 regs.size());
@@ -369,8 +369,8 @@ public class TestEventSource
 
         @Override
         protected <T extends ConfigurationEvent> ConfigurationEvent createEvent(
-                EventType<T> eventType, String propName, Object propValue,
-                boolean before)
+                final EventType<T> eventType, final String propName, final Object propValue,
+                final boolean before)
         {
             eventCount++;
             return super.createEvent(eventType, propName, propValue, before);
@@ -378,9 +378,9 @@ public class TestEventSource
 
         @Override
         protected ConfigurationErrorEvent createErrorEvent(
-                EventType<? extends ConfigurationErrorEvent> type,
-                EventType<?> opType, String propName, Object propValue,
-                Throwable ex)
+                final EventType<? extends ConfigurationErrorEvent> type,
+                final EventType<?> opType, final String propName, final Object propValue,
+                final Throwable ex)
         {
             errorCount++;
             return super

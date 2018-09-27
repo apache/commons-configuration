@@ -69,7 +69,7 @@ class AutoSaveListener extends FileHandlerListenerAdapter implements
      *
      * @param bldr the associated builder
      */
-    public AutoSaveListener(FileBasedConfigurationBuilder<?> bldr)
+    public AutoSaveListener(final FileBasedConfigurationBuilder<?> bldr)
     {
         builder = bldr;
     }
@@ -81,7 +81,7 @@ class AutoSaveListener extends FileHandlerListenerAdapter implements
      * operation is in progress.
      */
     @Override
-    public void onEvent(ConfigurationEvent event)
+    public void onEvent(final ConfigurationEvent event)
     {
         if (autoSaveRequired(event))
         {
@@ -89,7 +89,7 @@ class AutoSaveListener extends FileHandlerListenerAdapter implements
             {
                 builder.save();
             }
-            catch (ConfigurationException ce)
+            catch (final ConfigurationException ce)
             {
                 log.warn("Auto save failed!", ce);
             }
@@ -101,7 +101,7 @@ class AutoSaveListener extends FileHandlerListenerAdapter implements
      * operations in progress.
      */
     @Override
-    public synchronized void loading(FileHandler handler)
+    public synchronized void loading(final FileHandler handler)
     {
         loading++;
     }
@@ -111,7 +111,7 @@ class AutoSaveListener extends FileHandlerListenerAdapter implements
      * operations in progress.
      */
     @Override
-    public synchronized void loaded(FileHandler handler)
+    public synchronized void loaded(final FileHandler handler)
     {
         loading--;
     }
@@ -124,7 +124,7 @@ class AutoSaveListener extends FileHandlerListenerAdapter implements
      *
      * @param fh the new {@code FileHandler} (can be <b>null</b>)
      */
-    public synchronized void updateFileHandler(FileHandler fh)
+    public synchronized void updateFileHandler(final FileHandler fh)
     {
         if (handler != null)
         {
@@ -156,7 +156,7 @@ class AutoSaveListener extends FileHandlerListenerAdapter implements
      * @return <b>true</b> if a save operation should be performed, <b>false</b>
      *         otherwise
      */
-    private boolean autoSaveRequired(ConfigurationEvent event)
+    private boolean autoSaveRequired(final ConfigurationEvent event)
     {
         return !event.isBeforeUpdate() && !inLoadOperation();
     }

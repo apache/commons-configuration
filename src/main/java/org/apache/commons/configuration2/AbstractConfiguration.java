@@ -174,7 +174,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @since 2.0
      */
     public void setListDelimiterHandler(
-            ListDelimiterHandler listDelimiterHandler)
+            final ListDelimiterHandler listDelimiterHandler)
     {
         if (listDelimiterHandler == null)
         {
@@ -210,7 +210,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *         <b>null</b>
      * @since 2.0
      */
-    public void setConversionHandler(ConversionHandler conversionHandler)
+    public void setConversionHandler(final ConversionHandler conversionHandler)
     {
         if (conversionHandler == null)
         {
@@ -231,7 +231,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *
      * @param throwExceptionOnMissing The new value for the property
      */
-    public void setThrowExceptionOnMissing(boolean throwExceptionOnMissing)
+    public void setThrowExceptionOnMissing(final boolean throwExceptionOnMissing)
     {
         this.throwExceptionOnMissing = throwExceptionOnMissing;
     }
@@ -268,7 +268,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @since 2.0
      */
     @Override
-    public final void setInterpolator(ConfigurationInterpolator ci)
+    public final void setInterpolator(final ConfigurationInterpolator ci)
     {
         interpolator.set(ci);
     }
@@ -283,10 +283,10 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     @Override
     public final void installInterpolator(
-            Map<String, ? extends Lookup> prefixLookups,
-            Collection<? extends Lookup> defLookups)
+            final Map<String, ? extends Lookup> prefixLookups,
+            final Collection<? extends Lookup> defLookups)
     {
-        InterpolatorSpecification spec =
+        final InterpolatorSpecification spec =
                 new InterpolatorSpecification.Builder()
                         .withPrefixLookups(prefixLookups)
                         .withDefaultLookups(defLookups)
@@ -310,15 +310,15 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *        (may be <b>null</b>)
      * @since 2.0
      */
-    public void setPrefixLookups(Map<String, ? extends Lookup> lookups)
+    public void setPrefixLookups(final Map<String, ? extends Lookup> lookups)
     {
         boolean success;
         do
         {
             // do this in a loop because the ConfigurationInterpolator
             // instance may be changed by another thread
-            ConfigurationInterpolator ciOld = getInterpolator();
-            ConfigurationInterpolator ciNew =
+            final ConfigurationInterpolator ciOld = getInterpolator();
+            final ConfigurationInterpolator ciNew =
                     (ciOld != null) ? ciOld : new ConfigurationInterpolator();
             ciNew.registerLookups(lookups);
             success = interpolator.compareAndSet(ciOld, ciNew);
@@ -342,13 +342,13 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *        added
      * @since 2.0
      */
-    public void setDefaultLookups(Collection<? extends Lookup> lookups)
+    public void setDefaultLookups(final Collection<? extends Lookup> lookups)
     {
         boolean success;
         do
         {
-            ConfigurationInterpolator ciOld = getInterpolator();
-            ConfigurationInterpolator ciNew =
+            final ConfigurationInterpolator ciOld = getInterpolator();
+            final ConfigurationInterpolator ciNew =
                     (ciOld != null) ? ciOld : new ConfigurationInterpolator();
             Lookup confLookup = findConfigurationLookup(ciNew);
             if (confLookup == null)
@@ -376,13 +376,13 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param parent the parent {@code ConfigurationInterpolator} to be set
      * @since 2.0
      */
-    public void setParentInterpolator(ConfigurationInterpolator parent)
+    public void setParentInterpolator(final ConfigurationInterpolator parent)
     {
         boolean success;
         do
         {
-            ConfigurationInterpolator ciOld = getInterpolator();
-            ConfigurationInterpolator ciNew =
+            final ConfigurationInterpolator ciOld = getInterpolator();
+            final ConfigurationInterpolator ciNew =
                     (ciOld != null) ? ciOld : new ConfigurationInterpolator();
             ciNew.setParentInterpolator(parent);
             success = interpolator.compareAndSet(ciOld, ciNew);
@@ -397,7 +397,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @since 2.0
      */
     public void setConfigurationDecoder(
-            ConfigurationDecoder configurationDecoder)
+            final ConfigurationDecoder configurationDecoder)
     {
         this.configurationDecoder = configurationDecoder;
     }
@@ -432,12 +432,12 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *        cloned
      * @since 2.0
      */
-    protected void cloneInterpolator(AbstractConfiguration orgConfig)
+    protected void cloneInterpolator(final AbstractConfiguration orgConfig)
     {
         interpolator = new AtomicReference<>();
-        ConfigurationInterpolator orgInterpolator = orgConfig.getInterpolator();
-        List<Lookup> defaultLookups = orgInterpolator.getDefaultLookups();
-        Lookup lookup = findConfigurationLookup(orgInterpolator, orgConfig);
+        final ConfigurationInterpolator orgInterpolator = orgConfig.getInterpolator();
+        final List<Lookup> defaultLookups = orgInterpolator.getDefaultLookups();
+        final Lookup lookup = findConfigurationLookup(orgInterpolator, orgConfig);
         if (lookup != null)
         {
             defaultLookups.remove(lookup);
@@ -467,7 +467,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param ci the {@code ConfigurationInterpolator} in question
      * @return the found {@code Lookup} object or <b>null</b>
      */
-    private Lookup findConfigurationLookup(ConfigurationInterpolator ci)
+    private Lookup findConfigurationLookup(final ConfigurationInterpolator ci)
     {
         return findConfigurationLookup(ci, this);
     }
@@ -481,10 +481,10 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param targetConf the target configuration of the searched lookup
      * @return the found {@code Lookup} object or <b>null</b>
      */
-    private static Lookup findConfigurationLookup(ConfigurationInterpolator ci,
-            ImmutableConfiguration targetConf)
+    private static Lookup findConfigurationLookup(final ConfigurationInterpolator ci,
+            final ImmutableConfiguration targetConf)
     {
-        for (Lookup l : ci.getDefaultLookups())
+        for (final Lookup l : ci.getDefaultLookups())
         {
             if (l instanceof ConfigurationLookup)
             {
@@ -519,7 +519,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param log the new logger
      * @since 2.0
      */
-    public void setLogger(ConfigurationLogger log)
+    public void setLogger(final ConfigurationLogger log)
     {
         initLogger(log);
     }
@@ -538,7 +538,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
                 new EventListener<ConfigurationErrorEvent>()
                 {
                     @Override
-                    public void onEvent(ConfigurationErrorEvent event)
+                    public void onEvent(final ConfigurationErrorEvent event)
                     {
                         getLogger().warn("Internal error", event.getCause());
                     }
@@ -559,7 +559,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     @Override
     public final Synchronizer getSynchronizer()
     {
-        Synchronizer sync = synchronizer;
+        final Synchronizer sync = synchronizer;
         return (sync != null) ? sync : NoOpSynchronizer.INSTANCE;
     }
 
@@ -573,7 +573,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @since 2.0
      */
     @Override
-    public final void setSynchronizer(Synchronizer synchronizer)
+    public final void setSynchronizer(final Synchronizer synchronizer)
     {
         this.synchronizer = synchronizer;
     }
@@ -588,7 +588,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @throws NullPointerException if the argument is <b>null</b>
      */
     @Override
-    public final void lock(LockMode mode)
+    public final void lock(final LockMode mode)
     {
         switch (mode)
         {
@@ -612,7 +612,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @throws NullPointerException if the argument is <b>null</b>
      */
     @Override
-    public final void unlock(LockMode mode)
+    public final void unlock(final LockMode mode)
     {
         switch (mode)
         {
@@ -646,7 +646,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param optimize a flag whether optimization can be performed
      * @since 2.0
      */
-    protected void beginRead(boolean optimize)
+    protected void beginRead(final boolean optimize)
     {
         getSynchronizer().beginRead();
     }
@@ -679,7 +679,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @see #beginRead(boolean)
      * @since 2.0
      */
-    protected void beginWrite(boolean optimize)
+    protected void beginWrite(final boolean optimize)
     {
         getSynchronizer().beginWrite();
     }
@@ -700,7 +700,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     @Override
-    public final void addProperty(String key, Object value)
+    public final void addProperty(final String key, final Object value)
     {
         beginWrite(false);
         try
@@ -725,9 +725,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param value the new property value
      * @since 2.0
      */
-    protected void addPropertyInternal(String key, Object value)
+    protected void addPropertyInternal(final String key, final Object value)
     {
-        for (Object obj : getListDelimiterHandler().parse(value))
+        for (final Object obj : getListDelimiterHandler().parse(value))
         {
             addPropertyDirect(key, obj);
         }
@@ -749,9 +749,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *
      * @return returns the key name with the ${key} substituted
      */
-    protected String interpolate(String base)
+    protected String interpolate(final String base)
     {
-        Object result = interpolate((Object) base);
+        final Object result = interpolate((Object) base);
         return (result == null) ? null : result.toString();
     }
 
@@ -764,26 +764,26 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param value the value to interpolate
      * @return the value with variables substituted
      */
-    protected Object interpolate(Object value)
+    protected Object interpolate(final Object value)
     {
-        ConfigurationInterpolator ci = getInterpolator();
+        final ConfigurationInterpolator ci = getInterpolator();
         return ci != null ? ci.interpolate(value) : value;
     }
 
     @Override
-    public Configuration subset(String prefix)
+    public Configuration subset(final String prefix)
     {
         return new SubsetConfiguration(this, prefix, ".");
     }
 
     @Override
-    public ImmutableConfiguration immutableSubset(String prefix)
+    public ImmutableConfiguration immutableSubset(final String prefix)
     {
         return ConfigurationUtils.unmodifiableConfiguration(subset(prefix));
     }
 
     @Override
-    public final void setProperty(String key, Object value)
+    public final void setProperty(final String key, final Object value)
     {
         beginWrite(false);
         try
@@ -809,7 +809,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param value the new property value
      * @since 2.0
      */
-    protected void setPropertyInternal(String key, Object value)
+    protected void setPropertyInternal(final String key, final Object value)
     {
         setDetailEvents(false);
         try
@@ -831,7 +831,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param key the key to be removed
      */
     @Override
-    public final void clearProperty(String key)
+    public final void clearProperty(final String key)
     {
         beginWrite(false);
         try
@@ -884,17 +884,17 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         boolean useIterator = true;
         try
         {
-            Iterator<String> it = getKeys();
+            final Iterator<String> it = getKeys();
             while (it.hasNext())
             {
-                String key = it.next();
+                final String key = it.next();
                 if (useIterator)
                 {
                     try
                     {
                         it.remove();
                     }
-                    catch (UnsupportedOperationException usoex)
+                    catch (final UnsupportedOperationException usoex)
                     {
                         useIterator = false;
                     }
@@ -948,7 +948,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * {@code dbdriver}.
      */
     @Override
-    public final Iterator<String> getKeys(String prefix)
+    public final Iterator<String> getKeys(final String prefix)
     {
         beginRead(false);
         try
@@ -983,7 +983,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @return an {@code Iterator} returning the filtered keys
      * @since 2.0
      */
-    protected Iterator<String> getKeysInternal(String prefix)
+    protected Iterator<String> getKeysInternal(final String prefix)
     {
         return new PrefixedKeysIterator(getKeysInternal(), prefix);
     }
@@ -994,7 +994,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * method which is called from here.
      */
     @Override
-    public final Object getProperty(String key)
+    public final Object getProperty(final String key)
     {
         beginRead(false);
         try
@@ -1076,7 +1076,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     protected int sizeInternal()
     {
         int size = 0;
-        for (Iterator<String> keyIt = getKeysInternal(); keyIt.hasNext(); size++)
+        for (final Iterator<String> keyIt = getKeysInternal(); keyIt.hasNext(); size++)
         {
             keyIt.next();
         }
@@ -1088,7 +1088,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * to {@code containsKeyInternal()}.
      */
     @Override
-    public final boolean containsKey(String key)
+    public final boolean containsKey(final String key)
     {
         beginRead(false);
         try
@@ -1114,7 +1114,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     protected abstract boolean containsKeyInternal(String key);
 
     @Override
-    public Properties getProperties(String key)
+    public Properties getProperties(final String key)
     {
         return getProperties(key, null);
     }
@@ -1134,24 +1134,24 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @throws IllegalArgumentException if one of the tokens is malformed (does
      * not contain an equals sign).
      */
-    public Properties getProperties(String key, Properties defaults)
+    public Properties getProperties(final String key, final Properties defaults)
     {
         /*
          * Grab an array of the tokens for this key.
          */
-        String[] tokens = getStringArray(key);
+        final String[] tokens = getStringArray(key);
 
         /*
          * Each token is of the form 'key=value'.
          */
-        Properties props = defaults == null ? new Properties() : new Properties(defaults);
-        for (String token : tokens)
+        final Properties props = defaults == null ? new Properties() : new Properties(defaults);
+        for (final String token : tokens)
         {
-            int equalSign = token.indexOf('=');
+            final int equalSign = token.indexOf('=');
             if (equalSign > 0)
             {
-                String pkey = token.substring(0, equalSign).trim();
-                String pvalue = token.substring(equalSign + 1).trim();
+                final String pkey = token.substring(0, equalSign).trim();
+                final String pvalue = token.substring(equalSign + 1).trim();
                 props.put(pkey, pvalue);
             }
             else if (tokens.length == 1 && "".equals(token))
@@ -1169,14 +1169,14 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     @Override
-    public boolean getBoolean(String key)
+    public boolean getBoolean(final String key)
     {
-        Boolean b = convert(Boolean.class, key, null, true);
+        final Boolean b = convert(Boolean.class, key, null, true);
         return checkNonNullValue(key, b).booleanValue();
     }
 
     @Override
-    public boolean getBoolean(String key, boolean defaultValue)
+    public boolean getBoolean(final String key, final boolean defaultValue)
     {
         return getBoolean(key, Boolean.valueOf(defaultValue)).booleanValue();
     }
@@ -1193,121 +1193,121 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * {@code Boolean}
      */
     @Override
-    public Boolean getBoolean(String key, Boolean defaultValue)
+    public Boolean getBoolean(final String key, final Boolean defaultValue)
     {
         return convert(Boolean.class, key, defaultValue, false);
     }
 
     @Override
-    public byte getByte(String key)
+    public byte getByte(final String key)
     {
-        Byte b = convert(Byte.class, key, null, true);
+        final Byte b = convert(Byte.class, key, null, true);
         return checkNonNullValue(key, b).byteValue();
     }
 
     @Override
-    public byte getByte(String key, byte defaultValue)
+    public byte getByte(final String key, final byte defaultValue)
     {
         return getByte(key, Byte.valueOf(defaultValue)).byteValue();
     }
 
     @Override
-    public Byte getByte(String key, Byte defaultValue)
+    public Byte getByte(final String key, final Byte defaultValue)
     {
         return convert(Byte.class, key, defaultValue, false);
     }
 
     @Override
-    public double getDouble(String key)
+    public double getDouble(final String key)
     {
-        Double d = convert(Double.class, key, null, true);
+        final Double d = convert(Double.class, key, null, true);
         return checkNonNullValue(key, d).doubleValue();
     }
 
     @Override
-    public double getDouble(String key, double defaultValue)
+    public double getDouble(final String key, final double defaultValue)
     {
         return getDouble(key, Double.valueOf(defaultValue)).doubleValue();
     }
 
     @Override
-    public Double getDouble(String key, Double defaultValue)
+    public Double getDouble(final String key, final Double defaultValue)
     {
         return convert(Double.class, key, defaultValue, false);
     }
 
     @Override
-    public float getFloat(String key)
+    public float getFloat(final String key)
     {
-        Float f = convert(Float.class, key, null, true);
+        final Float f = convert(Float.class, key, null, true);
         return checkNonNullValue(key, f).floatValue();
     }
 
     @Override
-    public float getFloat(String key, float defaultValue)
+    public float getFloat(final String key, final float defaultValue)
     {
         return getFloat(key, Float.valueOf(defaultValue)).floatValue();
     }
 
     @Override
-    public Float getFloat(String key, Float defaultValue)
+    public Float getFloat(final String key, final Float defaultValue)
     {
         return convert(Float.class, key, defaultValue, false);
     }
 
     @Override
-    public int getInt(String key)
+    public int getInt(final String key)
     {
-        Integer i = convert(Integer.class, key, null, true);
+        final Integer i = convert(Integer.class, key, null, true);
         return checkNonNullValue(key, i).intValue();
     }
 
     @Override
-    public int getInt(String key, int defaultValue)
+    public int getInt(final String key, final int defaultValue)
     {
         return getInteger(key, Integer.valueOf(defaultValue)).intValue();
     }
 
     @Override
-    public Integer getInteger(String key, Integer defaultValue)
+    public Integer getInteger(final String key, final Integer defaultValue)
     {
         return convert(Integer.class, key, defaultValue, false);
     }
 
     @Override
-    public long getLong(String key)
+    public long getLong(final String key)
     {
-        Long l = convert(Long.class, key, null, true);
+        final Long l = convert(Long.class, key, null, true);
         return checkNonNullValue(key, l).longValue();
     }
 
     @Override
-    public long getLong(String key, long defaultValue)
+    public long getLong(final String key, final long defaultValue)
     {
         return getLong(key, Long.valueOf(defaultValue)).longValue();
     }
 
     @Override
-    public Long getLong(String key, Long defaultValue)
+    public Long getLong(final String key, final Long defaultValue)
     {
         return convert(Long.class, key, defaultValue, false);
     }
 
     @Override
-    public short getShort(String key)
+    public short getShort(final String key)
     {
-        Short s = convert(Short.class, key, null, true);
+        final Short s = convert(Short.class, key, null, true);
         return checkNonNullValue(key, s).shortValue();
     }
 
     @Override
-    public short getShort(String key, short defaultValue)
+    public short getShort(final String key, final short defaultValue)
     {
         return getShort(key, Short.valueOf(defaultValue)).shortValue();
     }
 
     @Override
-    public Short getShort(String key, Short defaultValue)
+    public Short getShort(final String key, final Short defaultValue)
     {
         return convert(Short.class, key, defaultValue, false);
     }
@@ -1317,13 +1317,13 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @see #setThrowExceptionOnMissing(boolean)
      */
     @Override
-    public BigDecimal getBigDecimal(String key)
+    public BigDecimal getBigDecimal(final String key)
     {
         return convert(BigDecimal.class, key, null, true);
     }
 
     @Override
-    public BigDecimal getBigDecimal(String key, BigDecimal defaultValue)
+    public BigDecimal getBigDecimal(final String key, final BigDecimal defaultValue)
     {
         return convert(BigDecimal.class, key, defaultValue, false);
     }
@@ -1333,13 +1333,13 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @see #setThrowExceptionOnMissing(boolean)
      */
     @Override
-    public BigInteger getBigInteger(String key)
+    public BigInteger getBigInteger(final String key)
     {
         return convert(BigInteger.class, key, null, true);
     }
 
     @Override
-    public BigInteger getBigInteger(String key, BigInteger defaultValue)
+    public BigInteger getBigInteger(final String key, final BigInteger defaultValue)
     {
         return convert(BigInteger.class, key, defaultValue, false);
     }
@@ -1349,15 +1349,15 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @see #setThrowExceptionOnMissing(boolean)
      */
     @Override
-    public String getString(String key)
+    public String getString(final String key)
     {
         return convert(String.class, key, null, true);
     }
 
     @Override
-    public String getString(String key, String defaultValue)
+    public String getString(final String key, final String defaultValue)
     {
-        String result = convert(String.class, key, null, false);
+        final String result = convert(String.class, key, null, false);
         return (result != null) ? result : interpolate(defaultValue);
     }
 
@@ -1369,7 +1369,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * expected.
      */
     @Override
-    public String getEncodedString(String key, ConfigurationDecoder decoder)
+    public String getEncodedString(final String key, final ConfigurationDecoder decoder)
     {
         if (decoder == null)
         {
@@ -1377,7 +1377,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
                     "ConfigurationDecoder must not be null!");
         }
 
-        String value = getString(key);
+        final String value = getString(key);
         return (value != null) ? decoder.decode(value) : null;
     }
 
@@ -1391,9 +1391,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @see #setConfigurationDecoder(ConfigurationDecoder)
      */
     @Override
-    public String getEncodedString(String key)
+    public String getEncodedString(final String key)
     {
-        ConfigurationDecoder decoder = getConfigurationDecoder();
+        final ConfigurationDecoder decoder = getConfigurationDecoder();
         if (decoder == null)
         {
             throw new IllegalStateException(
@@ -1419,9 +1419,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @see #setListDelimiterHandler(ListDelimiterHandler)
      */
     @Override
-    public String[] getStringArray(String key)
+    public String[] getStringArray(final String key)
     {
-        String[] result = (String[]) getArray(String.class, key);
+        final String[] result = (String[]) getArray(String.class, key);
         return (result == null) ? new String[0] : result;
     }
 
@@ -1430,15 +1430,15 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @see #getStringArray(String)
      */
     @Override
-    public List<Object> getList(String key)
+    public List<Object> getList(final String key)
     {
         return getList(key, new ArrayList<>());
     }
 
     @Override
-    public List<Object> getList(String key, List<?> defaultValue)
+    public List<Object> getList(final String key, final List<?> defaultValue)
     {
-        Object value = getProperty(key);
+        final Object value = getProperty(key);
         List<Object> list;
 
         if (value instanceof String)
@@ -1449,10 +1449,10 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         else if (value instanceof List)
         {
             list = new ArrayList<>();
-            List<?> l = (List<?>) value;
+            final List<?> l = (List<?>) value;
 
             // add the interpolated elements in the new list
-            for (Object elem : l)
+            for (final Object elem : l)
             {
                 list.add(interpolate(elem));
             }
@@ -1461,6 +1461,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         {
             // This is okay because we just return this list to the caller
             @SuppressWarnings("unchecked")
+            final
             List<Object> resultList = (List<Object>) defaultValue;
             list = resultList;
         }
@@ -1481,7 +1482,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     @Override
-    public <T> T get(Class<T> cls, String key)
+    public <T> T get(final Class<T> cls, final String key)
     {
         return convert(cls, key, null, true);
     }
@@ -1491,13 +1492,13 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * {@link ConversionHandler} to perform the actual type conversion.
      */
     @Override
-    public <T> T get(Class<T> cls, String key, T defaultValue)
+    public <T> T get(final Class<T> cls, final String key, final T defaultValue)
     {
         return convert(cls, key, defaultValue, false);
     }
 
     @Override
-    public Object getArray(Class<?> cls, String key)
+    public Object getArray(final Class<?> cls, final String key)
     {
         return getArray(cls, key, null);
     }
@@ -1513,13 +1514,13 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *         array
      */
     @Override
-    public Object getArray(Class<?> cls, String key, Object defaultValue)
+    public Object getArray(final Class<?> cls, final String key, final Object defaultValue)
     {
         return convertToArray(cls, key, defaultValue);
     }
 
     @Override
-    public <T> List<T> getList(Class<T> cls, String key)
+    public <T> List<T> getList(final Class<T> cls, final String key)
     {
         return getList(cls, key, null);
     }
@@ -1530,9 +1531,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * {@code ArrayList} is passed in.
      */
     @Override
-    public <T> List<T> getList(Class<T> cls, String key, List<T> defaultValue)
+    public <T> List<T> getList(final Class<T> cls, final String key, final List<T> defaultValue)
     {
-        List<T> result = new ArrayList<>();
+        final List<T> result = new ArrayList<>();
         if (getCollection(cls, key, result, defaultValue) == null)
         {
             return null;
@@ -1541,8 +1542,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     @Override
-    public <T> Collection<T> getCollection(Class<T> cls, String key,
-            Collection<T> target)
+    public <T> Collection<T> getCollection(final Class<T> cls, final String key,
+            final Collection<T> target)
     {
         return getCollection(cls, key, target, null);
     }
@@ -1553,16 +1554,16 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * collection is provided, an {@code ArrayList} is created.
      */
     @Override
-    public <T> Collection<T> getCollection(Class<T> cls, String key,
-            Collection<T> target, Collection<T> defaultValue)
+    public <T> Collection<T> getCollection(final Class<T> cls, final String key,
+            final Collection<T> target, final Collection<T> defaultValue)
     {
-        Object src = getProperty(key);
+        final Object src = getProperty(key);
         if (src == null)
         {
             return handleDefaultCollection(target, defaultValue);
         }
 
-        Collection<T> targetCol =
+        final Collection<T> targetCol =
                 (target != null) ? target : new ArrayList<>();
         getConversionHandler().toCollection(src, cls, getInterpolator(),
                 targetCol);
@@ -1582,7 +1583,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @return a flag whether the value is a scalar
      * @since 1.7
      */
-    protected boolean isScalarValue(Object value)
+    protected boolean isScalarValue(final Object value)
     {
         return ClassUtils.wrapperToPrimitive(value.getClass()) != null;
     }
@@ -1602,17 +1603,17 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * operation will have no effect)
      * @since 1.5
      */
-    public void copy(Configuration c)
+    public void copy(final Configuration c)
     {
         if (c != null)
         {
             c.lock(LockMode.READ);
             try
             {
-                for (Iterator<String> it = c.getKeys(); it.hasNext();)
+                for (final Iterator<String> it = c.getKeys(); it.hasNext();)
                 {
-                    String key = it.next();
-                    Object value = encodeForCopy(c.getProperty(key));
+                    final String key = it.next();
+                    final Object value = encodeForCopy(c.getProperty(key));
                     setProperty(key, value);
                 }
             }
@@ -1640,17 +1641,17 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * operation will have no effect)
      * @since 1.5
      */
-    public void append(Configuration c)
+    public void append(final Configuration c)
     {
         if (c != null)
         {
             c.lock(LockMode.READ);
             try
             {
-                for (Iterator<String> it = c.getKeys(); it.hasNext();)
+                for (final Iterator<String> it = c.getKeys(); it.hasNext();)
                 {
-                    String key = it.next();
-                    Object value = encodeForCopy(c.getProperty(key));
+                    final String key = it.next();
+                    final Object value = encodeForCopy(c.getProperty(key));
                     addProperty(key, value);
                 }
             }
@@ -1679,14 +1680,14 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     public Configuration interpolatedConfiguration()
     {
         // first clone this configuration
-        AbstractConfiguration c = (AbstractConfiguration) ConfigurationUtils
+        final AbstractConfiguration c = (AbstractConfiguration) ConfigurationUtils
                 .cloneConfiguration(this);
 
         // now perform interpolation
         c.setListDelimiterHandler(new DisabledListDelimiterHandler());
-        for (Iterator<String> it = getKeys(); it.hasNext();)
+        for (final Iterator<String> it = getKeys(); it.hasNext();)
         {
-            String key = it.next();
+            final String key = it.next();
             c.setProperty(key, getList(key));
         }
 
@@ -1701,7 +1702,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param log the logger
      * @since 2.0
      */
-    protected final void initLogger(ConfigurationLogger log)
+    protected final void initLogger(final ConfigurationLogger log)
     {
         this.log = (log != null) ? log : ConfigurationLogger.newDummyLogger();
     }
@@ -1715,7 +1716,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param value the value to be encoded
      * @return the encoded value
      */
-    private Object encodeForCopy(Object value)
+    private Object encodeForCopy(final Object value)
     {
         if (value instanceof Collection)
         {
@@ -1733,10 +1734,10 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param values the list to be encoded
      * @return a list with encoded elements
      */
-    private Object encodeListForCopy(Collection<?> values)
+    private Object encodeListForCopy(final Collection<?> values)
     {
-        List<Object> result = new ArrayList<>(values.size());
-        for (Object value : values)
+        final List<Object> result = new ArrayList<>(values.size());
+        for (final Object value : values)
         {
             result.add(encodeForCopy(value));
         }
@@ -1754,16 +1755,16 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @return the converted value of this property
      * @throws ConversionException if the conversion cannot be performed
      */
-    private <T> T getAndConvertProperty(Class<T> cls, String key, T defaultValue)
+    private <T> T getAndConvertProperty(final Class<T> cls, final String key, final T defaultValue)
     {
-        Object value = getProperty(key);
+        final Object value = getProperty(key);
         try
         {
             return ObjectUtils.defaultIfNull(
                     getConversionHandler().to(value, cls, getInterpolator()),
                     defaultValue);
         }
-        catch (ConversionException cex)
+        catch (final ConversionException cex)
         {
             // improve error message
             throw new ConversionException(
@@ -1784,15 +1785,15 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *        missing value
      * @return the converted value
      */
-    private <T> T convert(Class<T> cls, String key, T defValue,
-            boolean throwOnMissing)
+    private <T> T convert(final Class<T> cls, final String key, final T defValue,
+            final boolean throwOnMissing)
     {
         if (cls.isArray())
         {
             return cls.cast(convertToArray(cls.getComponentType(), key, defValue));
         }
 
-        T result = getAndConvertProperty(cls, key, defValue);
+        final T result = getAndConvertProperty(cls, key, defValue);
         if (result == null)
         {
             if (throwOnMissing && isThrowExceptionOnMissing())
@@ -1820,7 +1821,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @throws IllegalArgumentException if the default value is not a compatible
      *         array
      */
-    private Object convertToArray(Class<?> cls, String key, Object defaultValue)
+    private Object convertToArray(final Class<?> cls, final String key, final Object defaultValue)
     {
         checkDefaultValueArray(cls, defaultValue);
         return ObjectUtils.defaultIfNull(getConversionHandler().toArray(
@@ -1836,7 +1837,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param defaultValue the default value object to be checked
      * @throws IllegalArgumentException if this is not a valid default object
      */
-    private static void checkDefaultValueArray(Class<?> cls, Object defaultValue)
+    private static void checkDefaultValueArray(final Class<?> cls, final Object defaultValue)
     {
         if (defaultValue != null
                 && (!defaultValue.getClass().isArray() || !cls
@@ -1859,8 +1860,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param defaultValue the default collection
      * @return the initialized target collection
      */
-    private static <T> Collection<T> handleDefaultCollection(Collection<T> target,
-            Collection<T> defaultValue)
+    private static <T> Collection<T> handleDefaultCollection(final Collection<T> target,
+            final Collection<T> defaultValue)
     {
         if (defaultValue == null)
         {
@@ -1891,7 +1892,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @return the passed in value for chaining this method call
      * @throws NoSuchElementException if the value is <b>null</b>
      */
-    private static <T> T checkNonNullValue(String key, T value)
+    private static <T> T checkNonNullValue(final String key, final T value)
     {
         if (value == null)
         {
@@ -1906,7 +1907,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *
      * @param key the key (to be part of the error message)
      */
-    private static void throwMissingPropertyException(String key)
+    private static void throwMissingPropertyException(final String key)
     {
         throw new NoSuchElementException(String.format(
                 "Key '%s' does not map to an existing object!", key));

@@ -47,17 +47,17 @@ public class TestSystemConfiguration
     @Test
     public void testSystemConfiguration()
     {
-        Properties props = System.getProperties();
+        final Properties props = System.getProperties();
         props.put("test.number", "123");
 
-        Configuration conf = new SystemConfiguration();
+        final Configuration conf = new SystemConfiguration();
         assertEquals("number", 123, conf.getInt("test.number"));
     }
 
     @Test
     public void testSetSystemProperties()
     {
-        PropertiesConfiguration props = new PropertiesConfiguration();
+        final PropertiesConfiguration props = new PropertiesConfiguration();
         props.addProperty("test.name", "Apache");
         SystemConfiguration.setSystemProperties(props);
         assertEquals("System Properties", "Apache", System.getProperty("test.name"));
@@ -70,15 +70,15 @@ public class TestSystemConfiguration
     public void testSetSystemPropertiesFromPropertiesFile()
             throws ConfigurationException, IOException
     {
-        File file = folder.newFile("sys.properties");
-        PropertiesConfiguration pconfig = new PropertiesConfiguration();
-        FileHandler handler = new FileHandler(pconfig);
+        final File file = folder.newFile("sys.properties");
+        final PropertiesConfiguration pconfig = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(pconfig);
         pconfig.addProperty("fromFile", Boolean.TRUE);
         handler.setFile(file);
         handler.save();
         SystemConfiguration.setSystemProperties(handler.getBasePath(),
                 handler.getFileName());
-        SystemConfiguration sconf = new SystemConfiguration();
+        final SystemConfiguration sconf = new SystemConfiguration();
         assertTrue("Property from file not found", sconf.getBoolean("fromFile"));
     }
 
@@ -88,8 +88,8 @@ public class TestSystemConfiguration
     @Test
     public void testChangeSystemProperties()
     {
-        String testProperty = "someTest";
-        SystemConfiguration config = new SystemConfiguration();
+        final String testProperty = "someTest";
+        final SystemConfiguration config = new SystemConfiguration();
         config.setProperty(testProperty, "true");
         assertEquals("System property not changed", "true",
                 System.getProperty(testProperty));
@@ -106,7 +106,7 @@ public class TestSystemConfiguration
         final AtomicBoolean stop = new AtomicBoolean();
         final String property =
                 SystemConfiguration.class.getName() + ".testProperty";
-        Thread t = new Thread()
+        final Thread t = new Thread()
         {
             @Override
             public void run()
@@ -130,15 +130,15 @@ public class TestSystemConfiguration
         {
             t.start();
 
-            SystemConfiguration config = new SystemConfiguration();
-            PropertiesConfiguration props = new PropertiesConfiguration();
+            final SystemConfiguration config = new SystemConfiguration();
+            final PropertiesConfiguration props = new PropertiesConfiguration();
             props.append(config);
 
             stop.set(true);
             t.join();
-            for (Iterator<String> keys = config.getKeys(); keys.hasNext();)
+            for (final Iterator<String> keys = config.getKeys(); keys.hasNext();)
             {
-                String key = keys.next();
+                final String key = keys.next();
                 if (!property.equals(key))
                 {
                     assertEquals("Wrong value for " + key,

@@ -59,9 +59,9 @@ public class TestJNDIConfiguration {
 
         System.setProperty("java.naming.factory.initial", CONTEXT_FACTORY);
 
-        Properties props = new Properties();
+        final Properties props = new Properties();
         props.put("java.naming.factory.initial", CONTEXT_FACTORY);
-        Context ctx = new InitialContext(props);
+        final Context ctx = new InitialContext(props);
         conf = new PotentialErrorJNDIConfiguration(ctx);
 
         nonStringTestHolder = new NonStringTestHolder();
@@ -161,7 +161,7 @@ public class TestJNDIConfiguration {
 
     @Test
     public void testProperties() throws Exception {
-        Object o = conf.getProperty("test.boolean");
+        final Object o = conf.getProperty("test.boolean");
         assertNotNull(o);
         assertEquals("true", o.toString());
     }
@@ -169,7 +169,7 @@ public class TestJNDIConfiguration {
     @Test
     public void testContainsKey()
     {
-        String key = "test.boolean";
+        final String key = "test.boolean";
         assertTrue("'" + key + "' not found", conf.containsKey(key));
 
         conf.clearProperty(key);
@@ -225,7 +225,7 @@ public class TestJNDIConfiguration {
     {
         conf.installException();
         // remove log error listener to avoid output in tests
-        Iterator<EventListener<? super ConfigurationErrorEvent>> iterator =
+        final Iterator<EventListener<? super ConfigurationErrorEvent>> iterator =
                 conf.getEventListeners(ConfigurationErrorEvent.ANY).iterator();
         conf.removeEventListener(ConfigurationErrorEvent.ANY, iterator.next());
         return conf;
@@ -240,10 +240,10 @@ public class TestJNDIConfiguration {
      * @param propValue the property value
      */
     private void checkErrorListener(
-            EventType<? extends ConfigurationErrorEvent> type,
-            EventType<?> opEventType, String propName, Object propValue)
+            final EventType<? extends ConfigurationErrorEvent> type,
+            final EventType<?> opEventType, final String propName, final Object propValue)
     {
-        Throwable exception =
+        final Throwable exception =
                 listener.checkEvent(type, opEventType, propName, propValue);
         assertTrue("Wrong exception class",
                 exception instanceof NamingException);
@@ -256,7 +256,7 @@ public class TestJNDIConfiguration {
     @Test
     public void testLogListener() throws NamingException
     {
-        JNDIConfiguration c = new JNDIConfiguration();
+        final JNDIConfiguration c = new JNDIConfiguration();
         assertEquals("No error log listener registered", 1, c
                 .getEventListeners(ConfigurationErrorEvent.ANY).size());
     }
@@ -314,10 +314,10 @@ public class TestJNDIConfiguration {
     @Test
     public void testGetKeysWithCycles() throws NamingException
     {
-        Hashtable<Object, Object> env = new Hashtable<>();
+        final Hashtable<Object, Object> env = new Hashtable<>();
         env.put(MockInitialContextFactory.PROP_CYCLES, Boolean.TRUE);
-        InitialContext initCtx = new InitialContext(env);
-        JNDIConfiguration c = new JNDIConfiguration(initCtx);
+        final InitialContext initCtx = new InitialContext(env);
+        final JNDIConfiguration c = new JNDIConfiguration(initCtx);
         c.getKeys("cycle");
     }
 
@@ -344,7 +344,7 @@ public class TestJNDIConfiguration {
         /** An exception to be thrown by getBaseContext(). */
         private NamingException exception;
 
-        public PotentialErrorJNDIConfiguration(Context ctx)
+        public PotentialErrorJNDIConfiguration(final Context ctx)
         {
             super(ctx);
         }
@@ -355,7 +355,7 @@ public class TestJNDIConfiguration {
          *
          * @param nex the exception to be thrown
          */
-        public void installException(NamingException nex)
+        public void installException(final NamingException nex)
         {
             exception = nex;
         }

@@ -52,7 +52,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
     @Test
     public void testSimpleValues() throws ConfigurationException
     {
-        BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong number of bgcolors", 0, config
                 .getMaxIndex("gui.bgcolor"));
         assertEquals("Wrong bgcolor", "green", config.getString("gui.bgcolor"));
@@ -68,7 +68,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
     @Test
     public void testAttributes() throws ConfigurationException
     {
-        BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong value of min attribute", 1, config
                 .getInt("gui.level[@min]"));
         assertEquals("Wrong value of default attribute", 2, config
@@ -85,7 +85,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
     @Test
     public void testOverrideValues() throws ConfigurationException
     {
-        BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong user", "Admin", config
                 .getString("base.services.security.login.user"));
         assertEquals("Wrong user type", "default", config
@@ -102,7 +102,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
     @Test
     public void testListFromFirstStructure() throws ConfigurationException
     {
-        BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong number of services", 0, config
                 .getMaxIndex("net.service.url"));
         assertEquals("Wrong service", "http://service1.org", config
@@ -118,7 +118,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
     @Test
     public void testListFromSecondStructure() throws ConfigurationException
     {
-        BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         assertEquals("Wrong number of servers", 3, config
                 .getMaxIndex("net.server.url"));
         assertEquals("Wrong server", "http://testsvr.com", config
@@ -139,7 +139,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
     public void testMerge() throws ConfigurationException
     {
         //combiner.setDebugStream(System.out);
-        BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         config.setExpressionEngine(new XPathExpressionEngine());
         assertEquals("Wrong number of Channels", 3, config.getMaxIndex("Channels/Channel"));
         assertEquals("Bad Channel 1 Name", "My Channel",
@@ -166,11 +166,11 @@ public class TestMergeCombiner extends AbstractCombinerTest
      * @return the node for the table element
      */
     private ImmutableNode checkTable(
-            HierarchicalConfiguration<ImmutableNode> config)
+            final HierarchicalConfiguration<ImmutableNode> config)
     {
         assertEquals("Wrong number of tables", 1,
                 config.getMaxIndex("database.tables.table"));
-        HierarchicalConfiguration<ImmutableNode> c =
+        final HierarchicalConfiguration<ImmutableNode> c =
                 config.configurationAt("database.tables.table(0)");
         assertEquals("Wrong table name", "documents", c.getString("name"));
         assertEquals("Wrong number of fields", 2,
@@ -178,8 +178,8 @@ public class TestMergeCombiner extends AbstractCombinerTest
         assertEquals("Wrong field", "docname",
                 c.getString("fields.field(1).name"));
 
-        NodeHandler<ImmutableNode> nodeHandler = config.getNodeModel().getNodeHandler();
-        List<QueryResult<ImmutableNode>> nds =
+        final NodeHandler<ImmutableNode> nodeHandler = config.getNodeModel().getNodeHandler();
+        final List<QueryResult<ImmutableNode>> nds =
                 config.getExpressionEngine().query(nodeHandler.getRootNode(),
                         "database.tables.table",
                         nodeHandler);

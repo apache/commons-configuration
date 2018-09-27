@@ -52,9 +52,9 @@ public class TestConfigurationLookup
     @Test
     public void testLookupSuccess()
     {
-        Configuration conf = new BaseConfiguration();
+        final Configuration conf = new BaseConfiguration();
         conf.addProperty(VAR, VALUE);
-        ConfigurationLookup lookup = new ConfigurationLookup(conf);
+        final ConfigurationLookup lookup = new ConfigurationLookup(conf);
         assertEquals("Wrong result", VALUE, lookup.lookup(VAR));
     }
 
@@ -64,8 +64,8 @@ public class TestConfigurationLookup
     @Test
     public void testLookupNotFound()
     {
-        Configuration conf = new BaseConfiguration();
-        ConfigurationLookup lookup = new ConfigurationLookup(conf);
+        final Configuration conf = new BaseConfiguration();
+        final ConfigurationLookup lookup = new ConfigurationLookup(conf);
         assertNull("Got a value", lookup.lookup(VAR));
     }
 
@@ -76,9 +76,9 @@ public class TestConfigurationLookup
     @Test
     public void testLookupNotFoundEx()
     {
-        BaseConfiguration conf = new BaseConfiguration();
+        final BaseConfiguration conf = new BaseConfiguration();
         conf.setThrowExceptionOnMissing(true);
-        ConfigurationLookup lookup = new ConfigurationLookup(conf);
+        final ConfigurationLookup lookup = new ConfigurationLookup(conf);
         assertNull("Got a value", lookup.lookup(VAR));
     }
 
@@ -89,15 +89,15 @@ public class TestConfigurationLookup
     public void testLookupComplex()
     {
         final int count = 5;
-        Configuration conf = new BaseConfiguration();
+        final Configuration conf = new BaseConfiguration();
         for (int i = 0; i < count; i++)
         {
             conf.addProperty(VAR, String.valueOf(VALUE) + i);
         }
-        ConfigurationLookup lookup = new ConfigurationLookup(conf);
-        Collection<?> col = (Collection<?>) lookup.lookup(VAR);
+        final ConfigurationLookup lookup = new ConfigurationLookup(conf);
+        final Collection<?> col = (Collection<?>) lookup.lookup(VAR);
         assertEquals("Wrong number of elements", count, col.size());
-        Iterator<?> it = col.iterator();
+        final Iterator<?> it = col.iterator();
         for (int i = 0; i < count; i++)
         {
             assertEquals("Wrong element at " + i, String.valueOf(VALUE) + i,

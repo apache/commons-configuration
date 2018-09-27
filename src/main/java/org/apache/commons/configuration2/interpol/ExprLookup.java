@@ -108,7 +108,7 @@ public class ExprLookup implements Lookup
      * Constructor for use by applications.
      * @param list The list of objects to be accessible in expressions.
      */
-    public ExprLookup(Variables list)
+    public ExprLookup(final Variables list)
     {
         setVariables(list);
     }
@@ -119,7 +119,7 @@ public class ExprLookup implements Lookup
      * @param prefix The prefix to use for subordinate lookups.
      * @param suffix The suffix to use for subordinate lookups.
      */
-    public ExprLookup(Variables list, String prefix, String suffix)
+    public ExprLookup(final Variables list, final String prefix, final String suffix)
     {
         this(list);
         setVariablePrefixMatcher(prefix);
@@ -131,7 +131,7 @@ public class ExprLookup implements Lookup
      * same as the prefix used for the primary expression.
      * @param prefix The String identifying the beginning of the expression.
      */
-    public void setVariablePrefixMatcher(String prefix)
+    public void setVariablePrefixMatcher(final String prefix)
     {
         prefixMatcher = prefix;
     }
@@ -141,7 +141,7 @@ public class ExprLookup implements Lookup
      * same as the suffix used for the primary expression.
      * @param suffix The String identifying the end of the expression.
      */
-    public void setVariableSuffixMatcher(String suffix)
+    public void setVariableSuffixMatcher(final String suffix)
     {
         suffixMatcher = suffix;
     }
@@ -150,7 +150,7 @@ public class ExprLookup implements Lookup
      * Add the Variables that will be accessible within expressions.
      * @param list The list of Variables.
      */
-    public void setVariables(Variables list)
+    public void setVariables(final Variables list)
     {
         variables = new Variables(list);
     }
@@ -185,7 +185,7 @@ public class ExprLookup implements Lookup
      * @param logger the {@code Log}
      * @since 2.0
      */
-    public void setLogger(ConfigurationLogger logger)
+    public void setLogger(final ConfigurationLogger logger)
     {
         this.logger = logger;
     }
@@ -208,7 +208,7 @@ public class ExprLookup implements Lookup
      *        <b>null</b>)
      * @since 2.0
      */
-    public void setInterpolator(ConfigurationInterpolator interpolator)
+    public void setInterpolator(final ConfigurationInterpolator interpolator)
     {
         this.interpolator = interpolator;
         installSubstitutor(interpolator);
@@ -220,7 +220,7 @@ public class ExprLookup implements Lookup
      * @return The String result of the expression.
      */
     @Override
-    public String lookup(String var)
+    public String lookup(final String var)
     {
         if (substitutor == null)
         {
@@ -230,13 +230,13 @@ public class ExprLookup implements Lookup
         String result = substitutor.replace(var);
         try
         {
-            Expression exp = engine.createExpression(result);
-            Object exprResult = exp.evaluate(createContext());
+            final Expression exp = engine.createExpression(result);
+            final Object exprResult = exp.evaluate(createContext());
             result = (exprResult != null) ? String.valueOf(exprResult) : null;
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
-            ConfigurationLogger l = getLogger();
+            final ConfigurationLogger l = getLogger();
             if (l != null)
             {
                 l.debug("Error encountered evaluating " + result + ": " + e);
@@ -260,12 +260,12 @@ public class ExprLookup implements Lookup
         }
         else
         {
-            StringLookup variableResolver = new StringLookup()
+            final StringLookup variableResolver = new StringLookup()
             {
                 @Override
-                public String lookup(String key)
+                public String lookup(final String key)
                 {
-                    Object value = ip.resolve(key);
+                    final Object value = ip.resolve(key);
                     return (value != null) ? value.toString() : null;
                 }
             };
@@ -283,7 +283,7 @@ public class ExprLookup implements Lookup
      */
     private JexlContext createContext()
     {
-        JexlContext ctx = new MapContext();
+        final JexlContext ctx = new MapContext();
         initializeContext(ctx);
         return ctx;
     }
@@ -294,9 +294,9 @@ public class ExprLookup implements Lookup
      *
      * @param ctx the context to be initialized
      */
-    private void initializeContext(JexlContext ctx)
+    private void initializeContext(final JexlContext ctx)
     {
-        for (Variable var : variables)
+        for (final Variable var : variables)
         {
             ctx.set(var.getName(), var.getValue());
         }
@@ -327,7 +327,7 @@ public class ExprLookup implements Lookup
          *
          * @param vars the {@code Variables} object to be copied
          */
-        public Variables(Variables vars)
+        public Variables(final Variables vars)
         {
             super(vars);
         }
@@ -355,7 +355,7 @@ public class ExprLookup implements Lookup
         {
         }
 
-        public Variable(String name, Object value)
+        public Variable(final String name, final Object value)
         {
             setName(name);
             setValue(value);
@@ -366,7 +366,7 @@ public class ExprLookup implements Lookup
             return key;
         }
 
-        public void setName(String name)
+        public void setName(final String name)
         {
             this.key = name;
         }
@@ -376,7 +376,7 @@ public class ExprLookup implements Lookup
             return value;
         }
 
-        public void setValue(Object value) throws ConfigurationRuntimeException
+        public void setValue(final Object value) throws ConfigurationRuntimeException
         {
             try
             {
@@ -385,9 +385,9 @@ public class ExprLookup implements Lookup
                     this.value = value;
                     return;
                 }
-                String val = (String) value;
-                String name = StringUtils.removeStartIgnoreCase(val, CLASS);
-                Class<?> clazz = ClassUtils.getClass(name);
+                final String val = (String) value;
+                final String name = StringUtils.removeStartIgnoreCase(val, CLASS);
+                final Class<?> clazz = ClassUtils.getClass(name);
                 if (name.length() == val.length())
                 {
                     this.value = clazz.newInstance();
@@ -397,7 +397,7 @@ public class ExprLookup implements Lookup
                     this.value = clazz;
                 }
             }
-            catch (Exception e)
+            catch (final Exception e)
             {
                 throw new ConfigurationRuntimeException("Unable to create " + value, e);
             }

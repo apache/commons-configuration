@@ -229,7 +229,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * @param comb the node combiner (can be <b>null</b>, then a union combiner
      * is used as default)
      */
-    public CombinedConfiguration(NodeCombiner comb)
+    public CombinedConfiguration(final NodeCombiner comb)
     {
         nodeCombiner = (comb != null) ? comb : DEFAULT_COMBINER;
         initChildCollections();
@@ -274,7 +274,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      *
      * @param nodeCombiner the node combiner
      */
-    public void setNodeCombiner(NodeCombiner nodeCombiner)
+    public void setNodeCombiner(final NodeCombiner nodeCombiner)
     {
         if (nodeCombiner == null)
         {
@@ -330,7 +330,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * @since 1.6
      */
     public void setConversionExpressionEngine(
-            ExpressionEngine conversionExpressionEngine)
+            final ExpressionEngine conversionExpressionEngine)
     {
         beginWrite(true);
         try
@@ -359,8 +359,8 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * @param at the position of this configuration in the combined tree (can be
      * <b>null</b>)
      */
-    public void addConfiguration(Configuration config, String name,
-            String at)
+    public void addConfiguration(final Configuration config, final String name,
+            final String at)
     {
         if (config == null)
         {
@@ -379,7 +379,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
                                 + "' already exists in this combined configuration!");
             }
 
-            ConfigData cd = new ConfigData(config, name, at);
+            final ConfigData cd = new ConfigData(config, name, at);
             if (getLogger().isDebugEnabled())
             {
                 getLogger()
@@ -409,7 +409,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * @param config the configuration to add (must not be <b>null</b>)
      * @param name the name of this configuration (can be <b>null</b>)
      */
-    public void addConfiguration(Configuration config, String name)
+    public void addConfiguration(final Configuration config, final String name)
     {
         addConfiguration(config, name, null);
     }
@@ -421,7 +421,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      *
      * @param config the configuration to add (must not be <b>null</b>)
      */
-    public void addConfiguration(Configuration config)
+    public void addConfiguration(final Configuration config)
     {
         addConfiguration(config, null, null);
     }
@@ -453,12 +453,12 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * @param index the index
      * @return the configuration at this index
      */
-    public Configuration getConfiguration(int index)
+    public Configuration getConfiguration(final int index)
     {
         beginRead(true);
         try
         {
-            ConfigData cd = configurations.get(index);
+            final ConfigData cd = configurations.get(index);
             return cd.getConfiguration();
         }
         finally
@@ -474,7 +474,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * @param name the name of the configuration
      * @return the configuration with this name
      */
-    public Configuration getConfiguration(String name)
+    public Configuration getConfiguration(final String name)
     {
         beginRead(true);
         try
@@ -497,9 +497,9 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         beginRead(true);
         try
         {
-            List<Configuration> list =
+            final List<Configuration> list =
                     new ArrayList<>(getNumberOfConfigurationsInternal());
-            for (ConfigData cd : configurations)
+            for (final ConfigData cd : configurations)
             {
                 list.add(cd.getConfiguration());
             }
@@ -523,8 +523,8 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         beginRead(true);
         try
         {
-            List<String> list = new ArrayList<>(getNumberOfConfigurationsInternal());
-            for (ConfigData cd : configurations)
+            final List<String> list = new ArrayList<>(getNumberOfConfigurationsInternal());
+            for (final ConfigData cd : configurations)
             {
                 list.add(cd.getName());
             }
@@ -542,7 +542,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * @param config the configuration to be removed
      * @return a flag whether this configuration was found and could be removed
      */
-    public boolean removeConfiguration(Configuration config)
+    public boolean removeConfiguration(final Configuration config)
     {
         for (int index = 0; index < getNumberOfConfigurations(); index++)
         {
@@ -562,9 +562,9 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * @param index the index
      * @return the removed configuration
      */
-    public Configuration removeConfigurationAt(int index)
+    public Configuration removeConfigurationAt(final int index)
     {
-        ConfigData cd = configurations.remove(index);
+        final ConfigData cd = configurations.remove(index);
         if (cd.getName() != null)
         {
             namedConfigurations.remove(cd.getName());
@@ -581,9 +581,9 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * @return the removed configuration (<b>null</b> if this configuration
      * was not found)
      */
-    public Configuration removeConfiguration(String name)
+    public Configuration removeConfiguration(final String name)
     {
-        Configuration conf = getConfiguration(name);
+        final Configuration conf = getConfiguration(name);
         if (conf != null)
         {
             removeConfiguration(conf);
@@ -641,7 +641,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * @param event the update event
      */
     @Override
-    public void onEvent(ConfigurationEvent event)
+    public void onEvent(final ConfigurationEvent event)
     {
         if (event.isBeforeUpdate())
         {
@@ -675,9 +675,9 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         beginRead(false);
         try
         {
-            CombinedConfiguration copy = (CombinedConfiguration) super.clone();
+            final CombinedConfiguration copy = (CombinedConfiguration) super.clone();
             copy.initChildCollections();
-            for (ConfigData cd : configurations)
+            for (final ConfigData cd : configurations)
             {
                 copy.addConfiguration(ConfigurationUtils.cloneConfiguration(cd
                         .getConfiguration()), cd.getName(), cd.getAt());
@@ -714,20 +714,20 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * and the source cannot be determined, or if the key is <b>null</b>
      * @since 1.5
      */
-    public Configuration getSource(String key)
+    public Configuration getSource(final String key)
     {
         if (key == null)
         {
             throw new IllegalArgumentException("Key must not be null!");
         }
 
-        Set<Configuration> sources = getSources(key);
+        final Set<Configuration> sources = getSources(key);
         if (sources.isEmpty())
         {
             return null;
         }
-        Iterator<Configuration> iterator = sources.iterator();
-        Configuration source = iterator.next();
+        final Iterator<Configuration> iterator = sources.iterator();
+        final Configuration source = iterator.next();
         if (iterator.hasNext())
         {
             throw new IllegalArgumentException("The key " + key
@@ -754,17 +754,17 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * @return a set with the configuration sources, which contain this property
      * @since 2.0
      */
-    public Set<Configuration> getSources(String key)
+    public Set<Configuration> getSources(final String key)
     {
         beginRead(false);
         try
         {
-            List<QueryResult<ImmutableNode>> results = fetchNodeList(key);
-            Set<Configuration> sources = new HashSet<>();
+            final List<QueryResult<ImmutableNode>> results = fetchNodeList(key);
+            final Set<Configuration> sources = new HashSet<>();
 
-            for (QueryResult<ImmutableNode> result : results)
+            for (final QueryResult<ImmutableNode> result : results)
             {
-                Set<Configuration> resultSources =
+                final Set<Configuration> resultSources =
                         findSourceConfigurations(result.getNode());
                 if (resultSources.isEmpty())
                 {
@@ -790,7 +790,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * is available. If not, it is constructed by requesting a write lock.
      */
     @Override
-    protected void beginRead(boolean optimize)
+    protected void beginRead(final boolean optimize)
     {
         if (optimize)
         {
@@ -822,7 +822,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * is available. If not, it is constructed now.
      */
     @Override
-    protected void beginWrite(boolean optimize)
+    protected void beginWrite(final boolean optimize)
     {
         super.beginWrite(true);
         if (optimize)
@@ -840,7 +840,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
                 upToDate = true;
             }
         }
-        catch (RuntimeException rex)
+        catch (final RuntimeException rex)
         {
             endWrite();
             throw rex;
@@ -896,7 +896,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             }
             return EMPTY_ROOT;
         }
-        Iterator<ConfigData> it = configurations.iterator();
+        final Iterator<ConfigData> it = configurations.iterator();
         ImmutableNode node = it.next().getTransformedRoot();
         while (it.hasNext())
         {
@@ -905,8 +905,8 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         }
         if (getLogger().isDebugEnabled())
         {
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            PrintStream stream = new PrintStream(os);
+            final ByteArrayOutputStream os = new ByteArrayOutputStream();
+            final PrintStream stream = new PrintStream(os);
             TreeUtils.printTree(stream, node);
             getLogger().debug(os.toString());
         }
@@ -920,13 +920,13 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * @param node the node
      * @return a set with the owning configurations
      */
-    private Set<Configuration> findSourceConfigurations(ImmutableNode node)
+    private Set<Configuration> findSourceConfigurations(final ImmutableNode node)
     {
-        Set<Configuration> result = new HashSet<>();
-        FindNodeVisitor<ImmutableNode> visitor =
+        final Set<Configuration> result = new HashSet<>();
+        final FindNodeVisitor<ImmutableNode> visitor =
                 new FindNodeVisitor<>(node);
 
-        for (ConfigData cd : configurations)
+        for (final ConfigData cd : configurations)
         {
             NodeTreeWalker.INSTANCE.walkBFS(cd.getRootNode(), visitor,
                     getModel().getNodeHandler());
@@ -946,7 +946,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      *
      * @param configuration the child configuration
      */
-    private void registerListenerAt(Configuration configuration)
+    private void registerListenerAt(final Configuration configuration)
     {
         if (configuration instanceof EventSource)
         {
@@ -961,7 +961,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      *
      * @param configuration the child configuration
      */
-    private void unregisterListenerAt(Configuration configuration)
+    private void unregisterListenerAt(final Configuration configuration)
     {
         if (configuration instanceof EventSource)
         {
@@ -978,7 +978,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     {
         if (configurations != null)
         {
-            for (ConfigData child : configurations)
+            for (final ConfigData child : configurations)
             {
                 unregisterListenerAt(child.getConfiguration());
             }
@@ -1026,7 +1026,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
          * @param n the name
          * @param at the at position
          */
-        public ConfigData(Configuration config, String n, String at)
+        public ConfigData(final Configuration config, final String n, final String at)
         {
             configuration = config;
             name = n;
@@ -1084,7 +1084,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
          */
         public ImmutableNode getTransformedRoot()
         {
-            ImmutableNode configRoot = getRootNodeOfConfiguration();
+            final ImmutableNode configRoot = getRootNodeOfConfiguration();
             return (atPath == null) ? configRoot : prependAtPath(configRoot);
         }
 
@@ -1094,10 +1094,10 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
          * @param node the root node of the represented configuration
          * @return the new root node including the at path
          */
-        private ImmutableNode prependAtPath(ImmutableNode node)
+        private ImmutableNode prependAtPath(final ImmutableNode node)
         {
-            ImmutableNode.Builder pathBuilder = new ImmutableNode.Builder();
-            Iterator<String> pathIterator = atPath.iterator();
+            final ImmutableNode.Builder pathBuilder = new ImmutableNode.Builder();
+            final Iterator<String> pathIterator = atPath.iterator();
             prependAtPathComponent(pathBuilder, pathIterator.next(),
                     pathIterator, node);
             return new ImmutableNode.Builder(1).addChild(pathBuilder.create())
@@ -1114,14 +1114,14 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
          * @param components an iterator with all components of the at path
          * @param orgRoot the original root node of the wrapped configuration
          */
-        private void prependAtPathComponent(ImmutableNode.Builder builder,
-                String currentComponent, Iterator<String> components,
-                ImmutableNode orgRoot)
+        private void prependAtPathComponent(final ImmutableNode.Builder builder,
+                final String currentComponent, final Iterator<String> components,
+                final ImmutableNode orgRoot)
         {
             builder.name(currentComponent);
             if (components.hasNext())
             {
-                ImmutableNode.Builder childBuilder =
+                final ImmutableNode.Builder childBuilder =
                         new ImmutableNode.Builder();
                 prependAtPathComponent(childBuilder, components.next(),
                         components, orgRoot);
@@ -1147,7 +1147,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             getConfiguration().lock(LockMode.READ);
             try
             {
-                ImmutableNode root =
+                final ImmutableNode root =
                         ConfigurationUtils
                                 .convertToHierarchical(getConfiguration(),
                                         conversionExpressionEngine).getNodeModel()
@@ -1167,15 +1167,15 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
          * @param at the at string
          * @return a collection with the names of the single components
          */
-        private Collection<String> parseAt(String at)
+        private Collection<String> parseAt(final String at)
         {
             if (at == null)
             {
                 return null;
             }
 
-            Collection<String> result = new ArrayList<>();
-            DefaultConfigurationKey.KeyIterator it = new DefaultConfigurationKey(
+            final Collection<String> result = new ArrayList<>();
+            final DefaultConfigurationKey.KeyIterator it = new DefaultConfigurationKey(
                     AT_ENGINE, at).iterator();
             while (it.hasNext())
             {

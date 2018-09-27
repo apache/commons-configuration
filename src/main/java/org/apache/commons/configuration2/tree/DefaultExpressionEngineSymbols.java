@@ -90,7 +90,7 @@ public final class DefaultExpressionEngineSymbols
      *
      * @param b the builder for defining the properties of this instance
      */
-    private DefaultExpressionEngineSymbols(Builder b)
+    private DefaultExpressionEngineSymbols(final Builder b)
     {
         propertyDelimiter = b.propertyDelimiter;
         escapedDelimiter = b.escapedDelimiter;
@@ -183,7 +183,7 @@ public final class DefaultExpressionEngineSymbols
      * @return a flag whether these objects are equal
      */
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(final Object obj)
     {
         if (this == obj)
         {
@@ -194,7 +194,7 @@ public final class DefaultExpressionEngineSymbols
             return false;
         }
 
-        DefaultExpressionEngineSymbols c = (DefaultExpressionEngineSymbols) obj;
+        final DefaultExpressionEngineSymbols c = (DefaultExpressionEngineSymbols) obj;
         return new EqualsBuilder()
                 .append(getPropertyDelimiter(), c.getPropertyDelimiter())
                 .append(getEscapedDelimiter(), c.getEscapedDelimiter())
@@ -279,7 +279,7 @@ public final class DefaultExpressionEngineSymbols
          * @param c the {@code DefaultExpressionEngineSymbols} object serving as
          *        starting point for this builder
          */
-        public Builder(DefaultExpressionEngineSymbols c)
+        public Builder(final DefaultExpressionEngineSymbols c)
         {
             propertyDelimiter = c.getPropertyDelimiter();
             escapedDelimiter = c.getEscapedDelimiter();
@@ -295,7 +295,7 @@ public final class DefaultExpressionEngineSymbols
          * @param d the property delimiter
          * @return a reference to this object for method chaining
          */
-        public Builder setPropertyDelimiter(String d)
+        public Builder setPropertyDelimiter(final String d)
         {
             propertyDelimiter = d;
             return this;
@@ -311,7 +311,7 @@ public final class DefaultExpressionEngineSymbols
          * @param ed the escaped property delimiter
          * @return a reference to this object for method chaining
          */
-        public Builder setEscapedDelimiter(String ed)
+        public Builder setEscapedDelimiter(final String ed)
         {
             escapedDelimiter = ed;
             return this;
@@ -325,7 +325,7 @@ public final class DefaultExpressionEngineSymbols
          * @param is the index start
          * @return a reference to this object for method chaining
          */
-        public Builder setIndexStart(String is)
+        public Builder setIndexStart(final String is)
         {
             indexStart = is;
             return this;
@@ -337,7 +337,7 @@ public final class DefaultExpressionEngineSymbols
          * @param ie the index end
          * @return a reference to this object for method chaining
          */
-        public Builder setIndexEnd(String ie)
+        public Builder setIndexEnd(final String ie)
         {
             indexEnd = ie;
             return this;
@@ -351,7 +351,7 @@ public final class DefaultExpressionEngineSymbols
          * @param as the attribute start marker
          * @return a reference to this object for method chaining
          */
-        public Builder setAttributeStart(String as)
+        public Builder setAttributeStart(final String as)
         {
             attributeStart = as;
             return this;
@@ -364,7 +364,7 @@ public final class DefaultExpressionEngineSymbols
          * @param ae the attribute end marker
          * @return a reference to this object for method chaining
          */
-        public Builder setAttributeEnd(String ae)
+        public Builder setAttributeEnd(final String ae)
         {
             attributeEnd = ae;
             return this;

@@ -50,7 +50,7 @@ public class TestDatabaseBuilderParametersImpl
     @Test
     public void testSetDataSource()
     {
-        DataSource src = EasyMock.createMock(DataSource.class);
+        final DataSource src = EasyMock.createMock(DataSource.class);
         EasyMock.replay(src);
         assertSame("Wrong result", params, params.setDataSource(src));
         assertSame("Data source not set", src,
@@ -63,7 +63,7 @@ public class TestDatabaseBuilderParametersImpl
     @Test
     public void testSetTable()
     {
-        String table = "TestTable";
+        final String table = "TestTable";
         assertSame("Wrong result", params, params.setTable(table));
         assertEquals("Wrong table name", table,
                 params.getParameters().get("table"));
@@ -75,7 +75,7 @@ public class TestDatabaseBuilderParametersImpl
     @Test
     public void testSetKeyColumn()
     {
-        String colName = "KEY_COLUMN";
+        final String colName = "KEY_COLUMN";
         assertSame("Wrong result", params, params.setKeyColumn(colName));
         assertEquals("Wrong key column name", colName, params.getParameters()
                 .get("keyColumn"));
@@ -87,7 +87,7 @@ public class TestDatabaseBuilderParametersImpl
     @Test
     public void testSetValueColumn()
     {
-        String colName = "VALUE_COLUMN";
+        final String colName = "VALUE_COLUMN";
         assertSame("Wrong result", params, params.setValueColumn(colName));
         assertEquals("Wrong value column name", colName, params.getParameters()
                 .get("valueColumn"));
@@ -99,7 +99,7 @@ public class TestDatabaseBuilderParametersImpl
     @Test
     public void testSetConfigurationNameColumn()
     {
-        String colName = "CONFIG_COLUMN";
+        final String colName = "CONFIG_COLUMN";
         assertSame("Wrong result", params,
                 params.setConfigurationNameColumn(colName));
         assertEquals("Wrong configuration name column", colName, params
@@ -112,7 +112,7 @@ public class TestDatabaseBuilderParametersImpl
     @Test
     public void testSetConfigurationName()
     {
-        String confName = "TestConfiguration";
+        final String confName = "TestConfiguration";
         assertSame("Wrong result", params,
                 params.setConfigurationName(confName));
         assertEquals("Wrong configuration name", confName, params
@@ -138,7 +138,7 @@ public class TestDatabaseBuilderParametersImpl
     {
         BeanHelper.setProperty(params, "table", "testTable");
         BeanHelper.setProperty(params, "autoCommit", Boolean.FALSE);
-        Map<String, Object> map = params.getParameters();
+        final Map<String, Object> map = params.getParameters();
         assertEquals("Wrong table name", "testTable", map.get("table"));
         assertEquals("Wrong auto commit", Boolean.FALSE, map.get("autoCommit"));
     }

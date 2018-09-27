@@ -75,7 +75,7 @@ public abstract class NodeCombiner
      *
      * @param nodeName the name to be added
      */
-    public void addListNode(String nodeName)
+    public void addListNode(final String nodeName)
     {
         listNodes.add(nodeName);
     }
@@ -98,7 +98,7 @@ public abstract class NodeCombiner
      * @param node the node to be tested
      * @return a flag whether this is a list node
      */
-    public boolean isListNode(ImmutableNode node)
+    public boolean isListNode(final ImmutableNode node)
     {
         return listNodes.contains(node.getNodeName());
     }
@@ -126,7 +126,7 @@ public abstract class NodeCombiner
         return new AbstractImmutableNodeHandler()
         {
             @Override
-            public ImmutableNode getParent(ImmutableNode node)
+            public ImmutableNode getParent(final ImmutableNode node)
             {
                 return null;
             }

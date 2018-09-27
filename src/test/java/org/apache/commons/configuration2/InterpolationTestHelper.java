@@ -44,14 +44,14 @@ public class InterpolationTestHelper
      *
      * @param config the configuration to test
      */
-    public static void testGetInterpolator(AbstractConfiguration config)
+    public static void testGetInterpolator(final AbstractConfiguration config)
     {
         config.addProperty("var", "${echo:testVar}");
-        ConfigurationInterpolator interpol = config.getInterpolator();
+        final ConfigurationInterpolator interpol = config.getInterpolator();
         interpol.registerLookup("echo", new Lookup()
         {
             @Override
-            public Object lookup(String varName)
+            public Object lookup(final String varName)
             {
                 return "Value of variable " + varName;
             }
@@ -68,7 +68,7 @@ public class InterpolationTestHelper
      * @return the interpolated configuration
      */
     public static Configuration testInterpolatedConfiguration(
-            AbstractConfiguration config)
+            final AbstractConfiguration config)
     {
         config.setProperty("applicationRoot", "/home/applicationRoot");
         config.setProperty("db", "${applicationRoot}/db/hypersonic");
@@ -81,7 +81,7 @@ public class InterpolationTestHelper
         config.setProperty("inttest.list", "${db}");
         config.addProperty("inttest.list", "${inttest.value}");
 
-        Configuration c = config.interpolatedConfiguration();
+        final Configuration c = config.interpolatedConfiguration();
         assertEquals("Property not replaced",
                 "/home/applicationRoot/db/hypersonic", c.getProperty("db"));
         assertEquals("Const variable not replaced", KeyEvent.VK_CANCEL,
@@ -90,7 +90,7 @@ public class InterpolationTestHelper
                 .getProperty("java.version"), c.getProperty("inttest.sysprop"));
         assertEquals("Delimiter value not replaced", "3,1415", c
                 .getProperty("inttest.value"));
-        List<?> lst = (List<?>) c.getProperty("inttest.list");
+        final List<?> lst = (List<?>) c.getProperty("inttest.list");
         assertEquals("Wrong number of list elements", 2, lst.size());
         assertEquals("List element 0 not replaced",
                 "/home/applicationRoot/db/hypersonic", lst.get(0));
@@ -107,13 +107,13 @@ public class InterpolationTestHelper
      *
      * @param config the configuration to test
      */
-    public static void testInterpolation(Configuration config)
+    public static void testInterpolation(final Configuration config)
     {
         config.setProperty("applicationRoot", "/home/applicationRoot");
         config.setProperty("db", "${applicationRoot}/db/hypersonic");
-        String unInterpolatedValue = "${applicationRoot2}/db/hypersonic";
+        final String unInterpolatedValue = "${applicationRoot2}/db/hypersonic";
         config.setProperty("dbFailedInterpolate", unInterpolatedValue);
-        String dbProp = "/home/applicationRoot/db/hypersonic";
+        final String dbProp = "/home/applicationRoot/db/hypersonic";
 
         assertEquals("Checking interpolated variable", dbProp, config
                 .getString("db"));
@@ -121,7 +121,7 @@ public class InterpolationTestHelper
                 .getString("dbFailedInterpolate"), unInterpolatedValue);
 
         config.setProperty("arrayInt", "${applicationRoot}/1");
-        String[] arrayInt = config.getStringArray("arrayInt");
+        final String[] arrayInt = config.getStringArray("arrayInt");
         assertEquals("check first entry was interpolated",
                 "/home/applicationRoot/1", arrayInt[0]);
 
@@ -136,7 +136,7 @@ public class InterpolationTestHelper
      *
      * @param config the configuration to test
      */
-    public static void testInterpolationConstants(Configuration config)
+    public static void testInterpolationConstants(final Configuration config)
     {
         config.addProperty("key.code",
                 "${const:java.awt.event.KeyEvent.VK_CANCEL}");
@@ -151,15 +151,15 @@ public class InterpolationTestHelper
      *
      * @param config the configuration to test
      */
-    public static void testInterpolationEnvironment(Configuration config)
+    public static void testInterpolationEnvironment(final Configuration config)
     {
-        Map<String, String> env = System.getenv();
-        for (Map.Entry<String, String> e : env.entrySet())
+        final Map<String, String> env = System.getenv();
+        for (final Map.Entry<String, String> e : env.entrySet())
         {
             config.addProperty("prop" + e.getKey(), "${env:" + e.getKey() + "}");
         }
 
-        for (Map.Entry<String, String> e : env.entrySet())
+        for (final Map.Entry<String, String> e : env.entrySet())
         {
             assertEquals("Wrong value for environment property " + e.getKey(),
                     e.getValue(), config.getString("prop" + e.getKey()));
@@ -172,7 +172,7 @@ public class InterpolationTestHelper
      *
      * @param config the configuration to test
      */
-    public static void testInterpolationEscaped(Configuration config)
+    public static void testInterpolationEscaped(final Configuration config)
     {
         config.addProperty("var", "x");
         config.addProperty("escVar", "Use the variable $${${var}}.");
@@ -186,7 +186,7 @@ public class InterpolationTestHelper
      *
      * @param config the configuration to test
      */
-    public static void testInterpolationLoop(Configuration config)
+    public static void testInterpolationLoop(final Configuration config)
     {
         config.setProperty("test.a", "${test.b}");
         config.setProperty("test.b", "${test.a}");
@@ -196,7 +196,7 @@ public class InterpolationTestHelper
             config.getString("test.a");
             fail("IllegalStateException should have been thrown for looped property references");
         }
-        catch (IllegalStateException e)
+        catch (final IllegalStateException e)
         {
             // ok
         }
@@ -208,13 +208,13 @@ public class InterpolationTestHelper
      *
      * @param config the configuration to test
      */
-    public static void testInterpolationSubset(Configuration config)
+    public static void testInterpolationSubset(final Configuration config)
     {
         config.addProperty("test.a", new Integer(42));
         config.addProperty("test.b", "${test.a}");
         assertEquals("Wrong interpolated value", 42, config
                 .getInt("test.b"));
-        Configuration subset = config.subset("test");
+        final Configuration subset = config.subset("test");
         assertEquals("Wrong string property", "42", subset
                 .getString("b"));
         assertEquals("Wrong int property", 42, subset.getInt("b"));
@@ -225,9 +225,9 @@ public class InterpolationTestHelper
      *
      * @param config the configuration to test
      */
-    public static void testInterpolationSystemProperties(Configuration config)
+    public static void testInterpolationSystemProperties(final Configuration config)
     {
-        String[] sysProperties =
+        final String[] sysProperties =
         { "java.version", "java.vendor", "os.name", "java.class.path" };
         for (int i = 0; i < sysProperties.length; i++)
         {
@@ -247,7 +247,7 @@ public class InterpolationTestHelper
      *
      * @param config the configuration to test
      */
-    public static void testInterpolationUnknownProperty(Configuration config)
+    public static void testInterpolationUnknownProperty(final Configuration config)
     {
         config.addProperty("test.interpol", "${unknown.property}");
         assertEquals("Wrong interpolated unknown property",
@@ -260,7 +260,7 @@ public class InterpolationTestHelper
      *
      * @param config the configuration to test
      */
-    public static void testMultipleInterpolation(Configuration config)
+    public static void testMultipleInterpolation(final Configuration config)
     {
         config.setProperty("test.base-level", "/base-level");
         config
@@ -271,7 +271,7 @@ public class InterpolationTestHelper
         config.setProperty("test.third-level",
                 "${test.second-level}/third-level");
 
-        String expectedValue = "/base-level/first-level/second-level/third-level";
+        final String expectedValue = "/base-level/first-level/second-level/third-level";
 
         assertEquals(config.getString("test.third-level"),
                         expectedValue);

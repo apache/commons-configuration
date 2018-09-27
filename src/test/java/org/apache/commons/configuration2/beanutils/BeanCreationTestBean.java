@@ -34,7 +34,7 @@ public class BeanCreationTestBean
         return buddy;
     }
 
-    public void setBuddy(BeanCreationTestBean buddy)
+    public void setBuddy(final BeanCreationTestBean buddy)
     {
         this.buddy = buddy;
     }
@@ -44,7 +44,7 @@ public class BeanCreationTestBean
         return intValue;
     }
 
-    public void setIntValue(int intValue)
+    public void setIntValue(final int intValue)
     {
         this.intValue = intValue;
     }
@@ -54,7 +54,7 @@ public class BeanCreationTestBean
         return stringValue;
     }
 
-    public void setStringValue(String stringValue)
+    public void setStringValue(final String stringValue)
     {
         this.stringValue = stringValue;
     }

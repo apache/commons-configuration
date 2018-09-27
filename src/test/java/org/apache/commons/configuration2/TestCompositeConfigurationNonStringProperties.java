@@ -34,9 +34,9 @@ public class TestCompositeConfigurationNonStringProperties extends BaseNonString
     @Before
     public void setUp() throws Exception
     {
-        CompositeConfiguration cc = new CompositeConfiguration();
-        PropertiesConfiguration pc = new PropertiesConfiguration();
-        FileHandler handler = new FileHandler(pc);
+        final CompositeConfiguration cc = new CompositeConfiguration();
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(pc);
         handler.setFileName(testProperties);
         handler.load();
         cc.addConfiguration(pc);

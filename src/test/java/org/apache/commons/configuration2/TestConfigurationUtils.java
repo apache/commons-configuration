@@ -78,8 +78,8 @@ public class TestConfigurationUtils
     @Test
     public void testToString()
     {
-        Configuration config = new BaseConfiguration();
-        String lineSeparator = System.getProperty("line.separator");
+        final Configuration config = new BaseConfiguration();
+        final String lineSeparator = System.getProperty("line.separator");
 
         assertEquals("String representation of an empty configuration", "", ConfigurationUtils.toString(config));
 
@@ -100,12 +100,12 @@ public class TestConfigurationUtils
     public void testCopy()
     {
         // create the source configuration
-        Configuration conf1 = new BaseConfiguration();
+        final Configuration conf1 = new BaseConfiguration();
         conf1.addProperty("key1", "value1");
         conf1.addProperty("key2", "value2");
 
         // create the target configuration
-        Configuration conf2 = new BaseConfiguration();
+        final Configuration conf2 = new BaseConfiguration();
         conf2.addProperty("key1", "value3");
         conf2.addProperty("key2", "value4");
 
@@ -120,12 +120,12 @@ public class TestConfigurationUtils
     public void testAppend()
     {
         // create the source configuration
-        Configuration conf1 = new BaseConfiguration();
+        final Configuration conf1 = new BaseConfiguration();
         conf1.addProperty("key1", "value1");
         conf1.addProperty("key2", "value2");
 
         // create the target configuration
-        Configuration conf2 = new BaseConfiguration();
+        final Configuration conf2 = new BaseConfiguration();
         conf2.addProperty("key1", "value3");
         conf2.addProperty("key2", "value4");
 
@@ -149,19 +149,19 @@ public class TestConfigurationUtils
     @Test
     public void testConvertToHierarchical()
     {
-        Configuration conf = new BaseConfiguration();
+        final Configuration conf = new BaseConfiguration();
         for (int i = 0; i < 10; i++)
         {
             conf.addProperty("test" + i, "value" + i);
             conf.addProperty("test.list", "item" + i);
         }
 
-        BaseHierarchicalConfiguration hc =
+        final BaseHierarchicalConfiguration hc =
                 (BaseHierarchicalConfiguration) ConfigurationUtils
                         .convertToHierarchical(conf);
-        for (Iterator<String> it = conf.getKeys(); it.hasNext();)
+        for (final Iterator<String> it = conf.getKeys(); it.hasNext();)
         {
-            String key = it.next();
+            final String key = it.next();
             assertEquals("Wrong value for key " + key, conf.getProperty(key),
                     hc.getProperty(key));
         }
@@ -174,7 +174,7 @@ public class TestConfigurationUtils
     @Test
     public void testConvertHierarchicalToHierarchical()
     {
-        Configuration conf = new BaseHierarchicalConfiguration();
+        final Configuration conf = new BaseHierarchicalConfiguration();
         conf.addProperty("test", "yes");
         assertSame("Wrong configuration returned", conf, ConfigurationUtils
                 .convertToHierarchical(conf));
@@ -198,12 +198,12 @@ public class TestConfigurationUtils
     @Test
     public void testConvertToHierarchicalDelimiters()
     {
-        BaseConfiguration conf = new BaseConfiguration();
+        final BaseConfiguration conf = new BaseConfiguration();
         conf.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         conf.addProperty("test.key", "1\\,2\\,3");
         assertEquals("Wrong property value", "1,2,3", conf
                 .getString("test.key"));
-        HierarchicalConfiguration<?> hc = ConfigurationUtils
+        final HierarchicalConfiguration<?> hc = ConfigurationUtils
                 .convertToHierarchical(conf);
         assertEquals("Escaped list delimiters not correctly handled", "1,2,3",
                 hc.getString("test.key"));
@@ -216,15 +216,15 @@ public class TestConfigurationUtils
     @Test
     public void testConvertToHierarchicalEngine()
     {
-        Configuration conf = new BaseConfiguration();
+        final Configuration conf = new BaseConfiguration();
         conf.addProperty("test(a)", Boolean.TRUE);
         conf.addProperty("test(b)", Boolean.FALSE);
-        DefaultExpressionEngine engine =
+        final DefaultExpressionEngine engine =
                 new DefaultExpressionEngine(
                         new DefaultExpressionEngineSymbols.Builder(
                                 DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
                                 .setIndexStart("[").setIndexEnd("]").create());
-        HierarchicalConfiguration<?> hc = ConfigurationUtils
+        final HierarchicalConfiguration<?> hc = ConfigurationUtils
                 .convertToHierarchical(conf, engine);
         assertTrue("Wrong value for test(a)", hc.getBoolean("test(a)"));
         assertFalse("Wrong value for test(b)", hc.getBoolean("test(b)"));
@@ -237,8 +237,8 @@ public class TestConfigurationUtils
     @Test
     public void testConvertHierarchicalToHierarchicalEngine()
     {
-        BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
-        ExpressionEngine engine =
+        final BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
+        final ExpressionEngine engine =
                 new DefaultExpressionEngine(
                         DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
         assertSame("Created new configuration", hc, ConfigurationUtils
@@ -254,8 +254,8 @@ public class TestConfigurationUtils
     @Test
     public void testConvertHierarchicalToHierarchicalNullEngine()
     {
-        BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
-        ExpressionEngine engine =
+        final BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
+        final ExpressionEngine engine =
                 new DefaultExpressionEngine(
                         DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
         hc.setExpressionEngine(engine);
@@ -272,10 +272,10 @@ public class TestConfigurationUtils
     @Test
     public void testConvertToHierarchicalMultiValues()
     {
-        BaseConfiguration config = new BaseConfiguration();
+        final BaseConfiguration config = new BaseConfiguration();
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         config.addProperty("test", "1,2,3");
-        HierarchicalConfiguration<?> hc = ConfigurationUtils
+        final HierarchicalConfiguration<?> hc = ConfigurationUtils
                 .convertToHierarchical(config);
         assertEquals("Wrong value 1", 1, hc.getInt("test(0)"));
         assertEquals("Wrong value 2", 2, hc.getInt("test(1)"));
@@ -290,15 +290,16 @@ public class TestConfigurationUtils
     @Test
     public void testConvertToHierarchicalOrderOfProperties()
     {
-        PropertiesConfiguration config = new PropertiesConfiguration();
+        final PropertiesConfiguration config = new PropertiesConfiguration();
         config.addProperty("x.y.z", true);
         config.addProperty("x.y", true);
         @SuppressWarnings("unchecked")
+        final
         HierarchicalConfiguration<ImmutableNode> hc =
                 (HierarchicalConfiguration<ImmutableNode>)
                         ConfigurationUtils.convertToHierarchical(config);
-        ImmutableNode rootNode = hc.getNodeModel().getNodeHandler().getRootNode();
-        ImmutableNode nodeX = rootNode.getChildren().get(0);
+        final ImmutableNode rootNode = hc.getNodeModel().getNodeHandler().getRootNode();
+        final ImmutableNode nodeX = rootNode.getChildren().get(0);
         assertEquals("Wrong number of children of x", 1, nodeX.getChildren().size());
     }
 
@@ -308,9 +309,9 @@ public class TestConfigurationUtils
     @Test
     public void testCloneConfiguration()
     {
-        BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
+        final BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
         conf.addProperty("test", "yes");
-        BaseHierarchicalConfiguration copy = (BaseHierarchicalConfiguration) ConfigurationUtils
+        final BaseHierarchicalConfiguration copy = (BaseHierarchicalConfiguration) ConfigurationUtils
                 .cloneConfiguration(conf);
         assertNotSame("Same object was returned", conf, copy);
         assertEquals("Property was not cloned", "yes", copy.getString("test"));
@@ -323,7 +324,7 @@ public class TestConfigurationUtils
     @Test(expected = ConfigurationRuntimeException.class)
     public void testCloneConfigurationNotSupported()
     {
-        Configuration myNonCloneableConfig = new NonCloneableConfiguration();
+        final Configuration myNonCloneableConfig = new NonCloneableConfiguration();
         ConfigurationUtils.cloneConfiguration(myNonCloneableConfig);
     }
 
@@ -343,15 +344,15 @@ public class TestConfigurationUtils
     @Test
     public void testCloneIfPossibleSupported()
     {
-        XMLBuilderParametersImpl params = new XMLBuilderParametersImpl();
+        final XMLBuilderParametersImpl params = new XMLBuilderParametersImpl();
         params.setPublicID("testID");
         params.setSchemaValidation(true);
-        XMLBuilderParametersImpl clone =
+        final XMLBuilderParametersImpl clone =
                 (XMLBuilderParametersImpl) ConfigurationUtils
                         .cloneIfPossible(params);
         assertNotSame("No clone was created", params, clone);
-        Map<String, Object> map = clone.getParameters();
-        for (Map.Entry<String, Object> e : params.getParameters().entrySet())
+        final Map<String, Object> map = clone.getParameters();
+        for (final Map.Entry<String, Object> e : params.getParameters().entrySet())
         {
             if (!e.getKey().startsWith("config-"))
             {
@@ -367,7 +368,7 @@ public class TestConfigurationUtils
     @Test
     public void testCloneIfPossibleNotSupported()
     {
-        Long value = 20130116221714L;
+        final Long value = 20130116221714L;
         assertSame("Wrong result", value,
                 ConfigurationUtils.cloneIfPossible(value));
     }
@@ -378,7 +379,7 @@ public class TestConfigurationUtils
     @Test
     public void testCloneIfPossibleError()
     {
-        XMLBuilderParametersImpl params = new XMLBuilderParametersImpl()
+        final XMLBuilderParametersImpl params = new XMLBuilderParametersImpl()
         {
             @Override
             public XMLBuilderParametersImpl clone()
@@ -405,10 +406,10 @@ public class TestConfigurationUtils
     @Test(expected = ConfigurationRuntimeException.class)
     public void testEnableRuntimeExceptions()
     {
-        PropertiesConfiguration config = new PropertiesConfiguration()
+        final PropertiesConfiguration config = new PropertiesConfiguration()
         {
             @Override
-            protected void addPropertyDirect(String key, Object value)
+            protected void addPropertyDirect(final String key, final Object value)
             {
                 // always simulate an exception
                 fireError(ConfigurationErrorEvent.WRITE,
@@ -428,7 +429,7 @@ public class TestConfigurationUtils
     @Test(expected = IllegalArgumentException.class)
     public void testEnableRuntimeExceptionsInvalid()
     {
-        Configuration c = EasyMock.createMock(Configuration.class);
+        final Configuration c = EasyMock.createMock(Configuration.class);
         EasyMock.replay(c);
         ConfigurationUtils.enableRuntimeExceptions(c);
     }
@@ -475,7 +476,7 @@ public class TestConfigurationUtils
         Thread.currentThread().setContextClassLoader(new ClassLoader()
         {
             @Override
-            public Class<?> loadClass(String name)
+            public Class<?> loadClass(final String name)
                     throws ClassNotFoundException
             {
                 throw new ClassNotFoundException(name);
@@ -519,7 +520,7 @@ public class TestConfigurationUtils
     @Test
     public void testAsEventSourceSupported()
     {
-        XMLConfiguration src = new XMLConfiguration();
+        final XMLConfiguration src = new XMLConfiguration();
         assertSame("Wrong result", src, ConfigurationUtils.asEventSource(src, true));
     }
 
@@ -539,9 +540,10 @@ public class TestConfigurationUtils
     public void testAsEventSourceUnsupportedMock()
     {
         @SuppressWarnings("unchecked")
+        final
         EventListener<ConfigurationEvent> cl = EasyMock.createMock(EventListener.class);
         EasyMock.replay(cl);
-        EventSource source = ConfigurationUtils.asEventSource(this, true);
+        final EventSource source = ConfigurationUtils.asEventSource(this, true);
         source.addEventListener(ConfigurationEvent.ANY, cl);
         assertFalse("Wrong result (1)", source.removeEventListener(ConfigurationEvent.ANY, cl));
         source.addEventListener(ConfigurationEvent.ANY, null);
@@ -572,8 +574,8 @@ public class TestConfigurationUtils
     @Test
     public void testCloneSynchronizerNewInstance()
     {
-        SynchronizerTestImpl sync = new SynchronizerTestImpl();
-        SynchronizerTestImpl sync2 =
+        final SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        final SynchronizerTestImpl sync2 =
                 (SynchronizerTestImpl) ConfigurationUtils
                         .cloneSynchronizer(sync);
         assertNotNull("Clone is null", sync2);
@@ -586,8 +588,8 @@ public class TestConfigurationUtils
     @Test
     public void testCloneSynchronizerClone()
     {
-        CloneableSynchronizer sync = new CloneableSynchronizer(false);
-        CloneableSynchronizer sync2 =
+        final CloneableSynchronizer sync = new CloneableSynchronizer(false);
+        final CloneableSynchronizer sync2 =
                 (CloneableSynchronizer) ConfigurationUtils
                         .cloneSynchronizer(sync);
         assertTrue("Not cloned", sync2.isCloned());
@@ -624,7 +626,7 @@ public class TestConfigurationUtils
          *
          * @param clone the clone flag
          */
-        public CloneableSynchronizer(boolean clone)
+        public CloneableSynchronizer(final boolean clone)
         {
             cloned = clone;
         }

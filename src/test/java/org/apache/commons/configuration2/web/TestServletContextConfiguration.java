@@ -51,10 +51,10 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration
         parameters.setProperty("listesc", "value1\\,value2");
 
         // create a servlet context
-        ServletContext context = new MockServletContext()
+        final ServletContext context = new MockServletContext()
         {
             @Override
-            public String getInitParameter(String key)
+            public String getInitParameter(final String key)
             {
                 return parameters.getProperty(key);
             }
@@ -71,7 +71,7 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration
         config.setServletContext(context);
 
         // create a servlet
-        Servlet servlet = new HttpServlet()
+        final Servlet servlet = new HttpServlet()
         {
             /**
              * Serial version UID.
@@ -85,7 +85,7 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration
             }
         };
 
-        ServletContextConfiguration resultConfig = new ServletContextConfiguration(servlet);
+        final ServletContextConfiguration resultConfig = new ServletContextConfiguration(servlet);
         resultConfig.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         return resultConfig;
     }
@@ -94,7 +94,7 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration
     protected AbstractConfiguration getEmptyConfiguration()
     {
         // create a servlet context
-        ServletContext context = new MockServletContext()
+        final ServletContext context = new MockServletContext()
         {
             @Override
             public Enumeration<?> getInitParameterNames()

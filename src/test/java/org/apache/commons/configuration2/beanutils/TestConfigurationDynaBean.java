@@ -108,22 +108,22 @@ public class TestConfigurationDynaBean
     @Before
     public void setUp() throws Exception
     {
-        Configuration configuration = createConfiguration();
+        final Configuration configuration = createConfiguration();
 
         for (int i = 0; i < properties.length; i++)
         {
             configuration.setProperty(properties[i], values[i]);
         }
 
-        for (int element : intArray) {
+        for (final int element : intArray) {
             configuration.addProperty("intIndexed", new Integer(element));
         }
 
-        for (String element : stringArray) {
+        for (final String element : stringArray) {
             configuration.addProperty("stringIndexed", element);
         }
 
-        List<String> list = Arrays.asList(stringArray);
+        final List<String> list = Arrays.asList(stringArray);
         configuration.addProperty("listIndexed", list);
 
         bean = new ConfigurationDynaBean(configuration);
@@ -155,7 +155,7 @@ public class TestConfigurationDynaBean
     @Test(expected = IllegalArgumentException.class)
     public void testGetDescriptorArguments()
     {
-        DynaProperty descriptor = bean.getDynaClass().getDynaProperty("unknown");
+        final DynaProperty descriptor = bean.getDynaClass().getDynaProperty("unknown");
         assertNull("Unknown property descriptor should be null", descriptor);
         bean.getDynaClass().getDynaProperty(null);
     }
@@ -240,11 +240,11 @@ public class TestConfigurationDynaBean
     @Test
     public void testGetDescriptors()
     {
-        DynaProperty pd[] = bean.getDynaClass().getDynaProperties();
+        final DynaProperty pd[] = bean.getDynaClass().getDynaProperties();
         assertNotNull("Got descriptors", pd);
-        int count[] = new int[properties.length];
-        for (DynaProperty element : pd) {
-            String name = element.getName();
+        final int count[] = new int[properties.length];
+        for (final DynaProperty element : pd) {
+            final String name = element.getName();
             for (int j = 0; j < properties.length; j++)
             {
                 if (name.equals(properties[j]))
@@ -325,10 +325,10 @@ public class TestConfigurationDynaBean
     {
         try
         {
-            Object value = bean.get("mappedProperty", "unknown");
+            final Object value = bean.get("mappedProperty", "unknown");
             assertNull("Should not return a value", value);
         }
-        catch (Throwable t)
+        catch (final Throwable t)
         {
             fail("Threw " + t + " instead of returning null");
         }
@@ -365,7 +365,7 @@ public class TestConfigurationDynaBean
     @Test
     public void testGetSimpleBoolean()
     {
-        Object value = bean.get("booleanProperty");
+        final Object value = bean.get("booleanProperty");
         assertNotNull("Got a value", value);
         ObjectAssert.assertInstanceOf("Got correct type", Boolean.class, value);
         assertTrue("Got correct value", ((Boolean) value).booleanValue());
@@ -377,7 +377,7 @@ public class TestConfigurationDynaBean
     @Test
     public void testGetSimpleDouble()
     {
-        Object value = bean.get("doubleProperty");
+        final Object value = bean.get("doubleProperty");
         assertNotNull("Got a value", value);
         ObjectAssert.assertInstanceOf("Got correct type", Double.class, value);
         assertEquals("Got correct value", ((Double) value).doubleValue(), Double.MAX_VALUE, 0.005);
@@ -389,7 +389,7 @@ public class TestConfigurationDynaBean
     @Test
     public void testGetSimpleFloat()
     {
-        Object value = bean.get("floatProperty");
+        final Object value = bean.get("floatProperty");
         assertNotNull("Got a value", value);
         ObjectAssert.assertInstanceOf("Got correct type", Float.class, value);
         assertEquals("Got correct value", ((Float) value).floatValue(), Float.MAX_VALUE, 0.005f);
@@ -401,7 +401,7 @@ public class TestConfigurationDynaBean
     @Test
     public void testGetSimpleInt()
     {
-        Object value = bean.get("intProperty");
+        final Object value = bean.get("intProperty");
         assertNotNull("Failed to get value", value);
         ObjectAssert.assertInstanceOf("Incorrect type", Integer.class, value);
         assertEquals("Incorrect value", ((Integer) value).intValue(), Integer.MAX_VALUE);
@@ -413,7 +413,7 @@ public class TestConfigurationDynaBean
     @Test
     public void testGetSimpleLong()
     {
-        Object value = bean.get("longProperty");
+        final Object value = bean.get("longProperty");
         assertNotNull("Got a value", value);
         ObjectAssert.assertInstanceOf("Returned incorrect type", Long.class, value);
         assertEquals("Returned value of Incorrect value", ((Long) value).longValue(), Long.MAX_VALUE);
@@ -425,7 +425,7 @@ public class TestConfigurationDynaBean
     @Test
     public void testGetSimpleShort()
     {
-        Object value = bean.get("shortProperty");
+        final Object value = bean.get("shortProperty");
         assertNotNull("Got a value", value);
         ObjectAssert.assertInstanceOf("Got correct type", Short.class, value);
         assertEquals("Got correct value", ((Short) value).shortValue(), Short.MAX_VALUE);
@@ -437,7 +437,7 @@ public class TestConfigurationDynaBean
     @Test
     public void testGetSimpleString()
     {
-        Object value = bean.get("stringProperty");
+        final Object value = bean.get("stringProperty");
         assertNotNull("Got a value", value);
         ObjectAssert.assertInstanceOf("Got correct type", String.class, value);
         assertEquals("Got correct value", value, "This is a string");
@@ -529,13 +529,13 @@ public class TestConfigurationDynaBean
     @Test
     public void testSetArrayValue()
     {
-        MapConfiguration configuration = new MapConfiguration(new HashMap<String, Object>());
+        final MapConfiguration configuration = new MapConfiguration(new HashMap<String, Object>());
         configuration.getMap().put("objectArray", new Object[] {"value1", "value2", "value3"});
 
-        ConfigurationDynaBean bean = new ConfigurationDynaBean(configuration);
+        final ConfigurationDynaBean bean = new ConfigurationDynaBean(configuration);
 
         bean.set("objectArray", 1, "New Value 1");
-        Object value = bean.get("objectArray", 1);
+        final Object value = bean.get("objectArray", 1);
 
         assertNotNull("Returned new value 1", value);
         ObjectAssert.assertInstanceOf("Returned String new value 1", String.class,  value);
@@ -561,8 +561,8 @@ public class TestConfigurationDynaBean
     @Test
     public void testSetSimpleBoolean()
     {
-        boolean oldValue = ((Boolean) bean.get("booleanProperty")).booleanValue();
-        boolean newValue = !oldValue;
+        final boolean oldValue = ((Boolean) bean.get("booleanProperty")).booleanValue();
+        final boolean newValue = !oldValue;
         bean.set("booleanProperty", new Boolean(newValue));
         assertTrue("Matched new value", newValue == ((Boolean) bean.get("booleanProperty")).booleanValue());
     }
@@ -573,8 +573,8 @@ public class TestConfigurationDynaBean
     @Test
     public void testSetSimpleDouble()
     {
-        double oldValue = ((Double) bean.get("doubleProperty")).doubleValue();
-        double newValue = oldValue + 1.0;
+        final double oldValue = ((Double) bean.get("doubleProperty")).doubleValue();
+        final double newValue = oldValue + 1.0;
         bean.set("doubleProperty", new Double(newValue));
         assertEquals("Matched new value", newValue, ((Double) bean.get("doubleProperty")).doubleValue(), 0.005);
     }
@@ -585,8 +585,8 @@ public class TestConfigurationDynaBean
     @Test
     public void testSetSimpleFloat()
     {
-        float oldValue = ((Float) bean.get("floatProperty")).floatValue();
-        float newValue = oldValue + (float) 1.0;
+        final float oldValue = ((Float) bean.get("floatProperty")).floatValue();
+        final float newValue = oldValue + (float) 1.0;
         bean.set("floatProperty", new Float(newValue));
         assertEquals("Matched new value", newValue, ((Float) bean.get("floatProperty")).floatValue(), 0.005f);
     }
@@ -597,8 +597,8 @@ public class TestConfigurationDynaBean
     @Test
     public void testSetSimpleInt()
     {
-        int oldValue = ((Integer) bean.get("intProperty")).intValue();
-        int newValue = oldValue + 1;
+        final int oldValue = ((Integer) bean.get("intProperty")).intValue();
+        final int newValue = oldValue + 1;
         bean.set("intProperty", new Integer(newValue));
         assertEquals("Matched new value", newValue, ((Integer) bean.get("intProperty")).intValue());
     }
@@ -609,8 +609,8 @@ public class TestConfigurationDynaBean
     @Test
     public void testSetSimpleLong()
     {
-        long oldValue = ((Long) bean.get("longProperty")).longValue();
-        long newValue = oldValue + 1;
+        final long oldValue = ((Long) bean.get("longProperty")).longValue();
+        final long newValue = oldValue + 1;
         bean.set("longProperty", new Long(newValue));
         assertEquals("Matched new value", newValue, ((Long) bean.get("longProperty")).longValue());
     }
@@ -621,8 +621,8 @@ public class TestConfigurationDynaBean
     @Test
     public void testSetSimpleShort()
     {
-        short oldValue = ((Short) bean.get("shortProperty")).shortValue();
-        short newValue = (short) (oldValue + 1);
+        final short oldValue = ((Short) bean.get("shortProperty")).shortValue();
+        final short newValue = (short) (oldValue + 1);
         bean.set("shortProperty", new Short(newValue));
         assertEquals("Matched new value", newValue, ((Short) bean.get("shortProperty")).shortValue());
     }
@@ -633,8 +633,8 @@ public class TestConfigurationDynaBean
     @Test
     public void testSetSimpleString()
     {
-        String oldValue = (String) bean.get("stringProperty");
-        String newValue = oldValue + " Extra Value";
+        final String oldValue = (String) bean.get("stringProperty");
+        final String newValue = oldValue + " Extra Value";
         bean.set("stringProperty", newValue);
         assertEquals("Matched new value", newValue, bean.get("stringProperty"));
     }
@@ -663,9 +663,9 @@ public class TestConfigurationDynaBean
      * @param name Name of the property to be retrieved
      * @param type Expected class type of this property
      */
-    protected void testGetDescriptorBase(String name, Class<?> type)
+    protected void testGetDescriptorBase(final String name, final Class<?> type)
     {
-        DynaProperty descriptor = bean.getDynaClass().getDynaProperty(name);
+        final DynaProperty descriptor = bean.getDynaClass().getDynaProperty(name);
 
         assertNotNull("Failed to get descriptor", descriptor);
         assertEquals("Got incorrect type", type, descriptor.getType());
@@ -677,9 +677,9 @@ public class TestConfigurationDynaBean
     @Test
     public void testNestedPropeties()
     {
-        ConfigurationDynaBean nested = (ConfigurationDynaBean) bean.get("mappedProperty");
+        final ConfigurationDynaBean nested = (ConfigurationDynaBean) bean.get("mappedProperty");
 
-        String value = (String) nested.get("key1");
+        final String value = (String) nested.get("key1");
         assertEquals("Can find first value", "First Value", value);
 
         nested.set("key1", "undefined");

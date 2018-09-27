@@ -44,9 +44,9 @@ public class TestConstructorArg
     @Test
     public void testIsNestedBeanDeclarationTrue()
     {
-        BeanDeclaration decl = EasyMock.createMock(BeanDeclaration.class);
+        final BeanDeclaration decl = EasyMock.createMock(BeanDeclaration.class);
         EasyMock.replay(decl);
-        ConstructorArg arg = ConstructorArg.forBeanDeclaration(decl);
+        final ConstructorArg arg = ConstructorArg.forBeanDeclaration(decl);
         assertTrue("No bean declaration", arg.isNestedBeanDeclaration());
     }
 
@@ -56,7 +56,7 @@ public class TestConstructorArg
     @Test
     public void testIsNestedBeanDeclarationFalse()
     {
-        ConstructorArg arg = ConstructorArg.forValue("test");
+        final ConstructorArg arg = ConstructorArg.forValue("test");
         assertFalse("A bean declaration", arg.isNestedBeanDeclaration());
     }
 
@@ -66,7 +66,7 @@ public class TestConstructorArg
     @Test
     public void testMatchesNoType()
     {
-        ConstructorArg arg = ConstructorArg.forValue(42);
+        final ConstructorArg arg = ConstructorArg.forValue(42);
         assertTrue("No match (1)", arg.matches(String.class));
         assertTrue("No match (2)", arg.matches(getClass()));
     }
@@ -77,7 +77,7 @@ public class TestConstructorArg
     @Test
     public void testMatchesWithType()
     {
-        ConstructorArg arg = ConstructorArg.forValue("42", int.class.getName());
+        final ConstructorArg arg = ConstructorArg.forValue("42", int.class.getName());
         assertTrue("Wrong result (1)", arg.matches(Integer.TYPE));
         assertFalse("Wrong result (2)", arg.matches(Integer.class));
         assertFalse("Wrong result (3)", arg.matches(String.class));
@@ -89,7 +89,7 @@ public class TestConstructorArg
     @Test
     public void testMatchesNull()
     {
-        ConstructorArg arg = ConstructorArg.forValue(0);
+        final ConstructorArg arg = ConstructorArg.forValue(0);
         assertFalse("Wrong result", arg.matches(null));
     }
 }

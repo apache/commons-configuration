@@ -55,7 +55,7 @@ public class TestPropertyListParser
     @Test
     public void testParseDate() throws Exception
     {
-        Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, 2002);
         calendar.set(Calendar.MONTH, Calendar.MARCH);
         calendar.set(Calendar.DAY_OF_MONTH, 22);
@@ -71,7 +71,7 @@ public class TestPropertyListParser
     @Test
     public void testFilterData() throws Exception
     {
-        byte[] expected = new byte[] {0x20, 0x20};
+        final byte[] expected = new byte[] {0x20, 0x20};
         ArrayAssert.assertEquals("null string", null, parser.filterData(null));
         ArrayAssert.assertEquals("data with < >", expected, parser.filterData("<2020>"));
         ArrayAssert.assertEquals("data without < >", expected, parser.filterData("2020"));

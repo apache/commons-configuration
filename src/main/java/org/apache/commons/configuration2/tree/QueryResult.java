@@ -56,7 +56,7 @@ public final class QueryResult<T>
      * @param nd the node
      * @param attr the attribute name
      */
-    private QueryResult(T nd, String attr)
+    private QueryResult(final T nd, final String attr)
     {
         node = nd;
         attributeName = attr;
@@ -70,7 +70,7 @@ public final class QueryResult<T>
      * @param resultNode the result node
      * @return the newly created instance
      */
-    public static <T> QueryResult<T> createNodeResult(T resultNode)
+    public static <T> QueryResult<T> createNodeResult(final T resultNode)
     {
         return new QueryResult<>(resultNode, null);
     }
@@ -85,8 +85,8 @@ public final class QueryResult<T>
      * @param <T> the type of the parent node
      * @return the newly created instance
      */
-    public static <T> QueryResult<T> createAttributeResult(T parentNode,
-                                                           String attrName)
+    public static <T> QueryResult<T> createAttributeResult(final T parentNode,
+                                                           final String attrName)
     {
         return new QueryResult<>(parentNode, attrName);
     }
@@ -134,7 +134,7 @@ public final class QueryResult<T>
      * @return the attribute value
      * @throws IllegalStateException if this is not an attribute result
      */
-    public Object getAttributeValue(NodeHandler<T> handler)
+    public Object getAttributeValue(final NodeHandler<T> handler)
     {
         if (!isAttributeResult())
         {
@@ -160,7 +160,7 @@ public final class QueryResult<T>
      * @return a flag whether these objects are equal
      */
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(final Object obj)
     {
         if (this == obj)
         {
@@ -171,7 +171,7 @@ public final class QueryResult<T>
             return false;
         }
 
-        QueryResult<?> c = (QueryResult<?>) obj;
+        final QueryResult<?> c = (QueryResult<?>) obj;
         return new EqualsBuilder().append(getNode(), c.getNode())
                 .append(getAttributeName(), c.getAttributeName()).isEquals();
     }
@@ -186,7 +186,7 @@ public final class QueryResult<T>
     @Override
     public String toString()
     {
-        ToStringBuilder sb = new ToStringBuilder(this);
+        final ToStringBuilder sb = new ToStringBuilder(this);
         if (isAttributeResult())
         {
             sb.append("parentNode", getNode()).append("attribute",

@@ -62,7 +62,7 @@ public class XMLBuilderParametersImpl extends HierarchicalBuilderParametersImpl
     private static final String PROP_SCHEMA_VALIDATION = "schemaValidation";
 
     @Override
-    public void inheritFrom(Map<String, ?> source)
+    public void inheritFrom(final Map<String, ?> source)
     {
         super.inheritFrom(source);
         copyPropertiesFrom(source, PROP_DOCUMENT_BUILDER, PROP_ENTITY_RESOLVER,
@@ -71,14 +71,14 @@ public class XMLBuilderParametersImpl extends HierarchicalBuilderParametersImpl
 
     @Override
     public XMLBuilderParametersImpl setDocumentBuilder(
-            DocumentBuilder docBuilder)
+            final DocumentBuilder docBuilder)
     {
         storeProperty(PROP_DOCUMENT_BUILDER, docBuilder);
         return this;
     }
 
     @Override
-    public XMLBuilderParametersImpl setEntityResolver(EntityResolver resolver)
+    public XMLBuilderParametersImpl setEntityResolver(final EntityResolver resolver)
     {
         storeProperty(PROP_ENTITY_RESOLVER, resolver);
         return this;
@@ -96,28 +96,28 @@ public class XMLBuilderParametersImpl extends HierarchicalBuilderParametersImpl
     }
 
     @Override
-    public XMLBuilderParametersImpl setPublicID(String pubID)
+    public XMLBuilderParametersImpl setPublicID(final String pubID)
     {
         storeProperty(PROP_PUBLIC_ID, pubID);
         return this;
     }
 
     @Override
-    public XMLBuilderParametersImpl setSystemID(String sysID)
+    public XMLBuilderParametersImpl setSystemID(final String sysID)
     {
         storeProperty(PROP_SYSTEM_ID, sysID);
         return this;
     }
 
     @Override
-    public XMLBuilderParametersImpl setValidating(boolean f)
+    public XMLBuilderParametersImpl setValidating(final boolean f)
     {
         storeProperty(PROP_VALIDATING, Boolean.valueOf(f));
         return this;
     }
 
     @Override
-    public XMLBuilderParametersImpl setSchemaValidation(boolean f)
+    public XMLBuilderParametersImpl setSchemaValidation(final boolean f)
     {
         storeProperty(PROP_SCHEMA_VALIDATION, Boolean.valueOf(f));
         return this;

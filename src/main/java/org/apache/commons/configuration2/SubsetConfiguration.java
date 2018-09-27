@@ -50,7 +50,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      * @param prefix The prefix used to select the properties
      * @throws IllegalArgumentException if the parent configuration is <b>null</b>
      */
-    public SubsetConfiguration(Configuration parent, String prefix)
+    public SubsetConfiguration(final Configuration parent, final String prefix)
     {
         this(parent, prefix, null);
     }
@@ -63,7 +63,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      * @param delimiter The prefix delimiter
      * @throws IllegalArgumentException if the parent configuration is <b>null</b>
      */
-    public SubsetConfiguration(Configuration parent, String prefix, String delimiter)
+    public SubsetConfiguration(final Configuration parent, final String prefix, final String delimiter)
     {
         if (parent == null)
         {
@@ -84,7 +84,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      * @param key The key in the subset.
      * @return the key as to be used by the parent
      */
-    protected String getParentKey(String key)
+    protected String getParentKey(final String key)
     {
         if ("".equals(key) || key == null)
         {
@@ -100,7 +100,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      * @param key The key in the parent configuration.
      * @return the key in the context of this subset configuration
      */
-    protected String getChildKey(String key)
+    protected String getChildKey(final String key)
     {
         if (!key.startsWith(prefix))
         {
@@ -113,7 +113,7 @@ public class SubsetConfiguration extends AbstractConfiguration
         }
         else
         {
-            int i = prefix.length() + (delimiter != null ? delimiter.length() : 0);
+            final int i = prefix.length() + (delimiter != null ? delimiter.length() : 0);
             modifiedKey = key.substring(i);
         }
 
@@ -145,13 +145,13 @@ public class SubsetConfiguration extends AbstractConfiguration
      *
      * @param prefix the prefix
      */
-    public void setPrefix(String prefix)
+    public void setPrefix(final String prefix)
     {
         this.prefix = prefix;
     }
 
     @Override
-    public Configuration subset(String prefix)
+    public Configuration subset(final String prefix)
     {
         return parent.subset(getParentKey(prefix));
     }
@@ -163,31 +163,31 @@ public class SubsetConfiguration extends AbstractConfiguration
     }
 
     @Override
-    protected boolean containsKeyInternal(String key)
+    protected boolean containsKeyInternal(final String key)
     {
         return parent.containsKey(getParentKey(key));
     }
 
     @Override
-    public void addPropertyDirect(String key, Object value)
+    public void addPropertyDirect(final String key, final Object value)
     {
         parent.addProperty(getParentKey(key), value);
     }
 
     @Override
-    protected void clearPropertyDirect(String key)
+    protected void clearPropertyDirect(final String key)
     {
         parent.clearProperty(getParentKey(key));
     }
 
     @Override
-    protected Object getPropertyInternal(String key)
+    protected Object getPropertyInternal(final String key)
     {
         return parent.getProperty(getParentKey(key));
     }
 
     @Override
-    protected Iterator<String> getKeysInternal(String prefix)
+    protected Iterator<String> getKeysInternal(final String prefix)
     {
         return new SubsetIterator(parent.getKeys(getParentKey(prefix)));
     }
@@ -204,7 +204,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      * Change the behavior of the parent configuration if it supports this feature.
      */
     @Override
-    public void setThrowExceptionOnMissing(boolean throwExceptionOnMissing)
+    public void setThrowExceptionOnMissing(final boolean throwExceptionOnMissing)
     {
         if (parent instanceof AbstractConfiguration)
         {
@@ -250,7 +250,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      */
     @Override
     public void setListDelimiterHandler(
-            ListDelimiterHandler listDelimiterHandler)
+            final ListDelimiterHandler listDelimiterHandler)
     {
         if (parent instanceof AbstractConfiguration)
         {
@@ -290,7 +290,7 @@ public class SubsetConfiguration extends AbstractConfiguration
          *
          * @param it the iterator of the parent configuration
          */
-        public SubsetIterator(Iterator<String> it)
+        public SubsetIterator(final Iterator<String> it)
         {
             parentIterator = it;
         }

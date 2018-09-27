@@ -70,7 +70,7 @@ public class TestNodeSelector
      */
     private static NodeKeyResolver<ImmutableNode> createResolver()
     {
-        NodeKeyResolver<ImmutableNode> resolver =
+        final NodeKeyResolver<ImmutableNode> resolver =
                 NodeStructureHelper.createResolverMock();
         NodeStructureHelper.expectResolveKeyForQueries(resolver);
         EasyMock.replay(resolver);
@@ -83,8 +83,8 @@ public class TestNodeSelector
     @Test
     public void testSelectSingleKeySuccess()
     {
-        NodeSelector selector = new NodeSelector("tables.table(0).name");
-        ImmutableNode target = selector.select(root, resolver, handler);
+        final NodeSelector selector = new NodeSelector("tables.table(0).name");
+        final ImmutableNode target = selector.select(root, resolver, handler);
         assertEquals("Wrong name", "name", target.getNodeName());
         assertEquals("Wrong value", NodeStructureHelper.table(0),
                 target.getValue());
@@ -96,14 +96,14 @@ public class TestNodeSelector
     @Test
     public void testSelectSingleAttributeKey()
     {
-        NodeKeyResolver<ImmutableNode> resolverMock =
+        final NodeKeyResolver<ImmutableNode> resolverMock =
                 NodeStructureHelper.createResolverMock();
         EasyMock.expect(resolverMock.resolveKey(root, KEY, handler)).andReturn(
                 Collections.singletonList(QueryResult.createAttributeResult(
                         root, KEY)));
         EasyMock.replay(resolverMock);
 
-        NodeSelector selector = new NodeSelector(KEY);
+        final NodeSelector selector = new NodeSelector(KEY);
         assertNull("Got a result", selector.select(root, resolverMock, handler));
     }
 
@@ -113,13 +113,13 @@ public class TestNodeSelector
     @Test
     public void testSelectIgnoreAttributeResults()
     {
-        NodeKeyResolver<ImmutableNode> resolverMock =
+        final NodeKeyResolver<ImmutableNode> resolverMock =
                 NodeStructureHelper.createResolverMock();
-        List<QueryResult<ImmutableNode>> results =
+        final List<QueryResult<ImmutableNode>> results =
                 new LinkedList<>();
         results.add(QueryResult.createAttributeResult(
                 NodeStructureHelper.nodeForKey(root, "tables/table(0)"), "type"));
-        ImmutableNode target =
+        final ImmutableNode target =
                 NodeStructureHelper.nodeForKey(root, "tables/table(1)");
         results.add(QueryResult.createNodeResult(target));
         results.add(QueryResult.createAttributeResult(NodeStructureHelper
@@ -128,7 +128,7 @@ public class TestNodeSelector
                 results);
         EasyMock.replay(resolverMock);
 
-        NodeSelector selector = new NodeSelector(KEY);
+        final NodeSelector selector = new NodeSelector(KEY);
         assertSame("Wrong target", target,
                 selector.select(root, resolverMock, handler));
     }
@@ -139,7 +139,7 @@ public class TestNodeSelector
     @Test
     public void testSelectMultipleTargets()
     {
-        NodeSelector selector = new NodeSelector("tables.table.name");
+        final NodeSelector selector = new NodeSelector("tables.table.name");
         assertNull("Got a result", selector.select(root, resolver, handler));
     }
 
@@ -149,10 +149,10 @@ public class TestNodeSelector
     @Test
     public void testSelectSubKey()
     {
-        NodeSelector selectorParent = new NodeSelector("tables.table(0)");
-        NodeSelector selector =
+        final NodeSelector selectorParent = new NodeSelector("tables.table(0)");
+        final NodeSelector selector =
                 selectorParent.subSelector("fields.field(1).name");
-        ImmutableNode target = selector.select(root, resolver, handler);
+        final ImmutableNode target = selector.select(root, resolver, handler);
         assertEquals("Wrong node selected", NodeStructureHelper.field(0, 1),
                 target.getValue());
     }
@@ -163,8 +163,8 @@ public class TestNodeSelector
     @Test
     public void testSelectSubKeyUnknown()
     {
-        NodeSelector selectorParent = new NodeSelector("tables.unknown");
-        NodeSelector selector =
+        final NodeSelector selectorParent = new NodeSelector("tables.unknown");
+        final NodeSelector selector =
                 selectorParent.subSelector("fields.field(1).name");
         assertNull("Got a result", selector.select(root, resolver, handler));
     }
@@ -175,8 +175,8 @@ public class TestNodeSelector
     @Test
     public void testSelectSubKeyMultipleResults()
     {
-        NodeSelector selectorParent = new NodeSelector("tables.table");
-        NodeSelector selector =
+        final NodeSelector selectorParent = new NodeSelector("tables.table");
+        final NodeSelector selector =
                 selectorParent.subSelector("fields.field(1).name");
         assertNull("Got a result", selector.select(root, resolver, handler));
     }
@@ -189,12 +189,12 @@ public class TestNodeSelector
     @Test
     public void testSelectSubKeyComplexEvaluation()
     {
-        NodeSelector first = new NodeSelector("tables.table");
-        NodeSelector second = first.subSelector("fields");
-        int fldIdx = NodeStructureHelper.fieldsLength(1) - 1;
-        NodeSelector selector =
+        final NodeSelector first = new NodeSelector("tables.table");
+        final NodeSelector second = first.subSelector("fields");
+        final int fldIdx = NodeStructureHelper.fieldsLength(1) - 1;
+        final NodeSelector selector =
                 second.subSelector("field(" + fldIdx + ").name");
-        ImmutableNode target = selector.select(root, resolver, handler);
+        final ImmutableNode target = selector.select(root, resolver, handler);
         assertEquals("Wrong target node", NodeStructureHelper.field(1, fldIdx),
                 target.getValue());
     }
@@ -205,12 +205,12 @@ public class TestNodeSelector
     @Test
     public void testEqualsTrue()
     {
-        NodeSelector selector = new NodeSelector(KEY);
+        final NodeSelector selector = new NodeSelector(KEY);
         ConfigurationAssert.checkEquals(selector, selector, true);
-        NodeSelector sel2 = new NodeSelector(KEY);
+        final NodeSelector sel2 = new NodeSelector(KEY);
         ConfigurationAssert.checkEquals(selector, sel2, true);
-        NodeSelector sub1 = selector.subSelector("k2");
-        NodeSelector sub2 = sel2.subSelector("k2");
+        final NodeSelector sub1 = selector.subSelector("k2");
+        final NodeSelector sub2 = sel2.subSelector("k2");
         ConfigurationAssert.checkEquals(sub1, sub2, true);
     }
 
@@ -220,7 +220,7 @@ public class TestNodeSelector
     @Test
     public void testEqualsFalse()
     {
-        NodeSelector selector = new NodeSelector(KEY);
+        final NodeSelector selector = new NodeSelector(KEY);
         NodeSelector sel2 = new NodeSelector("other" + KEY);
         ConfigurationAssert.checkEquals(selector, sel2, false);
         sel2 = new NodeSelector(KEY).subSelector(KEY);
@@ -233,7 +233,7 @@ public class TestNodeSelector
     @Test
     public void testEqualsOtherObjects()
     {
-        NodeSelector selector = new NodeSelector(KEY);
+        final NodeSelector selector = new NodeSelector(KEY);
         ConfigurationAssert.checkEquals(selector, null, false);
         ConfigurationAssert.checkEquals(selector, this, false);
     }
@@ -245,8 +245,8 @@ public class TestNodeSelector
     public void testToString()
     {
         final String key2 = "anotherSelectionKey";
-        NodeSelector selector = new NodeSelector(KEY).subSelector(key2);
-        String s = selector.toString();
+        final NodeSelector selector = new NodeSelector(KEY).subSelector(key2);
+        final String s = selector.toString();
         assertThat(s, containsString(KEY));
         assertThat(s, containsString(key2));
     }

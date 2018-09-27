@@ -60,11 +60,11 @@ public class TestMultiWrapDynaBean
      *        wrapped beans
      * @return the test bean
      */
-    private MultiWrapDynaBean createBean(boolean withDynaBean)
+    private MultiWrapDynaBean createBean(final boolean withDynaBean)
     {
         params = new BasicBuilderParameters();
         wrapBean = new WrappedBeanTestImpl();
-        Collection<Object> beans = new ArrayList<>();
+        final Collection<Object> beans = new ArrayList<>();
         beans.add(params);
         beans.add(wrapBean);
         if (withDynaBean)
@@ -94,8 +94,8 @@ public class TestMultiWrapDynaBean
     @Test
     public void testGetSimpleProperty() throws Exception
     {
-        MultiWrapDynaBean bean = createBean(false);
-        String text = "testText";
+        final MultiWrapDynaBean bean = createBean(false);
+        final String text = "testText";
         wrapBean.setText(text);
         assertEquals("Wrong value", text,
                 PropertyUtils.getProperty(bean, "text"));
@@ -118,7 +118,7 @@ public class TestMultiWrapDynaBean
     @Test
     public void testGetIndexedProperty() throws Exception
     {
-        MultiWrapDynaBean bean = createBean(false);
+        final MultiWrapDynaBean bean = createBean(false);
         wrapBean.setIndexedProperty(3, 20121117);
         assertEquals("Wrong value", 20121117,
                 PropertyUtils.getIndexedProperty(bean, "indexedProperty", 3));
@@ -130,9 +130,9 @@ public class TestMultiWrapDynaBean
     @Test
     public void testSetMappedProperty() throws Exception
     {
-        MultiWrapDynaBean bean = createBean(true);
-        String key = "testKey";
-        String text = "Hello World";
+        final MultiWrapDynaBean bean = createBean(true);
+        final String key = "testKey";
+        final String text = "Hello World";
         PropertyUtils.setMappedProperty(bean, MAPPED_PROPERTY, key, text);
         assertEquals("Property not set", text,
                 wrapDynaBean.get(MAPPED_PROPERTY, key));
@@ -144,9 +144,9 @@ public class TestMultiWrapDynaBean
     @Test
     public void testGetMappedProperty() throws Exception
     {
-        MultiWrapDynaBean bean = createBean(true);
-        String key = "testKey";
-        String value = "Hello World";
+        final MultiWrapDynaBean bean = createBean(true);
+        final String key = "testKey";
+        final String value = "Hello World";
         wrapDynaBean.set(MAPPED_PROPERTY, key, value);
         assertEquals("Wrong value", value,
                 PropertyUtils.getMappedProperty(bean, MAPPED_PROPERTY, key));
@@ -167,7 +167,7 @@ public class TestMultiWrapDynaBean
     @Test
     public void testGetDynaClass()
     {
-        DynaClass cls = createBean(false).getDynaClass();
+        final DynaClass cls = createBean(false).getDynaClass();
         assertNotNull("Property not found (1)",
                 cls.getDynaProperty("throwExceptionOnMissing"));
         assertNotNull("Property not found (2)", cls.getDynaProperty("text"));
@@ -217,7 +217,7 @@ public class TestMultiWrapDynaBean
     @Test
     public void testOrderOfProperties() throws Exception
     {
-        Collection<Object> beans = new ArrayList<>();
+        final Collection<Object> beans = new ArrayList<>();
         params = new BasicBuilderParameters();
         beans.add(params);
         beans.add(new FileBasedBuilderParametersImpl());
@@ -225,13 +225,13 @@ public class TestMultiWrapDynaBean
         {
             beans.add(new BasicBuilderParameters());
         }
-        MultiWrapDynaBean bean = new MultiWrapDynaBean(beans);
-        ListDelimiterHandler listHandler = new DefaultListDelimiterHandler('+');
+        final MultiWrapDynaBean bean = new MultiWrapDynaBean(beans);
+        final ListDelimiterHandler listHandler = new DefaultListDelimiterHandler('+');
         PropertyUtils
                 .setProperty(bean, "throwExceptionOnMissing", Boolean.TRUE);
         PropertyUtils
                 .setProperty(bean, "listDelimiterHandler", listHandler);
-        Map<String, Object> map = params.getParameters();
+        final Map<String, Object> map = params.getParameters();
         assertEquals("Exception flag not set", Boolean.TRUE,
                 map.get("throwExceptionOnMissing"));
         assertEquals("List delimiter handler not set", listHandler,
@@ -253,22 +253,22 @@ public class TestMultiWrapDynaBean
         /** A simple property. */
         private String text;
 
-        public String getMapProperty(String key)
+        public String getMapProperty(final String key)
         {
             return mapProperties.get(key);
         }
 
-        public void setMapProperty(String key, String value)
+        public void setMapProperty(final String key, final String value)
         {
             mapProperties.put(key, value);
         }
 
-        public int getIndexedProperty(int idx)
+        public int getIndexedProperty(final int idx)
         {
             return indexedValues[idx];
         }
 
-        public void setIndexedProperty(int idx, int value)
+        public void setIndexedProperty(final int idx, final int value)
         {
             indexedValues[idx] = value;
         }
@@ -278,7 +278,7 @@ public class TestMultiWrapDynaBean
             return text;
         }
 
-        public void setText(String text)
+        public void setText(final String text)
         {
             this.text = text;
         }

@@ -67,13 +67,13 @@ public class TestConfigurationPropertiesFactoryBean
     @Test
     public void testMergeConfigurations() throws Exception
     {
-        Configuration one = new BaseConfiguration();
+        final Configuration one = new BaseConfiguration();
         one.setProperty("foo", "bar");
-        String properties =
+        final String properties =
                 "## some header \n" + "foo = bar1\n" + "bar = foo\n";
 
-        PropertiesConfiguration two = new PropertiesConfiguration();
-        PropertiesConfigurationLayout layout =
+        final PropertiesConfiguration two = new PropertiesConfiguration();
+        final PropertiesConfigurationLayout layout =
                 new PropertiesConfigurationLayout();
         layout.load(two, new StringReader(properties));
 
@@ -81,7 +81,7 @@ public class TestConfigurationPropertiesFactoryBean
                 one, two
         });
         configurationFactory.afterPropertiesSet();
-        Properties props = configurationFactory.getObject();
+        final Properties props = configurationFactory.getObject();
         Assert.assertEquals("foo", props.getProperty("bar"));
         Assert.assertEquals("bar", props.getProperty("foo"));
     }
@@ -97,7 +97,7 @@ public class TestConfigurationPropertiesFactoryBean
         });
         configurationFactory.afterPropertiesSet();
 
-        Properties props = configurationFactory.getObject();
+        final Properties props = configurationFactory.getObject();
         Assert.assertEquals("duke", props.getProperty("java"));
     }
 
@@ -113,10 +113,10 @@ public class TestConfigurationPropertiesFactoryBean
     @Test
     public void testSetLocationsDefensiveCopy()
     {
-        Resource[] locations = {
+        final Resource[] locations = {
                 new ClassPathResource("f1"), new ClassPathResource("f2")
         };
-        Resource[] locationsUpdate = locations.clone();
+        final Resource[] locationsUpdate = locations.clone();
 
         configurationFactory.setLocations(locationsUpdate);
         locationsUpdate[0] = new ClassPathResource("other");
@@ -134,12 +134,12 @@ public class TestConfigurationPropertiesFactoryBean
     @Test
     public void testGetLocationsDefensiveCopy()
     {
-        Resource[] locations = {
+        final Resource[] locations = {
                 new ClassPathResource("f1"), new ClassPathResource("f2")
         };
         configurationFactory.setLocations(locations);
 
-        Resource[] locationsGet = configurationFactory.getLocations();
+        final Resource[] locationsGet = configurationFactory.getLocations();
         locationsGet[1] = null;
         assertArrayEquals("Locations were changed", locations,
                 configurationFactory.getLocations());
@@ -148,10 +148,10 @@ public class TestConfigurationPropertiesFactoryBean
     @Test
     public void testSetConfigurationsDefensiveCopy()
     {
-        Configuration[] configs = {
+        final Configuration[] configs = {
                 new PropertiesConfiguration(), new XMLConfiguration()
         };
-        Configuration[] configsUpdate = configs.clone();
+        final Configuration[] configsUpdate = configs.clone();
 
         configurationFactory.setConfigurations(configsUpdate);
         configsUpdate[0] = null;
@@ -162,12 +162,12 @@ public class TestConfigurationPropertiesFactoryBean
     @Test
     public void testGetConfigurationDefensiveCopy()
     {
-        Configuration[] configs = {
+        final Configuration[] configs = {
                 new PropertiesConfiguration(), new XMLConfiguration()
         };
         configurationFactory.setConfigurations(configs);
 
-        Configuration[] configsGet = configurationFactory.getConfigurations();
+        final Configuration[] configsGet = configurationFactory.getConfigurations();
         configsGet[0] = null;
         assertArrayEquals("Configurations were changed", configs,
                 configurationFactory.getConfigurations());

@@ -47,12 +47,12 @@ public class TestReloadingFileBasedConfigurationBuilder
     @Test
     public void testGetConfigurationNoLocation() throws ConfigurationException
     {
-        Map<String, Object> params = new HashMap<>();
+        final Map<String, Object> params = new HashMap<>();
         params.put("throwExceptionOnMissing", Boolean.TRUE);
-        ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+        final ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new ReloadingFileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class, params);
-        PropertiesConfiguration conf = builder.getConfiguration();
+        final PropertiesConfiguration conf = builder.getConfiguration();
         assertTrue("Property not set", conf.isThrowExceptionOnMissing());
         assertTrue("Not empty", conf.isEmpty());
     }
@@ -64,14 +64,14 @@ public class TestReloadingFileBasedConfigurationBuilder
     @Test
     public void testCreateReloadingDetectorDefaultFactory() throws ConfigurationException
     {
-        ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+        final ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new ReloadingFileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class);
-        FileHandler handler = new FileHandler();
-        FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
-        long refreshDelay = 60000L;
+        final FileHandler handler = new FileHandler();
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
+        final long refreshDelay = 60000L;
         params.setReloadingRefreshDelay(refreshDelay);
-        FileHandlerReloadingDetector detector =
+        final FileHandlerReloadingDetector detector =
                 (FileHandlerReloadingDetector) builder.createReloadingDetector(
                         handler, params);
         assertSame("Wrong file handler", handler, detector.getFileHandler());
@@ -86,18 +86,18 @@ public class TestReloadingFileBasedConfigurationBuilder
     public void testCreateReloadingDetectoryCustomFactory()
             throws ConfigurationException
     {
-        ReloadingDetector detector =
+        final ReloadingDetector detector =
                 EasyMock.createMock(ReloadingDetector.class);
-        ReloadingDetectorFactory factory =
+        final ReloadingDetectorFactory factory =
                 EasyMock.createMock(ReloadingDetectorFactory.class);
-        FileHandler handler = new FileHandler();
-        FileBasedBuilderParametersImpl params =
+        final FileHandler handler = new FileHandler();
+        final FileBasedBuilderParametersImpl params =
                 new FileBasedBuilderParametersImpl();
         EasyMock.expect(factory.createReloadingDetector(handler, params))
                 .andReturn(detector);
         EasyMock.replay(detector, factory);
         params.setReloadingDetectorFactory(factory);
-        ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+        final ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new ReloadingFileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class);
         assertSame("Wrong detector", detector,
@@ -113,16 +113,16 @@ public class TestReloadingFileBasedConfigurationBuilder
     public void testReloadingDetectorIsReloadingRequired()
             throws ConfigurationException
     {
-        ReloadingDetector detector =
+        final ReloadingDetector detector =
                 EasyMock.createMock(ReloadingDetector.class);
         EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
         EasyMock.expect(detector.isReloadingRequired())
                 .andReturn(Boolean.FALSE);
         EasyMock.replay(detector);
-        ReloadingFileBasedConfigurationBuilderTestImpl builder =
+        final ReloadingFileBasedConfigurationBuilderTestImpl builder =
                 new ReloadingFileBasedConfigurationBuilderTestImpl(detector);
         builder.getConfiguration();
-        ReloadingDetector ctrlDetector =
+        final ReloadingDetector ctrlDetector =
                 builder.getReloadingController().getDetector();
         assertTrue("Wrong result (1)", ctrlDetector.isReloadingRequired());
         assertFalse("Wrong result (2)", ctrlDetector.isReloadingRequired());
@@ -139,14 +139,14 @@ public class TestReloadingFileBasedConfigurationBuilder
     public void testReloadingDetectorReloadingPerformed()
             throws ConfigurationException
     {
-        ReloadingDetector detector =
+        final ReloadingDetector detector =
                 EasyMock.createMock(ReloadingDetector.class);
         detector.reloadingPerformed();
         EasyMock.replay(detector);
-        ReloadingFileBasedConfigurationBuilderTestImpl builder =
+        final ReloadingFileBasedConfigurationBuilderTestImpl builder =
                 new ReloadingFileBasedConfigurationBuilderTestImpl(detector);
         builder.getConfiguration();
-        ReloadingDetector ctrlDetector =
+        final ReloadingDetector ctrlDetector =
                 builder.getReloadingController().getDetector();
         ctrlDetector.reloadingPerformed();
         EasyMock.verify(detector);
@@ -159,10 +159,10 @@ public class TestReloadingFileBasedConfigurationBuilder
     @Test
     public void testReloadingDetectorNoFileHandler()
     {
-        ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+        final ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new ReloadingFileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class);
-        ReloadingDetector ctrlDetector =
+        final ReloadingDetector ctrlDetector =
                 builder.getReloadingController().getDetector();
         ctrlDetector.reloadingPerformed();
         assertFalse("Wrong result", ctrlDetector.isReloadingRequired());
@@ -176,16 +176,16 @@ public class TestReloadingFileBasedConfigurationBuilder
     public void testResetReloadingStateInGetConfiguration()
             throws ConfigurationException
     {
-        ReloadingDetector detector =
+        final ReloadingDetector detector =
                 EasyMock.createMock(ReloadingDetector.class);
         EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
         detector.reloadingPerformed();
         EasyMock.replay(detector);
-        ReloadingFileBasedConfigurationBuilderTestImpl builder =
+        final ReloadingFileBasedConfigurationBuilderTestImpl builder =
                 new ReloadingFileBasedConfigurationBuilderTestImpl(detector);
-        PropertiesConfiguration config1 = builder.getConfiguration();
+        final PropertiesConfiguration config1 = builder.getConfiguration();
         builder.getReloadingController().checkForReloading(null);
-        PropertiesConfiguration config2 = builder.getConfiguration();
+        final PropertiesConfiguration config2 = builder.getConfiguration();
         assertNotSame("No new configuration instance", config1, config2);
         assertFalse("Still in reloading state", builder
                 .getReloadingController().isInReloadingState());
@@ -199,13 +199,13 @@ public class TestReloadingFileBasedConfigurationBuilder
     @Test
     public void testReloadingControllerEvents() throws ConfigurationException
     {
-        ReloadingDetector detector =
+        final ReloadingDetector detector =
                 EasyMock.createMock(ReloadingDetector.class);
         EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
-        ReloadingFileBasedConfigurationBuilderTestImpl builder =
+        final ReloadingFileBasedConfigurationBuilderTestImpl builder =
                 new ReloadingFileBasedConfigurationBuilderTestImpl(detector);
         EasyMock.replay(detector);
-        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        final BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
         builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
         builder.getConfiguration();
         builder.getReloadingController().checkForReloading(null);
@@ -220,7 +220,7 @@ public class TestReloadingFileBasedConfigurationBuilder
     @Test
     public void testInitAllowFailOnInitFlag()
     {
-        ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+        final ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new ReloadingFileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class, null, true);
         assertTrue("Flag not set", builder.isAllowFailOnInit());
@@ -247,7 +247,7 @@ public class TestReloadingFileBasedConfigurationBuilder
          * @param detector the mock detector
          */
         public ReloadingFileBasedConfigurationBuilderTestImpl(
-                ReloadingDetector detector)
+                final ReloadingDetector detector)
         {
             super(PropertiesConfiguration.class);
             mockDetector = detector;
@@ -269,7 +269,7 @@ public class TestReloadingFileBasedConfigurationBuilder
          */
         @Override
         protected ReloadingDetector createReloadingDetector(
-                FileHandler handler, FileBasedBuilderParametersImpl fbparams)
+                final FileHandler handler, final FileBasedBuilderParametersImpl fbparams)
         {
             handlerForDetector = handler;
             return mockDetector;

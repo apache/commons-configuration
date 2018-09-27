@@ -74,13 +74,13 @@ public class TestImmutableConfiguration
     public void testUnmodifiableConfigurationAccess()
             throws ConfigurationException
     {
-        Configuration confOrg = createTestConfig();
-        ImmutableConfiguration conf =
+        final Configuration confOrg = createTestConfig();
+        final ImmutableConfiguration conf =
                 ConfigurationUtils.unmodifiableConfiguration(confOrg);
         assertFalse("Empty", conf.isEmpty());
-        for (Iterator<String> it = confOrg.getKeys(); it.hasNext();)
+        for (final Iterator<String> it = confOrg.getKeys(); it.hasNext();)
         {
-            String key = it.next();
+            final String key = it.next();
             assertTrue("Key not contained: " + key, conf.containsKey(key));
             assertEquals("Wrong value for " + key, confOrg.getProperty(key),
                     conf.getProperty(key));
@@ -94,7 +94,7 @@ public class TestImmutableConfiguration
     public void testUnmodifiableConfigurationOtherTypes()
             throws ConfigurationException
     {
-        ImmutableConfiguration conf =
+        final ImmutableConfiguration conf =
                 ConfigurationUtils
                         .unmodifiableConfiguration(createTestConfig());
         assertEquals("Wrong byte", (byte) 10, conf.getByte("test.byte"));
@@ -112,9 +112,9 @@ public class TestImmutableConfiguration
      * @param it the iterator
      * @return a set with all keys
      */
-    private static Set<String> fetchKeys(Iterator<String> it)
+    private static Set<String> fetchKeys(final Iterator<String> it)
     {
-        Set<String> keys = new HashSet<>();
+        final Set<String> keys = new HashSet<>();
         while (it.hasNext())
         {
             keys.add(it.next());
@@ -129,8 +129,8 @@ public class TestImmutableConfiguration
     public void testUnmodifiableConfigurationIterate()
             throws ConfigurationException
     {
-        Configuration confOrg = createTestConfig();
-        ImmutableConfiguration conf =
+        final Configuration confOrg = createTestConfig();
+        final ImmutableConfiguration conf =
                 ConfigurationUtils.unmodifiableConfiguration(confOrg);
         assertEquals("Different keys", fetchKeys(confOrg.getKeys()),
                 fetchKeys(conf.getKeys()));
@@ -143,10 +143,10 @@ public class TestImmutableConfiguration
     public void testUnmodifiableConfigurationIteratorRemove()
             throws ConfigurationException
     {
-        ImmutableConfiguration conf =
+        final ImmutableConfiguration conf =
                 ConfigurationUtils
                         .unmodifiableConfiguration(createTestConfig());
-        Iterator<String> it = conf.getKeys();
+        final Iterator<String> it = conf.getKeys();
         it.next();
         it.remove();
     }
@@ -159,11 +159,11 @@ public class TestImmutableConfiguration
     public void testUnmodifiableConfigurationLiveUpdate()
             throws ConfigurationException
     {
-        Configuration confOrg = createTestConfig();
-        ImmutableConfiguration conf =
+        final Configuration confOrg = createTestConfig();
+        final ImmutableConfiguration conf =
                 ConfigurationUtils.unmodifiableConfiguration(confOrg);
         final String key = "new.property";
-        String value = "new value";
+        final String value = "new value";
         confOrg.addProperty(key, value);
         assertEquals("Value not set", value, conf.getString(key));
     }
@@ -175,10 +175,10 @@ public class TestImmutableConfiguration
     public void testUnmodifiableConfigurationCast()
             throws ConfigurationException
     {
-        ImmutableConfiguration conf =
+        final ImmutableConfiguration conf =
                 ConfigurationUtils
                         .unmodifiableConfiguration(createTestConfig());
-        Configuration mutableConf = (Configuration) conf;
+        final Configuration mutableConf = (Configuration) conf;
         mutableConf.clear();
     }
 
@@ -188,10 +188,10 @@ public class TestImmutableConfiguration
     @Test
     public void testImmutableSubset() throws ConfigurationException
     {
-        ImmutableConfiguration conf =
+        final ImmutableConfiguration conf =
                 ConfigurationUtils
                         .unmodifiableConfiguration(createTestConfig());
-        ImmutableConfiguration subset = conf.immutableSubset("test");
+        final ImmutableConfiguration subset = conf.immutableSubset("test");
         assertFalse("No content", subset.isEmpty());
         assertEquals("Wrong value", 1000000, subset.getLong("long"));
     }
@@ -202,10 +202,10 @@ public class TestImmutableConfiguration
     @Test
     public void testUnmodifiableHierarchicalConfiguration()
     {
-        HierarchicalConfiguration<?> conf = new BaseHierarchicalConfiguration();
-        String key = "test";
+        final HierarchicalConfiguration<?> conf = new BaseHierarchicalConfiguration();
+        final String key = "test";
         conf.addProperty(key, Boolean.TRUE);
-        ImmutableHierarchicalConfiguration ihc =
+        final ImmutableHierarchicalConfiguration ihc =
                 ConfigurationUtils.unmodifiableConfiguration(conf);
         assertTrue("Property not found", ihc.getBoolean(key));
         assertEquals("Wrong max index", 0, ihc.getMaxIndex(key));
@@ -218,17 +218,17 @@ public class TestImmutableConfiguration
     @Test
     public void testExceptionHandling()
     {
-        PropertiesConfiguration config = new PropertiesConfiguration();
+        final PropertiesConfiguration config = new PropertiesConfiguration();
         final String property = "nonExistingProperty";
         config.setThrowExceptionOnMissing(true);
-        ImmutableConfiguration ic =
+        final ImmutableConfiguration ic =
                 ConfigurationUtils.unmodifiableConfiguration(config);
         try
         {
             ic.getString(property);
             fail("Exception for missing property not thrown!");
         }
-        catch (NoSuchElementException e)
+        catch (final NoSuchElementException e)
         {
             assertThat("Wrong message", e.getMessage(),
                     containsString(property));

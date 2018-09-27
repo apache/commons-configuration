@@ -74,10 +74,10 @@ public class TestCombinedReloadingController
     private CombinedReloadingController setUpController()
     {
         initSubControllers();
-        List<ReloadingController> lstCtrls =
+        final List<ReloadingController> lstCtrls =
                 new ArrayList<>(
                         Arrays.asList(subControllers));
-        CombinedReloadingController result =
+        final CombinedReloadingController result =
                 new CombinedReloadingController(lstCtrls);
         // check whether a defensive copy is created
         lstCtrls.clear();
@@ -100,7 +100,7 @@ public class TestCombinedReloadingController
     public void testInitNullEntries()
     {
         initSubControllers();
-        Collection<ReloadingController> ctrls =
+        final Collection<ReloadingController> ctrls =
                 new ArrayList<>(
                         Arrays.asList(subControllers));
         ctrls.add(null);
@@ -113,7 +113,7 @@ public class TestCombinedReloadingController
     @Test
     public void testCheckForReloadingTrue()
     {
-        CombinedReloadingController ctrl = setUpController();
+        final CombinedReloadingController ctrl = setUpController();
         EasyMock.expect(subControllers[0].checkForReloading(null)).andReturn(
                 Boolean.FALSE);
         EasyMock.expect(subControllers[1].checkForReloading(null)).andReturn(
@@ -131,8 +131,8 @@ public class TestCombinedReloadingController
     @Test
     public void testCheckForReloadingFalse()
     {
-        CombinedReloadingController ctrl = setUpController();
-        for (ReloadingController rc : subControllers)
+        final CombinedReloadingController ctrl = setUpController();
+        for (final ReloadingController rc : subControllers)
         {
             EasyMock.expect(rc.checkForReloading(null))
                     .andReturn(Boolean.FALSE);
@@ -148,14 +148,14 @@ public class TestCombinedReloadingController
     @Test
     public void testResetReloadingState()
     {
-        CombinedReloadingController ctrl = setUpController();
+        final CombinedReloadingController ctrl = setUpController();
         EasyMock.expect(subControllers[0].checkForReloading(null)).andReturn(
                 Boolean.TRUE);
         EasyMock.expect(subControllers[1].checkForReloading(null)).andReturn(
                 Boolean.FALSE);
         EasyMock.expect(subControllers[2].checkForReloading(null)).andReturn(
                 Boolean.FALSE);
-        for (ReloadingController rc : subControllers)
+        for (final ReloadingController rc : subControllers)
         {
             rc.resetReloadingState();
         }
@@ -172,8 +172,8 @@ public class TestCombinedReloadingController
     @Test
     public void testResetInitialReloadingState()
     {
-        CombinedReloadingController ctrl = setUpController();
-        for (ReloadingController rc : subControllers)
+        final CombinedReloadingController ctrl = setUpController();
+        for (final ReloadingController rc : subControllers)
         {
             rc.resetReloadingState();
         }
@@ -188,9 +188,9 @@ public class TestCombinedReloadingController
     @Test
     public void testGetSubControllers()
     {
-        CombinedReloadingController ctrl = setUpController();
+        final CombinedReloadingController ctrl = setUpController();
         replaySubControllers();
-        Collection<ReloadingController> subs = ctrl.getSubControllers();
+        final Collection<ReloadingController> subs = ctrl.getSubControllers();
         assertEquals("Wrong number of sub controllers", subControllers.length,
                 subs.size());
         assertTrue("Wrong sub controllers",
@@ -203,7 +203,7 @@ public class TestCombinedReloadingController
     @Test(expected = UnsupportedOperationException.class)
     public void testGetSubControllersModify()
     {
-        Collection<ReloadingController> subs =
+        final Collection<ReloadingController> subs =
                 setUpController().getSubControllers();
         subs.clear();
     }

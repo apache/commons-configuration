@@ -39,7 +39,7 @@ public class HsqlDB
     private Connection connection = null;
     private static Log log = LogFactory.getLog(HsqlDB.class);
 
-    public HsqlDB(String uri, String databaseDriver, String loadFile)
+    public HsqlDB(final String uri, final String databaseDriver, final String loadFile)
             throws Exception
     {
         Class.forName(databaseDriver);
@@ -64,12 +64,12 @@ public class HsqlDB
         {
             connection.close();
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
         }
     }
 
-    private void loadSqlFile(String fileName)
+    private void loadSqlFile(final String fileName)
             throws Exception
     {
         Statement statement = null;
@@ -80,12 +80,12 @@ public class HsqlDB
 
             for (int targetPos = commands.indexOf(';'); targetPos > -1; targetPos = commands.indexOf(';'))
             {
-                String cmd = commands.substring(0, targetPos + 1);
+                final String cmd = commands.substring(0, targetPos + 1);
                 try
                 {
                     statement.execute(cmd);
                 }
-                catch (SQLException sqle)
+                catch (final SQLException sqle)
                 {
                     log.warn("Statement: " + cmd + ": " + sqle.getMessage());
                 }
@@ -102,13 +102,13 @@ public class HsqlDB
         }
     }
 
-    private String getFileContents(String fileName)
+    private String getFileContents(final String fileName)
             throws Exception
     {
-        FileReader fr = new FileReader(fileName);
+        final FileReader fr = new FileReader(fileName);
 
-        char fileBuf[]  = new char[1024];
-        StringBuffer sb = new StringBuffer(1000);
+        final char fileBuf[]  = new char[1024];
+        final StringBuffer sb = new StringBuffer(1000);
         int res = -1;
 
         while ((res = fr.read(fileBuf, 0, 1024)) > -1)

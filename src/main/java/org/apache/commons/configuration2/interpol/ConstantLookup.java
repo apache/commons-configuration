@@ -75,7 +75,7 @@ public class ConstantLookup implements Lookup
      * resolved
      */
     @Override
-    public Object lookup(String var)
+    public Object lookup(final String var)
     {
         if (var == null)
         {
@@ -92,14 +92,14 @@ public class ConstantLookup implements Lookup
             return result;
         }
 
-        int fieldPos = var.lastIndexOf(FIELD_SEPRATOR);
+        final int fieldPos = var.lastIndexOf(FIELD_SEPRATOR);
         if (fieldPos < 0)
         {
             return null;
         }
         try
         {
-            Object value = resolveField(var.substring(0, fieldPos), var
+            final Object value = resolveField(var.substring(0, fieldPos), var
                     .substring(fieldPos + 1));
             if (value != null)
             {
@@ -113,7 +113,7 @@ public class ConstantLookup implements Lookup
                 result = value;
             }
         }
-        catch (Exception ex)
+        catch (final Exception ex)
         {
             log.warn("Could not obtain value for variable " + var, ex);
         }
@@ -144,11 +144,11 @@ public class ConstantLookup implements Lookup
      * @return the field's value
      * @throws Exception if an error occurs
      */
-    protected Object resolveField(String className, String fieldName)
+    protected Object resolveField(final String className, final String fieldName)
             throws Exception
     {
-        Class<?> clazz = fetchClass(className);
-        Field field = clazz.getField(fieldName);
+        final Class<?> clazz = fetchClass(className);
+        final Field field = clazz.getField(fieldName);
         return field.get(null);
     }
 
@@ -164,7 +164,7 @@ public class ConstantLookup implements Lookup
      * @return the corresponding class object
      * @throws ClassNotFoundException if the class cannot be loaded
      */
-    protected Class<?> fetchClass(String className) throws ClassNotFoundException
+    protected Class<?> fetchClass(final String className) throws ClassNotFoundException
     {
         return ClassUtils.getClass(className);
     }

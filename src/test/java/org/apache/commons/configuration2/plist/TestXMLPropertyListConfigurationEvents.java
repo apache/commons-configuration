@@ -40,11 +40,11 @@ public class TestXMLPropertyListConfigurationEvents extends
     {
         try
         {
-            XMLPropertyListConfiguration c = new XMLPropertyListConfiguration();
+            final XMLPropertyListConfiguration c = new XMLPropertyListConfiguration();
             new FileHandler(c).load(TEST_FILE);
             return c;
         }
-        catch (ConfigurationException cex)
+        catch (final ConfigurationException cex)
         {
             throw new ConfigurationRuntimeException(cex);
         }

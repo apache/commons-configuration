@@ -59,20 +59,20 @@ public class ConfigurationAssert
      * @param expected the expected properties
      * @param actual the configuration to check
      */
-    public static void assertConfigurationEquals(ImmutableConfiguration expected, ImmutableConfiguration actual)
+    public static void assertConfigurationEquals(final ImmutableConfiguration expected, final ImmutableConfiguration actual)
     {
         // check that the actual configuration contains all the properties of the expected configuration
-        for (Iterator<String> it = expected.getKeys(); it.hasNext();)
+        for (final Iterator<String> it = expected.getKeys(); it.hasNext();)
         {
-            String key = it.next();
+            final String key = it.next();
             assertTrue("The actual configuration doesn't contain the expected key '" + key + "'", actual.containsKey(key));
             assertEquals("Value of the '" + key + "' property", expected.getProperty(key), actual.getProperty(key));
         }
 
         // check that the actual configuration has no extra properties
-        for (Iterator<String> it = actual.getKeys(); it.hasNext();)
+        for (final Iterator<String> it = actual.getKeys(); it.hasNext();)
         {
-            String key = it.next();
+            final String key = it.next();
             assertTrue("The actual configuration contains an extra key '" + key + "'", expected.containsKey(key));
         }
     }
@@ -83,7 +83,7 @@ public class ConfigurationAssert
      * @param name the name of the test file
      * @return a {@code File} object pointing to that test file
      */
-    public static File getTestFile(String name)
+    public static File getTestFile(final String name)
     {
         return new File(TEST_DIR, name);
     }
@@ -94,7 +94,7 @@ public class ConfigurationAssert
      * @param name the name of the out file
      * @return a {@code File} object pointing to that out file
      */
-    public static File getOutFile(String name)
+    public static File getOutFile(final String name)
     {
         return new File(OUT_DIR, name);
     }
@@ -106,7 +106,7 @@ public class ConfigurationAssert
      * @param name the name of the test file
      * @return the corresponding URL
      */
-    public static URL getTestURL(String name)
+    public static URL getTestURL(final String name)
     {
         return urlFromFile(getTestFile(name));
     }
@@ -118,7 +118,7 @@ public class ConfigurationAssert
      * @param name the name of the output file
      * @return the corresponding URL
      */
-    public static URL getOutURL(String name)
+    public static URL getOutURL(final String name)
     {
         return urlFromFile(getOutFile(name));
     }
@@ -131,7 +131,7 @@ public class ConfigurationAssert
      * @param o2 test object 2
      * @param expEquals the expected result of equals()
      */
-    public static void checkEquals(Object o1, Object o2, boolean expEquals)
+    public static void checkEquals(final Object o1, final Object o2, final boolean expEquals)
     {
         assertEquals("Wrong result of equals()", expEquals, o1.equals(o2));
         if (o2 != null)
@@ -150,9 +150,9 @@ public class ConfigurationAssert
      * @param config the configuration
      * @return a list with all keys of this configuration
      */
-    public static List<String> keysToList(ImmutableConfiguration config)
+    public static List<String> keysToList(final ImmutableConfiguration config)
     {
-        List<String> keyList = new LinkedList<>();
+        final List<String> keyList = new LinkedList<>();
         appendKeys(config, keyList);
         return keyList;
     }
@@ -163,9 +163,9 @@ public class ConfigurationAssert
      * @param config the configuration
      * @return a set with all keys of this configuration
      */
-    public static Set<String> keysToSet(ImmutableConfiguration config)
+    public static Set<String> keysToSet(final ImmutableConfiguration config)
     {
-        Set<String> keySet = new HashSet<>();
+        final Set<String> keySet = new HashSet<>();
         appendKeys(config, keySet);
         return keySet;
     }
@@ -176,10 +176,10 @@ public class ConfigurationAssert
      * @param config the configuration
      * @param collection the target collection
      */
-    public static void appendKeys(ImmutableConfiguration config,
-            Collection<String> collection)
+    public static void appendKeys(final ImmutableConfiguration config,
+            final Collection<String> collection)
     {
-        for (Iterator<String> it = config.getKeys(); it.hasNext();)
+        for (final Iterator<String> it = config.getKeys(); it.hasNext();)
         {
             collection.add(it.next());
         }
@@ -192,13 +192,13 @@ public class ConfigurationAssert
      * @return the corresponding URL
      * @throws ConfigurationRuntimeException if the URL cannot be constructed
      */
-    private static URL urlFromFile(File file)
+    private static URL urlFromFile(final File file)
     {
         try
         {
             return file.toURI().toURL();
         }
-        catch (MalformedURLException mex)
+        catch (final MalformedURLException mex)
         {
             throw new ConfigurationRuntimeException(mex);
         }

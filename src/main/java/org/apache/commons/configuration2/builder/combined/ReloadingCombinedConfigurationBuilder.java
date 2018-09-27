@@ -79,8 +79,8 @@ public class ReloadingCombinedConfigurationBuilder extends
      * @param params a map with initialization parameters
      * @param allowFailOnInit the <em>allowFailOnInit</em> flag
      */
-    public ReloadingCombinedConfigurationBuilder(Map<String, Object> params,
-            boolean allowFailOnInit)
+    public ReloadingCombinedConfigurationBuilder(final Map<String, Object> params,
+            final boolean allowFailOnInit)
     {
         super(params, allowFailOnInit);
     }
@@ -91,7 +91,7 @@ public class ReloadingCombinedConfigurationBuilder extends
      *
      * @param params a map with initialization parameters
      */
-    public ReloadingCombinedConfigurationBuilder(Map<String, Object> params)
+    public ReloadingCombinedConfigurationBuilder(final Map<String, Object> params)
     {
         super(params);
     }
@@ -100,7 +100,7 @@ public class ReloadingCombinedConfigurationBuilder extends
      * {@inheritDoc} This method is overridden to adapt the return type.
      */
     @Override
-    public ReloadingCombinedConfigurationBuilder configure(BuilderParameters... params)
+    public ReloadingCombinedConfigurationBuilder configure(final BuilderParameters... params)
     {
         super.configure(params);
         return this;
@@ -132,7 +132,7 @@ public class ReloadingCombinedConfigurationBuilder extends
     @Override
     public CombinedConfiguration getConfiguration() throws ConfigurationException
     {
-        CombinedConfiguration result = super.getConfiguration();
+        final CombinedConfiguration result = super.getConfiguration();
         reloadingController.resetReloadingState();
         return result;
     }
@@ -143,7 +143,7 @@ public class ReloadingCombinedConfigurationBuilder extends
      */
     @Override
     protected ConfigurationBuilder<? extends HierarchicalConfiguration<?>> createXMLDefinitionBuilder(
-            BuilderParameters builderParams)
+            final BuilderParameters builderParams)
     {
         return new ReloadingFileBasedConfigurationBuilder<>(
                 XMLConfiguration.class).configure(builderParams);
@@ -156,7 +156,7 @@ public class ReloadingCombinedConfigurationBuilder extends
      * with reloading support.
      */
     @Override
-    protected void initResultInstance(CombinedConfiguration result)
+    protected void initResultInstance(final CombinedConfiguration result)
             throws ConfigurationException
     {
         super.initResultInstance(result);
@@ -178,18 +178,18 @@ public class ReloadingCombinedConfigurationBuilder extends
     protected ReloadingController createReloadingController()
             throws ConfigurationException
     {
-        Collection<ReloadingController> subControllers =
+        final Collection<ReloadingController> subControllers =
                 new LinkedList<>();
-        ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder =
+        final ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder =
                 getDefinitionBuilder();
         obtainReloadingController(subControllers, defBuilder);
 
-        for (ConfigurationBuilder<? extends Configuration> b : getChildBuilders())
+        for (final ConfigurationBuilder<? extends Configuration> b : getChildBuilders())
         {
             obtainReloadingController(subControllers, b);
         }
 
-        CombinedReloadingController ctrl =
+        final CombinedReloadingController ctrl =
                 new CombinedReloadingController(subControllers);
         ctrl.resetInitialReloadingState();
         return ctrl;
@@ -203,7 +203,7 @@ public class ReloadingCombinedConfigurationBuilder extends
      * @param builder the builder object to be checked
      */
     public static void obtainReloadingController(
-            Collection<ReloadingController> subControllers, Object builder)
+            final Collection<ReloadingController> subControllers, final Object builder)
     {
         if (builder instanceof ReloadingControllerSupport)
         {

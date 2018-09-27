@@ -66,9 +66,9 @@ public class TestCatalogResolver
      * @param fileName the file name
      * @throws ConfigurationException if an error occurs
      */
-    private void load(String fileName) throws ConfigurationException
+    private void load(final String fileName) throws ConfigurationException
     {
-        FileHandler handler = new FileHandler(config);
+        final FileHandler handler = new FileHandler(config);
         handler.load(fileName);
     }
 
@@ -106,7 +106,7 @@ public class TestCatalogResolver
     @Test
     public void testLogger() throws Exception
     {
-        ConfigurationLogger log = new ConfigurationLogger(this.getClass());
+        final ConfigurationLogger log = new ConfigurationLogger(this.getClass());
         resolver.setLogger(log);
         assertNotNull("No Logger returned", resolver.getLogger());
         assertSame("Incorrect Logger", log, resolver.getLogger());

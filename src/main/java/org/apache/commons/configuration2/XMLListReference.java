@@ -51,7 +51,7 @@ final class XMLListReference
      *
      * @param e the associated element
      */
-    private XMLListReference(Element e)
+    private XMLListReference(final Element e)
     {
         element = e;
     }
@@ -75,8 +75,8 @@ final class XMLListReference
      * @param node the affected configuration node
      * @param elem the current XML element
      */
-    public static void assignListReference(Map<ImmutableNode, Object> refs,
-            ImmutableNode node, Element elem)
+    public static void assignListReference(final Map<ImmutableNode, Object> refs,
+            final ImmutableNode node, final Element elem)
     {
         if (refs != null)
         {
@@ -96,20 +96,20 @@ final class XMLListReference
      * @param handler the reference node handler
      * @return a flag whether this node is relevant for list handling
      */
-    public static boolean isListNode(ImmutableNode node,
-            ReferenceNodeHandler handler)
+    public static boolean isListNode(final ImmutableNode node,
+            final ReferenceNodeHandler handler)
     {
         if (hasListReference(node, handler))
         {
             return true;
         }
 
-        ImmutableNode parent = handler.getParent(node);
+        final ImmutableNode parent = handler.getParent(node);
         if (parent != null)
         {
             for (int i = 0; i < handler.getChildrenCount(parent, null); i++)
             {
-                ImmutableNode child = handler.getChild(parent, i);
+                final ImmutableNode child = handler.getChild(parent, i);
                 if (hasListReference(child, handler) && nameEquals(node, child))
                 {
                     return true;
@@ -131,15 +131,15 @@ final class XMLListReference
      * @param handler the reference node handler
      * @return a flag whether this is the first node of a list
      */
-    public static boolean isFirstListItem(ImmutableNode node,
-            ReferenceNodeHandler handler)
+    public static boolean isFirstListItem(final ImmutableNode node,
+            final ReferenceNodeHandler handler)
     {
-        ImmutableNode parent = handler.getParent(node);
+        final ImmutableNode parent = handler.getParent(node);
         ImmutableNode firstItem = null;
         int idx = 0;
         while (firstItem == null)
         {
-            ImmutableNode child = handler.getChild(parent, idx);
+            final ImmutableNode child = handler.getChild(parent, idx);
             if (nameEquals(node, child))
             {
                 firstItem = child;
@@ -163,16 +163,16 @@ final class XMLListReference
      * @throws ConfigurationRuntimeException if the list delimiter handler does
      *         not support the transformation of list items to a string
      */
-    public static String listValue(ImmutableNode node,
-            ReferenceNodeHandler nodeHandler,
-            ListDelimiterHandler delimiterHandler)
+    public static String listValue(final ImmutableNode node,
+            final ReferenceNodeHandler nodeHandler,
+            final ListDelimiterHandler delimiterHandler)
     {
         // cannot be null if the current node is a list node
-        ImmutableNode parent = nodeHandler.getParent(node);
-        List<ImmutableNode> items =
+        final ImmutableNode parent = nodeHandler.getParent(node);
+        final List<ImmutableNode> items =
                 nodeHandler.getChildren(parent, node.getNodeName());
-        List<Object> values = new ArrayList<>(items.size());
-        for (ImmutableNode n : items)
+        final List<Object> values = new ArrayList<>(items.size());
+        for (final ImmutableNode n : items)
         {
             values.add(n.getValue());
         }
@@ -181,7 +181,7 @@ final class XMLListReference
             return String.valueOf(delimiterHandler.escapeList(values,
                     ListDelimiterHandler.NOOP_TRANSFORMER));
         }
-        catch (UnsupportedOperationException e)
+        catch (final UnsupportedOperationException e)
         {
             throw new ConfigurationRuntimeException(
                     "List handling not supported by "
@@ -199,8 +199,8 @@ final class XMLListReference
      * @param handler the reference handler
      * @return a flag whether this node has a list reference
      */
-    private static boolean hasListReference(ImmutableNode node,
-            ReferenceNodeHandler handler)
+    private static boolean hasListReference(final ImmutableNode node,
+            final ReferenceNodeHandler handler)
     {
         return handler.getReference(node) instanceof XMLListReference;
     }
@@ -212,7 +212,7 @@ final class XMLListReference
      * @param n2 node 2
      * @return a flag whether these nodes have equal names
      */
-    private static boolean nameEquals(ImmutableNode n1, ImmutableNode n2)
+    private static boolean nameEquals(final ImmutableNode n1, final ImmutableNode n2)
     {
         return StringUtils.equals(n2.getNodeName(), n1.getNodeName());
     }

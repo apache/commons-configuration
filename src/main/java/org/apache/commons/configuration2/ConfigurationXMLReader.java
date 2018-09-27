@@ -80,7 +80,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @throws SAXException if an error occurs during parsing
      */
     @Override
-    public void parse(String systemId) throws IOException, SAXException
+    public void parse(final String systemId) throws IOException, SAXException
     {
         parseConfiguration();
     }
@@ -94,7 +94,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @throws SAXException if an error occurs during parsing
      */
     @Override
-    public void parse(InputSource input) throws IOException, SAXException
+    public void parse(final InputSource input) throws IOException, SAXException
     {
         parseConfiguration();
     }
@@ -106,7 +106,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @return always <b>false</b> (no features are supported)
      */
     @Override
-    public boolean getFeature(String name)
+    public boolean getFeature(final String name)
     {
         return false;
     }
@@ -118,7 +118,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @param value the value of the feature
      */
     @Override
-    public void setFeature(String name, boolean value)
+    public void setFeature(final String name, final boolean value)
     {
     }
 
@@ -140,7 +140,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @param handler the content handler
      */
     @Override
-    public void setContentHandler(ContentHandler handler)
+    public void setContentHandler(final ContentHandler handler)
     {
         contentHandler = handler;
     }
@@ -163,7 +163,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @param handler the handler to be set
      */
     @Override
-    public void setDTDHandler(DTDHandler handler)
+    public void setDTDHandler(final DTDHandler handler)
     {
     }
 
@@ -185,7 +185,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @param resolver the entity resolver
      */
     @Override
-    public void setEntityResolver(EntityResolver resolver)
+    public void setEntityResolver(final EntityResolver resolver)
     {
     }
 
@@ -207,7 +207,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @param handler the error handler
      */
     @Override
-    public void setErrorHandler(ErrorHandler handler)
+    public void setErrorHandler(final ErrorHandler handler)
     {
     }
 
@@ -219,7 +219,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @return the property value
      */
     @Override
-    public Object getProperty(String name)
+    public Object getProperty(final String name)
     {
         return null;
     }
@@ -232,7 +232,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @param value the property value
      */
     @Override
-    public void setProperty(String name, Object value)
+    public void setProperty(final String name, final Object value)
     {
     }
 
@@ -251,7 +251,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      *
      * @param string the name for the root element.
      */
-    public void setRootName(String string)
+    public void setRootName(final String string)
     {
         rootName = string;
     }
@@ -262,16 +262,16 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * @param name the name of the actual element
      * @param attribs the attributes of this element (can be <b>null</b>)
      */
-    protected void fireElementStart(String name, Attributes attribs)
+    protected void fireElementStart(final String name, final Attributes attribs)
     {
         if (getException() == null)
         {
             try
             {
-                Attributes at = (attribs == null) ? EMPTY_ATTRS : attribs;
+                final Attributes at = (attribs == null) ? EMPTY_ATTRS : attribs;
                 getContentHandler().startElement(NS_URI, name, name, at);
             }
-            catch (SAXException ex)
+            catch (final SAXException ex)
             {
                 exception = ex;
             }
@@ -283,7 +283,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      *
      * @param name the name of the affected element
      */
-    protected void fireElementEnd(String name)
+    protected void fireElementEnd(final String name)
     {
         if (getException() == null)
         {
@@ -291,7 +291,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
             {
                 getContentHandler().endElement(NS_URI, name, name);
             }
-            catch (SAXException ex)
+            catch (final SAXException ex)
             {
                 exception = ex;
             }
@@ -303,16 +303,16 @@ public abstract class ConfigurationXMLReader implements XMLReader
      *
      * @param text the text
      */
-    protected void fireCharacters(String text)
+    protected void fireCharacters(final String text)
     {
         if (getException() == null)
         {
             try
             {
-                char[] ch = text.toCharArray();
+                final char[] ch = text.toCharArray();
                 getContentHandler().characters(ch, 0, ch.length);
             }
-            catch (SAXException ex)
+            catch (final SAXException ex)
             {
                 exception = ex;
             }

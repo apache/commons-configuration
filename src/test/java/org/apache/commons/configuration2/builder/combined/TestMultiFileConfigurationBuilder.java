@@ -68,7 +68,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
      * @return the test instance
      */
     private static MultiFileConfigurationBuilder<XMLConfiguration> createTestBuilder(
-            BuilderParameters managedParams)
+            final BuilderParameters managedParams)
     {
         return new MultiFileConfigurationBuilder<>(
                 XMLConfiguration.class)
@@ -87,17 +87,17 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     private static MultiFileConfigurationBuilder<XMLConfiguration> createBuilderWithAccessToManagedBuilders(
             final Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders)
     {
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+        final MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 new MultiFileConfigurationBuilder<XMLConfiguration>(
                         XMLConfiguration.class)
                 {
                     @Override
                     protected FileBasedConfigurationBuilder<XMLConfiguration> createInitializedManagedBuilder(
-                            String fileName,
-                            java.util.Map<String, Object> params)
+                            final String fileName,
+                            final java.util.Map<String, Object> params)
                             throws ConfigurationException
                     {
-                        FileBasedConfigurationBuilder<XMLConfiguration> result =
+                        final FileBasedConfigurationBuilder<XMLConfiguration> result =
                                 super.createInitializedManagedBuilder(fileName,
                                         params);
                         managedBuilders.add(result);
@@ -114,9 +114,9 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test
     public void testGetConfiguration() throws ConfigurationException
     {
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+        final MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createTestBuilder(null);
-        String key = "rowsPerPage";
+        final String key = "rowsPerPage";
         switchToConfig(1);
         assertEquals("Wrong property (1)", 15, builder.getConfiguration()
                 .getInt(key));
@@ -135,7 +135,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test
     public void testInterpolatorFromParameters() throws ConfigurationException
     {
-        BasicBuilderParameters params =
+        final BasicBuilderParameters params =
                 new MultiFileBuilderParametersImpl().setFilePattern(PATTERN)
                         .setPrefixLookups(
                                 Collections.singletonMap(
@@ -143,7 +143,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
                                                 .getPrefix(),
                                         DefaultLookups.SYSTEM_PROPERTIES
                                                 .getLookup()));
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+        final MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 new MultiFileConfigurationBuilder<>(
                         XMLConfiguration.class);
         builder.configure(params);
@@ -159,26 +159,26 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     public void testManagedConfigurationSettings()
             throws ConfigurationException
     {
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+        final MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 new MultiFileConfigurationBuilder<>(
                         XMLConfiguration.class);
-        ExpressionEngine engine = new XPathExpressionEngine();
-        BuilderParameters xmlParams =
+        final ExpressionEngine engine = new XPathExpressionEngine();
+        final BuilderParameters xmlParams =
                 new XMLBuilderParametersImpl().setExpressionEngine(engine)
                         .setListDelimiterHandler(
                                 new DefaultListDelimiterHandler(';'));
-        MultiFileBuilderParametersImpl params =
+        final MultiFileBuilderParametersImpl params =
                 new MultiFileBuilderParametersImpl().setFilePattern(PATTERN)
                         .setManagedBuilderParameters(xmlParams);
-        ConfigurationInterpolator ci = createInterpolator();
+        final ConfigurationInterpolator ci = createInterpolator();
         params.setInterpolator(ci).setListDelimiterHandler(
                 new DefaultListDelimiterHandler('#'));
         builder.configure(params);
         switchToConfig(1);
-        XMLConfiguration config = builder.getConfiguration();
+        final XMLConfiguration config = builder.getConfiguration();
         assertSame("Wrong expression engine", engine,
                 config.getExpressionEngine());
-        DefaultListDelimiterHandler listHandler =
+        final DefaultListDelimiterHandler listHandler =
                 (DefaultListDelimiterHandler) config.getListDelimiterHandler();
         assertEquals("Wrong list delimiter", ';', listHandler.getDelimiter());
         assertNotSame("Interpolator was copied", ci, config.getInterpolator());
@@ -190,7 +190,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test
     public void testSchemaValidationError()
     {
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+        final MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createTestBuilder(new XMLBuilderParametersImpl().setValidating(
                         true).setSchemaValidation(true));
         switchToConfig("2001");
@@ -199,7 +199,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
             builder.getConfiguration();
             fail("No exception thrown");
         }
-        catch (ConfigurationException ex)
+        catch (final ConfigurationException ex)
         {
             Throwable cause = ex.getCause();
             while (cause != null && !(cause instanceof SAXParseException))
@@ -227,12 +227,12 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test
     public void testFileNotFoundAllowFailOnInit() throws ConfigurationException
     {
-        BasicBuilderParameters params = createTestBuilderParameters(null);
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+        final BasicBuilderParameters params = createTestBuilderParameters(null);
+        final MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 new MultiFileConfigurationBuilder<>(
                         XMLConfiguration.class, params.getParameters(), true);
         switchToConfig("unknown configuration ID");
-        XMLConfiguration config = builder.getConfiguration();
+        final XMLConfiguration config = builder.getConfiguration();
         assertTrue("Got content", config.isEmpty());
     }
 
@@ -242,10 +242,10 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test(expected = ConfigurationException.class)
     public void testNoPattern() throws ConfigurationException
     {
-        BasicBuilderParameters params =
+        final BasicBuilderParameters params =
                 new MultiFileBuilderParametersImpl()
                         .setInterpolator(createInterpolator());
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+        final MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 new MultiFileConfigurationBuilder<>(
                         XMLConfiguration.class, params.getParameters(), true);
         switchToConfig(1);
@@ -258,16 +258,17 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test
     public void testAddConfigurationListener() throws ConfigurationException
     {
-        EventListener<ConfigurationEvent> l1 = new EventListenerTestImpl(null);
+        final EventListener<ConfigurationEvent> l1 = new EventListenerTestImpl(null);
         @SuppressWarnings("unchecked")
+        final
         EventListener<Event> l2 =
                 EasyMock.createMock(EventListener.class);
         EasyMock.replay(l2);
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+        final MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createTestBuilder(null);
         builder.addEventListener(ConfigurationEvent.ANY, l1);
         switchToConfig(1);
-        XMLConfiguration config = builder.getConfiguration();
+        final XMLConfiguration config = builder.getConfiguration();
         assertTrue("Listener not added", config.getEventListeners(ConfigurationEvent.ANY)
                 .contains(l1));
         builder.addEventListener(Event.ANY, l2);
@@ -279,7 +280,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         assertFalse("Listener not removed", config.getEventListeners(Event.ANY)
                 .contains(l2));
         switchToConfig(2);
-        XMLConfiguration config2 = builder.getConfiguration();
+        final XMLConfiguration config2 = builder.getConfiguration();
         assertFalse("Listener not globally removed", config2
                 .getEventListeners(Event.ANY).contains(l2));
     }
@@ -290,9 +291,9 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test
     public void testCaching() throws ConfigurationException
     {
-        Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders =
+        final Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders =
                 new ArrayList<>();
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+        final MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createBuilderWithAccessToManagedBuilders(managedBuilders);
         switchToConfig(1);
         builder.getConfiguration();
@@ -314,9 +315,9 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test
     public void testCachingWithReset() throws ConfigurationException
     {
-        Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders =
+        final Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders =
                 new ArrayList<>();
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+        final MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createBuilderWithAccessToManagedBuilders(managedBuilders);
         switchToConfig(1);
         builder.getConfiguration();
@@ -333,13 +334,13 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test
     public void testInterpolatorReset()
     {
-        BasicBuilderParameters params =
+        final BasicBuilderParameters params =
                 new MultiFileBuilderParametersImpl().setFilePattern(PATTERN);
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+        final MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 new MultiFileConfigurationBuilder<>(
                         XMLConfiguration.class);
         builder.configure(params);
-        ConfigurationInterpolator interpolator = builder.getInterpolator();
+        final ConfigurationInterpolator interpolator = builder.getInterpolator();
         assertNotNull("No interpolator", interpolator);
         builder.resetParameters();
         assertNotSame("No new interpolator", interpolator,
@@ -352,16 +353,16 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test
     public void testBuilderListenerReset() throws ConfigurationException
     {
-        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
-        Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders =
+        final BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        final Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders =
                 new ArrayList<>();
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+        final MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createBuilderWithAccessToManagedBuilders(managedBuilders);
         switchToConfig(1);
         builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
-        XMLConfiguration configuration = builder.getConfiguration();
+        final XMLConfiguration configuration = builder.getConfiguration();
         managedBuilders.iterator().next().resetResult();
-        ConfigurationBuilderEvent event =
+        final ConfigurationBuilderEvent event =
                 listener.nextEvent(ConfigurationBuilderEvent.RESET);
         assertSame("Wrong event source", builder, event.getSource());
         assertNotSame("Configuration not reset", configuration,
@@ -376,10 +377,10 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     public void testRemoveBuilderListenerOnReset()
             throws ConfigurationException
     {
-        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
-        Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders =
+        final BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        final Collection<FileBasedConfigurationBuilder<XMLConfiguration>> managedBuilders =
                 new ArrayList<>();
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+        final MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createBuilderWithAccessToManagedBuilders(managedBuilders);
         switchToConfig(1);
         builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
@@ -395,17 +396,17 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test
     public void testBuilderListenerOtherTypes() throws ConfigurationException
     {
-        BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+        final BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        final MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createTestBuilder(null);
         builder.addEventListener(ConfigurationBuilderEvent.ANY, listener);
         switchToConfig(1);
         builder.getConfiguration();
-        ConfigurationBuilderEvent event =
+        final ConfigurationBuilderEvent event =
                 listener.nextEvent(ConfigurationBuilderEvent.CONFIGURATION_REQUEST);
         assertEquals("Wrong event source of request event", builder,
                 event.getSource());
-        ConfigurationBuilderResultCreatedEvent createdEvent =
+        final ConfigurationBuilderResultCreatedEvent createdEvent =
                 listener.nextEvent(ConfigurationBuilderResultCreatedEvent.RESULT_CREATED);
         assertEquals("Wrong source of creation event", builder,
                 createdEvent.getSource());
@@ -420,13 +421,13 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     public void testGetManagedBuilderClonedParameters()
             throws ConfigurationException
     {
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+        final MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 createTestBuilder(new XMLBuilderParametersImpl());
         switchToConfig(1);
-        FileBasedConfigurationBuilder<XMLConfiguration> managedBuilder1 =
+        final FileBasedConfigurationBuilder<XMLConfiguration> managedBuilder1 =
                 builder.getManagedBuilder();
         switchToConfig(2);
-        FileBasedConfigurationBuilder<XMLConfiguration> managedBuilder2 =
+        final FileBasedConfigurationBuilder<XMLConfiguration> managedBuilder2 =
                 builder.getManagedBuilder();
         assertNotSame("Managed parameters not cloned",
                 managedBuilder1.getFileHandler(),
@@ -442,18 +443,18 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test
     public void testRecursiveInterpolation()
     {
-        DynamicCombinedConfiguration config =
+        final DynamicCombinedConfiguration config =
                 new DynamicCombinedConfiguration();
         config.setKeyPattern(PATTERN_VAR);
-        BasicBuilderParameters params = createTestBuilderParameters(null);
-        ConfigurationInterpolator ci = new ConfigurationInterpolator();
+        final BasicBuilderParameters params = createTestBuilderParameters(null);
+        final ConfigurationInterpolator ci = new ConfigurationInterpolator();
         ci.addDefaultLookup(new ConfigurationLookup(config));
         params.setInterpolator(ci);
-        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+        final MultiFileConfigurationBuilder<XMLConfiguration> builder =
                 new MultiFileConfigurationBuilder<>(
                         XMLConfiguration.class, null, true);
         builder.configure(params);
-        BuilderConfigurationWrapperFactory wrapFactory =
+        final BuilderConfigurationWrapperFactory wrapFactory =
                 new BuilderConfigurationWrapperFactory();
         config.addConfiguration(wrapFactory.createBuilderConfigurationWrapper(
                 HierarchicalConfiguration.class, builder), "Multi");

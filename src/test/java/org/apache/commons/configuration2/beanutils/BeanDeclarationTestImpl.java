@@ -47,7 +47,7 @@ class BeanDeclarationTestImpl implements BeanDeclaration
         return beanClassName;
     }
 
-    public void setBeanClassName(String beanClassName)
+    public void setBeanClassName(final String beanClassName)
     {
         this.beanClassName = beanClassName;
     }
@@ -58,7 +58,7 @@ class BeanDeclarationTestImpl implements BeanDeclaration
         return beanFactoryName;
     }
 
-    public void setBeanFactoryName(String beanFactoryName)
+    public void setBeanFactoryName(final String beanFactoryName)
     {
         this.beanFactoryName = beanFactoryName;
     }
@@ -69,7 +69,7 @@ class BeanDeclarationTestImpl implements BeanDeclaration
         return beanFactoryParameter;
     }
 
-    public void setBeanFactoryParameter(Object beanFactoryParameter)
+    public void setBeanFactoryParameter(final Object beanFactoryParameter)
     {
         this.beanFactoryParameter = beanFactoryParameter;
     }
@@ -80,7 +80,7 @@ class BeanDeclarationTestImpl implements BeanDeclaration
         return beanProperties;
     }
 
-    public void setBeanProperties(Map<String, Object> beanProperties)
+    public void setBeanProperties(final Map<String, Object> beanProperties)
     {
         this.beanProperties = beanProperties;
     }
@@ -92,7 +92,7 @@ class BeanDeclarationTestImpl implements BeanDeclaration
     }
 
     public void setNestedBeanDeclarations(
-            Map<String, Object> nestedBeanDeclarations)
+            final Map<String, Object> nestedBeanDeclarations)
     {
         this.nestedBeanDeclarations = nestedBeanDeclarations;
     }
@@ -103,7 +103,7 @@ class BeanDeclarationTestImpl implements BeanDeclaration
         return constructorArgs;
     }
 
-    public void setConstructorArgs(Collection<ConstructorArg> args)
+    public void setConstructorArgs(final Collection<ConstructorArg> args)
     {
         constructorArgs = args;
     }

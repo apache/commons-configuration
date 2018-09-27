@@ -56,7 +56,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
             new Applet();
             supportsApplet = true;
         }
-        catch (Exception ex)
+        catch (final Exception ex)
         {
             // cannot use applets
             supportsApplet = false;
@@ -75,7 +75,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
 
         if (supportsApplet)
         {
-            Applet applet = new Applet()
+            final Applet applet = new Applet()
             {
                 /**
                  * Serial version UID.
@@ -83,7 +83,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
                 private static final long serialVersionUID = 1L;
 
                 @Override
-                public String getParameter(String key)
+                public String getParameter(final String key)
                 {
                     return parameters.getProperty(key);
                 }
@@ -132,7 +132,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
                 super.testAddPropertyDirect();
                 fail("addPropertyDirect should throw an UnsupportedException");
             }
-            catch (UnsupportedOperationException e)
+            catch (final UnsupportedOperationException e)
             {
                 // ok
             }
@@ -150,7 +150,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
                 super.testClearProperty();
                 fail("testClearProperty should throw an UnsupportedException");
             }
-            catch (UnsupportedOperationException e)
+            catch (final UnsupportedOperationException e)
             {
                 // ok
             }

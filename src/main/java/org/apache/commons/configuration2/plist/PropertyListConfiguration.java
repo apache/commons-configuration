@@ -145,7 +145,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
      * @param c the configuration to copy
      * @since 1.4
      */
-    public PropertyListConfiguration(HierarchicalConfiguration<ImmutableNode> c)
+    public PropertyListConfiguration(final HierarchicalConfiguration<ImmutableNode> c)
     {
         super(c);
     }
@@ -156,13 +156,13 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
      *
      * @param root the root node
      */
-    PropertyListConfiguration(ImmutableNode root)
+    PropertyListConfiguration(final ImmutableNode root)
     {
         super(new InMemoryNodeModel(root));
     }
 
     @Override
-    protected void setPropertyInternal(String key, Object value)
+    protected void setPropertyInternal(final String key, final Object value)
     {
         // special case for byte arrays, they must be stored as is in the configuration
         if (value instanceof byte[])
@@ -185,7 +185,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
     }
 
     @Override
-    protected void addPropertyInternal(String key, Object value)
+    protected void addPropertyInternal(final String key, final Object value)
     {
         if (value instanceof byte[])
         {
@@ -198,26 +198,26 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
     }
 
     @Override
-    public void read(Reader in) throws ConfigurationException
+    public void read(final Reader in) throws ConfigurationException
     {
-        PropertyListParser parser = new PropertyListParser(in);
+        final PropertyListParser parser = new PropertyListParser(in);
         try
         {
-            PropertyListConfiguration config = parser.parse();
+            final PropertyListConfiguration config = parser.parse();
             getModel().setRootNode(
                     config.getNodeModel().getNodeHandler().getRootNode());
         }
-        catch (ParseException e)
+        catch (final ParseException e)
         {
             throw new ConfigurationException(e);
         }
     }
 
     @Override
-    public void write(Writer out) throws ConfigurationException
+    public void write(final Writer out) throws ConfigurationException
     {
-        PrintWriter writer = new PrintWriter(out);
-        NodeHandler<ImmutableNode> handler = getModel().getNodeHandler();
+        final PrintWriter writer = new PrintWriter(out);
+        final NodeHandler<ImmutableNode> handler = getModel().getNodeHandler();
         printNode(writer, 0, handler.getRootNode(), handler);
         writer.flush();
     }
@@ -225,17 +225,17 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
     /**
      * Append a node to the writer, indented according to a specific level.
      */
-    private void printNode(PrintWriter out, int indentLevel,
-            ImmutableNode node, NodeHandler<ImmutableNode> handler)
+    private void printNode(final PrintWriter out, final int indentLevel,
+            final ImmutableNode node, final NodeHandler<ImmutableNode> handler)
     {
-        String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
+        final String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
 
         if (node.getNodeName() != null)
         {
             out.print(padding + quoteString(node.getNodeName()) + " = ");
         }
 
-        List<ImmutableNode> children = new ArrayList<>(node.getChildren());
+        final List<ImmutableNode> children = new ArrayList<>(node.getChildren());
         if (!children.isEmpty())
         {
             // skip a line, except for the root dictionary
@@ -247,15 +247,15 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
             out.println(padding + "{");
 
             // display the children
-            Iterator<ImmutableNode> it = children.iterator();
+            final Iterator<ImmutableNode> it = children.iterator();
             while (it.hasNext())
             {
-                ImmutableNode child = it.next();
+                final ImmutableNode child = it.next();
 
                 printNode(out, indentLevel + 1, child, handler);
 
                 // add a semi colon for elements that are not dictionaries
-                Object value = child.getValue();
+                final Object value = child.getValue();
                 if (value != null && !(value instanceof Map) && !(value instanceof Configuration))
                 {
                     out.println(";");
@@ -290,7 +290,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
         else
         {
             // display the leaf value
-            Object value = node.getValue();
+            final Object value = node.getValue();
             printValue(out, indentLevel, value);
         }
     }
@@ -298,14 +298,14 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
     /**
      * Append a value to the writer, indented according to a specific level.
      */
-    private void printValue(PrintWriter out, int indentLevel, Object value)
+    private void printValue(final PrintWriter out, final int indentLevel, final Object value)
     {
-        String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
+        final String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
 
         if (value instanceof List)
         {
             out.print("( ");
-            Iterator<?> it = ((List<?>) value).iterator();
+            final Iterator<?> it = ((List<?>) value).iterator();
             while (it.hasNext())
             {
                 printValue(out, indentLevel + 1, it.next());
@@ -318,7 +318,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
         }
         else if (value instanceof PropertyListConfiguration)
         {
-            NodeHandler<ImmutableNode> handler =
+            final NodeHandler<ImmutableNode> handler =
                     ((PropertyListConfiguration) value).getModel()
                             .getNodeHandler();
             printNode(out, indentLevel, handler.getRootNode(), handler);
@@ -329,15 +329,15 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
             out.println();
             out.println(padding + "{");
 
-            ImmutableConfiguration config = (ImmutableConfiguration) value;
-            Iterator<String> it = config.getKeys();
+            final ImmutableConfiguration config = (ImmutableConfiguration) value;
+            final Iterator<String> it = config.getKeys();
             while (it.hasNext())
             {
-                String key = it.next();
-                ImmutableNode node =
+                final String key = it.next();
+                final ImmutableNode node =
                         new ImmutableNode.Builder().name(key)
                                 .value(config.getProperty(key)).create();
-                InMemoryNodeModel tempModel = new InMemoryNodeModel(node);
+                final InMemoryNodeModel tempModel = new InMemoryNodeModel(node);
                 printNode(out, indentLevel + 1, node, tempModel.getNodeHandler());
                 out.println(";");
             }
@@ -346,7 +346,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
         else if (value instanceof Map)
         {
             // display a Map as a dictionary
-            Map<String, Object> map = transformMap((Map<?, ?>) value);
+            final Map<String, Object> map = transformMap((Map<?, ?>) value);
             printValue(out, indentLevel, new MapConfiguration(map));
         }
         else if (value instanceof byte[])
@@ -415,13 +415,13 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
      * @return the parsed date
      * @throws ParseException if an error occurred while parsing the string
      */
-    static Date parseDate(String s) throws ParseException
+    static Date parseDate(final String s) throws ParseException
     {
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.clear();
         int index = 0;
 
-        for (DateComponentParser parser : DATE_PARSERS)
+        for (final DateComponentParser parser : DATE_PARSERS)
         {
             index += parser.parseComponent(s, index, cal);
         }
@@ -436,11 +436,11 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
      * @param cal the calendar with the initialized date
      * @return a string for this date
      */
-    static String formatDate(Calendar cal)
+    static String formatDate(final Calendar cal)
     {
-        StringBuilder buf = new StringBuilder();
+        final StringBuilder buf = new StringBuilder();
 
-        for (DateComponentParser element : DATE_PARSERS)
+        for (final DateComponentParser element : DATE_PARSERS)
         {
             element.formatComponent(buf, cal);
         }
@@ -454,9 +454,9 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
      * @param date the date
      * @return a string for this date
      */
-    static String formatDate(Date date)
+    static String formatDate(final Date date)
     {
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return formatDate(cal);
     }
@@ -469,10 +469,10 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
      * @param src the map to be converted
      * @return the resulting map
      */
-    private static Map<String, Object> transformMap(Map<?, ?> src)
+    private static Map<String, Object> transformMap(final Map<?, ?> src)
     {
-        Map<String, Object> dest = new HashMap<>();
-        for (Map.Entry<?, ?> e : src.entrySet())
+        final Map<String, Object> dest = new HashMap<>();
+        for (final Map.Entry<?, ?> e : src.entrySet())
         {
             if (e.getKey() instanceof String)
             {
@@ -522,10 +522,10 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
          * @param length the minimum length after the index
          * @throws ParseException if the string is too short
          */
-        protected void checkLength(String s, int index, int length)
+        protected void checkLength(final String s, final int index, final int length)
                 throws ParseException
         {
-            int len = (s == null) ? 0 : s.length();
+            final int len = (s == null) ? 0 : s.length();
             if (index + length > len)
             {
                 throw new ParseException("Input string too short: " + s
@@ -541,7 +541,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
          * @param num the number to add
          * @param length the required length
          */
-        protected void padNum(StringBuilder buf, int num, int length)
+        protected void padNum(final StringBuilder buf, final int num, final int length)
         {
             buf.append(StringUtils.leftPad(String.valueOf(num), length,
                     PAD_CHAR));
@@ -570,7 +570,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
          * @param calFld the calendar field code
          * @param len the length of this field
          */
-        public DateFieldParser(int calFld, int len)
+        public DateFieldParser(final int calFld, final int len)
         {
             this(calFld, len, 0);
         }
@@ -583,7 +583,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
          * @param len the length of this field
          * @param ofs an offset to add to the calendar field
          */
-        public DateFieldParser(int calFld, int len, int ofs)
+        public DateFieldParser(final int calFld, final int len, final int ofs)
         {
             calendarField = calFld;
             length = len;
@@ -591,13 +591,13 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
         }
 
         @Override
-        public void formatComponent(StringBuilder buf, Calendar cal)
+        public void formatComponent(final StringBuilder buf, final Calendar cal)
         {
             padNum(buf, cal.get(calendarField) + offset, length);
         }
 
         @Override
-        public int parseComponent(String s, int index, Calendar cal)
+        public int parseComponent(final String s, final int index, final Calendar cal)
                 throws ParseException
         {
             checkLength(s, index, length);
@@ -608,7 +608,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
                         - offset);
                 return length;
             }
-            catch (NumberFormatException nfex)
+            catch (final NumberFormatException nfex)
             {
                 throw new ParseException("Invalid number: " + s + ", index "
                         + index);
@@ -631,19 +631,19 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
          *
          * @param sep the separator string
          */
-        public DateSeparatorParser(String sep)
+        public DateSeparatorParser(final String sep)
         {
             separator = sep;
         }
 
         @Override
-        public void formatComponent(StringBuilder buf, Calendar cal)
+        public void formatComponent(final StringBuilder buf, final Calendar cal)
         {
             buf.append(separator);
         }
 
         @Override
-        public int parseComponent(String s, int index, Calendar cal)
+        public int parseComponent(final String s, final int index, final Calendar cal)
                 throws ParseException
         {
             checkLength(s, index, separator.length());
@@ -663,9 +663,9 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
     private static class DateTimeZoneParser extends DateComponentParser
     {
         @Override
-        public void formatComponent(StringBuilder buf, Calendar cal)
+        public void formatComponent(final StringBuilder buf, final Calendar cal)
         {
-            TimeZone tz = cal.getTimeZone();
+            final TimeZone tz = cal.getTimeZone();
             int ofs = tz.getRawOffset() / MILLIS_PER_MINUTE;
             if (ofs < 0)
             {
@@ -676,18 +676,18 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
             {
                 buf.append('+');
             }
-            int hour = ofs / MINUTES_PER_HOUR;
-            int min = ofs % MINUTES_PER_HOUR;
+            final int hour = ofs / MINUTES_PER_HOUR;
+            final int min = ofs % MINUTES_PER_HOUR;
             padNum(buf, hour, 2);
             padNum(buf, min, 2);
         }
 
         @Override
-        public int parseComponent(String s, int index, Calendar cal)
+        public int parseComponent(final String s, final int index, final Calendar cal)
                 throws ParseException
         {
             checkLength(s, index, TIME_ZONE_LENGTH);
-            TimeZone tz = TimeZone.getTimeZone(TIME_ZONE_PREFIX
+            final TimeZone tz = TimeZone.getTimeZone(TIME_ZONE_PREFIX
                     + s.substring(index, index + TIME_ZONE_LENGTH));
             cal.setTimeZone(tz);
             return TIME_ZONE_LENGTH;

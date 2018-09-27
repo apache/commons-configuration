@@ -81,7 +81,7 @@ public final class FileLocator
      *
      * @param builder the builder
      */
-    public FileLocator(FileLocatorBuilder builder)
+    public FileLocator(final FileLocatorBuilder builder)
     {
         fileName = builder.fileName;
         basePath = builder.basePath;
@@ -182,7 +182,7 @@ public final class FileLocator
      * @return a flag whether these objects are equal
      */
     @Override
-    public boolean equals(Object obj)
+    public boolean equals(final Object obj)
     {
         if (this == obj)
         {
@@ -193,7 +193,7 @@ public final class FileLocator
             return false;
         }
 
-        FileLocator c = (FileLocator) obj;
+        final FileLocator c = (FileLocator) obj;
         return new EqualsBuilder().append(getFileName(), c.getFileName())
                 .append(getBasePath(), c.getBasePath())
                 .append(sourceURLAsString(), c.sourceURLAsString())
@@ -267,7 +267,7 @@ public final class FileLocator
          *
          * @param src the source {@code FileLocator} (may be <b>null</b>)
          */
-        FileLocatorBuilder(FileLocator src)
+        FileLocatorBuilder(final FileLocator src)
         {
             if (src != null)
             {
@@ -281,7 +281,7 @@ public final class FileLocator
          * @param enc the encoding
          * @return a reference to this builder for method chaining
          */
-        public FileLocatorBuilder encoding(String enc)
+        public FileLocatorBuilder encoding(final String enc)
         {
             encoding = enc;
             return this;
@@ -293,7 +293,7 @@ public final class FileLocator
          * @param fs the {@code FileSystem}
          * @return a reference to this builder for method chaining
          */
-        public FileLocatorBuilder fileSystem(FileSystem fs)
+        public FileLocatorBuilder fileSystem(final FileSystem fs)
         {
             fileSystem = fs;
             return this;
@@ -305,7 +305,7 @@ public final class FileLocator
          * @param path the base path
          * @return a reference to this builder for method chaining
          */
-        public FileLocatorBuilder basePath(String path)
+        public FileLocatorBuilder basePath(final String path)
         {
             basePath = path;
             return this;
@@ -317,7 +317,7 @@ public final class FileLocator
          * @param name the file name
          * @return a reference to this builder for method chaining
          */
-        public FileLocatorBuilder fileName(String name)
+        public FileLocatorBuilder fileName(final String name)
         {
             fileName = name;
             return this;
@@ -329,7 +329,7 @@ public final class FileLocator
          * @param url the source URL
          * @return a reference to this builder for method chaining
          */
-        public FileLocatorBuilder sourceURL(URL url)
+        public FileLocatorBuilder sourceURL(final URL url)
         {
             sourceURL = url;
             return this;
@@ -342,7 +342,7 @@ public final class FileLocator
          * @param strategy the {@code FileLocationStrategy}
          * @return a reference to this builder for method chaining
          */
-        public FileLocatorBuilder locationStrategy(FileLocationStrategy strategy)
+        public FileLocatorBuilder locationStrategy(final FileLocationStrategy strategy)
         {
             locationStrategy = strategy;
             return this;
@@ -365,7 +365,7 @@ public final class FileLocator
          *
          * @param src the source {@code FileLocator}
          */
-        private void initBuilder(FileLocator src)
+        private void initBuilder(final FileLocator src)
         {
             basePath = src.getBasePath();
             fileName = src.getFileName();

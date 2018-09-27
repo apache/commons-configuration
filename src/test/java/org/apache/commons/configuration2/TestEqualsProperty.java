@@ -35,12 +35,12 @@ public class TestEqualsProperty
     @Test
     public void testEquals() throws Exception
     {
-        PropertiesConfiguration conf = new PropertiesConfiguration();
-        FileHandler handler = new FileHandler(conf);
+        final PropertiesConfiguration conf = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(conf);
         handler.setFileName(testProperties);
         handler.load();
 
-        String equals = conf.getString("test.equals");
+        final String equals = conf.getString("test.equals");
         assertEquals("value=one", equals);
     }
 }

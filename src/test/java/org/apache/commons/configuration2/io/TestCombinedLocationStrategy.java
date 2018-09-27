@@ -114,13 +114,13 @@ public class TestCombinedLocationStrategy
      *
      * @param strategy the combined strategy to check
      */
-    private void checkSubStrategies(CombinedLocationStrategy strategy)
+    private void checkSubStrategies(final CombinedLocationStrategy strategy)
     {
-        Collection<FileLocationStrategy> subs = strategy.getSubStrategies();
+        final Collection<FileLocationStrategy> subs = strategy.getSubStrategies();
         assertEquals("Wrong number of strategies", getSubStrategies().length,
                 subs.size());
         int idx = 0;
-        for (FileLocationStrategy strat : subs)
+        for (final FileLocationStrategy strat : subs)
         {
             assertEquals("Wrong sub strategy at " + idx,
                     getSubStrategies()[idx++], strat);
@@ -153,7 +153,7 @@ public class TestCombinedLocationStrategy
     @Test(expected = IllegalArgumentException.class)
     public void testInitCollectionWithNullEntries()
     {
-        Collection<FileLocationStrategy> col =
+        final Collection<FileLocationStrategy> col =
                 new LinkedList<>(
                         Arrays.asList(getSubStrategies()));
         col.add(null);
@@ -167,10 +167,10 @@ public class TestCombinedLocationStrategy
     @Test
     public void testInitDefensiveCopy()
     {
-        Collection<FileLocationStrategy> col =
+        final Collection<FileLocationStrategy> col =
                 new LinkedList<>(
                         Arrays.asList(getSubStrategies()));
-        CombinedLocationStrategy strategy = new CombinedLocationStrategy(col);
+        final CombinedLocationStrategy strategy = new CombinedLocationStrategy(col);
         col.add(EasyMock.createMock(FileLocationStrategy.class));
         checkSubStrategies(strategy);
     }
@@ -181,7 +181,7 @@ public class TestCombinedLocationStrategy
     @Test(expected = UnsupportedOperationException.class)
     public void testGetSubStrategiesModify()
     {
-        CombinedLocationStrategy strategy = createCombinedStrategy();
+        final CombinedLocationStrategy strategy = createCombinedStrategy();
         strategy.getSubStrategies().clear();
     }
 
@@ -195,7 +195,7 @@ public class TestCombinedLocationStrategy
         EasyMock.expect(getSubStrategies()[0].locate(getFileSystem(), locator))
                 .andReturn(locateURL);
         replaySubStrategies();
-        CombinedLocationStrategy strategy = createCombinedStrategy();
+        final CombinedLocationStrategy strategy = createCombinedStrategy();
         assertSame("Wrong result", locateURL,
                 strategy.locate(getFileSystem(), locator));
         verifySubStrategies();
@@ -213,7 +213,7 @@ public class TestCombinedLocationStrategy
         EasyMock.expect(getSubStrategies()[1].locate(getFileSystem(), locator))
                 .andReturn(locateURL);
         replaySubStrategies();
-        CombinedLocationStrategy strategy = createCombinedStrategy();
+        final CombinedLocationStrategy strategy = createCombinedStrategy();
         assertSame("Wrong result", locateURL,
                 strategy.locate(getFileSystem(), locator));
         verifySubStrategies();
@@ -230,7 +230,7 @@ public class TestCombinedLocationStrategy
         EasyMock.expect(getSubStrategies()[1].locate(getFileSystem(), locator))
                 .andReturn(null);
         replaySubStrategies();
-        CombinedLocationStrategy strategy = createCombinedStrategy();
+        final CombinedLocationStrategy strategy = createCombinedStrategy();
         assertNull("Got a URL", strategy.locate(getFileSystem(), locator));
         verifySubStrategies();
     }

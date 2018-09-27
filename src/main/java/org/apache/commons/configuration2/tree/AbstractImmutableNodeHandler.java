@@ -40,26 +40,26 @@ abstract class AbstractImmutableNodeHandler implements
         NodeHandler<ImmutableNode>
 {
     @Override
-    public String nodeName(ImmutableNode node)
+    public String nodeName(final ImmutableNode node)
     {
         return node.getNodeName();
     }
 
     @Override
-    public Object getValue(ImmutableNode node)
+    public Object getValue(final ImmutableNode node)
     {
         return node.getValue();
     }
 
     @Override
-    public List<ImmutableNode> getChildren(ImmutableNode node)
+    public List<ImmutableNode> getChildren(final ImmutableNode node)
     {
         return node.getChildren();
     }
 
     @Override
-    public <C> int getMatchingChildrenCount(ImmutableNode node,
-            NodeMatcher<C> matcher, C criterion)
+    public <C> int getMatchingChildrenCount(final ImmutableNode node,
+            final NodeMatcher<C> matcher, final C criterion)
     {
         return getMatchingChildren(node, matcher, criterion).size();
     }
@@ -69,12 +69,12 @@ abstract class AbstractImmutableNodeHandler implements
      * child nodes accepted by the specified matcher.
      */
     @Override
-    public <C> List<ImmutableNode> getMatchingChildren(ImmutableNode node,
-            NodeMatcher<C> matcher, C criterion)
+    public <C> List<ImmutableNode> getMatchingChildren(final ImmutableNode node,
+            final NodeMatcher<C> matcher, final C criterion)
     {
-        List<ImmutableNode> result =
+        final List<ImmutableNode> result =
                 new ArrayList<>(node.getChildren().size());
-        for (ImmutableNode c : node.getChildren())
+        for (final ImmutableNode c : node.getChildren())
         {
             if (matcher.matches(c, this, criterion))
             {
@@ -89,25 +89,25 @@ abstract class AbstractImmutableNodeHandler implements
      * child nodes that have the specified name.
      */
     @Override
-    public List<ImmutableNode> getChildren(ImmutableNode node, String name)
+    public List<ImmutableNode> getChildren(final ImmutableNode node, final String name)
     {
         return getMatchingChildren(node, NodeNameMatchers.EQUALS, name);
     }
 
     @Override
-    public ImmutableNode getChild(ImmutableNode node, int index)
+    public ImmutableNode getChild(final ImmutableNode node, final int index)
     {
         return node.getChildren().get(index);
     }
 
     @Override
-    public int indexOfChild(ImmutableNode parent, ImmutableNode child)
+    public int indexOfChild(final ImmutableNode parent, final ImmutableNode child)
     {
         return parent.getChildren().indexOf(child);
     }
 
     @Override
-    public int getChildrenCount(ImmutableNode node, String name)
+    public int getChildrenCount(final ImmutableNode node, final String name)
     {
         if (name == null)
         {
@@ -117,19 +117,19 @@ abstract class AbstractImmutableNodeHandler implements
     }
 
     @Override
-    public Set<String> getAttributes(ImmutableNode node)
+    public Set<String> getAttributes(final ImmutableNode node)
     {
         return node.getAttributes().keySet();
     }
 
     @Override
-    public boolean hasAttributes(ImmutableNode node)
+    public boolean hasAttributes(final ImmutableNode node)
     {
         return !node.getAttributes().isEmpty();
     }
 
     @Override
-    public Object getAttributeValue(ImmutableNode node, String name)
+    public Object getAttributeValue(final ImmutableNode node, final String name)
     {
         return node.getAttributes().get(name);
     }
@@ -139,7 +139,7 @@ abstract class AbstractImmutableNodeHandler implements
      * has a value or has children or has attributes.
      */
     @Override
-    public boolean isDefined(ImmutableNode node)
+    public boolean isDefined(final ImmutableNode node)
     {
         return AbstractImmutableNodeHandler.checkIfNodeDefined(node);
     }
@@ -151,7 +151,7 @@ abstract class AbstractImmutableNodeHandler implements
      * @param node the node in question
      * @return <b>true</b> if the node is defined, <b>false</b> otherwise
      */
-    static boolean checkIfNodeDefined(ImmutableNode node)
+    static boolean checkIfNodeDefined(final ImmutableNode node)
     {
         return node.getValue() != null || !node.getChildren().isEmpty()
                 || !node.getAttributes().isEmpty();

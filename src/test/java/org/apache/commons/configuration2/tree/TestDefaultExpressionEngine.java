@@ -162,7 +162,7 @@ public class TestDefaultExpressionEngine
     @Test
     public void testQueryAttributeEmulation()
     {
-        DefaultExpressionEngineSymbols symbols =
+        final DefaultExpressionEngineSymbols symbols =
                 new DefaultExpressionEngineSymbols.Builder(
                         DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
                         .setAttributeEnd(null)
@@ -180,10 +180,10 @@ public class TestDefaultExpressionEngine
      *
      * @param key the key to be used
      */
-    private void checkQueryRootNode(String key)
+    private void checkQueryRootNode(final String key)
     {
-        List<QueryResult<ImmutableNode>> results = checkKey(key, null, 1);
-        QueryResult<ImmutableNode> result = results.get(0);
+        final List<QueryResult<ImmutableNode>> results = checkKey(key, null, 1);
+        final QueryResult<ImmutableNode> result = results.get(0);
         assertFalse("No node result", result.isAttributeResult());
         assertSame("Not the root node", root, result.getNode());
     }
@@ -235,7 +235,7 @@ public class TestDefaultExpressionEngine
     @Test
     public void testNodeKey()
     {
-        ImmutableNode node = root.getChildren().get(0);
+        final ImmutableNode node = root.getChildren().get(0);
         assertEquals("Invalid name for descendant of root", "tables", engine
                 .nodeKey(node, "", handler));
         assertEquals("Parent key not respected", "test.tables", engine.nodeKey(
@@ -293,7 +293,7 @@ public class TestDefaultExpressionEngine
     @Test
     public void testNodeKeyWithEscapedDelimiters()
     {
-        ImmutableNode node = root.getChildren().get(1);
+        final ImmutableNode node = root.getChildren().get(1);
         assertEquals("Wrong escaped key", "connection..settings",
                 engine.nodeKey(node, "", handler));
         assertEquals(
@@ -334,7 +334,7 @@ public class TestDefaultExpressionEngine
     public void testNodeKeyWithAlternativeSyntaxAttributePropertyDelimiter()
     {
         setUpAlternativeSyntax();
-        DefaultExpressionEngineSymbols symbols =
+        final DefaultExpressionEngineSymbols symbols =
                 new DefaultExpressionEngineSymbols.Builder(engine.getSymbols())
                         .setAttributeStart(
                                 engine.getSymbols().getPropertyDelimiter())
@@ -360,7 +360,7 @@ public class TestDefaultExpressionEngine
         assertEquals("Wrong name of new node", "name", data.getNewNodeName());
         assertTrue("Path nodes available", data.getPathNodes().isEmpty());
         assertEquals("Wrong parent node", "field", data.getParent().getNodeName());
-        ImmutableNode nd = data.getParent().getChildren().get(0);
+        final ImmutableNode nd = data.getParent().getChildren().get(0);
         assertEquals("Field has no name node", "name", nd.getNodeName());
         assertEquals("Incorrect name", "version", nd.getValue());
     }
@@ -378,7 +378,7 @@ public class TestDefaultExpressionEngine
         assertTrue("Path nodes available", data.getPathNodes().isEmpty());
         assertEquals("Wrong type of parent node", "table", data.getParent()
                 .getNodeName());
-        ImmutableNode node = data.getParent().getChildren().get(0);
+        final ImmutableNode node = data.getParent().getChildren().get(0);
         assertEquals("Wrong table", tables[0], node.getValue());
 
         data = engine.prepareAdd(root, "tables.table(1).fields.field(2).alias", handler);
@@ -395,7 +395,7 @@ public class TestDefaultExpressionEngine
     @Test
     public void testPrepareAddAttribute()
     {
-        NodeAddData<ImmutableNode> data = engine.prepareAdd(root,
+        final NodeAddData<ImmutableNode> data = engine.prepareAdd(root,
                 "tables.table(0)[@tableSpace]", handler);
         assertEquals("Wrong table node", tables[0], data.getParent()
                 .getChildren().get(0).getValue());
@@ -411,7 +411,7 @@ public class TestDefaultExpressionEngine
     @Test
     public void testPrepareAddAttributeRoot()
     {
-        NodeAddData<ImmutableNode> data = engine.prepareAdd(root, "[@newAttr]", handler);
+        final NodeAddData<ImmutableNode> data = engine.prepareAdd(root, "[@newAttr]", handler);
         assertSame("Root node is not parent", root, data.getParent());
         assertEquals("Wrong name of new node", "newAttr", data.getNewNodeName());
         assertTrue("Attribute not detected", data.isAttribute());
@@ -449,7 +449,7 @@ public class TestDefaultExpressionEngine
     @Test
     public void testPrepareAddWithSameAttributeDelimiter()
     {
-        DefaultExpressionEngineSymbols symbols =
+        final DefaultExpressionEngineSymbols symbols =
                 new DefaultExpressionEngineSymbols.Builder(
                         DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
                         .setAttributeEnd(null)
@@ -529,7 +529,7 @@ public class TestDefaultExpressionEngine
     @Test
     public void testCanonicalKeyNoDuplicates()
     {
-        ImmutableNode node = fetchNode("tables.table(0).name");
+        final ImmutableNode node = fetchNode("tables.table(0).name");
         assertEquals("Wrong canonical key", "table.name(0)",
                 engine.canonicalKey(node, "table", handler));
     }
@@ -541,8 +541,8 @@ public class TestDefaultExpressionEngine
     @Test
     public void testCanonicalKeyWithDuplicates()
     {
-        ImmutableNode tab1 = fetchNode("tables.table(0)");
-        ImmutableNode tab2 = fetchNode("tables.table(1)");
+        final ImmutableNode tab1 = fetchNode("tables.table(0)");
+        final ImmutableNode tab2 = fetchNode("tables.table(1)");
         assertEquals("Wrong key 1", "tables.table(0)",
                 engine.canonicalKey(tab1, "tables", handler));
         assertEquals("Wrong key 2", "tables.table(1)",
@@ -556,7 +556,7 @@ public class TestDefaultExpressionEngine
     @Test
     public void testCanonicalKeyNoParentKey()
     {
-        ImmutableNode node = fetchNode("tables.table(0).fields.field(1).name");
+        final ImmutableNode node = fetchNode("tables.table(0).fields.field(1).name");
         assertEquals("Wrong key", "name(0)",
                 engine.canonicalKey(node, null, handler));
     }
@@ -599,7 +599,7 @@ public class TestDefaultExpressionEngine
     public void testPrepareAddWithAlternativeMatcher()
     {
         setUpAlternativeMatcher();
-        NodeAddData<ImmutableNode> data =
+        final NodeAddData<ImmutableNode> data =
                 engine.prepareAdd(root, "tables_.table._fields__._field.name",
                         handler);
         assertEquals("Wrong name of new node", "name", data.getNewNodeName());
@@ -625,19 +625,19 @@ public class TestDefaultExpressionEngine
      */
     private static ImmutableNode setUpNodes()
     {
-        ImmutableNode.Builder nodeTablesBuilder =
+        final ImmutableNode.Builder nodeTablesBuilder =
                 new ImmutableNode.Builder(tables.length);
         nodeTablesBuilder.name("tables");
         for (int i = 0; i < tables.length; i++)
         {
-            ImmutableNode.Builder nodeTableBuilder =
+            final ImmutableNode.Builder nodeTableBuilder =
                     new ImmutableNode.Builder(2);
             nodeTableBuilder.name("table");
             nodeTableBuilder.addChild(new ImmutableNode.Builder().name("name")
                     .value(tables[i]).create());
             nodeTableBuilder.addAttribute("type", tabTypes[i]);
 
-            ImmutableNode.Builder nodeFieldsBuilder =
+            final ImmutableNode.Builder nodeFieldsBuilder =
                     new ImmutableNode.Builder(fields[i].length);
             for (int j = 0; j < fields[i].length; j++)
             {
@@ -648,9 +648,9 @@ public class TestDefaultExpressionEngine
             nodeTablesBuilder.addChild(nodeTableBuilder.create());
         }
 
-        ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
+        final ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
         rootBuilder.addChild(nodeTablesBuilder.create());
-        ImmutableNode.Builder nodeConnBuilder = new ImmutableNode.Builder();
+        final ImmutableNode.Builder nodeConnBuilder = new ImmutableNode.Builder();
         nodeConnBuilder.name("connection.settings");
         nodeConnBuilder.addChild(createNode("usr.name", "scott"));
         nodeConnBuilder.addChild(createNode("usr.pwd", "tiger"));
@@ -665,7 +665,7 @@ public class TestDefaultExpressionEngine
      */
     private void setUpAlternativeSyntax()
     {
-        DefaultExpressionEngineSymbols symbols =
+        final DefaultExpressionEngineSymbols symbols =
                 new DefaultExpressionEngineSymbols.Builder()
                         .setAttributeEnd(null).setAttributeStart("@")
                         .setPropertyDelimiter("/").setEscapedDelimiter(null)
@@ -679,11 +679,11 @@ public class TestDefaultExpressionEngine
      */
     private void setUpAlternativeMatcher()
     {
-        NodeMatcher<String> matcher = new NodeMatcher<String>()
+        final NodeMatcher<String> matcher = new NodeMatcher<String>()
         {
             @Override
-            public <T> boolean matches(T node, NodeHandler<T> handler,
-                    String criterion)
+            public <T> boolean matches(final T node, final NodeHandler<T> handler,
+                    final String criterion)
             {
                 return handler.nodeName(node).equals(StringUtils.remove(criterion, '_'));
             }
@@ -700,11 +700,11 @@ public class TestDefaultExpressionEngine
      * @param count the number of expected result nodes
      * @return the list with the results of the query
      */
-    private List<QueryResult<ImmutableNode>> checkKey(String key, String name,
-            int count)
+    private List<QueryResult<ImmutableNode>> checkKey(final String key, final String name,
+            final int count)
     {
-        List<QueryResult<ImmutableNode>> nodes = query(key, count);
-        for (QueryResult<ImmutableNode> result : nodes)
+        final List<QueryResult<ImmutableNode>> nodes = query(key, count);
+        for (final QueryResult<ImmutableNode> result : nodes)
         {
             if (result.isAttributeResult())
             {
@@ -727,9 +727,9 @@ public class TestDefaultExpressionEngine
      * @param expCount the expected number of result nodes
      * @return the collection of retrieved nodes
      */
-    private List<QueryResult<ImmutableNode>> query(String key, int expCount)
+    private List<QueryResult<ImmutableNode>> query(final String key, final int expCount)
     {
-        List<QueryResult<ImmutableNode>> nodes = engine.query(root, key, handler);
+        final List<QueryResult<ImmutableNode>> nodes = engine.query(root, key, handler);
         assertEquals("Wrong number of result nodes for key " + key, expCount,
                 nodes.size());
         return nodes;
@@ -741,9 +741,9 @@ public class TestDefaultExpressionEngine
      * @param key the key
      * @return the node with this key
      */
-    private ImmutableNode fetchNode(String key)
+    private ImmutableNode fetchNode(final String key)
     {
-        QueryResult<ImmutableNode> result = query(key, 1).get(0);
+        final QueryResult<ImmutableNode> result = query(key, 1).get(0);
         assertFalse("An attribute result", result.isAttributeResult());
         return result.getNode();
     }
@@ -757,10 +757,10 @@ public class TestDefaultExpressionEngine
      * @param name the expected name of the result node
      * @param value the expected value of the result node
      */
-    private void checkKeyValue(String key, String name, String value)
+    private void checkKeyValue(final String key, final String name, final String value)
     {
-        List<QueryResult<ImmutableNode>> results = checkKey(key, name, 1);
-        QueryResult<ImmutableNode> result = results.get(0);
+        final List<QueryResult<ImmutableNode>> results = checkKey(key, name, 1);
+        final QueryResult<ImmutableNode> result = results.get(0);
         assertFalse("No node result", result.isAttributeResult());
         assertEquals("Wrong value for key " + key, value,
                 result.getNode().getValue());
@@ -774,10 +774,10 @@ public class TestDefaultExpressionEngine
      * @param attr the attribute name
      * @param expValue the expected attribute value
      */
-    private void checkAttributeValue(String key, String attr, Object expValue)
+    private void checkAttributeValue(final String key, final String attr, final Object expValue)
     {
-        List<QueryResult<ImmutableNode>> results = checkKey(key, attr, 1);
-        QueryResult<ImmutableNode> result = results.get(0);
+        final List<QueryResult<ImmutableNode>> results = checkKey(key, attr, 1);
+        final QueryResult<ImmutableNode> result = results.get(0);
         assertTrue("Not an attribute result", result.isAttributeResult());
         assertEquals("Wrong attribute value for key " + key, expValue,
                 result.getAttributeValue(handler));
@@ -789,12 +789,12 @@ public class TestDefaultExpressionEngine
      * @param data the add data object
      * @param expected the expected path nodes
      */
-    private void checkNodePath(NodeAddData<ImmutableNode> data,
-            String... expected)
+    private void checkNodePath(final NodeAddData<ImmutableNode> data,
+            final String... expected)
     {
         assertEquals("Wrong number of path nodes", expected.length, data
                 .getPathNodes().size());
-        Iterator<String> it = data.getPathNodes().iterator();
+        final Iterator<String> it = data.getPathNodes().iterator();
         for (int i = 0; i < expected.length; i++)
         {
             assertEquals("Wrong path node " + i, expected[i], it.next());
@@ -808,9 +808,9 @@ public class TestDefaultExpressionEngine
      * @param name the name of the field
      * @return the field node
      */
-    private static ImmutableNode createFieldNode(String name)
+    private static ImmutableNode createFieldNode(final String name)
     {
-        ImmutableNode.Builder nodeFieldBuilder = new ImmutableNode.Builder(1);
+        final ImmutableNode.Builder nodeFieldBuilder = new ImmutableNode.Builder(1);
         nodeFieldBuilder.addChild(createNode("name", name));
         return nodeFieldBuilder.name("field").create();
     }
@@ -822,7 +822,7 @@ public class TestDefaultExpressionEngine
      * @param value the node value
      * @return the node instance
      */
-    private static ImmutableNode createNode(String name, Object value)
+    private static ImmutableNode createNode(final String name, final Object value)
     {
         return new ImmutableNode.Builder().name(name).value(value).create();
     }

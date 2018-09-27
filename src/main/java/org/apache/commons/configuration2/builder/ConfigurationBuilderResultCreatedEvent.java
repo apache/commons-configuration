@@ -66,9 +66,9 @@ public class ConfigurationBuilderResultCreatedEvent extends
      * @throws IllegalArgumentException if a required parameter is null
      */
     public ConfigurationBuilderResultCreatedEvent(
-            ConfigurationBuilder<?> source,
-            EventType<? extends ConfigurationBuilderResultCreatedEvent> evType,
-            ImmutableConfiguration createdConfiguration)
+            final ConfigurationBuilder<?> source,
+            final EventType<? extends ConfigurationBuilderResultCreatedEvent> evType,
+            final ImmutableConfiguration createdConfiguration)
     {
         super(source, evType);
         if (createdConfiguration == null)

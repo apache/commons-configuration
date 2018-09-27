@@ -135,7 +135,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @param resCls the result class (must not be <b>null</b>)
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public BasicConfigurationBuilder(Class<? extends T> resCls)
+    public BasicConfigurationBuilder(final Class<? extends T> resCls)
     {
         this(resCls, null);
     }
@@ -150,7 +150,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @param params a map with initialization parameters
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public BasicConfigurationBuilder(Class<? extends T> resCls, Map<String, Object> params)
+    public BasicConfigurationBuilder(final Class<? extends T> resCls, final Map<String, Object> params)
     {
         this(resCls, params, false);
     }
@@ -168,8 +168,8 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      *        created {@code ImmutableConfiguration} object are allowed
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public BasicConfigurationBuilder(Class<? extends T> resCls,
-            Map<String, Object> params, boolean allowFailOnInit)
+    public BasicConfigurationBuilder(final Class<? extends T> resCls,
+            final Map<String, Object> params, final boolean allowFailOnInit)
     {
         if (resCls == null)
         {
@@ -213,7 +213,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @return a reference to this builder for method chaining
      */
     public synchronized BasicConfigurationBuilder<T> setParameters(
-            Map<String, Object> params)
+            final Map<String, Object> params)
     {
         updateParameters(params);
         return this;
@@ -228,9 +228,9 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @return a reference to this builder for method chaining
      */
     public synchronized BasicConfigurationBuilder<T> addParameters(
-            Map<String, Object> params)
+            final Map<String, Object> params)
     {
-        Map<String, Object> newParams =
+        final Map<String, Object> newParams =
                 new HashMap<>(getParameters());
         if (params != null)
         {
@@ -249,10 +249,10 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @return a reference to this builder for method chaining
      * @throws NullPointerException if a <b>null</b> array is passed
      */
-    public BasicConfigurationBuilder<T> configure(BuilderParameters... params)
+    public BasicConfigurationBuilder<T> configure(final BuilderParameters... params)
     {
-        Map<String, Object> newParams = new HashMap<>();
-        for (BuilderParameters p : params)
+        final Map<String, Object> newParams = new HashMap<>();
+        for (final BuilderParameters p : params)
         {
             newParams.putAll(p.getParameters());
             handleEventListenerProviders(p);
@@ -306,7 +306,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      */
     @Override
     public <E extends Event> void addEventListener(
-            EventType<E> eventType, EventListener<? super E> listener)
+            final EventType<E> eventType, final EventListener<? super E> listener)
     {
         installEventListener(eventType, listener);
     }
@@ -317,7 +317,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      */
     @Override
     public <E extends Event> boolean removeEventListener(
-            EventType<E> eventType, EventListener<? super E> listener)
+            final EventType<E> eventType, final EventListener<? super E> listener)
     {
         fetchEventSource().removeEventListener(eventType, listener);
         return eventListeners.removeEventListener(eventType, listener);
@@ -384,7 +384,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @throws IllegalArgumentException if the controller is <b>null</b>
      */
     public final void connectToReloadingController(
-            ReloadingController controller)
+            final ReloadingController controller)
     {
         if (controller == null)
         {
@@ -414,13 +414,13 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      */
     protected T createResult() throws ConfigurationException
     {
-        T resObj = createResultInstance();
+        final T resObj = createResultInstance();
 
         try
         {
             initResultInstance(resObj);
         }
-        catch (ConfigurationException cex)
+        catch (final ConfigurationException cex)
         {
             if (!isAllowFailOnInit())
             {
@@ -444,7 +444,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      */
     protected T createResultInstance() throws ConfigurationException
     {
-        Object bean = fetchBeanHelper().createBean(getResultDeclaration());
+        final Object bean = fetchBeanHelper().createBean(getResultDeclaration());
         checkResultInstance(bean);
         return getResultClass().cast(bean);
     }
@@ -461,7 +461,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @param obj the object to be initialized
      * @throws ConfigurationException if an error occurs
      */
-    protected void initResultInstance(T obj) throws ConfigurationException
+    protected void initResultInstance(final T obj) throws ConfigurationException
     {
         fetchBeanHelper().initBean(obj, getResultDeclaration());
         registerEventListeners(obj);
@@ -514,7 +514,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      */
     protected final BeanHelper fetchBeanHelper()
     {
-        BeanHelper helper =
+        final BeanHelper helper =
                 BasicBuilderParameters.fetchBeanHelper(getParameters());
         return (helper != null) ? helper : BeanHelper.INSTANCE;
     }
@@ -588,7 +588,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @throws NullPointerException if the target builder is <b>null</b>
      */
     protected synchronized void copyEventListeners(
-            BasicConfigurationBuilder<?> target)
+            final BasicConfigurationBuilder<?> target)
     {
         copyEventListeners(target, eventListeners);
     }
@@ -603,8 +603,8 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @param listeners the event listeners to be copied over
      * @throws NullPointerException if the target builder is <b>null</b>
      */
-    protected void copyEventListeners(BasicConfigurationBuilder<?> target,
-            EventListenerList listeners)
+    protected void copyEventListeners(final BasicConfigurationBuilder<?> target,
+            final EventListenerList listeners)
     {
         target.eventListeners.addAll(listeners);
     }
@@ -620,7 +620,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @param <E> the event type
      */
     protected final <E extends Event> void installEventListener(
-            EventType<E> eventType, EventListener<? super E> listener)
+            final EventType<E> eventType, final EventListener<? super E> listener)
     {
         fetchEventSource().addEventListener(eventType, listener);
         eventListeners.addEventListener(eventType, listener);
@@ -631,7 +631,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      *
      * @param event the event to be fired
      */
-    protected void fireBuilderEvent(ConfigurationBuilderEvent event)
+    protected void fireBuilderEvent(final ConfigurationBuilderEvent event)
     {
         eventListeners.fire(event);
     }
@@ -641,9 +641,9 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      *
      * @param newParams the map with new parameters (may be <b>null</b>)
      */
-    private void updateParameters(Map<String, Object> newParams)
+    private void updateParameters(final Map<String, Object> newParams)
     {
-        Map<String, Object> map = new HashMap<>();
+        final Map<String, Object> map = new HashMap<>();
         if (newParams != null)
         {
             map.putAll(newParams);
@@ -657,10 +657,10 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      *
      * @param obj the object to initialize
      */
-    private void registerEventListeners(T obj)
+    private void registerEventListeners(final T obj)
     {
-        EventSource evSrc = ConfigurationUtils.asEventSource(obj, true);
-        for (EventListenerRegistrationData<?> regData : eventListeners
+        final EventSource evSrc = ConfigurationUtils.asEventSource(obj, true);
+        for (final EventListenerRegistrationData<?> regData : eventListeners
                 .getRegistrations())
         {
             registerListener(evSrc, regData);
@@ -674,10 +674,10 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      *
      * @param obj the affected result object
      */
-    private void removeEventListeners(T obj)
+    private void removeEventListeners(final T obj)
     {
-        EventSource evSrc = ConfigurationUtils.asEventSource(obj, true);
-        for (EventListenerRegistrationData<?> regData : eventListeners
+        final EventSource evSrc = ConfigurationUtils.asEventSource(obj, true);
+        for (final EventListenerRegistrationData<?> regData : eventListeners
                 .getRegistrations())
         {
             removeListener(evSrc, regData);
@@ -703,7 +703,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      *
      * @param params the parameters object
      */
-    private void handleEventListenerProviders(BuilderParameters params)
+    private void handleEventListenerProviders(final BuilderParameters params)
     {
         if (params instanceof EventListenerProvider)
         {
@@ -721,7 +721,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @throws ConfigurationRuntimeException if an invalid result class is
      *         detected
      */
-    private void checkResultInstance(Object inst)
+    private void checkResultInstance(final Object inst)
     {
         if (!getResultClass().isInstance(inst))
         {
@@ -738,12 +738,12 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      */
     private Map<String, Object> getFilteredParameters()
     {
-        Map<String, Object> filteredMap =
+        final Map<String, Object> filteredMap =
                 new HashMap<>(getParameters());
-        for (Iterator<String> it = filteredMap.keySet().iterator(); it
+        for (final Iterator<String> it = filteredMap.keySet().iterator(); it
                 .hasNext();)
         {
-            String key = it.next();
+            final String key = it.next();
             if (key.startsWith(BuilderParameters.RESERVED_PARAMETER_PREFIX))
             {
                 it.remove();
@@ -760,7 +760,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      *
      * @param obj the newly created result object
      */
-    private void handleInitializable(T obj)
+    private void handleInitializable(final T obj)
     {
         if (obj instanceof Initializable)
         {
@@ -775,8 +775,8 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @param regData the registration data object
      * @param <E> the type of the event listener
      */
-    private static <E extends Event> void registerListener(EventSource evSrc,
-            EventListenerRegistrationData<E> regData)
+    private static <E extends Event> void registerListener(final EventSource evSrc,
+            final EventListenerRegistrationData<E> regData)
     {
         evSrc.addEventListener(regData.getEventType(), regData.getListener());
     }
@@ -788,8 +788,8 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      * @param regData the registration data object
      * @param <E> the type of the event listener
      */
-    private static <E extends Event> void removeListener(EventSource evSrc,
-            EventListenerRegistrationData<E> regData)
+    private static <E extends Event> void removeListener(final EventSource evSrc,
+            final EventListenerRegistrationData<E> regData)
     {
         evSrc.removeEventListener(regData.getEventType(), regData.getListener());
     }

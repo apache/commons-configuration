@@ -47,7 +47,7 @@ public class StrictConfigurationComparator implements ConfigurationComparator
      *         is the sale in for the same key in b
      */
     @Override
-    public boolean compare(Configuration a, Configuration b)
+    public boolean compare(final Configuration a, final Configuration b)
     {
         if (a == null && b == null)
         {
@@ -58,20 +58,20 @@ public class StrictConfigurationComparator implements ConfigurationComparator
             return false;
         }
 
-        for (Iterator<String> keys = a.getKeys(); keys.hasNext();)
+        for (final Iterator<String> keys = a.getKeys(); keys.hasNext();)
         {
-            String key = keys.next();
-            Object value = a.getProperty(key);
+            final String key = keys.next();
+            final Object value = a.getProperty(key);
             if (!value.equals(b.getProperty(key)))
             {
                 return false;
             }
         }
 
-        for (Iterator<String> keys = b.getKeys(); keys.hasNext();)
+        for (final Iterator<String> keys = b.getKeys(); keys.hasNext();)
         {
-            String key = keys.next();
-            Object value = b.getProperty(key);
+            final String key = keys.next();
+            final Object value = b.getProperty(key);
             if (!value.equals(a.getProperty(key)))
             {
                 return false;

@@ -66,7 +66,7 @@ public class TestMultiFileBuilderParametersImpl
     @Test
     public void testFromParametersFound()
     {
-        Map<String, Object> map = params.getParameters();
+        final Map<String, Object> map = params.getParameters();
         assertSame("Instance not found", params,
                 MultiFileBuilderParametersImpl.fromParameters(map, true));
     }
@@ -90,7 +90,7 @@ public class TestMultiFileBuilderParametersImpl
     @Test
     public void testSetFilePattern()
     {
-        String pattern = "somePattern";
+        final String pattern = "somePattern";
         assertSame("Wrong result", params, params.setFilePattern(pattern));
         assertEquals("Pattern not set", pattern, params.getFilePattern());
     }
@@ -101,7 +101,7 @@ public class TestMultiFileBuilderParametersImpl
     @Test
     public void testSetManagedBuilderParameters()
     {
-        BuilderParameters bp = EasyMock.createMock(BuilderParameters.class);
+        final BuilderParameters bp = EasyMock.createMock(BuilderParameters.class);
         EasyMock.replay(bp);
         assertSame("Wrong result", params, params.setManagedBuilderParameters(bp));
         assertSame("Parameters not set", bp,
@@ -114,14 +114,14 @@ public class TestMultiFileBuilderParametersImpl
     @Test
     public void testBeanProperties() throws Exception
     {
-        BuilderParameters bp = EasyMock.createMock(BuilderParameters.class);
+        final BuilderParameters bp = EasyMock.createMock(BuilderParameters.class);
         EasyMock.replay(bp);
-        String pattern = "testPattern";
+        final String pattern = "testPattern";
         BeanHelper.setProperty(params, "filePattern", pattern);
         BeanHelper.setProperty(params, "managedBuilderParameters", bp);
         BeanHelper.setProperty(params, "throwExceptionOnMissing",
                 Boolean.TRUE);
-        Map<String, Object> map = params.getParameters();
+        final Map<String, Object> map = params.getParameters();
         assertEquals("Exception flag not set", Boolean.TRUE,
                 map.get("throwExceptionOnMissing"));
         assertSame("Wrong parameters instance", params,
@@ -137,12 +137,12 @@ public class TestMultiFileBuilderParametersImpl
     @Test
     public void testClone()
     {
-        FileBasedBuilderParametersImpl managedParams =
+        final FileBasedBuilderParametersImpl managedParams =
                 new FileBasedBuilderParametersImpl();
         managedParams.setFileName("test.xml");
         params.setManagedBuilderParameters(managedParams);
         params.setFilePattern("somePattern");
-        MultiFileBuilderParametersImpl clone = params.clone();
+        final MultiFileBuilderParametersImpl clone = params.clone();
         assertEquals("Wrong pattern", params.getFilePattern(),
                 clone.getFilePattern());
         assertNotSame("Managed parameters not cloned",

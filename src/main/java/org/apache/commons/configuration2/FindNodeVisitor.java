@@ -42,13 +42,13 @@ class FindNodeVisitor<T> extends ConfigurationNodeVisitorAdapter<T>
      *
      * @param node the search node
      */
-    public FindNodeVisitor(T node)
+    public FindNodeVisitor(final T node)
     {
         searchNode = node;
     }
 
     @Override
-    public void visitBeforeChildren(T node, NodeHandler<T> handler)
+    public void visitBeforeChildren(final T node, final NodeHandler<T> handler)
     {
         if (node.equals(searchNode))
         {

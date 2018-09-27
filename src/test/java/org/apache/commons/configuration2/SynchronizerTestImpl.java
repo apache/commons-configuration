@@ -73,7 +73,7 @@ public class SynchronizerTestImpl implements Synchronizer
      *
      * @param expMethods the expected methods
      */
-    public void verify(Methods... expMethods)
+    public void verify(final Methods... expMethods)
     {
         assertEquals("Wrong methods invoked",
                 constructExpectedMethods(expMethods), methods.toString());
@@ -85,7 +85,7 @@ public class SynchronizerTestImpl implements Synchronizer
      *
      * @param expMethods the expected methods
      */
-    public void verifyStart(Methods... expMethods)
+    public void verifyStart(final Methods... expMethods)
     {
         assertTrue("Wrong methods at start: " + methods, methods.toString()
                 .startsWith(constructExpectedMethods(expMethods)));
@@ -97,7 +97,7 @@ public class SynchronizerTestImpl implements Synchronizer
      *
      * @param expMethods the expected methods
      */
-    public void verifyEnd(Methods... expMethods)
+    public void verifyEnd(final Methods... expMethods)
     {
         assertTrue("Wrong methods at start: " + methods, methods.toString()
                 .endsWith(constructExpectedMethods(expMethods)));
@@ -109,7 +109,7 @@ public class SynchronizerTestImpl implements Synchronizer
      *
      * @param expMethods the expected methods
      */
-    public void verifyContains(Methods... expMethods)
+    public void verifyContains(final Methods... expMethods)
     {
         assertTrue("Expected methods not found: " + methods, methods.toString()
                 .indexOf(constructExpectedMethods(expMethods)) >= 0);
@@ -129,10 +129,10 @@ public class SynchronizerTestImpl implements Synchronizer
      * @param expMethods the array with expected methods
      * @return a corresponding string representation
      */
-    private String constructExpectedMethods(Methods... expMethods)
+    private String constructExpectedMethods(final Methods... expMethods)
     {
-        StringBuilder buf = new StringBuilder();
-        for (Methods m : expMethods)
+        final StringBuilder buf = new StringBuilder();
+        for (final Methods m : expMethods)
         {
             buf.append(m);
         }
@@ -145,7 +145,7 @@ public class SynchronizerTestImpl implements Synchronizer
      *
      * @param m the method that was invoked
      */
-    private void append(Methods m)
+    private void append(final Methods m)
     {
         methods.append(m);
     }

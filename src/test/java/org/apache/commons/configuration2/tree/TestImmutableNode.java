@@ -61,7 +61,7 @@ public class TestImmutableNode
      */
     private static ImmutableNode.Builder setUpBuilder()
     {
-        ImmutableNode.Builder builder = new ImmutableNode.Builder();
+        final ImmutableNode.Builder builder = new ImmutableNode.Builder();
         builder.name(NAME).value(VALUE);
         return builder;
     }
@@ -72,7 +72,7 @@ public class TestImmutableNode
     @Test
     public void testSimpleProperties()
     {
-        ImmutableNode node = setUpBuilder().create();
+        final ImmutableNode node = setUpBuilder().create();
         assertEquals("Wrong node name", NAME, node.getNodeName());
         assertTrue("Got children", node.getChildren().isEmpty());
         assertTrue("Got attributes", node.getAttributes().isEmpty());
@@ -84,7 +84,7 @@ public class TestImmutableNode
     @Test(expected = UnsupportedOperationException.class)
     public void testChildrenImmutable()
     {
-        ImmutableNode node = setUpBuilder().create();
+        final ImmutableNode node = setUpBuilder().create();
         node.getChildren().add(null);
     }
 
@@ -94,7 +94,7 @@ public class TestImmutableNode
     @Test(expected = UnsupportedOperationException.class)
     public void testAttributesImmutable()
     {
-        ImmutableNode node = setUpBuilder().create();
+        final ImmutableNode node = setUpBuilder().create();
         node.getAttributes().put("test", VALUE);
     }
 
@@ -104,14 +104,14 @@ public class TestImmutableNode
      * @param node the node to be checked
      * @param expChildren the collection with the expected children
      */
-    private static void checkChildNodes(ImmutableNode node,
-            Collection<ImmutableNode> expChildren)
+    private static void checkChildNodes(final ImmutableNode node,
+            final Collection<ImmutableNode> expChildren)
     {
         assertEquals("Wrong number of child nodes", expChildren.size(), node
                 .getChildren().size());
-        Iterator<ImmutableNode> itExp = expChildren.iterator();
+        final Iterator<ImmutableNode> itExp = expChildren.iterator();
         int idx = 0;
-        for(ImmutableNode c : node.getChildren())
+        for(final ImmutableNode c : node.getChildren())
         {
             assertEquals("Wrong child at " + idx, itExp.next(), c);
             idx++;
@@ -124,8 +124,8 @@ public class TestImmutableNode
      * @param parent the parent node to be checked
      * @param children the expected children
      */
-    private static void checkChildNodes(ImmutableNode parent,
-            ImmutableNode... children)
+    private static void checkChildNodes(final ImmutableNode parent,
+            final ImmutableNode... children)
     {
         checkChildNodes(parent, Arrays.asList(children));
     }
@@ -137,16 +137,16 @@ public class TestImmutableNode
     public void testNodeWithChildren()
     {
         final int childCount = 8;
-        List<ImmutableNode> childNodes = new ArrayList<>(childCount);
-        ImmutableNode.Builder builder = new ImmutableNode.Builder(childCount);
+        final List<ImmutableNode> childNodes = new ArrayList<>(childCount);
+        final ImmutableNode.Builder builder = new ImmutableNode.Builder(childCount);
         for (int i = 0; i < childCount; i++)
         {
-            ImmutableNode.Builder childBuilder = new ImmutableNode.Builder();
-            ImmutableNode child = childBuilder.name(NAME + i).value(i).create();
+            final ImmutableNode.Builder childBuilder = new ImmutableNode.Builder();
+            final ImmutableNode child = childBuilder.name(NAME + i).value(i).create();
             builder.addChild(child);
             childNodes.add(child);
         }
-        ImmutableNode node = builder.name(NAME).create();
+        final ImmutableNode node = builder.name(NAME).create();
         checkChildNodes(node, childNodes);
     }
 
@@ -157,16 +157,16 @@ public class TestImmutableNode
     public void testNodeWithAddMultipleChildren()
     {
         final int childCount = 4;
-        List<ImmutableNode> childNodes =
+        final List<ImmutableNode> childNodes =
                 new ArrayList<>(childCount);
         for (int i = 0; i < childCount; i++)
         {
-            ImmutableNode.Builder childBuilder = new ImmutableNode.Builder();
-            ImmutableNode child = childBuilder.name(NAME + i).value(i).create();
+            final ImmutableNode.Builder childBuilder = new ImmutableNode.Builder();
+            final ImmutableNode child = childBuilder.name(NAME + i).value(i).create();
             childNodes.add(child);
         }
-        ImmutableNode.Builder builder = setUpBuilder();
-        ImmutableNode node = builder.addChildren(childNodes).create();
+        final ImmutableNode.Builder builder = setUpBuilder();
+        final ImmutableNode node = builder.addChildren(childNodes).create();
         checkChildNodes(node, childNodes);
     }
 
@@ -176,9 +176,9 @@ public class TestImmutableNode
     @Test
     public void testNodeWithNullChild()
     {
-        ImmutableNode.Builder builder = setUpBuilder();
+        final ImmutableNode.Builder builder = setUpBuilder();
         builder.addChild(null);
-        ImmutableNode node = builder.create();
+        final ImmutableNode node = builder.create();
         checkChildNodes(node);
     }
 
@@ -189,10 +189,10 @@ public class TestImmutableNode
     @Test
     public void testNodeWithChildrenManipulateLater()
     {
-        ImmutableNode.Builder builder = setUpBuilder();
-        ImmutableNode child =
+        final ImmutableNode.Builder builder = setUpBuilder();
+        final ImmutableNode child =
                 new ImmutableNode.Builder().name("Child").create();
-        ImmutableNode node = builder.addChild(child).create();
+        final ImmutableNode node = builder.addChild(child).create();
         builder.addChild(new ImmutableNode.Builder().name("AnotherChild")
                 .create());
         checkChildNodes(node, Collections.singleton(child));
@@ -204,9 +204,9 @@ public class TestImmutableNode
     @Test
     public void testAddChildrenNull()
     {
-        ImmutableNode.Builder builder = setUpBuilder();
+        final ImmutableNode.Builder builder = setUpBuilder();
         builder.addChildren(null);
-        ImmutableNode node = builder.create();
+        final ImmutableNode node = builder.create();
         assertTrue("Got children", node.getChildren().isEmpty());
     }
 
@@ -216,10 +216,10 @@ public class TestImmutableNode
     @Test
     public void testAddChildrenNullElement()
     {
-        ImmutableNode.Builder builder = setUpBuilder();
-        List<ImmutableNode> children = Arrays.asList(createChild(), null, createChild());
+        final ImmutableNode.Builder builder = setUpBuilder();
+        final List<ImmutableNode> children = Arrays.asList(createChild(), null, createChild());
         builder.addChildren(children);
-        ImmutableNode node = builder.create();
+        final ImmutableNode node = builder.create();
         checkChildNodes(node, children.get(0), children.get(2));
     }
 
@@ -229,16 +229,16 @@ public class TestImmutableNode
     @Test
     public void testNodeWithAttributes()
     {
-        ImmutableNode.Builder builder = setUpBuilder();
+        final ImmutableNode.Builder builder = setUpBuilder();
         final int attrCount = 4;
-        Map<String, Object> attrs = new HashMap<>();
+        final Map<String, Object> attrs = new HashMap<>();
         for (int i = 0; i < attrCount; i++)
         {
-            String attrName = NAME + i;
+            final String attrName = NAME + i;
             attrs.put(attrName, i);
             builder.addAttribute(attrName, i);
         }
-        ImmutableNode node = builder.create();
+        final ImmutableNode node = builder.create();
         checkAttributes(node, attrs);
     }
 
@@ -248,12 +248,12 @@ public class TestImmutableNode
      * @param node the node to be checked
      * @param expAttrs the expected attributes
      */
-    private static void checkAttributes(ImmutableNode node,
-            Map<String, ?> expAttrs)
+    private static void checkAttributes(final ImmutableNode node,
+            final Map<String, ?> expAttrs)
     {
         assertEquals("Wrong number of attributes", expAttrs.size(), node
                 .getAttributes().size());
-        for (Map.Entry<String, ?> e : expAttrs.entrySet())
+        for (final Map.Entry<String, ?> e : expAttrs.entrySet())
         {
             assertEquals("Wrong value for " + e.getKey(), e.getValue(), node
                     .getAttributes().get(e.getKey()));
@@ -267,9 +267,9 @@ public class TestImmutableNode
     @Test
     public void testNodeWithAttributesManipulateLater()
     {
-        ImmutableNode.Builder builder = setUpBuilder();
+        final ImmutableNode.Builder builder = setUpBuilder();
         builder.addAttribute(ATTR, ATTR_VALUE);
-        ImmutableNode node = builder.create();
+        final ImmutableNode node = builder.create();
         builder.addAttribute("attr2", "a2");
         assertEquals("Wrong number of attributes", 1, node.getAttributes()
                 .size());
@@ -282,15 +282,15 @@ public class TestImmutableNode
     @Test
     public void testNodeWithMultipleAttributes()
     {
-        ImmutableNode.Builder builder = setUpBuilder();
+        final ImmutableNode.Builder builder = setUpBuilder();
         final int attrCount = 4;
-        Map<String, Object> attrs = new HashMap<>();
+        final Map<String, Object> attrs = new HashMap<>();
         for (int i = 0; i < attrCount; i++)
         {
-            String attrName = NAME + i;
+            final String attrName = NAME + i;
             attrs.put(attrName, i);
         }
-        ImmutableNode node = builder.addAttributes(attrs).create();
+        final ImmutableNode node = builder.addAttributes(attrs).create();
         checkAttributes(node, attrs);
     }
 
@@ -300,9 +300,9 @@ public class TestImmutableNode
     @Test
     public void testAddAttributesNull()
     {
-        ImmutableNode.Builder builder = setUpBuilder();
+        final ImmutableNode.Builder builder = setUpBuilder();
         builder.addAttributes(null);
-        ImmutableNode node = builder.create();
+        final ImmutableNode node = builder.create();
         assertTrue("Got attributes", node.getAttributes().isEmpty());
     }
 
@@ -313,7 +313,7 @@ public class TestImmutableNode
      * @param value the value of the node
      * @return the default node instance
      */
-    private ImmutableNode createDefaultNode(Object value)
+    private ImmutableNode createDefaultNode(final Object value)
     {
         return createDefaultNode(NAME, value);
     }
@@ -326,9 +326,9 @@ public class TestImmutableNode
      * @param value the value of the node
      * @return the default node instance
      */
-    private ImmutableNode createDefaultNode(String name, Object value)
+    private ImmutableNode createDefaultNode(final String name, final Object value)
     {
-        ImmutableNode.Builder builder = new ImmutableNode.Builder(1);
+        final ImmutableNode.Builder builder = new ImmutableNode.Builder(1);
         return builder.name(name).addChild(createChild())
                 .addAttribute("testAttr", "anotherTest").value(value).create();
     }
@@ -340,7 +340,7 @@ public class TestImmutableNode
      */
     private ImmutableNode createChild()
     {
-        int idx = childCounter++;
+        final int idx = childCounter++;
         return new ImmutableNode.Builder().name("Child" + idx)
                 .value("childValue" + idx).create();
     }
@@ -351,8 +351,8 @@ public class TestImmutableNode
      * @param org the original node
      * @param updated the updated node
      */
-    private static void checkUpdatedNode(ImmutableNode org,
-            ImmutableNode updated)
+    private static void checkUpdatedNode(final ImmutableNode org,
+            final ImmutableNode updated)
     {
         assertNotSame("Same instance", org, updated);
         assertEquals("Wrong node name", NAME, updated.getNodeName());
@@ -365,8 +365,8 @@ public class TestImmutableNode
     @Test
     public void testSetValue()
     {
-        ImmutableNode node = createDefaultNode("test");
-        ImmutableNode node2 = node.setValue(VALUE);
+        final ImmutableNode node = createDefaultNode("test");
+        final ImmutableNode node2 = node.setValue(VALUE);
         checkUpdatedNode(node, node2);
         assertSame("Different children", node.getChildren(),
                 node2.getChildren());
@@ -380,8 +380,8 @@ public class TestImmutableNode
     @Test
     public void testSetName()
     {
-        ImmutableNode node = createDefaultNode("anotherName", VALUE);
-        ImmutableNode node2 = node.setName(NAME);
+        final ImmutableNode node = createDefaultNode("anotherName", VALUE);
+        final ImmutableNode node2 = node.setName(NAME);
         checkUpdatedNode(node, node2);
         assertSame("Different children", node.getChildren(),
                 node2.getChildren());
@@ -395,10 +395,10 @@ public class TestImmutableNode
     @Test
     public void testAddChild()
     {
-        ImmutableNode node = createDefaultNode(VALUE);
-        ImmutableNode child2 =
+        final ImmutableNode node = createDefaultNode(VALUE);
+        final ImmutableNode child2 =
                 new ImmutableNode.Builder().name("child2").create();
-        ImmutableNode node2 = node.addChild(child2);
+        final ImmutableNode node2 = node.addChild(child2);
         checkUpdatedNode(node, node2);
         checkChildNodes(node2, node.getChildren().get(0), child2);
     }
@@ -409,10 +409,10 @@ public class TestImmutableNode
     @Test
     public void testGetChildrenByName()
     {
-        ImmutableNode node = createDefaultNode(VALUE);
-        ImmutableNode child2 =
+        final ImmutableNode node = createDefaultNode(VALUE);
+        final ImmutableNode child2 =
                 new ImmutableNode.Builder().name("child2").create();
-        ImmutableNode node2 = node.addChild(child2);
+        final ImmutableNode node2 = node.addChild(child2);
         checkUpdatedNode(node, node2);
         assertEquals("child2", node2.getChildren("child2").get(0).getNodeName());
         assertEquals(child2, node2.getChildren("child2").get(0));
@@ -424,10 +424,10 @@ public class TestImmutableNode
     @Test
     public void testGetChildrenByNullName()
     {
-        ImmutableNode node = createDefaultNode(VALUE);
-        ImmutableNode child2 =
+        final ImmutableNode node = createDefaultNode(VALUE);
+        final ImmutableNode child2 =
                 new ImmutableNode.Builder().name("child2").create();
-        ImmutableNode node2 = node.addChild(child2);
+        final ImmutableNode node2 = node.addChild(child2);
         checkUpdatedNode(node, node2);
         assertTrue(node2.getChildren(null).isEmpty());
     }
@@ -438,10 +438,10 @@ public class TestImmutableNode
     @Test
     public void testGetChildrenByMissingName()
     {
-        ImmutableNode node = createDefaultNode(VALUE);
-        ImmutableNode child2 =
+        final ImmutableNode node = createDefaultNode(VALUE);
+        final ImmutableNode child2 =
                 new ImmutableNode.Builder().name("child2").create();
-        ImmutableNode node2 = node.addChild(child2);
+        final ImmutableNode node2 = node.addChild(child2);
         checkUpdatedNode(node, node2);
         assertTrue(node2.getChildren("NotFound").isEmpty());
     }
@@ -461,9 +461,9 @@ public class TestImmutableNode
     @Test
     public void testRemoveChildExisting()
     {
-        ImmutableNode node = createDefaultNode(VALUE);
-        ImmutableNode child = node.getChildren().get(0);
-        ImmutableNode node2 = node.removeChild(child);
+        final ImmutableNode node = createDefaultNode(VALUE);
+        final ImmutableNode child = node.getChildren().get(0);
+        final ImmutableNode node2 = node.removeChild(child);
         checkUpdatedNode(node, node2);
         checkChildNodes(node2);
     }
@@ -474,11 +474,11 @@ public class TestImmutableNode
     @Test
     public void testRemoveChildMultiple()
     {
-        ImmutableNode childRemove = createChild();
-        ImmutableNode node =
+        final ImmutableNode childRemove = createChild();
+        final ImmutableNode node =
                 createDefaultNode(VALUE).addChild(createChild())
                         .addChild(childRemove).addChild(createChild());
-        ImmutableNode node2 = node.removeChild(childRemove);
+        final ImmutableNode node2 = node.removeChild(childRemove);
         checkChildNodes(node2, node.getChildren().get(0), node.getChildren()
                 .get(1), node.getChildren().get(3));
     }
@@ -490,7 +490,7 @@ public class TestImmutableNode
     @Test
     public void testRemoveChildNodeNotExisting()
     {
-        ImmutableNode node = createDefaultNode(VALUE);
+        final ImmutableNode node = createDefaultNode(VALUE);
         assertSame("Got different instance", node, node.removeChild(null));
     }
 
@@ -500,10 +500,10 @@ public class TestImmutableNode
     @Test
     public void testReplaceChildExisting()
     {
-        ImmutableNode childRemove = createChild();
-        ImmutableNode childReplace = createChild();
-        ImmutableNode node = createDefaultNode(VALUE).addChild(childRemove);
-        ImmutableNode node2 = node.replaceChild(childRemove, childReplace);
+        final ImmutableNode childRemove = createChild();
+        final ImmutableNode childReplace = createChild();
+        final ImmutableNode node = createDefaultNode(VALUE).addChild(childRemove);
+        final ImmutableNode node2 = node.replaceChild(childRemove, childReplace);
         checkUpdatedNode(node, node2);
         checkChildNodes(node2, node.getChildren().get(0), childReplace);
     }
@@ -514,7 +514,7 @@ public class TestImmutableNode
     @Test
     public void testReplaceChildNotExisting()
     {
-        ImmutableNode node = createDefaultNode(VALUE);
+        final ImmutableNode node = createDefaultNode(VALUE);
         assertSame("Got different instance", node,
                 node.replaceChild(createChild(), createChild()));
     }
@@ -534,11 +534,11 @@ public class TestImmutableNode
     @Test
     public void testSetAttribute()
     {
-        ImmutableNode node = createDefaultNode(VALUE);
-        ImmutableNode node2 = node.setAttribute("attr", ATTR_VALUE);
+        final ImmutableNode node = createDefaultNode(VALUE);
+        final ImmutableNode node2 = node.setAttribute("attr", ATTR_VALUE);
         checkUpdatedNode(node, node2);
         assertSame("Wrong children", node.getChildren(), node2.getChildren());
-        Map<String, Object> newAttrs =
+        final Map<String, Object> newAttrs =
                 new HashMap<>(node.getAttributes());
         newAttrs.put(ATTR, ATTR_VALUE);
         checkAttributes(node2, newAttrs);
@@ -550,13 +550,13 @@ public class TestImmutableNode
     @Test
     public void testSetAttributeOverride()
     {
-        ImmutableNode.Builder builder = setUpBuilder();
+        final ImmutableNode.Builder builder = setUpBuilder();
         final String attr2 = ATTR + "_other";
-        Map<String, Object> attrs = new HashMap<>();
+        final Map<String, Object> attrs = new HashMap<>();
         attrs.put(ATTR, ATTR_VALUE);
         attrs.put(attr2, "someValue");
-        ImmutableNode node = builder.addAttributes(attrs).create();
-        ImmutableNode node2 = node.setAttribute(attr2, VALUE);
+        final ImmutableNode node = builder.addAttributes(attrs).create();
+        final ImmutableNode node2 = node.setAttribute(attr2, VALUE);
         attrs.put(attr2, VALUE);
         checkAttributes(node2, attrs);
     }
@@ -567,11 +567,11 @@ public class TestImmutableNode
     @Test
     public void testSetAttributes()
     {
-        ImmutableNode node = createDefaultNode(VALUE);
-        Map<String, Object> attributes = new HashMap<>();
+        final ImmutableNode node = createDefaultNode(VALUE);
+        final Map<String, Object> attributes = new HashMap<>();
         attributes.put("newAttribute1", "value1");
         attributes.put("newAttribute2", "value2");
-        ImmutableNode node2 = node.setAttributes(attributes);
+        final ImmutableNode node2 = node.setAttributes(attributes);
         assertEquals("Wrong number of attributes", attributes.size()
                 + node.getAttributes().size(), node2.getAttributes().size());
         checkAttributesContained(node2, attributes);
@@ -585,10 +585,10 @@ public class TestImmutableNode
      * @param node the node to be checked
      * @param attributes the map with expected attributes
      */
-    private static void checkAttributesContained(ImmutableNode node,
-            Map<String, Object> attributes)
+    private static void checkAttributesContained(final ImmutableNode node,
+            final Map<String, Object> attributes)
     {
-        for (Map.Entry<String, Object> e : attributes.entrySet())
+        for (final Map.Entry<String, Object> e : attributes.entrySet())
         {
             assertEquals("Wrong attribute value", e.getValue(), node
                     .getAttributes().get(e.getKey()));
@@ -601,9 +601,9 @@ public class TestImmutableNode
      *
      * @param attributes the map with attributes
      */
-    private void checkSetAttributesNoOp(Map<String, Object> attributes)
+    private void checkSetAttributesNoOp(final Map<String, Object> attributes)
     {
-        ImmutableNode node = createDefaultNode(VALUE);
+        final ImmutableNode node = createDefaultNode(VALUE);
         assertSame("Node was changed", node, node.setAttributes(attributes));
     }
 
@@ -631,9 +631,9 @@ public class TestImmutableNode
     @Test
     public void testRemoveAttributeExisting()
     {
-        ImmutableNode node = createDefaultNode(VALUE);
-        String attrName = node.getAttributes().keySet().iterator().next();
-        ImmutableNode node2 = node.removeAttribute(attrName);
+        final ImmutableNode node = createDefaultNode(VALUE);
+        final String attrName = node.getAttributes().keySet().iterator().next();
+        final ImmutableNode node2 = node.removeAttribute(attrName);
         checkUpdatedNode(node, node2);
         assertSame("Wrong children", node.getChildren(), node2.getChildren());
         assertTrue("Attribute not deleted", node2.getAttributes().isEmpty());
@@ -645,7 +645,7 @@ public class TestImmutableNode
     @Test
     public void testRemoveAttributeNotExisting()
     {
-        ImmutableNode node = createDefaultNode(VALUE);
+        final ImmutableNode node = createDefaultNode(VALUE);
         assertSame("Got different instance", node, node.removeAttribute(ATTR));
     }
 
@@ -656,14 +656,14 @@ public class TestImmutableNode
     public void testReplaceChildren()
     {
         final int childCount = 8;
-        Collection<ImmutableNode> newChildren =
+        final Collection<ImmutableNode> newChildren =
                 new ArrayList<>(childCount);
         for (int i = 0; i < childCount; i++)
         {
             newChildren.add(createChild());
         }
-        ImmutableNode node = createDefaultNode(VALUE);
-        ImmutableNode node2 = node.replaceChildren(newChildren);
+        final ImmutableNode node = createDefaultNode(VALUE);
+        final ImmutableNode node2 = node.replaceChildren(newChildren);
         checkUpdatedNode(node, node2);
         checkChildNodes(node2, newChildren);
     }
@@ -674,8 +674,8 @@ public class TestImmutableNode
     @Test
     public void testReplaceChildrenNullCollection()
     {
-        ImmutableNode node = createDefaultNode(VALUE);
-        ImmutableNode node2 = node.replaceChildren(null);
+        final ImmutableNode node = createDefaultNode(VALUE);
+        final ImmutableNode node2 = node.replaceChildren(null);
         checkUpdatedNode(node, node2);
         checkChildNodes(node2);
     }

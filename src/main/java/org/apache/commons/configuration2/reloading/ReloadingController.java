@@ -83,7 +83,7 @@ public class ReloadingController implements EventSource
      * @param detect the {@code ReloadingDetector} (must not be <b>null</b>)
      * @throws IllegalArgumentException if the detector is undefined
      */
-    public ReloadingController(ReloadingDetector detect)
+    public ReloadingController(final ReloadingDetector detect)
     {
         if (detect == null)
         {
@@ -110,14 +110,14 @@ public class ReloadingController implements EventSource
      */
     @Override
     public <T extends Event> void addEventListener(
-            EventType<T> eventType, EventListener<? super T> listener)
+            final EventType<T> eventType, final EventListener<? super T> listener)
     {
         listeners.addEventListener(eventType, listener);
     }
 
     @Override
     public <T extends Event> boolean removeEventListener(
-            EventType<T> eventType, EventListener<? super T> listener)
+            final EventType<T> eventType, final EventListener<? super T> listener)
     {
         return listeners.removeEventListener(eventType, listener);
     }
@@ -152,7 +152,7 @@ public class ReloadingController implements EventSource
      * @param data additional data for an event notification
      * @return a flag whether a reload operation is necessary
      */
-    public boolean checkForReloading(Object data)
+    public boolean checkForReloading(final Object data)
     {
         boolean sendEvent = false;
         synchronized (this)

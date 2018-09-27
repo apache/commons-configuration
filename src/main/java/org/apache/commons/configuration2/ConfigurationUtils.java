@@ -75,14 +75,14 @@ public final class ConfigurationUtils
     {
 
         @Override
-        public <T extends Event> void addEventListener(EventType<T> eventType,
-                EventListener<? super T> listener)
+        public <T extends Event> void addEventListener(final EventType<T> eventType,
+                final EventListener<? super T> listener)
         {
         }
 
         @Override
         public <T extends Event> boolean removeEventListener(
-                EventType<T> eventType, EventListener<? super T> listener)
+                final EventType<T> eventType, final EventListener<? super T> listener)
         {
             return false;
         }
@@ -106,7 +106,7 @@ public final class ConfigurationUtils
      * @param out the output stream to dump the configuration to
      * @since 2.2
      */
-    public static void dump(ImmutableConfiguration configuration, PrintStream out)
+    public static void dump(final ImmutableConfiguration configuration, final PrintStream out)
     {
         dump(configuration, new PrintWriter(out));
     }
@@ -118,7 +118,7 @@ public final class ConfigurationUtils
      * @param configuration the configuration
      * @param out the output stream to dump the configuration to
      */
-    public static void dump(Configuration configuration, PrintStream out)
+    public static void dump(final Configuration configuration, final PrintStream out)
     {
         dump((ImmutableConfiguration) configuration, out);
     }
@@ -130,12 +130,12 @@ public final class ConfigurationUtils
      * @param out the writer to dump the configuration to
      * @since 2.2
      */
-    public static void dump(ImmutableConfiguration configuration, PrintWriter out)
+    public static void dump(final ImmutableConfiguration configuration, final PrintWriter out)
     {
-        for (Iterator<String> keys = configuration.getKeys(); keys.hasNext();)
+        for (final Iterator<String> keys = configuration.getKeys(); keys.hasNext();)
         {
-            String key = keys.next();
-            Object value = configuration.getProperty(key);
+            final String key = keys.next();
+            final Object value = configuration.getProperty(key);
             out.print(key);
             out.print("=");
             out.print(value);
@@ -156,7 +156,7 @@ public final class ConfigurationUtils
      * @param configuration the configuration
      * @param out the writer to dump the configuration to
      */
-    public static void dump(Configuration configuration, PrintWriter out)
+    public static void dump(final Configuration configuration, final PrintWriter out)
     {
         dump((ImmutableConfiguration) configuration, out);
     }
@@ -169,9 +169,9 @@ public final class ConfigurationUtils
      * @return a string representation of the configuration
      * @since 2.2
      */
-    public static String toString(ImmutableConfiguration configuration)
+    public static String toString(final ImmutableConfiguration configuration)
     {
-        StringWriter writer = new StringWriter();
+        final StringWriter writer = new StringWriter();
         dump(configuration, new PrintWriter(writer));
         return writer.toString();
     }
@@ -184,7 +184,7 @@ public final class ConfigurationUtils
      * @param configuration the configuration
      * @return a string representation of the configuration
      */
-    public static String toString(Configuration configuration)
+    public static String toString(final Configuration configuration)
     {
         return toString((ImmutableConfiguration) configuration);
     }
@@ -203,11 +203,11 @@ public final class ConfigurationUtils
      * @param target the target configuration
      * @since 2.2
      */
-    public static void copy(ImmutableConfiguration source, Configuration target)
+    public static void copy(final ImmutableConfiguration source, final Configuration target)
     {
-        for (Iterator<String> keys = source.getKeys(); keys.hasNext();)
+        for (final Iterator<String> keys = source.getKeys(); keys.hasNext();)
         {
-            String key = keys.next();
+            final String key = keys.next();
             target.setProperty(key, source.getProperty(key));
         }
     }
@@ -226,7 +226,7 @@ public final class ConfigurationUtils
      * @param target the target configuration
      * @since 1.1
      */
-    public static void copy(Configuration source, Configuration target)
+    public static void copy(final Configuration source, final Configuration target)
     {
         copy((ImmutableConfiguration) source, target);
     }
@@ -245,11 +245,11 @@ public final class ConfigurationUtils
      * @param target the target configuration
      * @since 2.2
      */
-    public static void append(ImmutableConfiguration source, Configuration target)
+    public static void append(final ImmutableConfiguration source, final Configuration target)
     {
-        for (Iterator<String> keys = source.getKeys(); keys.hasNext();)
+        for (final Iterator<String> keys = source.getKeys(); keys.hasNext();)
         {
-            String key = keys.next();
+            final String key = keys.next();
             target.addProperty(key, source.getProperty(key));
         }
     }
@@ -268,7 +268,7 @@ public final class ConfigurationUtils
      * @param target the target configuration
      * @since 1.1
      */
-    public static void append(Configuration source, Configuration target)
+    public static void append(final Configuration source, final Configuration target)
     {
         append((ImmutableConfiguration) source, target);
     }
@@ -284,7 +284,7 @@ public final class ConfigurationUtils
      * @since 1.3
      */
     public static HierarchicalConfiguration<?> convertToHierarchical(
-            Configuration conf)
+            final Configuration conf)
     {
         return convertToHierarchical(conf, null);
     }
@@ -313,7 +313,7 @@ public final class ConfigurationUtils
      * @since 1.6
      */
     public static HierarchicalConfiguration<?> convertToHierarchical(
-            Configuration conf, ExpressionEngine engine)
+            final Configuration conf, final ExpressionEngine engine)
     {
         if (conf == null)
         {
@@ -322,7 +322,7 @@ public final class ConfigurationUtils
 
         if (conf instanceof HierarchicalConfiguration)
         {
-            HierarchicalConfiguration<?> hc = (HierarchicalConfiguration<?>) conf;
+            final HierarchicalConfiguration<?> hc = (HierarchicalConfiguration<?>) conf;
             if (engine != null)
             {
                 hc.setExpressionEngine(engine);
@@ -330,7 +330,7 @@ public final class ConfigurationUtils
 
             return hc;
         }
-        BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
+        final BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
         if (engine != null)
         {
             hc.setExpressionEngine(engine);
@@ -355,7 +355,7 @@ public final class ConfigurationUtils
      * this object
      * @since 1.3
      */
-    public static Configuration cloneConfiguration(Configuration config)
+    public static Configuration cloneConfiguration(final Configuration config)
             throws ConfigurationRuntimeException
     {
         if (config == null)
@@ -366,7 +366,7 @@ public final class ConfigurationUtils
         {
             return (Configuration) clone(config);
         }
-        catch (CloneNotSupportedException cnex)
+        catch (final CloneNotSupportedException cnex)
         {
             throw new ConfigurationRuntimeException(cnex);
         }
@@ -384,13 +384,13 @@ public final class ConfigurationUtils
      * @return the result of the cloning attempt
      * @since 2.0
      */
-    public static Object cloneIfPossible(Object obj)
+    public static Object cloneIfPossible(final Object obj)
     {
         try
         {
             return clone(obj);
         }
-        catch (Exception ex)
+        catch (final Exception ex)
         {
             return obj;
         }
@@ -409,26 +409,26 @@ public final class ConfigurationUtils
      * @return the cloned object
      * @throws CloneNotSupportedException if the object cannot be cloned
      */
-    static Object clone(Object obj) throws CloneNotSupportedException
+    static Object clone(final Object obj) throws CloneNotSupportedException
     {
         if (obj instanceof Cloneable)
         {
             try
             {
-                Method m = obj.getClass().getMethod(METHOD_CLONE);
+                final Method m = obj.getClass().getMethod(METHOD_CLONE);
                 return m.invoke(obj);
             }
-            catch (NoSuchMethodException nmex)
+            catch (final NoSuchMethodException nmex)
             {
                 throw new CloneNotSupportedException(
                         "No clone() method found for class"
                                 + obj.getClass().getName());
             }
-            catch (IllegalAccessException iaex)
+            catch (final IllegalAccessException iaex)
             {
                 throw new ConfigurationRuntimeException(iaex);
             }
-            catch (InvocationTargetException itex)
+            catch (final InvocationTargetException itex)
             {
                 throw new ConfigurationRuntimeException(itex);
             }
@@ -456,7 +456,7 @@ public final class ConfigurationUtils
      * @throws ConfigurationRuntimeException if no clone can be created
      * @throws IllegalArgumentException if <b>null</b> is passed in
      */
-    public static Synchronizer cloneSynchronizer(Synchronizer sync)
+    public static Synchronizer cloneSynchronizer(final Synchronizer sync)
     {
         if (sync == null)
         {
@@ -471,7 +471,7 @@ public final class ConfigurationUtils
         {
             return sync.getClass().newInstance();
         }
-        catch (Exception ex)
+        catch (final Exception ex)
         {
             LOG.info("Cannot create new instance of " + sync.getClass());
         }
@@ -480,7 +480,7 @@ public final class ConfigurationUtils
         {
             return (Synchronizer) clone(sync);
         }
-        catch (CloneNotSupportedException cnex)
+        catch (final CloneNotSupportedException cnex)
         {
             throw new ConfigurationRuntimeException(
                     "Cannot clone Synchronizer " + sync);
@@ -500,7 +500,7 @@ public final class ConfigurationUtils
      * @param src the configuration, for which runtime exceptions are to be
      * enabled; this configuration must implement {@link EventSource}
      */
-    public static void enableRuntimeExceptions(Configuration src)
+    public static void enableRuntimeExceptions(final Configuration src)
     {
         if (!(src instanceof EventSource))
         {
@@ -511,7 +511,7 @@ public final class ConfigurationUtils
                 new EventListener<ConfigurationErrorEvent>()
                 {
                     @Override
-                    public void onEvent(ConfigurationErrorEvent event)
+                    public void onEvent(final ConfigurationErrorEvent event)
                     {
                         // Throw a runtime exception
                         throw new ConfigurationRuntimeException(event
@@ -530,7 +530,7 @@ public final class ConfigurationUtils
      * @throws ClassNotFoundException if the class cannot be resolved
      * @since 2.0
      */
-    public static Class<?> loadClass(String clsName)
+    public static Class<?> loadClass(final String clsName)
             throws ClassNotFoundException
     {
         if (LOG.isDebugEnabled())
@@ -538,7 +538,7 @@ public final class ConfigurationUtils
             LOG.debug("Loading class " + clsName);
         }
 
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        final ClassLoader cl = Thread.currentThread().getContextClassLoader();
         try
         {
             if (cl != null)
@@ -546,7 +546,7 @@ public final class ConfigurationUtils
                 return cl.loadClass(clsName);
             }
         }
-        catch (ClassNotFoundException cnfex)
+        catch (final ClassNotFoundException cnfex)
         {
             LOG.info("Could not load class " + clsName
                     + " using CCL. Falling back to default CL.", cnfex);
@@ -566,13 +566,13 @@ public final class ConfigurationUtils
      * @throws ConfigurationRuntimeException if the class cannot be resolved
      * @since 2.0
      */
-    public static Class<?> loadClassNoEx(String clsName)
+    public static Class<?> loadClassNoEx(final String clsName)
     {
         try
         {
             return loadClass(clsName);
         }
-        catch (ClassNotFoundException cnfex)
+        catch (final ClassNotFoundException cnfex)
         {
             throw new ConfigurationRuntimeException("Cannot load class "
                     + clsName, cnfex);
@@ -597,7 +597,7 @@ public final class ConfigurationUtils
      * @since 2.0
      */
     public static ImmutableConfiguration unmodifiableConfiguration(
-            Configuration c)
+            final Configuration c)
     {
         return createUnmodifiableConfiguration(IMMUTABLE_CONFIG_IFCS, c);
     }
@@ -617,7 +617,7 @@ public final class ConfigurationUtils
      * @since 2.0
      */
     public static ImmutableHierarchicalConfiguration unmodifiableConfiguration(
-            HierarchicalConfiguration<?> c)
+            final HierarchicalConfiguration<?> c)
     {
         return (ImmutableHierarchicalConfiguration) createUnmodifiableConfiguration(
                 IMMUTABLE_HIERARCHICAL_CONFIG_IFCS, c);
@@ -633,7 +633,7 @@ public final class ConfigurationUtils
      * @throws NullPointerException if the configuration is <b>null</b>
      */
     private static ImmutableConfiguration createUnmodifiableConfiguration(
-            Class<?>[] ifcs, Configuration c)
+            final Class<?>[] ifcs, final Configuration c)
     {
         return (ImmutableConfiguration) Proxy.newProxyInstance(
                 ConfigurationUtils.class.getClassLoader(), ifcs,
@@ -656,8 +656,8 @@ public final class ConfigurationUtils
      *         {@code EventSource} and the mock flag is <b>false</b>
      * @since 2.0
      */
-    public static EventSource asEventSource(Object obj,
-            boolean mockIfUnsupported)
+    public static EventSource asEventSource(final Object obj,
+            final boolean mockIfUnsupported)
     {
         if (obj instanceof EventSource)
         {

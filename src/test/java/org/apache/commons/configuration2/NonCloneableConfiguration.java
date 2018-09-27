@@ -32,7 +32,7 @@ public class NonCloneableConfiguration extends AbstractConfiguration
      * Dummy implementation of this method.
      */
     @Override
-    protected void addPropertyDirect(String key, Object value)
+    protected void addPropertyDirect(final String key, final Object value)
     {
     }
 
@@ -49,7 +49,7 @@ public class NonCloneableConfiguration extends AbstractConfiguration
      * Dummy implementation of this method.
      */
     @Override
-    protected boolean containsKeyInternal(String key)
+    protected boolean containsKeyInternal(final String key)
     {
         return false;
     }
@@ -67,13 +67,13 @@ public class NonCloneableConfiguration extends AbstractConfiguration
      * Dummy implementation of this method.
      */
     @Override
-    protected Object getPropertyInternal(String key)
+    protected Object getPropertyInternal(final String key)
     {
         return null;
     }
 
     @Override
-    protected void clearPropertyDirect(String key)
+    protected void clearPropertyDirect(final String key)
     {
     }
 }

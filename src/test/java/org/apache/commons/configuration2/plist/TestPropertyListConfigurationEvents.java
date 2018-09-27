@@ -40,11 +40,11 @@ public class TestPropertyListConfigurationEvents extends
     {
         try
         {
-            PropertyListConfiguration c = new PropertyListConfiguration();
+            final PropertyListConfiguration c = new PropertyListConfiguration();
             new FileHandler(c).load(TEST_FILE);
             return c;
         }
-        catch (ConfigurationException cex)
+        catch (final ConfigurationException cex)
         {
             throw new ConfigurationRuntimeException(cex);
         }

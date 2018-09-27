@@ -88,8 +88,8 @@ class XMLDocumentHelper
      * @param pubID the public ID of the source document
      * @param sysID the system ID of the source document
      */
-    XMLDocumentHelper(Document doc, Map<Node, Node> elemMap, String pubID,
-            String sysID)
+    XMLDocumentHelper(final Document doc, final Map<Node, Node> elemMap, final String pubID,
+            final String sysID)
     {
         document = doc;
         elementMapping = elemMap;
@@ -108,13 +108,13 @@ class XMLDocumentHelper
      * @throws ConfigurationException if an error occurs when creating the
      *         document
      */
-    public static XMLDocumentHelper forNewDocument(String rootElementName)
+    public static XMLDocumentHelper forNewDocument(final String rootElementName)
             throws ConfigurationException
     {
-        Document doc =
+        final Document doc =
                 createDocumentBuilder(createDocumentBuilderFactory())
                         .newDocument();
-        Element rootElem = doc.createElement(rootElementName);
+        final Element rootElem = doc.createElement(rootElementName);
         doc.appendChild(rootElem);
         return new XMLDocumentHelper(doc, emptyElementMapping(), null, null);
     }
@@ -137,7 +137,7 @@ class XMLDocumentHelper
      * @return the newly created instance
      * @throws ConfigurationException if an error occurs
      */
-    public static XMLDocumentHelper forSourceDocument(Document srcDoc)
+    public static XMLDocumentHelper forSourceDocument(final Document srcDoc)
             throws ConfigurationException
     {
         String pubID;
@@ -223,14 +223,14 @@ class XMLDocumentHelper
      * @param result the result
      * @throws ConfigurationException if an error occurs
      */
-    public static void transform(Transformer transformer, Source source,
-            Result result) throws ConfigurationException
+    public static void transform(final Transformer transformer, final Source source,
+            final Result result) throws ConfigurationException
     {
         try
         {
             transformer.transform(source, result);
         }
-        catch (TransformerException tex)
+        catch (final TransformerException tex)
         {
             throw new ConfigurationException(tex);
         }
@@ -246,7 +246,7 @@ class XMLDocumentHelper
      */
     public XMLDocumentHelper createCopy() throws ConfigurationException
     {
-        Document docCopy = copyDocument(getDocument());
+        final Document docCopy = copyDocument(getDocument());
         return new XMLDocumentHelper(docCopy, createElementMapping(
                 getDocument(), docCopy), getSourcePublicID(),
                 getSourceSystemID());
@@ -269,14 +269,14 @@ class XMLDocumentHelper
      * @return the newly created {@code Transformer}
      * @throws ConfigurationException if an error occurs
      */
-    static Transformer createTransformer(TransformerFactory factory)
+    static Transformer createTransformer(final TransformerFactory factory)
             throws ConfigurationException
     {
         try
         {
             return factory.newTransformer();
         }
-        catch (TransformerConfigurationException tex)
+        catch (final TransformerConfigurationException tex)
         {
             throw new ConfigurationException(tex);
         }
@@ -290,14 +290,14 @@ class XMLDocumentHelper
      * @return the newly created {@code DocumentBuilder}
      * @throws ConfigurationException if an error occurs
      */
-    static DocumentBuilder createDocumentBuilder(DocumentBuilderFactory factory)
+    static DocumentBuilder createDocumentBuilder(final DocumentBuilderFactory factory)
             throws ConfigurationException
     {
         try
         {
             return factory.newDocumentBuilder();
         }
-        catch (ParserConfigurationException pcex)
+        catch (final ParserConfigurationException pcex)
         {
             throw new ConfigurationException(pcex);
         }
@@ -310,12 +310,12 @@ class XMLDocumentHelper
      * @return the copy of this document
      * @throws ConfigurationException if an error occurs
      */
-    private static Document copyDocument(Document doc)
+    private static Document copyDocument(final Document doc)
             throws ConfigurationException
     {
-        Transformer transformer = createTransformer();
-        DOMSource source = new DOMSource(doc);
-        DOMResult result = new DOMResult();
+        final Transformer transformer = createTransformer();
+        final DOMSource source = new DOMSource(doc);
+        final DOMResult result = new DOMResult();
         transform(transformer, source, result);
 
         return (Document) result.getNode();
@@ -350,10 +350,10 @@ class XMLDocumentHelper
      * @param doc2 the destination document
      * @return the element mapping
      */
-    private static Map<Node, Node> createElementMapping(Document doc1,
-            Document doc2)
+    private static Map<Node, Node> createElementMapping(final Document doc1,
+            final Document doc2)
     {
-        Map<Node, Node> mapping = new HashMap<>();
+        final Map<Node, Node> mapping = new HashMap<>();
         createElementMappingForNodes(doc1.getDocumentElement(),
                 doc2.getDocumentElement(), mapping);
         return mapping;
@@ -367,13 +367,13 @@ class XMLDocumentHelper
      * @param n2 node 2
      * @param mapping the mapping to be filled
      */
-    private static void createElementMappingForNodes(Node n1, Node n2,
-            Map<Node, Node> mapping)
+    private static void createElementMappingForNodes(final Node n1, final Node n2,
+            final Map<Node, Node> mapping)
     {
         mapping.put(n1, n2);
-        NodeList childNodes1 = n1.getChildNodes();
-        NodeList childNodes2 = n2.getChildNodes();
-        int count = Math.min(childNodes1.getLength(), childNodes2.getLength());
+        final NodeList childNodes1 = n1.getChildNodes();
+        final NodeList childNodes2 = n2.getChildNodes();
+        final int count = Math.min(childNodes1.getLength(), childNodes2.getLength());
         for (int i = 0; i < count; i++)
         {
             createElementMappingForNodes(childNodes1.item(i),

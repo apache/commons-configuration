@@ -41,9 +41,9 @@ public class TestEqualBehaviour
     private Configuration setupSimpleConfiguration()
             throws Exception
     {
-        String simpleConfigurationFile = ConfigurationAssert.getTestFile("testEqual.properties").getAbsolutePath();
-        PropertiesConfiguration c = new PropertiesConfiguration();
-        FileHandler handler = new FileHandler(c);
+        final String simpleConfigurationFile = ConfigurationAssert.getTestFile("testEqual.properties").getAbsolutePath();
+        final PropertiesConfiguration c = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(c);
         handler.setFileName(simpleConfigurationFile);
         handler.load();
         return c;
@@ -52,7 +52,7 @@ public class TestEqualBehaviour
     private Configuration setupCompositeConfiguration()
             throws ConfigurationException
     {
-        CombinedConfigurationBuilder builder =
+        final CombinedConfigurationBuilder builder =
                 new CombinedConfigurationBuilder();
         builder.configure(new FileBasedBuilderParametersImpl()
                 .setFile(ConfigurationAssert
@@ -64,15 +64,15 @@ public class TestEqualBehaviour
      * Checks whether two configurations have the same size,
      * the same key sequence and contain the same key -> value mappings
      */
-    private void checkEquality(String msg, Configuration c1, Configuration c2)
+    private void checkEquality(final String msg, final Configuration c1, final Configuration c2)
     {
-        Iterator<String> it1 = c1.getKeys();
-        Iterator<String> it2 = c2.getKeys();
+        final Iterator<String> it1 = c1.getKeys();
+        final Iterator<String> it2 = c2.getKeys();
 
         while(it1.hasNext() && it2.hasNext())
         {
-            String key1 = it1.next();
-            String key2 = it2.next();
+            final String key1 = it1.next();
+            final String key2 = it2.next();
             assertEquals(msg + ", Keys: ", key1, key2);
             assertEquals(msg + ", Contains: ", c1.containsKey(key1), c2.containsKey(key2));
         }
@@ -82,10 +82,10 @@ public class TestEqualBehaviour
     /**
      * Checks whether two configurations have the same key -> value mapping
      */
-    private void checkSameKey(String msg, String key, Configuration c1, Configuration c2)
+    private void checkSameKey(final String msg, final String key, final Configuration c1, final Configuration c2)
     {
-        String [] s1 = c1.getStringArray(key);
-        String [] s2 = c2.getStringArray(key);
+        final String [] s1 = c1.getStringArray(key);
+        final String [] s2 = c2.getStringArray(key);
 
         assertEquals(msg + ", length: ", s1.length, s2.length);
 
@@ -94,18 +94,18 @@ public class TestEqualBehaviour
             assertEquals(msg + ", String Array: ", s1[i], s2[i]);
         }
 
-        List<Object> list1 = c1.getList(key);
-        List<Object> list2 = c2.getList(key);
+        final List<Object> list1 = c1.getList(key);
+        final List<Object> list2 = c2.getList(key);
 
         assertEquals(msg + ", Size: ", list1.size(), list2.size());
 
-        Iterator<Object> it1 = list1.iterator();
-        Iterator<Object> it2 = list2.iterator();
+        final Iterator<Object> it1 = list1.iterator();
+        final Iterator<Object> it2 = list2.iterator();
 
         while(it1.hasNext() && it2.hasNext())
         {
-            String val1 = (String) it1.next();
-            String val2 = (String) it2.next();
+            final String val1 = (String) it1.next();
+            final String val2 = (String) it2.next();
             assertEquals(msg + ", List: ", val1, val2);
         }
         assertEquals(msg + ", Iterator End: ", it1.hasNext(), it2.hasNext());
@@ -117,8 +117,8 @@ public class TestEqualBehaviour
     @Test
     public void testLoading() throws Exception
     {
-        Configuration simple = setupSimpleConfiguration();
-        Configuration composite = setupCompositeConfiguration();
+        final Configuration simple = setupSimpleConfiguration();
+        final Configuration composite = setupCompositeConfiguration();
 
         checkEquality("testLoading", simple, composite);
     }
@@ -130,10 +130,10 @@ public class TestEqualBehaviour
     @Test
     public void testDeletingExisting() throws Exception
     {
-        Configuration simple = setupSimpleConfiguration();
-        Configuration composite = setupCompositeConfiguration();
+        final Configuration simple = setupSimpleConfiguration();
+        final Configuration composite = setupCompositeConfiguration();
 
-        String key = "clear.property";
+        final String key = "clear.property";
 
         assertTrue(simple.containsKey(key));
         assertEquals(simple.containsKey(key), composite.containsKey(key));
@@ -150,10 +150,10 @@ public class TestEqualBehaviour
     @Test
     public void testDeletingNonExisting() throws Exception
     {
-        Configuration simple = setupSimpleConfiguration();
-        Configuration composite = setupCompositeConfiguration();
+        final Configuration simple = setupSimpleConfiguration();
+        final Configuration composite = setupCompositeConfiguration();
 
-        String key = "nonexisting.clear.property";
+        final String key = "nonexisting.clear.property";
 
         assertFalse(simple.containsKey(key));
         assertEquals(simple.containsKey(key), composite.containsKey(key));
@@ -174,11 +174,11 @@ public class TestEqualBehaviour
     @Test
     public void testSettingNonExisting() throws Exception
     {
-        Configuration simple = setupSimpleConfiguration();
-        Configuration composite = setupCompositeConfiguration();
+        final Configuration simple = setupSimpleConfiguration();
+        final Configuration composite = setupCompositeConfiguration();
 
-        String key = "nonexisting.property";
-        String value = "new value";
+        final String key = "nonexisting.property";
+        final String value = "new value";
 
         assertFalse(simple.containsKey(key));
         assertEquals(simple.containsKey(key), composite.containsKey(key));
@@ -196,11 +196,11 @@ public class TestEqualBehaviour
     @Test
     public void testSettingExisting() throws Exception
     {
-        Configuration simple = setupSimpleConfiguration();
-        Configuration composite = setupCompositeConfiguration();
+        final Configuration simple = setupSimpleConfiguration();
+        final Configuration composite = setupCompositeConfiguration();
 
-        String key = "existing.property";
-        String value = "new value";
+        final String key = "existing.property";
+        final String value = "new value";
 
         assertTrue(simple.containsKey(key));
         assertFalse(simple.getString(key).equals(value));
@@ -223,11 +223,11 @@ public class TestEqualBehaviour
     @Test
     public void testAddingUnset() throws Exception
     {
-        Configuration simple = setupSimpleConfiguration();
-        Configuration composite = setupCompositeConfiguration();
+        final Configuration simple = setupSimpleConfiguration();
+        final Configuration composite = setupCompositeConfiguration();
 
-        String key = "nonexisting.property";
-        String value = "new value";
+        final String key = "nonexisting.property";
+        final String value = "new value";
 
         assertFalse(simple.containsKey(key));
         assertEquals(simple.containsKey(key), composite.containsKey(key));
@@ -245,11 +245,11 @@ public class TestEqualBehaviour
     @Test
     public void testAddingSet() throws Exception
     {
-        Configuration simple = setupSimpleConfiguration();
-        Configuration composite = setupCompositeConfiguration();
+        final Configuration simple = setupSimpleConfiguration();
+        final Configuration composite = setupCompositeConfiguration();
 
-        String key = "existing.property";
-        String value = "new value";
+        final String key = "existing.property";
+        final String value = "new value";
 
         assertTrue(simple.containsKey(key));
         assertEquals(simple.containsKey(key), composite.containsKey(key));

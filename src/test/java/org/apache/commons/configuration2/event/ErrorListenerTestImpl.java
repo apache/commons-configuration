@@ -33,7 +33,7 @@ public class ErrorListenerTestImpl extends
      * @param source the event source (<b>null</b> if the source need not to be
      *        checked)
      */
-    public ErrorListenerTestImpl(Object source)
+    public ErrorListenerTestImpl(final Object source)
     {
         super(source);
     }
@@ -47,10 +47,10 @@ public class ErrorListenerTestImpl extends
      * @param propValue the expected property value
      * @return the exception stored in the next error event
      */
-    public Throwable checkEvent(EventType<?> type, EventType<?> opType,
-            String propName, Object propValue)
+    public Throwable checkEvent(final EventType<?> type, final EventType<?> opType,
+            final String propName, final Object propValue)
     {
-        ConfigurationErrorEvent e = nextEvent(type);
+        final ConfigurationErrorEvent e = nextEvent(type);
         assertEquals("Wrong operation event type", opType,
                 e.getErrorOperationType());
         assertEquals("Wrong property name", propName, e.getPropertyName());

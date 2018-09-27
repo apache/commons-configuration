@@ -88,7 +88,7 @@ public class TestPropertiesConfigurationLayout
     {
         assertTrue("Object contains keys", layout.getKeys().isEmpty());
         assertNull("Header comment not null", layout.getHeaderComment());
-        Iterator<EventListener<? super ConfigurationEvent>> it =
+        final Iterator<EventListener<? super ConfigurationEvent>> it =
                 config.getEventListeners(ConfigurationEvent.ANY).iterator();
         assertTrue("No event listener registered", it.hasNext());
         assertSame("Layout not registered as event listener", layout, it.next());
@@ -236,7 +236,7 @@ public class TestPropertiesConfigurationLayout
     @Test
     public void testHeaderCommentWithBlancsAndPresetHeaderComment() throws ConfigurationException
     {
-        String presetHeaderComment = "preset" + TEST_COMMENT + CRNORM + CRNORM + TEST_COMMENT;
+        final String presetHeaderComment = "preset" + TEST_COMMENT + CRNORM + CRNORM + TEST_COMMENT;
         builder.addComment(TEST_COMMENT);
         builder.addComment(null);
         builder.addComment(TEST_COMMENT);
@@ -288,7 +288,7 @@ public class TestPropertiesConfigurationLayout
     @Test
     public void testEventAdd()
     {
-        ConfigurationEvent event = new ConfigurationEvent(this,
+        final ConfigurationEvent event = new ConfigurationEvent(this,
                 ConfigurationEvent.ADD_PROPERTY, TEST_KEY, TEST_VALUE,
                 false);
         layout.onEvent(event);
@@ -306,7 +306,7 @@ public class TestPropertiesConfigurationLayout
     @Test
     public void testEventAddMultiple()
     {
-        ConfigurationEvent event = new ConfigurationEvent(this,
+        final ConfigurationEvent event = new ConfigurationEvent(this,
                 ConfigurationEvent.ADD_PROPERTY, TEST_KEY, TEST_VALUE,
                 false);
         layout.onEvent(event);
@@ -324,7 +324,7 @@ public class TestPropertiesConfigurationLayout
         builder.addComment(TEST_COMMENT);
         builder.addProperty(TEST_KEY, TEST_VALUE);
         layout.load(config, builder.getReader());
-        ConfigurationEvent event = new ConfigurationEvent(this,
+        final ConfigurationEvent event = new ConfigurationEvent(this,
                 ConfigurationEvent.ADD_PROPERTY, TEST_KEY, TEST_VALUE,
                 false);
         layout.onEvent(event);
@@ -340,7 +340,7 @@ public class TestPropertiesConfigurationLayout
     @Test
     public void testEventSetNonExisting()
     {
-        ConfigurationEvent event = new ConfigurationEvent(this,
+        final ConfigurationEvent event = new ConfigurationEvent(this,
                 ConfigurationEvent.SET_PROPERTY, TEST_KEY, TEST_VALUE,
                 false);
         layout.onEvent(event);
@@ -373,7 +373,7 @@ public class TestPropertiesConfigurationLayout
     public void testEventClearConfig() throws Exception
     {
         fillLayout();
-        ConfigurationEvent event = new ConfigurationEvent(this,
+        final ConfigurationEvent event = new ConfigurationEvent(this,
                 ConfigurationEvent.CLEAR, null, null, false);
         layout.onEvent(event);
         assertTrue("Keys not empty", layout.getKeys().isEmpty());
@@ -386,7 +386,7 @@ public class TestPropertiesConfigurationLayout
     @Test
     public void testEventAddBefore()
     {
-        ConfigurationEvent event = new ConfigurationEvent(this,
+        final ConfigurationEvent event = new ConfigurationEvent(this,
                 ConfigurationEvent.ADD_PROPERTY, TEST_KEY, TEST_VALUE,
                 true);
         layout.onEvent(event);
@@ -400,7 +400,7 @@ public class TestPropertiesConfigurationLayout
     @Test
     public void testRecursiveLoadCall() throws ConfigurationException
     {
-        PropertiesBuilder b = new PropertiesBuilder();
+        final PropertiesBuilder b = new PropertiesBuilder();
         b.addComment("A nested header comment.");
         b.addComment("With multiple lines");
         b.addComment(null);
@@ -567,7 +567,7 @@ public class TestPropertiesConfigurationLayout
     {
         fillLayout();
         layout.setComment("NonExistingKey", "NonExistingComment");
-        String output = getLayoutString();
+        final String output = getLayoutString();
         assertTrue("Non existing key was found", !output.contains("NonExistingKey"));
         assertTrue("Non existing comment was found", !output.contains("NonExistingComment"));
     }
@@ -588,10 +588,10 @@ public class TestPropertiesConfigurationLayout
     public void testInitCopy()
     {
         fillLayout();
-        PropertiesConfigurationLayout l2 = new PropertiesConfigurationLayout(layout);
+        final PropertiesConfigurationLayout l2 = new PropertiesConfigurationLayout(layout);
         assertEquals("Wrong number of keys", layout.getKeys().size(), l2
                 .getKeys().size());
-        for (String key : layout.getKeys())
+        for (final String key : layout.getKeys())
         {
             assertTrue("Key was not found: " + key, l2.getKeys().contains(key));
         }
@@ -608,7 +608,7 @@ public class TestPropertiesConfigurationLayout
     public void testInitCopyModify()
     {
         fillLayout();
-        PropertiesConfigurationLayout l2 = new PropertiesConfigurationLayout(layout);
+        final PropertiesConfigurationLayout l2 = new PropertiesConfigurationLayout(layout);
         assertEquals("Comments are not equal", layout.getComment(TEST_KEY), l2
                 .getComment(TEST_KEY));
         layout.setComment(TEST_KEY, "A new comment");
@@ -711,7 +711,7 @@ public class TestPropertiesConfigurationLayout
         {
             layout.load(config, builder.getReader());
         }
-        catch (ConfigurationException cex)
+        catch (final ConfigurationException cex)
         {
             // should not happen
             fail("Exception was thrown: " + cex);
@@ -726,7 +726,7 @@ public class TestPropertiesConfigurationLayout
      */
     private String getLayoutString() throws ConfigurationException
     {
-        StringWriter out = new StringWriter();
+        final StringWriter out = new StringWriter();
         layout.save(config, out);
         return out.toString();
     }
@@ -737,7 +737,7 @@ public class TestPropertiesConfigurationLayout
      * @param expected the expected result
      * @throws ConfigurationException if an error occurs
      */
-    private void checkLayoutString(String expected)
+    private void checkLayoutString(final String expected)
             throws ConfigurationException
     {
         assertEquals("Wrong layout file content", expected, getLayoutString());
@@ -759,7 +759,7 @@ public class TestPropertiesConfigurationLayout
          *
          * @param s the content of the line
          */
-        public void addLine(String s)
+        public void addLine(final String s)
         {
             buf.append(s).append(CR);
         }
@@ -770,7 +770,7 @@ public class TestPropertiesConfigurationLayout
          * @param key the property key
          * @param value the value
          */
-        public void addProperty(String key, String value)
+        public void addProperty(final String key, final String value)
         {
             buf.append(key).append(" = ").append(value).append(CR);
         }
@@ -781,7 +781,7 @@ public class TestPropertiesConfigurationLayout
          * @param s the comment (can be <b>null</b>, then a blanc line is
          * added)
          */
-        public void addComment(String s)
+        public void addComment(final String s)
         {
             if (s != null)
             {
@@ -835,7 +835,7 @@ public class TestPropertiesConfigurationLayout
          * load() call on the layout is invoked.
          */
         @Override
-        boolean propertyLoaded(String key, String value)
+        boolean propertyLoaded(final String key, final String value)
                 throws ConfigurationException
         {
             if (builder == null)

@@ -57,28 +57,28 @@ abstract class HierarchicalConfigurationConverter
      *
      * @param config the configuration to be processed
      */
-    public void process(Configuration config)
+    public void process(final Configuration config)
     {
         if (config != null)
         {
-            DefaultExpressionEngine exprEngine = DefaultExpressionEngine.INSTANCE;
-            DefaultConfigurationKey keyEmpty =
+            final DefaultExpressionEngine exprEngine = DefaultExpressionEngine.INSTANCE;
+            final DefaultConfigurationKey keyEmpty =
                     new DefaultConfigurationKey(exprEngine);
             DefaultConfigurationKey keyLast = keyEmpty;
-            Set<String> keySet = new HashSet<>();
+            final Set<String> keySet = new HashSet<>();
 
-            for (Iterator<String> it = config.getKeys(); it.hasNext();)
+            for (final Iterator<String> it = config.getKeys(); it.hasNext();)
             {
-                String key = it.next();
+                final String key = it.next();
                 if (keySet.contains(key))
                 {
                     // this key has already been processed by openElements
                     continue;
                 }
-                DefaultConfigurationKey keyAct =
+                final DefaultConfigurationKey keyAct =
                         new DefaultConfigurationKey(exprEngine, key);
                 closeElements(keyLast, keyAct);
-                String elem = openElements(keyLast, keyAct, config, keySet);
+                final String elem = openElements(keyLast, keyAct, config, keySet);
                 fireValue(elem, config.getProperty(key));
                 keyLast = keyAct;
             }
@@ -119,10 +119,10 @@ abstract class HierarchicalConfigurationConverter
      * @param keyLast the last processed key
      * @param keyAct the actual key
      */
-    protected void closeElements(DefaultConfigurationKey keyLast, DefaultConfigurationKey keyAct)
+    protected void closeElements(final DefaultConfigurationKey keyLast, final DefaultConfigurationKey keyAct)
     {
-        DefaultConfigurationKey keyDiff = keyAct.differenceKey(keyLast);
-        Iterator<String> it = reverseIterator(keyDiff);
+        final DefaultConfigurationKey keyDiff = keyAct.differenceKey(keyLast);
+        final Iterator<String> it = reverseIterator(keyDiff);
         if (it.hasNext())
         {
             // Skip first because it has already been closed by fireValue()
@@ -143,10 +143,10 @@ abstract class HierarchicalConfigurationConverter
      * @param key the key
      * @return a reverse iterator for the parts of this key
      */
-    protected Iterator<String> reverseIterator(DefaultConfigurationKey key)
+    protected Iterator<String> reverseIterator(final DefaultConfigurationKey key)
     {
-        List<String> list = new ArrayList<>();
-        for (DefaultConfigurationKey.KeyIterator it = key.iterator(); it.hasNext();)
+        final List<String> list = new ArrayList<>();
+        for (final DefaultConfigurationKey.KeyIterator it = key.iterator(); it.hasNext();)
         {
             list.add(it.nextKey());
         }
@@ -167,11 +167,11 @@ abstract class HierarchicalConfigurationConverter
      * @param keySet the set with the processed keys
      * @return the name of the last element on the path
      */
-    protected String openElements(DefaultConfigurationKey keyLast, DefaultConfigurationKey keyAct,
-            Configuration config, Set<String> keySet)
+    protected String openElements(final DefaultConfigurationKey keyLast, final DefaultConfigurationKey keyAct,
+            final Configuration config, final Set<String> keySet)
     {
-        DefaultConfigurationKey.KeyIterator it = keyLast.differenceKey(keyAct).iterator();
-        DefaultConfigurationKey k = keyLast.commonKey(keyAct);
+        final DefaultConfigurationKey.KeyIterator it = keyLast.differenceKey(keyAct).iterator();
+        final DefaultConfigurationKey k = keyLast.commonKey(keyAct);
         for (it.nextKey(); it.hasNext(); it.nextKey())
         {
             k.append(it.currentKey(true));
@@ -190,12 +190,12 @@ abstract class HierarchicalConfigurationConverter
      * @param name the name of the actual element
      * @param value the element's value
      */
-    protected void fireValue(String name, Object value)
+    protected void fireValue(final String name, final Object value)
     {
         if (value instanceof Collection)
         {
-            Collection<?> valueCol = (Collection<?>) value;
-            for (Object v : valueCol)
+            final Collection<?> valueCol = (Collection<?>) value;
+            for (final Object v : valueCol)
             {
                 fireValue(name, v);
             }

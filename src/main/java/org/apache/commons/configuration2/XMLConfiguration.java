@@ -257,7 +257,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @param c the configuration to copy
      * @since 1.4
      */
-    public XMLConfiguration(HierarchicalConfiguration<ImmutableNode> c)
+    public XMLConfiguration(final HierarchicalConfiguration<ImmutableNode> c)
     {
         super(c);
         rootElementName =
@@ -276,7 +276,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     @Override
     protected String getRootElementNameInternal()
     {
-        Document doc = getDocument();
+        final Document doc = getDocument();
         if (doc == null)
         {
             return (rootElementName == null) ? DEFAULT_ROOT_NAME : rootElementName;
@@ -296,7 +296,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      *
      * @param name the name of the root element
      */
-    public void setRootElementName(String name)
+    public void setRootElementName(final String name)
     {
         beginRead(true);
         try
@@ -338,7 +338,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * default builder will be used
      * @since 1.2
      */
-    public void setDocumentBuilder(DocumentBuilder documentBuilder)
+    public void setDocumentBuilder(final DocumentBuilder documentBuilder)
     {
         this.documentBuilder = documentBuilder;
     }
@@ -372,7 +372,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @param publicID the public ID
      * @since 1.3
      */
-    public void setPublicID(String publicID)
+    public void setPublicID(final String publicID)
     {
         beginWrite(false);
         try
@@ -414,7 +414,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @param systemID the system ID
      * @since 1.3
      */
-    public void setSystemID(String systemID)
+    public void setSystemID(final String systemID)
     {
         beginWrite(false);
         try
@@ -446,7 +446,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @param validating the validating flag
      * @since 1.2
      */
-    public void setValidating(boolean validating)
+    public void setValidating(final boolean validating)
     {
         if (!schemaValidation)
         {
@@ -476,7 +476,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @param schemaValidation the validating flag
      * @since 1.7
      */
-    public void setSchemaValidation(boolean schemaValidation)
+    public void setSchemaValidation(final boolean schemaValidation)
     {
         this.schemaValidation = schemaValidation;
         if (schemaValidation)
@@ -491,7 +491,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @param resolver The EntityResolver to use.
      * @since 1.7
      */
-    public void setEntityResolver(EntityResolver resolver)
+    public void setEntityResolver(final EntityResolver resolver)
     {
         this.entityResolver = resolver;
     }
@@ -515,7 +515,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     public Document getDocument()
     {
-        XMLDocumentHelper docHelper = getDocumentHelper();
+        final XMLDocumentHelper docHelper = getDocumentHelper();
         return (docHelper != null) ? docHelper.getDocument() : null;
     }
 
@@ -526,7 +526,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     private XMLDocumentHelper getDocumentHelper()
     {
-        ReferenceNodeHandler handler = getReferenceHandler();
+        final ReferenceNodeHandler handler = getReferenceHandler();
         return (XMLDocumentHelper) handler.getReference(handler.getRootNode());
     }
 
@@ -546,21 +546,21 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @param docHelper the helper object with the document to be parsed
      * @param elemRefs a flag whether references to the XML elements should be set
      */
-    private void initProperties(XMLDocumentHelper docHelper, boolean elemRefs)
+    private void initProperties(final XMLDocumentHelper docHelper, final boolean elemRefs)
     {
-        Document document = docHelper.getDocument();
+        final Document document = docHelper.getDocument();
         setPublicID(docHelper.getSourcePublicID());
         setSystemID(docHelper.getSourceSystemID());
 
-        ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
-        MutableObject<String> rootValue = new MutableObject<>();
-        Map<ImmutableNode, Object> elemRefMap =
+        final ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
+        final MutableObject<String> rootValue = new MutableObject<>();
+        final Map<ImmutableNode, Object> elemRefMap =
                 elemRefs ? new HashMap<>() : null;
-        Map<String, String> attributes =
+        final Map<String, String> attributes =
                 constructHierarchy(rootBuilder, rootValue,
                         document.getDocumentElement(), elemRefMap, true, 0);
         attributes.remove(ATTR_SPACE_INTERNAL);
-        ImmutableNode top =
+        final ImmutableNode top =
                 rootBuilder.value(rootValue.getValue())
                         .addAttributes(attributes).create();
         getSubConfigurationParentModel().mergeRoot(top,
@@ -584,33 +584,33 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      *         this map also contains the value of the trim flag for this node
      *         under the key {@value #ATTR_SPACE}
      */
-    private Map<String, String> constructHierarchy(ImmutableNode.Builder node,
-            MutableObject<String> refValue, Element element,
-            Map<ImmutableNode, Object> elemRefs, boolean trim, int level)
+    private Map<String, String> constructHierarchy(final ImmutableNode.Builder node,
+            final MutableObject<String> refValue, final Element element,
+            final Map<ImmutableNode, Object> elemRefs, final boolean trim, final int level)
     {
-        boolean trimFlag = shouldTrim(element, trim);
-        Map<String, String> attributes = processAttributes(element);
+        final boolean trimFlag = shouldTrim(element, trim);
+        final Map<String, String> attributes = processAttributes(element);
         attributes.put(ATTR_SPACE_INTERNAL, String.valueOf(trimFlag));
-        StringBuilder buffer = new StringBuilder();
-        NodeList list = element.getChildNodes();
+        final StringBuilder buffer = new StringBuilder();
+        final NodeList list = element.getChildNodes();
         boolean hasChildren = false;
 
         for (int i = 0; i < list.getLength(); i++)
         {
-            org.w3c.dom.Node w3cNode = list.item(i);
+            final org.w3c.dom.Node w3cNode = list.item(i);
             if (w3cNode instanceof Element)
             {
-                Element child = (Element) w3cNode;
-                ImmutableNode.Builder childNode = new ImmutableNode.Builder();
+                final Element child = (Element) w3cNode;
+                final ImmutableNode.Builder childNode = new ImmutableNode.Builder();
                 childNode.name(child.getTagName());
-                MutableObject<String> refChildValue =
+                final MutableObject<String> refChildValue =
                         new MutableObject<>();
-                Map<String, String> attrmap =
+                final Map<String, String> attrmap =
                         constructHierarchy(childNode, refChildValue, child,
                                 elemRefs, trimFlag, level + 1);
-                Boolean childTrim = Boolean.valueOf(attrmap.remove(ATTR_SPACE_INTERNAL));
+                final Boolean childTrim = Boolean.valueOf(attrmap.remove(ATTR_SPACE_INTERNAL));
                 childNode.addAttributes(attrmap);
-                ImmutableNode newChild =
+                final ImmutableNode newChild =
                         createChildNodeWithValue(node, childNode, child,
                                 refChildValue.getValue(),
                                 childTrim.booleanValue(), attrmap, elemRefs);
@@ -622,7 +622,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             }
             else if (w3cNode instanceof Text)
             {
-                Text data = (Text) w3cNode;
+                final Text data = (Text) w3cNode;
                 buffer.append(data.getData());
             }
         }
@@ -632,7 +632,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         {
             childrenFlag = hasChildren || attributes.size() > 1;
         }
-        String text = determineValue(buffer.toString(), childrenFlag, trimFlag);
+        final String text = determineValue(buffer.toString(), childrenFlag, trimFlag);
         if (text.length() > 0 || (!childrenFlag && level != 0))
         {
             refValue.setValue(text);
@@ -652,10 +652,10 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @param trimFlag the trim flag
      * @return the value to be stored for this node
      */
-    private static String determineValue(String content, boolean hasChildren,
-            boolean trimFlag)
+    private static String determineValue(final String content, final boolean hasChildren,
+            final boolean trimFlag)
     {
-        boolean shouldTrim =
+        final boolean shouldTrim =
                 trimFlag || (StringUtils.isBlank(content) && hasChildren);
         return shouldTrim ? content.trim() : content;
     }
@@ -667,17 +667,17 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @param element the current XML element
      * @return a map with all attribute values extracted for the current node
      */
-    private static Map<String, String> processAttributes(Element element)
+    private static Map<String, String> processAttributes(final Element element)
     {
-        NamedNodeMap attributes = element.getAttributes();
-        Map<String, String> attrmap = new HashMap<>();
+        final NamedNodeMap attributes = element.getAttributes();
+        final Map<String, String> attrmap = new HashMap<>();
 
         for (int i = 0; i < attributes.getLength(); ++i)
         {
-            org.w3c.dom.Node w3cNode = attributes.item(i);
+            final org.w3c.dom.Node w3cNode = attributes.item(i);
             if (w3cNode instanceof Attr)
             {
-                Attr attr = (Attr) w3cNode;
+                final Attr attr = (Attr) w3cNode;
                 attrmap.put(attr.getName(), attr.getValue());
             }
         }
@@ -701,10 +701,10 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      *        <b>null</b>, then reference objects are irrelevant
      * @return the first child node added to the parent
      */
-    private ImmutableNode createChildNodeWithValue(ImmutableNode.Builder parent,
-            ImmutableNode.Builder child, Element elem, String value,
-            boolean trim, Map<String, String> attrmap,
-            Map<ImmutableNode, Object> elemRefs)
+    private ImmutableNode createChildNodeWithValue(final ImmutableNode.Builder parent,
+            final ImmutableNode.Builder child, final Element elem, final String value,
+            final boolean trim, final Map<String, String> attrmap,
+            final Map<ImmutableNode, Object> elemRefs)
     {
         ImmutableNode addedChildNode;
         Collection<String> values;
@@ -720,8 +720,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
 
         if (values.size() > 1)
         {
-            Map<ImmutableNode, Object> refs = isSingleElementList(elem) ? elemRefs : null;
-            Iterator<String> it = values.iterator();
+            final Map<ImmutableNode, Object> refs = isSingleElementList(elem) ? elemRefs : null;
+            final Iterator<String> it = values.iterator();
             // Create new node for the original child's first value
             child.value(it.next());
             addedChildNode = child.create();
@@ -731,11 +731,11 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             // add multiple new children
             while (it.hasNext())
             {
-                ImmutableNode.Builder c = new ImmutableNode.Builder();
+                final ImmutableNode.Builder c = new ImmutableNode.Builder();
                 c.name(addedChildNode.getNodeName());
                 c.value(it.next());
                 c.addAttributes(attrmap);
-                ImmutableNode newChild = c.create();
+                final ImmutableNode newChild = c.create();
                 parent.addChild(newChild);
                 XMLListReference.assignListReference(refs, newChild, null);
             }
@@ -764,9 +764,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @param element the element to be checked
      * @return a flag whether this is the only element defining the list
      */
-    private static boolean isSingleElementList(Element element)
+    private static boolean isSingleElementList(final Element element)
     {
-        Node parentNode = element.getParentNode();
+        final Node parentNode = element.getParentNode();
         return countChildElements(parentNode, element.getTagName()) == 1;
     }
 
@@ -778,13 +778,13 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @param name the name in question
      * @return the number of child elements with this name
      */
-    private static int countChildElements(Node parent, String name)
+    private static int countChildElements(final Node parent, final String name)
     {
-        NodeList childNodes = parent.getChildNodes();
+        final NodeList childNodes = parent.getChildNodes();
         int count = 0;
         for (int i = 0; i < childNodes.getLength(); i++)
         {
-            Node item = childNodes.item(i);
+            final Node item = childNodes.item(i);
             if (item instanceof Element)
             {
                 if (name.equals(((Element) item).getTagName()))
@@ -807,9 +807,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @param currentTrim the current trim flag
      * @return a flag whether the content of this element should be trimmed
      */
-    private static boolean shouldTrim(Element element, boolean currentTrim)
+    private static boolean shouldTrim(final Element element, final boolean currentTrim)
     {
-        Attr attr = element.getAttributeNode(ATTR_SPACE);
+        final Attr attr = element.getAttributeNode(ATTR_SPACE);
 
         if (attr == null)
         {
@@ -838,7 +838,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         {
             return getDocumentBuilder();
         }
-        DocumentBuilderFactory factory = DocumentBuilderFactory
+        final DocumentBuilderFactory factory = DocumentBuilderFactory
                 .newInstance();
         if (isValidating())
         {
@@ -850,7 +850,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             }
         }
 
-        DocumentBuilder result = factory.newDocumentBuilder();
+        final DocumentBuilder result = factory.newDocumentBuilder();
         result.setEntityResolver(this.entityResolver);
 
         if (isValidating())
@@ -859,7 +859,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             result.setErrorHandler(new DefaultHandler()
             {
                 @Override
-                public void error(SAXParseException ex) throws SAXException
+                public void error(final SAXParseException ex) throws SAXException
                 {
                     throw ex;
                 }
@@ -880,7 +880,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     protected Transformer createTransformer() throws ConfigurationException
     {
-        Transformer transformer = XMLDocumentHelper.createTransformer();
+        final Transformer transformer = XMLDocumentHelper.createTransformer();
 
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         if (locator.getEncoding() != null)
@@ -909,15 +909,15 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     private Document createDocument() throws ConfigurationException
     {
-        ReferenceNodeHandler handler = getReferenceHandler();
-        XMLDocumentHelper docHelper =
+        final ReferenceNodeHandler handler = getReferenceHandler();
+        final XMLDocumentHelper docHelper =
                 (XMLDocumentHelper) handler.getReference(handler.getRootNode());
-        XMLDocumentHelper newHelper =
+        final XMLDocumentHelper newHelper =
                 (docHelper == null) ? XMLDocumentHelper
                         .forNewDocument(getRootElementName()) : docHelper
                         .createCopy();
 
-        XMLBuilderVisitor builder =
+        final XMLBuilderVisitor builder =
                 new XMLBuilderVisitor(newHelper, getListDelimiterHandler());
         builder.handleRemovedNodes(handler);
         builder.processDocument(handler);
@@ -932,15 +932,15 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @param doc the document
      * @param value the new text to be set
      */
-    private void initRootElementText(Document doc, Object value)
+    private void initRootElementText(final Document doc, final Object value)
     {
-        Element elem = doc.getDocumentElement();
-        NodeList children = elem.getChildNodes();
+        final Element elem = doc.getDocumentElement();
+        final NodeList children = elem.getChildNodes();
 
         // Remove all existing text nodes
         for (int i = 0; i < children.getLength(); i++)
         {
-            org.w3c.dom.Node nd = children.item(i);
+            final org.w3c.dom.Node nd = children.item(i);
             if (nd.getNodeType() == org.w3c.dom.Node.TEXT_NODE)
             {
                 elem.removeChild(nd);
@@ -958,7 +958,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * {@inheritDoc} Stores the passed in locator for the upcoming IO operation.
      */
     @Override
-    public void initFileLocator(FileLocator loc)
+    public void initFileLocator(final FileLocator loc)
     {
         locator = loc;
     }
@@ -974,7 +974,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @throws IOException if an IO error occurs
      */
     @Override
-    public void read(Reader in) throws ConfigurationException, IOException
+    public void read(final Reader in) throws ConfigurationException, IOException
     {
         load(new InputSource(in));
     }
@@ -991,7 +991,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @throws IOException if an IO error occurs
      */
     @Override
-    public void read(InputStream in) throws ConfigurationException, IOException
+    public void read(final InputStream in) throws ConfigurationException, IOException
     {
         load(new InputSource(in));
     }
@@ -1002,7 +1002,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @param source the input source
      * @throws ConfigurationException if an error occurs
      */
-    private void load(InputSource source) throws ConfigurationException
+    private void load(final InputSource source) throws ConfigurationException
     {
         if (locator == null)
         {
@@ -1013,23 +1013,23 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
 
         try
         {
-            URL sourceURL = locator.getSourceURL();
+            final URL sourceURL = locator.getSourceURL();
             if (sourceURL != null)
             {
                 source.setSystemId(sourceURL.toString());
             }
 
-            DocumentBuilder builder = createDocumentBuilder();
-            Document newDocument = builder.parse(source);
-            Document oldDocument = getDocument();
+            final DocumentBuilder builder = createDocumentBuilder();
+            final Document newDocument = builder.parse(source);
+            final Document oldDocument = getDocument();
             initProperties(XMLDocumentHelper.forSourceDocument(newDocument),
                     oldDocument == null);
         }
-        catch (SAXParseException spe)
+        catch (final SAXParseException spe)
         {
             throw new ConfigurationException("Error parsing " + source.getSystemId(), spe);
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             this.getLogger().debug("Unable to load the configuration: " + e);
             throw new ConfigurationException("Unable to load the configuration", e);
@@ -1044,11 +1044,11 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @throws IOException if an IO error occurs
      */
     @Override
-    public void write(Writer writer) throws ConfigurationException, IOException
+    public void write(final Writer writer) throws ConfigurationException, IOException
     {
-        Transformer transformer = createTransformer();
-        Source source = new DOMSource(createDocument());
-        Result result = new StreamResult(writer);
+        final Transformer transformer = createTransformer();
+        final Source source = new DOMSource(createDocument());
+        final Result result = new StreamResult(writer);
         XMLDocumentHelper.transform(transformer, source, result);
     }
 
@@ -1061,24 +1061,24 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         beginWrite(false);
         try
         {
-            Transformer transformer = createTransformer();
-            Source source = new DOMSource(createDocument());
-            StringWriter writer = new StringWriter();
-            Result result = new StreamResult(writer);
+            final Transformer transformer = createTransformer();
+            final Source source = new DOMSource(createDocument());
+            final StringWriter writer = new StringWriter();
+            final Result result = new StreamResult(writer);
             XMLDocumentHelper.transform(transformer, source, result);
-            Reader reader = new StringReader(writer.getBuffer().toString());
-            DocumentBuilder builder = createDocumentBuilder();
+            final Reader reader = new StringReader(writer.getBuffer().toString());
+            final DocumentBuilder builder = createDocumentBuilder();
             builder.parse(new InputSource(reader));
         }
-        catch (SAXException e)
+        catch (final SAXException e)
         {
             throw new ConfigurationException("Validation failed", e);
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new ConfigurationException("Validation failed", e);
         }
-        catch (ParserConfigurationException pce)
+        catch (final ParserConfigurationException pce)
         {
             throw new ConfigurationException("Validation failed", pce);
         }
@@ -1113,8 +1113,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
          * @param handler the delimiter handler for properties with multiple
          *        values
          */
-        public XMLBuilderVisitor(XMLDocumentHelper docHelper,
-                ListDelimiterHandler handler)
+        public XMLBuilderVisitor(final XMLDocumentHelper docHelper,
+                final ListDelimiterHandler handler)
         {
             document = docHelper.getDocument();
             elementMapping = docHelper.getElementMapping();
@@ -1128,7 +1128,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
          *
          * @param refHandler the {@code ReferenceNodeHandler}
          */
-        public void processDocument(ReferenceNodeHandler refHandler)
+        public void processDocument(final ReferenceNodeHandler refHandler)
         {
             updateAttributes(refHandler.getRootNode(), document.getDocumentElement());
             NodeTreeWalker.INSTANCE.walkDFS(refHandler.getRootNode(), this,
@@ -1141,13 +1141,13 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
          *
          * @param refHandler the {@code ReferenceNodeHandler}
          */
-        public void handleRemovedNodes(ReferenceNodeHandler refHandler)
+        public void handleRemovedNodes(final ReferenceNodeHandler refHandler)
         {
-            for (Object ref : refHandler.removedReferences())
+            for (final Object ref : refHandler.removedReferences())
             {
                 if (ref instanceof Node)
                 {
-                    Node removedElem = (Node) ref;
+                    final Node removedElem = (Node) ref;
                     removeReference((Element) elementMapping.get(removedElem));
                 }
             }
@@ -1158,21 +1158,21 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
          * element is created and inserted between the given siblings.
          */
         @Override
-        protected void insert(ImmutableNode newNode, ImmutableNode parent,
-                ImmutableNode sibling1, ImmutableNode sibling2,
-                ReferenceNodeHandler refHandler)
+        protected void insert(final ImmutableNode newNode, final ImmutableNode parent,
+                final ImmutableNode sibling1, final ImmutableNode sibling2,
+                final ReferenceNodeHandler refHandler)
         {
             if (XMLListReference.isListNode(newNode, refHandler))
             {
                 return;
             }
 
-            Element elem = document.createElement(newNode.getNodeName());
+            final Element elem = document.createElement(newNode.getNodeName());
             newElements.put(newNode, elem);
             updateAttributes(newNode, elem);
             if (newNode.getValue() != null)
             {
-                String txt =
+                final String txt =
                         String.valueOf(listDelimiterHandler.escape(
                                 newNode.getValue(),
                                 ListDelimiterHandler.NOOP_TRANSFORMER));
@@ -1200,29 +1200,29 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
          * attributes are set accordingly.
          */
         @Override
-        protected void update(ImmutableNode node, Object reference,
-                ReferenceNodeHandler refHandler)
+        protected void update(final ImmutableNode node, final Object reference,
+                final ReferenceNodeHandler refHandler)
         {
             if (XMLListReference.isListNode(node, refHandler))
             {
                 if (XMLListReference.isFirstListItem(node, refHandler))
                 {
-                    String value = XMLListReference.listValue(node, refHandler, listDelimiterHandler);
+                    final String value = XMLListReference.listValue(node, refHandler, listDelimiterHandler);
                     updateElement(node, refHandler, value);
                 }
             }
             else
             {
-                Object value = listDelimiterHandler.escape(refHandler.getValue(node),
+                final Object value = listDelimiterHandler.escape(refHandler.getValue(node),
                         ListDelimiterHandler.NOOP_TRANSFORMER);
                 updateElement(node, refHandler, value);
             }
         }
 
-        private void updateElement(ImmutableNode node, ReferenceNodeHandler refHandler,
-                                   Object value)
+        private void updateElement(final ImmutableNode node, final ReferenceNodeHandler refHandler,
+                                   final Object value)
         {
-            Element element = getElement(node, refHandler);
+            final Element element = getElement(node, refHandler);
             updateElement(element, value);
             updateAttributes(node, element);
         }
@@ -1233,7 +1233,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
          * @param element the element
          * @param value the new value
          */
-        private void updateElement(Element element, Object value)
+        private void updateElement(final Element element, final Object value)
         {
             Text txtNode = findTextNodeForUpdate(element);
             if (value == null)
@@ -1246,7 +1246,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             }
             else
             {
-                String newValue = String.valueOf(value);
+                final String newValue = String.valueOf(value);
                 if (txtNode == null)
                 {
                     txtNode = document.createTextNode(newValue);
@@ -1270,9 +1270,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
          * Updates the associated XML elements when a node is removed.
          * @param element the element to be removed
          */
-        private void removeReference(Element element)
+        private void removeReference(final Element element)
         {
-            org.w3c.dom.Node parentElem = element.getParentNode();
+            final org.w3c.dom.Node parentElem = element.getParentNode();
             if (parentElem != null)
             {
                 parentElem.removeChild(element);
@@ -1286,17 +1286,17 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
          * @param refHandler the {@code ReferenceNodeHandler}
          * @return the element of this node
          */
-        private Element getElement(ImmutableNode node,
-                ReferenceNodeHandler refHandler)
+        private Element getElement(final ImmutableNode node,
+                final ReferenceNodeHandler refHandler)
         {
-            Element elementNew = newElements.get(node);
+            final Element elementNew = newElements.get(node);
             if (elementNew != null)
             {
                 return elementNew;
             }
 
             // special treatment for root node of the hierarchy
-            Object reference = refHandler.getReference(node);
+            final Object reference = refHandler.getReference(node);
             Node element;
             if (reference instanceof XMLDocumentHelper)
             {
@@ -1323,12 +1323,12 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
          * @param node the affected node
          * @param elem the element that is associated with this node
          */
-        private static void updateAttributes(ImmutableNode node, Element elem)
+        private static void updateAttributes(final ImmutableNode node, final Element elem)
         {
             if (node != null && elem != null)
             {
                 clearAttributes(elem);
-                for (Map.Entry<String, Object> e : node.getAttributes()
+                for (final Map.Entry<String, Object> e : node.getAttributes()
                         .entrySet())
                 {
                     if (e.getValue() != null)
@@ -1344,9 +1344,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
          *
          * @param elem the element
          */
-        private static void clearAttributes(Element elem)
+        private static void clearAttributes(final Element elem)
         {
-            NamedNodeMap attributes = elem.getAttributes();
+            final NamedNodeMap attributes = elem.getAttributes();
             for (int i = 0; i < attributes.getLength(); i++)
             {
                 elem.removeAttribute(attributes.item(i).getNodeName());
@@ -1362,16 +1362,16 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
          * @param elem the element
          * @return the first and only text node
          */
-        private static Text findTextNodeForUpdate(Element elem)
+        private static Text findTextNodeForUpdate(final Element elem)
         {
             Text result = null;
             // Find all Text nodes
-            NodeList children = elem.getChildNodes();
-            Collection<org.w3c.dom.Node> textNodes =
+            final NodeList children = elem.getChildNodes();
+            final Collection<org.w3c.dom.Node> textNodes =
                     new ArrayList<>();
             for (int i = 0; i < children.getLength(); i++)
             {
-                org.w3c.dom.Node nd = children.item(i);
+                final org.w3c.dom.Node nd = children.item(i);
                 if (nd instanceof Text)
                 {
                     if (result == null)
@@ -1393,7 +1393,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             }
 
             // Remove all but the first Text node
-            for (org.w3c.dom.Node tn : textNodes)
+            for (final org.w3c.dom.Node tn : textNodes)
             {
                 elem.removeChild(tn);
             }

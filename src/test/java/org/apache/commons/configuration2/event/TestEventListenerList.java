@@ -102,7 +102,7 @@ public class TestEventListenerList
     @Test
     public void testReceiveEventOfExactType()
     {
-        ListenerTestImpl listener = new ListenerTestImpl();
+        final ListenerTestImpl listener = new ListenerTestImpl();
         list.addEventListener(typeSub1, listener);
 
         list.fire(new EventSub1(this, typeSub1, MESSAGE));
@@ -115,8 +115,8 @@ public class TestEventListenerList
     @Test
     public void testReceiveEventMultipleListeners()
     {
-        ListenerTestImpl listener1 = new ListenerTestImpl();
-        ListenerTestImpl listener2 = new ListenerTestImpl();
+        final ListenerTestImpl listener1 = new ListenerTestImpl();
+        final ListenerTestImpl listener2 = new ListenerTestImpl();
         list.addEventListener(typeSub1, listener1);
         list.addEventListener(typeSub1, listener2);
 
@@ -132,8 +132,8 @@ public class TestEventListenerList
     @Test
     public void testReceiveEventDifferentType()
     {
-        ListenerTestImpl listener1 = new ListenerTestImpl();
-        ListenerTestImpl listener2 = new ListenerTestImpl();
+        final ListenerTestImpl listener1 = new ListenerTestImpl();
+        final ListenerTestImpl listener2 = new ListenerTestImpl();
         list.addEventListener(typeSub1, listener1);
         list.addEventListener(typeSub2, listener2);
 
@@ -148,7 +148,7 @@ public class TestEventListenerList
     @Test
     public void testSuppressEventOfSuperType()
     {
-        ListenerTestImpl listener = new ListenerTestImpl();
+        final ListenerTestImpl listener = new ListenerTestImpl();
         list.addEventListener(typeSub1, listener);
 
         list.fire(new EventBase(this, typeBase, MESSAGE));
@@ -162,7 +162,7 @@ public class TestEventListenerList
     @Test
     public void testReceiveEventSubType()
     {
-        ListenerTestImpl listener = new ListenerTestImpl();
+        final ListenerTestImpl listener = new ListenerTestImpl();
         list.addEventListener(typeBase, listener);
 
         list.fire(new EventSub1(this, typeSub1, MESSAGE));
@@ -176,8 +176,8 @@ public class TestEventListenerList
     @Test
     public void testListenerRegistrationWithListenerData()
     {
-        ListenerTestImpl listener = new ListenerTestImpl();
-        EventListenerRegistrationData<EventSub1> regData =
+        final ListenerTestImpl listener = new ListenerTestImpl();
+        final EventListenerRegistrationData<EventSub1> regData =
                 new EventListenerRegistrationData<>(typeSub1, listener);
         list.addEventListener(regData);
 
@@ -212,7 +212,7 @@ public class TestEventListenerList
     @Test
     public void testRemoveEventListenerNonExistingEventType()
     {
-        ListenerTestImpl listener = new ListenerTestImpl();
+        final ListenerTestImpl listener = new ListenerTestImpl();
         list.addEventListener(typeSub1, listener);
 
         assertFalse("Wrong result",
@@ -225,7 +225,7 @@ public class TestEventListenerList
     @Test
     public void testRemoveEventListenerExisting()
     {
-        ListenerTestImpl listener = new ListenerTestImpl();
+        final ListenerTestImpl listener = new ListenerTestImpl();
         list.addEventListener(typeSub1, listener);
 
         assertTrue("Wrong result", list.removeEventListener(typeSub1, listener));
@@ -268,7 +268,7 @@ public class TestEventListenerList
     @Test
     public void testMultipleListenerRegistration()
     {
-        ListenerTestImpl listener = new ListenerTestImpl();
+        final ListenerTestImpl listener = new ListenerTestImpl();
         list.addEventListener(typeSub1, listener);
         list.addEventListener(typeSub2, listener);
 
@@ -284,10 +284,10 @@ public class TestEventListenerList
      * @param iterable the iterable
      * @return a list with the content of the iterable
      */
-    private static <T> List<T> fetchElements(Iterable<? extends T> iterable)
+    private static <T> List<T> fetchElements(final Iterable<? extends T> iterable)
     {
-        List<T> elems = new LinkedList<>();
-        for (T listener : iterable)
+        final List<T> elems = new LinkedList<>();
+        for (final T listener : iterable)
         {
             elems.add(listener);
         }
@@ -302,10 +302,10 @@ public class TestEventListenerList
      * @param expListeners the expected listeners
      */
     private void checkEventListenersForType(
-            EventType<? extends Event> eventType,
-            EventListener<?>... expListeners)
+            final EventType<? extends Event> eventType,
+            final EventListener<?>... expListeners)
     {
-        List<?> listeners = fetchElements(list.getEventListeners(eventType));
+        final List<?> listeners = fetchElements(list.getEventListeners(eventType));
         assertEquals("Wrong number of listeners", expListeners.length,
                 listeners.size());
         assertTrue("Wrong event listeners: " + listeners,
@@ -339,8 +339,8 @@ public class TestEventListenerList
     @Test
     public void testGetEventListenersMatchingType()
     {
-        ListenerTestImpl listener1 = new ListenerTestImpl();
-        ListenerTestImpl listener2 = new ListenerTestImpl();
+        final ListenerTestImpl listener1 = new ListenerTestImpl();
+        final ListenerTestImpl listener2 = new ListenerTestImpl();
         list.addEventListener(typeSub1, listener1);
         list.addEventListener(typeSub2, listener2);
         checkEventListenersForType(typeSub1, listener1);
@@ -353,8 +353,8 @@ public class TestEventListenerList
     @Test
     public void testGetEventListenersBaseType()
     {
-        ListenerTestImpl listener1 = new ListenerTestImpl();
-        ListenerTestImpl listener2 = new ListenerTestImpl();
+        final ListenerTestImpl listener1 = new ListenerTestImpl();
+        final ListenerTestImpl listener2 = new ListenerTestImpl();
         list.addEventListener(typeBase, listener1);
         list.addEventListener(typeBase, listener2);
         checkEventListenersForType(typeSub1, listener1, listener2);
@@ -367,11 +367,11 @@ public class TestEventListenerList
     @Test(expected = NoSuchElementException.class)
     public void testGetEventListenersIteratorNextNoElement()
     {
-        ListenerTestImpl listener1 = new ListenerTestImpl();
-        ListenerTestImpl listener2 = new ListenerTestImpl();
+        final ListenerTestImpl listener1 = new ListenerTestImpl();
+        final ListenerTestImpl listener2 = new ListenerTestImpl();
         list.addEventListener(typeBase, listener1);
         list.addEventListener(typeBase, listener2);
-        Iterator<EventListener<? super EventBase>> iterator =
+        final Iterator<EventListener<? super EventBase>> iterator =
                 list.getEventListeners(typeBase).iterator();
         for (int i = 0; i < 3; i++)
         {
@@ -387,7 +387,7 @@ public class TestEventListenerList
     public void testGetEventListenersIteratorRemove()
     {
         list.addEventListener(typeBase, new ListenerTestImpl());
-        Iterator<EventListener<? super EventBase>> iterator =
+        final Iterator<EventListener<? super EventBase>> iterator =
                 list.getEventListeners(typeBase).iterator();
         assertTrue("Wrong result", iterator.hasNext());
         iterator.remove();
@@ -400,15 +400,15 @@ public class TestEventListenerList
     @Test(expected = IllegalArgumentException.class)
     public void testEventListenerIteratorWrongEvent()
     {
-        EventListener<EventSub2> listener = new EventListener<EventSub2>()
+        final EventListener<EventSub2> listener = new EventListener<EventSub2>()
         {
             @Override
-            public void onEvent(EventSub2 event)
+            public void onEvent(final EventSub2 event)
             {
             }
         };
         list.addEventListener(typeSub2, listener);
-        EventListenerList.EventListenerIterator<EventSub2> iterator =
+        final EventListenerList.EventListenerIterator<EventSub2> iterator =
                 list.getEventListenerIterator(typeSub2);
         assertTrue("No elements", iterator.hasNext());
         iterator.invokeNext(new EventBase(this, typeBase, "Test"));
@@ -421,7 +421,7 @@ public class TestEventListenerList
     public void testEventListenerIteratorNullEvent()
     {
         list.addEventListener(typeBase, new ListenerTestImpl());
-        EventListenerList.EventListenerIterator<EventBase> iterator =
+        final EventListenerList.EventListenerIterator<EventBase> iterator =
                 list.getEventListenerIterator(typeBase);
         iterator.invokeNext(null);
     }
@@ -432,16 +432,16 @@ public class TestEventListenerList
     @Test
     public void testGetRegistrations()
     {
-        EventListenerRegistrationData<EventSub1> reg1 =
+        final EventListenerRegistrationData<EventSub1> reg1 =
                 new EventListenerRegistrationData<>(typeSub1,
                         new ListenerTestImpl());
-        EventListenerRegistrationData<EventSub2> reg2 =
+        final EventListenerRegistrationData<EventSub2> reg2 =
                 new EventListenerRegistrationData<>(typeSub2,
                         new ListenerTestImpl());
         list.addEventListener(reg1);
         list.addEventListener(reg2);
 
-        List<EventListenerRegistrationData<?>> registrations =
+        final List<EventListenerRegistrationData<?>> registrations =
                 list.getRegistrations();
         assertEquals("Wrong number of registrations", 2, registrations.size());
         assertTrue("Registration 1 not found", registrations.contains(reg1));
@@ -478,16 +478,16 @@ public class TestEventListenerList
     @Test
     public void testAddAll()
     {
-        EventListener<EventBase> l1 = new ListenerTestImpl();
-        EventListener<EventBase> l2 = new ListenerTestImpl();
-        EventListener<EventBase> l3 = new ListenerTestImpl();
+        final EventListener<EventBase> l1 = new ListenerTestImpl();
+        final EventListener<EventBase> l2 = new ListenerTestImpl();
+        final EventListener<EventBase> l3 = new ListenerTestImpl();
         list.addEventListener(typeBase, l1);
-        EventListenerList list2 = new EventListenerList();
+        final EventListenerList list2 = new EventListenerList();
         list2.addEventListener(typeSub1, l2);
         list2.addEventListener(typeBase, l3);
 
         list.addAll(list2);
-        Iterator<EventListenerRegistrationData<?>> it =
+        final Iterator<EventListenerRegistrationData<?>> it =
                 list.getRegistrations().iterator();
         EventListenerRegistrationData<?> reg = it.next();
         assertEquals("Wrong type (1)", typeBase, reg.getEventType());
@@ -516,17 +516,18 @@ public class TestEventListenerList
     @Test
     public void testGetEventListenerRegistrationsForSuperType()
     {
-        ListenerTestImpl l1 = new ListenerTestImpl();
-        ListenerTestImpl l2 = new ListenerTestImpl();
+        final ListenerTestImpl l1 = new ListenerTestImpl();
+        final ListenerTestImpl l2 = new ListenerTestImpl();
         @SuppressWarnings("unchecked")
+        final
         EventListener<Event> l3 = EasyMock.createMock(EventListener.class);
         list.addEventListener(typeSub1, l1);
         list.addEventListener(Event.ANY, l3);
         list.addEventListener(typeBase, l2);
 
-        List<EventListenerRegistrationData<? extends EventBase>> regs =
+        final List<EventListenerRegistrationData<? extends EventBase>> regs =
                 list.getRegistrationsForSuperType(typeBase);
-        Iterator<EventListenerRegistrationData<? extends EventBase>> iterator =
+        final Iterator<EventListenerRegistrationData<? extends EventBase>> iterator =
                 regs.iterator();
         assertEquals("Wrong listener 1", l1, iterator.next().getListener());
         assertEquals("Wrong listener 2", l2, iterator.next().getListener());
@@ -545,8 +546,8 @@ public class TestEventListenerList
         /** An event message for testing pay-load. */
         private final String message;
 
-        public EventBase(Object source, EventType<? extends EventBase> type,
-                String msg)
+        public EventBase(final Object source, final EventType<? extends EventBase> type,
+                final String msg)
         {
             super(source, type);
             message = msg;
@@ -565,8 +566,8 @@ public class TestEventListenerList
     {
         private static final long serialVersionUID = 1L;
 
-        public EventSub1(Object source, EventType<? extends EventSub1> type,
-                String msg)
+        public EventSub1(final Object source, final EventType<? extends EventSub1> type,
+                final String msg)
         {
             super(source, type, msg);
         }
@@ -579,8 +580,8 @@ public class TestEventListenerList
     {
         private static final long serialVersionUID = 1L;
 
-        public EventSub2(Object source, EventType<? extends EventSub2> type,
-                String msg)
+        public EventSub2(final Object source, final EventType<? extends EventSub2> type,
+                final String msg)
         {
             super(source, type, msg);
         }
@@ -597,7 +598,7 @@ public class TestEventListenerList
         private EventBase receivedEvent;
 
         @Override
-        public void onEvent(EventBase event)
+        public void onEvent(final EventBase event)
         {
             assertNull("Too many events: " + event, receivedEvent);
             receivedEvent = event;
@@ -620,8 +621,8 @@ public class TestEventListenerList
          * @param expType the expected type
          * @param expMessage the expected message
          */
-        public void assertEvent(Object expSource, EventType<?> expType,
-                String expMessage)
+        public void assertEvent(final Object expSource, final EventType<?> expType,
+                final String expMessage)
         {
             assertNotNull("No event received", receivedEvent);
             assertEquals("Wrong source", expSource, receivedEvent.getSource());

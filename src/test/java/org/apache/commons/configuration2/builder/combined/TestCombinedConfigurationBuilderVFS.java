@@ -49,7 +49,7 @@ public class TestCombinedConfigurationBuilderVFS extends
     @Override
     protected FileBasedBuilderParameters createParameters()
     {
-        FileBasedBuilderParameters params = super.createParameters();
+        final FileBasedBuilderParameters params = super.createParameters();
         return params.setFileSystem(new VFSFileSystem());
     }
 
@@ -59,19 +59,19 @@ public class TestCombinedConfigurationBuilderVFS extends
     @Test
     public void testSetConfigurationBasePath() throws ConfigurationException
     {
-        File deepDir = new File(ConfigurationAssert.TEST_DIR, "config/deep");
-        Map<String, Object> params = new HashMap<>();
+        final File deepDir = new File(ConfigurationAssert.TEST_DIR, "config/deep");
+        final Map<String, Object> params = new HashMap<>();
         params.put("fileName", "test.properties");
-        BaseHierarchicalConfiguration defConfig =
+        final BaseHierarchicalConfiguration defConfig =
                 createDefinitionConfig("properties", params);
         defConfig.addProperty("override.properties.fileSystem[@config-class]",
                 VFSFileSystem.class.getName());
-        BasicConfigurationBuilder<? extends HierarchicalConfiguration<ImmutableNode>> defBuilder =
+        final BasicConfigurationBuilder<? extends HierarchicalConfiguration<ImmutableNode>> defBuilder =
                 createDefinitionBuilder(defConfig);
         builder.configure(new CombinedBuilderParametersImpl()
                 .setDefinitionBuilder(defBuilder).setBasePath(
                         deepDir.getAbsolutePath()));
-        Configuration config = builder.getConfiguration();
+        final Configuration config = builder.getConfiguration();
         assertEquals("Wrong property value", "somevalue",
                 config.getString("somekey"));
     }

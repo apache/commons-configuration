@@ -62,9 +62,9 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      * @param value object to store
      */
     @Override
-    protected void addPropertyDirect(String key, Object value)
+    protected void addPropertyDirect(final String key, final Object value)
     {
-        Object previousValue = getPropertyInternal(key);
+        final Object previousValue = getPropertyInternal(key);
 
         if (previousValue == null)
         {
@@ -74,6 +74,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
         {
             // safe to case because we have created the lists ourselves
             @SuppressWarnings("unchecked")
+            final
             List<Object> valueList = (List<Object>) previousValue;
             // the value is added to the existing list
             valueList.add(value);
@@ -81,7 +82,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
         else
         {
             // the previous value is replaced by a list containing the previous value and the new value
-            List<Object> list = new ArrayList<>();
+            final List<Object> list = new ArrayList<>();
             list.add(previousValue);
             list.add(value);
 
@@ -97,7 +98,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      * @return object associated with the given configuration key.
      */
     @Override
-    protected Object getPropertyInternal(String key)
+    protected Object getPropertyInternal(final String key)
     {
         return store.get(key);
     }
@@ -123,7 +124,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      * {@code false} otherwise.
      */
     @Override
-    protected boolean containsKeyInternal(String key)
+    protected boolean containsKeyInternal(final String key)
     {
         return store.containsKey(key);
     }
@@ -134,7 +135,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      * @param key the key to remove along with corresponding value.
      */
     @Override
-    protected void clearPropertyDirect(String key)
+    protected void clearPropertyDirect(final String key)
     {
         store.remove(key);
     }
@@ -180,13 +181,13 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
     {
         try
         {
-            BaseConfiguration copy = (BaseConfiguration) super.clone();
+            final BaseConfiguration copy = (BaseConfiguration) super.clone();
             cloneStore(copy);
             copy.cloneInterpolator(this);
 
             return copy;
         }
-        catch (CloneNotSupportedException cex)
+        catch (final CloneNotSupportedException cex)
         {
             // should not happen
             throw new ConfigurationRuntimeException(cex);
@@ -199,21 +200,23 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      * @param copy the copy created by the {@code clone()} method
      * @throws CloneNotSupportedException if the map cannot be cloned
      */
-    private void cloneStore(BaseConfiguration copy)
+    private void cloneStore(final BaseConfiguration copy)
             throws CloneNotSupportedException
     {
         // This is safe because the type of the map is known
         @SuppressWarnings("unchecked")
+        final
         Map<String, Object> clonedStore = (Map<String, Object>) ConfigurationUtils.clone(store);
         copy.store = clonedStore;
 
         // Handle collections in the map; they have to be cloned, too
-        for (Map.Entry<String, Object> e : store.entrySet())
+        for (final Map.Entry<String, Object> e : store.entrySet())
         {
             if (e.getValue() instanceof Collection)
             {
                 // This is safe because the collections were created by ourselves
                 @SuppressWarnings("unchecked")
+                final
                 Collection<String> strList = (Collection<String>) e.getValue();
                 copy.store.put(e.getKey(), new ArrayList<>(strList));
             }

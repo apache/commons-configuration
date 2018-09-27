@@ -63,7 +63,7 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry
      * @throws IllegalArgumentException if the public ID is undefined
      */
     @Override
-    public void registerEntityId(String publicId, URL entityURL)
+    public void registerEntityId(final String publicId, final URL entityURL)
     {
         if (publicId == null)
         {
@@ -84,7 +84,7 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry
      * @throws org.xml.sax.SAXException if a parsing exception occurs
      */
     @Override
-    public InputSource resolveEntity(String publicId, String systemId)
+    public InputSource resolveEntity(final String publicId, final String systemId)
             throws SAXException
     {
         // Has this system identifier been registered?
@@ -100,14 +100,14 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry
             // createInputSourceFromURL() method of Commons Digester.
             try
             {
-                URLConnection connection = entityURL.openConnection();
+                final URLConnection connection = entityURL.openConnection();
                 connection.setUseCaches(false);
-                InputStream stream = connection.getInputStream();
-                InputSource source = new InputSource(stream);
+                final InputStream stream = connection.getInputStream();
+                final InputSource source = new InputSource(stream);
                 source.setSystemId(entityURL.toExternalForm());
                 return source;
             }
-            catch (IOException e)
+            catch (final IOException e)
             {
                 throw new SAXException(e);
             }

@@ -87,7 +87,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
      *
      * @param handler the associated {@code FileHandler} (can be <b>null</b>)
      */
-    public FileBasedBuilderParametersImpl(FileHandler handler)
+    public FileBasedBuilderParametersImpl(final FileHandler handler)
     {
         fileHandler = (handler != null) ? handler : new FileHandler();
     }
@@ -101,7 +101,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
      * @throws IllegalArgumentException if the map is <b>null</b>
      */
     public static FileBasedBuilderParametersImpl fromParameters(
-            Map<String, ?> params)
+            final Map<String, ?> params)
     {
         return fromParameters(params, false);
     }
@@ -120,7 +120,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
      * @throws IllegalArgumentException if the map is <b>null</b>
      */
     public static FileBasedBuilderParametersImpl fromParameters(
-            Map<String, ?> params, boolean createIfMissing)
+            final Map<String, ?> params, final boolean createIfMissing)
     {
         if (params == null)
         {
@@ -150,9 +150,9 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
      * @return the newly created instance
      * @throws ClassCastException if the map contains invalid data
      */
-    public static FileBasedBuilderParametersImpl fromMap(Map<String, ?> map)
+    public static FileBasedBuilderParametersImpl fromMap(final Map<String, ?> map)
     {
-        FileBasedBuilderParametersImpl params =
+        final FileBasedBuilderParametersImpl params =
                 new FileBasedBuilderParametersImpl(FileHandler.fromMap(map));
         if (map != null)
         {
@@ -168,11 +168,11 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
      * class into account.
      */
     @Override
-    public void inheritFrom(Map<String, ?> source)
+    public void inheritFrom(final Map<String, ?> source)
     {
         super.inheritFrom(source);
 
-        FileBasedBuilderParametersImpl srcParams = fromParameters(source);
+        final FileBasedBuilderParametersImpl srcParams = fromParameters(source);
         if (srcParams != null)
         {
             setFileSystem(srcParams.getFileHandler().getFileSystem());
@@ -218,7 +218,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
 
     @Override
     public FileBasedBuilderParametersImpl setReloadingRefreshDelay(
-            Long reloadingRefreshDelay)
+            final Long reloadingRefreshDelay)
     {
         this.reloadingRefreshDelay = reloadingRefreshDelay;
         return this;
@@ -237,49 +237,49 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
 
     @Override
     public FileBasedBuilderParametersImpl setReloadingDetectorFactory(
-            ReloadingDetectorFactory reloadingDetectorFactory)
+            final ReloadingDetectorFactory reloadingDetectorFactory)
     {
         this.reloadingDetectorFactory = reloadingDetectorFactory;
         return this;
     }
 
     @Override
-    public FileBasedBuilderParametersImpl setFile(File file)
+    public FileBasedBuilderParametersImpl setFile(final File file)
     {
         getFileHandler().setFile(file);
         return this;
     }
 
     @Override
-    public FileBasedBuilderParametersImpl setURL(URL url)
+    public FileBasedBuilderParametersImpl setURL(final URL url)
     {
         getFileHandler().setURL(url);
         return this;
     }
 
     @Override
-    public FileBasedBuilderParametersImpl setPath(String path)
+    public FileBasedBuilderParametersImpl setPath(final String path)
     {
         getFileHandler().setPath(path);
         return this;
     }
 
     @Override
-    public FileBasedBuilderParametersImpl setFileName(String name)
+    public FileBasedBuilderParametersImpl setFileName(final String name)
     {
         getFileHandler().setFileName(name);
         return this;
     }
 
     @Override
-    public FileBasedBuilderParametersImpl setBasePath(String path)
+    public FileBasedBuilderParametersImpl setBasePath(final String path)
     {
         getFileHandler().setBasePath(path);
         return this;
     }
 
     @Override
-    public FileBasedBuilderParametersImpl setFileSystem(FileSystem fs)
+    public FileBasedBuilderParametersImpl setFileSystem(final FileSystem fs)
     {
         getFileHandler().setFileSystem(fs);
         return this;
@@ -287,14 +287,14 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
 
     @Override
     public FileBasedBuilderParametersImpl setLocationStrategy(
-            FileLocationStrategy strategy)
+            final FileLocationStrategy strategy)
     {
         getFileHandler().setLocationStrategy(strategy);
         return this;
     }
 
     @Override
-    public FileBasedBuilderParametersImpl setEncoding(String enc)
+    public FileBasedBuilderParametersImpl setEncoding(final String enc)
     {
         getFileHandler().setEncoding(enc);
         return this;
@@ -310,7 +310,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
     @Override
     public Map<String, Object> getParameters()
     {
-        Map<String, Object> params = super.getParameters();
+        final Map<String, Object> params = super.getParameters();
         params.put(PARAM_KEY, this);
         return params;
     }
@@ -322,7 +322,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
     @Override
     public FileBasedBuilderParametersImpl clone()
     {
-        FileBasedBuilderParametersImpl copy =
+        final FileBasedBuilderParametersImpl copy =
                 (FileBasedBuilderParametersImpl) super.clone();
         copy.fileHandler =
                 new FileHandler(fileHandler.getContent(), fileHandler);

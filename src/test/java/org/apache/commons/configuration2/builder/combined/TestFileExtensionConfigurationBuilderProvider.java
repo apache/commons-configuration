@@ -57,7 +57,7 @@ public class TestFileExtensionConfigurationBuilderProvider
      */
     private static FileExtensionConfigurationBuilderProvider setUpProvider()
     {
-        FileExtensionConfigurationBuilderProvider provider =
+        final FileExtensionConfigurationBuilderProvider provider =
                 new FileExtensionConfigurationBuilderProvider(
                         BasicConfigurationBuilder.class.getName(), null,
                         MATCH_CLASS, DEF_CLASS, EXT, null);
@@ -71,7 +71,7 @@ public class TestFileExtensionConfigurationBuilderProvider
      */
     private ConfigurationDeclaration setUpDecl()
     {
-        ConfigurationDeclaration decl =
+        final ConfigurationDeclaration decl =
                 EasyMock.createMock(ConfigurationDeclaration.class);
         EasyMock.replay(decl);
         return decl;
@@ -116,7 +116,7 @@ public class TestFileExtensionConfigurationBuilderProvider
     @Test
     public void testInitSuper()
     {
-        FileExtensionConfigurationBuilderProvider provider =
+        final FileExtensionConfigurationBuilderProvider provider =
                 new FileExtensionConfigurationBuilderProvider(
                         BasicConfigurationBuilder.class.getName(),
                         ReloadingFileBasedConfigurationBuilder.class.getName(),
@@ -139,8 +139,8 @@ public class TestFileExtensionConfigurationBuilderProvider
     public void testDetermineConfigurationClassNoParams()
             throws ConfigurationException
     {
-        ConfigurationDeclaration decl = setUpDecl();
-        FileExtensionConfigurationBuilderProvider provider = setUpProvider();
+        final ConfigurationDeclaration decl = setUpDecl();
+        final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
         assertEquals("Wrong class", DEF_CLASS,
                 provider.determineConfigurationClass(decl,
                         new ArrayList<BuilderParameters>()));
@@ -154,11 +154,11 @@ public class TestFileExtensionConfigurationBuilderProvider
     public void testDetermineConfigurationClassNoExtension()
             throws ConfigurationException
     {
-        ConfigurationDeclaration decl = setUpDecl();
-        BuilderParameters params =
+        final ConfigurationDeclaration decl = setUpDecl();
+        final BuilderParameters params =
                 new FileBasedBuilderParametersImpl()
                         .setPath("C:\\Test\\someTestConfiguration");
-        FileExtensionConfigurationBuilderProvider provider = setUpProvider();
+        final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
         assertEquals(
                 "Wrong class",
                 DEF_CLASS,
@@ -174,11 +174,11 @@ public class TestFileExtensionConfigurationBuilderProvider
     public void testDetermineConfigurationClassExtensionNoMatch()
             throws ConfigurationException
     {
-        ConfigurationDeclaration decl = setUpDecl();
-        BuilderParameters params =
+        final ConfigurationDeclaration decl = setUpDecl();
+        final BuilderParameters params =
                 new FileBasedBuilderParametersImpl()
                         .setPath("C:\\Test\\someTestConfiguration.properties");
-        FileExtensionConfigurationBuilderProvider provider = setUpProvider();
+        final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
         assertEquals(
                 "Wrong class",
                 DEF_CLASS,
@@ -194,9 +194,9 @@ public class TestFileExtensionConfigurationBuilderProvider
     public void testDeterminieConfigurationClassNoFileName()
             throws ConfigurationException
     {
-        ConfigurationDeclaration decl = setUpDecl();
-        BuilderParameters params = new FileBasedBuilderParametersImpl();
-        FileExtensionConfigurationBuilderProvider provider = setUpProvider();
+        final ConfigurationDeclaration decl = setUpDecl();
+        final BuilderParameters params = new FileBasedBuilderParametersImpl();
+        final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
         assertEquals(
                 "Wrong class",
                 DEF_CLASS,
@@ -212,11 +212,11 @@ public class TestFileExtensionConfigurationBuilderProvider
     public void testDetermineConfigurationClassExtensionMatch()
             throws ConfigurationException
     {
-        ConfigurationDeclaration decl = setUpDecl();
-        BuilderParameters params =
+        final ConfigurationDeclaration decl = setUpDecl();
+        final BuilderParameters params =
                 new FileBasedBuilderParametersImpl()
                         .setPath("C:\\Test\\someTestConfiguration." + EXT);
-        FileExtensionConfigurationBuilderProvider provider = setUpProvider();
+        final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
         assertEquals(
                 "Wrong class",
                 MATCH_CLASS,
@@ -231,12 +231,12 @@ public class TestFileExtensionConfigurationBuilderProvider
     public void testDetermineConfigurationClassMatchCase()
             throws ConfigurationException
     {
-        ConfigurationDeclaration decl = setUpDecl();
-        BuilderParameters params =
+        final ConfigurationDeclaration decl = setUpDecl();
+        final BuilderParameters params =
                 new FileBasedBuilderParametersImpl()
                         .setPath("C:\\Test\\someTestConfiguration."
                                 + EXT.toUpperCase(Locale.ENGLISH));
-        FileExtensionConfigurationBuilderProvider provider = setUpProvider();
+        final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
         assertEquals(
                 "Wrong class",
                 MATCH_CLASS,

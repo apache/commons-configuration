@@ -62,7 +62,7 @@ public abstract class TestAbstractConfiguration
     @Test
     public void testGetProperty()
     {
-        Configuration config = getConfiguration();
+        final Configuration config = getConfiguration();
         assertEquals("key1", "value1", config.getProperty("key1"));
         assertEquals("key2", "value2", config.getProperty("key2"));
         assertNull("key3", config.getProperty("key3"));
@@ -71,9 +71,9 @@ public abstract class TestAbstractConfiguration
     @Test
     public void testList()
     {
-        Configuration config = getConfiguration();
+        final Configuration config = getConfiguration();
 
-        List<?> list = config.getList("list");
+        final List<?> list = config.getList("list");
         assertNotNull("list not found", config.getProperty("list"));
         assertEquals("list size", 2, list.size());
         assertTrue("'value1' is not in the list", list.contains("value1"));
@@ -94,16 +94,16 @@ public abstract class TestAbstractConfiguration
     @Test
     public void testAddPropertyDirect()
     {
-        AbstractConfiguration config = getConfiguration();
+        final AbstractConfiguration config = getConfiguration();
         config.addPropertyDirect("key3", "value3");
         assertEquals("key3", "value3", config.getProperty("key3"));
 
         config.addPropertyDirect("key3", "value4");
         config.addPropertyDirect("key3", "value5");
-        List<Object> list = config.getList("key3");
+        final List<Object> list = config.getList("key3");
         assertNotNull("no list found for the 'key3' property", list);
 
-        List<Object> expected = new ArrayList<>();
+        final List<Object> expected = new ArrayList<>();
         expected.add("value3");
         expected.add("value4");
         expected.add("value5");
@@ -114,7 +114,7 @@ public abstract class TestAbstractConfiguration
     @Test
     public void testIsEmpty()
     {
-        Configuration config = getConfiguration();
+        final Configuration config = getConfiguration();
         assertFalse("the configuration is empty", config.isEmpty());
         assertTrue("the configuration is not empty", getEmptyConfiguration().isEmpty());
     }
@@ -134,7 +134,7 @@ public abstract class TestAbstractConfiguration
     @Test
     public void testContainsKey()
     {
-        Configuration config = getConfiguration();
+        final Configuration config = getConfiguration();
         assertTrue("key1 not found", config.containsKey("key1"));
         assertFalse("key3 found", config.containsKey("key3"));
     }
@@ -142,7 +142,7 @@ public abstract class TestAbstractConfiguration
     @Test
     public void testClearProperty()
     {
-        Configuration config = getConfiguration();
+        final Configuration config = getConfiguration();
         config.clearProperty("key2");
         assertFalse("key2 not cleared", config.containsKey("key2"));
     }
@@ -150,10 +150,10 @@ public abstract class TestAbstractConfiguration
     @Test
     public void testGetKeys()
     {
-        Configuration config = getConfiguration();
-        Iterator<String> keys = config.getKeys();
+        final Configuration config = getConfiguration();
+        final Iterator<String> keys = config.getKeys();
 
-        List<String> expectedKeys = new ArrayList<>();
+        final List<String> expectedKeys = new ArrayList<>();
         expectedKeys.add("key1");
         expectedKeys.add("key2");
         expectedKeys.add("list");
@@ -162,7 +162,7 @@ public abstract class TestAbstractConfiguration
         assertNotNull("null iterator", keys);
         assertTrue("empty iterator", keys.hasNext());
 
-        List<String> actualKeys = new ArrayList<>();
+        final List<String> actualKeys = new ArrayList<>();
         while (keys.hasNext())
         {
             actualKeys.add(keys.next());
@@ -177,9 +177,9 @@ public abstract class TestAbstractConfiguration
     @Test
     public void testSetLogger()
     {
-        AbstractConfiguration config = getEmptyConfiguration();
+        final AbstractConfiguration config = getEmptyConfiguration();
         assertNotNull("Default logger is null", config.getLogger());
-        ConfigurationLogger log = new ConfigurationLogger(config.getClass());
+        final ConfigurationLogger log = new ConfigurationLogger(config.getClass());
         config.setLogger(log);
         assertSame("Logger was not set", log, config.getLogger());
     }
@@ -191,13 +191,13 @@ public abstract class TestAbstractConfiguration
     @Test
     public void testGetBigIntegerConversion()
     {
-        Configuration config = getConfiguration();
+        final Configuration config = getConfiguration();
         try
         {
             config.getBigInteger("key1");
             fail("No conversion exception thrown!");
         }
-        catch (ConversionException cex)
+        catch (final ConversionException cex)
         {
             assertTrue("Key not found in exception message: " + cex, cex
                     .getMessage().contains("'key1'"));

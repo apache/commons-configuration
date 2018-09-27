@@ -84,7 +84,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
      * @param refreshDelay the refresh delay; a value of 0 means that a check is
      *        performed in all cases
      */
-    public FileHandlerReloadingDetector(FileHandler handler, long refreshDelay)
+    public FileHandlerReloadingDetector(final FileHandler handler, final long refreshDelay)
     {
         fileHandler = (handler != null) ? handler : new FileHandler();
         this.refreshDelay = refreshDelay;
@@ -98,7 +98,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
      * @param handler the {@code FileHandler} associated with this detector (can
      *        be <b>null</b>)
      */
-    public FileHandlerReloadingDetector(FileHandler handler)
+    public FileHandlerReloadingDetector(final FileHandler handler)
     {
         this(handler, DEFAULT_REFRESH_DELAY);
     }
@@ -150,12 +150,12 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
     @Override
     public boolean isReloadingRequired()
     {
-        long now = System.currentTimeMillis();
+        final long now = System.currentTimeMillis();
         if (now >= lastChecked + getRefreshDelay())
         {
             lastChecked = now;
 
-            long modified = getLastModificationDate();
+            final long modified = getLastModificationDate();
             if (modified > 0)
             {
                 if (lastModified == 0)
@@ -205,7 +205,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
      */
     protected long getLastModificationDate()
     {
-        File file = getExistingFile();
+        final File file = getExistingFile();
         return (file != null) ? file.lastModified() : 0;
     }
 
@@ -216,7 +216,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
      *
      * @param time the new last modification date
      */
-    protected void updateLastModified(long time)
+    protected void updateLastModified(final long time)
     {
         lastModified = time;
     }
@@ -232,7 +232,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
      */
     protected File getFile()
     {
-        URL url = getFileHandler().getURL();
+        final URL url = getFileHandler().getURL();
         return (url != null) ? fileFromURL(url) : getFileHandler().getFile();
     }
 
@@ -259,17 +259,17 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
      * @param url the URL to be converted
      * @return the resulting file or <b>null </b>
      */
-    private static File fileFromURL(URL url)
+    private static File fileFromURL(final URL url)
     {
         if (JAR_PROTOCOL.equals(url.getProtocol()))
         {
-            String path = url.getPath();
+            final String path = url.getPath();
             try
             {
                 return FileLocatorUtils.fileFromURL(new URL(path.substring(0,
                         path.indexOf('!'))));
             }
-            catch (MalformedURLException mex)
+            catch (final MalformedURLException mex)
             {
                 return null;
             }

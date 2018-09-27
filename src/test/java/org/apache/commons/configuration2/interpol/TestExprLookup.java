@@ -59,8 +59,8 @@ public class TestExprLookup
      */
     private static XMLConfiguration loadConfig() throws ConfigurationException
     {
-        XMLConfiguration config = new XMLConfiguration();
-        FileHandler handler = new FileHandler(config);
+        final XMLConfiguration config = new XMLConfiguration();
+        final FileHandler handler = new FileHandler(config);
         handler.load(TEST_FILE);
         return config;
     }
@@ -68,20 +68,20 @@ public class TestExprLookup
     @Test
     public void testLookup() throws Exception
     {
-        ConsoleAppender app = new ConsoleAppender(new SimpleLayout());
-        Log log = LogFactory.getLog("TestLogger");
-        Logger logger = ((Log4JLogger)log).getLogger();
+        final ConsoleAppender app = new ConsoleAppender(new SimpleLayout());
+        final Log log = LogFactory.getLog("TestLogger");
+        final Logger logger = ((Log4JLogger)log).getLogger();
         logger.addAppender(app);
         logger.setLevel(Level.DEBUG);
         logger.setAdditivity(false);
-        ExprLookup.Variables vars = new ExprLookup.Variables();
+        final ExprLookup.Variables vars = new ExprLookup.Variables();
         vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
         vars.add(new ExprLookup.Variable("Util", new Utility("Hello")));
         vars.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
-        XMLConfiguration config = loadConfig();
-        ConfigurationLogger testLogger = new ConfigurationLogger("TestLogger");
+        final XMLConfiguration config = loadConfig();
+        final ConfigurationLogger testLogger = new ConfigurationLogger("TestLogger");
         config.setLogger(testLogger);
-        ExprLookup lookup = new ExprLookup(vars);
+        final ExprLookup lookup = new ExprLookup(vars);
         lookup.setInterpolator(config.getInterpolator());
         lookup.setLogger(testLogger);
         String str = lookup.lookup(PATTERN1);
@@ -97,10 +97,10 @@ public class TestExprLookup
     @Test
     public void testLookupNoConfigurationInterpolator()
     {
-        ExprLookup.Variables vars = new ExprLookup.Variables();
+        final ExprLookup.Variables vars = new ExprLookup.Variables();
         vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
-        ExprLookup lookup = new ExprLookup(vars);
-        String value = "test";
+        final ExprLookup lookup = new ExprLookup(vars);
+        final String value = "test";
         assertEquals("Wrong result", value, lookup.lookup(value));
     }
 
@@ -110,9 +110,9 @@ public class TestExprLookup
     @Test
     public void testGetVariables()
     {
-        ExprLookup.Variables vars = new ExprLookup.Variables();
+        final ExprLookup.Variables vars = new ExprLookup.Variables();
         vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
-        ExprLookup lookup = new ExprLookup(vars);
+        final ExprLookup lookup = new ExprLookup(vars);
         assertEquals("Wrong variables", vars, lookup.getVariables());
     }
 
@@ -122,10 +122,10 @@ public class TestExprLookup
     @Test
     public void testGetVariablesDefensiveCopy()
     {
-        ExprLookup.Variables vars = new ExprLookup.Variables();
+        final ExprLookup.Variables vars = new ExprLookup.Variables();
         vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
-        ExprLookup lookup = new ExprLookup(vars);
-        ExprLookup.Variables vars2 = lookup.getVariables();
+        final ExprLookup lookup = new ExprLookup(vars);
+        final ExprLookup.Variables vars2 = lookup.getVariables();
         vars2.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
         assertEquals("Modified variables", vars, lookup.getVariables());
     }
@@ -136,13 +136,13 @@ public class TestExprLookup
     @Test
     public void testLookupNonStringExpression() throws ConfigurationException
     {
-        ExprLookup.Variables vars = new ExprLookup.Variables();
+        final ExprLookup.Variables vars = new ExprLookup.Variables();
         vars.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
-        ExprLookup lookup = new ExprLookup(vars);
-        XMLConfiguration config = loadConfig();
+        final ExprLookup lookup = new ExprLookup(vars);
+        final XMLConfiguration config = loadConfig();
         lookup.setInterpolator(config.getInterpolator());
-        String pattern = "System.currentTimeMillis()";
-        String result = lookup.lookup(pattern);
+        final String pattern = "System.currentTimeMillis()";
+        final String result = lookup.lookup(pattern);
         assertNotEquals("Not replaced", pattern, result);
     }
 
@@ -152,10 +152,10 @@ public class TestExprLookup
     @Test
     public void testLookupNullExpression() throws ConfigurationException
     {
-        ExprLookup.Variables vars = new ExprLookup.Variables();
+        final ExprLookup.Variables vars = new ExprLookup.Variables();
         vars.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
-        ExprLookup lookup = new ExprLookup(vars);
-        XMLConfiguration config = loadConfig();
+        final ExprLookup lookup = new ExprLookup(vars);
+        final XMLConfiguration config = loadConfig();
         lookup.setInterpolator(config.getInterpolator());
         assertNull("Wrong result",
                 lookup.lookup("System.getProperty('undefined.property')"));
@@ -165,7 +165,7 @@ public class TestExprLookup
     {
         String message;
 
-        public Utility(String msg)
+        public Utility(final String msg)
         {
             this.message = msg;
         }
@@ -175,7 +175,7 @@ public class TestExprLookup
             return message;
         }
 
-        public String str(String str)
+        public String str(final String str)
         {
             return str;
         }

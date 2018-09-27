@@ -80,7 +80,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      *
      * @param root the new root node for this model
      */
-    public InMemoryNodeModel(ImmutableNode root)
+    public InMemoryNodeModel(final ImmutableNode root)
     {
         structure =
                 new AtomicReference<>(
@@ -116,8 +116,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     }
 
     @Override
-    public void addProperty(String key, Iterable<?> values,
-            NodeKeyResolver<ImmutableNode> resolver)
+    public void addProperty(final String key, final Iterable<?> values,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         addProperty(key, null, values, resolver);
     }
@@ -136,7 +136,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param resolver the {@code NodeKeyResolver}
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
-    public void addProperty(final String key, NodeSelector selector,
+    public void addProperty(final String key, final NodeSelector selector,
             final Iterable<?> values,
             final NodeKeyResolver<ImmutableNode> resolver)
     {
@@ -145,7 +145,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             updateModel(new TransactionInitializer()
             {
                 @Override
-                public boolean initTransaction(ModelTransaction tx)
+                public boolean initTransaction(final ModelTransaction tx)
                 {
                     initializeAddTransaction(tx, key, values, resolver);
                     return true;
@@ -155,8 +155,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     }
 
     @Override
-    public void addNodes(String key, Collection<? extends ImmutableNode> nodes,
-            NodeKeyResolver<ImmutableNode> resolver)
+    public void addNodes(final String key, final Collection<? extends ImmutableNode> nodes,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         addNodes(key, null, nodes, resolver);
     }
@@ -175,7 +175,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param resolver the {@code NodeKeyResolver}
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
-    public void addNodes(final String key, NodeSelector selector,
+    public void addNodes(final String key, final NodeSelector selector,
             final Collection<? extends ImmutableNode> nodes,
             final NodeKeyResolver<ImmutableNode> resolver)
     {
@@ -184,9 +184,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             updateModel(new TransactionInitializer()
             {
                 @Override
-                public boolean initTransaction(ModelTransaction tx)
+                public boolean initTransaction(final ModelTransaction tx)
                 {
-                    List<QueryResult<ImmutableNode>> results =
+                    final List<QueryResult<ImmutableNode>> results =
                             resolver.resolveKey(tx.getQueryRoot(), key,
                                     tx.getCurrentData());
                     if (results.size() == 1)
@@ -199,14 +199,14 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                     }
                     else
                     {
-                        NodeAddData<ImmutableNode> addData =
+                        final NodeAddData<ImmutableNode> addData =
                                 resolver.resolveAddKey(tx.getQueryRoot(), key,
                                         tx.getCurrentData());
                         if (addData.isAttribute())
                         {
                             throw attributeKeyException(key);
                         }
-                        ImmutableNode newNode =
+                        final ImmutableNode newNode =
                                 new ImmutableNode.Builder(nodes.size())
                                         .name(addData.getNewNodeName())
                                         .addChildren(nodes).create();
@@ -220,8 +220,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     }
 
     @Override
-    public void setProperty(String key, Object value,
-            NodeKeyResolver<ImmutableNode> resolver)
+    public void setProperty(final String key, final Object value,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         setProperty(key, null, value, resolver);
     }
@@ -240,16 +240,16 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param resolver the {@code NodeKeyResolver}
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
-    public void setProperty(final String key, NodeSelector selector,
+    public void setProperty(final String key, final NodeSelector selector,
             final Object value, final NodeKeyResolver<ImmutableNode> resolver)
     {
         updateModel(new TransactionInitializer()
         {
             @Override
-            public boolean initTransaction(ModelTransaction tx)
+            public boolean initTransaction(final ModelTransaction tx)
             {
                 boolean added = false;
-                NodeUpdateData<ImmutableNode> updateData =
+                final NodeUpdateData<ImmutableNode> updateData =
                         resolver.resolveUpdateKey(tx.getQueryRoot(), key,
                                 value, tx.getCurrentData());
                 if (!updateData.getNewValues().isEmpty())
@@ -258,10 +258,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                             updateData.getNewValues(), resolver);
                     added = true;
                 }
-                boolean cleared =
+                final boolean cleared =
                         initializeClearTransaction(tx,
                                 updateData.getRemovedNodes());
-                boolean updated =
+                final boolean updated =
                         initializeUpdateTransaction(tx,
                                 updateData.getChangedValues());
                 return added || cleared || updated;
@@ -276,8 +276,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * objects for the elements to be removed from the model.
      */
     @Override
-    public List<QueryResult<ImmutableNode>> clearTree(String key,
-            NodeKeyResolver<ImmutableNode> resolver)
+    public List<QueryResult<ImmutableNode>> clearTree(final String key,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         return clearTree(key, null, resolver);
     }
@@ -297,22 +297,22 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
     public List<QueryResult<ImmutableNode>> clearTree(final String key,
-            NodeSelector selector, final NodeKeyResolver<ImmutableNode> resolver)
+            final NodeSelector selector, final NodeKeyResolver<ImmutableNode> resolver)
     {
         final List<QueryResult<ImmutableNode>> removedElements =
                 new LinkedList<>();
         updateModel(new TransactionInitializer()
         {
             @Override
-            public boolean initTransaction(ModelTransaction tx)
+            public boolean initTransaction(final ModelTransaction tx)
             {
                 boolean changes = false;
-                TreeData currentStructure = tx.getCurrentData();
-                List<QueryResult<ImmutableNode>> results = resolver.resolveKey(
+                final TreeData currentStructure = tx.getCurrentData();
+                final List<QueryResult<ImmutableNode>> results = resolver.resolveKey(
                         tx.getQueryRoot(), key, currentStructure);
                 removedElements.clear();
                 removedElements.addAll(results);
-                for (QueryResult<ImmutableNode> result : results)
+                for (final QueryResult<ImmutableNode> result : results)
                 {
                     if (result.isAttributeResult())
                     {
@@ -345,8 +345,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * state, it is removed from the model.
      */
     @Override
-    public void clearProperty(String key,
-            NodeKeyResolver<ImmutableNode> resolver)
+    public void clearProperty(final String key,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         clearProperty(key, null, resolver);
     }
@@ -364,15 +364,15 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param resolver the {@code NodeKeyResolver}
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
-    public void clearProperty(final String key, NodeSelector selector,
+    public void clearProperty(final String key, final NodeSelector selector,
             final NodeKeyResolver<ImmutableNode> resolver)
     {
         updateModel(new TransactionInitializer()
         {
             @Override
-            public boolean initTransaction(ModelTransaction tx)
+            public boolean initTransaction(final ModelTransaction tx)
             {
-                List<QueryResult<ImmutableNode>> results =
+                final List<QueryResult<ImmutableNode>> results =
                         resolver.resolveKey(tx.getQueryRoot(), key,
                                 tx.getCurrentData());
                 return initializeClearTransaction(tx, results);
@@ -388,9 +388,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param resolver the {@code NodeKeyResolver}
      */
     @Override
-    public void clear(NodeKeyResolver<ImmutableNode> resolver)
+    public void clear(final NodeKeyResolver<ImmutableNode> resolver)
     {
-        ImmutableNode newRoot =
+        final ImmutableNode newRoot =
                 new ImmutableNode.Builder().name(getRootNode().getNodeName())
                         .create();
         setRootNode(newRoot);
@@ -416,7 +416,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      *        empty root node is set)
      */
     @Override
-    public void setRootNode(ImmutableNode newRoot)
+    public void setRootNode(final ImmutableNode newRoot)
     {
         structure.set(createTreeData(initialRootNode(newRoot), structure.get()));
     }
@@ -435,8 +435,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param resolver the {@code NodeKeyResolver}
      * @throws IllegalArgumentException if the new root node is <b>null</b>
      */
-    public void replaceRoot(ImmutableNode newRoot,
-            NodeKeyResolver<ImmutableNode> resolver)
+    public void replaceRoot(final ImmutableNode newRoot,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         if (newRoot == null)
         {
@@ -444,9 +444,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                     "Replaced root node must not be null!");
         }
 
-        TreeData current = structure.get();
+        final TreeData current = structure.get();
         // this step is needed to get a valid NodeHandler
-        TreeData temp =
+        final TreeData temp =
                 createTreeDataForRootAndTracker(newRoot,
                         current.getNodeTracker());
         structure.set(temp.updateNodeTracker(temp.getNodeTracker().update(
@@ -469,15 +469,15 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      */
     public void mergeRoot(final ImmutableNode node, final String rootName,
             final Map<ImmutableNode, ?> references, final Object rootRef,
-            NodeKeyResolver<ImmutableNode> resolver)
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         updateModel(new TransactionInitializer()
         {
             @Override
-            public boolean initTransaction(ModelTransaction tx)
+            public boolean initTransaction(final ModelTransaction tx)
             {
-                TreeData current = tx.getCurrentData();
-                String newRootName =
+                final TreeData current = tx.getCurrentData();
+                final String newRootName =
                         determineRootName(current.getRootNode(), node, rootName);
                 if (newRootName != null)
                 {
@@ -521,14 +521,14 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @throws ConfigurationRuntimeException if the selector does not select a
      *         single node
      */
-    public void trackNode(NodeSelector selector,
-            NodeKeyResolver<ImmutableNode> resolver)
+    public void trackNode(final NodeSelector selector,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
         boolean done;
         do
         {
-            TreeData current = structure.get();
-            NodeTracker newTracker =
+            final TreeData current = structure.get();
+            final NodeTracker newTracker =
                     current.getNodeTracker().trackNode(current.getRootNode(),
                             selector, resolver, current);
             done =
@@ -549,16 +549,16 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @return a collection with the {@code NodeSelector} objects for the new
      *         tracked nodes
      */
-    public Collection<NodeSelector> selectAndTrackNodes(String key,
-            NodeKeyResolver<ImmutableNode> resolver)
+    public Collection<NodeSelector> selectAndTrackNodes(final String key,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
-        Mutable<Collection<NodeSelector>> refSelectors =
+        final Mutable<Collection<NodeSelector>> refSelectors =
                 new MutableObject<>();
         boolean done;
         do
         {
-            TreeData current = structure.get();
-            List<ImmutableNode> nodes =
+            final TreeData current = structure.get();
+            final List<ImmutableNode> nodes =
                     resolver.resolveNodeKey(current.getRootNode(), key, current);
             if (nodes.isEmpty())
             {
@@ -586,21 +586,21 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @return a collection with the {@code NodeSelector} objects for the new
      *         tracked nodes
      */
-    public Collection<NodeSelector> trackChildNodes(String key,
-            NodeKeyResolver<ImmutableNode> resolver)
+    public Collection<NodeSelector> trackChildNodes(final String key,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
-        Mutable<Collection<NodeSelector>> refSelectors =
+        final Mutable<Collection<NodeSelector>> refSelectors =
                 new MutableObject<>();
         boolean done;
         do
         {
             refSelectors.setValue(Collections.<NodeSelector> emptyList());
-            TreeData current = structure.get();
-            List<ImmutableNode> nodes =
+            final TreeData current = structure.get();
+            final List<ImmutableNode> nodes =
                     resolver.resolveNodeKey(current.getRootNode(), key, current);
             if (nodes.size() == 1)
             {
-                ImmutableNode node = nodes.get(0);
+                final ImmutableNode node = nodes.get(0);
                 done =
                         node.getChildren().isEmpty()
                                 || structure.compareAndSet(
@@ -631,17 +631,17 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @throws ConfigurationRuntimeException if the passed in key does not
      *         select a single node
      */
-    public NodeSelector trackChildNodeWithCreation(String key,
-            String childName, NodeKeyResolver<ImmutableNode> resolver)
+    public NodeSelector trackChildNodeWithCreation(final String key,
+            final String childName, final NodeKeyResolver<ImmutableNode> resolver)
     {
-        MutableObject<NodeSelector> refSelector =
+        final MutableObject<NodeSelector> refSelector =
                 new MutableObject<>();
         boolean done;
 
         do
         {
-            TreeData current = structure.get();
-            List<ImmutableNode> nodes =
+            final TreeData current = structure.get();
+            final List<ImmutableNode> nodes =
                     resolver.resolveNodeKey(current.getRootNode(), key, current);
             if (nodes.size() != 1)
             {
@@ -649,8 +649,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                         "Key does not select a single node: " + key);
             }
 
-            ImmutableNode parent = nodes.get(0);
-            TreeData newData =
+            final ImmutableNode parent = nodes.get(0);
+            final TreeData newData =
                     createDataWithTrackedChildNode(current, parent, childName,
                             resolver, refSelector);
 
@@ -670,7 +670,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @return the current {@code ImmutableNode} associated with this selector
      * @throws ConfigurationRuntimeException if the selector is unknown
      */
-    public ImmutableNode getTrackedNode(NodeSelector selector)
+    public ImmutableNode getTrackedNode(final NodeSelector selector)
     {
         return structure.get().getNodeTracker().getTrackedNode(selector);
     }
@@ -688,7 +688,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      * @throws IllegalArgumentException if the replacement node is <b>null</b>
      */
-    public void replaceTrackedNode(NodeSelector selector, ImmutableNode newNode)
+    public void replaceTrackedNode(final NodeSelector selector, final ImmutableNode newNode)
     {
         if (newNode == null)
         {
@@ -699,7 +699,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         boolean done;
         do
         {
-            TreeData currentData = structure.get();
+            final TreeData currentData = structure.get();
             done =
                     replaceDetachedTrackedNode(currentData, selector, newNode)
                             || replaceActiveTrackedNode(currentData, selector,
@@ -721,10 +721,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @throws ConfigurationRuntimeException if the selector is unknown
      */
     public NodeHandler<ImmutableNode> getTrackedNodeHandler(
-            NodeSelector selector)
+            final NodeSelector selector)
     {
-        TreeData currentData = structure.get();
-        InMemoryNodeModel detachedNodeModel =
+        final TreeData currentData = structure.get();
+        final InMemoryNodeModel detachedNodeModel =
                 currentData.getNodeTracker().getDetachedNodeModel(selector);
         return (detachedNodeModel != null) ? detachedNodeModel.getNodeHandler()
                 : new TrackedNodeHandler(currentData.getNodeTracker()
@@ -747,7 +747,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @return a flag whether this tracked node is in detached state
      * @throws ConfigurationRuntimeException if the selector is unknown
      */
-    public boolean isTrackedNodeDetached(NodeSelector selector)
+    public boolean isTrackedNodeDetached(final NodeSelector selector)
     {
         return structure.get().getNodeTracker().isTrackedNodeDetached(selector);
     }
@@ -763,13 +763,13 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @throws ConfigurationRuntimeException if the specified node is not
      *         tracked
      */
-    public void untrackNode(NodeSelector selector)
+    public void untrackNode(final NodeSelector selector)
     {
         boolean done;
         do
         {
-            TreeData current = structure.get();
-            NodeTracker newTracker =
+            final TreeData current = structure.get();
+            final NodeTracker newTracker =
                     current.getNodeTracker().untrackNode(selector);
             done =
                     structure.compareAndSet(current,
@@ -810,16 +810,16 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param root the root node of the current tree
      */
     static void updateParentMapping(final Map<ImmutableNode, ImmutableNode> parents,
-            ImmutableNode root)
+            final ImmutableNode root)
     {
         NodeTreeWalker.INSTANCE.walkBFS(root,
                 new ConfigurationNodeVisitorAdapter<ImmutableNode>()
                 {
                     @Override
-                    public void visitBeforeChildren(ImmutableNode node,
-                            NodeHandler<ImmutableNode> handler)
+                    public void visitBeforeChildren(final ImmutableNode node,
+                            final NodeHandler<ImmutableNode> handler)
                     {
-                        for (ImmutableNode c : node.getChildren())
+                        for (final ImmutableNode c : node.getChildren())
                         {
                             parents.put(c, node);
                         }
@@ -834,7 +834,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param node the node in question
      * @return <b>true</b> if the node is defined, <b>false</b> otherwise
      */
-    static boolean checkIfNodeDefined(ImmutableNode node)
+    static boolean checkIfNodeDefined(final ImmutableNode node)
     {
         return node.getValue() != null || !node.getChildren().isEmpty()
                 || !node.getAttributes().isEmpty();
@@ -848,10 +848,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param values the collection with node values
      * @param resolver the {@code NodeKeyResolver}
      */
-    private void initializeAddTransaction(ModelTransaction tx, String key,
-            Iterable<?> values, NodeKeyResolver<ImmutableNode> resolver)
+    private void initializeAddTransaction(final ModelTransaction tx, final String key,
+            final Iterable<?> values, final NodeKeyResolver<ImmutableNode> resolver)
     {
-        NodeAddData<ImmutableNode> addData =
+        final NodeAddData<ImmutableNode> addData =
                 resolver.resolveAddKey(tx.getQueryRoot(), key,
                         tx.getCurrentData());
         if (addData.isAttribute())
@@ -871,9 +871,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param current the current {@code TreeData} object (may be <b>null</b>)
      * @return the {@code TreeData} describing the current tree
      */
-    private TreeData createTreeData(ImmutableNode root, TreeData current)
+    private TreeData createTreeData(final ImmutableNode root, final TreeData current)
     {
-        NodeTracker newTracker =
+        final NodeTracker newTracker =
                 (current != null) ? current.getNodeTracker()
                         .detachAllTrackedNodes() : new NodeTracker();
         return createTreeDataForRootAndTracker(root, newTracker);
@@ -887,8 +887,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param newTracker the new {@code NodeTracker}
      * @return the new {@code TreeData} object
      */
-    private TreeData createTreeDataForRootAndTracker(ImmutableNode root,
-            NodeTracker newTracker)
+    private TreeData createTreeDataForRootAndTracker(final ImmutableNode root,
+            final NodeTracker newTracker)
     {
         return new TreeData(root, createParentMapping(root),
                 Collections.<ImmutableNode, ImmutableNode> emptyMap(),
@@ -902,10 +902,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param addData the {@code NodeAddData}
      * @param values the collection with node values
      */
-    private static void addNodeProperty(ModelTransaction tx,
-            NodeAddData<ImmutableNode> addData, Iterable<?> values)
+    private static void addNodeProperty(final ModelTransaction tx,
+            final NodeAddData<ImmutableNode> addData, final Iterable<?> values)
     {
-        Collection<ImmutableNode> newNodes =
+        final Collection<ImmutableNode> newNodes =
                 createNodesToAdd(addData.getNewNodeName(), values);
         addNodesByAddData(tx, addData, newNodes);
     }
@@ -920,9 +920,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param addData the {@code NodeAddData}
      * @param newNodes the collection of new child nodes
      */
-    private static void addNodesByAddData(ModelTransaction tx,
-            NodeAddData<ImmutableNode> addData,
-            Collection<ImmutableNode> newNodes)
+    private static void addNodesByAddData(final ModelTransaction tx,
+            final NodeAddData<ImmutableNode> addData,
+            final Collection<ImmutableNode> newNodes)
     {
         if (addData.getPathNodes().isEmpty())
         {
@@ -930,7 +930,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         }
         else
         {
-            ImmutableNode newChild = createNodeToAddWithPath(addData, newNodes);
+            final ImmutableNode newChild = createNodeToAddWithPath(addData, newNodes);
             tx.addAddNodeOperation(addData.getParent(), newChild);
         }
     }
@@ -943,8 +943,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param addData the {@code NodeAddData}
      * @param values the collection with node values
      */
-    private static void addAttributeProperty(ModelTransaction tx,
-            NodeAddData<ImmutableNode> addData, Iterable<?> values)
+    private static void addAttributeProperty(final ModelTransaction tx,
+            final NodeAddData<ImmutableNode> addData, final Iterable<?> values)
     {
         if (addData.getPathNodes().isEmpty())
         {
@@ -953,13 +953,13 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         }
         else
         {
-            int pathNodeCount = addData.getPathNodes().size();
-            ImmutableNode childWithAttribute =
+            final int pathNodeCount = addData.getPathNodes().size();
+            final ImmutableNode childWithAttribute =
                     new ImmutableNode.Builder()
                             .name(addData.getPathNodes().get(pathNodeCount - 1))
                             .addAttribute(addData.getNewNodeName(),
                                     values.iterator().next()).create();
-            ImmutableNode newChild =
+            final ImmutableNode newChild =
                     (pathNodeCount > 1) ? createNodeOnPath(addData
                             .getPathNodes().subList(0, pathNodeCount - 1)
                             .iterator(),
@@ -978,10 +978,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @return the newly created collection
      */
     private static Collection<ImmutableNode> createNodesToAdd(
-            String newNodeName, Iterable<?> values)
+            final String newNodeName, final Iterable<?> values)
     {
-        Collection<ImmutableNode> nodes = new LinkedList<>();
-        for (Object value : values)
+        final Collection<ImmutableNode> nodes = new LinkedList<>();
+        for (final Object value : values)
         {
             nodes.add(new ImmutableNode.Builder().name(newNodeName)
                     .value(value).create());
@@ -998,8 +998,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @return the parent node of the newly created hierarchy
      */
     private static ImmutableNode createNodeToAddWithPath(
-            NodeAddData<ImmutableNode> addData,
-            Collection<ImmutableNode> newNodes)
+            final NodeAddData<ImmutableNode> addData,
+            final Collection<ImmutableNode> newNodes)
     {
         return createNodeOnPath(addData.getPathNodes().iterator(), newNodes);
     }
@@ -1013,10 +1013,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param newNodes the collection of new child nodes
      * @return the newly created path node
      */
-    private static ImmutableNode createNodeOnPath(Iterator<String> it,
-            Collection<ImmutableNode> newNodes)
+    private static ImmutableNode createNodeOnPath(final Iterator<String> it,
+            final Collection<ImmutableNode> newNodes)
     {
-        String nodeName = it.next();
+        final String nodeName = it.next();
         ImmutableNode.Builder builder;
         if (it.hasNext())
         {
@@ -1040,10 +1040,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      *        cleared
      * @return a flag whether there are elements to be cleared
      */
-    private static boolean initializeClearTransaction(ModelTransaction tx,
-            Collection<QueryResult<ImmutableNode>> results)
+    private static boolean initializeClearTransaction(final ModelTransaction tx,
+            final Collection<QueryResult<ImmutableNode>> results)
     {
-        for (QueryResult<ImmutableNode> result : results)
+        for (final QueryResult<ImmutableNode> result : results)
         {
             if (result.isAttributeResult())
             {
@@ -1067,10 +1067,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param changedValues the map defining the elements to be changed
      * @return a flag whether there are elements to be updated
      */
-    private static boolean initializeUpdateTransaction(ModelTransaction tx,
-            Map<QueryResult<ImmutableNode>, Object> changedValues)
+    private static boolean initializeUpdateTransaction(final ModelTransaction tx,
+            final Map<QueryResult<ImmutableNode>, Object> changedValues)
     {
-        for (Map.Entry<QueryResult<ImmutableNode>, Object> e : changedValues
+        for (final Map.Entry<QueryResult<ImmutableNode>, Object> e : changedValues
                 .entrySet())
         {
             if (e.getKey().isAttributeResult())
@@ -1095,7 +1095,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param providedRoot the passed in root node
      * @return the root node to be used
      */
-    private static ImmutableNode initialRootNode(ImmutableNode providedRoot)
+    private static ImmutableNode initialRootNode(final ImmutableNode providedRoot)
     {
         return (providedRoot != null) ? providedRoot
                 : new ImmutableNode.Builder().create();
@@ -1112,8 +1112,8 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param rootName the name of the resulting node
      * @return the new name of the root node
      */
-    private static String determineRootName(ImmutableNode rootNode,
-            ImmutableNode node, String rootName)
+    private static String determineRootName(final ImmutableNode rootNode,
+            final ImmutableNode node, final String rootName)
     {
         if (rootName != null)
         {
@@ -1136,9 +1136,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @return the parent node mapping
      */
     private Map<ImmutableNode, ImmutableNode> createParentMapping(
-            ImmutableNode root)
+            final ImmutableNode root)
     {
-        Map<ImmutableNode, ImmutableNode> parents =
+        final Map<ImmutableNode, ImmutableNode> parents =
                 new HashMap<>();
         updateParentMapping(parents, root);
         return parents;
@@ -1155,14 +1155,14 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      *        of the transaction
      * @param resolver the {@code NodeKeyResolver}
      */
-    private void updateModel(TransactionInitializer txInit,
-            NodeSelector selector, NodeKeyResolver<ImmutableNode> resolver)
+    private void updateModel(final TransactionInitializer txInit,
+            final NodeSelector selector, final NodeKeyResolver<ImmutableNode> resolver)
     {
         boolean done;
 
         do
         {
-            TreeData currentData = getTreeData();
+            final TreeData currentData = getTreeData();
             done =
                     executeTransactionOnDetachedTrackedNode(txInit, selector,
                             currentData, resolver)
@@ -1183,11 +1183,11 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @return a flag whether the operation has been completed successfully
      */
     private boolean executeTransactionOnCurrentStructure(
-            TransactionInitializer txInit, NodeSelector selector,
-            TreeData currentData, NodeKeyResolver<ImmutableNode> resolver)
+            final TransactionInitializer txInit, final NodeSelector selector,
+            final TreeData currentData, final NodeKeyResolver<ImmutableNode> resolver)
     {
         boolean done;
-        ModelTransaction tx =
+        final ModelTransaction tx =
                 new ModelTransaction(currentData, selector, resolver);
         if (!txInit.initTransaction(tx))
         {
@@ -1195,7 +1195,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         }
         else
         {
-            TreeData newData = tx.execute();
+            final TreeData newData = tx.execute();
             done = structure.compareAndSet(tx.getCurrentData(), newData);
         }
         return done;
@@ -1216,12 +1216,12 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
     private boolean executeTransactionOnDetachedTrackedNode(
-            TransactionInitializer txInit, NodeSelector selector,
-            TreeData currentData, NodeKeyResolver<ImmutableNode> resolver)
+            final TransactionInitializer txInit, final NodeSelector selector,
+            final TreeData currentData, final NodeKeyResolver<ImmutableNode> resolver)
     {
         if (selector != null)
         {
-            InMemoryNodeModel detachedNodeModel =
+            final InMemoryNodeModel detachedNodeModel =
                     currentData.getNodeTracker().getDetachedNodeModel(selector);
             if (detachedNodeModel != null)
             {
@@ -1241,10 +1241,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param newNode the node replacing the tracked node
      * @return a flag whether the operation was successful
      */
-    private boolean replaceDetachedTrackedNode(TreeData currentData,
-            NodeSelector selector, ImmutableNode newNode)
+    private boolean replaceDetachedTrackedNode(final TreeData currentData,
+            final NodeSelector selector, final ImmutableNode newNode)
     {
-        InMemoryNodeModel detachedNodeModel =
+        final InMemoryNodeModel detachedNodeModel =
                 currentData.getNodeTracker().getDetachedNodeModel(selector);
         if (detachedNodeModel != null)
         {
@@ -1263,10 +1263,10 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param newNode the node replacing the tracked node
      * @return a flag whether the operation was successful
      */
-    private boolean replaceActiveTrackedNode(TreeData currentData,
-            NodeSelector selector, ImmutableNode newNode)
+    private boolean replaceActiveTrackedNode(final TreeData currentData,
+            final NodeSelector selector, final ImmutableNode newNode)
     {
-        NodeTracker newTracker =
+        final NodeTracker newTracker =
                 currentData.getNodeTracker().replaceAndDetachTrackedNode(
                         selector, newNode);
         return structure.compareAndSet(currentData,
@@ -1284,20 +1284,20 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @return the updated {@code TreeData} object
      */
     private static TreeData createSelectorsForTrackedNodes(
-            Mutable<Collection<NodeSelector>> refSelectors,
-            List<ImmutableNode> nodes, TreeData current,
-            NodeKeyResolver<ImmutableNode> resolver)
+            final Mutable<Collection<NodeSelector>> refSelectors,
+            final List<ImmutableNode> nodes, final TreeData current,
+            final NodeKeyResolver<ImmutableNode> resolver)
     {
-        List<NodeSelector> selectors =
+        final List<NodeSelector> selectors =
                 new ArrayList<>(nodes.size());
-        Map<ImmutableNode, String> cache = new HashMap<>();
-        for (ImmutableNode node : nodes)
+        final Map<ImmutableNode, String> cache = new HashMap<>();
+        for (final ImmutableNode node : nodes)
         {
             selectors.add(new NodeSelector(resolver.nodeKey(node, cache,
                     current)));
         }
         refSelectors.setValue(selectors);
-        NodeTracker newTracker =
+        final NodeTracker newTracker =
                 current.getNodeTracker().trackNodes(selectors, nodes);
         return current.updateNodeTracker(newTracker);
     }
@@ -1313,15 +1313,15 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      *        returned
      * @return the new {@code TreeData} instance
      */
-    private static TreeData updateDataWithNewTrackedNode(TreeData current,
-            ImmutableNode node, NodeKeyResolver<ImmutableNode> resolver,
-            MutableObject<NodeSelector> refSelector)
+    private static TreeData updateDataWithNewTrackedNode(final TreeData current,
+            final ImmutableNode node, final NodeKeyResolver<ImmutableNode> resolver,
+            final MutableObject<NodeSelector> refSelector)
     {
-        NodeSelector selector =
+        final NodeSelector selector =
                 new NodeSelector(resolver.nodeKey(node,
                         new HashMap<ImmutableNode, String>(), current));
         refSelector.setValue(selector);
-        NodeTracker newTracker =
+        final NodeTracker newTracker =
                 current.getNodeTracker().trackNodes(
                         Collections.singleton(selector),
                         Collections.singleton(node));
@@ -1341,13 +1341,13 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      *        returned
      * @return the new {@code TreeData} instance
      */
-    private static TreeData createDataWithTrackedChildNode(TreeData current,
-            ImmutableNode parent, String childName,
-            NodeKeyResolver<ImmutableNode> resolver,
-            MutableObject<NodeSelector> refSelector)
+    private static TreeData createDataWithTrackedChildNode(final TreeData current,
+            final ImmutableNode parent, final String childName,
+            final NodeKeyResolver<ImmutableNode> resolver,
+            final MutableObject<NodeSelector> refSelector)
     {
         TreeData newData;
-        List<ImmutableNode> namedChildren =
+        final List<ImmutableNode> namedChildren =
                 current.getChildren(parent, childName);
         if (!namedChildren.isEmpty())
         {
@@ -1357,9 +1357,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         }
         else
         {
-            ImmutableNode child =
+            final ImmutableNode child =
                     new ImmutableNode.Builder().name(childName).create();
-            ModelTransaction tx = new ModelTransaction(current, null, resolver);
+            final ModelTransaction tx = new ModelTransaction(current, null, resolver);
             tx.addAddNodeOperation(parent, child);
             newData =
                     updateDataWithNewTrackedNode(tx.execute(), child, resolver,
@@ -1374,7 +1374,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param values the collection with node values
      * @return <b>true</b> if values are provided, <b>false</b> otherwise
      */
-    private static boolean valuesNotEmpty(Iterable<?> values)
+    private static boolean valuesNotEmpty(final Iterable<?> values)
     {
         return values.iterator().hasNext();
     }
@@ -1387,7 +1387,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      * @param key the invalid key causing this exception
      * @return the exception
      */
-    private static RuntimeException attributeKeyException(String key)
+    private static RuntimeException attributeKeyException(final String key)
     {
         return new IllegalArgumentException(
                 "New nodes cannot be added to an attribute key: " + key);

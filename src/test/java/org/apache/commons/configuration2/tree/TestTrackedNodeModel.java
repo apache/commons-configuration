@@ -54,6 +54,7 @@ public class TestTrackedNodeModel
     {
         selector = new NodeSelector("someKey");
         @SuppressWarnings("unchecked")
+        final
         NodeKeyResolver<ImmutableNode> resolverMock =
                 EasyMock.createMock(NodeKeyResolver.class);
         EasyMock.replay(resolverMock);
@@ -104,11 +105,11 @@ public class TestTrackedNodeModel
     @Test
     public void testSetRootNode()
     {
-        ImmutableNode root = NodeStructureHelper.createNode("root", null);
+        final ImmutableNode root = NodeStructureHelper.createNode("root", null);
         parentModel.replaceTrackedNode(selector, root);
         EasyMock.replay(parentModel);
 
-        TrackedNodeModel model = setUpModel();
+        final TrackedNodeModel model = setUpModel();
         model.setRootNode(root);
         EasyMock.verify(parentModel);
     }
@@ -122,6 +123,7 @@ public class TestTrackedNodeModel
     private NodeHandler<ImmutableNode> expectGetNodeHandler()
     {
         @SuppressWarnings("unchecked")
+        final
         NodeHandler<ImmutableNode> handler =
                 EasyMock.createMock(NodeHandler.class);
         EasyMock.expect(parentModel.getTrackedNodeHandler(selector)).andReturn(
@@ -135,7 +137,7 @@ public class TestTrackedNodeModel
     @Test
     public void testGetNodeHandler()
     {
-        NodeHandler<ImmutableNode> handler = expectGetNodeHandler();
+        final NodeHandler<ImmutableNode> handler = expectGetNodeHandler();
         EasyMock.replay(handler, parentModel);
 
         assertSame("Wrong node handler", handler, setUpModel().getNodeHandler());
@@ -148,7 +150,7 @@ public class TestTrackedNodeModel
     @Test
     public void testAddProperty()
     {
-        Iterable<?> values = EasyMock.createMock(Iterable.class);
+        final Iterable<?> values = EasyMock.createMock(Iterable.class);
         parentModel.addProperty(KEY, selector, values, resolver);
         EasyMock.replay(values, parentModel);
 
@@ -162,7 +164,7 @@ public class TestTrackedNodeModel
     @Test
     public void testAddNodes()
     {
-        List<ImmutableNode> nodes =
+        final List<ImmutableNode> nodes =
                 Arrays.asList(NodeStructureHelper.createNode("n1", 1),
                         NodeStructureHelper.createNode("n2", 2));
         parentModel.addNodes(KEY, selector, nodes, resolver);
@@ -192,10 +194,10 @@ public class TestTrackedNodeModel
     @Test
     public void testClearTree()
     {
-        QueryResult<ImmutableNode> result =
+        final QueryResult<ImmutableNode> result =
                 QueryResult.createNodeResult(NodeStructureHelper.createNode(
                         "test", null));
-        List<QueryResult<ImmutableNode>> removed =
+        final List<QueryResult<ImmutableNode>> removed =
                 Collections.singletonList(result);
         EasyMock.expect(parentModel.clearTree(KEY, selector, resolver))
                 .andReturn(removed);
@@ -255,7 +257,7 @@ public class TestTrackedNodeModel
         parentModel.untrackNode(selector);
         EasyMock.replay(parentModel);
 
-        TrackedNodeModel model = setUpModel();
+        final TrackedNodeModel model = setUpModel();
         model.close();
         model.close();
         EasyMock.verify(parentModel);
@@ -267,12 +269,12 @@ public class TestTrackedNodeModel
     @Test
     public void testGetInMemoryRepresentation()
     {
-        NodeHandler<ImmutableNode> handler = expectGetNodeHandler();
-        ImmutableNode root = NodeStructureHelper.createNode("Root", null);
+        final NodeHandler<ImmutableNode> handler = expectGetNodeHandler();
+        final ImmutableNode root = NodeStructureHelper.createNode("Root", null);
         EasyMock.expect(handler.getRootNode()).andReturn(root);
         EasyMock.replay(handler, parentModel);
 
-        TrackedNodeModel model = setUpModel();
+        final TrackedNodeModel model = setUpModel();
         assertSame("Wrong root node", root, model.getInMemoryRepresentation());
     }
 }

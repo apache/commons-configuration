@@ -125,7 +125,7 @@ public class TestXPathExpressionEngineInConfig
     @Test
     public void testPropertiesWithNamespace() throws ConfigurationException
     {
-        String xml =
+        final String xml =
                 "<Config>\n"
                         + "<dsig:Transforms xmlns:dsig=\"http://www.w3.org/2000/09/xmldsig#\">\n"
                         + "  <dsig:Transform Algorithm=\"http://www.w3.org/TR/1999/REC-xpath-19991116\">\n"
@@ -133,12 +133,12 @@ public class TestXPathExpressionEngineInConfig
                         + "  </dsig:Transform>\n"
                         + "  <dsig:Transform Algorithm=\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\"/>\n"
                         + "</dsig:Transforms>" + "</Config>";
-        FileHandler handler = new FileHandler(config);
+        final FileHandler handler = new FileHandler(config);
         handler.load(new StringReader(xml));
 
-        for (Iterator<String> it = config.getKeys(); it.hasNext();)
+        for (final Iterator<String> it = config.getKeys(); it.hasNext();)
         {
-            String key = it.next();
+            final String key = it.next();
             assertNotNull("No value for " + key, config.getString(key));
         }
     }

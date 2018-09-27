@@ -40,19 +40,19 @@ public class TestReloadingBuilderSupportListener
     @Test
     public void testResetBuilderOnReloadingEvent()
     {
-        ReloadingDetector detector =
+        final ReloadingDetector detector =
                 EasyMock.createMock(ReloadingDetector.class);
         EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
         EasyMock.replay(detector);
-        ReloadingController controller = new ReloadingController(detector);
-        BasicConfigurationBuilder<Configuration> builder =
+        final ReloadingController controller = new ReloadingController(detector);
+        final BasicConfigurationBuilder<Configuration> builder =
                 new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
-        BuilderEventListenerImpl builderListener =
+        final BuilderEventListenerImpl builderListener =
                 new BuilderEventListenerImpl();
         builder.addEventListener(ConfigurationBuilderEvent.ANY, builderListener);
 
-        ReloadingBuilderSupportListener listener =
+        final ReloadingBuilderSupportListener listener =
                 ReloadingBuilderSupportListener.connect(builder, controller);
         assertNotNull("No listener returned", listener);
         controller.checkForReloading(null);
@@ -69,17 +69,17 @@ public class TestReloadingBuilderSupportListener
     public void testResetReloadingStateOnResultCreation()
             throws ConfigurationException
     {
-        ReloadingController controller =
+        final ReloadingController controller =
                 EasyMock.createMock(ReloadingController.class);
         controller.addEventListener(EasyMock.eq(ReloadingEvent.ANY),
                 EasyMock.anyObject(EventListener.class));
         controller.resetReloadingState();
         EasyMock.replay(controller);
-        BasicConfigurationBuilder<Configuration> builder =
+        final BasicConfigurationBuilder<Configuration> builder =
                 new BasicConfigurationBuilder<>(
                         PropertiesConfiguration.class);
 
-        ReloadingBuilderSupportListener listener =
+        final ReloadingBuilderSupportListener listener =
                 ReloadingBuilderSupportListener.connect(builder, controller);
         assertNotNull("No listener returned", listener);
         builder.getConfiguration();

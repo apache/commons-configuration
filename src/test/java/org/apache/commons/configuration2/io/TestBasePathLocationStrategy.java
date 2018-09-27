@@ -56,7 +56,7 @@ public class TestBasePathLocationStrategy
      *
      * @param url the URL to be checked
      */
-    private static void checkURL(URL url)
+    private static void checkURL(final URL url)
     {
         assertEquals("Wrong URL", FileLocatorUtils.fileFromURL(url)
                 .getAbsoluteFile(), ConfigurationAssert.getTestFile(TEST_FILE)
@@ -70,8 +70,8 @@ public class TestBasePathLocationStrategy
     @Test
     public void testLocateSuccess()
     {
-        File path = ConfigurationAssert.TEST_DIR;
-        FileLocator locator =
+        final File path = ConfigurationAssert.TEST_DIR;
+        final FileLocator locator =
                 FileLocatorUtils.fileLocator().basePath(path.getAbsolutePath())
                         .fileName(TEST_FILE).create();
         checkURL(strategy.locate(fileSystem, locator));
@@ -83,8 +83,8 @@ public class TestBasePathLocationStrategy
     @Test
     public void testLocateSuccessRelativePrefix()
     {
-        File path = ConfigurationAssert.TEST_DIR;
-        FileLocator locator =
+        final File path = ConfigurationAssert.TEST_DIR;
+        final FileLocator locator =
                 FileLocatorUtils.fileLocator().basePath(path.getAbsolutePath())
                         .fileName("." + File.separator + TEST_FILE).create();
         checkURL(strategy.locate(fileSystem, locator));
@@ -96,7 +96,7 @@ public class TestBasePathLocationStrategy
     @Test
     public void testNullFileName()
     {
-        FileLocator locator =
+        final FileLocator locator =
                 FileLocatorUtils
                         .fileLocator()
                         .basePath(
@@ -111,7 +111,7 @@ public class TestBasePathLocationStrategy
     @Test
     public void testNullBasePath()
     {
-        FileLocator locator =
+        final FileLocator locator =
                 FileLocatorUtils.fileLocator().fileName(TEST_FILE).create();
         assertNull("Got a URL", strategy.locate(fileSystem, locator));
     }

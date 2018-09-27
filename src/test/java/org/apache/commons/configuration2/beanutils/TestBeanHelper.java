@@ -82,7 +82,7 @@ public class TestBeanHelper
     @Test
     public void testInitWithBeanFactory()
     {
-        BeanFactory factory = EasyMock.createMock(BeanFactory.class);
+        final BeanFactory factory = EasyMock.createMock(BeanFactory.class);
         EasyMock.replay(factory);
         helper = new BeanHelper(factory);
         assertSame("Wrong default bean factory", factory,
@@ -149,7 +149,7 @@ public class TestBeanHelper
     @Test
     public void testDeregisterBeanFactory()
     {
-        BeanFactory factory = new TestBeanFactory();
+        final BeanFactory factory = new TestBeanFactory();
         helper.registerBeanFactory(TEST_FACTORY, factory);
         assertSame("Could not deregister factory", factory, helper
                 .deregisterBeanFactory(TEST_FACTORY));
@@ -182,8 +182,8 @@ public class TestBeanHelper
     @Test
     public void testInitBean()
     {
-        BeanDeclarationTestImpl data = setUpBeanDeclaration();
-        BeanCreationTestBean bean = new BeanCreationTestBean();
+        final BeanDeclarationTestImpl data = setUpBeanDeclaration();
+        final BeanCreationTestBean bean = new BeanCreationTestBean();
         helper.initBean(bean, data);
         checkBean(bean);
     }
@@ -195,8 +195,8 @@ public class TestBeanHelper
     @Test
     public void testInitBeanWithNoData()
     {
-        BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
-        BeanCreationTestBean bean = new BeanCreationTestBean();
+        final BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
+        final BeanCreationTestBean bean = new BeanCreationTestBean();
         helper.initBean(bean, data);
         assertNull("Wrong string property", bean.getStringValue());
         assertEquals("Wrong int property", 0, bean.getIntValue());
@@ -210,7 +210,7 @@ public class TestBeanHelper
     @Test(expected = ConfigurationRuntimeException.class)
     public void testInitBeanWithInvalidProperty()
     {
-        BeanDeclarationTestImpl data = setUpBeanDeclaration();
+        final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.getBeanProperties().put("nonExistingProperty", Boolean.TRUE);
         helper.initBean(new BeanCreationTestBean(), data);
     }
@@ -222,9 +222,9 @@ public class TestBeanHelper
     @Test
     public void testCreateBean()
     {
-        TestBeanFactory factory = new TestBeanFactory();
+        final TestBeanFactory factory = new TestBeanFactory();
         helper.registerBeanFactory(TEST_FACTORY, factory);
-        BeanDeclarationTestImpl data = setUpBeanDeclaration();
+        final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(BeanCreationTestBean.class.getName());
         checkBean((BeanCreationTestBean) helper.createBean(data, null));
@@ -238,9 +238,9 @@ public class TestBeanHelper
     @Test
     public void testCreateBeanWithListChildBean()
     {
-        TestBeanFactory factory = new TestBeanFactory();
+        final TestBeanFactory factory = new TestBeanFactory();
         helper.registerBeanFactory(TEST_FACTORY, factory);
-        BeanDeclarationTestImpl data = setUpBeanDeclarationWithListChild();
+        final BeanDeclarationTestImpl data = setUpBeanDeclarationWithListChild();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(BeanCreationTestBeanWithListChild.class.getName());
         checkBean((BeanCreationTestBeanWithListChild) helper.createBean(data, null));
@@ -266,7 +266,7 @@ public class TestBeanHelper
     public void testCreateBeanWithDefaultClass()
     {
         helper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
-        BeanDeclarationTestImpl data = setUpBeanDeclaration();
+        final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         checkBean((BeanCreationTestBean) helper.createBean(data, BeanCreationTestBean.class));
     }
@@ -278,10 +278,10 @@ public class TestBeanHelper
     @Test
     public void testCreateBeanWithFactoryDefaultClass()
     {
-        TestBeanFactory factory = new TestBeanFactory();
+        final TestBeanFactory factory = new TestBeanFactory();
         factory.supportsDefaultClass = true;
         helper.registerBeanFactory(TEST_FACTORY, factory);
-        BeanDeclarationTestImpl data = setUpBeanDeclaration();
+        final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         checkBean((BeanCreationTestBean) helper.createBean(data, null));
         assertEquals("Factory not called", 1, factory.getCreateBeanCount());
@@ -295,7 +295,7 @@ public class TestBeanHelper
     public void testCreateBeanWithNoClass()
     {
         helper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
-        BeanDeclarationTestImpl data = setUpBeanDeclaration();
+        final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         helper.createBean(data, null);
     }
@@ -308,7 +308,7 @@ public class TestBeanHelper
     public void testCreateBeanWithInvalidClass()
     {
         helper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
-        BeanDeclarationTestImpl data = setUpBeanDeclaration();
+        final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName("non.existing.ClassName");
         helper.createBean(data, null);
@@ -320,10 +320,10 @@ public class TestBeanHelper
     @Test
     public void testCreateBeanWithDefaultFactory()
     {
-        BeanDeclarationTestImpl data = setUpBeanDeclaration();
+        final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanClassName(BeanCreationTestBean.class.getName());
         checkBean((BeanCreationTestBean) helper.createBean(data, null));
-        TestBeanFactory factory = (TestBeanFactory) helper.getDefaultBeanFactory();
+        final TestBeanFactory factory = (TestBeanFactory) helper.getDefaultBeanFactory();
         assertTrue("Factory not called", factory.getCreateBeanCount() > 0);
     }
 
@@ -333,7 +333,7 @@ public class TestBeanHelper
     @Test(expected = ConfigurationRuntimeException.class)
     public void testCreateBeanWithUnknownFactory()
     {
-        BeanDeclarationTestImpl data = setUpBeanDeclaration();
+        final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(BeanCreationTestBean.class.getName());
         helper.createBean(data, null);
@@ -346,7 +346,7 @@ public class TestBeanHelper
     public void testCreateBeanWithException()
     {
         helper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
-        BeanDeclarationTestImpl data = setUpBeanDeclaration();
+        final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(getClass().getName());
         helper.createBean(data, null);
@@ -358,10 +358,10 @@ public class TestBeanHelper
     @Test
     public void testCreateBeanWithParameter()
     {
-        Object param = new Integer(42);
-        TestBeanFactory factory = new TestBeanFactory();
+        final Object param = new Integer(42);
+        final TestBeanFactory factory = new TestBeanFactory();
         helper.registerBeanFactory(TEST_FACTORY, factory);
-        BeanDeclarationTestImpl data = setUpBeanDeclaration();
+        final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(BeanCreationTestBean.class.getName());
         checkBean((BeanCreationTestBean) helper.createBean(data, null, param));
@@ -374,9 +374,9 @@ public class TestBeanHelper
     @Test
     public void testCreateWrapDynaBean()
     {
-        PropertiesConfiguration config = new PropertiesConfiguration();
-        DynaBean bean = BeanHelper.createWrapDynaBean(config);
-        String value = "TestFooter";
+        final PropertiesConfiguration config = new PropertiesConfiguration();
+        final DynaBean bean = BeanHelper.createWrapDynaBean(config);
+        final String value = "TestFooter";
         bean.set("footer", value);
         assertEquals("Property not set", value, config.getFooter());
     }
@@ -396,10 +396,10 @@ public class TestBeanHelper
     @Test
     public void testCopyProperties() throws Exception
     {
-        PropertiesConfiguration src = new PropertiesConfiguration();
+        final PropertiesConfiguration src = new PropertiesConfiguration();
         src.setHeader("TestHeader");
         src.setFooter("TestFooter");
-        LazyDynaBean dest = new LazyDynaBean();
+        final LazyDynaBean dest = new LazyDynaBean();
         BeanHelper.copyProperties(dest, src);
         assertEquals("Wrong footer property", "TestFooter", dest.get("footer"));
         assertEquals("Wrong header property", "TestHeader", dest.get("header"));
@@ -412,19 +412,19 @@ public class TestBeanHelper
      */
     private BeanDeclarationTestImpl setUpBeanDeclaration()
     {
-        BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
-        Map<String, Object> properties = new HashMap<>();
+        final BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
+        final Map<String, Object> properties = new HashMap<>();
         properties.put("stringValue", TEST_STRING);
         properties.put("intValue", String.valueOf(TEST_INT));
         data.setBeanProperties(properties);
-        BeanDeclarationTestImpl buddyData = new BeanDeclarationTestImpl();
-        Map<String, Object> properties2 = new HashMap<>();
+        final BeanDeclarationTestImpl buddyData = new BeanDeclarationTestImpl();
+        final Map<String, Object> properties2 = new HashMap<>();
         properties2.put("stringValue", "Another test string");
         properties2.put("intValue", new Integer(100));
         buddyData.setBeanProperties(properties2);
         buddyData.setBeanClassName(BeanCreationTestBean.class.getName());
 
-        Map<String, Object> nested = new HashMap<>();
+        final Map<String, Object> nested = new HashMap<>();
         nested.put("buddy", buddyData);
         data.setNestedBeanDeclarations(nested);
         return data;
@@ -439,16 +439,16 @@ public class TestBeanHelper
      */
     private BeanDeclarationTestImpl setUpBeanDeclarationWithListChild()
     {
-        BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
-        Map<String, Object> properties = new HashMap<>();
+        final BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
+        final Map<String, Object> properties = new HashMap<>();
         properties.put("stringValue", TEST_STRING);
         properties.put("intValue", String.valueOf(TEST_INT));
         data.setBeanProperties(properties);
 
-        List<BeanDeclaration> childData = new ArrayList<>();
+        final List<BeanDeclaration> childData = new ArrayList<>();
         childData.add(createChildBean("child1"));
         childData.add(createChildBean("child2"));
-        Map<String, Object> nested = new HashMap<>();
+        final Map<String, Object> nested = new HashMap<>();
         nested.put("children", childData);
         data.setNestedBeanDeclarations(nested);
         return data;
@@ -461,10 +461,10 @@ public class TestBeanHelper
      * @param name A name prefix that can be used to disambiguate the children
      * @return A simple declaration
      */
-    private BeanDeclarationTestImpl createChildBean(String name)
+    private BeanDeclarationTestImpl createChildBean(final String name)
     {
-        BeanDeclarationTestImpl childBean = new BeanDeclarationTestImpl();
-        Map<String, Object> properties2 = new HashMap<>();
+        final BeanDeclarationTestImpl childBean = new BeanDeclarationTestImpl();
+        final Map<String, Object> properties2 = new HashMap<>();
         properties2.put("stringValue", name + " Another test string");
         properties2.put("intValue", new Integer(100));
         childBean.setBeanProperties(properties2);
@@ -479,12 +479,12 @@ public class TestBeanHelper
      *
      * @param bean the bean to be checked
      */
-    private void checkBean(BeanCreationTestBean bean)
+    private void checkBean(final BeanCreationTestBean bean)
     {
         assertEquals("Wrong string property", TEST_STRING, bean
                 .getStringValue());
         assertEquals("Wrong int property", TEST_INT, bean.getIntValue());
-        BeanCreationTestBean buddy = bean.getBuddy();
+        final BeanCreationTestBean buddy = bean.getBuddy();
         assertNotNull("Buddy was not set", buddy);
         assertEquals("Wrong string property in buddy", "Another test string",
                 buddy.getStringValue());
@@ -497,12 +497,12 @@ public class TestBeanHelper
      *
      * @param bean the bean to be checked
      */
-    private void checkBean(BeanCreationTestBeanWithListChild bean)
+    private void checkBean(final BeanCreationTestBeanWithListChild bean)
     {
         assertEquals("Wrong string property", TEST_STRING, bean
                 .getStringValue());
         assertEquals("Wrong int property", TEST_INT, bean.getIntValue());
-        List<BeanCreationTestBean> children = bean.getChildren();
+        final List<BeanCreationTestBean> children = bean.getChildren();
         assertNotNull("Children were not set", children);
         assertEquals("Wrong number of children created", children.size(), 2);
         assertNotNull("First child was set as null", children.get(0));
@@ -524,20 +524,20 @@ public class TestBeanHelper
         private int createBeanCount;
 
         @Override
-        public Object createBean(BeanCreationContext bcc) throws Exception
+        public Object createBean(final BeanCreationContext bcc) throws Exception
         {
             createBeanCount++;
             parameter = bcc.getParameter();
             if (BeanCreationTestBean.class.equals(bcc.getBeanClass()))
             {
-                BeanCreationTestBean bean = new BeanCreationTestBean();
+                final BeanCreationTestBean bean = new BeanCreationTestBean();
                 helper.initBean(bean, bcc.getBeanDeclaration());
                 return bean;
             }
             else if (BeanCreationTestBeanWithListChild.class.equals(bcc
                     .getBeanClass()))
             {
-                BeanCreationTestBeanWithListChild bean =
+                final BeanCreationTestBeanWithListChild bean =
                         new BeanCreationTestBeanWithListChild();
                 helper.initBean(bean, bcc.getBeanDeclaration());
                 return bean;

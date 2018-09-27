@@ -50,8 +50,8 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration
      * @param builder the associated configuration builder
      * @param config the configuration this declaration is based onto
      */
-    public ConfigurationDeclaration(CombinedConfigurationBuilder builder,
-            HierarchicalConfiguration<?> config)
+    public ConfigurationDeclaration(final CombinedConfigurationBuilder builder,
+            final HierarchicalConfiguration<?> config)
     {
         super(config);
         configurationBuilder = builder;
@@ -74,7 +74,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration
      */
     public String getAt()
     {
-        String result =
+        final String result =
                 this.getConfiguration().getString(
                         CombinedConfigurationBuilder.ATTR_AT_RES);
         return (result == null) ? this.getConfiguration().getString(
@@ -178,14 +178,14 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration
      * configuration files supported by earlier versions of this library.)
      */
     @Override
-    protected boolean isReservedAttributeName(String name)
+    protected boolean isReservedAttributeName(final String name)
     {
         if (super.isReservedAttributeName(name))
         {
             return true;
         }
 
-        Set<String> attributes = getAttributeNames();
+        final Set<String> attributes = getAttributeNames();
         return (CombinedConfigurationBuilder.ATTR_ATNAME.equals(name) && !attributes
                 .contains(RESERVED_PREFIX
                         + CombinedConfigurationBuilder.ATTR_ATNAME))

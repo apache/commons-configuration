@@ -63,8 +63,8 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest
     {
         List<?> results = context.selectNodes(CHILD_NAME1);
         assertEquals("Incorrect number of results", 2, results.size());
-        for (Object result : results) {
-            ImmutableNode node = (ImmutableNode) result;
+        for (final Object result : results) {
+            final ImmutableNode node = (ImmutableNode) result;
             assertEquals("Incorrect node name", CHILD_NAME1, node.getNodeName());
         }
 
@@ -89,12 +89,12 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest
                 .valueOf(CHILD_COUNT), context.getValue(CHILD_NAME2
                 + "[last()]"));
 
-        List<?> nodes = context.selectNodes("/" + CHILD_NAME1 + "[1]/*");
+        final List<?> nodes = context.selectNodes("/" + CHILD_NAME1 + "[1]/*");
         assertEquals("Wrong number of children", CHILD_COUNT, nodes.size());
         int index = 1;
-        for (Iterator<?> it = nodes.iterator(); it.hasNext(); index++)
+        for (final Iterator<?> it = nodes.iterator(); it.hasNext(); index++)
         {
-            ImmutableNode node = (ImmutableNode) it.next();
+            final ImmutableNode node = (ImmutableNode) it.next();
             assertEquals("Wrong node value for child " + index, "2." + index,
                     node.getValue());
         }
@@ -126,7 +126,7 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest
     @Test
     public void testText()
     {
-        List<?> nodes = context.selectNodes("//" + CHILD_NAME2
+        final List<?> nodes = context.selectNodes("//" + CHILD_NAME2
                 + "[text()='1.1.1']");
         assertEquals("Incorrect number of result nodes", 1, nodes.size());
     }
@@ -137,7 +137,7 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest
     @Test
     public void testParentAxis()
     {
-        List<?> nodes = context.selectNodes("/" + CHILD_NAME2 + "/parent::*");
+        final List<?> nodes = context.selectNodes("/" + CHILD_NAME2 + "/parent::*");
         assertEquals("Wrong number of parent nodes", 1, nodes.size());
     }
 
@@ -147,10 +147,10 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest
     @Test
     public void testFollowingSiblingAxis()
     {
-        List<?> nodes = context.selectNodes("/" + CHILD_NAME1
+        final List<?> nodes = context.selectNodes("/" + CHILD_NAME1
                 + "[2]/following-sibling::*");
         assertEquals("Wrong number of following siblings", 1, nodes.size());
-        ImmutableNode node = (ImmutableNode) nodes.get(0);
+        final ImmutableNode node = (ImmutableNode) nodes.get(0);
         assertEquals("Wrong node type", CHILD_NAME2, node.getNodeName());
         assertEquals("Wrong index", String.valueOf(CHILD_COUNT), node
                 .getValue());
@@ -162,7 +162,7 @@ public class TestConfigurationNodePointerFactory extends AbstractXPathTest
     @Test
     public void testPrecedingSiblingAxis()
     {
-        List<?> nodes = context.selectNodes("/" + CHILD_NAME1
+        final List<?> nodes = context.selectNodes("/" + CHILD_NAME1
                 + "[2]/preceding-sibling::*");
         assertEquals("Wrong number of preceding siblings", 3, nodes.size());
         for (int index = 0, value = 3; index < nodes.size(); index++, value--)

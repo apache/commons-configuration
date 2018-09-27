@@ -45,7 +45,7 @@ public class TestServletConfiguration extends TestAbstractConfiguration
         config.setInitParameter("list", "value1, value2");
         config.setInitParameter("listesc", "value1\\,value2");
 
-        Servlet servlet = new HttpServlet() {
+        final Servlet servlet = new HttpServlet() {
             /**
              * Serial version UID.
              */
@@ -58,7 +58,7 @@ public class TestServletConfiguration extends TestAbstractConfiguration
             }
         };
 
-        ServletConfiguration servletConfiguration = new ServletConfiguration(servlet);
+        final ServletConfiguration servletConfiguration = new ServletConfiguration(servlet);
         servletConfiguration.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         return servletConfiguration;
     }

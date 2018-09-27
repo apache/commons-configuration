@@ -48,7 +48,7 @@ public class ConfigurationRuntimeException extends RuntimeException
      *
      * @param message  the error message
      */
-    public ConfigurationRuntimeException(String message)
+    public ConfigurationRuntimeException(final String message)
     {
         super(message);
     }
@@ -61,7 +61,7 @@ public class ConfigurationRuntimeException extends RuntimeException
      * @param args arguments to the error message
      * @see String#format(String,Object...)
      */
-    public ConfigurationRuntimeException(String message, Object... args)
+    public ConfigurationRuntimeException(final String message, final Object... args)
     {
         super(String.format(message, args));
     }
@@ -72,7 +72,7 @@ public class ConfigurationRuntimeException extends RuntimeException
      *
      * @param cause  the exception or error that caused this exception to be thrown
      */
-    public ConfigurationRuntimeException(Throwable cause)
+    public ConfigurationRuntimeException(final Throwable cause)
     {
         super(cause);
     }
@@ -84,7 +84,7 @@ public class ConfigurationRuntimeException extends RuntimeException
      * @param message  the error message
      * @param cause    the exception or error that caused this exception to be thrown
      */
-    public ConfigurationRuntimeException(String message, Throwable cause)
+    public ConfigurationRuntimeException(final String message, final Throwable cause)
     {
         super(message, cause);
     }

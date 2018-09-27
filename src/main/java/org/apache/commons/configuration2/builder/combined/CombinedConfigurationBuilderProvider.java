@@ -81,7 +81,7 @@ public class CombinedConfigurationBuilderProvider extends
      */
     @Override
     protected BasicConfigurationBuilder<? extends Configuration> createBuilder(
-            ConfigurationDeclaration decl, Collection<BuilderParameters> params)
+            final ConfigurationDeclaration decl, final Collection<BuilderParameters> params)
             throws Exception
     {
         CombinedConfigurationBuilder builder;
@@ -102,12 +102,12 @@ public class CombinedConfigurationBuilderProvider extends
      * basic properties of the parent builder's result configuration.
      */
     @Override
-    protected void initializeParameterObjects(ConfigurationDeclaration decl,
-            Collection<BuilderParameters> params) throws Exception
+    protected void initializeParameterObjects(final ConfigurationDeclaration decl,
+            final Collection<BuilderParameters> params) throws Exception
     {
         // we know that the first object is the combined builder parameters
         // object
-        BasicBuilderParameters basicParams =
+        final BasicBuilderParameters basicParams =
                 (BasicBuilderParameters) params.iterator().next();
         setUpBasicParameters(decl.getConfigurationBuilder()
                 .getConfigurationUnderConstruction(), basicParams);
@@ -123,8 +123,8 @@ public class CombinedConfigurationBuilderProvider extends
      * @param config the configuration whose properties are to be copied
      * @param params the target parameters object
      */
-    private static void setUpBasicParameters(CombinedConfiguration config,
-            BasicBuilderParameters params)
+    private static void setUpBasicParameters(final CombinedConfiguration config,
+            final BasicBuilderParameters params)
     {
         params.setListDelimiterHandler(config.getListDelimiterHandler())
                 .setLogger(config.getLogger())

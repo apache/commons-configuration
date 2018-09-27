@@ -30,7 +30,7 @@ public class TestNodeHandlerDecorator extends AbstractImmutableNodeHandlerTest
      * which wraps a {@code TreeData} object acting as the actual node handler.
      */
     @Override
-    protected NodeHandler<ImmutableNode> createHandler(ImmutableNode root)
+    protected NodeHandler<ImmutableNode> createHandler(final ImmutableNode root)
     {
         final InMemoryNodeModel model = new InMemoryNodeModel(root);
         return new NodeHandlerDecorator<ImmutableNode>()

@@ -66,7 +66,7 @@ public class TestDataConfiguration
     @Before
     public void setUp() throws Exception
     {
-        BaseConfiguration baseConfig = new BaseConfiguration();
+        final BaseConfiguration baseConfig = new BaseConfiguration();
         baseConfig.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         conf = new DataConfiguration(baseConfig);
 
@@ -81,7 +81,7 @@ public class TestDataConfiguration
         conf.addProperty("boolean.list3", Boolean.FALSE);
         conf.addPropertyDirect("boolean.list4", new Boolean[] { Boolean.TRUE, Boolean.FALSE });
         conf.addPropertyDirect("boolean.list5", new boolean[] { true, false });
-        List<Object> booleans = new ArrayList<>();
+        final List<Object> booleans = new ArrayList<>();
         booleans.add(Boolean.TRUE);
         booleans.add(Boolean.FALSE);
         conf.addProperty("boolean.list6", booleans);
@@ -97,7 +97,7 @@ public class TestDataConfiguration
         conf.addProperty("byte.list3", new Byte("2"));
         conf.addPropertyDirect("byte.list4", new Byte[] { new Byte("1"), new Byte("2") });
         conf.addPropertyDirect("byte.list5", new byte[] { 1, 2 });
-        List<Object> bytes = new ArrayList<>();
+        final List<Object> bytes = new ArrayList<>();
         bytes.add(new Byte("1"));
         bytes.add(new Byte("2"));
         conf.addProperty("byte.list6", bytes);
@@ -113,7 +113,7 @@ public class TestDataConfiguration
         conf.addProperty("short.list3", new Short("2"));
         conf.addPropertyDirect("short.list4", new Short[] { new Short("1"), new Short("2") });
         conf.addPropertyDirect("short.list5", new short[] { 1, 2 });
-        List<Object> shorts = new ArrayList<>();
+        final List<Object> shorts = new ArrayList<>();
         shorts.add(new Short("1"));
         shorts.add(new Short("2"));
         conf.addProperty("short.list6", shorts);
@@ -129,7 +129,7 @@ public class TestDataConfiguration
         conf.addProperty("integer.list3", new Integer("2"));
         conf.addPropertyDirect("integer.list4", new Integer[] { new Integer("1"), new Integer("2") });
         conf.addPropertyDirect("integer.list5", new int[] { 1, 2 });
-        List<Object> integers = new ArrayList<>();
+        final List<Object> integers = new ArrayList<>();
         integers.add(new Integer("1"));
         integers.add(new Integer("2"));
         conf.addProperty("integer.list6", integers);
@@ -145,7 +145,7 @@ public class TestDataConfiguration
         conf.addProperty("long.list3", new Long("2"));
         conf.addPropertyDirect("long.list4", new Long[] { new Long("1"), new Long("2") });
         conf.addPropertyDirect("long.list5", new long[] { 1, 2 });
-        List<Object> longs = new ArrayList<>();
+        final List<Object> longs = new ArrayList<>();
         longs.add(new Long("1"));
         longs.add(new Long("2"));
         conf.addProperty("long.list6", longs);
@@ -161,7 +161,7 @@ public class TestDataConfiguration
         conf.addProperty("float.list3", new Float("2"));
         conf.addPropertyDirect("float.list4", new Float[] { new Float("1"), new Float("2") });
         conf.addPropertyDirect("float.list5", new float[] { 1, 2 });
-        List<Object> floats = new ArrayList<>();
+        final List<Object> floats = new ArrayList<>();
         floats.add(new Float("1"));
         floats.add(new Float("2"));
         conf.addProperty("float.list6", floats);
@@ -177,7 +177,7 @@ public class TestDataConfiguration
         conf.addProperty("double.list3", new Double("2"));
         conf.addPropertyDirect("double.list4", new Double[] { new Double("1"), new Double("2") });
         conf.addPropertyDirect("double.list5", new double[] { 1, 2 });
-        List<Object> doubles = new ArrayList<>();
+        final List<Object> doubles = new ArrayList<>();
         doubles.add(new Double("1"));
         doubles.add(new Double("2"));
         conf.addProperty("double.list6", doubles);
@@ -192,7 +192,7 @@ public class TestDataConfiguration
         conf.addProperty("biginteger.list3", new BigInteger("1"));
         conf.addProperty("biginteger.list3", new BigInteger("2"));
         conf.addPropertyDirect("biginteger.list4", new BigInteger[] { new BigInteger("1"), new BigInteger("2") });
-        List<Object> bigintegers = new ArrayList<>();
+        final List<Object> bigintegers = new ArrayList<>();
         bigintegers.add(new BigInteger("1"));
         bigintegers.add(new BigInteger("2"));
         conf.addProperty("biginteger.list6", bigintegers);
@@ -207,7 +207,7 @@ public class TestDataConfiguration
         conf.addProperty("bigdecimal.list3", new BigDecimal("1"));
         conf.addProperty("bigdecimal.list3", new BigDecimal("2"));
         conf.addPropertyDirect("bigdecimal.list4", new BigDecimal[] { new BigDecimal("1"), new BigDecimal("2") });
-        List<Object> bigdecimals = new ArrayList<>();
+        final List<Object> bigdecimals = new ArrayList<>();
         bigdecimals.add(new BigDecimal("1"));
         bigdecimals.add(new BigDecimal("2"));
         conf.addProperty("bigdecimal.list6", bigdecimals);
@@ -216,8 +216,8 @@ public class TestDataConfiguration
         conf.addProperty("bigdecimal.list.interpolated", "${bigdecimal.string},2");
 
         // URIs
-        String uri1 = "http://jakarta.apache.org";
-        String uri2 = "http://www.apache.org";
+        final String uri1 = "http://jakarta.apache.org";
+        final String uri2 = "http://www.apache.org";
         conf.addProperty("uri.string", uri1);
         conf.addProperty("uri.string.interpolated", "${uri.string}");
         conf.addProperty("uri.object", new URI(uri1));
@@ -227,15 +227,15 @@ public class TestDataConfiguration
         conf.addProperty("uri.list3", new URI(uri1));
         conf.addProperty("uri.list3", new URI(uri2));
         conf.addPropertyDirect("uri.list4", new URI[] { new URI(uri1), new URI(uri2) });
-        List<Object> uris = new ArrayList<>();
+        final List<Object> uris = new ArrayList<>();
         uris.add(new URI(uri1));
         uris.add(new URI(uri2));
         conf.addProperty("uri.list6", uris);
         conf.addProperty("uri.list.interpolated", "${uri.string}," + uri2);
 
         // URLs
-        String url1 = "http://jakarta.apache.org";
-        String url2 = "http://www.apache.org";
+        final String url1 = "http://jakarta.apache.org";
+        final String url2 = "http://www.apache.org";
         conf.addProperty("url.string", url1);
         conf.addProperty("url.string.interpolated", "${url.string}");
         conf.addProperty("url.object", new URL(url1));
@@ -245,7 +245,7 @@ public class TestDataConfiguration
         conf.addProperty("url.list3", new URL(url1));
         conf.addProperty("url.list3", new URL(url2));
         conf.addPropertyDirect("url.list4", new URL[] { new URL(url1), new URL(url2) });
-        List<Object> urls = new ArrayList<>();
+        final List<Object> urls = new ArrayList<>();
         urls.add(new URL(url1));
         urls.add(new URL(url2));
         conf.addProperty("url.list6", urls);
@@ -261,15 +261,15 @@ public class TestDataConfiguration
         conf.addProperty("locale.list3", Locale.FRENCH);
         conf.addProperty("locale.list3", Locale.GERMAN);
         conf.addPropertyDirect("locale.list4", new Locale[] { Locale.FRENCH, Locale.GERMAN });
-        List<Object> locales = new ArrayList<>();
+        final List<Object> locales = new ArrayList<>();
         locales.add(Locale.FRENCH);
         locales.add(Locale.GERMAN);
         conf.addProperty("locale.list6", locales);
         conf.addProperty("locale.list.interpolated", "${locale.string},de");
 
         // Colors
-        String color1 = "FF0000";
-        String color2 = "0000FF";
+        final String color1 = "FF0000";
+        final String color2 = "0000FF";
         conf.addProperty("color.string", color1);
         conf.addProperty("color.string.interpolated", "${color.string}");
         conf.addProperty("color.object", Color.red);
@@ -279,22 +279,22 @@ public class TestDataConfiguration
         conf.addProperty("color.list3", Color.red);
         conf.addProperty("color.list3", Color.blue);
         conf.addPropertyDirect("color.list4", new Color[] { Color.red, Color.blue });
-        List<Object> colors = new ArrayList<>();
+        final List<Object> colors = new ArrayList<>();
         colors.add(Color.red);
         colors.add(Color.blue);
         conf.addProperty("color.list6", colors);
         conf.addProperty("color.list.interpolated", "${color.string}," + color2);
 
         // Dates & Calendars
-        String pattern = DATE_PATTERN;
-        DateFormat format = new SimpleDateFormat(pattern);
+        final String pattern = DATE_PATTERN;
+        final DateFormat format = new SimpleDateFormat(pattern);
         conf.setProperty(DataConfiguration.DATE_FORMAT_KEY, pattern);
 
-        Date date1 = format.parse("2004-01-01");
-        Date date2 = format.parse("2004-12-31");
-        Calendar calendar1 = Calendar.getInstance();
+        final Date date1 = format.parse("2004-01-01");
+        final Date date2 = format.parse("2004-12-31");
+        final Calendar calendar1 = Calendar.getInstance();
         calendar1.setTime(date1);
-        Calendar calendar2 = Calendar.getInstance();
+        final Calendar calendar2 = Calendar.getInstance();
         calendar2.setTime(date2);
 
         conf.addProperty("date.string", "2004-01-01");
@@ -307,7 +307,7 @@ public class TestDataConfiguration
         conf.addProperty("date.list3", date2);
         conf.addPropertyDirect("date.list4", new Date[] { date1, date2 });
         conf.addPropertyDirect("date.list5", new Calendar[] { calendar1, calendar2 });
-        List<Object> dates = new ArrayList<>();
+        final List<Object> dates = new ArrayList<>();
         dates.add(date1);
         dates.add(date2);
         conf.addProperty("date.list6", dates);
@@ -324,7 +324,7 @@ public class TestDataConfiguration
         conf.addProperty("calendar.list3", calendar2);
         conf.addPropertyDirect("calendar.list4", new Calendar[] { calendar1, calendar2 });
         conf.addPropertyDirect("calendar.list5", new Date[] { date1, date2 });
-        List<Object> calendars = new ArrayList<>();
+        final List<Object> calendars = new ArrayList<>();
         calendars.add(date1);
         calendars.add(date2);
         conf.addProperty("calendar.list6", calendars);
@@ -345,8 +345,8 @@ public class TestDataConfiguration
     @Test
     public void testGetConfiguration()
     {
-        Configuration baseconf = new BaseConfiguration();
-        DataConfiguration conf = new DataConfiguration(baseconf);
+        final Configuration baseconf = new BaseConfiguration();
+        final DataConfiguration conf = new DataConfiguration(baseconf);
 
         assertEquals("base configuration", baseconf, conf.getConfiguration());
     }
@@ -354,8 +354,8 @@ public class TestDataConfiguration
     @Test
     public void testIsEmpty()
     {
-        Configuration baseconf = new BaseConfiguration();
-        DataConfiguration conf = new DataConfiguration(baseconf);
+        final Configuration baseconf = new BaseConfiguration();
+        final DataConfiguration conf = new DataConfiguration(baseconf);
 
         assertTrue("not empty", conf.isEmpty());
 
@@ -367,8 +367,8 @@ public class TestDataConfiguration
     @Test
     public void testContainsKey()
     {
-        Configuration baseconf = new BaseConfiguration();
-        DataConfiguration conf = new DataConfiguration(baseconf);
+        final Configuration baseconf = new BaseConfiguration();
+        final DataConfiguration conf = new DataConfiguration(baseconf);
 
         assertFalse(conf.containsKey("foo"));
 
@@ -380,12 +380,12 @@ public class TestDataConfiguration
     @Test
     public void testGetKeys()
     {
-        Configuration baseconf = new BaseConfiguration();
-        DataConfiguration conf = new DataConfiguration(baseconf);
+        final Configuration baseconf = new BaseConfiguration();
+        final DataConfiguration conf = new DataConfiguration(baseconf);
 
         baseconf.setProperty("foo", "bar");
 
-        Iterator<String> it = conf.getKeys();
+        final Iterator<String> it = conf.getKeys();
         assertTrue("the iterator is empty", it.hasNext());
         assertEquals("unique key", "foo", it.next());
         assertFalse("the iterator is not exhausted", it.hasNext());
@@ -426,10 +426,10 @@ public class TestDataConfiguration
     public void testGetBooleanArray()
     {
         // missing list
-        boolean[] defaultValue = new boolean[] { false, true };
+        final boolean[] defaultValue = new boolean[] { false, true };
         ArrayAssert.assertEquals(defaultValue, conf.getBooleanArray("boolean.list", defaultValue));
 
-        boolean[] expected = new boolean[] { true, false };
+        final boolean[] expected = new boolean[] { true, false };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list1"));
@@ -505,10 +505,10 @@ public class TestDataConfiguration
     public void testGetByteArray()
     {
         // missing list
-        byte[] defaultValue = new byte[] { 1, 2};
+        final byte[] defaultValue = new byte[] { 1, 2};
         ArrayAssert.assertEquals(defaultValue, conf.getByteArray("byte.list", defaultValue));
 
-        byte[] expected = new byte[] { 1, 2 };
+        final byte[] expected = new byte[] { 1, 2 };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list1"));
@@ -584,10 +584,10 @@ public class TestDataConfiguration
     public void testGetShortArray()
     {
         // missing list
-        short[] defaultValue = new short[] { 2, 1};
+        final short[] defaultValue = new short[] { 2, 1};
         ArrayAssert.assertEquals(defaultValue, conf.getShortArray("short.list", defaultValue));
 
-        short[] expected = new short[] { 1, 2 };
+        final short[] expected = new short[] { 1, 2 };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getShortArray("short.list1"));
@@ -663,10 +663,10 @@ public class TestDataConfiguration
     public void testGetIntegerArray()
     {
         // missing list
-        int[] defaultValue = new int[] { 2, 1};
+        final int[] defaultValue = new int[] { 2, 1};
         ArrayAssert.assertEquals(defaultValue, conf.getIntArray("integer.list", defaultValue));
 
-        int[] expected = new int[] { 1, 2 };
+        final int[] expected = new int[] { 1, 2 };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list1"));
@@ -742,10 +742,10 @@ public class TestDataConfiguration
     public void testGetLongArray()
     {
         // missing list
-        long[] defaultValue = new long[] { 2, 1};
+        final long[] defaultValue = new long[] { 2, 1};
         ArrayAssert.assertEquals(defaultValue, conf.getLongArray("long.list", defaultValue));
 
-        long[] expected = new long[] { 1, 2 };
+        final long[] expected = new long[] { 1, 2 };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getLongArray("long.list1"));
@@ -821,10 +821,10 @@ public class TestDataConfiguration
     public void testGetFloatArray()
     {
         // missing list
-        float[] defaultValue = new float[] { 2, 1};
+        final float[] defaultValue = new float[] { 2, 1};
         ArrayAssert.assertEquals(defaultValue, conf.getFloatArray("float.list", defaultValue), 0);
 
-        float[] expected = new float[] { 1, 2 };
+        final float[] expected = new float[] { 1, 2 };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list1"), 0);
@@ -900,10 +900,10 @@ public class TestDataConfiguration
     public void testGetDoubleArray()
     {
         // missing list
-        double[] defaultValue = new double[] { 2, 1 };
+        final double[] defaultValue = new double[] { 2, 1 };
         ArrayAssert.assertEquals(defaultValue, conf.getDoubleArray("double.list", defaultValue), 0);
 
-        double[] expected = new double[] { 1, 2 };
+        final double[] expected = new double[] { 1, 2 };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list1"), 0);
@@ -979,10 +979,10 @@ public class TestDataConfiguration
     public void testGetBigIntegerArray()
     {
         // missing list
-        BigInteger[] defaultValue = new BigInteger[] { new BigInteger("2"), new BigInteger("1") };
+        final BigInteger[] defaultValue = new BigInteger[] { new BigInteger("2"), new BigInteger("1") };
         ArrayAssert.assertEquals(defaultValue, conf.getBigIntegerArray("biginteger.list", defaultValue));
 
-        BigInteger[] expected = new BigInteger[] { new BigInteger("1"), new BigInteger("2") };
+        final BigInteger[] expected = new BigInteger[] { new BigInteger("1"), new BigInteger("2") };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getBigIntegerArray("biginteger.list1"));
@@ -1014,7 +1014,7 @@ public class TestDataConfiguration
     public void testGetBigIntegerList()
     {
         // missing list
-        List<BigInteger> bigIntegerList = conf.getBigIntegerList("biginteger.list", null);
+        final List<BigInteger> bigIntegerList = conf.getBigIntegerList("biginteger.list", null);
         ListAssert.assertEquals(null, bigIntegerList);
 
         List<Object> expected = new ArrayList<>();
@@ -1053,10 +1053,10 @@ public class TestDataConfiguration
     public void testGetBigDecimalArray()
     {
         // missing list
-        BigDecimal[] defaultValue = new BigDecimal[] { new BigDecimal("2"), new BigDecimal("1") };
+        final BigDecimal[] defaultValue = new BigDecimal[] { new BigDecimal("2"), new BigDecimal("1") };
         ArrayAssert.assertEquals(defaultValue, conf.getBigDecimalArray("bigdecimal.list", defaultValue));
 
-        BigDecimal[] expected = new BigDecimal[] { new BigDecimal("1"), new BigDecimal("2") };
+        final BigDecimal[] expected = new BigDecimal[] { new BigDecimal("1"), new BigDecimal("2") };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getBigDecimalArray("bigdecimal.list1"));
@@ -1126,10 +1126,10 @@ public class TestDataConfiguration
     public void testGetURI() throws Exception
     {
         // missing URI
-        URI defaultValue = new URI("http://www.google.com");
+        final URI defaultValue = new URI("http://www.google.com");
         assertEquals(defaultValue, conf.getURI("url", defaultValue));
 
-        URI expected = new URI("http://jakarta.apache.org");
+        final URI expected = new URI("http://jakarta.apache.org");
 
         // URI string
         assertEquals(expected, conf.getURI("uri.string"));
@@ -1145,10 +1145,10 @@ public class TestDataConfiguration
     public void testGetURIArray() throws Exception
     {
         // missing list
-        URI[] defaultValue = new URI[] { new URI("http://www.apache.org"), new URI("http://jakarta.apache.org") };
+        final URI[] defaultValue = new URI[] { new URI("http://www.apache.org"), new URI("http://jakarta.apache.org") };
         ArrayAssert.assertEquals(defaultValue, conf.getURIArray("url.list", defaultValue));
 
-        URI[] expected = new URI[] { new URI("http://jakarta.apache.org"), new URI("http://www.apache.org") };
+        final URI[] expected = new URI[] { new URI("http://jakarta.apache.org"), new URI("http://www.apache.org") };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list1"));
@@ -1218,10 +1218,10 @@ public class TestDataConfiguration
     public void testGetURL() throws Exception
     {
         // missing URL
-        URL defaultValue = new URL("http://www.google.com");
+        final URL defaultValue = new URL("http://www.google.com");
         assertEquals(defaultValue, conf.getURL("url", defaultValue));
 
-        URL expected = new URL("http://jakarta.apache.org");
+        final URL expected = new URL("http://jakarta.apache.org");
 
         // URL string
         assertEquals(expected, conf.getURL("url.string"));
@@ -1237,10 +1237,10 @@ public class TestDataConfiguration
     public void testGetURLArray() throws Exception
     {
         // missing list
-        URL[] defaultValue = new URL[] { new URL("http://www.apache.org"), new URL("http://jakarta.apache.org") };
+        final URL[] defaultValue = new URL[] { new URL("http://www.apache.org"), new URL("http://jakarta.apache.org") };
         ArrayAssert.assertEquals(defaultValue, conf.getURLArray("url.list", defaultValue));
 
-        URL[] expected = new URL[] { new URL("http://jakarta.apache.org"), new URL("http://www.apache.org") };
+        final URL[] expected = new URL[] { new URL("http://jakarta.apache.org"), new URL("http://www.apache.org") };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getURLArray("url.list1"));
@@ -1346,10 +1346,10 @@ public class TestDataConfiguration
     public void testGetLocaleArray() throws Exception
     {
         // missing list
-        Locale[] defaultValue = new Locale[] { Locale.GERMAN, Locale.FRENCH };
+        final Locale[] defaultValue = new Locale[] { Locale.GERMAN, Locale.FRENCH };
         ArrayAssert.assertEquals(defaultValue, conf.getLocaleArray("locale.list", defaultValue));
 
-        Locale[] expected = new Locale[] { Locale.FRENCH, Locale.GERMAN };
+        final Locale[] expected = new Locale[] { Locale.FRENCH, Locale.GERMAN };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getLocaleArray("locale.list1"));
@@ -1428,7 +1428,7 @@ public class TestDataConfiguration
 
         // #RRGGBBAA
         conf.setProperty("color", "#01030507");
-        Color color = conf.getColor("color");
+        final Color color = conf.getColor("color");
         assertNotNull("null color", color);
         assertEquals("red",   1, color.getRed());
         assertEquals("green", 3, color.getGreen());
@@ -1446,10 +1446,10 @@ public class TestDataConfiguration
     public void testGetColorArray() throws Exception
     {
         // missing list
-        Color[] defaultValue = new Color[] { Color.red, Color.blue };
+        final Color[] defaultValue = new Color[] { Color.red, Color.blue };
         ArrayAssert.assertEquals(defaultValue, conf.getColorArray("color.list", defaultValue));
 
-        Color[] expected = new Color[] { Color.red, Color.blue };
+        final Color[] expected = new Color[] { Color.red, Color.blue };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getColorArray("color.list1"));
@@ -1523,17 +1523,17 @@ public class TestDataConfiguration
      */
     private static Date expectedDate() throws ParseException
     {
-        DateFormat format = new SimpleDateFormat(DATE_PATTERN);
+        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
         return format.parse("2004-01-01");
     }
 
     @Test
     public void testGetDate() throws Exception
     {
-        Date expected = expectedDate();
+        final Date expected = expectedDate();
 
         // missing Date
-        Date defaultValue = new Date();
+        final Date defaultValue = new Date();
         assertEquals(defaultValue, conf.getDate("date", defaultValue));
         assertNull("non null object for a missing key", conf.getDate("unknownkey", DATE_PATTERN));
 
@@ -1544,7 +1544,7 @@ public class TestDataConfiguration
             conf.getDate("unknownkey", DATE_PATTERN);
             fail("NoSuchElementException should be thrown for missing properties");
         }
-        catch (NoSuchElementException e)
+        catch (final NoSuchElementException e)
         {
             // expected
         }
@@ -1583,7 +1583,7 @@ public class TestDataConfiguration
     public void testGetDateNoFormatPropertyConversionHandler() throws Exception
     {
         conf.clearProperty(DataConfiguration.DATE_FORMAT_KEY);
-        DefaultConversionHandler handler = new DefaultConversionHandler();
+        final DefaultConversionHandler handler = new DefaultConversionHandler();
         handler.setDateFormat(DATE_PATTERN);
         conf.setConversionHandler(handler);
         assertEquals("Wrong result", expectedDate(), conf.getDate("date.string"));
@@ -1592,15 +1592,15 @@ public class TestDataConfiguration
     @Test
     public void testGetDateArray() throws Exception
     {
-        DateFormat format = new SimpleDateFormat(DATE_PATTERN);
-        Date date1 = format.parse("2004-01-01");
-        Date date2 = format.parse("2004-12-31");
+        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
+        final Date date1 = format.parse("2004-01-01");
+        final Date date2 = format.parse("2004-12-31");
 
         // missing list
-        Date[] defaultValue = new Date[] { date2, date1 };
+        final Date[] defaultValue = new Date[] { date2, date1 };
         ArrayAssert.assertEquals(defaultValue, conf.getDateArray("date.list", defaultValue));
 
-        Date[] expected = new Date[] { date1, date2 };
+        final Date[] expected = new Date[] { date1, date2 };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getDateArray("date.list1"));
@@ -1634,10 +1634,10 @@ public class TestDataConfiguration
     @Test
     public void testGetDateArrayWithFormat() throws Exception
     {
-        DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-        Date date1 = format.parse("01/01/2004");
-        Date date2 = format.parse("12/31/2004");
-        Date[] expected = new Date[] { date1, date2 };
+        final DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        final Date date1 = format.parse("01/01/2004");
+        final Date date2 = format.parse("12/31/2004");
+        final Date[] expected = new Date[] { date1, date2 };
 
         conf.addProperty("date.format", "01/01/2004");
         conf.addProperty("date.format", "12/31/2004");
@@ -1647,12 +1647,12 @@ public class TestDataConfiguration
     @Test
     public void testGetDateList() throws Exception
     {
-        DateFormat format = new SimpleDateFormat(DATE_PATTERN);
-        Date date1 = format.parse("2004-01-01");
-        Date date2 = format.parse("2004-12-31");
+        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
+        final Date date1 = format.parse("2004-01-01");
+        final Date date2 = format.parse("2004-12-31");
 
         // missing list
-        List<Date> nullList = null;
+        final List<Date> nullList = null;
         ListAssert.assertEquals(null, conf.getDateList("date.list", nullList));
 
         List<Object> expected = new ArrayList<>();
@@ -1697,10 +1697,10 @@ public class TestDataConfiguration
     @Test
     public void testGetCalendar() throws Exception
     {
-        DateFormat format = new SimpleDateFormat(DATE_PATTERN);
+        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
 
         // missing Date
-        Calendar defaultValue = Calendar.getInstance();
+        final Calendar defaultValue = Calendar.getInstance();
         defaultValue.setTime(new Date());
         assertEquals(defaultValue, conf.getCalendar("calendar", defaultValue));
         assertNull("non null object for a missing key", conf.getCalendar("unknownkey", DATE_PATTERN));
@@ -1712,12 +1712,12 @@ public class TestDataConfiguration
             conf.getCalendar("unknownkey", DATE_PATTERN);
             fail("NoSuchElementException should be thrown for missing properties");
         }
-        catch (NoSuchElementException e)
+        catch (final NoSuchElementException e)
         {
             // expected
         }
 
-        Calendar expected = Calendar.getInstance();
+        final Calendar expected = Calendar.getInstance();
         expected.setTime(format.parse("2004-01-01"));
 
         // Calendar string
@@ -1737,19 +1737,19 @@ public class TestDataConfiguration
     @Test
     public void testGetCalendarArray() throws Exception
     {
-        DateFormat format = new SimpleDateFormat(DATE_PATTERN);
-        Date date1 = format.parse("2004-01-01");
-        Date date2 = format.parse("2004-12-31");
-        Calendar calendar1 = Calendar.getInstance();
+        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
+        final Date date1 = format.parse("2004-01-01");
+        final Date date2 = format.parse("2004-12-31");
+        final Calendar calendar1 = Calendar.getInstance();
         calendar1.setTime(date1);
-        Calendar calendar2 = Calendar.getInstance();
+        final Calendar calendar2 = Calendar.getInstance();
         calendar2.setTime(date2);
 
         // missing list
-        Calendar[] defaultValue = new Calendar[] { calendar2, calendar1 };
+        final Calendar[] defaultValue = new Calendar[] { calendar2, calendar1 };
         ArrayAssert.assertEquals(defaultValue, conf.getCalendarArray("calendar.list", defaultValue));
 
-        Calendar[] expected = new Calendar[] { calendar1, calendar2 };
+        final Calendar[] expected = new Calendar[] { calendar1, calendar2 };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list1"));
@@ -1783,15 +1783,15 @@ public class TestDataConfiguration
     @Test
     public void testGetCalendarArrayWithFormat() throws Exception
     {
-        DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-        Date date1 = format.parse("01/01/2004");
-        Date date2 = format.parse("12/31/2004");
+        final DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        final Date date1 = format.parse("01/01/2004");
+        final Date date2 = format.parse("12/31/2004");
 
-        Calendar calendar1 = Calendar.getInstance();
+        final Calendar calendar1 = Calendar.getInstance();
         calendar1.setTime(date1);
-        Calendar calendar2 = Calendar.getInstance();
+        final Calendar calendar2 = Calendar.getInstance();
         calendar2.setTime(date2);
-        Calendar[] expected = new Calendar[] { calendar1, calendar2 };
+        final Calendar[] expected = new Calendar[] { calendar1, calendar2 };
 
         conf.addProperty("calendar.format", "01/01/2004");
         conf.addProperty("calendar.format", "12/31/2004");
@@ -1801,16 +1801,16 @@ public class TestDataConfiguration
     @Test
     public void testGetCalendarList() throws Exception
     {
-        DateFormat format = new SimpleDateFormat(DATE_PATTERN);
-        Date date1 = format.parse("2004-01-01");
-        Date date2 = format.parse("2004-12-31");
-        Calendar calendar1 = Calendar.getInstance();
+        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
+        final Date date1 = format.parse("2004-01-01");
+        final Date date2 = format.parse("2004-12-31");
+        final Calendar calendar1 = Calendar.getInstance();
         calendar1.setTime(date1);
-        Calendar calendar2 = Calendar.getInstance();
+        final Calendar calendar2 = Calendar.getInstance();
         calendar2.setTime(date2);
 
         // missing list
-        List<Calendar> nullList = null;
+        final List<Calendar> nullList = null;
         ListAssert.assertEquals(null, conf.getCalendarList("calendar.list", nullList));
 
         List<Object> expected = new ArrayList<>();
@@ -1855,7 +1855,7 @@ public class TestDataConfiguration
     @Test
     public void testGetInetAddress() throws Exception
     {
-        InetAddress expected = InetAddress.getByName("127.0.0.1");
+        final InetAddress expected = InetAddress.getByName("127.0.0.1");
 
         // address as string
         assertEquals(expected, conf.get(InetAddress.class, "ip.string"));
@@ -1877,7 +1877,7 @@ public class TestDataConfiguration
     @Test
     public void testGetInternetAddress() throws Exception
     {
-        Object expected = createInternetAddress("ebourg@apache.org");
+        final Object expected = createInternetAddress("ebourg@apache.org");
 
         // address as string
         assertEquals(expected, conf.get(expected.getClass(), "email.string"));
@@ -1894,7 +1894,7 @@ public class TestDataConfiguration
             conf.get(expected.getClass(), "email.invalid");
             fail("ConversionException should be thrown for invalid emails");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -1903,7 +1903,7 @@ public class TestDataConfiguration
     @Test(expected = ConversionException.class)
     public void testGetInternetAddressInvalidType() throws Exception
     {
-        Object expected = createInternetAddress("ebourg@apache.org");
+        final Object expected = createInternetAddress("ebourg@apache.org");
         conf.setProperty("email.invalid", "ebourg@apache@org");
         conf.get(expected.getClass(), "email.invalid");
     }
@@ -1913,9 +1913,9 @@ public class TestDataConfiguration
      * compile and run the test with Java 1.3 and the javamail-1.4 which
      * is not compatible with Java 1.3
      */
-    private Object createInternetAddress(String email) throws Exception
+    private Object createInternetAddress(final String email) throws Exception
     {
-        Class<?> cls = Class.forName("javax.mail.internet.InternetAddress");
+        final Class<?> cls = Class.forName("javax.mail.internet.InternetAddress");
         return cls.getConstructor(new Class[]{String.class}).newInstance(new Object[]{email});
     }
 
@@ -1930,7 +1930,7 @@ public class TestDataConfiguration
             conf.getBooleanArray("key1");
             fail("getBooleanArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -1940,7 +1940,7 @@ public class TestDataConfiguration
             conf.getBooleanArray("key2");
             fail("getBooleanArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -1950,7 +1950,7 @@ public class TestDataConfiguration
             conf.getBooleanList("key1");
             fail("getBooleanList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -1960,7 +1960,7 @@ public class TestDataConfiguration
             conf.getBooleanList("key2");
             fail("getBooleanList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -1970,7 +1970,7 @@ public class TestDataConfiguration
             conf.getByteArray("key1");
             fail("getByteArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -1980,7 +1980,7 @@ public class TestDataConfiguration
             conf.getByteArray("key2");
             fail("getByteArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -1990,7 +1990,7 @@ public class TestDataConfiguration
             conf.getByteList("key1");
             fail("getByteList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2000,7 +2000,7 @@ public class TestDataConfiguration
             conf.getByteList("key2");
             fail("getByteList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2010,7 +2010,7 @@ public class TestDataConfiguration
             conf.getShortArray("key1");
             fail("getShortArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2020,7 +2020,7 @@ public class TestDataConfiguration
             conf.getShortArray("key2");
             fail("getShortArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2030,7 +2030,7 @@ public class TestDataConfiguration
             conf.getShortList("key1");
             fail("getShortList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2040,7 +2040,7 @@ public class TestDataConfiguration
             conf.getShortList("key2");
             fail("getShortList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2050,7 +2050,7 @@ public class TestDataConfiguration
             conf.getIntArray("key1");
             fail("getIntArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2060,7 +2060,7 @@ public class TestDataConfiguration
             conf.getIntArray("key2");
             fail("getIntArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2070,7 +2070,7 @@ public class TestDataConfiguration
             conf.getIntegerList("key1");
             fail("getIntegerList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2080,7 +2080,7 @@ public class TestDataConfiguration
             conf.getIntegerList("key2");
             fail("getIntegerList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2090,7 +2090,7 @@ public class TestDataConfiguration
             conf.getLongArray("key1");
             fail("getLongArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2100,7 +2100,7 @@ public class TestDataConfiguration
             conf.getLongArray("key2");
             fail("getLongArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2110,7 +2110,7 @@ public class TestDataConfiguration
             conf.getLongList("key1");
             fail("getLongList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2120,7 +2120,7 @@ public class TestDataConfiguration
             conf.getLongList("key2");
             fail("getLongList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2130,7 +2130,7 @@ public class TestDataConfiguration
             conf.getFloatArray("key1");
             fail("getFloatArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2140,7 +2140,7 @@ public class TestDataConfiguration
             conf.getFloatArray("key2");
             fail("getFloatArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2150,7 +2150,7 @@ public class TestDataConfiguration
             conf.getFloatList("key1");
             fail("getFloatList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2160,7 +2160,7 @@ public class TestDataConfiguration
             conf.getFloatList("key2");
             fail("getFloatList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2170,7 +2170,7 @@ public class TestDataConfiguration
             conf.getDoubleArray("key1");
             fail("getDoubleArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2180,7 +2180,7 @@ public class TestDataConfiguration
             conf.getDoubleArray("key2");
             fail("getDoubleArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2190,7 +2190,7 @@ public class TestDataConfiguration
             conf.getDoubleList("key1");
             fail("getDoubleList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2200,7 +2200,7 @@ public class TestDataConfiguration
             conf.getDoubleList("key2");
             fail("getDoubleList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2210,7 +2210,7 @@ public class TestDataConfiguration
             conf.getBigIntegerArray("key1");
             fail("getBigIntegerArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2220,7 +2220,7 @@ public class TestDataConfiguration
             conf.getBigIntegerArray("key2");
             fail("getBigIntegerArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2230,7 +2230,7 @@ public class TestDataConfiguration
             conf.getBigIntegerList("key1");
             fail("getBigIntegerList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2240,7 +2240,7 @@ public class TestDataConfiguration
             conf.getBigIntegerList("key2");
             fail("getBigIntegerList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2250,7 +2250,7 @@ public class TestDataConfiguration
             conf.getBigDecimalArray("key1");
             fail("getBigDecimalArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2260,7 +2260,7 @@ public class TestDataConfiguration
             conf.getBigDecimalArray("key2");
             fail("getBigDecimalArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2270,7 +2270,7 @@ public class TestDataConfiguration
             conf.getBigDecimalList("key1");
             fail("getBigDecimalList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2280,7 +2280,7 @@ public class TestDataConfiguration
             conf.getBigDecimalList("key2");
             fail("getBigDecimalList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2290,7 +2290,7 @@ public class TestDataConfiguration
             conf.getURLArray("key1");
             fail("getURLArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2300,7 +2300,7 @@ public class TestDataConfiguration
             conf.getURLArray("key2");
             fail("getURLArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2310,7 +2310,7 @@ public class TestDataConfiguration
             conf.getURLList("key1");
             fail("getURLList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2320,7 +2320,7 @@ public class TestDataConfiguration
             conf.getURLList("key2");
             fail("getURLList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2330,7 +2330,7 @@ public class TestDataConfiguration
             conf.getLocaleArray("key1");
             fail("getLocaleArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2340,7 +2340,7 @@ public class TestDataConfiguration
             conf.getLocaleArray("key2");
             fail("getLocaleArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2350,7 +2350,7 @@ public class TestDataConfiguration
             conf.getLocaleList("key1");
             fail("getLocaleList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2360,7 +2360,7 @@ public class TestDataConfiguration
             conf.getLocaleList("key2");
             fail("getLocaleList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2370,7 +2370,7 @@ public class TestDataConfiguration
             conf.getColorArray("key1");
             fail("getColorArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2380,7 +2380,7 @@ public class TestDataConfiguration
             conf.getColorArray("key2");
             fail("getColorArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2390,7 +2390,7 @@ public class TestDataConfiguration
             conf.getColorList("key1");
             fail("getColorList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2400,7 +2400,7 @@ public class TestDataConfiguration
             conf.getColorList("key2");
             fail("getColorList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2410,7 +2410,7 @@ public class TestDataConfiguration
             conf.getDateArray("key1");
             fail("getDateArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2420,7 +2420,7 @@ public class TestDataConfiguration
             conf.getDate("key1", DATE_PATTERN);
             fail("getDate didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2430,7 +2430,7 @@ public class TestDataConfiguration
             conf.getDate("key2", DATE_PATTERN);
             fail("getDate didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2440,7 +2440,7 @@ public class TestDataConfiguration
             conf.getDateArray("key2");
             fail("getDateArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2450,7 +2450,7 @@ public class TestDataConfiguration
             conf.getDateList("key1");
             fail("getDateList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2460,7 +2460,7 @@ public class TestDataConfiguration
             conf.getDateList("key2");
             fail("getDateList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2470,7 +2470,7 @@ public class TestDataConfiguration
             conf.getCalendar("key1", DATE_PATTERN);
             fail("getCalendar didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2480,7 +2480,7 @@ public class TestDataConfiguration
             conf.getCalendar("key2",DATE_PATTERN);
             fail("getCalendar didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2490,7 +2490,7 @@ public class TestDataConfiguration
             conf.getCalendarArray("key1");
             fail("getCalendarArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2500,7 +2500,7 @@ public class TestDataConfiguration
             conf.getCalendarArray("key2");
             fail("getCalendarArray didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2510,7 +2510,7 @@ public class TestDataConfiguration
             conf.getCalendarList("key1");
             fail("getCalendarList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2520,7 +2520,7 @@ public class TestDataConfiguration
             conf.getCalendarList("key2");
             fail("getCalendarList didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2530,7 +2530,7 @@ public class TestDataConfiguration
             conf.get(InetAddress.class, "key1");
             fail("getInetAddress didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2540,7 +2540,7 @@ public class TestDataConfiguration
             conf.get(Class.forName("javax.mail.internet.InternetAddress"), "key1");
             fail("getInternetAddress didn't throw a ConversionException");
         }
-        catch (ConversionException e)
+        catch (final ConversionException e)
         {
             // expected
         }
@@ -2553,8 +2553,8 @@ public class TestDataConfiguration
     @Test
     public void testGetPropertyWithoutConversion()
     {
-        String key = "test.str";
-        String value = "someTestValue";
+        final String key = "test.str";
+        final String value = "someTestValue";
         conf.addProperty(key, value);
         assertEquals("Wrong result", value, conf.get(String.class, key));
     }
@@ -2565,7 +2565,7 @@ public class TestDataConfiguration
     @Test
     public void testClearProperty()
     {
-        String key = "test.property";
+        final String key = "test.property";
         conf.addProperty(key, "someValue");
         conf.clearProperty(key);
         assertFalse("Property still found", conf.containsKey(key));
@@ -2577,7 +2577,7 @@ public class TestDataConfiguration
     @Test
     public void testClearPropertyDirect()
     {
-        String key = "test.property";
+        final String key = "test.property";
         conf.addProperty(key, "someValue");
         conf.clearPropertyDirect(key);
         assertFalse("Property still found", conf.containsKey(key));
@@ -2590,8 +2590,8 @@ public class TestDataConfiguration
     @Test
     public void testClearPropertyDirectNoAbstractConf()
     {
-        Configuration wrapped = EasyMock.createMock(Configuration.class);
-        String key = "test.property";
+        final Configuration wrapped = EasyMock.createMock(Configuration.class);
+        final String key = "test.property";
         wrapped.clearProperty(key);
         EasyMock.replay(wrapped);
         conf = new DataConfiguration(wrapped);
@@ -2610,7 +2610,7 @@ public class TestDataConfiguration
             conf.get(Integer.TYPE, "uri.string");
             fail("No conversion exception thrown!");
         }
-        catch (ConversionException cex)
+        catch (final ConversionException cex)
         {
             assertTrue("Wrong cause",
                     cex.getCause() instanceof NumberFormatException);

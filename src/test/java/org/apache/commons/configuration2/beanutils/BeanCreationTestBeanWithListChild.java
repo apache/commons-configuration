@@ -38,7 +38,7 @@ public class BeanCreationTestBeanWithListChild
         return children;
     }
 
-    public void setChildren(List<BeanCreationTestBean> buddies)
+    public void setChildren(final List<BeanCreationTestBean> buddies)
     {
         this.children.clear();
         this.children.addAll(buddies);
@@ -49,7 +49,7 @@ public class BeanCreationTestBeanWithListChild
         return intValue;
     }
 
-    public void setIntValue(int intValue)
+    public void setIntValue(final int intValue)
     {
         this.intValue = intValue;
     }
@@ -59,7 +59,7 @@ public class BeanCreationTestBeanWithListChild
         return stringValue;
     }
 
-    public void setStringValue(String stringValue)
+    public void setStringValue(final String stringValue)
     {
         this.stringValue = stringValue;
     }

@@ -59,7 +59,7 @@ class ImmutableConfigurationInvocationHandler implements InvocationHandler
      * @param conf the wrapped {@code Configuration} (must not be <b>null</b>)
      * @throws NullPointerException if the {@code Configuration} is <b>null</b>
      */
-    public ImmutableConfigurationInvocationHandler(Configuration conf)
+    public ImmutableConfigurationInvocationHandler(final Configuration conf)
     {
         if (conf == null)
         {
@@ -74,14 +74,14 @@ class ImmutableConfigurationInvocationHandler implements InvocationHandler
      * object. Result objects are wrapped if necessary.
      */
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args)
+    public Object invoke(final Object proxy, final Method method, final Object[] args)
             throws Throwable
     {
         try
         {
             return handleResult(method.invoke(wrappedConfiguration, args));
         }
-        catch (InvocationTargetException e)
+        catch (final InvocationTargetException e)
         {
             // unwrap
             throw e.getCause();
@@ -96,7 +96,7 @@ class ImmutableConfigurationInvocationHandler implements InvocationHandler
      * @param result the result object
      * @return the processed result object
      */
-    private static Object handleResult(Object result)
+    private static Object handleResult(final Object result)
     {
         if (result instanceof Iterator)
         {
@@ -120,7 +120,7 @@ class ImmutableConfigurationInvocationHandler implements InvocationHandler
          *
          * @param it the underlying iterator
          */
-        public ImmutableIterator(Iterator<?> it)
+        public ImmutableIterator(final Iterator<?> it)
         {
             wrappedIterator = it;
         }

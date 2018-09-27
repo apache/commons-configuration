@@ -54,8 +54,8 @@ class TrackedNodeHandler extends AbstractImmutableNodeHandler
      * @param root the root node of the represented hierarchy
      * @param handler an underlying handler for delegation
      */
-    public TrackedNodeHandler(ImmutableNode root,
-            NodeHandler<ImmutableNode> handler)
+    public TrackedNodeHandler(final ImmutableNode root,
+            final NodeHandler<ImmutableNode> handler)
     {
         rootNode = root;
         parentHandler = handler;
@@ -77,7 +77,7 @@ class TrackedNodeHandler extends AbstractImmutableNodeHandler
      * parent mapping.
      */
     @Override
-    public ImmutableNode getParent(ImmutableNode node)
+    public ImmutableNode getParent(final ImmutableNode node)
     {
         return getParentHandler().getParent(node);
     }

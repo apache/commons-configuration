@@ -89,27 +89,27 @@ public class TestBaseConfigurationXMLReader
     @Test(expected = IOException.class)
     public void testParseIOException() throws SAXException, IOException
     {
-        BaseConfigurationXMLReader reader = new BaseConfigurationXMLReader();
+        final BaseConfigurationXMLReader reader = new BaseConfigurationXMLReader();
         reader.parse("document");
     }
 
     @Test
     public void testSetRootName() throws Exception
     {
-        BaseConfigurationXMLReader reader = new BaseConfigurationXMLReader(config);
+        final BaseConfigurationXMLReader reader = new BaseConfigurationXMLReader(config);
         reader.setRootName("apache");
         checkDocument(reader, "apache");
     }
 
-    private void checkDocument(BaseConfigurationXMLReader creader,
-    String rootName) throws Exception
+    private void checkDocument(final BaseConfigurationXMLReader creader,
+    final String rootName) throws Exception
     {
-        SAXSource source = new SAXSource(creader, new InputSource());
-        DOMResult result = new DOMResult();
-        Transformer trans = TransformerFactory.newInstance().newTransformer();
+        final SAXSource source = new SAXSource(creader, new InputSource());
+        final DOMResult result = new DOMResult();
+        final Transformer trans = TransformerFactory.newInstance().newTransformer();
         trans.transform(source, result);
-        Node root = ((Document) result.getNode()).getDocumentElement();
-        JXPathContext ctx = JXPathContext.newContext(root);
+        final Node root = ((Document) result.getNode()).getDocumentElement();
+        final JXPathContext ctx = JXPathContext.newContext(root);
 
         assertEquals("Wrong root name", rootName, root.getNodeName());
         assertEquals("Wrong number of children", 3, ctx.selectNodes("/*").size());
@@ -131,17 +131,17 @@ public class TestBaseConfigurationXMLReader
      * @param path the path to be checked
      * @param values the expected element values
      */
-    private void check(JXPathContext ctx, String path, String[] values)
+    private void check(final JXPathContext ctx, final String path, final String[] values)
     {
-        Iterator<?> it = ctx.iterate(path);
-        for (String value : values) {
+        final Iterator<?> it = ctx.iterate(path);
+        for (final String value : values) {
             assertTrue("Too few values", it.hasNext());
             assertEquals("Wrong property value", value, it.next());
         }
         assertFalse("Too many values", it.hasNext());
     }
 
-    private void check(JXPathContext ctx, String path, String value)
+    private void check(final JXPathContext ctx, final String path, final String value)
     {
         check(ctx, path, new String[]
         { value });
@@ -151,7 +151,7 @@ public class TestBaseConfigurationXMLReader
     private static class TestContentHandler extends DefaultHandler
      {
         @Override
-        public void characters(char[] ch, int start, int length)
+        public void characters(final char[] ch, final int start, final int length)
             throws SAXException
         {
             throw new SAXException("Test exception during parsing");

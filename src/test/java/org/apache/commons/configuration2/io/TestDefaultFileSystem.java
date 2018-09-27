@@ -58,7 +58,7 @@ public class TestDefaultFileSystem
     @Test
     public void testSetLogger()
     {
-        ConfigurationLogger log = new ConfigurationLogger(getClass());
+        final ConfigurationLogger log = new ConfigurationLogger(getClass());
         fileSystem.setLogger(log);
         assertSame("Logger not set", log, fileSystem.getLogger());
     }

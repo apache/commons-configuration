@@ -61,7 +61,7 @@ public class CombinedBeanDeclaration implements BeanDeclaration
      * @throws NullPointerException if the array with child declarations is
      *         <b>null</b>
      */
-    public CombinedBeanDeclaration(BeanDeclaration... decl)
+    public CombinedBeanDeclaration(final BeanDeclaration... decl)
     {
         childDeclarations = new ArrayList<>(Arrays.asList(decl));
     }
@@ -75,9 +75,9 @@ public class CombinedBeanDeclaration implements BeanDeclaration
     @Override
     public String getBeanFactoryName()
     {
-        for (BeanDeclaration d : childDeclarations)
+        for (final BeanDeclaration d : childDeclarations)
         {
-            String factoryName = d.getBeanFactoryName();
+            final String factoryName = d.getBeanFactoryName();
             if (factoryName != null)
             {
                 return factoryName;
@@ -95,9 +95,9 @@ public class CombinedBeanDeclaration implements BeanDeclaration
     @Override
     public Object getBeanFactoryParameter()
     {
-        for (BeanDeclaration d : childDeclarations)
+        for (final BeanDeclaration d : childDeclarations)
         {
-            Object factoryParam = d.getBeanFactoryParameter();
+            final Object factoryParam = d.getBeanFactoryParameter();
             if (factoryParam != null)
             {
                 return factoryParam;
@@ -115,9 +115,9 @@ public class CombinedBeanDeclaration implements BeanDeclaration
     @Override
     public String getBeanClassName()
     {
-        for (BeanDeclaration d : childDeclarations)
+        for (final BeanDeclaration d : childDeclarations)
         {
-            String beanClassName = d.getBeanClassName();
+            final String beanClassName = d.getBeanClassName();
             if (beanClassName != null)
             {
                 return beanClassName;
@@ -135,10 +135,10 @@ public class CombinedBeanDeclaration implements BeanDeclaration
     @Override
     public Map<String, Object> getBeanProperties()
     {
-        Map<String, Object> result = new HashMap<>();
+        final Map<String, Object> result = new HashMap<>();
         for (int i = childDeclarations.size() - 1; i >= 0; i--)
         {
-            Map<String, Object> props =
+            final Map<String, Object> props =
                     childDeclarations.get(i).getBeanProperties();
             if (props != null)
             {
@@ -157,10 +157,10 @@ public class CombinedBeanDeclaration implements BeanDeclaration
     @Override
     public Map<String, Object> getNestedBeanDeclarations()
     {
-        Map<String, Object> result = new HashMap<>();
+        final Map<String, Object> result = new HashMap<>();
         for (int i = childDeclarations.size() - 1; i >= 0; i--)
         {
-            Map<String, Object> decls =
+            final Map<String, Object> decls =
                     childDeclarations.get(i).getNestedBeanDeclarations();
             if (decls != null)
             {
@@ -180,9 +180,9 @@ public class CombinedBeanDeclaration implements BeanDeclaration
     @Override
     public Collection<ConstructorArg> getConstructorArgs()
     {
-        for (BeanDeclaration d : childDeclarations)
+        for (final BeanDeclaration d : childDeclarations)
         {
-            Collection<ConstructorArg> args = d.getConstructorArgs();
+            final Collection<ConstructorArg> args = d.getConstructorArgs();
             if (args != null && !args.isEmpty())
             {
                 return args;

@@ -60,7 +60,7 @@ public class TestConfigurationSet {
     @Before
     public void setUp() throws Exception
     {
-        BaseConfiguration configuration = new BaseConfiguration();
+        final BaseConfiguration configuration = new BaseConfiguration();
         for(int i = 0; i < properties.length ; i++) {
             configuration.setProperty(properties[i], values[i]);
         }
@@ -86,9 +86,9 @@ public class TestConfigurationSet {
      */
     @Test
     public void testIterator() {
-        Iterator<Map.Entry<Object, Object>> iterator = set.iterator();
+        final Iterator<Map.Entry<Object, Object>> iterator = set.iterator();
         while(iterator.hasNext()) {
-            Map.Entry<Object, Object> entry = iterator.next();
+            final Map.Entry<Object, Object> entry = iterator.next();
             boolean found = false;
             for(int i = 0; i < properties.length; i++) {
                 if(entry.getKey().equals(properties[i])) {

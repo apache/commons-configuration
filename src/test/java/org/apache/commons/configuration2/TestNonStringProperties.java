@@ -33,8 +33,8 @@ public class TestNonStringProperties extends BaseNonStringProperties
     @Before
     public void setUp() throws Exception
     {
-        PropertiesConfiguration c = new PropertiesConfiguration();
-        FileHandler handler = new FileHandler(c);
+        final PropertiesConfiguration c = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(c);
         handler.setFileName(testProperties);
         handler.load();
         conf = c;

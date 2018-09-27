@@ -94,7 +94,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
      * @param config the definition configuration
      * @param fileName the name of the file
      */
-    private static void addReloadSource(Configuration config, String fileName)
+    private static void addReloadSource(final Configuration config, final String fileName)
     {
         config.addProperty(PROP_SRC + "(-1)[@fileName]", fileName);
         config.addProperty(PROP_SRC + "[@config-reload]", Boolean.TRUE);
@@ -107,7 +107,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
      * @param content the file's content
      * @throws IOException if an error occurs
      */
-    private static void writeFile(File file, String content) throws IOException
+    private static void writeFile(final File file, final String content) throws IOException
     {
         PrintWriter out = null;
         try
@@ -134,9 +134,9 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
      * @return the <code>File</code> object for the test file
      * @throws IOException if an error occurs
      */
-    private File writeReloadFile(File f, String content) throws IOException
+    private File writeReloadFile(final File f, final String content) throws IOException
     {
-        File file = (f != null) ? f : folder.newFile();
+        final File file = (f != null) ? f : folder.newFile();
         writeFile(file, content);
         return file;
     }
@@ -150,7 +150,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
      * @return the file that was written
      * @throws IOException if an error occurs
      */
-    private File writeReloadFile(File f, int tagIdx, int value)
+    private File writeReloadFile(final File f, final int tagIdx, final int value)
             throws IOException
     {
         return writeReloadFile(f,
@@ -163,7 +163,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
      * @param idx the index of the property
      * @return the test property with this index
      */
-    private static String testProperty(int idx)
+    private static String testProperty(final int idx)
     {
         return PROP_RELOAD + idx;
     }
@@ -174,21 +174,21 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
     @Test
     public void testReloadFromFile() throws ConfigurationException, IOException
     {
-        File xmlConf1 = writeReloadFile(null, 1, 0);
-        File xmlConf2 = writeReloadFile(null, 2, 0);
-        ReloadingDetectorFactory detectorFactory =
+        final File xmlConf1 = writeReloadFile(null, 1, 0);
+        final File xmlConf2 = writeReloadFile(null, 2, 0);
+        final ReloadingDetectorFactory detectorFactory =
                 new ReloadingDetectorFactory()
                 {
                     @Override
                     public ReloadingDetector createReloadingDetector(
-                            FileHandler handler,
-                            FileBasedBuilderParametersImpl params)
+                            final FileHandler handler,
+                            final FileBasedBuilderParametersImpl params)
                             throws ConfigurationException
                     {
                         return new AlwaysReloadingDetector();
                     }
                 };
-        BaseHierarchicalConfiguration defConf = new BaseHierarchicalConfiguration();
+        final BaseHierarchicalConfiguration defConf = new BaseHierarchicalConfiguration();
         addReloadSource(defConf, xmlConf1.getAbsolutePath());
         addReloadSource(defConf, xmlConf2.getAbsolutePath());
         builder.configure(parameters
@@ -230,26 +230,26 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
     {
         final int threadCount = 4;
         final int loopCount = 100;
-        ReloadingDetectorFactory detectorFactory =
+        final ReloadingDetectorFactory detectorFactory =
                 new ReloadingDetectorFactory()
                 {
                     @Override
                     public ReloadingDetector createReloadingDetector(
-                            FileHandler handler,
-                            FileBasedBuilderParametersImpl params)
+                            final FileHandler handler,
+                            final FileBasedBuilderParametersImpl params)
                             throws ConfigurationException
                     {
                         return new RandomReloadingDetector();
                     }
                 };
-        BaseHierarchicalConfiguration defConf = new BaseHierarchicalConfiguration();
+        final BaseHierarchicalConfiguration defConf = new BaseHierarchicalConfiguration();
         defConf.addProperty("header.result.nodeCombiner[@config-class]",
                 MergeCombiner.class.getName());
         defConf.addProperty("header.result.expressionEngine[@config-class]",
                 XPathExpressionEngine.class.getName());
         addReloadSource(defConf, "configA.xml");
         addReloadSource(defConf, "configB.xml");
-        Synchronizer sync = new ReadWriteSynchronizer();
+        final Synchronizer sync = new ReadWriteSynchronizer();
         builder.configure(parameters
                 .combined()
                 .setDefinitionBuilder(new ConstantConfigurationBuilder(defConf))
@@ -268,8 +268,8 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
         assertEquals("Wrong initial value", "100", builder.getConfiguration()
                 .getString("/property[@name='config']/@value"));
 
-        Thread testThreads[] = new Thread[threadCount];
-        int failures[] = new int[threadCount];
+        final Thread testThreads[] = new Thread[threadCount];
+        final int failures[] = new int[threadCount];
 
         for (int i = 0; i < testThreads.length; ++i)
         {
@@ -296,11 +296,11 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
      * @throws ConfigurationException if a configuration-related error occurs
      * @throws InterruptedException if waiting is interrupted
      */
-    private void checkReloadDefinitionFile(File defFile) throws IOException,
+    private void checkReloadDefinitionFile(final File defFile) throws IOException,
             ConfigurationException, InterruptedException
     {
-        File src1 = writeReloadFile(null, 1, 0);
-        File src2 = writeReloadFile(null, 1, 1);
+        final File src1 = writeReloadFile(null, 1, 0);
+        final File src2 = writeReloadFile(null, 1, 1);
         writeDefinitionFile(defFile, src1);
         CombinedConfiguration config = builder.getConfiguration();
         assertEquals("Wrong initial value", 0, config.getInt(testProperty(1)));
@@ -330,7 +330,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
     public void testReloadDefinitionFileExplicitBuilder()
             throws ConfigurationException, IOException, InterruptedException
     {
-        File defFile = folder.newFile();
+        final File defFile = folder.newFile();
         builder.configure(parameters.combined().setDefinitionBuilder(
                 new ReloadingFileBasedConfigurationBuilder<>(
                         XMLConfiguration.class).configure(parameters.xml()
@@ -346,7 +346,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
     public void testReloadDefinitionFileDefaultBuilder()
             throws ConfigurationException, IOException, InterruptedException
     {
-        File defFile = folder.newFile();
+        final File defFile = folder.newFile();
         builder.configure(parameters.combined().setDefinitionBuilderParameters(
                 parameters.xml().setReloadingRefreshDelay(0L).setFile(defFile)));
         checkReloadDefinitionFile(defFile);
@@ -360,10 +360,10 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
      * @param src the configuration source file to be referenced
      * @throws ConfigurationException if an error occurs
      */
-    private void writeDefinitionFile(File defFile, File src)
+    private void writeDefinitionFile(final File defFile, final File src)
             throws ConfigurationException
     {
-        XMLConfiguration defConf = new XMLConfiguration();
+        final XMLConfiguration defConf = new XMLConfiguration();
         addReloadSource(defConf, src.getAbsolutePath());
         new FileHandler(defConf).save(defFile);
     }
@@ -376,7 +376,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
     {
         private final BaseHierarchicalConfiguration configuration;
 
-        public ConstantConfigurationBuilder(BaseHierarchicalConfiguration conf)
+        public ConstantConfigurationBuilder(final BaseHierarchicalConfiguration conf)
         {
             super(BaseHierarchicalConfiguration.class);
             configuration = conf;
@@ -407,8 +407,8 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
         /** The number of test operations. */
         private final int count;
 
-        ReloadThread(ReloadingCombinedConfigurationBuilder bldr,
-                int[] failures, int index, int count)
+        ReloadThread(final ReloadingCombinedConfigurationBuilder bldr,
+                final int[] failures, final int index, final int count)
         {
             builder = bldr;
             this.failures = failures;
@@ -425,7 +425,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
                 try
                 {
                     builder.getReloadingController().checkForReloading(null);
-                    String value =
+                    final String value =
                             builder.getConfiguration().getString(
                                     "/property[@name='config']/@value");
                     if (value == null || !value.equals("100"))
@@ -433,7 +433,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
                         ++failures[index];
                     }
                 }
-                catch (Exception ex)
+                catch (final Exception ex)
                 {
                     ++failures[index];
                 }

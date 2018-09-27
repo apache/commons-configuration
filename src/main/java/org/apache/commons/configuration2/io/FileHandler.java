@@ -135,17 +135,17 @@ public class FileHandler
             new SynchronizerSupport()
             {
                 @Override
-                public void unlock(LockMode mode)
+                public void unlock(final LockMode mode)
                 {
                 }
 
                 @Override
-                public void setSynchronizer(Synchronizer sync)
+                public void setSynchronizer(final Synchronizer sync)
                 {
                 }
 
                 @Override
-                public void lock(LockMode mode)
+                public void lock(final LockMode mode)
                 {
                 }
 
@@ -183,7 +183,7 @@ public class FileHandler
      *
      * @param obj the file-based object to manage
      */
-    public FileHandler(FileBased obj)
+    public FileHandler(final FileBased obj)
     {
         this(obj, emptyFileLocator());
     }
@@ -201,7 +201,7 @@ public class FileHandler
      * @throws IllegalArgumentException if the {@code FileHandler} is
      *         <b>null</b>
      */
-    public FileHandler(FileBased obj, FileHandler c)
+    public FileHandler(final FileBased obj, final FileHandler c)
     {
         this(obj, checkSourceHandler(c).getFileLocator());
     }
@@ -213,7 +213,7 @@ public class FileHandler
      * @param obj the {@code FileBased} object to manage
      * @param locator the {@code FileLocator}
      */
-    private FileHandler(FileBased obj, FileLocator locator)
+    private FileHandler(final FileBased obj, final FileLocator locator)
     {
         content = obj;
         fileLocator = new AtomicReference<>(locator);
@@ -228,7 +228,7 @@ public class FileHandler
      * @return the newly created {@code FileHandler}
      * @see FileLocatorUtils#fromMap(Map)
      */
-    public static FileHandler fromMap(Map<String, ?> map)
+    public static FileHandler fromMap(final Map<String, ?> map)
     {
         return new FileHandler(null, FileLocatorUtils.fromMap(map));
     }
@@ -251,7 +251,7 @@ public class FileHandler
      * @param l the listener to be added (must not be <b>null</b>)
      * @throws IllegalArgumentException if the listener is <b>null</b>
      */
-    public void addFileHandlerListener(FileHandlerListener l)
+    public void addFileHandlerListener(final FileHandlerListener l)
     {
         if (l == null)
         {
@@ -265,7 +265,7 @@ public class FileHandler
      *
      * @param l the listener to be removed
      */
-    public void removeFileHandlerListener(FileHandlerListener l)
+    public void removeFileHandlerListener(final FileHandlerListener l)
     {
         listeners.remove(l);
     }
@@ -278,7 +278,7 @@ public class FileHandler
      */
     public String getFileName()
     {
-        FileLocator locator = getFileLocator();
+        final FileLocator locator = getFileLocator();
         if (locator.getFileName() != null)
         {
             return locator.getFileName();
@@ -301,13 +301,13 @@ public class FileHandler
      *
      * @param fileName the name of the file
      */
-    public void setFileName(String fileName)
+    public void setFileName(final String fileName)
     {
         final String name = normalizeFileURL(fileName);
         new Updater()
         {
             @Override
-            protected void updateBuilder(FileLocatorBuilder builder)
+            protected void updateBuilder(final FileLocatorBuilder builder)
             {
                 builder.fileName(name);
                 builder.sourceURL(null);
@@ -324,7 +324,7 @@ public class FileHandler
      */
     public String getBasePath()
     {
-        FileLocator locator = getFileLocator();
+        final FileLocator locator = getFileLocator();
         if (locator.getBasePath() != null)
         {
             return locator.getBasePath();
@@ -354,13 +354,13 @@ public class FileHandler
      *
      * @param basePath the base path.
      */
-    public void setBasePath(String basePath)
+    public void setBasePath(final String basePath)
     {
         final String path = normalizeFileURL(basePath);
         new Updater()
         {
             @Override
-            protected void updateBuilder(FileLocatorBuilder builder)
+            protected void updateBuilder(final FileLocatorBuilder builder)
             {
                 builder.basePath(path);
                 builder.sourceURL(null);
@@ -390,7 +390,7 @@ public class FileHandler
      *
      * @param file the location of the associated file
      */
-    public void setFile(File file)
+    public void setFile(final File file)
     {
         final String fileName = file.getName();
         final String basePath =
@@ -399,7 +399,7 @@ public class FileHandler
         new Updater()
         {
             @Override
-            protected void updateBuilder(FileLocatorBuilder builder)
+            protected void updateBuilder(final FileLocatorBuilder builder)
             {
                 builder.fileName(fileName).basePath(basePath).sourceURL(null);
             }
@@ -417,8 +417,8 @@ public class FileHandler
      */
     public String getPath()
     {
-        FileLocator locator = getFileLocator();
-        File file = createFile(locator);
+        final FileLocator locator = getFileLocator();
+        final File file = createFile(locator);
         return FileLocatorUtils.obtainFileSystem(locator).getPath(file,
                 locator.getSourceURL(), locator.getBasePath(), locator.getFileName());
     }
@@ -433,7 +433,7 @@ public class FileHandler
      *
      * @param path the full path name of the associated file
      */
-    public void setPath(String path)
+    public void setPath(final String path)
     {
         setFile(new File(path));
     }
@@ -448,7 +448,7 @@ public class FileHandler
      */
     public URL getURL()
     {
-        FileLocator locator = getFileLocator();
+        final FileLocator locator = getFileLocator();
         return (locator.getSourceURL() != null) ? locator.getSourceURL()
                 : FileLocatorUtils.locate(locator);
     }
@@ -467,7 +467,7 @@ public class FileHandler
         new Updater()
         {
             @Override
-            protected void updateBuilder(FileLocatorBuilder builder)
+            protected void updateBuilder(final FileLocatorBuilder builder)
             {
                 builder.sourceURL(url);
                 builder.basePath(null).fileName(null);
@@ -500,7 +500,7 @@ public class FileHandler
      * @throws IllegalArgumentException if the {@code FileLocator} is
      *         <b>null</b>
      */
-    public void setFileLocator(FileLocator locator)
+    public void setFileLocator(final FileLocator locator)
     {
         if (locator == null)
         {
@@ -530,7 +530,7 @@ public class FileHandler
         new Updater()
         {
             @Override
-            protected void updateBuilder(FileLocatorBuilder builder)
+            protected void updateBuilder(final FileLocatorBuilder builder)
             {
                 builder.basePath(null).fileName(null).sourceURL(null);
             }
@@ -561,7 +561,7 @@ public class FileHandler
         new Updater()
         {
             @Override
-            protected void updateBuilder(FileLocatorBuilder builder)
+            protected void updateBuilder(final FileLocatorBuilder builder)
             {
                 builder.encoding(encoding);
             }
@@ -593,7 +593,7 @@ public class FileHandler
         new Updater()
         {
             @Override
-            protected void updateBuilder(FileLocatorBuilder builder)
+            protected void updateBuilder(final FileLocatorBuilder builder)
             {
                 builder.fileSystem(fileSystem);
             }
@@ -637,7 +637,7 @@ public class FileHandler
         new Updater()
         {
             @Override
-            protected void updateBuilder(FileLocatorBuilder builder)
+            protected void updateBuilder(final FileLocatorBuilder builder)
             {
                 builder.locationStrategy(strategy);
             }
@@ -671,7 +671,7 @@ public class FileHandler
 
         do
         {
-            FileLocator locator = getFileLocator();
+            final FileLocator locator = getFileLocator();
             FileLocator fullLocator =
                     FileLocatorUtils.fullyInitializedLocator(locator);
             if (fullLocator == null)
@@ -711,7 +711,7 @@ public class FileHandler
      * @param fileName the name of the file to be loaded
      * @throws ConfigurationException if an error occurs
      */
-    public void load(String fileName) throws ConfigurationException
+    public void load(final String fileName) throws ConfigurationException
     {
         load(fileName, checkContentAndGetLocator());
     }
@@ -722,14 +722,14 @@ public class FileHandler
      * @param file the file to load
      * @throws ConfigurationException if an error occurs
      */
-    public void load(File file) throws ConfigurationException
+    public void load(final File file) throws ConfigurationException
     {
         URL url;
         try
         {
             url = FileLocatorUtils.toURL(file);
         }
-        catch (MalformedURLException e1)
+        catch (final MalformedURLException e1)
         {
             throw new ConfigurationException("Cannot create URL from file "
                     + file);
@@ -745,7 +745,7 @@ public class FileHandler
      * @param url the URL of the file to be loaded
      * @throws ConfigurationException if an error occurs
      */
-    public void load(URL url) throws ConfigurationException
+    public void load(final URL url) throws ConfigurationException
     {
         load(url, checkContentAndGetLocator());
     }
@@ -758,7 +758,7 @@ public class FileHandler
      * @throws ConfigurationException if an error occurs during the load
      *         operation
      */
-    public void load(InputStream in) throws ConfigurationException
+    public void load(final InputStream in) throws ConfigurationException
     {
         load(in, checkContentAndGetLocator());
     }
@@ -773,7 +773,7 @@ public class FileHandler
      * @throws ConfigurationException if an error occurs during the load
      *         operation
      */
-    public void load(InputStream in, String encoding)
+    public void load(final InputStream in, final String encoding)
             throws ConfigurationException
     {
         loadFromStream(in, encoding, null);
@@ -786,7 +786,7 @@ public class FileHandler
      * @throws ConfigurationException if an error occurs during the load
      *         operation
      */
-    public void load(Reader in) throws ConfigurationException
+    public void load(final Reader in) throws ConfigurationException
     {
         checkContent();
         injectNullFileLocator();
@@ -814,7 +814,7 @@ public class FileHandler
      * @throws ConfigurationException if an error occurs during the save
      *         operation
      */
-    public void save(String fileName) throws ConfigurationException
+    public void save(final String fileName) throws ConfigurationException
     {
         save(fileName, checkContentAndGetLocator());
     }
@@ -827,7 +827,7 @@ public class FileHandler
      * @throws ConfigurationException if an error occurs during the save
      *         operation
      */
-    public void save(URL url) throws ConfigurationException
+    public void save(final URL url) throws ConfigurationException
     {
         save(url, checkContentAndGetLocator());
     }
@@ -841,7 +841,7 @@ public class FileHandler
      * @throws ConfigurationException if an error occurs during the save
      *         operation
      */
-    public void save(File file) throws ConfigurationException
+    public void save(final File file) throws ConfigurationException
     {
         save(file, checkContentAndGetLocator());
     }
@@ -854,7 +854,7 @@ public class FileHandler
      * @throws ConfigurationException if an error occurs during the save
      *         operation
      */
-    public void save(OutputStream out) throws ConfigurationException
+    public void save(final OutputStream out) throws ConfigurationException
     {
         save(out, checkContentAndGetLocator());
     }
@@ -869,7 +869,7 @@ public class FileHandler
      * @throws ConfigurationException if an error occurs during the save
      *         operation
      */
-    public void save(OutputStream out, String encoding)
+    public void save(final OutputStream out, final String encoding)
             throws ConfigurationException
     {
         saveToStream(out, encoding, null);
@@ -882,7 +882,7 @@ public class FileHandler
      * @throws ConfigurationException if an error occurs during the save
      *         operation
      */
-    public void save(Writer out) throws ConfigurationException
+    public void save(final Writer out) throws ConfigurationException
     {
         checkContent();
         injectNullFileLocator();
@@ -914,7 +914,7 @@ public class FileHandler
     {
         if (getContent() instanceof FileLocatorAware)
         {
-            FileLocator locator = prepareNullLocatorBuilder().create();
+            final FileLocator locator = prepareNullLocatorBuilder().create();
             ((FileLocatorAware) getContent()).initFileLocator(locator);
         }
     }
@@ -926,7 +926,7 @@ public class FileHandler
      *
      * @param url the URL for the locator
      */
-    private void injectFileLocator(URL url)
+    private void injectFileLocator(final URL url)
     {
         if (url == null)
         {
@@ -936,7 +936,7 @@ public class FileHandler
         {
             if (getContent() instanceof FileLocatorAware)
             {
-                FileLocator locator =
+                final FileLocator locator =
                         prepareNullLocatorBuilder().sourceURL(url).create();
                 ((FileLocatorAware) getContent()).initFileLocator(locator);
             }
@@ -967,9 +967,9 @@ public class FileHandler
      * @param locator the current {@code FileLocator}
      * @throws ConfigurationException if an error occurs
      */
-    private void load(FileLocator locator) throws ConfigurationException
+    private void load(final FileLocator locator) throws ConfigurationException
     {
-        URL url = FileLocatorUtils.locateOrThrow(locator);
+        final URL url = FileLocatorUtils.locateOrThrow(locator);
         load(url, locator);
     }
 
@@ -980,7 +980,7 @@ public class FileHandler
      * @param locator the current {@code FileLocator}
      * @throws ConfigurationException if an error occurs
      */
-    private void load(URL url, FileLocator locator) throws ConfigurationException
+    private void load(final URL url, final FileLocator locator) throws ConfigurationException
     {
         InputStream in = null;
 
@@ -989,11 +989,11 @@ public class FileHandler
             in = FileLocatorUtils.obtainFileSystem(locator).getInputStream(url);
             loadFromStream(in, locator.getEncoding(), url);
         }
-        catch (ConfigurationException e)
+        catch (final ConfigurationException e)
         {
             throw e;
         }
-        catch (Exception e)
+        catch (final Exception e)
         {
             throw new ConfigurationException(
                     "Unable to load the configuration from the URL " + url, e);
@@ -1011,11 +1011,11 @@ public class FileHandler
      * @param locator the current {@code FileLocator}
      * @throws ConfigurationException if an error occurs
      */
-    private void load(String fileName, FileLocator locator)
+    private void load(final String fileName, final FileLocator locator)
             throws ConfigurationException
     {
-        FileLocator locFileName = createLocatorWithFileName(fileName, locator);
-        URL url = FileLocatorUtils.locateOrThrow(locFileName);
+        final FileLocator locFileName = createLocatorWithFileName(fileName, locator);
+        final URL url = FileLocatorUtils.locateOrThrow(locFileName);
         load(url, locator);
     }
 
@@ -1026,7 +1026,7 @@ public class FileHandler
      * @param locator the current {@code FileLocator}
      * @throws ConfigurationException if an error occurs
      */
-    private void load(InputStream in, FileLocator locator)
+    private void load(final InputStream in, final FileLocator locator)
             throws ConfigurationException
     {
         load(in, locator.getEncoding());
@@ -1040,11 +1040,11 @@ public class FileHandler
      * @param url the URL of the file to be loaded (if known)
      * @throws ConfigurationException if an error occurs
      */
-    private void loadFromStream(InputStream in, String encoding, URL url)
+    private void loadFromStream(final InputStream in, final String encoding, final URL url)
             throws ConfigurationException
     {
         checkContent();
-        SynchronizerSupport syncSupport = fetchSynchronizerSupport();
+        final SynchronizerSupport syncSupport = fetchSynchronizerSupport();
         syncSupport.lock(LockMode.WRITE);
         try
         {
@@ -1072,14 +1072,14 @@ public class FileHandler
      * @param in the input stream
      * @throws ConfigurationException if an error occurs
      */
-    private void loadFromStreamDirectly(InputStream in)
+    private void loadFromStreamDirectly(final InputStream in)
             throws ConfigurationException
     {
         try
         {
             ((InputStreamSupport) getContent()).read(in);
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             throw new ConfigurationException(e);
         }
@@ -1093,7 +1093,7 @@ public class FileHandler
      * @param encoding the encoding
      * @throws ConfigurationException if an error occurs
      */
-    private void loadFromTransformedStream(InputStream in, String encoding)
+    private void loadFromTransformedStream(final InputStream in, final String encoding)
             throws ConfigurationException
     {
         Reader reader = null;
@@ -1104,7 +1104,7 @@ public class FileHandler
             {
                 reader = new InputStreamReader(in, encoding);
             }
-            catch (UnsupportedEncodingException e)
+            catch (final UnsupportedEncodingException e)
             {
                 throw new ConfigurationException(
                         "The requested encoding is not supported, try the default encoding.",
@@ -1126,14 +1126,14 @@ public class FileHandler
      * @param in the reader
      * @throws ConfigurationException if an error occurs
      */
-    private void loadFromReader(Reader in) throws ConfigurationException
+    private void loadFromReader(final Reader in) throws ConfigurationException
     {
         fireLoadingEvent();
         try
         {
             getContent().read(in);
         }
-        catch (IOException ioex)
+        catch (final IOException ioex)
         {
             throw new ConfigurationException(ioex);
         }
@@ -1151,7 +1151,7 @@ public class FileHandler
      * @throws ConfigurationException if an error occurs during the save
      *         operation
      */
-    private void save(FileLocator locator) throws ConfigurationException
+    private void save(final FileLocator locator) throws ConfigurationException
     {
         if (!FileLocatorUtils.isLocationDefined(locator))
         {
@@ -1176,7 +1176,7 @@ public class FileHandler
      * @throws ConfigurationException if an error occurs during the save
      *         operation
      */
-    private void save(String fileName, FileLocator locator)
+    private void save(final String fileName, final FileLocator locator)
             throws ConfigurationException
     {
         URL url;
@@ -1185,7 +1185,7 @@ public class FileHandler
             url = FileLocatorUtils.obtainFileSystem(locator).getURL(
                     locator.getBasePath(), fileName);
         }
-        catch (MalformedURLException e)
+        catch (final MalformedURLException e)
         {
             throw new ConfigurationException(e);
         }
@@ -1206,7 +1206,7 @@ public class FileHandler
      * @throws ConfigurationException if an error occurs during the save
      *         operation
      */
-    private void save(URL url, FileLocator locator) throws ConfigurationException
+    private void save(final URL url, final FileLocator locator) throws ConfigurationException
     {
         OutputStream out = null;
         try
@@ -1219,7 +1219,7 @@ public class FileHandler
                 {
                     ((VerifiableOutputStream) out).verify();
                 }
-                catch (IOException e)
+                catch (final IOException e)
                 {
                     throw new ConfigurationException(e);
                 }
@@ -1239,7 +1239,7 @@ public class FileHandler
      * @throws ConfigurationException if an error occurs during the save
      *         operation
      */
-    private void save(File file, FileLocator locator) throws ConfigurationException
+    private void save(final File file, final FileLocator locator) throws ConfigurationException
     {
         OutputStream out = null;
 
@@ -1248,7 +1248,7 @@ public class FileHandler
             out = FileLocatorUtils.obtainFileSystem(locator).getOutputStream(file);
             saveToStream(out, locator.getEncoding(), file.toURI().toURL());
         }
-        catch (MalformedURLException muex)
+        catch (final MalformedURLException muex)
         {
             throw new ConfigurationException(muex);
         }
@@ -1266,7 +1266,7 @@ public class FileHandler
      * @throws ConfigurationException if an error occurs during the save
      *         operation
      */
-    private void save(OutputStream out, FileLocator locator)
+    private void save(final OutputStream out, final FileLocator locator)
             throws ConfigurationException
     {
         save(out, locator.getEncoding());
@@ -1280,11 +1280,11 @@ public class FileHandler
      * @param url the URL of the output file if known
      * @throws ConfigurationException if an error occurs
      */
-    private void saveToStream(OutputStream out, String encoding, URL url)
+    private void saveToStream(final OutputStream out, final String encoding, final URL url)
             throws ConfigurationException
     {
         checkContent();
-        SynchronizerSupport syncSupport = fetchSynchronizerSupport();
+        final SynchronizerSupport syncSupport = fetchSynchronizerSupport();
         syncSupport.lock(LockMode.WRITE);
         try
         {
@@ -1297,7 +1297,7 @@ public class FileHandler
                 {
                     writer = new OutputStreamWriter(out, encoding);
                 }
-                catch (UnsupportedEncodingException e)
+                catch (final UnsupportedEncodingException e)
                 {
                     throw new ConfigurationException(
                             "The requested encoding is not supported, try the default encoding.",
@@ -1324,14 +1324,14 @@ public class FileHandler
      * @param out the writer
      * @throws ConfigurationException if an error occurs
      */
-    private void saveToWriter(Writer out) throws ConfigurationException
+    private void saveToWriter(final Writer out) throws ConfigurationException
     {
         fireSavingEvent();
         try
         {
             getContent().write(out);
         }
-        catch (IOException ioex)
+        catch (final IOException ioex)
         {
             throw new ConfigurationException(ioex);
         }
@@ -1349,8 +1349,8 @@ public class FileHandler
      * @param locator the {@code FileLocator} to copy
      * @return the manipulated {@code FileLocator} with the file name
      */
-    private FileLocator createLocatorWithFileName(String fileName,
-            FileLocator locator)
+    private FileLocator createLocatorWithFileName(final String fileName,
+            final FileLocator locator)
     {
         return FileLocatorUtils.fileLocator(locator).sourceURL(null)
                 .fileName(fileName).create();
@@ -1391,7 +1391,7 @@ public class FileHandler
      */
     private void fireLoadingEvent()
     {
-        for (FileHandlerListener l : listeners)
+        for (final FileHandlerListener l : listeners)
         {
             l.loading(this);
         }
@@ -1402,7 +1402,7 @@ public class FileHandler
      */
     private void fireLoadedEvent()
     {
-        for (FileHandlerListener l : listeners)
+        for (final FileHandlerListener l : listeners)
         {
             l.loaded(this);
         }
@@ -1413,7 +1413,7 @@ public class FileHandler
      */
     private void fireSavingEvent()
     {
-        for (FileHandlerListener l : listeners)
+        for (final FileHandlerListener l : listeners)
         {
             l.saving(this);
         }
@@ -1424,7 +1424,7 @@ public class FileHandler
      */
     private void fireSavedEvent()
     {
-        for (FileHandlerListener l : listeners)
+        for (final FileHandlerListener l : listeners)
         {
             l.saved(this);
         }
@@ -1435,7 +1435,7 @@ public class FileHandler
      */
     private void fireLocationChangedEvent()
     {
-        for (FileHandlerListener l : listeners)
+        for (final FileHandlerListener l : listeners)
         {
             l.locationChanged(this);
         }
@@ -1466,7 +1466,7 @@ public class FileHandler
      *
      * @param cl the stream to be closed (may be <b>null</b>)
      */
-    private static void closeSilent(Closeable cl)
+    private static void closeSilent(final Closeable cl)
     {
         try
         {
@@ -1475,7 +1475,7 @@ public class FileHandler
                 cl.close();
             }
         }
-        catch (IOException e)
+        catch (final IOException e)
         {
             LogFactory.getLog(FileHandler.class).warn("Exception when closing " + cl, e);
         }
@@ -1489,7 +1489,7 @@ public class FileHandler
      * @param loc the {@code FileLocator}
      * @return a {@code File} object pointing to the associated file
      */
-    private static File createFile(FileLocator loc)
+    private static File createFile(final FileLocator loc)
     {
         if (loc.getFileName() == null && loc.getSourceURL() == null)
         {
@@ -1523,7 +1523,7 @@ public class FileHandler
      * @param c the {@code FileHandler} from which to copy the location
      * @return the same {@code FileHandler}
      */
-    private static FileHandler checkSourceHandler(FileHandler c)
+    private static FileHandler checkSourceHandler(final FileHandler c)
     {
         if (c == null)
         {
@@ -1552,8 +1552,8 @@ public class FileHandler
             boolean done;
             do
             {
-                FileLocator oldLocator = fileLocator.get();
-                FileLocatorBuilder builder =
+                final FileLocator oldLocator = fileLocator.get();
+                final FileLocatorBuilder builder =
                         FileLocatorUtils.fileLocator(oldLocator);
                 updateBuilder(builder);
                 done = fileLocator.compareAndSet(oldLocator, builder.create());

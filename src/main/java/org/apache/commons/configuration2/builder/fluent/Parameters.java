@@ -107,7 +107,7 @@ public final class Parameters
      * @param manager the {@code DefaultParametersHandler} (may be <b>null</b>,
      *        then a new default instance is created)
      */
-    public Parameters(DefaultParametersManager manager)
+    public Parameters(final DefaultParametersManager manager)
     {
         defaultParametersManager =
                 (manager != null) ? manager : new DefaultParametersManager();
@@ -136,8 +136,8 @@ public final class Parameters
      * @throws IllegalArgumentException if a required parameter is missing
      * @see DefaultParametersManager
      */
-    public <T> void registerDefaultsHandler(Class<T> paramsClass,
-            DefaultParametersHandler<? super T> handler)
+    public <T> void registerDefaultsHandler(final Class<T> paramsClass,
+            final DefaultParametersHandler<? super T> handler)
     {
         getDefaultParametersManager().registerDefaultsHandler(paramsClass, handler);
     }
@@ -157,8 +157,8 @@ public final class Parameters
      *        objects for which this handler should be applied
      * @throws IllegalArgumentException if a required parameter is missing
      */
-    public <T> void registerDefaultsHandler(Class<T> paramsClass,
-            DefaultParametersHandler<? super T> handler, Class<?> startClass)
+    public <T> void registerDefaultsHandler(final Class<T> paramsClass,
+            final DefaultParametersHandler<? super T> handler, final Class<?> startClass)
     {
         getDefaultParametersManager().registerDefaultsHandler(paramsClass,
                 handler, startClass);
@@ -297,13 +297,13 @@ public final class Parameters
      *        implemented
      * @return the proxy object
      */
-    private <T> T createParametersProxy(Object target, Class<T> ifcClass,
-            Class<?>... superIfcs)
+    private <T> T createParametersProxy(final Object target, final Class<T> ifcClass,
+            final Class<?>... superIfcs)
     {
-        Class<?>[] ifcClasses = new Class<?>[1 + superIfcs.length];
+        final Class<?>[] ifcClasses = new Class<?>[1 + superIfcs.length];
         ifcClasses[0] = ifcClass;
         System.arraycopy(superIfcs, 0, ifcClasses, 1, superIfcs.length);
-        Object obj =
+        final Object obj =
                 Proxy.newProxyInstance(Parameters.class.getClassLoader(),
                         ifcClasses, new ParametersIfcInvocationHandler(target));
         getDefaultParametersManager().initializeParameters(
@@ -333,7 +333,7 @@ public final class Parameters
          *
          * @param targetObj the target object for reflection calls
          */
-        public ParametersIfcInvocationHandler(Object targetObj)
+        public ParametersIfcInvocationHandler(final Object targetObj)
         {
             target = targetObj;
         }
@@ -343,10 +343,10 @@ public final class Parameters
          * target object and handles the return value correctly.
          */
         @Override
-        public Object invoke(Object proxy, Method method, Object[] args)
+        public Object invoke(final Object proxy, final Method method, final Object[] args)
                 throws Throwable
         {
-            Object result = method.invoke(target, args);
+            final Object result = method.invoke(target, args);
             return isFluentResult(method) ? proxy : result;
         }
 
@@ -358,9 +358,9 @@ public final class Parameters
          * @return a flag whether the method's result should be handled as a
          *         fluent result value
          */
-        private static boolean isFluentResult(Method method)
+        private static boolean isFluentResult(final Method method)
         {
-            Class<?> declaringClass = method.getDeclaringClass();
+            final Class<?> declaringClass = method.getDeclaringClass();
             return declaringClass.isInterface()
                     && !declaringClass.equals(BuilderParameters.class);
         }

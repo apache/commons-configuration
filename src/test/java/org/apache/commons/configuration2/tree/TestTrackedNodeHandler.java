@@ -49,6 +49,7 @@ public class TestTrackedNodeHandler
     public void setUp() throws Exception
     {
         @SuppressWarnings("unchecked")
+        final
         NodeHandler<ImmutableNode> h = EasyMock.createMock(NodeHandler.class);
         parentHandler = h;
         handler = new TrackedNodeHandler(root, parentHandler);
@@ -69,8 +70,8 @@ public class TestTrackedNodeHandler
     @Test
     public void testGetParent()
     {
-        ImmutableNode node = new ImmutableNode.Builder().name("node").create();
-        ImmutableNode parent = new ImmutableNode.Builder().name("parent").create();
+        final ImmutableNode node = new ImmutableNode.Builder().name("node").create();
+        final ImmutableNode parent = new ImmutableNode.Builder().name("parent").create();
         EasyMock.expect(parentHandler.getParent(node)).andReturn(parent);
         EasyMock.replay(parentHandler);
 

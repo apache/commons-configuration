@@ -56,13 +56,13 @@ public class TestConfigurationPropertySource
 
         @Bean
         public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer(
-                ConfigurableEnvironment env)
+                final ConfigurableEnvironment env)
         {
-            PropertySourcesPlaceholderConfigurer configurer =
+            final PropertySourcesPlaceholderConfigurer configurer =
                     new PropertySourcesPlaceholderConfigurer();
             // https://jira.spring.io/browse/SPR-9631 may simplify this in
             // future
-            MutablePropertySources sources = new MutablePropertySources();
+            final MutablePropertySources sources = new MutablePropertySources();
             sources.addLast(createConfigPropertySource());
             configurer.setPropertySources(sources);
             configurer.setEnvironment(env);
@@ -72,7 +72,7 @@ public class TestConfigurationPropertySource
 
     private static ConfigurationPropertySource createConfigPropertySource()
     {
-        PropertiesConfiguration propertiesConfiguration =
+        final PropertiesConfiguration propertiesConfiguration =
                 new PropertiesConfiguration();
         propertiesConfiguration.addProperty(TEST_PROPERTY, TEST_VALUE);
         return new ConfigurationPropertySource("test configuration",

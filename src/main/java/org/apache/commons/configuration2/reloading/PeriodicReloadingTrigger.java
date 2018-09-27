@@ -87,8 +87,8 @@ public class PeriodicReloadingTrigger
      *        default executor service is created
      * @throws IllegalArgumentException if a required argument is missing
      */
-    public PeriodicReloadingTrigger(ReloadingController ctrl, Object ctrlParam,
-            long triggerPeriod, TimeUnit unit, ScheduledExecutorService exec)
+    public PeriodicReloadingTrigger(final ReloadingController ctrl, final Object ctrlParam,
+            final long triggerPeriod, final TimeUnit unit, final ScheduledExecutorService exec)
     {
         if (ctrl == null)
         {
@@ -115,8 +115,8 @@ public class PeriodicReloadingTrigger
      * @param unit the time unit for the period
      * @throws IllegalArgumentException if a required argument is missing
      */
-    public PeriodicReloadingTrigger(ReloadingController ctrl, Object ctrlParam,
-            long triggerPeriod, TimeUnit unit)
+    public PeriodicReloadingTrigger(final ReloadingController ctrl, final Object ctrlParam,
+            final long triggerPeriod, final TimeUnit unit)
     {
         this(ctrl, ctrlParam, triggerPeriod, unit, null);
     }
@@ -173,7 +173,7 @@ public class PeriodicReloadingTrigger
      * @param shutdownExecutor a flag whether the associated
      *        {@code ScheduledExecutorService} is to be shut down
      */
-    public void shutdown(boolean shutdownExecutor)
+    public void shutdown(final boolean shutdownExecutor)
     {
         stop();
         if (shutdownExecutor)
@@ -228,7 +228,7 @@ public class PeriodicReloadingTrigger
      */
     private static ScheduledExecutorService createDefaultExecutorService()
     {
-        ThreadFactory factory =
+        final ThreadFactory factory =
                 new BasicThreadFactory.Builder()
                         .namingPattern("ReloadingTrigger-%s").daemon(true)
                         .build();

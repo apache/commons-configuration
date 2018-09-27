@@ -50,7 +50,7 @@ public class ConfigurationDynaClass implements DynaClass
      * wrapping the specified {@code Configuration} instance.
      * @param configuration {@code Configuration} instance.
      */
-    public ConfigurationDynaClass(Configuration configuration)
+    public ConfigurationDynaClass(final Configuration configuration)
     {
         super();
         if (LOG.isTraceEnabled())
@@ -61,7 +61,7 @@ public class ConfigurationDynaClass implements DynaClass
     }
 
     @Override
-    public DynaProperty getDynaProperty(String name)
+    public DynaProperty getDynaProperty(final String name)
     {
         if (LOG.isTraceEnabled())
         {
@@ -73,7 +73,7 @@ public class ConfigurationDynaClass implements DynaClass
             throw new IllegalArgumentException("Property name must not be null!");
         }
 
-        Object value = configuration.getProperty(name);
+        final Object value = configuration.getProperty(name);
         if (value == null)
         {
             return null;
@@ -124,16 +124,16 @@ public class ConfigurationDynaClass implements DynaClass
             LOG.trace("getDynaProperties()");
         }
 
-        Iterator<String> keys = configuration.getKeys();
-        List<DynaProperty> properties = new ArrayList<>();
+        final Iterator<String> keys = configuration.getKeys();
+        final List<DynaProperty> properties = new ArrayList<>();
         while (keys.hasNext())
         {
-            String key = keys.next();
-            DynaProperty property = getDynaProperty(key);
+            final String key = keys.next();
+            final DynaProperty property = getDynaProperty(key);
             properties.add(property);
         }
 
-        DynaProperty[] propertyArray = new DynaProperty[properties.size()];
+        final DynaProperty[] propertyArray = new DynaProperty[properties.size()];
         properties.toArray(propertyArray);
         if (LOG.isDebugEnabled())
         {

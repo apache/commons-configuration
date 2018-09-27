@@ -30,12 +30,12 @@ import org.springframework.core.env.EnumerablePropertySource;
 public class ConfigurationPropertySource extends EnumerablePropertySource<Configuration>
 {
 
-    public ConfigurationPropertySource(String name, Configuration source)
+    public ConfigurationPropertySource(final String name, final Configuration source)
     {
        super(name, source);
     }
 
-    protected ConfigurationPropertySource(String name)
+    protected ConfigurationPropertySource(final String name)
     {
        super(name);
     }
@@ -53,7 +53,7 @@ public class ConfigurationPropertySource extends EnumerablePropertySource<Config
     }
 
     @Override
-    public Object getProperty(String name)
+    public Object getProperty(final String name)
     {
        return source.getProperty(name);
    }

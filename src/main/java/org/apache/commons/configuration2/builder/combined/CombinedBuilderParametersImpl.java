@@ -97,7 +97,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      * @throws NullPointerException if the map is <b>null</b>
      */
     public static CombinedBuilderParametersImpl fromParameters(
-            Map<String, ?> params)
+            final Map<String, ?> params)
     {
         return fromParameters(params, false);
     }
@@ -116,7 +116,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      * @throws NullPointerException if the map is <b>null</b>
      */
     public static CombinedBuilderParametersImpl fromParameters(
-            Map<String, ?> params, boolean createIfMissing)
+            final Map<String, ?> params, final boolean createIfMissing)
     {
         CombinedBuilderParametersImpl result =
                 (CombinedBuilderParametersImpl) params.get(PARAM_KEY);
@@ -132,11 +132,11 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      * defined by this class.
      */
     @Override
-    public void inheritFrom(Map<String, ?> source)
+    public void inheritFrom(final Map<String, ?> source)
     {
         super.inheritFrom(source);
 
-        CombinedBuilderParametersImpl srcParams = fromParameters(source);
+        final CombinedBuilderParametersImpl srcParams = fromParameters(source);
         if (srcParams != null)
         {
             setChildDefaultParametersManager(
@@ -160,7 +160,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
 
     @Override
     public CombinedBuilderParametersImpl setInheritSettings(
-            boolean inheritSettings)
+            final boolean inheritSettings)
     {
         this.inheritSettings = inheritSettings;
         return this;
@@ -187,7 +187,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      */
     @Override
     public CombinedBuilderParametersImpl setDefinitionBuilder(
-            ConfigurationBuilder<? extends HierarchicalConfiguration<?>> builder)
+            final ConfigurationBuilder<? extends HierarchicalConfiguration<?>> builder)
     {
         definitionBuilder = builder;
         return this;
@@ -206,8 +206,8 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      * @throws IllegalArgumentException if a required parameter is missing
      */
     @Override
-    public CombinedBuilderParametersImpl registerProvider(String tagName,
-            ConfigurationBuilderProvider provider)
+    public CombinedBuilderParametersImpl registerProvider(final String tagName,
+            final ConfigurationBuilderProvider provider)
     {
         if (tagName == null)
         {
@@ -238,7 +238,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      *         or contains <b>null</b> entries
      */
     public CombinedBuilderParametersImpl registerMissingProviders(
-            Map<String, ConfigurationBuilderProvider> providers)
+            final Map<String, ConfigurationBuilderProvider> providers)
     {
         if (providers == null)
         {
@@ -246,7 +246,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
                     "Map with providers must not be null!");
         }
 
-        for (Map.Entry<String, ConfigurationBuilderProvider> e : providers
+        for (final Map.Entry<String, ConfigurationBuilderProvider> e : providers
                 .entrySet())
         {
             if (!this.providers.containsKey(e.getKey()))
@@ -270,7 +270,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      *         <b>null</b>
      */
     public CombinedBuilderParametersImpl registerMissingProviders(
-            CombinedBuilderParametersImpl params)
+            final CombinedBuilderParametersImpl params)
     {
         if (params == null)
         {
@@ -300,7 +300,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      * @param tagName the tag name
      * @return the provider registered for this tag or <b>null</b>
      */
-    public ConfigurationBuilderProvider providerForTag(String tagName)
+    public ConfigurationBuilderProvider providerForTag(final String tagName)
     {
         return providers.get(tagName);
     }
@@ -328,7 +328,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      * @return a reference to this object for method chaining
      */
     @Override
-    public CombinedBuilderParametersImpl setBasePath(String path)
+    public CombinedBuilderParametersImpl setBasePath(final String path)
     {
         basePath = path;
         return this;
@@ -360,7 +360,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      */
     @Override
     public CombinedBuilderParametersImpl setDefinitionBuilderParameters(
-            BuilderParameters params)
+            final BuilderParameters params)
     {
         definitionBuilderParameters = params;
         return this;
@@ -406,7 +406,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      */
     @Override
     public CombinedBuilderParametersImpl setChildDefaultParametersManager(
-            DefaultParametersManager manager)
+            final DefaultParametersManager manager)
     {
         childDefaultParametersManager = manager;
         return this;
@@ -419,7 +419,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      */
     @Override
     public <D> CombinedBuilderParametersImpl registerChildDefaultsHandler(
-            Class<D> paramClass, DefaultParametersHandler<? super D> handler)
+            final Class<D> paramClass, final DefaultParametersHandler<? super D> handler)
     {
         getChildDefaultParametersManager().registerDefaultsHandler(paramClass,
                 handler);
@@ -433,8 +433,8 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
      */
     @Override
     public <D> CombinedBuilderParametersImpl registerChildDefaultsHandler(
-            Class<D> paramClass, DefaultParametersHandler<? super D> handler,
-            Class<?> startClass)
+            final Class<D> paramClass, final DefaultParametersHandler<? super D> handler,
+            final Class<?> startClass)
     {
         getChildDefaultParametersManager().registerDefaultsHandler(paramClass,
                 handler, startClass);
@@ -449,7 +449,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
     @Override
     public Map<String, Object> getParameters()
     {
-        Map<String, Object> params = super.getParameters();
+        final Map<String, Object> params = super.getParameters();
         params.put(PARAM_KEY, this);
         return params;
     }
@@ -461,7 +461,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
     @Override
     public CombinedBuilderParametersImpl clone()
     {
-        CombinedBuilderParametersImpl copy =
+        final CombinedBuilderParametersImpl copy =
                 (CombinedBuilderParametersImpl) super.clone();
         copy.setDefinitionBuilderParameters((BuilderParameters) ConfigurationUtils
                 .cloneIfPossible(getDefinitionBuilderParameters()));

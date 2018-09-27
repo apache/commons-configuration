@@ -74,7 +74,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * constructor will behave like the standard constructor)
      * @since 1.4
      */
-    public BaseHierarchicalConfiguration(HierarchicalConfiguration<ImmutableNode> c)
+    public BaseHierarchicalConfiguration(final HierarchicalConfiguration<ImmutableNode> c)
     {
         this(createNodeModel(c));
     }
@@ -85,7 +85,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      *
      * @param model the {@code NodeModel}
      */
-    protected BaseHierarchicalConfiguration(NodeModel<ImmutableNode> model)
+    protected BaseHierarchicalConfiguration(final NodeModel<ImmutableNode> model)
     {
         super(model);
         changeListener = createChangeListener();
@@ -121,24 +121,24 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @return a new configuration object representing the selected subset
      */
     @Override
-    public Configuration subset(String prefix)
+    public Configuration subset(final String prefix)
     {
         beginRead(false);
         try
         {
-            List<QueryResult<ImmutableNode>> results = fetchNodeList(prefix);
+            final List<QueryResult<ImmutableNode>> results = fetchNodeList(prefix);
             if (results.isEmpty())
             {
                 return new BaseHierarchicalConfiguration();
             }
 
             final BaseHierarchicalConfiguration parent = this;
-            BaseHierarchicalConfiguration result =
+            final BaseHierarchicalConfiguration result =
                     new BaseHierarchicalConfiguration()
                     {
                         // Override interpolate to always interpolate on the parent
                         @Override
-                        protected Object interpolate(Object value)
+                        protected Object interpolate(final Object value)
                         {
                             return parent.interpolate(value);
                         }
@@ -174,13 +174,13 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @return the root node for the subset configuration
      */
     private ImmutableNode createSubsetRootNode(
-            Collection<QueryResult<ImmutableNode>> results)
+            final Collection<QueryResult<ImmutableNode>> results)
     {
-        ImmutableNode.Builder builder = new ImmutableNode.Builder();
+        final ImmutableNode.Builder builder = new ImmutableNode.Builder();
         Object value = null;
         int valueCount = 0;
 
-        for (QueryResult<ImmutableNode> result : results)
+        for (final QueryResult<ImmutableNode> result : results)
         {
             if (result.isAttributeResult())
             {
@@ -224,8 +224,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      *         node
      */
     @Override
-    public HierarchicalConfiguration<ImmutableNode> configurationAt(String key,
-            boolean supportUpdates)
+    public HierarchicalConfiguration<ImmutableNode> configurationAt(final String key,
+            final boolean supportUpdates)
     {
         beginRead(false);
         try
@@ -265,7 +265,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @return a {@code NodeSelector} for initializing a sub configuration
      * @since 2.0
      */
-    protected NodeSelector getSubConfigurationNodeSelector(String key)
+    protected NodeSelector getSubConfigurationNodeSelector(final String key)
     {
         return new NodeSelector(key);
     }
@@ -281,9 +281,9 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @since 2.0
      */
     protected SubnodeConfiguration createSubConfigurationForTrackedNode(
-            NodeSelector selector, InMemoryNodeModelSupport parentModelSupport)
+            final NodeSelector selector, final InMemoryNodeModelSupport parentModelSupport)
     {
-        SubnodeConfiguration subConfig =
+        final SubnodeConfiguration subConfig =
                 new SubnodeConfiguration(this, new TrackedNodeModel(
                         parentModelSupport, selector, true));
         initSubConfigurationForThisParent(subConfig);
@@ -299,7 +299,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @param subConfig the sub configuration to be initialized
      * @since 2.0
      */
-    protected void initSubConfigurationForThisParent(SubnodeConfiguration subConfig)
+    protected void initSubConfigurationForThisParent(final SubnodeConfiguration subConfig)
     {
         initSubConfiguration(subConfig);
         subConfig.addEventListener(ConfigurationEvent.ANY, changeListener);
@@ -315,9 +315,9 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @return the new sub configuration
      */
     private BaseHierarchicalConfiguration createConnectedSubConfiguration(
-            String key)
+            final String key)
     {
-        NodeSelector selector = getSubConfigurationNodeSelector(key);
+        final NodeSelector selector = getSubConfigurationNodeSelector(key);
         getSubConfigurationParentModel().trackNode(selector, this);
         return createSubConfigurationForTrackedNode(selector, this);
     }
@@ -331,13 +331,13 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @return the list with sub configurations
      */
     private List<HierarchicalConfiguration<ImmutableNode>> createConnectedSubConfigurations(
-            InMemoryNodeModelSupport parentModelSupport,
-            Collection<NodeSelector> selectors)
+            final InMemoryNodeModelSupport parentModelSupport,
+            final Collection<NodeSelector> selectors)
     {
-        List<HierarchicalConfiguration<ImmutableNode>> configs =
+        final List<HierarchicalConfiguration<ImmutableNode>> configs =
                 new ArrayList<>(
                         selectors.size());
-        for (NodeSelector selector : selectors)
+        for (final NodeSelector selector : selectors)
         {
             configs.add(createSubConfigurationForTrackedNode(selector,
                     parentModelSupport));
@@ -354,16 +354,16 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @return the new sub configuration
      */
     private BaseHierarchicalConfiguration createIndependentSubConfiguration(
-            String key)
+            final String key)
     {
-        List<ImmutableNode> targetNodes = fetchFilteredNodeResults(key);
-        int size = targetNodes.size();
+        final List<ImmutableNode> targetNodes = fetchFilteredNodeResults(key);
+        final int size = targetNodes.size();
         if (size != 1)
         {
             throw new ConfigurationRuntimeException(
                     "Passed in key must select exactly one node (found %,d): %s", size, key);
         }
-        BaseHierarchicalConfiguration sub =
+        final BaseHierarchicalConfiguration sub =
                 new BaseHierarchicalConfiguration(new InMemoryNodeModel(
                         targetNodes.get(0)));
         initSubConfiguration(sub);
@@ -379,9 +379,9 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @return the initialized sub configuration
      */
     private BaseHierarchicalConfiguration createIndependentSubConfigurationForNode(
-            ImmutableNode node)
+            final ImmutableNode node)
     {
-        BaseHierarchicalConfiguration sub =
+        final BaseHierarchicalConfiguration sub =
                 new BaseHierarchicalConfiguration(new InMemoryNodeModel(node));
         initSubConfiguration(sub);
         return sub;
@@ -393,9 +393,9 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @param key the key
      * @return the filtered list with result nodes
      */
-    private List<ImmutableNode> fetchFilteredNodeResults(String key)
+    private List<ImmutableNode> fetchFilteredNodeResults(final String key)
     {
-        NodeHandler<ImmutableNode> handler = getModel().getNodeHandler();
+        final NodeHandler<ImmutableNode> handler = getModel().getNodeHandler();
         return resolveNodeKey(handler.getRootNode(), key, handler);
     }
 
@@ -406,7 +406,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     @Override
     public ImmutableHierarchicalConfiguration immutableConfigurationAt(
-            String key, boolean supportUpdates)
+            final String key, final boolean supportUpdates)
     {
         return ConfigurationUtils.unmodifiableConfiguration(configurationAt(
                 key, supportUpdates));
@@ -418,7 +418,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @throws ConfigurationRuntimeException if the key does not select a single node
      */
     @Override
-    public HierarchicalConfiguration<ImmutableNode> configurationAt(String key)
+    public HierarchicalConfiguration<ImmutableNode> configurationAt(final String key)
     {
         return configurationAt(key, false);
     }
@@ -431,7 +431,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     @Override
     public ImmutableHierarchicalConfiguration immutableConfigurationAt(
-            String key)
+            final String key)
     {
         return ConfigurationUtils.unmodifiableConfiguration(configurationAt(
                 key));
@@ -443,7 +443,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     @Override
     public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(
-            String key)
+            final String key)
     {
         List<ImmutableNode> nodes;
         beginRead(false);
@@ -456,12 +456,12 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
             endRead();
         }
 
-        List<HierarchicalConfiguration<ImmutableNode>> results =
+        final List<HierarchicalConfiguration<ImmutableNode>> results =
                 new ArrayList<>(
                         nodes.size());
-        for (ImmutableNode node : nodes)
+        for (final ImmutableNode node : nodes)
         {
-            BaseHierarchicalConfiguration sub =
+            final BaseHierarchicalConfiguration sub =
                     createIndependentSubConfigurationForNode(node);
             results.add(sub);
         }
@@ -475,7 +475,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     @Override
     public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(
-            String key, boolean supportUpdates)
+            final String key, final boolean supportUpdates)
     {
         if (!supportUpdates)
         {
@@ -493,7 +493,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
             endRead();
         }
 
-        Collection<NodeSelector> selectors =
+        final Collection<NodeSelector> selectors =
                 parentModel.selectAndTrackNodes(key, this);
         return createConnectedSubConfigurations(this, selectors);
     }
@@ -506,7 +506,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     @Override
     public List<ImmutableHierarchicalConfiguration> immutableConfigurationsAt(
-            String key)
+            final String key)
     {
         return toImmutable(configurationsAt(key));
     }
@@ -518,7 +518,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     @Override
     public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(
-            String key)
+            final String key)
     {
         List<ImmutableNode> nodes;
         beginRead(false);
@@ -536,11 +536,11 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
             return Collections.emptyList();
         }
 
-        ImmutableNode parent = nodes.get(0);
-        List<HierarchicalConfiguration<ImmutableNode>> subs =
+        final ImmutableNode parent = nodes.get(0);
+        final List<HierarchicalConfiguration<ImmutableNode>> subs =
                 new ArrayList<>(parent
                         .getChildren().size());
-        for (ImmutableNode node : parent.getChildren())
+        for (final ImmutableNode node : parent.getChildren())
         {
             subs.add(createIndependentSubConfigurationForNode(node));
         }
@@ -556,14 +556,14 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     @Override
     public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(
-            String key, boolean supportUpdates)
+            final String key, final boolean supportUpdates)
     {
         if (!supportUpdates)
         {
             return childConfigurationsAt(key);
         }
 
-        InMemoryNodeModel parentModel = getSubConfigurationParentModel();
+        final InMemoryNodeModel parentModel = getSubConfigurationParentModel();
         return createConnectedSubConfigurations(this,
                 parentModel.trackChildNodes(key, this));
     }
@@ -576,7 +576,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     @Override
     public List<ImmutableHierarchicalConfiguration> immutableChildConfigurationsAt(
-            String key)
+            final String key)
     {
         return toImmutable(childConfigurationsAt(key));
     }
@@ -590,7 +590,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @param event the event describing the change
      * @since 1.5
      */
-    protected void subnodeConfigurationChanged(ConfigurationEvent event)
+    protected void subnodeConfigurationChanged(final ConfigurationEvent event)
     {
         fireEvent(ConfigurationEvent.SUBNODE_CHANGED, null, event, event.isBeforeUpdate());
     }
@@ -602,7 +602,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      *
      * @param sub the sub configuration to be initialized
      */
-    private void initSubConfiguration(BaseHierarchicalConfiguration sub)
+    private void initSubConfiguration(final BaseHierarchicalConfiguration sub)
     {
         sub.setSynchronizer(getSynchronizer());
         sub.setExpressionEngine(getExpressionEngine());
@@ -623,7 +623,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         return new EventListener<ConfigurationEvent>()
         {
             @Override
-            public void onEvent(ConfigurationEvent event)
+            public void onEvent(final ConfigurationEvent event)
             {
                 subnodeConfigurationChanged(event);
             }
@@ -643,12 +643,12 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     @Override
     public Configuration interpolatedConfiguration()
     {
-        InterpolatedVisitor visitor = new InterpolatedVisitor();
-        NodeHandler<ImmutableNode> handler = getModel().getNodeHandler();
+        final InterpolatedVisitor visitor = new InterpolatedVisitor();
+        final NodeHandler<ImmutableNode> handler = getModel().getNodeHandler();
         NodeTreeWalker.INSTANCE
                 .walkDFS(handler.getRootNode(), visitor, handler);
 
-        BaseHierarchicalConfiguration c =
+        final BaseHierarchicalConfiguration c =
                 (BaseHierarchicalConfiguration) clone();
         c.getNodeModel().setRootNode(visitor.getInterpolatedRoot());
         return c;
@@ -673,11 +673,11 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @return a list with corresponding immutable configurations
      */
     private static List<ImmutableHierarchicalConfiguration> toImmutable(
-            List<? extends HierarchicalConfiguration<?>> subs)
+            final List<? extends HierarchicalConfiguration<?>> subs)
     {
-        List<ImmutableHierarchicalConfiguration> res =
+        final List<ImmutableHierarchicalConfiguration> res =
                 new ArrayList<>(subs.size());
-        for (HierarchicalConfiguration<?> sub : subs)
+        for (final HierarchicalConfiguration<?> sub : subs)
         {
             res.add(ConfigurationUtils.unmodifiableConfiguration(sub));
         }
@@ -695,9 +695,9 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @return the {@code NodeModel} for the new configuration
      */
     private static NodeModel<ImmutableNode> createNodeModel(
-            HierarchicalConfiguration<ImmutableNode> c)
+            final HierarchicalConfiguration<ImmutableNode> c)
     {
-        ImmutableNode root = (c != null) ? obtainRootNode(c) : null;
+        final ImmutableNode root = (c != null) ? obtainRootNode(c) : null;
         return new InMemoryNodeModel(root);
     }
 
@@ -709,7 +709,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      * @return the root node of this configuration
      */
     private static ImmutableNode obtainRootNode(
-            HierarchicalConfiguration<ImmutableNode> c)
+            final HierarchicalConfiguration<ImmutableNode> c)
     {
         return c.getNodeModel().getNodeHandler().getRootNode();
     }
@@ -732,9 +732,9 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
             ConfigurationNodeVisitorAdapter<ImmutableNode>
     {
         @Override
-        public void visitBeforeChildren(ImmutableNode node, NodeHandler<ImmutableNode> handler)
+        public void visitBeforeChildren(final ImmutableNode node, final NodeHandler<ImmutableNode> handler)
         {
-            ReferenceNodeHandler refHandler = (ReferenceNodeHandler) handler;
+            final ReferenceNodeHandler refHandler = (ReferenceNodeHandler) handler;
             updateNode(node, refHandler);
             insertNewChildNodes(node, refHandler);
         }
@@ -781,10 +781,10 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          * @param node the current node to be processed
          * @param refHandler the {@code ReferenceNodeHandler}
          */
-        private void updateNode(ImmutableNode node,
-                ReferenceNodeHandler refHandler)
+        private void updateNode(final ImmutableNode node,
+                final ReferenceNodeHandler refHandler)
         {
-            Object reference = refHandler.getReference(node);
+            final Object reference = refHandler.getReference(node);
             if (reference != null)
             {
                 update(node, reference, refHandler);
@@ -797,12 +797,12 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          * @param node the current node to be processed
          * @param refHandler the {@code ReferenceNodeHandler}
          */
-        private void insertNewChildNodes(ImmutableNode node,
-                ReferenceNodeHandler refHandler)
+        private void insertNewChildNodes(final ImmutableNode node,
+                final ReferenceNodeHandler refHandler)
         {
-            Collection<ImmutableNode> subNodes =
+            final Collection<ImmutableNode> subNodes =
                     new LinkedList<>(refHandler.getChildren(node));
-            Iterator<ImmutableNode> children = subNodes.iterator();
+            final Iterator<ImmutableNode> children = subNodes.iterator();
             ImmutableNode sibling1;
             ImmutableNode nd = null;
 
@@ -819,7 +819,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
                 if (refHandler.getReference(nd) == null)
                 {
                     // find all following new nodes
-                    List<ImmutableNode> newNodes =
+                    final List<ImmutableNode> newNodes =
                             new LinkedList<>();
                     newNodes.add(nd);
                     while (children.hasNext())
@@ -836,9 +836,9 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
                     }
 
                     // Insert all new nodes
-                    ImmutableNode sibling2 =
+                    final ImmutableNode sibling2 =
                             (refHandler.getReference(nd) == null) ? null : nd;
-                    for (ImmutableNode insertNode : newNodes)
+                    for (final ImmutableNode insertNode : newNodes)
                     {
                         if (refHandler.getReference(insertNode) == null)
                         {
@@ -885,8 +885,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         }
 
         @Override
-        public void visitBeforeChildren(ImmutableNode node,
-                NodeHandler<ImmutableNode> handler)
+        public void visitBeforeChildren(final ImmutableNode node,
+                final NodeHandler<ImmutableNode> handler)
         {
             if (isLeafNode(node, handler))
             {
@@ -894,7 +894,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
             }
             else
             {
-                ImmutableNode.Builder builder =
+                final ImmutableNode.Builder builder =
                         new ImmutableNode.Builder(handler.getChildrenCount(
                                 node, null))
                                 .name(handler.nodeName(node))
@@ -906,12 +906,12 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         }
 
         @Override
-        public void visitAfterChildren(ImmutableNode node,
-                NodeHandler<ImmutableNode> handler)
+        public void visitAfterChildren(final ImmutableNode node,
+                final NodeHandler<ImmutableNode> handler)
         {
             if (!isLeafNode(node, handler))
             {
-                ImmutableNode newNode = pop().create();
+                final ImmutableNode newNode = pop().create();
                 storeInterpolatedNode(newNode);
             }
         }
@@ -921,7 +921,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          *
          * @param builder the builder
          */
-        private void push(ImmutableNode.Builder builder)
+        private void push(final ImmutableNode.Builder builder)
         {
             builderStack.add(0, builder);
         }
@@ -954,8 +954,8 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          * @param handler the {@code NodeHandler}
          * @return a flag whether this is a leaf node
          */
-        private boolean isLeafNode(ImmutableNode node,
-                NodeHandler<ImmutableNode> handler)
+        private boolean isLeafNode(final ImmutableNode node,
+                final NodeHandler<ImmutableNode> handler)
         {
             return handler.getChildren(node).isEmpty();
         }
@@ -969,15 +969,15 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          * @param node the current node to be processed
          * @param handler the {@code NodeHandler}
          */
-        private void handleLeafNode(ImmutableNode node,
-                NodeHandler<ImmutableNode> handler)
+        private void handleLeafNode(final ImmutableNode node,
+                final NodeHandler<ImmutableNode> handler)
         {
-            Object value = interpolate(node.getValue());
-            Map<String, Object> interpolatedAttributes =
+            final Object value = interpolate(node.getValue());
+            final Map<String, Object> interpolatedAttributes =
                     new HashMap<>();
-            boolean attributeChanged =
+            final boolean attributeChanged =
                     interpolateAttributes(node, handler, interpolatedAttributes);
-            ImmutableNode newNode =
+            final ImmutableNode newNode =
                     (valueChanged(value, handler.getValue(node)) || attributeChanged) ? new ImmutableNode.Builder()
                             .name(handler.nodeName(node)).value(value)
                             .addAttributes(interpolatedAttributes).create()
@@ -992,7 +992,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          *
          * @param node the node to be stored
          */
-        private void storeInterpolatedNode(ImmutableNode node)
+        private void storeInterpolatedNode(final ImmutableNode node)
         {
             if (builderStack.isEmpty())
             {
@@ -1013,14 +1013,14 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          * @return a flag whether an attribute value was changed by
          *         interpolation
          */
-        private boolean interpolateAttributes(ImmutableNode node,
-                NodeHandler<ImmutableNode> handler,
-                Map<String, Object> interpolatedAttributes)
+        private boolean interpolateAttributes(final ImmutableNode node,
+                final NodeHandler<ImmutableNode> handler,
+                final Map<String, Object> interpolatedAttributes)
         {
             boolean attributeChanged = false;
-            for (String attr : handler.getAttributes(node))
+            for (final String attr : handler.getAttributes(node))
             {
-                Object attrValue =
+                final Object attrValue =
                         interpolate(handler.getAttributeValue(node, attr));
                 if (valueChanged(attrValue,
                         handler.getAttributeValue(node, attr)))
@@ -1039,10 +1039,10 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          * @param handler the {@code NodeHandler}
          * @return the map with interpolated attributes
          */
-        private Map<String, Object> interpolateAttributes(ImmutableNode node,
-                NodeHandler<ImmutableNode> handler)
+        private Map<String, Object> interpolateAttributes(final ImmutableNode node,
+                final NodeHandler<ImmutableNode> handler)
         {
-            Map<String, Object> attributes = new HashMap<>();
+            final Map<String, Object> attributes = new HashMap<>();
             interpolateAttributes(node, handler, attributes);
             return attributes;
         }
@@ -1054,7 +1054,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
          * @param value the original value
          * @return a flag whether the value was changed
          */
-        private boolean valueChanged(Object interpolatedValue, Object value)
+        private boolean valueChanged(final Object interpolatedValue, final Object value)
         {
             return ObjectUtils.notEqual(interpolatedValue, value);
         }

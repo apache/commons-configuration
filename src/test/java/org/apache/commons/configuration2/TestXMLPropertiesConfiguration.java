@@ -61,11 +61,11 @@ public class TestXMLPropertiesConfiguration
      * @return the configuration instance
      * @throws ConfigurationException if an error occurs
      */
-    private static XMLPropertiesConfiguration load(String fileName)
+    private static XMLPropertiesConfiguration load(final String fileName)
             throws ConfigurationException
     {
-        XMLPropertiesConfiguration conf = new XMLPropertiesConfiguration();
-        FileHandler handler = new FileHandler(conf);
+        final XMLPropertiesConfiguration conf = new XMLPropertiesConfiguration();
+        final FileHandler handler = new FileHandler(conf);
         handler.load(fileName);
         return conf;
     }
@@ -73,7 +73,7 @@ public class TestXMLPropertiesConfiguration
     @Test
     public void testLoad() throws Exception
     {
-        XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
+        final XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
         assertEquals("header", "Description of the property list", conf.getHeader());
 
         assertFalse("The configuration is empty", conf.isEmpty());
@@ -85,21 +85,21 @@ public class TestXMLPropertiesConfiguration
     @Test
     public void testDOMLoad() throws Exception
     {
-        URL location = ConfigurationAssert.getTestURL(TEST_PROPERTIES_FILE);
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        final URL location = ConfigurationAssert.getTestURL(TEST_PROPERTIES_FILE);
+        final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         dBuilder.setEntityResolver(new EntityResolver()
         {
             @Override
-            public InputSource resolveEntity(String publicId, String systemId)
+            public InputSource resolveEntity(final String publicId, final String systemId)
             {
                 return new InputSource(getClass().getClassLoader()
                         .getResourceAsStream("properties.dtd"));
             }
         });
-        File file = new File(location.toURI());
-        Document doc = dBuilder.parse(file);
-        XMLPropertiesConfiguration conf = new XMLPropertiesConfiguration(doc.getDocumentElement());
+        final File file = new File(location.toURI());
+        final Document doc = dBuilder.parse(file);
+        final XMLPropertiesConfiguration conf = new XMLPropertiesConfiguration(doc.getDocumentElement());
 
         assertEquals("header", "Description of the property list", conf.getHeader());
 
@@ -113,7 +113,7 @@ public class TestXMLPropertiesConfiguration
     public void testSave() throws Exception
     {
         // load the configuration
-        XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
+        final XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
 
         // update the configuration
         conf.addProperty("key4", "value4");
@@ -121,12 +121,12 @@ public class TestXMLPropertiesConfiguration
         conf.setHeader("Description of the new property list");
 
         // save the configuration
-        File saveFile = folder.newFile("test2.properties.xml");
-        FileHandler saveHandler = new FileHandler(conf);
+        final File saveFile = folder.newFile("test2.properties.xml");
+        final FileHandler saveHandler = new FileHandler(conf);
         saveHandler.save(saveFile);
 
         // reload the configuration
-        XMLPropertiesConfiguration conf2 = load(saveFile.getAbsolutePath());
+        final XMLPropertiesConfiguration conf2 = load(saveFile.getAbsolutePath());
 
         // test the configuration
         assertEquals("header", "Description of the new property list", conf2.getHeader());
@@ -141,7 +141,7 @@ public class TestXMLPropertiesConfiguration
     public void testDOMSave() throws Exception
     {
         // load the configuration
-        XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
+        final XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
 
         // update the configuration
         conf.addProperty("key4", "value4");
@@ -149,21 +149,21 @@ public class TestXMLPropertiesConfiguration
         conf.setHeader("Description of the new property list");
 
         // save the configuration
-        File saveFile = folder.newFile("test2.properties.xml");
+        final File saveFile = folder.newFile("test2.properties.xml");
 
         // save as DOM into saveFile
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document document = dBuilder.newDocument();
+        final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        final Document document = dBuilder.newDocument();
         conf.save(document, document);
-        TransformerFactory tFactory = TransformerFactory.newInstance();
-        Transformer transformer = tFactory.newTransformer();
-        DOMSource source = new DOMSource(document);
-        Result result = new StreamResult(saveFile);
+        final TransformerFactory tFactory = TransformerFactory.newInstance();
+        final Transformer transformer = tFactory.newTransformer();
+        final DOMSource source = new DOMSource(document);
+        final Result result = new StreamResult(saveFile);
         transformer.transform(source, result);
 
         // reload the configuration
-        XMLPropertiesConfiguration conf2 = load(saveFile.getAbsolutePath());
+        final XMLPropertiesConfiguration conf2 = load(saveFile.getAbsolutePath());
 
         // test the configuration
         assertEquals("header", "Description of the new property list", conf2.getHeader());

@@ -45,11 +45,11 @@ public class BasePathLocationStrategy implements FileLocationStrategy
      * returned.
      */
     @Override
-    public URL locate(FileSystem fileSystem, FileLocator locator)
+    public URL locate(final FileSystem fileSystem, final FileLocator locator)
     {
         if (StringUtils.isNotEmpty(locator.getFileName()))
         {
-            File file =
+            final File file =
                     FileLocatorUtils.constructFile(locator.getBasePath(),
                             locator.getFileName());
             if (file.isFile())

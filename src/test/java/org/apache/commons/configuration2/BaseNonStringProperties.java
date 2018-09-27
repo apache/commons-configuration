@@ -48,7 +48,7 @@ public abstract class BaseNonStringProperties
     @Test
     public void testBooleanArrayValue() throws Exception
     {
-        boolean booleanValue = conf.getBoolean("test.boolean");
+        final boolean booleanValue = conf.getBoolean("test.boolean");
         assertTrue(booleanValue);
         assertEquals(2, conf.getList("test.boolean.array").size());
     }
@@ -62,8 +62,8 @@ public abstract class BaseNonStringProperties
     @Test
     public void testByteArrayValue() throws Exception
     {
-        byte testValue = 10;
-        byte byteValue = conf.getByte("test.byte");
+        final byte testValue = 10;
+        final byte byteValue = conf.getByte("test.byte");
         assertEquals(testValue, byteValue);
         assertEquals(2, conf.getList("test.byte.array").size());
     }
@@ -83,8 +83,8 @@ public abstract class BaseNonStringProperties
     @Test
     public void testDoubleArrayValue() throws Exception
     {
-        double testValue = 10.25;
-        double doubleValue = conf.getDouble("test.double");
+        final double testValue = 10.25;
+        final double doubleValue = conf.getDouble("test.double");
         assertEquals(testValue, doubleValue, 0.01);
         assertEquals(2, conf.getList("test.double.array").size());
     }
@@ -105,8 +105,8 @@ public abstract class BaseNonStringProperties
     @Test
     public void testFloatArrayValue() throws Exception
     {
-        float testValue = (float) 20.25;
-        float floatValue = conf.getFloat("test.float");
+        final float testValue = (float) 20.25;
+        final float floatValue = conf.getFloat("test.float");
         assertEquals(testValue, floatValue, 0.01);
         assertEquals(2, conf.getList("test.float.array").size());
     }
@@ -126,7 +126,7 @@ public abstract class BaseNonStringProperties
     @Test
     public void testIntegerArrayValue() throws Exception
     {
-        int intValue = conf.getInt("test.integer");
+        final int intValue = conf.getInt("test.integer");
         assertEquals(10, intValue);
         assertEquals(2, conf.getList("test.integer.array").size());
     }
@@ -146,7 +146,7 @@ public abstract class BaseNonStringProperties
     @Test
     public void testLongArrayValue() throws Exception
     {
-        long longValue = conf.getLong("test.long");
+        final long longValue = conf.getLong("test.long");
         assertEquals(1000000, longValue);
         assertEquals(2, conf.getList("test.long.array").size());
     }
@@ -166,7 +166,7 @@ public abstract class BaseNonStringProperties
     @Test
     public void testShortArrayValue() throws Exception
     {
-        short shortValue = conf.getShort("test.short");
+        final short shortValue = conf.getShort("test.short");
         assertEquals(1, shortValue);
         assertEquals(2, conf.getList("test.short.array").size());
     }

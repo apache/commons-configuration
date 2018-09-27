@@ -39,13 +39,13 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration
     @Override
     protected AbstractConfiguration getConfiguration()
     {
-        MockFilterConfig config = new MockFilterConfig();
+        final MockFilterConfig config = new MockFilterConfig();
         config.setInitParameter("key1", "value1");
         config.setInitParameter("key2", "value2");
         config.setInitParameter("list", "value1, value2");
         config.setInitParameter("listesc", "value1\\,value2");
 
-        ServletFilterConfiguration resultConfig = new ServletFilterConfiguration(config);
+        final ServletFilterConfiguration resultConfig = new ServletFilterConfiguration(config);
         resultConfig.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         return resultConfig;
     }
@@ -73,7 +73,7 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration
         }
 
         @Override
-        public String getInitParameter(String key)
+        public String getInitParameter(final String key)
         {
             return parameters.getProperty(key);
         }
@@ -84,7 +84,7 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration
             return parameters.keys();
         }
 
-        public void setInitParameter(String key, String value)
+        public void setInitParameter(final String key, final String value)
         {
             parameters.setProperty(key, value);
         }

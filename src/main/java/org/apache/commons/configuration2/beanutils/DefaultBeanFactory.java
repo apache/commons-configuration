@@ -80,7 +80,7 @@ public class DefaultBeanFactory implements BeanFactory
      *        then a default handler is used
      * @since 2.0
      */
-    public DefaultBeanFactory(ConversionHandler convHandler)
+    public DefaultBeanFactory(final ConversionHandler convHandler)
     {
         conversionHandler =
                 (convHandler != null) ? convHandler
@@ -110,9 +110,9 @@ public class DefaultBeanFactory implements BeanFactory
      * @throws Exception if an error occurs
      */
     @Override
-    public Object createBean(BeanCreationContext bcc) throws Exception
+    public Object createBean(final BeanCreationContext bcc) throws Exception
     {
-        Object result = createBeanInstance(bcc);
+        final Object result = createBeanInstance(bcc);
         initBeanInstance(result, bcc);
         return result;
     }
@@ -138,13 +138,13 @@ public class DefaultBeanFactory implements BeanFactory
      * @return the new bean instance
      * @throws Exception if an error occurs
      */
-    protected Object createBeanInstance(BeanCreationContext bcc)
+    protected Object createBeanInstance(final BeanCreationContext bcc)
             throws Exception
     {
-        Constructor<?> ctor =
+        final Constructor<?> ctor =
                 findMatchingConstructor(bcc.getBeanClass(),
                         bcc.getBeanDeclaration());
-        Object[] args = fetchConstructorArgs(ctor, bcc);
+        final Object[] args = fetchConstructorArgs(ctor, bcc);
         return ctor.newInstance(args);
     }
 
@@ -157,7 +157,7 @@ public class DefaultBeanFactory implements BeanFactory
      * @param bcc the context object defining the bean to be created
      * @throws Exception if an error occurs
      */
-    protected void initBeanInstance(Object bean, BeanCreationContext bcc) throws Exception
+    protected void initBeanInstance(final Object bean, final BeanCreationContext bcc) throws Exception
     {
         bcc.initBean(bean, bcc.getBeanDeclaration());
     }
@@ -178,9 +178,9 @@ public class DefaultBeanFactory implements BeanFactory
      *         <b>null</b>
      */
     protected static <T> Constructor<T> findMatchingConstructor(
-            Class<T> beanClass, BeanDeclaration data)
+            final Class<T> beanClass, final BeanDeclaration data)
     {
-        List<Constructor<T>> matchingConstructors =
+        final List<Constructor<T>> matchingConstructors =
                 findMatchingConstructors(beanClass, data);
         checkSingleMatchingConstructor(beanClass, data, matchingConstructors);
         return matchingConstructors.get(0);
@@ -195,18 +195,18 @@ public class DefaultBeanFactory implements BeanFactory
      * @param bcc the context object defining the bean to be created
      * @return an array with constructor arguments
      */
-    private Object[] fetchConstructorArgs(Constructor<?> ctor,
-            BeanCreationContext bcc)
+    private Object[] fetchConstructorArgs(final Constructor<?> ctor,
+            final BeanCreationContext bcc)
     {
-        Class<?>[] types = ctor.getParameterTypes();
+        final Class<?>[] types = ctor.getParameterTypes();
         assert types.length == nullSafeConstructorArgs(bcc.getBeanDeclaration()).size()
                 : "Wrong number of constructor arguments!";
-        Object[] args = new Object[types.length];
+        final Object[] args = new Object[types.length];
         int idx = 0;
 
-        for (ConstructorArg arg : nullSafeConstructorArgs(bcc.getBeanDeclaration()))
+        for (final ConstructorArg arg : nullSafeConstructorArgs(bcc.getBeanDeclaration()))
         {
-            Object val =
+            final Object val =
                     arg.isNestedBeanDeclaration() ? bcc.createBean(arg
                             .getBeanDeclaration()) : arg.getValue();
             args[idx] = getConversionHandler().to(val, types[idx], null);
@@ -224,7 +224,7 @@ public class DefaultBeanFactory implements BeanFactory
      * @return the collection with constructor arguments (never <b>null</b>)
      */
     private static Collection<ConstructorArg> nullSafeConstructorArgs(
-            BeanDeclaration data)
+            final BeanDeclaration data)
     {
         Collection<ConstructorArg> args = data.getConstructorArgs();
         if (args == null)
@@ -243,17 +243,18 @@ public class DefaultBeanFactory implements BeanFactory
      * @return a list with all matching constructors
      */
     private static <T> List<Constructor<T>> findMatchingConstructors(
-            Class<T> beanClass, BeanDeclaration data)
+            final Class<T> beanClass, final BeanDeclaration data)
     {
-        List<Constructor<T>> result = new LinkedList<>();
-        Collection<ConstructorArg> args = getConstructorArgs(data);
-        for (Constructor<?> ctor : beanClass.getConstructors())
+        final List<Constructor<T>> result = new LinkedList<>();
+        final Collection<ConstructorArg> args = getConstructorArgs(data);
+        for (final Constructor<?> ctor : beanClass.getConstructors())
         {
             if (matchesConstructor(ctor, args))
             {
                 // cast should be okay according to the Javadocs of
                 // getConstructors()
                 @SuppressWarnings("unchecked")
+                final
                 Constructor<T> match = (Constructor<T>) ctor;
                 result.add(match);
             }
@@ -270,17 +271,17 @@ public class DefaultBeanFactory implements BeanFactory
      * @return a flag whether this constructor is compatible with the given
      *         arguments
      */
-    private static boolean matchesConstructor(Constructor<?> ctor,
-            Collection<ConstructorArg> args)
+    private static boolean matchesConstructor(final Constructor<?> ctor,
+            final Collection<ConstructorArg> args)
     {
-        Class<?>[] types = ctor.getParameterTypes();
+        final Class<?>[] types = ctor.getParameterTypes();
         if (types.length != args.size())
         {
             return false;
         }
 
         int idx = 0;
-        for (ConstructorArg arg : args)
+        for (final ConstructorArg arg : args)
         {
             if (!arg.matches(types[idx++]))
             {
@@ -299,7 +300,7 @@ public class DefaultBeanFactory implements BeanFactory
      * @return the collection with constructor arguments (never <b>null</b>)
      */
     private static Collection<ConstructorArg> getConstructorArgs(
-            BeanDeclaration data)
+            final BeanDeclaration data)
     {
         Collection<ConstructorArg> args = data.getConstructorArgs();
         if (args == null)
@@ -319,8 +320,8 @@ public class DefaultBeanFactory implements BeanFactory
      * @param matchingConstructors the list with matching constructors
      * @throws ConfigurationRuntimeException if there is not exactly one match
      */
-    private static <T> void checkSingleMatchingConstructor(Class<T> beanClass,
-            BeanDeclaration data, List<Constructor<T>> matchingConstructors)
+    private static <T> void checkSingleMatchingConstructor(final Class<T> beanClass,
+            final BeanDeclaration data, final List<Constructor<T>> matchingConstructors)
     {
         if (matchingConstructors.isEmpty())
         {
@@ -344,7 +345,7 @@ public class DefaultBeanFactory implements BeanFactory
      * @return the exception with the error message
      */
     private static ConfigurationRuntimeException constructorMatchingException(
-            Class<?> beanClass, BeanDeclaration data, String msg)
+            final Class<?> beanClass, final BeanDeclaration data, final String msg)
     {
         return new ConfigurationRuntimeException(FMT_CTOR_ERROR,
                 msg, beanClass.getName(), getConstructorArgs(data).toString());

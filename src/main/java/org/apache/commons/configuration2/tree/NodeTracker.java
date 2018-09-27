@@ -82,7 +82,7 @@ class NodeTracker
      *
      * @param map the map with tracked nodes
      */
-    private NodeTracker(Map<NodeSelector, TrackedNodeData> map)
+    private NodeTracker(final Map<NodeSelector, TrackedNodeData> map)
     {
         trackedNodes = map;
     }
@@ -100,13 +100,13 @@ class NodeTracker
      * @throws ConfigurationRuntimeException if the selector does not select a
      *         single node
      */
-    public NodeTracker trackNode(ImmutableNode root, NodeSelector selector,
-            NodeKeyResolver<ImmutableNode> resolver,
-            NodeHandler<ImmutableNode> handler)
+    public NodeTracker trackNode(final ImmutableNode root, final NodeSelector selector,
+            final NodeKeyResolver<ImmutableNode> resolver,
+            final NodeHandler<ImmutableNode> handler)
     {
-        Map<NodeSelector, TrackedNodeData> newState =
+        final Map<NodeSelector, TrackedNodeData> newState =
                 new HashMap<>(trackedNodes);
-        TrackedNodeData trackData = newState.get(selector);
+        final TrackedNodeData trackData = newState.get(selector);
         newState.put(
                 selector,
                 trackDataForAddedObserver(root, selector, resolver, handler,
@@ -122,15 +122,15 @@ class NodeTracker
      * @param nodes a collection with the nodes to be tracked
      * @return the updated instance
      */
-    public NodeTracker trackNodes(Collection<NodeSelector> selectors,
-            Collection<ImmutableNode> nodes)
+    public NodeTracker trackNodes(final Collection<NodeSelector> selectors,
+            final Collection<ImmutableNode> nodes)
     {
-        Map<NodeSelector, TrackedNodeData> newState =
+        final Map<NodeSelector, TrackedNodeData> newState =
                 new HashMap<>(trackedNodes);
-        Iterator<ImmutableNode> itNodes = nodes.iterator();
-        for (NodeSelector selector : selectors)
+        final Iterator<ImmutableNode> itNodes = nodes.iterator();
+        for (final NodeSelector selector : selectors)
         {
-            ImmutableNode node = itNodes.next();
+            final ImmutableNode node = itNodes.next();
             TrackedNodeData trackData = newState.get(selector);
             if (trackData == null)
             {
@@ -156,13 +156,13 @@ class NodeTracker
      * @throws ConfigurationRuntimeException if no information about this node
      *         is available
      */
-    public NodeTracker untrackNode(NodeSelector selector)
+    public NodeTracker untrackNode(final NodeSelector selector)
     {
-        TrackedNodeData trackData = getTrackedNodeData(selector);
+        final TrackedNodeData trackData = getTrackedNodeData(selector);
 
-        Map<NodeSelector, TrackedNodeData> newState =
+        final Map<NodeSelector, TrackedNodeData> newState =
                 new HashMap<>(trackedNodes);
-        TrackedNodeData newTrackData = trackData.observerRemoved();
+        final TrackedNodeData newTrackData = trackData.observerRemoved();
         if (newTrackData == null)
         {
             newState.remove(selector);
@@ -183,7 +183,7 @@ class NodeTracker
      * @throws ConfigurationRuntimeException if no data for this selector is
      *         available
      */
-    public ImmutableNode getTrackedNode(NodeSelector selector)
+    public ImmutableNode getTrackedNode(final NodeSelector selector)
     {
         return getTrackedNodeData(selector).getNode();
     }
@@ -196,7 +196,7 @@ class NodeTracker
      * @throws ConfigurationRuntimeException if no data for this selector is
      *         available
      */
-    public boolean isTrackedNodeDetached(NodeSelector selector)
+    public boolean isTrackedNodeDetached(final NodeSelector selector)
     {
         return getTrackedNodeData(selector).isDetached();
     }
@@ -213,7 +213,7 @@ class NodeTracker
      * @throws ConfigurationRuntimeException if no data for this selector is
      *         available
      */
-    public InMemoryNodeModel getDetachedNodeModel(NodeSelector selector)
+    public InMemoryNodeModel getDetachedNodeModel(final NodeSelector selector)
     {
         return getTrackedNodeData(selector).getDetachedModel();
     }
@@ -238,9 +238,9 @@ class NodeTracker
      * @param handler the {@code NodeHandler}
      * @return the updated instance
      */
-    public NodeTracker update(ImmutableNode root, NodeSelector txTarget,
-            NodeKeyResolver<ImmutableNode> resolver,
-            NodeHandler<ImmutableNode> handler)
+    public NodeTracker update(final ImmutableNode root, final NodeSelector txTarget,
+            final NodeKeyResolver<ImmutableNode> resolver,
+            final NodeHandler<ImmutableNode> handler)
     {
         if (trackedNodes.isEmpty())
         {
@@ -248,9 +248,9 @@ class NodeTracker
             return this;
         }
 
-        Map<NodeSelector, TrackedNodeData> newState =
+        final Map<NodeSelector, TrackedNodeData> newState =
                 new HashMap<>();
-        for (Map.Entry<NodeSelector, TrackedNodeData> e : trackedNodes
+        for (final Map.Entry<NodeSelector, TrackedNodeData> e : trackedNodes
                 .entrySet())
         {
             newState.put(
@@ -277,12 +277,12 @@ class NodeTracker
             return this;
         }
 
-        Map<NodeSelector, TrackedNodeData> newState =
+        final Map<NodeSelector, TrackedNodeData> newState =
                 new HashMap<>();
-        for (Map.Entry<NodeSelector, TrackedNodeData> e : trackedNodes
+        for (final Map.Entry<NodeSelector, TrackedNodeData> e : trackedNodes
                 .entrySet())
         {
-            TrackedNodeData newData =
+            final TrackedNodeData newData =
                     e.getValue().isDetached() ? e.getValue() : e.getValue()
                             .detach(null);
             newState.put(e.getKey(), newData);
@@ -300,10 +300,10 @@ class NodeTracker
      * @return the updated instance
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
-    public NodeTracker replaceAndDetachTrackedNode(NodeSelector selector,
-            ImmutableNode newNode)
+    public NodeTracker replaceAndDetachTrackedNode(final NodeSelector selector,
+            final ImmutableNode newNode)
     {
-        Map<NodeSelector, TrackedNodeData> newState =
+        final Map<NodeSelector, TrackedNodeData> newState =
                 new HashMap<>(trackedNodes);
         newState.put(selector, getTrackedNodeData(selector).detach(newNode));
         return new NodeTracker(newState);
@@ -317,9 +317,9 @@ class NodeTracker
      * @return the {@code TrackedNodeData} object for this selector
      * @throws ConfigurationRuntimeException if the selector cannot be resolved
      */
-    private TrackedNodeData getTrackedNodeData(NodeSelector selector)
+    private TrackedNodeData getTrackedNodeData(final NodeSelector selector)
     {
-        TrackedNodeData trackData = trackedNodes.get(selector);
+        final TrackedNodeData trackData = trackedNodes.get(selector);
         if (trackData == null)
         {
             throw new ConfigurationRuntimeException("No tracked node found: "
@@ -342,10 +342,10 @@ class NodeTracker
      * @return the updated {@code TrackedNodeData}
      */
     private static TrackedNodeData determineUpdatedTrackedNodeData(
-            ImmutableNode root, NodeSelector txTarget,
-            NodeKeyResolver<ImmutableNode> resolver,
-            NodeHandler<ImmutableNode> handler,
-            Map.Entry<NodeSelector, TrackedNodeData> e)
+            final ImmutableNode root, final NodeSelector txTarget,
+            final NodeKeyResolver<ImmutableNode> resolver,
+            final NodeHandler<ImmutableNode> handler,
+            final Map.Entry<NodeSelector, TrackedNodeData> e)
     {
         if (e.getValue().isDetached())
         {
@@ -357,7 +357,7 @@ class NodeTracker
         {
             newTarget = e.getKey().select(root, resolver, handler);
         }
-        catch (Exception ex)
+        catch (final Exception ex)
         {
             /*
             Evaluation of the key caused an exception. This can happen for
@@ -386,9 +386,9 @@ class NodeTracker
      *         tracked node
      */
     private static TrackedNodeData detachedTrackedNodeData(
-            NodeSelector txTarget, Map.Entry<NodeSelector, TrackedNodeData> e)
+            final NodeSelector txTarget, final Map.Entry<NodeSelector, TrackedNodeData> e)
     {
-        ImmutableNode newNode =
+        final ImmutableNode newNode =
                 e.getKey().equals(txTarget) ? createEmptyTrackedNode(e
                         .getValue()) : null;
         return e.getValue().detach(newNode);
@@ -402,7 +402,7 @@ class NodeTracker
      * @param data the {@code TrackedNodeData}
      * @return the new node instance for this tracked node
      */
-    private static ImmutableNode createEmptyTrackedNode(TrackedNodeData data)
+    private static ImmutableNode createEmptyTrackedNode(final TrackedNodeData data)
     {
         return new ImmutableNode.Builder().name(data.getNode().getNodeName())
                 .create();
@@ -422,15 +422,15 @@ class NodeTracker
      *         single node
      */
     private static TrackedNodeData trackDataForAddedObserver(
-            ImmutableNode root, NodeSelector selector,
-            NodeKeyResolver<ImmutableNode> resolver,
-            NodeHandler<ImmutableNode> handler, TrackedNodeData trackData)
+            final ImmutableNode root, final NodeSelector selector,
+            final NodeKeyResolver<ImmutableNode> resolver,
+            final NodeHandler<ImmutableNode> handler, final TrackedNodeData trackData)
     {
         if (trackData != null)
         {
             return trackData.observerAdded();
         }
-        ImmutableNode target = selector.select(root, resolver, handler);
+        final ImmutableNode target = selector.select(root, resolver, handler);
         if (target == null)
         {
             throw new ConfigurationRuntimeException(
@@ -459,7 +459,7 @@ class NodeTracker
          *
          * @param nd the tracked node
          */
-        public TrackedNodeData(ImmutableNode nd)
+        public TrackedNodeData(final ImmutableNode nd)
         {
             this(nd, 1, null);
         }
@@ -472,8 +472,8 @@ class NodeTracker
          * @param obsCount the observer count
          * @param detachedNodeModel a model to be used in detached mode
          */
-        private TrackedNodeData(ImmutableNode nd, int obsCount,
-                InMemoryNodeModel detachedNodeModel)
+        private TrackedNodeData(final ImmutableNode nd, final int obsCount,
+                final InMemoryNodeModel detachedNodeModel)
         {
             node = nd;
             observerCount = obsCount;
@@ -545,7 +545,7 @@ class NodeTracker
          * @param newNode the new tracked node instance
          * @return the updated instance
          */
-        public TrackedNodeData updateNode(ImmutableNode newNode)
+        public TrackedNodeData updateNode(final ImmutableNode newNode)
         {
             return new TrackedNodeData(newNode, observerCount, getDetachedModel());
         }
@@ -560,9 +560,9 @@ class NodeTracker
          * @param newNode the new tracked node instance (may be <b>null</b>)
          * @return the updated instance
          */
-        public TrackedNodeData detach(ImmutableNode newNode)
+        public TrackedNodeData detach(final ImmutableNode newNode)
         {
-            ImmutableNode newTrackedNode =
+            final ImmutableNode newTrackedNode =
                     (newNode != null) ? newNode : getNode();
             return new TrackedNodeData(newTrackedNode, observerCount,
                     new InMemoryNodeModel(newTrackedNode));

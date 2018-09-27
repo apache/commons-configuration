@@ -70,7 +70,7 @@ public class TestFileLocator
     @Test
     public void testCreateFileLocatorUndefined()
     {
-        FileLocator locator = FileLocatorUtils.fileLocator().create();
+        final FileLocator locator = FileLocatorUtils.fileLocator().create();
         assertNull("Got a base path", locator.getBasePath());
         assertNull("Got a file name", locator.getFileName());
         assertNull("Got a URL", locator.getSourceURL());
@@ -84,7 +84,7 @@ public class TestFileLocator
      *
      * @param locator the locator to check
      */
-    private static void checkLocator(FileLocator locator)
+    private static void checkLocator(final FileLocator locator)
     {
         assertEquals("Wrong base path", BASE_PATH, locator.getBasePath());
         assertEquals("Wrong file name", FILE_NAME, locator.getFileName());
@@ -102,7 +102,7 @@ public class TestFileLocator
     @Test
     public void testCreateFileLocator()
     {
-        FileLocator locator =
+        final FileLocator locator =
                 FileLocatorUtils.fileLocator().basePath(BASE_PATH)
                         .fileName(FILE_NAME).encoding(ENCODING)
                         .fileSystem(fileSystem).sourceURL(sourceURL)
@@ -116,12 +116,12 @@ public class TestFileLocator
     @Test
     public void testCreateFileLocatorFromSource()
     {
-        FileLocator locatorSrc =
+        final FileLocator locatorSrc =
                 FileLocatorUtils.fileLocator().basePath(BASE_PATH)
                         .fileName("someFile").encoding(ENCODING)
                         .fileSystem(fileSystem).sourceURL(sourceURL)
                         .locationStrategy(locationStrategy).create();
-        FileLocator locator =
+        final FileLocator locator =
                 FileLocatorUtils.fileLocator(locatorSrc).fileName(FILE_NAME)
                         .create();
         checkLocator(locator);
@@ -158,7 +158,7 @@ public class TestFileLocator
     @Test
     public void testFileLocatorEqualsFalse()
     {
-        FileLocator loc1 =
+        final FileLocator loc1 =
                 FileLocatorUtils.fileLocator().basePath(BASE_PATH)
                         .fileName(FILE_NAME).encoding(ENCODING)
                         .fileSystem(fileSystem).sourceURL(sourceURL)
@@ -203,7 +203,7 @@ public class TestFileLocator
     @Test
     public void testFileLocatorEqualsNull()
     {
-        FileLocator loc =
+        final FileLocator loc =
                 FileLocatorUtils.fileLocator().fileName(FILE_NAME).create();
         assertFalse("Wrong result", loc.equals(null));
     }
@@ -214,7 +214,7 @@ public class TestFileLocator
     @Test
     public void testFileLocatorEqualsOtherClass()
     {
-        FileLocator loc =
+        final FileLocator loc =
                 FileLocatorUtils.fileLocator().fileName(FILE_NAME).create();
         assertFalse("Wrong result", loc.equals(this));
     }
@@ -225,12 +225,12 @@ public class TestFileLocator
     @Test
     public void testFileLocatorToString()
     {
-        FileLocator loc =
+        final FileLocator loc =
                 FileLocatorUtils.fileLocator().basePath(BASE_PATH)
                         .fileName(FILE_NAME).encoding(ENCODING)
                         .fileSystem(fileSystem).sourceURL(sourceURL)
                         .locationStrategy(locationStrategy).create();
-        String s = loc.toString();
+        final String s = loc.toString();
         assertThat(s, containsString("fileName=" + FILE_NAME));
         assertThat(s, containsString("basePath=" + BASE_PATH));
         assertThat(s, containsString("sourceURL=" + sourceURL));

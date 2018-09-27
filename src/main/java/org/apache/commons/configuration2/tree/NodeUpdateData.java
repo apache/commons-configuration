@@ -68,9 +68,9 @@ public class NodeUpdateData<T>
      * @param removedNodes the collection with the nodes to be removed
      * @param key the key of the update operation
      */
-    public NodeUpdateData(Map<QueryResult<T>, Object> changedValues,
-            Collection<Object> newValues,
-            Collection<QueryResult<T>> removedNodes, String key)
+    public NodeUpdateData(final Map<QueryResult<T>, Object> changedValues,
+            final Collection<Object> newValues,
+            final Collection<QueryResult<T>> removedNodes, final String key)
     {
         this.changedValues = copyMap(changedValues);
         this.newValues = copyCollection(newValues);
@@ -133,7 +133,7 @@ public class NodeUpdateData<T>
      * @param <V> the type of the values involved
      * @return the unmodifiable copy
      */
-    private static <K, V> Map<K, V> copyMap(Map<? extends K, ? extends V> map)
+    private static <K, V> Map<K, V> copyMap(final Map<? extends K, ? extends V> map)
     {
         if (map == null)
         {
@@ -150,7 +150,7 @@ public class NodeUpdateData<T>
      * @param <T> the element type of the collection
      * @return the unmodifiable copy
      */
-    private static <T> Collection<T> copyCollection(Collection<? extends T> col)
+    private static <T> Collection<T> copyCollection(final Collection<? extends T> col)
     {
         if (col == null)
         {

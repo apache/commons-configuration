@@ -69,12 +69,12 @@ public class TestXMLListHandling
      * @param xml the XML to be parsed
      * @return the resulting configuration
      */
-    private static XMLConfiguration readFromString(String xml)
+    private static XMLConfiguration readFromString(final String xml)
             throws ConfigurationException
     {
-        XMLConfiguration config = new XMLConfiguration();
+        final XMLConfiguration config = new XMLConfiguration();
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
-        FileHandler handler = new FileHandler(config);
+        final FileHandler handler = new FileHandler(config);
         handler.load(new StringReader(xml));
         return config;
     }
@@ -86,8 +86,8 @@ public class TestXMLListHandling
      */
     private String saveToString() throws ConfigurationException
     {
-        StringWriter writer = new StringWriter(4096);
-        FileHandler handler = new FileHandler(config);
+        final StringWriter writer = new StringWriter(4096);
+        final FileHandler handler = new FileHandler(config);
         handler.save(writer);
         return writer.toString();
     }
@@ -99,7 +99,7 @@ public class TestXMLListHandling
      * @param value the value
      * @return the string representation of this element
      */
-    private static String element(String key, String value)
+    private static String element(final String key, final String value)
     {
         return "<" + key + '>' + value + "</" + key + '>';
     }
@@ -112,11 +112,11 @@ public class TestXMLListHandling
      * @param key the key
      * @param values the expected values
      */
-    private static void checkCommaSeparated(String xml, String key,
-            String... values)
+    private static void checkCommaSeparated(final String xml, final String key,
+            final String... values)
     {
-        String strValues = StringUtils.join(values, ',');
-        String element = element(key, strValues);
+        final String strValues = StringUtils.join(values, ',');
+        final String element = element(key, strValues);
         assertThat(xml, containsString(element));
     }
 
@@ -128,9 +128,9 @@ public class TestXMLListHandling
      * @param key the key
      * @param values the expected values
      */
-    private static void checkSplit(String xml, String key, String... values)
+    private static void checkSplit(final String xml, final String key, final String... values)
     {
-        for (String v : values)
+        for (final String v : values)
         {
             assertThat(xml, containsString(element(key, v)));
         }
@@ -142,7 +142,7 @@ public class TestXMLListHandling
     @Test
     public void testSaveNoChanges() throws ConfigurationException
     {
-        String xml = saveToString();
+        final String xml = saveToString();
 
         checkSplit(xml, ELEM_SPLIT, "1", "2");
         checkCommaSeparated(xml, KEY_VALUES, "a", "b", "c");
@@ -156,7 +156,7 @@ public class TestXMLListHandling
     {
         config.addProperty(KEY_VALUES, "d");
         config.addProperty(KEY_SPLIT, "3");
-        String xml = saveToString();
+        final String xml = saveToString();
 
         checkSplit(xml, ELEM_SPLIT, "1", "2", "3");
         checkCommaSeparated(xml, KEY_VALUES, "a", "b", "c", "d");
@@ -170,7 +170,7 @@ public class TestXMLListHandling
     {
         config.clearProperty(KEY_VALUES + "(2)");
         config.clearProperty(KEY_SPLIT + "(1)");
-        String xml = saveToString();
+        final String xml = saveToString();
 
         checkSplit(xml, ELEM_SPLIT, "1");
         checkCommaSeparated(xml, KEY_VALUES, "a", "b");
@@ -183,12 +183,12 @@ public class TestXMLListHandling
     @Test
     public void testMixedList() throws ConfigurationException
     {
-        List<String> expected = Arrays.asList("foo", "blah", "bar", "baz");
+        final List<String> expected = Arrays.asList("foo", "blah", "bar", "baz");
         assertEquals("Wrong list value (1)", expected,
                 config.getList("mixed.values"));
-        String xml = saveToString();
+        final String xml = saveToString();
 
-        XMLConfiguration c2 = readFromString(xml);
+        final XMLConfiguration c2 = readFromString(xml);
         assertEquals("Wrong list value (2)", expected,
                 c2.getList("mixed.values"));
     }

@@ -59,10 +59,10 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
     @Override
     protected AbstractConfiguration getEmptyConfiguration()
     {
-        ServletRequest request = new MockHttpServletRequest()
+        final ServletRequest request = new MockHttpServletRequest()
         {
             @Override
-            public String getParameter(String key)
+            public String getParameter(final String key)
             {
                 return null;
             }
@@ -86,10 +86,10 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
      */
     private ServletRequestConfiguration createConfiguration(final Configuration base)
     {
-        ServletRequest request = new MockHttpServletRequest()
+        final ServletRequest request = new MockHttpServletRequest()
         {
             @Override
-            public String[] getParameterValues(String key)
+            public String[] getParameterValues(final String key)
             {
                 return base.getStringArray(key);
             }
@@ -101,7 +101,7 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
             }
         };
 
-        ServletRequestConfiguration config = new ServletRequestConfiguration(request);
+        final ServletRequestConfiguration config = new ServletRequestConfiguration(request);
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         return config;
     }
@@ -126,16 +126,16 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
     @Test
     public void testListWithEscapedElements()
     {
-        String[] values = { "test1", "test2\\,test3", "test4\\,test5" };
-        String listKey = "test.list";
+        final String[] values = { "test1", "test2\\,test3", "test4\\,test5" };
+        final String listKey = "test.list";
 
-        BaseConfiguration config = new BaseConfiguration();
+        final BaseConfiguration config = new BaseConfiguration();
         config.addProperty(listKey, values);
 
         assertEquals("Wrong number of list elements", values.length, config.getList(listKey).size());
 
-        Configuration c = createConfiguration(config);
-        List<?> v = c.getList(listKey);
+        final Configuration c = createConfiguration(config);
+        final List<?> v = c.getList(listKey);
 
         assertEquals("Wrong number of elements in list", values.length, v.size());
 

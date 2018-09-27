@@ -60,7 +60,7 @@ public class BuilderConfigurationWrapperFactory
      *
      * @param evSrcSupport the level of {@code EventSource} support
      */
-    public BuilderConfigurationWrapperFactory(EventSourceSupport evSrcSupport)
+    public BuilderConfigurationWrapperFactory(final EventSourceSupport evSrcSupport)
     {
         eventSourceSupport = evSrcSupport;
     }
@@ -92,7 +92,7 @@ public class BuilderConfigurationWrapperFactory
      *         occurs when creating the result {@code ImmutableConfiguration}
      */
     public <T extends ImmutableConfiguration> T createBuilderConfigurationWrapper(
-            Class<T> ifcClass, ConfigurationBuilder<? extends T> builder)
+            final Class<T> ifcClass, final ConfigurationBuilder<? extends T> builder)
     {
         return createBuilderConfigurationWrapper(ifcClass, builder,
                 getEventSourceSupport());
@@ -129,8 +129,8 @@ public class BuilderConfigurationWrapperFactory
      *         occurs when creating the result {@code ImmutableConfiguration}
      */
     public static <T extends ImmutableConfiguration> T createBuilderConfigurationWrapper(
-            Class<T> ifcClass, ConfigurationBuilder<? extends T> builder,
-            EventSourceSupport evSrcSupport)
+            final Class<T> ifcClass, final ConfigurationBuilder<? extends T> builder,
+            final EventSourceSupport evSrcSupport)
     {
         if (ifcClass == null)
         {
@@ -158,8 +158,8 @@ public class BuilderConfigurationWrapperFactory
      * @param evSrcSupport the level of {@code EventSource} support
      * @return an array with the interface classes to implement
      */
-    private static Class<?>[] fetchSupportedInterfaces(Class<?> ifcClass,
-            EventSourceSupport evSrcSupport)
+    private static Class<?>[] fetchSupportedInterfaces(final Class<?> ifcClass,
+            final EventSourceSupport evSrcSupport)
     {
         if (EventSourceSupport.NONE == evSrcSupport)
         {
@@ -168,7 +168,7 @@ public class BuilderConfigurationWrapperFactory
             };
         }
 
-        Class<?>[] result = new Class<?>[2];
+        final Class<?>[] result = new Class<?>[2];
         result[0] = EventSource.class;
         result[1] = ifcClass;
         return result;
@@ -239,8 +239,8 @@ public class BuilderConfigurationWrapperFactory
          * @param evSrcSupport the level of {@code EventSource} support
          */
         public BuilderConfigurationWrapperInvocationHandler(
-                ConfigurationBuilder<? extends ImmutableConfiguration> wrappedBuilder,
-                EventSourceSupport evSrcSupport)
+                final ConfigurationBuilder<? extends ImmutableConfiguration> wrappedBuilder,
+                final EventSourceSupport evSrcSupport)
         {
             builder = wrappedBuilder;
             eventSourceSupport = evSrcSupport;
@@ -263,7 +263,7 @@ public class BuilderConfigurationWrapperFactory
          * @throws Throwable if an error occurs
          */
         @Override
-        public Object invoke(Object proxy, Method method, Object[] args)
+        public Object invoke(final Object proxy, final Method method, final Object[] args)
                 throws Throwable
         {
             if (EventSource.class.equals(method.getDeclaringClass()))
@@ -282,8 +282,8 @@ public class BuilderConfigurationWrapperFactory
          * @return the return value of the method
          * @throws Exception if an error occurs
          */
-        private Object handleConfigurationInvocation(Method method,
-                Object[] args) throws Exception
+        private Object handleConfigurationInvocation(final Method method,
+                final Object[] args) throws Exception
         {
             return method.invoke(builder.getConfiguration(), args);
         }
@@ -298,10 +298,10 @@ public class BuilderConfigurationWrapperFactory
          * @return the return value of the method
          * @throws Exception if an error occurs
          */
-        private Object handleEventSourceInvocation(Method method, Object[] args)
+        private Object handleEventSourceInvocation(final Method method, final Object[] args)
                 throws Exception
         {
-            Object target =
+            final Object target =
                     (EventSourceSupport.DUMMY == eventSourceSupport) ? ConfigurationUtils
                             .asEventSource(this, true) : builder;
             return method.invoke(target, args);
