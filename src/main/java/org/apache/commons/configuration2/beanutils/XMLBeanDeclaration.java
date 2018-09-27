@@ -432,7 +432,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
     {
         ConfigurationInterpolator interpolator =
                 getConfiguration().getInterpolator();
-        return (interpolator != null) ? interpolator.interpolate(value) : value;
+        return interpolator != null ? interpolator.interpolate(value) : value;
     }
 
     /**
