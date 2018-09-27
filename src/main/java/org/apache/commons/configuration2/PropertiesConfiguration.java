@@ -906,14 +906,14 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public static class PropertiesWriter extends FilterWriter
     {
-        
+
         private static final Map<CharSequence, CharSequence> PROPERTIES_CHARS_ESCAPE;
         static {
             final Map<CharSequence, CharSequence> initialMap = new HashMap<>();
             initialMap.put("\\", "\\\\");
             PROPERTIES_CHARS_ESCAPE = Collections.unmodifiableMap(initialMap);
         }
-        
+
         /**
          * A translator for escaping property values. This translator performs a
          * subset of transformations done by the ESCAPE_JAVA translator from
