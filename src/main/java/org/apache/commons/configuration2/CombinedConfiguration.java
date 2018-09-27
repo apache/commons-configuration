@@ -182,7 +182,7 @@ import org.apache.commons.configuration2.tree.UnionCombiner;
  * @version $Id$
  */
 public class CombinedConfiguration extends BaseHierarchicalConfiguration implements
-        EventListener<ConfigurationEvent>, Cloneable
+        EventListener<ConfigurationEvent>
 {
     /**
      * Constant for the event type fired when the internal node structure of a
