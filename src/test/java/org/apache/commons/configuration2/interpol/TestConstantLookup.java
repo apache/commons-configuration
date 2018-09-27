@@ -65,7 +65,7 @@ public class TestConstantLookup
      * class is wiped out.
      */
     @After
-    public void tearDown() throws Exception
+    public void tearDown()
     {
         ConstantLookup.clear();
     }
