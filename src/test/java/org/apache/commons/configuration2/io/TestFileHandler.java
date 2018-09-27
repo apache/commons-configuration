@@ -1396,7 +1396,7 @@ public class TestFileHandler
                 public void run()
                 {
                     handler.setFileSystem(fileSystem);
-                };
+                }
             };
             Thread t2 = new Thread()
             {
@@ -1404,7 +1404,7 @@ public class TestFileHandler
                 public void run()
                 {
                     handler.setFileName(TEST_FILENAME);
-                };
+                }
             };
             Thread t3 = new Thread()
             {
@@ -1412,7 +1412,7 @@ public class TestFileHandler
                 public void run()
                 {
                     handler.setEncoding(encoding);
-                };
+                }
             };
             Thread t4 = new Thread()
             {
