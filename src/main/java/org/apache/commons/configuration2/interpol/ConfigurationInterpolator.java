@@ -482,7 +482,7 @@ public class ConfigurationInterpolator
      * successful either and a parent {@code ConfigurationInterpolator} is
      * available, this object is asked to resolve the variable.
      *
-     * @param var the name of the variable whose value is to be looked up
+     * @param var the name of the variable whose value is to be looked up which may contain a prefix.
      * @return the value of this variable or <b>null</b> if it cannot be
      * resolved
      */
