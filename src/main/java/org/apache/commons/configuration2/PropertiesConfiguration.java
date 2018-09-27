@@ -25,7 +25,10 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,12 +43,12 @@ import org.apache.commons.configuration2.io.FileLocatorAware;
 import org.apache.commons.configuration2.io.FileLocatorUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.translate.AggregateTranslator;
-import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
-import org.apache.commons.lang3.text.translate.EntityArrays;
-import org.apache.commons.lang3.text.translate.LookupTranslator;
-import org.apache.commons.lang3.text.translate.UnicodeEscaper;
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.commons.text.translate.AggregateTranslator;
+import org.apache.commons.text.translate.CharSequenceTranslator;
+import org.apache.commons.text.translate.EntityArrays;
+import org.apache.commons.text.translate.LookupTranslator;
+import org.apache.commons.text.translate.UnicodeEscaper;
 
 /**
  * This is the "classic" Properties loader which loads the values from
@@ -903,15 +906,23 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public static class PropertiesWriter extends FilterWriter
     {
+        
+        private static final Map<CharSequence, CharSequence> PROPERTIES_CHARS_ESCAPE;
+        static {
+            final Map<CharSequence, CharSequence> initialMap = new HashMap<>();
+            initialMap.put("\\", "\\\\");
+            PROPERTIES_CHARS_ESCAPE = Collections.unmodifiableMap(initialMap);
+        }
+        
         /**
          * A translator for escaping property values. This translator performs a
          * subset of transformations done by the ESCAPE_JAVA translator from
          * Commons Lang 3.
          */
         private static final CharSequenceTranslator ESCAPE_PROPERTIES =
-                new AggregateTranslator(new LookupTranslator(new String[][]{
-                    {"\\", "\\\\"}}),
-                        new LookupTranslator(EntityArrays.JAVA_CTRL_CHARS_ESCAPE()),
+                new AggregateTranslator(
+                        new LookupTranslator(PROPERTIES_CHARS_ESCAPE),
+                        new LookupTranslator(EntityArrays.JAVA_CTRL_CHARS_ESCAPE),
                         UnicodeEscaper.outsideOf(32, 0x7f));
 
         /**
