@@ -482,7 +482,7 @@ public class ConfigurationInterpolator
             public String lookup(String key)
             {
                 Object result = resolve(key);
-                return (result != null) ? result.toString() : null;
+                return result != null ? result.toString() : null;
             }
         });
     }
