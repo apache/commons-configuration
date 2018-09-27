@@ -50,6 +50,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-694">
         Update Java requirement from version 7 to 8.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-721">
+        Update Jackson from 2.9.6 to 2.9.7.
+      </action>
     </release>
 
     <release version="2.3" date="2018-08-04"
