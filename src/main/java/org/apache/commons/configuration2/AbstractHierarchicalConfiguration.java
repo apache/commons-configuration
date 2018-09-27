@@ -289,28 +289,22 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         {
             return null;
         }
-        else
+        NodeHandler<T> handler = getModel().getNodeHandler();
+        List<Object> list = new ArrayList<>();
+        for (QueryResult<T> result : results)
         {
-            NodeHandler<T> handler = getModel().getNodeHandler();
-            List<Object> list = new ArrayList<>();
-            for (QueryResult<T> result : results)
+            Object value = valueFromResult(result, handler);
+            if (value != null)
             {
-                Object value = valueFromResult(result, handler);
-                if (value != null)
-                {
-                    list.add(value);
-                }
-            }
-
-            if (list.size() < 1)
-            {
-                return null;
-            }
-            else
-            {
-                return (list.size() == 1) ? list.get(0) : list;
+                list.add(value);
             }
         }
+
+        if (list.size() < 1)
+        {
+            return null;
+        }
+        return (list.size() == 1) ? list.get(0) : list;
     }
 
     /**
