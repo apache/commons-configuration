@@ -544,7 +544,7 @@ public class CatalogResolver implements EntityResolver
         protected String normalizeURI(String uriref)
         {
             ConfigurationInterpolator ci = ((CatalogManager) catalogManager).getInterpolator();
-            String resolved = (ci != null) ? String.valueOf(ci.interpolate(uriref)) : uriref;
+            String resolved = ci != null ? String.valueOf(ci.interpolate(uriref)) : uriref;
             return super.normalizeURI(resolved);
         }
     }
