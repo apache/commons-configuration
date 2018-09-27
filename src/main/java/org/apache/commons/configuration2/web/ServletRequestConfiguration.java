@@ -85,7 +85,6 @@ public class ServletRequestConfiguration extends BaseWebConfiguration
     protected Iterator<String> getKeysInternal()
     {
         // According to the documentation of getParameterMap(), keys are Strings.
-        @SuppressWarnings("unchecked")
         Map<String, ?> parameterMap = request.getParameterMap();
         return parameterMap.keySet().iterator();
     }

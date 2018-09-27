@@ -58,7 +58,6 @@ public class ServletFilterConfiguration extends BaseWebConfiguration
     {
         // According to the documentation of getInitParameterNames() the
         // enumeration is of type String.
-        @SuppressWarnings("unchecked")
         Enumeration<String> en = config.getInitParameterNames();
         return Collections.list(en).iterator();
     }

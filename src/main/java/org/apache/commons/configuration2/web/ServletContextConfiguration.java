@@ -71,7 +71,6 @@ public class ServletContextConfiguration extends BaseWebConfiguration
     {
         // According to the documentation of getInitParameterNames() the
         // enumeration is of type String.
-        @SuppressWarnings("unchecked")
         Enumeration<String> en = context.getInitParameterNames();
         return Collections.list(en).iterator();
     }
