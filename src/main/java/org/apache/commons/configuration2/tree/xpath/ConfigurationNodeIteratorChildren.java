@@ -114,24 +114,21 @@ class ConfigurationNodeIteratorChildren<T> extends
         {
             return getNodeHandler().getChildren(node);
         }
-        else
+        if (test instanceof NodeNameTest)
         {
-            if (test instanceof NodeNameTest)
-            {
-                NodeNameTest nameTest = (NodeNameTest) test;
-                QName name = nameTest.getNodeName();
-                return nameTest.isWildcard() ? createSubNodeListForWildcardName(
-                        node, name) : createSubNodeListForName(node, name);
-            }
+            NodeNameTest nameTest = (NodeNameTest) test;
+            QName name = nameTest.getNodeName();
+            return nameTest.isWildcard() ? createSubNodeListForWildcardName(
+                    node, name) : createSubNodeListForName(node, name);
+        }
 
-            else if (test instanceof NodeTypeTest)
+        else if (test instanceof NodeTypeTest)
+        {
+            NodeTypeTest typeTest = (NodeTypeTest) test;
+            if (typeTest.getNodeType() == Compiler.NODE_TYPE_NODE
+                    || typeTest.getNodeType() == Compiler.NODE_TYPE_TEXT)
             {
-                NodeTypeTest typeTest = (NodeTypeTest) test;
-                if (typeTest.getNodeType() == Compiler.NODE_TYPE_NODE
-                        || typeTest.getNodeType() == Compiler.NODE_TYPE_TEXT)
-                {
-                    return getNodeHandler().getChildren(node);
-                }
+                return getNodeHandler().getChildren(node);
             }
         }
 
@@ -176,20 +173,17 @@ class ConfigurationNodeIteratorChildren<T> extends
         {
             return children;
         }
-        else
+        List<T> prefixChildren = new ArrayList<>(children.size());
+        String prefix = prefixName(name.getPrefix(), null);
+        for (T child : children)
         {
-            List<T> prefixChildren = new ArrayList<>(children.size());
-            String prefix = prefixName(name.getPrefix(), null);
-            for (T child : children)
+            if (StringUtils.startsWith(getNodeHandler().nodeName(child),
+                    prefix))
             {
-                if (StringUtils.startsWith(getNodeHandler().nodeName(child),
-                        prefix))
-                {
-                    prefixChildren.add(child);
-                }
+                prefixChildren.add(child);
             }
-            return prefixChildren;
         }
+        return prefixChildren;
     }
 
     /**

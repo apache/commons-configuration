@@ -362,16 +362,13 @@ public class DefaultConfigurationKey
         {
             return key;
         }
-        else
+        StringBuilder buf = new StringBuilder();
+        buf.append(getSymbols().getAttributeStart()).append(key);
+        if (getSymbols().getAttributeEnd() != null)
         {
-            StringBuilder buf = new StringBuilder();
-            buf.append(getSymbols().getAttributeStart()).append(key);
-            if (getSymbols().getAttributeEnd() != null)
-            {
-                buf.append(getSymbols().getAttributeEnd());
-            }
-            return buf.toString();
+            buf.append(getSymbols().getAttributeEnd());
         }
+        return buf.toString();
     }
 
     /**
@@ -398,16 +395,13 @@ public class DefaultConfigurationKey
         {
             return StringUtils.EMPTY;
         }
-        else
+        String result = key;
+        while (hasLeadingDelimiter(result))
         {
-            String result = key;
-            while (hasLeadingDelimiter(result))
-            {
-                result = result.substring(getSymbols()
-                        .getPropertyDelimiter().length());
-            }
-            return result;
+            result = result.substring(getSymbols()
+                    .getPropertyDelimiter().length());
         }
+        return result;
     }
 
     /**
@@ -422,18 +416,15 @@ public class DefaultConfigurationKey
         {
             return StringUtils.EMPTY;
         }
-        else
+        String result = key;
+        while (hasTrailingDelimiter(result))
         {
-            String result = key;
-            while (hasTrailingDelimiter(result))
-            {
-                result = result
-                        .substring(0, result.length()
-                                - getSymbols().getPropertyDelimiter()
-                                        .length());
-            }
-            return result;
+            result = result
+                    .substring(0, result.length()
+                            - getSymbols().getPropertyDelimiter()
+                                    .length());
         }
+        return result;
     }
 
     /**
@@ -773,10 +764,7 @@ public class DefaultConfigurationKey
                 startIndex = endIndex - 1;
                 return keyBuffer.substring(startIndex, endIndex);
             }
-            else
-            {
-                return nextKeyPart();
-            }
+            return nextKeyPart();
         }
 
         /**
@@ -873,10 +861,7 @@ public class DefaultConfigurationKey
                 return escapePos
                         + getSymbols().getEscapedDelimiter().length();
             }
-            else
-            {
-                return -1;
-            }
+            return -1;
         }
 
         /**
@@ -916,10 +901,7 @@ public class DefaultConfigurationKey
                 current = removeAttributeMarkers(key);
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         /**

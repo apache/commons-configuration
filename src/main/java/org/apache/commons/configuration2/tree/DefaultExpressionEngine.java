@@ -207,14 +207,10 @@ public class DefaultExpressionEngine implements ExpressionEngine
             // this is the root node
             return StringUtils.EMPTY;
         }
-
-        else
-        {
-            DefaultConfigurationKey key = new DefaultConfigurationKey(this,
-                    parentKey);
-                key.append(handler.nodeName(node), true);
-            return key.toString();
-        }
+        DefaultConfigurationKey key = new DefaultConfigurationKey(this,
+                parentKey);
+            key.append(handler.nodeName(node), true);
+        return key.toString();
     }
 
     @Override
@@ -435,18 +431,11 @@ public class DefaultExpressionEngine implements ExpressionEngine
             {
                 return node;
             }
-            else
-            {
-                return findLastPathNode(keyIt,
-                        findChildNodesByName(handler, node, keyPart).get(idx),
-                        handler);
-            }
+            return findLastPathNode(keyIt,
+                    findChildNodesByName(handler, node, keyPart).get(idx),
+                    handler);
         }
-
-        else
-        {
-            return node;
-        }
+        return node;
     }
 
     /**

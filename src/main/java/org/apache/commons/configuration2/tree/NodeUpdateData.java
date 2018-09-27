@@ -139,10 +139,7 @@ public class NodeUpdateData<T>
         {
             return Collections.emptyMap();
         }
-        else
-        {
-            return Collections.unmodifiableMap(new HashMap<>(map));
-        }
+        return Collections.unmodifiableMap(new HashMap<>(map));
     }
 
     /**
@@ -159,9 +156,6 @@ public class NodeUpdateData<T>
         {
             return Collections.emptySet();
         }
-        else
-        {
-            return Collections.unmodifiableCollection(new ArrayList<>(col));
-        }
+        return Collections.unmodifiableCollection(new ArrayList<>(col));
     }
 }

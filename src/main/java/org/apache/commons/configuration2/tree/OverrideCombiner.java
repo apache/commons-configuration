@@ -142,9 +142,6 @@ public class OverrideCombiner extends NodeCombiner
         {
             return HANDLER.getChildren(node2, child.getNodeName()).get(0);
         }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 }

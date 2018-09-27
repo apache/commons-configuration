@@ -430,16 +430,13 @@ class NodeTracker
         {
             return trackData.observerAdded();
         }
-        else
+        ImmutableNode target = selector.select(root, resolver, handler);
+        if (target == null)
         {
-            ImmutableNode target = selector.select(root, resolver, handler);
-            if (target == null)
-            {
-                throw new ConfigurationRuntimeException(
-                        "Selector does not select unique node: " + selector);
-            }
-            return new TrackedNodeData(target);
+            throw new ConfigurationRuntimeException(
+                    "Selector does not select unique node: " + selector);
         }
+        return new TrackedNodeData(target);
     }
 
     /**

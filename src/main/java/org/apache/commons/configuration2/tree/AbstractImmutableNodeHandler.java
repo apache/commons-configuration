@@ -113,10 +113,7 @@ abstract class AbstractImmutableNodeHandler implements
         {
             return node.getChildren().size();
         }
-        else
-        {
-            return getMatchingChildrenCount(node, NodeNameMatchers.EQUALS, name);
-        }
+        return getMatchingChildrenCount(node, NodeNameMatchers.EQUALS, name);
     }
 
     @Override

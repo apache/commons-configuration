@@ -200,16 +200,13 @@ public class XPathExpressionEngine implements ExpressionEngine
             QueryResult<T> result = createResult(root);
             return Collections.singletonList(result);
         }
-        else
+        JXPathContext context = createContext(root, handler);
+        List<?> results = context.selectNodes(key);
+        if (results == null)
         {
-            JXPathContext context = createContext(root, handler);
-            List<?> results = context.selectNodes(key);
-            if (results == null)
-            {
-                results = Collections.emptyList();
-            }
-            return convertResults(results);
+            results = Collections.emptyList();
         }
+        return convertResults(results);
     }
 
     /**
@@ -552,10 +549,7 @@ public class XPathExpressionEngine implements ExpressionEngine
         {
             return (QueryResult<T>) resObj;
         }
-        else
-        {
-            return QueryResult.createNodeResult((T) resObj);
-        }
+        return QueryResult.createNodeResult((T) resObj);
     }
 
     // static initializer: registers the configuration node pointer factory
