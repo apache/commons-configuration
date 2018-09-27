@@ -16,7 +16,7 @@
  */
 package org.apache.commons.configuration2.interpol;
 
-import org.apache.commons.lang3.text.StrLookup;
+import org.apache.commons.text.lookup.StringLookupFactory;
 
 /**
  * <p>
@@ -44,13 +44,9 @@ import org.apache.commons.lang3.text.StrLookup;
  */
 public class SystemPropertiesLookup implements Lookup
 {
-    /** The underlying StrLookup object. */
-    private final StrLookup<String> sysLookup = StrLookup
-            .systemPropertiesLookup();
-
     @Override
     public Object lookup(String variable)
     {
-        return sysLookup.lookup(variable);
+        return StringLookupFactory.INSTANCE.systemPropertyStringLookup().lookup(variable);
     }
 }

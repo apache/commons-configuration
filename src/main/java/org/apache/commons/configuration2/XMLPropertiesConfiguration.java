@@ -17,19 +17,20 @@
 
 package org.apache.commons.configuration2;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileLocator;
 import org.apache.commons.configuration2.io.FileLocatorAware;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -219,7 +220,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
 
         if (getHeader() != null)
         {
-            writer.println("  <comment>" + StringEscapeUtils.escapeXml(getHeader()) + "</comment>");
+            writer.println("  <comment>" + StringEscapeUtils.escapeXml10(getHeader()) + "</comment>");
         }
 
         Iterator<String> keys = getKeys();
@@ -252,7 +253,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
     private void writeProperty(PrintWriter out, String key, Object value)
     {
         // escape the key
-        String k = StringEscapeUtils.escapeXml(key);
+        String k = StringEscapeUtils.escapeXml10(key);
 
         if (value != null)
         {
@@ -295,7 +296,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
         {
             Element comment = document.createElement("comment");
             properties.appendChild(comment);
-            comment.setTextContent(StringEscapeUtils.escapeXml(getHeader()));
+            comment.setTextContent(StringEscapeUtils.escapeXml10(getHeader()));
         }
 
         Iterator<String> keys = getKeys();
@@ -333,7 +334,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
         properties.appendChild(entry);
 
         // escape the key
-        String k = StringEscapeUtils.escapeXml(key);
+        String k = StringEscapeUtils.escapeXml10(key);
         entry.setAttribute("key", k);
 
         if (value != null)
@@ -359,7 +360,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
      */
     private String escapeValue(Object value)
     {
-        String v = StringEscapeUtils.escapeXml(String.valueOf(value));
+        String v = StringEscapeUtils.escapeXml10(String.valueOf(value));
         return String.valueOf(getListDelimiterHandler().escape(v,
                 ListDelimiterHandler.NOOP_TRANSFORMER));
     }
