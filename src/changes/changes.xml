@@ -56,6 +56,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-722">
         Update optional dependency snakeyaml from 1.21 to 1.23.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-723">
+        Update optional Spring dependencies from 4.3.18.RELEASE to 4.3.19.RELEASE.
+      </action>
     </release>
 
     <release version="2.3" date="2018-08-04"
