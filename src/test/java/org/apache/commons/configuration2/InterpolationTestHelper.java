@@ -40,181 +40,6 @@ import org.apache.commons.configuration2.interpol.Lookup;
 public class InterpolationTestHelper
 {
     /**
-     * Tests basic interpolation facilities of the specified configuration.
-     *
-     * @param config the configuration to test
-     */
-    public static void testInterpolation(Configuration config)
-    {
-        config.setProperty("applicationRoot", "/home/applicationRoot");
-        config.setProperty("db", "${applicationRoot}/db/hypersonic");
-        String unInterpolatedValue = "${applicationRoot2}/db/hypersonic";
-        config.setProperty("dbFailedInterpolate", unInterpolatedValue);
-        String dbProp = "/home/applicationRoot/db/hypersonic";
-
-        assertEquals("Checking interpolated variable", dbProp, config
-                .getString("db"));
-        assertEquals("lookup fails, leave variable as is", config
-                .getString("dbFailedInterpolate"), unInterpolatedValue);
-
-        config.setProperty("arrayInt", "${applicationRoot}/1");
-        String[] arrayInt = config.getStringArray("arrayInt");
-        assertEquals("check first entry was interpolated",
-                "/home/applicationRoot/1", arrayInt[0]);
-
-        config.addProperty("path", Arrays.asList("/temp", "C:\\Temp","/usr/local/tmp"));
-        config.setProperty("path.current", "${path}");
-        assertEquals("Interpolation with multi-valued property",
-                "/temp", config.getString("path.current"));
-    }
-
-    /**
-     * Tests an interpolation over multiple levels (i.e. the replacement of a
-     * variable is another variable and so on).
-     *
-     * @param config the configuration to test
-     */
-    public static void testMultipleInterpolation(Configuration config)
-    {
-        config.setProperty("test.base-level", "/base-level");
-        config
-                .setProperty("test.first-level",
-                        "${test.base-level}/first-level");
-        config.setProperty("test.second-level",
-                "${test.first-level}/second-level");
-        config.setProperty("test.third-level",
-                "${test.second-level}/third-level");
-
-        String expectedValue = "/base-level/first-level/second-level/third-level";
-
-        assertEquals(config.getString("test.third-level"),
-                        expectedValue);
-    }
-
-    /**
-     * Tests an invalid interpolation that results in an infinite loop. This
-     * loop should be detected and an exception should be thrown.
-     *
-     * @param config the configuration to test
-     */
-    public static void testInterpolationLoop(Configuration config)
-    {
-        config.setProperty("test.a", "${test.b}");
-        config.setProperty("test.b", "${test.a}");
-
-        try
-        {
-            config.getString("test.a");
-            fail("IllegalStateException should have been thrown for looped property references");
-        }
-        catch (IllegalStateException e)
-        {
-            // ok
-        }
-
-    }
-
-    /**
-     * Tests interpolation when a subset configuration is involved.
-     *
-     * @param config the configuration to test
-     */
-    public static void testInterpolationSubset(Configuration config)
-    {
-        config.addProperty("test.a", new Integer(42));
-        config.addProperty("test.b", "${test.a}");
-        assertEquals("Wrong interpolated value", 42, config
-                .getInt("test.b"));
-        Configuration subset = config.subset("test");
-        assertEquals("Wrong string property", "42", subset
-                .getString("b"));
-        assertEquals("Wrong int property", 42, subset.getInt("b"));
-    }
-
-    /**
-     * Tests interpolation when the referred property is not found.
-     *
-     * @param config the configuration to test
-     */
-    public static void testInterpolationUnknownProperty(Configuration config)
-    {
-        config.addProperty("test.interpol", "${unknown.property}");
-        assertEquals("Wrong interpolated unknown property",
-                "${unknown.property}", config.getString("test.interpol"));
-    }
-
-    /**
-     * Tests interpolation of system properties.
-     *
-     * @param config the configuration to test
-     */
-    public static void testInterpolationSystemProperties(Configuration config)
-    {
-        String[] sysProperties =
-        { "java.version", "java.vendor", "os.name", "java.class.path" };
-        for (int i = 0; i < sysProperties.length; i++)
-        {
-            config.addProperty("prop" + i, "${sys:" + sysProperties[i] + "}");
-        }
-
-        for (int i = 0; i < sysProperties.length; i++)
-        {
-            assertEquals("Wrong value for system property "
-                    + sysProperties[i], System.getProperty(sysProperties[i]),
-                    config.getString("prop" + i));
-        }
-    }
-
-    /**
-     * Tests interpolation of environment properties.
-     *
-     * @param config the configuration to test
-     */
-    public static void testInterpolationEnvironment(Configuration config)
-    {
-        Map<String, String> env = System.getenv();
-        for (Map.Entry<String, String> e : env.entrySet())
-        {
-            config.addProperty("prop" + e.getKey(), "${env:" + e.getKey() + "}");
-        }
-
-        for (Map.Entry<String, String> e : env.entrySet())
-        {
-            assertEquals("Wrong value for environment property " + e.getKey(),
-                    e.getValue(), config.getString("prop" + e.getKey()));
-        }
-    }
-
-    /**
-     * Tests interpolation of constant values.
-     *
-     * @param config the configuration to test
-     */
-    public static void testInterpolationConstants(Configuration config)
-    {
-        config.addProperty("key.code",
-                "${const:java.awt.event.KeyEvent.VK_CANCEL}");
-        assertEquals("Wrong value of constant variable",
-                KeyEvent.VK_CANCEL, config.getInt("key.code"));
-        assertEquals("Wrong value when fetching constant from cache",
-                KeyEvent.VK_CANCEL, config.getInt("key.code"));
-    }
-
-    /**
-     * Tests whether a variable can be escaped, so that it won't be
-     * interpolated.
-     *
-     * @param config the configuration to test
-     */
-    public static void testInterpolationEscaped(Configuration config)
-    {
-        config.addProperty("var", "x");
-        config.addProperty("escVar", "Use the variable $${${var}}.");
-        assertEquals("Wrong escaped variable", "Use the variable ${x}.",
-                config.getString("escVar"));
-    }
-
-    /**
      * Tests accessing and manipulating the interpolator object.
      *
      * @param config the configuration to test
@@ -275,5 +100,180 @@ public class InterpolationTestHelper
                 "${unknown.property}", c.getProperty("inttest.interpol"));
 
         return c;
+    }
+
+    /**
+     * Tests basic interpolation facilities of the specified configuration.
+     *
+     * @param config the configuration to test
+     */
+    public static void testInterpolation(Configuration config)
+    {
+        config.setProperty("applicationRoot", "/home/applicationRoot");
+        config.setProperty("db", "${applicationRoot}/db/hypersonic");
+        String unInterpolatedValue = "${applicationRoot2}/db/hypersonic";
+        config.setProperty("dbFailedInterpolate", unInterpolatedValue);
+        String dbProp = "/home/applicationRoot/db/hypersonic";
+
+        assertEquals("Checking interpolated variable", dbProp, config
+                .getString("db"));
+        assertEquals("lookup fails, leave variable as is", config
+                .getString("dbFailedInterpolate"), unInterpolatedValue);
+
+        config.setProperty("arrayInt", "${applicationRoot}/1");
+        String[] arrayInt = config.getStringArray("arrayInt");
+        assertEquals("check first entry was interpolated",
+                "/home/applicationRoot/1", arrayInt[0]);
+
+        config.addProperty("path", Arrays.asList("/temp", "C:\\Temp","/usr/local/tmp"));
+        config.setProperty("path.current", "${path}");
+        assertEquals("Interpolation with multi-valued property",
+                "/temp", config.getString("path.current"));
+    }
+
+    /**
+     * Tests interpolation of constant values.
+     *
+     * @param config the configuration to test
+     */
+    public static void testInterpolationConstants(Configuration config)
+    {
+        config.addProperty("key.code",
+                "${const:java.awt.event.KeyEvent.VK_CANCEL}");
+        assertEquals("Wrong value of constant variable",
+                KeyEvent.VK_CANCEL, config.getInt("key.code"));
+        assertEquals("Wrong value when fetching constant from cache",
+                KeyEvent.VK_CANCEL, config.getInt("key.code"));
+    }
+
+    /**
+     * Tests interpolation of environment properties.
+     *
+     * @param config the configuration to test
+     */
+    public static void testInterpolationEnvironment(Configuration config)
+    {
+        Map<String, String> env = System.getenv();
+        for (Map.Entry<String, String> e : env.entrySet())
+        {
+            config.addProperty("prop" + e.getKey(), "${env:" + e.getKey() + "}");
+        }
+
+        for (Map.Entry<String, String> e : env.entrySet())
+        {
+            assertEquals("Wrong value for environment property " + e.getKey(),
+                    e.getValue(), config.getString("prop" + e.getKey()));
+        }
+    }
+
+    /**
+     * Tests whether a variable can be escaped, so that it won't be
+     * interpolated.
+     *
+     * @param config the configuration to test
+     */
+    public static void testInterpolationEscaped(Configuration config)
+    {
+        config.addProperty("var", "x");
+        config.addProperty("escVar", "Use the variable $${${var}}.");
+        assertEquals("Wrong escaped variable", "Use the variable ${x}.",
+                config.getString("escVar"));
+    }
+
+    /**
+     * Tests an invalid interpolation that results in an infinite loop. This
+     * loop should be detected and an exception should be thrown.
+     *
+     * @param config the configuration to test
+     */
+    public static void testInterpolationLoop(Configuration config)
+    {
+        config.setProperty("test.a", "${test.b}");
+        config.setProperty("test.b", "${test.a}");
+
+        try
+        {
+            config.getString("test.a");
+            fail("IllegalStateException should have been thrown for looped property references");
+        }
+        catch (IllegalStateException e)
+        {
+            // ok
+        }
+
+    }
+
+    /**
+     * Tests interpolation when a subset configuration is involved.
+     *
+     * @param config the configuration to test
+     */
+    public static void testInterpolationSubset(Configuration config)
+    {
+        config.addProperty("test.a", new Integer(42));
+        config.addProperty("test.b", "${test.a}");
+        assertEquals("Wrong interpolated value", 42, config
+                .getInt("test.b"));
+        Configuration subset = config.subset("test");
+        assertEquals("Wrong string property", "42", subset
+                .getString("b"));
+        assertEquals("Wrong int property", 42, subset.getInt("b"));
+    }
+
+    /**
+     * Tests interpolation of system properties.
+     *
+     * @param config the configuration to test
+     */
+    public static void testInterpolationSystemProperties(Configuration config)
+    {
+        String[] sysProperties =
+        { "java.version", "java.vendor", "os.name", "java.class.path" };
+        for (int i = 0; i < sysProperties.length; i++)
+        {
+            config.addProperty("prop" + i, "${sys:" + sysProperties[i] + "}");
+        }
+
+        for (int i = 0; i < sysProperties.length; i++)
+        {
+            assertEquals("Wrong value for system property "
+                    + sysProperties[i], System.getProperty(sysProperties[i]),
+                    config.getString("prop" + i));
+        }
+    }
+
+    /**
+     * Tests interpolation when the referred property is not found.
+     *
+     * @param config the configuration to test
+     */
+    public static void testInterpolationUnknownProperty(Configuration config)
+    {
+        config.addProperty("test.interpol", "${unknown.property}");
+        assertEquals("Wrong interpolated unknown property",
+                "${unknown.property}", config.getString("test.interpol"));
+    }
+
+    /**
+     * Tests an interpolation over multiple levels (i.e. the replacement of a
+     * variable is another variable and so on).
+     *
+     * @param config the configuration to test
+     */
+    public static void testMultipleInterpolation(Configuration config)
+    {
+        config.setProperty("test.base-level", "/base-level");
+        config
+                .setProperty("test.first-level",
+                        "${test.base-level}/first-level");
+        config.setProperty("test.second-level",
+                "${test.first-level}/second-level");
+        config.setProperty("test.third-level",
+                "${test.second-level}/third-level");
+
+        String expectedValue = "/base-level/first-level/second-level/third-level";
+
+        assertEquals(config.getString("test.third-level"),
+                        expectedValue);
     }
 }
