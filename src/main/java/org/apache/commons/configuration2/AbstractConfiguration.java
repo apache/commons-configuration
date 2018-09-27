@@ -767,7 +767,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     protected Object interpolate(Object value)
     {
         ConfigurationInterpolator ci = getInterpolator();
-        return (ci != null) ? ci.interpolate(value) : value;
+        return ci != null ? ci.interpolate(value) : value;
     }
 
     @Override
