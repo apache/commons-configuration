@@ -65,7 +65,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
 
     public ConfigurationPropertiesFactoryBean(Configuration configuration)
     {
-        Assert.notNull(configuration);
+        Assert.notNull(configuration, "configuration");
         this.compositeConfiguration = new CompositeConfiguration(configuration);
     }
 

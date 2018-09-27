@@ -21,8 +21,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.ObjectUtils;
+import java.util.Objects;
 
 /**
  * <p>
@@ -165,7 +164,7 @@ public class MergeCombiner extends NodeCombiner
         for (Map.Entry<String, Object> e : attrs1.entrySet())
         {
             if (attrs2.containsKey(e.getKey())
-                    && !ObjectUtils
+                    && !Objects
                             .equals(e.getValue(), attrs2.get(e.getKey())))
             {
                 return false;
