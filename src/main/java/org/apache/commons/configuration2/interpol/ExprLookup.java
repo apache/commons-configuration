@@ -18,16 +18,16 @@ package org.apache.commons.configuration2.interpol;
 
 import java.util.ArrayList;
 
-import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
+import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.jexl2.Expression;
 import org.apache.commons.jexl2.JexlContext;
 import org.apache.commons.jexl2.JexlEngine;
 import org.apache.commons.jexl2.MapContext;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.StrLookup;
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
+import org.apache.commons.text.lookup.StringLookup;
 
 /**
  * Lookup that allows expressions to be evaluated.
@@ -79,7 +79,7 @@ public class ExprLookup implements Lookup
     private ConfigurationInterpolator interpolator;
 
     /** The StrSubstitutor for performing replace operations. */
-    private StrSubstitutor substitutor;
+    private StringSubstitutor substitutor;
 
     /** The logger used by this instance. */
     private ConfigurationLogger logger;
@@ -260,7 +260,7 @@ public class ExprLookup implements Lookup
         }
         else
         {
-            StrLookup<String> variableResolver = new StrLookup<String>()
+            StringLookup variableResolver = new StringLookup()
             {
                 @Override
                 public String lookup(String key)
@@ -270,8 +270,8 @@ public class ExprLookup implements Lookup
                 }
             };
             substitutor =
-                    new StrSubstitutor(variableResolver, prefixMatcher,
-                            suffixMatcher, StrSubstitutor.DEFAULT_ESCAPE);
+                    new StringSubstitutor(variableResolver, prefixMatcher,
+                            suffixMatcher, StringSubstitutor.DEFAULT_ESCAPE);
         }
     }
 
@@ -334,14 +334,7 @@ public class ExprLookup implements Lookup
 
         public Variable getVariable()
         {
-            if (size() > 0)
-            {
-                return get(size() - 1);
-            }
-            else
-            {
-                return null;
-            }
+            return size() > 0 ? get(size() - 1) : null;
         }
 
     }

@@ -26,8 +26,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.commons.lang3.text.StrLookup;
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
+import org.apache.commons.text.lookup.StringLookup;
 
 /**
  * <p>
@@ -107,7 +107,7 @@ public class ConfigurationInterpolator
     private final List<Lookup> defaultLookups;
 
     /** The helper object performing variable substitution. */
-    private final StrSubstitutor substitutor;
+    private final StringSubstitutor substitutor;
 
     /** Stores a parent interpolator objects if the interpolator is nested hierarchically. */
     private volatile ConfigurationInterpolator parentInterpolator;
@@ -474,9 +474,9 @@ public class ConfigurationInterpolator
      *
      * @return the {@code StrSubstitutor} used by this object
      */
-    private StrSubstitutor initSubstitutor()
+    private StringSubstitutor initSubstitutor()
     {
-        return new StrSubstitutor(new StrLookup<Object>()
+        return new StringSubstitutor(new StringLookup()
         {
             @Override
             public String lookup(String key)
