@@ -94,8 +94,14 @@ public class ConfigurationInterpolator
     /** The variable prefix. */
     private static final String VAR_START = "${";
 
+    /** The length of {@link #VAR_START}. */
+    private static final int VAR_START_LENGTH = VAR_START.length();
+
     /** The variable suffix. */
     private static final String VAR_END = "}";
+
+    /** The length of {@link #VAR_END}. */
+    private static final int VAR_END_LENGTH = VAR_END.length();
 
     /** A map containing the default prefix lookups. */
     private static final Map<String, Lookup> DEFAULT_PREFIX_LOOKUPS;
@@ -522,8 +528,8 @@ public class ConfigurationInterpolator
      */
     private static String extractVariableName(String strValue)
     {
-        return strValue.substring(VAR_START.length(),
-                strValue.length() - VAR_END.length());
+        return strValue.substring(VAR_START_LENGTH,
+                strValue.length() - VAR_END_LENGTH);
     }
 
     /**
