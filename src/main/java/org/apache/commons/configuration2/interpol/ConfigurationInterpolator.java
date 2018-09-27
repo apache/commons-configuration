@@ -39,8 +39,8 @@ import org.apache.commons.text.lookup.StringLookup;
  * of this class. All interpolation tasks are delegated to this object.
  * </p>
  * <p>
- * {@code ConfigurationInterpolator} internally uses the {@code StrSubstitutor}
- * class from <a href="http://commons.apache.org/lang">Commons Lang</a>. Thus it
+ * {@code ConfigurationInterpolator} internally uses the {@code StringSubstitutor}
+ * class from <a href="http://commons.apache.org/text">Commons Text</a>. Thus it
  * supports the same syntax of variable expressions.
  * </p>
  * <p>
