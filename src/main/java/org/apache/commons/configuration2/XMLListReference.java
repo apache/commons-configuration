@@ -16,17 +16,16 @@
  */
 package org.apache.commons.configuration2;
 
-import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.ReferenceNodeHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Element;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -180,7 +179,7 @@ final class XMLListReference
         try
         {
             return String.valueOf(delimiterHandler.escapeList(values,
-                    DefaultListDelimiterHandler.NOOP_TRANSFORMER));
+                    ListDelimiterHandler.NOOP_TRANSFORMER));
         }
         catch (UnsupportedOperationException e)
         {
