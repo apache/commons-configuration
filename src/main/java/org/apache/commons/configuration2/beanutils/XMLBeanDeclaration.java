@@ -571,7 +571,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
     private String getAttribute(final NodeData<?> nd, final String attr)
     {
         final Object value = nd.getAttribute(attr);
-        return (value == null) ? null : String.valueOf(interpolate(value));
+        return value == null ? null : String.valueOf(interpolate(value));
     }
 
     /**
