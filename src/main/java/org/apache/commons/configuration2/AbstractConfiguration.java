@@ -752,7 +752,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     protected String interpolate(final String base)
     {
         final Object result = interpolate((Object) base);
-        return (result == null) ? null : result.toString();
+        return result == null ? null : result.toString();
     }
 
     /**
