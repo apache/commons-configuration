@@ -59,6 +59,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-723">
         Update optional Spring dependencies from 4.3.18.RELEASE to 4.3.19.RELEASE.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-724">
+        Add support for Commons Text 1.4 localhost string lookup as a default lookup.
+      </action>
     </release>
 
     <release version="2.3" date="2018-08-04"

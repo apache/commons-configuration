@@ -756,6 +756,15 @@ public class TestAbstractHierarchicalConfiguration
     }
 
     /**
+     * Tests interpolation with localhost values.
+     */
+    @Test
+    public void testInterpolationLocalhost()
+    {
+        InterpolationTestHelper.testInterpolationLocalhost(config);
+    }
+
+    /**
      * Tests manipulating the interpolator.
      */
     @Test

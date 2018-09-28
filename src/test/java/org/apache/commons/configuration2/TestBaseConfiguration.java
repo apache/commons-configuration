@@ -558,6 +558,15 @@ public class TestBaseConfiguration
     }
 
     /**
+     * Tests interpolation with localhost values.
+     */
+    @Test
+    public void testInterpolationLocalhost()
+    {
+        InterpolationTestHelper.testInterpolationLocalhost(config);
+    }
+
+    /**
      * Tests accessing and manipulating the interpolator object.
      */
     @Test

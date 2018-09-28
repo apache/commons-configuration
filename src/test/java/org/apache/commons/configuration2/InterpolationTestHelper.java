@@ -20,12 +20,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.awt.event.KeyEvent;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.Lookup;
+
+import junitx.framework.Assert;
 
 /**
  * A helper class that defines a bunch of tests related to variable
@@ -178,6 +182,37 @@ public class InterpolationTestHelper
         config.addProperty("escVar", "Use the variable $${${var}}.");
         assertEquals("Wrong escaped variable", "Use the variable ${x}.",
                 config.getString("escVar"));
+    }
+
+    /**
+     * Tests interpolation of localhost properties.
+     *
+     * @param config the configuration to test
+     */
+    public static void testInterpolationLocalhost(Configuration config)
+    {
+        String[] localhostKeys =
+        { "name", "canonical-name", "address" };
+        String[] localhostValues = null;
+        try {
+            localhostValues = new String[] { 
+                    InetAddress.getLocalHost().getHostName(), 
+                    InetAddress.getLocalHost().getCanonicalHostName(), 
+                    InetAddress.getLocalHost().getHostAddress() };
+        } catch (UnknownHostException e) {
+            Assert.fail(e);
+        }
+        for (int i = 0; i < localhostKeys.length; i++)
+        {
+            config.addProperty("prop" + i, "${localhost:" + localhostKeys[i] + "}");
+        }
+
+        for (int i = 0; i < localhostKeys.length; i++)
+        {
+            assertEquals("Wrong value for system property "
+                    + localhostKeys[i], localhostValues[i],
+                    config.getString("prop" + i));
+        }
     }
 
     /**

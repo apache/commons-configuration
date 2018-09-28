@@ -16,6 +16,8 @@
  */
 package org.apache.commons.configuration2.interpol;
 
+import org.apache.commons.text.lookup.StringLookupFactory;
+
 /**
  * <p>
  * An enumeration class defining constants for the {@code Lookup} objects
@@ -37,6 +39,9 @@ package org.apache.commons.configuration2.interpol;
  */
 public enum DefaultLookups
 {
+    /** @since 2.4 */
+    LOCAL_HOST("localhost", new StringLookupAdapter(StringLookupFactory.INSTANCE.localHostStringLookup())),
+    
     /** The lookup for system properties. */
     SYSTEM_PROPERTIES("sys", new SystemPropertiesLookup()),
 
@@ -70,8 +75,7 @@ public enum DefaultLookups
      *
      * @return the prefix
      */
-    public String getPrefix()
-    {
+    public String getPrefix() {
         return prefix;
     }
 
@@ -80,8 +84,7 @@ public enum DefaultLookups
      *
      * @return the associated {@code Lookup} object
      */
-    public Lookup getLookup()
-    {
+    public Lookup getLookup() {
         return lookup;
     }
 }
