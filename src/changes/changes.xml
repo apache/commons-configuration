@@ -44,6 +44,16 @@
       <action dev="oheger" type="add" issue="CONFIGURATION-713" due-to="Lars W">
         Configuration properties can now be converted to regular expressions.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-715" due-to="Patrick Schmidt">
+        With JupIOFactory a new IOFactory implementation is now available that
+        implements handling of whitespace in a way closer to java.util.Properties.
+        This class can be used when stricter compatibility with Java standard
+        methods for reading and writing properties files is needed.
+      </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-716" due-to="Patrick Schmidt">
+        JupIOFactory (introduced for CONFIGURATION-715) also implements
+        handling of escape sequences in a way closer to java.util.Properties.
+      </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-720">
         Replace use of deprecated Commons Lang string substitution code for Commons Text.
       </action>
