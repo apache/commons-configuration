@@ -816,7 +816,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          */
         protected void parseProperty(final String line)
         {
-            final String[] property = doParseProperty(line);
+            final String[] property = doParseProperty(line, true);
             initPropertyName(property[0]);
             initPropertyValue(property[1]);
             initPropertySeparator(property[2]);
@@ -833,7 +833,19 @@ public class PropertiesConfiguration extends BaseConfiguration
          */
         protected void initPropertyName(final String name)
         {
-            propertyName = StringEscapeUtils.unescapeJava(name);
+            propertyName = unescapePropertyName(name);
+        }
+
+        /**
+         * Performs unescaping on the given property name.
+         *
+         * @param name the property name
+         * @return the unescaped property name
+         * @since 2.4
+         */
+        protected String unescapePropertyName(String name)
+        {
+            return StringEscapeUtils.unescapeJava(name);
         }
 
         /**
@@ -847,7 +859,19 @@ public class PropertiesConfiguration extends BaseConfiguration
          */
         protected void initPropertyValue(final String value)
         {
-            propertyValue = unescapeJava(value);
+            propertyValue = unescapePropertyValue(value);
+        }
+
+        /**
+         * Performs unescaping on the given property value.
+         *
+         * @param value the property value
+         * @return the unescaped property value
+         * @since 2.4
+         */
+        protected String unescapePropertyValue(String value)
+        {
+            return unescapeJava(value);
         }
 
         /**
@@ -871,18 +895,20 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param line the line
          * @return a flag if the lines should be combined
          */
-        private static boolean checkCombineLines(final String line)
+        static boolean checkCombineLines(final String line)
         {
             return countTrailingBS(line) % 2 != 0;
         }
 
         /**
-         * Parse a property line and return the key, the value, and the separator in an array.
+         * Parse a property line and return the key, the value, and the separator in an
+         * array.
          *
          * @param line the line to parse
+         * @param trimValue flag whether the value is to be trimmed
          * @return an array with the property's key, value, and separator
          */
-        private static String[] doParseProperty(final String line)
+        static String[] doParseProperty(final String line, final boolean trimValue)
         {
             final Matcher matcher = PROPERTY_PATTERN.matcher(line);
 
@@ -891,7 +917,14 @@ public class PropertiesConfiguration extends BaseConfiguration
             if (matcher.matches())
             {
                 result[0] = matcher.group(IDX_KEY).trim();
-                result[1] = matcher.group(IDX_VALUE).trim();
+
+                String value = matcher.group(IDX_VALUE);
+                if (trimValue)
+                {
+                    value = value.trim();
+                }
+                result[1] = value;
+
                 result[2] = matcher.group(IDX_SEPARATOR);
             }
 
@@ -934,7 +967,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * values. This implementation applies the transformation defined by the
          * {@link #ESCAPE_PROPERTIES} translator.
          */
-        private static final ValueTransformer TRANSFORMER =
+        private static final ValueTransformer DEFAULT_TRANSFORMER =
                 new ValueTransformer()
                 {
                     @Override
@@ -944,6 +977,9 @@ public class PropertiesConfiguration extends BaseConfiguration
                         return ESCAPE_PROPERTIES.translate(strVal);
                     }
                 };
+
+        /** The value transformer used for escaping property values. */
+        private final ValueTransformer valueTransformer;
 
         /** The list delimiter handler.*/
         private final ListDelimiterHandler delimiterHandler;
@@ -966,8 +1002,22 @@ public class PropertiesConfiguration extends BaseConfiguration
          */
         public PropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler)
         {
+            this(writer, delHandler, DEFAULT_TRANSFORMER);
+        }
+
+        /**
+         * Creates a new instance of {@code PropertiesWriter}.
+         *
+         * @param writer a Writer object providing the underlying stream
+         * @param delHandler the delimiter handler for dealing with properties
+         *        with multiple values
+         * @param valueTransformer the value transformer used to escape property values
+         */
+        public PropertiesWriter(Writer writer, ListDelimiterHandler delHandler, ValueTransformer valueTransformer)
+        {
             super(writer);
             delimiterHandler = delHandler;
+            this.valueTransformer = valueTransformer;
         }
 
         /**
@@ -1111,7 +1161,7 @@ public class PropertiesConfiguration extends BaseConfiguration
                     try
                     {
                         v = String.valueOf(getDelimiterHandler()
-                                        .escapeList(values, TRANSFORMER));
+                                        .escapeList(values, valueTransformer));
                     }
                     catch (final UnsupportedOperationException uoex)
                     {
@@ -1127,7 +1177,7 @@ public class PropertiesConfiguration extends BaseConfiguration
             }
             else
             {
-                v = String.valueOf(getDelimiterHandler().escape(value, TRANSFORMER));
+                v = String.valueOf(getDelimiterHandler().escape(value, valueTransformer));
             }
 
             write(escapeKey(key));
@@ -1166,7 +1216,8 @@ public class PropertiesConfiguration extends BaseConfiguration
             {
                 final char c = key.charAt(i);
 
-                if (ArrayUtils.contains(SEPARATORS, c) || ArrayUtils.contains(WHITE_SPACE, c))
+                if (ArrayUtils.contains(SEPARATORS, c) || ArrayUtils.contains(WHITE_SPACE, c) ||
+                        c == '\\')
                 {
                     // escape the separator
                     newkey.append('\\');
@@ -1301,6 +1352,233 @@ public class PropertiesConfiguration extends BaseConfiguration
     }
 
     /**
+     * An alternative {@link IOFactory} that tries to mimic the behavior of
+     * {@link java.util.Properties} (Jup) more closely.
+     * <p>
+     * It also has the option to <em>not</em> use Unicode escapes. When using UTF-8
+     * encoding (which is e.g. the new default for resource bundle properties files
+     * since Java 9), Unicode escapes are no longer required and avoiding them makes
+     * properties files more readable with regular text editors.
+     * <ul>
+     * <li>Trailing whitespace will not be trimmed from each line.</li>
+     * <li>Unknown escape sequences will have their backslash removed.</li>
+     * <li>{@code \b} is not a recognized escape sequence.</li>
+     * <li>Leading spaces in property values are preserved by escaping them.</li>
+     * <li></li>
+     * </ul>
+     *
+     * @since 2.4
+     */
+    public static class JupIOFactory implements IOFactory
+    {
+
+        /**
+         * Whether characters less than {@code \u0020} and characters greater than
+         * {@code \u007E} in property keys or values should be escaped using
+         * Unicode escape sequences. Not necessary when e.g. writing as UTF-8.
+         */
+        private final boolean escapeUnicode;
+
+        /**
+         * Constructs a new {@link JupIOFactory} with Unicode escaping.
+         */
+        public JupIOFactory()
+        {
+            this(true);
+        }
+
+        /**
+         * Constructs a new {@link JupIOFactory} with optional Unicode escaping. Whether
+         * Unicode escaping is required depends on the encoding used to save the
+         * properties file. E.g. for ISO-8859-1 this must be turned on, for UTF-8 it's
+         * not necessary. Unfortunately this factory can't determine the encoding on its
+         * own.
+         *
+         * @param escapeUnicode whether Unicode characters should be escaped
+         */
+        public JupIOFactory(boolean escapeUnicode)
+        {
+            this.escapeUnicode = escapeUnicode;
+        }
+
+        @Override
+        public PropertiesReader createPropertiesReader(Reader in)
+        {
+            return new JupPropertiesReader(in);
+        }
+
+        @Override
+        public PropertiesWriter createPropertiesWriter(Writer out, ListDelimiterHandler handler)
+        {
+            return new JupPropertiesWriter(out, handler, escapeUnicode);
+        }
+
+    }
+
+    /**
+     * A {@link PropertiesReader} that tries to mimic the behavior of
+     * {@link java.util.Properties}.
+     *
+     * @since 2.4
+     */
+    public static class JupPropertiesReader extends PropertiesReader
+    {
+
+        /**
+         * Constructor.
+         *
+         * @param reader A Reader.
+         */
+        public JupPropertiesReader(Reader reader)
+        {
+            super(reader);
+        }
+
+
+        @Override
+        public String readProperty() throws IOException
+        {
+            getCommentLines().clear();
+            StringBuilder buffer = new StringBuilder();
+
+            while (true)
+            {
+                String line = readLine();
+                if (line == null)
+                {
+                    // EOF
+                    if (buffer.length() > 0)
+                    {
+                        break;
+                    }
+                    return null;
+                }
+
+                // while a property line continues there are no comments (even if the line from
+                // the file looks like one)
+                if (isCommentLine(line) && (buffer.length() == 0))
+                {
+                    getCommentLines().add(line);
+                    continue;
+                }
+
+                // while property line continues left trim all following lines read from the
+                // file
+                if (buffer.length() > 0)
+                {
+                    // index of the first non-whitespace character
+                    int i;
+                    for (i = 0; i < line.length(); i++)
+                    {
+                        if (!Character.isWhitespace(line.charAt(i)))
+                        {
+                            break;
+                        }
+                    }
+
+                    line = line.substring(i);
+                }
+
+                if (checkCombineLines(line))
+                {
+                    line = line.substring(0, line.length() - 1);
+                    buffer.append(line);
+                }
+                else
+                {
+                    buffer.append(line);
+                    break;
+                }
+            }
+            return buffer.toString();
+        }
+
+        @Override
+        protected void parseProperty(String line)
+        {
+            String[] property = doParseProperty(line, false);
+            initPropertyName(property[0]);
+            initPropertyValue(property[1]);
+            initPropertySeparator(property[2]);
+        }
+
+        @Override
+        protected String unescapePropertyValue(String value)
+        {
+            return unescapeJava(value, true);
+        }
+
+    }
+
+    /**
+     * A {@link PropertiesWriter} that tries to mimic the behavior of
+     * {@link java.util.Properties}.
+     *
+     * @since 2.4
+     */
+    public static class JupPropertiesWriter extends PropertiesWriter
+    {
+
+        /**
+         * Characters that need to be escaped when wring a properties file.
+         */
+        private static final Map<CharSequence, CharSequence> JUP_CHARS_ESCAPE;
+        static
+        {
+            Map<CharSequence, CharSequence> initialMap = new HashMap<>();
+            initialMap.put("\\", "\\\\");
+            initialMap.put("\n", "\\n");
+            initialMap.put("\t", "\\t");
+            initialMap.put("\f", "\\f");
+            initialMap.put("\r", "\\r");
+            JUP_CHARS_ESCAPE = Collections.unmodifiableMap(initialMap);
+        };
+
+        /**
+         * Creates a new instance of {@code JupPropertiesWriter}.
+         *
+         * @param writer a Writer object providing the underlying stream
+         * @param delHandler the delimiter handler for dealing with properties with
+         *        multiple values
+         * @param escapeUnicode whether Unicode characters should be escaped using
+         *        Unicode escapes
+         */
+        public JupPropertiesWriter(Writer writer, ListDelimiterHandler delHandler, final boolean escapeUnicode)
+        {
+            super(writer, delHandler, new ValueTransformer()
+            {
+                @Override
+                public Object transformValue(Object value)
+                {
+                    String valueString = String.valueOf(value);
+
+                    CharSequenceTranslator translator;
+                    if (escapeUnicode)
+                    {
+                        translator = new AggregateTranslator(new LookupTranslator(JUP_CHARS_ESCAPE),
+                                UnicodeEscaper.outsideOf(0x20, 0x7e));
+                    }
+                    else
+                    {
+                        translator = new AggregateTranslator(new LookupTranslator(JUP_CHARS_ESCAPE));
+                    }
+
+                    valueString = translator.translate(valueString);
+
+                    // escape the first leading space to preserve it (and all after it)
+                    if (valueString.startsWith(" "))
+                    {
+                        valueString = "\\" + valueString;
+                    }
+
+                    return valueString;
+                }
+            });
+        }
+
+    }
+
+    /**
      * <p>Unescapes any Java literals found in the {@code String} to a
      * {@code Writer}.</p> This is a slightly modified version of the
      * StringEscapeUtils.unescapeJava() function in commons-lang that doesn't
@@ -1311,6 +1589,25 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @throws IllegalArgumentException if the Writer is {@code null}
      */
     protected static String unescapeJava(final String str)
+    {
+        return unescapeJava(str, false);
+    }
+
+    /**
+     * Unescapes Java literals found in the {@code String} to a {@code Writer}.
+     * </p>
+     * When the parameter {@code jupCompatible} is {@code false}, the classic
+     * behavior is used (see {@link #unescapeJava(String)}). When it's {@code true}
+     * a slightly different behavior that's compatible with
+     * {@link java.util.Properties} is used (see {@link JupIOFactory}).
+     *
+     * @param str the {@code String} to unescape, may be null
+     * @param jupCompatible whether unescaping is compatible with
+     *        {@link java.util.Properties}; otherwise the classic behavior is used
+     * @return the processed string
+     * @throws IllegalArgumentException if the Writer is {@code null}
+     */
+    protected static String unescapeJava(String str, boolean jupCompatible)
     {
         if (str == null)
         {
@@ -1370,7 +1667,8 @@ public class PropertiesConfiguration extends BaseConfiguration
                 {
                     out.append('\n');
                 }
-                else if (ch == 'b')
+                // JUP does not recognize \b
+                else if (!jupCompatible && ch == 'b')
                 {
                     out.append('\b');
                 }
@@ -1385,7 +1683,11 @@ public class PropertiesConfiguration extends BaseConfiguration
                 }
                 else
                 {
-                    out.append('\\');
+                    // JUP simply throws away the \ of unknown escape sequences
+                    if (!jupCompatible)
+                    {
+                        out.append('\\');
+                    }
                     out.append(ch);
                 }
 

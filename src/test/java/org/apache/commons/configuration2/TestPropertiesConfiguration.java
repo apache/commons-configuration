@@ -22,13 +22,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.configuration2.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
@@ -1208,6 +1213,147 @@ public class TestPropertiesConfiguration
         finally
         {
             in.close();
+        }
+    }
+
+    /**
+     * Tests that {@link PropertiesConfiguration.JupIOFactory} reads the same keys
+     * and values as {@link Properties} based on a test file.
+     */
+    @Test
+    public void testJupRead() throws IOException, ConfigurationException
+    {
+        conf.clear();
+        conf.setIOFactory(new PropertiesConfiguration.JupIOFactory());
+
+        String testFilePath = ConfigurationAssert.getTestFile("jup-test.properties").getAbsolutePath();
+
+        load(conf, testFilePath);
+
+        Properties jup = new Properties();
+        try (InputStream in = Files.newInputStream(Paths.get(testFilePath)))
+        {
+            jup.load(in);
+        }
+
+        @SuppressWarnings("unchecked")
+        Set<Object> pcKeys = new HashSet<>(IteratorUtils.toList(conf.getKeys()));
+        assertEquals(jup.keySet(), pcKeys);
+
+        for (Object key : jup.keySet())
+        {
+            String keyString = key.toString();
+            System.out.println(keyString);
+            assertEquals("Wrong property value for '" + keyString + "'", jup.getProperty(keyString),
+                    conf.getProperty(keyString));
+        }
+    }
+
+    /**
+     * Tests that {@link PropertiesConfiguration.JupIOFactory} writes properties in
+     * a way that allows {@link Properties} to read them exactly like they were set.
+     */
+    @Test
+    public void testJupWrite() throws IOException, ConfigurationException
+    {
+        conf.clear();
+        conf.setIOFactory(new PropertiesConfiguration.JupIOFactory());
+
+        String testFilePath = ConfigurationAssert.getTestFile("jup-test.properties").getAbsolutePath();
+
+        // read the test properties and set them on the PropertiesConfiguration
+        Properties origProps = new Properties();
+        try (InputStream in = Files.newInputStream(Paths.get(testFilePath)))
+        {
+            origProps.load(in);
+        }
+        for (Object key : origProps.keySet())
+        {
+            String keyString = key.toString();
+            conf.setProperty(keyString, origProps.getProperty(keyString));
+        }
+
+        // save the configuration
+        saveTestConfig();
+        assertTrue("The saved file doesn't exist", testSavePropertiesFile.exists());
+
+        // load the saved file...
+        Properties testProps = new Properties();
+        try (InputStream in = Files.newInputStream(testSavePropertiesFile.toPath()))
+        {
+            testProps.load(in);
+        }
+
+        // ... and compare the properties to the originals
+        @SuppressWarnings("unchecked")
+        Set<Object> pcKeys = new HashSet<>(IteratorUtils.toList(conf.getKeys()));
+        assertEquals(testProps.keySet(), pcKeys);
+
+        for (Object key : testProps.keySet())
+        {
+            String keyString = key.toString();
+            assertEquals("Wrong property value for '" + keyString + "'", testProps.getProperty(keyString),
+                    conf.getProperty(keyString));
+        }
+    }
+
+    /**
+     * Tests that {@link PropertiesConfiguration.JupIOFactory} writes properties in
+     * a way that allows {@link Properties} to read them exactly like they were set.
+     * This test writes in UTF-8 encoding, with Unicode escapes turned off.
+     */
+    @Test
+    public void testJupWriteUtf8WithoutUnicodeEscapes() throws IOException, ConfigurationException
+    {
+        conf.clear();
+        conf.setIOFactory(new PropertiesConfiguration.JupIOFactory(false));
+
+        String testFilePath = ConfigurationAssert.getTestFile("jup-test.properties").getAbsolutePath();
+
+        // read the test properties and set them on the PropertiesConfiguration
+        Properties origProps = new Properties();
+        try (InputStream in = Files.newInputStream(Paths.get(testFilePath)))
+        {
+            origProps.load(in);
+        }
+        for (Object key : origProps.keySet())
+        {
+            String keyString = key.toString();
+            conf.setProperty(keyString, origProps.getProperty(keyString));
+        }
+
+        // save the configuration as UTF-8
+        final FileHandler handler = new FileHandler(conf);
+        handler.setEncoding(StandardCharsets.UTF_8.name());
+        handler.save(testSavePropertiesFile);
+        assertTrue("The saved file doesn't exist", testSavePropertiesFile.exists());
+
+        // load the saved file...
+        Properties testProps = new Properties();
+        try (BufferedReader in = Files.newBufferedReader(testSavePropertiesFile.toPath(), StandardCharsets.UTF_8))
+        {
+            testProps.load(in);
+        }
+
+        // ... and compare the properties to the originals
+        @SuppressWarnings("unchecked")
+        Set<Object> pcKeys = new HashSet<>(IteratorUtils.toList(conf.getKeys()));
+        assertEquals(testProps.keySet(), pcKeys);
+
+        for (Object key : testProps.keySet())
+        {
+            String keyString = key.toString();
+            assertEquals("Wrong property value for '" + keyString + "'", testProps.getProperty(keyString),
+                    conf.getProperty(keyString));
+        }
+
+        // ensure that the written properties file contains no Unicode escapes
+        for (String line : Files.readAllLines(testSavePropertiesFile.toPath()))
+        {
+            if (line.contains("\\u"))
+            {
+                fail("Unicode escape found in line: " + line);
+            }
         }
     }
 
