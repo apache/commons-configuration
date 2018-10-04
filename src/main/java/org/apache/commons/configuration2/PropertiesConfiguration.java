@@ -1353,18 +1353,25 @@ public class PropertiesConfiguration extends BaseConfiguration
 
     /**
      * An alternative {@link IOFactory} that tries to mimic the behavior of
-     * {@link java.util.Properties} (Jup) more closely.
+     * {@link java.util.Properties} (Jup) more closely. The goal is to allow both of
+     * them be used interchangeably when reading and writing properties files
+     * without losing or changing information.
      * <p>
      * It also has the option to <em>not</em> use Unicode escapes. When using UTF-8
      * encoding (which is e.g. the new default for resource bundle properties files
      * since Java 9), Unicode escapes are no longer required and avoiding them makes
      * properties files more readable with regular text editors.
+     * <p>
+     * Some of the ways this implementation differs from {@link DefaultIOFactory}:
      * <ul>
      * <li>Trailing whitespace will not be trimmed from each line.</li>
      * <li>Unknown escape sequences will have their backslash removed.</li>
      * <li>{@code \b} is not a recognized escape sequence.</li>
      * <li>Leading spaces in property values are preserved by escaping them.</li>
-     * <li></li>
+     * <li>All natural lines (i.e. in the file) of a logical property line will have
+     * their leading whitespace trimmed.</li>
+     * <li>Natural lines that look like comment lines within a logical line are not
+     * treated as such; they're part of the property value.</li>
      * </ul>
      *
      * @since 2.4
