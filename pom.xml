@@ -266,6 +266,11 @@
       </roles>
       <timezone>-4</timezone>
     </contributor>
+
+    <contributor>
+      <name>Patrick Schmidt</name>
+      <email>patrick.schmidt@codecamp.de</email>
+    </contributor>
   </contributors>
 
   <dependencies>
