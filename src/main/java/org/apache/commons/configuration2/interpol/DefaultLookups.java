@@ -144,14 +144,14 @@ public enum DefaultLookups {
      * 
      * @since 2.4
      */
-    // URL_DECODE("urlDecode", new StringLookupAdapter(StringLookupFactory.INSTANCE.urlDecodeStringLookup())),
+    // URL_DECODE("urlDecoder", new StringLookupAdapter(StringLookupFactory.INSTANCE.urlDecoderStringLookup())),
 
     /**
      * The lookup for URL decoding.
      * 
      * @since 2.4
      */
-    // URL_ENCODE("urlEncode", new StringLookupAdapter(StringLookupFactory.INSTANCE.urlEncodeStringLookup())),
+    // URL_ENCODE("urlEncoder", new StringLookupAdapter(StringLookupFactory.INSTANCE.urlEncoderStringLookup())),
 
     /**
      * The lookup for URL decoding.
