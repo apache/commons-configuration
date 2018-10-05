@@ -389,12 +389,26 @@ config.dirs = \\\\share2
         properties writer. A default implementation called
         <code>DefaultIOFactory</code> is also available and is used by
         <code>PropertiesConfiguration</code> when no specific
-        <code>IOFactory</code> is set. To make this discussion more concrete
-        we provide an example of how to inject a custom properties reader. The
-        use case is that we have to load a properties file that contains keys
-        with whitespace, which is not supported by
-        <code>PropertiesConfiguration</code> per default. A fragment from such
-        a properties file could look as follows:
+        <code>IOFactory</code> is set.<br/>
+        The original goal of <code>PropertiesConfiguration</code> wasn't to be
+        strictly compatible with the exact file format defined in
+        <code>java.util.Properties</code> (JUP). However, in cases where this
+        compatibility is required, the alternative <code>JupIOFactory</code> can
+        be used, as it aims to mimic the exact behavior of <code>JUP</code>. The
+        main differences concern the handling of leading and trailing whitespace
+        and the handling of escape sequences. <code>JupIOFactory</code> can also
+        be configured to avoid Unicode escape sequences (like \u00DF) when
+        the used encoding already supports all characters natively. E.g. UTF-8
+        is the new default encoding for resource bundle properties files since
+        Java 9, so Unicode escapes are not required anymore and not using them
+        can make properties files much more readable in regular text editors.
+      </p>
+      <p>
+        To make this discussion more concrete we provide an example of how to
+        inject a custom properties reader. The use case is that we have to load
+        a properties file that contains keys with whitespace, which is not
+        supported by <code>PropertiesConfiguration</code> per default. A
+        fragment from such a properties file could look as follows:
       </p>
         <source><![CDATA[
 Background Color = #800080
