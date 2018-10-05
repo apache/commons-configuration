@@ -35,7 +35,8 @@ import org.apache.commons.text.lookup.StringLookupFactory;
  * 
  * Provides access to lookups defined in Apache Commons Text:
  * <ul>
- * <li>"base64" for the {@code Base64StringLookup} since Apache Commons Text 1.5.</li>
+ * <li>"base64Decoder" for the {@code Base64DecoderStringLookup} since Apache Commons Text 1.6.</li>
+ * <li>"base64Encoder" for the {@code Base64EncoderStringLookup} since Apache Commons Text 1.6.</li>
  * <li>"const" for the {@code ConstantStringLookup} since Apache Commons Text 1.5.</li>
  * <li>"date" for the {@code DateStringLookup}.</li>
  * <li>"env" for the {@code EnvironmentVariableStringLookup}.</li>
@@ -48,8 +49,8 @@ import org.apache.commons.text.lookup.StringLookupFactory;
  * <li>"script" for the {@code ScriptStringLookup} since Apache Commons Text 1.5.</li>
  * <li>"sys" for the {@code SystemPropertyStringLookup}.</li>
  * <li>"url" for the {@code UrlStringLookup} since Apache Commons Text 1.5.</li>
-// * <li>"urlDecode" for the {@code UrlDecoderStringLookup} since Apache Commons Text 1.6.</li>
-// * <li>"urlEncode" for the {@code UrlEncoderStringLookup} since Apache Commons Text 1.6.</li>
+ * <li>"urlDecoder" for the {@code UrlDecoderStringLookup} since Apache Commons Text 1.6.</li>
+ * <li>"urlEncoder" for the {@code UrlEncoderStringLookup} since Apache Commons Text 1.6.</li>
  * <li>"xml" for the {@code XmlStringLookup} since Apache Commons Text 1.5.</li>
  * </ul>
  * 
