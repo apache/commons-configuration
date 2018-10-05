@@ -59,11 +59,18 @@ import org.apache.commons.text.lookup.StringLookupFactory;
 public enum DefaultLookups {
 
     /**
-     * The lookup for Base64.
+     * The lookup for Base64 decoding.
      * 
      * @since 2.4
      */
-    BASE64("base64", new StringLookupAdapter(StringLookupFactory.INSTANCE.base64StringLookup())),
+    BASE64_DECODER("base64Decoder", new StringLookupAdapter(StringLookupFactory.INSTANCE.base64StringLookup())),
+
+    /**
+     * The lookup for Base64 decoding.
+     * 
+     * @since 2.4
+     */
+    //BASE64_ENCODER("base64Encoder", new StringLookupAdapter(StringLookupFactory.INSTANCE.base64EncoderStringLookup())),
 
     /**
      * The lookup for constants.
