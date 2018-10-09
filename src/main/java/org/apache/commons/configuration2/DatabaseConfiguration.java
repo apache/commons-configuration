@@ -841,8 +841,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         protected ResultSet openResultSet(final String sql, final boolean nameCol,
                 final Object... params) throws SQLException
         {
-            resultSet = initStatement(sql, nameCol, params).executeQuery();
-            return resultSet;
+            return resultSet = initStatement(sql, nameCol, params).executeQuery();
         }
 
         /**
