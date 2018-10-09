@@ -82,7 +82,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      * @see org.springframework.beans.factory.FactoryBean#getObjectType()
      */
     @Override
-    public Class getObjectType()
+    public Class<?> getObjectType()
     {
         return java.util.Properties.class;
     }
