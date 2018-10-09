@@ -42,7 +42,9 @@ package org.apache.commons.configuration2.interpol;
  *         Configuration team</a>
  * @since 1.7
  * @version $Id$
+ * @deprecated Use {@link DefaultLookups#ENVIRONMENT}.
  */
+@Deprecated
 public class EnvironmentLookup implements Lookup
 {
     /**

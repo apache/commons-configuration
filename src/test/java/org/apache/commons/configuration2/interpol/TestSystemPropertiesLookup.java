@@ -32,12 +32,12 @@ import org.junit.Test;
 public class TestSystemPropertiesLookup
 {
     /** The lookup object to be tested.*/
-    private SystemPropertiesLookup lookup;
+    private Lookup lookup;
 
     @Before
     public void setUp() throws Exception
     {
-        lookup = new SystemPropertiesLookup();
+        lookup = DefaultLookups.SYSTEM_PROPERTIES.getLookup();
     }
 
     /**

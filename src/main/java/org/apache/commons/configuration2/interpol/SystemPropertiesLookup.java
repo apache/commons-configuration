@@ -41,7 +41,9 @@ import org.apache.commons.text.lookup.StringLookupFactory;
  *
  * @version $Id$
  * @since 2.0
+ * @deprecated Use {@link DefaultLookups#SYSTEM_PROPERTIES}.
  */
+@Deprecated
 public class SystemPropertiesLookup implements Lookup
 {
     @Override

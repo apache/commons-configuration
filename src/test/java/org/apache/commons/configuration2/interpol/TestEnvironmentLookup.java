@@ -36,12 +36,12 @@ import org.junit.Test;
 public class TestEnvironmentLookup
 {
     /** The lookup to be tested. */
-    private EnvironmentLookup lookup;
+    private Lookup lookup;
 
     @Before
     public void setUp() throws Exception
     {
-        lookup = new EnvironmentLookup();
+        lookup = DefaultLookups.ENVIRONMENT.getLookup();
     }
 
     /**
