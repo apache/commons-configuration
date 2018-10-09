@@ -72,10 +72,8 @@ public class HsqlDB
     private void loadSqlFile(final String fileName)
             throws Exception
     {
-        Statement statement = null;
-        try
+        try (Statement statement = connection.createStatement())
         {
-            statement = connection.createStatement();
             String commands = getFileContents(fileName);
 
             for (int targetPos = commands.indexOf(';'); targetPos > -1; targetPos = commands.indexOf(';'))
@@ -93,30 +91,23 @@ public class HsqlDB
                 commands = commands.substring(targetPos + 2);
             }
         }
-        finally
-        {
-            if (statement != null)
-            {
-                statement.close();
-            }
-        }
     }
 
     private String getFileContents(final String fileName)
             throws Exception
     {
-        final FileReader fr = new FileReader(fileName);
+        try (final FileReader fr = new FileReader(fileName)) {
 
-        final char fileBuf[]  = new char[1024];
-        final StringBuffer sb = new StringBuffer(1000);
-        int res = -1;
+            final char fileBuf[]  = new char[1024];
+            final StringBuffer sb = new StringBuffer(1000);
+            int res = -1;
 
-        while ((res = fr.read(fileBuf, 0, 1024)) > -1)
-        {
-            sb.append(fileBuf, 0, res);
+            while ((res = fr.read(fileBuf, 0, 1024)) > -1)
+            {
+                sb.append(fileBuf, 0, res);
+            }
+            return sb.toString();
+            }    
         }
-        fr.close();
-        return sb.toString();
-    }
 }
 
