@@ -390,15 +390,17 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 }
                 query.append(")");
 
-                final PreparedStatement pstmt = initStatement(query.toString(),
-                        false, key, String.valueOf(obj));
-                if (configurationNameColumn != null)
+                try (final PreparedStatement pstmt = initStatement(query.toString(),
+                        false, key, String.valueOf(obj)))
                 {
-                    pstmt.setString(3, configurationName);
-                }
+                    if (configurationNameColumn != null)
+                    {
+                        pstmt.setString(3, configurationName);
+                    }
 
-                pstmt.executeUpdate();
-                return null;
+                    pstmt.executeUpdate();
+                    return null;
+                }
             }
         }
         .execute();
@@ -512,10 +514,12 @@ public class DatabaseConfiguration extends AbstractConfiguration
             @Override
             protected Void performOperation() throws SQLException
             {
-                final PreparedStatement ps = initStatement(String.format(
-                        SQL_CLEAR_PROPERTY, table, keyColumn), true, key);
-                ps.executeUpdate();
-                return null;
+                try (final PreparedStatement ps = initStatement(String.format(
+                        SQL_CLEAR_PROPERTY, table, keyColumn), true, key))
+                {
+                    ps.executeUpdate();
+                    return null;
+                }
             }
         }
         .execute();
