@@ -78,6 +78,9 @@
       <action dev="ggregory" type="add" issue="CONFIGURATION-726">
         Add support for Commons Text 1.5 new string lookups as default lookups.
       </action>
+      <action dev="ggregory" type="fix" issue="CONFIGURATION-727">
+        org.apache.commons.configuration2.DatabaseConfiguration never closes result sets.
+      </action>
     </release>
 
     <release version="2.3" date="2018-08-04"

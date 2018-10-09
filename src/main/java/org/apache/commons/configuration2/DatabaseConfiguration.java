@@ -329,21 +329,21 @@ public class DatabaseConfiguration extends AbstractConfiguration
             @Override
             protected Object performOperation() throws SQLException
             {
-                final ResultSet rs =
-                        openResultSet(String.format(SQL_GET_PROPERTY,
-                                table, keyColumn), true, key);
-
                 final List<Object> results = new ArrayList<>();
-                while (rs.next())
+                try (final ResultSet rs =
+                        openResultSet(String.format(SQL_GET_PROPERTY,
+                                table, keyColumn), true, key))
                 {
-                    final Object value = extractPropertyValue(rs);
-                    // Split value if it contains the list delimiter
-                    for (final Object o : getListDelimiterHandler().parse(value))
+                    while (rs.next())
                     {
-                        results.add(o);
+                        final Object value = extractPropertyValue(rs);
+                        // Split value if it contains the list delimiter
+                        for (final Object o : getListDelimiterHandler().parse(value))
+                        {
+                            results.add(o);
+                        }
                     }
                 }
-
                 if (!results.isEmpty())
                 {
                     return (results.size() > 1) ? results : results
@@ -450,10 +450,11 @@ public class DatabaseConfiguration extends AbstractConfiguration
             @Override
             protected Integer performOperation() throws SQLException
             {
-                final ResultSet rs = openResultSet(String.format(
-                        SQL_IS_EMPTY, table), true);
-
-                return rs.next() ? Integer.valueOf(rs.getInt(1)) : null;
+                try (final ResultSet rs = openResultSet(String.format(
+                        SQL_IS_EMPTY, table), true))
+                {
+                    return rs.next() ? Integer.valueOf(rs.getInt(1)) : null;
+                }
             }
         };
 
@@ -481,10 +482,11 @@ public class DatabaseConfiguration extends AbstractConfiguration
             @Override
             protected Boolean performOperation() throws SQLException
             {
-                final ResultSet rs = openResultSet(
-                        String.format(SQL_GET_PROPERTY, table, keyColumn), true, key);
-
-                return rs.next();
+                try (final ResultSet rs = openResultSet(
+                        String.format(SQL_GET_PROPERTY, table, keyColumn), true, key))
+                {
+                    return rs.next();
+                }
             }
         };
 
@@ -563,14 +565,15 @@ public class DatabaseConfiguration extends AbstractConfiguration
             @Override
             protected Collection<String> performOperation() throws SQLException
             {
-                final ResultSet rs = openResultSet(String.format(
-                        SQL_GET_KEYS, keyColumn, table), true);
-
-                while (rs.next())
+                try (final ResultSet rs = openResultSet(String.format(
+                        SQL_GET_KEYS, keyColumn, table), true))
                 {
-                    keys.add(rs.getString(1));
+                    while (rs.next())
+                    {
+                        keys.add(rs.getString(1));
+                    }
+                    return keys;
                 }
-                return keys;
             }
         }
         .execute();
