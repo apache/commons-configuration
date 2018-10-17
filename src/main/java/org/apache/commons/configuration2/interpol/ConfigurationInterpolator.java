@@ -108,7 +108,7 @@ public class ConfigurationInterpolator
 
     static
     {
-        final Map<String, Lookup> lookups = new HashMap<>();
+        final Map<String, Lookup> lookups = new HashMap<>(DefaultLookups.values().length);
         for (final DefaultLookups l : DefaultLookups.values())
         {
             lookups.put(l.getPrefix(), l.getLookup());

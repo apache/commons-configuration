@@ -81,6 +81,9 @@
       <action dev="ggregory" type="fix" issue="CONFIGURATION-727">
         org.apache.commons.configuration2.DatabaseConfiguration never closes result sets and statements.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-728">
+        Update Apache Commons Text from 1.5 to 1.6.
+      </action>
     </release>
 
     <release version="2.3" date="2018-08-04"
