@@ -25,7 +25,7 @@
   </properties>
 
   <body>
-    <release version="2.4" date="in SVN"
+    <release version="2.4" date="2018-10-23"
              description="Minor release with new features and updated dependencies.">
       <action dev="oheger" type="fix" issue="CONFIGURATION-710" due-to="thc202">
         Fixed numerous typos in user guides.
