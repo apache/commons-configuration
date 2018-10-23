@@ -667,6 +667,7 @@
         <version>2.6</version>
         <configuration>
           <jdkVersion>1.8</jdkVersion>
+          <javadocFriendlyComments>true</javadocFriendlyComments>
         </configuration>
         <executions>
           <execution>
