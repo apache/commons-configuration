@@ -27,7 +27,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>commons-configuration2</artifactId>
-  <version>2.4-SNAPSHOT</version>
+  <version>2.4</version>
   <name>Apache Commons Configuration</name>
 
   <inceptionYear>2001</inceptionYear>
@@ -537,7 +537,7 @@
   <properties>
     <commons.componentid>configuration</commons.componentid>
     <commons.module.name>org.apache.commons.configuration2</commons.module.name>
-    <commons.release.version>2.3</commons.release.version>
+    <commons.release.version>2.4</commons.release.version>
     <commons.release.desc>(reworked 2.x version)</commons.release.desc>
     <commons.release.2.name>commons-configuration-${commons.release.2.version}</commons.release.2.name>
     <commons.release.2.version>1.10</commons.release.2.version>
@@ -566,10 +566,20 @@
     </commons.osgi.import>
     <slf4j.version>1.7.25</slf4j.version>
     <spring.version>4.3.19.RELEASE</spring.version>
-    <commons.japicmp.version>0.11.1</commons.japicmp.version>
 
+    <!-- generate report even if there are binary incompatible changes -->
+    <commons.japicmp.breakBuildOnBinaryIncompatibleModifications>false</commons.japicmp.breakBuildOnBinaryIncompatibleModifications>
+    <!-- 0.12.0 dies with a NullPointerException -->
+    <commons.japicmp.version>0.13.0</commons.japicmp.version>
+    <japicmp.skip>false</japicmp.skip>
+
+    <!-- Commons Release Plugin -->
+    <commons.bc.version>2.3</commons.bc.version>
+    <commons.rc.version>RC1</commons.rc.version>
     <commons.release.isDistModule>true</commons.release.isDistModule>
-    <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/configuration</commons.distSvnStagingUrl>
+    <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
+    <commons.releaseManagerName>Rob Tompkins</commons.releaseManagerName>
+    <commons.releaseManagerKey>B6E73D84EA4FCC47166087253FAAD2CD5ECBB314</commons.releaseManagerKey>
   </properties>
 
   <build>
@@ -655,6 +665,9 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>javacc-maven-plugin</artifactId>
         <version>2.6</version>
+        <configuration>
+          <jdkVersion>1.8</jdkVersion>
+        </configuration>
         <executions>
           <execution>
             <id>javacc</id>
@@ -721,6 +734,23 @@
             <exclude>src/test/resources/test.json</exclude>
             <exclude>src/test/resources/test.yaml</exclude>
           </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.0.1</version>
+        <configuration>
+          <quiet>true</quiet>
+          <source>1.8</source>
+          <encoding>iso-8859-1</encoding>
+          <docencoding>iso-8859-1</docencoding>
+          <notimestamp>true</notimestamp>
+          <linksource>true</linksource>
+          <notimestamp>true</notimestamp>
+          <links>
+            <link>http://docs.oracle.com/javase/7/docs/api/</link>
+            <link>http://docs.oracle.com/javaee/6/api/</link>
+          </links>
         </configuration>
       </plugin>
     </plugins>
@@ -844,6 +874,43 @@
           <excludes>
             <exclude>org/apache/commons/configuration2/plist/PropertyListParser*</exclude>
           </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.0.1</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>javadoc</report>
+            </reports>
+            <configuration>
+              <quiet>true</quiet>
+              <source>1.8</source>
+              <encoding>iso-8859-1</encoding>
+              <docencoding>iso-8859-1</docencoding>
+              <notimestamp>true</notimestamp>
+              <linksource>true</linksource>
+              <notimestamp>true</notimestamp>
+              <links>
+                <link>http://docs.oracle.com/javase/7/docs/api/</link>
+                <link>http://docs.oracle.com/javaee/6/api/</link>
+              </links>
+            </configuration>
+          </reportSet>
+        </reportSets>
+        <configuration>
+          <quiet>true</quiet>
+          <source>1.8</source>
+          <encoding>iso-8859-1</encoding>
+          <docencoding>iso-8859-1</docencoding>
+          <notimestamp>true</notimestamp>
+          <linksource>true</linksource>
+          <notimestamp>true</notimestamp>
+          <links>
+            <link>http://docs.oracle.com/javase/7/docs/api/</link>
+            <link>http://docs.oracle.com/javaee/6/api/</link>
+          </links>
         </configuration>
       </plugin>
     </plugins>
