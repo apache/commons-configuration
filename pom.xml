@@ -735,19 +735,19 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.0.1</version>
         <configuration>
-          <quiet>true</quiet>
-          <source>1.8</source>
-          <encoding>iso-8859-1</encoding>
-          <docencoding>iso-8859-1</docencoding>
-          <notimestamp>true</notimestamp>
-          <linksource>true</linksource>
-          <notimestamp>true</notimestamp>
+          <!--
+            The below setting for not failing upon error stems from the fact that javacc's generated
+            code.
+
+            Javacc is responsible for a portion of the code in the package org.apache.commons.configuration2.plist,
+            and only generates a portion of the package. Furthermore, the javacc parser generator
+            generates javadoc that does not conform to the java 1.8 standard and causes the build to fail. For the
+            sake of releasing commons-configuration-2.4.
+          -->
           <failOnError>false</failOnError>
           <links>
-            <link>http://docs.oracle.com/javase/7/docs/api/</link>
-            <link>http://docs.oracle.com/javaee/6/api/</link>
+            <link>https://docs.oracle.com/javase/8/docs/api/</link>
           </links>
         </configuration>
       </plugin>
@@ -876,40 +876,32 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.0.1</version>
         <reportSets>
           <reportSet>
             <reports>
               <report>javadoc</report>
             </reports>
             <configuration>
-              <quiet>true</quiet>
-              <source>1.8</source>
-              <encoding>iso-8859-1</encoding>
-              <docencoding>iso-8859-1</docencoding>
-              <notimestamp>true</notimestamp>
-              <linksource>true</linksource>
-              <notimestamp>true</notimestamp>
+              <!--
+                The below setting for not failing upon error stems from the fact that javacc's generated
+                code.
+
+                Javacc is responsible for a portion of the code in the package org.apache.commons.configuration2.plist,
+                and only generates a portion of the package. Furthermore, the javacc parser generator
+                generates javadoc that does not conform to the java 1.8 standard and causes the build to fail. For the
+                sake of releasing commons-configuration-2.4.
+              -->
               <failOnError>false</failOnError>
               <links>
-                <link>http://docs.oracle.com/javase/7/docs/api/</link>
-                <link>http://docs.oracle.com/javaee/6/api/</link>
+                <link>https://docs.oracle.com/javase/8/docs/api/</link>
               </links>
             </configuration>
           </reportSet>
         </reportSets>
         <configuration>
-          <quiet>true</quiet>
-          <source>1.8</source>
-          <encoding>iso-8859-1</encoding>
-          <docencoding>iso-8859-1</docencoding>
-          <notimestamp>true</notimestamp>
-          <linksource>true</linksource>
-          <notimestamp>true</notimestamp>
           <failOnError>false</failOnError>
           <links>
-            <link>http://docs.oracle.com/javase/7/docs/api/</link>
-            <link>http://docs.oracle.com/javaee/6/api/</link>
+            <link>https://docs.oracle.com/javase/8/docs/api/</link>
           </links>
         </configuration>
       </plugin>
