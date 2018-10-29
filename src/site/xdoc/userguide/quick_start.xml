@@ -55,7 +55,7 @@ database.timeout = 60000
 Configurations configs = new Configurations();
 try
 {
-    Configuration config = configs.properties(new File("config.properties"));
+    Configuration config = configs.properties(new File("database.properties"));
     // access configuration properties
     ...
 }
