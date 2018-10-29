@@ -1,4 +1,73 @@
-$Id$
+                        Commons Configuration Package
+                            Version 2.4
+                           Release Notes
+
+
+INTRODUCTION:
+=============
+
+This document contains the release notes for this version of the Commons
+Configuration component. It describes the changes since the previous version.
+The Commons Configuration software library provides a generic configuration
+interface which enables an application to read configuration data from a variety
+of sources.
+
+Tools to assist in the reading of configuration/preferences files in
+various formats
+
+Minor release with new features and updated dependencies.
+
+Changes in this version include:
+
+NEW FEATURES
+============
+
+o CONFIGURATION-712:  FileHandlerReloadingDetector now has a new refresh() method to
+                      initialize the reloading state from the underlying file. This new
+                      method is called by DefaultReloadingDetectorFactory when a new detector
+                      instance is created. This makes sure that a changed configuration file
+                      is directly detected on the first invocation of the
+                      isReloadingRequired() method. Thanks to Rolland Hobbie.
+o CONFIGURATION-713:  Configuration properties can now be converted to regular expressions. Thanks to Lars W.
+o CONFIGURATION-715:  With JupIOFactory a new IOFactory implementation is now available that
+                      implements handling of whitespace in a way closer to java.util.Properties.
+                      This class can be used when stricter compatibility with Java standard
+                      methods for reading and writing properties files is needed. Thanks to Patrick Schmidt.
+o CONFIGURATION-716:  JupIOFactory (introduced for CONFIGURATION-715) also implements
+                      handling of escape sequences in a way closer to java.util.Properties. Thanks to Patrick Schmidt.
+o CONFIGURATION-724:  Add support for Commons Text 1.4 localhost string lookup as a default lookup.
+o CONFIGURATION-726:  Add support for Commons Text 1.5 new string lookups as default lookups.
+
+FIXED BUGS
+==========
+
+o CONFIGURATION-710:  Fixed numerous typos in user guides. Thanks to thc202.
+o CONFIGURATION-711:  Update Apache Commons Lang from 3.7 to 3.8.1.
+o CONFIGURATION-727:  org.apache.commons.configuration2.DatabaseConfiguration never closes result sets and statements.
+
+CHANGES
+=======
+
+o CONFIGURATION-720:  Replace use of deprecated Commons Lang string substitution code for Commons Text.
+o CONFIGURATION-694:  Update Java requirement from version 7 to 8.
+o CONFIGURATION-721:  Update Jackson from 2.9.6 to 2.9.7.
+o CONFIGURATION-722:  Update optional dependency snakeyaml from 1.21 to 1.23.
+o CONFIGURATION-723:  Update optional Spring dependencies from 4.3.18.RELEASE to 4.3.19.RELEASE.
+o CONFIGURATION-725:  Update Apache Commons Text from 1.4 to 1.5.
+o CONFIGURATION-728:  Update Apache Commons Text from 1.5 to 1.6.
+
+
+Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+
+For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
+
+http://commons.apache.org/proper/commons-configuration/
+
+
+Older release notes
+===================
+
                         Apache Commons Configuration
                                Version 2.3
                                Release Notes
@@ -95,10 +164,6 @@ For complete information on Apache Commons Configuration, including instructions
 patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
 
 http://commons.apache.org/proper/commons-configuration/
-
-
-Older release notes
-===================
 
                         Apache Commons Configuration
                                Version 2.2

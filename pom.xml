@@ -27,7 +27,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>commons-configuration2</artifactId>
-  <version>2.4-SNAPSHOT</version>
+  <version>2.5-SNAPSHOT</version>
   <name>Apache Commons Configuration</name>
 
   <inceptionYear>2001</inceptionYear>
@@ -537,12 +537,11 @@
   <properties>
     <commons.componentid>configuration</commons.componentid>
     <commons.module.name>org.apache.commons.configuration2</commons.module.name>
-    <commons.release.version>2.3</commons.release.version>
+    <commons.release.version>2.4</commons.release.version>
     <commons.release.desc>(reworked 2.x version)</commons.release.desc>
     <commons.release.2.name>commons-configuration-${commons.release.2.version}</commons.release.2.name>
     <commons.release.2.version>1.10</commons.release.2.version>
     <commons.release.2.desc>(old 1.x version)</commons.release.2.desc>
-    <commons.rc.version>RC2</commons.rc.version>
     <commons.jira.id>CONFIGURATION</commons.jira.id>
     <commons.jira.pid>12310467</commons.jira.pid>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -566,10 +565,20 @@
     </commons.osgi.import>
     <slf4j.version>1.7.25</slf4j.version>
     <spring.version>4.3.19.RELEASE</spring.version>
-    <commons.japicmp.version>0.11.1</commons.japicmp.version>
 
+    <!-- generate report even if there are binary incompatible changes -->
+    <commons.japicmp.breakBuildOnBinaryIncompatibleModifications>false</commons.japicmp.breakBuildOnBinaryIncompatibleModifications>
+    <!-- 0.12.0 dies with a NullPointerException -->
+    <commons.japicmp.version>0.13.0</commons.japicmp.version>
+    <japicmp.skip>false</japicmp.skip>
+
+    <!-- Commons Release Plugin -->
+    <commons.bc.version>2.3</commons.bc.version>
+    <commons.rc.version>RC2</commons.rc.version>
     <commons.release.isDistModule>true</commons.release.isDistModule>
-    <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/configuration</commons.distSvnStagingUrl>
+    <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
+    <commons.releaseManagerName>Rob Tompkins</commons.releaseManagerName>
+    <commons.releaseManagerKey>B6E73D84EA4FCC47166087253FAAD2CD5ECBB314</commons.releaseManagerKey>
   </properties>
 
   <build>
@@ -723,6 +732,24 @@
           </excludes>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <configuration>
+          <!--
+            The below setting for not failing upon error stems from the fact that javacc's generated
+            code.
+
+            Javacc is responsible for a portion of the code in the package org.apache.commons.configuration2.plist,
+            and only generates a portion of the package. Furthermore, the javacc parser generator
+            generates javadoc that does not conform to the java 1.8 standard and causes the build to fail. For the
+            sake of releasing commons-configuration-2.4.
+          -->
+          <failOnError>false</failOnError>
+          <links>
+            <link>https://docs.oracle.com/javase/8/docs/api/</link>
+          </links>
+        </configuration>
+      </plugin>
     </plugins>
 
   </build>
@@ -844,6 +871,37 @@
           <excludes>
             <exclude>org/apache/commons/configuration2/plist/PropertyListParser*</exclude>
           </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>javadoc</report>
+            </reports>
+            <configuration>
+              <!--
+                The below setting for not failing upon error stems from the fact that javacc's generated
+                code.
+
+                Javacc is responsible for a portion of the code in the package org.apache.commons.configuration2.plist,
+                and only generates a portion of the package. Furthermore, the javacc parser generator
+                generates javadoc that does not conform to the java 1.8 standard and causes the build to fail. For the
+                sake of releasing commons-configuration-2.4.
+              -->
+              <failOnError>false</failOnError>
+              <links>
+                <link>https://docs.oracle.com/javase/8/docs/api/</link>
+              </links>
+            </configuration>
+          </reportSet>
+        </reportSets>
+        <configuration>
+          <failOnError>false</failOnError>
+          <links>
+            <link>https://docs.oracle.com/javase/8/docs/api/</link>
+          </links>
         </configuration>
       </plugin>
     </plugins>
