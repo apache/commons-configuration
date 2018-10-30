@@ -66,7 +66,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-configuration2</artifactId>
-  <version>2.3</version>
+  <version>2.4</version>
 </dependency>
 ```
 
