@@ -43,4 +43,22 @@ public interface INIBuilderProperties<T>
      * @return a reference to this object for method chaining
      */
     T setSeparatorUsedInOutput(String separator);
+
+    /**
+     * Allows setting the key and value separator which is used in reading
+     * an INI file
+     *
+     * @param separator String of the new separator for INI reading
+     * @return a reference to this object for method chaining
+     */
+    T setSeparatorUsedInInput(String separator);
+
+    /**
+     * Allows setting the leading comment separator which is used in reading
+     * an INI file
+     *
+     * @param separator String of the new separator for INI reading
+     * @return a reference to this object for method chaining
+     */
+    T setCommentLeadingCharsUsedInInput(String separator);
 }
