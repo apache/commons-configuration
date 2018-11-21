@@ -901,7 +901,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
             return false;
         }
         // blank lines are also treated as comment lines
-        return line.length() < 1 || COMMENT_CHARS.indexOf(line.charAt(0)) >= 0;
+        return line.length() < 1
+            || getCommentLeadingCharsUsedInInput().indexOf(line.charAt(0)) >= 0;
     }
 
     /**
