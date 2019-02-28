@@ -563,7 +563,7 @@
       org.yaml.snakeyaml.*;resolution:=optional,
       *
     </commons.osgi.import>
-    <slf4j.version>1.7.25</slf4j.version>
+    <slf4j.version>1.7.26</slf4j.version>
     <spring.version>4.3.19.RELEASE</spring.version>
 
     <!-- generate report even if there are binary incompatible changes -->
