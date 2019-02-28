@@ -36,6 +36,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-739" due-to="Gary Gregory">
         Update Apache Commons Codec from 1.11 to 1.12.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-740" due-to="Gary Gregory">
+        Update Apache Commons VFS from 2.2 to 2.3.
+      </action>
     </release>
     <release version="2.4" date="2018-10-23"
              description="Minor release with new features and updated dependencies.">
