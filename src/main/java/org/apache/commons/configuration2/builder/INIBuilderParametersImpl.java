@@ -40,18 +40,36 @@ public class INIBuilderParametersImpl extends HierarchicalBuilderParametersImpl
     /** The key for the separatorUsedInINIOutput property. */
     private static final String PROP_SEPARATOR_USED_IN_INI_OUTPUT
         = "separatorUsedInOutput";
+    private static final String PROP_SEPARATOR_USED_IN_INI_INPUT
+        = "separatorUsedInInput";
+    private static final String PROP_COMMENT_LEADING_SEPARATOR_USED_IN_INI_INPUT
+        = "commentLeadingCharsUsedInInput";
 
     @Override
     public void inheritFrom(final Map<String, ?> source)
     {
         super.inheritFrom(source);
         copyPropertiesFrom(source, PROP_SEPARATOR_USED_IN_INI_OUTPUT);
+        copyPropertiesFrom(source, PROP_SEPARATOR_USED_IN_INI_INPUT);
+        copyPropertiesFrom(source, PROP_COMMENT_LEADING_SEPARATOR_USED_IN_INI_INPUT);
     }
 
     @Override
     public INIBuilderParametersImpl setSeparatorUsedInOutput(final String separator)
     {
         storeProperty(PROP_SEPARATOR_USED_IN_INI_OUTPUT, separator);
+        return this;
+    }
+
+    @Override
+    public INIBuilderParametersImpl setSeparatorUsedInInput(String separator) {
+        storeProperty(PROP_SEPARATOR_USED_IN_INI_INPUT, separator);
+        return this;
+    }
+
+    @Override
+    public INIBuilderParametersImpl setCommentLeadingCharsUsedInInput(String separator) {
+        storeProperty(PROP_COMMENT_LEADING_SEPARATOR_USED_IN_INI_INPUT, separator);
         return this;
     }
 }

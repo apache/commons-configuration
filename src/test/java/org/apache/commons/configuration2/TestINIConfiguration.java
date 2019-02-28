@@ -20,6 +20,7 @@ package org.apache.commons.configuration2;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -251,6 +252,57 @@ public class TestINIConfiguration
         final String result = writer.toString().trim();
 
         assertEquals("Wrong content of ini file", expectedOutput, result);
+    }
+
+    /**
+     * Test of read method with changed separator.
+     */
+    @Test
+    public void testSeparatorUsedInINIInput() throws Exception
+    {
+        final String inputSeparator = "=";
+        final String input = "[section]" + LINE_SEPARATOR
+            + "k1:v1$key1=value1" + LINE_SEPARATOR
+            + "k1:v1,k2:v2$key2=value2" + LINE_SEPARATOR
+            + "key3:value3" + LINE_SEPARATOR
+            + "key4 = value4" + LINE_SEPARATOR;
+
+        final INIConfiguration instance = new FileBasedConfigurationBuilder<>(
+            INIConfiguration.class)
+            .configure(new Parameters().ini().setSeparatorUsedInInput(inputSeparator))
+            .getConfiguration();
+        load(instance, input);
+
+        assertEquals("value1", instance.getString("section.k1:v1$key1"));
+        assertEquals("value2", instance.getString("section.k1:v1,k2:v2$key2"));
+        assertEquals("", instance.getString("section.key3:value3"));
+        assertEquals("value4", instance.getString("section.key4").trim());
+    }
+
+    /**
+     * Test of read method with changed comment leading separator
+     */
+    @Test
+    public void testCommentLeadingSeparatorUsedInINIInput() throws Exception
+    {
+        final String inputCommentLeadingSeparator = ";";
+        final String input = "[section]" + LINE_SEPARATOR
+            + "key1=a;b;c" + LINE_SEPARATOR
+            + "key2=a#b#c" + LINE_SEPARATOR
+            + ";key3=value3" + LINE_SEPARATOR
+            + "#key4=value4" + LINE_SEPARATOR;
+
+        final INIConfiguration instance = new FileBasedConfigurationBuilder<>(
+            INIConfiguration.class)
+            .configure(new Parameters().ini()
+                .setCommentLeadingCharsUsedInInput(inputCommentLeadingSeparator))
+            .getConfiguration();
+        load(instance, input);
+
+        assertEquals("a;b;c", instance.getString("section.key1"));
+        assertEquals("a#b#c", instance.getString("section.key2"));
+        assertNull("", instance.getString("section.;key3"));
+        assertEquals("value4", instance.getString("section.#key4"));
     }
 
     /**

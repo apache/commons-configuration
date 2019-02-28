@@ -227,12 +227,12 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
         FileBasedConfiguration
 {
     /**
-     * The characters that signal the start of a comment line.
+     * The default characters that signal the start of a comment line.
      */
     protected static final String COMMENT_CHARS = "#;";
 
     /**
-     * The characters used to separate keys from values.
+     * The default characters used to separate keys from values.
      */
     protected static final String SEPARATOR_CHARS = "=:";
 
@@ -255,6 +255,17 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * The separator used when writing an INI file.
      */
     private String separatorUsedInOutput = " = ";
+
+    /**
+     * The separator used when reading an INI file.
+     */
+    private String separatorUsedInInput = SEPARATOR_CHARS;
+
+    /**
+     * The characters used to separate keys from values
+     * when reading an INI file.
+     */
+    private String commentCharsUsedInInput = COMMENT_CHARS;
 
     /**
      * Create a new empty INI Configuration.
@@ -313,6 +324,86 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
         finally
         {
             endWrite();
+        }
+    }
+
+    /**
+     * Get separator used in INI reading. see {@code setSeparatorUsedInInput}
+     * for further explanation
+     *
+     * @return the current separator for reading the INI input
+     * @since 2.5
+     */
+    public String getSeparatorUsedInInput()
+    {
+        beginRead(false);
+        try
+        {
+            return separatorUsedInInput;
+        }
+        finally
+        {
+            endRead();
+        }
+    }
+
+    /**
+     * Allows setting the key and value separator which is used in reading
+     * an INI file
+     *
+     * @param separator String of the new separator for INI reading
+     * @since 2.5
+     */
+    public void setSeparatorUsedInInput(final String separator)
+    {
+        beginRead(false);
+        try
+        {
+            this.separatorUsedInInput = separator;
+        }
+        finally
+        {
+            endRead();
+        }
+    }
+
+    /**
+     * Get comment leading separator used in INI reading.
+     * see {@code setCommentLeadingCharsUsedInInput} for further explanation
+     *
+     * @return the current separator for reading the INI input
+     * @since 2.5
+     */
+    public String getCommentLeadingCharsUsedInInput()
+    {
+        beginRead(false);
+        try
+        {
+            return commentCharsUsedInInput;
+        }
+        finally
+        {
+            endRead();
+        }
+    }
+
+    /**
+     * Allows setting the leading comment separator which is used in reading
+     * an INI file
+     *
+     * @param separator String of the new separator for INI reading
+     * @since 2.5
+     */
+    public void setCommentLeadingCharsUsedInInput(final String separator)
+    {
+        beginRead(false);
+        try
+        {
+            this.commentCharsUsedInInput = separator;
+        }
+        finally
+        {
+            endRead();
         }
     }
 
@@ -530,7 +621,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param reader the reader (needed if multiple lines have to be read)
      * @throws IOException if an IO error occurs
      */
-    private static String parseValue(final String val, final BufferedReader reader) throws IOException
+    private String parseValue(final String val, final BufferedReader reader)
+        throws IOException
     {
         final StringBuilder propertyValue = new StringBuilder();
         boolean lineContinues;
@@ -645,7 +737,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param pos the start position
      * @return a flag whether this line continues
      */
-    private static boolean lineContinues(final String line, final int pos)
+    private boolean lineContinues(final String line, final int pos)
     {
         String s;
 
@@ -672,9 +764,9 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param c the character
      * @return a flag whether this character starts a comment
      */
-    private static boolean isCommentChar(final char c)
+    private boolean isCommentChar(final char c)
     {
-        return COMMENT_CHARS.indexOf(c) >= 0;
+        return getCommentLeadingCharsUsedInInput().indexOf(c) >= 0;
     }
 
     /**
@@ -687,14 +779,14 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param line the line to be checked
      * @return the index of the separator character or -1 if none is found
      */
-    private static int findSeparator(final String line)
+    private int findSeparator(final String line)
     {
         int index =
                 findSeparatorBeforeQuote(line,
                         findFirstOccurrence(line, QUOTE_CHARACTERS));
         if (index < 0)
         {
-            index = findFirstOccurrence(line, SEPARATOR_CHARS);
+            index = findFirstOccurrence(line, getSeparatorUsedInInput());
         }
         return index;
     }
@@ -774,13 +866,14 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param value the value to be escaped
      * @return the value with comment characters escaped
      */
-    private static String escapeComments(final String value)
+    private String escapeComments(final String value)
     {
+        final String commentChars = getCommentLeadingCharsUsedInInput();
         boolean quoted = false;
 
-        for (int i = 0; i < COMMENT_CHARS.length() && !quoted; i++)
+        for (int i = 0; i < commentChars.length() && !quoted; i++)
         {
-            final char c = COMMENT_CHARS.charAt(i);
+            final char c = commentChars.charAt(i);
             if (value.indexOf(c) != -1)
             {
                 quoted = true;
@@ -808,7 +901,8 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
             return false;
         }
         // blank lines are also treated as comment lines
-        return line.length() < 1 || COMMENT_CHARS.indexOf(line.charAt(0)) >= 0;
+        return line.length() < 1
+            || getCommentLeadingCharsUsedInInput().indexOf(line.charAt(0)) >= 0;
     }
 
     /**
