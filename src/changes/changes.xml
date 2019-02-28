@@ -31,7 +31,10 @@
         Allow user to specify the comments and separator chars.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-738" due-to="Gary Gregory">
-      Update Jackson from 2.9.7 to 2.9.8.
+        Update Jackson from 2.9.7 to 2.9.8.
+      </action>.
+      <action dev="ggregory" type="update" issue="CONFIGURATION-739" due-to="Gary Gregory">
+        Update Apache Commons Codec from 1.11 to 1.12.
       </action>
     </release>
     <release version="2.4" date="2018-10-23"
