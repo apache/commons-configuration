@@ -28,7 +28,7 @@
     <release version="2.5" date="2019-MM-DD"
              description="Minor release with new features and updated dependencies.">
       <action dev="ggregory" type="fix" issue="CONFIGURATION-731" due-to="Shuai Zhang, Gary Gregory">
-        Allow user to specify the comments & separator chars.
+        Allow user to specify the comments and separator chars.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-738" due-to="Gary Gregory">
       Update Jackson from 2.9.7 to 2.9.8.
