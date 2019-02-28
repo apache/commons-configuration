@@ -195,9 +195,9 @@ public class InterpolationTestHelper
         { "name", "canonical-name", "address" };
         String[] localhostValues = null;
         try {
-            localhostValues = new String[] { 
-                    InetAddress.getLocalHost().getHostName(), 
-                    InetAddress.getLocalHost().getCanonicalHostName(), 
+            localhostValues = new String[] {
+                    InetAddress.getLocalHost().getHostName(),
+                    InetAddress.getLocalHost().getCanonicalHostName(),
                     InetAddress.getLocalHost().getHostAddress() };
         } catch (UnknownHostException e) {
             Assert.fail(e);

@@ -32,7 +32,7 @@ import org.apache.commons.text.lookup.StringLookupFactory;
  * All the default {@code Lookup} classes are state-less, thus their instances can be shared between multiple
  * configuration objects. Therefore, it makes sense to keep shared instances in this enumeration class.
  * </p>
- * 
+ *
  * Provides access to lookups defined in Apache Commons Text:
  * <ul>
  * <li>"base64Decoder" for the {@code Base64DecoderStringLookup} since Apache Commons Text 1.6.</li>
@@ -53,7 +53,7 @@ import org.apache.commons.text.lookup.StringLookupFactory;
  * <li>"urlEncoder" for the {@code UrlEncoderStringLookup} since Apache Commons Text 1.6.</li>
  * <li>"xml" for the {@code XmlStringLookup} since Apache Commons Text 1.5.</li>
  * </ul>
- * 
+ *
  * @version $Id$
  * @since 2.0
  */
@@ -61,7 +61,7 @@ public enum DefaultLookups {
 
     /**
      * The lookup for Base64 decoding.
-     * 
+     *
      * @since 2.4
      */
     BASE64_DECODER(StringLookupFactory.KEY_BASE64_DECODER,
@@ -69,7 +69,7 @@ public enum DefaultLookups {
 
     /**
      * The lookup for Base64 decoding.
-     * 
+     *
      * @since 2.4
      */
     BASE64_ENCODER(StringLookupFactory.KEY_BASE64_ENCODER,
@@ -77,14 +77,14 @@ public enum DefaultLookups {
 
     /**
      * The lookup for constants.
-     * 
+     *
      * @since 2.4
      */
     CONST(StringLookupFactory.KEY_CONST, new StringLookupAdapter(StringLookupFactory.INSTANCE.constantStringLookup())),
 
     /**
      * The lookup for dates.
-     * 
+     *
      * @since 2.4
      */
     DATE(StringLookupFactory.KEY_DATE, new StringLookupAdapter(StringLookupFactory.INSTANCE.dateStringLookup())),
@@ -97,14 +97,14 @@ public enum DefaultLookups {
 
     /**
      * The lookup for files.
-     * 
+     *
      * @since 2.4
      */
     FILE(StringLookupFactory.KEY_FILE, new StringLookupAdapter(StringLookupFactory.INSTANCE.fileStringLookup())),
 
     /**
      * The lookup for Java platform information.
-     * 
+     *
      * @since 2.4
      */
     JAVA(StringLookupFactory.KEY_JAVA,
@@ -112,7 +112,7 @@ public enum DefaultLookups {
 
     /**
      * The lookup for localhost information.
-     * 
+     *
      * @since 2.4
      */
     LOCAL_HOST(StringLookupFactory.KEY_LOCALHOST,
@@ -120,7 +120,7 @@ public enum DefaultLookups {
 
     /**
      * The lookup for properties.
-     * 
+     *
      * @since 2.4
      */
     PROPERTIES(StringLookupFactory.KEY_PROPERTIES,
@@ -128,7 +128,7 @@ public enum DefaultLookups {
 
     /**
      * The lookup for resource bundles.
-     * 
+     *
      * @since 2.4
      */
     RESOURCE_BUNDLE(StringLookupFactory.KEY_RESOURCE_BUNDLE,
@@ -136,7 +136,7 @@ public enum DefaultLookups {
 
     /**
      * The lookup for scripts.
-     * 
+     *
      * @since 2.4
      */
     SCRIPT(StringLookupFactory.KEY_SCRIPT, new StringLookupAdapter(StringLookupFactory.INSTANCE.scriptStringLookup())),
@@ -149,14 +149,14 @@ public enum DefaultLookups {
 
     /**
      * The lookup for URLs.
-     * 
+     *
      * @since 2.4
      */
     URL(StringLookupFactory.KEY_URL, new StringLookupAdapter(StringLookupFactory.INSTANCE.urlStringLookup())),
 
     /**
      * The lookup for URL decoding.
-     * 
+     *
      * @since 2.4
      */
     URL_DECODER(StringLookupFactory.KEY_URL_DECODER,
@@ -164,7 +164,7 @@ public enum DefaultLookups {
 
     /**
      * The lookup for URL decoding.
-     * 
+     *
      * @since 2.4
      */
     URL_ENCODER(StringLookupFactory.KEY_URL_ENCODER,
@@ -172,7 +172,7 @@ public enum DefaultLookups {
 
     /**
      * The lookup for URL decoding.
-     * 
+     *
      * @since 2.4
      */
     XML(StringLookupFactory.KEY_XML, new StringLookupAdapter(StringLookupFactory.INSTANCE.xmlStringLookup()));

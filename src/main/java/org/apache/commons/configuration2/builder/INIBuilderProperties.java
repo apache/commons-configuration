@@ -34,7 +34,7 @@ package org.apache.commons.configuration2.builder;
  * @param <T> the type of the result of all set methods for method chaining
  */
 public interface INIBuilderProperties<T> {
-    
+
     /**
      * Allows setting the leading comment separator which is used in reading an INI
      * file.

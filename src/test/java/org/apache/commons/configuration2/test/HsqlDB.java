@@ -107,7 +107,7 @@ public class HsqlDB
                 sb.append(fileBuf, 0, res);
             }
             return sb.toString();
-            }    
+            }
         }
 }
 

@@ -22,7 +22,7 @@ import org.apache.commons.text.lookup.StringLookup;
 
 /**
  * Wraps an Apache Commons Text {@link StringLookup} as an Apache Commons Configuration {@link Lookup}.
- * 
+ *
  * @since 2.4
  */
 class StringLookupAdapter implements Lookup {
