@@ -37,7 +37,7 @@ public interface INIBuilderProperties<T> {
     
     /**
      * Allows setting the leading comment separator which is used in reading an INI
-     * file
+     * file.
      *
      * @param separator String of the new separator for INI reading
      * @return a reference to this object for method chaining
@@ -50,7 +50,7 @@ public interface INIBuilderProperties<T> {
 
     /**
      * Allows setting the key and value separator which is used in reading an INI
-     * file
+     * file.
      *
      * @param separator String of the new separator for INI reading
      * @return a reference to this object for method chaining
