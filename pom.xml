@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>47</version>
+    <version>48</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>commons-configuration2</artifactId>
@@ -569,7 +569,7 @@
     <!-- generate report even if there are binary incompatible changes -->
     <commons.japicmp.breakBuildOnBinaryIncompatibleModifications>false</commons.japicmp.breakBuildOnBinaryIncompatibleModifications>
     <!-- 0.12.0 dies with a NullPointerException -->
-    <commons.japicmp.version>0.13.0</commons.japicmp.version>
+    <commons.japicmp.version>0.13.1</commons.japicmp.version>
     <japicmp.skip>false</japicmp.skip>
 
     <!-- Commons Release Plugin -->
