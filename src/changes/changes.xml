@@ -42,6 +42,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-741" due-to="Gary Gregory">
         Update Spring from 4.3.19 to 4.3.22.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-743" due-to="Gary Gregory">
+        Update optional library snakeyaml from 1.23 to 1.24.
+      </action>
     </release>
     <release version="2.4" date="2018-10-23"
              description="Minor release with new features and updated dependencies.">
