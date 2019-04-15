@@ -45,6 +45,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-743" due-to="Gary Gregory">
         Update optional library snakeyaml from 1.23 to 1.24.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-747" due-to="Gary Gregory">
+        Update Apache Commons Lang from 3.8.1 to 3.9.
+      </action>
     </release>
     <release version="2.4" date="2018-10-23"
              description="Minor release with new features and updated dependencies.">
