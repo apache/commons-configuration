@@ -32,7 +32,6 @@ import org.junit.Test;
 /**
  * Test class for OverrideCombiner.
  *
- * @version $Id$
  */
 public class TestOverrideCombiner extends AbstractCombinerTest
 {

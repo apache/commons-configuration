@@ -39,7 +39,6 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * be created.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <T> the concrete type of the {@code ImmutableConfiguration} class produced by
  *        this builder

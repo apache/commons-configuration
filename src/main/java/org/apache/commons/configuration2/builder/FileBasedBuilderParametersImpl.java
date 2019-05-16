@@ -43,7 +43,6 @@ import org.apache.commons.configuration2.io.FileSystem;
  * {@code ConfigurationBuilder}.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class FileBasedBuilderParametersImpl extends BasicBuilderParameters

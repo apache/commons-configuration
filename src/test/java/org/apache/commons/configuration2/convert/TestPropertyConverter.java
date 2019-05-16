@@ -34,7 +34,6 @@ import org.junit.Test;
  * Test class for PropertyConverter.
  *
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class TestPropertyConverter
 {

@@ -20,6 +20,5 @@
  * A package with helper and utility classes used by hierarchical configurations.
  * </p>
  *
- * @version $Id$
  */
 package org.apache.commons.configuration2.tree;

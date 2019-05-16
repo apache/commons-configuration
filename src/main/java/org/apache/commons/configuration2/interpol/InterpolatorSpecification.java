@@ -52,7 +52,6 @@ import java.util.Map;
  * class. They are then immutable.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public final class InterpolatorSpecification

@@ -52,7 +52,6 @@ import org.junit.rules.TemporaryFolder;
 /**
  * Test class for {@code FileBasedConfigurationBuilder}.
  *
- * @version $Id$
  */
 public class TestFileBasedConfigurationBuilder
 {

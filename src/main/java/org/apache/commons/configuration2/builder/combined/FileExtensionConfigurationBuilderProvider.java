@@ -44,7 +44,6 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * load. This class can be used to implement this feature in a generic way.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class FileExtensionConfigurationBuilderProvider extends

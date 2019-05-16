@@ -24,7 +24,6 @@ import java.util.Iterator;
  * clone() methods. It does not make much sense otherwise; all methods are just
  * dummies.
  *
- * @version $Id$
  */
 public class NonCloneableConfiguration extends AbstractConfiguration
 {

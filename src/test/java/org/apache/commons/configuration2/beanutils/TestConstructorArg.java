@@ -25,7 +25,6 @@ import org.junit.Test;
 /**
  * Test class for {@code ConstructorArg}.
  *
- * @version $Id$
  */
 public class TestConstructorArg
 {

@@ -35,7 +35,6 @@ import org.junit.Test;
 /**
  * Test class for {@code MultiFileBuilderParametersImpl}.
  *
- * @version $Id$
  */
 public class TestMultiFileBuilderParametersImpl
 {

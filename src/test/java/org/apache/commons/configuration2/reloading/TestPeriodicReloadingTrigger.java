@@ -33,7 +33,6 @@ import org.junit.Test;
 /**
  * Test class for {@code PeriodicReloadingTrigger}.
  *
- * @version $Id$
  */
 public class TestPeriodicReloadingTrigger
 {

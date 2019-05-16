@@ -49,7 +49,6 @@ import org.apache.commons.configuration2.io.FileLocatorUtils;
  * obtains the file's modification date and stores it internally.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class FileHandlerReloadingDetector implements ReloadingDetector

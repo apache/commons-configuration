@@ -27,7 +27,6 @@ package org.apache.commons.configuration2.tree;
  * capabilities of an {@code InMemoryNodeModel}.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface InMemoryNodeModelSupport extends

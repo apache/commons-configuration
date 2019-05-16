@@ -37,7 +37,6 @@ import org.xml.sax.EntityResolver;
  * {@code ConfigurationBuilder}.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class XMLBuilderParametersImpl extends HierarchicalBuilderParametersImpl

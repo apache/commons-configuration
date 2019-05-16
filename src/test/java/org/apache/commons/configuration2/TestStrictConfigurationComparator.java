@@ -25,7 +25,6 @@ import org.junit.Test;
 /**
  * Tests the StrintConfigurationComparator class
  *
- * @version $Id$
  */
 public class TestStrictConfigurationComparator
 {

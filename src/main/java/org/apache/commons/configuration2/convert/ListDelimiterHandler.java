@@ -51,7 +51,6 @@ import java.util.List;
  * they have to deal with properties with multiple values.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface ListDelimiterHandler

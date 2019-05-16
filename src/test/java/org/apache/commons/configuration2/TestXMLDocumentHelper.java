@@ -53,7 +53,6 @@ import org.xml.sax.SAXException;
 /**
  * Test class for {@code XMLDocumentHelper}.
  *
- * @version $Id$
  */
 public class TestXMLDocumentHelper
 {

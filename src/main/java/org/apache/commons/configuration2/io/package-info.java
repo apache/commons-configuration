@@ -28,6 +28,5 @@
  * specific application.
  * </p>
  *
- * @version $Id$
  */
 package org.apache.commons.configuration2.io;

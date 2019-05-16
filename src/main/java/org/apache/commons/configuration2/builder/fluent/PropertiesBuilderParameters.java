@@ -32,7 +32,6 @@ import org.apache.commons.configuration2.builder.PropertiesBuilderProperties;
  * be extended even in minor releases.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface PropertiesBuilderParameters extends

@@ -29,7 +29,6 @@ import org.apache.commons.configuration2.event.EventType;
  * information about the components involved is available.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class ReloadingEvent extends Event

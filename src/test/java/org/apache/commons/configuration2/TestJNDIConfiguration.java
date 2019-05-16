@@ -42,7 +42,6 @@ import org.junit.Test;
 /**
  * Test to see if the JNDIConfiguration works properly.
  *
- * @version $Id$
  */
 public class TestJNDIConfiguration {
 

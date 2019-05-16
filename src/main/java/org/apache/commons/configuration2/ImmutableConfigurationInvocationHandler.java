@@ -44,7 +44,6 @@ import java.util.Iterator;
  * remove operation.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 class ImmutableConfigurationInvocationHandler implements InvocationHandler

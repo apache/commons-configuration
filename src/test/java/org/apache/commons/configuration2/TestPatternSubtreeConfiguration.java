@@ -32,7 +32,6 @@ import org.junit.Test;
 /**
  * Unit test for simple MultiConfigurationTest.
  *
- * @version $Id$
  */
 public class TestPatternSubtreeConfiguration
 {

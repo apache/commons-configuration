@@ -38,7 +38,6 @@ import java.util.HashMap;
  * </pre>
  *
  * @author <a href="mailto:nicolas.deloof@gmail.com">Nicolas De Loof</a>
- * @version $Id$
  * @since 1.5
  */
 public class EnvironmentConfiguration extends MapConfiguration

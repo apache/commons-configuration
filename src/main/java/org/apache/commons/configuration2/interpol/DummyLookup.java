@@ -31,7 +31,6 @@ package org.apache.commons.configuration2.interpol;
  * enumeration.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public enum DummyLookup implements Lookup

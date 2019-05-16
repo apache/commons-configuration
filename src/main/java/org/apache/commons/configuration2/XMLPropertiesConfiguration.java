@@ -68,7 +68,6 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author Emmanuel Bourg
  * @author Alistair Young
- * @version $Id$
  * @since 1.1
  */
 public class XMLPropertiesConfiguration extends BaseConfiguration implements

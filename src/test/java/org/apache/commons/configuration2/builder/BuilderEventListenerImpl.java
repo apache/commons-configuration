@@ -32,7 +32,6 @@ import org.apache.commons.configuration2.event.EventType;
  * class is used by some unit tests. It collects the events received by the
  * listener and provides some methods for querying them.
  *
- * @version $Id$
  */
 public class BuilderEventListenerImpl implements
         EventListener<ConfigurationBuilderEvent>

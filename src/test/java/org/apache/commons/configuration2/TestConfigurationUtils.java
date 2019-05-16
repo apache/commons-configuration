@@ -52,7 +52,6 @@ import org.junit.Test;
 /**
  * Tests the ConfigurationUtils class
  *
- * @version $Id$
  */
 public class TestConfigurationUtils
 {

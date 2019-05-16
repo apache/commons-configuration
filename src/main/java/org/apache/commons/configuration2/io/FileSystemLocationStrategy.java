@@ -31,7 +31,6 @@ import java.net.URL;
  * {@code FileSystem}.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class FileSystemLocationStrategy implements FileLocationStrategy

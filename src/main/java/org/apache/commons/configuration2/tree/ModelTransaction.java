@@ -60,7 +60,6 @@ import java.util.TreeMap;
  * </ul>
  * </p>
  *
- * @version $Id$
  */
 class ModelTransaction
 {

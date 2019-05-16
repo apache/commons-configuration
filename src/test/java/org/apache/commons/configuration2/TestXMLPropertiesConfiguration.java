@@ -43,7 +43,6 @@ import org.xml.sax.InputSource;
  * Test class for {@code XMLPropertiesConfiguration}.
  *
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class TestXMLPropertiesConfiguration
 {

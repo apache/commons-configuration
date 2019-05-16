@@ -32,7 +32,6 @@ import org.junit.Test;
  * Test case for the {@link ServletFilterConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class TestServletFilterConfiguration extends TestAbstractConfiguration
 {

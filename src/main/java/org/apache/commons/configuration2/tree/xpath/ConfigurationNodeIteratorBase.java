@@ -33,7 +33,6 @@ import org.apache.commons.lang3.StringUtils;
  * </p>
  *
  * @since 1.3
- * @version $Id$
  * @param <T> the type of the nodes this iterator deals with
  */
 abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator

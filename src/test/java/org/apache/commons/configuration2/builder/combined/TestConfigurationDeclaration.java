@@ -29,7 +29,6 @@ import org.junit.Test;
 /**
  * Test class for {@code ConfigurationDeclaration}.
  *
- * @version $Id$
  */
 public class TestConfigurationDeclaration
 {

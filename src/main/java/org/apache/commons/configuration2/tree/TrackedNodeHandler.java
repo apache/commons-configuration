@@ -36,7 +36,6 @@ package org.apache.commons.configuration2.tree;
  * handler. Further, the root node has to be provided explicitly.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 class TrackedNodeHandler extends AbstractImmutableNodeHandler

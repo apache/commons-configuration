@@ -72,7 +72,6 @@ import org.apache.commons.lang3.concurrent.ConcurrentUtils;
  * are used to initialize the builders for managed configurations.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <T> the concrete type of {@code Configuration} objects created by this
  *        builder

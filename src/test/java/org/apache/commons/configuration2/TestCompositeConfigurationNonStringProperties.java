@@ -24,7 +24,6 @@ import org.junit.Before;
 /**
  * Test if non-string properties are handled correctly.
  *
- * @version $Id$
  */
 public class TestCompositeConfigurationNonStringProperties extends BaseNonStringProperties
 {

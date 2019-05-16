@@ -25,7 +25,6 @@ import org.apache.commons.configuration2.tree.NodeHandler;
  * specific node in a hierarchy.
  * </p>
  *
- * @version $Id$
  * @param <T> the type of the nodes to be visited
  */
 class FindNodeVisitor<T> extends ConfigurationNodeVisitorAdapter<T>

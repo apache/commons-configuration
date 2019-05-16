@@ -32,7 +32,6 @@ import org.apache.commons.configuration2.tree.ExpressionEngine;
  * be extended even in minor releases.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <T> the type of the result of all set methods for method chaining
  */

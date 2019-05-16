@@ -52,7 +52,6 @@ import org.apache.commons.lang3.StringUtils;
  * location is reset, too.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <T> the concrete type of {@code Configuration} objects created by this
  *        builder

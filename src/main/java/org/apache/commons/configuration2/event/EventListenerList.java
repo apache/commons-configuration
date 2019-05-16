@@ -50,7 +50,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Implementation note: This class is thread-safe.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class EventListenerList

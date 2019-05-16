@@ -35,7 +35,6 @@ import org.junit.Test;
  * Tests for MapConfiguration.
  *
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class TestMapConfiguration extends TestAbstractConfiguration
 {

@@ -30,7 +30,6 @@ import org.apache.commons.configuration2.interpol.Lookup;
  * {@code lookup()} are mapped directly to configuration properties.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class ConfigurationLookup implements Lookup

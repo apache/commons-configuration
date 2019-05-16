@@ -25,7 +25,6 @@ import org.apache.commons.logging.LogFactory;
  * JMX management.
  *
  * @author Nicolas De loof
- * @version $Id$
  */
 public class ManagedReloadingDetector implements ReloadingDetector,
         ManagedReloadingDetectorMBean

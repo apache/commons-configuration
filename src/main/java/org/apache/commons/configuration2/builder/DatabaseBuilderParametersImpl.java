@@ -32,7 +32,6 @@ import javax.sql.DataSource;
  * {@code ConfigurationBuilder}.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class DatabaseBuilderParametersImpl extends BasicBuilderParameters

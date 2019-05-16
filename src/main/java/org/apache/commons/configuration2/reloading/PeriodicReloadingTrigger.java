@@ -50,7 +50,6 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
  * the {@code ScheduledExecutorService} should be shut down, too.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @see ReloadingController
  */

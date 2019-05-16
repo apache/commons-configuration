@@ -30,7 +30,6 @@ package org.apache.commons.configuration2.event;
  * by a Lambda expression).
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <T> the type of events this listener can process
  */

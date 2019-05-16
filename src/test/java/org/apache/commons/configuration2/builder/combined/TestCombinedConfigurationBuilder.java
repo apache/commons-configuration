@@ -89,7 +89,6 @@ import org.junit.Test;
 /**
  * Test class for {@code CombinedConfigurationBuilder}.
  *
- * @version $Id$
  */
 public class TestCombinedConfigurationBuilder
 {

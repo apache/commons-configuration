@@ -31,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
  * the class path and the system class path.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class ClasspathLocationStrategy implements FileLocationStrategy

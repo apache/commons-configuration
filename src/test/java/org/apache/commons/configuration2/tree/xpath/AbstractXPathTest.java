@@ -32,7 +32,6 @@ import org.junit.Before;
  * creates a hierarchy of nodes in its setUp() method that can be used for test
  * cases.
  *
- * @version $Id$
  */
 public abstract class AbstractXPathTest
 {

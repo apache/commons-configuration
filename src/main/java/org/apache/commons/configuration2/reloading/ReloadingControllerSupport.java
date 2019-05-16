@@ -27,7 +27,6 @@ package org.apache.commons.configuration2.reloading;
  * reloading checks.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface ReloadingControllerSupport

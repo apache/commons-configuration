@@ -53,7 +53,6 @@ import org.apache.commons.configuration2.reloading.ReloadingControllerSupport;
  * in one of these configuration sources or in the definition configuration.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class ReloadingCombinedConfigurationBuilder extends

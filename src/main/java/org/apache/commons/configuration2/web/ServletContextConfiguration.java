@@ -30,7 +30,6 @@ import javax.servlet.ServletContext;
  * throw an UnsupportedOperationException.
  *
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Id$
  * @since 1.1
  */
 public class ServletContextConfiguration extends BaseWebConfiguration

@@ -33,7 +33,6 @@ import org.junit.Test;
 /**
  * Test class for {@code ConfigurationNodeIteratorAttributes}.
  *
- * @version $Id$
  */
 public class TestConfigurationIteratorAttributes extends AbstractXPathTest
 {

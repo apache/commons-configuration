@@ -30,7 +30,6 @@ import org.apache.commons.lang3.StringUtils;
  * ExtendedProperties and standard Properties.
  *
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
- * @version $Id$
  */
 public final class ConfigurationConverter
 {

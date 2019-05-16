@@ -48,7 +48,6 @@ package org.apache.commons.configuration2.sync;
  * desired operation is granted.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface Synchronizer

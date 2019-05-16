@@ -57,7 +57,6 @@ import org.apache.commons.configuration2.reloading.ReloadingControllerSupport;
  * of the managed configuration.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <T> the concrete type of {@code Configuration} objects created by this
  *        builder

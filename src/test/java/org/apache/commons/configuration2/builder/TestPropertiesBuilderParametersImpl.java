@@ -33,7 +33,6 @@ import org.junit.Test;
 /**
  * Test class for {@code PropertiesBuilderParametersImpl}.
  *
- * @version $Id$
  */
 public class TestPropertiesBuilderParametersImpl
 {

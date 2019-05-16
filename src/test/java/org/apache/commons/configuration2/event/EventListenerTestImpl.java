@@ -22,7 +22,6 @@ import static org.junit.Assert.assertEquals;
  * A test event listener class that can be used for testing whether
  * event sources generated correct events.
  *
- * @version $Id$
  */
 public class EventListenerTestImpl extends AbstractEventListenerTestImpl<ConfigurationEvent>
 {

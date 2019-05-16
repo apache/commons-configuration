@@ -43,7 +43,6 @@ import java.net.URL;
  * successful.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface FileLocationStrategy

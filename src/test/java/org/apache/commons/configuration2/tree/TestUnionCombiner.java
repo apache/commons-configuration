@@ -26,7 +26,6 @@ import org.junit.Test;
 /**
  * Test class for UnionCombiner.
  *
- * @version $Id$
  */
 public class TestUnionCombiner extends AbstractCombinerTest
 {

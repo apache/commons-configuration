@@ -28,7 +28,6 @@ import org.apache.commons.logging.LogFactory;
  * A configuration based on the system properties.
  *
  * @author Emmanuel Bourg
- * @version $Id$
  * @since 1.1
  */
 public class SystemConfiguration extends MapConfiguration

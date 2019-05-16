@@ -39,7 +39,6 @@ import org.apache.commons.text.lookup.StringLookupFactory;
  * registered per default for each configuration.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @deprecated Use {@link DefaultLookups#SYSTEM_PROPERTIES}.
  */

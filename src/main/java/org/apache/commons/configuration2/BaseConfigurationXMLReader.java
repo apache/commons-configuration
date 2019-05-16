@@ -28,7 +28,6 @@ package org.apache.commons.configuration2;
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
- * @version $Id$
  */
 public class BaseConfigurationXMLReader extends ConfigurationXMLReader
 {

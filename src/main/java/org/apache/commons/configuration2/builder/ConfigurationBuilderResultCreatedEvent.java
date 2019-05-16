@@ -36,7 +36,6 @@ import org.apache.commons.configuration2.event.EventType;
  * fully initialized; i.e. the managed configuration is available.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class ConfigurationBuilderResultCreatedEvent extends

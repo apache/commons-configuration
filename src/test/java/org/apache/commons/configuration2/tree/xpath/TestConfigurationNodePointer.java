@@ -32,7 +32,6 @@ import org.junit.Test;
 /**
  * Test class for {@code ConfigurationNodePointer}.
  *
- * @version $Id$
  */
 public class TestConfigurationNodePointer extends AbstractXPathTest
 {

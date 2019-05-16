@@ -42,7 +42,6 @@ import org.apache.commons.logging.LogFactory;
  * {@code FileHandler}: during load operations no auto-save is performed.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 class AutoSaveListener extends FileHandlerListenerAdapter implements

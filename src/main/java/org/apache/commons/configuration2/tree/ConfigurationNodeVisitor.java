@@ -34,7 +34,6 @@ package org.apache.commons.configuration2.tree;
  * </p>
  *
  * @since 1.3
- * @version $Id$
  * @param <T> the type of the nodes processed by this visitor
  */
 public interface ConfigurationNodeVisitor<T>

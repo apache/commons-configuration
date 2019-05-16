@@ -36,7 +36,6 @@ import org.junit.Test;
 /**
  * Test class for {@code ConfigurationLogger}.
  *
- * @version $Id$
  */
 public class TestConfigurationLogger
 {

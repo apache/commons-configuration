@@ -43,7 +43,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * shared between arbitrary components.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class NodeSelector

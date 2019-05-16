@@ -82,7 +82,6 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.2
  *
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class PropertyListConfiguration extends BaseHierarchicalConfiguration
     implements FileBasedConfiguration

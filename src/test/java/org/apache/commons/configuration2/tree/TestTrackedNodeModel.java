@@ -30,7 +30,6 @@ import org.junit.Test;
 /**
  * Test class for {@code TrackedNodeModel}.
  *
- * @version $Id$
  */
 public class TestTrackedNodeModel
 {

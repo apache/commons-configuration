@@ -19,7 +19,6 @@ package org.apache.commons.configuration2.beanutils;
 /**
  * A simple bean class used for testing bean creation operations.
  *
- * @version $Id$
  */
 public class BeanCreationTestBean
 {

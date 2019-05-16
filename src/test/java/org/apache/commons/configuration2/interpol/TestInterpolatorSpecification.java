@@ -32,7 +32,6 @@ import org.junit.Test;
 /**
  * Test class for {@code InterpolatorSpecification}.
  *
- * @version $Id$
  */
 public class TestInterpolatorSpecification
 {

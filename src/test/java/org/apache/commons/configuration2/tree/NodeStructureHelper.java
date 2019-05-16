@@ -31,7 +31,6 @@ import org.easymock.IAnswer;
  * objects. This class provides functionality for creating test trees and
  * accessing single nodes. It can be used by various test classes.
  *
- * @version $Id$
  */
 public class NodeStructureHelper
 {

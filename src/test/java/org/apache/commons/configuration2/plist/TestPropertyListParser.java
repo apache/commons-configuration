@@ -29,7 +29,6 @@ import org.junit.Test;
 
 /**
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class TestPropertyListParser
 {

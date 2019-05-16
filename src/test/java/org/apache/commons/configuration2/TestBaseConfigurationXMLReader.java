@@ -42,7 +42,6 @@ import org.xml.sax.helpers.DefaultHandler;
 /**
  * Test class for BaseConfigurationXMLReader.
  *
- * @version $Id$
  */
 public class TestBaseConfigurationXMLReader
 {

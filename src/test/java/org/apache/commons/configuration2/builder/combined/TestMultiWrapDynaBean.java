@@ -37,7 +37,6 @@ import org.junit.Test;
 /**
  * Test class for {@code MultiWrapDynaBean} and {@code MultiWrapDynaClass}.
  *
- * @version $Id$
  */
 public class TestMultiWrapDynaBean
 {

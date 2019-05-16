@@ -35,7 +35,6 @@ import org.junit.Test;
  * combined. Concrete sub classes only need to create the correct combiner
  * object.
  *
- * @version $Id$
  */
 public abstract class AbstractCombinerTest
 {

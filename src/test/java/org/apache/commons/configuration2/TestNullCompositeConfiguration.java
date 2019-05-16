@@ -37,7 +37,6 @@ import org.junit.Test;
 /**
  * Test loading multiple configurations.
  *
- * @version $Id$
  */
 public class TestNullCompositeConfiguration
 {

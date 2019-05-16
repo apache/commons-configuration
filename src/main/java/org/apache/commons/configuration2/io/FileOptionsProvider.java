@@ -24,7 +24,6 @@ import java.util.Map;
  * @since 1.7
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
- * @version $Id$
  */
 public interface FileOptionsProvider
 {

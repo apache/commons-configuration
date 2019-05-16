@@ -107,7 +107,6 @@ import org.apache.commons.lang3.StringUtils;
  * the file is saved, two property definitions will be written (in series).</li>
  * </ul>
  *
- * @version $Id$
  * @since 1.3
  */
 public class PropertiesConfigurationLayout implements EventListener<ConfigurationEvent>

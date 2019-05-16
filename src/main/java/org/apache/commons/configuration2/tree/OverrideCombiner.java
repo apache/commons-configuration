@@ -47,7 +47,6 @@ package org.apache.commons.configuration2.tree;
  * will never be combined.
  * </p>
  *
- * @version $Id$
  * @since 1.3
  */
 public class OverrideCombiner extends NodeCombiner

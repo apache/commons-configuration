@@ -47,7 +47,6 @@ import org.apache.commons.configuration2.builder.DefaultParametersManager;
  * {@code ConfigurationBuilder}.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class CombinedBuilderParametersImpl extends BasicBuilderParameters

@@ -62,7 +62,6 @@ import org.apache.commons.configuration2.event.EventType;
  * concrete detector implementation does not have to be thread-safe.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class ReloadingController implements EventSource

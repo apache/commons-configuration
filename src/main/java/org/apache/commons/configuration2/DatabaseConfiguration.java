@@ -117,7 +117,6 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.0
  *
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Id$
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {

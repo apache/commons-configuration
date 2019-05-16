@@ -58,7 +58,6 @@ import org.junit.rules.TemporaryFolder;
 /**
  * Test class for {@code INIConfiguration}.
  *
- * @version $Id$
  */
 public class TestINIConfiguration
 {

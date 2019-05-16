@@ -28,7 +28,6 @@ import java.nio.charset.Charset;
  * The copied constants and methods are <em>literally</em> copied.<br />
  *
  * See CONFIGURATION-521 for a discussion.
- * @version $Id$
  */
 class FileUtils {
     /**

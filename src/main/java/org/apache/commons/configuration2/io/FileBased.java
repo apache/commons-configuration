@@ -44,7 +44,6 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * unpredictable results.
  * </p>
  *
- * @version $Id$
  */
 public interface FileBased
 {

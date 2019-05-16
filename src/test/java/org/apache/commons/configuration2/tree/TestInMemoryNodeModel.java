@@ -50,7 +50,6 @@ import org.junit.Test;
 /**
  * Test class for {@code InMemoryNodeModel}.
  *
- * @version $Id$
  */
 public class TestInMemoryNodeModel
 {

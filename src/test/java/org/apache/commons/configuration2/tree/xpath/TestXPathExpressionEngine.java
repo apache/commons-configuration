@@ -41,7 +41,6 @@ import org.junit.Test;
 /**
  * Test class for XPathExpressionEngine.
  *
- * @version $Id$
  */
 public class TestXPathExpressionEngine
 {

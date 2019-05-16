@@ -36,7 +36,6 @@ import org.junit.rules.TemporaryFolder;
  * Tests for {@code SystemConfiguration}.
  *
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class TestSystemConfiguration
 {

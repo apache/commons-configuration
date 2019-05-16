@@ -40,7 +40,6 @@ import org.junit.Test;
 /**
  * Test class for {@code BuilderConfigurationWrapperFactory}.
  *
- * @version $Id$
  */
 public class TestBuilderConfigurationWrapperFactory
 {

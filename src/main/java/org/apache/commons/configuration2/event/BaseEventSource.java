@@ -61,7 +61,6 @@ import java.util.List;
  * notifications about errors to registered observers.
  * </p>
  *
- * @version $Id$
  * @since 1.3
  */
 public class BaseEventSource implements EventSource

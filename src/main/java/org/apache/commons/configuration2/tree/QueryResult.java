@@ -38,7 +38,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * static factory methods.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <T> the type of the result nodes
  */

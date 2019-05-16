@@ -44,7 +44,6 @@ import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
  *
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
- * @version $Id$
  */
 abstract class HierarchicalConfigurationConverter
 {

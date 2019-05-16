@@ -63,7 +63,6 @@ import org.xml.sax.helpers.DefaultHandler;
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id$
  */
 public class TestXMLConfiguration
 {

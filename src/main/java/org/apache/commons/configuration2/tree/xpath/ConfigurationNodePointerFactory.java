@@ -41,7 +41,6 @@ import org.apache.commons.jxpath.ri.model.NodePointerFactory;
  * </p>
  *
  * @since 1.3
- * @version $Id$
  */
 public class ConfigurationNodePointerFactory implements NodePointerFactory
 {

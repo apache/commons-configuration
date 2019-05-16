@@ -48,7 +48,6 @@ import org.apache.commons.logging.impl.NoOpLog;
  * uses a completely different logging framework.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class ConfigurationLogger

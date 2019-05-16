@@ -29,7 +29,6 @@ import org.junit.Test;
 /**
  * Test class for NodeAddData.
  *
- * @version $Id$
  */
 public class TestNodeAddData
 {

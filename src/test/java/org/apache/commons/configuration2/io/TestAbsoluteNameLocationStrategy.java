@@ -30,7 +30,6 @@ import org.junit.Test;
 /**
  * Test class for {@code AbsoluteNameLocationStrategy}.
  *
- * @version $Id$
  */
 public class TestAbsoluteNameLocationStrategy
 {

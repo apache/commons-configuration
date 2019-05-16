@@ -44,7 +44,6 @@ import org.junit.Test;
 /**
  * Test class for {@code Parameters}.
  *
- * @version $Id$
  */
 public class TestParameters
 {

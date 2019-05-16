@@ -33,7 +33,6 @@ import org.junit.Test;
 /**
  * Test class for {@code CombinedBeanDeclaration}.
  *
- * @version $Id$
  */
 public class TestCombinedBeanDeclaration
 {

@@ -39,7 +39,6 @@ import org.junit.Test;
  * Abstract TestCase for implementations of {@link AbstractConfiguration}.
  *
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public abstract class TestAbstractConfiguration
 {

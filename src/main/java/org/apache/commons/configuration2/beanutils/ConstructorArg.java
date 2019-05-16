@@ -33,7 +33,6 @@ package org.apache.commons.configuration2.beanutils;
  * be explicitly provided.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public final class ConstructorArg

@@ -30,7 +30,6 @@ import org.junit.Test;
 /**
  * Test class for {@code HierarchicalBuilderParametersImpl}.
  *
- * @version $Id$
  */
 public class TestHierarchicalBuilderParametersImpl
 {

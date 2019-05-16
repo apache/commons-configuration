@@ -47,7 +47,6 @@ import org.junit.Test;
  * A special test class for {@code InMemoryNodeModel} which tests the facilities
  * for tracking nodes.
  *
- * @version $Id$
  */
 public class TestInMemoryNodeModelTrackedNodes
 {

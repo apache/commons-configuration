@@ -49,7 +49,6 @@ import java.util.Collections;
  * ensure a safe access to this list in a multi-threaded environment.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class CombinedReloadingController extends ReloadingController

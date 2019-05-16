@@ -36,7 +36,6 @@ import org.junit.Test;
 /**
  * Test class for {@code BaseHierarchicalConfiguration}.
  *
- * @version $Id$
  */
 public class TestHierarchicalConfiguration
 {

@@ -46,7 +46,6 @@ import org.junit.Test;
  * the Synchronizer is called correctly by the methods specific for hierarchical
  * configurations.
  *
- * @version $Id$
  */
 public class TestBaseHierarchicalConfigurationSynchronization
 {

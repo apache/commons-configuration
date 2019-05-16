@@ -30,7 +30,6 @@ import org.apache.commons.configuration2.convert.ListDelimiterHandler;
  * which will return a correctly initialized instance.</p>
  *
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class SubsetConfiguration extends AbstractConfiguration
 {

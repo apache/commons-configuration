@@ -38,7 +38,6 @@ import org.apache.commons.configuration2.tree.NodeModelSupport;
  * structures.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <T> the type of the nodes used by this hierarchical configuration
  */

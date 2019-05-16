@@ -30,7 +30,6 @@ import java.util.Set;
  * querying the internal state of a node in a read-only way.
  * </p>
  *
- * @version $Id$
  * @param <T> the type of the nodes this handler deals with
  */
 public interface NodeHandler<T>

@@ -33,7 +33,6 @@ import org.junit.Test;
  * Test that the configuration factory returns keys in the same
  * sequence as the properties configurator
  *
- * @version $Id$
  */
 public class TestPropertiesSequence
 {

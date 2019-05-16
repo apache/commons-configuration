@@ -38,7 +38,6 @@ import org.junit.Test;
 /**
  * Test class for {@code Configurations}.
  *
- * @version $Id$
  */
 public class TestConfigurations
 {

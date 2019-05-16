@@ -36,7 +36,6 @@ package org.apache.commons.configuration2.tree;
  * shared between multiple components.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <C> the type of the criterion evaluated by this matcher
  */

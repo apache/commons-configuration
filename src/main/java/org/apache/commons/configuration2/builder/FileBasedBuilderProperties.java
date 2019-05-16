@@ -31,7 +31,6 @@ import org.apache.commons.configuration2.io.FileSystem;
  * location of a configuration source.
  * </p>
  *
- * @version $Id$
  * @param <T> the type of the result of all set methods for method chaining
  */
 public interface FileBasedBuilderProperties<T>

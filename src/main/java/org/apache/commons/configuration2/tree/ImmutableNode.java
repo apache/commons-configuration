@@ -39,7 +39,6 @@ import java.util.Map;
  * instances. Instances are created using the nested {@code Builder} class.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public final class ImmutableNode

@@ -29,7 +29,6 @@ package org.apache.commons.configuration2.event;
  * compiler can check this.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface EventSource

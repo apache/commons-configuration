@@ -23,7 +23,6 @@ import org.junit.Test;
 /**
  * Test class for {@code DummyLookup}.
  *
- * @version $Id$
  */
 public class TestDummyLookup
 {

@@ -46,7 +46,6 @@ package org.apache.commons.configuration2.event;
  * (e.g. name of the affected property or its value) may be available.
  * </p>
  *
- * @version $Id$
  * @since 1.4
  * @see ConfigurationEvent
  */

@@ -80,7 +80,6 @@ import org.apache.commons.configuration2.builder.combined.MultiFileBuilderParame
  * Implementation note: This class is thread-safe.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public final class Parameters

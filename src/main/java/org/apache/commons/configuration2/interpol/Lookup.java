@@ -41,7 +41,6 @@ package org.apache.commons.configuration2.interpol;
  * threads or if a {@code Lookup} object is shared by multiple configurations.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface Lookup

@@ -34,7 +34,6 @@ import org.junit.Test;
  * Compare the behavior of various methods between CompositeConfiguration
  * and normal (Properties) Configuration
  *
- * @version $Id$
  */
 public class TestEqualBehaviour
 {

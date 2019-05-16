@@ -30,7 +30,6 @@ import org.junit.Test;
 /**
  * Test class for BaseEventSource.
  *
- * @version $Id$
  */
 public class TestEventSource
 {

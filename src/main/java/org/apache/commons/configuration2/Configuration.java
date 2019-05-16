@@ -54,7 +54,6 @@ import org.apache.commons.configuration2.sync.SynchronizerSupport;
  * a subset configuration.</p>
  *
  * @author Commons Configuration team
- * @version $Id$
  */
 public interface Configuration extends ImmutableConfiguration, SynchronizerSupport
 {

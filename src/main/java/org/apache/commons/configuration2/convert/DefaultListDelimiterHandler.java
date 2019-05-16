@@ -61,7 +61,6 @@ import org.apache.commons.lang3.StringUtils;
  * multiple {@code Configuration} instances.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class DefaultListDelimiterHandler extends AbstractListDelimiterHandler

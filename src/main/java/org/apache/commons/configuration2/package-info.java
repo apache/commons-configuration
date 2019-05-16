@@ -23,6 +23,5 @@
  * files) or <code>XMLConfiguration</code> that can load XML documents.
  * </p>
  *
- * @version $Id$
  */
 package org.apache.commons.configuration2;

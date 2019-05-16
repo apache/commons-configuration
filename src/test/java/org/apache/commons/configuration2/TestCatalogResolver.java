@@ -31,7 +31,6 @@ import org.junit.Test;
 /**
  * Test class for CatalogResolver.
  *
- * @version $Id$
  */
 public class TestCatalogResolver
 {

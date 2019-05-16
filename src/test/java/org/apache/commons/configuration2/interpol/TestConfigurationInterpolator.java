@@ -37,7 +37,6 @@ import org.junit.Test;
 /**
  * Test class for ConfigurationInterpolator.
  *
- * @version $Id$
  */
 public class TestConfigurationInterpolator
 {

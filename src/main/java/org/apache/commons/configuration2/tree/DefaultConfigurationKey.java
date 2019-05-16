@@ -49,7 +49,6 @@ import org.apache.commons.lang3.StringUtils;
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
- * @version $Id$
  */
 public class DefaultConfigurationKey
 {

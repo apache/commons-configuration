@@ -44,7 +44,6 @@ import org.junit.Test;
 /**
  * Test class for {@code CombinedBuilderParametersImpl}.
  *
- * @version $Id$
  */
 public class TestCombinedBuilderParametersImpl
 {

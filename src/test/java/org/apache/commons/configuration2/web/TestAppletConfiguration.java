@@ -34,7 +34,6 @@ import org.junit.Test;
  * Test case for the {@link AppletConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class TestAppletConfiguration extends TestAbstractConfiguration
 {

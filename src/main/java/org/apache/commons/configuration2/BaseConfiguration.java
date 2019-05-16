@@ -47,7 +47,6 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
- * @version $Id$
  */
 public class BaseConfiguration extends AbstractConfiguration implements Cloneable
 {

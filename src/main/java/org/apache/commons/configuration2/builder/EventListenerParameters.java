@@ -55,7 +55,6 @@ import org.apache.commons.configuration2.event.EventType;
  * is just a dummy implementation; no parameters are propagated to the builder.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class EventListenerParameters implements BuilderParameters,

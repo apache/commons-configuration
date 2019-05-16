@@ -53,7 +53,6 @@ import junitx.framework.ObjectAssert;
 
 /**
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class TestXMLPropertyListConfiguration
 {

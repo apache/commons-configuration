@@ -44,7 +44,6 @@ import java.util.Set;
  * can be passed the name of a node, which should be considered a list node.
  * </p>
  *
- * @version $Id$
  * @since 1.3
  */
 public abstract class NodeCombiner

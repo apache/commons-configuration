@@ -46,7 +46,6 @@ import org.apache.commons.configuration2.event.EventSource;
  * different data object on each call.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class BuilderConfigurationWrapperFactory

@@ -58,7 +58,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * As {@code InMemoryNodeModel}, this class is thread-safe.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class TrackedNodeModel implements NodeModel<ImmutableNode>

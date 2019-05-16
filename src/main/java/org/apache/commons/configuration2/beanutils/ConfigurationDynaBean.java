@@ -50,7 +50,6 @@ import org.apache.commons.logging.LogFactory;
  * expression engine is set, may cause problems.</p>
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
- * @version $Id$
  * @since 1.0-rc1
  */
 public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean

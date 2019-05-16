@@ -25,7 +25,6 @@ import java.util.Map;
  * required by the BeanDeclaration interface. It is used by multiple test
  * classes.
  *
- * @version $Id$
  */
 class BeanDeclarationTestImpl implements BeanDeclaration
 {

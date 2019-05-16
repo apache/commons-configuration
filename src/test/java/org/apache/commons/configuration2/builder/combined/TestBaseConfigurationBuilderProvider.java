@@ -41,7 +41,6 @@ import org.junit.Test;
 /**
  * Test class for {@code BaseConfigurationBuilderProvider}.
  *
- * @version $Id$
  */
 public class TestBaseConfigurationBuilderProvider
 {

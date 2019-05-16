@@ -39,7 +39,6 @@ import org.junit.Test;
  * Tests some basic functions of the BaseConfiguration class. Missing keys might
  * return null.
  *
- * @version $Id$
  */
 public class TestBaseNullConfiguration
 {

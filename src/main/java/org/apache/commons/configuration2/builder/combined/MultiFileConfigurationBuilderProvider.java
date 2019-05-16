@@ -51,7 +51,6 @@ import org.apache.commons.configuration2.reloading.ReloadingControllerSupport;
  * {@code DynamicCombinedConfiguration} manages its data.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class MultiFileConfigurationBuilderProvider extends

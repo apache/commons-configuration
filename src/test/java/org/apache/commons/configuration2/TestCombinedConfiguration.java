@@ -61,7 +61,6 @@ import org.junit.rules.TemporaryFolder;
 /**
  * Test class for CombinedConfiguration.
  *
- * @version $Id$
  */
 public class TestCombinedConfiguration
 {

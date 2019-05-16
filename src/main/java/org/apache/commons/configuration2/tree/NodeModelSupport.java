@@ -24,7 +24,6 @@ package org.apache.commons.configuration2.tree;
  * This interface defines a single method for querying a {@code NodeModel}.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <T> the type of the supported {@code NodeModel}
  */

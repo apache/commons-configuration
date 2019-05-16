@@ -51,7 +51,6 @@ import org.junit.rules.TemporaryFolder;
 
 /**
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class TestPropertyListConfiguration
 {

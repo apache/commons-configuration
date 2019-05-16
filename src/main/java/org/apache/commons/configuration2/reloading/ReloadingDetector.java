@@ -40,7 +40,6 @@ package org.apache.commons.configuration2.reloading;
  * that an instance is accessed by a single thread only.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface ReloadingDetector

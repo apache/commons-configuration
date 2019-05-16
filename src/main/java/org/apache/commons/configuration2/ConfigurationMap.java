@@ -32,7 +32,6 @@ import java.util.Set;
  * <p><em>Note:</em> This implementation is incomplete.</p>
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
- * @version $Id$
  * @since 1.0
  */
 public class ConfigurationMap extends AbstractMap<Object, Object>

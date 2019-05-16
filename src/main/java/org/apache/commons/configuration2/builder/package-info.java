@@ -38,6 +38,5 @@
  * methods will be added to them. This can happen even in minor releases.</strong>
  * </p>
  *
- * @version $Id$
  */
 package org.apache.commons.configuration2.builder;

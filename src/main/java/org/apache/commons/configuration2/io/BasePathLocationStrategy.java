@@ -33,7 +33,6 @@ import org.apache.commons.lang3.StringUtils;
  * returned.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class BasePathLocationStrategy implements FileLocationStrategy

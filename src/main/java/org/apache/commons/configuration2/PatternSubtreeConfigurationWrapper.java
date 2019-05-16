@@ -44,7 +44,6 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
- * @version $Id$
  */
 public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfiguration
     implements FileBasedConfiguration

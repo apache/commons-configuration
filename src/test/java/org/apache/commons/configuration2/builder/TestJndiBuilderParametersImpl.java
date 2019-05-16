@@ -31,7 +31,6 @@ import org.junit.Test;
 /**
  * Test class for {@code JndiBuilderParametersImpl}.
  *
- * @version $Id$
  */
 public class TestJndiBuilderParametersImpl
 {

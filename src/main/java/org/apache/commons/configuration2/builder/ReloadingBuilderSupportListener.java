@@ -41,7 +41,6 @@ import org.apache.commons.configuration2.reloading.ReloadingEvent;
  * </ul>
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 final class ReloadingBuilderSupportListener implements EventListener<Event>

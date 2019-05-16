@@ -53,7 +53,6 @@ import junitx.framework.ListAssert;
 
 /**
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class TestDataConfiguration
 {

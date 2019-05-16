@@ -27,7 +27,6 @@ package org.apache.commons.configuration2.tree;
  * to override the methods they really need.
  * </p>
  *
- * @version $Id$
  * @param  <T> the type of the nodes processed by this visitor
  */
 public class ConfigurationNodeVisitorAdapter<T> implements

@@ -35,7 +35,6 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * </p>
  *
  * @since 1.3
- * @version $Id$
  * @param <T> the type of the nodes this pointer deals with
  */
 class ConfigurationNodePointer<T> extends NodePointer

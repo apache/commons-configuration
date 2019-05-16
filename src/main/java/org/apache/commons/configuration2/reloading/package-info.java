@@ -26,6 +26,5 @@
  * transparently in background.
  * </p>
  *
- * @version $Id$
  */
 package org.apache.commons.configuration2.reloading;

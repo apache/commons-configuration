@@ -95,7 +95,6 @@ import org.apache.commons.lang3.StringUtils;
  * </pre>
  *
  * @author <a href="ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Id$
  * @since 1.1
  */
 public class DataConfiguration extends AbstractConfiguration

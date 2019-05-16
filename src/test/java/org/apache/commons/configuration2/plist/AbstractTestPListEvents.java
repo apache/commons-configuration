@@ -25,7 +25,6 @@ import org.junit.Test;
  * configurations. This class especially checks events related to the special
  * handling of byte arrays.
  *
- * @version $Id$
  */
 public abstract class AbstractTestPListEvents extends
         AbstractTestConfigurationEvents

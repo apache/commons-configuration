@@ -26,7 +26,6 @@ import org.junit.Test;
 /**
  * Test class for {@code TrackedNodeHandler}.
  *
- * @version $Id$
  */
 public class TestTrackedNodeHandler
 {

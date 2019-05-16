@@ -68,7 +68,6 @@ import org.apache.commons.lang3.ClassUtils;
  * </p>
  *
  * @since 1.3
- * @version $Id$
  */
 public final class BeanHelper
 {

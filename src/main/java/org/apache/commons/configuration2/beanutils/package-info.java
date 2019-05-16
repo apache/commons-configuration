@@ -24,6 +24,5 @@
  * then instances can be created.
  * </p>
  *
- * @version $Id$
  */
 package org.apache.commons.configuration2.beanutils;

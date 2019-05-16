@@ -110,7 +110,6 @@ import java.util.List;
  * first node is used.
  * </p>
  *
- * @version $Id$
  * @since 1.3
  */
 public class UnionCombiner extends NodeCombiner

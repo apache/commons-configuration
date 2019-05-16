@@ -33,7 +33,6 @@ import java.util.Set;
  * sub classes.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 abstract class AbstractImmutableNodeHandler implements

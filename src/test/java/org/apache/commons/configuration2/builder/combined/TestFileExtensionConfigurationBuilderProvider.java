@@ -35,7 +35,6 @@ import org.junit.Test;
 /**
  * Test class for {@code FileExtensionConfigurationBuilderProvider}.
  *
- * @version $Id$
  */
 public class TestFileExtensionConfigurationBuilderProvider
 {

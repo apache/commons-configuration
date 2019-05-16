@@ -26,7 +26,6 @@ import java.util.Map;
  * stores the current root node and additional information which is not part
  * of the {@code ImmutableNode} class.
  *
- * @version $Id$
  * @since 2.0
  */
 class TreeData extends AbstractImmutableNodeHandler implements ReferenceNodeHandler

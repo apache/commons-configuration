@@ -30,7 +30,6 @@ import org.apache.commons.configuration2.reloading.ReloadingDetector;
  * create detector objects for configuration sources supporting reloading.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface ReloadingDetectorFactory

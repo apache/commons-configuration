@@ -38,7 +38,6 @@ import java.util.List;
  * instances can be created.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class NodeTreeWalker

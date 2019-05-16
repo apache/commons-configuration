@@ -30,7 +30,6 @@ import org.apache.commons.configuration2.reloading.ReloadingDetector;
  * Instances have no state and can be shared between multiple builders.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class DefaultReloadingDetectorFactory implements

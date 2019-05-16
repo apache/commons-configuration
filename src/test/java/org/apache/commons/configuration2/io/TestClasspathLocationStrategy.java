@@ -31,7 +31,6 @@ import org.junit.Test;
 /**
  * Test class for {@code ClasspathLocationStrategy}.
  *
- * @version $Id$
  */
 public class TestClasspathLocationStrategy
 {

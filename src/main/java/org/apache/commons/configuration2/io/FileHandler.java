@@ -114,7 +114,6 @@ import org.apache.commons.logging.LogFactory;
  * This class is thread-safe.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class FileHandler

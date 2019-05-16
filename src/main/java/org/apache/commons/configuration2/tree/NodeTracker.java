@@ -58,7 +58,6 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * creating new instances which are then stored by the owning node model.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 class NodeTracker

@@ -23,7 +23,6 @@ import org.junit.Test;
 /**
  * Test class for {@code Event}.
  *
- * @version $Id$
  */
 public class TestEvent
 {

@@ -30,7 +30,6 @@ import org.apache.commons.configuration2.event.EventType;
  * {@code ConfigurationBuilder}.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class ConfigurationBuilderEvent extends Event

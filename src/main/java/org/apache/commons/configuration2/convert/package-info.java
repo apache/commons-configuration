@@ -34,6 +34,5 @@
  * one which is most suitable for the current use case.
  * </p>
  *
- * @version $Id$
  */
 package org.apache.commons.configuration2.convert;

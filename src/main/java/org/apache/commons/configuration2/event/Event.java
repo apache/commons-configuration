@@ -30,7 +30,6 @@ import java.util.EventObject;
  * events or for defining event listeners on a fine-grained basis.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class Event extends EventObject

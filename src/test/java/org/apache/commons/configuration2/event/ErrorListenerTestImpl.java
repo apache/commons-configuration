@@ -21,7 +21,6 @@ import static org.junit.Assert.assertEquals;
 /**
  * A test event listener implementation for error events.
  *
- * @version $Id$
  */
 public class ErrorListenerTestImpl extends
         AbstractEventListenerTestImpl<ConfigurationErrorEvent>

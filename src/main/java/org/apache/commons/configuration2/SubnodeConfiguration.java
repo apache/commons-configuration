@@ -105,7 +105,6 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * </p>
  *
  * @since 1.3
- * @version $Id$
  */
 public class SubnodeConfiguration extends BaseHierarchicalConfiguration
 {

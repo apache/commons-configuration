@@ -29,7 +29,6 @@ import org.junit.Test;
 /**
  * Test class for {@code ProvidedURLLocationStrategy}.
  *
- * @version $Id$
  */
 public class TestProvidedURLLocationStrategy
 {

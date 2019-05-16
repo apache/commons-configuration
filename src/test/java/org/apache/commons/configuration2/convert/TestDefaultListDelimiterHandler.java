@@ -29,7 +29,6 @@ import org.junit.Test;
 /**
  * Test class for {@code DefaultListDelimiterHandler}.
  *
- * @version $Id$
  */
 public class TestDefaultListDelimiterHandler
 {

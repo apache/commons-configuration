@@ -60,7 +60,6 @@ import org.apache.commons.configuration2.tree.NodeCombiner;
  * </p>
  *
  * @since 1.6
- * @version $Id$
  */
 public class DynamicCombinedConfiguration extends CombinedConfiguration
 {

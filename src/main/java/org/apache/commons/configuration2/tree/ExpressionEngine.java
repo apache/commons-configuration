@@ -47,7 +47,6 @@ import java.util.List;
  * </p>
  *
  * @since 1.3
- * @version $Id$
  */
 public interface ExpressionEngine
 {

@@ -49,7 +49,6 @@ import org.junit.Test;
 /**
  * Test class for {@code CompositeConfiguration}.
  *
- * @version $Id$
  */
 public class TestCompositeConfiguration
 {

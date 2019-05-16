@@ -37,7 +37,6 @@ import org.junit.Test;
 /**
  * Test class for {@code DefaultParametersManager}.
  *
- * @version $Id$
  */
 public class TestDefaultParametersManager
 {

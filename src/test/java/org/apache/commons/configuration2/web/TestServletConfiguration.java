@@ -32,7 +32,6 @@ import com.mockobjects.servlet.MockServletConfig;
  * Test case for the {@link ServletConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class TestServletConfiguration extends TestAbstractConfiguration
 {

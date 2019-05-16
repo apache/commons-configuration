@@ -52,7 +52,6 @@ import junitx.framework.ListAssert;
  * Tests some basic functions of the BaseConfiguration class. Missing keys will
  * throw Exceptions
  *
- * @version $Id$
  */
 public class TestBaseConfiguration
 {

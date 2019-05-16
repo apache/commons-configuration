@@ -38,7 +38,6 @@ import java.util.List;
  * configuration objects. It is state-less and thread-safe.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class DisabledListDelimiterHandler extends AbstractListDelimiterHandler

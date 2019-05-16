@@ -60,7 +60,6 @@ import org.w3c.dom.NodeList;
  * this class.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 class XMLDocumentHelper

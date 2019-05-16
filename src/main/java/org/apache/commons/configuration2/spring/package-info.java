@@ -20,6 +20,5 @@
  * A package containing integrations for the Spring Framework.
  * </p>
  *
- * @version $Id$
  */
 package org.apache.commons.configuration2.spring;

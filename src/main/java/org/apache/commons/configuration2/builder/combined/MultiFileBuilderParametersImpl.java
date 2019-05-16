@@ -51,7 +51,6 @@ import org.apache.commons.configuration2.builder.BuilderParameters;
  * {@code ConfigurationBuilder}.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class MultiFileBuilderParametersImpl extends BasicBuilderParameters

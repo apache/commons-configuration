@@ -42,7 +42,6 @@ import org.xml.sax.SAXException;
  * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
  * @since 1.7
- * @version $Id$
  */
 public class CatalogResolver implements EntityResolver
 {

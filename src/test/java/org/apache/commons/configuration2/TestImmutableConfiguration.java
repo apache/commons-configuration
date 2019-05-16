@@ -36,7 +36,6 @@ import org.junit.Test;
 /**
  * A test class which tests functionality related to immutable configurations.
  *
- * @version $Id$
  */
 public class TestImmutableConfiguration
 {

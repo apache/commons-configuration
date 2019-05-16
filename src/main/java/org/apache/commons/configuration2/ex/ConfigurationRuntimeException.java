@@ -24,7 +24,6 @@ package org.apache.commons.configuration2.ex;
  * @since 1.0
  *
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class ConfigurationRuntimeException extends RuntimeException
 {

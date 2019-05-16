@@ -39,7 +39,6 @@ package org.apache.commons.configuration2.convert;
  * back to perform the additional encoding as its pleasure.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface ValueTransformer

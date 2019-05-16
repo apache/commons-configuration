@@ -19,7 +19,6 @@ package org.apache.commons.configuration2.tree;
 /**
  * Test class for {@code TreeData}
  *
- * @version $Id$
  */
 public class TestTreeData extends AbstractImmutableNodeHandlerTest
 {

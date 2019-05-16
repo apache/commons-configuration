@@ -21,6 +21,5 @@
  * interface that are useful in web environments.
  * </p>
  *
- * @version $Id$
  */
 package org.apache.commons.configuration2.web;

@@ -36,7 +36,6 @@ import org.junit.Test;
  * nodes. Concrete sub classes have to implement a method which creates a new
  * handler object for a given nodes structure.
  *
- * @version $Id$
  */
 public abstract class AbstractImmutableNodeHandlerTest
 {

@@ -36,7 +36,6 @@ import org.junit.Test;
 /**
  * Test class for {@code ReloadingFileBasedConfigurationBuilder}.
  *
- * @version $Id$
  */
 public class TestReloadingFileBasedConfigurationBuilder
 {

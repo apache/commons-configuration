@@ -31,7 +31,6 @@ import java.util.Set;
  * provide the underlying handler.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <T> the type of the nodes supported by this handler
  */

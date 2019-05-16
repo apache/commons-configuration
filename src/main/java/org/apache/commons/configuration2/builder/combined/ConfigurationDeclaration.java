@@ -35,7 +35,6 @@ import org.apache.commons.configuration2.beanutils.XMLBeanDeclaration;
  * bean factory is never needed.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class ConfigurationDeclaration extends XMLBeanDeclaration

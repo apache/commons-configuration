@@ -42,7 +42,6 @@ import org.apache.commons.lang3.StringUtils;
  * underlying JNDI data source is not changed.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id$
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {

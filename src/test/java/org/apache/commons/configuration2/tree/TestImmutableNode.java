@@ -35,7 +35,6 @@ import org.junit.Test;
 /**
  * Test class for {@code ImmutableNode}
  *
- * @version $Id$
  */
 public class TestImmutableNode
 {

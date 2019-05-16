@@ -63,7 +63,6 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * an application only has to include the dependencies it actually uses.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class BaseConfigurationBuilderProvider implements

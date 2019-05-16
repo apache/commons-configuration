@@ -30,7 +30,6 @@ import org.apache.commons.lang3.StringUtils;
  * these instances can be shared and accessed concurrently.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public enum NodeNameMatchers implements NodeMatcher<String>

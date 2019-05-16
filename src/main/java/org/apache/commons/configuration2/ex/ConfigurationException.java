@@ -23,7 +23,6 @@ package org.apache.commons.configuration2.ex;
  * object.
  *
  * @author Eric Pugh
- * @version $Id$
  */
 public class ConfigurationException extends Exception
 {

@@ -54,7 +54,6 @@ import org.apache.commons.text.lookup.StringLookupFactory;
  * <li>"xml" for the {@code XmlStringLookup} since Apache Commons Text 1.5.</li>
  * </ul>
  *
- * @version $Id$
  * @since 2.0
  */
 public enum DefaultLookups {

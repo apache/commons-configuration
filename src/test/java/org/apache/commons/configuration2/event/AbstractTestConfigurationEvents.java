@@ -31,7 +31,6 @@ import org.junit.Test;
  * Instead the corresponding test methods check whether the enclosing events
  * (not the detail events) are of the expected type.
  *
- * @version $Id$
  */
 public abstract class AbstractTestConfigurationEvents
 {

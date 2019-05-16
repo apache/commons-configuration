@@ -47,7 +47,6 @@ import org.apache.commons.lang3.mutable.MutableObject;
  * structure.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class InMemoryNodeModel implements NodeModel<ImmutableNode>

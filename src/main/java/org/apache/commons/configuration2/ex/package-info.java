@@ -25,6 +25,5 @@
  * located in their own package to avoid cyclic dependencies.
  * </p>
  *
- * @version $Id$
  */
 package org.apache.commons.configuration2.ex;

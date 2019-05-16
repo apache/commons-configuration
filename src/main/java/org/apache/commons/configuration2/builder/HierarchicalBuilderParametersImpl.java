@@ -30,7 +30,6 @@ import org.apache.commons.configuration2.tree.ExpressionEngine;
  * class extends {@code FileBasedBuilderParametersImpl}.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class HierarchicalBuilderParametersImpl extends

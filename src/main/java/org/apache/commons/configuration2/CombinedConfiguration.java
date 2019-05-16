@@ -179,7 +179,6 @@ import org.apache.commons.configuration2.tree.UnionCombiner;
  * </p>
  *
  * @since 1.3
- * @version $Id$
  */
 public class CombinedConfiguration extends BaseHierarchicalConfiguration implements
         EventListener<ConfigurationEvent>

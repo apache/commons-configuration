@@ -29,7 +29,6 @@ import org.junit.Test;
 /**
  * Test class for {@code NodeUpdateData}.
  *
- * @version $Id$
  */
 public class TestNodeUpdateData
 {

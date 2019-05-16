@@ -36,7 +36,6 @@ import org.xml.sax.InputSource;
 /**
  * Test class for HierarchicalConfigurationXMLReader.
  *
- * @version $Id$
  */
 public class TestHierarchicalConfigurationXMLReader
 {

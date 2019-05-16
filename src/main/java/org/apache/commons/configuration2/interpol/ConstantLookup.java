@@ -45,7 +45,6 @@ import org.apache.commons.logging.LogFactory;
  * clients concurrently.
  * </p>
  *
- * @version $Id$
  * @since 1.4
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons

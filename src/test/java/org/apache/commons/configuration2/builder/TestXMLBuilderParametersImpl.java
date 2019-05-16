@@ -31,7 +31,6 @@ import org.xml.sax.EntityResolver;
 /**
  * Test class for {@code XMLBuilderParametersImpl}.
  *
- * @version $Id$
  */
 public class TestXMLBuilderParametersImpl
 {

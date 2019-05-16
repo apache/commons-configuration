@@ -27,7 +27,6 @@ import org.junit.Test;
 /**
  * Test class for {@code DefaultExpressionEngineSymbols}.
  *
- * @version $Id$
  */
 public class TestDefaultExpressionEngineSymbols
 {

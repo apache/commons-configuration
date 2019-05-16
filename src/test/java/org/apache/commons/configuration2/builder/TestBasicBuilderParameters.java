@@ -48,7 +48,6 @@ import org.junit.Test;
 /**
  * Test class for {@code BasicBuilderParameters}.
  *
- * @version $Id$
  */
 public class TestBasicBuilderParameters
 {

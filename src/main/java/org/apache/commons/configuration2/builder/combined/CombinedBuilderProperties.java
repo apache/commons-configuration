@@ -38,7 +38,6 @@ import org.apache.commons.configuration2.builder.DefaultParametersManager;
  * be extended even in minor releases.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <T> the return type of all methods for allowing method chaining
  */

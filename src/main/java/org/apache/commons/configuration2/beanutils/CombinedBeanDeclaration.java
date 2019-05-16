@@ -45,7 +45,6 @@ import java.util.Map;
  * child declarations is built.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class CombinedBeanDeclaration implements BeanDeclaration

@@ -33,7 +33,6 @@ import org.apache.commons.configuration2.AbstractConfiguration;
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
- * @version $Id$
  * @since 1.2
  */
 abstract class BaseWebConfiguration extends AbstractConfiguration

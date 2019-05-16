@@ -28,7 +28,6 @@ import org.apache.commons.configuration2.io.FileBased;
  * implementations which produce configurations read from a {@code FileHandler}.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface FileBasedConfiguration extends FileBased, Configuration

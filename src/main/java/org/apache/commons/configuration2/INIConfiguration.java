@@ -220,7 +220,6 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * @author <a
  *         href="http://commons.apache.org/configuration/team-list.html">Commons
  *         Configuration team</a>
- * @version $Id$
  * @since 1.6
  */
 public class INIConfiguration extends BaseHierarchicalConfiguration implements

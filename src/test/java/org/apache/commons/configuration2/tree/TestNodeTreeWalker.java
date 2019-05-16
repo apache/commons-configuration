@@ -27,7 +27,6 @@ import org.junit.Test;
 /**
  * Test class for {@code NodeTreeWalker}.
  *
- * @version $Id$
  */
 public class TestNodeTreeWalker
 {

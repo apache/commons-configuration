@@ -45,7 +45,6 @@ import org.junit.Test;
 /**
  * Test case for SubnodeConfiguration.
  *
- * @version $Id$
  */
 public class TestSubnodeConfiguration
 {

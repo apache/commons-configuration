@@ -28,7 +28,6 @@ import org.junit.Test;
 /**
  * Test class for {@code EventListenerParameters}.
  *
- * @version $Id$
  */
 public class TestEventListenerParameters
 {

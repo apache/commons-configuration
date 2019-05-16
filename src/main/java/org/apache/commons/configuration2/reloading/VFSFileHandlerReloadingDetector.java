@@ -45,7 +45,6 @@ import org.apache.commons.vfs2.VFS;
  * @author <a
  *         href="http://commons.apache.org/configuration/team-list.html">Commons
  *         Configuration team</a>
- * @version $Id$
  * @since 1.7
  */
 public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetector

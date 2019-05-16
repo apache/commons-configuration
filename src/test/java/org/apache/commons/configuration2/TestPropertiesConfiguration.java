@@ -60,7 +60,6 @@ import static org.junit.Assert.*;
 /**
  * Test for loading and saving properties files.
  *
- * @version $Id$
  */
 public class TestPropertiesConfiguration
 {

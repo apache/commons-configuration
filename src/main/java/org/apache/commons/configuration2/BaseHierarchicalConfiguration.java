@@ -49,7 +49,6 @@ import org.apache.commons.lang3.ObjectUtils;
  * structure of {@link ImmutableNode} objects.
  * </p>
  *
- * @version $Id$
  */
 public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfiguration<ImmutableNode>
     implements InMemoryNodeModelSupport

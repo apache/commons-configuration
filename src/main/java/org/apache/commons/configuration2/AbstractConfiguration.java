@@ -97,7 +97,6 @@ import org.apache.commons.lang3.ObjectUtils;
  *
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov </a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen </a>
- * @version $Id$
  */
 public abstract class AbstractConfiguration extends BaseEventSource implements Configuration
 {

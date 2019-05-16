@@ -30,7 +30,6 @@ import java.util.Map;
  * UnsupportedOperationException.
  *
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Id$
  * @since 1.1
  */
 public class ServletRequestConfiguration extends BaseWebConfiguration

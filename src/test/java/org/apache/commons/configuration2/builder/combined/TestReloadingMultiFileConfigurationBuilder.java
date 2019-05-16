@@ -40,7 +40,6 @@ import org.junit.Test;
 /**
  * Test class for {@code ReloadingMultiFileConfigurationBuilder}.
  *
- * @version $Id$
  */
 public class TestReloadingMultiFileConfigurationBuilder extends
         AbstractMultiFileConfigurationBuilderTest
@@ -189,8 +188,7 @@ public class TestReloadingMultiFileConfigurationBuilder extends
      * A test implementation of the class under test which allows access to
      * reloading controllers of managed configuration builders.
      *
-     * @version $Id$
-     */
+         */
     private static class ReloadingMultiFileConfigurationBuilderTestImpl extends
             ReloadingMultiFileConfigurationBuilder<XMLConfiguration>
     {

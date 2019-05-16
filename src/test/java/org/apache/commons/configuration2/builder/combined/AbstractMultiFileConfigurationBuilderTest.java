@@ -27,7 +27,6 @@ import org.junit.After;
  * derived classes. This class provides some common functionality related to
  * file name pattern which can be used by concrete tests.
  *
- * @version $Id$
  */
 public class AbstractMultiFileConfigurationBuilderTest
 {

@@ -61,7 +61,6 @@ import org.junit.Test;
 /**
  * Test class for {@code BasicConfigurationBuilder}.
  *
- * @version $Id$
  */
 public class TestBasicConfigurationBuilder
 {

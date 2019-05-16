@@ -31,7 +31,6 @@ import org.junit.Test;
 /**
  * Test class for MergeCombiner.
  *
- * @version $Id$
  */
 public class TestMergeCombiner extends AbstractCombinerTest
 {

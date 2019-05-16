@@ -22,7 +22,6 @@ import java.util.Map;
 /**
  * Utility methods.
  *
- * @version $Id$
  * @since 1.7
  */
 public final class TreeUtils

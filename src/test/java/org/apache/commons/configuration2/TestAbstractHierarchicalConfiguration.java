@@ -53,7 +53,6 @@ import org.junit.Test;
 /**
  * Test class for {@code AbstractHierarchicalConfiguration}.
  *
- * @version $Id$
  */
 public class TestAbstractHierarchicalConfiguration
 {

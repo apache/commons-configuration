@@ -32,7 +32,6 @@ import org.junit.Test;
 /**
  * Test class for {@code FileHandlerReloadingDetector}.
  *
- * @version $Id$
  */
 public class TestFileHandlerReloadingDetector
 {

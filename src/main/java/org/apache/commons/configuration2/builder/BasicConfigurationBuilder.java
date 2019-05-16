@@ -101,7 +101,6 @@ import org.apache.commons.configuration2.reloading.ReloadingController;
  * builder is reset.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <T> the concrete type of {@code ImmutableConfiguration} objects created by this
  *        builder

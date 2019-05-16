@@ -32,7 +32,6 @@ import java.net.URLStreamHandler;
  * standard URLs. This handler acts like a file handler with write support.
  *
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class FileURLStreamHandler extends URLStreamHandler
 {

@@ -31,7 +31,6 @@ import org.apache.commons.beanutils.DynaProperty;
  * multiple other {@code DynaClass} instances.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 class MultiWrapDynaClass implements DynaClass

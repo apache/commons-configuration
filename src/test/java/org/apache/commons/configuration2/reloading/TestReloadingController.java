@@ -32,7 +32,6 @@ import org.junit.Test;
 /**
  * Test class for {@code ReloadingController}.
  *
- * @version $Id$
  */
 public class TestReloadingController
 {

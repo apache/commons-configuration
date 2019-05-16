@@ -78,7 +78,6 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * settings for the configurations to be created.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @see org.apache.commons.configuration2.builder.DefaultParametersManager
  */

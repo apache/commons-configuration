@@ -135,7 +135,6 @@ import org.apache.commons.lang3.StringUtils;
  * </p>
  *
  * @since 1.3
- * @version $Id$
  */
 public class XPathExpressionEngine implements ExpressionEngine
 {

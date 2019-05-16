@@ -41,7 +41,6 @@ import org.junit.Test;
 /**
  * Test class for {@code FileBasedBuilderParametersImpl}.
  *
- * @version $Id$
  */
 public class TestFileBasedBuilderParameters
 {

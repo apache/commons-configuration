@@ -27,7 +27,6 @@ import org.apache.commons.configuration2.XMLConfiguration;
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
- * @version $Id$
  */
 public class TestConfigurationDynaBeanXMLConfig extends
         TestConfigurationDynaBean

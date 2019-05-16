@@ -25,7 +25,6 @@ import org.junit.Test;
 /**
  * test if properties that contain a "=" will be loaded correctly.
  *
- * @version $Id$
  */
 public class TestEqualsProperty
 {

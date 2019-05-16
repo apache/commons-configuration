@@ -51,7 +51,6 @@ import java.util.Map;
  * creating new instances which are then stored by the owning node model.
  * </p>
  *
- * @version $Id$
  */
 class ReferenceTracker
 {

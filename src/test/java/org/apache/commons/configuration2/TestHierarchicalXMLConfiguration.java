@@ -38,7 +38,6 @@ import org.junit.rules.TemporaryFolder;
  *
  * @author Emmanuel Bourg
  * @author Mark Woodman
- * @version $Id$
  */
 public class TestHierarchicalXMLConfiguration
 {

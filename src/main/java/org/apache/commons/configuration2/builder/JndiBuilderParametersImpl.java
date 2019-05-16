@@ -36,7 +36,6 @@ import javax.naming.Context;
  * {@code ConfigurationBuilder}.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class JndiBuilderParametersImpl extends BasicBuilderParameters implements

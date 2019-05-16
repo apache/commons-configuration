@@ -35,7 +35,6 @@ import java.util.List;
  * references.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface ReferenceNodeHandler extends NodeHandler<ImmutableNode>

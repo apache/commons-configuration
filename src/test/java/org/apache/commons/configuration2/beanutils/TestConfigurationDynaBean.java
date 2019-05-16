@@ -43,7 +43,6 @@ import org.junit.Test;
  * because the two classes provide similar levels of functionality.</p>
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
- * @version $Id$
  */
 public class TestConfigurationDynaBean
 {

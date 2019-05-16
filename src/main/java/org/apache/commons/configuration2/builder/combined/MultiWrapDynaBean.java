@@ -41,7 +41,6 @@ import org.apache.commons.configuration2.beanutils.BeanHelper;
  * which bean property is read or written.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 class MultiWrapDynaBean implements DynaBean

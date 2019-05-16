@@ -45,7 +45,6 @@ import org.junit.Test;
  * Test in Eclipse it sometimes takes a couple tries. Otherwise you may get
  * database is already in use by another process errors.
  *
- * @version $Id$
  */
 public class TestDatabaseConfiguration
 {

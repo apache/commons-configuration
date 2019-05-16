@@ -27,7 +27,6 @@ import org.junit.Test;
 /**
  * Test class for {@code SystemPropertiesLookup}.
  *
- * @version $Id$
  */
 public class TestSystemPropertiesLookup
 {

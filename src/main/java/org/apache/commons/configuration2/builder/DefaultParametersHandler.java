@@ -31,7 +31,6 @@ package org.apache.commons.configuration2.builder;
  * to perform arbitrary initialization.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <T> the type of parameters supported by this handler
  */

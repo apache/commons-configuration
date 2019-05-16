@@ -80,7 +80,6 @@ import org.apache.commons.text.lookup.StringLookup;
  * or removed at any time concurrent to interpolation operations.
  * </p>
  *
- * @version $Id$
  * @since 1.4
  * @author <a
  *         href="http://commons.apache.org/configuration/team-list.html">Commons

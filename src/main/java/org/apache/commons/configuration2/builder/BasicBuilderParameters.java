@@ -48,7 +48,6 @@ import org.apache.commons.configuration2.sync.Synchronizer;
  * {@code ConfigurationBuilder}.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class BasicBuilderParameters implements Cloneable, BuilderParameters,

@@ -20,7 +20,6 @@ package org.apache.commons.configuration2.reloading;
  * A reloading detector implementation which always indicates that a reload is
  * required. This is used by some test classes.
  *
- * @version $Id$
  */
 public class AlwaysReloadingDetector implements ReloadingDetector
 {

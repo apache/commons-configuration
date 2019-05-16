@@ -47,7 +47,6 @@ import java.util.List;
  * </ul>
  *
  * @since 1.3
- * @version $Id$
  * @param <T> the type of nodes this class can handle
  */
 public class NodeAddData<T>

@@ -24,7 +24,6 @@ import org.junit.Test;
 /**
  * Test class for {@code EventType}.
  *
- * @version $Id$
  */
 public class TestEventType
 {

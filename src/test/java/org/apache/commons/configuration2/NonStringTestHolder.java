@@ -26,7 +26,6 @@ import org.junit.Assert;
  * Pulling out the calls to do the tests so both JUnit and Cactus tests
  * can share.
  *
- * @version $Id$
  */
 public class NonStringTestHolder
 {

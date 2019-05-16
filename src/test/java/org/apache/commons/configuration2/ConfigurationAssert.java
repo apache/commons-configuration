@@ -37,7 +37,6 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * access to test files.
  *
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class ConfigurationAssert
 {

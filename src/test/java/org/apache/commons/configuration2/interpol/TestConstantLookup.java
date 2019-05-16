@@ -28,7 +28,6 @@ import org.junit.Test;
 /**
  * Test class for ConstantLookup.
  *
- * @version $Id$
  */
 public class TestConstantLookup
 {

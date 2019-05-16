@@ -33,7 +33,6 @@ import org.junit.Test;
  * call the factory's methods, but rather checks if it can be installed in a
  * {@code JXPathContext} and if XPath expressions can be evaluated.
  *
- * @version $Id$
  */
 public class TestConfigurationNodePointerFactory extends AbstractXPathTest
 {

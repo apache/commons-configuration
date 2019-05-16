@@ -208,7 +208,6 @@ import org.apache.commons.text.translate.UnicodeEscaper;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Id$
  */
 public class PropertiesConfiguration extends BaseConfiguration
     implements FileBasedConfiguration, FileLocatorAware

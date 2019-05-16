@@ -29,7 +29,6 @@ import org.junit.Test;
 /**
  * Test class for {@code QueryResult}.
  *
- * @version $Id$
  */
 public class TestQueryResult
 {

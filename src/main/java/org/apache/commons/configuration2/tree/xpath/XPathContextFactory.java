@@ -27,7 +27,6 @@ import org.apache.commons.jxpath.JXPathContext;
  * This class is used by {@link XPathExpressionEngine}. It simplifies testing.
  * </p>
  *
- * @version $Id$
  */
 class XPathContextFactory
 {

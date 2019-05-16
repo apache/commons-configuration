@@ -36,7 +36,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * configuration, this happens with an exclusive lock.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class ReadWriteSynchronizer implements Synchronizer

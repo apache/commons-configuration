@@ -49,7 +49,6 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * </p>
  *
  * @since 1.3
- * @version $Id$
  */
 public class DefaultBeanFactory implements BeanFactory
 {

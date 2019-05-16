@@ -21,6 +21,5 @@
  * about changes at configurations.
  * </p>
  *
- * @version $Id$
  */
 package org.apache.commons.configuration2.event;

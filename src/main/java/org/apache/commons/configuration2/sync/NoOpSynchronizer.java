@@ -34,7 +34,6 @@ package org.apache.commons.configuration2.sync;
  * configurations.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public enum NoOpSynchronizer implements Synchronizer

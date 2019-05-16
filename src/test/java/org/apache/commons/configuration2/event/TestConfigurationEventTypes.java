@@ -31,7 +31,6 @@ import org.junit.Test;
  * A test class which tests whether the types of basic configuration events are
  * correctly defined.
  *
- * @version $Id$
  */
 public class TestConfigurationEventTypes
 {

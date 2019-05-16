@@ -32,7 +32,6 @@ import org.junit.Test;
  * A test class for XPathExpressionEngine that tests the engine integrated into
  * a hierarchical configuration.
  *
- * @version $Id$
  */
 public class TestXPathExpressionEngineInConfig
 {

@@ -46,7 +46,6 @@ import java.util.Properties;
  * {@code AbstractConfiguration} always throw an exception for missing
  * properties because there is no way of overloading the return value.)</p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface ImmutableConfiguration

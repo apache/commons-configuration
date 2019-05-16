@@ -46,7 +46,6 @@ import org.apache.commons.lang3.ClassUtils;
  * actual conversion.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public class DefaultConversionHandler implements ConversionHandler

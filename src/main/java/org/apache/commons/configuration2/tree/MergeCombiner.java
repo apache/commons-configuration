@@ -38,7 +38,6 @@ import java.util.Objects;
  * <li>Nodes in both files that do not match are added to the result.</li>
  * </ol>
  *
- * @version $Id$
  * @since 1.7
  */
 public class MergeCombiner extends NodeCombiner

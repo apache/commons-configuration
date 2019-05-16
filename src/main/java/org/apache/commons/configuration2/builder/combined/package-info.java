@@ -35,6 +35,5 @@
  * project: development, integration test, production, etc.
  * </p>
  *
- * @version $Id$
  */
 package org.apache.commons.configuration2.builder.combined;

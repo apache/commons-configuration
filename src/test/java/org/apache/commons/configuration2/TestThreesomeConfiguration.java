@@ -31,7 +31,6 @@ import org.junit.Test;
  * org.apache.commons.configuration2.BasePropertiesConfiguration}
  * extensions.
  *
- * @version $Id$
  */
 public class TestThreesomeConfiguration
 {

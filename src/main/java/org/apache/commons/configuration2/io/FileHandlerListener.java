@@ -28,7 +28,6 @@ package org.apache.commons.configuration2.io;
  * configurations.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface FileHandlerListener

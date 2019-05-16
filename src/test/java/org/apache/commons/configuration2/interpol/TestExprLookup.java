@@ -40,7 +40,6 @@ import org.junit.Test;
 /**
  * Test class for ExprLookup.
  *
- * @version $Id$
  */
 public class TestExprLookup
 {

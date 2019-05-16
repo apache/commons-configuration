@@ -34,7 +34,6 @@ import org.junit.Test;
  *
  * @author Martin Poeschl
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class TestConfigurationConverter
 {

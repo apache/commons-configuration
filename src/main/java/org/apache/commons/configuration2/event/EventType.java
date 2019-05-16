@@ -40,7 +40,6 @@ import java.util.Set;
  * selection of events to be processed.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <T> the event associated with this type
  */

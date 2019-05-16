@@ -32,7 +32,6 @@ package org.apache.commons.configuration2;
  * support for different kinds of encoded strings in configuration files.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface ConfigurationDecoder

@@ -34,7 +34,6 @@ import org.junit.Test;
 /**
  * Test class for {@code NodeSelector}.
  *
- * @version $Id$
  */
 public class TestNodeSelector
 {

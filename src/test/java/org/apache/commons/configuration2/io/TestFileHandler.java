@@ -57,7 +57,6 @@ import org.junit.rules.TemporaryFolder;
 /**
  * Test class for {@code FileHandler}.
  *
- * @version $Id$
  */
 public class TestFileHandler
 {

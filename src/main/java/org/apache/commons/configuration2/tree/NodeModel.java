@@ -39,7 +39,6 @@ import java.util.Collection;
  * keys.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <T> the type of the nodes managed by this model
  */

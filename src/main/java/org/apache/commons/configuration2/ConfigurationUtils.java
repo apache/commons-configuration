@@ -44,7 +44,6 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public final class ConfigurationUtils
 {

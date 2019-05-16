@@ -24,7 +24,6 @@ import org.junit.Test;
 /**
  * Test if non-string properties are handled correctly.
  *
- * @version $Id$
  */
 public abstract class BaseNonStringProperties
 {

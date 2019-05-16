@@ -40,7 +40,6 @@ import java.util.Map;
  * perform the update based on a passed in instance.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  * @param <T> the type of nodes involved in this update operation
  */

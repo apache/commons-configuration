@@ -33,7 +33,6 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * of the builders are provided as {@link ConfigurationDeclaration} objects.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface ConfigurationBuilderProvider

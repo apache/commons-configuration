@@ -41,7 +41,6 @@ import org.dbunit.operation.DatabaseOperation;
  * be accessed from a {@link DatabaseConfiguration} instance. Constants for
  * table and column names and database connection settings are provided, too.
  *
- * @version $Id$
  */
 public class DatabaseConfigurationTestHelper
 {

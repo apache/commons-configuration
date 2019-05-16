@@ -36,7 +36,6 @@ import org.junit.Test;
  * {@code AbstractConfiguration}. This class mainly checks the collaboration
  * between a configuration object and its {@code Synchronizer}.
  *
- * @version $Id$
  */
 public class TestAbstractConfigurationSynchronization
 {

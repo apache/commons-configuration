@@ -39,7 +39,6 @@ import com.mockobjects.servlet.MockHttpServletRequest;
  * Test case for the {@link ServletRequestConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Id$
  */
 public class TestServletRequestConfiguration extends TestAbstractConfiguration
 {

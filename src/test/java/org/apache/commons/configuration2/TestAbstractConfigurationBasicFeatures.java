@@ -48,7 +48,6 @@ import org.junit.Test;
  * A test class for some of the basic functionality implemented by
  * AbstractConfiguration.
  *
- * @version $Id$
  */
 public class TestAbstractConfigurationBasicFeatures
 {

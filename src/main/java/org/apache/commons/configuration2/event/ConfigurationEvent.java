@@ -67,7 +67,6 @@ package org.apache.commons.configuration2.event;
  * corresponding event object contains no additional data.</dd>
  * </dl>
  *
- * @version $Id$
  * @since 1.3
  */
 public class ConfigurationEvent extends Event

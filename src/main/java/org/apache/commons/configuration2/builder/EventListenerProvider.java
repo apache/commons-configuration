@@ -35,7 +35,6 @@ import org.apache.commons.configuration2.event.EventListenerList;
  * fluent API style as the other initialization of the configuration builder.
  * </p>
  *
- * @version $Id$
  * @since 2.0
  */
 public interface EventListenerProvider

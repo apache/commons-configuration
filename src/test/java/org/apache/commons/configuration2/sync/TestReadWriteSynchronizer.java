@@ -28,7 +28,6 @@ import org.junit.Test;
 /**
  * Test class for {@code ReadWriteSynchronizer}.
  *
- * @version $Id$
  */
 public class TestReadWriteSynchronizer
 {
