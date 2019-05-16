@@ -30,7 +30,6 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * a configuration node.
  * </p>
  *
- * @version $Id $
  * @since 2.0
  * @param <T> the type of the nodes this pointer deals with
  */
