@@ -54,6 +54,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-747" due-to="Gary Gregory">
         Update Spring from 4.3.22 to 4.3.24.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-745" due-to="Gary Gregory">
+        Add the special key "includeoptional" for properties files.
+      </action>
     </release>
     <release version="2.4" date="2018-10-23"
              description="Minor release with new features and updated dependencies.">
