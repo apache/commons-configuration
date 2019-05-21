@@ -537,7 +537,7 @@
   <properties>
     <commons.componentid>configuration</commons.componentid>
     <commons.module.name>org.apache.commons.configuration2</commons.module.name>
-    <commons.release.version>2.4</commons.release.version>
+    <commons.release.version>2.5</commons.release.version>
     <commons.release.desc>(reworked 2.x version)</commons.release.desc>
     <commons.release.2.name>commons-configuration-${commons.release.2.version}</commons.release.2.name>
     <commons.release.2.version>1.10</commons.release.2.version>
