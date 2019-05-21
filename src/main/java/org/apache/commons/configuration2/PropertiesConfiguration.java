@@ -243,6 +243,15 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     private static String include = "include";
 
+    /**
+     * This is the name of the property that can point to other
+     * properties file for including other properties files.
+     * <p>
+     * If the file is absent, processing continues normally.
+     * </p>
+     */
+    private static String includeOptional = "includeoptional";
+
     /** The list of possible key/value separators */
     private static final char[] SEPARATORS = new char[] {'=', ':'};
 
@@ -292,6 +301,18 @@ public class PropertiesConfiguration extends BaseConfiguration
     }
 
     /**
+     * Gets the property value for including other properties files.
+     * By default it is "include".
+     *
+     * @return A String.
+     * @since 2.5
+     */
+    public static String getIncludeOptional()
+    {
+        return PropertiesConfiguration.includeOptional;
+    }
+
+    /**
      * Sets the property value for including other properties files.
      * By default it is "include".
      *
@@ -300,6 +321,18 @@ public class PropertiesConfiguration extends BaseConfiguration
     public static void setInclude(final String inc)
     {
         PropertiesConfiguration.include = inc;
+    }
+
+    /**
+     * Sets the property value for including other properties files.
+     * By default it is "include".
+     *
+     * @param inc A String.
+     * @since 2.5
+     */
+    public static void setIncludeOptional(final String inc)
+    {
+        PropertiesConfiguration.includeOptional = inc;
     }
 
     /**
@@ -586,7 +619,22 @@ public class PropertiesConfiguration extends BaseConfiguration
                         getListDelimiterHandler().split(value, true);
                 for (final String f : files)
                 {
-                    loadIncludeFile(interpolate(f));
+                    loadIncludeFile(interpolate(f), false);
+                }
+            }
+            result = false;
+        }
+
+        else if (StringUtils.isNotEmpty(getIncludeOptional())
+            && key.equalsIgnoreCase(getIncludeOptional()))
+        {
+            if (isIncludesAllowed())
+            {
+                final Collection<String> files =
+                        getListDelimiterHandler().split(value, true);
+                for (final String f : files)
+                {
+                    loadIncludeFile(interpolate(f), true);
                 }
             }
             result = false;
@@ -1740,9 +1788,10 @@ public class PropertiesConfiguration extends BaseConfiguration
      * this properties file is tried.
      *
      * @param fileName the name of the file to load
+     * @param optional TODO
      * @throws ConfigurationException if loading fails
      */
-    private void loadIncludeFile(final String fileName) throws ConfigurationException
+    private void loadIncludeFile(final String fileName, boolean optional) throws ConfigurationException
     {
         if (locator == null)
         {
@@ -1761,6 +1810,11 @@ public class PropertiesConfiguration extends BaseConfiguration
             }
         }
 
+        if (optional && url == null)
+        {
+            return;
+        }
+        
         if (url == null)
         {
             throw new ConfigurationException("Cannot resolve include file "

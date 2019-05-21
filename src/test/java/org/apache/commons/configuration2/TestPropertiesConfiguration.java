@@ -1073,6 +1073,18 @@ public class TestPropertiesConfiguration
     }
 
     @Test
+    public void testLoadIncludeOptional() throws Exception
+    {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("includeoptional.properties");
+        handler.load();
+
+        assertTrue("Make sure we have multiple keys", pc.getBoolean("includeoptional.loaded"));
+    }
+
+    @Test
     public void testLoadViaPropertyWithBasePath2() throws Exception
     {
         final PropertiesConfiguration pc = new PropertiesConfiguration();
