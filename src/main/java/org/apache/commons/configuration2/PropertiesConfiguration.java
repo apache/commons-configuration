@@ -303,6 +303,9 @@ public class PropertiesConfiguration extends BaseConfiguration
     /**
      * Gets the property value for including other properties files.
      * By default it is "include".
+     * <p>
+     * If the file is absent, processing continues normally.
+     * </p>
      *
      * @return A String.
      * @since 2.5
@@ -326,6 +329,9 @@ public class PropertiesConfiguration extends BaseConfiguration
     /**
      * Sets the property value for including other properties files.
      * By default it is "include".
+     * <p>
+     * If the file is absent, processing continues normally.
+     * </p>
      *
      * @param inc A String.
      * @since 2.5
@@ -1586,7 +1592,7 @@ public class PropertiesConfiguration extends BaseConfiguration
             initialMap.put("\f", "\\f");
             initialMap.put("\r", "\\r");
             JUP_CHARS_ESCAPE = Collections.unmodifiableMap(initialMap);
-        };
+        }
 
         /**
          * Creates a new instance of {@code JupPropertiesWriter}.
@@ -1788,7 +1794,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      * this properties file is tried.
      *
      * @param fileName the name of the file to load
-     * @param optional TODO
+     * @param optional whether or not the {@code fileName} is optional
      * @throws ConfigurationException if loading fails
      */
     private void loadIncludeFile(final String fileName, boolean optional) throws ConfigurationException
@@ -1814,7 +1820,7 @@ public class PropertiesConfiguration extends BaseConfiguration
         {
             return;
         }
-        
+
         if (url == null)
         {
             throw new ConfigurationException("Cannot resolve include file "
