@@ -56,7 +56,8 @@ import org.apache.commons.text.lookup.StringLookupFactory;
  *
  * @since 2.0
  */
-public enum DefaultLookups {
+public enum DefaultLookups
+{
 
     /**
      * The lookup for Base64 decoding.
@@ -190,7 +191,8 @@ public enum DefaultLookups {
      * @param lookup
      *            the {@code Lookup} instance
      */
-    private DefaultLookups(final String prefix, final Lookup lookup) {
+    private DefaultLookups(final String prefix, final Lookup lookup)
+    {
         this.prefix = prefix;
         this.lookup = lookup;
     }
@@ -200,7 +202,8 @@ public enum DefaultLookups {
      *
      * @return the associated {@code Lookup} object
      */
-    public Lookup getLookup() {
+    public Lookup getLookup()
+    {
         return lookup;
     }
 
@@ -209,7 +212,8 @@ public enum DefaultLookups {
      *
      * @return the prefix
      */
-    public String getPrefix() {
+    public String getPrefix()
+    {
         return prefix;
     }
 }
