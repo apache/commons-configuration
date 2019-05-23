@@ -896,7 +896,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @return the unescaped property name
          * @since 2.4
          */
-        protected String unescapePropertyName(String name)
+        protected String unescapePropertyName(final String name)
         {
             return StringEscapeUtils.unescapeJava(name);
         }
@@ -922,7 +922,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @return the unescaped property value
          * @since 2.4
          */
-        protected String unescapePropertyValue(String value)
+        protected String unescapePropertyValue(final String value)
         {
             return unescapeJava(value);
         }
@@ -1066,7 +1066,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          *        with multiple values
          * @param valueTransformer the value transformer used to escape property values
          */
-        public PropertiesWriter(Writer writer, ListDelimiterHandler delHandler, ValueTransformer valueTransformer)
+        public PropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler, final ValueTransformer valueTransformer)
         {
             super(writer);
             delimiterHandler = delHandler;
@@ -1456,19 +1456,19 @@ public class PropertiesConfiguration extends BaseConfiguration
          *
          * @param escapeUnicode whether Unicode characters should be escaped
          */
-        public JupIOFactory(boolean escapeUnicode)
+        public JupIOFactory(final boolean escapeUnicode)
         {
             this.escapeUnicode = escapeUnicode;
         }
 
         @Override
-        public PropertiesReader createPropertiesReader(Reader in)
+        public PropertiesReader createPropertiesReader(final Reader in)
         {
             return new JupPropertiesReader(in);
         }
 
         @Override
-        public PropertiesWriter createPropertiesWriter(Writer out, ListDelimiterHandler handler)
+        public PropertiesWriter createPropertiesWriter(final Writer out, final ListDelimiterHandler handler)
         {
             return new JupPropertiesWriter(out, handler, escapeUnicode);
         }
@@ -1489,7 +1489,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          *
          * @param reader A Reader.
          */
-        public JupPropertiesReader(Reader reader)
+        public JupPropertiesReader(final Reader reader)
         {
             super(reader);
         }
@@ -1499,7 +1499,7 @@ public class PropertiesConfiguration extends BaseConfiguration
         public String readProperty() throws IOException
         {
             getCommentLines().clear();
-            StringBuilder buffer = new StringBuilder();
+            final StringBuilder buffer = new StringBuilder();
 
             while (true)
             {
@@ -1554,16 +1554,16 @@ public class PropertiesConfiguration extends BaseConfiguration
         }
 
         @Override
-        protected void parseProperty(String line)
+        protected void parseProperty(final String line)
         {
-            String[] property = doParseProperty(line, false);
+            final String[] property = doParseProperty(line, false);
             initPropertyName(property[0]);
             initPropertyValue(property[1]);
             initPropertySeparator(property[2]);
         }
 
         @Override
-        protected String unescapePropertyValue(String value)
+        protected String unescapePropertyValue(final String value)
         {
             return unescapeJava(value, true);
         }
@@ -1585,7 +1585,7 @@ public class PropertiesConfiguration extends BaseConfiguration
         private static final Map<CharSequence, CharSequence> JUP_CHARS_ESCAPE;
         static
         {
-            Map<CharSequence, CharSequence> initialMap = new HashMap<>();
+            final Map<CharSequence, CharSequence> initialMap = new HashMap<>();
             initialMap.put("\\", "\\\\");
             initialMap.put("\n", "\\n");
             initialMap.put("\t", "\\t");
@@ -1603,12 +1603,12 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param escapeUnicode whether Unicode characters should be escaped using
          *        Unicode escapes
          */
-        public JupPropertiesWriter(Writer writer, ListDelimiterHandler delHandler, final boolean escapeUnicode)
+        public JupPropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler, final boolean escapeUnicode)
         {
             super(writer, delHandler, new ValueTransformer()
             {
                 @Override
-                public Object transformValue(Object value)
+                public Object transformValue(final Object value)
                 {
                     String valueString = String.valueOf(value);
 
@@ -1667,7 +1667,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @return the processed string
      * @throws IllegalArgumentException if the Writer is {@code null}
      */
-    protected static String unescapeJava(String str, boolean jupCompatible)
+    protected static String unescapeJava(final String str, final boolean jupCompatible)
     {
         if (str == null)
         {
@@ -1797,7 +1797,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @param optional whether or not the {@code fileName} is optional
      * @throws ConfigurationException if loading fails
      */
-    private void loadIncludeFile(final String fileName, boolean optional) throws ConfigurationException
+    private void loadIncludeFile(final String fileName, final boolean optional) throws ConfigurationException
     {
         if (locator == null)
         {

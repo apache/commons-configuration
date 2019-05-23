@@ -29,13 +29,13 @@ class StringLookupAdapter implements Lookup {
 
     private final StringLookup stringLookup;
 
-    StringLookupAdapter(StringLookup stringLookup) {
+    StringLookupAdapter(final StringLookup stringLookup) {
         super();
         this.stringLookup = Objects.requireNonNull(stringLookup, "stringLookup");
     }
 
     @Override
-    public Object lookup(String key) {
+    public Object lookup(final String key) {
         return stringLookup.lookup(key);
     }
 

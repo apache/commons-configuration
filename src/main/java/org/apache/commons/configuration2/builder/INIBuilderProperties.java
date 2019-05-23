@@ -43,7 +43,7 @@ public interface INIBuilderProperties<T> {
      * @return a reference to this object for method chaining
      * @since 2.5
      */
-    default T setCommentLeadingCharsUsedInInput(String separator) {
+    default T setCommentLeadingCharsUsedInInput(final String separator) {
         // NoOp
         return (T) this;
     }
@@ -56,7 +56,7 @@ public interface INIBuilderProperties<T> {
      * @return a reference to this object for method chaining
      * @since 2.5
      */
-    default T setSeparatorUsedInInput(String separator) {
+    default T setSeparatorUsedInInput(final String separator) {
         // NoOp
         return (T) this;
     }

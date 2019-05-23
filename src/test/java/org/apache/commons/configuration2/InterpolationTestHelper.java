@@ -188,9 +188,9 @@ public class InterpolationTestHelper
      *
      * @param config the configuration to test
      */
-    public static void testInterpolationLocalhost(Configuration config)
+    public static void testInterpolationLocalhost(final Configuration config)
     {
-        String[] localhostKeys =
+        final String[] localhostKeys =
         { "name", "canonical-name", "address" };
         String[] localhostValues = null;
         try {
@@ -198,7 +198,7 @@ public class InterpolationTestHelper
                     InetAddress.getLocalHost().getHostName(),
                     InetAddress.getLocalHost().getCanonicalHostName(),
                     InetAddress.getLocalHost().getHostAddress() };
-        } catch (UnknownHostException e) {
+        } catch (final UnknownHostException e) {
             Assert.fail(e);
         }
         for (int i = 0; i < localhostKeys.length; i++)

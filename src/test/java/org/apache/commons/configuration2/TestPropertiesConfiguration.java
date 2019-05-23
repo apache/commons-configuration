@@ -734,23 +734,24 @@ public class TestPropertiesConfiguration
         conf.clear();
         conf.setIOFactory(new PropertiesConfiguration.JupIOFactory());
 
-        String testFilePath = ConfigurationAssert.getTestFile("jup-test.properties").getAbsolutePath();
+        final String testFilePath = ConfigurationAssert.getTestFile("jup-test.properties").getAbsolutePath();
 
         load(conf, testFilePath);
 
-        Properties jup = new Properties();
+        final Properties jup = new Properties();
         try (InputStream in = Files.newInputStream(Paths.get(testFilePath)))
         {
             jup.load(in);
         }
 
         @SuppressWarnings("unchecked")
+        final
         Set<Object> pcKeys = new HashSet<>(IteratorUtils.toList(conf.getKeys()));
         assertEquals(jup.keySet(), pcKeys);
 
-        for (Object key : jup.keySet())
+        for (final Object key : jup.keySet())
         {
-            String keyString = key.toString();
+            final String keyString = key.toString();
             System.out.println(keyString);
             assertEquals("Wrong property value for '" + keyString + "'", jup.getProperty(keyString),
                     conf.getProperty(keyString));
@@ -767,17 +768,17 @@ public class TestPropertiesConfiguration
         conf.clear();
         conf.setIOFactory(new PropertiesConfiguration.JupIOFactory());
 
-        String testFilePath = ConfigurationAssert.getTestFile("jup-test.properties").getAbsolutePath();
+        final String testFilePath = ConfigurationAssert.getTestFile("jup-test.properties").getAbsolutePath();
 
         // read the test properties and set them on the PropertiesConfiguration
-        Properties origProps = new Properties();
+        final Properties origProps = new Properties();
         try (InputStream in = Files.newInputStream(Paths.get(testFilePath)))
         {
             origProps.load(in);
         }
-        for (Object key : origProps.keySet())
+        for (final Object key : origProps.keySet())
         {
-            String keyString = key.toString();
+            final String keyString = key.toString();
             conf.setProperty(keyString, origProps.getProperty(keyString));
         }
 
@@ -786,7 +787,7 @@ public class TestPropertiesConfiguration
         assertTrue("The saved file doesn't exist", testSavePropertiesFile.exists());
 
         // load the saved file...
-        Properties testProps = new Properties();
+        final Properties testProps = new Properties();
         try (InputStream in = Files.newInputStream(testSavePropertiesFile.toPath()))
         {
             testProps.load(in);
@@ -794,12 +795,13 @@ public class TestPropertiesConfiguration
 
         // ... and compare the properties to the originals
         @SuppressWarnings("unchecked")
+        final
         Set<Object> pcKeys = new HashSet<>(IteratorUtils.toList(conf.getKeys()));
         assertEquals(testProps.keySet(), pcKeys);
 
-        for (Object key : testProps.keySet())
+        for (final Object key : testProps.keySet())
         {
-            String keyString = key.toString();
+            final String keyString = key.toString();
             assertEquals("Wrong property value for '" + keyString + "'", testProps.getProperty(keyString),
                     conf.getProperty(keyString));
         }
@@ -816,17 +818,17 @@ public class TestPropertiesConfiguration
         conf.clear();
         conf.setIOFactory(new PropertiesConfiguration.JupIOFactory(false));
 
-        String testFilePath = ConfigurationAssert.getTestFile("jup-test.properties").getAbsolutePath();
+        final String testFilePath = ConfigurationAssert.getTestFile("jup-test.properties").getAbsolutePath();
 
         // read the test properties and set them on the PropertiesConfiguration
-        Properties origProps = new Properties();
+        final Properties origProps = new Properties();
         try (InputStream in = Files.newInputStream(Paths.get(testFilePath)))
         {
             origProps.load(in);
         }
-        for (Object key : origProps.keySet())
+        for (final Object key : origProps.keySet())
         {
-            String keyString = key.toString();
+            final String keyString = key.toString();
             conf.setProperty(keyString, origProps.getProperty(keyString));
         }
 
@@ -837,7 +839,7 @@ public class TestPropertiesConfiguration
         assertTrue("The saved file doesn't exist", testSavePropertiesFile.exists());
 
         // load the saved file...
-        Properties testProps = new Properties();
+        final Properties testProps = new Properties();
         try (BufferedReader in = Files.newBufferedReader(testSavePropertiesFile.toPath(), StandardCharsets.UTF_8))
         {
             testProps.load(in);
@@ -845,18 +847,19 @@ public class TestPropertiesConfiguration
 
         // ... and compare the properties to the originals
         @SuppressWarnings("unchecked")
+        final
         Set<Object> pcKeys = new HashSet<>(IteratorUtils.toList(conf.getKeys()));
         assertEquals(testProps.keySet(), pcKeys);
 
-        for (Object key : testProps.keySet())
+        for (final Object key : testProps.keySet())
         {
-            String keyString = key.toString();
+            final String keyString = key.toString();
             assertEquals("Wrong property value for '" + keyString + "'", testProps.getProperty(keyString),
                     conf.getProperty(keyString));
         }
 
         // ensure that the written properties file contains no Unicode escapes
-        for (String line : Files.readAllLines(testSavePropertiesFile.toPath()))
+        for (final String line : Files.readAllLines(testSavePropertiesFile.toPath()))
         {
             if (line.contains("\\u"))
             {
