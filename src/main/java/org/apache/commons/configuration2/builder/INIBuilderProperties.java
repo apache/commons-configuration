@@ -33,7 +33,8 @@ package org.apache.commons.configuration2.builder;
  * @since 2.2
  * @param <T> the type of the result of all set methods for method chaining
  */
-public interface INIBuilderProperties<T> {
+public interface INIBuilderProperties<T>
+{
 
     /**
      * Allows setting the leading comment separator which is used in reading an INI
@@ -43,7 +44,8 @@ public interface INIBuilderProperties<T> {
      * @return a reference to this object for method chaining
      * @since 2.5
      */
-    default T setCommentLeadingCharsUsedInInput(final String separator) {
+    default T setCommentLeadingCharsUsedInInput(final String separator)
+    {
         // NoOp
         return (T) this;
     }
@@ -56,7 +58,8 @@ public interface INIBuilderProperties<T> {
      * @return a reference to this object for method chaining
      * @since 2.5
      */
-    default T setSeparatorUsedInInput(final String separator) {
+    default T setSeparatorUsedInInput(final String separator)
+    {
         // NoOp
         return (T) this;
     }

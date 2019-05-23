@@ -115,6 +115,28 @@ public class ConfigurationInterpolator
         DEFAULT_PREFIX_LOOKUPS = Collections.unmodifiableMap(lookups);
     }
 
+    /** A map with the currently registered lookup objects. */
+    private final Map<String, Lookup> prefixLookups;
+
+    /** Stores the default lookup objects. */
+    private final List<Lookup> defaultLookups;
+
+    /** The helper object performing variable substitution. */
+    private final StringSubstitutor substitutor;
+
+    /** Stores a parent interpolator objects if the interpolator is nested hierarchically. */
+    private volatile ConfigurationInterpolator parentInterpolator;
+
+    /**
+     * Creates a new instance of {@code ConfigurationInterpolator}.
+     */
+    public ConfigurationInterpolator()
+    {
+        prefixLookups = new ConcurrentHashMap<>();
+        defaultLookups = new CopyOnWriteArrayList<>();
+        substitutor = initSubstitutor();
+    }
+
     /**
      * Creates a new instance based on the properties in the given specification
      * object.
@@ -204,28 +226,6 @@ public class ConfigurationInterpolator
             lookup = DummyLookup.INSTANCE;
         }
         return lookup;
-    }
-
-    /** A map with the currently registered lookup objects. */
-    private final Map<String, Lookup> prefixLookups;
-
-    /** Stores the default lookup objects. */
-    private final List<Lookup> defaultLookups;
-
-    /** The helper object performing variable substitution. */
-    private final StringSubstitutor substitutor;
-
-    /** Stores a parent interpolator objects if the interpolator is nested hierarchically. */
-    private volatile ConfigurationInterpolator parentInterpolator;
-
-    /**
-     * Creates a new instance of {@code ConfigurationInterpolator}.
-     */
-    public ConfigurationInterpolator()
-    {
-        prefixLookups = new ConcurrentHashMap<>();
-        defaultLookups = new CopyOnWriteArrayList<>();
-        substitutor = initSubstitutor();
     }
 
     /**
