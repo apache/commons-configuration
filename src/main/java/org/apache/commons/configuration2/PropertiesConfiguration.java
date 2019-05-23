@@ -1066,7 +1066,8 @@ public class PropertiesConfiguration extends BaseConfiguration
          *        with multiple values
          * @param valueTransformer the value transformer used to escape property values
          */
-        public PropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler, final ValueTransformer valueTransformer)
+        public PropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler,
+            final ValueTransformer valueTransformer)
         {
             super(writer);
             delimiterHandler = delHandler;
@@ -1603,7 +1604,8 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param escapeUnicode whether Unicode characters should be escaped using
          *        Unicode escapes
          */
-        public JupPropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler, final boolean escapeUnicode)
+        public JupPropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler, 
+            final boolean escapeUnicode)
         {
             super(writer, delHandler, new ValueTransformer()
             {
