@@ -1270,8 +1270,7 @@ public class PropertiesConfiguration extends BaseConfiguration
             {
                 final char c = key.charAt(i);
 
-                if (ArrayUtils.contains(SEPARATORS, c) || ArrayUtils.contains(WHITE_SPACE, c) ||
-                        c == '\\')
+                if (ArrayUtils.contains(SEPARATORS, c) || ArrayUtils.contains(WHITE_SPACE, c) || c == '\\')
                 {
                     // escape the separator
                     newkey.append('\\');
@@ -1581,6 +1580,22 @@ public class PropertiesConfiguration extends BaseConfiguration
     {
 
         /**
+         * The starting ASCII printable character.
+         */
+        private static final int PRINTABLE_INDEX_END = 0x7e;
+
+        /**
+         * The ending ASCII printable character.
+         */
+        private static final int PRINTABLE_INDEX_START = 0x20;
+
+        /**
+         * A UnicodeEscaper for characters outside the ASCII printable range.
+         */
+        private static final UnicodeEscaper ESCAPER = UnicodeEscaper.outsideOf(PRINTABLE_INDEX_START,
+            PRINTABLE_INDEX_END);
+
+        /**
          * Characters that need to be escaped when wring a properties file.
          */
         private static final Map<CharSequence, CharSequence> JUP_CHARS_ESCAPE;
@@ -1604,7 +1619,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param escapeUnicode whether Unicode characters should be escaped using
          *        Unicode escapes
          */
-        public JupPropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler, 
+        public JupPropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler,
             final boolean escapeUnicode)
         {
             super(writer, delHandler, new ValueTransformer()
@@ -1617,8 +1632,7 @@ public class PropertiesConfiguration extends BaseConfiguration
                     CharSequenceTranslator translator;
                     if (escapeUnicode)
                     {
-                        translator = new AggregateTranslator(new LookupTranslator(JUP_CHARS_ESCAPE),
-                                UnicodeEscaper.outsideOf(0x20, 0x7e));
+                        translator = new AggregateTranslator(new LookupTranslator(JUP_CHARS_ESCAPE), ESCAPER);
                     }
                     else
                     {
