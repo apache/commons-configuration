@@ -890,6 +890,8 @@
               <links>
                 <link>https://docs.oracle.com/javase/8/docs/api/</link>
               </links>
+              <!-- Disable Doclint since the Javadoc in the generated code does not comply. -->
+              <doclint>none</doclint>
             </configuration>
           </reportSet>
         </reportSets>
