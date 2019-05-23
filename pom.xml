@@ -568,7 +568,7 @@
 
     <!-- generate report even if there are binary incompatible changes -->
     <commons.japicmp.breakBuildOnBinaryIncompatibleModifications>false</commons.japicmp.breakBuildOnBinaryIncompatibleModifications>
-    <commons.japicmp.version>0.13.1</commons.japicmp.version>
+    <commons.japicmp.version>0.14.1</commons.japicmp.version>
     <japicmp.skip>false</japicmp.skip>
     <commons.jacoco.version>0.8.4</commons.jacoco.version>
 
@@ -895,23 +895,16 @@
           </links>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>com.github.siom79.japicmp</groupId>
-        <artifactId>japicmp-maven-plugin</artifactId>
-        <version>${commons.japicmp.version}</version>
-        <configuration>
-          <parameter>
-            <onlyModified>true</onlyModified>
-            <breakBuildOnBinaryIncompatibleModifications>${commons.japicmp.breakBuildOnBinaryIncompatibleModifications}</breakBuildOnBinaryIncompatibleModifications>
-            <breakBuildOnSourceIncompatibleModifications>${commons.japicmp.breakBuildOnSourceIncompatibleModifications}</breakBuildOnSourceIncompatibleModifications>
-            <!-- skip japicmp on "mvn site" - use "mvn package site" to include report -->
-            <skipPomModules>true</skipPomModules>
-            <ignoreMissingNewVersion>true</ignoreMissingNewVersion>
-            <reportOnlyFilename>true</reportOnlyFilename>
-            <ignoreMissingClasses>true</ignoreMissingClasses>
-          </parameter>
-        </configuration>
-      </plugin>      
+<!--       <plugin> -->
+<!--         <groupId>com.github.siom79.japicmp</groupId> -->
+<!--         <artifactId>japicmp-maven-plugin</artifactId> -->
+<!--         <version>${commons.japicmp.version}</version> -->
+<!--         <configuration> -->
+<!--           <parameter> -->
+<!--             <ignoreMissingClasses>true</ignoreMissingClasses> -->
+<!--           </parameter> -->
+<!--         </configuration> -->
+<!--       </plugin>       -->
     </plugins>
   </reporting>
 
