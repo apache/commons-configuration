@@ -1,6 +1,52 @@
-                        Commons Configuration Package
-                            Version 2.4
-                           Release Notes
+                        Apache Commons Configuration
+                        Version 2.5
+                        Release Notes
+
+
+INTRODUCTION:
+=============
+
+This document contains the release notes for this version of the Commons
+Configuration component. It describes the changes since the previous version.
+The Commons Configuration software library provides a generic configuration
+interface which enables an application to read configuration data from a variety
+of sources.
+
+Tools to assist in the reading of configuration/preferences files in
+various formats
+
+Minor release with new features and updated dependencies.
+
+Changes in this version include:
+
+
+Fixed Bugs:
+o CONFIGURATION-731:  Allow user to specify the comments and separator chars. Thanks to Shuai Zhang, Gary Gregory.
+
+Changes:
+o CONFIGURATION-738:  Update Jackson from 2.9.7 to 2.9.8. Thanks to Gary Gregory.
+o CONFIGURATION-739:  Update Apache Commons Codec from 1.11 to 1.12. Thanks to Gary Gregory.
+o CONFIGURATION-740:  Update Apache Commons VFS from 2.2 to 2.3. Thanks to Gary Gregory.
+o CONFIGURATION-741:  Update Spring from 4.3.19 to 4.3.22. Thanks to Gary Gregory.
+o CONFIGURATION-743:  Update optional library snakeyaml from 1.23 to 1.24. Thanks to Gary Gregory.
+o CONFIGURATION-747:  Update Apache Commons Lang from 3.8.1 to 3.9. Thanks to Gary Gregory.
+o CONFIGURATION-746:  Update Jackson from 2.9.8 to 2.9.9. Thanks to Gary Gregory.
+o CONFIGURATION-747:  Update Spring from 4.3.22 to 4.3.24. Thanks to Gary Gregory.
+o CONFIGURATION-745:  Add the special key "includeoptional" for properties files. Thanks to Gary Gregory.
+
+
+Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+
+For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
+
+http://commons.apache.org/proper/commons-configuration/
+
+=============================================================================
+
+                        Apache Commons Configuration
+                        Version 2.4
+                        Release Notes
 
 
 INTRODUCTION:
@@ -65,12 +111,11 @@ patches, or suggestions for improvement, see the Apache Apache Commons Configura
 http://commons.apache.org/proper/commons-configuration/
 
 
-Older release notes
-===================
+=============================================================================
 
                         Apache Commons Configuration
-                               Version 2.3
-                               Release Notes
+                        Version 2.3
+                        Release Notes
 
 
 INTRODUCTION:
@@ -165,9 +210,11 @@ patches, or suggestions for improvement, see the Apache Apache Commons Configura
 
 http://commons.apache.org/proper/commons-configuration/
 
+=============================================================================
+
                         Apache Commons Configuration
-                               Version 2.2
-                               Release Notes
+                        Version 2.2
+                        Release Notes
 
 
 INTRODUCTION:
@@ -256,10 +303,11 @@ patches, or suggestions for improvement, see the Apache Apache Commons Configura
 
 http://commons.apache.org/proper/commons-configuration/
 
+=============================================================================
 
                         Apache Commons Configuration
-                               Version 2.1.1
-                               Release Notes
+                        Version 2.1.1
+                        Release Notes
 
 
 INTRODUCTION:
@@ -331,10 +379,11 @@ patches, or suggestions for improvement, see the Apache Apache Commons Configura
 
 http://commons.apache.org/proper/commons-configuration/
 
+=============================================================================
 
                         Commons Configuration Package
-                                 Version 2.1
-                                Release Notes
+                        Version 2.1
+                        Release Notes
 
 INTRODUCTION
 ============
@@ -406,9 +455,11 @@ on how to submit bug reports, patches, or suggestions for improvement, see the
 Apache Commons Configuration website:
 http://commons.apache.org/proper/commons-configuration/
 
-                        Commons Configuration Package
-                                 Version 2.0
-                                Release Notes
+=============================================================================
+
+                        Apache Commons Configuration
+                        Version 2.0
+                        Release Notes
 
 INTRODUCTION
 ============
@@ -462,9 +513,11 @@ o CONFIGURATION-618:
 
 Commons Configuration 2.0 requires Java 1.6 or higher.
 
-                        Commons Configuration Package
-                             Version 2.0-beta2
-                                Release Notes
+=============================================================================
+
+                        Apache Commons Configuration
+                        Version 2.0-beta2
+                        Release Notes
 
 After the first beta release in June 2015 there has been some feedback from the
 community resulting in (minor) adaptations of the API. In most cases, the
@@ -515,9 +568,11 @@ on how to submit bug reports, patches, or suggestions for improvement, see the
 Apache Commons Configuration website:
 http://commons.apache.org/proper/commons-configuration/
 
-                        Commons Configuration Package
-                             Version 2.0-beta1
-                                Release Notes
+=============================================================================
+
+                        Apache Commons Configuration
+                        Version 2.0-beta1
+                        Release Notes
 
 This is the first beta release of Commons Configuration 2.0 after two alpha
 versions. There has not been much feedback so far and no requests for API
@@ -535,10 +590,11 @@ Changes:
 o CONFIGURATION-598: Removed obsolete ConfigurationBuilder interface in the
                      base package.
 
+=============================================================================
 
-                        Commons Configuration Package
-                             Version 2.0-alpha2
-                                Release Notes
+                        Apache Commons Configuration
+                        Version 2.0-alpha2
+                        Release Notes
 
 
 After version 2.0-alpha1 has been out for a while (the corresponding release
@@ -573,9 +629,11 @@ patches, or suggestions for improvement, see the Apache Commons Configuration we
 
 http://commons.apache.org/proper/commons-configuration/
 
-                        Commons Configuration Package
-                             Version 2.0-alpha1
-                                Release Notes
+=============================================================================
+
+                        Apache Commons Configuration
+                        Version 2.0-alpha1
+                        Release Notes
 
 This is the first alpha release for version 2.0 of Commons Configuration.
 Version 2 is a major redesign of the Configuration API. It breaks compatibility

@@ -25,7 +25,7 @@
  | commons-build-plugin/trunk/src/main/resources/commons-xdoc-templates |
  +======================================================================+
  |                                                                      |
- | 1) Re-generate using: mvn commons:readme-md                          |
+ | 1) Re-generate using: mvn commons-build:readme-md                    |
  |                                                                      |
  | 2) Set the following properties in the component's pom:              |
  |    - commons.componentid (required, alphabetic, lower case)          |
@@ -43,8 +43,10 @@
 Apache Commons Configuration
 ===================
 
-[![Build Status](https://travis-ci.org/apache/commons-configuration.svg?branch=trunk)](https://travis-ci.org/apache/commons-configuration)
+[![Build Status](https://travis-ci.org/apache/commons-configuration.svg)](https://travis-ci.org/apache/commons-configuration)
+[![Coverage Status](https://coveralls.io/repos/apache/commons-configuration/badge.svg)](https://coveralls.io/r/apache/commons-configuration)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-configuration2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-configuration2/)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-configuration2/2.5.svg)](https://javadoc.io/doc/org.apache.commons/commons-configuration2/2.5)
 
 Tools to assist in the reading of configuration/preferences files in
         various formats
@@ -53,7 +55,7 @@ Documentation
 -------------
 
 More information can be found on the [Apache Commons Configuration homepage](https://commons.apache.org/proper/commons-configuration).
-The [Javadoc](https://commons.apache.org/proper/commons-configuration/javadocs/api-release) can be browsed.
+The [Javadoc](https://commons.apache.org/proper/commons-configuration/apidocs) can be browsed.
 Questions related to the usage of Apache Commons Configuration should be posted to the [user mailing list][ml].
 
 Where can I get the latest release?
@@ -66,7 +68,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-configuration2</artifactId>
-  <version>2.4</version>
+  <version>2.5</version>
 </dependency>
 ```
 
