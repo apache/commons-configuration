@@ -49,9 +49,9 @@
   </ciManagement>
 
   <scm>
-    <connection>scm:svn:http://svn.apache.org/repos/asf/commons/proper/configuration/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/configuration/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/commons/proper/configuration/trunk</url>
+    <connection>scm:git:https://gitbox.apache.org/repos/asf/commons-configuration.git</connection>
+    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/commons-configuration.git</developerConnection>
+    <url>https://gitbox.apache.org/repos/asf?p=commons-configuration.git</url>
   </scm>
 
   <distributionManagement>
