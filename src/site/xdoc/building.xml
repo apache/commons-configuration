@@ -29,7 +29,7 @@
 
         <section name="Building">
           <p>
-            Commons Configuration uses <a href="http://maven.apache.org">maven</a> as its build tool.
+            Commons Configuration uses <a href="http://maven.apache.org">Maven</a> as its build tool.
             Any recent version of Maven should work. To build the Configuration
             jar, change into the directory where the source distribution resides and run
             "mvn install". This will compile the source and tests, run the tests, and then
