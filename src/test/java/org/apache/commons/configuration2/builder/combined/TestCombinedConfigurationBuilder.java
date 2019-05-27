@@ -703,6 +703,13 @@ public class TestCombinedConfigurationBuilder
         builder.configure(createParameters().setFile(envFile));
         final CombinedConfiguration cc = builder.getConfiguration();
         assertFalse("Configuration is empty", cc.isEmpty());
+
+        // The environment may contain settings with values that 
+        // are altered by interpolation. Disable this for direct access
+        // to the String associated with the environment property name.
+        cc.setInterpolator(null);
+
+        // Test the environment is available through the configuration
         for (final Map.Entry<String, String> e : System.getenv().entrySet())
         {
             assertEquals("Wrong value for property: " + e.getKey(),
