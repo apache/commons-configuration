@@ -12,9 +12,6 @@ The Commons Configuration software library provides a generic configuration
 interface which enables an application to read configuration data from a variety
 of sources.
 
-Tools to assist in the reading of configuration/preferences files in
-various formats
-
 Minor release with new features and updated dependencies.
 
 Changes in this version include:
@@ -57,9 +54,6 @@ Configuration component. It describes the changes since the previous version.
 The Commons Configuration software library provides a generic configuration
 interface which enables an application to read configuration data from a variety
 of sources.
-
-Tools to assist in the reading of configuration/preferences files in
-various formats
 
 Minor release with new features and updated dependencies.
 
