@@ -19,11 +19,10 @@ package org.apache.commons.configuration2.interpol;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.util.Iterator;
-
-import org.apache.commons.configuration2.EnvironmentConfiguration;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Map;
 
 /**
  * Test class for EnvironmentLookup.
@@ -49,12 +48,10 @@ public class TestEnvironmentLookup
     @Test
     public void testLookup()
     {
-        final EnvironmentConfiguration envConf = new EnvironmentConfiguration();
-        for (final Iterator<String> it = envConf.getKeys(); it.hasNext();)
+        for (final Map.Entry<String, String> e : System.getenv().entrySet())
         {
-            final String var = it.next();
-            assertEquals("Wrong value for " + var, envConf.getString(var),
-                    lookup.lookup(var));
+            assertEquals("Wrong value for " + e.getKey(), e.getValue(),
+                    lookup.lookup(e.getKey()));
         }
     }
 
