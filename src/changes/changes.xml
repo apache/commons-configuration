@@ -772,7 +772,7 @@
       <action dev="henning" type="fix" issue="CONFIGURATION-556">
         In 1.7 and before, any change to the system properties was
         immediately reflected in a SystemConfiguration object. This
-        behaviour broke in 1.8 and 1.9. This has been fixed for 1.10.
+        behavior broke in 1.8 and 1.9. This has been fixed for 1.10.
       </action>
       <action dev="henning" type="fix" issue="CONFIGURATION-557">
         In 1.7 and before, it was possible to pass an arbitrary Map
@@ -2298,10 +2298,10 @@
         accessed with the getContext() method which is now public.
       </action>
       <action dev="henning" type="add">
-        Make the behaviour on missing properties for the get methods that
+        Make the behavior on missing properties for the get methods that
         return objects configurable. A property throwExceptionOnMissing
         can be set and then the getters throw an NoSuchElementException.
-        The old default behaviour of returning a null value has
+        The old default behavior of returning a null value has
         been restored.
       </action>
       <action dev="epugh" type="add" issue="CONFIGURATION-151">

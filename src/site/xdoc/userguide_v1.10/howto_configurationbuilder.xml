@@ -231,7 +231,7 @@ Configuration config = builder.getConfiguration(true);
       In an earlier section about the configuration definition file for
       <code>DefaultConfigurationBuilder</code> it was stated that configuration
       files included first can override properties in configuration files
-      included later, and an example use case for this behaviour was given. There
+      included later, and an example use case for this behavior was given. There
       may be cases when there are other requirements.
     </p>
     <p>
@@ -337,7 +337,7 @@ Configuration config = builder.getConfiguration(true);
       if there is also an <code>&lt;additional&gt;</code> section.
     </p>
     <p>
-      It is the <code>&lt;additional&gt;</code> section that introduces a new behaviour.
+      It is the <code>&lt;additional&gt;</code> section that introduces a new behavior.
       All configuration sources listed here are combined to a union configuration.
       In our example we have put two <code>xml</code> elements in this area
       that load the available files with database table definitions. The syntax

@@ -35,7 +35,7 @@ import org.junit.Test;
  * and normal (Properties) Configuration
  *
  */
-public class TestEqualBehaviour
+public class TestEqualBehavior
 {
     private Configuration setupSimpleConfiguration()
             throws Exception
