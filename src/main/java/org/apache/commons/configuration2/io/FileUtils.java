@@ -54,9 +54,9 @@ class FileUtils {
         if (url == null || !"file".equalsIgnoreCase(url.getProtocol())) {
             return null;
         }
-        String filename = url.getFile().replace('/', File.separatorChar);
-        filename = decodeUrl(filename);
-        return new File(filename);
+        String fileName = url.getFile().replace('/', File.separatorChar);
+        fileName = decodeUrl(fileName);
+        return new File(fileName);
     }
 
     /**
