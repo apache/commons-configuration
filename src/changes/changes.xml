@@ -25,6 +25,9 @@
   </properties>
 
   <body>
+    <release version="2.6" date="2019-MM-DD"
+             description="Minor release with new features and updated dependencies.">
+    </release>
     <release version="2.5" date="2019-05-23"
              description="Minor release with new features and updated dependencies.">
       <action dev="ggregory" type="fix" issue="CONFIGURATION-731" due-to="Shuai Zhang, Gary Gregory">
