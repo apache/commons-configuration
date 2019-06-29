@@ -174,22 +174,30 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
     protected void setPropertyInternal(final String key, final Object value)
     {
         // special case for byte arrays, they must be stored as is in the configuration
-        if (value instanceof byte[])
+        if (value instanceof byte[] || value instanceof List)
         {
-            setDetailEvents(false);
-            try
-            {
-                clearProperty(key);
-                addPropertyDirect(key, value);
-            }
-            finally
-            {
-                setDetailEvents(true);
-            }
+            setArrayProperty(key, value);
+        }
+        else if (value instanceof Object[])
+        {
+            setArrayProperty(key, Arrays.asList((Object[]) value));
         }
         else
         {
             super.setPropertyInternal(key, value);
+        }
+    }
+
+    private void setArrayProperty(final String key, final Object value) {
+        setDetailEvents(false);
+        try
+        {
+            clearProperty(key);
+            addPropertyDirect(key, value);
+        }
+        finally
+        {
+            setDetailEvents(true);
         }
     }
 
