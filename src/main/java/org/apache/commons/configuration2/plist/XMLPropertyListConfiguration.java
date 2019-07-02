@@ -170,22 +170,30 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         super(new InMemoryNodeModel(root));
     }
 
+    private void setPropertyDirect(final String key, final Object value) {
+        setDetailEvents(false);
+        try
+        {
+            clearProperty(key);
+            addPropertyDirect(key, value);
+        }
+        finally
+        {
+            setDetailEvents(true);
+        }
+    }
+
     @Override
     protected void setPropertyInternal(final String key, final Object value)
     {
         // special case for byte arrays, they must be stored as is in the configuration
-        if (value instanceof byte[])
+        if (value instanceof byte[] || value instanceof List)
         {
-            setDetailEvents(false);
-            try
-            {
-                clearProperty(key);
-                addPropertyDirect(key, value);
-            }
-            finally
-            {
-                setDetailEvents(true);
-            }
+            setPropertyDirect(key, value);
+        }
+        else if (value instanceof Object[])
+        {
+            setPropertyDirect(key, Arrays.asList((Object[]) value));
         }
         else
         {

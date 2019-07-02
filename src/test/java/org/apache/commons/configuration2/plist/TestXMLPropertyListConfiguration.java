@@ -483,11 +483,11 @@ public class TestXMLPropertyListConfiguration
     }
 
     /**
-     * Tests whether a list can be saved correctly. This test is related to
+     * Tests whether a list can be added correctly. This test is related to
      * CONFIGURATION-427.
      */
     @Test
-    public void testSaveList() throws ConfigurationException
+    public void testAddList() throws ConfigurationException
     {
         final List<String> elems =
                 Arrays.asList("element1", "element2", "anotherElement");
@@ -498,17 +498,47 @@ public class TestXMLPropertyListConfiguration
     }
 
     /**
-     * Tests whether an array can be saved correctly. This test is related to
+     * Tests whether an array can be added correctly. This test is related to
      * CONFIGURATION-427.
      */
     @Test
-    public void testSaveArray() throws ConfigurationException
+    public void testAddArray() throws ConfigurationException
     {
         final Object[] elems = {
                 "arrayElem1", "arrayElem2", "arrayElem3"
         };
         config = new XMLPropertyListConfiguration();
         config.addProperty("array", elems);
+
+        checkArrayProperty(Arrays.asList(elems));
+    }
+
+    /**
+     * Tests whether a list can be set correctly. This test is related to
+     * CONFIGURATION-750.
+     */
+    @Test
+    public void testSetList() throws ConfigurationException
+    {
+        final List<String> elems =
+                Arrays.asList("element1", "element2", "anotherElement");
+        config = new XMLPropertyListConfiguration();
+        config.setProperty("array", elems);
+
+        checkArrayProperty(elems);
+    }
+
+    /**
+     * Tests whether an array can be set correctly. This test is related to
+     * CONFIGURATION-750.
+     */
+    @Test
+    public void testSetArray() throws ConfigurationException {
+        final Object[] elems = {
+                "arrayElem1", "arrayElem2", "arrayElem3"
+        };
+        config = new XMLPropertyListConfiguration();
+        config.setProperty("array", elems);
 
         checkArrayProperty(Arrays.asList(elems));
     }
