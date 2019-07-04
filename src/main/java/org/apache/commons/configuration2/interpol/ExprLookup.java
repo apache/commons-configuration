@@ -61,7 +61,7 @@ import org.apache.commons.text.lookup.StringLookup;
  *
  * @since 1.7
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
+ * href="https://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  */
 public class ExprLookup implements Lookup
 {

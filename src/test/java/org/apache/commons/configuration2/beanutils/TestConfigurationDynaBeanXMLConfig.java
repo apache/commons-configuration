@@ -25,7 +25,7 @@ import org.apache.commons.configuration2.XMLConfiguration;
  * underlying configuration object.
  *
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * href="https://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
  */
 public class TestConfigurationDynaBeanXMLConfig extends

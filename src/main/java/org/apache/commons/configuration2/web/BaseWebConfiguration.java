@@ -31,7 +31,7 @@ import org.apache.commons.configuration2.AbstractConfiguration;
  * </p>
  *
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * href="https://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
  * @since 1.2
  */

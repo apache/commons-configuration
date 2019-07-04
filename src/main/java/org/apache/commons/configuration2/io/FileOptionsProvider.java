@@ -23,7 +23,7 @@ import java.util.Map;
  * configuration can implement this interface and register it with the FileSystem.
  * @since 1.7
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
+ * href="https://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  */
 public interface FileOptionsProvider
 {

@@ -964,7 +964,7 @@ config.addProperty("tables table/name", "documents");
             </p>
             <p>
                 <em>Note:</em> XPATH support is implemented through
-                <a href="http://commons.apache.org/jxpath">Commons JXPath</a>.
+                <a href="https://commons.apache.org/jxpath">Commons JXPath</a>.
                 So when making use of this feature, be sure you include the
                 commons-jxpath jar in your classpath.
             </p>
@@ -1096,9 +1096,9 @@ config.load();
         </p>
          <source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<Employees xmlns="http://commons.apache.org/employee"
+<Employees xmlns="https://commons.apache.org/employee"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://commons.apache.org/employee http://commons.apache.org/sample.xsd">
+           xsi:schemaLocation="https://commons.apache.org/employee https://commons.apache.org/sample.xsd">
   <Employee>
     <SSN>555121211</SSN>
     <Name>John Doe</Name>
@@ -1109,10 +1109,10 @@ config.load();
 </Employees>]]></source>
         <p>
             The XML sample above is an XML document using a default namespace of
-            http://commons.apache.org/employee. The schemaLocation allows a set
+            https://commons.apache.org/employee. The schemaLocation allows a set
             of namespaces and hints to the location of their corresponding
             schemas. When processing the document the parser will pass the hint,
-            in this case http://commons.apache.org/sample.xsd, to the entity resolver
+            in this case https://commons.apache.org/sample.xsd, to the entity resolver
             as the system id. More information on using schema locations can be found
             at <a href="http://www.w3.org/TR/xmlschema-0/#schemaLocation">schemaLocation</a>.
         </p>

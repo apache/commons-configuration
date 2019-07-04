@@ -40,7 +40,7 @@ import org.apache.commons.text.lookup.StringLookup;
  * </p>
  * <p>
  * {@code ConfigurationInterpolator} internally uses the {@code StringSubstitutor}
- * class from <a href="http://commons.apache.org/text">Commons Text</a>. Thus it
+ * class from <a href="https://commons.apache.org/text">Commons Text</a>. Thus it
  * supports the same syntax of variable expressions.
  * </p>
  * <p>
@@ -82,7 +82,7 @@ import org.apache.commons.text.lookup.StringLookup;
  *
  * @since 1.4
  * @author <a
- *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         href="https://commons.apache.org/configuration/team-list.html">Commons
  *         Configuration team</a>
  */
 public class ConfigurationInterpolator

@@ -38,7 +38,7 @@ package org.apache.commons.configuration2.interpol;
  * </p>
  *
  * @author <a
- *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         href="https://commons.apache.org/configuration/team-list.html">Commons
  *         Configuration team</a>
  * @since 1.7
  * @deprecated Use {@link DefaultLookups#ENVIRONMENT}.

@@ -30,7 +30,7 @@ import org.apache.commons.vfs2.VFS;
 /**
  * <p>
  * A file-based reloading strategy that uses <a
- * href="http://commons.apache.org/vfs/">Commons VFS</a> to determine when a
+ * href="https://commons.apache.org/vfs/">Commons VFS</a> to determine when a
  * file was changed.
  * </p>
  * <p>
@@ -43,7 +43,7 @@ import org.apache.commons.vfs2.VFS;
  * </p>
  *
  * @author <a
- *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         href="https://commons.apache.org/configuration/team-list.html">Commons
  *         Configuration team</a>
  * @since 1.7
  */

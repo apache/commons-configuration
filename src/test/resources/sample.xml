@@ -15,9 +15,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<Employees xmlns="http://commons.apache.org/employee"
+<Employees xmlns="https://commons.apache.org/employee"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://commons.apache.org/employee http://commons.apache.org/sample.xsd">
+           xsi:schemaLocation="https://commons.apache.org/employee https://commons.apache.org/sample.xsd">
   <Employee>
     <SSN>555121211</SSN>
     <Name>John Doe</Name>

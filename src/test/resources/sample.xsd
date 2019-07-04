@@ -16,9 +16,9 @@
    limitations under the License.
 -->
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
-           targetNamespace="http://commons.apache.org/employee"
+           targetNamespace="https://commons.apache.org/employee"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="Employees" xmlns="http://commons.apache.org/employee">
+  <xs:element name="Employees" xmlns="https://commons.apache.org/employee">
     <xs:complexType>
       <xs:sequence>
         <xs:element name="Employee">

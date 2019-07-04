@@ -256,9 +256,9 @@ public class TestFileHandler
     {
         final FileHandler handler = new FileHandler();
         handler.setURL(new URL(
-                "http://commons.apache.org/configuration/index.html"));
+                "https://commons.apache.org/configuration/index.html"));
 
-        assertEquals("base path", "http://commons.apache.org/configuration/",
+        assertEquals("base path", "https://commons.apache.org/configuration/",
                 handler.getBasePath());
         assertEquals("file name", "index.html", handler.getFileName());
         assertNull("Got a file name in locator", handler.getFileLocator()

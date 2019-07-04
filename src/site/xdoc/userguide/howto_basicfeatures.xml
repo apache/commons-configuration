@@ -361,7 +361,7 @@ PropertiesConfiguration config = builder.getConfiguration();
     <subsection name="Using Expressions">
       <p>
         In addition to the simple lookup mechanisms previously described, Commons Configuration
-        provides <code>ExprLookup</code> which uses <a href="http://commons.apache.org/jexl">Apache
+        provides <code>ExprLookup</code> which uses <a href="https://commons.apache.org/jexl">Apache
         Commons Jexl</a> to allow expressions to be resolved wherever a StrLookup is allowed. This
         example shows an alternate way of obtaining a system property if the ExprLookup is
         configured.
@@ -545,7 +545,7 @@ int[] result = config.getInt(int[].class, "myIntArrayKey");
       control over the whole data conversion process. By implementing the
       different conversion methods, it is possible to integrate existing
       conversion libraries (e.g. the converters offered by
-      <a href="http://commons.apache.org/proper/commons-beanutils/">Commons
+      <a href="https://commons.apache.org/proper/commons-beanutils/">Commons
       BeanUtils</a>) with <em>Commons Configuration</em>.
     </p>
     <p>

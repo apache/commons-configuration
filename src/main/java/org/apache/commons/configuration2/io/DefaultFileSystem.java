@@ -33,7 +33,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * FileSystem that uses java.io.File or HttpClient
  * @since 1.7
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
+ * href="https://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  */
 public class DefaultFileSystem extends FileSystem
 {
@@ -273,7 +273,7 @@ public class DefaultFileSystem extends FileSystem
      * Wraps the output stream so errors can be detected in the HTTP response.
      * @since 1.7
      * @author <a
-     * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
+     * href="https://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
      */
     private static class HttpOutputStream extends VerifiableOutputStream
     {

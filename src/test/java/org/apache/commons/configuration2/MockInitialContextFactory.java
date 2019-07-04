@@ -33,7 +33,7 @@ import com.mockobjects.dynamic.Mock;
  * This implementation will return a mock context that contains some test data.
  *
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * href="https://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
  */
 public class MockInitialContextFactory implements InitialContextFactory

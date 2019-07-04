@@ -38,7 +38,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * configuration classes.</p>
  *
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * href="https://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
  */
 public abstract class ConfigurationXMLReader implements XMLReader

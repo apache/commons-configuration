@@ -28,7 +28,7 @@
   <body>
     <menu name="Configuration">
       <item name="Overview"                             href="/index.html"/>
-      <item name="Download"                             href="http://commons.apache.org/configuration/download_configuration.cgi"/>
+      <item name="Download"                             href="https://commons.apache.org/configuration/download_configuration.cgi"/>
       <item name="Issue Tracking"                       href="issue-tracking.html"/>
     </menu>
 
@@ -43,7 +43,7 @@
       </item>
       <item name="1.10" collapse="true"                 href="/index.html">
         <item name="User's Guide"                       href="/userguide_v1.10/user_guide.html"/>
-        <item name="Javadoc"                            href="http://commons.apache.org/configuration/javadocs/v1.10/apidocs/index.html"/>
+        <item name="Javadoc"                            href="https://commons.apache.org/configuration/javadocs/v1.10/apidocs/index.html"/>
         <item name="Runtime Dependencies"               href="/dependencies_1_10.html"/>
       </item>
     </menu>

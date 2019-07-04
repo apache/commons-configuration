@@ -26,7 +26,7 @@ package org.apache.commons.configuration2;
  * it is possible to perform XML processing on a configuration object.</p>
  *
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * href="https://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
  */
 public class BaseConfigurationXMLReader extends ConfigurationXMLReader

@@ -43,7 +43,7 @@ import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
  * @see HierarchicalConfiguration
  *
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
+ * href="https://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  */
 abstract class HierarchicalConfigurationConverter
 {

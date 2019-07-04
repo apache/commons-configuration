@@ -180,7 +180,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * <p>
  * More information about the basic functionality supported by
  * {@code XMLConfiguration} can be found at the user's guide at
- * <a href="http://commons.apache.org/proper/commons-configuration/userguide/howto_basicfeatures.html">
+ * <a href="https://commons.apache.org/proper/commons-configuration/userguide/howto_basicfeatures.html">
  * Basic features and AbstractConfiguration</a>. There is
  * also a separate chapter dealing with
  * <a href="commons.apache.org/proper/commons-configuration/userguide/howto_xml.html">

@@ -47,7 +47,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @since 1.4
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * href="https://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
  */
 public class ConstantLookup implements Lookup
@@ -156,7 +156,7 @@ public class ConstantLookup implements Lookup
      * needs regarding the class loaders to be used, it can hook in here. This
      * implementation delegates to the {@code getClass()} method of
      * Commons Lang's
-     * <code><a href="http://commons.apache.org/lang/api-release/org/apache/commons/lang/ClassUtils.html">
+     * <code><a href="https://commons.apache.org/lang/api-release/org/apache/commons/lang/ClassUtils.html">
      * ClassUtils</a></code>.
      *
      * @param className the name of the class to be loaded

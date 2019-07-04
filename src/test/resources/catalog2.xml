@@ -21,6 +21,6 @@
           uri="resolver.dtd"/>
   <rewriteSystem systemIdStartString="http://java.sun.com/dtd/"
                  rewritePrefix="./"/>
-  <rewriteSystem systemIdStartString="http://commons.apache.org/"
+  <rewriteSystem systemIdStartString="https://commons.apache.org/"
                  rewritePrefix="file://${sys:user.dir}/target/test-classes/"/>
 </catalog>

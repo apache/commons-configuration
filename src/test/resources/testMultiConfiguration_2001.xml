@@ -17,7 +17,7 @@
 -->
 <configuration
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:noNamespaceSchemaLocation="http://commons.apache.org/testMultiConfiguration.xsd">
+           xsi:noNamespaceSchemaLocation="https://commons.apache.org/testMultiConfiguration.xsd">
   <colors>
     <undefined>This will throw a schema exception</undefined>
   </colors>

@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * Thin wrapper around xml commons CatalogResolver to allow list of catalogs
  * to be provided.
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * href="https://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
  * @since 1.7
  */

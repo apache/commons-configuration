@@ -222,7 +222,7 @@ java.home = ${env:JAVA_HOME}
       explains some approaches how you can add your own interpolation facilities.
       Under the hood interpolation is implemented using the
       <code>StrSubstitutor</code> class of the <code>text</code> package of
-      <a href="http://commons.apache.org/lang/">Commons Lang</a>. This
+      <a href="https://commons.apache.org/lang/">Commons Lang</a>. This
       class uses objects derived from the <code>StrLookup</code> class for
       resolving variables. <code>StrLookup</code> defines a simple
       <code>lookup()</code> method that must be implemented by custom
@@ -285,7 +285,7 @@ ConfigurationInterpolator.registerGlobalLookup("echo", new EchoLookup());
     <subsection name="Using Expressions">
       <p>
         In addition to the simple lookup mechanisms previously described, Commond Configuration
-        provides <code>ExprLookup</code> which uses <a href="http://commons.apache.org/jexl">Apache
+        provides <code>ExprLookup</code> which uses <a href="https://commons.apache.org/jexl">Apache
         Commons Jexl</a> to allow expressions to be resolved wherever a StrLookup is allowed. This
         example shows an alternate way of obtaining a system property if the ExprLookup is
         configured.

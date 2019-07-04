@@ -42,7 +42,7 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
  * such as Spring it allows components to be injected with subtrees of the configuration.
  * @since 1.6
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * href="https://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
  */
 public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfiguration

@@ -32,12 +32,12 @@ o CONFIGURATION-747:  Update Spring from 4.3.22 to 4.3.24. Thanks to Gary Gregor
 o CONFIGURATION-745:  Add the special key "includeoptional" for properties files. Thanks to Gary Gregory.
 
 
-Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+Historical list of changes: https://commons.apache.org/proper/commons-configuration/changes-report.html
 
 For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
 
-http://commons.apache.org/proper/commons-configuration/
+https://commons.apache.org/proper/commons-configuration/
 
 =============================================================================
 
@@ -97,12 +97,12 @@ o CONFIGURATION-725:  Update Apache Commons Text from 1.4 to 1.5.
 o CONFIGURATION-728:  Update Apache Commons Text from 1.5 to 1.6.
 
 
-Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+Historical list of changes: https://commons.apache.org/proper/commons-configuration/changes-report.html
 
 For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
 
-http://commons.apache.org/proper/commons-configuration/
+https://commons.apache.org/proper/commons-configuration/
 
 
 =============================================================================
@@ -197,12 +197,12 @@ o Some dependencies have been updated to their most recent versions. However,
   o Update optional dependency Jackson from 2.8.9 to 2.9.6.
 
 
-Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+Historical list of changes: https://commons.apache.org/proper/commons-configuration/changes-report.html
 
 For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
 
-http://commons.apache.org/proper/commons-configuration/
+https://commons.apache.org/proper/commons-configuration/
 
 =============================================================================
 
@@ -290,12 +290,12 @@ o CONFIGURATION-661
   Update platform requirement from Java 6 to 7.
 
 
-Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+Historical list of changes: https://commons.apache.org/proper/commons-configuration/changes-report.html
 
 For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
 
-http://commons.apache.org/proper/commons-configuration/
+https://commons.apache.org/proper/commons-configuration/
 
 =============================================================================
 
@@ -366,12 +366,12 @@ o CONFIGURATION-627
   used.
 
 
-Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+Historical list of changes: https://commons.apache.org/proper/commons-configuration/changes-report.html
 
 For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
 
-http://commons.apache.org/proper/commons-configuration/
+https://commons.apache.org/proper/commons-configuration/
 
 =============================================================================
 
@@ -442,12 +442,12 @@ o CONFIGURATION-635
   older version still works.)
 
 
-Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+Historical list of changes: https://commons.apache.org/proper/commons-configuration/changes-report.html
 
 For complete information on Apache Commons Configuration, including instructions
 on how to submit bug reports, patches, or suggestions for improvement, see the
 Apache Commons Configuration website:
-http://commons.apache.org/proper/commons-configuration/
+https://commons.apache.org/proper/commons-configuration/
 
 =============================================================================
 
@@ -468,7 +468,7 @@ and powerful. Therefore, this release is not a drop-in replacement for Commons
 Configuration 1.x; there have been incompatible changes in many areas that
 require adaptations on client code. A migration guide is available at
 
-http://commons.apache.org/configuration/userguide/upgradeto2_0.html
+https://commons.apache.org/configuration/userguide/upgradeto2_0.html
 
 that describes all breaking changes and helps when upgrading to the new
 version. One obvious breaking change is the renaming of the main package
@@ -480,7 +480,7 @@ on the classpath without conflicts.
 The user's guide has been completely reworked to describe all features of the
 new version. It can be found at
 
-http://commons.apache.org/configuration/userguide/user_guide.html
+https://commons.apache.org/configuration/userguide/user_guide.html
 
 Changes:
 ========
@@ -524,7 +524,7 @@ existed already in the Configuration 1.0 code base; so these fixes are not all
 related to changes introduced in the 2.0 version.
 
 Below is a list of all changes in this version. Please refer to the clirr
-report at http://commons.apache.org/proper/commons-configuration/clirr-report.html
+report at https://commons.apache.org/proper/commons-configuration/clirr-report.html
 for information about changes which break binary compatibility.
 
 Changes:
@@ -555,12 +555,12 @@ o CONFIGURATION-604:
 
 Commons Configuration 2.0-beta2 requires Java 1.6 or higher.
 
-Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+Historical list of changes: https://commons.apache.org/proper/commons-configuration/changes-report.html
 
 For complete information on Apache Commons Configuration, including instructions
 on how to submit bug reports, patches, or suggestions for improvement, see the
 Apache Commons Configuration website:
-http://commons.apache.org/proper/commons-configuration/
+https://commons.apache.org/proper/commons-configuration/
 
 =============================================================================
 
@@ -616,12 +616,12 @@ o CONFIGURATION-564:  PropertiesConfiguration now supports again properties with
                       are added to the configuration with an empty String as value.
 o CONFIGURATION-427:  XMLPropertyListConfiguration can now save arrays in the correct form.
 
-Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+Historical list of changes: https://commons.apache.org/proper/commons-configuration/changes-report.html
 
 For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Commons Configuration website:
 
-http://commons.apache.org/proper/commons-configuration/
+https://commons.apache.org/proper/commons-configuration/
 
 =============================================================================
 
@@ -636,13 +636,13 @@ Configuration 1.x. To allow collaboration with an older version of the library
 (and to prevent jar and dependency hell), the top-level package and the Maven
 coordinates have been changed. There is an upgrade guide available at
 
-http://commons.apache.org/configuration/userguide/upgradeto2_0.html
+https://commons.apache.org/configuration/userguide/upgradeto2_0.html
 
 describing the most important breaking changes. Be sure to read this
 document if you want to switch from a 1.x version to this new version. The
 user's guide which can be found at
 
-http://commons.apache.org/configuration/userguide/user_guide.html
+https://commons.apache.org/configuration/userguide/user_guide.html
 
 has been reworked to cover all the new and changed features.
 
@@ -823,9 +823,9 @@ o CONFIGURATION-26:   It is now possible to influence the conversion from a cont
                       configuration's ConversionHandler, this behavior can be changed.
 
 
-Historical list of changes: http://commons.apache.org/proper/commons-configuration/changes-report.html
+Historical list of changes: https://commons.apache.org/proper/commons-configuration/changes-report.html
 
 For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
 patches, or suggestions for improvement, see the Apache Commons Configuration website:
 
-http://commons.apache.org/proper/commons-configuration/
+https://commons.apache.org/proper/commons-configuration/

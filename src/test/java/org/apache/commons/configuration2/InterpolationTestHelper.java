@@ -37,7 +37,7 @@ import junitx.framework.Assert;
  * configuration implementations.
  *
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * href="https://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
  */
 public class InterpolationTestHelper

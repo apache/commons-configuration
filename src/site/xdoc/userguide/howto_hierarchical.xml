@@ -1131,7 +1131,7 @@ config.addProperty("tables table/name", "documents");
             </p>
             <p>
                 <em>Note:</em> XPATH support is implemented through
-                <a href="http://commons.apache.org/jxpath">Commons JXPath</a>.
+                <a href="https://commons.apache.org/jxpath">Commons JXPath</a>.
                 So when making use of this feature, be sure you include the
                 commons-jxpath jar in your classpath.
             </p>

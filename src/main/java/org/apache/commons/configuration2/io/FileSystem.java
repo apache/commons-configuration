@@ -28,7 +28,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * Abstract layer to allow various types of file systems.
  * @since 1.7
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
+ * href="https://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  */
 public abstract class FileSystem
 {

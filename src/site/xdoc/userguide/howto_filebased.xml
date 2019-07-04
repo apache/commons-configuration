@@ -430,7 +430,7 @@ handler.save(out);
       </p>
       <p>
         <em>Commons Configuration</em> also provides a second <code>FileSystem</code> implementation which allows retrieval using
-        <a href="http://commons.apache.org/vfs">Apache Commons VFS</a>. As of this writing
+        <a href="https://commons.apache.org/vfs">Apache Commons VFS</a>. As of this writing
         Commons VFS supports 18 protocols for manipulating files.
       </p>
       <p>

@@ -34,7 +34,7 @@
       </p>
       <p>
         Commons Configuration also provides a second FileSystem which allows retrieval using
-        <a href="http://commons.apache.org/vfs">Apache Commons VFS</a>. As of this writing
+        <a href="https://commons.apache.org/vfs">Apache Commons VFS</a>. As of this writing
         Commons VFS supports 18 protocols for manipulating files.
       </p>
       <subsection name="Configuration">
