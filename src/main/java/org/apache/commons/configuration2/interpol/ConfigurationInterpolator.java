@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.text.StringSubstitutor;
+import org.apache.commons.text.lookup.DefaultStringLookup;
 import org.apache.commons.text.lookup.StringLookup;
 
 /**
@@ -107,10 +108,17 @@ public class ConfigurationInterpolator
 
     static
     {
-        final Map<String, Lookup> lookups = new HashMap<>(DefaultLookups.values().length);
-        for (final DefaultLookups l : DefaultLookups.values())
+        // TODO Perhaps a 3.0 version should only use Commons Text lookups.
+        // Add our own lookups.
+        final Map<String, Lookup> lookups = new HashMap<>();
+        for (final DefaultLookups lookup : DefaultLookups.values())
         {
-            lookups.put(l.getPrefix(), l.getLookup());
+            lookups.put(lookup.getPrefix(), lookup.getLookup());
+        }
+        // Add Apache Commons Text lookups but don't override existing keys.
+        for (final DefaultStringLookup lookup : DefaultStringLookup.values())
+        {
+            lookups.putIfAbsent(lookup.getKey(), new StringLookupAdapter(lookup.getStringLookup()));
         }
         DEFAULT_PREFIX_LOOKUPS = Collections.unmodifiableMap(lookups);
     }
