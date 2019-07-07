@@ -288,10 +288,10 @@ public class TestFileHandler
         final FileHandler handler = new FileHandler();
         final URL url =
                 new URL(
-                        "http://issues.apache.org/bugzilla/show_bug.cgi?id=37886");
+                        "https://issues.apache.org/bugzilla/show_bug.cgi?id=37886");
         handler.setURL(url);
         assertEquals("Base path incorrect",
-                "http://issues.apache.org/bugzilla/", handler.getBasePath());
+                "https://issues.apache.org/bugzilla/", handler.getBasePath());
         assertEquals("File name incorrect", "show_bug.cgi",
                 handler.getFileName());
         assertEquals("URL was not correctly stored", url, handler.getURL());

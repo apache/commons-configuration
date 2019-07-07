@@ -125,7 +125,7 @@ Integer integer = config.getInteger("number");
 
     <section name="Bugs">
       <p>
-        Bugs may be reported via the <a href="http://issues.apache.org/jira/browse/CONFIGURATION">ASF JIRA</a>
+        Bugs may be reported via the <a href="https://issues.apache.org/jira/browse/CONFIGURATION">ASF JIRA</a>
         system. Detailed information can be found on the <a href="issue-tracking.html">issue tracking page</a>.
       </p>
     </section>
