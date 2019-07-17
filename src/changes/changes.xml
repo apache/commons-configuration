@@ -33,6 +33,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-751" due-to="Gary Gregory">
         Update Apache Commons Text from 1.6 to 1.7.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-752" due-to="Gary Gregory">
+        Update Apache Commons VFS from 2.3 to 2.4.
+      </action>
     </release>
     <release version="2.5" date="2019-05-23"
              description="Minor release with new features and updated dependencies.">
