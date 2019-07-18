@@ -94,14 +94,47 @@ Dimension size = new Dimension(config.getInt("window.width"),
       <subsection name="Includes">
         <p>
           If a property is named "<code>include</code>", and the value of that property is the
-          name of a file on the disk, that file will be included into the configuration. Here is
-          an example:
+          name of a file on the disk, that file will be included into the configuration. 
+        </p>
+        <p>
+          The difference between "<code>include</code>" and "<code>includeOptional</code>" (below) is that if the file value 
+          is absent, processing continues with "<code>includeOptional</code>" but stops with "<code>include</code>".
+        </p>
+        <p>
+          For example:
         </p>
 <source>
 # usergui.properties
 
 include = colors.properties
 include = sizes.properties
+</source>
+
+<source>
+# colors.properties
+
+colors.background = #FFFFFF
+</source>
+
+      </subsection>
+
+      <subsection name="Oprional Includes">
+        <p>
+          If a property is named "<code>includeOptional</code>", and the value of that property is the
+          name of a file on the disk, that file will be included into the configuration.
+        </p>
+        <p>
+          The difference between "<code>include</code>" (above) and "<code>includeOptional</code>" is that if the file value 
+          is absent, processing continues with "<code>includeOptional</code>" but stops with "<code>include</code>".
+        </p>
+        <p>
+          For example:
+        </p>
+<source>
+# usergui.properties
+
+includeOptional = colors.properties
+includeOptional = sizes.properties
 </source>
 
 <source>
