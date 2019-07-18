@@ -36,6 +36,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-752" due-to="Gary Gregory">
         Update Apache Commons VFS from 2.3 to 2.4.
       </action>
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        Fix Javadoc for org.apache.commons.configuration2.PropertiesConfiguration.getIncludeOptional().
+      </action>
     </release>
     <release version="2.5" date="2019-05-23"
              description="Minor release with new features and updated dependencies.">

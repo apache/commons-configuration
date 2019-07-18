@@ -302,7 +302,7 @@ public class PropertiesConfiguration extends BaseConfiguration
 
     /**
      * Gets the property value for including other properties files.
-     * By default it is "include".
+     * By default it is "includeoptional".
      * <p>
      * If the file is absent, processing continues normally.
      * </p>
