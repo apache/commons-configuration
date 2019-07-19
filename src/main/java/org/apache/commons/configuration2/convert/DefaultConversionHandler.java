@@ -90,7 +90,7 @@ public class DefaultConversionHandler implements ConversionHandler
     public String getDateFormat()
     {
         final String fmt = dateFormat;
-        return (fmt != null) ? fmt : DEFAULT_DATE_FORMAT;
+        return fmt != null ? fmt : DEFAULT_DATE_FORMAT;
     }
 
     /**
@@ -414,6 +414,6 @@ public class DefaultConversionHandler implements ConversionHandler
     private static ConfigurationInterpolator fetchInterpolator(
             final ConfigurationInterpolator ci)
     {
-        return (ci != null) ? ci : NULL_INTERPOLATOR;
+        return ci != null ? ci : NULL_INTERPOLATOR;
     }
 }
