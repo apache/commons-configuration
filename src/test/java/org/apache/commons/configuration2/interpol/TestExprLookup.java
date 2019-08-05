@@ -43,12 +43,32 @@ import org.junit.Test;
  */
 public class TestExprLookup
 {
-    private static File TEST_FILE = ConfigurationAssert.getTestFile("test.xml");
+    public static class Utility
+    {
+        String message;
+
+        public Utility(final String msg)
+        {
+            this.message = msg;
+        }
+
+        public String getMessage()
+        {
+            return message;
+        }
+
+        public String str(final String str)
+        {
+            return str;
+        }
+    }
 
     private static String PATTERN1 =
         "String.replace(Util.message, 'Hello', 'Goodbye') + System.getProperty('user.name')";
     private static String PATTERN2 =
         "'$[element] ' + String.trimToEmpty('$[space.description]')";
+
+    private static File TEST_FILE = ConfigurationAssert.getTestFile("test.xml");
 
     /**
      * Loads the test configuration.
@@ -62,6 +82,32 @@ public class TestExprLookup
         final FileHandler handler = new FileHandler(config);
         handler.load(TEST_FILE);
         return config;
+    }
+
+    /**
+     * Tests whether variables can be queried.
+     */
+    @Test
+    public void testGetVariables()
+    {
+        final ExprLookup.Variables vars = new ExprLookup.Variables();
+        vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
+        final ExprLookup lookup = new ExprLookup(vars);
+        assertEquals("Wrong variables", vars, lookup.getVariables());
+    }
+
+    /**
+     * Tests that getVariables() returns a copy of the original variables.
+     */
+    @Test
+    public void testGetVariablesDefensiveCopy()
+    {
+        final ExprLookup.Variables vars = new ExprLookup.Variables();
+        vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
+        final ExprLookup lookup = new ExprLookup(vars);
+        final ExprLookup.Variables vars2 = lookup.getVariables();
+        vars2.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
+        assertEquals("Modified variables", vars, lookup.getVariables());
     }
 
     @Test
@@ -104,32 +150,6 @@ public class TestExprLookup
     }
 
     /**
-     * Tests whether variables can be queried.
-     */
-    @Test
-    public void testGetVariables()
-    {
-        final ExprLookup.Variables vars = new ExprLookup.Variables();
-        vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
-        final ExprLookup lookup = new ExprLookup(vars);
-        assertEquals("Wrong variables", vars, lookup.getVariables());
-    }
-
-    /**
-     * Tests that getVariables() returns a copy of the original variables.
-     */
-    @Test
-    public void testGetVariablesDefensiveCopy()
-    {
-        final ExprLookup.Variables vars = new ExprLookup.Variables();
-        vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
-        final ExprLookup lookup = new ExprLookup(vars);
-        final ExprLookup.Variables vars2 = lookup.getVariables();
-        vars2.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
-        assertEquals("Modified variables", vars, lookup.getVariables());
-    }
-
-    /**
      * Tests an expression that does not yield a string.
      */
     @Test
@@ -158,25 +178,5 @@ public class TestExprLookup
         lookup.setInterpolator(config.getInterpolator());
         assertNull("Wrong result",
                 lookup.lookup("System.getProperty('undefined.property')"));
-    }
-
-    public static class Utility
-    {
-        String message;
-
-        public Utility(final String msg)
-        {
-            this.message = msg;
-        }
-
-        public String getMessage()
-        {
-            return message;
-        }
-
-        public String str(final String str)
-        {
-            return str;
-        }
     }
 }
