@@ -353,6 +353,20 @@ public class TestConfigurationInterpolator
     }
 
     /**
+     * Tests an interpolation that consists of a single undefined variable only with and without a default value.
+     */
+    @Test
+    public void testInterpolationSingleVariableDefaultValue()
+    {
+        final Object value = 42;
+        interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
+        assertEquals("Wrong result", "${I_am_not_defined}",
+                interpolator.interpolate("${I_am_not_defined}"));
+        assertEquals("Wrong result", "42",
+                interpolator.interpolate("${I_am_not_defined:-42}"));
+    }
+
+    /**
      * Tests a variable declaration which lacks the trailing closing bracket.
      */
     @Test
