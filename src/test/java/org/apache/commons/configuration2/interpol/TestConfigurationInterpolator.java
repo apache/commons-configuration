@@ -364,6 +364,8 @@ public class TestConfigurationInterpolator
                 interpolator.interpolate("${I_am_not_defined}"));
         assertEquals("Wrong result", "42",
                 interpolator.interpolate("${I_am_not_defined:-42}"));
+        assertEquals("Wrong result", "",
+                interpolator.interpolate("${I_am_not_defined:-}"));
     }
 
     /**
