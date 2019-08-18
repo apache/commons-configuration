@@ -34,7 +34,7 @@
         Update Apache Commons Text from 1.6 to 1.7.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-752" due-to="Gary Gregory">
-        Update Apache Commons VFS from 2.3 to 2.4.
+        Update Apache Commons VFS from 2.3 to 2.4.1.
       </action>
       <action dev="ggregory" type="fix" due-to="Gary Gregory">
         Fix Javadoc for org.apache.commons.configuration2.PropertiesConfiguration.getIncludeOptional().
