@@ -232,7 +232,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
     protected File getFile()
     {
         final URL url = getFileHandler().getURL();
-        return (url != null) ? fileFromURL(url) : getFileHandler().getFile();
+        return url != null ? fileFromURL(url) : getFileHandler().getFile();
     }
 
     /**
