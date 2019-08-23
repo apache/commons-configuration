@@ -168,6 +168,9 @@
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Bump commons.javadoc.version from 3.1.1 to 3.3.0.
        </action>
+       <action dev="tpoliaw" type="fix" issue="CONFIGURATION-753" due-to="Peter Holloway">
+         Handling of interpolation is inconsistent
+       </action>
     </release>
     <release version="2.7" date="2020-03-07"
              description="Minor release with new features and updated dependencies.">

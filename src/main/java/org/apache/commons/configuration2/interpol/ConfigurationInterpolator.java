@@ -340,7 +340,19 @@ public class ConfigurationInterpolator
      */
     private StringSubstitutor initSubstitutor()
     {
-        return new StringSubstitutor(key -> Objects.toString(resolve(key), null));
+        return new StringSubstitutor(key ->
+        {
+            Object result = resolve(key);
+            if (result instanceof Collection<?>)
+            {
+                Collection<?> results = (Collection<?>) result;
+                if (!results.isEmpty())
+                {
+                    result = results.iterator().next();
+                }
+            }
+            return Objects.toString(result, null);
+        });
     }
 
     /**

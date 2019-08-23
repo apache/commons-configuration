@@ -334,6 +334,30 @@ public class TestConfigurationInterpolator
     }
 
     /**
+     * Tests a property consisting of a single variable that resolves to multiple values
+     * Should return all values.
+     */
+    @Test
+    public void testInterpolationMultipleValuesNoPrefix()
+    {
+        final String value = "${subject}";
+        interpolator.addDefaultLookup(setUpTestLookup("subject", Arrays.asList("foo", "bar")));
+        assertEquals("Wrong result", Arrays.asList("foo", "bar"), interpolator.interpolate(value));
+    }
+
+    /**
+     * Tests a property that includes a variable that resolves to multiple values. Should use only
+     * the first value.
+     */
+    @Test
+    public void testInterpolationMultipleValuesWithPrefix()
+    {
+        final String value = "hello ${subject}";
+        interpolator.addDefaultLookup(setUpTestLookup("subject", Arrays.asList("foo", "bar")));
+        assertEquals("Wrong result", "hello foo", interpolator.interpolate(value));
+    }
+
+    /**
      * Tests an interpolation that consists of a single variable only. The
      * variable's value should be returned verbatim.
      */
