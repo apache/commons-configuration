@@ -205,7 +205,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
     protected long getLastModificationDate()
     {
         final File file = getExistingFile();
-        return (file != null) ? file.lastModified() : 0;
+        return file != null ? file.lastModified() : 0;
     }
 
     /**
