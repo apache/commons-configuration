@@ -90,6 +90,13 @@ public enum DefaultLookups
     DATE(StringLookupFactory.KEY_DATE, new StringLookupAdapter(StringLookupFactory.INSTANCE.dateStringLookup())),
 
     /**
+     * The lookup for DNS.
+     *
+     * @since 2.6
+     */
+    DNS(StringLookupFactory.KEY_DNS, new StringLookupAdapter(StringLookupFactory.INSTANCE.dnsStringLookup())),
+
+    /**
      * The lookup for environment properties.
      */
     ENVIRONMENT(StringLookupFactory.KEY_ENV,
