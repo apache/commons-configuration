@@ -188,7 +188,6 @@ import org.xml.sax.helpers.DefaultHandler;
  * </p>
  *
  * @since commons-configuration 1.0
- * @author J&ouml;rg Schaible
  */
 public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         FileBasedConfiguration, FileLocatorAware, InputStreamSupport

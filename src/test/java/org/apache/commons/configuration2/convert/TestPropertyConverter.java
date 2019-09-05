@@ -33,7 +33,6 @@ import org.junit.Test;
 /**
  * Test class for PropertyConverter.
  *
- * @author Emmanuel Bourg
  */
 public class TestPropertyConverter
 {

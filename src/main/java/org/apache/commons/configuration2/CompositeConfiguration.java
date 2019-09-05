@@ -63,8 +63,6 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * children.
  * </p>
  *
- * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  */
 public class CompositeConfiguration extends AbstractConfiguration
 implements Cloneable

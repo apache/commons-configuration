@@ -37,7 +37,6 @@ import java.util.HashMap;
  * System.out.println("JAVA_HOME=" + envConfig.getString("JAVA_HOME");
  * </pre>
  *
- * @author <a href="mailto:nicolas.deloof@gmail.com">Nicolas De Loof</a>
  * @since 1.5
  */
 public class EnvironmentConfiguration extends MapConfiguration

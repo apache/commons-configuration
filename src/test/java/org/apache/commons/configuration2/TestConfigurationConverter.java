@@ -32,8 +32,6 @@ import org.junit.Test;
 /**
  * Tests the ConfigurationConverter class.
  *
- * @author Martin Poeschl
- * @author Emmanuel Bourg
  */
 public class TestConfigurationConverter
 {

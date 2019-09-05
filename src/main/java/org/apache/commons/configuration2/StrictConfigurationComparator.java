@@ -24,8 +24,6 @@ import java.util.Iterator;
  *
  * @since 1.0
  *
- * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
- * @author <a href="mailto:shapira@mpi.com">Yoav Shapira</a>
  */
 public class StrictConfigurationComparator implements ConfigurationComparator
 {

@@ -42,7 +42,6 @@ import org.junit.Test;
  * These tests were based on the ones in <code>BasicDynaBeanTestCase</code>
  * because the two classes provide similar levels of functionality.</p>
  *
- * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
  */
 public class TestConfigurationDynaBean
 {

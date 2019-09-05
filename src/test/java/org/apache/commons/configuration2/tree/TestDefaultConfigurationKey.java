@@ -30,7 +30,6 @@ import org.junit.Test;
 /**
  * Test class for DefaultConfigurationKey.
  *
- * @author Oliver Heger
  */
 public class TestDefaultConfigurationKey
 {

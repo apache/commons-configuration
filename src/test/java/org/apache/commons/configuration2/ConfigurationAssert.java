@@ -36,7 +36,6 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * Assertions on configurations for the unit tests. This class also provides
  * access to test files.
  *
- * @author Emmanuel Bourg
  */
 public class ConfigurationAssert
 {

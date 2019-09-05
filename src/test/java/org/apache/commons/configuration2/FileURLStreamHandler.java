@@ -31,7 +31,6 @@ import java.net.URLStreamHandler;
  * A custom URLStreamHandler to test loading and saving configurations to non
  * standard URLs. This handler acts like a file handler with write support.
  *
- * @author Emmanuel Bourg
  */
 public class FileURLStreamHandler extends URLStreamHandler
 {

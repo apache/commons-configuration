@@ -49,7 +49,6 @@ import org.apache.commons.logging.LogFactory;
  * the default configurations. Hierarchical configurations, for which a specific
  * expression engine is set, may cause problems.</p>
  *
- * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
  * @since 1.0-rc1
  */
 public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean

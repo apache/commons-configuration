@@ -46,7 +46,6 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * A utility class to convert the configuration properties into any type.
  *
- * @author Emmanuel Bourg
  * @since 1.1
  */
 final class PropertyConverter

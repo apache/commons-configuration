@@ -52,7 +52,6 @@ import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;
 
 /**
- * @author Emmanuel Bourg
  */
 public class TestDataConfiguration
 {

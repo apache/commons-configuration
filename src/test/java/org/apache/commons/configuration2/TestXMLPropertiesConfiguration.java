@@ -42,7 +42,6 @@ import org.xml.sax.InputSource;
 /**
  * Test class for {@code XMLPropertiesConfiguration}.
  *
- * @author Emmanuel Bourg
  */
 public class TestXMLPropertiesConfiguration
 {

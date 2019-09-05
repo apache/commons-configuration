@@ -26,7 +26,6 @@ import org.junit.Test;
 /**
  * Test case for the ManagedReloadingDetector class.
  *
- * @author Nicolas De loof
  */
 public class TestManagedReloadingDetector
 {

@@ -52,7 +52,6 @@ import junitx.framework.ListAssert;
 import junitx.framework.ObjectAssert;
 
 /**
- * @author Emmanuel Bourg
  */
 public class TestXMLPropertyListConfiguration
 {

@@ -116,7 +116,6 @@ import org.apache.commons.lang3.StringUtils;
  * <h1>Note: Like JDBC itself, protection against SQL injection is left to the user.</h1>
  * @since 1.0
  *
- * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {

@@ -41,7 +41,6 @@ import org.apache.commons.lang3.StringUtils;
  * UnsupportedOperationException. The clear operations are supported but the
  * underlying JNDI data source is not changed.
  *
- * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {

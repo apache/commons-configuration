@@ -24,7 +24,6 @@ import org.apache.commons.logging.LogFactory;
  * A strategy to reload configuration based on management requests. Designed for
  * JMX management.
  *
- * @author Nicolas De loof
  */
 public class ManagedReloadingDetector implements ReloadingDetector,
         ManagedReloadingDetectorMBean

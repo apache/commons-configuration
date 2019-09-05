@@ -23,7 +23,6 @@ package org.apache.commons.configuration2.ex;
  *
  * @since 1.0
  *
- * @author Emmanuel Bourg
  */
 public class ConversionException extends ConfigurationRuntimeException
 {

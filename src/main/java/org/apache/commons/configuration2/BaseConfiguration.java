@@ -35,18 +35,6 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * to use the same key many times concatenating the value strings
  * instead of overwriting them.
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @author <a href="mailto:daveb@miceda-data">Dave Bryson</a>
- * @author <a href="mailto:geirm@optonline.net">Geir Magnusson Jr.</a>
- * @author <a href="mailto:leon@opticode.co.za">Leon Messerschmidt</a>
- * @author <a href="mailto:kjohnson@transparent.com">Kent Johnson</a>
- * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @author <a href="mailto:ipriha@surfeu.fi">Ilkka Priha</a>
- * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
- * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
- * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  */
 public class BaseConfiguration extends AbstractConfiguration implements Cloneable
 {

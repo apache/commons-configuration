@@ -36,8 +36,6 @@ import org.junit.rules.TemporaryFolder;
  * class especially tests the hierarchical nature of this class and structured
  * data access.
  *
- * @author Emmanuel Bourg
- * @author Mark Woodman
  */
 public class TestHierarchicalXMLConfiguration
 {

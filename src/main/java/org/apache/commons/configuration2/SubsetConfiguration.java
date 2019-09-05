@@ -29,7 +29,6 @@ import org.apache.commons.configuration2.convert.ListDelimiterHandler;
  * {@link Configuration#subset(String)} method should be used,
  * which will return a correctly initialized instance.</p>
  *
- * @author Emmanuel Bourg
  */
 public class SubsetConfiguration extends AbstractConfiguration
 {

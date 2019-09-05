@@ -124,7 +124,6 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @since 1.2
  *
- * @author Emmanuel Bourg
  */
 public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
     implements FileBasedConfiguration, FileLocatorAware

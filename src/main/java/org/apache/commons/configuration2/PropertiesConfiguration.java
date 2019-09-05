@@ -195,19 +195,6 @@ import org.apache.commons.text.translate.UnicodeEscaper;
  *
  * @see java.util.Properties#load
  *
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
- * @author <a href="mailto:daveb@miceda-data">Dave Bryson</a>
- * @author <a href="mailto:geirm@optonline.net">Geir Magnusson Jr.</a>
- * @author <a href="mailto:leon@opticode.co.za">Leon Messerschmidt</a>
- * @author <a href="mailto:kjohnson@transparent.com">Kent Johnson</a>
- * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
- * @author <a href="mailto:ipriha@surfeu.fi">Ilkka Priha</a>
- * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
- * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
- * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
  */
 public class PropertiesConfiguration extends BaseConfiguration
     implements FileBasedConfiguration, FileLocatorAware
@@ -1671,11 +1658,12 @@ public class PropertiesConfiguration extends BaseConfiguration
 
     /**
      * Unescapes Java literals found in the {@code String} to a {@code Writer}.
-     * </p>
+     * <p>
      * When the parameter {@code jupCompatible} is {@code false}, the classic
      * behavior is used (see {@link #unescapeJava(String)}). When it's {@code true}
      * a slightly different behavior that's compatible with
      * {@link java.util.Properties} is used (see {@link JupIOFactory}).
+     * </p>
      *
      * @param str the {@code String} to unescape, may be null
      * @param jupCompatible whether unescaping is compatible with

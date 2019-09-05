@@ -28,7 +28,6 @@ import junitx.framework.ArrayAssert;
 import org.junit.Test;
 
 /**
- * @author Emmanuel Bourg
  */
 public class TestPropertyListParser
 {

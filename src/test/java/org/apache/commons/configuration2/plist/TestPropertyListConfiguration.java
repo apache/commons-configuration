@@ -50,7 +50,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * @author Emmanuel Bourg
  */
 public class TestPropertyListConfiguration
 {

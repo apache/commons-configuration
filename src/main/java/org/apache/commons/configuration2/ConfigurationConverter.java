@@ -29,7 +29,6 @@ import org.apache.commons.lang3.StringUtils;
  * Configuration converter. Helper class to convert between Configuration,
  * ExtendedProperties and standard Properties.
  *
- * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  */
 public final class ConfigurationConverter
 {

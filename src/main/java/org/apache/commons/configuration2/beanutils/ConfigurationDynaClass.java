@@ -33,7 +33,6 @@ import org.apache.commons.logging.LogFactory;
  * a {@code ConfigurationDynaBean} from a wrapped configuration-collection
  * {@link org.apache.commons.configuration2.Configuration} instance.
  *
- * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
  * @since 1.0-rc1
  */
 public class ConfigurationDynaClass implements DynaClass

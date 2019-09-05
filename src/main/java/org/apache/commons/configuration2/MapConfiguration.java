@@ -84,7 +84,6 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * might throw {@code ClassCastException} exceptions later.
  * </p>
  *
- * @author Emmanuel Bourg
  * @since 1.1
  */
 public class MapConfiguration extends AbstractConfiguration implements Cloneable

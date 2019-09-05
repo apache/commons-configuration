@@ -22,7 +22,6 @@ package org.apache.commons.configuration2;
  *
  * @since 1.0
  *
- * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
  */
 public interface ConfigurationComparator
 {

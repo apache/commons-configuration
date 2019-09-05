@@ -25,7 +25,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
  */
 public class TestConfigurationMap
 {

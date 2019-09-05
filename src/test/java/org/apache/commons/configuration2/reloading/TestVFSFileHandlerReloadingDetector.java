@@ -39,7 +39,6 @@ import org.junit.rules.TemporaryFolder;
 /**
  * Test case for the VFSFileHandlerReloadingDetector class.
  *
- * @author Ralph Goers
  */
 public class TestVFSFileHandlerReloadingDetector
 {

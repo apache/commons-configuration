@@ -53,7 +53,6 @@ import org.apache.commons.configuration2.sync.SynchronizerSupport;
  * Other methods allow to iterate over the contained properties or to create
  * a subset configuration.</p>
  *
- * @author Commons Configuration team
  */
 public interface Configuration extends ImmutableConfiguration, SynchronizerSupport
 {

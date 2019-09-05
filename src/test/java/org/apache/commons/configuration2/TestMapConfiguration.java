@@ -34,7 +34,6 @@ import org.junit.Test;
 /**
  * Tests for MapConfiguration.
  *
- * @author Emmanuel Bourg
  */
 public class TestMapConfiguration extends TestAbstractConfiguration
 {

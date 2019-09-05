@@ -66,8 +66,6 @@ import org.xml.sax.helpers.DefaultHandler;
  * by multiple threads. However if one of these threads modifies the object,
  * synchronization has to be performed manually.
  *
- * @author Emmanuel Bourg
- * @author Alistair Young
  * @since 1.1
  */
 public class XMLPropertiesConfiguration extends BaseConfiguration implements
@@ -367,7 +365,6 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
     /**
      * SAX Handler to parse a XML properties file.
      *
-     * @author Alistair Young
      * @since 1.2
      */
     private class XMLPropertiesHandler extends DefaultHandler

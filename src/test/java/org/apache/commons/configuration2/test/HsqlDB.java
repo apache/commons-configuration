@@ -30,7 +30,6 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Stolen from Turbine
  *
- * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  */
 
 public class HsqlDB

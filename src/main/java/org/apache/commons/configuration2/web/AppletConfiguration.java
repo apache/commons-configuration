@@ -26,7 +26,6 @@ import java.util.Iterator;
  * read only, adding or removing a property will throw an
  * UnsupportedOperationException.
  *
- * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
  * @since 1.1
  */
 public class AppletConfiguration extends BaseWebConfiguration

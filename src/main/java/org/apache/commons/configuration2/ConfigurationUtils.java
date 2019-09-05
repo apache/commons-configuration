@@ -42,8 +42,6 @@ import org.apache.commons.logging.LogFactory;
  *
  * @see ConfigurationConverter Utility methods to convert configurations.
  *
- * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
- * @author Emmanuel Bourg
  */
 public final class ConfigurationUtils
 {

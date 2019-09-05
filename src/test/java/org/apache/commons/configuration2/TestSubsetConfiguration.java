@@ -43,7 +43,6 @@ import org.junit.Test;
 /**
  * Test case for the {@link SubsetConfiguration} class.
  *
- * @author Emmanuel Bourg
  */
 public class TestSubsetConfiguration
 {
