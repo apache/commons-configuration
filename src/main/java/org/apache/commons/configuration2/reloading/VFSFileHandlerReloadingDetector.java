@@ -42,9 +42,6 @@ import org.apache.commons.vfs2.VFS;
  * This strategy only works with FileConfiguration instances.
  * </p>
  *
- * @author <a
- *         href="https://commons.apache.org/configuration/team-list.html">Commons
- *         Configuration team</a>
  * @since 1.7
  */
 public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetector

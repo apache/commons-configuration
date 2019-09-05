@@ -28,10 +28,6 @@ import org.junit.Test;
 
 /**
  * Test class for EnvironmentConfiguration.
- *
- * @author <a
- * href="https://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  */
 public class TestEnvironmentConfiguration
 {

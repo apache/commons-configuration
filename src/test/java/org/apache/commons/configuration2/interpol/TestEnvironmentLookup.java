@@ -26,10 +26,6 @@ import java.util.Map;
 
 /**
  * Test class for EnvironmentLookup.
- *
- * @author <a
- *         href="https://commons.apache.org/configuration/team-list.html">Commons
- *         Configuration team</a>
  */
 public class TestEnvironmentLookup
 {

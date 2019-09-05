@@ -217,9 +217,6 @@ import org.apache.commons.configuration2.tree.TrackedNodeModel;
  * Such properties are considered to be section nodes.
  * </p>
  *
- * @author <a
- *         href="https://commons.apache.org/configuration/team-list.html">Commons
- *         Configuration team</a>
  * @since 1.6
  */
 public class INIConfiguration extends BaseHierarchicalConfiguration implements

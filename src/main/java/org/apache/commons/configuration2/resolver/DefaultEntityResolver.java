@@ -29,9 +29,6 @@ import org.xml.sax.SAXException;
 
 /**
  * The DefaultEntityResolver used by XML Configurations.
- * @author <a
- * href="https://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @since 1.7
  */
 public class DefaultEntityResolver implements EntityResolver, EntityRegistry

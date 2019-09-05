@@ -45,8 +45,6 @@ import org.apache.commons.vfs2.provider.UriParser;
 /**
  * FileSystem that uses Commons VFS
  * @since 1.7
- * @author <a
- * href="https://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  */
 public class VFSFileSystem extends DefaultFileSystem
 {

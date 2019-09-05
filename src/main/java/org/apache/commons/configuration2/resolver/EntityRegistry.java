@@ -21,9 +21,6 @@ import java.util.Map;
 
 /**
  * Interface used for registering and retrieving PUBLICID to URL mappings.
- * @author <a
- * href="https://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @since 1.7
  */
 public interface EntityRegistry

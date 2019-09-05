@@ -26,8 +26,6 @@ import java.util.NoSuchElementException;
  *
  * <p>This class is basically a stripped-down version of the
  * {@code FilterIterator} class of Commons Collections</p>
- *
- * @author <a href="https://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  */
 class PrefixedKeysIterator implements Iterator<String>
 {

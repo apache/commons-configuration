@@ -41,9 +41,6 @@ import java.util.Map;
  * </p>
  *
  * @since 1.3
- * @author <a
- * href="https://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  */
 public interface BeanDeclaration
 {

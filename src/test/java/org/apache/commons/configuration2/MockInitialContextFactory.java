@@ -31,10 +31,6 @@ import com.mockobjects.dynamic.Mock;
 /**
  * A mock implementation of the {@code InitialContextFactory} interface.
  * This implementation will return a mock context that contains some test data.
- *
- * @author <a
- * href="https://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  */
 public class MockInitialContextFactory implements InitialContextFactory
 {

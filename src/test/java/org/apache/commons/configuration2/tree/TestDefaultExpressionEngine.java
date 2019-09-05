@@ -31,10 +31,6 @@ import org.junit.Test;
 
 /**
  * Test class for DefaultExpressionEngine.
- *
- * @author <a
- * href="https://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  */
 public class TestDefaultExpressionEngine
 {

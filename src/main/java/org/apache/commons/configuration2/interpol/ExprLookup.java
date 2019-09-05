@@ -60,8 +60,6 @@ import org.apache.commons.text.lookup.StringLookup;
  * projects which use this.
  *
  * @since 1.7
- * @author <a
- * href="https://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  */
 public class ExprLookup implements Lookup
 {

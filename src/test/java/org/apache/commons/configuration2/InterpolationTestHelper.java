@@ -35,10 +35,6 @@ import junitx.framework.Assert;
  * A helper class that defines a bunch of tests related to variable
  * interpolation. It can be used for running these tests on different
  * configuration implementations.
- *
- * @author <a
- * href="https://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  */
 public class InterpolationTestHelper
 {

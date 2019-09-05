@@ -24,9 +24,6 @@ import org.apache.commons.configuration2.XMLConfiguration;
  * the same tests as the default test class, but uses a XMLConfiguration as
  * underlying configuration object.
  *
- * @author <a
- * href="https://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  */
 public class TestConfigurationDynaBeanXMLConfig extends
         TestConfigurationDynaBean

@@ -25,9 +25,6 @@ package org.apache.commons.configuration2;
  * events. By registering a {@code ContentHandler} at an instance
  * it is possible to perform XML processing on a configuration object.</p>
  *
- * @author <a
- * href="https://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  */
 public class BaseConfigurationXMLReader extends ConfigurationXMLReader
 {

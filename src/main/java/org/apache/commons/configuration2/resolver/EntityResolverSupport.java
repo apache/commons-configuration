@@ -20,8 +20,6 @@ import org.xml.sax.EntityResolver;
 
 /**
  * Interface that identifies the class as using an EntityResolver
- * @author <a href="https://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @since 1.7
  */
 public interface EntityResolverSupport

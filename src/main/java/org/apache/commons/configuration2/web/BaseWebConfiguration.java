@@ -30,9 +30,6 @@ import org.apache.commons.configuration2.AbstractConfiguration;
  * type, so they throw a {@code UnsupportedOperationException} exception.
  * </p>
  *
- * @author <a
- * href="https://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  * @since 1.2
  */
 abstract class BaseWebConfiguration extends AbstractConfiguration

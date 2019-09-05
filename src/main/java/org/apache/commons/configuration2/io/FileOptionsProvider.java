@@ -22,8 +22,6 @@ import java.util.Map;
  * Some FileSystems allow options to be passed on File operations. Users of commons
  * configuration can implement this interface and register it with the FileSystem.
  * @since 1.7
- * @author <a
- * href="https://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  */
 public interface FileOptionsProvider
 {

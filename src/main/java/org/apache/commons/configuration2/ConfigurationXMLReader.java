@@ -37,9 +37,6 @@ import org.xml.sax.helpers.AttributesImpl;
  * special purpose. There will be concrete sub classes that process specific
  * configuration classes.</p>
  *
- * @author <a
- * href="https://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  */
 public abstract class ConfigurationXMLReader implements XMLReader
 {

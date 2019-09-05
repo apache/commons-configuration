@@ -46,9 +46,6 @@ import org.apache.commons.logging.LogFactory;
  * </p>
  *
  * @since 1.4
- * @author <a
- * href="https://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
  */
 public class ConstantLookup implements Lookup
 {
