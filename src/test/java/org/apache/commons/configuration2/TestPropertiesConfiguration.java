@@ -17,7 +17,31 @@
 
 package org.apache.commons.configuration2;
 
-import java.io.*;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -50,12 +74,10 @@ import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.io.FileSystem;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.Ignore;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.*;
 
 /**
  * Test for loading and saving properties files.
@@ -1087,6 +1109,43 @@ public class TestPropertiesConfiguration
         assertTrue("Make sure we have multiple keys", pc.getBoolean("includeoptional.loaded"));
     }
 
+    @Test
+    public void testIncludeLoadAllOnNotFound() throws Exception
+    {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        pc.setIncludeListener(null);
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-not-found.properties");
+        handler.load();
+        assertEquals("valueA", pc.getString("keyA"));
+    }
+    
+    @Test
+    public void testIncludeLoadAllOnLoadException() throws Exception
+    {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        pc.setIncludeListener(null);
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-load-exception.properties");
+        handler.load();
+        assertEquals("valueA", pc.getString("keyA"));
+    }
+    
+    @Test
+    @Ignore("PropertiesConfiguration does NOT detect cyclical references.")
+    public void testIncludeLoadAllCycliclaReference() throws Exception
+    {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        pc.setIncludeListener(null);
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-cyclical-reference.properties");
+        handler.load();
+        assertEquals("valueA", pc.getString("keyA"));
+    }
+    
     @Test
     public void testLoadViaPropertyWithBasePath2() throws Exception
     {

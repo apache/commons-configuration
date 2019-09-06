@@ -199,6 +199,56 @@ import org.apache.commons.text.translate.UnicodeEscaper;
 public class PropertiesConfiguration extends BaseConfiguration
     implements FileBasedConfiguration, FileLocatorAware
 {
+
+    /**
+     * Defines error handling for the special {@code "include"} key.
+     *
+     * @since 2.6
+     */
+    public interface IncludeListener
+    {
+        /**
+         * Defines what to do when an include file is missing.
+         *
+         * @param fileName the missing file name.
+         * @throws ConfigurationException Optionally thrown by the implementation to stop processing.
+         */
+        void onFileNotFound(String fileName) throws ConfigurationException;
+
+        /**
+         * Defines what to do when an exception is caught loading a property file.
+         *
+         * @param e The exception.
+         * @throws ConfigurationException Optionally thrown by the implementation to stop processing.
+         */
+        void onLoadException(ConfigurationException e) throws ConfigurationException;
+    }
+
+    /**
+     * Defines the default behavior.
+     *
+     * @since 2.6
+     */
+    public static class DefaultIncludeListener implements IncludeListener
+    {
+        /**
+         * The singleton instance.
+         */
+        static final DefaultIncludeListener INSTANCE = new DefaultIncludeListener();
+
+        @Override
+        public void onFileNotFound(final String fileName) throws ConfigurationException
+        {
+            throw new ConfigurationException("Cannot resolve include file " + fileName);
+        }
+
+        @Override
+        public void onLoadException(ConfigurationException e) throws ConfigurationException
+        {
+            throw e;
+        }
+    }
+
     /**
      * The default encoding (ISO-8859-1 as specified by
      * http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html)
@@ -265,6 +315,9 @@ public class PropertiesConfiguration extends BaseConfiguration
 
     /** Allow file inclusion or not */
     private boolean includesAllowed = true;
+
+    /** TODO */
+    private IncludeListener includeListener = DefaultIncludeListener.INSTANCE;
 
     /**
      * Creates an empty PropertyConfiguration object which can be
@@ -1827,20 +1880,34 @@ public class PropertiesConfiguration extends BaseConfiguration
 
         if (url == null)
         {
-            throw new ConfigurationException("Cannot resolve include file "
-                    + fileName);
+            if (includeListener != null)
+            {
+                includeListener.onFileNotFound(fileName);
+            }
         }
-
-        final FileHandler fh = new FileHandler(this);
-        fh.setFileLocator(locator);
-        final FileLocator orgLocator = locator;
-        try
+        else
         {
-            fh.load(url);
-        }
-        finally
-        {
-            locator = orgLocator; // reset locator which is changed by load
+            final FileHandler fh = new FileHandler(this);
+            fh.setFileLocator(locator);
+            final FileLocator orgLocator = locator;
+            try
+            {
+                try
+                {
+                    fh.load(url);
+                }
+                catch (ConfigurationException e)
+                {
+                    if (includeListener != null)
+                    {
+                        includeListener.onLoadException(e);
+                    }
+                }
+            }
+            finally
+            {
+                locator = orgLocator; // reset locator which is changed by load
+            }
         }
     }
 
@@ -1859,5 +1926,27 @@ public class PropertiesConfiguration extends BaseConfiguration
                 FileLocatorUtils.fileLocator(locator).sourceURL(null)
                         .basePath(basePath).fileName(fileName).create();
         return FileLocatorUtils.locate(includeLocator);
+    }
+
+    /**
+     * Gets the current IncludeListener, may be null.
+     *
+     * @return the current IncludeListener, may be null.
+     * @since 2.6
+     */
+    public IncludeListener getIncludeListener()
+    {
+        return includeListener;
+    }
+
+    /**
+     * Sets the current IncludeListener, may be null.
+     *
+     * @param includeListener the current IncludeListener, may be null.
+     * @since 2.6
+     */
+    public void setIncludeListener(final IncludeListener includeListener)
+    {
+        this.includeListener = includeListener;
     }
 }
