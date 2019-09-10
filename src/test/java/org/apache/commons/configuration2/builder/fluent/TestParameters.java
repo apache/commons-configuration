@@ -272,11 +272,19 @@ public class TestParameters
     {
         final PropertiesConfiguration.IOFactory factory =
                 EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
+        final PropertiesConfiguration.IncludeListener includeListener =
+                EasyMock.createMock(PropertiesConfiguration.IncludeListener.class);
+        // @formatter:off
         final Map<String, Object> map =
-                new Parameters().properties().setThrowExceptionOnMissing(true)
-                        .setFileName("test.properties").setIOFactory(factory)
-                        .setListDelimiterHandler(listHandler).setIncludesAllowed(false)
+                new Parameters().properties()
+                        .setThrowExceptionOnMissing(true)
+                        .setFileName("test.properties")
+                        .setIncludeListener(includeListener)
+                        .setIOFactory(factory)
+                        .setListDelimiterHandler(listHandler)
+                        .setIncludesAllowed(false)
                         .getParameters();
+        // @formatter:on
         checkBasicProperties(map);
         final FileBasedBuilderParametersImpl fbp =
                 FileBasedBuilderParametersImpl.fromParameters(map);
@@ -284,6 +292,7 @@ public class TestParameters
                 .getFileName());
         assertEquals("Wrong includes flag", Boolean.FALSE,
                 map.get("includesAllowed"));
+        assertSame("Wrong include listener", includeListener, map.get("includeListener"));
         assertSame("Wrong factory", factory, map.get("IOFactory"));
     }
 

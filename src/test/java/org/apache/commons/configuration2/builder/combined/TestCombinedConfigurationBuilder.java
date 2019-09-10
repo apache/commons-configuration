@@ -704,7 +704,7 @@ public class TestCombinedConfigurationBuilder
         final CombinedConfiguration cc = builder.getConfiguration();
         assertFalse("Configuration is empty", cc.isEmpty());
 
-        // The environment may contain settings with values that 
+        // The environment may contain settings with values that
         // are altered by interpolation. Disable this for direct access
         // to the String associated with the environment property name.
         cc.setInterpolator(null);

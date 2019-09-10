@@ -137,6 +137,10 @@ import org.apache.commons.text.translate.UnicodeEscaper;
  *   they do not replace existing properties with the same key.
  *
  *  </li>
+ *  <li>
+ *   You can define custom error handling for the special key {@code "include"}
+ *   by using {@link #setIncludeListener(IncludeListener)}.
+ *  </li>
  * </ul>
  *
  * <p>Here is an example of a valid extended properties file:</p>
@@ -234,7 +238,7 @@ public class PropertiesConfiguration extends BaseConfiguration
         /**
          * The singleton instance.
          */
-        static final DefaultIncludeListener INSTANCE = new DefaultIncludeListener();
+        public static final DefaultIncludeListener INSTANCE = new DefaultIncludeListener();
 
         @Override
         public void onFileNotFound(final String fileName) throws ConfigurationException
@@ -250,6 +254,31 @@ public class PropertiesConfiguration extends BaseConfiguration
     }
 
     /**
+     * Implements all methods as noops.
+     *
+     * @since 2.6
+     */
+    public static class NoopIncludeListener implements IncludeListener
+    {
+        /**
+         * The singleton instance.
+         */
+        public static final NoopIncludeListener INSTANCE = new NoopIncludeListener();
+
+        @Override
+        public void onFileNotFound(final String fileName) throws ConfigurationException
+        {
+            // noop
+        }
+
+        @Override
+        public void onLoadException(ConfigurationException e) throws ConfigurationException
+        {
+            // noop
+        }
+    }
+
+    /**
      * The default encoding (ISO-8859-1 as specified by
      * http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html)
      */
@@ -260,12 +289,6 @@ public class PropertiesConfiguration extends BaseConfiguration
 
     /** Constant for the default properties separator.*/
     static final String DEFAULT_SEPARATOR = " = ";
-
-    /**
-     * Constant for the default {@code IOFactory}. This instance is used
-     * when no specific factory was set.
-     */
-    private static final IOFactory DEFAULT_IO_FACTORY = new DefaultIOFactory();
 
     /**
      * A string with special characters that need to be unescaped when reading
@@ -307,6 +330,9 @@ public class PropertiesConfiguration extends BaseConfiguration
     /** Stores the layout object.*/
     private PropertiesConfigurationLayout layout;
 
+    /** The IncludeListener for the special {@code "include"} key. */
+    private IncludeListener includeListener;
+
     /** The IOFactory for creating readers and writers.*/
     private IOFactory ioFactory;
 
@@ -315,9 +341,6 @@ public class PropertiesConfiguration extends BaseConfiguration
 
     /** Allow file inclusion or not */
     private boolean includesAllowed = true;
-
-    /** TODO */
-    private IncludeListener includeListener = DefaultIncludeListener.INSTANCE;
 
     /**
      * Creates an empty PropertyConfiguration object which can be
@@ -541,6 +564,17 @@ public class PropertiesConfiguration extends BaseConfiguration
     }
 
     /**
+     * Gets the current IncludeListener, never null.
+     *
+     * @return the current IncludeListener, never null.
+     * @since 2.6
+     */
+    public IncludeListener getIncludeListener()
+    {
+        return includeListener != null ? includeListener : DefaultIncludeListener.INSTANCE;
+    }
+
+    /**
      * Returns the {@code IOFactory} to be used for creating readers and
      * writers when loading or saving this configuration.
      *
@@ -549,7 +583,23 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public IOFactory getIOFactory()
     {
-        return (ioFactory != null) ? ioFactory : DEFAULT_IO_FACTORY;
+        return ioFactory != null ? ioFactory : DefaultIOFactory.INSTANCE;
+    }
+
+    /**
+     * Sets the current IncludeListener, may not be null.
+     *
+     * @param includeListener the current IncludeListener, may not be null.
+     * @throws IllegalArgumentException if the {@code IncludeListener} is null.
+     * @since 2.6
+     */
+    public void setIncludeListener(final IncludeListener includeListener)
+    {
+        if (includeListener == null)
+        {
+            throw new IllegalArgumentException("IncludeListener must not be null.");
+        }
+        this.includeListener = includeListener;
     }
 
     /**
@@ -571,7 +621,7 @@ public class PropertiesConfiguration extends BaseConfiguration
     {
         if (ioFactory == null)
         {
-            throw new IllegalArgumentException("IOFactory must not be null!");
+            throw new IllegalArgumentException("IOFactory must not be null.");
         }
 
         this.ioFactory = ioFactory;
@@ -1430,6 +1480,11 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public static class DefaultIOFactory implements IOFactory
     {
+        /**
+         * The singleton instance.
+         */
+        static final DefaultIOFactory INSTANCE = new DefaultIOFactory();
+
         @Override
         public PropertiesReader createPropertiesReader(final Reader in)
         {
@@ -1880,9 +1935,9 @@ public class PropertiesConfiguration extends BaseConfiguration
 
         if (url == null)
         {
-            if (includeListener != null)
+            if (getIncludeListener() != null)
             {
-                includeListener.onFileNotFound(fileName);
+                getIncludeListener().onFileNotFound(fileName);
             }
         }
         else
@@ -1928,25 +1983,4 @@ public class PropertiesConfiguration extends BaseConfiguration
         return FileLocatorUtils.locate(includeLocator);
     }
 
-    /**
-     * Gets the current IncludeListener, may be null.
-     *
-     * @return the current IncludeListener, may be null.
-     * @since 2.6
-     */
-    public IncludeListener getIncludeListener()
-    {
-        return includeListener;
-    }
-
-    /**
-     * Sets the current IncludeListener, may be null.
-     *
-     * @param includeListener the current IncludeListener, may be null.
-     * @since 2.6
-     */
-    public void setIncludeListener(final IncludeListener includeListener)
-    {
-        this.includeListener = includeListener;
-    }
 }

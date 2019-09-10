@@ -17,6 +17,7 @@
 package org.apache.commons.configuration2.builder;
 
 import org.apache.commons.configuration2.PropertiesConfiguration.IOFactory;
+import org.apache.commons.configuration2.PropertiesConfiguration.IncludeListener;
 import org.apache.commons.configuration2.PropertiesConfigurationLayout;
 
 /**
@@ -38,6 +39,18 @@ import org.apache.commons.configuration2.PropertiesConfigurationLayout;
  */
 public interface PropertiesBuilderProperties<T>
 {
+    /**
+     * Sets the current IncludeListener, may be null.
+     *
+     * @param includeListener the current IncludeListener, may be null.
+     * @return a reference to this object for method chaining
+     * @since 2.6
+     */
+    default T setIncludeListener(IncludeListener includeListener)
+    {
+        return (T) this;
+    }
+
     /**
      * Sets a flag whether include files are supported by the properties
      * configuration object. If set to <b>true</b>, files listed by an include

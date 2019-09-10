@@ -1113,39 +1113,52 @@ public class TestPropertiesConfiguration
     public void testIncludeLoadAllOnNotFound() throws Exception
     {
         final PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setIncludeListener(null);
+        pc.setIncludeListener(PropertiesConfiguration.NoopIncludeListener.INSTANCE);
         final FileHandler handler = new FileHandler(pc);
         handler.setBasePath(testBasePath);
         handler.setFileName("include-not-found.properties");
         handler.load();
         assertEquals("valueA", pc.getString("keyA"));
     }
-    
+
+    @Test
+    public void testIncludeIncludeLoadAllOnNotFound() throws Exception
+    {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        pc.setIncludeListener(PropertiesConfiguration.NoopIncludeListener.INSTANCE);
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-include-not-found.properties");
+        handler.load();
+        assertEquals("valueA", pc.getString("keyA"));
+        assertEquals("valueB", pc.getString("keyB"));
+    }
+
     @Test
     public void testIncludeLoadAllOnLoadException() throws Exception
     {
         final PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setIncludeListener(null);
+        pc.setIncludeListener(PropertiesConfiguration.NoopIncludeListener.INSTANCE);
         final FileHandler handler = new FileHandler(pc);
         handler.setBasePath(testBasePath);
         handler.setFileName("include-load-exception.properties");
         handler.load();
         assertEquals("valueA", pc.getString("keyA"));
     }
-    
+
     @Test
     @Ignore("PropertiesConfiguration does NOT detect cyclical references.")
     public void testIncludeLoadAllCycliclaReference() throws Exception
     {
         final PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setIncludeListener(null);
+        pc.setIncludeListener(PropertiesConfiguration.NoopIncludeListener.INSTANCE);
         final FileHandler handler = new FileHandler(pc);
         handler.setBasePath(testBasePath);
         handler.setFileName("include-cyclical-reference.properties");
         handler.load();
         assertEquals("valueA", pc.getString("keyA"));
     }
-    
+
     @Test
     public void testLoadViaPropertyWithBasePath2() throws Exception
     {

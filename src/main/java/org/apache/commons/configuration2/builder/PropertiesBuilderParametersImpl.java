@@ -19,6 +19,7 @@ package org.apache.commons.configuration2.builder;
 import java.util.Map;
 
 import org.apache.commons.configuration2.PropertiesConfiguration.IOFactory;
+import org.apache.commons.configuration2.PropertiesConfiguration.IncludeListener;
 import org.apache.commons.configuration2.PropertiesConfigurationLayout;
 
 /**
@@ -44,6 +45,9 @@ public class PropertiesBuilderParametersImpl extends
         FileBasedBuilderParametersImpl implements
         PropertiesBuilderProperties<PropertiesBuilderParametersImpl>
 {
+    /** The key for the include listener property. */
+    private static final String PROP_INCLUDE_LISTENER = "includeListener";
+
     /** The key for the includes allowed property. */
     private static final String PROP_INCLUDES_ALLOWED = "includesAllowed";
 
@@ -52,6 +56,13 @@ public class PropertiesBuilderParametersImpl extends
 
     /** The key for the IO factory property. */
     private static final String PROP_IO_FACTORY = "IOFactory";
+
+    @Override
+    public PropertiesBuilderParametersImpl setIncludeListener(final IncludeListener includeListener)
+    {
+        storeProperty(PROP_INCLUDE_LISTENER, includeListener);
+        return this;
+    }
 
     @Override
     public PropertiesBuilderParametersImpl setIncludesAllowed(final boolean f)
@@ -68,7 +79,7 @@ public class PropertiesBuilderParametersImpl extends
     public void inheritFrom(final Map<String, ?> source)
     {
         super.inheritFrom(source);
-        copyPropertiesFrom(source, PROP_INCLUDES_ALLOWED, PROP_IO_FACTORY);
+        copyPropertiesFrom(source, PROP_INCLUDES_ALLOWED, PROP_INCLUDE_LISTENER, PROP_IO_FACTORY);
     }
 
     @Override
