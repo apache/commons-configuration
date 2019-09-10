@@ -18,9 +18,10 @@ package org.apache.commons.configuration2.builder;
 
 import java.util.Map;
 
+import org.apache.commons.configuration2.ConfigurationConsumer;
 import org.apache.commons.configuration2.PropertiesConfiguration.IOFactory;
-import org.apache.commons.configuration2.PropertiesConfiguration.IncludeListener;
 import org.apache.commons.configuration2.PropertiesConfigurationLayout;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 
 /**
  * <p>
@@ -58,7 +59,8 @@ public class PropertiesBuilderParametersImpl extends
     private static final String PROP_IO_FACTORY = "IOFactory";
 
     @Override
-    public PropertiesBuilderParametersImpl setIncludeListener(final IncludeListener includeListener)
+    public PropertiesBuilderParametersImpl setIncludeListener(
+            final ConfigurationConsumer<ConfigurationException> includeListener)
     {
         storeProperty(PROP_INCLUDE_LISTENER, includeListener);
         return this;

@@ -16,9 +16,10 @@
  */
 package org.apache.commons.configuration2.builder;
 
+import org.apache.commons.configuration2.ConfigurationConsumer;
 import org.apache.commons.configuration2.PropertiesConfiguration.IOFactory;
-import org.apache.commons.configuration2.PropertiesConfiguration.IncludeListener;
 import org.apache.commons.configuration2.PropertiesConfigurationLayout;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 
 /**
  * <p>
@@ -40,13 +41,13 @@ import org.apache.commons.configuration2.PropertiesConfigurationLayout;
 public interface PropertiesBuilderProperties<T>
 {
     /**
-     * Sets the current IncludeListener, may be null.
+     * Sets the current include listener, may be null.
      *
-     * @param includeListener the current IncludeListener, may be null.
+     * @param includeListener the current include listener, may be null.
      * @return a reference to this object for method chaining
      * @since 2.6
      */
-    default T setIncludeListener(IncludeListener includeListener)
+    default T setIncludeListener(ConfigurationConsumer<ConfigurationException> includeListener)
     {
         return (T) this;
     }

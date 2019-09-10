@@ -320,7 +320,7 @@ public class TestConfigurations
             final Map<String, Object> map =
                     new Parameters().properties()
                             .setPath(absPath)
-                            .setIncludeListener(PropertiesConfiguration.NoopIncludeListener.INSTANCE)
+                            .setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER)
                             .getParameters();
             // @formatter:on
             final BasicConfigurationBuilder<PropertiesConfiguration> builderOk = configs.propertiesBuilder(absPath)
@@ -334,7 +334,7 @@ public class TestConfigurations
             final BasicConfigurationBuilder<PropertiesConfiguration> builderOk = configs.propertiesBuilder(
                     new Parameters().properties()
                         .setPath(absPath)
-                        .setIncludeListener(PropertiesConfiguration.NoopIncludeListener.INSTANCE));
+                        .setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER));
             // @formatter:on
             final PropertiesConfiguration configuration = builderOk.getConfiguration();
             assertEquals("valueA", configuration.getString("keyA"));

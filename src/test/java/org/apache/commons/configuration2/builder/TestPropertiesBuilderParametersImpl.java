@@ -22,6 +22,7 @@ import static org.junit.Assert.assertSame;
 
 import java.util.Map;
 
+import org.apache.commons.configuration2.ConfigurationConsumer;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.PropertiesConfigurationLayout;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
@@ -75,8 +76,8 @@ public class TestPropertiesBuilderParametersImpl
     @Test
     public void testSetIncludeListener()
     {
-        final PropertiesConfiguration.IncludeListener includeListener =
-                EasyMock.createMock(PropertiesConfiguration.IncludeListener.class);
+        final ConfigurationConsumer<ConfigurationException> includeListener =
+                EasyMock.createMock(ConfigurationConsumer.class);
         EasyMock.replay(includeListener);
         assertSame("Wrong result", params, params.setIncludeListener(includeListener));
         assertSame("IncludeListener not set", includeListener,
@@ -127,8 +128,8 @@ public class TestPropertiesBuilderParametersImpl
     {
         final PropertiesConfiguration.IOFactory factory =
                 EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
-        final PropertiesConfiguration.IncludeListener includeListener =
-                EasyMock.createMock(PropertiesConfiguration.IncludeListener.class);
+        final ConfigurationConsumer<ConfigurationException> includeListener =
+                EasyMock.createMock(ConfigurationConsumer.class);
         params.setIOFactory(factory)
                 .setIncludeListener(includeListener)
                 .setIncludesAllowed(false)
@@ -172,8 +173,8 @@ public class TestPropertiesBuilderParametersImpl
     @Test
     public void testSetIncludeListenerProperty() throws ConfigurationException
     {
-        final PropertiesConfiguration.IncludeListener includeListener =
-                new PropertiesConfiguration.DefaultIncludeListener();
+        final ConfigurationConsumer<ConfigurationException> includeListener =
+                PropertiesConfiguration.DEFAULT_INCLUDE_LISTENER;
         final ConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class)

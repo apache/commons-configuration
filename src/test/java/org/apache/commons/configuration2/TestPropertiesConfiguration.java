@@ -1113,7 +1113,7 @@ public class TestPropertiesConfiguration
     public void testIncludeLoadAllOnNotFound() throws Exception
     {
         final PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setIncludeListener(PropertiesConfiguration.NoopIncludeListener.INSTANCE);
+        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
         final FileHandler handler = new FileHandler(pc);
         handler.setBasePath(testBasePath);
         handler.setFileName("include-not-found.properties");
@@ -1125,7 +1125,7 @@ public class TestPropertiesConfiguration
     public void testIncludeIncludeLoadAllOnNotFound() throws Exception
     {
         final PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setIncludeListener(PropertiesConfiguration.NoopIncludeListener.INSTANCE);
+        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
         final FileHandler handler = new FileHandler(pc);
         handler.setBasePath(testBasePath);
         handler.setFileName("include-include-not-found.properties");
@@ -1138,7 +1138,7 @@ public class TestPropertiesConfiguration
     public void testIncludeLoadAllOnLoadException() throws Exception
     {
         final PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setIncludeListener(PropertiesConfiguration.NoopIncludeListener.INSTANCE);
+        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
         final FileHandler handler = new FileHandler(pc);
         handler.setBasePath(testBasePath);
         handler.setFileName("include-load-exception.properties");
@@ -1151,7 +1151,7 @@ public class TestPropertiesConfiguration
     public void testIncludeLoadAllCycliclaReference() throws Exception
     {
         final PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setIncludeListener(PropertiesConfiguration.NoopIncludeListener.INSTANCE);
+        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
         final FileHandler handler = new FileHandler(pc);
         handler.setBasePath(testBasePath);
         handler.setFileName("include-cyclical-reference.properties");

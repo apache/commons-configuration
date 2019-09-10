@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.configuration2.ConfigurationConsumer;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.builder.BasicBuilderParameters;
 import org.apache.commons.configuration2.builder.BasicBuilderProperties;
@@ -35,6 +36,7 @@ import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.combined.CombinedBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.combined.MultiFileBuilderParametersImpl;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
@@ -272,8 +274,8 @@ public class TestParameters
     {
         final PropertiesConfiguration.IOFactory factory =
                 EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
-        final PropertiesConfiguration.IncludeListener includeListener =
-                EasyMock.createMock(PropertiesConfiguration.IncludeListener.class);
+        final ConfigurationConsumer<ConfigurationException> includeListener =
+                EasyMock.createMock(ConfigurationConsumer.class);
         // @formatter:off
         final Map<String, Object> map =
                 new Parameters().properties()

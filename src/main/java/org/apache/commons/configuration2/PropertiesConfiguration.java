@@ -17,6 +17,7 @@
 
 package org.apache.commons.configuration2;
 
+import java.io.FileNotFoundException;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -139,7 +140,7 @@ import org.apache.commons.text.translate.UnicodeEscaper;
  *  </li>
  *  <li>
  *   You can define custom error handling for the special key {@code "include"}
- *   by using {@link #setIncludeListener(IncludeListener)}.
+ *   by using {@link #setIncludeListener(ConfigurationConsumer)}.
  *  </li>
  * </ul>
  *
@@ -198,85 +199,30 @@ import org.apache.commons.text.translate.UnicodeEscaper;
  * Properties files</a> in special.
  *
  * @see java.util.Properties#load
- *
  */
 public class PropertiesConfiguration extends BaseConfiguration
     implements FileBasedConfiguration, FileLocatorAware
 {
 
     /**
-     * Defines error handling for the special {@code "include"} key.
+     * Defines default error handling for the special {@code "include"} key by throwing the given exception.
      *
      * @since 2.6
      */
-    public interface IncludeListener
+    public static final ConfigurationConsumer<ConfigurationException> DEFAULT_INCLUDE_LISTENER = e ->
     {
-        /**
-         * Defines what to do when an include file is missing.
-         *
-         * @param fileName the missing file name.
-         * @throws ConfigurationException Optionally thrown by the implementation to stop processing.
-         */
-        void onFileNotFound(String fileName) throws ConfigurationException;
-
-        /**
-         * Defines what to do when an exception is caught loading a property file.
-         *
-         * @param e The exception.
-         * @throws ConfigurationException Optionally thrown by the implementation to stop processing.
-         */
-        void onLoadException(ConfigurationException e) throws ConfigurationException;
-    }
+        throw e;
+    };
 
     /**
-     * Defines the default behavior.
+     * Defines error handling as a noop for the special {@code "include"} key.
      *
      * @since 2.6
      */
-    public static class DefaultIncludeListener implements IncludeListener
+    public static final ConfigurationConsumer<ConfigurationException> NOOP_INCLUDE_LISTENER = e ->
     {
-        /**
-         * The singleton instance.
-         */
-        public static final DefaultIncludeListener INSTANCE = new DefaultIncludeListener();
-
-        @Override
-        public void onFileNotFound(final String fileName) throws ConfigurationException
-        {
-            throw new ConfigurationException("Cannot resolve include file " + fileName);
-        }
-
-        @Override
-        public void onLoadException(ConfigurationException e) throws ConfigurationException
-        {
-            throw e;
-        }
-    }
-
-    /**
-     * Implements all methods as noops.
-     *
-     * @since 2.6
-     */
-    public static class NoopIncludeListener implements IncludeListener
-    {
-        /**
-         * The singleton instance.
-         */
-        public static final NoopIncludeListener INSTANCE = new NoopIncludeListener();
-
-        @Override
-        public void onFileNotFound(final String fileName) throws ConfigurationException
-        {
-            // noop
-        }
-
-        @Override
-        public void onLoadException(ConfigurationException e) throws ConfigurationException
-        {
-            // noop
-        }
-    }
+        // noop
+    };
 
     /**
      * The default encoding (ISO-8859-1 as specified by
@@ -330,8 +276,8 @@ public class PropertiesConfiguration extends BaseConfiguration
     /** Stores the layout object.*/
     private PropertiesConfigurationLayout layout;
 
-    /** The IncludeListener for the special {@code "include"} key. */
-    private IncludeListener includeListener;
+    /** The include listener for the special {@code "include"} key. */
+    private ConfigurationConsumer<ConfigurationException> includeListener;
 
     /** The IOFactory for creating readers and writers.*/
     private IOFactory ioFactory;
@@ -564,14 +510,14 @@ public class PropertiesConfiguration extends BaseConfiguration
     }
 
     /**
-     * Gets the current IncludeListener, never null.
+     * Gets the current include listener, never null.
      *
-     * @return the current IncludeListener, never null.
+     * @return the current include listener, never null.
      * @since 2.6
      */
-    public IncludeListener getIncludeListener()
+    public ConfigurationConsumer<ConfigurationException> getIncludeListener()
     {
-        return includeListener != null ? includeListener : DefaultIncludeListener.INSTANCE;
+        return includeListener != null ? includeListener : PropertiesConfiguration.DEFAULT_INCLUDE_LISTENER;
     }
 
     /**
@@ -587,17 +533,17 @@ public class PropertiesConfiguration extends BaseConfiguration
     }
 
     /**
-     * Sets the current IncludeListener, may not be null.
+     * Sets the current include listener, may not be null.
      *
-     * @param includeListener the current IncludeListener, may not be null.
-     * @throws IllegalArgumentException if the {@code IncludeListener} is null.
+     * @param includeListener the current include listener, may not be null.
+     * @throws IllegalArgumentException if the {@code includeListener} is null.
      * @since 2.6
      */
-    public void setIncludeListener(final IncludeListener includeListener)
+    public void setIncludeListener(final ConfigurationConsumer<ConfigurationException> includeListener)
     {
         if (includeListener == null)
         {
-            throw new IllegalArgumentException("IncludeListener must not be null.");
+            throw new IllegalArgumentException("includeListener must not be null.");
         }
         this.includeListener = includeListener;
     }
@@ -1937,7 +1883,8 @@ public class PropertiesConfiguration extends BaseConfiguration
         {
             if (getIncludeListener() != null)
             {
-                getIncludeListener().onFileNotFound(fileName);
+                getIncludeListener().accept(new ConfigurationException(
+                        "Cannot resolve include file " + fileName, new FileNotFoundException(fileName)));
             }
         }
         else
@@ -1953,9 +1900,9 @@ public class PropertiesConfiguration extends BaseConfiguration
                 }
                 catch (ConfigurationException e)
                 {
-                    if (includeListener != null)
+                    if (getIncludeListener() != null)
                     {
-                        includeListener.onLoadException(e);
+                        getIncludeListener().accept(e);
                     }
                 }
             }
