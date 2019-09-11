@@ -23,6 +23,7 @@ import static org.junit.Assert.assertNotNull;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
@@ -77,13 +78,14 @@ public class TestVFSFileHandlerReloadingDetector
     {
         final File file = folder.newFile();
         writeTestFile(file, "value1");
-        final VFSFileHandlerReloadingDetector strategy =
-                new VFSFileHandlerReloadingDetector();
+        final VFSFileHandlerReloadingDetector strategy = new VFSFileHandlerReloadingDetector();
         strategy.getFileHandler().setFile(file);
         strategy.getFileHandler().setFileSystem(new VFSFileSystem());
         final long modificationDate = strategy.getLastModificationDate();
-        assertEquals("Wrong modification date", file.lastModified(),
-                modificationDate);
+        // Workaround OpenJDK 8 and 9 bug JDK-8177809
+        // https://bugs.openjdk.java.net/browse/JDK-8177809
+        final long expectedMillis = Files.getLastModifiedTime(file.toPath()).toMillis();
+        assertEquals("Wrong modification date", expectedMillis, modificationDate);
     }
 
     /**
