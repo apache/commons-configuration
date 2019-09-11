@@ -33,7 +33,7 @@ public interface ConfigurationConsumer<T>
      * Performs this operation on the given argument.
      *
      * @param t the input argument
-     * @throws ConfigurationException May be thrown while initializing a Configuration object.
+     * @throws ConfigurationException May be thrown while performing a Configuration operation.
      */
     void accept(T t) throws ConfigurationException;
 }
