@@ -89,7 +89,7 @@ public class CatalogResolver implements EntityResolver
     }
 
     /**
-     * Set the list of catalog file names
+     * Sets the list of catalog file names
      *
      * @param catalogs The delimited list of catalog files.
      */
@@ -99,7 +99,7 @@ public class CatalogResolver implements EntityResolver
     }
 
     /**
-     * Set the FileSystem.
+     * Sets the FileSystem.
      * @param fileSystem The FileSystem.
      */
     public void setFileSystem(final FileSystem fileSystem)
@@ -109,7 +109,7 @@ public class CatalogResolver implements EntityResolver
     }
 
     /**
-     * Set the base path.
+     * Sets the base path.
      * @param baseDir The base path String.
      */
     public void setBaseDir(final String baseDir)
@@ -118,7 +118,7 @@ public class CatalogResolver implements EntityResolver
     }
 
     /**
-     * Set the {@code ConfigurationInterpolator}.
+     * Sets the {@code ConfigurationInterpolator}.
      * @param ci the {@code ConfigurationInterpolator}
      */
     public void setInterpolator(final ConfigurationInterpolator ci)
@@ -209,7 +209,7 @@ public class CatalogResolver implements EntityResolver
     }
 
     /**
-     * Returns the logger used by this configuration object.
+     * Gets the logger used by this configuration object.
      *
      * @return the logger
      */
@@ -253,7 +253,7 @@ public class CatalogResolver implements EntityResolver
     }
 
     /**
-     * Helper method for locating a given file. This implementation delegates to
+     * Locates a given file. This implementation delegates to
      * the corresponding method in {@link FileLocatorUtils}.
      *
      * @param fs the {@code FileSystem}
@@ -270,7 +270,7 @@ public class CatalogResolver implements EntityResolver
     }
 
     /**
-     * Extend the CatalogManager to make the FileSystem and base directory accessible.
+     * Extends the CatalogManager to make the FileSystem and base directory accessible.
      */
     public static class CatalogManager extends org.apache.xml.resolver.CatalogManager
     {
@@ -287,7 +287,7 @@ public class CatalogResolver implements EntityResolver
         private ConfigurationInterpolator interpolator;
 
         /**
-         * Set the FileSystem
+         * Sets the FileSystem
          * @param fileSystem The FileSystem in use.
          */
         public void setFileSystem(final FileSystem fileSystem)
@@ -296,7 +296,7 @@ public class CatalogResolver implements EntityResolver
         }
 
         /**
-         * Retrieve the FileSystem.
+         * Gets the FileSystem.
          * @return The FileSystem.
          */
         public FileSystem getFileSystem()
@@ -305,7 +305,7 @@ public class CatalogResolver implements EntityResolver
         }
 
         /**
-         * Set the base directory.
+         * Sets the base directory.
          * @param baseDir The base directory.
          */
         public void setBaseDir(final String baseDir)
@@ -317,7 +317,7 @@ public class CatalogResolver implements EntityResolver
         }
 
         /**
-         * Return the base directory.
+         * Gets the base directory.
          * @return The base directory.
          */
         public String getBaseDir()
@@ -337,7 +337,7 @@ public class CatalogResolver implements EntityResolver
 
 
         /**
-         * Get a new catalog instance. This method is only overridden because xml-resolver
+         * Gets a new catalog instance. This method is only overridden because xml-resolver
          * might be in a parent ClassLoader and will be incapable of loading our Catalog
          * implementation.
          *
@@ -373,7 +373,7 @@ public class CatalogResolver implements EntityResolver
         }
 
         /**
-         * Get a catalog instance.
+         * Gets a catalog instance.
          *
          * If this manager uses static catalogs, the same static catalog will
          * always be returned. Otherwise a new catalog will be returned.
@@ -463,7 +463,7 @@ public class CatalogResolver implements EntityResolver
         }
 
         /**
-         * Parse the specified catalog file.
+         * Parses the specified catalog file.
          * @param baseDir The base directory, if not included in the file name.
          * @param fileName The catalog file. May be a full URI String.
          * @throws IOException If an error occurs.
@@ -530,7 +530,7 @@ public class CatalogResolver implements EntityResolver
         }
 
         /**
-         * Perform character normalization on a URI reference.
+         * Performs character normalization on a URI reference.
          *
          * @param uriref The URI reference
          * @return The normalized URI reference.
