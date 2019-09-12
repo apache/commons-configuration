@@ -326,11 +326,21 @@ public class CatalogResolver implements EntityResolver
             return this.baseDir;
         }
 
-        public void setInterpolator(final ConfigurationInterpolator ci)
+        /**
+         * Sets the ConfigurationInterpolator.
+         * 
+         * @param configurationInterpolator the ConfigurationInterpolator.
+         */
+        public void setInterpolator(final ConfigurationInterpolator configurationInterpolator)
         {
-            interpolator = ci;
+            interpolator = configurationInterpolator;
         }
 
+        /**
+         * Gets the ConfigurationInterpolator.
+         * 
+         * @return the ConfigurationInterpolator.
+         */
         public ConfigurationInterpolator getInterpolator()
         {
             return interpolator;
