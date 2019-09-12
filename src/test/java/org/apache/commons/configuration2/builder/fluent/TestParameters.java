@@ -39,7 +39,6 @@ import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -383,14 +382,9 @@ public class TestParameters
         final List<Object> initializedParams = new ArrayList<>(1);
         manager.initializeParameters(EasyMock
                 .anyObject(BuilderParameters.class));
-        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>()
-        {
-            @Override
-            public Object answer() throws Throwable
-            {
-                initializedParams.add(EasyMock.getCurrentArguments()[0]);
-                return null;
-            }
+        EasyMock.expectLastCall().andAnswer(() -> {
+            initializedParams.add(EasyMock.getCurrentArguments()[0]);
+            return null;
         });
         EasyMock.replay(manager);
 

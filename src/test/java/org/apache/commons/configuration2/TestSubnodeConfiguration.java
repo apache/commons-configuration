@@ -31,7 +31,6 @@ import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
-import org.apache.commons.configuration2.interpol.Lookup;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.InMemoryNodeModel;
 import org.apache.commons.configuration2.tree.NodeSelector;
@@ -441,14 +440,7 @@ public class TestSubnodeConfiguration
         parent.addProperty("tables.table(0).var", "${brackets:x}");
 
         final ConfigurationInterpolator interpolator = parent.getInterpolator();
-        interpolator.registerLookup("brackets", new Lookup() {
-
-            @Override
-            public String lookup(final String key) {
-                return "(" + key + ")";
-            }
-
-        });
+        interpolator.registerLookup("brackets", key -> "(" + key + ")");
         setUpSubnodeConfig();
         assertEquals("Local lookup was not inherited", "(x)",
                 config.getString("var", ""));

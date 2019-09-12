@@ -532,14 +532,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     public final void addErrorLogListener()
     {
         addEventListener(ConfigurationErrorEvent.ANY,
-                new EventListener<ConfigurationErrorEvent>()
-                {
-                    @Override
-                    public void onEvent(final ConfigurationErrorEvent event)
-                    {
-                        getLogger().warn("Internal error", event.getCause());
-                    }
-                });
+                event -> getLogger().warn("Internal error", event.getCause()));
     }
 
     /**

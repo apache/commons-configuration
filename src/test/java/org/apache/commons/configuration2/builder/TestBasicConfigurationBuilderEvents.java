@@ -25,7 +25,6 @@ import static org.junit.Assert.assertTrue;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.event.Event;
-import org.apache.commons.configuration2.event.EventListener;
 import org.apache.commons.configuration2.event.EventType;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.Test;
@@ -167,14 +166,7 @@ public class TestBasicConfigurationBuilderEvents
         builder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
         builder.addEventListener(
                 ConfigurationBuilderEvent.CONFIGURATION_REQUEST,
-                new EventListener<ConfigurationBuilderEvent>()
-                {
-                    @Override
-                    public void onEvent(final ConfigurationBuilderEvent event)
-                    {
-                        builder.resetResult();
-                    }
-                });
+                event -> builder.resetResult());
 
         final PropertiesConfiguration configuration2 = builder.getConfiguration();
         assertNotSame("Configuration not reset", configuration, configuration2);

@@ -258,14 +258,7 @@ public class ExprLookup implements Lookup
         }
         else
         {
-            final StringLookup variableResolver = new StringLookup()
-            {
-                @Override
-                public String lookup(final String key)
-                {
-                    return Objects.toString(ip.resolve(key), null);
-                }
-            };
+            final StringLookup variableResolver = key -> Objects.toString(ip.resolve(key), null);
             substitutor =
                     new StringSubstitutor(variableResolver, prefixMatcher,
                             suffixMatcher, StringSubstitutor.DEFAULT_ESCAPE);

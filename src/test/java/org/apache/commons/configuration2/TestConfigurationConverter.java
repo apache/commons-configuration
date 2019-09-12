@@ -26,7 +26,6 @@ import java.util.Properties;
 
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 import org.junit.Test;
 
 /**
@@ -112,14 +111,9 @@ public class TestConfigurationConverter
         final BaseConfiguration config = createTestConfiguration();
         EasyMock.expect(src.getKeys()).andReturn(config.getKeys());
         src.getList(EasyMock.anyObject(String.class));
-        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>()
-        {
-            @Override
-            public Object answer() throws Throwable
-            {
-                final String key = (String) EasyMock.getCurrentArguments()[0];
-                return config.getList(key);
-            }
+        EasyMock.expectLastCall().andAnswer(() -> {
+            final String key = (String) EasyMock.getCurrentArguments()[0];
+            return config.getList(key);
         }).anyTimes();
         EasyMock.replay(src);
         final Properties props = ConfigurationConverter.getProperties(src);

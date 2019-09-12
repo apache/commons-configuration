@@ -505,15 +505,10 @@ public final class ConfigurationUtils
                     "Configuration must implement EventSource!");
         }
         ((EventSource) src).addEventListener(ConfigurationErrorEvent.ANY,
-                new EventListener<ConfigurationErrorEvent>()
-                {
-                    @Override
-                    public void onEvent(final ConfigurationErrorEvent event)
-                    {
-                        // Throw a runtime exception
-                        throw new ConfigurationRuntimeException(event
-                                .getCause());
-                    }
+                event -> {
+                    // Throw a runtime exception
+                    throw new ConfigurationRuntimeException(event
+                            .getCause());
                 });
     }
 

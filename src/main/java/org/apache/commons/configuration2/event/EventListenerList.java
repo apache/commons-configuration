@@ -172,14 +172,7 @@ public class EventListenerList
     public <T extends Event> Iterable<EventListener<? super T>> getEventListeners(
             final EventType<T> eventType)
     {
-        return new Iterable<EventListener<? super T>>()
-        {
-            @Override
-            public Iterator<EventListener<? super T>> iterator()
-            {
-                return getEventListenerIterator(eventType);
-            }
-        };
+        return () -> getEventListenerIterator(eventType);
     }
 
     /**

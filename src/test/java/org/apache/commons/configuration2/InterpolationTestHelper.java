@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
-import org.apache.commons.configuration2.interpol.Lookup;
 
 import junitx.framework.Assert;
 
@@ -47,14 +46,7 @@ public class InterpolationTestHelper
     {
         config.addProperty("var", "${echo:testVar}");
         final ConfigurationInterpolator interpol = config.getInterpolator();
-        interpol.registerLookup("echo", new Lookup()
-        {
-            @Override
-            public Object lookup(final String varName)
-            {
-                return "Value of variable " + varName;
-            }
-        });
+        interpol.registerLookup("echo", varName -> "Value of variable " + varName);
         assertEquals("Wrong value of echo variable",
                 "Value of variable testVar", config.getString("var"));
     }

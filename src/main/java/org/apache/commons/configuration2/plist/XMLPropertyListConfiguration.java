@@ -233,15 +233,8 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
     public void read(final Reader in) throws ConfigurationException
     {
         // set up the DTD validation
-        final EntityResolver resolver = new EntityResolver()
-        {
-            @Override
-            public InputSource resolveEntity(final String publicId, final String systemId)
-            {
-                return new InputSource(getClass().getClassLoader()
-                        .getResourceAsStream("PropertyList-1.0.dtd"));
-            }
-        };
+        final EntityResolver resolver = (publicId, systemId) -> new InputSource(getClass().getClassLoader()
+                .getResourceAsStream("PropertyList-1.0.dtd"));
 
         // parse the file
         final XMLPropertyListHandler handler = new XMLPropertyListHandler();

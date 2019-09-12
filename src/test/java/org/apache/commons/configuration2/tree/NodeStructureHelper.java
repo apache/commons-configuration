@@ -16,7 +16,6 @@
  */
 package org.apache.commons.configuration2.tree;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,7 +23,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.dbunit.dataset.common.handlers.NoHandler;
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 
 /**
  * A helper class for tests related to hierarchies of {@code ImmutableNode}
@@ -378,20 +376,16 @@ public class NodeStructureHelper
                         EasyMock.anyObject(String.class),
                         (NodeHandler<ImmutableNode>) EasyMock
                                 .anyObject(NoHandler.class)))
-                .andAnswer(new IAnswer<List<QueryResult<ImmutableNode>>>() {
-                    @Override
-                    public List<QueryResult<ImmutableNode>> answer()
-                            throws Throwable {
-                        final ImmutableNode root =
-                                (ImmutableNode) EasyMock.getCurrentArguments()[0];
-                        final String key = (String) EasyMock.getCurrentArguments()[1];
-                        final NodeHandler<ImmutableNode> handler =
-                                (NodeHandler<ImmutableNode>) EasyMock
-                                        .getCurrentArguments()[2];
-                        return DefaultExpressionEngine.INSTANCE.query(root,
-                                key, handler);
-                    }
-                }).anyTimes();
+                .andAnswer(() -> {
+                  final ImmutableNode root =
+                    (ImmutableNode) EasyMock.getCurrentArguments()[0];
+                  final String key = (String) EasyMock.getCurrentArguments()[1];
+                  final NodeHandler<ImmutableNode> handler =
+                    (NodeHandler<ImmutableNode>) EasyMock
+                            .getCurrentArguments()[2];
+                  return DefaultExpressionEngine.INSTANCE.query(root,
+                    key, handler);
+               }).anyTimes();
     }
 
     /**
@@ -407,17 +401,14 @@ public class NodeStructureHelper
                 resolver.resolveAddKey(EasyMock.anyObject(ImmutableNode.class),
                         EasyMock.anyString(),
                         EasyMock.anyObject(TreeData.class)))
-                .andAnswer(new IAnswer<NodeAddData<ImmutableNode>>() {
-                    @Override
-                    public NodeAddData<ImmutableNode> answer() throws Throwable {
-                        final ImmutableNode root =
-                                (ImmutableNode) EasyMock.getCurrentArguments()[0];
-                        final String key = (String) EasyMock.getCurrentArguments()[1];
-                        final TreeData handler =
-                                (TreeData) EasyMock.getCurrentArguments()[2];
-                        return DefaultExpressionEngine.INSTANCE.prepareAdd(
-                                root, key, handler);
-                    }
+                .andAnswer(() -> {
+                    final ImmutableNode root =
+                            (ImmutableNode) EasyMock.getCurrentArguments()[0];
+                    final String key = (String) EasyMock.getCurrentArguments()[1];
+                    final TreeData handler =
+                            (TreeData) EasyMock.getCurrentArguments()[2];
+                    return DefaultExpressionEngine.INSTANCE.prepareAdd(
+                            root, key, handler);
                 }).anyTimes();
     }
 

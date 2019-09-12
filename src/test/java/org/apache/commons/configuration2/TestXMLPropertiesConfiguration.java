@@ -36,7 +36,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.w3c.dom.Document;
-import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 
 /**
@@ -86,15 +85,8 @@ public class TestXMLPropertiesConfiguration
         final URL location = ConfigurationAssert.getTestURL(TEST_PROPERTIES_FILE);
         final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        dBuilder.setEntityResolver(new EntityResolver()
-        {
-            @Override
-            public InputSource resolveEntity(final String publicId, final String systemId)
-            {
-                return new InputSource(getClass().getClassLoader()
-                        .getResourceAsStream("properties.dtd"));
-            }
-        });
+        dBuilder.setEntityResolver((publicId, systemId) -> new InputSource(getClass().getClassLoader()
+                .getResourceAsStream("properties.dtd")));
         final File file = new File(location.toURI());
         final Document doc = dBuilder.parse(file);
         final XMLPropertiesConfiguration conf = new XMLPropertiesConfiguration(doc.getDocumentElement());

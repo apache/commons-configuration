@@ -44,7 +44,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 import org.junit.Test;
 
 /**
@@ -605,17 +604,13 @@ public class TestInMemoryNodeModel
                             EasyMock.anyObject(ImmutableNode.class),
                             EasyMock.eq(KEY),
                             EasyMock.anyObject(TreeData.class))).andAnswer(
-                    new IAnswer<NodeAddData<ImmutableNode>>() {
-                        @Override
-                        public NodeAddData<ImmutableNode> answer()
-                                throws Throwable {
-                            assertSame("Wrong root node", model.getRootNode(),
-                                    EasyMock.getCurrentArguments()[0]);
-                            final ImmutableNode addParent = nodeForKey(model, key);
-                            return new NodeAddData<>(addParent,
-                                    "Warrior" + index, false, null);
-                        }
-                    });
+                    () -> {
+                     assertSame("Wrong root node", model.getRootNode(),
+                        EasyMock.getCurrentArguments()[0]);
+                     final ImmutableNode addParent = nodeForKey(model, key);
+                     return new NodeAddData<>(addParent,
+                        "Warrior" + index, false, null);
+                  });
         }
         EasyMock.replay(resolver);
 
@@ -647,16 +642,11 @@ public class TestInMemoryNodeModel
         EasyMock.expect(
                 resolver.resolveAddKey(EasyMock.anyObject(ImmutableNode.class),
                         EasyMock.eq(KEY), EasyMock.anyObject(TreeData.class)))
-                .andAnswer(new IAnswer<NodeAddData<ImmutableNode>>()
-                {
-                    @Override
-                    public NodeAddData<ImmutableNode> answer() throws Throwable
-                    {
-                        final ImmutableNode addParent =
-                                (ImmutableNode) EasyMock.getCurrentArguments()[0];
-                        return new NodeAddData<>(addParent,
-                                "name", false, Collections.singleton("author"));
-                    }
+                .andAnswer(() -> {
+                    final ImmutableNode addParent =
+                            (ImmutableNode) EasyMock.getCurrentArguments()[0];
+                    return new NodeAddData<>(addParent,
+                            "name", false, Collections.singleton("author"));
                 }).anyTimes();
         EasyMock.replay(resolver);
 

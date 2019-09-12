@@ -209,14 +209,7 @@ public class PeriodicReloadingTrigger
      */
     private Runnable createTriggerTaskCommand()
     {
-        return new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                controller.checkForReloading(controllerParam);
-            }
-        };
+        return () -> controller.checkForReloading(controllerParam);
     }
 
     /**

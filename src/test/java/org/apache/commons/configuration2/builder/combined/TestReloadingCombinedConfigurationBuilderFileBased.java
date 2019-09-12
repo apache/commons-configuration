@@ -42,7 +42,6 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.reloading.AlwaysReloadingDetector;
 import org.apache.commons.configuration2.reloading.RandomReloadingDetector;
-import org.apache.commons.configuration2.reloading.ReloadingDetector;
 import org.apache.commons.configuration2.sync.ReadWriteSynchronizer;
 import org.apache.commons.configuration2.sync.Synchronizer;
 import org.apache.commons.configuration2.tree.MergeCombiner;
@@ -176,17 +175,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
         final File xmlConf1 = writeReloadFile(null, 1, 0);
         final File xmlConf2 = writeReloadFile(null, 2, 0);
         final ReloadingDetectorFactory detectorFactory =
-                new ReloadingDetectorFactory()
-                {
-                    @Override
-                    public ReloadingDetector createReloadingDetector(
-                            final FileHandler handler,
-                            final FileBasedBuilderParametersImpl params)
-                            throws ConfigurationException
-                    {
-                        return new AlwaysReloadingDetector();
-                    }
-                };
+                (handler, params) -> new AlwaysReloadingDetector();
         final BaseHierarchicalConfiguration defConf = new BaseHierarchicalConfiguration();
         addReloadSource(defConf, xmlConf1.getAbsolutePath());
         addReloadSource(defConf, xmlConf2.getAbsolutePath());
@@ -230,17 +219,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
         final int threadCount = 4;
         final int loopCount = 100;
         final ReloadingDetectorFactory detectorFactory =
-                new ReloadingDetectorFactory()
-                {
-                    @Override
-                    public ReloadingDetector createReloadingDetector(
-                            final FileHandler handler,
-                            final FileBasedBuilderParametersImpl params)
-                            throws ConfigurationException
-                    {
-                        return new RandomReloadingDetector();
-                    }
-                };
+                (handler, params) -> new RandomReloadingDetector();
         final BaseHierarchicalConfiguration defConf = new BaseHierarchicalConfiguration();
         defConf.addProperty("header.result.nodeCombiner[@config-class]",
                 MergeCombiner.class.getName());

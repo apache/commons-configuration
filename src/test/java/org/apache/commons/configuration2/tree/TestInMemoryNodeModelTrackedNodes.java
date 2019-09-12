@@ -38,7 +38,6 @@ import java.util.Set;
 
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -548,26 +547,22 @@ public class TestInMemoryNodeModelTrackedNodes
                         EasyMock.anyObject(ImmutableNode.class),
                         EasyMock.anyString(), EasyMock.anyObject(),
                         EasyMock.anyObject(TreeData.class)))
-                .andAnswer(new IAnswer<NodeUpdateData<ImmutableNode>>() {
-                    @Override
-                    public NodeUpdateData<ImmutableNode> answer()
-                            throws Throwable {
-                        final ImmutableNode root =
-                                (ImmutableNode) EasyMock.getCurrentArguments()[0];
-                        final String key = (String) EasyMock.getCurrentArguments()[1];
-                        final TreeData handler =
-                                (TreeData) EasyMock.getCurrentArguments()[3];
-                        final List<QueryResult<ImmutableNode>> results =
-                                DefaultExpressionEngine.INSTANCE.query(root,
-                                        key, handler);
-                        assertEquals("Wrong number of query results", 1,
-                                results.size());
-                        return new NodeUpdateData<>(Collections
-                                .singletonMap(results.get(0),
-                                        EasyMock.getCurrentArguments()[2]),
-                                null, null, null);
-                    }
-                }).anyTimes();
+                .andAnswer(() -> {
+                  final ImmutableNode root =
+                    (ImmutableNode) EasyMock.getCurrentArguments()[0];
+                  final String key = (String) EasyMock.getCurrentArguments()[1];
+                  final TreeData handler =
+                    (TreeData) EasyMock.getCurrentArguments()[3];
+                  final List<QueryResult<ImmutableNode>> results =
+                    DefaultExpressionEngine.INSTANCE.query(root,
+                            key, handler);
+                  assertEquals("Wrong number of query results", 1,
+                    results.size());
+                  return new NodeUpdateData<>(Collections
+                    .singletonMap(results.get(0),
+                            EasyMock.getCurrentArguments()[2]),
+                    null, null, null);
+               }).anyTimes();
     }
 
     /**

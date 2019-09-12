@@ -36,7 +36,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
-import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
@@ -144,14 +143,8 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
             final SAXParser parser = factory.newSAXParser();
 
             final XMLReader xmlReader = parser.getXMLReader();
-            xmlReader.setEntityResolver(new EntityResolver()
-            {
-                @Override
-                public InputSource resolveEntity(final String publicId, final String systemId)
-                {
-                    return new InputSource(getClass().getClassLoader().getResourceAsStream("properties.dtd"));
-                }
-            });
+            xmlReader.setEntityResolver((publicId, systemId) ->
+                new InputSource(getClass().getClassLoader().getResourceAsStream("properties.dtd")));
             xmlReader.setContentHandler(new XMLPropertiesHandler());
             xmlReader.parse(new InputSource(in));
         }

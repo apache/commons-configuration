@@ -29,7 +29,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.commons.text.lookup.DefaultStringLookup;
-import org.apache.commons.text.lookup.StringLookup;
 
 /**
  * <p>
@@ -341,14 +340,7 @@ public class ConfigurationInterpolator
      */
     private StringSubstitutor initSubstitutor()
     {
-        return new StringSubstitutor(new StringLookup()
-        {
-            @Override
-            public String lookup(final String key)
-            {
-                return Objects.toString(resolve(key), null);
-            }
-        });
+        return new StringSubstitutor(key -> Objects.toString(resolve(key), null));
     }
 
     /**

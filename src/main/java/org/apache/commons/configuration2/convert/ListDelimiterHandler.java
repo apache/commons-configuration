@@ -61,14 +61,7 @@ public interface ListDelimiterHandler
      * passed in object without changes. This instance can be used by
      * configurations which do not require additional encoding.
      */
-    ValueTransformer NOOP_TRANSFORMER = new ValueTransformer()
-    {
-        @Override
-        public Object transformValue(final Object value)
-        {
-            return value;
-        }
-    };
+    ValueTransformer NOOP_TRANSFORMER = value -> value;
 
     /**
      * Parses the specified value for list delimiters and splits it if

@@ -400,12 +400,7 @@ public class TestEventListenerList
     @Test(expected = IllegalArgumentException.class)
     public void testEventListenerIteratorWrongEvent()
     {
-        final EventListener<EventSub2> listener = new EventListener<EventSub2>()
-        {
-            @Override
-            public void onEvent(final EventSub2 event)
-            {
-            }
+        final EventListener<EventSub2> listener = event -> {
         };
         list.addEventListener(typeSub2, listener);
         final EventListenerList.EventListenerIterator<EventSub2> iterator =

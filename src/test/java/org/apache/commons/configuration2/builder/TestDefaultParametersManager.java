@@ -174,19 +174,11 @@ public class TestDefaultParametersManager
         final ExpressionEngine engine =
                 EasyMock.createMock(ExpressionEngine.class);
         manager.registerDefaultsHandler(XMLBuilderParameters.class,
-                new DefaultParametersHandler<XMLBuilderParameters>()
-                {
-                    @Override
-                    public void initializeDefaults(
-                            final XMLBuilderParameters parameters)
-                    {
-                        parameters
-                                .setThrowExceptionOnMissing(false)
-                                .setListDelimiterHandler(
-                                        EasyMock.createMock(ListDelimiterHandler.class))
-                                .setExpressionEngine(engine);
-                    }
-                });
+                parameters -> parameters
+                        .setThrowExceptionOnMissing(false)
+                        .setListDelimiterHandler(
+                                EasyMock.createMock(ListDelimiterHandler.class))
+                        .setExpressionEngine(engine));
         manager.registerDefaultsHandler(FileBasedBuilderParameters.class,
                 new FileBasedDefaultsHandler());
         final XMLBuilderParameters params = parameters.xml();

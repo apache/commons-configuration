@@ -110,14 +110,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * {@code MultiFileConfigurationBuilder}.
      */
     private final EventListener<ConfigurationBuilderEvent> managedBuilderDelegationListener =
-            new EventListener<ConfigurationBuilderEvent>()
-            {
-                @Override
-                public void onEvent(final ConfigurationBuilderEvent event)
-                {
-                    handleManagedBuilderEvent(event);
-                }
-            };
+            event -> handleManagedBuilderEvent(event);
 
     /**
      * Creates a new instance of {@code MultiFileConfigurationBuilder} and sets

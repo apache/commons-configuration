@@ -26,7 +26,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -137,15 +136,10 @@ public class TestPeriodicReloadingTrigger
         final MutableObject<Runnable> refTask = new MutableObject<>();
         expectSchedule(null);
         EasyMock.expectLastCall().andAnswer(
-                new IAnswer<ScheduledFuture<Void>>()
-                {
-                    @Override
-                    public ScheduledFuture<Void> answer() throws Throwable
-                    {
-                        refTask.setValue((Runnable) EasyMock
-                                .getCurrentArguments()[0]);
-                        return future;
-                    }
+                () -> {
+                    refTask.setValue((Runnable) EasyMock
+                            .getCurrentArguments()[0]);
+                    return future;
                 });
         EasyMock.expect(controller.checkForReloading(CTRL_PARAM)).andReturn(
                 Boolean.FALSE);

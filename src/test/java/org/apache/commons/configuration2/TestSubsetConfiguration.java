@@ -36,7 +36,6 @@ import org.apache.commons.configuration2.builder.combined.CombinedConfigurationB
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
-import org.apache.commons.configuration2.interpol.Lookup;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
@@ -346,14 +345,7 @@ public class TestSubsetConfiguration
     public void testLocalLookupsInInterpolatorAreInherited() {
         final BaseConfiguration config = new BaseConfiguration();
         final ConfigurationInterpolator interpolator = config.getInterpolator();
-        interpolator.registerLookup("brackets", new Lookup(){
-
-            @Override
-            public String lookup(final String key) {
-                return "(" + key +")";
-            }
-
-        });
+        interpolator.registerLookup("brackets", key -> "(" + key +")");
         config.setProperty("prefix.var", "${brackets:x}");
         final AbstractConfiguration subset = (AbstractConfiguration) config
                 .subset("prefix");

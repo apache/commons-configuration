@@ -25,7 +25,6 @@ import org.apache.commons.configuration2.event.Event;
 import org.apache.commons.configuration2.event.EventListener;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -98,14 +97,9 @@ public class TestReloadingController
             final MutableObject<ReloadingEvent> evRef)
     {
         l.onEvent(EasyMock.anyObject(ReloadingEvent.class));
-        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>()
-        {
-            @Override
-            public Object answer() throws Throwable
-            {
-                evRef.setValue((ReloadingEvent) EasyMock.getCurrentArguments()[0]);
-                return null;
-            }
+        EasyMock.expectLastCall().andAnswer(() -> {
+            evRef.setValue((ReloadingEvent) EasyMock.getCurrentArguments()[0]);
+            return null;
         });
     }
 

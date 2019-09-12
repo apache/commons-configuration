@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -71,17 +70,12 @@ public class TestConfigurationInterpolator
     {
         final Lookup lookup = EasyMock.createMock(Lookup.class);
         EasyMock.expect(lookup.lookup(EasyMock.anyObject(String.class)))
-                .andAnswer(new IAnswer<Object>()
-                {
-                    @Override
-                    public Object answer() throws Throwable
+                .andAnswer(() -> {
+                    if (var.equals(EasyMock.getCurrentArguments()[0]))
                     {
-                        if (var.equals(EasyMock.getCurrentArguments()[0]))
-                        {
-                            return value;
-                        }
-                        return null;
+                        return value;
                     }
+                    return null;
                 }).anyTimes();
         EasyMock.replay(lookup);
         return lookup;

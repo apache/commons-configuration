@@ -141,14 +141,9 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     {
         if (valuesNotEmpty(values))
         {
-            updateModel(new TransactionInitializer()
-            {
-                @Override
-                public boolean initTransaction(final ModelTransaction tx)
-                {
-                    initializeAddTransaction(tx, key, values, resolver);
-                    return true;
-                }
+            updateModel(tx -> {
+                initializeAddTransaction(tx, key, values, resolver);
+                return true;
             }, selector, resolver);
         }
     }
@@ -180,40 +175,35 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     {
         if (nodes != null && !nodes.isEmpty())
         {
-            updateModel(new TransactionInitializer()
-            {
-                @Override
-                public boolean initTransaction(final ModelTransaction tx)
+            updateModel(tx -> {
+                final List<QueryResult<ImmutableNode>> results =
+                        resolver.resolveKey(tx.getQueryRoot(), key,
+                                tx.getCurrentData());
+                if (results.size() == 1)
                 {
-                    final List<QueryResult<ImmutableNode>> results =
-                            resolver.resolveKey(tx.getQueryRoot(), key,
-                                    tx.getCurrentData());
-                    if (results.size() == 1)
+                    if (results.get(0).isAttributeResult())
                     {
-                        if (results.get(0).isAttributeResult())
-                        {
-                            throw attributeKeyException(key);
-                        }
-                        tx.addAddNodesOperation(results.get(0).getNode(), nodes);
+                        throw attributeKeyException(key);
                     }
-                    else
-                    {
-                        final NodeAddData<ImmutableNode> addData =
-                                resolver.resolveAddKey(tx.getQueryRoot(), key,
-                                        tx.getCurrentData());
-                        if (addData.isAttribute())
-                        {
-                            throw attributeKeyException(key);
-                        }
-                        final ImmutableNode newNode =
-                                new ImmutableNode.Builder(nodes.size())
-                                        .name(addData.getNewNodeName())
-                                        .addChildren(nodes).create();
-                        addNodesByAddData(tx, addData,
-                                Collections.singleton(newNode));
-                    }
-                    return true;
+                    tx.addAddNodesOperation(results.get(0).getNode(), nodes);
                 }
+                else
+                {
+                    final NodeAddData<ImmutableNode> addData =
+                            resolver.resolveAddKey(tx.getQueryRoot(), key,
+                                    tx.getCurrentData());
+                    if (addData.isAttribute())
+                    {
+                        throw attributeKeyException(key);
+                    }
+                    final ImmutableNode newNode =
+                            new ImmutableNode.Builder(nodes.size())
+                                    .name(addData.getNewNodeName())
+                                    .addChildren(nodes).create();
+                    addNodesByAddData(tx, addData,
+                            Collections.singleton(newNode));
+                }
+                return true;
             }, selector, resolver);
         }
     }
@@ -242,29 +232,24 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     public void setProperty(final String key, final NodeSelector selector,
             final Object value, final NodeKeyResolver<ImmutableNode> resolver)
     {
-        updateModel(new TransactionInitializer()
-        {
-            @Override
-            public boolean initTransaction(final ModelTransaction tx)
+        updateModel(tx -> {
+            boolean added = false;
+            final NodeUpdateData<ImmutableNode> updateData =
+                    resolver.resolveUpdateKey(tx.getQueryRoot(), key,
+                            value, tx.getCurrentData());
+            if (!updateData.getNewValues().isEmpty())
             {
-                boolean added = false;
-                final NodeUpdateData<ImmutableNode> updateData =
-                        resolver.resolveUpdateKey(tx.getQueryRoot(), key,
-                                value, tx.getCurrentData());
-                if (!updateData.getNewValues().isEmpty())
-                {
-                    initializeAddTransaction(tx, key,
-                            updateData.getNewValues(), resolver);
-                    added = true;
-                }
-                final boolean cleared =
-                        initializeClearTransaction(tx,
-                                updateData.getRemovedNodes());
-                final boolean updated =
-                        initializeUpdateTransaction(tx,
-                                updateData.getChangedValues());
-                return added || cleared || updated;
+                initializeAddTransaction(tx, key,
+                        updateData.getNewValues(), resolver);
+                added = true;
             }
+            final boolean cleared =
+                    initializeClearTransaction(tx,
+                            updateData.getRemovedNodes());
+            final boolean updated =
+                    initializeUpdateTransaction(tx,
+                            updateData.getChangedValues());
+            return added || cleared || updated;
         }, selector, resolver);
     }
 
@@ -300,40 +285,35 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     {
         final List<QueryResult<ImmutableNode>> removedElements =
                 new LinkedList<>();
-        updateModel(new TransactionInitializer()
-        {
-            @Override
-            public boolean initTransaction(final ModelTransaction tx)
+        updateModel(tx -> {
+            boolean changes = false;
+            final TreeData currentStructure = tx.getCurrentData();
+            final List<QueryResult<ImmutableNode>> results = resolver.resolveKey(
+                    tx.getQueryRoot(), key, currentStructure);
+            removedElements.clear();
+            removedElements.addAll(results);
+            for (final QueryResult<ImmutableNode> result : results)
             {
-                boolean changes = false;
-                final TreeData currentStructure = tx.getCurrentData();
-                final List<QueryResult<ImmutableNode>> results = resolver.resolveKey(
-                        tx.getQueryRoot(), key, currentStructure);
-                removedElements.clear();
-                removedElements.addAll(results);
-                for (final QueryResult<ImmutableNode> result : results)
+                if (result.isAttributeResult())
                 {
-                    if (result.isAttributeResult())
-                    {
-                        tx.addRemoveAttributeOperation(result.getNode(),
-                                result.getAttributeName());
-                    }
-                    else
-                    {
-                        if (result.getNode() == currentStructure.getRootNode())
-                        {
-                            // the whole model is to be cleared
-                            clear(resolver);
-                            return false;
-                        }
-                        tx.addRemoveNodeOperation(
-                                currentStructure.getParent(result.getNode()),
-                                result.getNode());
-                    }
-                    changes = true;
+                    tx.addRemoveAttributeOperation(result.getNode(),
+                            result.getAttributeName());
                 }
-                return changes;
+                else
+                {
+                    if (result.getNode() == currentStructure.getRootNode())
+                    {
+                        // the whole model is to be cleared
+                        clear(resolver);
+                        return false;
+                    }
+                    tx.addRemoveNodeOperation(
+                            currentStructure.getParent(result.getNode()),
+                            result.getNode());
+                }
+                changes = true;
             }
+            return changes;
         }, selector, resolver);
 
         return removedElements;
@@ -366,16 +346,11 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     public void clearProperty(final String key, final NodeSelector selector,
             final NodeKeyResolver<ImmutableNode> resolver)
     {
-        updateModel(new TransactionInitializer()
-        {
-            @Override
-            public boolean initTransaction(final ModelTransaction tx)
-            {
-                final List<QueryResult<ImmutableNode>> results =
-                        resolver.resolveKey(tx.getQueryRoot(), key,
-                                tx.getCurrentData());
-                return initializeClearTransaction(tx, results);
-            }
+        updateModel(tx -> {
+            final List<QueryResult<ImmutableNode>> results =
+                    resolver.resolveKey(tx.getQueryRoot(), key,
+                            tx.getCurrentData());
+            return initializeClearTransaction(tx, results);
         }, selector, resolver);
     }
 
@@ -470,38 +445,33 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             final Map<ImmutableNode, ?> references, final Object rootRef,
             final NodeKeyResolver<ImmutableNode> resolver)
     {
-        updateModel(new TransactionInitializer()
-        {
-            @Override
-            public boolean initTransaction(final ModelTransaction tx)
+        updateModel(tx -> {
+            final TreeData current = tx.getCurrentData();
+            final String newRootName =
+                    determineRootName(current.getRootNode(), node, rootName);
+            if (newRootName != null)
             {
-                final TreeData current = tx.getCurrentData();
-                final String newRootName =
-                        determineRootName(current.getRootNode(), node, rootName);
-                if (newRootName != null)
-                {
-                    tx.addChangeNodeNameOperation(current.getRootNode(),
-                            newRootName);
-                }
-                tx.addAddNodesOperation(current.getRootNode(),
-                        node.getChildren());
-                tx.addAttributesOperation(current.getRootNode(),
-                        node.getAttributes());
-                if (node.getValue() != null)
-                {
-                    tx.addChangeNodeValueOperation(current.getRootNode(),
-                            node.getValue());
-                }
-                if (references != null)
-                {
-                    tx.addNewReferences(references);
-                }
-                if (rootRef != null)
-                {
-                    tx.addNewReference(current.getRootNode(), rootRef);
-                }
-                return true;
+                tx.addChangeNodeNameOperation(current.getRootNode(),
+                        newRootName);
             }
+            tx.addAddNodesOperation(current.getRootNode(),
+                    node.getChildren());
+            tx.addAttributesOperation(current.getRootNode(),
+                    node.getAttributes());
+            if (node.getValue() != null)
+            {
+                tx.addChangeNodeValueOperation(current.getRootNode(),
+                        node.getValue());
+            }
+            if (references != null)
+            {
+                tx.addNewReferences(references);
+            }
+            if (rootRef != null)
+            {
+                tx.addNewReference(current.getRootNode(), rootRef);
+            }
+            return true;
         }, null, resolver);
     }
 

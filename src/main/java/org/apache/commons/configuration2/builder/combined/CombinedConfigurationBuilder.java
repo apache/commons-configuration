@@ -1294,18 +1294,13 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             final ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder)
     {
         defBuilder.addEventListener(ConfigurationBuilderEvent.RESET,
-                new EventListener<ConfigurationBuilderEvent>()
-                {
-            @Override
-            public void onEvent(final ConfigurationBuilderEvent event)
-            {
-                synchronized (CombinedConfigurationBuilder.this)
-                {
-                    reset();
-                    definitionBuilder = defBuilder;
-                }
-            }
-        });
+                event -> {
+                    synchronized (CombinedConfigurationBuilder.this)
+                    {
+                        reset();
+                        definitionBuilder = defBuilder;
+                    }
+                });
     }
 
     /**
@@ -1621,14 +1616,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          */
         private EventListener<ConfigurationBuilderEvent> createBuilderChangeListener()
         {
-            return new EventListener<ConfigurationBuilderEvent>()
-            {
-                @Override
-                public void onEvent(final ConfigurationBuilderEvent event)
-                {
-                    resetResult();
-                }
-            };
+            return event -> resetResult();
         }
 
         /**

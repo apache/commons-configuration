@@ -102,14 +102,7 @@ public class TestDefaultListDelimiterHandler
     @Test
     public void testEscapeList()
     {
-        final ValueTransformer trans = new ValueTransformer()
-        {
-            @Override
-            public Object transformValue(final Object value)
-            {
-                return String.valueOf(value) + "_trans";
-            }
-        };
+        final ValueTransformer trans = value -> String.valueOf(value) + "_trans";
         final List<String> data =
                 Arrays.asList("simple", "Hello,world!", "\\,\\", "end");
         assertEquals("Wrong result", "simple_trans,Hello\\,world!_trans,"

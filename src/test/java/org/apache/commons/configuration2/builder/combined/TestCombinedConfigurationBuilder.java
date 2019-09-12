@@ -642,17 +642,8 @@ public class TestCombinedConfigurationBuilder
                 .setDefinitionBuilder(
                         createDefinitionBuilder(createDefinitionConfig(tagName,
                                 attrs))).registerProvider(tagName,
-                        new ConfigurationBuilderProvider()
-                        {
-                            @Override
-                            public ConfigurationBuilder<? extends Configuration> getConfigurationBuilder(
-                                    final ConfigurationDeclaration decl)
-                                    throws ConfigurationException
-                            {
-                                return new ConstantConfigurationBuilder(
-                                        dataConf);
-                            }
-                        }));
+                        decl -> new ConstantConfigurationBuilder(
+                                dataConf)));
         final CombinedConfiguration cc = builder.getConfiguration();
         assertEquals("Configuration not added", dataConf,
                 cc.getConfiguration(BUILDER_NAME));

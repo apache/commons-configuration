@@ -1053,15 +1053,10 @@ public class PropertiesConfiguration extends BaseConfiguration
          * {@link #ESCAPE_PROPERTIES} translator.
          */
         private static final ValueTransformer DEFAULT_TRANSFORMER =
-                new ValueTransformer()
-                {
-                    @Override
-                    public Object transformValue(final Object value)
-                    {
-                        final String strVal = String.valueOf(value);
-                        return ESCAPE_PROPERTIES.translate(strVal);
-                    }
-                };
+                value -> {
+            final String strVal = String.valueOf(value);
+            return ESCAPE_PROPERTIES.translate(strVal);
+        };
 
         /** The value transformer used for escaping property values. */
         private final ValueTransformer valueTransformer;
@@ -1659,33 +1654,28 @@ public class PropertiesConfiguration extends BaseConfiguration
         public JupPropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler,
             final boolean escapeUnicode)
         {
-            super(writer, delHandler, new ValueTransformer()
-            {
-                @Override
-                public Object transformValue(final Object value)
+            super(writer, delHandler, value -> {
+                String valueString = String.valueOf(value);
+
+                CharSequenceTranslator translator;
+                if (escapeUnicode)
                 {
-                    String valueString = String.valueOf(value);
-
-                    CharSequenceTranslator translator;
-                    if (escapeUnicode)
-                    {
-                        translator = new AggregateTranslator(new LookupTranslator(JUP_CHARS_ESCAPE), ESCAPER);
-                    }
-                    else
-                    {
-                        translator = new AggregateTranslator(new LookupTranslator(JUP_CHARS_ESCAPE));
-                    }
-
-                    valueString = translator.translate(valueString);
-
-                    // escape the first leading space to preserve it (and all after it)
-                    if (valueString.startsWith(" "))
-                    {
-                        valueString = "\\" + valueString;
-                    }
-
-                    return valueString;
+                    translator = new AggregateTranslator(new LookupTranslator(JUP_CHARS_ESCAPE), ESCAPER);
                 }
+                else
+                {
+                    translator = new AggregateTranslator(new LookupTranslator(JUP_CHARS_ESCAPE));
+                }
+
+                valueString = translator.translate(valueString);
+
+                // escape the first leading space to preserve it (and all after it)
+                if (valueString.startsWith(" "))
+                {
+                    valueString = "\\" + valueString;
+                }
+
+                return valueString;
             });
         }
 
