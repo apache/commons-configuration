@@ -408,9 +408,7 @@ public class CatalogResolver implements EntityResolver
             final String base = ((CatalogManager) catalogManager).getBaseDir();
 
             // This is safe because the catalog manager returns a vector of strings.
-            @SuppressWarnings("unchecked")
-            final
-            Vector<String> catalogs = catalogManager.getCatalogFiles();
+            final Vector<String> catalogs = catalogManager.getCatalogFiles();
             if (catalogs != null)
             {
                 for (int count = 0; count < catalogs.size(); count++)
