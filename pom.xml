@@ -321,7 +321,7 @@
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
-      <version>1.12</version>
+      <version>1.13</version>
       <optional>true</optional>
     </dependency>
 
@@ -403,7 +403,7 @@
     <dependency>
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
-      <version>1.24</version>
+      <version>1.25</version>
       <optional>true</optional>
     </dependency>
 
@@ -419,21 +419,21 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-dbcp2</artifactId>
-      <version>2.6.0</version>
+      <version>2.7.0</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-pool2</artifactId>
-      <version>2.6.2</version>
+      <version>2.7.0</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
-      <version>2.4.1</version>
+      <version>2.5.0</version>
       <scope>test</scope>
     </dependency>
 
@@ -493,7 +493,7 @@
     <dependency>
       <groupId>com.sun.mail</groupId>
       <artifactId>mailapi</artifactId>
-      <version>1.6.3</version>
+      <version>1.6.4</version>
       <scope>test</scope>
     </dependency>
 
@@ -564,13 +564,15 @@
       *
     </commons.osgi.import>
     <slf4j.version>1.7.26</slf4j.version>
-    <spring.version>4.3.24.RELEASE</spring.version>
+    <spring.version>4.3.25.RELEASE</spring.version>
 
     <!-- generate report even if there are binary incompatible changes -->
     <commons.japicmp.breakBuildOnBinaryIncompatibleModifications>false</commons.japicmp.breakBuildOnBinaryIncompatibleModifications>
     <commons.japicmp.version>0.14.1</commons.japicmp.version>
     <japicmp.skip>false</japicmp.skip>
     <commons.jacoco.version>0.8.4</commons.jacoco.version>
+    <commons.spotbugs.version>3.1.12.2</commons.spotbugs.version>
+    <commons.javadoc.version>3.1.1</commons.javadoc.version>
 
     <!-- Commons Release Plugin -->
     <commons.bc.version>2.5</commons.bc.version>
@@ -582,6 +584,7 @@
   </properties>
 
   <build>
+   <defaultGoal>clean verify apache-rat:check japicmp:cmp checkstyle:check spotbugs:check javadoc:javadoc</defaultGoal>
     <testResources>
       <testResource>
         <directory>src/test/resources</directory>
@@ -744,6 +747,7 @@
             generates javadoc that does not conform to the java 1.8 standard and causes the build to fail. For the
             sake of releasing commons-configuration-2.4.
           -->
+          <source>${maven.compiler.source}</source>
           <failOnError>false</failOnError>
           <links>
             <link>https://docs.oracle.com/javase/8/docs/api/</link>
@@ -751,8 +755,17 @@
           </links>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>${commons.spotbugs.version}</version>
+        <configuration>
+          <threshold>Normal</threshold>
+          <effort>Default</effort>
+          <excludeFilterFile>${basedir}/conf/findbugs-exclude-filter.xml</excludeFilterFile>
+        </configuration>
+      </plugin>
     </plugins>
-
   </build>
   <profiles>
     <profile>
@@ -878,6 +891,7 @@
                 generates javadoc that does not conform to the java 1.8 standard and causes the build to fail. For the
                 sake of releasing commons-configuration-2.4.
               -->
+              <source>${maven.compiler.source}</source>
               <failOnError>false</failOnError>
               <links>
                 <link>https://docs.oracle.com/javase/8/docs/api/</link>
