@@ -571,6 +571,8 @@
     <commons.japicmp.version>0.14.1</commons.japicmp.version>
     <japicmp.skip>false</japicmp.skip>
     <commons.jacoco.version>0.8.4</commons.jacoco.version>
+    <commons.spotbugs.version>3.1.12.2</commons.spotbugs.version>
+    <commons.javadoc.version>3.1.1</commons.javadoc.version>
 
     <!-- Commons Release Plugin -->
     <commons.bc.version>2.5</commons.bc.version>
@@ -582,6 +584,7 @@
   </properties>
 
   <build>
+   <defaultGoal>clean verify apache-rat:check japicmp:cmp checkstyle:check spotbugs:check javadoc:javadoc</defaultGoal>
     <testResources>
       <testResource>
         <directory>src/test/resources</directory>
@@ -744,6 +747,7 @@
             generates javadoc that does not conform to the java 1.8 standard and causes the build to fail. For the
             sake of releasing commons-configuration-2.4.
           -->
+          <source>${maven.compiler.source}</source>
           <failOnError>false</failOnError>
           <links>
             <link>https://docs.oracle.com/javase/8/docs/api/</link>
@@ -751,8 +755,17 @@
           </links>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>${commons.spotbugs.version}</version>
+        <configuration>
+          <threshold>Normal</threshold>
+          <effort>Default</effort>
+          <excludeFilterFile>${basedir}/conf/findbugs-exclude-filter.xml</excludeFilterFile>
+        </configuration>
+      </plugin>
     </plugins>
-
   </build>
   <profiles>
     <profile>
@@ -878,6 +891,7 @@
                 generates javadoc that does not conform to the java 1.8 standard and causes the build to fail. For the
                 sake of releasing commons-configuration-2.4.
               -->
+              <source>${maven.compiler.source}</source>
               <failOnError>false</failOnError>
               <links>
                 <link>https://docs.oracle.com/javase/8/docs/api/</link>
