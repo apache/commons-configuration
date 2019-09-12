@@ -16,8 +16,10 @@
  */
 package org.apache.commons.configuration2.builder;
 
+import org.apache.commons.configuration2.ConfigurationConsumer;
 import org.apache.commons.configuration2.PropertiesConfiguration.IOFactory;
 import org.apache.commons.configuration2.PropertiesConfigurationLayout;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 
 /**
  * <p>
@@ -38,6 +40,18 @@ import org.apache.commons.configuration2.PropertiesConfigurationLayout;
  */
 public interface PropertiesBuilderProperties<T>
 {
+    /**
+     * Sets the current include listener, may be null.
+     *
+     * @param includeListener the current include listener, may be null.
+     * @return a reference to this object for method chaining
+     * @since 2.6
+     */
+    default T setIncludeListener(ConfigurationConsumer<ConfigurationException> includeListener)
+    {
+        return (T) this;
+    }
+
     /**
      * Sets a flag whether include files are supported by the properties
      * configuration object. If set to <b>true</b>, files listed by an include

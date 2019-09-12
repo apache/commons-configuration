@@ -225,6 +225,17 @@ public class Configurations
     }
 
     /**
+     * Creates a builder for a {@code PropertiesConfiguration}.
+     *
+     * @return the newly created {@code FileBasedConfigurationBuilder}
+     * @since 2.6
+     */
+    public FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder()
+    {
+        return createFileBasedBuilder(PropertiesConfiguration.class);
+    }
+
+    /**
      * Creates a builder for a {@code PropertiesConfiguration} and initializes
      * it with the given file to be loaded.
      *
@@ -235,6 +246,20 @@ public class Configurations
             final File file)
     {
         return fileBasedBuilder(PropertiesConfiguration.class, file);
+    }
+
+    /**
+     * Creates a builder for a {@code PropertiesConfiguration} and initializes
+     * it with the given parameters to be loaded.
+     *
+     * @param parameters the parameters to be loaded
+     * @return the newly created {@code FileBasedConfigurationBuilder}
+     * @since 2.6
+     */
+    public FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder(
+            PropertiesBuilderParameters parameters)
+    {
+        return propertiesBuilder().configure(parameters);
     }
 
     /**
@@ -579,6 +604,21 @@ public class Configurations
      * specified type.
      *
      * @param configClass the configuration class
+     * @param <T> the type of the configuration to be constructed
+     * @return the newly created builder
+     * @since 2.6
+     */
+    private <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> createFileBasedBuilder(
+            final Class<T> configClass)
+    {
+        return new FileBasedConfigurationBuilder<>(configClass);
+    }
+
+    /**
+     * Creates a configured builder for a file-based configuration of the
+     * specified type.
+     *
+     * @param configClass the configuration class
      * @param params the parameters object for configuring the builder
      * @param <T> the type of the configuration to be constructed
      * @return the newly created builder
@@ -586,8 +626,7 @@ public class Configurations
     private <T extends FileBasedConfiguration> FileBasedConfigurationBuilder<T> createFileBasedBuilder(
             final Class<T> configClass, final FileBasedBuilderParameters params)
     {
-        return new FileBasedConfigurationBuilder<>(configClass)
-                .configure(params);
+        return createFileBasedBuilder(configClass).configure(params);
     }
 
     /**
@@ -636,4 +675,5 @@ public class Configurations
     {
         return fileParams().setFileName(path);
     }
+
 }

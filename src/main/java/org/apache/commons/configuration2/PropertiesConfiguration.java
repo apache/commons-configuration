@@ -17,6 +17,7 @@
 
 package org.apache.commons.configuration2;
 
+import java.io.FileNotFoundException;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -137,6 +138,10 @@ import org.apache.commons.text.translate.UnicodeEscaper;
  *   they do not replace existing properties with the same key.
  *
  *  </li>
+ *  <li>
+ *   You can define custom error handling for the special key {@code "include"}
+ *   by using {@link #setIncludeListener(ConfigurationConsumer)}.
+ *  </li>
  * </ul>
  *
  * <p>Here is an example of a valid extended properties file:</p>
@@ -194,11 +199,31 @@ import org.apache.commons.text.translate.UnicodeEscaper;
  * Properties files</a> in special.
  *
  * @see java.util.Properties#load
- *
  */
 public class PropertiesConfiguration extends BaseConfiguration
     implements FileBasedConfiguration, FileLocatorAware
 {
+
+    /**
+     * Defines default error handling for the special {@code "include"} key by throwing the given exception.
+     *
+     * @since 2.6
+     */
+    public static final ConfigurationConsumer<ConfigurationException> DEFAULT_INCLUDE_LISTENER = e ->
+    {
+        throw e;
+    };
+
+    /**
+     * Defines error handling as a noop for the special {@code "include"} key.
+     *
+     * @since 2.6
+     */
+    public static final ConfigurationConsumer<ConfigurationException> NOOP_INCLUDE_LISTENER = e ->
+    {
+        // noop
+    };
+
     /**
      * The default encoding (ISO-8859-1 as specified by
      * http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html)
@@ -210,12 +235,6 @@ public class PropertiesConfiguration extends BaseConfiguration
 
     /** Constant for the default properties separator.*/
     static final String DEFAULT_SEPARATOR = " = ";
-
-    /**
-     * Constant for the default {@code IOFactory}. This instance is used
-     * when no specific factory was set.
-     */
-    private static final IOFactory DEFAULT_IO_FACTORY = new DefaultIOFactory();
 
     /**
      * A string with special characters that need to be unescaped when reading
@@ -256,6 +275,9 @@ public class PropertiesConfiguration extends BaseConfiguration
 
     /** Stores the layout object.*/
     private PropertiesConfigurationLayout layout;
+
+    /** The include listener for the special {@code "include"} key. */
+    private ConfigurationConsumer<ConfigurationException> includeListener;
 
     /** The IOFactory for creating readers and writers.*/
     private IOFactory ioFactory;
@@ -488,6 +510,17 @@ public class PropertiesConfiguration extends BaseConfiguration
     }
 
     /**
+     * Gets the current include listener, never null.
+     *
+     * @return the current include listener, never null.
+     * @since 2.6
+     */
+    public ConfigurationConsumer<ConfigurationException> getIncludeListener()
+    {
+        return includeListener != null ? includeListener : PropertiesConfiguration.DEFAULT_INCLUDE_LISTENER;
+    }
+
+    /**
      * Returns the {@code IOFactory} to be used for creating readers and
      * writers when loading or saving this configuration.
      *
@@ -496,7 +529,23 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public IOFactory getIOFactory()
     {
-        return (ioFactory != null) ? ioFactory : DEFAULT_IO_FACTORY;
+        return ioFactory != null ? ioFactory : DefaultIOFactory.INSTANCE;
+    }
+
+    /**
+     * Sets the current include listener, may not be null.
+     *
+     * @param includeListener the current include listener, may not be null.
+     * @throws IllegalArgumentException if the {@code includeListener} is null.
+     * @since 2.6
+     */
+    public void setIncludeListener(final ConfigurationConsumer<ConfigurationException> includeListener)
+    {
+        if (includeListener == null)
+        {
+            throw new IllegalArgumentException("includeListener must not be null.");
+        }
+        this.includeListener = includeListener;
     }
 
     /**
@@ -518,7 +567,7 @@ public class PropertiesConfiguration extends BaseConfiguration
     {
         if (ioFactory == null)
         {
-            throw new IllegalArgumentException("IOFactory must not be null!");
+            throw new IllegalArgumentException("IOFactory must not be null.");
         }
 
         this.ioFactory = ioFactory;
@@ -1377,6 +1426,11 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public static class DefaultIOFactory implements IOFactory
     {
+        /**
+         * The singleton instance.
+         */
+        static final DefaultIOFactory INSTANCE = new DefaultIOFactory();
+
         @Override
         public PropertiesReader createPropertiesReader(final Reader in)
         {
@@ -1827,20 +1881,35 @@ public class PropertiesConfiguration extends BaseConfiguration
 
         if (url == null)
         {
-            throw new ConfigurationException("Cannot resolve include file "
-                    + fileName);
+            if (getIncludeListener() != null)
+            {
+                getIncludeListener().accept(new ConfigurationException(
+                        "Cannot resolve include file " + fileName, new FileNotFoundException(fileName)));
+            }
         }
-
-        final FileHandler fh = new FileHandler(this);
-        fh.setFileLocator(locator);
-        final FileLocator orgLocator = locator;
-        try
+        else
         {
-            fh.load(url);
-        }
-        finally
-        {
-            locator = orgLocator; // reset locator which is changed by load
+            final FileHandler fh = new FileHandler(this);
+            fh.setFileLocator(locator);
+            final FileLocator orgLocator = locator;
+            try
+            {
+                try
+                {
+                    fh.load(url);
+                }
+                catch (ConfigurationException e)
+                {
+                    if (getIncludeListener() != null)
+                    {
+                        getIncludeListener().accept(e);
+                    }
+                }
+            }
+            finally
+            {
+                locator = orgLocator; // reset locator which is changed by load
+            }
         }
     }
 
@@ -1860,4 +1929,5 @@ public class PropertiesConfiguration extends BaseConfiguration
                         .basePath(basePath).fileName(fileName).create();
         return FileLocatorUtils.locate(includeLocator);
     }
+
 }

@@ -22,6 +22,7 @@ import static org.junit.Assert.assertSame;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Map;
 
 import org.apache.commons.configuration2.CombinedConfiguration;
 import org.apache.commons.configuration2.Configuration;
@@ -29,10 +30,12 @@ import org.apache.commons.configuration2.ConfigurationAssert;
 import org.apache.commons.configuration2.INIConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.builder.combined.CombinedConfigurationBuilder;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.plist.PropertyListConfiguration;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -57,12 +60,12 @@ public class TestConfigurations
     private static final String TEST_PLIST = "test.plist";
 
     /**
-     * Generates a full path for the test file with the given name.
+     * Generates an absolute path for the test file with the given name.
      *
      * @param name the name of the test file
      * @return the full path to this file
      */
-    private static String filePath(final String name)
+    private static String absolutePath(final String name)
     {
         return ConfigurationAssert.getTestFile(name).getAbsolutePath();
     }
@@ -126,7 +129,7 @@ public class TestConfigurations
     public void testFileBasedBuilderWithPath()
     {
         final Configurations configs = new Configurations();
-        final String filePath = filePath(TEST_PROPERTIES);
+        final String filePath = absolutePath(TEST_PROPERTIES);
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 configs.fileBasedBuilder(PropertiesConfiguration.class,
                         filePath);
@@ -179,7 +182,7 @@ public class TestConfigurations
         final Configurations configs = new Configurations();
         final PropertyListConfiguration config =
                 configs.fileBased(PropertyListConfiguration.class,
-                        filePath(TEST_PLIST));
+                        absolutePath(TEST_PLIST));
         checkPList(config);
     }
 
@@ -256,8 +259,86 @@ public class TestConfigurations
     {
         final Configurations configs = new Configurations();
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-                configs.propertiesBuilder(filePath(TEST_PROPERTIES));
+                configs.propertiesBuilder(absolutePath(TEST_PROPERTIES));
         checkProperties(builder.getConfiguration());
+    }
+
+    /**
+     * Tests whether a builder for a properties configuration can be created for
+     * a given file path when an include is not found.
+     */
+    @Test
+    public void testPropertiesBuilderFromPathIncludeNotFoundFail() throws ConfigurationException
+    {
+        final Configurations configs = new Configurations();
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                configs.propertiesBuilder(absolutePath("include-not-found.properties"));
+        try
+        {
+            builder.getConfiguration();
+            Assert.fail("Expected ConfigurationException");
+        }
+        catch (ConfigurationException e) {
+            // ignore
+        }
+    }
+
+    /**
+     * Tests whether a builder for a properties configuration can be created for
+     * a given file path when an include is not found.
+     */
+    @Test
+    public void testPropertiesBuilderFromPathIncludeNotFoundPass() throws ConfigurationException
+    {
+        final Configurations configs = new Configurations();
+        final String absPath = absolutePath("include-not-found.properties");
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builderFail =
+                configs.propertiesBuilder(absPath);
+        // Expect failure:
+        try
+        {
+            builderFail.getConfiguration();
+            Assert.fail("Expected ConfigurationException");
+        }
+        catch (ConfigurationException e)
+        {
+            // Ignore
+            // e.printStackTrace();
+        }
+        // Expect failure:
+        try
+        {
+            configs.properties(absPath);
+        }
+        catch (ConfigurationException e) {
+            // Ignore
+            // e.printStackTrace();
+        }
+        {
+            // Expect success:
+            // @formatter:off
+            final Map<String, Object> map =
+                    new Parameters().properties()
+                            .setPath(absPath)
+                            .setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER)
+                            .getParameters();
+            // @formatter:on
+            final BasicConfigurationBuilder<PropertiesConfiguration> builderOk = configs.propertiesBuilder(absPath)
+                    .addParameters(map);
+            final PropertiesConfiguration configuration = builderOk.getConfiguration();
+            assertEquals("valueA", configuration.getString("keyA"));
+        }
+        {
+            // Expect success:
+            // @formatter:off
+            final BasicConfigurationBuilder<PropertiesConfiguration> builderOk = configs.propertiesBuilder(
+                    new Parameters().properties()
+                        .setPath(absPath)
+                        .setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER));
+            // @formatter:on
+            final PropertiesConfiguration configuration = builderOk.getConfiguration();
+            assertEquals("valueA", configuration.getString("keyA"));
+        }
     }
 
     /**
@@ -268,7 +349,7 @@ public class TestConfigurations
     {
         final Configurations configs = new Configurations();
         final PropertiesConfiguration config =
-                configs.properties(filePath(TEST_PROPERTIES));
+                configs.properties(absolutePath(TEST_PROPERTIES));
         checkProperties(config);
     }
 
@@ -341,7 +422,7 @@ public class TestConfigurations
     {
         final Configurations configs = new Configurations();
         final FileBasedConfigurationBuilder<XMLConfiguration> builder =
-                configs.xmlBuilder(filePath(TEST_XML));
+                configs.xmlBuilder(absolutePath(TEST_XML));
         checkXML(builder.getConfiguration());
     }
 
@@ -352,7 +433,7 @@ public class TestConfigurations
     public void testXMLFromPath() throws ConfigurationException
     {
         final Configurations configs = new Configurations();
-        final XMLConfiguration config = configs.xml(filePath(TEST_XML));
+        final XMLConfiguration config = configs.xml(absolutePath(TEST_XML));
         checkXML(config);
     }
 
@@ -425,7 +506,7 @@ public class TestConfigurations
     {
         final Configurations configs = new Configurations();
         final FileBasedConfigurationBuilder<INIConfiguration> builder =
-                configs.iniBuilder(filePath(TEST_INI));
+                configs.iniBuilder(absolutePath(TEST_INI));
         checkINI(builder.getConfiguration());
     }
 
@@ -436,7 +517,7 @@ public class TestConfigurations
     public void testINIFromPath() throws ConfigurationException
     {
         final Configurations configs = new Configurations();
-        final INIConfiguration config = configs.ini(filePath(TEST_INI));
+        final INIConfiguration config = configs.ini(absolutePath(TEST_INI));
         checkINI(config);
     }
 
@@ -512,7 +593,7 @@ public class TestConfigurations
     {
         final Configurations configs = new Configurations();
         final CombinedConfigurationBuilder builder =
-                configs.combinedBuilder(filePath(TEST_COMBINED));
+                configs.combinedBuilder(absolutePath(TEST_COMBINED));
         checkCombined(builder.getConfiguration());
     }
 
@@ -524,7 +605,7 @@ public class TestConfigurations
     {
         final Configurations configs = new Configurations();
         final CombinedConfiguration config =
-                configs.combined(filePath(TEST_COMBINED));
+                configs.combined(absolutePath(TEST_COMBINED));
         checkCombined(config);
     }
 }

@@ -22,6 +22,7 @@ import static org.junit.Assert.assertSame;
 
 import java.util.Map;
 
+import org.apache.commons.configuration2.ConfigurationConsumer;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.PropertiesConfigurationLayout;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
@@ -70,6 +71,20 @@ public class TestPropertiesBuilderParametersImpl
     }
 
     /**
+     * Tests whether the include listener can be set.
+     */
+    @Test
+    public void testSetIncludeListener()
+    {
+        final ConfigurationConsumer<ConfigurationException> includeListener =
+                EasyMock.createMock(ConfigurationConsumer.class);
+        EasyMock.replay(includeListener);
+        assertSame("Wrong result", params, params.setIncludeListener(includeListener));
+        assertSame("IncludeListener not set", includeListener,
+                params.getParameters().get("includeListener"));
+    }
+
+    /**
      * Tests whether the IO factory can be set.
      */
     @Test
@@ -113,9 +128,13 @@ public class TestPropertiesBuilderParametersImpl
     {
         final PropertiesConfiguration.IOFactory factory =
                 EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
-        params.setIOFactory(factory).setIncludesAllowed(false)
-                .setLayout(new PropertiesConfigurationLayout());
-        params.setThrowExceptionOnMissing(true);
+        final ConfigurationConsumer<ConfigurationException> includeListener =
+                EasyMock.createMock(ConfigurationConsumer.class);
+        params.setIOFactory(factory)
+                .setIncludeListener(includeListener)
+                .setIncludesAllowed(false)
+                .setLayout(new PropertiesConfigurationLayout())
+                .setThrowExceptionOnMissing(true);
         final PropertiesBuilderParametersImpl params2 =
                 new PropertiesBuilderParametersImpl();
 
@@ -123,6 +142,7 @@ public class TestPropertiesBuilderParametersImpl
         final Map<String, Object> parameters = params2.getParameters();
         assertEquals("Exception flag not set", Boolean.TRUE,
                 parameters.get("throwExceptionOnMissing"));
+        assertEquals("IncludeListener not set", includeListener, parameters.get("includeListener"));
         assertEquals("IOFactory not set", factory, parameters.get("IOFactory"));
         assertEquals("Include flag not set", Boolean.FALSE,
                 parameters.get("includesAllowed"));
@@ -145,5 +165,22 @@ public class TestPropertiesBuilderParametersImpl
 
         final PropertiesConfiguration config = builder.getConfiguration();
         assertEquals("Wrong IO factory", factory, config.getIOFactory());
+    }
+
+    /**
+     * Tests whether the IncludeListener property can be correctly set.
+     */
+    @Test
+    public void testSetIncludeListenerProperty() throws ConfigurationException
+    {
+        final ConfigurationConsumer<ConfigurationException> includeListener =
+                PropertiesConfiguration.DEFAULT_INCLUDE_LISTENER;
+        final ConfigurationBuilder<PropertiesConfiguration> builder =
+                new FileBasedConfigurationBuilder<>(
+                        PropertiesConfiguration.class)
+                .configure(params.setIncludeListener(includeListener));
+
+        final PropertiesConfiguration config = builder.getConfiguration();
+        assertEquals("Wrong IncludeListener", includeListener, config.getIncludeListener());
     }
 }
