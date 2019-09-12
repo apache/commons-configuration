@@ -210,20 +210,14 @@ public class PropertiesConfiguration extends BaseConfiguration
      *
      * @since 2.6
      */
-    public static final ConfigurationConsumer<ConfigurationException> DEFAULT_INCLUDE_LISTENER = e ->
-    {
-        throw e;
-    };
+    public static final ConfigurationConsumer<ConfigurationException> DEFAULT_INCLUDE_LISTENER = e -> { throw e; };
 
     /**
      * Defines error handling as a noop for the special {@code "include"} key.
      *
      * @since 2.6
      */
-    public static final ConfigurationConsumer<ConfigurationException> NOOP_INCLUDE_LISTENER = e ->
-    {
-        // noop
-    };
+    public static final ConfigurationConsumer<ConfigurationException> NOOP_INCLUDE_LISTENER = e -> { /* noop */ };
 
     /**
      * The default encoding (ISO-8859-1 as specified by
