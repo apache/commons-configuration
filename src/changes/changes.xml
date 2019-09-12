@@ -69,6 +69,9 @@
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         Update tests from com.sun.mail:mailapi 1.6.3 to 1.6.4.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-759" due-to="Gary Gregory">
+        Update Spring from 4.3.24.RELEASE to 4.3.25.RELEASE.
+      </action>
     </release>
     <release version="2.5" date="2019-05-23"
              description="Minor release with new features and updated dependencies.">

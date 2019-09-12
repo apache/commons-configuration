@@ -564,7 +564,7 @@
       *
     </commons.osgi.import>
     <slf4j.version>1.7.26</slf4j.version>
-    <spring.version>4.3.24.RELEASE</spring.version>
+    <spring.version>4.3.25.RELEASE</spring.version>
 
     <!-- generate report even if there are binary incompatible changes -->
     <commons.japicmp.breakBuildOnBinaryIncompatibleModifications>false</commons.japicmp.breakBuildOnBinaryIncompatibleModifications>
