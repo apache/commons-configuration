@@ -206,7 +206,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
     {
         final PrintWriter writer = new PrintWriter(out);
 
-        String encoding = (locator != null) ? locator.getEncoding() : null;
+        String encoding = locator != null ? locator.getEncoding() : null;
         if (encoding == null)
         {
             encoding = DEFAULT_ENCODING;

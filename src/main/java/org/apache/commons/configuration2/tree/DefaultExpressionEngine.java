@@ -158,7 +158,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
 
         symbols = syms;
         nameMatcher =
-                (nodeNameMatcher != null) ? nodeNameMatcher
+                nodeNameMatcher != null ? nodeNameMatcher
                         : NodeNameMatchers.EQUALS;
     }
 

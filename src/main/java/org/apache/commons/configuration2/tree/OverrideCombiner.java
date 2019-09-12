@@ -91,7 +91,7 @@ public class OverrideCombiner extends NodeCombiner
 
         // Handle attributes and value
         addAttributes(result, node1, node2);
-        result.value((node1.getValue() != null) ? node1.getValue() : node2
+        result.value(node1.getValue() != null ? node1.getValue() : node2
                 .getValue());
 
         return result.create();

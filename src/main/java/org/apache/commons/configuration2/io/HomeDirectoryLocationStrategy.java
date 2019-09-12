@@ -164,6 +164,6 @@ public class HomeDirectoryLocationStrategy implements FileLocationStrategy
      */
     private static String fetchHomeDirectory(final String homeDir)
     {
-        return (homeDir != null) ? homeDir : System.getProperty(PROP_HOME);
+        return homeDir != null ? homeDir : System.getProperty(PROP_HOME);
     }
 }

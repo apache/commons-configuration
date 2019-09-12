@@ -162,7 +162,7 @@ public class DatabaseConfigurationTestHelper
                 .setTable(TABLE_MULTI)
                 .setConfigurationNameColumn(COL_NAME)
                 .setConfigurationName(
-                        (configName != null) ? configName : CONFIG_NAME);
+                        configName != null ? configName : CONFIG_NAME);
     }
 
     /**

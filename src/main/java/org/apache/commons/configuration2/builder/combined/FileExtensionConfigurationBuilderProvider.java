@@ -172,6 +172,6 @@ public class FileExtensionConfigurationBuilderProvider extends
         }
 
         final int pos = fileName.lastIndexOf(EXT_SEPARATOR);
-        return (pos < 0) ? null : fileName.substring(pos + 1);
+        return pos < 0 ? null : fileName.substring(pos + 1);
     }
 }

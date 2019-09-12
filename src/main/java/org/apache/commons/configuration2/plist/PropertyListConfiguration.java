@@ -523,7 +523,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
         protected void checkLength(final String s, final int index, final int length)
                 throws ParseException
         {
-            final int len = (s == null) ? 0 : s.length();
+            final int len = s == null ? 0 : s.length();
             if (index + length > len)
             {
                 throw new ParseException("Input string too short: " + s

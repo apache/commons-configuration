@@ -104,7 +104,7 @@ public class NodeSelector
             nodes = currentResults;
         }
 
-        return (nodes.size() == 1) ? nodes.get(0) : null;
+        return nodes.size() == 1 ? nodes.get(0) : null;
     }
 
     /**

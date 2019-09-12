@@ -486,7 +486,7 @@ class NodeTracker
          */
         public ImmutableNode getNode()
         {
-            return (getDetachedModel() != null) ? getDetachedModel()
+            return getDetachedModel() != null ? getDetachedModel()
                     .getRootNode() : node;
         }
 
@@ -532,7 +532,7 @@ class NodeTracker
          */
         public TrackedNodeData observerRemoved()
         {
-            return (observerCount <= 1) ? null : new TrackedNodeData(node,
+            return observerCount <= 1 ? null : new TrackedNodeData(node,
                     observerCount - 1, getDetachedModel());
         }
 
@@ -562,7 +562,7 @@ class NodeTracker
         public TrackedNodeData detach(final ImmutableNode newNode)
         {
             final ImmutableNode newTrackedNode =
-                    (newNode != null) ? newNode : getNode();
+                    newNode != null ? newNode : getNode();
             return new TrackedNodeData(newTrackedNode, observerCount,
                     new InMemoryNodeModel(newTrackedNode));
         }

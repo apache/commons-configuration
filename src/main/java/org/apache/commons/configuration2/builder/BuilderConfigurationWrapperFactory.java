@@ -301,7 +301,7 @@ public class BuilderConfigurationWrapperFactory
                 throws Exception
         {
             final Object target =
-                    (EventSourceSupport.DUMMY == eventSourceSupport) ? ConfigurationUtils
+                    EventSourceSupport.DUMMY == eventSourceSupport ? ConfigurationUtils
                             .asEventSource(this, true) : builder;
             return method.invoke(target, args);
         }

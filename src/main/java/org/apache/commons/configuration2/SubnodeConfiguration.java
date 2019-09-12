@@ -170,7 +170,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
      */
     public void close()
     {
-        (getTrackedModel()).close();
+        getTrackedModel().close();
     }
 
     /**

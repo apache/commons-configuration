@@ -393,7 +393,7 @@ public class FileHandler
     {
         final String fileName = file.getName();
         final String basePath =
-                (file.getParentFile() != null) ? file.getParentFile()
+                file.getParentFile() != null ? file.getParentFile()
                         .getAbsolutePath() : null;
         new Updater()
         {
@@ -448,7 +448,7 @@ public class FileHandler
     public URL getURL()
     {
         final FileLocator locator = getFileLocator();
-        return (locator.getSourceURL() != null) ? locator.getSourceURL()
+        return locator.getSourceURL() != null ? locator.getSourceURL()
                 : FileLocatorUtils.locate(locator);
     }
 

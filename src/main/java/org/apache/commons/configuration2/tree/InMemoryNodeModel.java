@@ -725,7 +725,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
         final TreeData currentData = structure.get();
         final InMemoryNodeModel detachedNodeModel =
                 currentData.getNodeTracker().getDetachedNodeModel(selector);
-        return (detachedNodeModel != null) ? detachedNodeModel.getNodeHandler()
+        return detachedNodeModel != null ? detachedNodeModel.getNodeHandler()
                 : new TrackedNodeHandler(currentData.getNodeTracker()
                         .getTrackedNode(selector), currentData);
     }
@@ -873,7 +873,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     private TreeData createTreeData(final ImmutableNode root, final TreeData current)
     {
         final NodeTracker newTracker =
-                (current != null) ? current.getNodeTracker()
+                current != null ? current.getNodeTracker()
                         .detachAllTrackedNodes() : new NodeTracker();
         return createTreeDataForRootAndTracker(root, newTracker);
     }
@@ -959,7 +959,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                             .addAttribute(addData.getNewNodeName(),
                                     values.iterator().next()).create();
             final ImmutableNode newChild =
-                    (pathNodeCount > 1) ? createNodeOnPath(addData
+                    pathNodeCount > 1 ? createNodeOnPath(addData
                             .getPathNodes().subList(0, pathNodeCount - 1)
                             .iterator(),
                             Collections.singleton(childWithAttribute))
@@ -1096,7 +1096,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
      */
     private static ImmutableNode initialRootNode(final ImmutableNode providedRoot)
     {
-        return (providedRoot != null) ? providedRoot
+        return providedRoot != null ? providedRoot
                 : new ImmutableNode.Builder().create();
     }
 

@@ -43,7 +43,7 @@ public class TestConfigurationDeclaration
             final HierarchicalConfiguration<?> conf)
     {
         final HierarchicalConfiguration<?> config =
-                (conf != null) ? conf : new BaseHierarchicalConfiguration();
+                conf != null ? conf : new BaseHierarchicalConfiguration();
         return new ConfigurationDeclaration(null, config);
     }
 

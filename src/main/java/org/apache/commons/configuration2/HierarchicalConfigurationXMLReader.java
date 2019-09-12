@@ -201,7 +201,7 @@ public class HierarchicalConfigurationXMLReader<T> extends
         private String nodeName(final T node, final NodeHandler<T> handler)
         {
             final String nodeName = handler.nodeName(node);
-            return (nodeName == null) ? getRootName() : nodeName;
+            return nodeName == null ? getRootName() : nodeName;
         }
     }
 }

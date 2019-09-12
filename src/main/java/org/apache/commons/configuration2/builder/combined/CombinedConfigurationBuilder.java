@@ -1127,7 +1127,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                 FileBasedConfigurationBuilder fileBuilder =
                         (FileBasedConfigurationBuilder) defBuilder;
                 final URL url = fileBuilder.getFileHandler().getURL();
-                currentXMLParameters.setBasePath((url != null) ? url
+                currentXMLParameters.setBasePath(url != null ? url
                         .toExternalForm() : fileBuilder.getFileHandler()
                         .getBasePath());
             }
@@ -1318,7 +1318,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     private Map<String, ? extends Lookup> fetchPrefixLookups()
     {
         final CombinedConfiguration cc = getConfigurationUnderConstruction();
-        return (cc != null) ? cc.getInterpolator().getLookups() : null;
+        return cc != null ? cc.getInterpolator().getLookups() : null;
     }
 
     /**

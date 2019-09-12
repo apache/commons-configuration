@@ -227,7 +227,7 @@ public final class FileLocator
      */
     private String sourceURLAsString()
     {
-        return (sourceURL != null) ? sourceURL.toExternalForm()
+        return sourceURL != null ? sourceURL.toExternalForm()
                 : StringUtils.EMPTY;
     }
 

@@ -221,7 +221,7 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
      */
     protected static String qualifiedName(final QName name)
     {
-        return (name.getPrefix() == null) ? name.getName() : prefixName(
+        return name.getPrefix() == null ? name.getName() : prefixName(
                 name.getPrefix(), name.getName());
     }
 }

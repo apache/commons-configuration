@@ -229,7 +229,7 @@ public class ExprLookup implements Lookup
         {
             final Expression exp = engine.createExpression(result);
             final Object exprResult = exp.evaluate(createContext());
-            result = (exprResult != null) ? String.valueOf(exprResult) : null;
+            result = exprResult != null ? String.valueOf(exprResult) : null;
         }
         catch (final Exception e)
         {

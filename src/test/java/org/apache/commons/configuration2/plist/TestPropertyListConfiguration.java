@@ -214,7 +214,7 @@ public class TestPropertyListConfiguration
     @Test
     public void testData()
     {
-        ObjectAssert.assertInstanceOf("data", (new byte[0]).getClass(), config.getProperty("data"));
+        ObjectAssert.assertInstanceOf("data", new byte[0].getClass(), config.getProperty("data"));
         ArrayAssert.assertEquals("data", "foo bar".getBytes(), (byte[]) config.getProperty("data"));
     }
 

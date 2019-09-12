@@ -1158,7 +1158,7 @@ public class TestXMLConfiguration
         {
             assertEquals("Wrong value of element " + (i + 1), i,
                     conf.getInt("attrList.a(" + i + ")"));
-            assertEquals("Wrong name attribute for element " + (i), "y",
+            assertEquals("Wrong name attribute for element " + i, "y",
                     conf.getString("attrList.a(" + i + ")[@name]"));
         }
     }

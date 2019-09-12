@@ -53,7 +53,7 @@ public class ReadWriteSynchronizer implements Synchronizer
      */
     public ReadWriteSynchronizer(final ReadWriteLock l)
     {
-        lock = (l != null) ? l : createDefaultLock();
+        lock = l != null ? l : createDefaultLock();
     }
 
     /**

@@ -358,7 +358,7 @@ class ModelTransaction
     Operations fetchOperations(final ImmutableNode target, final int level)
     {
         final Integer nodeLevel =
-                Integer.valueOf((level == LEVEL_UNKNOWN) ? level(target)
+                Integer.valueOf(level == LEVEL_UNKNOWN ? level(target)
                         : level);
         Map<ImmutableNode, Operations> levelOperations =
                 operations.get(nodeLevel);
@@ -387,7 +387,7 @@ class ModelTransaction
      */
     private ImmutableNode initQueryRoot(final TreeData treeData, final NodeSelector selector)
     {
-        return (selector == null) ? treeData.getRootNode() : treeData
+        return selector == null ? treeData.getRootNode() : treeData
                 .getNodeTracker().getTrackedNode(selector);
     }
 
@@ -566,7 +566,7 @@ class ModelTransaction
         }
 
         final Collection<E> result =
-                (col1 != null) ? col1 : new ArrayList<>(col2.size());
+                col1 != null ? col1 : new ArrayList<>(col2.size());
         result.addAll(col2);
         return result;
     }
@@ -586,7 +586,7 @@ class ModelTransaction
             return set1;
         }
 
-        final Set<E> result = (set1 != null) ? set1 : new HashSet<>();
+        final Set<E> result = set1 != null ? set1 : new HashSet<>();
         result.addAll(set2);
         return result;
     }
@@ -608,7 +608,7 @@ class ModelTransaction
             return map1;
         }
 
-        final Map<K, V> result = (map1 != null) ? map1 : new HashMap<>();
+        final Map<K, V> result = map1 != null ? map1 : new HashMap<>();
         result.putAll(map2);
         return result;
     }
@@ -624,7 +624,7 @@ class ModelTransaction
      */
     private static <E> Collection<E> append(final Collection<E> col, final E node)
     {
-        final Collection<E> result = (col != null) ? col : new LinkedList<>();
+        final Collection<E> result = col != null ? col : new LinkedList<>();
         result.add(node);
         return result;
     }
@@ -640,7 +640,7 @@ class ModelTransaction
      */
     private static <E> Set<E> append(final Set<E> col, final E elem)
     {
-        final Set<E> result = (col != null) ? col : new HashSet<>();
+        final Set<E> result = col != null ? col : new HashSet<>();
         result.add(elem);
         return result;
     }
@@ -658,7 +658,7 @@ class ModelTransaction
      */
     private static <K, V> Map<K, V> append(final Map<K, V> map, final K key, final V value)
     {
-        final Map<K, V> result = (map != null) ? map : new HashMap<>();
+        final Map<K, V> result = map != null ? map : new HashMap<>();
         result.put(key, value);
         return result;
     }
@@ -810,7 +810,7 @@ class ModelTransaction
          */
         private Map<ImmutableNode, ImmutableNode> fetchReplacementMap()
         {
-            return (nodesToReplace != null) ? nodesToReplace : Collections
+            return nodesToReplace != null ? nodesToReplace : Collections
                     .<ImmutableNode, ImmutableNode> emptyMap();
         }
 
@@ -822,7 +822,7 @@ class ModelTransaction
          */
         private Set<ImmutableNode> fetchRemovalSet()
         {
-            return (nodesToRemove != null) ? nodesToRemove : Collections
+            return nodesToRemove != null ? nodesToRemove : Collections
                     .<ImmutableNode> emptySet();
         }
     }

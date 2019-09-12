@@ -82,7 +82,7 @@ public class DefaultBeanFactory implements BeanFactory
     public DefaultBeanFactory(final ConversionHandler convHandler)
     {
         conversionHandler =
-                (convHandler != null) ? convHandler
+                convHandler != null ? convHandler
                         : DefaultConversionHandler.INSTANCE;
     }
 

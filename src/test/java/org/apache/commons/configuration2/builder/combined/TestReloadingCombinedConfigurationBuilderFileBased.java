@@ -135,7 +135,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
      */
     private File writeReloadFile(final File f, final String content) throws IOException
     {
-        final File file = (f != null) ? f : folder.newFile();
+        final File file = f != null ? f : folder.newFile();
         writeFile(file, content);
         return file;
     }

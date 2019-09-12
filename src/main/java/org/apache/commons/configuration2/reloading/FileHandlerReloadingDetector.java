@@ -85,7 +85,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
      */
     public FileHandlerReloadingDetector(final FileHandler handler, final long refreshDelay)
     {
-        fileHandler = (handler != null) ? handler : new FileHandler();
+        fileHandler = handler != null ? handler : new FileHandler();
         this.refreshDelay = refreshDelay;
     }
 

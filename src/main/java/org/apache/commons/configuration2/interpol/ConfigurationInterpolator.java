@@ -194,7 +194,7 @@ public class ConfigurationInterpolator
             throw new IllegalArgumentException(
                     "InterpolatorSpecification must not be null!");
         }
-        return (spec.getInterpolator() != null) ? spec.getInterpolator()
+        return spec.getInterpolator() != null ? spec.getInterpolator()
                 : createInterpolator(spec);
     }
 

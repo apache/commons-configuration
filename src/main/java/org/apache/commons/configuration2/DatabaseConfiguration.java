@@ -344,7 +344,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 }
                 if (!results.isEmpty())
                 {
-                    return (results.size() > 1) ? results : results
+                    return results.size() > 1 ? results : results
                             .get(0);
                 }
                 return null;
@@ -673,7 +673,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
     private static Object convertClob(final Clob clob) throws SQLException
     {
         final int len = (int) clob.length();
-        return (len > 0) ? clob.getSubString(1, len) : StringUtils.EMPTY;
+        return len > 0 ? clob.getSubString(1, len) : StringUtils.EMPTY;
     }
 
     /**

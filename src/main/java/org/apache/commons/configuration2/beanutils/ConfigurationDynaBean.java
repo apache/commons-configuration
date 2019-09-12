@@ -247,6 +247,6 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
                     + "' does not exist.");
         }
 
-        return (property instanceof List) || property.getClass().isArray();
+        return property instanceof List || property.getClass().isArray();
     }
 }

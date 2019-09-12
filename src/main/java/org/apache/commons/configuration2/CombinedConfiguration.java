@@ -230,7 +230,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public CombinedConfiguration(final NodeCombiner comb)
     {
-        nodeCombiner = (comb != null) ? comb : DEFAULT_COMBINER;
+        nodeCombiner = comb != null ? comb : DEFAULT_COMBINER;
         initChildCollections();
     }
 
@@ -1084,7 +1084,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         public ImmutableNode getTransformedRoot()
         {
             final ImmutableNode configRoot = getRootNodeOfConfiguration();
-            return (atPath == null) ? configRoot : prependAtPath(configRoot);
+            return atPath == null ? configRoot : prependAtPath(configRoot);
         }
 
         /**

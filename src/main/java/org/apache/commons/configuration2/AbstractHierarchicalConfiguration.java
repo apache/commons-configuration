@@ -253,7 +253,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     @Override
     public ExpressionEngine getExpressionEngine()
     {
-        return (expressionEngine != null) ? expressionEngine
+        return expressionEngine != null ? expressionEngine
                 : DefaultExpressionEngine.INSTANCE;
     }
 
@@ -303,7 +303,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         {
             return null;
         }
-        return (list.size() == 1) ? list.get(0) : list;
+        return list.size() == 1 ? list.get(0) : list;
     }
 
     /**

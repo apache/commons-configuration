@@ -624,11 +624,11 @@ final class PropertyConverter
             final String[] elements = ((String) value).split("_");
             final int size = elements.length;
 
-            if (size >= 1 && ((elements[0]).length() == 2 || (elements[0]).length() == 0))
+            if (size >= 1 && (elements[0].length() == 2 || elements[0].length() == 0))
             {
                 final String language = elements[0];
-                final String country = (size >= 2) ? elements[1] : "";
-                final String variant = (size >= 3) ? elements[2] : "";
+                final String country = size >= 2 ? elements[1] : "";
+                final String variant = size >= 3 ? elements[2] : "";
 
                 return new Locale(language, country, variant);
             }

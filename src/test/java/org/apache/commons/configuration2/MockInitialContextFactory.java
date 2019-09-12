@@ -133,7 +133,7 @@ public class MockInitialContextFactory implements InitialContextFactory
         for (int i = 0; i < PROP_NAMES.length; i++)
         {
             bind(mockCtx, prefix + PROP_NAMES[i], PROP_VALUES[i]);
-            final String errProp = (prefix.length() > 0) ? PROP_NAMES[i] : PREFIX
+            final String errProp = prefix.length() > 0 ? PROP_NAMES[i] : PREFIX
                     + PROP_NAMES[i];
             bindError(mockCtx, errProp);
         }

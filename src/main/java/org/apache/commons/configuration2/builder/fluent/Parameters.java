@@ -109,7 +109,7 @@ public final class Parameters
     public Parameters(final DefaultParametersManager manager)
     {
         defaultParametersManager =
-                (manager != null) ? manager : new DefaultParametersManager();
+                manager != null ? manager : new DefaultParametersManager();
     }
 
     /**

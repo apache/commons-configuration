@@ -135,7 +135,7 @@ class ReferenceTracker
             }
 
             List<Object> newRemovedRefs =
-                    (newRefs != null) ? new LinkedList<>(
+                    newRefs != null ? new LinkedList<>(
                             removedReferences) : null;
             for (final ImmutableNode node : removedNodes)
             {

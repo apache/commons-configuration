@@ -103,7 +103,7 @@ public class Configurations
      */
     public Configurations(final Parameters params)
     {
-        parameters = (params != null) ? params : new Parameters();
+        parameters = params != null ? params : new Parameters();
     }
 
     /**

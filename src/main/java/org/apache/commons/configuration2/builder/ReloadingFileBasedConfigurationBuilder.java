@@ -233,7 +233,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
             public boolean isReloadingRequired()
             {
                 final ReloadingDetector detector = resultReloadingDetector;
-                return (detector != null) && detector.isReloadingRequired();
+                return detector != null && detector.isReloadingRequired();
             }
         };
     }
@@ -249,6 +249,6 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
             final FileBasedBuilderParametersImpl params)
     {
         final ReloadingDetectorFactory factory = params.getReloadingDetectorFactory();
-        return (factory != null) ? factory : DEFAULT_DETECTOR_FACTORY;
+        return factory != null ? factory : DEFAULT_DETECTOR_FACTORY;
     }
 }

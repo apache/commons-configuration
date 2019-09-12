@@ -972,7 +972,7 @@ public class TestAbstractHierarchicalConfiguration
     {
         final Set<String> values = new HashSet<>();
         for (final String anExpected : expected) {
-            values.add((anExpected.startsWith(prefix)) ? anExpected : prefix + "." + anExpected);
+            values.add(anExpected.startsWith(prefix) ? anExpected : prefix + "." + anExpected);
         }
 
         final Iterator<String> itKeys = config.getKeys(prefix);

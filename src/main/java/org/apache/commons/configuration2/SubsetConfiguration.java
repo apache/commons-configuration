@@ -237,7 +237,7 @@ public class SubsetConfiguration extends AbstractConfiguration
     @Override
     public ListDelimiterHandler getListDelimiterHandler()
     {
-        return (parent instanceof AbstractConfiguration) ? ((AbstractConfiguration) parent)
+        return parent instanceof AbstractConfiguration ? ((AbstractConfiguration) parent)
                 .getListDelimiterHandler() : super.getListDelimiterHandler();
     }
 

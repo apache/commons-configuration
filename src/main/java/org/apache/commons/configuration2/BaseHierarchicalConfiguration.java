@@ -696,7 +696,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
     private static NodeModel<ImmutableNode> createNodeModel(
             final HierarchicalConfiguration<ImmutableNode> c)
     {
-        final ImmutableNode root = (c != null) ? obtainRootNode(c) : null;
+        final ImmutableNode root = c != null ? obtainRootNode(c) : null;
         return new InMemoryNodeModel(root);
     }
 
@@ -836,7 +836,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
 
                     // Insert all new nodes
                     final ImmutableNode sibling2 =
-                            (refHandler.getReference(nd) == null) ? null : nd;
+                            refHandler.getReference(nd) == null ? null : nd;
                     for (final ImmutableNode insertNode : newNodes)
                     {
                         if (refHandler.getReference(insertNode) == null)
@@ -977,7 +977,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
             final boolean attributeChanged =
                     interpolateAttributes(node, handler, interpolatedAttributes);
             final ImmutableNode newNode =
-                    (valueChanged(value, handler.getValue(node)) || attributeChanged) ? new ImmutableNode.Builder()
+                    valueChanged(value, handler.getValue(node)) || attributeChanged ? new ImmutableNode.Builder()
                             .name(handler.nodeName(node)).value(value)
                             .addAttributes(interpolatedAttributes).create()
                             : node;

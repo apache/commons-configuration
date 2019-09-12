@@ -47,7 +47,7 @@ public abstract class FileSystem
     public ConfigurationLogger getLogger()
     {
         final ConfigurationLogger result = log;
-        return (result != null) ? result : DEFAULT_LOG;
+        return result != null ? result : DEFAULT_LOG;
     }
 
     /**

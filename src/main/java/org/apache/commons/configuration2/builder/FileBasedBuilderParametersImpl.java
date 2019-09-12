@@ -88,7 +88,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
      */
     public FileBasedBuilderParametersImpl(final FileHandler handler)
     {
-        fileHandler = (handler != null) ? handler : new FileHandler();
+        fileHandler = handler != null ? handler : new FileHandler();
     }
 
     /**

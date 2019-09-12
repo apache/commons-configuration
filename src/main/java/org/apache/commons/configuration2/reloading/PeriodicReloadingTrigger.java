@@ -100,7 +100,7 @@ public class PeriodicReloadingTrigger
         period = triggerPeriod;
         timeUnit = unit;
         executorService =
-                (exec != null) ? exec : createDefaultExecutorService();
+                exec != null ? exec : createDefaultExecutorService();
     }
 
     /**

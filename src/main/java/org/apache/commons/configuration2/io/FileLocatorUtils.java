@@ -234,7 +234,7 @@ public final class FileLocatorUtils
      */
     public static boolean isLocationDefined(final FileLocator locator)
     {
-        return (locator != null)
+        return locator != null
                 && (locator.getFileName() != null || locator.getSourceURL() != null);
     }
 
@@ -296,7 +296,7 @@ public final class FileLocatorUtils
         }
 
         final URL url = locate(locator);
-        return (url != null) ? createFullyInitializedLocatorFromURL(locator,
+        return url != null ? createFullyInitializedLocatorFromURL(locator,
                 url) : null;
     }
 
@@ -610,7 +610,7 @@ public final class FileLocatorUtils
      */
     static FileSystem obtainFileSystem(final FileLocator locator)
     {
-        return (locator != null) ? ObjectUtils.defaultIfNull(
+        return locator != null ? ObjectUtils.defaultIfNull(
                 locator.getFileSystem(), DEFAULT_FILE_SYSTEM)
                 : DEFAULT_FILE_SYSTEM;
     }
@@ -627,7 +627,7 @@ public final class FileLocatorUtils
      */
     static FileLocationStrategy obtainLocationStrategy(final FileLocator locator)
     {
-        return (locator != null) ? ObjectUtils.defaultIfNull(
+        return locator != null ? ObjectUtils.defaultIfNull(
                 locator.getLocationStrategy(), DEFAULT_LOCATION_STRATEGY)
                 : DEFAULT_LOCATION_STRATEGY;
     }

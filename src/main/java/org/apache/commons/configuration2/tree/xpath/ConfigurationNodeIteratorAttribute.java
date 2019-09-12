@@ -101,7 +101,7 @@ class ConfigurationNodeIteratorAttribute<T> extends
                     new LinkedHashSet<>(parent.getNodeHandler()
                             .getAttributes(parent.getConfigurationNode()));
             final String prefix =
-                    (name.getPrefix() != null) ? prefixName(name.getPrefix(),
+                    name.getPrefix() != null ? prefixName(name.getPrefix(),
                             null) : null;
             for (final String n : names)
             {

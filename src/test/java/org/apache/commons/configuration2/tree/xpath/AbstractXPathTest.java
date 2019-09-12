@@ -146,12 +146,12 @@ public abstract class AbstractXPathTest
     {
         if (level >= 0)
         {
-            final String prefix = (value == null) ? "" : value + ".";
+            final String prefix = value == null ? "" : value + ".";
             for (int i = 1; i <= CHILD_COUNT; i++)
             {
                 final ImmutableNode.Builder childBuilder =
                         new ImmutableNode.Builder();
-                childBuilder.name((i % 2 == 0) ? CHILD_NAME1 : CHILD_NAME2);
+                childBuilder.name(i % 2 == 0 ? CHILD_NAME1 : CHILD_NAME2);
                 final String currentValue = prefix + i;
                 childBuilder.value(currentValue);
                 createLevel(childBuilder, currentValue, level - 1);

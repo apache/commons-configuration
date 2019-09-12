@@ -586,7 +586,7 @@ public class TestInMemoryNodeModelTrackedNodes
         for (final ImmutableNode field : nodeFields.getChildren())
         {
             final String expName =
-                    (childIndex == idx) ? NEW_FIELD : NodeStructureHelper
+                    childIndex == idx ? NEW_FIELD : NodeStructureHelper
                             .field(1, childIndex);
             checkFieldNode(field, expName);
             childIndex++;

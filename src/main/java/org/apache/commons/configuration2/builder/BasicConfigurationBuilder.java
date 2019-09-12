@@ -515,7 +515,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     {
         final BeanHelper helper =
                 BasicBuilderParameters.fetchBeanHelper(getParameters());
-        return (helper != null) ? helper : BeanHelper.INSTANCE;
+        return helper != null ? helper : BeanHelper.INSTANCE;
     }
 
     /**

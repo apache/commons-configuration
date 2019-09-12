@@ -264,7 +264,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
         {
             try
             {
-                final Attributes at = (attribs == null) ? EMPTY_ATTRS : attribs;
+                final Attributes at = attribs == null ? EMPTY_ATTRS : attribs;
                 getContentHandler().startElement(NS_URI, name, name, at);
             }
             catch (final SAXException ex)

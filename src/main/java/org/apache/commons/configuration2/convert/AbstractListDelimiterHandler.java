@@ -88,7 +88,7 @@ public abstract class AbstractListDelimiterHandler implements
     public Object escape(final Object value, final ValueTransformer transformer)
     {
         final Object escValue =
-                (value instanceof String) ? escapeString((String) value)
+                value instanceof String ? escapeString((String) value)
                         : value;
         return transformer.transformValue(escValue);
     }

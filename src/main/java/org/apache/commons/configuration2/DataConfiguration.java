@@ -1688,7 +1688,7 @@ public class DataConfiguration extends AbstractConfiguration
     private DefaultConversionHandler getOriginalConversionHandler()
     {
         final ConversionHandler handler = super.getConversionHandler();
-        return (DefaultConversionHandler) ((handler instanceof DefaultConversionHandler) ? handler
+        return (DefaultConversionHandler) (handler instanceof DefaultConversionHandler ? handler
                 : null);
     }
 
@@ -1726,7 +1726,7 @@ public class DataConfiguration extends AbstractConfiguration
 
             final DefaultConversionHandler orgHandler =
                     getOriginalConversionHandler();
-            return (orgHandler != null) ? orgHandler.getDateFormat() : null;
+            return orgHandler != null ? orgHandler.getDateFormat() : null;
         }
     }
 }

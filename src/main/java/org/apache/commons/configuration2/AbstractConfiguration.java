@@ -316,7 +316,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
             // instance may be changed by another thread
             final ConfigurationInterpolator ciOld = getInterpolator();
             final ConfigurationInterpolator ciNew =
-                    (ciOld != null) ? ciOld : new ConfigurationInterpolator();
+                    ciOld != null ? ciOld : new ConfigurationInterpolator();
             ciNew.registerLookups(lookups);
             success = interpolator.compareAndSet(ciOld, ciNew);
         } while (!success);
@@ -346,7 +346,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         {
             final ConfigurationInterpolator ciOld = getInterpolator();
             final ConfigurationInterpolator ciNew =
-                    (ciOld != null) ? ciOld : new ConfigurationInterpolator();
+                    ciOld != null ? ciOld : new ConfigurationInterpolator();
             Lookup confLookup = findConfigurationLookup(ciNew);
             if (confLookup == null)
             {
@@ -380,7 +380,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         {
             final ConfigurationInterpolator ciOld = getInterpolator();
             final ConfigurationInterpolator ciNew =
-                    (ciOld != null) ? ciOld : new ConfigurationInterpolator();
+                    ciOld != null ? ciOld : new ConfigurationInterpolator();
             ciNew.setParentInterpolator(parent);
             success = interpolator.compareAndSet(ciOld, ciNew);
         } while (!success);
@@ -557,7 +557,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     public final Synchronizer getSynchronizer()
     {
         final Synchronizer sync = synchronizer;
-        return (sync != null) ? sync : NoOpSynchronizer.INSTANCE;
+        return sync != null ? sync : NoOpSynchronizer.INSTANCE;
     }
 
     /**
@@ -1355,7 +1355,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     public String getString(final String key, final String defaultValue)
     {
         final String result = convert(String.class, key, null, false);
-        return (result != null) ? result : interpolate(defaultValue);
+        return result != null ? result : interpolate(defaultValue);
     }
 
     /**
@@ -1375,7 +1375,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         }
 
         final String value = getString(key);
-        return (value != null) ? decoder.decode(value) : null;
+        return value != null ? decoder.decode(value) : null;
     }
 
     /**
@@ -1419,7 +1419,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     public String[] getStringArray(final String key)
     {
         final String[] result = (String[]) getArray(String.class, key);
-        return (result == null) ? new String[0] : result;
+        return result == null ? new String[0] : result;
     }
 
     /**
@@ -1561,7 +1561,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         }
 
         final Collection<T> targetCol =
-                (target != null) ? target : new ArrayList<>();
+                target != null ? target : new ArrayList<>();
         getConversionHandler().toCollection(src, cls, getInterpolator(),
                 targetCol);
         return targetCol;
@@ -1701,7 +1701,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     protected final void initLogger(final ConfigurationLogger log)
     {
-        this.log = (log != null) ? log : ConfigurationLogger.newDummyLogger();
+        this.log = log != null ? log : ConfigurationLogger.newDummyLogger();
     }
 
     /**

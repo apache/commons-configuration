@@ -43,7 +43,7 @@ public class DefaultReloadingDetectorFactory implements
         final Long refreshDelay = params.getReloadingRefreshDelay();
 
         final FileHandlerReloadingDetector fileHandlerReloadingDetector =
-                (refreshDelay != null) ? new FileHandlerReloadingDetector(
+                refreshDelay != null ? new FileHandlerReloadingDetector(
                 handler, refreshDelay) : new FileHandlerReloadingDetector(
                 handler);
 

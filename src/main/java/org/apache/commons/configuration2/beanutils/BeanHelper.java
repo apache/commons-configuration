@@ -116,7 +116,7 @@ public final class BeanHelper
     public BeanHelper(final BeanFactory defFactory)
     {
         defaultBeanFactory =
-                (defFactory != null) ? defFactory : DefaultBeanFactory.INSTANCE;
+                defFactory != null ? defFactory : DefaultBeanFactory.INSTANCE;
     }
 
     /**

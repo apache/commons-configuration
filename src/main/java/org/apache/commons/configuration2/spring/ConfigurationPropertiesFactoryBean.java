@@ -75,7 +75,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
     @Override
     public Properties getObject() throws Exception
     {
-        return (compositeConfiguration != null) ? ConfigurationConverter.getProperties(compositeConfiguration) : null;
+        return compositeConfiguration != null ? ConfigurationConverter.getProperties(compositeConfiguration) : null;
     }
 
     /**
@@ -196,6 +196,6 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      */
     private static <T> T[] defensiveCopy(final T[] src)
     {
-        return (src != null) ? src.clone() : null;
+        return src != null ? src.clone() : null;
     }
 }
