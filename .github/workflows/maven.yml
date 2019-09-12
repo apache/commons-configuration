@@ -32,4 +32,6 @@ jobs:
       with:
         java-version: ${{ matrix.java }}
     - name: Build with Maven
-      run: mvn -V apache-rat:check spotbugs:check javadoc:javadoc -DadditionalJOption=-Xdoclint/package:-org.apache.commons.configuration2.plist package --file pom.xml
+      run: mvn -V clean apache-rat:check spotbugs:check javadoc:javadoc -Ddoclint=none package --file pom.xml
+
+# For Java 11, you can be more strict: -DadditionalJOption=-Xdoclint/package:-org.apache.commons.configuration2.plist
