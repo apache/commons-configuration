@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -345,8 +346,7 @@ public class ConfigurationInterpolator
             @Override
             public String lookup(final String key)
             {
-                final Object result = resolve(key);
-                return result != null ? result.toString() : null;
+                return Objects.toString(resolve(key), null);
             }
         });
     }

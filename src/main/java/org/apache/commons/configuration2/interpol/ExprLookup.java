@@ -17,6 +17,7 @@
 package org.apache.commons.configuration2.interpol;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.io.ConfigurationLogger;
@@ -262,8 +263,7 @@ public class ExprLookup implements Lookup
                 @Override
                 public String lookup(final String key)
                 {
-                    final Object value = ip.resolve(key);
-                    return value != null ? value.toString() : null;
+                    return Objects.toString(ip.resolve(key), null);
                 }
             };
             substitutor =

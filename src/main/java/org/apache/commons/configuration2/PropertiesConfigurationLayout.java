@@ -24,6 +24,7 @@ import java.util.ArrayDeque;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -968,7 +969,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
          */
         public String getComment()
         {
-            return comment == null ? null : comment.toString();
+            return Objects.toString(comment, null);
         }
 
         /**
