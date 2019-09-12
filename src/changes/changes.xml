@@ -51,6 +51,9 @@
       <action dev="ggregory" type="update" due-to="Kevin Wang">
         Fix syntax in user guide documentation #33.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-757" due-to="Gary Gregory">
+        Update org.yaml:snakeyaml from 1.24 to 1.25.
+      </action>
     </release>
     <release version="2.5" date="2019-05-23"
              description="Minor release with new features and updated dependencies.">
