@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -643,11 +644,12 @@ public class PropertiesConfiguration extends BaseConfiguration
      *
      * @param key the property key
      * @param value the property value
+     * @param seenStack TODO
      * @return a flag whether this is a normal property
      * @throws ConfigurationException if an error occurs
      * @since 1.3
      */
-    boolean propertyLoaded(final String key, final String value)
+    boolean propertyLoaded(final String key, final String value, final Deque<URL> seenStack)
             throws ConfigurationException
     {
         boolean result;
@@ -661,7 +663,7 @@ public class PropertiesConfiguration extends BaseConfiguration
                         getListDelimiterHandler().split(value, true);
                 for (final String f : files)
                 {
-                    loadIncludeFile(interpolate(f), false);
+                    loadIncludeFile(interpolate(f), false, seenStack);
                 }
             }
             result = false;
@@ -676,7 +678,7 @@ public class PropertiesConfiguration extends BaseConfiguration
                         getListDelimiterHandler().split(value, true);
                 for (final String f : files)
                 {
-                    loadIncludeFile(interpolate(f), true);
+                    loadIncludeFile(interpolate(f), true, seenStack);
                 }
             }
             result = false;
@@ -1853,9 +1855,11 @@ public class PropertiesConfiguration extends BaseConfiguration
      *
      * @param fileName the name of the file to load
      * @param optional whether or not the {@code fileName} is optional
+     * @param seenStack Stack of seen include URLs
      * @throws ConfigurationException if loading fails
      */
-    private void loadIncludeFile(final String fileName, final boolean optional) throws ConfigurationException
+    private void loadIncludeFile(final String fileName, final boolean optional, final Deque<URL> seenStack)
+            throws ConfigurationException
     {
         if (locator == null)
         {
@@ -1881,11 +1885,8 @@ public class PropertiesConfiguration extends BaseConfiguration
 
         if (url == null)
         {
-            if (getIncludeListener() != null)
-            {
-                getIncludeListener().accept(new ConfigurationException(
-                        "Cannot resolve include file " + fileName, new FileNotFoundException(fileName)));
-            }
+            getIncludeListener().accept(new ConfigurationException("Cannot resolve include file " + fileName,
+                    new FileNotFoundException(fileName)));
         }
         else
         {
@@ -1896,14 +1897,25 @@ public class PropertiesConfiguration extends BaseConfiguration
             {
                 try
                 {
-                    fh.load(url);
+                    // Check for cycles
+                    if (seenStack.contains(url))
+                    {
+                        throw new ConfigurationException(
+                                String.format("Cycle detected loading %s, seen stack: %s", url, seenStack));
+                    }
+                    seenStack.add(url);
+                    try
+                    {
+                        fh.load(url);
+                    }
+                    finally
+                    {
+                        seenStack.pop();
+                    }
                 }
                 catch (ConfigurationException e)
                 {
-                    if (getIncludeListener() != null)
-                    {
-                        getIncludeListener().accept(e);
-                    }
+                    getIncludeListener().accept(e);
                 }
             }
             finally
