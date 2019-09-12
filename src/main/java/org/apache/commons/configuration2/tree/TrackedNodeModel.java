@@ -215,7 +215,7 @@ public class TrackedNodeModel implements NodeModel<ImmutableNode>
      * associate tracked node. This has the side effect that this in any case
      * becomes detached.
      *
-     * @param resolver
+     * @param resolver the {@code NodeKeyResolver}.
      */
     @Override
     public void clear(final NodeKeyResolver<ImmutableNode> resolver)
