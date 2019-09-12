@@ -328,7 +328,7 @@ public class CatalogResolver implements EntityResolver
 
         /**
          * Sets the ConfigurationInterpolator.
-         * 
+         *
          * @param configurationInterpolator the ConfigurationInterpolator.
          */
         public void setInterpolator(final ConfigurationInterpolator configurationInterpolator)
@@ -338,7 +338,7 @@ public class CatalogResolver implements EntityResolver
 
         /**
          * Gets the ConfigurationInterpolator.
-         * 
+         *
          * @return the ConfigurationInterpolator.
          */
         public ConfigurationInterpolator getInterpolator()
