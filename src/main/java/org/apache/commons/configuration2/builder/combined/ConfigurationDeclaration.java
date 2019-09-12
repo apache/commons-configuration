@@ -76,7 +76,7 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration
         final String result =
                 this.getConfiguration().getString(
                         CombinedConfigurationBuilder.ATTR_AT_RES);
-        return (result == null) ? this.getConfiguration().getString(
+        return result == null ? this.getConfiguration().getString(
                 CombinedConfigurationBuilder.ATTR_AT) : result;
     }
 

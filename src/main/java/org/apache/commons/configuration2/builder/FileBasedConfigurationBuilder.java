@@ -207,7 +207,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      */
     public synchronized FileHandler getFileHandler()
     {
-        return (currentFileHandler != null) ? currentFileHandler
+        return currentFileHandler != null ? currentFileHandler
                 : fetchFileHandlerFromParameters();
     }
 
@@ -279,7 +279,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
     {
         super.initResultInstance(obj);
         final FileHandler srcHandler =
-                (currentFileHandler != null && !resetParameters) ? currentFileHandler
+                currentFileHandler != null && !resetParameters ? currentFileHandler
                         : fetchFileHandlerFromParameters();
         currentFileHandler = new FileHandler(obj, srcHandler);
 

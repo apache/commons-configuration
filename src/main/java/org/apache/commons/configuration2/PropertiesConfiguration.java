@@ -1182,7 +1182,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          */
         public String getLineSeparator()
         {
-            return (lineSeparator != null) ? lineSeparator : LINE_SEPARATOR;
+            return lineSeparator != null ? lineSeparator : LINE_SEPARATOR;
         }
 
         /**
@@ -1357,7 +1357,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          */
         protected String fetchSeparator(final String key, final Object value)
         {
-            return (getGlobalSeparator() != null) ? getGlobalSeparator()
+            return getGlobalSeparator() != null ? getGlobalSeparator()
                     : StringUtils.defaultString(getCurrentSeparator());
         }
     } // class PropertiesWriter

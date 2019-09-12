@@ -62,7 +62,7 @@ public class VFSFileSystem extends DefaultFileSystem
         try
         {
             final FileSystemOptions opts = getOptions(url.getProtocol());
-            file = (opts == null) ? VFS.getManager().resolveFile(url.toString())
+            file = opts == null ? VFS.getManager().resolveFile(url.toString())
                     : VFS.getManager().resolveFile(url.toString(), opts);
             if (file.getType() != FileType.FILE)
             {
@@ -90,7 +90,7 @@ public class VFSFileSystem extends DefaultFileSystem
         {
             final FileSystemOptions opts = getOptions(url.getProtocol());
             final FileSystemManager fsManager = VFS.getManager();
-            final FileObject file = (opts == null) ? fsManager.resolveFile(url.toString())
+            final FileObject file = opts == null ? fsManager.resolveFile(url.toString())
                     : fsManager.resolveFile(url.toString(), opts);
             // throw an exception if the target URL is a directory
             if (file == null || file.getType() == FileType.FOLDER)
@@ -245,8 +245,8 @@ public class VFSFileSystem extends DefaultFileSystem
             if (basePath != null && fileScheme == null)
             {
                 final String scheme = UriParser.extractScheme(basePath);
-                final FileSystemOptions opts = (scheme != null) ? getOptions(scheme) : null;
-                FileObject base = (opts == null) ? fsManager.resolveFile(basePath)
+                final FileSystemOptions opts = scheme != null ? getOptions(scheme) : null;
+                FileObject base = opts == null ? fsManager.resolveFile(basePath)
                         : fsManager.resolveFile(basePath, opts);
                 if (base.getType() == FileType.FILE)
                 {
@@ -257,8 +257,8 @@ public class VFSFileSystem extends DefaultFileSystem
             }
             else
             {
-                final FileSystemOptions opts = (fileScheme != null) ? getOptions(fileScheme) : null;
-                file = (opts == null) ? fsManager.resolveFile(fileName)
+                final FileSystemOptions opts = fileScheme != null ? getOptions(fileScheme) : null;
+                file = opts == null ? fsManager.resolveFile(fileName)
                         : fsManager.resolveFile(fileName, opts);
             }
 

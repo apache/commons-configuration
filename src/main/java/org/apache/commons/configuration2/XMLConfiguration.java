@@ -259,7 +259,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     {
         super(c);
         rootElementName =
-                (c != null) ? c.getRootElementName() : null;
+                c != null ? c.getRootElementName() : null;
         initLogger(new ConfigurationLogger(XMLConfiguration.class));
     }
 
@@ -277,7 +277,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         final Document doc = getDocument();
         if (doc == null)
         {
-            return (rootElementName == null) ? DEFAULT_ROOT_NAME : rootElementName;
+            return rootElementName == null ? DEFAULT_ROOT_NAME : rootElementName;
         }
         return doc.getDocumentElement().getNodeName();
     }
@@ -514,7 +514,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     public Document getDocument()
     {
         final XMLDocumentHelper docHelper = getDocumentHelper();
-        return (docHelper != null) ? docHelper.getDocument() : null;
+        return docHelper != null ? docHelper.getDocument() : null;
     }
 
     /**
@@ -911,7 +911,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         final XMLDocumentHelper docHelper =
                 (XMLDocumentHelper) handler.getReference(handler.getRootNode());
         final XMLDocumentHelper newHelper =
-                (docHelper == null) ? XMLDocumentHelper
+                docHelper == null ? XMLDocumentHelper
                         .forNewDocument(getRootElementName()) : docHelper
                         .createCopy();
 
@@ -1310,7 +1310,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             {
                 element = (Node) reference;
             }
-            return (element != null) ? (Element) elementMapping.get(element)
+            return element != null ? (Element) elementMapping.get(element)
                     : document.getDocumentElement();
         }
 

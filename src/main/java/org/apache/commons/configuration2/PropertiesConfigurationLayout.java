@@ -743,7 +743,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
                 pos++;
             }
 
-            return (pos < s.length()) ? s.substring(pos)
+            return pos < s.length() ? s.substring(pos)
                     : StringUtils.EMPTY;
         }
         return COMMENT_PREFIX + s;
@@ -852,7 +852,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     private static String constructCanonicalComment(final String comment,
             final boolean commentChar)
     {
-        return (comment == null) ? null : trimComment(comment, commentChar);
+        return comment == null ? null : trimComment(comment, commentChar);
     }
 
     /**
@@ -968,7 +968,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
          */
         public String getComment()
         {
-            return (comment == null) ? null : comment.toString();
+            return comment == null ? null : comment.toString();
         }
 
         /**

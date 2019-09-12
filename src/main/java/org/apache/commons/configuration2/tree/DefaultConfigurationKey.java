@@ -498,7 +498,7 @@ public class DefaultConfigurationKey
      */
     private String unescapeDelimiters(final String key)
     {
-        return (getSymbols().getEscapedDelimiter() == null) ? key
+        return getSymbols().getEscapedDelimiter() == null ? key
                 : StringUtils.replace(key, getSymbols()
                         .getEscapedDelimiter(), getSymbols()
                         .getPropertyDelimiter());
@@ -663,7 +663,7 @@ public class DefaultConfigurationKey
          */
         public String currentKey(final boolean decorated)
         {
-            return (decorated && !isPropertyKey()) ? constructAttributeKey(current)
+            return decorated && !isPropertyKey() ? constructAttributeKey(current)
                     : current;
         }
 
