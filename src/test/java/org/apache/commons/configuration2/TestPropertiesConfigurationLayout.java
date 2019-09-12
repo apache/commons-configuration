@@ -26,6 +26,8 @@ import static org.junit.Assert.fail;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URL;
+import java.util.Deque;
 import java.util.Iterator;
 
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
@@ -830,12 +832,12 @@ public class TestPropertiesConfigurationLayout
          * load() call on the layout is invoked.
          */
         @Override
-        boolean propertyLoaded(final String key, final String value)
+        boolean propertyLoaded(final String key, final String value, Deque<URL> seenStack)
                 throws ConfigurationException
         {
             if (builder == null)
             {
-                return super.propertyLoaded(key, value);
+                return super.propertyLoaded(key, value, seenStack);
             }
             if (PropertiesConfiguration.getInclude().equals(key))
             {

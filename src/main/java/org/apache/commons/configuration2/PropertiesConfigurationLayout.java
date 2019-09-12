@@ -19,6 +19,8 @@ package org.apache.commons.configuration2;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URL;
+import java.util.ArrayDeque;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -137,6 +139,9 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
 
     /** Stores the force single line flag. */
     private boolean forceSingleLine;
+
+    /** Seen includes. */
+    private final ArrayDeque<URL> seenStack = new ArrayDeque<>();
 
     /**
      * Creates a new, empty instance of {@code PropertiesConfigurationLayout}.
@@ -486,7 +491,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
             while (reader.nextProperty())
             {
                 if (config.propertyLoaded(reader.getPropertyName(),
-                        reader.getPropertyValue()))
+                        reader.getPropertyValue(), seenStack))
                 {
                     final boolean contained = layoutData.containsKey(reader
                             .getPropertyName());
@@ -653,6 +658,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      */
     private void clear()
     {
+        seenStack.clear();
         layoutData.clear();
         setHeaderComment(null);
         setFooterComment(null);

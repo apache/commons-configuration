@@ -72,6 +72,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-759" due-to="Gary Gregory">
         Update Spring from 4.3.24.RELEASE to 4.3.25.RELEASE.
       </action>
+      <action dev="ggregory" type="fix" issue="CONFIGURATION-760" due-to="Gary Gregory">
+        Properties file using cyclical includes cause a StackOverflowError instead of detecting the misconfiguration.
+      </action>
     </release>
     <release version="2.5" date="2019-05-23"
              description="Minor release with new features and updated dependencies.">

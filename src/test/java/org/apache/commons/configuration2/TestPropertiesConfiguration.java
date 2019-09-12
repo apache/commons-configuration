@@ -49,6 +49,7 @@ import java.net.URLStreamHandler;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -73,8 +74,8 @@ import org.apache.commons.configuration2.io.DefaultFileSystem;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.io.FileSystem;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -1147,8 +1148,82 @@ public class TestPropertiesConfiguration
     }
 
     @Test
-    @Ignore("PropertiesConfiguration does NOT detect cyclical references.")
-    public void testIncludeLoadAllCycliclaReference() throws Exception
+    public void testIncludeLoadCyclicalReferenceFail() throws Exception
+    {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-cyclical-reference.properties");
+        try {
+            handler.load();
+            Assert.fail("Expected " + Configuration.class.getCanonicalName());
+        } catch (ConfigurationException e) {
+            // expected
+            // e.printStackTrace();
+        }
+        assertNull(pc.getString("keyA"));
+    }
+
+    @Test
+    public void testIncludeLoadCyclicalMultiStepReferenceFail() throws Exception
+    {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-cyclical-root.properties");
+        try {
+            handler.load();
+            Assert.fail("Expected " + Configuration.class.getCanonicalName());
+        } catch (ConfigurationException e) {
+            // expected
+            // e.printStackTrace();
+        }
+        assertNull(pc.getString("keyA"));
+    }
+
+    @Test
+    public void testIncludeLoadCyclicalMultiStepReferenceIgnore() throws Exception
+    {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-cyclical-root.properties");
+        handler.load();
+        assertEquals("valueA", pc.getString("keyA"));
+    }
+
+    @Test
+    public void testIncludeIncludeLoadCyclicalReferenceFail() throws Exception
+    {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-include-cyclical-reference.properties");
+        try {
+            handler.load();
+            Assert.fail("Expected " + Configuration.class.getCanonicalName());
+        } catch (ConfigurationException e) {
+            // expected
+            // e.printStackTrace();
+        }
+        assertNull(pc.getString("keyA"));
+    }
+
+    @Test
+    public void testIncludeIncludeLoadCyclicalReferenceIgnore() throws Exception
+    {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-include-cyclical-reference.properties");
+        handler.load();
+        assertEquals("valueA", pc.getString("keyA"));
+    }
+
+    @Test
+    public void testIncludeLoadCyclicalReferenceIgnore() throws Exception
     {
         final PropertiesConfiguration pc = new PropertiesConfiguration();
         pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
@@ -1231,7 +1306,7 @@ public class TestPropertiesConfiguration
     {
         final DummyLayout layout = new DummyLayout();
         conf.setLayout(layout);
-        conf.propertyLoaded("layoutLoadedProperty", "yes");
+        conf.propertyLoaded("layoutLoadedProperty", "yes", null);
         assertEquals("Layout's load() was called", 0, layout.loadCalls);
         assertEquals("Property not added", "yes", conf.getString("layoutLoadedProperty"));
     }
@@ -1244,7 +1319,8 @@ public class TestPropertiesConfiguration
     {
         final DummyLayout layout = new DummyLayout();
         conf.setLayout(layout);
-        conf.propertyLoaded(PropertiesConfiguration.getInclude(), "testClasspath.properties,testEqual.properties");
+        conf.propertyLoaded(PropertiesConfiguration.getInclude(), "testClasspath.properties,testEqual.properties",
+                new ArrayDeque<>());
         assertEquals("Layout's load() was not correctly called", 2, layout.loadCalls);
         assertFalse("Property was added", conf.containsKey(PropertiesConfiguration.getInclude()));
     }
@@ -1259,7 +1335,7 @@ public class TestPropertiesConfiguration
         final DummyLayout layout = new DummyLayout();
         conf.setLayout(layout);
         conf.setIncludesAllowed(false);
-        conf.propertyLoaded(PropertiesConfiguration.getInclude(), "testClassPath.properties,testEqual.properties");
+        conf.propertyLoaded(PropertiesConfiguration.getInclude(), "testClassPath.properties,testEqual.properties", null);
         assertEquals("Layout's load() was called", 0, layout.loadCalls);
         assertFalse("Property was added", conf.containsKey(PropertiesConfiguration.getInclude()));
     }
