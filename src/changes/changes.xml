@@ -48,6 +48,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-755" due-to="Gary Gregory">
         [CVE-2014-0114] Update Apache Commons BeanUtils from 1.9.3 to 1.9.4.
       </action>
+      <action dev="ggregory" type="update" due-to="Kevin Wang">
+        Fix syntax in user guide documentation #33.
+      </action>
     </release>
     <release version="2.5" date="2019-05-23"
              description="Minor release with new features and updated dependencies.">
