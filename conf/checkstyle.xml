@@ -59,6 +59,9 @@
         <property name="message" value="Line has trailing spaces."/>
     </module>
     <module name="FileLength"/>
+    <module name="LineLength">
+        <property name="max" value="120"/>
+    </module>
 
     <module name="TreeWalker">
 
@@ -101,9 +104,6 @@
 
         <!-- Checks for Size Violations.                    -->
         <!-- See http://checkstyle.sf.net/config_sizes.html -->
-        <module name="LineLength">
-            <property name="max" value="120"/>
-        </module>
         <module name="MethodLength"/>
         <module name="ParameterNumber"/>
 

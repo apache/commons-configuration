@@ -573,6 +573,7 @@
     <commons.jacoco.version>0.8.4</commons.jacoco.version>
     <commons.spotbugs.version>3.1.12.2</commons.spotbugs.version>
     <commons.javadoc.version>3.1.1</commons.javadoc.version>
+    <checkstyle.version>8.24</checkstyle.version>
 
     <!-- Commons Release Plugin -->
     <commons.bc.version>2.5</commons.bc.version>
@@ -633,6 +634,13 @@
             </sourceDirectories>
             <excludes>**/org/apache/commons/configuration2/plist/*.java</excludes>
           </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>${checkstyle.version}</version>
+            </dependency>
+          </dependencies>
         </plugin>
       </plugins>
     </pluginManagement>
