@@ -367,7 +367,7 @@ PropertiesConfiguration config = builder.getConfiguration();
         configured.
       </p>
 <source><![CDATA[
-user.file = ${expr:System.getProperty("user.home"}/settings.xml
+user.file = ${expr:System.getProperty("user.home")}/settings.xml
 ]]></source>
       <p>
         <code>ExprLookup</code> is not enabled by default, it must be manually added or configured via
