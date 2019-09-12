@@ -644,7 +644,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      *
      * @param key the property key
      * @param value the property value
-     * @param seenStack TODO
+     * @param seenStack the stack of seen include URLs
      * @return a flag whether this is a normal property
      * @throws ConfigurationException if an error occurs
      * @since 1.3
