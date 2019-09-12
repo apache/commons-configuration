@@ -192,11 +192,11 @@ public class CatalogResolver implements EntityResolver
                     throw new ConfigurationException("Could not locate "
                             + resolved);
                 }
-                final InputStream is = fs.getInputStream(url);
-                final InputSource iSource = new InputSource(resolved);
-                iSource.setPublicId(publicId);
-                iSource.setByteStream(is);
-                return iSource;
+                final InputStream inputStream = fs.getInputStream(url);
+                final InputSource inputSource = new InputSource(resolved);
+                inputSource.setPublicId(publicId);
+                inputSource.setByteStream(inputStream);
+                return inputSource;
             }
             catch (final Exception e)
             {
@@ -240,7 +240,7 @@ public class CatalogResolver implements EntityResolver
      */
     private void initLogger(final ConfigurationLogger log)
     {
-        this.log = (log != null) ? log : ConfigurationLogger.newDummyLogger();
+        this.log = log != null ? log : ConfigurationLogger.newDummyLogger();
     }
 
     private synchronized org.apache.xml.resolver.tools.CatalogResolver getResolver()
@@ -416,14 +416,14 @@ public class CatalogResolver implements EntityResolver
                     final String fileName = catalogs.elementAt(count);
 
                     URL url = null;
-                    InputStream is = null;
+                    InputStream inputStream = null;
 
                     try
                     {
                         url = locate(fs, base, fileName);
                         if (url != null)
                         {
-                            is = fs.getInputStream(url);
+                            inputStream = fs.getInputStream(url);
                         }
                     }
                     catch (final ConfigurationException ce)
@@ -433,14 +433,14 @@ public class CatalogResolver implements EntityResolver
                         catalogManager.debug.message(DEBUG_ALL,
                             "Unable to get input stream for " + name + ". " + ce.getMessage());
                     }
-                    if (is != null)
+                    if (inputStream != null)
                     {
                         final String mimeType = fileNameMap.getContentTypeFor(fileName);
                         try
                         {
                             if (mimeType != null)
                             {
-                                parseCatalog(mimeType, is);
+                                parseCatalog(mimeType, inputStream);
                                 continue;
                             }
                         }
@@ -453,7 +453,7 @@ public class CatalogResolver implements EntityResolver
                         }
                         finally
                         {
-                            is.close();
+                            inputStream.close();
                         }
                     }
                     parseCatalog(base, fileName);
@@ -480,11 +480,11 @@ public class CatalogResolver implements EntityResolver
             for (int count = 0; !parsed && count < readerArr.size(); count++)
             {
                 final CatalogReader reader = (CatalogReader) readerArr.get(count);
-                InputStream inStream;
+                InputStream inputStream;
 
                 try
                 {
-                    inStream = fs.getInputStream(base);
+                    inputStream = fs.getInputStream(base);
                 }
                 catch (final Exception ex)
                 {
@@ -495,7 +495,7 @@ public class CatalogResolver implements EntityResolver
 
                 try
                 {
-                    reader.readCatalog(this, inStream);
+                    reader.readCatalog(this, inputStream);
                     parsed = true;
                 }
                 catch (final CatalogException ce)
@@ -513,12 +513,12 @@ public class CatalogResolver implements EntityResolver
                 {
                     try
                     {
-                        inStream.close();
+                        inputStream.close();
                     }
                     catch (final IOException ioe)
                     {
                         // Ignore the exception.
-                        inStream = null;
+                        inputStream = null;
                     }
                 }
             }
