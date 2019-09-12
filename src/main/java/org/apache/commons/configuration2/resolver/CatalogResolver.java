@@ -167,6 +167,7 @@ public class CatalogResolver implements EntityResolver
      * @return An InputSource for the mapped identifier, or null.
      * @throws SAXException if an error occurs.
      */
+    @SuppressWarnings("resource") // InputSource wraps an InputStream.
     @Override
     public InputSource resolveEntity(final String publicId, final String systemId)
             throws SAXException
