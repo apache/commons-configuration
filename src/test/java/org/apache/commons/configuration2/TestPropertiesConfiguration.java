@@ -775,7 +775,7 @@ public class TestPropertiesConfiguration
         for (final Object key : jup.keySet())
         {
             final String keyString = key.toString();
-            System.out.println(keyString);
+            // System.out.println(keyString);
             assertEquals("Wrong property value for '" + keyString + "'", jup.getProperty(keyString),
                     conf.getProperty(keyString));
         }
