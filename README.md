@@ -46,7 +46,7 @@ Apache Commons Configuration
 [![Build Status](https://travis-ci.org/apache/commons-configuration.svg)](https://travis-ci.org/apache/commons-configuration)
 [![Coverage Status](https://coveralls.io/repos/apache/commons-configuration/badge.svg)](https://coveralls.io/r/apache/commons-configuration)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-configuration2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-configuration2/)
-[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-configuration2/2.5.svg)](https://javadoc.io/doc/org.apache.commons/commons-configuration2/2.5)
+[![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-configuration2/2.6.svg)](https://javadoc.io/doc/org.apache.commons/commons-configuration2/2.6)
 
 Tools to assist in the reading of configuration/preferences files in
         various formats
@@ -68,7 +68,7 @@ Alternatively you can pull it from the central Maven repositories:
 <dependency>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-configuration2</artifactId>
-  <version>2.5</version>
+  <version>2.6</version>
 </dependency>
 ```
 
