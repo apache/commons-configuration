@@ -51,6 +51,9 @@
       <action dev="ggregory" type="update" due-to="Kevin Wang">
         Fix syntax in user guide documentation #33.
       </action>
+      <action dev="ggregory" type="add" issue="CONFIGURATION-756" due-to="Gary Gregory">
+        Allow for custom behavior to handle errors loading included properties files.
+      </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-757" due-to="Gary Gregory">
         Update org.yaml:snakeyaml from 1.24 to 1.25.
       </action>
