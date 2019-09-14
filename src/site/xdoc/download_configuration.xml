@@ -148,12 +148,12 @@ limitations under the License.
         <table>
           <tr>
               <td><a href="[preferred]/commons/configuration/binaries/commons-configuration-1.10-bin.tar.gz">commons-configuration-1.10-bin.tar.gz</a></td>
-              <td><a href="https://www.apache.org/dist/commons/configuration/binaries/commons-configuration-1.10-bin.tar.gz.sha512">sha512</a></td>
+              <td><a href="https://www.apache.org/dist/commons/configuration/binaries/commons-configuration-1.10-bin.tar.gz.sha256">sha256</a></td>
               <td><a href="https://www.apache.org/dist/commons/configuration/binaries/commons-configuration-1.10-bin.tar.gz.asc">pgp</a></td>
           </tr>
           <tr>
               <td><a href="[preferred]/commons/configuration/binaries/commons-configuration-1.10-bin.zip">commons-configuration-1.10-bin.zip</a></td>
-              <td><a href="https://www.apache.org/dist/commons/configuration/binaries/commons-configuration-1.10-bin.zip.sha512">sha512</a></td>
+              <td><a href="https://www.apache.org/dist/commons/configuration/binaries/commons-configuration-1.10-bin.zip.sha256">sha256</a></td>
               <td><a href="https://www.apache.org/dist/commons/configuration/binaries/commons-configuration-1.10-bin.zip.asc">pgp</a></td>
           </tr>
         </table>
@@ -162,12 +162,12 @@ limitations under the License.
         <table>
           <tr>
               <td><a href="[preferred]/commons/configuration/source/commons-configuration-1.10-src.tar.gz">commons-configuration-1.10-src.tar.gz</a></td>
-              <td><a href="https://www.apache.org/dist/commons/configuration/source/commons-configuration-1.10-src.tar.gz.sha512">sha512</a></td>
+              <td><a href="https://www.apache.org/dist/commons/configuration/source/commons-configuration-1.10-src.tar.gz.sha256">sha256</a></td>
               <td><a href="https://www.apache.org/dist/commons/configuration/source/commons-configuration-1.10-src.tar.gz.asc">pgp</a></td>
           </tr>
           <tr>
               <td><a href="[preferred]/commons/configuration/source/commons-configuration-1.10-src.zip">commons-configuration-1.10-src.zip</a></td>
-              <td><a href="https://www.apache.org/dist/commons/configuration/source/commons-configuration-1.10-src.zip.sha512">sha512</a></td>
+              <td><a href="https://www.apache.org/dist/commons/configuration/source/commons-configuration-1.10-src.zip.sha256">sha256</a></td>
               <td><a href="https://www.apache.org/dist/commons/configuration/source/commons-configuration-1.10-src.zip.asc">pgp</a></td>
           </tr>
         </table>
