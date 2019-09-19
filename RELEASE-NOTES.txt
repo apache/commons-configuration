@@ -53,7 +53,7 @@ patches, or suggestions for improvement, see the Apache Apache Commons Configura
 
 https://commons.apache.org/proper/commons-configuration/
 
-Download it from https://commons.apache.org/proper/commons-configuration//download_text.cgi
+Download it from https://commons.apache.org/proper/commons-configuration/download_configuration.cgi
 
 =============================================================================
 
