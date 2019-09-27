@@ -79,6 +79,7 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry
      * @return an input source for the specified entity
      * @throws org.xml.sax.SAXException if a parsing exception occurs
      */
+    @SuppressWarnings("resource") // The stream is managed by the InputSource returned by this method.
     @Override
     public InputSource resolveEntity(final String publicId, final String systemId)
             throws SAXException
