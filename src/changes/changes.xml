@@ -36,6 +36,9 @@
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         com.puppycrawl.tools:checkstyle 8.24 -> 8.25.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-763" due-to="Gary Gregory">
+        Update com.fasterxml.jackson.core:jackson-databind from 2.9.9 to 2.10.0.
+      </action>
     </release>
     <release version="2.6" date="2019-09-13"
              description="Minor release with new features and updated dependencies.">
