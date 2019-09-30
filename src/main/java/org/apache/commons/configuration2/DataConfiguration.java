@@ -99,6 +99,12 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class DataConfiguration extends AbstractConfiguration
 {
+    /** The key of the property storing the user defined date format. */
+    public static final String DATE_FORMAT_KEY = "org.apache.commons.configuration.format.date";
+
+    /** The default format for dates. */
+    public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
     /** Empty array constant. */
     private static final URL[] EMPTY_URL_ARRAY = new URL[0];
 
@@ -122,12 +128,6 @@ public class DataConfiguration extends AbstractConfiguration
 
     /** Empty array constant. */
     private static final BigDecimal[] EMPTY_BIG_DECIMAL_ARRAY = new BigDecimal[0];
-
-    /** The key of the property storing the user defined date format. */
-    public static final String DATE_FORMAT_KEY = "org.apache.commons.configuration.format.date";
-
-    /** The default format for dates. */
-    public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /** Stores temporary date formats. */
     private static final ThreadLocal<String> TEMP_DATE_FORMAT = new ThreadLocal<>();
