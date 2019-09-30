@@ -25,6 +25,12 @@
   </properties>
 
   <body>
+    <release version="2.6.1" date="2019-09-13"
+             description="Minor release with new features and updated dependencies.">
+      <action dev="ggregory" type="fix" issue="CONFIGURATION-761" due-to="Gary Gregory">
+        Single argument DataConfiguration APIs always create empty arrays.
+      </action>
+    </release>
     <release version="2.6" date="2019-09-13"
              description="Minor release with new features and updated dependencies.">
       <action dev="ggregory" type="fix" issue="CONFIGURATION-750" due-to="Jason Pickens, Gary Gregory, Emmanuel Bourg">
