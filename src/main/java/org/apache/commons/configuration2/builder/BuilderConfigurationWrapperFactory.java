@@ -297,7 +297,7 @@ public class BuilderConfigurationWrapperFactory
          * @return the return value of the method
          * @throws Exception if an error occurs
          */
-        private Object handleEventSourceInvocation(final Method method, final Object[] args)
+        private Object handleEventSourceInvocation(final Method method, final Object... args)
                 throws Exception
         {
             final Object target =

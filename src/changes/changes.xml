@@ -30,6 +30,9 @@
       <action dev="ggregory" type="fix" issue="CONFIGURATION-761" due-to="Gary Gregory">
         Single argument DataConfiguration APIs always create empty arrays.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-762" due-to="Gary Gregory">
+        Use variable arguments.
+      </action>
     </release>
     <release version="2.6" date="2019-09-13"
              description="Minor release with new features and updated dependencies.">

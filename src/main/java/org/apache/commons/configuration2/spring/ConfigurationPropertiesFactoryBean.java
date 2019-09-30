@@ -143,7 +143,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      *
      * @param configurations commons configurations objects which will be used as properties.
      */
-    public void setConfigurations(final Configuration[] configurations)
+    public void setConfigurations(final Configuration... configurations)
     {
         this.configurations = defensiveCopy(configurations);
     }
@@ -160,7 +160,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      *
      * @param locations resources of configuration files
      */
-    public void setLocations(final Resource[] locations)
+    public void setLocations(final Resource... locations)
     {
         this.locations = defensiveCopy(locations);
     }

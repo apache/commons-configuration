@@ -286,7 +286,7 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of booleans.
      */
-    public boolean[] getBooleanArray(final String key, final boolean[] defaultValue)
+    public boolean[] getBooleanArray(final String key, final boolean... defaultValue)
     {
         return get(boolean[].class, key, defaultValue);
     }
@@ -351,7 +351,7 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of bytes.
      */
-    public byte[] getByteArray(final String key, final byte[] defaultValue)
+    public byte[] getByteArray(final String key, final byte... defaultValue)
     {
         return get(byte[].class, key, defaultValue);
     }
@@ -416,7 +416,7 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of shorts.
      */
-    public short[] getShortArray(final String key, final short[] defaultValue)
+    public short[] getShortArray(final String key, final short... defaultValue)
     {
         return get(short[].class, key, defaultValue);
     }
@@ -482,7 +482,7 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of integers.
      */
-    public int[] getIntArray(final String key, final int[] defaultValue)
+    public int[] getIntArray(final String key, final int... defaultValue)
     {
         return get(int[].class, key, defaultValue);
     }
@@ -547,7 +547,7 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of longs.
      */
-    public long[] getLongArray(final String key, final long[] defaultValue)
+    public long[] getLongArray(final String key, final long... defaultValue)
     {
         return get(long[].class, key, defaultValue);
     }
@@ -612,7 +612,7 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of floats.
      */
-    public float[] getFloatArray(final String key, final float[] defaultValue)
+    public float[] getFloatArray(final String key, final float... defaultValue)
     {
         return get(float[].class, key, defaultValue);
     }
@@ -678,7 +678,7 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of doubles.
      */
-    public double[] getDoubleArray(final String key, final double[] defaultValue)
+    public double[] getDoubleArray(final String key, final double... defaultValue)
     {
         return get(double[].class, key, defaultValue);
     }
@@ -743,7 +743,7 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of BigIntegers.
      */
-    public BigInteger[] getBigIntegerArray(final String key, final BigInteger[] defaultValue)
+    public BigInteger[] getBigIntegerArray(final String key, final BigInteger... defaultValue)
     {
         return get(BigInteger[].class, key, defaultValue);
     }
@@ -808,7 +808,7 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of BigDecimals.
      */
-    public BigDecimal[] getBigDecimalArray(final String key, final BigDecimal[] defaultValue)
+    public BigDecimal[] getBigDecimalArray(final String key, final BigDecimal... defaultValue)
     {
         return get(BigDecimal[].class, key, defaultValue);
     }
@@ -870,7 +870,7 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of URIs.
      */
-    public URI[] getURIArray(final String key, final URI[] defaultValue)
+    public URI[] getURIArray(final String key, final URI... defaultValue)
     {
         return get(URI[].class, key, defaultValue);
     }
@@ -996,7 +996,7 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of URLs.
      */
-    public URL[] getURLArray(final String key, final URL[] defaultValue)
+    public URL[] getURLArray(final String key, final URL... defaultValue)
     {
         return get(URL[].class, key, defaultValue);
     }
@@ -1212,7 +1212,7 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of Dates.
      */
-    public Date[] getDateArray(final String key, final Date[] defaultValue)
+    public Date[] getDateArray(final String key, final Date... defaultValue)
     {
         return getDateArray(key, defaultValue, null);
     }
@@ -1469,7 +1469,7 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of Calendars.
      */
-    public Calendar[] getCalendarArray(final String key, final Calendar[] defaultValue)
+    public Calendar[] getCalendarArray(final String key, final Calendar... defaultValue)
     {
         return getCalendarArray(key, defaultValue, null);
     }
@@ -1603,7 +1603,7 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of Locales.
      */
-    public Locale[] getLocaleArray(final String key, final Locale[] defaultValue)
+    public Locale[] getLocaleArray(final String key, final Locale... defaultValue)
     {
         return get(Locale[].class, key, defaultValue);
     }
@@ -1699,7 +1699,7 @@ public class DataConfiguration extends AbstractConfiguration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of Colors.
      */
-    public Color[] getColorArray(final String key, final Color[] defaultValue)
+    public Color[] getColorArray(final String key, final Color... defaultValue)
     {
         return get(Color[].class, key, defaultValue);
     }

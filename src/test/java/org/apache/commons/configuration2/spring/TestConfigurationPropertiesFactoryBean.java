@@ -56,9 +56,7 @@ public class TestConfigurationPropertiesFactoryBean
     @Test
     public void testGetObject() throws Exception
     {
-        configurationFactory.setConfigurations(new Configuration[] {
-                new BaseConfiguration()
-        });
+        configurationFactory.setConfigurations(new BaseConfiguration());
         Assert.assertNull(configurationFactory.getObject());
         configurationFactory.afterPropertiesSet();
         Assert.assertNotNull(configurationFactory.getObject());
@@ -77,9 +75,7 @@ public class TestConfigurationPropertiesFactoryBean
                 new PropertiesConfigurationLayout();
         layout.load(two, new StringReader(properties));
 
-        configurationFactory.setConfigurations(new Configuration[] {
-                one, two
-        });
+        configurationFactory.setConfigurations(one, two);
         configurationFactory.afterPropertiesSet();
         final Properties props = configurationFactory.getObject();
         Assert.assertEquals("foo", props.getProperty("bar"));
@@ -89,12 +85,8 @@ public class TestConfigurationPropertiesFactoryBean
     @Test
     public void testLoadResources() throws Exception
     {
-        configurationFactory.setLocations(new Resource[] {
-                new ClassPathResource("testConfigurationFactoryBean.file")
-        });
-        configurationFactory.setConfigurations(new Configuration[] {
-                new BaseConfiguration()
-        });
+        configurationFactory.setLocations(new ClassPathResource("testConfigurationFactoryBean.file"));
+        configurationFactory.setConfigurations(new BaseConfiguration());
         configurationFactory.afterPropertiesSet();
 
         final Properties props = configurationFactory.getObject();
