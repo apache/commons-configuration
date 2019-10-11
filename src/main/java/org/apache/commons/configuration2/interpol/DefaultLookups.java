@@ -87,7 +87,7 @@ public enum DefaultLookups
      *
      * @since 2.4
      */
-    DATE(StringLookupFactory.KEY_DATE, new StringLookupAdapter(StringLookupFactory.INSTANCE.dateStringLookup())),
+    DATE(StringLookupFactory.KEY_DATE, new StringLookupCatchExceptionAdapter(StringLookupFactory.INSTANCE.dateStringLookup())),
 
     /**
      * The lookup for DNS.

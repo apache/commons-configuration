@@ -46,6 +46,9 @@
        <action issue="CONFIGURATION-805" type="update" dev="ggregory" due-to="Roman Zaynetdinov">
          [Javadoc] Specify that typed getList returns null for missing key #100.
        </action>
+       <action issue="CONFIGURATION-764" type="update" dev="ningzhangnj"  due-to="Ning Zhang">
+         Default date lookup can not work for some specific format
+       </action>
        <!-- ADD -->
        <action type="update" dev="ggregory" due-to="SethiPandi">
          Implement Iterable in ImmutableNode #74.
