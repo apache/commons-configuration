@@ -1044,7 +1044,18 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     @Override
     public void write(final Writer writer) throws ConfigurationException, IOException
     {
-        final Transformer transformer = createTransformer();
+        write(writer, createTransformer());
+    }
+
+    /**
+     * Saves the configuration to the specified writer.
+     * 
+     * @param writer the writer used to save the configuration.
+     * @param transformer How to transform this configuration.
+     * @throws ConfigurationException if an error occurs.
+     * @since 2.7.0
+     */
+    public void write(final Writer writer, final Transformer transformer) throws ConfigurationException {
         final Source source = new DOMSource(createDocument());
         final Result result = new StreamResult(writer);
         XMLDocumentHelper.transform(transformer, source, result);
