@@ -17,7 +17,6 @@
 -->
 <!-- Test configuration definition file that contains a declaration of a
      custom file system to be applied to a sub configuration.
-     $Id$
 -->
 
 <configuration>

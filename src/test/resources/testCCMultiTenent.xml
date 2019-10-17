@@ -18,7 +18,6 @@
 <!-- Test configuration definition file that includes a builder for
      multiple configuration files. It collaborates with a
      DynamicCombinedConfiguration.
-     $Id$
 -->
 <configuration>
   <header>

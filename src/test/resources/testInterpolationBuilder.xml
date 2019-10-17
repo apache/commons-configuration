@@ -20,7 +20,6 @@
   configuration sources created by a DefaultConfigurationBuilder.
   This configuration definition file for a DefaultConfigurationBuilder
   references multiple sources which contain variable references.
-  $Id$
 -->
 <configuration>
   <system/>

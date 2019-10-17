@@ -17,7 +17,6 @@
 -->
 <!-- Test configuration definition file that includes a source with
      environment properties.
-     $Id$
 -->
 <configuration systemProperties="test.properties.xml">
   <env/>

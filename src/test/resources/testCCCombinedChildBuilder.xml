@@ -18,7 +18,6 @@
 <!-- Test configuration definition file that includes another source for a
      combined configuration. Some basic properties are defined to test the
      inheritance of properties.
-     $Id$
 -->
 
 <configuration>

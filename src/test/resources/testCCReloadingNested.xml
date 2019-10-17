@@ -17,7 +17,6 @@
 -->
 <!-- Test configuration definition file that contains a nested combined
      configuration definition with reloading support.
-     $Id$
 -->
 
 <configuration>

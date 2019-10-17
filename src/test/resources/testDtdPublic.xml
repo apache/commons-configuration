@@ -17,7 +17,6 @@
 -->
 <!-- Tests whether the DOCTYPE declaration is correctly parsed when loaded from
      XMLConfiguration.
-     $Id$
 -->
 <!DOCTYPE properties PUBLIC "-//Commons Configuration//DTD Test Configuration 1.3//EN"
   "properties.dtd">
