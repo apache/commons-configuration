@@ -20,7 +20,6 @@
 -->
 <!-- ===================================================================== -->
 <!-- Checkstyle configuration that checks the commons-configuration coding conventions -->
-<!-- $Id$ -->
 <!-- ===================================================================== -->
 
 <module name="Checker">
