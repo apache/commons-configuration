@@ -28,6 +28,7 @@ import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
 import org.apache.commons.configuration2.ex.ConversionException;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -38,6 +39,35 @@ public class TestPropertyConverter
 {
     /** Constant for an enumeration class used by some tests. */
     private static final Class<ElementType> ENUM_CLASS = ElementType.class;
+
+    /**
+     * See CONFIGURATION-766.
+     */
+    @Test
+    @Ignore
+    public void testToBigDecimalStringConstructor()
+    {
+        // If the conversion uses new BigDecimal(0.1) the result is not exact due to round off.
+        // The result is 0.1000000000000000055511151231257827021181583404541015625.
+        // See Sonar rule: https://rules.sonarsource.com/java/type/Bug/RSPEC-2111
+        final double d = 0.1;
+        assertEquals("Incorrect BigDecimal value", new BigDecimal(Double.toString(d)), 
+            PropertyConverter.toBigDecimal(d));
+    }
+
+    /**
+     * See CONFIGURATION-766.
+     */
+    @Test
+    public void testToBigDecimalDoubleConstructor()
+    {
+        // If the conversion uses new BigDecimal(0.1) the result is not exact due to round off.
+        // The result is 0.1000000000000000055511151231257827021181583404541015625.
+        // See Sonar rule: https://rules.sonarsource.com/java/type/Bug/RSPEC-2111
+        final double d = 0.1;
+        assertEquals("Incorrect BigDecimal value", new BigDecimal(d), 
+            PropertyConverter.toBigDecimal(d));
+    }
 
     /**
      * Tests conversion to files when the passed in objects are already
@@ -305,4 +335,5 @@ public class TestPropertyConverter
                         new DefaultConversionHandler());
         assertEquals("Wrong resulting string", "42", result);
     }
+    
 }
