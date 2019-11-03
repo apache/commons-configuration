@@ -1784,6 +1784,7 @@ public class TestXMLConfiguration
         // Check that we can parse the XML.
         Assert.assertNotNull(parseXml(sw.toString()));
     }
+
     /**
      * Tests accessing properties when the XPATH expression engine is set.
      */
