@@ -41,6 +41,9 @@
       <action dev="ggregory" type="add" issue="CONFIGURATION-765" due-to="Gary Gregory">
         Refactor XMLConfiguration.write(Writer) to add XMLConfiguration.write(Writer, Transformer).
       </action>
+      <action dev="ggregory" type="fix" issue="CONFIGURATION-767" due-to="Gary Gregory">
+        NullPointerException in XMLConfiguration#createTransformer() when no FileLocator is set.
+      </action>
     </release>
     <release version="2.6" date="2019-09-13"
              description="Minor release with new features and updated dependencies.">

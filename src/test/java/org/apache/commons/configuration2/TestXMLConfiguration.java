@@ -26,20 +26,22 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.apache.commons.configuration2.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
@@ -52,10 +54,12 @@ import org.apache.commons.configuration2.resolver.CatalogResolver;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.NodeStructureHelper;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -228,6 +232,11 @@ public class TestXMLConfiguration
             }
         });
         return builder;
+    }
+
+    private Document parseXml(final String xml) throws SAXException, IOException, ParserConfigurationException {
+        return DocumentBuilderFactory.newInstance().newDocumentBuilder()
+                .parse(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
     }
 
     /**
@@ -965,12 +974,12 @@ public class TestXMLConfiguration
         assertEquals("three", list.get(1));
     }
 
+
     @Test
     public void testGetProperty()
     {
         assertEquals("value", conf.getProperty("element"));
     }
-
 
     @Test
     public void testGetPropertyWithXMLEntity()
@@ -1764,7 +1773,17 @@ public class TestXMLConfiguration
         conf.setValidating(true);
         load(conf, "testValidateInvalid.xml");
     }
-
+    
+    @Test
+    public void testWrite() throws Exception
+    {
+        XMLConfiguration xmlConfig = new XMLConfiguration();
+        xmlConfig.setRootElementName("IAmRoot");
+        StringWriter sw = new StringWriter();
+        xmlConfig.write(sw);
+        // Check that we can parse the XML.
+        Assert.assertNotNull(parseXml(sw.toString()));
+    }
     /**
      * Tests accessing properties when the XPATH expression engine is set.
      */

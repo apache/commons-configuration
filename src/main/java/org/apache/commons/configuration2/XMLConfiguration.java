@@ -881,19 +881,17 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         final Transformer transformer = XMLDocumentHelper.createTransformer();
 
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        if (locator.getEncoding() != null)
+        if (locator != null && locator.getEncoding() != null)
         {
             transformer.setOutputProperty(OutputKeys.ENCODING, locator.getEncoding());
         }
         if (publicID != null)
         {
-            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC,
-                    publicID);
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, publicID);
         }
         if (systemID != null)
         {
-            transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
-                    systemID);
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, systemID);
         }
 
         return transformer;
