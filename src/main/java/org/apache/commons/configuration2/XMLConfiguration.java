@@ -875,7 +875,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     /**
      * Creates and initializes the transformer used for save operations. This
      * base implementation initializes all of the default settings like
-     * indention mode and the DOCTYPE. Derived classes may overload this method
+     * indentation mode and the DOCTYPE. Derived classes may overload this method
      * if they have specific needs.
      *
      * @return the transformer to use for a save operation
