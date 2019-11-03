@@ -192,8 +192,14 @@ import org.xml.sax.helpers.DefaultHandler;
 public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         FileBasedConfiguration, FileLocatorAware, InputStreamSupport
 {
+    /** Constant for output property name used on a transformer to specify the indent amount. */
+    static final String INDENT_AMOUNT_PROPERTY = "{http://xml.apache.org/xslt}indent-amount";
+
     /** Constant for the default root element name. */
     private static final String DEFAULT_ROOT_NAME = "configuration";
+
+    /** Constant for the default indent size. */
+    static final int DEFAULT_INDENT_SIZE = 2;
 
     /** Constant for the name of the space attribute.*/
     private static final String ATTR_SPACE = "xml:space";
@@ -881,6 +887,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         final Transformer transformer = XMLDocumentHelper.createTransformer();
 
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(INDENT_AMOUNT_PROPERTY, Integer.toString(DEFAULT_INDENT_SIZE));
         if (locator != null && locator.getEncoding() != null)
         {
             transformer.setOutputProperty(OutputKeys.ENCODING, locator.getEncoding());

@@ -41,6 +41,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.apache.commons.configuration2.SynchronizerTestImpl.Methods;
@@ -54,6 +55,7 @@ import org.apache.commons.configuration2.resolver.CatalogResolver;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.NodeStructureHelper;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -1783,6 +1785,38 @@ public class TestXMLConfiguration
         xmlConfig.write(sw);
         // Check that we can parse the XML.
         Assert.assertNotNull(parseXml(sw.toString()));
+    }
+
+    @Test
+    public void testWriteIndentSize() throws Exception
+    {
+        XMLConfiguration xmlConfig = new XMLConfiguration();
+        xmlConfig.setRootElementName("IAmRoot");
+        StringWriter sw = new StringWriter();
+        xmlConfig.setProperty("Child", "Alexander");
+        xmlConfig.write(sw);
+        // Check that we can parse the XML.
+        final String xml = sw.toString();
+        Assert.assertNotNull(parseXml(xml));
+        final String indent = StringUtils.repeat(' ', XMLConfiguration.DEFAULT_INDENT_SIZE);
+        Assert.assertTrue(xml.contains(System.lineSeparator() + indent + "<Child>"));
+    }
+
+    @Test
+    public void testWriteWithTransformer() throws Exception
+    {
+        XMLConfiguration xmlConfig = new XMLConfiguration();
+        xmlConfig.setRootElementName("IAmRoot");
+        xmlConfig.setProperty("Child", "Alexander");
+        StringWriter sw = new StringWriter();
+        final Transformer transformer = xmlConfig.createTransformer();
+        final int indentSize = 8;
+        transformer.setOutputProperty(XMLConfiguration.INDENT_AMOUNT_PROPERTY, Integer.toString(indentSize));
+        xmlConfig.write(sw, transformer);
+        final String xml = sw.toString();
+        Assert.assertNotNull(parseXml(xml));
+        final String indent = StringUtils.repeat(' ', indentSize);
+        Assert.assertTrue(xml.contains(System.lineSeparator() + indent + "<Child>"));
     }
 
     /**
