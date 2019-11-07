@@ -192,6 +192,12 @@ import org.xml.sax.helpers.DefaultHandler;
 public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         FileBasedConfiguration, FileLocatorAware, InputStreamSupport
 {
+    /** Constant for the default indent size. */
+    static final int DEFAULT_INDENT_SIZE = 2;
+
+    /** Constant for output property name used on a transformer to specify the indent amount. */
+    static final String INDENT_AMOUNT_PROPERTY = "{http://xml.apache.org/xslt}indent-amount";
+
     /** Constant for the default root element name. */
     private static final String DEFAULT_ROOT_NAME = "configuration";
 
@@ -869,7 +875,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     /**
      * Creates and initializes the transformer used for save operations. This
      * base implementation initializes all of the default settings like
-     * indention mode and the DOCTYPE. Derived classes may overload this method
+     * indentation mode and the DOCTYPE. Derived classes may overload this method
      * if they have specific needs.
      *
      * @return the transformer to use for a save operation
@@ -881,19 +887,18 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         final Transformer transformer = XMLDocumentHelper.createTransformer();
 
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        if (locator.getEncoding() != null)
+        transformer.setOutputProperty(INDENT_AMOUNT_PROPERTY, Integer.toString(DEFAULT_INDENT_SIZE));
+        if (locator != null && locator.getEncoding() != null)
         {
             transformer.setOutputProperty(OutputKeys.ENCODING, locator.getEncoding());
         }
         if (publicID != null)
         {
-            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC,
-                    publicID);
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, publicID);
         }
         if (systemID != null)
         {
-            transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
-                    systemID);
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, systemID);
         }
 
         return transformer;
@@ -1049,13 +1054,14 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
 
     /**
      * Saves the configuration to the specified writer.
-     * 
+     *
      * @param writer the writer used to save the configuration.
      * @param transformer How to transform this configuration.
      * @throws ConfigurationException if an error occurs.
      * @since 2.7.0
      */
-    public void write(final Writer writer, final Transformer transformer) throws ConfigurationException {
+    public void write(final Writer writer, final Transformer transformer) throws ConfigurationException
+    {
         final Source source = new DOMSource(createDocument());
         final Result result = new StreamResult(writer);
         XMLDocumentHelper.transform(transformer, source, result);
