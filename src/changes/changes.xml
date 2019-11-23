@@ -45,6 +45,9 @@
       <action dev="ggregory" type="fix" issue="CONFIGURATION-768" due-to="Gary Gregory">
         XMLConfiguration#write does not indent XML elements.
       </action>
+      <action dev="ggregory" type="fix" issue="CONFIGURATION-771" due-to="Gary Gregory">
+        Update com.fasterxml.jackson.core:jackson-databind 2.10.0 -> 2.10.1.
+      </action>
     </release>
     <release version="2.6" date="2019-09-13"
              description="Minor release with new features and updated dependencies.">
