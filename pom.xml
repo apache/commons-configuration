@@ -441,6 +441,16 @@
       <artifactId>dbunit</artifactId>
       <version>2.6.0</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.poi</groupId>
+          <artifactId>poi-ooxml</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>postgresql</groupId>
+          <artifactId>postgresql</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
