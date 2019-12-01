@@ -214,9 +214,9 @@ FileBasedConfigurationBuilder<FileBasedConfiguration> builder =
     new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
     .configure(params.properties()
         .setFileName("usergui.properties")
-        .setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        .setListDelimiterHandler(new DefaultListDelimiterHandler(',')));
 Configuration config = builder.getConfiguration();
-config.setProperty("colors.background", "#000000);
+config.setProperty("colors.background", "#000000");
 builder.save();
 ]]></source>
         <p>
