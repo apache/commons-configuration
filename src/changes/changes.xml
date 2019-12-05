@@ -15,8 +15,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<!-- ===================================================================== -->
-<!-- ===================================================================== -->
 <document>
   <properties>
     <title>Apache Commons Configuration Release Notes</title>
@@ -46,6 +44,15 @@
       </action>
       <action dev="ggregory" type="fix" issue="CONFIGURATION-768" due-to="Gary Gregory">
         XMLConfiguration#write does not indent XML elements.
+      </action>
+      <action dev="ggregory" type="fix" issue="CONFIGURATION-771" due-to="Gary Gregory">
+        Update com.fasterxml.jackson.core:jackson-databind 2.10.0 -> 2.10.1.
+      </action>
+      <action dev="ggregory" type="update" due-to="Gary Gregory">
+        [test] org.easymock:easymock 4.0.2 -> 4.1.
+      </action>
+      <action dev="ggregory" type="fix" issue="CONFIGURATION-773" due-to="Dan Dragut">
+        User's Guide &gt; Properties files &gt; Saving - small documentation bugs #41.
       </action>
     </release>
     <release version="2.6" date="2019-09-13"
