@@ -820,7 +820,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
 
     /**
      * Creates the {@code CombinedConfiguration} for the configuration
-     * sources in the <code>&lt;additional&gt;</code> section. This method is
+     * sources in the {@code &lt;additional&gt;} section. This method is
      * called when the builder constructs the final configuration. It creates a
      * new {@code CombinedConfiguration} and initializes some properties
      * from the result configuration.

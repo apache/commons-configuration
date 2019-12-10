@@ -1307,7 +1307,7 @@ public class TestINIConfiguration
         volatile boolean error;
 
         /**
-         * Creates a new instance of <code>GlobalSectionTestThread</code> and
+         * Creates a new instance of {@code GlobalSectionTestThread} and
          * initializes it.
          *
          * @param conf the configuration object

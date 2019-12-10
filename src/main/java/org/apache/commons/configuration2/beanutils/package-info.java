@@ -17,8 +17,8 @@
 
 /**
  * <p>
- * In this package a <code>Configuration</code> implementation can be found that
- * implements the <code>DynaBean</code> interface. It allows to access or modify
+ * In this package a {@code Configuration} implementation can be found that
+ * implements the {@code DynaBean} interface. It allows to access or modify
  * a configuration using the classes from the Commons Beanutils package.
  * There are also classes for declaring beans in configuration files, from which
  * then instances can be created.

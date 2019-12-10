@@ -104,8 +104,8 @@ import org.apache.commons.lang3.StringUtils;
  * which has multiple values defined in one line using the separator character.</li>
  * <li>The {@code AppVendor} property appears twice. The comment lines
  * are concatenated, so that {@code layout.getComment("AppVendor");} will
- * result in <code>Application vendor&lt;CR&gt;Another vendor</code>, with
- * <code>&lt;CR&gt;</code> meaning the line separator. In addition the
+ * result in {@code Application vendor&lt;CR&gt;Another vendor}, with
+ * {@code &lt;CR&gt;} meaning the line separator. In addition the
  * &quot;single line&quot; flag is set to <b>false</b> for this property. When
  * the file is saved, two property definitions will be written (in series).</li>
  * </ul>

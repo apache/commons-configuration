@@ -24,7 +24,7 @@ package org.apache.commons.configuration2.interpol;
  * Objects implementing this interface can be assigned a variable prefix and
  * added to a {@link ConfigurationInterpolator} object. Whenever the
  * {@code ConfigurationInterpolator} encounters a property value referencing a
- * variable, e.g. <code>${prefix:variableName}</code>, it extracts the prefix
+ * variable, e.g. {@code ${prefix:variableName}}, it extracts the prefix
  * and finds the matching {@code Lookup} object. Then this object is asked to
  * resolve the variable name and provide the corresponding value.
  * </p>

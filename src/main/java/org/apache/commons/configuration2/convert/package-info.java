@@ -20,7 +20,7 @@
  * This package contains interfaces and classes related to data type conversions.
  * </p>
  * <p>
- * An <code>AbstractConfiguration</code> object is associated with an object
+ * An {@code AbstractConfiguration} object is associated with an object
  * responsible for data type conversions. Each conversion is done by this object.
  * By replacing the default conversion handler by a custom version, client
  * applications can adapt and extend the type conversions available.

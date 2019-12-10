@@ -37,18 +37,18 @@ class FileUtils {
 
     //-----------------------------------------------------------------------
     /**
-     * Convert from a <code>URL</code> to a <code>File</code>.
+     * Convert from a {@code URL} to a {@code File}.
      * <p>
      * From version 1.1 this method will decode the URL.
-     * Syntax such as <code>file:///my%20docs/file.txt</code> will be
-     * correctly decoded to <code>/my docs/file.txt</code>. Starting with version
+     * Syntax such as {@code file:///my%20docs/file.txt} will be
+     * correctly decoded to {@code /my docs/file.txt}. Starting with version
      * 1.5, this method uses UTF-8 to decode percent-encoded octets to characters.
      * Additionally, malformed percent-encoded octets are handled leniently by
      * passing them through literally.
      *
      * @param url  the file URL to convert, {@code null} returns {@code null}
-     * @return the equivalent <code>File</code> object, or {@code null}
-     *  if the URL's protocol is not <code>file</code>
+     * @return the equivalent {@code File} object, or {@code null}
+     *  if the URL's protocol is not {@code file}
      */
     public static File toFile(final URL url) {
         if (url == null || !"file".equalsIgnoreCase(url.getProtocol())) {

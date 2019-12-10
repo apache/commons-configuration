@@ -47,7 +47,7 @@ import org.apache.commons.text.lookup.DefaultStringLookup;
  * <p>
  * The basic idea of this class is that it can maintain a set of primitive
  * {@link Lookup} objects, each of which is identified by a special prefix. The
- * variables to be processed have the form <code>${prefix:name}</code>.
+ * variables to be processed have the form {@code ${prefix:name}}.
  * {@code ConfigurationInterpolator} will extract the prefix and determine,
  * which primitive lookup object is registered for it. Then the name of the
  * variable is passed to this object to obtain the actual value. It is also

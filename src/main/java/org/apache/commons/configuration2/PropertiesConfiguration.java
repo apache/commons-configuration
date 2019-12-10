@@ -68,7 +68,7 @@ import org.apache.commons.text.translate.UnicodeEscaper;
  *
  * <ul>
  *  <li>
- *   Each property has the syntax <code>key &lt;separator&gt; value</code>. The
+ *   Each property has the syntax {@code key &lt;separator&gt; value}. The
  *   separators accepted are {@code '='}, {@code ':'} and any white
  *   space character. Examples:
  * <pre>
@@ -770,8 +770,8 @@ public class PropertiesConfiguration extends BaseConfiguration
          * Reads a property line. Returns null if Stream is
          * at EOF. Concatenates lines ending with "\".
          * Skips lines beginning with "#" or "!" and empty lines.
-         * The return value is a property definition (<code>&lt;name&gt;</code>
-         * = <code>&lt;value&gt;</code>)
+         * The return value is a property definition ({@code &lt;name&gt;}
+         * = {@code &lt;value&gt;})
          *
          * @return A string containing a property value or null
          *

@@ -129,7 +129,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
      *
      * @param f the file to be written or <b>null</b> for creating a new one
      * @param content the content of the file
-     * @return the <code>File</code> object for the test file
+     * @return the {@code File} object for the test file
      * @throws IOException if an error occurs
      */
     private File writeReloadFile(final File f, final String content) throws IOException

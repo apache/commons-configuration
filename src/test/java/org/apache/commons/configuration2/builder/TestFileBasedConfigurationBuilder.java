@@ -534,10 +534,10 @@ public class TestFileBasedConfigurationBuilder
 
     /**
      * Tests whether HomeDirectoryLocationStrategy can be properly initialized
-     * and that it shouldn't throw <code>ConfigurationException</code> when
+     * and that it shouldn't throw {@code ConfigurationException} when
      * everything is correctly in place. Without the code fix for
      * <a href="https://issues.apache.org/jira/browse/CONFIGURATION-634">CONFIGURATION-634</a>,
-     * this test will throw <code>ConfigurationException</code>
+     * this test will throw {@code ConfigurationException}
      * @throws IOException              Shouldn't happen
      * @throws ConfigurationException   Shouldn't happen
      */

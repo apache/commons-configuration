@@ -42,7 +42,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
     /**
      * Initializes the tests. This implementation checks whether an applet can
      * be used. Some environments, which do not support a GUI, don't allow
-     * creating an <code>Applet</code> instance. If we are in such an
+     * creating an {@code Applet} instance. If we are in such an
      * environment, some tests need to behave differently or be completely
      * dropped.
      */

@@ -107,9 +107,9 @@ public class Logging extends Log4JLogger
 
 
     /**
-     * Logs a message with <code>org.apache.log4j.Priority.TRACE</code>.
-     * When using a log4j version that does not support the <code>TRACE</code>
-     * level, the message will be logged at the <code>DEBUG</code> level.
+     * Logs a message with {@code org.apache.log4j.Priority.TRACE}.
+     * When using a log4j version that does not support the {@code TRACE}
+     * level, the message will be logged at the {@code DEBUG} level.
      *
      * @param message to log
      * @see org.apache.commons.logging.Log#trace(Object)
@@ -122,9 +122,9 @@ public class Logging extends Log4JLogger
 
 
     /**
-     * Logs a message with <code>org.apache.log4j.Priority.TRACE</code>.
-     * When using a log4j version that does not support the <code>TRACE</code>
-     * level, the message will be logged at the <code>DEBUG</code> level.
+     * Logs a message with {@code org.apache.log4j.Priority.TRACE}.
+     * When using a log4j version that does not support the {@code TRACE}
+     * level, the message will be logged at the {@code DEBUG} level.
      *
      * @param message to log
      * @param t       log this cause
@@ -138,7 +138,7 @@ public class Logging extends Log4JLogger
 
 
     /**
-     * Logs a message with <code>org.apache.log4j.Priority.DEBUG</code>.
+     * Logs a message with {@code org.apache.log4j.Priority.DEBUG}.
      *
      * @param message to log
      * @see org.apache.commons.logging.Log#debug(Object)
@@ -150,7 +150,7 @@ public class Logging extends Log4JLogger
     }
 
     /**
-     * Logs a message with <code>org.apache.log4j.Priority.DEBUG</code>.
+     * Logs a message with {@code org.apache.log4j.Priority.DEBUG}.
      *
      * @param message to log
      * @param t       log this cause
@@ -164,7 +164,7 @@ public class Logging extends Log4JLogger
 
 
     /**
-     * Logs a message with <code>org.apache.log4j.Priority.INFO</code>.
+     * Logs a message with {@code org.apache.log4j.Priority.INFO}.
      *
      * @param message to log
      * @see org.apache.commons.logging.Log#info(Object)
@@ -177,7 +177,7 @@ public class Logging extends Log4JLogger
 
 
     /**
-     * Logs a message with <code>org.apache.log4j.Priority.INFO</code>.
+     * Logs a message with {@code org.apache.log4j.Priority.INFO}.
      *
      * @param message to log
      * @param t       log this cause
@@ -191,7 +191,7 @@ public class Logging extends Log4JLogger
 
 
     /**
-     * Logs a message with <code>org.apache.log4j.Priority.WARN</code>.
+     * Logs a message with {@code org.apache.log4j.Priority.WARN}.
      *
      * @param message to log
      * @see org.apache.commons.logging.Log#warn(Object)
@@ -204,7 +204,7 @@ public class Logging extends Log4JLogger
 
 
     /**
-     * Logs a message with <code>org.apache.log4j.Priority.WARN</code>.
+     * Logs a message with {@code org.apache.log4j.Priority.WARN}.
      *
      * @param message to log
      * @param t       log this cause
@@ -218,7 +218,7 @@ public class Logging extends Log4JLogger
 
 
     /**
-     * Logs a message with <code>org.apache.log4j.Priority.ERROR</code>.
+     * Logs a message with {@code org.apache.log4j.Priority.ERROR}.
      *
      * @param message to log
      * @see org.apache.commons.logging.Log#error(Object)
@@ -231,7 +231,7 @@ public class Logging extends Log4JLogger
 
 
     /**
-     * Logs a message with <code>org.apache.log4j.Priority.ERROR</code>.
+     * Logs a message with {@code org.apache.log4j.Priority.ERROR}.
      *
      * @param message to log
      * @param t       log this cause
@@ -245,7 +245,7 @@ public class Logging extends Log4JLogger
 
 
     /**
-     * Logs a message with <code>org.apache.log4j.Priority.FATAL</code>.
+     * Logs a message with {@code org.apache.log4j.Priority.FATAL}.
      *
      * @param message to log
      * @see org.apache.commons.logging.Log#fatal(Object)
@@ -258,7 +258,7 @@ public class Logging extends Log4JLogger
 
 
     /**
-     * Logs a message with <code>org.apache.log4j.Priority.FATAL</code>.
+     * Logs a message with {@code org.apache.log4j.Priority.FATAL}.
      *
      * @param message to log
      * @param t       log this cause

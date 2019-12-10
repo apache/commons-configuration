@@ -38,7 +38,7 @@ import org.apache.commons.lang3.StringUtils;
  * delimiter, which is by the default a dot (&quot;.&quot;).</li>
  * <li>Navigating from a node to one of its attributes using the attribute node
  * delimiter, which by default follows the XPATH like syntax
- * <code>[@&lt;attributeName&gt;]</code>.</li>
+ * {@code [@&lt;attributeName&gt;]}.</li>
  * <li>If there are multiple child or attribute nodes with the same name, a
  * specific node can be selected using a numerical index. By default indices are
  * written in parenthesis.</li>

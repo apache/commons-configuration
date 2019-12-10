@@ -62,7 +62,7 @@ import org.apache.commons.lang3.ObjectUtils;
  * A concrete sub class only needs to provide a generic {@code getProperty()}
  * method.</li>
  * <li>Support for variable interpolation. Property values containing special
- * variable tokens (like <code>${var}</code>) will be replaced by their
+ * variable tokens (like {@code ${var}}) will be replaced by their
  * corresponding values.</li>
  * <li>Optional support for string lists. The values of properties to be added to this
  * configuration are checked whether they contain a list delimiter character. If
@@ -1656,7 +1656,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Returns a configuration with the same content as this configuration, but
      * with all variables replaced by their actual values. This method tries to
      * clone the configuration and then perform interpolation on all properties.
-     * So property values of the form <code>${var}</code> will be resolved as
+     * So property values of the form {@code ${var}} will be resolved as
      * far as possible (if a variable cannot be resolved, it remains unchanged).
      * This operation is useful if the content of a configuration is to be
      * exported or processed by an external component that does not support
