@@ -1775,7 +1775,7 @@ public class TestXMLConfiguration
         conf.setValidating(true);
         load(conf, "testValidateInvalid.xml");
     }
-    
+
     @Test
     public void testWrite() throws Exception
     {
