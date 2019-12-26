@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * <p>
@@ -55,17 +56,12 @@ class ImmutableConfigurationInvocationHandler implements InvocationHandler
      * Creates a new instance of {@code ImmutableConfigurationInvocationHandler}
      * and initializes it with the wrapped configuration object.
      *
-     * @param conf the wrapped {@code Configuration} (must not be <b>null</b>)
+     * @param configuration the wrapped {@code Configuration} (must not be <b>null</b>)
      * @throws NullPointerException if the {@code Configuration} is <b>null</b>
      */
-    public ImmutableConfigurationInvocationHandler(final Configuration conf)
+    public ImmutableConfigurationInvocationHandler(final Configuration configuration)
     {
-        if (conf == null)
-        {
-            throw new NullPointerException(
-                    "Wrapped configuration must not be null!");
-        }
-        wrappedConfiguration = conf;
+        wrappedConfiguration = Objects.requireNonNull(configuration, "configuration");
     }
 
     /**

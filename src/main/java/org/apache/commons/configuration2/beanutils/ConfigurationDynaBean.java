@@ -20,6 +20,7 @@ package org.apache.commons.configuration2.beanutils;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaClass;
@@ -81,11 +82,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         {
             LOG.trace("set(" + name + "," + value + ")");
         }
-
-        if (value == null)
-        {
-            throw new NullPointerException("Error trying to set property to null.");
-        }
+        Objects.requireNonNull(value, "Error trying to set property to null.");
 
         if (value instanceof Collection)
         {

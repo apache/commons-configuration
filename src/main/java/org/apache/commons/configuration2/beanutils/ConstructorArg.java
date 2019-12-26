@@ -16,6 +16,8 @@
  */
 package org.apache.commons.configuration2.beanutils;
 
+import java.util.Objects;
+
 /**
  * <p>
  * A class representing an argument for a constructor invocation to be used by a
@@ -81,20 +83,17 @@ public final class ConstructorArg
      * is used to match this argument against the parameter type of a
      * constructor or the bean class.
      *
-     * @param decl the {@code BeanDeclaration}
+     * @param beanDeclaration the {@code BeanDeclaration}
      * @param typeName the name of the data type of this argument
      * @return the newly created instance of this class
      * @throws NullPointerException if the {@code BeanDeclaration} is
      *         <b>null</b>
      */
-    public static ConstructorArg forBeanDeclaration(final BeanDeclaration decl,
+    public static ConstructorArg forBeanDeclaration(final BeanDeclaration beanDeclaration,
             final String typeName)
     {
-        if (decl == null)
-        {
-            throw new NullPointerException("BeanDeclaration must not be null!");
-        }
-        return new ConstructorArg(decl, null, typeName);
+        Objects.requireNonNull(beanDeclaration, "beanDeclaration");
+        return new ConstructorArg(beanDeclaration, null, typeName);
     }
 
     /**
