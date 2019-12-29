@@ -55,7 +55,7 @@
         User's Guide &gt; Properties files &gt; Saving - small documentation bugs #41.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-775" due-to="Gary Gregory">
-      Update Apache Commons VFS from 2.4.1 to 2.5.0.
+        Update Apache Commons VFS from 2.4.1 to 2.5.0.
       </action>
     </release>
     <release version="2.6" date="2019-09-13"
