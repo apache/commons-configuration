@@ -58,7 +58,7 @@
         Update Apache Commons VFS from 2.4.1 to 2.5.0.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-777" due-to="Gary Gregory">
-        Update Apache Commons VFS from 2.5.0 to 2.5.0.
+        Update Apache Commons VFS from 2.5.0 to 2.6.0.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-778" due-to="Gary Gregory">
         Update optional Apache Commons Codec from 1.13 to 1.14.
