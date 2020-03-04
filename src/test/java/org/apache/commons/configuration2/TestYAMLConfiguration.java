@@ -17,26 +17,37 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.yaml.snakeyaml.Yaml;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Unit test for {@link YAMLConfiguration}
  */
 public class TestYAMLConfiguration
 {
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
     /** The files that we test with. */
     private final String testYaml =
             ConfigurationAssert.getTestFile("test.yaml").getAbsolutePath();
@@ -133,5 +144,41 @@ public class TestYAMLConfiguration
 
         yamlConfiguration = new YAMLConfiguration(c);
         assertEquals("bar", yamlConfiguration.getString("foo"));
+    }
+
+    @Test
+    public void testObjectCreationFromReader()
+    {
+        final File createdFile = new File(temporaryFolder.getRoot(), "data.txt");
+        final String yaml = "!!java.io.FileOutputStream [" + createdFile.getAbsolutePath() + "]";
+
+        try
+        {
+            yamlConfiguration.read(new StringReader(yaml));
+            fail("Loading configuration did not cause an exception!");
+        }
+        catch (ConfigurationException e)
+        {
+            //expected
+        }
+        assertFalse("Java object was created", createdFile.exists());
+    }
+
+    @Test
+    public void testObjectCreationFromStream()
+    {
+        final File createdFile = new File(temporaryFolder.getRoot(), "data.txt");
+        final String yaml = "!!java.io.FileOutputStream [" + createdFile.getAbsolutePath() + "]";
+
+        try
+        {
+            yamlConfiguration.read(new ByteArrayInputStream(yaml.getBytes(StandardCharsets.UTF_8)));
+            fail("Loading configuration did not cause an exception!");
+        }
+        catch (ConfigurationException e)
+        {
+            //expected
+        }
+        assertFalse("Java object was created", createdFile.exists());
     }
 }
