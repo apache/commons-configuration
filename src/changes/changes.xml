@@ -73,7 +73,7 @@
         Update com.fasterxml.jackson.core:jackson-databind from 2.10.2 to 2.10.3.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-784" due-to="Gary Gregory">
-        Update org.yaml:snakeyaml from 1.25 to 1.26.
+        Update org.yaml:snakeyaml from 1.25 to 1.26 and tweak parser configuration.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-785" due-to="Gary Gregory">
         Update org.springframework:spring-* from 4.3.25.RELEASE to 4.3.26.RELEASE.

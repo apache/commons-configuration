@@ -171,7 +171,7 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration
             @Override
             protected Class<?> getClassForName(String name)
             {
-                throw new ConfigurationRuntimeException("Class loading is disabled.");
+                throw new ConfigurationRuntimeException("Class instantiation is disabled.");
             }
         };
     }
