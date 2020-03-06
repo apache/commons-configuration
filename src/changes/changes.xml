@@ -72,6 +72,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-783" due-to="Gary Gregory">
         Update com.fasterxml.jackson.core:jackson-databind from 2.10.2 to 2.10.3.
       </action>
+      <action dev="ggregory" type="update" issue="CONFIGURATION-784" due-to="Gary Gregory">
+        Update org.yaml:snakeyaml from 1.25 to 1.26.
+      </action>
     </release>
     
     <release version="2.6" date="2019-09-13"
