@@ -1,4 +1,62 @@
                         Apache Commons Configuration
+                        Version 2.7
+                        Release Notes
+
+
+INTRODUCTION:
+=============
+
+This document contains the release notes for this version of the Commons
+Configuration component. It describes the changes since the previous version.
+The Commons Configuration software library provides a generic configuration
+interface which enables an application to read configuration data from a variety
+of sources.
+
+Tools to assist in the reading of configuration/preferences files in
+various formats
+
+Minor release with new features and updated dependencies.
+
+Changes in this version include:
+
+New features:
+o CONFIGURATION-765:  Refactor XMLConfiguration.write(Writer) to add XMLConfiguration.write(Writer, Transformer). Thanks to Gary Gregory.
+
+Fixed Bugs:
+o CONFIGURATION-761:  Single argument DataConfiguration APIs always create empty arrays. Thanks to Gary Gregory.
+o CONFIGURATION-767:  NullPointerException in XMLConfiguration#createTransformer() when no FileLocator is set. Thanks to Gary Gregory.
+o CONFIGURATION-768:  XMLConfiguration#write does not indent XML elements. Thanks to Gary Gregory.
+o CONFIGURATION-771:  Update com.fasterxml.jackson.core:jackson-databind 2.10.0 -> 2.10.1. Thanks to Gary Gregory.
+o CONFIGURATION-773:  User's Guide > Properties files > Saving - small documentation bugs #41. Thanks to Dan Dragut.
+
+Changes:
+o CONFIGURATION-762:  Use variable arguments. Thanks to Gary Gregory.
+o                     Update ]com.puppycrawl.tools:checkstyle from 8.24 to  8.25. Thanks to Gary Gregory.
+o CONFIGURATION-763:  Update com.fasterxml.jackson.core:jackson-databind from 2.9.9 to 2.10.0. Thanks to Gary Gregory.
+o                     [test] org.easymock:easymock 4.0.2 -> 4.1. Thanks to Gary Gregory.
+o CONFIGURATION-775:  Update Apache Commons VFS from 2.4.1 to 2.5.0. Thanks to Gary Gregory.
+o CONFIGURATION-777:  Update Apache Commons VFS from 2.5.0 to 2.6.0. Thanks to Gary Gregory.
+o CONFIGURATION-778:  Update optional Apache Commons Codec from 1.13 to 1.14. Thanks to Gary Gregory.
+o                     Update tests from JUnit 4.12 to 4.13. Thanks to Gary Gregory.
+o CONFIGURATION-779:  Update optional jackson-databind from 2.10.1 to 2.10.2. Thanks to Gary Gregory.
+o CONFIGURATION-783:  Update com.fasterxml.jackson.core:jackson-databind from 2.10.2 to 2.10.3. Thanks to Gary Gregory.
+o CONFIGURATION-784:  Update org.yaml:snakeyaml from 1.25 to 1.26 and tweak parser configuration. Thanks to Gary Gregory.
+o CONFIGURATION-785:  Update org.springframework:spring-* from 4.3.25.RELEASE to 4.3.26.RELEASE. Thanks to Gary Gregory.
+o                     Update org.apache.commons:commons-parent from 48 to 50 Thanks to Rob Tompkins.
+
+
+Historical list of changes: https://commons.apache.org/proper/commons-configuration/changes-report.html
+
+For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
+
+https://commons.apache.org/proper/commons-configuration/
+
+Download it from https://commons.apache.org/proper/commons-configuration//download_text.cgi
+
+=============================================================================
+
+                        Apache Commons Configuration
                         Version 2.6
                         Release Notes
                         2019-09-13
