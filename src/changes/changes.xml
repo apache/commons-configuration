@@ -78,6 +78,9 @@
       <action dev="ggregory" type="update" issue="CONFIGURATION-785" due-to="Gary Gregory">
         Update org.springframework:spring-* from 4.3.25.RELEASE to 4.3.26.RELEASE.
       </action>
+      <action dev="chtompki" type="update" due-to="Rob Tompkins">
+        Update org.apache.commons:commons-parent from 48 to 50
+      </action>
     </release>
     
     <release version="2.6" date="2019-09-13"
