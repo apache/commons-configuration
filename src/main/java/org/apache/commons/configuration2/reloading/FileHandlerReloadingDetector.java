@@ -155,7 +155,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
             lastChecked = now;
 
             final long modified = getLastModificationDate();
-            if (modified > 0)
+            if (modified >= 0)
             {
                 if (lastModified == 0)
                 {
