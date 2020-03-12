@@ -30,7 +30,7 @@ import java.util.List;
 
 import junitx.framework.ObjectAssert;
 
-import org.apache.commons.beanutils.DynaProperty;
+import org.apache.commons.beanutils2.DynaProperty;
 import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.MapConfiguration;

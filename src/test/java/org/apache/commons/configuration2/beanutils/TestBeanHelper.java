@@ -27,8 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.beanutils.DynaBean;
-import org.apache.commons.beanutils.LazyDynaBean;
+import org.apache.commons.beanutils2.DynaBean;
+import org.apache.commons.beanutils2.LazyDynaBean;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.easymock.EasyMock;

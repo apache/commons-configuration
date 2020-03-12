@@ -25,9 +25,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.beanutils.DynaClass;
-import org.apache.commons.beanutils.LazyDynaBean;
-import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.beanutils2.DynaClass;
+import org.apache.commons.beanutils2.LazyDynaBean;
+import org.apache.commons.beanutils2.PropertyUtils;
 import org.apache.commons.configuration2.builder.BasicBuilderParameters;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
