@@ -293,4 +293,162 @@ public class TestHierarchicalXMLConfiguration
         assertEquals("testconfig", config.getRootElementName());
         config.setRootElementName("anotherRootElement");
     }
+
+    @Test
+    public void testBackupFileCreation() throws Exception {
+        final String property       = "myTestProperty";
+        final String value          = "myTestValue";
+        final String appendix       = "backup2";
+        final String testFileName   = "test-with-backup.xml";
+        final File   testFile       = new File(testFileName);
+        final File   testBackupFile = new File(testFileName + "." + appendix);
+
+        if (testFile.exists()) {
+            if (!testFile.delete()) {
+                assertTrue("Started with clean test file state", false);
+            }
+        }
+        if (testBackupFile.exists()) {
+            if (!testBackupFile.delete()) {
+                assertTrue("Started with clean backup file state", false);
+            }
+        }
+
+        XMLConfiguration.setKeepBackupGlobal(true);
+        XMLConfiguration.setKeepBackupGlobal(appendix);
+
+        XMLConfiguration configWithBackup = new XMLConfiguration();
+        assertTrue("Concrete instance of backup has been auto configured to keep backups",
+                   configWithBackup.isKeepBackup());
+
+        configWithBackup.load(new File(TEST_FILE3));
+        configWithBackup.setFile(testFile);
+        assertEquals("Config loaded successfully from reference file.",
+                     "testconfig", configWithBackup.getRootElementName());
+
+        configWithBackup.save();
+        assertTrue("Test config file has been created: " + testFile.getAbsolutePath(), testFile.exists());
+        configWithBackup.save();
+        assertTrue("Backup file has been created: " + testBackupFile.getAbsolutePath(), testBackupFile.exists());
+
+        XMLConfiguration configFromBackup = new XMLConfiguration(testBackupFile);
+        assertEquals("Config loaded successfully from reference file.",
+                     "testconfig", configFromBackup.getRootElementName());
+
+        configWithBackup.setAutoSave(true);
+        configWithBackup.setProperty(property, value);
+        XMLConfiguration configFromTestFile = new XMLConfiguration(testFile);
+        assertEquals("Config loaded successfully from test file.",
+                     "testconfig", configFromTestFile.getRootElementName());
+        assertEquals("Test property loaded successfully from test file.",
+                     value, configFromTestFile.getProperty(property));
+
+        XMLConfiguration configFromBackupFile = new XMLConfiguration(testBackupFile);
+        assertEquals("Config loaded successfully from backup file.",
+                     "testconfig", configFromBackupFile.getRootElementName());
+
+        testFile.deleteOnExit();
+        testBackupFile.deleteOnExit();
+    }
+
+    @Test
+    public void testBackupFileCreationWithoutGlobal() throws Exception {
+        final String property       = "myTestProperty";
+        final String value          = "myTestValue";
+        final String appendix       = "backup2";
+        final String testFileName   = "test-with-backup-local.xml";
+        final File   testFile       = new File(testFileName);
+        final File   testBackupFile = new File(testFileName + "." + appendix);
+
+        if (testFile.exists()) {
+            if (!testFile.delete()) {
+                assertTrue("Started with clean test file state", false);
+            }
+        }
+        if (testBackupFile.exists()) {
+            if (!testBackupFile.delete()) {
+                assertTrue("Started with clean backup file state", false);
+            }
+        }
+
+        XMLConfiguration.setKeepBackupGlobal(false);
+
+        XMLConfiguration configWithBackup = new XMLConfiguration();
+        assertFalse("Concrete instance of backup has not been auto configured to keep backups",
+                    configWithBackup.isKeepBackup());
+
+        configWithBackup.load(new File(TEST_FILE3));
+        configWithBackup.setFile(testFile);
+        assertEquals("Config loaded successfully from reference file.",
+                     "testconfig", configWithBackup.getRootElementName());
+
+        configWithBackup.setKeepBackup(true);
+        configWithBackup.setBackupFileNameAppendix(appendix);
+        assertTrue("Concrete instance of backup has been configured to keep backups",
+                   configWithBackup.isKeepBackup());
+        
+
+        configWithBackup.save();
+        assertTrue("Test config file has been created: " + testFile.getAbsolutePath(), testFile.exists());
+        configWithBackup.save();
+        assertTrue("Backup file has been created: " + testBackupFile.getAbsolutePath(), testBackupFile.exists());
+
+        XMLConfiguration configFromBackup = new XMLConfiguration(testBackupFile);
+        assertEquals("Config loaded successfully from reference file.",
+                     "testconfig", configFromBackup.getRootElementName());
+
+        configWithBackup.setAutoSave(true);
+        configWithBackup.setProperty(property, value);
+        XMLConfiguration configFromTestFile = new XMLConfiguration(testFile);
+        assertEquals("Config loaded successfully from test file.",
+                     "testconfig", configFromTestFile.getRootElementName());
+        assertEquals("Test property loaded successfully from test file.",
+                     value, configFromTestFile.getProperty(property));
+        assertFalse("Concrete instance of backup has not been auto configured to keep backups",
+                    configFromTestFile.isKeepBackup());
+
+        XMLConfiguration configFromBackupFile = new XMLConfiguration(testBackupFile);
+        assertEquals("Config loaded successfully from backup file.",
+                     "testconfig", configFromBackupFile.getRootElementName());
+        assertFalse("Concrete instance of backup has not been auto configured to keep backups",
+                    configFromBackupFile.isKeepBackup());
+
+        testFile.deleteOnExit();
+        testBackupFile.deleteOnExit();
+    }
+
+    @Test
+    public void testLoadingFromBackupFile() throws Exception {
+        final String appendix       = "backup2";
+        final String testFilePath   = ConfigurationAssert.getTestFile("test-backups.xml").getAbsolutePath();
+        final File   testBackupFile = new File(testFilePath + "." + appendix);
+        assertTrue("Test backup file exists: " + testBackupFile.getAbsolutePath(), testBackupFile.exists());
+
+        XMLConfiguration.setKeepBackupGlobal(true);
+        XMLConfiguration.setKeepBackupGlobal(appendix);
+
+        XMLConfiguration configFromBackup = new XMLConfiguration(testFilePath);
+        assertTrue("Concrete instance of backup has been auto configured to keep backups",
+                   configFromBackup.isKeepBackup());
+
+        assertEquals("Config loaded successfully from test backup file.",
+                     "testconfig", configFromBackup.getRootElementName());
+    }
+
+    @Test
+    public void testLoadingFromBackupFileWithoutGlobal() throws Exception {
+        final String appendix       = "backup2";
+        final String testFilePath   = ConfigurationAssert.getTestFile("test-backups.xml").getAbsolutePath();
+        final File   testBackupFile = new File(testFilePath + "." + appendix);
+        assertTrue("Test backup file exists: " + testBackupFile.getAbsolutePath(), testBackupFile.exists());
+
+        XMLConfiguration.setKeepBackupGlobal(false);
+
+        XMLConfiguration configFromBackup = new XMLConfiguration(testFilePath, appendix);
+        assertTrue("Concrete instance of backup has been auto configured to keep backups",
+                   configFromBackup.isKeepBackup());
+
+        assertEquals("Config loaded successfully from test backup file.",
+                     "testconfig", configFromBackup.getRootElementName());
+    }
 }

@@ -26,6 +26,8 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -107,6 +109,12 @@ implements FileConfiguration, FileSystemBased
 
     /** The auto save flag.*/
     protected boolean autoSave;
+
+    /** The keepBackup flag.*/
+    protected boolean keepBackup;
+
+    /** The backup files appendix.*/
+    protected String appendix = "backup";
 
     /** Holds a reference to the reloading strategy.*/
     protected ReloadingStrategy strategy;
@@ -262,7 +270,17 @@ implements FileConfiguration, FileSystemBased
         }
         catch (ConfigurationException e)
         {
-            throw e;
+            if (isKeepBackup() && !fileName.endsWith("." + appendix)) {
+                final String backupFileName = getBackupFileName();
+                URL url = ConfigurationUtils.locate(this.fileSystem, basePath, backupFileName);
+                if (url == null) {
+                    throw e;
+                } else {
+                    load(url);
+                }
+            } else {
+                throw e;
+            }
         }
         catch (Exception e)
         {
@@ -470,6 +488,7 @@ implements FileConfiguration, FileSystemBased
         OutputStream out = null;
         try
         {
+            possiblyCreateBackup(url);
             out = fileSystem.getOutputStream(url);
             save(out);
             if (out instanceof VerifiableOutputStream)
@@ -487,6 +506,39 @@ implements FileConfiguration, FileSystemBased
         }
     }
 
+    private void possiblyCreateBackup(URL url) throws MalformedURLException, ConfigurationException {
+        if (isKeepBackup()) {
+            try {
+                URL origFileUrl = this.fileSystem.getURL(basePath, fileName);
+                if (origFileUrl != null && origFileUrl.sameFile(url)) {
+                    createBackup();
+                }
+            } catch (MalformedURLException e) {
+              // We can safely ignore this because we can't make a file backup from it anyways.
+            }
+        }
+    }
+
+    private void possiblyCreateBackup(File newFile) throws ConfigurationException {
+      if (isKeepBackup()) {
+          try {
+              URL origFileUrl = this.fileSystem.getURL(basePath, fileName);
+              if (origFileUrl != null) {
+              
+                  File origFile = new File(origFileUrl.toURI());
+                  if (origFile.exists() && origFile.getCanonicalPath().equals(newFile.getCanonicalPath())) {
+                      createBackup();
+                  }
+              }
+          } catch (URISyntaxException e) {
+              // We can safely ignore this because we can't make a file backup from it anyways.
+          } catch (IOException e) {
+              // We can safely ignore this because we can't and, if caused by newFile, don't need to make a file´
+              // backup from it anyways.
+          }
+      }
+  }
+
     /**
      * Save the configuration to the specified file. The file is created
      * automatically if it doesn't exist. This doesn't change the source
@@ -502,6 +554,7 @@ implements FileConfiguration, FileSystemBased
 
         try
         {
+            possiblyCreateBackup(file);
             out = fileSystem.getOutputStream(file);
             save(out);
         }
@@ -736,6 +789,20 @@ implements FileConfiguration, FileSystemBased
         return autoSave;
     }
 
+    public void setKeepBackup(boolean keepBackup)
+    {
+        this.keepBackup = keepBackup;
+    }
+
+    public boolean isKeepBackup()
+    {
+        return keepBackup;
+    }
+
+    public void setBackupFileNameAppendix(String appendix) {
+        this.appendix = appendix;
+    }
+
     /**
      * Save the configuration if the automatic persistence is enabled
      * and if a file is specified.
@@ -753,6 +820,34 @@ implements FileConfiguration, FileSystemBased
                 throw new ConfigurationRuntimeException("Failed to auto-save", e);
             }
         }
+    }
+
+    private void createBackup() throws ConfigurationException {
+        URL  origFileUrl = null;
+        File origFile    = null;
+        File backupFile  = null;
+        try {
+            origFileUrl = this.fileSystem.getURL(basePath, fileName);
+            origFile    = new File(origFileUrl.toURI());
+            if (origFile.exists()) {
+                backupFile  = new File(origFile.getAbsolutePath() + "." + appendix);
+                java.nio.file.Files.copy(java.nio.file.Paths.get(origFileUrl.toURI()),
+                                         java.nio.file.Paths.get(backupFile.toURI()),
+                                         java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (MalformedURLException e) {
+            throw new ConfigurationException("Unable to create backup of the configuration of the file " + fileName, e);
+        } catch (URISyntaxException e) {
+            throw new ConfigurationException("Unable to create backup of the configuration of the file "
+                                           + origFileUrl, e);
+        } catch (IOException e) {
+            throw new ConfigurationException("Unable to create backup of the configuration of the file "
+                                           + origFile + " to " + backupFile, e);
+        }
+    }
+
+    private String getBackupFileName() {
+        return fileName + "." + appendix;
     }
 
     /**

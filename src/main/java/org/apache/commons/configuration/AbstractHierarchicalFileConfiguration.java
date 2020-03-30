@@ -52,6 +52,12 @@ extends HierarchicalConfiguration
 implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener, FileSystemBased,
         Reloadable
 {
+    /** */
+    private static final long serialVersionUID = -2442591233300744836L;
+    /** The global keepBackup flag.*/
+    private static boolean keepBackupGlobal = false;
+    /** The global backup files appendix.*/
+    private static String appendixGlobal = "backup";
     /** Stores the delegate used for implementing functionality related to the
      * {@code FileConfiguration} interface.
      */
@@ -90,6 +96,24 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
         this();
         // store the file name
         delegate.setFileName(fileName);
+
+        // load the file
+        load();
+    }
+
+    /**
+     * Creates and loads the configuration from the specified file.
+     *
+     * @param fileName The name of the plist file to load.
+     * @throws ConfigurationException Error while loading the file
+     */
+    public AbstractHierarchicalFileConfiguration(String fileName, String backupAppendix) throws ConfigurationException
+    {
+        this();
+        // store the file name
+        delegate.setFileName(fileName);
+        delegate.setBackupFileNameAppendix(backupAppendix);
+        delegate.setKeepBackup(true);
 
         // load the file
         load();
@@ -289,6 +313,21 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
         return delegate.isAutoSave();
     }
 
+    public void setKeepBackup(boolean keepBackup)
+    {
+        delegate.setKeepBackup(keepBackup);
+    }
+
+    public boolean isKeepBackup()
+    {
+        return delegate.isKeepBackup();
+    }
+
+    public void setBackupFileNameAppendix(String appendix)
+    {
+        delegate.setBackupFileNameAppendix(appendix);
+    }
+
     public ReloadingStrategy getReloadingStrategy()
     {
         return delegate.getReloadingStrategy();
@@ -478,6 +517,10 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
         del.addConfigurationListener(this);
         del.addErrorListener(this);
         del.setLogger(getLogger());
+        if (keepBackupGlobal) {
+            del.setKeepBackup(keepBackupGlobal);
+            del.setBackupFileNameAppendix(appendixGlobal);
+        }
     }
 
     /**
@@ -525,6 +568,10 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
     protected void setDelegate(FileConfigurationDelegate delegate)
     {
         this.delegate = delegate;
+        if (keepBackupGlobal) {
+            this.delegate.setKeepBackup(keepBackupGlobal);
+            this.delegate.setBackupFileNameAppendix(appendixGlobal);
+        }
     }
 
     /**
@@ -551,6 +598,25 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
     public FileSystem getFileSystem()
     {
         return delegate.getFileSystem();
+    }
+
+    /**
+     * Use this method to auto-configure all future delegate assignments.
+     * <p>
+     * <b>Using this feature requires at least a JDK7!</b>
+     * 
+     * @param keepBackup sets the global keep backup flag
+     */
+    public static void setKeepBackupGlobal(final boolean keepBackup) {
+        keepBackupGlobal = keepBackup;
+    }
+    /**
+     * Use this method to auto-configure all future delegate assignments.
+     * 
+     * @param appendix The appendix to use with all future delegates.
+     */
+    public static void setKeepBackupGlobal(final String appendix) {
+    	appendixGlobal = appendix;
     }
 
     /**

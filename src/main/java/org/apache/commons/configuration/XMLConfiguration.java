@@ -263,6 +263,21 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     }
 
     /**
+     * Creates a new instance of{@code XMLConfiguration}. The
+     * configuration is loaded from the specified file or it's backup.
+     * {@link #setKeepBackup(boolean)} is set to true automatically when using this constructor.
+     *
+     * @param fileName the name of the file to load
+     * @param backupAppendix the name of the appendix of a backup file if it exists
+     * @throws ConfigurationException if the file cannot be loaded
+     */
+    public XMLConfiguration(String fileName, String backupAppendix) throws ConfigurationException
+    {
+        super(fileName, backupAppendix);
+        setLogger(LogFactory.getLog(XMLConfiguration.class));
+    }
+
+    /**
      * Creates a new instance of {@code XMLConfiguration}.
      * The configuration is loaded from the specified file.
      *

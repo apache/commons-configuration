@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<!-- Test file for XMLConfiguration -->
+<testconfig>
+    <element>value</element>
+    <element2>
+        <subelement>
+            <subsubelement>I'm complex!</subsubelement>
+        </subelement>
+    </element2>
+    <element3 name="foo">value</element3>
+    <test>
+        <comment><!-- this value is commented --></comment>
+        <cdata><![CDATA[<cdata value>]]></cdata>
+        <entity name="foo&quot;bar">1&lt;2</entity>
+    </test>
+    <mean>This is
+<![CDATA[ A long story...]]>
+      <submean>really complex structure</submean>
+And even longer.
+    </mean>
+
+    <!-- non string properties -->
+    <test>
+        <short>8</short>
+    </test>
+	
+	<!-- list properties -->
+	<list>
+		<item name="one">one</item>
+		<item>two</item>
+	</list>
+	<list>
+		<item name="three">three</item>
+		<item>four</item>
+		<sublist>
+			<item>five</item>
+			<item>six</item>
+		</sublist>
+	</list>
+    
+    <!-- Comma delimited lists -->
+    <split>
+      <list1>a,b,c</list1>
+      <list2>a\,b\,c</list2>
+      <list3 values="a,b,c"/>
+      <list4 values="a\,b\,c"/>
+    </split>
+
+	<!-- clear tests -->
+	<clear>
+		<element>value</element>
+		<element2 id="element2">value</element2>
+		<comment><!-- this value is commented --></comment>
+		<cdata><![CDATA[<cdata value>]]></cdata>
+		<list>
+			<item id="1">one</item>
+			<item>two</item>
+			<item id="3">three</item>
+			<item>four</item>
+		</list>
+		<list>
+			<item>one</item>
+			<item id="2">two</item>
+			<item>three</item>
+			<item id="4">four</item>
+		</list>
+	</clear>
+    
+    <!-- Complex property names -->
+    <complexNames>
+      <my.elem>Name with dot
+        <sub.elem>Another dot</sub.elem>
+      </my.elem>
+    </complexNames>
+    
+    <!-- An empty element. This should occur in the configuration with an
+         empty string as value.
+    -->
+    <empty/>
+    
+    <!-- List nodes with attributes -->
+    <attrList>
+      <a name="x">ABC</a>
+      <a name="y">1,2,3</a>
+      <a name="u" test="yes">value1,value2</a>
+    </attrList>
+
+    <!-- An attribute with multiple values and escape characters for testing
+         splitting when delimiter parsing is disabled.
+    -->
+    <expressions value="a \|\| (b &amp;&amp; c)|!d"
+      value2="a,b|c"/>
+
+    <!-- Tests for handling of spaces -->
+    <space xml:space="preserve">
+      <blanc> </blanc>
+      <stars> * * </stars>
+      <description xml:space="default">     Some text      </description>
+      <testInvalid xml:space="invalid">     Some other text </testInvalid>
+    </space>
+    <spaceElement xml:space="preserve"> preserved </spaceElement>
+</testconfig>

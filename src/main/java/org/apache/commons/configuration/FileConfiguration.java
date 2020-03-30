@@ -250,6 +250,34 @@ public interface FileConfiguration extends Configuration
     boolean isAutoSave();
 
     /**
+     * Enable or disable the automatically creating a backup before saving of modified properties to the disk.
+     * <p>
+     * <b>Using this feature requires at least a JDK7!</b>
+     *
+     * @param keepBackup {@code true} to enable, {@code false} to disable
+     * @since 1.11
+     */
+    void setKeepBackup(boolean keepBackup);
+
+    /**
+     * Tells if a backup is created when properties are automatically saved to the disk.
+     *
+     * @return {@code true} if backup keeping is enabled, {@code false} otherwise
+     * @since 1.11
+     */
+    boolean isKeepBackup();
+
+    /**
+     * Sets the appendix to append to the file name of the configuration file when creating the backup. Use this in
+     * conjunction with {@link #setKeepBackup(boolean)} set to {@code true}. The resulting backup file name will be
+     * <tt>[filename].[appendix]</tt>. The default value is <tt>backup</tt>.
+     *
+     * @param appendix the appendix to add to the file name when creating the backup
+     * @since 1.11
+     */
+    void setBackupFileNameAppendix(String appendix);
+
+    /**
      * Return the reloading strategy.
      *
      * @return the reloading strategy currently used
