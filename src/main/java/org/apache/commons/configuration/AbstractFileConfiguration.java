@@ -270,8 +270,8 @@ implements FileConfiguration, FileSystemBased
         }
         catch (ConfigurationException e)
         {
-            if (isKeepBackup() && !fileName.endsWith("." + appendix)) {
-                final String backupFileName = getBackupFileName();
+            if (isKeepBackup() && fileName != null && !fileName.endsWith("." + appendix)) {
+                final String backupFileName = getBackupFileName(fileName);
                 URL url = ConfigurationUtils.locate(this.fileSystem, basePath, backupFileName);
                 if (url == null) {
                     throw e;
@@ -520,9 +520,10 @@ implements FileConfiguration, FileSystemBased
     }
 
     private void possiblyCreateBackup(File newFile) throws ConfigurationException {
-      if (isKeepBackup()) {
+      String cFileName = this.fileName;
+      if (isKeepBackup() && cFileName != null) {
           try {
-              URL origFileUrl = this.fileSystem.getURL(basePath, fileName);
+              URL origFileUrl = this.fileSystem.getURL(basePath, cFileName);
               if (origFileUrl != null) {
               
                   File origFile = new File(origFileUrl.toURI());
@@ -846,9 +847,9 @@ implements FileConfiguration, FileSystemBased
         }
     }
 
-    private String getBackupFileName() {
-        return fileName + "." + appendix;
-    }
+    private String getBackupFileName(final String fileName) {
+      return fileName + "." + appendix;
+  }
 
     /**
      * Adds a new property to this configuration. This implementation checks if
