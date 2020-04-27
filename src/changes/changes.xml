@@ -27,6 +27,9 @@
        <action type="update" dev="ggregory" issue="CONFIGURATION-787" due-to="Gary Gregory">
          Update from Apache Commons Lang 3.9 to 3.10.
        </action>
+       <action type="add" dev="ggregory" issue="CONFIGURATION-789" due-to="Gary Gregory">
+         Add ImmutableConfiguration.getEnum() methods.
+       </action>
     </release>
     <release version="2.7" date="2020-03-07"
              description="Minor release with new features and updated dependencies.">

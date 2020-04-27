@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.configuration2.ex.ConversionException;
+
 /**
  * <p>The main interface for accessing configuration data in a read-only fashion.</p>
  * <p>
@@ -490,6 +492,52 @@ public interface ImmutableConfiguration
      * @return the plain string value of the specified encoded property
      */
     String getEncodedString(String key);
+
+    /**
+     * Gets an enum associated with the given configuration key.
+     *
+     * @param <T> The enum type whose constant is to be returned.
+     * @param enumType the {@code Class} object of the enum type from which to return a constant
+     * @param key The configuration key.
+     * @return The associated enum.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
+     *         is not a String.
+     * @since 2.8
+     */
+    default <T extends Enum<T>> T getEnum(String key, Class<T> enumType) {
+        try {
+            return Enum.valueOf(enumType, getString(key));
+        } catch (IllegalArgumentException e) {
+            throw new ConversionException(e);
+        }
+    }
+
+    /**
+     * Gets the enum associated with the given configuration key. If the key doesn't map to an existing object, the
+     * default value is returned.
+     * 
+     * @param <T> The enum type whose constant is to be returned.
+     * @param key The configuration key.
+     * @param enumType the {@code Class} object of the enum type from which to return a constant
+     * @param defaultValue The default value.
+     * @return The associated enum if key is found and has valid format, default value otherwise.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is
+     *         not a Enum.
+     * @since 2.8
+     */
+    default <T extends Enum<T>> T getEnum(String key, Class<T> enumType, T defaultValue) {
+        final String strValue = getString(key, null);
+        if (strValue == null) {
+            return defaultValue;
+        }
+        try {
+            return Enum.valueOf(enumType, strValue);
+        } catch (IllegalArgumentException e) {
+            throw new ConversionException(e);
+        }
+    }
 
     /**
      * Get an array of strings associated with the given configuration key.

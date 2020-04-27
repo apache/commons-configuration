@@ -19,7 +19,7 @@ package org.apache.commons.configuration2.ex;
 
 
 /**
- * Exception thrown when a property is incompatible with the type requested.
+ * Thrown when a property is incompatible with the type requested.
  *
  * @since 1.0
  *

@@ -22,6 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -59,7 +60,6 @@ public class TestBaseConfiguration
     static final String KEY_NUMBER = "number";
 
     protected static Class<?> missingElementException = NoSuchElementException.class;
-
     protected static Class<?> incompatibleElementException = ConversionException.class;
     protected BaseConfiguration config = null;
 
@@ -525,6 +525,33 @@ public class TestBaseConfiguration
         assertEquals("Existing key", string, config.getString("testString"));
         assertEquals("Existing key with default value", string, config.getString("testString", defaultValue));
         assertEquals("Missing key with default value", defaultValue, config.getString("stringNotInConfig", defaultValue));
+    }
+
+    @Test
+    public void testGetEnum()
+    {
+        config.setProperty("testEnum", EnumFixture.SMALLTALK.name());
+        config.setProperty("testBadEnum", "This is not an enum value.");
+        final EnumFixture enum1 = EnumFixture.SMALLTALK;
+        final EnumFixture defaultValue = EnumFixture.JAVA;
+        //
+        assertEquals("Existing key", enum1, config.getEnum("testEnum", EnumFixture.class));
+        assertEquals("Existing key with default value", enum1, config.getEnum("testEnum", EnumFixture.class, defaultValue));
+        assertEquals("Missing key with default value", defaultValue, config.getEnum("stringNotInConfig", EnumFixture.class, defaultValue));
+        //
+        try {
+            config.getEnum("testBadEnum", EnumFixture.class);
+            fail("Expected " + ConversionException.class);
+        } catch (ConversionException e) {
+            // expected
+        }
+        //
+        try {
+            config.getEnum("testBadEnum", EnumFixture.class, defaultValue);
+            fail("Expected " + ConversionException.class);
+        } catch (ConversionException e) {
+            // expected
+        }
     }
 
     /**
