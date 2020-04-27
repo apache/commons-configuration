@@ -53,7 +53,7 @@ import org.apache.commons.configuration2.ex.ConversionException;
 public interface ImmutableConfiguration
 {
     /**
-     * Check if the configuration is empty.
+     * Checks if the configuration is empty.
      *
      * @return {@code true} if the configuration contains no property,
      *         {@code false} otherwise.
@@ -72,7 +72,7 @@ public interface ImmutableConfiguration
     int size();
 
     /**
-     * Check if the configuration contains the specified key.
+     * Checks if the configuration contains the specified key.
      *
      * @param key the key whose presence in this configuration is to be tested
      *
@@ -100,7 +100,7 @@ public interface ImmutableConfiguration
     Object getProperty(String key);
 
     /**
-     * Get the list of the keys contained in the configuration that match the
+     * Gets the list of the keys contained in the configuration that match the
      * specified prefix. For instance, if the configuration contains the
      * following keys:<br>
      * {@code db.user, db.pwd, db.url, window.xpos, window.ypos},<br>
@@ -118,7 +118,7 @@ public interface ImmutableConfiguration
     Iterator<String> getKeys(String prefix);
 
     /**
-     * Get the list of the keys contained in the configuration. The returned
+     * Gets the list of the keys contained in the configuration. The returned
      * iterator can be used to obtain all defined keys. It does not allow
      * removing elements from this configuration via its {@code remove()}
      * method. Note that the keys of this configuration are returned in a form,
@@ -130,7 +130,7 @@ public interface ImmutableConfiguration
     Iterator<String> getKeys();
 
     /**
-     * Get a list of properties associated with the given configuration key. This method
+     * Gets a list of properties associated with the given configuration key. This method
      * expects the given key to have an arbitrary number of String values, each of which
      * is of the form {@code key=value}. These strings are split at the equals sign, and
      * the key parts will become keys of the returned {@code Properties} object, the value
@@ -146,7 +146,7 @@ public interface ImmutableConfiguration
     Properties getProperties(String key);
 
     /**
-     * Get a boolean associated with the given configuration key.
+     * Gets a boolean associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated boolean.
@@ -156,7 +156,7 @@ public interface ImmutableConfiguration
     boolean getBoolean(String key);
 
     /**
-     * Get a boolean associated with the given configuration key. If the key doesn't map
+     * Gets a boolean associated with the given configuration key. If the key doesn't map
      * to an existing object, the default value is returned.
      *
      * @param key The configuration key.
@@ -168,7 +168,7 @@ public interface ImmutableConfiguration
     boolean getBoolean(String key, boolean defaultValue);
 
     /**
-     * Get a {@link Boolean} associated with the given configuration key.
+     * Gets a {@link Boolean} associated with the given configuration key.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
@@ -180,7 +180,7 @@ public interface ImmutableConfiguration
     Boolean getBoolean(String key, Boolean defaultValue);
 
     /**
-     * Get a byte associated with the given configuration key.
+     * Gets a byte associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated byte.
@@ -190,7 +190,7 @@ public interface ImmutableConfiguration
     byte getByte(String key);
 
     /**
-     * Get a byte associated with the given configuration key. If the key doesn't map to
+     * Gets a byte associated with the given configuration key. If the key doesn't map to
      * an existing object, the default value is returned.
      *
      * @param key The configuration key.
@@ -202,7 +202,7 @@ public interface ImmutableConfiguration
     byte getByte(String key, byte defaultValue);
 
     /**
-     * Get a {@link Byte} associated with the given configuration key.
+     * Gets a {@link Byte} associated with the given configuration key.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
@@ -214,7 +214,7 @@ public interface ImmutableConfiguration
     Byte getByte(String key, Byte defaultValue);
 
     /**
-     * Get a double associated with the given configuration key.
+     * Gets a double associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated double.
@@ -224,7 +224,7 @@ public interface ImmutableConfiguration
     double getDouble(String key);
 
     /**
-     * Get a double associated with the given configuration key. If the key doesn't map to
+     * Gets a double associated with the given configuration key. If the key doesn't map to
      * an existing object, the default value is returned.
      *
      * @param key The configuration key.
@@ -236,7 +236,7 @@ public interface ImmutableConfiguration
     double getDouble(String key, double defaultValue);
 
     /**
-     * Get a {@link Double} associated with the given configuration key.
+     * Gets a {@link Double} associated with the given configuration key.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
@@ -248,7 +248,7 @@ public interface ImmutableConfiguration
     Double getDouble(String key, Double defaultValue);
 
     /**
-     * Get a float associated with the given configuration key.
+     * Gets a float associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated float.
@@ -258,7 +258,7 @@ public interface ImmutableConfiguration
     float getFloat(String key);
 
     /**
-     * Get a float associated with the given configuration key. If the key doesn't map to
+     * Gets a float associated with the given configuration key. If the key doesn't map to
      * an existing object, the default value is returned.
      *
      * @param key The configuration key.
@@ -270,7 +270,7 @@ public interface ImmutableConfiguration
     float getFloat(String key, float defaultValue);
 
     /**
-     * Get a {@link Float} associated with the given configuration key. If the key doesn't
+     * Gets a {@link Float} associated with the given configuration key. If the key doesn't
      * map to an existing object, the default value is returned.
      *
      * @param key The configuration key.
@@ -283,7 +283,7 @@ public interface ImmutableConfiguration
     Float getFloat(String key, Float defaultValue);
 
     /**
-     * Get a int associated with the given configuration key.
+     * Gets a int associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated int.
@@ -293,7 +293,7 @@ public interface ImmutableConfiguration
     int getInt(String key);
 
     /**
-     * Get a int associated with the given configuration key. If the key doesn't map to an
+     * Gets a int associated with the given configuration key. If the key doesn't map to an
      * existing object, the default value is returned.
      *
      * @param key The configuration key.
@@ -305,7 +305,7 @@ public interface ImmutableConfiguration
     int getInt(String key, int defaultValue);
 
     /**
-     * Get an {@link Integer} associated with the given configuration key. If the key
+     * Gets an {@link Integer} associated with the given configuration key. If the key
      * doesn't map to an existing object, the default value is returned.
      *
      * @param key The configuration key.
@@ -318,7 +318,7 @@ public interface ImmutableConfiguration
     Integer getInteger(String key, Integer defaultValue);
 
     /**
-     * Get a long associated with the given configuration key.
+     * Gets a long associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated long.
@@ -328,7 +328,7 @@ public interface ImmutableConfiguration
     long getLong(String key);
 
     /**
-     * Get a long associated with the given configuration key.
+     * Gets a long associated with the given configuration key.
      * If the key doesn't map to an existing object, the default value
      * is returned.
      *
@@ -342,7 +342,7 @@ public interface ImmutableConfiguration
     long getLong(String key, long defaultValue);
 
     /**
-     * Get a {@link Long} associated with the given configuration key.
+     * Gets a {@link Long} associated with the given configuration key.
      * If the key doesn't map to an existing object, the default value
      * is returned.
      *
@@ -357,7 +357,7 @@ public interface ImmutableConfiguration
     Long getLong(String key, Long defaultValue);
 
     /**
-     * Get a short associated with the given configuration key.
+     * Gets a short associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated short.
@@ -368,7 +368,7 @@ public interface ImmutableConfiguration
     short getShort(String key);
 
     /**
-     * Get a short associated with the given configuration key.
+     * Gets a short associated with the given configuration key.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
@@ -380,7 +380,7 @@ public interface ImmutableConfiguration
     short getShort(String key, short defaultValue);
 
     /**
-     * Get a {@link Short} associated with the given configuration key.
+     * Gets a {@link Short} associated with the given configuration key.
      * If the key doesn't map to an existing object, the default value
      * is returned.
      *
@@ -395,7 +395,7 @@ public interface ImmutableConfiguration
     Short getShort(String key, Short defaultValue);
 
     /**
-     * Get a {@link BigDecimal} associated with the given configuration key.
+     * Gets a {@link BigDecimal} associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated BigDecimal if key is found and has valid format
@@ -403,7 +403,7 @@ public interface ImmutableConfiguration
     BigDecimal getBigDecimal(String key);
 
     /**
-     * Get a {@link BigDecimal} associated with the given configuration key.
+     * Gets a {@link BigDecimal} associated with the given configuration key.
      * If the key doesn't map to an existing object, the default value
      * is returned.
      *
@@ -416,7 +416,7 @@ public interface ImmutableConfiguration
     BigDecimal getBigDecimal(String key, BigDecimal defaultValue);
 
     /**
-     * Get a {@link BigInteger} associated with the given configuration key.
+     * Gets a {@link BigInteger} associated with the given configuration key.
      *
      * @param key The configuration key.
      *
@@ -425,7 +425,7 @@ public interface ImmutableConfiguration
     BigInteger getBigInteger(String key);
 
     /**
-     * Get a {@link BigInteger} associated with the given configuration key.
+     * Gets a {@link BigInteger} associated with the given configuration key.
      * If the key doesn't map to an existing object, the default value
      * is returned.
      *
@@ -438,7 +438,7 @@ public interface ImmutableConfiguration
     BigInteger getBigInteger(String key, BigInteger defaultValue);
 
     /**
-     * Get a string associated with the given configuration key.
+     * Gets a string associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated string.
@@ -449,7 +449,7 @@ public interface ImmutableConfiguration
     String getString(String key);
 
     /**
-     * Get a string associated with the given configuration key.
+     * Gets a string associated with the given configuration key.
      * If the key doesn't map to an existing object, the default value
      * is returned.
      *
@@ -464,7 +464,7 @@ public interface ImmutableConfiguration
     String getString(String key, String defaultValue);
 
     /**
-     * Get the value of a string property that is stored in encoded form in this
+     * Gets the value of a string property that is stored in encoded form in this
      * configuration. This method obtains the value of the string property
      * identified by the given key. This value is then passed to the provided
      * {@code ConfigurationDecoder}. The value returned by the
@@ -481,7 +481,7 @@ public interface ImmutableConfiguration
     String getEncodedString(String key, ConfigurationDecoder decoder);
 
     /**
-     * Get the value of a string property that is stored in encoded form in this
+     * Gets the value of a string property that is stored in encoded form in this
      * configuration using a default {@code ConfigurationDecoder}. This method
      * works like the method with the same name, but it uses a default
      * {@code ConfigurationDecoder} associated with this configuration. It
@@ -540,7 +540,7 @@ public interface ImmutableConfiguration
     }
 
     /**
-     * Get an array of strings associated with the given configuration key.
+     * Gets an array of strings associated with the given configuration key.
      * If the key doesn't map to an existing object an empty array is returned
      *
      * @param key The configuration key.
@@ -552,7 +552,7 @@ public interface ImmutableConfiguration
     String[] getStringArray(String key);
 
     /**
-     * Get a List of the values associated with the given configuration key.
+     * Gets a List of the values associated with the given configuration key.
      * This method is different from the generic {@code getList()} method in
      * that it does not recursively obtain all values stored for the specified
      * property key. Rather, only the first level of the hierarchy is processed.
@@ -570,7 +570,7 @@ public interface ImmutableConfiguration
     List<Object> getList(String key);
 
     /**
-     * Get a List of strings associated with the given configuration key.
+     * Gets a List of strings associated with the given configuration key.
      * If the key doesn't map to an existing object, the default value
      * is returned.
      *
@@ -585,7 +585,7 @@ public interface ImmutableConfiguration
     List<Object> getList(String key, List<?> defaultValue);
 
     /**
-     * Get an object of the specified type associated with the given
+     * Gets an object of the specified type associated with the given
      * configuration key. If the key doesn't map to an existing object, the
      * method returns null unless
      * {@link AbstractConfiguration#isThrowExceptionOnMissing()} is set to
@@ -604,7 +604,7 @@ public interface ImmutableConfiguration
     <T> T get(Class<T> cls, String key);
 
     /**
-     * Get an object of the specified type associated with the given
+     * Gets an object of the specified type associated with the given
      * configuration key using a default value. If the key doesn't map to an
      * existing object, the default value is returned.
      *
@@ -623,7 +623,7 @@ public interface ImmutableConfiguration
     <T> T get(Class<T> cls, String key, T defaultValue);
 
     /**
-     * Get an array of typed objects associated with the given configuration key.
+     * Gets an array of typed objects associated with the given configuration key.
      * If the key doesn't map to an existing object, an empty list is returned.
      *
      * @param cls the type expected for the elements of the array
@@ -638,7 +638,7 @@ public interface ImmutableConfiguration
     Object getArray(Class<?> cls, String key);
 
     /**
-     * Get an array of typed objects associated with the given configuration key.
+     * Gets an array of typed objects associated with the given configuration key.
      * If the key doesn't map to an existing object, the default value is returned.
      *
      * @param cls          the type expected for the elements of the array
@@ -661,7 +661,7 @@ public interface ImmutableConfiguration
     Object getArray(Class<?> cls, String key, Object defaultValue);
 
     /**
-     * Get a list of typed objects associated with the given configuration key
+     * Gets a list of typed objects associated with the given configuration key
      * returning an empty list if the key doesn't map to an existing object.
      *
      * @param <T> the type expected for the elements of the list
@@ -677,7 +677,7 @@ public interface ImmutableConfiguration
     <T> List<T> getList(Class<T> cls, String key);
 
     /**
-     * Get a list of typed objects associated with the given configuration key
+     * Gets a list of typed objects associated with the given configuration key
      * returning the specified default value if the key doesn't map to an
      * existing object. This method recursively retrieves all values stored
      * for the passed in key, i.e. if one of these values is again a complex
@@ -699,7 +699,7 @@ public interface ImmutableConfiguration
     <T> List<T> getList(Class<T> cls, String key, List<T> defaultValue);
 
     /**
-     * Get a collection of typed objects associated with the given configuration
+     * Gets a collection of typed objects associated with the given configuration
      * key. This method works like
      * {@link #getCollection(Class, String, Collection, Collection)} passing in
      * <b>null</b> as default value.
@@ -716,7 +716,7 @@ public interface ImmutableConfiguration
             Collection<T> target);
 
     /**
-     * Get a collection of typed objects associated with the given configuration
+     * Gets a collection of typed objects associated with the given configuration
      * key using the values in the specified default collection if the key does
      * not map to an existing object. This method is similar to
      * {@code getList()}, however, it allows specifying a target collection.
