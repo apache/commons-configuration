@@ -219,7 +219,7 @@ public class TestFileBasedBuilderParameters
                         .setReloadingRefreshDelay(1000L);
         params.setThrowExceptionOnMissing(true);
         final Map<String, Object> map = params.getParameters();
-        assertTrue("Object not stored", map.values().contains(params));
+        assertTrue("Object not stored", map.containsValue(params));
         assertEquals("Wrong exception flag", Boolean.TRUE, params
                 .getParameters().get("throwExceptionOnMissing"));
     }
