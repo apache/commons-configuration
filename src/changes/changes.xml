@@ -40,6 +40,13 @@
          org.slf4j:slf4j-log4j12 1.7.26 -> 1.7.30,
          org.slf4j:slf4j-nop 1.7.26 -> 1.7.30.
        </action>
+       <action type="update" dev="ggregory" due-to="Gary Gregory">
+         Update optional org.springframework from 4.3.26.RELEASE to 4.3.27.RELEASE:
+         org.springframework:spring-beans 4.3.26.RELEASE -> 4.3.27.RELEASE,
+         org.springframework:spring-context 4.3.26.RELEASE -> 4.3.27.RELEASE,
+         org.springframework:spring-core 4.3.26.RELEASE -> 4.3.27.RELEASE,
+         org.springframework:spring-test 4.3.26.RELEASE -> 4.3.27.RELEASE.
+       </action>
     </release>
     <release version="2.7" date="2020-03-07"
              description="Minor release with new features and updated dependencies.">
