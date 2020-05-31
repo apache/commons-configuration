@@ -345,6 +345,33 @@ public class TestBaseConfiguration
     }
 
     @Test
+    public void testGetEnum()
+    {
+        config.setProperty("testEnum", EnumFixture.SMALLTALK.name());
+        config.setProperty("testBadEnum", "This is not an enum value.");
+        final EnumFixture enum1 = EnumFixture.SMALLTALK;
+        final EnumFixture defaultValue = EnumFixture.JAVA;
+        //
+        assertEquals("Existing key", enum1, config.getEnum("testEnum", EnumFixture.class));
+        assertEquals("Existing key with default value", enum1, config.getEnum("testEnum", EnumFixture.class, defaultValue));
+        assertEquals("Missing key with default value", defaultValue, config.getEnum("stringNotInConfig", EnumFixture.class, defaultValue));
+        //
+        try {
+            config.getEnum("testBadEnum", EnumFixture.class);
+            fail("Expected " + ConversionException.class);
+        } catch (ConversionException e) {
+            // expected
+        }
+        //
+        try {
+            config.getEnum("testBadEnum", EnumFixture.class, defaultValue);
+            fail("Expected " + ConversionException.class);
+        } catch (ConversionException e) {
+            // expected
+        }
+    }
+
+    @Test
     public void testGetFloat()
     {
         config.setProperty("numberF", "1.0");
@@ -525,33 +552,6 @@ public class TestBaseConfiguration
         assertEquals("Existing key", string, config.getString("testString"));
         assertEquals("Existing key with default value", string, config.getString("testString", defaultValue));
         assertEquals("Missing key with default value", defaultValue, config.getString("stringNotInConfig", defaultValue));
-    }
-
-    @Test
-    public void testGetEnum()
-    {
-        config.setProperty("testEnum", EnumFixture.SMALLTALK.name());
-        config.setProperty("testBadEnum", "This is not an enum value.");
-        final EnumFixture enum1 = EnumFixture.SMALLTALK;
-        final EnumFixture defaultValue = EnumFixture.JAVA;
-        //
-        assertEquals("Existing key", enum1, config.getEnum("testEnum", EnumFixture.class));
-        assertEquals("Existing key with default value", enum1, config.getEnum("testEnum", EnumFixture.class, defaultValue));
-        assertEquals("Missing key with default value", defaultValue, config.getEnum("stringNotInConfig", EnumFixture.class, defaultValue));
-        //
-        try {
-            config.getEnum("testBadEnum", EnumFixture.class);
-            fail("Expected " + ConversionException.class);
-        } catch (ConversionException e) {
-            // expected
-        }
-        //
-        try {
-            config.getEnum("testBadEnum", EnumFixture.class, defaultValue);
-            fail("Expected " + ConversionException.class);
-        } catch (ConversionException e) {
-            // expected
-        }
     }
 
     /**
