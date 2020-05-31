@@ -53,25 +53,6 @@ import org.apache.commons.configuration2.ex.ConversionException;
 public interface ImmutableConfiguration
 {
     /**
-     * Checks if the configuration is empty.
-     *
-     * @return {@code true} if the configuration contains no property,
-     *         {@code false} otherwise.
-     */
-    boolean isEmpty();
-
-    /**
-     * Returns the number of keys stored in this configuration. Note that a
-     * concrete implementation is not guaranteed to be efficient; for some
-     * implementations it may be expensive to determine the size. Especially, if
-     * you just want to check whether a configuration is empty, it is preferable
-     * to use the {@link #isEmpty()} method.
-     *
-     * @return the number of keys stored in this configuration
-     */
-    int size();
-
-    /**
      * Checks if the configuration contains the specified key.
      *
      * @param key the key whose presence in this configuration is to be tested
@@ -80,509 +61,6 @@ public interface ImmutableConfiguration
      *         key, {@code false} otherwise
      */
     boolean containsKey(String key);
-
-    /**
-     * Gets a property from the configuration. This is the most basic get
-     * method for retrieving values of properties. In a typical implementation
-     * of the {@code Configuration} interface the other get methods (that
-     * return specific data types) will internally make use of this method. On
-     * this level variable substitution is not yet performed. The returned
-     * object is an internal representation of the property value for the passed
-     * in key. It is owned by the {@code Configuration} object. So a caller
-     * should not modify this object. It cannot be guaranteed that this object
-     * will stay constant over time (i.e. further update operations on the
-     * configuration may change its internal state).
-     *
-     * @param key property to retrieve
-     * @return the value to which this configuration maps the specified key, or
-     *         null if the configuration contains no mapping for this key.
-     */
-    Object getProperty(String key);
-
-    /**
-     * Gets the list of the keys contained in the configuration that match the
-     * specified prefix. For instance, if the configuration contains the
-     * following keys:<br>
-     * {@code db.user, db.pwd, db.url, window.xpos, window.ypos},<br>
-     * an invocation of {@code getKeys("db");}<br>
-     * will return the keys below:<br>
-     * {@code db.user, db.pwd, db.url}.<br>
-     * Note that the prefix itself is included in the result set if there is a
-     * matching key. The exact behavior - how the prefix is actually
-     * interpreted - depends on a concrete implementation.
-     *
-     * @param prefix The prefix to test against.
-     * @return An Iterator of keys that match the prefix.
-     * @see #getKeys()
-     */
-    Iterator<String> getKeys(String prefix);
-
-    /**
-     * Gets the list of the keys contained in the configuration. The returned
-     * iterator can be used to obtain all defined keys. It does not allow
-     * removing elements from this configuration via its {@code remove()}
-     * method. Note that the keys of this configuration are returned in a form,
-     * so that they can be directly evaluated; escaping of special characters
-     * (if necessary) has already been performed.
-     *
-     * @return An Iterator.
-     */
-    Iterator<String> getKeys();
-
-    /**
-     * Gets a list of properties associated with the given configuration key. This method
-     * expects the given key to have an arbitrary number of String values, each of which
-     * is of the form {@code key=value}. These strings are split at the equals sign, and
-     * the key parts will become keys of the returned {@code Properties} object, the value
-     * parts become values.
-     *
-     * @param key The configuration key.
-     * @return The associated properties if key is found.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a String/List.
-     * @throws IllegalArgumentException if one of the tokens is malformed (does not contain
-     * an equals sign).
-     */
-    Properties getProperties(String key);
-
-    /**
-     * Gets a boolean associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated boolean.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a Boolean.
-     */
-    boolean getBoolean(String key);
-
-    /**
-     * Gets a boolean associated with the given configuration key. If the key doesn't map
-     * to an existing object, the default value is returned.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated boolean.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a Boolean.
-     */
-    boolean getBoolean(String key, boolean defaultValue);
-
-    /**
-     * Gets a {@link Boolean} associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated boolean if key is found and has valid format, default value
-     * otherwise.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a Boolean.
-     */
-    Boolean getBoolean(String key, Boolean defaultValue);
-
-    /**
-     * Gets a byte associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated byte.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a Byte.
-     */
-    byte getByte(String key);
-
-    /**
-     * Gets a byte associated with the given configuration key. If the key doesn't map to
-     * an existing object, the default value is returned.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated byte.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a Byte.
-     */
-    byte getByte(String key, byte defaultValue);
-
-    /**
-     * Gets a {@link Byte} associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated byte if key is found and has valid format, default value
-     * otherwise.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a Byte.
-     */
-    Byte getByte(String key, Byte defaultValue);
-
-    /**
-     * Gets a double associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated double.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a Double.
-     */
-    double getDouble(String key);
-
-    /**
-     * Gets a double associated with the given configuration key. If the key doesn't map to
-     * an existing object, the default value is returned.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated double.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a Double.
-     */
-    double getDouble(String key, double defaultValue);
-
-    /**
-     * Gets a {@link Double} associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated double if key is found and has valid format, default value
-     * otherwise.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a Double.
-     */
-    Double getDouble(String key, Double defaultValue);
-
-    /**
-     * Gets a float associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated float.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a Float.
-     */
-    float getFloat(String key);
-
-    /**
-     * Gets a float associated with the given configuration key. If the key doesn't map to
-     * an existing object, the default value is returned.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated float.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a Float.
-     */
-    float getFloat(String key, float defaultValue);
-
-    /**
-     * Gets a {@link Float} associated with the given configuration key. If the key doesn't
-     * map to an existing object, the default value is returned.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated float if key is found and has valid format, default value
-     * otherwise.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a Float.
-     */
-    Float getFloat(String key, Float defaultValue);
-
-    /**
-     * Gets a int associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated int.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a Integer.
-     */
-    int getInt(String key);
-
-    /**
-     * Gets a int associated with the given configuration key. If the key doesn't map to an
-     * existing object, the default value is returned.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated int.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a Integer.
-     */
-    int getInt(String key, int defaultValue);
-
-    /**
-     * Gets an {@link Integer} associated with the given configuration key. If the key
-     * doesn't map to an existing object, the default value is returned.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated int if key is found and has valid format, default value
-     * otherwise.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a Integer.
-     */
-    Integer getInteger(String key, Integer defaultValue);
-
-    /**
-     * Gets a long associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated long.
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
-     * key maps to an object that is not a Long.
-     */
-    long getLong(String key);
-
-    /**
-     * Gets a long associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated long.
-     *
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
-     *         object that is not a Long.
-     */
-    long getLong(String key, long defaultValue);
-
-    /**
-     * Gets a {@link Long} associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated long if key is found and has valid
-     * format, default value otherwise.
-     *
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
-     *         object that is not a Long.
-     */
-    Long getLong(String key, Long defaultValue);
-
-    /**
-     * Gets a short associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated short.
-     *
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
-     *         object that is not a Short.
-     */
-    short getShort(String key);
-
-    /**
-     * Gets a short associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated short.
-     *
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
-     *         object that is not a Short.
-     */
-    short getShort(String key, short defaultValue);
-
-    /**
-     * Gets a {@link Short} associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated short if key is found and has valid
-     *         format, default value otherwise.
-     *
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
-     *         object that is not a Short.
-     */
-    Short getShort(String key, Short defaultValue);
-
-    /**
-     * Gets a {@link BigDecimal} associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated BigDecimal if key is found and has valid format
-     */
-    BigDecimal getBigDecimal(String key);
-
-    /**
-     * Gets a {@link BigDecimal} associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
-     *
-     * @param key          The configuration key.
-     * @param defaultValue The default value.
-     *
-     * @return The associated BigDecimal if key is found and has valid
-     *         format, default value otherwise.
-     */
-    BigDecimal getBigDecimal(String key, BigDecimal defaultValue);
-
-    /**
-     * Gets a {@link BigInteger} associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     *
-     * @return The associated BigInteger if key is found and has valid format
-     */
-    BigInteger getBigInteger(String key);
-
-    /**
-     * Gets a {@link BigInteger} associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
-     *
-     * @param key          The configuration key.
-     * @param defaultValue The default value.
-     *
-     * @return The associated BigInteger if key is found and has valid
-     *         format, default value otherwise.
-     */
-    BigInteger getBigInteger(String key, BigInteger defaultValue);
-
-    /**
-     * Gets a string associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated string.
-     *
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
-     *         is not a String.
-     */
-    String getString(String key);
-
-    /**
-     * Gets a string associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated string if key is found and has valid
-     *         format, default value otherwise.
-     *
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
-     *         is not a String.
-     */
-    String getString(String key, String defaultValue);
-
-    /**
-     * Gets the value of a string property that is stored in encoded form in this
-     * configuration. This method obtains the value of the string property
-     * identified by the given key. This value is then passed to the provided
-     * {@code ConfigurationDecoder}. The value returned by the
-     * {@code ConfigurationDecoder} is passed to the caller. If the key is not
-     * associated with a value, the decoder is not invoked; depending on this
-     * configuration's settings either <b>null</b> is returned or an exception
-     * is thrown.
-     *
-     * @param key the configuration key
-     * @param decoder the {@code ConfigurationDecoder} (must not be <b>null</b>)
-     * @return the plain string value of the specified encoded property
-     * @throws IllegalArgumentException if a <b>null</b> decoder is passed
-     */
-    String getEncodedString(String key, ConfigurationDecoder decoder);
-
-    /**
-     * Gets the value of a string property that is stored in encoded form in this
-     * configuration using a default {@code ConfigurationDecoder}. This method
-     * works like the method with the same name, but it uses a default
-     * {@code ConfigurationDecoder} associated with this configuration. It
-     * depends on a specific implementation how this default decoder is
-     * obtained.
-     *
-     * @param key the configuration key
-     * @return the plain string value of the specified encoded property
-     */
-    String getEncodedString(String key);
-
-    /**
-     * Gets an enum associated with the given configuration key.
-     *
-     * @param <T> The enum type whose constant is to be returned.
-     * @param enumType the {@code Class} object of the enum type from which to return a constant
-     * @param key The configuration key.
-     * @return The associated enum.
-     *
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
-     *         is not a String.
-     * @since 2.8
-     */
-    default <T extends Enum<T>> T getEnum(String key, Class<T> enumType) {
-        try {
-            return Enum.valueOf(enumType, getString(key));
-        } catch (IllegalArgumentException e) {
-            throw new ConversionException(e);
-        }
-    }
-
-    /**
-     * Gets the enum associated with the given configuration key. If the key doesn't map to an existing object, the
-     * default value is returned.
-     * 
-     * @param <T> The enum type whose constant is to be returned.
-     * @param key The configuration key.
-     * @param enumType the {@code Class} object of the enum type from which to return a constant
-     * @param defaultValue The default value.
-     * @return The associated enum if key is found and has valid format, default value otherwise.
-     *
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is
-     *         not a Enum.
-     * @since 2.8
-     */
-    default <T extends Enum<T>> T getEnum(String key, Class<T> enumType, T defaultValue) {
-        final String strValue = getString(key, null);
-        if (strValue == null) {
-            return defaultValue;
-        }
-        try {
-            return Enum.valueOf(enumType, strValue);
-        } catch (IllegalArgumentException e) {
-            throw new ConversionException(e);
-        }
-    }
-
-    /**
-     * Gets an array of strings associated with the given configuration key.
-     * If the key doesn't map to an existing object an empty array is returned
-     *
-     * @param key The configuration key.
-     * @return The associated string array if key is found.
-     *
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
-     *         object that is not a String/List of Strings.
-     */
-    String[] getStringArray(String key);
-
-    /**
-     * Gets a List of the values associated with the given configuration key.
-     * This method is different from the generic {@code getList()} method in
-     * that it does not recursively obtain all values stored for the specified
-     * property key. Rather, only the first level of the hierarchy is processed.
-     * So the resulting list may contain complex objects like arrays or
-     * collections - depending on the storage structure used by a concrete
-     * subclass. If the key doesn't map to an existing object, an empty List is
-     * returned.
-     *
-     * @param key The configuration key.
-     * @return The associated List.
-     *
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
-     *         object that is not a List.
-     */
-    List<Object> getList(String key);
-
-    /**
-     * Gets a List of strings associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated List of strings.
-     *
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
-     *         object that is not a List.
-     * @see #getList(Class, String, List)
-     */
-    List<Object> getList(String key, List<?> defaultValue);
 
     /**
      * Gets an object of the specified type associated with the given
@@ -661,42 +139,115 @@ public interface ImmutableConfiguration
     Object getArray(Class<?> cls, String key, Object defaultValue);
 
     /**
-     * Gets a list of typed objects associated with the given configuration key
-     * returning an empty list if the key doesn't map to an existing object.
+     * Gets a {@link BigDecimal} associated with the given configuration key.
      *
-     * @param <T> the type expected for the elements of the list
-     * @param cls the class expected for the elements of the list
      * @param key The configuration key.
-     * @return The associated list if the key is found.
-     *
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
-     *     is not compatible with a list of the specified class.
-     *
-     * @since 2.0
+     * @return The associated BigDecimal if key is found and has valid format
      */
-    <T> List<T> getList(Class<T> cls, String key);
+    BigDecimal getBigDecimal(String key);
 
     /**
-     * Gets a list of typed objects associated with the given configuration key
-     * returning the specified default value if the key doesn't map to an
-     * existing object. This method recursively retrieves all values stored
-     * for the passed in key, i.e. if one of these values is again a complex
-     * object like an array or a collection (which may be the case for some
-     * concrete subclasses), all values are extracted and added to the
-     * resulting list - performing a type conversion if necessary.
+     * Gets a {@link BigDecimal} associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
      *
-     * @param <T>          the type expected for the elements of the list
-     * @param cls          the class expected for the elements of the list
-     * @param key          the configuration key.
-     * @param defaultValue the default value.
-     * @return The associated List.
+     * @param key          The configuration key.
+     * @param defaultValue The default value.
      *
-     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
-     *     is not compatible with a list of the specified class.
-     *
-     * @since 2.0
+     * @return The associated BigDecimal if key is found and has valid
+     *         format, default value otherwise.
      */
-    <T> List<T> getList(Class<T> cls, String key, List<T> defaultValue);
+    BigDecimal getBigDecimal(String key, BigDecimal defaultValue);
+
+    /**
+     * Gets a {@link BigInteger} associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     *
+     * @return The associated BigInteger if key is found and has valid format
+     */
+    BigInteger getBigInteger(String key);
+
+    /**
+     * Gets a {@link BigInteger} associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
+     *
+     * @param key          The configuration key.
+     * @param defaultValue The default value.
+     *
+     * @return The associated BigInteger if key is found and has valid
+     *         format, default value otherwise.
+     */
+    BigInteger getBigInteger(String key, BigInteger defaultValue);
+
+    /**
+     * Gets a boolean associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     * @return The associated boolean.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Boolean.
+     */
+    boolean getBoolean(String key);
+
+    /**
+     * Gets a boolean associated with the given configuration key. If the key doesn't map
+     * to an existing object, the default value is returned.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated boolean.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Boolean.
+     */
+    boolean getBoolean(String key, boolean defaultValue);
+
+    /**
+     * Gets a {@link Boolean} associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated boolean if key is found and has valid format, default value
+     * otherwise.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Boolean.
+     */
+    Boolean getBoolean(String key, Boolean defaultValue);
+
+    /**
+     * Gets a byte associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     * @return The associated byte.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Byte.
+     */
+    byte getByte(String key);
+
+    /**
+     * Gets a byte associated with the given configuration key. If the key doesn't map to
+     * an existing object, the default value is returned.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated byte.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Byte.
+     */
+    byte getByte(String key, byte defaultValue);
+
+    /**
+     * Gets a {@link Byte} associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated byte if key is found and has valid format, default value
+     * otherwise.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Byte.
+     */
+    Byte getByte(String key, Byte defaultValue);
 
     /**
      * Gets a collection of typed objects associated with the given configuration
@@ -747,6 +298,436 @@ public interface ImmutableConfiguration
             Collection<T> target, Collection<T> defaultValue);
 
     /**
+     * Gets a double associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     * @return The associated double.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Double.
+     */
+    double getDouble(String key);
+
+    /**
+     * Gets a double associated with the given configuration key. If the key doesn't map to
+     * an existing object, the default value is returned.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated double.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Double.
+     */
+    double getDouble(String key, double defaultValue);
+
+    /**
+     * Gets a {@link Double} associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated double if key is found and has valid format, default value
+     * otherwise.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Double.
+     */
+    Double getDouble(String key, Double defaultValue);
+
+    /**
+     * Gets the value of a string property that is stored in encoded form in this
+     * configuration using a default {@code ConfigurationDecoder}. This method
+     * works like the method with the same name, but it uses a default
+     * {@code ConfigurationDecoder} associated with this configuration. It
+     * depends on a specific implementation how this default decoder is
+     * obtained.
+     *
+     * @param key the configuration key
+     * @return the plain string value of the specified encoded property
+     */
+    String getEncodedString(String key);
+
+    /**
+     * Gets the value of a string property that is stored in encoded form in this
+     * configuration. This method obtains the value of the string property
+     * identified by the given key. This value is then passed to the provided
+     * {@code ConfigurationDecoder}. The value returned by the
+     * {@code ConfigurationDecoder} is passed to the caller. If the key is not
+     * associated with a value, the decoder is not invoked; depending on this
+     * configuration's settings either <b>null</b> is returned or an exception
+     * is thrown.
+     *
+     * @param key the configuration key
+     * @param decoder the {@code ConfigurationDecoder} (must not be <b>null</b>)
+     * @return the plain string value of the specified encoded property
+     * @throws IllegalArgumentException if a <b>null</b> decoder is passed
+     */
+    String getEncodedString(String key, ConfigurationDecoder decoder);
+
+    /**
+     * Gets an enum associated with the given configuration key.
+     *
+     * @param <T> The enum type whose constant is to be returned.
+     * @param enumType the {@code Class} object of the enum type from which to return a constant
+     * @param key The configuration key.
+     * @return The associated enum.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
+     *         is not a String.
+     * @since 2.8
+     */
+    default <T extends Enum<T>> T getEnum(String key, Class<T> enumType) {
+        try {
+            return Enum.valueOf(enumType, getString(key));
+        } catch (IllegalArgumentException e) {
+            throw new ConversionException(e);
+        }
+    }
+
+    /**
+     * Gets the enum associated with the given configuration key. If the key doesn't map to an existing object, the
+     * default value is returned.
+     * 
+     * @param <T> The enum type whose constant is to be returned.
+     * @param key The configuration key.
+     * @param enumType the {@code Class} object of the enum type from which to return a constant
+     * @param defaultValue The default value.
+     * @return The associated enum if key is found and has valid format, default value otherwise.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is
+     *         not a Enum.
+     * @since 2.8
+     */
+    default <T extends Enum<T>> T getEnum(String key, Class<T> enumType, T defaultValue) {
+        final String strValue = getString(key, null);
+        if (strValue == null) {
+            return defaultValue;
+        }
+        try {
+            return Enum.valueOf(enumType, strValue);
+        } catch (IllegalArgumentException e) {
+            throw new ConversionException(e);
+        }
+    }
+
+    /**
+     * Gets a float associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     * @return The associated float.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Float.
+     */
+    float getFloat(String key);
+
+    /**
+     * Gets a float associated with the given configuration key. If the key doesn't map to
+     * an existing object, the default value is returned.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated float.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Float.
+     */
+    float getFloat(String key, float defaultValue);
+
+    /**
+     * Gets a {@link Float} associated with the given configuration key. If the key doesn't
+     * map to an existing object, the default value is returned.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated float if key is found and has valid format, default value
+     * otherwise.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Float.
+     */
+    Float getFloat(String key, Float defaultValue);
+
+    /**
+     * Gets a int associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     * @return The associated int.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Integer.
+     */
+    int getInt(String key);
+
+    /**
+     * Gets a int associated with the given configuration key. If the key doesn't map to an
+     * existing object, the default value is returned.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated int.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Integer.
+     */
+    int getInt(String key, int defaultValue);
+
+    /**
+     * Gets an {@link Integer} associated with the given configuration key. If the key
+     * doesn't map to an existing object, the default value is returned.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated int if key is found and has valid format, default value
+     * otherwise.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Integer.
+     */
+    Integer getInteger(String key, Integer defaultValue);
+
+    /**
+     * Gets the list of the keys contained in the configuration. The returned
+     * iterator can be used to obtain all defined keys. It does not allow
+     * removing elements from this configuration via its {@code remove()}
+     * method. Note that the keys of this configuration are returned in a form,
+     * so that they can be directly evaluated; escaping of special characters
+     * (if necessary) has already been performed.
+     *
+     * @return An Iterator.
+     */
+    Iterator<String> getKeys();
+
+    /**
+     * Gets the list of the keys contained in the configuration that match the
+     * specified prefix. For instance, if the configuration contains the
+     * following keys:<br>
+     * {@code db.user, db.pwd, db.url, window.xpos, window.ypos},<br>
+     * an invocation of {@code getKeys("db");}<br>
+     * will return the keys below:<br>
+     * {@code db.user, db.pwd, db.url}.<br>
+     * Note that the prefix itself is included in the result set if there is a
+     * matching key. The exact behavior - how the prefix is actually
+     * interpreted - depends on a concrete implementation.
+     *
+     * @param prefix The prefix to test against.
+     * @return An Iterator of keys that match the prefix.
+     * @see #getKeys()
+     */
+    Iterator<String> getKeys(String prefix);
+
+    /**
+     * Gets a list of typed objects associated with the given configuration key
+     * returning an empty list if the key doesn't map to an existing object.
+     *
+     * @param <T> the type expected for the elements of the list
+     * @param cls the class expected for the elements of the list
+     * @param key The configuration key.
+     * @return The associated list if the key is found.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
+     *     is not compatible with a list of the specified class.
+     *
+     * @since 2.0
+     */
+    <T> List<T> getList(Class<T> cls, String key);
+
+    /**
+     * Gets a list of typed objects associated with the given configuration key
+     * returning the specified default value if the key doesn't map to an
+     * existing object. This method recursively retrieves all values stored
+     * for the passed in key, i.e. if one of these values is again a complex
+     * object like an array or a collection (which may be the case for some
+     * concrete subclasses), all values are extracted and added to the
+     * resulting list - performing a type conversion if necessary.
+     *
+     * @param <T>          the type expected for the elements of the list
+     * @param cls          the class expected for the elements of the list
+     * @param key          the configuration key.
+     * @param defaultValue the default value.
+     * @return The associated List.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
+     *     is not compatible with a list of the specified class.
+     *
+     * @since 2.0
+     */
+    <T> List<T> getList(Class<T> cls, String key, List<T> defaultValue);
+
+    /**
+     * Gets a List of the values associated with the given configuration key.
+     * This method is different from the generic {@code getList()} method in
+     * that it does not recursively obtain all values stored for the specified
+     * property key. Rather, only the first level of the hierarchy is processed.
+     * So the resulting list may contain complex objects like arrays or
+     * collections - depending on the storage structure used by a concrete
+     * subclass. If the key doesn't map to an existing object, an empty List is
+     * returned.
+     *
+     * @param key The configuration key.
+     * @return The associated List.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
+     *         object that is not a List.
+     */
+    List<Object> getList(String key);
+
+    /**
+     * Gets a List of strings associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated List of strings.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
+     *         object that is not a List.
+     * @see #getList(Class, String, List)
+     */
+    List<Object> getList(String key, List<?> defaultValue);
+
+    /**
+     * Gets a long associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     * @return The associated long.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a Long.
+     */
+    long getLong(String key);
+
+    /**
+     * Gets a long associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated long.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
+     *         object that is not a Long.
+     */
+    long getLong(String key, long defaultValue);
+
+    /**
+     * Gets a {@link Long} associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated long if key is found and has valid
+     * format, default value otherwise.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
+     *         object that is not a Long.
+     */
+    Long getLong(String key, Long defaultValue);
+
+    /**
+     * Gets a list of properties associated with the given configuration key. This method
+     * expects the given key to have an arbitrary number of String values, each of which
+     * is of the form {@code key=value}. These strings are split at the equals sign, and
+     * the key parts will become keys of the returned {@code Properties} object, the value
+     * parts become values.
+     *
+     * @param key The configuration key.
+     * @return The associated properties if key is found.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the
+     * key maps to an object that is not a String/List.
+     * @throws IllegalArgumentException if one of the tokens is malformed (does not contain
+     * an equals sign).
+     */
+    Properties getProperties(String key);
+
+    /**
+     * Gets a property from the configuration. This is the most basic get
+     * method for retrieving values of properties. In a typical implementation
+     * of the {@code Configuration} interface the other get methods (that
+     * return specific data types) will internally make use of this method. On
+     * this level variable substitution is not yet performed. The returned
+     * object is an internal representation of the property value for the passed
+     * in key. It is owned by the {@code Configuration} object. So a caller
+     * should not modify this object. It cannot be guaranteed that this object
+     * will stay constant over time (i.e. further update operations on the
+     * configuration may change its internal state).
+     *
+     * @param key property to retrieve
+     * @return the value to which this configuration maps the specified key, or
+     *         null if the configuration contains no mapping for this key.
+     */
+    Object getProperty(String key);
+
+    /**
+     * Gets a short associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     * @return The associated short.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
+     *         object that is not a Short.
+     */
+    short getShort(String key);
+
+    /**
+     * Gets a short associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated short.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
+     *         object that is not a Short.
+     */
+    short getShort(String key, short defaultValue);
+
+    /**
+     * Gets a {@link Short} associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated short if key is found and has valid
+     *         format, default value otherwise.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
+     *         object that is not a Short.
+     */
+    Short getShort(String key, Short defaultValue);
+
+    /**
+     * Gets a string associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     * @return The associated string.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
+     *         is not a String.
+     */
+    String getString(String key);
+
+    /**
+     * Gets a string associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated string if key is found and has valid
+     *         format, default value otherwise.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that
+     *         is not a String.
+     */
+    String getString(String key, String defaultValue);
+
+    /**
+     * Gets an array of strings associated with the given configuration key.
+     * If the key doesn't map to an existing object an empty array is returned
+     *
+     * @param key The configuration key.
+     * @return The associated string array if key is found.
+     *
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an
+     *         object that is not a String/List of Strings.
+     */
+    String[] getStringArray(String key);
+
+    /**
      * Return a decorator immutable Configuration containing every key from the current
      * Configuration that starts with the specified prefix. The prefix is
      * removed from the keys in the subset. For example, if the configuration
@@ -772,6 +753,25 @@ public interface ImmutableConfiguration
      * @return a subset immutable configuration
      */
     ImmutableConfiguration immutableSubset(String prefix);
+
+    /**
+     * Checks if the configuration is empty.
+     *
+     * @return {@code true} if the configuration contains no property,
+     *         {@code false} otherwise.
+     */
+    boolean isEmpty();
+
+    /**
+     * Returns the number of keys stored in this configuration. Note that a
+     * concrete implementation is not guaranteed to be efficient; for some
+     * implementations it may be expensive to determine the size. Especially, if
+     * you just want to check whether a configuration is empty, it is preferable
+     * to use the {@link #isEmpty()} method.
+     *
+     * @return the number of keys stored in this configuration
+     */
+    int size();
 
 
 }
