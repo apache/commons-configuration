@@ -384,7 +384,7 @@ public interface ImmutableConfiguration
     /**
      * Gets the enum associated with the given configuration key. If the key doesn't map to an existing object, the
      * default value is returned.
-     * 
+     *
      * @param <T> The enum type whose constant is to be returned.
      * @param key The configuration key.
      * @param enumType the {@code Class} object of the enum type from which to return a constant
