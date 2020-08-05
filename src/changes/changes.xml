@@ -65,6 +65,9 @@
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Update commons-text from 1.8 to 1.9.
        </action>
+       <action type="update" dev="ggregory" due-to="Gary Gregory">
+         Update servlet-api from 2.4 to 2.5 #58.
+       </action>
     </release>
     <release version="2.7" date="2020-03-07"
              description="Minor release with new features and updated dependencies.">
