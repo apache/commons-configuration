@@ -30,8 +30,8 @@
        <action type="add" dev="ggregory" issue="CONFIGURATION-789" due-to="Gary Gregory">
          Add ImmutableConfiguration.getEnum() methods.
        </action>
-       <action type="update" dev="ggregory" issue="CONFIGURATION-790" due-to="Gary Gregory">
-         Update optional com.fasterxml.jackson.core:jackson-databind from 2.10.3 to 2.11.1.
+       <action type="update" dev="ggregory" issue="CONFIGURATION-790" due-to="Gary Gregory, Dependabot">
+         Update optional com.fasterxml.jackson.core:jackson-databind from 2.10.3 to 2.11.2, #60.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Update Slf4j test dependencies:
