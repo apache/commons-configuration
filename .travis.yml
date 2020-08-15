@@ -33,4 +33,4 @@ matrix:
     - jdk: openjdk-ea
 
 after_success:
-  - mvn -V clean cobertura:cobertura coveralls:report --no-transfer-progress
+  - ./mvnw -V clean cobertura:cobertura coveralls:report --no-transfer-progress
