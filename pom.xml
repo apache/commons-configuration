@@ -735,6 +735,7 @@
         <artifactId>apache-rat-plugin</artifactId>
         <configuration>
           <excludes>
+            <exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
             <exclude>src/java/org/apache/commons/configuration2/plist/*.java</exclude>
             <exclude>velocity.log</exclude>
             <exclude>src/test/resources/test.json</exclude>
@@ -860,6 +861,7 @@
         <artifactId>apache-rat-plugin</artifactId>
         <configuration>
           <excludes>
+            <exclude>.mvn/wrapper/maven-wrapper.properties</exclude>
             <exclude>src/java/org/apache/commons/configuration2/plist/*.java</exclude>
             <exclude>velocity.log</exclude>
             <exclude>src/test/resources/test.json</exclude>
