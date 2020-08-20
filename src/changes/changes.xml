@@ -33,6 +33,9 @@
        <action type="update" dev="ggregory" issue="CONFIGURATION-790" due-to="Gary Gregory, Dependabot">
          Update optional com.fasterxml.jackson.core:jackson-databind from 2.10.3 to 2.11.2, #60.
        </action>
+       <action type="update" dev="ggregory" due-to="Oliver B. Fischer">
+         Mention EnvironmentConfiguration in the list of configuration sources #45.
+       </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Update Slf4j test dependencies:
          org.slf4j:slf4j-api 1.7.26 -> 1.7.30,
