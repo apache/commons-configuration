@@ -74,6 +74,9 @@
        <action type="update" dev="ggregory" due-to="Dependabot">
          Update commons-pool2 from 2.8.0 to 2.8.1 #61.
        </action>
+       <action type="update" dev="ggregory" due-to="Dependabot">
+         Update actions/setup-java from v1.4.0 to v1.4.1 #63.
+       </action>
     </release>
     <release version="2.7" date="2020-03-07"
              description="Minor release with new features and updated dependencies.">
