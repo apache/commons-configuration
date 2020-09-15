@@ -465,6 +465,10 @@ public final class FileLocatorUtils
      * file.toURI().toURL().
      *
      * @param file the file to be converted into an URL
+     * @return a URL
+     * @throws  MalformedURLException 
+     *          If the file protocol handler is not found (should not happen)
+     *          or if an error occurred while constructing the URL
      */
     static URL toURL(final File file) throws MalformedURLException
     {
