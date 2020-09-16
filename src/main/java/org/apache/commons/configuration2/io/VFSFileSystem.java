@@ -86,7 +86,8 @@ public class VFSFileSystem extends DefaultFileSystem
         }
         try
         {
-            return resolveURI(path).getParent().getURI();
+            final FileName parent = resolveURI(path).getParent();
+            return parent != null ? parent.getURI() : null;
         }
         catch (final FileSystemException fse)
         {
@@ -120,12 +121,12 @@ public class VFSFileSystem extends DefaultFileSystem
         try
         {
             final FileSystemOptions opts = getOptions(url.getProtocol());
-            file = opts == null ? resolveFile(url.toString()) : getManager().resolveFile(url.toString(), opts);
+            file = getManager().resolveFile(url.toString(), opts);
             if (!file.exists())
             {
                 throw new ConfigurationException("File not found");
             }
-            if (file.getType() != FileType.FILE)
+            if (!file.isFile())
             {
                 throw new ConfigurationException("Cannot load a configuration from a directory");
             }
@@ -150,6 +151,9 @@ public class VFSFileSystem extends DefaultFileSystem
 
     private FileSystemOptions getOptions(final String scheme)
     {
+        if (scheme == null) {
+            return null;
+        }
         final FileSystemOptions opts = new FileSystemOptions();
         FileSystemConfigBuilder builder;
         try
@@ -202,10 +206,9 @@ public class VFSFileSystem extends DefaultFileSystem
         try
         {
             final FileSystemOptions opts = getOptions(url.getProtocol());
-            final FileObject file = opts == null ? resolveFile(url.toString())
-                    : getManager().resolveFile(url.toString(), opts);
+            final FileObject file = getManager().resolveFile(url.toString(), opts);
             // throw an exception if the target URL is a directory
-            if (file == null || file.getType() == FileType.FOLDER)
+            if (file == null || file.isFolder())
             {
                 throw new ConfigurationException("Cannot save a configuration to a directory");
             }
@@ -312,10 +315,9 @@ public class VFSFileSystem extends DefaultFileSystem
             if (basePath != null && fileScheme == null)
             {
                 final String scheme = UriParser.extractScheme(basePath);
-                final FileSystemOptions opts = scheme != null ? getOptions(scheme) : null;
-                FileObject base = opts == null ? resolveFile(basePath)
-                        : getManager().resolveFile(basePath, opts);
-                if (base.getType() == FileType.FILE)
+                final FileSystemOptions opts = getOptions(scheme);
+                FileObject base = getManager().resolveFile(basePath, opts);
+                if (base.isFile())
                 {
                     base = base.getParent();
                 }
@@ -325,8 +327,7 @@ public class VFSFileSystem extends DefaultFileSystem
             else
             {
                 final FileSystemOptions opts = fileScheme != null ? getOptions(fileScheme) : null;
-                file = opts == null ? resolveFile(fileName)
-                        : getManager().resolveFile(fileName, opts);
+                file = getManager().resolveFile(fileName, opts);
             }
 
             if (!file.exists())
@@ -337,18 +338,10 @@ public class VFSFileSystem extends DefaultFileSystem
             final URLStreamHandler handler = new VFSURLStreamHandler(path);
             return new URL(null, path.getURI(), handler);
         }
-        catch (final FileSystemException fse)
+        catch (final FileSystemException | MalformedURLException fse)
         {
             return null;
         }
-        catch (final MalformedURLException ex)
-        {
-            return null;
-        }
-    }
-
-    private FileObject resolveFile(final String basePath) throws FileSystemException {
-        return getManager().resolveFile(basePath);
     }
 
     private FileName resolveURI(final String path) throws FileSystemException {
