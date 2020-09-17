@@ -466,7 +466,7 @@ public final class FileLocatorUtils
      *
      * @param file the file to be converted into an URL
      * @return a URL
-     * @throws  MalformedURLException 
+     * @throws  MalformedURLException
      *          If the file protocol handler is not found (should not happen)
      *          or if an error occurred while constructing the URL
      */
