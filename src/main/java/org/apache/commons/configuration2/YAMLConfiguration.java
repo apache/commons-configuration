@@ -152,7 +152,7 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration
      * @param options options for loading the file
      * @return the {@code Yaml} instance for loading a file
      */
-    private static Yaml createYamlForReading(LoaderOptions options)
+    private static Yaml createYamlForReading(final LoaderOptions options)
     {
         return new Yaml(createClassLoadingDisablingConstructor(), new Representer(), new DumperOptions(), options);
     }
@@ -169,7 +169,7 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration
         return new Constructor()
         {
             @Override
-            protected Class<?> getClassForName(String name)
+            protected Class<?> getClassForName(final String name)
             {
                 throw new ConfigurationRuntimeException("Class instantiation is disabled.");
             }

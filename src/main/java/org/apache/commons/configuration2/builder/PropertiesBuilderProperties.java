@@ -47,7 +47,7 @@ public interface PropertiesBuilderProperties<T>
      * @return a reference to this object for method chaining
      * @since 2.6
      */
-    default T setIncludeListener(ConfigurationConsumer<ConfigurationException> includeListener)
+    default T setIncludeListener(final ConfigurationConsumer<ConfigurationException> includeListener)
     {
         return (T) this;
     }

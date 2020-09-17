@@ -157,7 +157,7 @@ public class TestYAMLConfiguration
             yamlConfiguration.read(new StringReader(yaml));
             fail("Loading configuration did not cause an exception!");
         }
-        catch (ConfigurationException e)
+        catch (final ConfigurationException e)
         {
             //expected
         }
@@ -175,7 +175,7 @@ public class TestYAMLConfiguration
             yamlConfiguration.read(new ByteArrayInputStream(yaml.getBytes(StandardCharsets.UTF_8)));
             fail("Loading configuration did not cause an exception!");
         }
-        catch (ConfigurationException e)
+        catch (final ConfigurationException e)
         {
             //expected
         }

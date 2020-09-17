@@ -359,14 +359,14 @@ public class TestBaseConfiguration
         try {
             config.getEnum("testBadEnum", EnumFixture.class);
             fail("Expected " + ConversionException.class);
-        } catch (ConversionException e) {
+        } catch (final ConversionException e) {
             // expected
         }
         //
         try {
             config.getEnum("testBadEnum", EnumFixture.class, defaultValue);
             fail("Expected " + ConversionException.class);
-        } catch (ConversionException e) {
+        } catch (final ConversionException e) {
             // expected
         }
     }

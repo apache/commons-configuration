@@ -832,7 +832,7 @@ public class TestPropertiesConfigurationLayout
          * load() call on the layout is invoked.
          */
         @Override
-        boolean propertyLoaded(final String key, final String value, Deque<URL> seenStack)
+        boolean propertyLoaded(final String key, final String value, final Deque<URL> seenStack)
                 throws ConfigurationException
         {
             if (builder == null)

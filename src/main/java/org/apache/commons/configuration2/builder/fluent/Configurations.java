@@ -257,7 +257,7 @@ public class Configurations
      * @since 2.6
      */
     public FileBasedConfigurationBuilder<PropertiesConfiguration> propertiesBuilder(
-            PropertiesBuilderParameters parameters)
+            final PropertiesBuilderParameters parameters)
     {
         return propertiesBuilder().configure(parameters);
     }

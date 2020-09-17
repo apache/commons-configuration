@@ -1897,7 +1897,7 @@ public class PropertiesConfiguration extends BaseConfiguration
                         seenStack.pop();
                     }
                 }
-                catch (ConfigurationException e)
+                catch (final ConfigurationException e)
                 {
                     getIncludeListener().accept(e);
                 }

@@ -278,7 +278,7 @@ public class TestConfigurations
             builder.getConfiguration();
             Assert.fail("Expected ConfigurationException");
         }
-        catch (ConfigurationException e) {
+        catch (final ConfigurationException e) {
             // ignore
         }
     }
@@ -300,7 +300,7 @@ public class TestConfigurations
             builderFail.getConfiguration();
             Assert.fail("Expected ConfigurationException");
         }
-        catch (ConfigurationException e)
+        catch (final ConfigurationException e)
         {
             // Ignore
             // e.printStackTrace();
@@ -310,7 +310,7 @@ public class TestConfigurations
         {
             configs.properties(absPath);
         }
-        catch (ConfigurationException e) {
+        catch (final ConfigurationException e) {
             // Ignore
             // e.printStackTrace();
         }

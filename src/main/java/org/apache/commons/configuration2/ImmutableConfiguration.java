@@ -373,10 +373,10 @@ public interface ImmutableConfiguration
      *         is not a String.
      * @since 2.8
      */
-    default <T extends Enum<T>> T getEnum(String key, Class<T> enumType) {
+    default <T extends Enum<T>> T getEnum(final String key, final Class<T> enumType) {
         try {
             return Enum.valueOf(enumType, getString(key));
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             throw new ConversionException(e);
         }
     }
@@ -395,14 +395,14 @@ public interface ImmutableConfiguration
      *         not a Enum.
      * @since 2.8
      */
-    default <T extends Enum<T>> T getEnum(String key, Class<T> enumType, T defaultValue) {
+    default <T extends Enum<T>> T getEnum(final String key, final Class<T> enumType, final T defaultValue) {
         final String strValue = getString(key, null);
         if (strValue == null) {
             return defaultValue;
         }
         try {
             return Enum.valueOf(enumType, strValue);
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             throw new ConversionException(e);
         }
     }

@@ -1779,9 +1779,9 @@ public class TestXMLConfiguration
     @Test
     public void testWrite() throws Exception
     {
-        XMLConfiguration xmlConfig = new XMLConfiguration();
+        final XMLConfiguration xmlConfig = new XMLConfiguration();
         xmlConfig.setRootElementName("IAmRoot");
-        StringWriter sw = new StringWriter();
+        final StringWriter sw = new StringWriter();
         xmlConfig.write(sw);
         // Check that we can parse the XML.
         Assert.assertNotNull(parseXml(sw.toString()));
@@ -1790,9 +1790,9 @@ public class TestXMLConfiguration
     @Test
     public void testWriteIndentSize() throws Exception
     {
-        XMLConfiguration xmlConfig = new XMLConfiguration();
+        final XMLConfiguration xmlConfig = new XMLConfiguration();
         xmlConfig.setRootElementName("IAmRoot");
-        StringWriter sw = new StringWriter();
+        final StringWriter sw = new StringWriter();
         xmlConfig.setProperty("Child", "Alexander");
         xmlConfig.write(sw);
         // Check that we can parse the XML.
@@ -1805,10 +1805,10 @@ public class TestXMLConfiguration
     @Test
     public void testWriteWithTransformer() throws Exception
     {
-        XMLConfiguration xmlConfig = new XMLConfiguration();
+        final XMLConfiguration xmlConfig = new XMLConfiguration();
         xmlConfig.setRootElementName("IAmRoot");
         xmlConfig.setProperty("Child", "Alexander");
-        StringWriter sw = new StringWriter();
+        final StringWriter sw = new StringWriter();
         final Transformer transformer = xmlConfig.createTransformer();
         final int indentSize = 8;
         transformer.setOutputProperty(XMLConfiguration.INDENT_AMOUNT_PROPERTY, Integer.toString(indentSize));

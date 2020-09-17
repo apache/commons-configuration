@@ -1157,7 +1157,7 @@ public class TestPropertiesConfiguration
         try {
             handler.load();
             Assert.fail("Expected " + Configuration.class.getCanonicalName());
-        } catch (ConfigurationException e) {
+        } catch (final ConfigurationException e) {
             // expected
             // e.printStackTrace();
         }
@@ -1174,7 +1174,7 @@ public class TestPropertiesConfiguration
         try {
             handler.load();
             Assert.fail("Expected " + Configuration.class.getCanonicalName());
-        } catch (ConfigurationException e) {
+        } catch (final ConfigurationException e) {
             // expected
             // e.printStackTrace();
         }
@@ -1203,7 +1203,7 @@ public class TestPropertiesConfiguration
         try {
             handler.load();
             Assert.fail("Expected " + Configuration.class.getCanonicalName());
-        } catch (ConfigurationException e) {
+        } catch (final ConfigurationException e) {
             // expected
             // e.printStackTrace();
         }
