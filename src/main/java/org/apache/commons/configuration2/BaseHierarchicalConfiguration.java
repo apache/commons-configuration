@@ -619,7 +619,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
      */
     private EventListener<ConfigurationEvent> createChangeListener()
     {
-        return event -> subnodeConfigurationChanged(event);
+        return this::subnodeConfigurationChanged;
     }
 
     /**
