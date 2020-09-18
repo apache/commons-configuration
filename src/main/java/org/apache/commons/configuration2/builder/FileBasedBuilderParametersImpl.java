@@ -60,35 +60,29 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
             "reloadingDetectorFactory";
 
     /**
-     * Stores the associated file handler for the location of the configuration.
-     */
-    private FileHandler fileHandler;
-
-    /** The factory for reloading detectors. */
-    private ReloadingDetectorFactory reloadingDetectorFactory;
-
-    /** The refresh delay for reloading support. */
-    private Long reloadingRefreshDelay;
-
-    /**
-     * Creates a new instance of {@code FileBasedBuilderParametersImpl} with an
-     * uninitialized {@code FileHandler} object.
-     */
-    public FileBasedBuilderParametersImpl()
-    {
-        this(null);
-    }
-
-    /**
-     * Creates a new instance of {@code FileBasedBuilderParametersImpl} and
-     * associates it with the given {@code FileHandler} object. If the handler
-     * is <b>null</b>, a new handler instance is created.
+     * Creates a new {@code FileBasedBuilderParametersImpl} object from the
+     * content of the given map. While {@code fromParameters()} expects that an
+     * object already exists and is stored in the given map, this method creates
+     * a new instance based on the content of the map. The map can contain
+     * properties of a {@code FileHandler} and some additional settings which
+     * are stored directly in the newly created object. If the map is
+     * <b>null</b>, an uninitialized instance is returned.
      *
-     * @param handler the associated {@code FileHandler} (can be <b>null</b>)
+     * @param map the map with properties (must not be <b>null</b>)
+     * @return the newly created instance
+     * @throws ClassCastException if the map contains invalid data
      */
-    public FileBasedBuilderParametersImpl(final FileHandler handler)
+    public static FileBasedBuilderParametersImpl fromMap(final Map<String, ?> map)
     {
-        fileHandler = handler != null ? handler : new FileHandler();
+        final FileBasedBuilderParametersImpl params =
+                new FileBasedBuilderParametersImpl(FileHandler.fromMap(map));
+        if (map != null)
+        {
+            params.setReloadingRefreshDelay((Long) map.get(PROP_REFRESH_DELAY));
+            params.setReloadingDetectorFactory((ReloadingDetectorFactory) map
+                    .get(PROP_DETECTOR_FACTORY));
+        }
+        return params;
     }
 
     /**
@@ -137,29 +131,97 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
     }
 
     /**
-     * Creates a new {@code FileBasedBuilderParametersImpl} object from the
-     * content of the given map. While {@code fromParameters()} expects that an
-     * object already exists and is stored in the given map, this method creates
-     * a new instance based on the content of the map. The map can contain
-     * properties of a {@code FileHandler} and some additional settings which
-     * are stored directly in the newly created object. If the map is
-     * <b>null</b>, an uninitialized instance is returned.
-     *
-     * @param map the map with properties (must not be <b>null</b>)
-     * @return the newly created instance
-     * @throws ClassCastException if the map contains invalid data
+     * Stores the associated file handler for the location of the configuration.
      */
-    public static FileBasedBuilderParametersImpl fromMap(final Map<String, ?> map)
+    private FileHandler fileHandler;
+
+    /** The factory for reloading detectors. */
+    private ReloadingDetectorFactory reloadingDetectorFactory;
+
+    /** The refresh delay for reloading support. */
+    private Long reloadingRefreshDelay;
+
+    /**
+     * Creates a new instance of {@code FileBasedBuilderParametersImpl} with an
+     * uninitialized {@code FileHandler} object.
+     */
+    public FileBasedBuilderParametersImpl()
     {
-        final FileBasedBuilderParametersImpl params =
-                new FileBasedBuilderParametersImpl(FileHandler.fromMap(map));
-        if (map != null)
-        {
-            params.setReloadingRefreshDelay((Long) map.get(PROP_REFRESH_DELAY));
-            params.setReloadingDetectorFactory((ReloadingDetectorFactory) map
-                    .get(PROP_DETECTOR_FACTORY));
-        }
+        this(null);
+    }
+
+    /**
+     * Creates a new instance of {@code FileBasedBuilderParametersImpl} and
+     * associates it with the given {@code FileHandler} object. If the handler
+     * is <b>null</b>, a new handler instance is created.
+     *
+     * @param handler the associated {@code FileHandler} (can be <b>null</b>)
+     */
+    public FileBasedBuilderParametersImpl(final FileHandler handler)
+    {
+        fileHandler = handler != null ? handler : new FileHandler();
+    }
+
+    /**
+     * {@inheritDoc} This implementation also creates a copy of the
+     * {@code FileHandler}.
+     */
+    @Override
+    public FileBasedBuilderParametersImpl clone()
+    {
+        final FileBasedBuilderParametersImpl copy =
+                (FileBasedBuilderParametersImpl) super.clone();
+        copy.fileHandler =
+                new FileHandler(fileHandler.getContent(), fileHandler);
+        return copy;
+    }
+
+    /**
+     * Returns the {@code FileHandler} managed by this object. This object is
+     * updated every time the file location is changed.
+     *
+     * @return the managed {@code FileHandler}
+     */
+    public FileHandler getFileHandler()
+    {
+        return fileHandler;
+    }
+
+    /**
+     * {@inheritDoc} This implementation returns a map which contains this
+     * object itself under a specific key. The static {@code fromParameters()}
+     * method can be used to extract an instance from a parameters map. Of
+     * course, the properties inherited from the base class are also added to
+     * the result map.
+     */
+    @Override
+    public Map<String, Object> getParameters()
+    {
+        final Map<String, Object> params = super.getParameters();
+        params.put(PARAM_KEY, this);
         return params;
+    }
+
+    /**
+     * Returns the {@code ReloadingDetectorFactory}. Result may be <b>null</b>
+     * which means that the default factory is to be used.
+     *
+     * @return the {@code ReloadingDetectorFactory}
+     */
+    public ReloadingDetectorFactory getReloadingDetectorFactory()
+    {
+        return reloadingDetectorFactory;
+    }
+
+    /**
+     * Returns the refresh delay for reload operations. Result may be
+     * <b>null</b> if this value has not been set.
+     *
+     * @return the reloading refresh delay
+     */
+    public Long getReloadingRefreshDelay()
+    {
+        return reloadingRefreshDelay;
     }
 
     /**
@@ -193,52 +255,17 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
         }
     }
 
-    /**
-     * Returns the {@code FileHandler} managed by this object. This object is
-     * updated every time the file location is changed.
-     *
-     * @return the managed {@code FileHandler}
-     */
-    public FileHandler getFileHandler()
-    {
-        return fileHandler;
-    }
-
-    /**
-     * Returns the refresh delay for reload operations. Result may be
-     * <b>null</b> if this value has not been set.
-     *
-     * @return the reloading refresh delay
-     */
-    public Long getReloadingRefreshDelay()
-    {
-        return reloadingRefreshDelay;
-    }
-
     @Override
-    public FileBasedBuilderParametersImpl setReloadingRefreshDelay(
-            final Long reloadingRefreshDelay)
+    public FileBasedBuilderParametersImpl setBasePath(final String path)
     {
-        this.reloadingRefreshDelay = reloadingRefreshDelay;
+        getFileHandler().setBasePath(path);
         return this;
     }
 
-    /**
-     * Returns the {@code ReloadingDetectorFactory}. Result may be <b>null</b>
-     * which means that the default factory is to be used.
-     *
-     * @return the {@code ReloadingDetectorFactory}
-     */
-    public ReloadingDetectorFactory getReloadingDetectorFactory()
-    {
-        return reloadingDetectorFactory;
-    }
-
     @Override
-    public FileBasedBuilderParametersImpl setReloadingDetectorFactory(
-            final ReloadingDetectorFactory reloadingDetectorFactory)
+    public FileBasedBuilderParametersImpl setEncoding(final String enc)
     {
-        this.reloadingDetectorFactory = reloadingDetectorFactory;
+        getFileHandler().setEncoding(enc);
         return this;
     }
 
@@ -250,30 +277,9 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
     }
 
     @Override
-    public FileBasedBuilderParametersImpl setURL(final URL url)
-    {
-        getFileHandler().setURL(url);
-        return this;
-    }
-
-    @Override
-    public FileBasedBuilderParametersImpl setPath(final String path)
-    {
-        getFileHandler().setPath(path);
-        return this;
-    }
-
-    @Override
     public FileBasedBuilderParametersImpl setFileName(final String name)
     {
         getFileHandler().setFileName(name);
-        return this;
-    }
-
-    @Override
-    public FileBasedBuilderParametersImpl setBasePath(final String path)
-    {
-        getFileHandler().setBasePath(path);
         return this;
     }
 
@@ -293,38 +299,32 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
     }
 
     @Override
-    public FileBasedBuilderParametersImpl setEncoding(final String enc)
+    public FileBasedBuilderParametersImpl setPath(final String path)
     {
-        getFileHandler().setEncoding(enc);
+        getFileHandler().setPath(path);
         return this;
     }
 
-    /**
-     * {@inheritDoc} This implementation returns a map which contains this
-     * object itself under a specific key. The static {@code fromParameters()}
-     * method can be used to extract an instance from a parameters map. Of
-     * course, the properties inherited from the base class are also added to
-     * the result map.
-     */
     @Override
-    public Map<String, Object> getParameters()
+    public FileBasedBuilderParametersImpl setReloadingDetectorFactory(
+            final ReloadingDetectorFactory reloadingDetectorFactory)
     {
-        final Map<String, Object> params = super.getParameters();
-        params.put(PARAM_KEY, this);
-        return params;
+        this.reloadingDetectorFactory = reloadingDetectorFactory;
+        return this;
     }
 
-    /**
-     * {@inheritDoc} This implementation also creates a copy of the
-     * {@code FileHandler}.
-     */
     @Override
-    public FileBasedBuilderParametersImpl clone()
+    public FileBasedBuilderParametersImpl setReloadingRefreshDelay(
+            final Long reloadingRefreshDelay)
     {
-        final FileBasedBuilderParametersImpl copy =
-                (FileBasedBuilderParametersImpl) super.clone();
-        copy.fileHandler =
-                new FileHandler(fileHandler.getContent(), fileHandler);
-        return copy;
+        this.reloadingRefreshDelay = reloadingRefreshDelay;
+        return this;
+    }
+
+    @Override
+    public FileBasedBuilderParametersImpl setURL(final URL url)
+    {
+        getFileHandler().setURL(url);
+        return this;
     }
 }
