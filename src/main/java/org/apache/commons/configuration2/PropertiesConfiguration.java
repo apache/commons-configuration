@@ -206,1150 +206,40 @@ public class PropertiesConfiguration extends BaseConfiguration
 {
 
     /**
-     * Defines default error handling for the special {@code "include"} key by throwing the given exception.
-     *
-     * @since 2.6
-     */
-    public static final ConfigurationConsumer<ConfigurationException> DEFAULT_INCLUDE_LISTENER = e -> { throw e; };
-
-    /**
-     * Defines error handling as a noop for the special {@code "include"} key.
-     *
-     * @since 2.6
-     */
-    public static final ConfigurationConsumer<ConfigurationException> NOOP_INCLUDE_LISTENER = e -> { /* noop */ };
-
-    /**
-     * The default encoding (ISO-8859-1 as specified by
-     * http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html)
-     */
-    public static final String DEFAULT_ENCODING = "ISO-8859-1";
-
-    /** Constant for the supported comment characters.*/
-    static final String COMMENT_CHARS = "#!";
-
-    /** Constant for the default properties separator.*/
-    static final String DEFAULT_SEPARATOR = " = ";
-
-    /**
-     * A string with special characters that need to be unescaped when reading
-     * a properties file. {@code java.util.Properties} escapes these characters
-     * when writing out a properties file.
-     */
-    private static final String UNESCAPE_CHARACTERS = ":#=!\\\'\"";
-
-    /**
-     * This is the name of the property that can point to other
-     * properties file for including other properties files.
-     */
-    private static String include = "include";
-
-    /**
-     * This is the name of the property that can point to other
-     * properties file for including other properties files.
      * <p>
-     * If the file is absent, processing continues normally.
+     * A default implementation of the {@code IOFactory} interface.
      * </p>
-     */
-    private static String includeOptional = "includeoptional";
-
-    /** The list of possible key/value separators */
-    private static final char[] SEPARATORS = new char[] {'=', ':'};
-
-    /** The white space characters used as key/value separators. */
-    private static final char[] WHITE_SPACE = new char[]{' ', '\t', '\f'};
-
-    /** Constant for the platform specific line separator.*/
-    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-
-    /** Constant for the radix of hex numbers.*/
-    private static final int HEX_RADIX = 16;
-
-    /** Constant for the length of a unicode literal.*/
-    private static final int UNICODE_LEN = 4;
-
-    /** Stores the layout object.*/
-    private PropertiesConfigurationLayout layout;
-
-    /** The include listener for the special {@code "include"} key. */
-    private ConfigurationConsumer<ConfigurationException> includeListener;
-
-    /** The IOFactory for creating readers and writers.*/
-    private IOFactory ioFactory;
-
-    /** The current {@code FileLocator}. */
-    private FileLocator locator;
-
-    /** Allow file inclusion or not */
-    private boolean includesAllowed = true;
-
-    /**
-     * Creates an empty PropertyConfiguration object which can be
-     * used to synthesize a new Properties file by adding values and
-     * then saving().
-     */
-    public PropertiesConfiguration()
-    {
-        installLayout(createLayout());
-    }
-
-    /**
-     * Gets the property value for including other properties files.
-     * By default it is "include".
-     *
-     * @return A String.
-     */
-    public static String getInclude()
-    {
-        return PropertiesConfiguration.include;
-    }
-
-    /**
-     * Gets the property value for including other properties files.
-     * By default it is "includeoptional".
      * <p>
-     * If the file is absent, processing continues normally.
+     * This class implements the {@code createXXXX()} methods defined by
+     * the {@code IOFactory} interface in a way that the default objects
+     * (i.e. {@code PropertiesReader} and {@code PropertiesWriter} are
+     * returned. Customizing either the reader or the writer (or both) can be
+     * done by extending this class and overriding the corresponding
+     * {@code createXXXX()} method.
      * </p>
      *
-     * @return A String.
-     * @since 2.5
-     */
-    public static String getIncludeOptional()
-    {
-        return PropertiesConfiguration.includeOptional;
-    }
-
-    /**
-     * Sets the property value for including other properties files.
-     * By default it is "include".
-     *
-     * @param inc A String.
-     */
-    public static void setInclude(final String inc)
-    {
-        PropertiesConfiguration.include = inc;
-    }
-
-    /**
-     * Sets the property value for including other properties files.
-     * By default it is "include".
-     * <p>
-     * If the file is absent, processing continues normally.
-     * </p>
-     *
-     * @param inc A String.
-     * @since 2.5
-     */
-    public static void setIncludeOptional(final String inc)
-    {
-        PropertiesConfiguration.includeOptional = inc;
-    }
-
-    /**
-     * Controls whether additional files can be loaded by the {@code include = <xxx>}
-     * statement or not. This is <b>true</b> per default.
-     *
-     * @param includesAllowed True if Includes are allowed.
-     */
-    public void setIncludesAllowed(final boolean includesAllowed)
-    {
-        this.includesAllowed = includesAllowed;
-    }
-
-    /**
-     * Reports the status of file inclusion.
-     *
-     * @return True if include files are loaded.
-     */
-    public boolean isIncludesAllowed()
-    {
-        return this.includesAllowed;
-    }
-
-    /**
-     * Return the comment header.
-     *
-     * @return the comment header
-     * @since 1.1
-     */
-    public String getHeader()
-    {
-        beginRead(false);
-        try
-        {
-            return getLayout().getHeaderComment();
-        }
-        finally
-        {
-            endRead();
-        }
-    }
-
-    /**
-     * Set the comment header.
-     *
-     * @param header the header to use
-     * @since 1.1
-     */
-    public void setHeader(final String header)
-    {
-        beginWrite(false);
-        try
-        {
-            getLayout().setHeaderComment(header);
-        }
-        finally
-        {
-            endWrite();
-        }
-    }
-
-    /**
-     * Returns the footer comment. This is a comment at the very end of the
-     * file.
-     *
-     * @return the footer comment
-     * @since 2.0
-     */
-    public String getFooter()
-    {
-        beginRead(false);
-        try
-        {
-            return getLayout().getFooterComment();
-        }
-        finally
-        {
-            endRead();
-        }
-    }
-
-    /**
-     * Sets the footer comment. If set, this comment is written after all
-     * properties at the end of the file.
-     *
-     * @param footer the footer comment
-     * @since 2.0
-     */
-    public void setFooter(final String footer)
-    {
-        beginWrite(false);
-        try
-        {
-            getLayout().setFooterComment(footer);
-        }
-        finally
-        {
-            endWrite();
-        }
-    }
-
-    /**
-     * Returns the associated layout object.
-     *
-     * @return the associated layout object
-     * @since 1.3
-     */
-    public PropertiesConfigurationLayout getLayout()
-    {
-        return layout;
-    }
-
-    /**
-     * Sets the associated layout object.
-     *
-     * @param layout the new layout object; can be <b>null</b>, then a new
-     * layout object will be created
-     * @since 1.3
-     */
-    public void setLayout(final PropertiesConfigurationLayout layout)
-    {
-        installLayout(layout);
-    }
-
-    /**
-     * Installs a layout object. It has to be ensured that the layout is
-     * registered as change listener at this configuration. If there is already
-     * a layout object installed, it has to be removed properly.
-     *
-     * @param layout the layout object to be installed
-     */
-    private void installLayout(final PropertiesConfigurationLayout layout)
-    {
-        // only one layout must exist
-        if (this.layout != null)
-        {
-            removeEventListener(ConfigurationEvent.ANY, this.layout);
-        }
-
-        if (layout == null)
-        {
-            this.layout = createLayout();
-        }
-        else
-        {
-            this.layout = layout;
-        }
-        addEventListener(ConfigurationEvent.ANY, this.layout);
-    }
-
-    /**
-     * Creates a standard layout object. This configuration is initialized with
-     * such a standard layout.
-     *
-     * @return the newly created layout object
-     */
-    private PropertiesConfigurationLayout createLayout()
-    {
-        return new PropertiesConfigurationLayout();
-    }
-
-    /**
-     * Gets the current include listener, never null.
-     *
-     * @return the current include listener, never null.
-     * @since 2.6
-     */
-    public ConfigurationConsumer<ConfigurationException> getIncludeListener()
-    {
-        return includeListener != null ? includeListener : PropertiesConfiguration.DEFAULT_INCLUDE_LISTENER;
-    }
-
-    /**
-     * Returns the {@code IOFactory} to be used for creating readers and
-     * writers when loading or saving this configuration.
-     *
-     * @return the {@code IOFactory}
      * @since 1.7
      */
-    public IOFactory getIOFactory()
+    public static class DefaultIOFactory implements IOFactory
     {
-        return ioFactory != null ? ioFactory : DefaultIOFactory.INSTANCE;
+        /**
+         * The singleton instance.
+         */
+        static final DefaultIOFactory INSTANCE = new DefaultIOFactory();
+
+        @Override
+        public PropertiesReader createPropertiesReader(final Reader in)
+        {
+            return new PropertiesReader(in);
+        }
+
+        @Override
+        public PropertiesWriter createPropertiesWriter(final Writer out,
+                final ListDelimiterHandler handler)
+        {
+            return new PropertiesWriter(out, handler);
+        }
     }
-
-    /**
-     * Sets the current include listener, may not be null.
-     *
-     * @param includeListener the current include listener, may not be null.
-     * @throws IllegalArgumentException if the {@code includeListener} is null.
-     * @since 2.6
-     */
-    public void setIncludeListener(final ConfigurationConsumer<ConfigurationException> includeListener)
-    {
-        if (includeListener == null)
-        {
-            throw new IllegalArgumentException("includeListener must not be null.");
-        }
-        this.includeListener = includeListener;
-    }
-
-    /**
-     * Sets the {@code IOFactory} to be used for creating readers and
-     * writers when loading or saving this configuration. Using this method a
-     * client can customize the reader and writer classes used by the load and
-     * save operations. Note that this method must be called before invoking
-     * one of the {@code load()} and {@code save()} methods.
-     * Especially, if you want to use a custom {@code IOFactory} for
-     * changing the {@code PropertiesReader}, you cannot load the
-     * configuration data in the constructor.
-     *
-     * @param ioFactory the new {@code IOFactory} (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the {@code IOFactory} is
-     *         <b>null</b>
-     * @since 1.7
-     */
-    public void setIOFactory(final IOFactory ioFactory)
-    {
-        if (ioFactory == null)
-        {
-            throw new IllegalArgumentException("IOFactory must not be null.");
-        }
-
-        this.ioFactory = ioFactory;
-    }
-
-    /**
-     * Stores the current {@code FileLocator} for a following IO operation. The
-     * {@code FileLocator} is needed to resolve include files with relative file
-     * names.
-     *
-     * @param locator the current {@code FileLocator}
-     * @since 2.0
-     */
-    @Override
-    public void initFileLocator(final FileLocator locator)
-    {
-        this.locator = locator;
-    }
-
-    /**
-     * {@inheritDoc} This implementation delegates to the associated layout
-     * object which does the actual loading. Note that this method does not
-     * do any synchronization. This lies in the responsibility of the caller.
-     * (Typically, the caller is a {@code FileHandler} object which takes
-     * care for proper synchronization.)
-     *
-     * @since 2.0
-     */
-    @Override
-    public void read(final Reader in) throws ConfigurationException, IOException
-    {
-        getLayout().load(this, in);
-    }
-
-    /**
-     * {@inheritDoc} This implementation delegates to the associated layout
-     * object which does the actual saving. Note that, analogous to
-     * {@link #read(Reader)}, this method does not do any synchronization.
-     *
-     * @since 2.0
-     */
-    @Override
-    public void write(final Writer out) throws ConfigurationException, IOException
-    {
-        getLayout().save(this, out);
-    }
-
-    /**
-     * Creates a copy of this object.
-     *
-     * @return the copy
-     */
-    @Override
-    public Object clone()
-    {
-        final PropertiesConfiguration copy = (PropertiesConfiguration) super.clone();
-        if (layout != null)
-        {
-            copy.setLayout(new PropertiesConfigurationLayout(layout));
-        }
-        return copy;
-    }
-
-    /**
-     * This method is invoked by the associated
-     * {@link PropertiesConfigurationLayout} object for each
-     * property definition detected in the parsed properties file. Its task is
-     * to check whether this is a special property definition (e.g. the
-     * {@code include} property). If not, the property must be added to
-     * this configuration. The return value indicates whether the property
-     * should be treated as a normal property. If it is <b>false</b>, the
-     * layout object will ignore this property.
-     *
-     * @param key the property key
-     * @param value the property value
-     * @param seenStack the stack of seen include URLs
-     * @return a flag whether this is a normal property
-     * @throws ConfigurationException if an error occurs
-     * @since 1.3
-     */
-    boolean propertyLoaded(final String key, final String value, final Deque<URL> seenStack)
-            throws ConfigurationException
-    {
-        boolean result;
-
-        if (StringUtils.isNotEmpty(getInclude())
-                && key.equalsIgnoreCase(getInclude()))
-        {
-            if (isIncludesAllowed())
-            {
-                final Collection<String> files =
-                        getListDelimiterHandler().split(value, true);
-                for (final String f : files)
-                {
-                    loadIncludeFile(interpolate(f), false, seenStack);
-                }
-            }
-            result = false;
-        }
-
-        else if (StringUtils.isNotEmpty(getIncludeOptional())
-            && key.equalsIgnoreCase(getIncludeOptional()))
-        {
-            if (isIncludesAllowed())
-            {
-                final Collection<String> files =
-                        getListDelimiterHandler().split(value, true);
-                for (final String f : files)
-                {
-                    loadIncludeFile(interpolate(f), true, seenStack);
-                }
-            }
-            result = false;
-        }
-
-        else
-        {
-            addPropertyInternal(key, value);
-            result = true;
-        }
-
-        return result;
-    }
-
-    /**
-     * Tests whether a line is a comment, i.e. whether it starts with a comment
-     * character.
-     *
-     * @param line the line
-     * @return a flag if this is a comment line
-     * @since 1.3
-     */
-    static boolean isCommentLine(final String line)
-    {
-        final String s = line.trim();
-        // blanc lines are also treated as comment lines
-        return s.length() < 1 || COMMENT_CHARS.indexOf(s.charAt(0)) >= 0;
-    }
-
-    /**
-     * Returns the number of trailing backslashes. This is sometimes needed for
-     * the correct handling of escape characters.
-     *
-     * @param line the string to investigate
-     * @return the number of trailing backslashes
-     */
-    private static int countTrailingBS(final String line)
-    {
-        int bsCount = 0;
-        for (int idx = line.length() - 1; idx >= 0 && line.charAt(idx) == '\\'; idx--)
-        {
-            bsCount++;
-        }
-
-        return bsCount;
-    }
-
-    /**
-     * This class is used to read properties lines. These lines do
-     * not terminate with new-line chars but rather when there is no
-     * backslash sign a the end of the line.  This is used to
-     * concatenate multiple lines for readability.
-     */
-    public static class PropertiesReader extends LineNumberReader
-    {
-        /** The regular expression to parse the key and the value of a property. */
-        private static final Pattern PROPERTY_PATTERN = Pattern
-                .compile("(([\\S&&[^\\\\" + new String(SEPARATORS)
-                        + "]]|\\\\.)*)(\\s*(\\s+|[" + new String(SEPARATORS)
-                        + "])\\s*)?(.*)");
-
-        /** Constant for the index of the group for the key. */
-        private static final int IDX_KEY = 1;
-
-        /** Constant for the index of the group for the value. */
-        private static final int IDX_VALUE = 5;
-
-        /** Constant for the index of the group for the separator. */
-        private static final int IDX_SEPARATOR = 3;
-
-        /** Stores the comment lines for the currently processed property.*/
-        private final List<String> commentLines;
-
-        /** Stores the name of the last read property.*/
-        private String propertyName;
-
-        /** Stores the value of the last read property.*/
-        private String propertyValue;
-
-        /** Stores the property separator of the last read property.*/
-        private String propertySeparator = DEFAULT_SEPARATOR;
-
-        /**
-         * Constructor.
-         *
-         * @param reader A Reader.
-         */
-        public PropertiesReader(final Reader reader)
-        {
-            super(reader);
-            commentLines = new ArrayList<>();
-        }
-
-        /**
-         * Reads a property line. Returns null if Stream is
-         * at EOF. Concatenates lines ending with "\".
-         * Skips lines beginning with "#" or "!" and empty lines.
-         * The return value is a property definition ({@code &lt;name&gt;}
-         * = {@code &lt;value&gt;})
-         *
-         * @return A string containing a property value or null
-         *
-         * @throws IOException in case of an I/O error
-         */
-        public String readProperty() throws IOException
-        {
-            commentLines.clear();
-            final StringBuilder buffer = new StringBuilder();
-
-            while (true)
-            {
-                String line = readLine();
-                if (line == null)
-                {
-                    // EOF
-                    return null;
-                }
-
-                if (isCommentLine(line))
-                {
-                    commentLines.add(line);
-                    continue;
-                }
-
-                line = line.trim();
-
-                if (checkCombineLines(line))
-                {
-                    line = line.substring(0, line.length() - 1);
-                    buffer.append(line);
-                }
-                else
-                {
-                    buffer.append(line);
-                    break;
-                }
-            }
-            return buffer.toString();
-        }
-
-        /**
-         * Parses the next property from the input stream and stores the found
-         * name and value in internal fields. These fields can be obtained using
-         * the provided getter methods. The return value indicates whether EOF
-         * was reached (<b>false</b>) or whether further properties are
-         * available (<b>true</b>).
-         *
-         * @return a flag if further properties are available
-         * @throws IOException if an error occurs
-         * @since 1.3
-         */
-        public boolean nextProperty() throws IOException
-        {
-            final String line = readProperty();
-
-            if (line == null)
-            {
-                return false; // EOF
-            }
-
-            // parse the line
-            parseProperty(line);
-            return true;
-        }
-
-        /**
-         * Returns the comment lines that have been read for the last property.
-         *
-         * @return the comment lines for the last property returned by
-         * {@code readProperty()}
-         * @since 1.3
-         */
-        public List<String> getCommentLines()
-        {
-            return commentLines;
-        }
-
-        /**
-         * Returns the name of the last read property. This method can be called
-         * after {@link #nextProperty()} was invoked and its
-         * return value was <b>true</b>.
-         *
-         * @return the name of the last read property
-         * @since 1.3
-         */
-        public String getPropertyName()
-        {
-            return propertyName;
-        }
-
-        /**
-         * Returns the value of the last read property. This method can be
-         * called after {@link #nextProperty()} was invoked and
-         * its return value was <b>true</b>.
-         *
-         * @return the value of the last read property
-         * @since 1.3
-         */
-        public String getPropertyValue()
-        {
-            return propertyValue;
-        }
-
-        /**
-         * Returns the separator that was used for the last read property. The
-         * separator can be stored so that it can later be restored when saving
-         * the configuration.
-         *
-         * @return the separator for the last read property
-         * @since 1.7
-         */
-        public String getPropertySeparator()
-        {
-            return propertySeparator;
-        }
-
-        /**
-         * Parses a line read from the properties file. This method is called
-         * for each non-comment line read from the source file. Its task is to
-         * split the passed in line into the property key and its value. The
-         * results of the parse operation can be stored by calling the
-         * {@code initPropertyXXX()} methods.
-         *
-         * @param line the line read from the properties file
-         * @since 1.7
-         */
-        protected void parseProperty(final String line)
-        {
-            final String[] property = doParseProperty(line, true);
-            initPropertyName(property[0]);
-            initPropertyValue(property[1]);
-            initPropertySeparator(property[2]);
-        }
-
-        /**
-         * Sets the name of the current property. This method can be called by
-         * {@code parseProperty()} for storing the results of the parse
-         * operation. It also ensures that the property key is correctly
-         * escaped.
-         *
-         * @param name the name of the current property
-         * @since 1.7
-         */
-        protected void initPropertyName(final String name)
-        {
-            propertyName = unescapePropertyName(name);
-        }
-
-        /**
-         * Performs unescaping on the given property name.
-         *
-         * @param name the property name
-         * @return the unescaped property name
-         * @since 2.4
-         */
-        protected String unescapePropertyName(final String name)
-        {
-            return StringEscapeUtils.unescapeJava(name);
-        }
-
-        /**
-         * Sets the value of the current property. This method can be called by
-         * {@code parseProperty()} for storing the results of the parse
-         * operation. It also ensures that the property value is correctly
-         * escaped.
-         *
-         * @param value the value of the current property
-         * @since 1.7
-         */
-        protected void initPropertyValue(final String value)
-        {
-            propertyValue = unescapePropertyValue(value);
-        }
-
-        /**
-         * Performs unescaping on the given property value.
-         *
-         * @param value the property value
-         * @return the unescaped property value
-         * @since 2.4
-         */
-        protected String unescapePropertyValue(final String value)
-        {
-            return unescapeJava(value);
-        }
-
-        /**
-         * Sets the separator of the current property. This method can be called
-         * by {@code parseProperty()}. It allows the associated layout
-         * object to keep track of the property separators. When saving the
-         * configuration the separators can be restored.
-         *
-         * @param value the separator used for the current property
-         * @since 1.7
-         */
-        protected void initPropertySeparator(final String value)
-        {
-            propertySeparator = value;
-        }
-
-        /**
-         * Checks if the passed in line should be combined with the following.
-         * This is true, if the line ends with an odd number of backslashes.
-         *
-         * @param line the line
-         * @return a flag if the lines should be combined
-         */
-        static boolean checkCombineLines(final String line)
-        {
-            return countTrailingBS(line) % 2 != 0;
-        }
-
-        /**
-         * Parse a property line and return the key, the value, and the separator in an
-         * array.
-         *
-         * @param line the line to parse
-         * @param trimValue flag whether the value is to be trimmed
-         * @return an array with the property's key, value, and separator
-         */
-        static String[] doParseProperty(final String line, final boolean trimValue)
-        {
-            final Matcher matcher = PROPERTY_PATTERN.matcher(line);
-
-            final String[] result = {"", "", ""};
-
-            if (matcher.matches())
-            {
-                result[0] = matcher.group(IDX_KEY).trim();
-
-                String value = matcher.group(IDX_VALUE);
-                if (trimValue)
-                {
-                    value = value.trim();
-                }
-                result[1] = value;
-
-                result[2] = matcher.group(IDX_SEPARATOR);
-            }
-
-            return result;
-        }
-    } // class PropertiesReader
-
-    /**
-     * This class is used to write properties lines. The most important method
-     * is {@code writeProperty(String, Object, boolean)}, which is called
-     * during a save operation for each property found in the configuration.
-     */
-    public static class PropertiesWriter extends FilterWriter
-    {
-
-        /**
-         * Properties escape map.
-         */
-        private static final Map<CharSequence, CharSequence> PROPERTIES_CHARS_ESCAPE;
-        static
-        {
-            final Map<CharSequence, CharSequence> initialMap = new HashMap<>();
-            initialMap.put("\\", "\\\\");
-            PROPERTIES_CHARS_ESCAPE = Collections.unmodifiableMap(initialMap);
-        }
-
-        /**
-         * A translator for escaping property values. This translator performs a
-         * subset of transformations done by the ESCAPE_JAVA translator from
-         * Commons Lang 3.
-         */
-        private static final CharSequenceTranslator ESCAPE_PROPERTIES =
-                new AggregateTranslator(
-                        new LookupTranslator(PROPERTIES_CHARS_ESCAPE),
-                        new LookupTranslator(EntityArrays.JAVA_CTRL_CHARS_ESCAPE),
-                        UnicodeEscaper.outsideOf(32, 0x7f));
-
-        /**
-         * A {@code ValueTransformer} implementation used to escape property
-         * values. This implementation applies the transformation defined by the
-         * {@link #ESCAPE_PROPERTIES} translator.
-         */
-        private static final ValueTransformer DEFAULT_TRANSFORMER =
-                value -> {
-            final String strVal = String.valueOf(value);
-            return ESCAPE_PROPERTIES.translate(strVal);
-        };
-
-        /** The value transformer used for escaping property values. */
-        private final ValueTransformer valueTransformer;
-
-        /** The list delimiter handler.*/
-        private final ListDelimiterHandler delimiterHandler;
-
-        /** The separator to be used for the current property. */
-        private String currentSeparator;
-
-        /** The global separator. If set, it overrides the current separator.*/
-        private String globalSeparator;
-
-        /** The line separator.*/
-        private String lineSeparator;
-
-        /**
-         * Creates a new instance of {@code PropertiesWriter}.
-         *
-         * @param writer a Writer object providing the underlying stream
-         * @param delHandler the delimiter handler for dealing with properties
-         *        with multiple values
-         */
-        public PropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler)
-        {
-            this(writer, delHandler, DEFAULT_TRANSFORMER);
-        }
-
-        /**
-         * Creates a new instance of {@code PropertiesWriter}.
-         *
-         * @param writer a Writer object providing the underlying stream
-         * @param delHandler the delimiter handler for dealing with properties
-         *        with multiple values
-         * @param valueTransformer the value transformer used to escape property values
-         */
-        public PropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler,
-            final ValueTransformer valueTransformer)
-        {
-            super(writer);
-            delimiterHandler = delHandler;
-            this.valueTransformer = valueTransformer;
-        }
-
-        /**
-         * Returns the delimiter handler for properties with multiple values.
-         * This object is used to escape property values so that they can be
-         * read in correctly the next time they are loaded.
-         *
-         * @return the delimiter handler for properties with multiple values
-         * @since 2.0
-         */
-        public ListDelimiterHandler getDelimiterHandler()
-        {
-            return delimiterHandler;
-        }
-
-        /**
-         * Returns the current property separator.
-         *
-         * @return the current property separator
-         * @since 1.7
-         */
-        public String getCurrentSeparator()
-        {
-            return currentSeparator;
-        }
-
-        /**
-         * Sets the current property separator. This separator is used when
-         * writing the next property.
-         *
-         * @param currentSeparator the current property separator
-         * @since 1.7
-         */
-        public void setCurrentSeparator(final String currentSeparator)
-        {
-            this.currentSeparator = currentSeparator;
-        }
-
-        /**
-         * Returns the global property separator.
-         *
-         * @return the global property separator
-         * @since 1.7
-         */
-        public String getGlobalSeparator()
-        {
-            return globalSeparator;
-        }
-
-        /**
-         * Sets the global property separator. This separator corresponds to the
-         * {@code globalSeparator} property of
-         * {@link PropertiesConfigurationLayout}. It defines the separator to be
-         * used for all properties. If it is undefined, the current separator is
-         * used.
-         *
-         * @param globalSeparator the global property separator
-         * @since 1.7
-         */
-        public void setGlobalSeparator(final String globalSeparator)
-        {
-            this.globalSeparator = globalSeparator;
-        }
-
-        /**
-         * Returns the line separator.
-         *
-         * @return the line separator
-         * @since 1.7
-         */
-        public String getLineSeparator()
-        {
-            return lineSeparator != null ? lineSeparator : LINE_SEPARATOR;
-        }
-
-        /**
-         * Sets the line separator. Each line written by this writer is
-         * terminated with this separator. If not set, the platform-specific
-         * line separator is used.
-         *
-         * @param lineSeparator the line separator to be used
-         * @since 1.7
-         */
-        public void setLineSeparator(final String lineSeparator)
-        {
-            this.lineSeparator = lineSeparator;
-        }
-
-        /**
-         * Write a property.
-         *
-         * @param key the key of the property
-         * @param value the value of the property
-         *
-         * @throws IOException if an I/O error occurs
-         */
-        public void writeProperty(final String key, final Object value) throws IOException
-        {
-            writeProperty(key, value, false);
-        }
-
-        /**
-         * Write a property.
-         *
-         * @param key The key of the property
-         * @param values The array of values of the property
-         *
-         * @throws IOException if an I/O error occurs
-         */
-        public void writeProperty(final String key, final List<?> values) throws IOException
-        {
-            for (int i = 0; i < values.size(); i++)
-            {
-                writeProperty(key, values.get(i));
-            }
-        }
-
-        /**
-         * Writes the given property and its value. If the value happens to be a
-         * list, the {@code forceSingleLine} flag is evaluated. If it is
-         * set, all values are written on a single line using the list delimiter
-         * as separator.
-         *
-         * @param key the property key
-         * @param value the property value
-         * @param forceSingleLine the &quot;force single line&quot; flag
-         * @throws IOException if an error occurs
-         * @since 1.3
-         */
-        public void writeProperty(final String key, final Object value,
-                final boolean forceSingleLine) throws IOException
-        {
-            String v;
-
-            if (value instanceof List)
-            {
-                v = null;
-                final List<?> values = (List<?>) value;
-                if (forceSingleLine)
-                {
-                    try
-                    {
-                        v = String.valueOf(getDelimiterHandler()
-                                        .escapeList(values, valueTransformer));
-                    }
-                    catch (final UnsupportedOperationException uoex)
-                    {
-                        // the handler may not support escaping lists,
-                        // then the list is written in multiple lines
-                    }
-                }
-                if (v == null)
-                {
-                    writeProperty(key, values);
-                    return;
-                }
-            }
-            else
-            {
-                v = String.valueOf(getDelimiterHandler().escape(value, valueTransformer));
-            }
-
-            write(escapeKey(key));
-            write(fetchSeparator(key, value));
-            write(v);
-
-            writeln(null);
-        }
-
-        /**
-         * Write a comment.
-         *
-         * @param comment the comment to write
-         * @throws IOException if an I/O error occurs
-         */
-        public void writeComment(final String comment) throws IOException
-        {
-            writeln("# " + comment);
-        }
-
-        /**
-         * Escapes the key of a property before it gets written to file. This
-         * method is called on saving a configuration for each property key.
-         * It ensures that separator characters contained in the key are
-         * escaped.
-         *
-         * @param key the key
-         * @return the escaped key
-         * @since 2.0
-         */
-        protected String escapeKey(final String key)
-        {
-            final StringBuilder newkey = new StringBuilder();
-
-            for (int i = 0; i < key.length(); i++)
-            {
-                final char c = key.charAt(i);
-
-                if (ArrayUtils.contains(SEPARATORS, c) || ArrayUtils.contains(WHITE_SPACE, c) || c == '\\')
-                {
-                    // escape the separator
-                    newkey.append('\\');
-                    newkey.append(c);
-                }
-                else
-                {
-                    newkey.append(c);
-                }
-            }
-
-            return newkey.toString();
-        }
-
-        /**
-         * Helper method for writing a line with the platform specific line
-         * ending.
-         *
-         * @param s the content of the line (may be <b>null</b>)
-         * @throws IOException if an error occurs
-         * @since 1.3
-         */
-        public void writeln(final String s) throws IOException
-        {
-            if (s != null)
-            {
-                write(s);
-            }
-            write(getLineSeparator());
-        }
-
-        /**
-         * Returns the separator to be used for the given property. This method
-         * is called by {@code writeProperty()}. The string returned here
-         * is used as separator between the property key and its value. Per
-         * default the method checks whether a global separator is set. If this
-         * is the case, it is returned. Otherwise the separator returned by
-         * {@code getCurrentSeparator()} is used, which was set by the
-         * associated layout object. Derived classes may implement a different
-         * strategy for defining the separator.
-         *
-         * @param key the property key
-         * @param value the value
-         * @return the separator to be used
-         * @since 1.7
-         */
-        protected String fetchSeparator(final String key, final Object value)
-        {
-            return getGlobalSeparator() != null ? getGlobalSeparator()
-                    : StringUtils.defaultString(getCurrentSeparator());
-        }
-    } // class PropertiesWriter
 
     /**
      * <p>
@@ -1398,42 +288,6 @@ public class PropertiesConfiguration extends BaseConfiguration
          */
         PropertiesWriter createPropertiesWriter(Writer out,
                 ListDelimiterHandler handler);
-    }
-
-    /**
-     * <p>
-     * A default implementation of the {@code IOFactory} interface.
-     * </p>
-     * <p>
-     * This class implements the {@code createXXXX()} methods defined by
-     * the {@code IOFactory} interface in a way that the default objects
-     * (i.e. {@code PropertiesReader} and {@code PropertiesWriter} are
-     * returned. Customizing either the reader or the writer (or both) can be
-     * done by extending this class and overriding the corresponding
-     * {@code createXXXX()} method.
-     * </p>
-     *
-     * @since 1.7
-     */
-    public static class DefaultIOFactory implements IOFactory
-    {
-        /**
-         * The singleton instance.
-         */
-        static final DefaultIOFactory INSTANCE = new DefaultIOFactory();
-
-        @Override
-        public PropertiesReader createPropertiesReader(final Reader in)
-        {
-            return new PropertiesReader(in);
-        }
-
-        @Override
-        public PropertiesWriter createPropertiesWriter(final Writer out,
-                final ListDelimiterHandler handler)
-        {
-            return new PropertiesWriter(out, handler);
-        }
     }
 
     /**
@@ -1528,6 +382,15 @@ public class PropertiesConfiguration extends BaseConfiguration
 
 
         @Override
+        protected void parseProperty(final String line)
+        {
+            final String[] property = doParseProperty(line, false);
+            initPropertyName(property[0]);
+            initPropertyValue(property[1]);
+            initPropertySeparator(property[2]);
+        }
+
+        @Override
         public String readProperty() throws IOException
         {
             getCommentLines().clear();
@@ -1583,15 +446,6 @@ public class PropertiesConfiguration extends BaseConfiguration
                 }
             }
             return buffer.toString();
-        }
-
-        @Override
-        protected void parseProperty(final String line)
-        {
-            final String[] property = doParseProperty(line, false);
-            initPropertyName(property[0]);
-            initPropertyValue(property[1]);
-            initPropertySeparator(property[2]);
         }
 
         @Override
@@ -1679,6 +533,800 @@ public class PropertiesConfiguration extends BaseConfiguration
             });
         }
 
+    }
+
+    /**
+     * This class is used to read properties lines. These lines do
+     * not terminate with new-line chars but rather when there is no
+     * backslash sign a the end of the line.  This is used to
+     * concatenate multiple lines for readability.
+     */
+    public static class PropertiesReader extends LineNumberReader
+    {
+        /** The regular expression to parse the key and the value of a property. */
+        private static final Pattern PROPERTY_PATTERN = Pattern
+                .compile("(([\\S&&[^\\\\" + new String(SEPARATORS)
+                        + "]]|\\\\.)*)(\\s*(\\s+|[" + new String(SEPARATORS)
+                        + "])\\s*)?(.*)");
+
+        /** Constant for the index of the group for the key. */
+        private static final int IDX_KEY = 1;
+
+        /** Constant for the index of the group for the value. */
+        private static final int IDX_VALUE = 5;
+
+        /** Constant for the index of the group for the separator. */
+        private static final int IDX_SEPARATOR = 3;
+
+        /**
+         * Checks if the passed in line should be combined with the following.
+         * This is true, if the line ends with an odd number of backslashes.
+         *
+         * @param line the line
+         * @return a flag if the lines should be combined
+         */
+        static boolean checkCombineLines(final String line)
+        {
+            return countTrailingBS(line) % 2 != 0;
+        }
+
+        /**
+         * Parse a property line and return the key, the value, and the separator in an
+         * array.
+         *
+         * @param line the line to parse
+         * @param trimValue flag whether the value is to be trimmed
+         * @return an array with the property's key, value, and separator
+         */
+        static String[] doParseProperty(final String line, final boolean trimValue)
+        {
+            final Matcher matcher = PROPERTY_PATTERN.matcher(line);
+
+            final String[] result = {"", "", ""};
+
+            if (matcher.matches())
+            {
+                result[0] = matcher.group(IDX_KEY).trim();
+
+                String value = matcher.group(IDX_VALUE);
+                if (trimValue)
+                {
+                    value = value.trim();
+                }
+                result[1] = value;
+
+                result[2] = matcher.group(IDX_SEPARATOR);
+            }
+
+            return result;
+        }
+
+        /** Stores the comment lines for the currently processed property.*/
+        private final List<String> commentLines;
+
+        /** Stores the name of the last read property.*/
+        private String propertyName;
+
+        /** Stores the value of the last read property.*/
+        private String propertyValue;
+
+        /** Stores the property separator of the last read property.*/
+        private String propertySeparator = DEFAULT_SEPARATOR;
+
+        /**
+         * Constructor.
+         *
+         * @param reader A Reader.
+         */
+        public PropertiesReader(final Reader reader)
+        {
+            super(reader);
+            commentLines = new ArrayList<>();
+        }
+
+        /**
+         * Returns the comment lines that have been read for the last property.
+         *
+         * @return the comment lines for the last property returned by
+         * {@code readProperty()}
+         * @since 1.3
+         */
+        public List<String> getCommentLines()
+        {
+            return commentLines;
+        }
+
+        /**
+         * Returns the name of the last read property. This method can be called
+         * after {@link #nextProperty()} was invoked and its
+         * return value was <b>true</b>.
+         *
+         * @return the name of the last read property
+         * @since 1.3
+         */
+        public String getPropertyName()
+        {
+            return propertyName;
+        }
+
+        /**
+         * Returns the separator that was used for the last read property. The
+         * separator can be stored so that it can later be restored when saving
+         * the configuration.
+         *
+         * @return the separator for the last read property
+         * @since 1.7
+         */
+        public String getPropertySeparator()
+        {
+            return propertySeparator;
+        }
+
+        /**
+         * Returns the value of the last read property. This method can be
+         * called after {@link #nextProperty()} was invoked and
+         * its return value was <b>true</b>.
+         *
+         * @return the value of the last read property
+         * @since 1.3
+         */
+        public String getPropertyValue()
+        {
+            return propertyValue;
+        }
+
+        /**
+         * Sets the name of the current property. This method can be called by
+         * {@code parseProperty()} for storing the results of the parse
+         * operation. It also ensures that the property key is correctly
+         * escaped.
+         *
+         * @param name the name of the current property
+         * @since 1.7
+         */
+        protected void initPropertyName(final String name)
+        {
+            propertyName = unescapePropertyName(name);
+        }
+
+        /**
+         * Sets the separator of the current property. This method can be called
+         * by {@code parseProperty()}. It allows the associated layout
+         * object to keep track of the property separators. When saving the
+         * configuration the separators can be restored.
+         *
+         * @param value the separator used for the current property
+         * @since 1.7
+         */
+        protected void initPropertySeparator(final String value)
+        {
+            propertySeparator = value;
+        }
+
+        /**
+         * Sets the value of the current property. This method can be called by
+         * {@code parseProperty()} for storing the results of the parse
+         * operation. It also ensures that the property value is correctly
+         * escaped.
+         *
+         * @param value the value of the current property
+         * @since 1.7
+         */
+        protected void initPropertyValue(final String value)
+        {
+            propertyValue = unescapePropertyValue(value);
+        }
+
+        /**
+         * Parses the next property from the input stream and stores the found
+         * name and value in internal fields. These fields can be obtained using
+         * the provided getter methods. The return value indicates whether EOF
+         * was reached (<b>false</b>) or whether further properties are
+         * available (<b>true</b>).
+         *
+         * @return a flag if further properties are available
+         * @throws IOException if an error occurs
+         * @since 1.3
+         */
+        public boolean nextProperty() throws IOException
+        {
+            final String line = readProperty();
+
+            if (line == null)
+            {
+                return false; // EOF
+            }
+
+            // parse the line
+            parseProperty(line);
+            return true;
+        }
+
+        /**
+         * Parses a line read from the properties file. This method is called
+         * for each non-comment line read from the source file. Its task is to
+         * split the passed in line into the property key and its value. The
+         * results of the parse operation can be stored by calling the
+         * {@code initPropertyXXX()} methods.
+         *
+         * @param line the line read from the properties file
+         * @since 1.7
+         */
+        protected void parseProperty(final String line)
+        {
+            final String[] property = doParseProperty(line, true);
+            initPropertyName(property[0]);
+            initPropertyValue(property[1]);
+            initPropertySeparator(property[2]);
+        }
+
+        /**
+         * Reads a property line. Returns null if Stream is
+         * at EOF. Concatenates lines ending with "\".
+         * Skips lines beginning with "#" or "!" and empty lines.
+         * The return value is a property definition ({@code &lt;name&gt;}
+         * = {@code &lt;value&gt;})
+         *
+         * @return A string containing a property value or null
+         *
+         * @throws IOException in case of an I/O error
+         */
+        public String readProperty() throws IOException
+        {
+            commentLines.clear();
+            final StringBuilder buffer = new StringBuilder();
+
+            while (true)
+            {
+                String line = readLine();
+                if (line == null)
+                {
+                    // EOF
+                    return null;
+                }
+
+                if (isCommentLine(line))
+                {
+                    commentLines.add(line);
+                    continue;
+                }
+
+                line = line.trim();
+
+                if (checkCombineLines(line))
+                {
+                    line = line.substring(0, line.length() - 1);
+                    buffer.append(line);
+                }
+                else
+                {
+                    buffer.append(line);
+                    break;
+                }
+            }
+            return buffer.toString();
+        }
+
+        /**
+         * Performs unescaping on the given property name.
+         *
+         * @param name the property name
+         * @return the unescaped property name
+         * @since 2.4
+         */
+        protected String unescapePropertyName(final String name)
+        {
+            return StringEscapeUtils.unescapeJava(name);
+        }
+
+        /**
+         * Performs unescaping on the given property value.
+         *
+         * @param value the property value
+         * @return the unescaped property value
+         * @since 2.4
+         */
+        protected String unescapePropertyValue(final String value)
+        {
+            return unescapeJava(value);
+        }
+    } // class PropertiesReader
+
+    /**
+     * This class is used to write properties lines. The most important method
+     * is {@code writeProperty(String, Object, boolean)}, which is called
+     * during a save operation for each property found in the configuration.
+     */
+    public static class PropertiesWriter extends FilterWriter
+    {
+
+        /**
+         * Properties escape map.
+         */
+        private static final Map<CharSequence, CharSequence> PROPERTIES_CHARS_ESCAPE;
+        static
+        {
+            final Map<CharSequence, CharSequence> initialMap = new HashMap<>();
+            initialMap.put("\\", "\\\\");
+            PROPERTIES_CHARS_ESCAPE = Collections.unmodifiableMap(initialMap);
+        }
+
+        /**
+         * A translator for escaping property values. This translator performs a
+         * subset of transformations done by the ESCAPE_JAVA translator from
+         * Commons Lang 3.
+         */
+        private static final CharSequenceTranslator ESCAPE_PROPERTIES =
+                new AggregateTranslator(
+                        new LookupTranslator(PROPERTIES_CHARS_ESCAPE),
+                        new LookupTranslator(EntityArrays.JAVA_CTRL_CHARS_ESCAPE),
+                        UnicodeEscaper.outsideOf(32, 0x7f));
+
+        /**
+         * A {@code ValueTransformer} implementation used to escape property
+         * values. This implementation applies the transformation defined by the
+         * {@link #ESCAPE_PROPERTIES} translator.
+         */
+        private static final ValueTransformer DEFAULT_TRANSFORMER =
+                value -> {
+            final String strVal = String.valueOf(value);
+            return ESCAPE_PROPERTIES.translate(strVal);
+        };
+
+        /** The value transformer used for escaping property values. */
+        private final ValueTransformer valueTransformer;
+
+        /** The list delimiter handler.*/
+        private final ListDelimiterHandler delimiterHandler;
+
+        /** The separator to be used for the current property. */
+        private String currentSeparator;
+
+        /** The global separator. If set, it overrides the current separator.*/
+        private String globalSeparator;
+
+        /** The line separator.*/
+        private String lineSeparator;
+
+        /**
+         * Creates a new instance of {@code PropertiesWriter}.
+         *
+         * @param writer a Writer object providing the underlying stream
+         * @param delHandler the delimiter handler for dealing with properties
+         *        with multiple values
+         */
+        public PropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler)
+        {
+            this(writer, delHandler, DEFAULT_TRANSFORMER);
+        }
+
+        /**
+         * Creates a new instance of {@code PropertiesWriter}.
+         *
+         * @param writer a Writer object providing the underlying stream
+         * @param delHandler the delimiter handler for dealing with properties
+         *        with multiple values
+         * @param valueTransformer the value transformer used to escape property values
+         */
+        public PropertiesWriter(final Writer writer, final ListDelimiterHandler delHandler,
+            final ValueTransformer valueTransformer)
+        {
+            super(writer);
+            delimiterHandler = delHandler;
+            this.valueTransformer = valueTransformer;
+        }
+
+        /**
+         * Escapes the key of a property before it gets written to file. This
+         * method is called on saving a configuration for each property key.
+         * It ensures that separator characters contained in the key are
+         * escaped.
+         *
+         * @param key the key
+         * @return the escaped key
+         * @since 2.0
+         */
+        protected String escapeKey(final String key)
+        {
+            final StringBuilder newkey = new StringBuilder();
+
+            for (int i = 0; i < key.length(); i++)
+            {
+                final char c = key.charAt(i);
+
+                if (ArrayUtils.contains(SEPARATORS, c) || ArrayUtils.contains(WHITE_SPACE, c) || c == '\\')
+                {
+                    // escape the separator
+                    newkey.append('\\');
+                    newkey.append(c);
+                }
+                else
+                {
+                    newkey.append(c);
+                }
+            }
+
+            return newkey.toString();
+        }
+
+        /**
+         * Returns the separator to be used for the given property. This method
+         * is called by {@code writeProperty()}. The string returned here
+         * is used as separator between the property key and its value. Per
+         * default the method checks whether a global separator is set. If this
+         * is the case, it is returned. Otherwise the separator returned by
+         * {@code getCurrentSeparator()} is used, which was set by the
+         * associated layout object. Derived classes may implement a different
+         * strategy for defining the separator.
+         *
+         * @param key the property key
+         * @param value the value
+         * @return the separator to be used
+         * @since 1.7
+         */
+        protected String fetchSeparator(final String key, final Object value)
+        {
+            return getGlobalSeparator() != null ? getGlobalSeparator()
+                    : StringUtils.defaultString(getCurrentSeparator());
+        }
+
+        /**
+         * Returns the current property separator.
+         *
+         * @return the current property separator
+         * @since 1.7
+         */
+        public String getCurrentSeparator()
+        {
+            return currentSeparator;
+        }
+
+        /**
+         * Returns the delimiter handler for properties with multiple values.
+         * This object is used to escape property values so that they can be
+         * read in correctly the next time they are loaded.
+         *
+         * @return the delimiter handler for properties with multiple values
+         * @since 2.0
+         */
+        public ListDelimiterHandler getDelimiterHandler()
+        {
+            return delimiterHandler;
+        }
+
+        /**
+         * Returns the global property separator.
+         *
+         * @return the global property separator
+         * @since 1.7
+         */
+        public String getGlobalSeparator()
+        {
+            return globalSeparator;
+        }
+
+        /**
+         * Returns the line separator.
+         *
+         * @return the line separator
+         * @since 1.7
+         */
+        public String getLineSeparator()
+        {
+            return lineSeparator != null ? lineSeparator : LINE_SEPARATOR;
+        }
+
+        /**
+         * Sets the current property separator. This separator is used when
+         * writing the next property.
+         *
+         * @param currentSeparator the current property separator
+         * @since 1.7
+         */
+        public void setCurrentSeparator(final String currentSeparator)
+        {
+            this.currentSeparator = currentSeparator;
+        }
+
+        /**
+         * Sets the global property separator. This separator corresponds to the
+         * {@code globalSeparator} property of
+         * {@link PropertiesConfigurationLayout}. It defines the separator to be
+         * used for all properties. If it is undefined, the current separator is
+         * used.
+         *
+         * @param globalSeparator the global property separator
+         * @since 1.7
+         */
+        public void setGlobalSeparator(final String globalSeparator)
+        {
+            this.globalSeparator = globalSeparator;
+        }
+
+        /**
+         * Sets the line separator. Each line written by this writer is
+         * terminated with this separator. If not set, the platform-specific
+         * line separator is used.
+         *
+         * @param lineSeparator the line separator to be used
+         * @since 1.7
+         */
+        public void setLineSeparator(final String lineSeparator)
+        {
+            this.lineSeparator = lineSeparator;
+        }
+
+        /**
+         * Write a comment.
+         *
+         * @param comment the comment to write
+         * @throws IOException if an I/O error occurs
+         */
+        public void writeComment(final String comment) throws IOException
+        {
+            writeln("# " + comment);
+        }
+
+        /**
+         * Helper method for writing a line with the platform specific line
+         * ending.
+         *
+         * @param s the content of the line (may be <b>null</b>)
+         * @throws IOException if an error occurs
+         * @since 1.3
+         */
+        public void writeln(final String s) throws IOException
+        {
+            if (s != null)
+            {
+                write(s);
+            }
+            write(getLineSeparator());
+        }
+
+        /**
+         * Write a property.
+         *
+         * @param key The key of the property
+         * @param values The array of values of the property
+         *
+         * @throws IOException if an I/O error occurs
+         */
+        public void writeProperty(final String key, final List<?> values) throws IOException
+        {
+            for (int i = 0; i < values.size(); i++)
+            {
+                writeProperty(key, values.get(i));
+            }
+        }
+
+        /**
+         * Write a property.
+         *
+         * @param key the key of the property
+         * @param value the value of the property
+         *
+         * @throws IOException if an I/O error occurs
+         */
+        public void writeProperty(final String key, final Object value) throws IOException
+        {
+            writeProperty(key, value, false);
+        }
+
+        /**
+         * Writes the given property and its value. If the value happens to be a
+         * list, the {@code forceSingleLine} flag is evaluated. If it is
+         * set, all values are written on a single line using the list delimiter
+         * as separator.
+         *
+         * @param key the property key
+         * @param value the property value
+         * @param forceSingleLine the &quot;force single line&quot; flag
+         * @throws IOException if an error occurs
+         * @since 1.3
+         */
+        public void writeProperty(final String key, final Object value,
+                final boolean forceSingleLine) throws IOException
+        {
+            String v;
+
+            if (value instanceof List)
+            {
+                v = null;
+                final List<?> values = (List<?>) value;
+                if (forceSingleLine)
+                {
+                    try
+                    {
+                        v = String.valueOf(getDelimiterHandler()
+                                        .escapeList(values, valueTransformer));
+                    }
+                    catch (final UnsupportedOperationException uoex)
+                    {
+                        // the handler may not support escaping lists,
+                        // then the list is written in multiple lines
+                    }
+                }
+                if (v == null)
+                {
+                    writeProperty(key, values);
+                    return;
+                }
+            }
+            else
+            {
+                v = String.valueOf(getDelimiterHandler().escape(value, valueTransformer));
+            }
+
+            write(escapeKey(key));
+            write(fetchSeparator(key, value));
+            write(v);
+
+            writeln(null);
+        }
+    } // class PropertiesWriter
+
+    /**
+     * Defines default error handling for the special {@code "include"} key by throwing the given exception.
+     *
+     * @since 2.6
+     */
+    public static final ConfigurationConsumer<ConfigurationException> DEFAULT_INCLUDE_LISTENER = e -> { throw e; };
+
+    /**
+     * Defines error handling as a noop for the special {@code "include"} key.
+     *
+     * @since 2.6
+     */
+    public static final ConfigurationConsumer<ConfigurationException> NOOP_INCLUDE_LISTENER = e -> { /* noop */ };
+
+    /**
+     * The default encoding (ISO-8859-1 as specified by
+     * http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html)
+     */
+    public static final String DEFAULT_ENCODING = "ISO-8859-1";
+
+    /** Constant for the supported comment characters.*/
+    static final String COMMENT_CHARS = "#!";
+
+    /** Constant for the default properties separator.*/
+    static final String DEFAULT_SEPARATOR = " = ";
+
+    /**
+     * A string with special characters that need to be unescaped when reading
+     * a properties file. {@code java.util.Properties} escapes these characters
+     * when writing out a properties file.
+     */
+    private static final String UNESCAPE_CHARACTERS = ":#=!\\\'\"";
+
+    /**
+     * This is the name of the property that can point to other
+     * properties file for including other properties files.
+     */
+    private static String include = "include";
+
+    /**
+     * This is the name of the property that can point to other
+     * properties file for including other properties files.
+     * <p>
+     * If the file is absent, processing continues normally.
+     * </p>
+     */
+    private static String includeOptional = "includeoptional";
+
+    /** The list of possible key/value separators */
+    private static final char[] SEPARATORS = new char[] {'=', ':'};
+
+    /** The white space characters used as key/value separators. */
+    private static final char[] WHITE_SPACE = new char[]{' ', '\t', '\f'};
+
+    /** Constant for the platform specific line separator.*/
+    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
+    /** Constant for the radix of hex numbers.*/
+    private static final int HEX_RADIX = 16;
+
+    /** Constant for the length of a unicode literal.*/
+    private static final int UNICODE_LEN = 4;
+
+    /**
+     * Returns the number of trailing backslashes. This is sometimes needed for
+     * the correct handling of escape characters.
+     *
+     * @param line the string to investigate
+     * @return the number of trailing backslashes
+     */
+    private static int countTrailingBS(final String line)
+    {
+        int bsCount = 0;
+        for (int idx = line.length() - 1; idx >= 0 && line.charAt(idx) == '\\'; idx--)
+        {
+            bsCount++;
+        }
+
+        return bsCount;
+    }
+
+    /**
+     * Gets the property value for including other properties files.
+     * By default it is "include".
+     *
+     * @return A String.
+     */
+    public static String getInclude()
+    {
+        return PropertiesConfiguration.include;
+    }
+
+    /**
+     * Gets the property value for including other properties files.
+     * By default it is "includeoptional".
+     * <p>
+     * If the file is absent, processing continues normally.
+     * </p>
+     *
+     * @return A String.
+     * @since 2.5
+     */
+    public static String getIncludeOptional()
+    {
+        return PropertiesConfiguration.includeOptional;
+    }
+
+    /**
+     * Tests whether a line is a comment, i.e. whether it starts with a comment
+     * character.
+     *
+     * @param line the line
+     * @return a flag if this is a comment line
+     * @since 1.3
+     */
+    static boolean isCommentLine(final String line)
+    {
+        final String s = line.trim();
+        // blanc lines are also treated as comment lines
+        return s.length() < 1 || COMMENT_CHARS.indexOf(s.charAt(0)) >= 0;
+    }
+
+    /**
+     * Checks whether the specified character needs to be unescaped. This method
+     * is called when during reading a property file an escape character ('\')
+     * is detected. If the character following the escape character is
+     * recognized as a special character which is escaped per default in a Java
+     * properties file, it has to be unescaped.
+     *
+     * @param ch the character in question
+     * @return a flag whether this character has to be unescaped
+     */
+    private static boolean needsUnescape(final char ch)
+    {
+        return UNESCAPE_CHARACTERS.indexOf(ch) >= 0;
+    }
+
+    /**
+     * Sets the property value for including other properties files.
+     * By default it is "include".
+     *
+     * @param inc A String.
+     */
+    public static void setInclude(final String inc)
+    {
+        PropertiesConfiguration.include = inc;
+    }
+
+    /**
+     * Sets the property value for including other properties files.
+     * By default it is "include".
+     * <p>
+     * If the file is absent, processing continues normally.
+     * </p>
+     *
+     * @param inc A String.
+     * @since 2.5
+     */
+    public static void setIncludeOptional(final String inc)
+    {
+        PropertiesConfiguration.includeOptional = inc;
     }
 
     /**
@@ -1815,19 +1463,179 @@ public class PropertiesConfiguration extends BaseConfiguration
         return out.toString();
     }
 
+    /** Stores the layout object.*/
+    private PropertiesConfigurationLayout layout;
+
+    /** The include listener for the special {@code "include"} key. */
+    private ConfigurationConsumer<ConfigurationException> includeListener;
+
+    /** The IOFactory for creating readers and writers.*/
+    private IOFactory ioFactory;
+
+    /** The current {@code FileLocator}. */
+    private FileLocator locator;
+
+    /** Allow file inclusion or not */
+    private boolean includesAllowed = true;
+
     /**
-     * Checks whether the specified character needs to be unescaped. This method
-     * is called when during reading a property file an escape character ('\')
-     * is detected. If the character following the escape character is
-     * recognized as a special character which is escaped per default in a Java
-     * properties file, it has to be unescaped.
-     *
-     * @param ch the character in question
-     * @return a flag whether this character has to be unescaped
+     * Creates an empty PropertyConfiguration object which can be
+     * used to synthesize a new Properties file by adding values and
+     * then saving().
      */
-    private static boolean needsUnescape(final char ch)
+    public PropertiesConfiguration()
     {
-        return UNESCAPE_CHARACTERS.indexOf(ch) >= 0;
+        installLayout(createLayout());
+    }
+
+    /**
+     * Creates a copy of this object.
+     *
+     * @return the copy
+     */
+    @Override
+    public Object clone()
+    {
+        final PropertiesConfiguration copy = (PropertiesConfiguration) super.clone();
+        if (layout != null)
+        {
+            copy.setLayout(new PropertiesConfigurationLayout(layout));
+        }
+        return copy;
+    }
+
+    /**
+     * Creates a standard layout object. This configuration is initialized with
+     * such a standard layout.
+     *
+     * @return the newly created layout object
+     */
+    private PropertiesConfigurationLayout createLayout()
+    {
+        return new PropertiesConfigurationLayout();
+    }
+
+    /**
+     * Returns the footer comment. This is a comment at the very end of the
+     * file.
+     *
+     * @return the footer comment
+     * @since 2.0
+     */
+    public String getFooter()
+    {
+        beginRead(false);
+        try
+        {
+            return getLayout().getFooterComment();
+        }
+        finally
+        {
+            endRead();
+        }
+    }
+
+    /**
+     * Return the comment header.
+     *
+     * @return the comment header
+     * @since 1.1
+     */
+    public String getHeader()
+    {
+        beginRead(false);
+        try
+        {
+            return getLayout().getHeaderComment();
+        }
+        finally
+        {
+            endRead();
+        }
+    }
+
+    /**
+     * Gets the current include listener, never null.
+     *
+     * @return the current include listener, never null.
+     * @since 2.6
+     */
+    public ConfigurationConsumer<ConfigurationException> getIncludeListener()
+    {
+        return includeListener != null ? includeListener : PropertiesConfiguration.DEFAULT_INCLUDE_LISTENER;
+    }
+
+    /**
+     * Returns the {@code IOFactory} to be used for creating readers and
+     * writers when loading or saving this configuration.
+     *
+     * @return the {@code IOFactory}
+     * @since 1.7
+     */
+    public IOFactory getIOFactory()
+    {
+        return ioFactory != null ? ioFactory : DefaultIOFactory.INSTANCE;
+    }
+
+    /**
+     * Returns the associated layout object.
+     *
+     * @return the associated layout object
+     * @since 1.3
+     */
+    public PropertiesConfigurationLayout getLayout()
+    {
+        return layout;
+    }
+
+    /**
+     * Stores the current {@code FileLocator} for a following IO operation. The
+     * {@code FileLocator} is needed to resolve include files with relative file
+     * names.
+     *
+     * @param locator the current {@code FileLocator}
+     * @since 2.0
+     */
+    @Override
+    public void initFileLocator(final FileLocator locator)
+    {
+        this.locator = locator;
+    }
+
+    /**
+     * Installs a layout object. It has to be ensured that the layout is
+     * registered as change listener at this configuration. If there is already
+     * a layout object installed, it has to be removed properly.
+     *
+     * @param layout the layout object to be installed
+     */
+    private void installLayout(final PropertiesConfigurationLayout layout)
+    {
+        // only one layout must exist
+        if (this.layout != null)
+        {
+            removeEventListener(ConfigurationEvent.ANY, this.layout);
+        }
+
+        if (layout == null)
+        {
+            this.layout = createLayout();
+        }
+        else
+        {
+            this.layout = layout;
+        }
+        addEventListener(ConfigurationEvent.ANY, this.layout);
+    }
+
+    /**
+     * Reports the status of file inclusion.
+     *
+     * @return True if include files are loaded.
+     */
+    public boolean isIncludesAllowed()
+    {
+        return this.includesAllowed;
     }
 
     /**
@@ -1924,6 +1732,198 @@ public class PropertiesConfiguration extends BaseConfiguration
                 FileLocatorUtils.fileLocator(locator).sourceURL(null)
                         .basePath(basePath).fileName(fileName).create();
         return FileLocatorUtils.locate(includeLocator);
+    }
+
+    /**
+     * This method is invoked by the associated
+     * {@link PropertiesConfigurationLayout} object for each
+     * property definition detected in the parsed properties file. Its task is
+     * to check whether this is a special property definition (e.g. the
+     * {@code include} property). If not, the property must be added to
+     * this configuration. The return value indicates whether the property
+     * should be treated as a normal property. If it is <b>false</b>, the
+     * layout object will ignore this property.
+     *
+     * @param key the property key
+     * @param value the property value
+     * @param seenStack the stack of seen include URLs
+     * @return a flag whether this is a normal property
+     * @throws ConfigurationException if an error occurs
+     * @since 1.3
+     */
+    boolean propertyLoaded(final String key, final String value, final Deque<URL> seenStack)
+            throws ConfigurationException
+    {
+        boolean result;
+
+        if (StringUtils.isNotEmpty(getInclude())
+                && key.equalsIgnoreCase(getInclude()))
+        {
+            if (isIncludesAllowed())
+            {
+                final Collection<String> files =
+                        getListDelimiterHandler().split(value, true);
+                for (final String f : files)
+                {
+                    loadIncludeFile(interpolate(f), false, seenStack);
+                }
+            }
+            result = false;
+        }
+
+        else if (StringUtils.isNotEmpty(getIncludeOptional())
+            && key.equalsIgnoreCase(getIncludeOptional()))
+        {
+            if (isIncludesAllowed())
+            {
+                final Collection<String> files =
+                        getListDelimiterHandler().split(value, true);
+                for (final String f : files)
+                {
+                    loadIncludeFile(interpolate(f), true, seenStack);
+                }
+            }
+            result = false;
+        }
+
+        else
+        {
+            addPropertyInternal(key, value);
+            result = true;
+        }
+
+        return result;
+    }
+
+    /**
+     * {@inheritDoc} This implementation delegates to the associated layout
+     * object which does the actual loading. Note that this method does not
+     * do any synchronization. This lies in the responsibility of the caller.
+     * (Typically, the caller is a {@code FileHandler} object which takes
+     * care for proper synchronization.)
+     *
+     * @since 2.0
+     */
+    @Override
+    public void read(final Reader in) throws ConfigurationException, IOException
+    {
+        getLayout().load(this, in);
+    }
+
+    /**
+     * Sets the footer comment. If set, this comment is written after all
+     * properties at the end of the file.
+     *
+     * @param footer the footer comment
+     * @since 2.0
+     */
+    public void setFooter(final String footer)
+    {
+        beginWrite(false);
+        try
+        {
+            getLayout().setFooterComment(footer);
+        }
+        finally
+        {
+            endWrite();
+        }
+    }
+
+    /**
+     * Set the comment header.
+     *
+     * @param header the header to use
+     * @since 1.1
+     */
+    public void setHeader(final String header)
+    {
+        beginWrite(false);
+        try
+        {
+            getLayout().setHeaderComment(header);
+        }
+        finally
+        {
+            endWrite();
+        }
+    }
+
+    /**
+     * Sets the current include listener, may not be null.
+     *
+     * @param includeListener the current include listener, may not be null.
+     * @throws IllegalArgumentException if the {@code includeListener} is null.
+     * @since 2.6
+     */
+    public void setIncludeListener(final ConfigurationConsumer<ConfigurationException> includeListener)
+    {
+        if (includeListener == null)
+        {
+            throw new IllegalArgumentException("includeListener must not be null.");
+        }
+        this.includeListener = includeListener;
+    }
+
+    /**
+     * Controls whether additional files can be loaded by the {@code include = <xxx>}
+     * statement or not. This is <b>true</b> per default.
+     *
+     * @param includesAllowed True if Includes are allowed.
+     */
+    public void setIncludesAllowed(final boolean includesAllowed)
+    {
+        this.includesAllowed = includesAllowed;
+    }
+
+    /**
+     * Sets the {@code IOFactory} to be used for creating readers and
+     * writers when loading or saving this configuration. Using this method a
+     * client can customize the reader and writer classes used by the load and
+     * save operations. Note that this method must be called before invoking
+     * one of the {@code load()} and {@code save()} methods.
+     * Especially, if you want to use a custom {@code IOFactory} for
+     * changing the {@code PropertiesReader}, you cannot load the
+     * configuration data in the constructor.
+     *
+     * @param ioFactory the new {@code IOFactory} (must not be <b>null</b>)
+     * @throws IllegalArgumentException if the {@code IOFactory} is
+     *         <b>null</b>
+     * @since 1.7
+     */
+    public void setIOFactory(final IOFactory ioFactory)
+    {
+        if (ioFactory == null)
+        {
+            throw new IllegalArgumentException("IOFactory must not be null.");
+        }
+
+        this.ioFactory = ioFactory;
+    }
+
+    /**
+     * Sets the associated layout object.
+     *
+     * @param layout the new layout object; can be <b>null</b>, then a new
+     * layout object will be created
+     * @since 1.3
+     */
+    public void setLayout(final PropertiesConfigurationLayout layout)
+    {
+        installLayout(layout);
+    }
+
+    /**
+     * {@inheritDoc} This implementation delegates to the associated layout
+     * object which does the actual saving. Note that, analogous to
+     * {@link #read(Reader)}, this method does not do any synchronization.
+     *
+     * @since 2.0
+     */
+    @Override
+    public void write(final Writer out) throws ConfigurationException, IOException
+    {
+        getLayout().save(this, out);
     }
 
 }
