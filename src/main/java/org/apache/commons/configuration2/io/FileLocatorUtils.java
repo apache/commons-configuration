@@ -111,10 +111,123 @@ public final class FileLocatorUtils
     private static final String PROP_SOURCE_URL = "sourceURL";
 
     /**
-     * Private constructor so that no instances can be created.
+     * Extends a path by another component. The given extension is added to the
+     * already existing path adding a separator if necessary.
+     *
+     * @param path the path to be extended
+     * @param ext the extension of the path
+     * @return the extended path
      */
-    private FileLocatorUtils()
+    static String appendPath(final String path, final String ext)
     {
+        final StringBuilder fName = new StringBuilder();
+        fName.append(path);
+
+        // My best friend. Paranoia.
+        if (!path.endsWith(File.separator))
+        {
+            fName.append(File.separator);
+        }
+
+        //
+        // We have a relative path, and we have
+        // two possible forms here. If we have the
+        // "./" form then just strip that off first
+        // before continuing.
+        //
+        if (ext.startsWith("." + File.separator))
+        {
+            fName.append(ext.substring(2));
+        }
+        else
+        {
+            fName.append(ext);
+        }
+        return fName.toString();
+    }
+
+    /**
+     * Helper method for constructing a file object from a base path and a
+     * file name. This method is called if the base path passed to
+     * {@code getURL()} does not seem to be a valid URL.
+     *
+     * @param basePath the base path
+     * @param fileName the file name (must not be <b>null</b>)
+     * @return the resulting file
+     */
+    static File constructFile(final String basePath, final String fileName)
+    {
+        File file;
+
+        final File absolute = new File(fileName);
+        if (StringUtils.isEmpty(basePath) || absolute.isAbsolute())
+        {
+            file = absolute;
+        }
+        else
+        {
+            file = new File(appendPath(basePath, fileName));
+        }
+
+        return file;
+    }
+
+    /**
+     * Tries to convert the specified file to a URL. If this causes an
+     * exception, result is <b>null</b>.
+     *
+     * @param file the file to be converted
+     * @return the resulting URL or <b>null</b>
+     */
+    static URL convertFileToURL(final File file)
+    {
+        return convertURIToURL(file.toURI());
+    }
+
+    /**
+     * Tries to convert the specified URI to a URL. If this causes an exception,
+     * result is <b>null</b>.
+     *
+     * @param uri the URI to be converted
+     * @return the resulting URL or <b>null</b>
+     */
+    static URL convertURIToURL(final URI uri)
+    {
+        try
+        {
+            return uri.toURL();
+        }
+        catch (final MalformedURLException e)
+        {
+            return null;
+        }
+    }
+
+    /**
+     * Creates a fully initialized {@code FileLocator} based on the specified
+     * URL.
+     *
+     * @param src the source {@code FileLocator}
+     * @param url the URL
+     * @return the fully initialized {@code FileLocator}
+     */
+    private static FileLocator createFullyInitializedLocatorFromURL(final FileLocator src,
+            final URL url)
+    {
+        final FileLocator.FileLocatorBuilder fileLocatorBuilder = fileLocator(src);
+        if (src.getSourceURL() == null)
+        {
+            fileLocatorBuilder.sourceURL(url);
+        }
+        if (StringUtils.isBlank(src.getFileName()))
+        {
+            fileLocatorBuilder.fileName(getFileName(url));
+        }
+        if (StringUtils.isBlank(src.getBasePath()))
+        {
+            fileLocatorBuilder.basePath(getBasePath(url));
+        }
+        return fileLocatorBuilder.create();
     }
 
     /**
@@ -195,79 +308,6 @@ public final class FileLocatorUtils
     }
 
     /**
-     * Stores the specified {@code FileLocator} in the given map. With the
-     * {@link #fromMap(Map)} method a new {@code FileLocator} with the same
-     * properties as the original one can be created.
-     *
-     * @param locator the {@code FileLocator} to be stored
-     * @param map the map in which to store the {@code FileLocator} (must not be
-     *        <b>null</b>)
-     * @throws IllegalArgumentException if the map is <b>null</b>
-     */
-    public static void put(final FileLocator locator, final Map<String, Object> map)
-    {
-        if (map == null)
-        {
-            throw new IllegalArgumentException("Map must not be null!");
-        }
-
-        if (locator != null)
-        {
-            map.put(PROP_BASE_PATH, locator.getBasePath());
-            map.put(PROP_ENCODING, locator.getEncoding());
-            map.put(PROP_FILE_NAME, locator.getFileName());
-            map.put(PROP_FILE_SYSTEM, locator.getFileSystem());
-            map.put(PROP_SOURCE_URL, locator.getSourceURL());
-            map.put(PROP_STRATEGY, locator.getLocationStrategy());
-        }
-    }
-
-    /**
-     * Checks whether the specified {@code FileLocator} contains enough
-     * information to locate a file. This is the case if a file name or a URL is
-     * defined. If the passed in {@code FileLocator} is <b>null</b>, result is
-     * <b>false</b>.
-     *
-     * @param locator the {@code FileLocator} to check
-     * @return a flag whether a file location is defined by this
-     *         {@code FileLocator}
-     */
-    public static boolean isLocationDefined(final FileLocator locator)
-    {
-        return locator != null
-                && (locator.getFileName() != null || locator.getSourceURL() != null);
-    }
-
-    /**
-     * Returns a flag whether all components of the given {@code FileLocator}
-     * describing the referenced file are defined. In order to reference a file,
-     * it is not necessary that all components are filled in (for instance, the
-     * URL alone is sufficient). For some use cases however, it might be of
-     * interest to have different methods for accessing the referenced file.
-     * Also, depending on the filled out properties, there is a subtle
-     * difference how the file is accessed: If only the file name is set (and
-     * optionally the base path), each time the file is accessed a
-     * {@code locate()} operation has to be performed to uniquely identify the
-     * file. If however the URL is determined once based on the other components
-     * and stored in a fully defined {@code FileLocator}, it can be used
-     * directly to identify the file. If the passed in {@code FileLocator} is
-     * <b>null</b>, result is <b>false</b>.
-     *
-     * @param locator the {@code FileLocator} to be checked (may be <b>null</b>)
-     * @return a flag whether all components describing the referenced file are
-     *         initialized
-     */
-    public static boolean isFullyInitialized(final FileLocator locator)
-    {
-        if (locator == null)
-        {
-            return false;
-        }
-        return locator.getBasePath() != null && locator.getFileName() != null
-                && locator.getSourceURL() != null;
-    }
-
-    /**
      * Returns a {@code FileLocator} object based on the passed in one whose
      * location is fully defined. This method ensures that all components of the
      * {@code FileLocator} pointing to the file are set in a consistent way. In
@@ -301,53 +341,6 @@ public final class FileLocatorUtils
     }
 
     /**
-     * Locates the provided {@code FileLocator}, returning a URL for accessing
-     * the referenced file. This method uses a {@link FileLocationStrategy} to
-     * locate the file the passed in {@code FileLocator} points to. If the
-     * {@code FileLocator} contains itself a {@code FileLocationStrategy}, it is
-     * used. Otherwise, the default {@code FileLocationStrategy} is applied. The
-     * strategy is passed the locator and a {@code FileSystem}. The resulting
-     * URL is returned. If the {@code FileLocator} is <b>null</b>, result is
-     * <b>null</b>.
-     *
-     * @param locator the {@code FileLocator} to be resolved
-     * @return the URL pointing to the referenced file or <b>null</b> if the
-     *         {@code FileLocator} could not be resolved
-     * @see #DEFAULT_LOCATION_STRATEGY
-     */
-    public static URL locate(final FileLocator locator)
-    {
-        if (locator == null)
-        {
-            return null;
-        }
-
-        return obtainLocationStrategy(locator).locate(
-                obtainFileSystem(locator), locator);
-    }
-
-    /**
-     * Tries to locate the file referenced by the passed in {@code FileLocator}.
-     * If this fails, an exception is thrown. This method works like
-     * {@link #locate(FileLocator)}; however, in case of a failed location
-     * attempt an exception is thrown.
-     *
-     * @param locator the {@code FileLocator} to be resolved
-     * @return the URL pointing to the referenced file
-     * @throws ConfigurationException if the file cannot be resolved
-     */
-    public static URL locateOrThrow(final FileLocator locator)
-            throws ConfigurationException
-    {
-        final URL url = locate(locator);
-        if (url == null)
-        {
-            throw new ConfigurationException("Could not locate: " + locator);
-        }
-        return url;
-    }
-
-    /**
      * Return the path without the file name, for example http://xyz.net/foo/bar.xml
      * results in http://xyz.net/foo/
      *
@@ -372,28 +365,6 @@ public final class FileLocatorUtils
             return s;
         }
         return s.substring(0, s.lastIndexOf("/") + 1);
-    }
-
-    /**
-     * Extract the file name from the specified URL.
-     *
-     * @param url the URL from which to extract the file name
-     * @return the extracted file name
-     */
-    static String getFileName(final URL url)
-    {
-        if (url == null)
-        {
-            return null;
-        }
-
-        final String path = url.getPath();
-
-        if (path.endsWith("/") || StringUtils.isEmpty(path))
-        {
-            return null;
-        }
-        return path.substring(path.lastIndexOf("/") + 1);
     }
 
     /**
@@ -457,53 +428,118 @@ public final class FileLocatorUtils
     }
 
     /**
-     * Convert the specified file into an URL. This method is equivalent
-     * to file.toURI().toURL(). It was used to work around a bug in the JDK
-     * preventing the transformation of a file into an URL if the file name
-     * contains a '#' character. See the issue CONFIGURATION-300 for
-     * more details. Now that we switched to JDK 1.4 we can directly use
-     * file.toURI().toURL().
+     * Extract the file name from the specified URL.
      *
-     * @param file the file to be converted into an URL
-     * @return a URL
-     * @throws  MalformedURLException
-     *          If the file protocol handler is not found (should not happen)
-     *          or if an error occurred while constructing the URL
+     * @param url the URL from which to extract the file name
+     * @return the extracted file name
      */
-    static URL toURL(final File file) throws MalformedURLException
+    static String getFileName(final URL url)
     {
-        return file.toURI().toURL();
-    }
-
-    /**
-     * Tries to convert the specified URI to a URL. If this causes an exception,
-     * result is <b>null</b>.
-     *
-     * @param uri the URI to be converted
-     * @return the resulting URL or <b>null</b>
-     */
-    static URL convertURIToURL(final URI uri)
-    {
-        try
-        {
-            return uri.toURL();
-        }
-        catch (final MalformedURLException e)
+        if (url == null)
         {
             return null;
         }
+
+        final String path = url.getPath();
+
+        if (path.endsWith("/") || StringUtils.isEmpty(path))
+        {
+            return null;
+        }
+        return path.substring(path.lastIndexOf("/") + 1);
     }
 
     /**
-     * Tries to convert the specified file to a URL. If this causes an
-     * exception, result is <b>null</b>.
+     * Creates the default location strategy. This method creates a combined
+     * location strategy as described in the comment of the
+     * {@link #DEFAULT_LOCATION_STRATEGY} member field.
      *
-     * @param file the file to be converted
-     * @return the resulting URL or <b>null</b>
+     * @return the default {@code FileLocationStrategy}
      */
-    static URL convertFileToURL(final File file)
+    private static FileLocationStrategy initDefaultLocationStrategy()
     {
-        return convertURIToURL(file.toURI());
+        final FileLocationStrategy[] subStrategies =
+                new FileLocationStrategy[] {
+                        new ProvidedURLLocationStrategy(),
+                        new FileSystemLocationStrategy(),
+                        new AbsoluteNameLocationStrategy(),
+                        new BasePathLocationStrategy(),
+                        new HomeDirectoryLocationStrategy(true),
+                        new HomeDirectoryLocationStrategy(false),
+                        new ClasspathLocationStrategy()
+                };
+        return new CombinedLocationStrategy(Arrays.asList(subStrategies));
+    }
+
+    /**
+     * Returns a flag whether all components of the given {@code FileLocator}
+     * describing the referenced file are defined. In order to reference a file,
+     * it is not necessary that all components are filled in (for instance, the
+     * URL alone is sufficient). For some use cases however, it might be of
+     * interest to have different methods for accessing the referenced file.
+     * Also, depending on the filled out properties, there is a subtle
+     * difference how the file is accessed: If only the file name is set (and
+     * optionally the base path), each time the file is accessed a
+     * {@code locate()} operation has to be performed to uniquely identify the
+     * file. If however the URL is determined once based on the other components
+     * and stored in a fully defined {@code FileLocator}, it can be used
+     * directly to identify the file. If the passed in {@code FileLocator} is
+     * <b>null</b>, result is <b>false</b>.
+     *
+     * @param locator the {@code FileLocator} to be checked (may be <b>null</b>)
+     * @return a flag whether all components describing the referenced file are
+     *         initialized
+     */
+    public static boolean isFullyInitialized(final FileLocator locator)
+    {
+        if (locator == null)
+        {
+            return false;
+        }
+        return locator.getBasePath() != null && locator.getFileName() != null
+                && locator.getSourceURL() != null;
+    }
+
+    /**
+     * Checks whether the specified {@code FileLocator} contains enough
+     * information to locate a file. This is the case if a file name or a URL is
+     * defined. If the passed in {@code FileLocator} is <b>null</b>, result is
+     * <b>false</b>.
+     *
+     * @param locator the {@code FileLocator} to check
+     * @return a flag whether a file location is defined by this
+     *         {@code FileLocator}
+     */
+    public static boolean isLocationDefined(final FileLocator locator)
+    {
+        return locator != null
+                && (locator.getFileName() != null || locator.getSourceURL() != null);
+    }
+
+    /**
+     * Locates the provided {@code FileLocator}, returning a URL for accessing
+     * the referenced file. This method uses a {@link FileLocationStrategy} to
+     * locate the file the passed in {@code FileLocator} points to. If the
+     * {@code FileLocator} contains itself a {@code FileLocationStrategy}, it is
+     * used. Otherwise, the default {@code FileLocationStrategy} is applied. The
+     * strategy is passed the locator and a {@code FileSystem}. The resulting
+     * URL is returned. If the {@code FileLocator} is <b>null</b>, result is
+     * <b>null</b>.
+     *
+     * @param locator the {@code FileLocator} to be resolved
+     * @return the URL pointing to the referenced file or <b>null</b> if the
+     *         {@code FileLocator} could not be resolved
+     * @see #DEFAULT_LOCATION_STRATEGY
+     */
+    public static URL locate(final FileLocator locator)
+    {
+        if (locator == null)
+        {
+            return null;
+        }
+
+        return obtainLocationStrategy(locator).locate(
+                obtainFileSystem(locator), locator);
     }
 
     /**
@@ -542,65 +578,24 @@ public final class FileLocatorUtils
     }
 
     /**
-     * Helper method for constructing a file object from a base path and a
-     * file name. This method is called if the base path passed to
-     * {@code getURL()} does not seem to be a valid URL.
+     * Tries to locate the file referenced by the passed in {@code FileLocator}.
+     * If this fails, an exception is thrown. This method works like
+     * {@link #locate(FileLocator)}; however, in case of a failed location
+     * attempt an exception is thrown.
      *
-     * @param basePath the base path
-     * @param fileName the file name (must not be <b>null</b>)
-     * @return the resulting file
+     * @param locator the {@code FileLocator} to be resolved
+     * @return the URL pointing to the referenced file
+     * @throws ConfigurationException if the file cannot be resolved
      */
-    static File constructFile(final String basePath, final String fileName)
+    public static URL locateOrThrow(final FileLocator locator)
+            throws ConfigurationException
     {
-        File file;
-
-        final File absolute = new File(fileName);
-        if (StringUtils.isEmpty(basePath) || absolute.isAbsolute())
+        final URL url = locate(locator);
+        if (url == null)
         {
-            file = absolute;
+            throw new ConfigurationException("Could not locate: " + locator);
         }
-        else
-        {
-            file = new File(appendPath(basePath, fileName));
-        }
-
-        return file;
-    }
-
-    /**
-     * Extends a path by another component. The given extension is added to the
-     * already existing path adding a separator if necessary.
-     *
-     * @param path the path to be extended
-     * @param ext the extension of the path
-     * @return the extended path
-     */
-    static String appendPath(final String path, final String ext)
-    {
-        final StringBuilder fName = new StringBuilder();
-        fName.append(path);
-
-        // My best friend. Paranoia.
-        if (!path.endsWith(File.separator))
-        {
-            fName.append(File.separator);
-        }
-
-        //
-        // We have a relative path, and we have
-        // two possible forms here. If we have the
-        // "./" form then just strip that off first
-        // before continuing.
-        //
-        if (ext.startsWith("." + File.separator))
-        {
-            fName.append(ext.substring(2));
-        }
-        else
-        {
-            fName.append(ext);
-        }
-        return fName.toString();
+        return url;
     }
 
     /**
@@ -637,51 +632,56 @@ public final class FileLocatorUtils
     }
 
     /**
-     * Creates a fully initialized {@code FileLocator} based on the specified
-     * URL.
+     * Stores the specified {@code FileLocator} in the given map. With the
+     * {@link #fromMap(Map)} method a new {@code FileLocator} with the same
+     * properties as the original one can be created.
      *
-     * @param src the source {@code FileLocator}
-     * @param url the URL
-     * @return the fully initialized {@code FileLocator}
+     * @param locator the {@code FileLocator} to be stored
+     * @param map the map in which to store the {@code FileLocator} (must not be
+     *        <b>null</b>)
+     * @throws IllegalArgumentException if the map is <b>null</b>
      */
-    private static FileLocator createFullyInitializedLocatorFromURL(final FileLocator src,
-            final URL url)
+    public static void put(final FileLocator locator, final Map<String, Object> map)
     {
-        final FileLocator.FileLocatorBuilder fileLocatorBuilder = fileLocator(src);
-        if (src.getSourceURL() == null)
+        if (map == null)
         {
-            fileLocatorBuilder.sourceURL(url);
+            throw new IllegalArgumentException("Map must not be null!");
         }
-        if (StringUtils.isBlank(src.getFileName()))
+
+        if (locator != null)
         {
-            fileLocatorBuilder.fileName(getFileName(url));
+            map.put(PROP_BASE_PATH, locator.getBasePath());
+            map.put(PROP_ENCODING, locator.getEncoding());
+            map.put(PROP_FILE_NAME, locator.getFileName());
+            map.put(PROP_FILE_SYSTEM, locator.getFileSystem());
+            map.put(PROP_SOURCE_URL, locator.getSourceURL());
+            map.put(PROP_STRATEGY, locator.getLocationStrategy());
         }
-        if (StringUtils.isBlank(src.getBasePath()))
-        {
-            fileLocatorBuilder.basePath(getBasePath(url));
-        }
-        return fileLocatorBuilder.create();
     }
 
     /**
-     * Creates the default location strategy. This method creates a combined
-     * location strategy as described in the comment of the
-     * {@link #DEFAULT_LOCATION_STRATEGY} member field.
+     * Convert the specified file into an URL. This method is equivalent
+     * to file.toURI().toURL(). It was used to work around a bug in the JDK
+     * preventing the transformation of a file into an URL if the file name
+     * contains a '#' character. See the issue CONFIGURATION-300 for
+     * more details. Now that we switched to JDK 1.4 we can directly use
+     * file.toURI().toURL().
      *
-     * @return the default {@code FileLocationStrategy}
+     * @param file the file to be converted into an URL
+     * @return a URL
+     * @throws  MalformedURLException
+     *          If the file protocol handler is not found (should not happen)
+     *          or if an error occurred while constructing the URL
      */
-    private static FileLocationStrategy initDefaultLocationStrategy()
+    static URL toURL(final File file) throws MalformedURLException
     {
-        final FileLocationStrategy[] subStrategies =
-                new FileLocationStrategy[] {
-                        new ProvidedURLLocationStrategy(),
-                        new FileSystemLocationStrategy(),
-                        new AbsoluteNameLocationStrategy(),
-                        new BasePathLocationStrategy(),
-                        new HomeDirectoryLocationStrategy(true),
-                        new HomeDirectoryLocationStrategy(false),
-                        new ClasspathLocationStrategy()
-                };
-        return new CombinedLocationStrategy(Arrays.asList(subStrategies));
+        return file.toURI().toURL();
+    }
+
+    /**
+     * Private constructor so that no instances can be created.
+     */
+    private FileLocatorUtils()
+    {
     }
 }
