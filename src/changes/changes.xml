@@ -86,6 +86,9 @@
        <action type="update" dev="ggregory" due-to="Dependabot">
          Update checkstyle from 8.26 to 8.36 #66.
        </action>
+       <action dev="ggregory" type="update" due-to="Gary Gregory">
+         Update commons.jacoco.version 0.8.5 to 0.8.6 (Fixes Java 15 builds).
+       </action>
     </release>
     <release version="2.7" date="2020-03-07"
              description="Minor release with new features and updated dependencies.">
