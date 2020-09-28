@@ -53,9 +53,38 @@ public class TestJSONConfiguration
     }
 
     @Test
-    public void testGetProperty_simple()
+    public void testCopyConstructor()
     {
-        assertEquals("value1", jsonConfiguration.getProperty("key1"));
+        final BaseHierarchicalConfiguration c = new BaseHierarchicalConfiguration();
+        c.addProperty("foo", "bar");
+
+        jsonConfiguration = new JSONConfiguration(c);
+        assertEquals("bar", jsonConfiguration.getString("foo"));
+    }
+
+    @Test
+    public void testGetProperty_dictionary()
+    {
+        assertEquals("Martin D'vloper",
+                jsonConfiguration.getProperty("martin.name"));
+        assertEquals("Developer", jsonConfiguration.getProperty("martin.job"));
+        assertEquals("Elite", jsonConfiguration.getProperty("martin.skill"));
+    }
+
+    @Test
+    public void testGetProperty_dictionaryInList()
+    {
+        assertEquals("UK", jsonConfiguration.getString("capitals(1).country"));
+        assertEquals("Washington", jsonConfiguration.getString("capitals(0).capital"));
+    }
+
+    @Test
+    public void testGetProperty_integer()
+    {
+        final Object property = jsonConfiguration.getProperty("int1");
+        assertTrue("property should be an Integer",
+                property instanceof Integer);
+        assertEquals(37, property);
     }
 
     @Test
@@ -72,6 +101,12 @@ public class TestJSONConfiguration
     }
 
     @Test
+    public void testGetProperty_simple()
+    {
+        assertEquals("value1", jsonConfiguration.getProperty("key1"));
+    }
+
+    @Test
     public void testGetProperty_subset()
     {
         final Configuration subset = jsonConfiguration.subset("key4");
@@ -84,15 +119,6 @@ public class TestJSONConfiguration
         final Object property =
                 jsonConfiguration.getProperty("very.nested.properties");
         assertEquals(Arrays.asList("nested1", "nested2", "nested3"), property);
-    }
-
-    @Test
-    public void testGetProperty_integer()
-    {
-        final Object property = jsonConfiguration.getProperty("int1");
-        assertTrue("property should be an Integer",
-                property instanceof Integer);
-        assertEquals(37, property);
     }
 
     @Test
@@ -123,31 +149,5 @@ public class TestJSONConfiguration
         final List<?> capitals = (List<?>) parsed.get("capitals");
         final Map<?, ?> capUk = (Map<?, ?>) capitals.get(1);
         assertEquals("London", capUk.get("capital"));
-    }
-
-    @Test
-    public void testGetProperty_dictionary()
-    {
-        assertEquals("Martin D'vloper",
-                jsonConfiguration.getProperty("martin.name"));
-        assertEquals("Developer", jsonConfiguration.getProperty("martin.job"));
-        assertEquals("Elite", jsonConfiguration.getProperty("martin.skill"));
-    }
-
-    @Test
-    public void testGetProperty_dictionaryInList()
-    {
-        assertEquals("UK", jsonConfiguration.getString("capitals(1).country"));
-        assertEquals("Washington", jsonConfiguration.getString("capitals(0).capital"));
-    }
-
-    @Test
-    public void testCopyConstructor()
-    {
-        final BaseHierarchicalConfiguration c = new BaseHierarchicalConfiguration();
-        c.addProperty("foo", "bar");
-
-        jsonConfiguration = new JSONConfiguration(c);
-        assertEquals("bar", jsonConfiguration.getString("foo"));
     }
 }
