@@ -357,6 +357,7 @@ public final class ImmutableNode implements Iterable<ImmutableNode>
 
     /**
      * @return An iterator of {@link #children child nodes.}
+     * @since 2.8.0
      */
     @Override
     public Iterator<ImmutableNode> iterator()

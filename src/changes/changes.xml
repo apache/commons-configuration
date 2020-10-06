@@ -24,6 +24,11 @@
   <body>
     <release version="2.8" date="2020-MM-DD"
              description="Minor release with new features and updated dependencies.">
+       <!--  ADD  -->
+       <action type="update" dev="ggregory" due-to="SethiPandi">
+         Implement Iterable in ImmutableNode #74.
+       </action>
+       <!-- UPDATES -->
        <action type="update" dev="ggregory" issue="CONFIGURATION-787" due-to="Gary Gregory">
          Update from Apache Commons Lang 3.9 to 3.11.
        </action>
