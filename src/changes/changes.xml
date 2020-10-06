@@ -51,7 +51,7 @@
          org.springframework:spring-test 4.3.26.RELEASE -> 4.3.27.RELEASE.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
-         Update GitHub actions/checkout from v1 to v2.3.2 #47, #62.
+         Update GitHub actions/checkout from v1 to v2.3.3 #47, #62, #70.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
          Update commons-parent from 50 to 51.
@@ -84,13 +84,19 @@
          Update optional commons-codec from 1.14 to 1.15.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
-         Update checkstyle from 8.26 to 8.36 #66.
+         Update checkstyle from 8.26 to 8.36.2 #66, #71.
        </action>
        <action dev="ggregory" type="update" due-to="Gary Gregory">
          Update commons.jacoco.version 0.8.5 to 0.8.6 (Fixes Java 15 builds).
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Update tests from commons-dbcp2 2.7.0 to 2.8.0.
+       </action>
+       <action type="update" dev="ggregory" due-to="Dependabot">
+         Bump actions/setup-java from v1.4.2 to v1.4.3 #73.
+       </action>
+       <action type="update" dev="ggregory" due-to="Dependabot">
+         Bump snakeyaml from 1.26 to 1.27 #68.
        </action>
     </release>
     <release version="2.7" date="2020-03-07"
