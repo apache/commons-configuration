@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,7 @@ import java.util.Map;
  *
  * @since 2.0
  */
-public final class ImmutableNode
+public final class ImmutableNode implements Iterable<ImmutableNode>
 {
     /** The name of this node. */
     private final String nodeName;
@@ -352,6 +353,15 @@ public final class ImmutableNode
         {
             throw new IllegalArgumentException("Child node must not be null!");
         }
+    }
+
+    /**
+     * @return An iterator of {@link #children child nodes.}
+     */
+    @Override
+    public Iterator<ImmutableNode> iterator()
+    {
+        return children.iterator();
     }
 
     /**

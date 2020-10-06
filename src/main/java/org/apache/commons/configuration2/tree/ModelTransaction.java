@@ -776,7 +776,7 @@ class ModelTransaction
             final Set<ImmutableNode> removals = fetchRemovalSet();
             final List<ImmutableNode> resultNodes = new LinkedList<>();
 
-            for (final ImmutableNode nd : target.getChildren())
+            for (final ImmutableNode nd : target)
             {
                 final ImmutableNode repl = replacements.get(nd);
                 if (repl != null)

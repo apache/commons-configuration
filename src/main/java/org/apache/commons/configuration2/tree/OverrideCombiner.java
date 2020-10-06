@@ -66,7 +66,7 @@ public class OverrideCombiner extends NodeCombiner
         result.name(node1.getNodeName());
 
         // Process nodes from the first structure, which override the second
-        for (final ImmutableNode child : node1.getChildren())
+        for (final ImmutableNode child : node1)
         {
             final ImmutableNode child2 = canCombine(node1, node2, child);
             if (child2 != null)
@@ -81,7 +81,7 @@ public class OverrideCombiner extends NodeCombiner
 
         // Process nodes from the second structure, which are not contained
         // in the first structure
-        for (final ImmutableNode child : node2.getChildren())
+        for (final ImmutableNode child : node2)
         {
             if (HANDLER.getChildrenCount(node1, child.getNodeName()) < 1)
             {

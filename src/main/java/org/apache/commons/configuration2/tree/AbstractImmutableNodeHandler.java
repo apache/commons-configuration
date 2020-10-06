@@ -73,7 +73,7 @@ abstract class AbstractImmutableNodeHandler implements
     {
         final List<ImmutableNode> result =
                 new ArrayList<>(node.getChildren().size());
-        for (final ImmutableNode c : node.getChildren())
+        for (final ImmutableNode c : node)
         {
             if (matcher.matches(c, this, criterion))
             {

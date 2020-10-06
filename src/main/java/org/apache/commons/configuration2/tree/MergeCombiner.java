@@ -60,7 +60,7 @@ public class MergeCombiner extends NodeCombiner
 
         // Check if nodes can be combined
         final List<ImmutableNode> children2 = new LinkedList<>(node2.getChildren());
-        for (final ImmutableNode child1 : node1.getChildren())
+        for (final ImmutableNode child1 : node1)
         {
             final ImmutableNode child2 = canCombine(node2, child1, children2);
             if (child2 != null)

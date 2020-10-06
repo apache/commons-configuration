@@ -539,7 +539,7 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
         final List<HierarchicalConfiguration<ImmutableNode>> subs =
                 new ArrayList<>(parent
                         .getChildren().size());
-        for (final ImmutableNode node : parent.getChildren())
+        for (final ImmutableNode node : parent)
         {
             subs.add(createIndependentSubConfigurationForNode(node));
         }
