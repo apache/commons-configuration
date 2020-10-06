@@ -130,7 +130,7 @@ public class TestInMemoryNodeModel
         assertEquals("Wrong number of children", locations.length, nodeLocs
                 .getChildren().size());
         int idx = 0;
-        for (final ImmutableNode c : nodeLocs.getChildren())
+        for (final ImmutableNode c : nodeLocs)
         {
             assertEquals("Wrong node name", "location", c.getNodeName());
             assertEquals("Wrong value", locations[idx], c.getValue());
@@ -323,7 +323,7 @@ public class TestInMemoryNodeModel
         final List<QueryResult<ImmutableNode>> removed = model.clearTree(KEY, resolver);
         final ImmutableNode node = nodeForKey(model, "Homer/Ilias");
         assertEquals("Wrong number of children", 2, node.getChildren().size());
-        for (final ImmutableNode c : node.getChildren())
+        for (final ImmutableNode c : node)
         {
             assertNotEquals("Node still found", result.getNode().getNodeName(),
                     c.getNodeName());
@@ -426,7 +426,7 @@ public class TestInMemoryNodeModel
         final List<QueryResult<ImmutableNode>> results =
                 new ArrayList<>(node.getChildren()
                         .size());
-        for (final ImmutableNode child : node.getChildren())
+        for (final ImmutableNode child : node)
         {
             results.add(QueryResult.createNodeResult(child));
         }
@@ -439,7 +439,7 @@ public class TestInMemoryNodeModel
         assertEquals("Child of root not removed",
                 NodeStructureHelper.authorsLength() - 1, model.getRootNode()
                         .getChildren().size());
-        for (final ImmutableNode child : model.getRootNode().getChildren())
+        for (final ImmutableNode child : model.getRootNode())
         {
             assertNotEquals("Child still found", "Homer", child.getNodeName());
         }

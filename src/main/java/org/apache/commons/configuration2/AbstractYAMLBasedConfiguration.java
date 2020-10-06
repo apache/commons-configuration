@@ -87,7 +87,7 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
     protected Map<String, Object> constructMap(final ImmutableNode node)
     {
         final Map<String, Object> map = new HashMap<>(node.getChildren().size());
-        for (final ImmutableNode cNode : node.getChildren())
+        for (final ImmutableNode cNode : node)
         {
             final Object value = cNode.getChildren().isEmpty() ? cNode.getValue()
                     : constructMap(cNode);

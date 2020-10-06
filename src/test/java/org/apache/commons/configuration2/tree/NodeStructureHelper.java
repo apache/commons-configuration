@@ -590,7 +590,7 @@ public class NodeStructureHelper
         }
 
         int foundIdx = 0;
-        for (final ImmutableNode node : parent.getChildren())
+        for (final ImmutableNode node : parent)
         {
             if (childName.equals(node.getNodeName()))
             {

@@ -435,7 +435,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
                     out.print("]");
                     out.println();
 
-                    for (final ImmutableNode child : node.getChildren())
+                    for (final ImmutableNode child : node)
                     {
                         writeProperty(out, child.getNodeName(),
                                 child.getValue(), separator);

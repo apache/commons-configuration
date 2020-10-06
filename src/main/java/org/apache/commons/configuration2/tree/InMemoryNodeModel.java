@@ -788,7 +788,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
                     public void visitBeforeChildren(final ImmutableNode node,
                             final NodeHandler<ImmutableNode> handler)
                     {
-                        for (final ImmutableNode c : node.getChildren())
+                        for (final ImmutableNode c : node)
                         {
                             parents.put(c, node);
                         }

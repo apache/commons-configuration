@@ -110,7 +110,7 @@ public class TestImmutableNode
                 .getChildren().size());
         final Iterator<ImmutableNode> itExp = expChildren.iterator();
         int idx = 0;
-        for(final ImmutableNode c : node.getChildren())
+        for(final ImmutableNode c : node)
         {
             assertEquals("Wrong child at " + idx, itExp.next(), c);
             idx++;

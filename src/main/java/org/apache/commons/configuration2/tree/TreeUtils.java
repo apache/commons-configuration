@@ -61,7 +61,7 @@ public final class TreeUtils
         if (!result.getChildren().isEmpty())
         {
             stream.print("\n");
-            for (final ImmutableNode child : result.getChildren())
+            for (final ImmutableNode child : result)
             {
                 printTree(stream, indent + "  ", child);
             }

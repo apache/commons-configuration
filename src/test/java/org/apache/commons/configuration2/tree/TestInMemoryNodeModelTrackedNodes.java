@@ -367,7 +367,7 @@ public class TestInMemoryNodeModelTrackedNodes
                 expectedNames.add(NodeStructureHelper.field(1, i));
             }
         }
-        for (final ImmutableNode field : nodeFields.getChildren())
+        for (final ImmutableNode field : nodeFields)
         {
             final ImmutableNode nodeName = field.getChildren().get(0);
             actualNames.add(String.valueOf(nodeName.getValue()));
@@ -578,7 +578,7 @@ public class TestInMemoryNodeModelTrackedNodes
                 NodeStructureHelper.fieldsLength(1), nodeFields.getChildren()
                 .size());
         int childIndex = 0;
-        for (final ImmutableNode field : nodeFields.getChildren())
+        for (final ImmutableNode field : nodeFields)
         {
             final String expName =
                     childIndex == idx ? NEW_FIELD : NodeStructureHelper
