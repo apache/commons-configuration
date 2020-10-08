@@ -18,6 +18,7 @@ package org.apache.commons.configuration2.builder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -27,7 +28,12 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Writer;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +51,7 @@ import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.io.FileLocator;
 import org.apache.commons.configuration2.io.FileLocatorUtils;
 import org.apache.commons.configuration2.io.HomeDirectoryLocationStrategy;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -60,7 +67,7 @@ public class TestFileBasedConfigurationBuilder
 
     /** Helper object for managing temporary files. */
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public TemporaryFolder folder = TemporaryFolder.builder().assureDeletion().build();
 
     /**
      * Creates a test properties file with the given property value
@@ -134,6 +141,30 @@ public class TestFileBasedConfigurationBuilder
         assertEquals("Not read from file", 1, config.getInt(PROP));
         assertSame("FileHandler not initialized", config, builder
                 .getFileHandler().getContent());
+    }
+
+    /**
+     * Tests whether a configuration is loaded from a JAR file if a location is
+     * provided.
+     */
+    @Test
+    @Ignore
+    public void testGetConfigurationLoadFromJarFile()
+            throws ConfigurationException, IOException
+    {
+        URL jarResourceUrl = getClass().getClassLoader().getResource("org/apache/commons/configuration2/test.jar");
+        assertNotNull(jarResourceUrl);
+        final Path testJar = Paths.get(folder.getRoot().getAbsolutePath(), "test.jar");
+        try (final InputStream inputStream = jarResourceUrl.openStream()) {
+            Files.copy(inputStream, testJar);
+        }
+        URL url = new URL("jar:" + testJar.toUri() + "!/configuration.properties");
+
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<>(
+            PropertiesConfiguration.class).configure(new FileBasedBuilderParametersImpl().setURL(url));
+        final PropertiesConfiguration config = builder.getConfiguration();
+        assertEquals("Not read from file", 1, config.getInt(PROP));
+        assertSame("FileHandler not initialized", config, builder.getFileHandler().getContent());
     }
 
     /**
