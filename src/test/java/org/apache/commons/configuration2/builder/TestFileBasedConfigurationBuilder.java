@@ -162,6 +162,31 @@ public class TestFileBasedConfigurationBuilder
 
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<>(
             PropertiesConfiguration.class).configure(new FileBasedBuilderParametersImpl().setURL(url));
+// the next line causes:
+//        java.lang.AssertionError: Unable to clean up temporary folder C:\Users\ggregory\AppData\Local\Temp\junit7789840233804508643
+//        at org.junit.Assert.fail(Assert.java:89)
+//        at org.junit.rules.TemporaryFolder.delete(TemporaryFolder.java:274)
+//        at org.junit.rules.TemporaryFolder.after(TemporaryFolder.java:138)
+//        at org.junit.rules.ExternalResource$1.evaluate(ExternalResource.java:59)
+//        at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+//        at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+//        at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+//        at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+//        at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+//        at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+//        at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+//        at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+//        at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+//        at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+//        at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+//        at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+//        at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:89)
+//        at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:41)
+//        at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:542)
+//        at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:770)
+//        at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:464)
+//        at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:210)
+
         final PropertiesConfiguration config = builder.getConfiguration();
         assertEquals("Not read from file", 1, config.getInt(PROP));
         assertSame("FileHandler not initialized", config, builder.getFileHandler().getContent());
