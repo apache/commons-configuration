@@ -756,8 +756,7 @@ public class FileHandler
      */
     private void load(final FileLocator locator) throws ConfigurationException
     {
-        final URL url = FileLocatorUtils.locateOrThrow(locator);
-        load(url, locator);
+        load(FileLocatorUtils.locateOrThrow(locator), locator);
     }
 
     /**
