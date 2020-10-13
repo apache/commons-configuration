@@ -869,7 +869,10 @@ public class FileHandler
 
         try
         {
-            in = FileLocatorUtils.obtainFileSystem(locator).getInputStream(url);
+            final FileSystem obtainFileSystem = FileLocatorUtils.obtainFileSystem(locator);
+            final URLConnectionOptions urlConnectionOptions = locator.getURLConnectionOptions();
+            in = urlConnectionOptions == null ? obtainFileSystem.getInputStream(url)
+                : obtainFileSystem.getInputStream(url, urlConnectionOptions);
             loadFromStream(in, locator.getEncoding(), url);
         }
         catch (final ConfigurationException e)
@@ -1558,12 +1561,28 @@ public class FileHandler
      */
     public void setURL(final URL url)
     {
+        setURL(url, URLConnectionOptions.DEFAULT);
+    }
+
+    /**
+     * Sets the location of the associated file as a URL. For loading this can
+     * be an arbitrary URL with a supported protocol. If the file is to be
+     * saved, too, a URL with the &quot;file&quot; protocol should be provided.
+     * This method sets the file name and the base path to <b>null</b>.
+     * They have to be determined anew based on the new URL.
+     *
+     * @param url the location of the file as URL
+     * @param urlConnectionOptions URL connection options
+     * @since 2.8.0
+     */
+    public void setURL(final URL url, final URLConnectionOptions urlConnectionOptions) {
         new Updater()
         {
             @Override
             protected void updateBuilder(final FileLocatorBuilder builder)
             {
                 builder.sourceURL(url);
+                builder.urlConnectionOptions(urlConnectionOptions);
                 builder.basePath(null).fileName(null);
             }
         }

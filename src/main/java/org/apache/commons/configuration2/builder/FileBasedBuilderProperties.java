@@ -21,6 +21,7 @@ import java.net.URL;
 
 import org.apache.commons.configuration2.io.FileLocationStrategy;
 import org.apache.commons.configuration2.io.FileSystem;
+import org.apache.commons.configuration2.io.URLConnectionOptions;
 
 /**
  * <p>
@@ -120,4 +121,17 @@ public interface FileBasedBuilderProperties<T>
      * @return a reference to this object for method chaining
      */
     T setURL(URL url);
+
+    /**
+     * Sets the location of the associated {@code FileHandler} as a {@code URL}
+     * object.
+     *
+     * @param url the {@code URL} location
+     * @param urlConnectionOptions options
+     * @return a reference to this object for method chaining
+     * @since 2.8.0
+     */
+    default T setURL(final URL url, final URLConnectionOptions urlConnectionOptions) {
+        return setURL(url);
+    }
 }

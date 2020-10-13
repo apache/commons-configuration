@@ -30,13 +30,21 @@ import java.net.URLConnection;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 
 /**
- * FileSystem that uses java.io.File or HttpClient
+ * FileSystem that uses java.io.File or HttpClient.
+ *
  * @since 1.7
  */
 public class DefaultFileSystem extends FileSystem
 {
+
     @Override
     public InputStream getInputStream(final URL url) throws ConfigurationException
+    {
+        return getInputStream(url, null);
+    }
+
+    @Override
+    public InputStream getInputStream(final URL url, final URLConnectionOptions urlConnectionOptions) throws ConfigurationException
     {
         // throw an exception if the target URL is a directory
         final File file = FileLocatorUtils.fileFromURL(url);
@@ -47,7 +55,8 @@ public class DefaultFileSystem extends FileSystem
 
         try
         {
-            return url.openStream();
+            return urlConnectionOptions == null ? url.openStream()
+                : urlConnectionOptions.openConnection(url).getInputStream();
         }
         catch (final Exception e)
         {

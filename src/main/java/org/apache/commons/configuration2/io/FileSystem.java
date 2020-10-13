@@ -39,6 +39,27 @@ public abstract class FileSystem
     /** FileSystem options provider */
     private volatile FileOptionsProvider optionsProvider;
 
+    public abstract String getBasePath(String path);
+
+    public abstract String getFileName(String path);
+
+    public FileOptionsProvider getFileOptionsProvider()
+    {
+        return this.optionsProvider;
+    }
+
+    public abstract InputStream getInputStream(URL url) throws ConfigurationException;
+
+    /**
+     * Not abstract for binary compatibility.
+     *
+     * @since 2.8.0
+     */
+    public InputStream getInputStream(final URL url, final URLConnectionOptions urlConnectionOptions)
+        throws ConfigurationException {
+        return getInputStream(url);
+    }
+
     /**
      * Returns the logger used by this FileSystem.
      *
@@ -48,6 +69,25 @@ public abstract class FileSystem
     {
         final ConfigurationLogger result = log;
         return result != null ? result : DEFAULT_LOG;
+    }
+
+    public abstract OutputStream getOutputStream(File file) throws ConfigurationException;
+
+    public abstract OutputStream getOutputStream(URL url) throws ConfigurationException;
+
+    public abstract String getPath(File file, URL url, String basePath, String fileName);
+
+    public abstract URL getURL(String basePath, String fileName) throws MalformedURLException;
+
+    public abstract URL locateFromURL(String basePath, String fileName);
+
+    /**
+     * Set the FileOptionsProvider
+     * @param provider The FileOptionsProvider
+     */
+    public void setFileOptionsProvider(final FileOptionsProvider provider)
+    {
+        this.optionsProvider = provider;
     }
 
     /**
@@ -64,34 +104,4 @@ public abstract class FileSystem
     {
         this.log = log;
     }
-
-    /**
-     * Set the FileOptionsProvider
-     * @param provider The FileOptionsProvider
-     */
-    public void setFileOptionsProvider(final FileOptionsProvider provider)
-    {
-        this.optionsProvider = provider;
-    }
-
-    public FileOptionsProvider getFileOptionsProvider()
-    {
-        return this.optionsProvider;
-    }
-
-    public abstract InputStream getInputStream(URL url) throws ConfigurationException;
-
-    public abstract OutputStream getOutputStream(URL url) throws ConfigurationException;
-
-    public abstract OutputStream getOutputStream(File file) throws ConfigurationException;
-
-    public abstract String getPath(File file, URL url, String basePath, String fileName);
-
-    public abstract String getBasePath(String path);
-
-    public abstract String getFileName(String path);
-
-    public abstract URL locateFromURL(String basePath, String fileName);
-
-    public abstract URL getURL(String basePath, String fileName) throws MalformedURLException;
 }

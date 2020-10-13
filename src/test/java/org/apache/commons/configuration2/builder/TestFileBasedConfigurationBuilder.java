@@ -51,6 +51,7 @@ import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.io.FileLocator;
 import org.apache.commons.configuration2.io.FileLocatorUtils;
 import org.apache.commons.configuration2.io.HomeDirectoryLocationStrategy;
+import org.apache.commons.configuration2.io.URLConnectionOptions;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -60,8 +61,7 @@ import org.junit.rules.TemporaryFolder;
  * Test class for {@code FileBasedConfigurationBuilder}.
  *
  */
-public class TestFileBasedConfigurationBuilder
-{
+public class TestFileBasedConfigurationBuilder {
     /** Constant for a test property name. */
     private static final String PROP = "testProperty";
 
@@ -75,31 +75,21 @@ public class TestFileBasedConfigurationBuilder
      * @param value the value for the test property
      * @return the File object pointing to the test file
      */
-    private File createTestFile(final int value)
-    {
+    private File createTestFile(final int value) {
         Writer out = null;
         File file;
-        try
-        {
+        try {
             file = folder.newFile();
             out = new FileWriter(file);
             out.write(String.format("%s=%d", PROP, value));
-        }
-        catch (final IOException ioex)
-        {
+        } catch (final IOException ioex) {
             fail("Could not create test file: " + ioex);
             return null; // cannot happen
-        }
-        finally
-        {
-            if (out != null)
-            {
-                try
-                {
+        } finally {
+            if (out != null) {
+                try {
                     out.close();
-                }
-                catch (final IOException ioex)
-                {
+                } catch (final IOException ioex) {
                     // ignore
                 }
             }
@@ -111,47 +101,35 @@ public class TestFileBasedConfigurationBuilder
      * Tests whether a configuration can be created if no location is set.
      */
     @Test
-    public void testGetConfigurationNoLocation() throws ConfigurationException
-    {
+    public void testGetConfigurationNoLocation() throws ConfigurationException {
         final Map<String, Object> params = new HashMap<>();
         params.put("throwExceptionOnMissing", Boolean.TRUE);
-        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-                new FileBasedConfigurationBuilder<>(
-                        PropertiesConfiguration.class, params);
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<>(
+            PropertiesConfiguration.class, params);
         final PropertiesConfiguration conf = builder.getConfiguration();
         assertTrue("Property not set", conf.isThrowExceptionOnMissing());
         assertTrue("Not empty", conf.isEmpty());
     }
 
     /**
-     * Tests whether a configuration is loaded from file if a location is
-     * provided.
+     * Tests whether a configuration is loaded from file if a location is provided.
      */
     @Test
-    public void testGetConfigurationLoadFromFile()
-            throws ConfigurationException
-    {
+    public void testGetConfigurationLoadFromFile() throws ConfigurationException {
         final File file = createTestFile(1);
-        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-                new FileBasedConfigurationBuilder<>(
-                        PropertiesConfiguration.class)
-                        .configure(new FileBasedBuilderParametersImpl()
-                                .setFile(file));
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<>(
+            PropertiesConfiguration.class).configure(new FileBasedBuilderParametersImpl().setFile(file));
         final PropertiesConfiguration config = builder.getConfiguration();
         assertEquals("Not read from file", 1, config.getInt(PROP));
-        assertSame("FileHandler not initialized", config, builder
-                .getFileHandler().getContent());
+        assertSame("FileHandler not initialized", config, builder.getFileHandler().getContent());
     }
 
     /**
-     * Tests whether a configuration is loaded from a JAR file if a location is
-     * provided.
+     * Tests whether a configuration is loaded from a JAR file if a location is provided.
+     * CONFIGURATION-794: Unclosed file handle when reading config from JAR file URL.
      */
     @Test
-    @Ignore
-    public void testGetConfigurationLoadFromJarFile()
-            throws ConfigurationException, IOException
-    {
+    public void testGetConfigurationLoadFromJarFile() throws ConfigurationException, IOException {
         URL jarResourceUrl = getClass().getClassLoader().getResource("org/apache/commons/configuration2/test.jar");
         assertNotNull(jarResourceUrl);
         final Path testJar = Paths.get(folder.getRoot().getAbsolutePath(), "test.jar");
@@ -160,8 +138,14 @@ public class TestFileBasedConfigurationBuilder
         }
         URL url = new URL("jar:" + testJar.toUri() + "!/configuration.properties");
 
-        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<>(
-            PropertiesConfiguration.class).configure(new FileBasedBuilderParametersImpl().setURL(url));
+        //@formatter:off
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = 
+            new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
+                .configure(new FileBasedBuilderParametersImpl()
+                .setURL(url, new URLConnectionOptions().setUseCaches(false)));
+        //@formatter:off
+
+// CONFIGURATION-794
 // the next line causes:
 //        java.lang.AssertionError: Unable to clean up temporary folder C:\Users\ggregory\AppData\Local\Temp\junit7789840233804508643
 //        at org.junit.Assert.fail(Assert.java:89)
@@ -187,6 +171,7 @@ public class TestFileBasedConfigurationBuilder
 //        at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:464)
 //        at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:210)
 
+        // builder contains the current FileHandler which loads the file.
         final PropertiesConfiguration config = builder.getConfiguration();
         assertEquals("Not read from file", 1, config.getInt(PROP));
         assertSame("FileHandler not initialized", config, builder.getFileHandler().getContent());

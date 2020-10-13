@@ -17,10 +17,9 @@
 package org.apache.commons.configuration2.io;
 
 import java.net.URL;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
@@ -66,23 +65,26 @@ public final class FileLocator
      */
     public static final class FileLocatorBuilder
     {
-        /** The file name. */
-        private String fileName;
-
         /** The base path. */
         private String basePath;
-
-        /** The source URL. */
-        private URL sourceURL;
 
         /** The encoding. */
         private String encoding;
 
+        /** The file name. */
+        private String fileName;
+        
         /** The file system. */
         private FileSystem fileSystem;
 
         /** The location strategy. */
         private FileLocationStrategy locationStrategy;
+
+        /** The URL. */
+        private URL sourceURL;
+
+        /** The URL connection options. */
+        private URLConnectionOptions urlConnectionOptions;
 
         /**
          * Creates a new instance of {@code FileLocatorBuilder} and initializes
@@ -169,6 +171,7 @@ public final class FileLocator
             basePath = src.getBasePath();
             fileName = src.getFileName();
             sourceURL = src.getSourceURL();
+            urlConnectionOptions = src.getURLConnectionOptions();
             encoding = src.getEncoding();
             fileSystem = src.getFileSystem();
             locationStrategy = src.getLocationStrategy();
@@ -195,28 +198,43 @@ public final class FileLocator
          */
         public FileLocatorBuilder sourceURL(final URL url)
         {
-            sourceURL = url;
+            this.sourceURL = url;
             return this;
         }
-    }
 
-    /** The file name. */
-    private final String fileName;
+        /**
+         * Specifies the source URL connection options of the new {@code FileLocator}.
+         *
+         * @param urlConnectionOptions the source URL connection options.
+         * @return a reference to this builder for method chaining
+         */
+        public FileLocatorBuilder urlConnectionOptions(URLConnectionOptions urlConnectionOptions) {
+            this.urlConnectionOptions = urlConnectionOptions;
+            return this;
+            
+        }
+    }
 
     /** The base path. */
     private final String basePath;
 
-    /** The source URL. */
-    private final URL sourceURL;
-
     /** The encoding. */
     private final String encoding;
 
+    /** The file name. */
+    private final String fileName;
+    
     /** The file system. */
     private final FileSystem fileSystem;
 
     /** The file location strategy. */
     private final FileLocationStrategy locationStrategy;
+
+    /** The source URL. */
+    private final URL sourceURL;
+
+    /** The source URL connection options. */
+    private final URLConnectionOptions urlConnectionOptions;
 
     /**
      * Creates a new instance of {@code FileLocatorImpl} and initializes it from
@@ -229,6 +247,7 @@ public final class FileLocator
         fileName = builder.fileName;
         basePath = builder.basePath;
         sourceURL = builder.sourceURL;
+        urlConnectionOptions = builder.urlConnectionOptions;
         encoding = builder.encoding;
         fileSystem = builder.fileSystem;
         locationStrategy = builder.locationStrategy;
@@ -243,25 +262,18 @@ public final class FileLocator
      * @return a flag whether these objects are equal
      */
     @Override
-    public boolean equals(final Object obj)
-    {
-        if (this == obj)
-        {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (!(obj instanceof FileLocator))
-        {
+        if (!(obj instanceof FileLocator)) {
             return false;
         }
-
-        final FileLocator c = (FileLocator) obj;
-        return new EqualsBuilder().append(getFileName(), c.getFileName())
-                .append(getBasePath(), c.getBasePath())
-                .append(sourceURLAsString(), c.sourceURLAsString())
-                .append(getEncoding(), c.getEncoding())
-                .append(getFileSystem(), c.getFileSystem())
-                .append(getLocationStrategy(), c.getLocationStrategy())
-                .isEquals();
+        FileLocator other = (FileLocator) obj;
+        return Objects.equals(basePath, other.basePath) && Objects.equals(encoding, other.encoding)
+            && Objects.equals(fileName, other.fileName) && Objects.equals(fileSystem, other.fileSystem)
+            && Objects.equals(locationStrategy, other.locationStrategy) && Objects.equals(sourceURL, other.sourceURL)
+            && Objects.equals(urlConnectionOptions, other.urlConnectionOptions);
     }
 
     /**
@@ -333,17 +345,24 @@ public final class FileLocator
     }
 
     /**
+     * Returns the URLConnectionOptions
+     *
+     * @return the URLConnectionOptions
+     */
+    public URLConnectionOptions getURLConnectionOptions()
+    {
+        return urlConnectionOptions;
+    }
+
+    /**
      * Returns a hash code for this object.
      *
      * @return a hash code for this object
      */
     @Override
-    public int hashCode()
-    {
-        return new HashCodeBuilder().append(getFileName())
-                .append(getBasePath()).append(sourceURLAsString())
-                .append(getEncoding()).append(getFileSystem())
-                .append(getLocationStrategy()).toHashCode();
+    public int hashCode() {
+        return Objects.hash(basePath, encoding, fileName, fileSystem, locationStrategy, sourceURL,
+            urlConnectionOptions);
     }
 
     /**
@@ -358,20 +377,10 @@ public final class FileLocator
                 : StringUtils.EMPTY;
     }
 
-    /**
-     * Returns a string representation of this object. This string contains the
-     * values of all properties.
-     *
-     * @return a string for this object
-     */
     @Override
-    public String toString()
-    {
-        return new ToStringBuilder(this).append("fileName", getFileName())
-                .append("basePath", getBasePath())
-                .append("sourceURL", sourceURLAsString())
-                .append("encoding", getEncoding())
-                .append("fileSystem", getFileSystem())
-                .append("locationStrategy", getLocationStrategy()).toString();
+    public String toString() {
+        return "FileLocator [basePath=" + basePath + ", encoding=" + encoding + ", fileName=" + fileName
+            + ", fileSystem=" + fileSystem + ", locationStrategy=" + locationStrategy + ", sourceURL=" + sourceURL
+            + ", urlConnectionOptions=" + urlConnectionOptions + "]";
     }
 }
