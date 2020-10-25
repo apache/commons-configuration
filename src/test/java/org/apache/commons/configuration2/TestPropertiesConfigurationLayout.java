@@ -118,15 +118,14 @@ public class TestPropertiesConfigurationLayout
         assertTrue("Property not found", layout.getKeys().contains(TEST_KEY));
         assertEquals("Comment not found", TEST_COMMENT, layout
                 .getCanonicalComment(TEST_KEY, false));
-        assertEquals("Wrong number of blanc lines", 0, layout
-                .getBlancLinesBefore(TEST_KEY));
+        assertEquals("Wrong number of blank lines", 0, layout.getBlankLinesBefore(TEST_KEY));
         assertTrue("Wrong single line flag", layout.isSingleLine(TEST_KEY));
         assertEquals("Property not stored in config", TEST_VALUE, config
                 .getString(TEST_KEY));
     }
 
     /**
-     * Tests whether blanc lines before a property are correctly detected.
+     * Tests whether blank lines before a property are correctly detected.
      */
     @Test
     public void testBlancLines() throws ConfigurationException
@@ -138,8 +137,7 @@ public class TestPropertiesConfigurationLayout
         builder.addComment(null);
         builder.addProperty(TEST_KEY, TEST_VALUE);
         layout.load(config, builder.getReader());
-        assertEquals("Wrong number of blanc lines", 2, layout
-                .getBlancLinesBefore(TEST_KEY));
+        assertEquals("Wrong number of blank lines", 2, layout.getBlankLinesBefore(TEST_KEY));
         assertEquals("Wrong comment", TEST_COMMENT + CRNORM, layout
                 .getCanonicalComment(TEST_KEY, false));
         assertEquals("Wrong property value", TEST_VALUE, config
@@ -189,8 +187,7 @@ public class TestPropertiesConfigurationLayout
         assertEquals("Wrong combined comment",
                 TEST_COMMENT + CRNORM + TEST_COMMENT, layout.getCanonicalComment(
                         TEST_KEY, false));
-        assertEquals("Wrong combined blanc numbers", 0, layout
-                .getBlancLinesBefore(TEST_KEY));
+        assertEquals("Wrong combined blank numbers", 0, layout.getBlankLinesBefore(TEST_KEY));
     }
 
     /**
@@ -210,7 +207,7 @@ public class TestPropertiesConfigurationLayout
     }
 
     /**
-     * Tests if a header comment containing blanc lines is correctly detected.
+     * Tests if a header comment containing blank lines is correctly detected.
      */
     @Test
     public void testHeaderCommentWithBlancs() throws ConfigurationException
@@ -227,7 +224,7 @@ public class TestPropertiesConfigurationLayout
     }
 
     /**
-     * Tests if a header comment containing blanc lines is correctly detected and doesn't overflow into the property
+     * Tests if a header comment containing blank lines is correctly detected and doesn't overflow into the property
      * comment in the case that the header comment is already set
      */
     @Test
@@ -247,7 +244,7 @@ public class TestPropertiesConfigurationLayout
     }
 
     /**
-     * Tests if a header comment is correctly detected when it contains blanc
+     * Tests if a header comment is correctly detected when it contains blank
      * lines and the first property has a comment, too.
      */
     @Test
@@ -290,8 +287,7 @@ public class TestPropertiesConfigurationLayout
                 false);
         layout.onEvent(event);
         assertTrue("Property not stored", layout.getKeys().contains(TEST_KEY));
-        assertEquals("Blanc lines before new property", 0, layout
-                .getBlancLinesBefore(TEST_KEY));
+        assertEquals("Blanc lines before new property", 0, layout.getBlankLinesBefore(TEST_KEY));
         assertTrue("No single line property", layout.isSingleLine(TEST_KEY));
         assertEquals("Wrong separator", " = ", layout.getSeparator(TEST_KEY));
     }
@@ -457,7 +453,7 @@ public class TestPropertiesConfigurationLayout
         config.addProperty("AnotherProperty", "AnotherValue");
         config.addProperty("AnotherProperty", "3rdValue");
         layout.setComment("AnotherProperty", "AnotherComment");
-        layout.setBlancLinesBefore("AnotherProperty", 2);
+        layout.setBlankLinesBefore("AnotherProperty", 2);
         layout.setSingleLine("AnotherProperty", true);
         layout.setHeaderComment("A header comment" + CRNORM + "for my properties");
         checkLayoutString("# A header comment" + CR + "# for my properties"
@@ -529,8 +525,7 @@ public class TestPropertiesConfigurationLayout
     {
         assertNull("A comment was found", layout.getComment("unknown"));
         assertTrue("A multi-line property", layout.isSingleLine("unknown"));
-        assertEquals("Leading blanc lines", 0, layout
-                .getBlancLinesBefore("unknown"));
+        assertEquals("Leading blank lines", 0, layout.getBlankLinesBefore("unknown"));
     }
 
     /**
@@ -611,10 +606,8 @@ public class TestPropertiesConfigurationLayout
         layout.setComment(TEST_KEY, "A new comment");
         assertEquals("Comment was changed", TEST_COMMENT, l2
                 .getCanonicalComment(TEST_KEY, false));
-        l2.setBlancLinesBefore(TEST_KEY, l2.getBlancLinesBefore(TEST_KEY) + 1);
-        assertFalse("Blanc lines do not differ", layout
-                .getBlancLinesBefore(TEST_KEY) == l2
-                .getBlancLinesBefore(TEST_KEY));
+        l2.setBlankLinesBefore(TEST_KEY, l2.getBlankLinesBefore(TEST_KEY) + 1);
+        assertFalse("Blanc lines do not differ", layout.getBlankLinesBefore(TEST_KEY) == l2.getBlankLinesBefore(TEST_KEY));
     }
 
     /**
@@ -652,7 +645,7 @@ public class TestPropertiesConfigurationLayout
     {
         final String lf = CR + CR;
         config.addProperty(TEST_KEY, TEST_VALUE);
-        layout.setBlancLinesBefore(TEST_KEY, 2);
+        layout.setBlankLinesBefore(TEST_KEY, 2);
         layout.setComment(TEST_KEY, TEST_COMMENT);
         layout.setHeaderComment("Header comment");
         layout.setLineSeparator(lf);
@@ -775,7 +768,7 @@ public class TestPropertiesConfigurationLayout
         /**
          * Adds a comment line.
          *
-         * @param s the comment (can be <b>null</b>, then a blanc line is
+         * @param s the comment (can be <b>null</b>, then a blank line is
          * added)
          */
         public void addComment(final String s)

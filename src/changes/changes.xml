@@ -32,6 +32,18 @@
          Unclosed file handle when reading config from JAR file URL.
          Add and use FileBasedBuilderProperties.setURL(URL, URLConnectionOptions).
        </action>
+       <action type="add" dev="ggregory" due-to="Gary Gregory">
+         Add PropertiesConfigurationLayout.getBlankLinesBefore() and deprecate getBlancLinesBefore(). 
+       </action>
+       <action type="add" dev="ggregory" due-to="Gary Gregory">
+         Add PropertiesConfigurationLayout.setBlankLinesBefore() and deprecate setBlancLinesBefore(). 
+       </action>
+       <action type="add" dev="ggregory" due-to="Gary Gregory">
+         Add PropertiesConfigurationLayout.PropertyLayoutData.getBlankLines() and deprecate getBlancLines().  
+       </action>
+       <action type="add" dev="ggregory" due-to="Gary Gregory">
+         Add PropertiesConfigurationLayout.PropertyLayoutData.setBlankLines() and deprecate setBlancLines().  
+       </action>
        <!-- UPDATES -->
        <action type="update" dev="ggregory" issue="CONFIGURATION-787" due-to="Gary Gregory">
          Update from Apache Commons Lang 3.9 to 3.11.
@@ -1939,7 +1951,7 @@
       </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-104">
         A new class PropertiesConfigurationLayout was introduced whose task is
-        to preserve the structure (e.g. comments, blanc lines) of a file
+        to preserve the structure (e.g. comments, blank lines) of a file
         loaded by PropertiesConfiguration. Each PropertiesConfiguration
         object is now associated with such a layout object. A saved properties
         file will look very similar to its original.

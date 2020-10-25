@@ -1179,7 +1179,7 @@ public class TestXMLConfiguration
     @Test
     public void testPreserveSpace()
     {
-        assertEquals("Wrong value of blanc", " ", conf.getString("space.blanc"));
+        assertEquals("Wrong value of blank", " ", conf.getString("space.blank"));
         assertEquals("Wrong value of stars", " * * ", conf
                 .getString("space.stars"));
     }

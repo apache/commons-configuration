@@ -1284,7 +1284,7 @@ public class PropertiesConfiguration extends BaseConfiguration
     static boolean isCommentLine(final String line)
     {
         final String s = line.trim();
-        // blanc lines are also treated as comment lines
+        // blank lines are also treated as comment lines
         return s.length() < 1 || COMMENT_CHARS.indexOf(s.charAt(0)) >= 0;
     }
 

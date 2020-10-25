@@ -90,11 +90,11 @@ import org.apache.commons.lang3.StringUtils;
  * </p>
  * <ul>
  * <li>The first two lines are set as header comment. The header comment is
- * determined by the last blanc line before the first property definition.</li>
+ * determined by the last blank line before the first property definition.</li>
  * <li>For the property {@code AppName} one comment line and one
- * leading blanc line is stored.</li>
+ * leading blank line is stored.</li>
  * <li>For the property {@code windowColors} two comment lines and two
- * leading blanc lines are stored.</li>
+ * leading blank lines are stored.</li>
  * <li>Include files is something this class cannot deal with well. When saving
  * the properties configuration back, the included properties are simply
  * contained in the original file. The comment before the include property is
@@ -218,29 +218,60 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     }
 
     /**
-     * Returns the number of blanc lines before this property key. If this key
+     * Returns the number of blank lines before this property key. If this key
      * does not exist, 0 will be returned.
      *
      * @param key the property key
-     * @return the number of blanc lines before the property definition for this
+     * @return the number of blank lines before the property definition for this
      * key
+     * @deprecated Use {@link #getBlankLinesBefore(String)}.
      */
+    @Deprecated
     public int getBlancLinesBefore(final String key)
     {
-        return fetchLayoutData(key).getBlancLines();
+        return getBlankLinesBefore(key);
     }
 
     /**
-     * Sets the number of blanc lines before the given property key. This can be
+     * Returns the number of blank lines before this property key. If this key
+     * does not exist, 0 will be returned.
+     *
+     * @param key the property key
+     * @return the number of blank lines before the property definition for this
+     * key
+     */
+    public int getBlankLinesBefore(final String key)
+    {
+        return fetchLayoutData(key).getBlankLines();
+    }
+
+    /**
+     * Sets the number of blank lines before the given property key. This can be
      * used for a logical grouping of properties.
      *
      * @param key the property key
-     * @param number the number of blanc lines to add before this property
+     * @param number the number of blank lines to add before this property
      * definition
+     * @deprecated use {@link PropertiesConfigurationLayout#setBlankLinesBefore(String, int)}. 
      */
+    @Deprecated
     public void setBlancLinesBefore(final String key, final int number)
     {
-        fetchLayoutData(key).setBlancLines(number);
+        setBlankLinesBefore(key, number);
+    }
+
+    /**
+     * Sets the number of blank lines before the given property key. This can be
+     * used for a logical grouping of properties.
+     *
+     * @param key the property key
+     * @param number the number of blank lines to add before this property
+     * definition
+     * @since 2.8.0
+     */
+    public void setBlankLinesBefore(final String key, final int number)
+    {
+        fetchLayoutData(key).setBlankLines(number);
     }
 
     /**
@@ -496,13 +527,13 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
                 {
                     final boolean contained = layoutData.containsKey(reader
                             .getPropertyName());
-                    int blancLines = 0;
+                    int blankLines = 0;
                     int idx = checkHeaderComment(reader.getCommentLines());
                     while (idx < reader.getCommentLines().size()
                             && reader.getCommentLines().get(idx).length() < 1)
                     {
                         idx++;
-                        blancLines++;
+                        blankLines++;
                     }
                     final String comment = extractComment(reader.getCommentLines(),
                             idx, reader.getCommentLines().size() - 1);
@@ -516,7 +547,8 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
                     else
                     {
                         data.setComment(comment);
-                        data.setBlancLines(blancLines);
+                        final int blankLines1 = blankLines;
+                        data.setBlankLines(blankLines1);
                         data.setSeparator(reader.getPropertySeparator());
                     }
                 }
@@ -568,7 +600,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
                 {
 
                     // Output blank lines before property
-                    for (int i = 0; i < getBlancLinesBefore(key); i++)
+                    for (int i = 0; i < getBlankLinesBefore(key); i++)
                     {
                         writer.writeln(null);
                     }
@@ -778,7 +810,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * Checks if parts of the passed in comment can be used as header comment.
      * This method checks whether a header comment can be defined (i.e. whether
      * this is the first comment in the loaded file). If this is the case, it is
-     * searched for the latest blanc line. This line will mark the end of the
+     * searched for the latest blank line. This line will mark the end of the
      * header comment. The return value is the index of the first line in the
      * passed in list, which does not belong to the header comment.
      *
@@ -789,7 +821,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     {
         if (loadCounter.get() == 1 && layoutData.isEmpty())
         {
-            // This is the first comment. Search for blanc lines.
+            // This is the first comment. Search for blank lines.
             int index = commentLines.size() - 1;
             while (index >= 0
                     && commentLines.get(index).length() > 0)
@@ -868,8 +900,8 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         /** The separator to be used for this property. */
         private String separator;
 
-        /** Stores the number of blanc lines before this property. */
-        private int blancLines;
+        /** Stores the number of blank lines before this property. */
+        private int blankLines;
 
         /** Stores the single line property. */
         private boolean singleLine;
@@ -884,23 +916,49 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
         }
 
         /**
-         * Returns the number of blanc lines before this property.
+         * Returns the number of blank lines before this property.
          *
-         * @return the number of blanc lines before this property
+         * @return the number of blank lines before this property
+         * @deprecated Use {#link {@link #getBlankLines()}}.
          */
+        @Deprecated
         public int getBlancLines()
         {
-            return blancLines;
+            return getBlankLines();
+        }
+
+        /**
+         * Returns the number of blank lines before this property.
+         *
+         * @return the number of blank lines before this property
+         * @since 2.8.0
+         */
+        public int getBlankLines()
+        {
+            return blankLines;
         }
 
         /**
          * Sets the number of properties before this property.
          *
-         * @param blancLines the number of properties before this property
+         * @param blankLines the number of properties before this property
+         * @deprecated Use {@link #setBlankLines(int)}.
          */
-        public void setBlancLines(final int blancLines)
+        @Deprecated
+        public void setBlancLines(final int blankLines)
         {
-            this.blancLines = blancLines;
+            setBlankLines(blankLines);
+        }
+
+        /**
+         * Sets the number of properties before this property.
+         *
+         * @param blankLines the number of properties before this property
+         * @since 2.8.0
+         */
+        public void setBlankLines(final int blankLines)
+        {
+            this.blankLines = blankLines;
         }
 
         /**
