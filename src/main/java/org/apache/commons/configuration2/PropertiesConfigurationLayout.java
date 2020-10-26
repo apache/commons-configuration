@@ -252,7 +252,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @param key the property key
      * @param number the number of blank lines to add before this property
      * definition
-     * @deprecated use {@link PropertiesConfigurationLayout#setBlankLinesBefore(String, int)}. 
+     * @deprecated use {@link PropertiesConfigurationLayout#setBlankLinesBefore(String, int)}.
      */
     @Deprecated
     public void setBlancLinesBefore(final String key, final int number)
@@ -530,7 +530,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
                     int blankLines = 0;
                     int idx = checkHeaderComment(reader.getCommentLines());
                     while (idx < reader.getCommentLines().size()
-                            && reader.getCommentLines().get(idx).length() < 1)
+                            && StringUtils.isEmpty(reader.getCommentLines().get(idx)))
                     {
                         idx++;
                         blankLines++;
@@ -547,8 +547,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
                     else
                     {
                         data.setComment(comment);
-                        final int blankLines1 = blankLines;
-                        data.setBlankLines(blankLines1);
+                        data.setBlankLines(blankLines);
                         data.setSeparator(reader.getPropertySeparator());
                     }
                 }
@@ -591,13 +590,17 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
             if (headerComment != null)
             {
                 writeComment(writer, getCanonicalHeaderComment(true));
-                writer.writeln(null);
             }
 
+            boolean firstKey = true;
             for (final String key : getKeys())
             {
                 if (config.containsKeyInternal(key))
                 {
+                    // preset header comment needs to be separated from key
+                    if (firstKey && headerComment != null && getBlankLinesBefore(key) == 0) {
+                        writer.writeln(null);
+                    }
 
                     // Output blank lines before property
                     for (int i = 0; i < getBlankLinesBefore(key); i++)
@@ -614,6 +617,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
                     writer.writeProperty(key, config.getPropertyInternal(
                             key), singleLine);
                 }
+                firstKey = false;
             }
 
             writeComment(writer, getCanonicalFooterCooment(true));
@@ -821,16 +825,18 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
     {
         if (loadCounter.get() == 1 && layoutData.isEmpty())
         {
-            // This is the first comment. Search for blank lines.
             int index = commentLines.size() - 1;
-            while (index >= 0
-                    && commentLines.get(index).length() > 0)
-            {
+            // strip comments that belong to first key
+            while (index >= 0 && StringUtils.isNotEmpty(commentLines.get(index))) {
+                index--;
+            }
+            // strip blank lines
+            while (index >= 0 && StringUtils.isEmpty(commentLines.get(index))) {
                 index--;
             }
             if (getHeaderComment() == null)
             {
-                setHeaderComment(extractComment(commentLines, 0, index - 1));
+                setHeaderComment(extractComment(commentLines, 0, index));
             }
             return index + 1;
         }

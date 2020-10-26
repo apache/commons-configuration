@@ -128,7 +128,7 @@ public class TestPropertiesConfigurationLayout
      * Tests whether blank lines before a property are correctly detected.
      */
     @Test
-    public void testBlancLines() throws ConfigurationException
+    public void testBlankLines() throws ConfigurationException
     {
         builder.addProperty("prop", "value");
         builder.addComment(null);
@@ -139,6 +139,25 @@ public class TestPropertiesConfigurationLayout
         layout.load(config, builder.getReader());
         assertEquals("Wrong number of blank lines", 2, layout.getBlankLinesBefore(TEST_KEY));
         assertEquals("Wrong comment", TEST_COMMENT + CRNORM, layout
+                .getCanonicalComment(TEST_KEY, false));
+        assertEquals("Wrong property value", TEST_VALUE, config
+                .getString(TEST_KEY));
+    }
+
+    /**
+     * Tests whether blank lines before a property are correctly detected if a header comment is present
+     */
+    @Test
+    public void testBlankLinesWithHeaderComment() throws ConfigurationException
+    {
+        builder.addComment(TEST_COMMENT);
+        builder.addComment(null);
+        builder.addComment(null);
+        builder.addComment(TEST_COMMENT);
+        builder.addProperty(TEST_KEY, TEST_VALUE);
+        layout.load(config, builder.getReader());
+        assertEquals("Wrong number of blank lines", 2, layout.getBlankLinesBefore(TEST_KEY));
+        assertEquals("Wrong comment", TEST_COMMENT, layout
                 .getCanonicalComment(TEST_KEY, false));
         assertEquals("Wrong property value", TEST_VALUE, config
                 .getString(TEST_KEY));
@@ -210,7 +229,7 @@ public class TestPropertiesConfigurationLayout
      * Tests if a header comment containing blank lines is correctly detected.
      */
     @Test
-    public void testHeaderCommentWithBlancs() throws ConfigurationException
+    public void testHeaderCommentWithBlanks() throws ConfigurationException
     {
         builder.addComment(TEST_COMMENT);
         builder.addComment(null);
@@ -228,7 +247,7 @@ public class TestPropertiesConfigurationLayout
      * comment in the case that the header comment is already set
      */
     @Test
-    public void testHeaderCommentWithBlancsAndPresetHeaderComment() throws ConfigurationException
+    public void testHeaderCommentWithBlanksAndPresetHeaderComment() throws ConfigurationException
     {
         final String presetHeaderComment = "preset" + TEST_COMMENT + CRNORM + CRNORM + TEST_COMMENT;
         builder.addComment(TEST_COMMENT);
@@ -248,7 +267,7 @@ public class TestPropertiesConfigurationLayout
      * lines and the first property has a comment, too.
      */
     @Test
-    public void testHeaderCommentWithBlancsAndPropComment()
+    public void testHeaderCommentWithBlanksAndPropComment()
             throws ConfigurationException
     {
         builder.addComment(TEST_COMMENT);
@@ -430,6 +449,7 @@ public class TestPropertiesConfigurationLayout
     {
         builder.addComment("This is my test properties file,");
         builder.addComment("which contains a header comment.");
+        builder.addComment(null);
         builder.addComment(null);
         builder.addComment(TEST_COMMENT);
         builder.addProperty(TEST_KEY, TEST_COMMENT);
@@ -649,7 +669,7 @@ public class TestPropertiesConfigurationLayout
         layout.setComment(TEST_KEY, TEST_COMMENT);
         layout.setHeaderComment("Header comment");
         layout.setLineSeparator(lf);
-        checkLayoutString("# Header comment" + lf + lf + lf + lf + "# "
+        checkLayoutString("# Header comment" + lf + lf + lf + "# "
                 + TEST_COMMENT + lf + TEST_KEY + " = " + TEST_VALUE + lf);
     }
 
