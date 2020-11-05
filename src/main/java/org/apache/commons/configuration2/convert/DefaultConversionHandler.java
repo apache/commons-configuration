@@ -65,6 +65,27 @@ public class DefaultConversionHandler implements ConversionHandler
     private static final AbstractListDelimiterHandler EXTRACTOR =
             (AbstractListDelimiterHandler) DisabledListDelimiterHandler.INSTANCE;
 
+    /** The current list delimiter handler */
+    private volatile AbstractListDelimiterHandler listDelimiterHandler = EXTRACTOR;
+
+    /**
+    * Sets the list delimiter handler to be used by this conversion handler. 
+    *
+    * @param listDelimiterHandler the list delimiter handler
+    */
+    public void setListDelimiterHandler(AbstractListDelimiterHandler listDelimiterHandler){
+        this.listDelimiterHandler = listDelimiterHandler;
+    }
+
+    /**
+    * Returns the list delimiter handler used by this conversion handler.
+    *
+    * @return the list delimiter handler, while the default value is DisabledListDelimiterHandler
+    */
+    public AbstractListDelimiterHandler getListDelimiterHandler(){
+        return listDelimiterHandler;
+    }
+
     /**
      * Constant for a default {@code ConfigurationInterpolator} to be used if
      * none is provided by the caller.
@@ -247,7 +268,7 @@ public class DefaultConversionHandler implements ConversionHandler
      */
     protected Collection<?> extractValues(final Object source, final int limit)
     {
-        return EXTRACTOR.flatten(source, limit);
+        return listDelimiterHandler.flatten(source, limit);
     }
 
     /**
