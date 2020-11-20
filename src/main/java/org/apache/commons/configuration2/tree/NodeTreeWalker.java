@@ -148,10 +148,7 @@ public class NodeTreeWalker
             final T node = pendingNodes.remove(0);
             visitor.visitBeforeChildren(node, handler);
             cancel = visitor.terminate();
-            for (final T c : handler.getChildren(node))
-            {
-                pendingNodes.add(c);
-            }
+            pendingNodes.addAll(handler.getChildren(node));
         }
     }
 
