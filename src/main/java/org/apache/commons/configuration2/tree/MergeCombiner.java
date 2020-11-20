@@ -95,8 +95,7 @@ public class MergeCombiner extends NodeCombiner
     protected void addAttributes(final ImmutableNode.Builder result, final ImmutableNode node1,
             final ImmutableNode node2)
     {
-        final Map<String, Object> attributes = new HashMap<>();
-        attributes.putAll(node1.getAttributes());
+        final Map<String, Object> attributes = new HashMap<>(node1.getAttributes());
         for (final Map.Entry<String, Object> e : node2.getAttributes().entrySet())
         {
             if (!attributes.containsKey(e.getKey()))
