@@ -50,7 +50,6 @@ public class ConfigurationDynaClass implements DynaClass
      */
     public ConfigurationDynaClass(final Configuration configuration)
     {
-        super();
         if (LOG.isTraceEnabled())
         {
             LOG.trace("ConfigurationDynaClass(" + configuration + ")");

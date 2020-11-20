@@ -95,7 +95,6 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
      */
     public XMLPropertiesConfiguration()
     {
-        super();
     }
 
     /**
@@ -107,7 +106,6 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
      */
     public XMLPropertiesConfiguration(final Element element) throws ConfigurationException
     {
-        super();
         this.load(element);
     }
 

@@ -57,7 +57,6 @@ public class JSONConfiguration extends AbstractYAMLBasedConfiguration
      */
     public JSONConfiguration()
     {
-        super();
     }
 
     /**

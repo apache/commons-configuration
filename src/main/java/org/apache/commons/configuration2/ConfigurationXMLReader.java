@@ -63,7 +63,6 @@ public abstract class ConfigurationXMLReader implements XMLReader
      */
     protected ConfigurationXMLReader()
     {
-        super();
         rootName = DEFAULT_ROOT_NAME;
     }
 

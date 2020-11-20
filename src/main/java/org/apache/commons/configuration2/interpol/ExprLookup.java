@@ -308,7 +308,6 @@ public class ExprLookup implements Lookup
          */
         public Variables()
         {
-            super();
         }
 
         /**

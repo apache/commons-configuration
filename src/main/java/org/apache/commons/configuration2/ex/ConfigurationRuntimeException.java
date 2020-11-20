@@ -37,7 +37,6 @@ public class ConfigurationRuntimeException extends RuntimeException
      */
     public ConfigurationRuntimeException()
     {
-        super();
     }
 
     /**

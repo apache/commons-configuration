@@ -67,7 +67,6 @@ public class ReloadingCombinedConfigurationBuilder extends
      */
     public ReloadingCombinedConfigurationBuilder()
     {
-        super();
     }
 
     /**

@@ -49,7 +49,6 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration
      */
     public YAMLConfiguration()
     {
-        super();
     }
 
     /**

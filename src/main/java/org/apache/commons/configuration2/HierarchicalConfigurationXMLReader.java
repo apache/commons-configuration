@@ -54,7 +54,6 @@ public class HierarchicalConfigurationXMLReader<T> extends
      */
     public HierarchicalConfigurationXMLReader()
     {
-        super();
     }
 
     /**

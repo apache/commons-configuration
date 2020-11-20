@@ -55,7 +55,6 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
      */
     public VFSFileHandlerReloadingDetector()
     {
-        super();
     }
 
     /**

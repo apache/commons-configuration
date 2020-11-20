@@ -37,7 +37,6 @@ public class ConversionException extends ConfigurationRuntimeException
      */
     public ConversionException()
     {
-        super();
     }
 
     /**

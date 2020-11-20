@@ -247,7 +247,6 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     public XMLConfiguration()
     {
-        super();
         initLogger(new ConfigurationLogger(XMLConfiguration.class));
     }
 

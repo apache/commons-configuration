@@ -102,7 +102,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      */
     public DynamicCombinedConfiguration(final NodeCombiner comb)
     {
-        super();
         setNodeCombiner(comb);
         initLogger(new ConfigurationLogger(DynamicCombinedConfiguration.class));
         localSubst = initLocalInterpolator();
@@ -116,7 +115,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      */
     public DynamicCombinedConfiguration()
     {
-        super();
         initLogger(new ConfigurationLogger(DynamicCombinedConfiguration.class));
         localSubst = initLocalInterpolator();
     }

@@ -36,7 +36,6 @@ public class ConfigurationException extends Exception
      */
     public ConfigurationException()
     {
-        super();
     }
 
     /**

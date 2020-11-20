@@ -35,7 +35,6 @@ class StringLookupAdapter implements Lookup
 
     StringLookupAdapter(final StringLookup stringLookup)
     {
-        super();
         this.stringLookup = Objects.requireNonNull(stringLookup, "stringLookup");
     }
 

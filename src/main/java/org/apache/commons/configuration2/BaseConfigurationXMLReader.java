@@ -36,7 +36,6 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
      */
     public BaseConfigurationXMLReader()
     {
-        super();
     }
 
     /**

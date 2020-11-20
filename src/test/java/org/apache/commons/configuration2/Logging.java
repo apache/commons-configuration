@@ -68,7 +68,6 @@ public class Logging extends Log4JLogger
 
     public Logging()
     {
-        super();
     }
 
 

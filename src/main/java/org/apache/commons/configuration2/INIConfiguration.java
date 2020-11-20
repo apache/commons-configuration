@@ -268,7 +268,6 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      */
     public INIConfiguration()
     {
-        super();
     }
 
     /**
