@@ -1403,44 +1403,43 @@ public class PropertiesConfiguration extends BaseConfiguration
                 // handle an escaped value
                 hadSlash = false;
 
-                if (ch == 'r')
-                {
+                switch (ch) {
+                case 'r':
                     out.append('\r');
-                }
-                else if (ch == 'f')
-                {
+                    break;
+                case 'f':
                     out.append('\f');
-                }
-                else if (ch == 't')
-                {
+                    break;
+                case 't':
                     out.append('\t');
-                }
-                else if (ch == 'n')
-                {
+                    break;
+                case 'n':
                     out.append('\n');
-                }
-                // JUP does not recognize \b
-                else if (!jupCompatible && ch == 'b')
-                {
-                    out.append('\b');
-                }
-                else if (ch == 'u')
-                {
-                    // uh-oh, we're in unicode country....
-                    inUnicode = true;
-                }
-                else if (needsUnescape(ch))
-                {
-                    out.append(ch);
-                }
-                else
-                {
-                    // JUP simply throws away the \ of unknown escape sequences
-                    if (!jupCompatible)
+                    break;
+                default:
+                    if (!jupCompatible && ch == 'b')
                     {
-                        out.append('\\');
+                        out.append('\b');
                     }
-                    out.append(ch);
+                    else if (ch == 'u')
+                    {
+                        // uh-oh, we're in unicode country....
+                        inUnicode = true;
+                    }
+                    else if (needsUnescape(ch))
+                    {
+                        out.append(ch);
+                    }
+                    else
+                    {
+                        // JUP simply throws away the \ of unknown escape sequences
+                        if (!jupCompatible)
+                        {
+                            out.append('\\');
+                        }
+                        out.append(ch);
+                    }
+                    break;
                 }
 
                 continue;
