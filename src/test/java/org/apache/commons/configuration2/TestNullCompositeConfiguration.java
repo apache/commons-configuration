@@ -239,8 +239,7 @@ public class TestNullCompositeConfiguration
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
 
-        Configuration subset = null;
-        subset = cc.subset("test");
+        Configuration subset = cc.subset("test");
         assertNotNull(subset);
         assertFalse("Shouldn't be empty", subset.isEmpty());
         assertEquals("Make sure the initial loaded configs subset overrides any later add configs subset", "1", subset.getString("short"));
