@@ -198,7 +198,7 @@ public enum DefaultLookups
      * @param lookup
      *            the {@code Lookup} instance
      */
-    private DefaultLookups(final String prefix, final Lookup lookup)
+    DefaultLookups(final String prefix, final Lookup lookup)
     {
         this.prefix = prefix;
         this.lookup = lookup;
