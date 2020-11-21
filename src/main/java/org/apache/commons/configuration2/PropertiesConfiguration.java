@@ -1094,9 +1094,8 @@ public class PropertiesConfiguration extends BaseConfiguration
          */
         public void writeProperty(final String key, final List<?> values) throws IOException
         {
-            for (int i = 0; i < values.size(); i++)
-            {
-                writeProperty(key, values.get(i));
+            for (Object value : values) {
+                writeProperty(key, value);
             }
         }
 
