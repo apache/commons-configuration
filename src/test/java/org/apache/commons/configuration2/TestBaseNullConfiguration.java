@@ -250,8 +250,8 @@ public class TestBaseNullConfiguration
     public void testGetString()
     {
         config.setProperty("testString", "The quick brown fox");
-        final String string = new String("The quick brown fox");
-        final String defaultValue = new String("jumps over the lazy dog");
+        final String string = "The quick brown fox";
+        final String defaultValue = "jumps over the lazy dog";
 
         assertEquals("Existing key", string, config.getString("testString"));
         assertEquals("Existing key with default value", string, config.getString("testString", defaultValue));
