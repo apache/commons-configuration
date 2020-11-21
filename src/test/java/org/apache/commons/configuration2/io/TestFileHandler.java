@@ -606,14 +606,9 @@ public class TestFileHandler
         final File file = createTestFile();
         final FileBasedTestImpl content = new FileBasedTestImpl();
         final FileHandler handler = new FileHandler(content);
-        final FileInputStream in = new FileInputStream(file);
-        try
+        try (FileInputStream in = new FileInputStream(file))
         {
             handler.load(in);
-        }
-        finally
-        {
-            in.close();
         }
         assertEquals("Wrong content", CONTENT, content.getContent());
     }
@@ -627,14 +622,9 @@ public class TestFileHandler
         final File file = createTestFile();
         final FileBasedTestImpl content = new FileBasedTestImpl();
         final FileHandler handler = new FileHandler(content);
-        final Reader in = new FileReader(file);
-        try
+        try (Reader in = new FileReader(file))
         {
             handler.load(in);
-        }
-        finally
-        {
-            in.close();
         }
         assertEquals("Wrong content", CONTENT, content.getContent());
     }

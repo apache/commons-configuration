@@ -197,14 +197,9 @@ public class TestINIConfiguration
     private File writeTestFile(final String content) throws IOException
     {
         final File file = folder.newFile();
-        final PrintWriter out = new PrintWriter(new FileWriter(file));
-        try
+        try (PrintWriter out = new PrintWriter(new FileWriter(file)))
         {
             out.println(content);
-        }
-        finally
-        {
-            out.close();
         }
         return file;
     }

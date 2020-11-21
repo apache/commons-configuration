@@ -552,8 +552,7 @@ public class TestXMLPropertyListConfiguration
         config = new XMLPropertyListConfiguration();
         config.addProperty("foo", "bar");
 
-        final Writer out = new FileWriter(folder.newFile());
-        try
+        try (Writer out = new FileWriter(folder.newFile()))
         {
             config.write(out);
             fail("No exception thrown!");
@@ -561,10 +560,6 @@ public class TestXMLPropertyListConfiguration
         catch (final ConfigurationException e)
         {
             assertThat(e.getMessage(), containsString("FileHandler"));
-        }
-        finally
-        {
-            out.close();
         }
     }
 }

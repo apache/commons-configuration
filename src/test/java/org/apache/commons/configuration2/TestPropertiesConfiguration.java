@@ -905,9 +905,8 @@ public class TestPropertiesConfiguration
                 "test.separator.no.space=foo"
         };
         final Set<String> foundLines = new HashSet<>();
-        final BufferedReader in = new BufferedReader(new FileReader(
-                testSavePropertiesFile));
-        try
+        try (BufferedReader in = new BufferedReader(new FileReader(
+                testSavePropertiesFile)))
         {
             String s;
             while ((s = in.readLine()) != null)
@@ -919,10 +918,6 @@ public class TestPropertiesConfiguration
                     }
                 }
             }
-        }
-        finally
-        {
-            in.close();
         }
         assertEquals("No all separators were found: " + foundLines,
                 separatorTests.length, foundLines.size());
@@ -1349,8 +1344,7 @@ public class TestPropertiesConfiguration
     public void testReadCalledDirectly() throws IOException
     {
         conf = new PropertiesConfiguration();
-        final Reader in = new FileReader(ConfigurationAssert.getTestFile("test.properties"));
-        try
+        try (Reader in = new FileReader(ConfigurationAssert.getTestFile("test.properties")))
         {
             conf.read(in);
             fail("No exception thrown!");
@@ -1358,10 +1352,6 @@ public class TestPropertiesConfiguration
         catch (final ConfigurationException e)
         {
             assertThat(e.getMessage(), containsString("FileHandler"));
-        }
-        finally
-        {
-            in.close();
         }
     }
 

@@ -1351,18 +1351,9 @@ public class TestXMLConfiguration
     {
         final FileHandler handler = new FileHandler(conf);
         handler.setEncoding("UTF8");
-        FileOutputStream out = null;
-        try
+        try (FileOutputStream out = new FileOutputStream(testSaveConf))
         {
-            out = new FileOutputStream(testSaveConf);
             handler.save(out);
-        }
-        finally
-        {
-            if(out != null)
-            {
-                out.close();
-            }
         }
 
         checkSavedConfig(testSaveConf);

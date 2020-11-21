@@ -107,18 +107,9 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
      */
     private static void writeFile(final File file, final String content) throws IOException
     {
-        PrintWriter out = null;
-        try
+        try (PrintWriter out = new PrintWriter(new FileWriter(file)))
         {
-            out = new PrintWriter(new FileWriter(file));
             out.print(content);
-        }
-        finally
-        {
-            if (out != null)
-            {
-                out.close();
-            }
         }
     }
 

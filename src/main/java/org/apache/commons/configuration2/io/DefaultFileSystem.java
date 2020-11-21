@@ -44,7 +44,8 @@ public class DefaultFileSystem extends FileSystem
     }
 
     @Override
-    public InputStream getInputStream(final URL url, final URLConnectionOptions urlConnectionOptions) throws ConfigurationException
+    public InputStream getInputStream(final URL url, final URLConnectionOptions urlConnectionOptions)
+            throws ConfigurationException
     {
         // throw an exception if the target URL is a directory
         final File file = FileLocatorUtils.fileFromURL(url);
@@ -228,17 +229,10 @@ public class DefaultFileSystem extends FileSystem
             url = new URL(baseURL, fileName);
 
             // check if the file exists
-            InputStream in = null;
-            try
+            try (InputStream in = url.openStream())
             {
-                in = url.openStream();
-            }
-            finally
-            {
-                if (in != null)
-                {
-                    in.close();
-                }
+                // nothing
+
             }
             return url;
         }
