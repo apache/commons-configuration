@@ -130,13 +130,13 @@ public class TestFileBasedConfigurationBuilder {
      */
     @Test
     public void testGetConfigurationLoadFromJarFile() throws ConfigurationException, IOException {
-        URL jarResourceUrl = getClass().getClassLoader().getResource("org/apache/commons/configuration2/test.jar");
+        final URL jarResourceUrl = getClass().getClassLoader().getResource("org/apache/commons/configuration2/test.jar");
         assertNotNull(jarResourceUrl);
         final Path testJar = Paths.get(folder.getRoot().getAbsolutePath(), "test.jar");
         try (final InputStream inputStream = jarResourceUrl.openStream()) {
             Files.copy(inputStream, testJar);
         }
-        URL url = new URL("jar:" + testJar.toUri() + "!/configuration.properties");
+        final URL url = new URL("jar:" + testJar.toUri() + "!/configuration.properties");
 
         //@formatter:off
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = 

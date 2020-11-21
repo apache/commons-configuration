@@ -208,7 +208,7 @@ public final class FileLocator
          * @param urlConnectionOptions the source URL connection options.
          * @return a reference to this builder for method chaining
          */
-        public FileLocatorBuilder urlConnectionOptions(URLConnectionOptions urlConnectionOptions) {
+        public FileLocatorBuilder urlConnectionOptions(final URLConnectionOptions urlConnectionOptions) {
             this.urlConnectionOptions = urlConnectionOptions;
             return this;
             
@@ -262,14 +262,14 @@ public final class FileLocator
      * @return a flag whether these objects are equal
      */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
         if (!(obj instanceof FileLocator)) {
             return false;
         }
-        FileLocator other = (FileLocator) obj;
+        final FileLocator other = (FileLocator) obj;
         return Objects.equals(basePath, other.basePath) && Objects.equals(encoding, other.encoding)
             && Objects.equals(fileName, other.fileName) && Objects.equals(fileSystem, other.fileSystem)
             && Objects.equals(locationStrategy, other.locationStrategy) && Objects.equals(sourceURL, other.sourceURL)
