@@ -16,16 +16,10 @@
 language: java
 sudo: false
 
-matrix:
-  include:
-    - os: linux-ppc64le
-      jdk: openjdk8
-
 jdk:
-  - oraclejdk11
   - openjdk8
   - openjdk11
-  - openjdk14
+  - openjdk15
   - openjdk-ea
 
 matrix:
