@@ -202,7 +202,6 @@ public class CatalogResolver implements EntityResolver
             catch (final Exception e)
             {
                 log.warn("Failed to create InputSource for " + resolved, e);
-                return null;
             }
         }
 
