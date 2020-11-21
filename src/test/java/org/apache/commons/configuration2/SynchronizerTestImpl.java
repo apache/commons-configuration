@@ -152,7 +152,7 @@ public class SynchronizerTestImpl implements Synchronizer
     /**
      * An enumeration with the methods of the Synchronizer which can be called.
      */
-    public static enum Methods
+    public enum Methods
     {
         BEGIN_READ, END_READ, BEGIN_WRITE, END_WRITE
     }
