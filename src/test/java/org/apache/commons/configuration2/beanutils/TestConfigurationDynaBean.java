@@ -86,7 +86,7 @@ public class TestConfigurationDynaBean
             new Short(Short.MAX_VALUE),
             "This is a string",
             new Byte(Byte.MAX_VALUE),
-            new Character(Character.MAX_VALUE)
+            Character.valueOf(Character.MAX_VALUE)
     };
 
     int[] intArray = {0, 10, 20, 30, 40};
