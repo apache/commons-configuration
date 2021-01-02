@@ -132,6 +132,9 @@
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Update Apache Commons VFS 2.6.0 -> 2.7.0.
        </action>
+       <action type="update" dev="ggregory" due-to="Dependabot">
+         Bump jackson-databind from 2.11.3 to 2.12.0 #88.
+       </action>
     </release>
     <release version="2.7" date="2020-03-07"
              description="Minor release with new features and updated dependencies.">
