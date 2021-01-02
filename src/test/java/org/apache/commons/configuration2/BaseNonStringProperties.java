@@ -28,7 +28,7 @@ import org.junit.Test;
 public abstract class BaseNonStringProperties
 {
 
-    protected NonStringTestHolder nonStringTestHolder = new NonStringTestHolder();
+    protected final NonStringTestHolder nonStringTestHolder = new NonStringTestHolder();
 
     protected Configuration conf;
 

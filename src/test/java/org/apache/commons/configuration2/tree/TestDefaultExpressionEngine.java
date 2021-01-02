@@ -35,15 +35,15 @@ import org.junit.Test;
 public class TestDefaultExpressionEngine
 {
     /** Stores the names of the test nodes representing tables. */
-    private static final String[] tables =
+    private static final String[] TABLES =
     { "users", "documents"};
 
     /** Stores the types of the test table nodes. */
-    private static final String[] tabTypes =
+    private static final String[] TAB_TYPES =
     { "system", "application"};
 
     /** Test data fields for the node hierarchy. */
-    private static final String[][] fields =
+    private static final String[][] FIELDS =
     {
     { "uid", "uname", "firstName", "lastName", "email"},
     { "docid", "name", "creationDate", "authorID", "version"}};
@@ -110,16 +110,16 @@ public class TestDefaultExpressionEngine
     @Test
     public void testQueryNodes()
     {
-        for (int i = 0; i < tables.length; i++)
+        for (int i = 0; i < TABLES.length; i++)
         {
-            checkKeyValue("tables.table(" + i + ").name", "name", tables[i]);
+            checkKeyValue("tables.table(" + i + ").name", "name", TABLES[i]);
             checkAttributeValue("tables.table(" + i + ")[@type]", "type",
-                    tabTypes[i]);
+                    TAB_TYPES[i]);
 
-            for (int j = 0; j < fields[i].length; j++)
+            for (int j = 0; j < FIELDS[i].length; j++)
             {
                 checkKeyValue("tables.table(" + i + ").fields.field(" + j
-                        + ").name", "name", fields[i][j]);
+                        + ").name", "name", FIELDS[i][j]);
             }
         }
     }
@@ -165,8 +165,8 @@ public class TestDefaultExpressionEngine
                                 DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER)
                         .create();
         engine = new DefaultExpressionEngine(symbols);
-        checkKeyValue("tables.table(0).name", "name", tables[0]);
-        checkAttributeValue("tables.table(0).type", "type", tabTypes[0]);
+        checkKeyValue("tables.table(0).name", "name", TABLES[0]);
+        checkAttributeValue("tables.table(0).type", "type", TAB_TYPES[0]);
         checkKey("tables.table.type", "type", 2);
     }
 
@@ -218,8 +218,8 @@ public class TestDefaultExpressionEngine
     public void testQueryAlternativeSyntax()
     {
         setUpAlternativeSyntax();
-        checkKeyValue("tables/table[1]/name", "name", tables[1]);
-        checkAttributeValue("tables/table[0]@type", "type", tabTypes[0]);
+        checkKeyValue("tables/table[1]/name", "name", TABLES[1]);
+        checkAttributeValue("tables/table[0]@type", "type", TAB_TYPES[0]);
         checkAttributeValue("@test", "test", "true");
         checkKeyValue("connection.settings/usr.name", "usr.name", "scott");
     }
@@ -374,7 +374,7 @@ public class TestDefaultExpressionEngine
         assertEquals("Wrong type of parent node", "table", data.getParent()
                 .getNodeName());
         final ImmutableNode node = data.getParent().getChildren().get(0);
-        assertEquals("Wrong table", tables[0], node.getValue());
+        assertEquals("Wrong table", TABLES[0], node.getValue());
 
         data = engine.prepareAdd(root, "tables.table(1).fields.field(2).alias", handler);
         assertEquals("Wrong name of new node", "alias", data.getNewNodeName());
@@ -392,7 +392,7 @@ public class TestDefaultExpressionEngine
     {
         final NodeAddData<ImmutableNode> data = engine.prepareAdd(root,
                 "tables.table(0)[@tableSpace]", handler);
-        assertEquals("Wrong table node", tables[0], data.getParent()
+        assertEquals("Wrong table node", TABLES[0], data.getParent()
                 .getChildren().get(0).getValue());
         assertEquals("Wrong name of new node", "tableSpace", data
                 .getNewNodeName());
@@ -476,7 +476,7 @@ public class TestDefaultExpressionEngine
                 engine.prepareAdd(root, "tables/table[0]/test", handler);
         assertEquals("Wrong name of new node", "test", data.getNewNodeName());
         assertFalse("New node is attribute", data.isAttribute());
-        assertEquals("Wrong parent node", tables[0], data.getParent()
+        assertEquals("Wrong parent node", TABLES[0], data.getParent()
                 .getChildren().get(0).getValue());
 
         data = engine.prepareAdd(root, "a/complete/new/path@attr", handler);
@@ -621,22 +621,22 @@ public class TestDefaultExpressionEngine
     private static ImmutableNode setUpNodes()
     {
         final ImmutableNode.Builder nodeTablesBuilder =
-                new ImmutableNode.Builder(tables.length);
+                new ImmutableNode.Builder(TABLES.length);
         nodeTablesBuilder.name("tables");
-        for (int i = 0; i < tables.length; i++)
+        for (int i = 0; i < TABLES.length; i++)
         {
             final ImmutableNode.Builder nodeTableBuilder =
                     new ImmutableNode.Builder(2);
             nodeTableBuilder.name("table");
             nodeTableBuilder.addChild(new ImmutableNode.Builder().name("name")
-                    .value(tables[i]).create());
-            nodeTableBuilder.addAttribute("type", tabTypes[i]);
+                    .value(TABLES[i]).create());
+            nodeTableBuilder.addAttribute("type", TAB_TYPES[i]);
 
             final ImmutableNode.Builder nodeFieldsBuilder =
-                    new ImmutableNode.Builder(fields[i].length);
-            for (int j = 0; j < fields[i].length; j++)
+                    new ImmutableNode.Builder(FIELDS[i].length);
+            for (int j = 0; j < FIELDS[i].length; j++)
             {
-                nodeFieldsBuilder.addChild(createFieldNode(fields[i][j]));
+                nodeFieldsBuilder.addChild(createFieldNode(FIELDS[i][j]));
             }
             nodeTableBuilder
                     .addChild(nodeFieldsBuilder.name("fields").create());

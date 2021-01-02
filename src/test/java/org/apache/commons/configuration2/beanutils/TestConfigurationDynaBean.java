@@ -55,7 +55,7 @@ public class TestConfigurationDynaBean
      * {@code getDynaProperties()}.  You should update this list
      * when new properties are added to TestBean.
      */
-    String[] properties = {
+    final String[] properties = {
             "booleanProperty",
             "booleanSecond",
             "doubleProperty",
@@ -72,7 +72,7 @@ public class TestConfigurationDynaBean
             "charProperty"
     };
 
-    Object[] values = {
+    final Object[] values = {
             Boolean.TRUE,
             Boolean.TRUE,
             new Double(Double.MAX_VALUE),
@@ -89,15 +89,15 @@ public class TestConfigurationDynaBean
             Character.valueOf(Character.MAX_VALUE)
     };
 
-    int[] intArray = {0, 10, 20, 30, 40};
-    boolean[] booleanArray = {true, false, true, false, true};
-    char[] charArray = {'a', 'b', 'c', 'd', 'e'};
-    byte[] byteArray = {0, 10, 20, 30, 40};
-    long[] longArray = {0, 10, 20, 30, 40};
-    short[] shortArray = {0, 10, 20, 30, 40};
-    float[] floatArray = {0, 10, 20, 30, 40};
-    double[] doubleArray = {0.0, 10.0, 20.0, 30.0, 40.0};
-    String[] stringArray = {"String 0", "String 1", "String 2", "String 3", "String 4"};
+    final int[] intArray = {0, 10, 20, 30, 40};
+    final boolean[] booleanArray = {true, false, true, false, true};
+    final char[] charArray = {'a', 'b', 'c', 'd', 'e'};
+    final byte[] byteArray = {0, 10, 20, 30, 40};
+    final long[] longArray = {0, 10, 20, 30, 40};
+    final short[] shortArray = {0, 10, 20, 30, 40};
+    final float[] floatArray = {0, 10, 20, 30, 40};
+    final double[] doubleArray = {0.0, 10.0, 20.0, 30.0, 40.0};
+    final String[] stringArray = {"String 0", "String 1", "String 2", "String 3", "String 4"};
 
 
     /**

@@ -40,7 +40,7 @@ public class TestSystemConfiguration
 {
     /** An object for creating temporary files. */
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public final TemporaryFolder folder = new TemporaryFolder();
 
     @Test
     public void testSystemConfiguration()

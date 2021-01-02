@@ -52,7 +52,7 @@ public class TestVFSFileHandlerReloadingDetector
 
     /** A helper object for creating temporary files. */
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public final TemporaryFolder folder = new TemporaryFolder();
 
     /**
      * Writes a test configuration file containing a single property with the

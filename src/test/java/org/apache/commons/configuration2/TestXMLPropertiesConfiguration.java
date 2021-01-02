@@ -49,7 +49,7 @@ public class TestXMLPropertiesConfiguration
 
     /** A helper object for creating temporary files. */
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public final TemporaryFolder folder = new TemporaryFolder();
 
     /**
      * Helper method for loading a configuration file.

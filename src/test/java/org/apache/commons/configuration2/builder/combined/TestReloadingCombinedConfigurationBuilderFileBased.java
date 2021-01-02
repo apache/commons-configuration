@@ -70,7 +70,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
 
     /** A helper object for managing temporary files. */
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public final TemporaryFolder folder = new TemporaryFolder();
 
     /** A helper object for creating builder parameters. */
     private Parameters parameters;

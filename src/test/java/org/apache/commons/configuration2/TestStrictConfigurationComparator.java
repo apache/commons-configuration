@@ -31,12 +31,12 @@ public class TestStrictConfigurationComparator
     /**
      * The comparator.
      */
-    protected ConfigurationComparator comparator = new StrictConfigurationComparator();
+    protected final ConfigurationComparator comparator = new StrictConfigurationComparator();
 
     /**
      * The first configuration.
      */
-    protected Configuration configuration = new BaseConfiguration();
+    protected final Configuration configuration = new BaseConfiguration();
 
     /**
      * Tests the comparator.

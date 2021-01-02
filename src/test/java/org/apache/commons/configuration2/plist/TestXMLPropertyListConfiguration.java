@@ -57,7 +57,7 @@ public class TestXMLPropertyListConfiguration
 {
     /** A helper object for dealing with temporary files. */
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public final TemporaryFolder folder = new TemporaryFolder();
 
     /** The test configuration. */
     private XMLPropertyListConfiguration config;

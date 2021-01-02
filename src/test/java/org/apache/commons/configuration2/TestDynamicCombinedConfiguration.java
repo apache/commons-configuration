@@ -76,7 +76,7 @@ public class TestDynamicCombinedConfiguration
 
     /** Helper object for creating temporary files. */
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public final TemporaryFolder folder = new TemporaryFolder();
 
     @BeforeClass
     public static void setUpOnce()
@@ -548,7 +548,7 @@ public class TestDynamicCombinedConfiguration
 
     public static class ThreadLookup implements Lookup
     {
-        private static final ThreadLocal<String> id = new ThreadLocal<>();
+        private static final ThreadLocal<String> ID = new ThreadLocal<>();
 
         public ThreadLookup()
         {
@@ -556,7 +556,7 @@ public class TestDynamicCombinedConfiguration
 
         public static void setId(final String value)
         {
-            id.set(value);
+            ID.set(value);
         }
 
         @Override
@@ -571,7 +571,7 @@ public class TestDynamicCombinedConfiguration
             {
                 return value;
             }
-            return id.get();
+            return ID.get();
 
         }
     }

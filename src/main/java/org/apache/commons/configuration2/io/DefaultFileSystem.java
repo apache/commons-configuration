@@ -161,7 +161,7 @@ public class DefaultFileSystem extends FileSystem
     @Override
     public String getBasePath(final String path)
     {
-        URL url;
+        final URL url;
         try
         {
             url = getURL(null, path);
@@ -176,7 +176,7 @@ public class DefaultFileSystem extends FileSystem
     @Override
     public String getFileName(final String path)
     {
-        URL url;
+        final URL url;
         try
         {
             url = getURL(null, path);
@@ -219,7 +219,7 @@ public class DefaultFileSystem extends FileSystem
     {
         try
         {
-            URL url;
+            final URL url;
             if (basePath == null)
             {
                 return new URL(fileName);

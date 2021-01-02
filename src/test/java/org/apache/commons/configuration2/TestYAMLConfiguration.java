@@ -46,7 +46,7 @@ import static org.junit.Assert.fail;
 public class TestYAMLConfiguration
 {
     @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     /** The files that we test with. */
     private final String testYaml =

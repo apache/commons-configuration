@@ -69,7 +69,7 @@ public class TestFileHandler
 
     /** Helper object for managing temporary files. */
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public final TemporaryFolder folder = new TemporaryFolder();
 
     /**
      * Creates a test file with test content and allows specifying a file name.

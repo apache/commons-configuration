@@ -40,7 +40,6 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -234,7 +233,7 @@ public class TestPropertiesConfiguration
     {
         public PropertiesWriterTestImpl(final ListDelimiterHandler handler) throws IOException
         {
-            super(new FileWriter(testSavePropertiesFile), handler);
+            super(new FileWriter(TEST_SAVE_PROPERTIES_FILE), handler);
         }
     }
 
@@ -246,13 +245,13 @@ public class TestPropertiesConfiguration
     private static final String CR = System.getProperty("line.separator");
 
     /** The File that we test with */
-    private static final String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
+    private static final String TEST_PROPERTIES = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
 
-    private static final String testBasePath = ConfigurationAssert.TEST_DIR.getAbsolutePath();
+    private static final String TEST_BASE_PATH = ConfigurationAssert.TEST_DIR.getAbsolutePath();
 
-    private static final String testBasePath2 = ConfigurationAssert.TEST_DIR.getParentFile().getAbsolutePath();
+    private static final String TEST_BASE_PATH_2 = ConfigurationAssert.TEST_DIR.getParentFile().getAbsolutePath();
 
-    private static final File testSavePropertiesFile = ConfigurationAssert.getOutFile("testsave.properties");
+    private static final File TEST_SAVE_PROPERTIES_FILE = ConfigurationAssert.getOutFile("testsave.properties");
 
     /**
      * Helper method for loading a configuration from a given file.
@@ -276,7 +275,7 @@ public class TestPropertiesConfiguration
 
     /** Helper object for creating temporary files. */
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public final TemporaryFolder folder = new TemporaryFolder();
 
     /**
      * Helper method for testing the content of a list with elements that
@@ -307,7 +306,7 @@ public class TestPropertiesConfiguration
     {
         saveTestConfig();
         final PropertiesConfiguration checkConf = new PropertiesConfiguration();
-        load(checkConf, testSavePropertiesFile.getAbsolutePath());
+        load(checkConf, TEST_SAVE_PROPERTIES_FILE.getAbsolutePath());
         for (final Iterator<String> it = copyConf.getKeys(); it.hasNext();)
         {
             final String key = it.next();
@@ -340,7 +339,7 @@ public class TestPropertiesConfiguration
     {
         final PropertiesConfiguration checkConfig = new PropertiesConfiguration();
         checkConfig.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
-        load(checkConfig, testSavePropertiesFile.getAbsolutePath());
+        load(checkConfig, TEST_SAVE_PROPERTIES_FILE.getAbsolutePath());
         ConfigurationAssert.assertConfigurationEquals(conf, checkConfig);
         return checkConfig;
     }
@@ -353,7 +352,7 @@ public class TestPropertiesConfiguration
     private void saveTestConfig() throws ConfigurationException
     {
         final FileHandler handler = new FileHandler(conf);
-        handler.save(testSavePropertiesFile);
+        handler.save(TEST_SAVE_PROPERTIES_FILE);
     }
 
     @Before
@@ -361,13 +360,13 @@ public class TestPropertiesConfiguration
     {
         conf = new PropertiesConfiguration();
         conf.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
-        load(conf, testProperties);
+        load(conf, TEST_PROPERTIES);
 
         // remove the test save file if it exists
-        if (testSavePropertiesFile.exists())
+        if (TEST_SAVE_PROPERTIES_FILE.exists())
         {
             assertTrue("Test output file could not be deleted",
-                    testSavePropertiesFile.delete());
+                    TEST_SAVE_PROPERTIES_FILE.delete());
         }
     }
 
@@ -435,7 +434,7 @@ public class TestPropertiesConfiguration
                 conf.getString("test.other.delimiter"));
         final PropertiesConfiguration pc2 = new PropertiesConfiguration();
         pc2.setListDelimiterHandler(new DefaultListDelimiterHandler('^'));
-        load(pc2, testProperties);
+        load(pc2, TEST_PROPERTIES);
         assertEquals("Should obtain the first value", "a",
                 pc2.getString("test.other.delimiter"));
         assertEquals("Wrong list size", 3, pc2.getList("test.other.delimiter")
@@ -535,7 +534,7 @@ public class TestPropertiesConfiguration
         assertEquals(4, conf.getList("test.mixed.array").size());
 
         final PropertiesConfiguration pc2 = new PropertiesConfiguration();
-        load(pc2, testProperties);
+        load(pc2, TEST_PROPERTIES);
         assertEquals(2, pc2.getList("test.mixed.array").size());
     }
 
@@ -598,7 +597,7 @@ public class TestPropertiesConfiguration
                 out.toString().contains(text));
         saveTestConfig();
         final PropertiesConfiguration c2 = new PropertiesConfiguration();
-        load(c2, testSavePropertiesFile.getAbsolutePath());
+        load(c2, TEST_SAVE_PROPERTIES_FILE.getAbsolutePath());
         assertEquals("Wrong value", text, c2.getString(PROP_NAME));
     }
 
@@ -707,7 +706,7 @@ public class TestPropertiesConfiguration
         final String testProperty = "test.successfull";
         conf = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(conf);
-        handler.setFile(testSavePropertiesFile);
+        handler.setFile(TEST_SAVE_PROPERTIES_FILE);
         conf.addProperty(testProperty, "true");
         handler.save();
         checkSavedConfig();
@@ -728,7 +727,7 @@ public class TestPropertiesConfiguration
 
         // save the configuration
         saveTestConfig();
-        assertTrue("The saved file doesn't exist", testSavePropertiesFile.exists());
+        assertTrue("The saved file doesn't exist", TEST_SAVE_PROPERTIES_FILE.exists());
 
         // read the configuration and compare the properties
         checkSavedConfig();
@@ -807,11 +806,11 @@ public class TestPropertiesConfiguration
 
         // save the configuration
         saveTestConfig();
-        assertTrue("The saved file doesn't exist", testSavePropertiesFile.exists());
+        assertTrue("The saved file doesn't exist", TEST_SAVE_PROPERTIES_FILE.exists());
 
         // load the saved file...
         final Properties testProps = new Properties();
-        try (InputStream in = Files.newInputStream(testSavePropertiesFile.toPath()))
+        try (InputStream in = Files.newInputStream(TEST_SAVE_PROPERTIES_FILE.toPath()))
         {
             testProps.load(in);
         }
@@ -858,12 +857,12 @@ public class TestPropertiesConfiguration
         // save the configuration as UTF-8
         final FileHandler handler = new FileHandler(conf);
         handler.setEncoding(StandardCharsets.UTF_8.name());
-        handler.save(testSavePropertiesFile);
-        assertTrue("The saved file doesn't exist", testSavePropertiesFile.exists());
+        handler.save(TEST_SAVE_PROPERTIES_FILE);
+        assertTrue("The saved file doesn't exist", TEST_SAVE_PROPERTIES_FILE.exists());
 
         // load the saved file...
         final Properties testProps = new Properties();
-        try (BufferedReader in = Files.newBufferedReader(testSavePropertiesFile.toPath(), StandardCharsets.UTF_8))
+        try (BufferedReader in = Files.newBufferedReader(TEST_SAVE_PROPERTIES_FILE.toPath(), StandardCharsets.UTF_8))
         {
             testProps.load(in);
         }
@@ -882,7 +881,7 @@ public class TestPropertiesConfiguration
         }
 
         // ensure that the written properties file contains no Unicode escapes
-        for (final String line : Files.readAllLines(testSavePropertiesFile.toPath()))
+        for (final String line : Files.readAllLines(TEST_SAVE_PROPERTIES_FILE.toPath()))
         {
             if (line.contains("\\u"))
             {
@@ -906,7 +905,7 @@ public class TestPropertiesConfiguration
         };
         final Set<String> foundLines = new HashSet<>();
         try (BufferedReader in = new BufferedReader(new FileReader(
-                testSavePropertiesFile)))
+                TEST_SAVE_PROPERTIES_FILE)))
         {
             String s;
             while ((s = in.readLine()) != null)
@@ -1013,16 +1012,8 @@ public class TestPropertiesConfiguration
             {
                 if (url.toString().endsWith("include.properties"))
                 {
-                    try
-                    {
-                        return new ByteArrayInputStream(
-                                "test.outcome = success".getBytes("UTF-8"));
-                    }
-                    catch (final UnsupportedEncodingException e)
-                    {
-                        throw new ConfigurationException("Unsupported encoding",
-                                e);
-                    }
+                    return new ByteArrayInputStream(
+                            "test.outcome = success".getBytes(StandardCharsets.UTF_8));
                 }
                 return super.getInputStream(url);
             }
@@ -1031,7 +1022,7 @@ public class TestPropertiesConfiguration
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new FileBasedConfigurationBuilder<>(
                         PropertiesConfiguration.class);
-        builder.configure(params.fileBased().setFile(testSavePropertiesFile)
+        builder.configure(params.fileBased().setFile(TEST_SAVE_PROPERTIES_FILE)
                 .setBasePath(ConfigurationAssert.OUT_DIR.toURI().toString())
                 .setFileSystem(fs));
         final PropertiesConfiguration configuration = builder.getConfiguration();
@@ -1086,7 +1077,7 @@ public class TestPropertiesConfiguration
     {
         final PropertiesConfiguration pc = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
+        handler.setBasePath(TEST_BASE_PATH);
         handler.setFileName("test.properties");
         handler.load();
 
@@ -1098,7 +1089,7 @@ public class TestPropertiesConfiguration
     {
         final PropertiesConfiguration pc = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
+        handler.setBasePath(TEST_BASE_PATH);
         handler.setFileName("includeoptional.properties");
         handler.load();
 
@@ -1111,7 +1102,7 @@ public class TestPropertiesConfiguration
         final PropertiesConfiguration pc = new PropertiesConfiguration();
         pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
         final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
+        handler.setBasePath(TEST_BASE_PATH);
         handler.setFileName("include-not-found.properties");
         handler.load();
         assertEquals("valueA", pc.getString("keyA"));
@@ -1123,7 +1114,7 @@ public class TestPropertiesConfiguration
         final PropertiesConfiguration pc = new PropertiesConfiguration();
         pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
         final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
+        handler.setBasePath(TEST_BASE_PATH);
         handler.setFileName("include-include-not-found.properties");
         handler.load();
         assertEquals("valueA", pc.getString("keyA"));
@@ -1136,7 +1127,7 @@ public class TestPropertiesConfiguration
         final PropertiesConfiguration pc = new PropertiesConfiguration();
         pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
         final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
+        handler.setBasePath(TEST_BASE_PATH);
         handler.setFileName("include-load-exception.properties");
         handler.load();
         assertEquals("valueA", pc.getString("keyA"));
@@ -1147,7 +1138,7 @@ public class TestPropertiesConfiguration
     {
         final PropertiesConfiguration pc = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
+        handler.setBasePath(TEST_BASE_PATH);
         handler.setFileName("include-cyclical-reference.properties");
         try {
             handler.load();
@@ -1164,7 +1155,7 @@ public class TestPropertiesConfiguration
     {
         final PropertiesConfiguration pc = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
+        handler.setBasePath(TEST_BASE_PATH);
         handler.setFileName("include-cyclical-root.properties");
         try {
             handler.load();
@@ -1182,7 +1173,7 @@ public class TestPropertiesConfiguration
         final PropertiesConfiguration pc = new PropertiesConfiguration();
         pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
         final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
+        handler.setBasePath(TEST_BASE_PATH);
         handler.setFileName("include-cyclical-root.properties");
         handler.load();
         assertEquals("valueA", pc.getString("keyA"));
@@ -1193,7 +1184,7 @@ public class TestPropertiesConfiguration
     {
         final PropertiesConfiguration pc = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
+        handler.setBasePath(TEST_BASE_PATH);
         handler.setFileName("include-include-cyclical-reference.properties");
         try {
             handler.load();
@@ -1211,7 +1202,7 @@ public class TestPropertiesConfiguration
         final PropertiesConfiguration pc = new PropertiesConfiguration();
         pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
         final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
+        handler.setBasePath(TEST_BASE_PATH);
         handler.setFileName("include-include-cyclical-reference.properties");
         handler.load();
         assertEquals("valueA", pc.getString("keyA"));
@@ -1223,7 +1214,7 @@ public class TestPropertiesConfiguration
         final PropertiesConfiguration pc = new PropertiesConfiguration();
         pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
         final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
+        handler.setBasePath(TEST_BASE_PATH);
         handler.setFileName("include-cyclical-reference.properties");
         handler.load();
         assertEquals("valueA", pc.getString("keyA"));
@@ -1234,7 +1225,7 @@ public class TestPropertiesConfiguration
     {
         final PropertiesConfiguration pc = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath2);
+        handler.setBasePath(TEST_BASE_PATH_2);
         handler.setFileName("test.properties");
         handler.load();
 
@@ -1391,7 +1382,7 @@ public class TestPropertiesConfiguration
 
         // save the configuration
         saveTestConfig();
-        assertTrue("The saved file doesn't exist", testSavePropertiesFile.exists());
+        assertTrue("The saved file doesn't exist", TEST_SAVE_PROPERTIES_FILE.exists());
 
         // read the configuration and compare the properties
         checkSavedConfig();
@@ -1442,7 +1433,7 @@ public class TestPropertiesConfiguration
     public void testSaveToHTTPServerFail() throws Exception
     {
         final MockHttpURLStreamHandler handler = new MockHttpURLStreamHandler(
-                HttpURLConnection.HTTP_BAD_REQUEST, testSavePropertiesFile);
+                HttpURLConnection.HTTP_BAD_REQUEST, TEST_SAVE_PROPERTIES_FILE);
         final URL url = new URL(null, "http://jakarta.apache.org", handler);
         try
         {
@@ -1463,7 +1454,7 @@ public class TestPropertiesConfiguration
     public void testSaveToHTTPServerSuccess() throws Exception
     {
         final MockHttpURLStreamHandler handler = new MockHttpURLStreamHandler(
-                HttpURLConnection.HTTP_OK, testSavePropertiesFile);
+                HttpURLConnection.HTTP_OK, TEST_SAVE_PROPERTIES_FILE);
         final URL url = new URL(null, "http://jakarta.apache.org", handler);
         new FileHandler(conf).save(url);
         final MockHttpURLConnection con = handler.getMockConnection();
@@ -1480,11 +1471,11 @@ public class TestPropertiesConfiguration
     {
         conf.setProperty("test", "true");
         final FileHandler handler = new FileHandler(conf);
-        handler.setBasePath(testSavePropertiesFile.getParentFile().toURI().toURL()
+        handler.setBasePath(TEST_SAVE_PROPERTIES_FILE.getParentFile().toURI().toURL()
                 .toString());
-        handler.setFileName(testSavePropertiesFile.getName());
+        handler.setFileName(TEST_SAVE_PROPERTIES_FILE.getName());
         handler.save();
-        assertTrue(testSavePropertiesFile.exists());
+        assertTrue(TEST_SAVE_PROPERTIES_FILE.exists());
     }
 
     /**
@@ -1496,14 +1487,14 @@ public class TestPropertiesConfiguration
     {
         conf = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(conf);
-        handler.setFile(testSavePropertiesFile);
+        handler.setFile(TEST_SAVE_PROPERTIES_FILE);
         final DataConfiguration dataConfig = new DataConfiguration(conf);
         dataConfig.setProperty("foo", "bar");
         assertEquals("Property not set", "bar", conf.getString("foo"));
 
         handler.save();
         final PropertiesConfiguration config2 = new PropertiesConfiguration();
-        load(config2, testSavePropertiesFile.getAbsolutePath());
+        load(config2, TEST_SAVE_PROPERTIES_FILE.getAbsolutePath());
         assertEquals("Property not saved", "bar", config2.getString("foo"));
     }
 
@@ -1519,7 +1510,7 @@ public class TestPropertiesConfiguration
 
         final PropertiesConfiguration checkConfig = new PropertiesConfiguration();
         checkConfig.setListDelimiterHandler(conf.getListDelimiterHandler());
-        new FileHandler(checkConfig).load(testSavePropertiesFile);
+        new FileHandler(checkConfig).load(TEST_SAVE_PROPERTIES_FILE);
         ConfigurationAssert.assertConfigurationEquals(conf, checkConfig);
     }
 
@@ -1537,7 +1528,7 @@ public class TestPropertiesConfiguration
 
         final PropertiesConfiguration checkConfig = new PropertiesConfiguration();
         checkConfig.setListDelimiterHandler(new DisabledListDelimiterHandler());
-        new FileHandler(checkConfig).load(testSavePropertiesFile);
+        new FileHandler(checkConfig).load(TEST_SAVE_PROPERTIES_FILE);
         ConfigurationAssert.assertConfigurationEquals(conf, checkConfig);
     }
 
@@ -1573,7 +1564,7 @@ public class TestPropertiesConfiguration
         PropertiesConfiguration.setInclude("import");
 
         // load the configuration
-        load(conf, testProperties);
+        load(conf, TEST_PROPERTIES);
 
         // restore the previous value for the other tests
         PropertiesConfiguration.setInclude("include");
@@ -1614,7 +1605,7 @@ public class TestPropertiesConfiguration
                 throw new UnsupportedOperationException("Unexpected call!");
             }
         });
-        load(conf, testProperties);
+        load(conf, TEST_PROPERTIES);
         for (int i = 1; i <= propertyCount; i++)
         {
             assertEquals("Wrong property value at " + i, PROP_VALUE + i, conf
@@ -1673,7 +1664,7 @@ public class TestPropertiesConfiguration
         conf.setProperty(prop, list);
         saveTestConfig();
         conf.clear();
-        load(conf, testSavePropertiesFile.getAbsolutePath());
+        load(conf, TEST_SAVE_PROPERTIES_FILE.getAbsolutePath());
         assertEquals("Wrong list property", list, conf.getProperty(prop));
     }
 

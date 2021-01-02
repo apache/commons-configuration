@@ -45,7 +45,7 @@ public class TestExprLookup
 {
     public static class Utility
     {
-        String message;
+        final String message;
 
         public Utility(final String msg)
         {

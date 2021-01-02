@@ -45,7 +45,7 @@ public class TestHomeDirectoryLocationStrategy
 
     /** An object for dealing with temporary files. */
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public final TemporaryFolder folder = new TemporaryFolder();
 
     /** A mock for the file system. */
     private FileSystem fileSystem;

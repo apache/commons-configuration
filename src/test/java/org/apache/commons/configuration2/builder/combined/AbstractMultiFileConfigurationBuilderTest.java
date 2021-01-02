@@ -34,10 +34,10 @@ public class AbstractMultiFileConfigurationBuilderTest
     private static final String PROP = "Id";
 
     /** The part of the pattern containing the variable. */
-    protected static String PATTERN_VAR = "${sys:Id}";
+    protected static final String PATTERN_VAR = "${sys:Id}";
 
     /** The pattern for file names. */
-    protected static String PATTERN =
+    protected static final String PATTERN =
             "target/test-classes/testMultiConfiguration_" + PATTERN_VAR
                     + ".xml";
 

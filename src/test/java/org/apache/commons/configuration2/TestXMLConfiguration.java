@@ -151,7 +151,7 @@ public class TestXMLConfiguration
     }
     /** Helper object for creating temporary files. */
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public final TemporaryFolder folder = new TemporaryFolder();
 
     /** The File that we test with */
     private final String testProperties = ConfigurationAssert.getTestFile("test.xml").getAbsolutePath();

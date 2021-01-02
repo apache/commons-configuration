@@ -53,7 +53,7 @@ public class ConstantLookup implements Lookup
     private static final char FIELD_SEPRATOR = '.';
 
     /** An internally used cache for already retrieved values. */
-    private static final Map<String, Object> constantCache = new HashMap<>();
+    private static final Map<String, Object> CONSTANT_CACHE = new HashMap<>();
 
     /** The logger. */
     private final Log log = LogFactory.getLog(getClass());
@@ -79,9 +79,9 @@ public class ConstantLookup implements Lookup
         }
 
         Object result;
-        synchronized (constantCache)
+        synchronized (CONSTANT_CACHE)
         {
-            result = constantCache.get(var);
+            result = CONSTANT_CACHE.get(var);
         }
         if (result != null)
         {
@@ -99,12 +99,12 @@ public class ConstantLookup implements Lookup
                     .substring(fieldPos + 1));
             if (value != null)
             {
-                synchronized (constantCache)
+                synchronized (CONSTANT_CACHE)
                 {
                     // In worst case, the value will be fetched multiple times
                     // because of this lax synchronization, but for constant
                     // values this shouldn't be a problem.
-                    constantCache.put(var, value);
+                    CONSTANT_CACHE.put(var, value);
                 }
                 result = value;
             }
@@ -122,9 +122,9 @@ public class ConstantLookup implements Lookup
      */
     public static void clear()
     {
-        synchronized (constantCache)
+        synchronized (CONSTANT_CACHE)
         {
-            constantCache.clear();
+            CONSTANT_CACHE.clear();
         }
     }
 

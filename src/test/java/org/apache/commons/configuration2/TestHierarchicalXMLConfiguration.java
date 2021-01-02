@@ -62,7 +62,7 @@ public class TestHierarchicalXMLConfiguration
 
     /** Helper object for creating temporary files. */
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public final TemporaryFolder folder = new TemporaryFolder();
 
     /** Instance config used for tests. */
     private XMLConfiguration config;

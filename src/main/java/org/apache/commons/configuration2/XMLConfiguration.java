@@ -709,8 +709,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             final boolean trim, final Map<String, String> attrmap,
             final Map<ImmutableNode, Object> elemRefs)
     {
-        ImmutableNode addedChildNode;
-        Collection<String> values;
+        final ImmutableNode addedChildNode;
+        final Collection<String> values;
 
         if (value != null)
         {
@@ -1303,7 +1303,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
 
             // special treatment for root node of the hierarchy
             final Object reference = refHandler.getReference(node);
-            Node element;
+            final Node element;
             if (reference instanceof XMLDocumentHelper)
             {
                 element =

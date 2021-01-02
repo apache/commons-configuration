@@ -33,7 +33,7 @@ public class TestConfigurationSet {
 
     ConfigurationMap.ConfigurationSet set;
 
-    String[] properties = {
+    final String[] properties = {
             "booleanProperty",
             "doubleProperty",
             "floatProperty",
@@ -43,7 +43,7 @@ public class TestConfigurationSet {
             "stringProperty"
     };
 
-    Object[] values = {
+    final Object[] values = {
             Boolean.TRUE,
             new Double(Double.MAX_VALUE),
             new Float(Float.MAX_VALUE),

@@ -31,7 +31,7 @@ public class TestConfigurationMap
 
     ConfigurationMap map;
 
-    String[] properties = {
+    final String[] properties = {
             "booleanProperty",
             "doubleProperty",
             "floatProperty",
@@ -41,7 +41,7 @@ public class TestConfigurationMap
             "stringProperty"
     };
 
-    Object[] values = {
+    final Object[] values = {
             Boolean.TRUE,
             new Double(Double.MAX_VALUE),
             new Float(Float.MAX_VALUE),

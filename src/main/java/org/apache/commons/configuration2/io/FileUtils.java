@@ -20,6 +20,7 @@ import java.io.File;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * This class is a subset of org.apache.commons.io.FileUtils,
@@ -30,10 +31,6 @@ import java.nio.charset.Charset;
  * See CONFIGURATION-521 for a discussion.
  */
 class FileUtils {
-    /**
-     * The UTF-8 character set, used to decode octets in URLs.
-     */
-    private static final Charset UTF8 = Charset.forName("UTF-8");
 
     //-----------------------------------------------------------------------
     /**
@@ -77,7 +74,7 @@ class FileUtils {
         String decoded = url;
         if (url != null && url.indexOf('%') >= 0) {
             final int n = url.length();
-            final StringBuffer buffer = new StringBuffer();
+            final StringBuilder buffer = new StringBuilder();
             final ByteBuffer bytes = ByteBuffer.allocate(n);
             for (int i = 0; i < n;) {
                 if (url.charAt(i) == '%') {
@@ -94,7 +91,7 @@ class FileUtils {
                     } finally {
                         if (bytes.position() > 0) {
                             bytes.flip();
-                            buffer.append(UTF8.decode(bytes).toString());
+                            buffer.append(StandardCharsets.UTF_8.decode(bytes).toString());
                             bytes.clear();
                         }
                     }

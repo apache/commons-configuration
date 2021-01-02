@@ -576,8 +576,8 @@ public class NodeStructureHelper
         }
 
         final Matcher m = PAT_KEY_WITH_INDEX.matcher(components[currentIdx]);
-        String childName;
-        int childIndex;
+        final String childName;
+        final int childIndex;
         if (m.matches())
         {
             childName = m.group(1);

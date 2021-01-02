@@ -66,7 +66,7 @@ public class TestFileBasedConfigurationBuilder {
 
     /** Helper object for managing temporary files. */
     @Rule
-    public TemporaryFolder folder = TemporaryFolder.builder().assureDeletion().build();
+    public final TemporaryFolder folder = TemporaryFolder.builder().assureDeletion().build();
 
     /**
      * Creates a test properties file with the given property value

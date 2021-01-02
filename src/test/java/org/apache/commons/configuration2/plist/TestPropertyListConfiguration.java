@@ -56,7 +56,7 @@ public class TestPropertyListConfiguration
 {
     /** A helper object for dealing with temporary files. */
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public final TemporaryFolder folder = new TemporaryFolder();
 
     private PropertyListConfiguration config;
 

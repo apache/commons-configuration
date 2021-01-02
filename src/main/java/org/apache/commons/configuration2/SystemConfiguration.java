@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
 public class SystemConfiguration extends MapConfiguration
 {
     /** The logger. */
-    private static final Log log = LogFactory.getLog(SystemConfiguration.class);
+    private static final Log LOG = LogFactory.getLog(SystemConfiguration.class);
 
     /**
      * Create a Configuration based on the system properties.
@@ -95,9 +95,9 @@ public class SystemConfiguration extends MapConfiguration
         {
             final String key = iter.next();
             final String value = (String) systemConfig.getProperty(key);
-            if (log.isDebugEnabled())
+            if (LOG.isDebugEnabled())
             {
-                log.debug("Setting system property " + key + " to " + value);
+                LOG.debug("Setting system property " + key + " to " + value);
             }
             System.setProperty(key, value);
         }

@@ -123,7 +123,7 @@ public class TestINIConfiguration
 
     /** A helper object for creating temporary files. */
     @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    public final TemporaryFolder folder = new TemporaryFolder();
 
     /**
      * Creates a INIConfiguration object that is initialized from

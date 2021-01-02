@@ -986,7 +986,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             final Collection<ImmutableNode> newNodes)
     {
         final String nodeName = it.next();
-        ImmutableNode.Builder builder;
+        final ImmutableNode.Builder builder;
         if (it.hasNext())
         {
             builder = new ImmutableNode.Builder(1);
@@ -1155,7 +1155,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             final TransactionInitializer txInit, final NodeSelector selector,
             final TreeData currentData, final NodeKeyResolver<ImmutableNode> resolver)
     {
-        boolean done;
+        final boolean done;
         final ModelTransaction tx =
                 new ModelTransaction(currentData, selector, resolver);
         if (!txInit.initTransaction(tx))
@@ -1315,7 +1315,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
             final NodeKeyResolver<ImmutableNode> resolver,
             final MutableObject<NodeSelector> refSelector)
     {
-        TreeData newData;
+        final TreeData newData;
         final List<ImmutableNode> namedChildren =
                 current.getChildren(parent, childName);
         if (!namedChildren.isEmpty())
