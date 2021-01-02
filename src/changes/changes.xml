@@ -109,7 +109,7 @@
          Update optional commons-codec from 1.14 to 1.15.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
-         Update checkstyle from 8.26 to 8.36.2 #66, #71.
+         Update checkstyle from 8.26 to 8.39, #66, #71, #90.
        </action>
        <action dev="ggregory" type="update" due-to="Gary Gregory">
          Update commons.jacoco.version 0.8.5 to 0.8.6 (Fixes Java 15 builds).
