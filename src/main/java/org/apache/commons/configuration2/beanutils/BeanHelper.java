@@ -365,11 +365,7 @@ public final class BeanHelper
         {
             BEAN_UTILS_BEAN.setProperty(bean, propName, value);
         }
-        catch (final IllegalAccessException iaex)
-        {
-            throw new ConfigurationRuntimeException(iaex);
-        }
-        catch (final InvocationTargetException itex)
+        catch (final IllegalAccessException | InvocationTargetException itex)
         {
             throw new ConfigurationRuntimeException(itex);
         }

@@ -1084,15 +1084,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             final DocumentBuilder builder = createDocumentBuilder();
             builder.parse(new InputSource(reader));
         }
-        catch (final SAXException e)
-        {
-            throw new ConfigurationException("Validation failed", e);
-        }
-        catch (final IOException e)
-        {
-            throw new ConfigurationException("Validation failed", e);
-        }
-        catch (final ParserConfigurationException pce)
+        catch (final SAXException | IOException | ParserConfigurationException pce)
         {
             throw new ConfigurationException("Validation failed", pce);
         }

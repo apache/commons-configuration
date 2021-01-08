@@ -421,11 +421,7 @@ public final class ConfigurationUtils
                         "No clone() method found for class"
                                 + obj.getClass().getName());
             }
-            catch (final IllegalAccessException iaex)
-            {
-                throw new ConfigurationRuntimeException(iaex);
-            }
-            catch (final InvocationTargetException itex)
+            catch (final IllegalAccessException | InvocationTargetException itex)
             {
                 throw new ConfigurationRuntimeException(itex);
             }

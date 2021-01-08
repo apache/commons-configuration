@@ -413,12 +413,7 @@ public class JNDIConfiguration extends AbstractConfiguration
             key = key.replaceAll("\\.", "/");
             return getBaseContext().lookup(key);
         }
-        catch (final NameNotFoundException e)
-        {
-            // expected exception, no need to log it
-            return null;
-        }
-        catch (final NotContextException nctxex)
+        catch (final NameNotFoundException | NotContextException nctxex)
         {
             // expected exception, no need to log it
             return null;
