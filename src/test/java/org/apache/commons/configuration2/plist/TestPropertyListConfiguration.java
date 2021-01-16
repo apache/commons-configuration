@@ -44,6 +44,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.NodeHandler;
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -214,7 +215,7 @@ public class TestPropertyListConfiguration
     @Test
     public void testData()
     {
-        ObjectAssert.assertInstanceOf("data", new byte[0].getClass(), config.getProperty("data"));
+        ObjectAssert.assertInstanceOf("data", ArrayUtils.EMPTY_BYTE_ARRAY.getClass(), config.getProperty("data"));
         ArrayAssert.assertEquals("data", "foo bar".getBytes(), (byte[]) config.getProperty("data"));
     }
 

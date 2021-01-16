@@ -41,6 +41,7 @@ import org.apache.commons.configuration2.event.EventListener;
 import org.apache.commons.configuration2.event.EventType;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.Lookup;
+import org.apache.commons.lang3.ArrayUtils;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
@@ -814,7 +815,7 @@ public class TestAbstractConfigurationBasicFeatures
             expected[i] = (short) i;
         }
         final short[] result =
-                config.get(short[].class, KEY_PREFIX, new short[0]);
+                config.get(short[].class, KEY_PREFIX, ArrayUtils.EMPTY_SHORT_ARRAY);
         assertArrayEquals("Wrong result", expected, result);
     }
 

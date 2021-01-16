@@ -46,6 +46,7 @@ import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.configuration2.sync.LockMode;
 import org.apache.commons.configuration2.sync.NoOpSynchronizer;
 import org.apache.commons.configuration2.sync.Synchronizer;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -1412,7 +1413,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     public String[] getStringArray(final String key)
     {
         final String[] result = (String[]) getArray(String.class, key);
-        return result == null ? new String[0] : result;
+        return result == null ? ArrayUtils.EMPTY_STRING_ARRAY : result;
     }
 
     /**
