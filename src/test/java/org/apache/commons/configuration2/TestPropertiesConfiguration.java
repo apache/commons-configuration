@@ -246,13 +246,13 @@ public class TestPropertiesConfiguration
     private static final String CR = System.getProperty("line.separator");
 
     /** The File that we test with */
-    private static String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
+    private static final String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
 
-    private static String testBasePath = ConfigurationAssert.TEST_DIR.getAbsolutePath();
+    private static final String testBasePath = ConfigurationAssert.TEST_DIR.getAbsolutePath();
 
-    private static String testBasePath2 = ConfigurationAssert.TEST_DIR.getParentFile().getAbsolutePath();
+    private static final String testBasePath2 = ConfigurationAssert.TEST_DIR.getParentFile().getAbsolutePath();
 
-    private static File testSavePropertiesFile = ConfigurationAssert.getOutFile("testsave.properties");
+    private static final File testSavePropertiesFile = ConfigurationAssert.getOutFile("testsave.properties");
 
     /**
      * Helper method for loading a configuration from a given file.

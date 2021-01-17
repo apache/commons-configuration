@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
 public class SystemConfiguration extends MapConfiguration
 {
     /** The logger. */
-    private static Log log = LogFactory.getLog(SystemConfiguration.class);
+    private static final Log log = LogFactory.getLog(SystemConfiguration.class);
 
     /**
      * Create a Configuration based on the system properties.

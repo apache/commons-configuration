@@ -63,12 +63,12 @@ public class TestExprLookup
         }
     }
 
-    private static String PATTERN1 =
+    private static final String PATTERN1 =
         "String.replace(Util.message, 'Hello', 'Goodbye') + System.getProperty('user.name')";
-    private static String PATTERN2 =
+    private static final String PATTERN2 =
         "'$[element] ' + String.trimToEmpty('$[space.description]')";
 
-    private static File TEST_FILE = ConfigurationAssert.getTestFile("test.xml");
+    private static final File TEST_FILE = ConfigurationAssert.getTestFile("test.xml");
 
     /**
      * Loads the test configuration.

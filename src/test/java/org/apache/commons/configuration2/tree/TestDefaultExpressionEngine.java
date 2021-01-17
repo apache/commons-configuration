@@ -35,15 +35,15 @@ import org.junit.Test;
 public class TestDefaultExpressionEngine
 {
     /** Stores the names of the test nodes representing tables. */
-    private static String[] tables =
+    private static final String[] tables =
     { "users", "documents"};
 
     /** Stores the types of the test table nodes. */
-    private static String[] tabTypes =
+    private static final String[] tabTypes =
     { "system", "application"};
 
     /** Test data fields for the node hierarchy. */
-    private static String[][] fields =
+    private static final String[][] fields =
     {
     { "uid", "uname", "firstName", "lastName", "email"},
     { "docid", "name", "creationDate", "authorID", "version"}};

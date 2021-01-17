@@ -53,7 +53,7 @@ public class ConstantLookup implements Lookup
     private static final char FIELD_SEPRATOR = '.';
 
     /** An internally used cache for already retrieved values. */
-    private static Map<String, Object> constantCache = new HashMap<>();
+    private static final Map<String, Object> constantCache = new HashMap<>();
 
     /** The logger. */
     private final Log log = LogFactory.getLog(getClass());

@@ -57,9 +57,9 @@ import org.junit.rules.TemporaryFolder;
 
 public class TestDynamicCombinedConfiguration
 {
-    private static String PATTERN = "${sys:Id}";
-    private static String PATTERN1 = "target/test-classes/testMultiConfiguration_${sys:Id}.xml";
-    private static String DEFAULT_FILE = "target/test-classes/testMultiConfiguration_default.xml";
+    private static final String PATTERN = "${sys:Id}";
+    private static final String PATTERN1 = "target/test-classes/testMultiConfiguration_${sys:Id}.xml";
+    private static final String DEFAULT_FILE = "target/test-classes/testMultiConfiguration_default.xml";
     private static final File MULTI_TENENT_FILE = ConfigurationAssert
             .getTestFile("testMultiTenentConfigurationBuilder4.xml");
     private static final File MULTI_DYNAMIC_FILE = ConfigurationAssert
@@ -548,7 +548,7 @@ public class TestDynamicCombinedConfiguration
 
     public static class ThreadLookup implements Lookup
     {
-        private static ThreadLocal<String> id = new ThreadLocal<>();
+        private static final ThreadLocal<String> id = new ThreadLocal<>();
 
         public ThreadLookup()
         {

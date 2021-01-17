@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
 public class HsqlDB
 {
     private Connection connection = null;
-    private static Log log = LogFactory.getLog(HsqlDB.class);
+    private static final Log log = LogFactory.getLog(HsqlDB.class);
 
     public HsqlDB(final String uri, final String databaseDriver, final String loadFile)
             throws Exception

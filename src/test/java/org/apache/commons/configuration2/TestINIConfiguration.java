@@ -61,7 +61,7 @@ import org.junit.rules.TemporaryFolder;
  */
 public class TestINIConfiguration
 {
-    private static String LINE_SEPARATOR = System.getProperty("line.separator");
+    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
     /** Constant for the content of an ini file. */
     private static final String INI_DATA = "[section1]" + LINE_SEPARATOR

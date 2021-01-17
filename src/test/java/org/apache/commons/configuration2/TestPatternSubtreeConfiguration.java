@@ -35,8 +35,8 @@ import org.junit.Test;
  */
 public class TestPatternSubtreeConfiguration
 {
-    private static File CONFIG_FILE = ConfigurationAssert.getTestFile("testPatternSubtreeConfig.xml");
-    private static String PATTERN = "BusinessClient[@name='${sys:Id}']";
+    private static final File CONFIG_FILE = ConfigurationAssert.getTestFile("testPatternSubtreeConfig.xml");
+    private static final String PATTERN = "BusinessClient[@name='${sys:Id}']";
     private XMLConfiguration conf;
 
     @Before
