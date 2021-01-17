@@ -552,7 +552,7 @@ public class TestFileHandler
         final FileHandler config1 = new FileHandler(content);
         config1.setFileName("config/deep/deeptest.properties");
         config1.load();
-        assertTrue("No data loaded", content.getContent().length() > 0);
+        assertFalse("No data loaded", content.getContent().isEmpty());
     }
 
     /**

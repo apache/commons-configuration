@@ -237,7 +237,7 @@ public class XPathExpressionEngine implements ExpressionEngine
                     new StringBuilder(parentKey.length()
                             + handler.nodeName(node).length()
                             + PATH_DELIMITER.length());
-            if (parentKey.length() > 0)
+            if (!parentKey.isEmpty())
             {
                 buf.append(parentKey);
                 buf.append(PATH_DELIMITER);

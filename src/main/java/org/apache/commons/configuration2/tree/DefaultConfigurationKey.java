@@ -130,7 +130,7 @@ public class DefaultConfigurationKey
         key = trim(key);
 
         if (keyBuffer.length() > 0 && !isAttributeKey(property)
-                && key.length() > 0)
+                && !key.isEmpty())
         {
             keyBuffer.append(getSymbols().getPropertyDelimiter());
         }
