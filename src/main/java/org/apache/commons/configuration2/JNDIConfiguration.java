@@ -135,13 +135,13 @@ public class JNDIConfiguration extends AbstractConfiguration
                 final Object object = context.lookup(name);
 
                 // build the key
-                final StringBuilder key = new StringBuilder();
-                key.append(prefix);
-                if (key.length() > 0)
+                final StringBuilder keyBuilder = new StringBuilder();
+                keyBuilder.append(prefix);
+                if (keyBuilder.length() > 0)
                 {
-                    key.append(".");
+                    keyBuilder.append(".");
                 }
-                key.append(name);
+                keyBuilder.append(name);
 
                 if (object instanceof Context)
                 {
@@ -149,14 +149,14 @@ public class JNDIConfiguration extends AbstractConfiguration
                     final Context subcontext = (Context) object;
                     if (!processedCtx.contains(subcontext))
                     {
-                        recursiveGetKeys(keys, subcontext, key.toString(),
+                        recursiveGetKeys(keys, subcontext, keyBuilder.toString(),
                                 processedCtx);
                     }
                 }
                 else
                 {
                     // add the key
-                    keys.add(key.toString());
+                    keys.add(keyBuilder.toString());
                 }
             }
         }
