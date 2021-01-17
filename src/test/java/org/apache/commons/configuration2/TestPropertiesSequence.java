@@ -19,6 +19,7 @@ package org.apache.commons.configuration2;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 import java.util.Iterator;
 import java.util.List;
@@ -57,7 +58,7 @@ public class TestPropertiesSequence
         final List<String> keysSimpleConfiguration = ConfigurationAssert.keysToList(a);
         final List<String> keysCompositeConfiguration = ConfigurationAssert.keysToList(b);
 
-        assertTrue("Size:" + keysSimpleConfiguration.size(), keysSimpleConfiguration.size() > 0);
+        assertFalse("Size:" + keysSimpleConfiguration.size(), keysSimpleConfiguration.isEmpty());
         assertEquals(keysSimpleConfiguration.size(), keysCompositeConfiguration.size());
 
         for (int i = 0; i < keysSimpleConfiguration.size(); i++)
@@ -93,7 +94,7 @@ public class TestPropertiesSequence
         final List<String> keysSimpleConfiguration = ConfigurationAssert.keysToList(a);
         final List<String> keysCompositeConfiguration = ConfigurationAssert.keysToList(b);
 
-        assertTrue("Size:" + keysSimpleConfiguration.size(), keysSimpleConfiguration.size() > 0);
+        assertFalse("Size:" + keysSimpleConfiguration.size(), keysSimpleConfiguration.isEmpty());
         assertEquals(keysSimpleConfiguration.size(), keysCompositeConfiguration.size());
 
         for (int i = 0; i < keysSimpleConfiguration.size(); i++)

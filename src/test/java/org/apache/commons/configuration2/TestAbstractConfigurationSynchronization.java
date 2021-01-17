@@ -199,7 +199,7 @@ public class TestAbstractConfigurationSynchronization
     @Test
     public void testSizeSynchronized()
     {
-        assertTrue("Wrong size", config.size() > 0);
+        assertFalse("Wrong size", config.isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 

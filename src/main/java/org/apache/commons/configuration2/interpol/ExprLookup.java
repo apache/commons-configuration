@@ -323,7 +323,7 @@ public class ExprLookup implements Lookup
 
         public Variable getVariable()
         {
-            return size() > 0 ? get(size() - 1) : null;
+            return !isEmpty() ? get(size() - 1) : null;
         }
 
     }
