@@ -408,7 +408,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param writer - The writer to save the configuration to.
      * @throws ConfigurationException If an error occurs while writing the
      *         configuration
-     * @throws IOException if an I/O error occurs
+     * @throws IOException if an I/O error occurs.
      */
     @Override
     public void write(final Writer writer) throws ConfigurationException, IOException
@@ -463,7 +463,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param in the reader to read the configuration from.
      * @throws ConfigurationException If an error occurs while reading the
      *         configuration
-     * @throws IOException if an I/O error occurs
+     * @throws IOException if an I/O error occurs.
      */
     @Override
     public void read(final Reader in) throws ConfigurationException, IOException
@@ -505,7 +505,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      * @param in the reader
      * @param rootBuilder the builder for the top-level section
      * @param sectionBuilders a map storing the section builders
-     * @throws IOException if an I/O error occurs
+     * @throws IOException if an I/O error occurs.
      */
     private void createNodeBuilders(final BufferedReader in,
             final ImmutableNode.Builder rootBuilder,

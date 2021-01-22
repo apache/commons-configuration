@@ -1060,7 +1060,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * Write a comment.
          *
          * @param comment the comment to write
-         * @throws IOException if an I/O error occurs
+         * @throws IOException if an I/O error occurs.
          */
         public void writeComment(final String comment) throws IOException
         {
@@ -1090,7 +1090,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param key The key of the property
          * @param values The array of values of the property
          *
-         * @throws IOException if an I/O error occurs
+         * @throws IOException if an I/O error occurs.
          */
         public void writeProperty(final String key, final List<?> values) throws IOException
         {
@@ -1105,7 +1105,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          * @param key the key of the property
          * @param value the value of the property
          *
-         * @throws IOException if an I/O error occurs
+         * @throws IOException if an I/O error occurs.
          */
         public void writeProperty(final String key, final Object value) throws IOException
         {

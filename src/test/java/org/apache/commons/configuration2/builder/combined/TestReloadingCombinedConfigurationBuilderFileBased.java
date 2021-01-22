@@ -261,7 +261,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
      * initialized.
      *
      * @param defFile the path to the definition file
-     * @throws IOException if an I/O error occurs
+     * @throws IOException if an I/O error occurs.
      * @throws ConfigurationException if a configuration-related error occurs
      * @throws InterruptedException if waiting is interrupted
      */
