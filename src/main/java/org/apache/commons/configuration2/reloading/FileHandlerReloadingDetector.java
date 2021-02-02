@@ -57,19 +57,19 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
     private static final String JAR_PROTOCOL = "jar";
 
     /** Constant for the default refresh delay. */
-    private static final int DEFAULT_REFRESH_DELAY = 5000;
+    private static final int DEFAULT_REFRESH_DELAY_MILLIS = 5000;
 
     /** The associated file handler. */
     private final FileHandler fileHandler;
 
     /** The refresh delay. */
-    private final long refreshDelay;
+    private final long refreshDelayMillis;
 
     /** The last time the configuration file was modified. */
-    private long lastModified;
+    private long lastModifiedMillis;
 
     /** The last time the file was checked for changes. */
-    private long lastChecked;
+    private long lastCheckedMillis;
 
     /**
      * Creates a new instance of {@code FileHandlerReloadingDetector} and
@@ -80,13 +80,13 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
      *
      * @param handler the {@code FileHandler} associated with this detector (can
      *        be <b>null</b>)
-     * @param refreshDelay the refresh delay; a value of 0 means that a check is
+     * @param refreshDelayMillis the refresh delay; a value of 0 means that a check is
      *        performed in all cases
      */
-    public FileHandlerReloadingDetector(final FileHandler handler, final long refreshDelay)
+    public FileHandlerReloadingDetector(final FileHandler handler, final long refreshDelayMillis)
     {
         fileHandler = handler != null ? handler : new FileHandler();
-        this.refreshDelay = refreshDelay;
+        this.refreshDelayMillis = refreshDelayMillis;
     }
 
     /**
@@ -99,7 +99,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
      */
     public FileHandlerReloadingDetector(final FileHandler handler)
     {
-        this(handler, DEFAULT_REFRESH_DELAY);
+        this(handler, DEFAULT_REFRESH_DELAY_MILLIS);
     }
 
     /**
@@ -136,7 +136,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
      */
     public long getRefreshDelay()
     {
-        return refreshDelay;
+        return refreshDelayMillis;
     }
 
     /**
@@ -149,22 +149,22 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
     @Override
     public boolean isReloadingRequired()
     {
-        final long now = System.currentTimeMillis();
-        if (now >= lastChecked + getRefreshDelay())
+        final long nowMillis = System.currentTimeMillis();
+        if (nowMillis >= lastCheckedMillis + getRefreshDelay())
         {
-            lastChecked = now;
+            lastCheckedMillis = nowMillis;
 
-            final long modified = getLastModificationDate();
-            if (modified > 0)
+            final long modifiedMillis = getLastModificationDate();
+            if (modifiedMillis > 0)
             {
-                if (lastModified == 0)
+                if (lastModifiedMillis == 0)
                 {
                     // initialization
-                    updateLastModified(modified);
+                    updateLastModified(modifiedMillis);
                 }
                 else
                 {
-                    if (modified != lastModified)
+                    if (modifiedMillis != lastModifiedMillis)
                     {
                         return true;
                     }
@@ -200,7 +200,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
      * Returns the date of the last modification of the monitored file. A return
      * value of 0 indicates, that the monitored file does not exist.
      *
-     * @return the last modification date
+     * @return the last modification date in milliseconds.
      */
     protected long getLastModificationDate()
     {
@@ -213,11 +213,11 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
      * reload is detected only if the file's modification date is different from
      * this value.
      *
-     * @param time the new last modification date
+     * @param timeMillis the new last modification date
      */
-    protected void updateLastModified(final long time)
+    protected void updateLastModified(final long timeMillis)
     {
-        lastModified = time;
+        lastModifiedMillis = timeMillis;
     }
 
     /**
