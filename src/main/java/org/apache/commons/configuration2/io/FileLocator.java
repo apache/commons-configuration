@@ -72,7 +72,7 @@ public final class FileLocator
 
         /** The file name. */
         private String fileName;
-        
+
         /** The file system. */
         private FileSystem fileSystem;
 
@@ -210,7 +210,7 @@ public final class FileLocator
         public FileLocatorBuilder urlConnectionOptions(final URLConnectionOptions urlConnectionOptions) {
             this.urlConnectionOptions = urlConnectionOptions;
             return this;
-            
+
         }
     }
 
@@ -222,7 +222,7 @@ public final class FileLocator
 
     /** The file name. */
     private final String fileName;
-    
+
     /** The file system. */
     private final FileSystem fileSystem;
 

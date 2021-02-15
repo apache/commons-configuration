@@ -138,7 +138,7 @@ public class TestFileBasedConfigurationBuilder {
         final URL url = new URL("jar:" + testJar.toUri() + "!/configuration.properties");
 
         //@formatter:off
-        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = 
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
             new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
                 .configure(new FileBasedBuilderParametersImpl()
                 .setURL(url, new URLConnectionOptions().setUseCaches(false)));
