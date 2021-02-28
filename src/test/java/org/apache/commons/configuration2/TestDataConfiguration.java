@@ -1914,7 +1914,7 @@ public class TestDataConfiguration
     private Object createInternetAddress(final String email) throws Exception
     {
         final Class<?> cls = Class.forName("javax.mail.internet.InternetAddress");
-        return cls.getConstructor(new Class[] { String.class }).newInstance(email);
+        return cls.getConstructor(String.class).newInstance(email);
     }
 
     @Test
