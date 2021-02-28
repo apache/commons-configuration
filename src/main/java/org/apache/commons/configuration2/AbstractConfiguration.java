@@ -484,12 +484,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     {
         for (final Lookup l : ci.getDefaultLookups())
         {
-            if (l instanceof ConfigurationLookup)
+            if (l instanceof ConfigurationLookup && targetConf == ((ConfigurationLookup) l).getConfiguration())
             {
-                if (targetConf == ((ConfigurationLookup) l).getConfiguration())
-                {
-                    return l;
-                }
+                return l;
             }
         }
         return null;

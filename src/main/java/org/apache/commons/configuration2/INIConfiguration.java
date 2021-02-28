@@ -803,12 +803,9 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
         {
             final char sep = separators.charAt(i);
             final int pos = line.indexOf(sep);
-            if (pos >= 0)
+            if ((pos >= 0) && (index < 0 || pos < index))
             {
-                if (index < 0 || pos < index)
-                {
-                    index = pos;
-                }
+                index = pos;
             }
         }
 

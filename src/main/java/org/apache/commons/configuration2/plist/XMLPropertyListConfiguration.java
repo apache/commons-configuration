@@ -549,14 +549,10 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
             if ("array".equals(qName))
             {
                 push(new ArrayNodeBuilder());
-            }
-            else if ("dict".equals(qName))
+            } else if ("dict".equals(qName) && peek() instanceof ArrayNodeBuilder)
             {
-                if (peek() instanceof ArrayNodeBuilder)
-                {
-                    // push the new root builder on the stack
-                    push(new PListNodeBuilder());
-                }
+                // push the new root builder on the stack
+                push(new PListNodeBuilder());
             }
         }
 

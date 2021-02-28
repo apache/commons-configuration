@@ -382,12 +382,9 @@ public class DefaultExpressionEngine implements ExpressionEngine
                 processSubNodes(keyPart, findChildNodesByName(handler, node, key),
                         results, handler);
             }
-            if (keyPart.isAttribute() && !keyPart.hasNext())
+            if (keyPart.isAttribute() && !keyPart.hasNext() && handler.getAttributeValue(node, key) != null)
             {
-                if (handler.getAttributeValue(node, key) != null)
-                {
-                    results.add(QueryResult.createAttributeResult(node, key));
-                }
+                results.add(QueryResult.createAttributeResult(node, key));
             }
         }
     }

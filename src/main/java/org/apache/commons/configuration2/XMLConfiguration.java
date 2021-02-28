@@ -788,12 +788,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         for (int i = 0; i < childNodes.getLength(); i++)
         {
             final Node item = childNodes.item(i);
-            if (item instanceof Element)
+            if (item instanceof Element && name.equals(((Element) item).getTagName()))
             {
-                if (name.equals(((Element) item).getTagName()))
-                {
-                    count++;
-                }
+                count++;
             }
         }
         return count;

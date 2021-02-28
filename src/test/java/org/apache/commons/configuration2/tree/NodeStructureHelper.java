@@ -592,12 +592,9 @@ public class NodeStructureHelper
         int foundIdx = 0;
         for (final ImmutableNode node : parent)
         {
-            if (childName.equals(node.getNodeName()))
+            if (childName.equals(node.getNodeName()) && (foundIdx++ == childIndex))
             {
-                if (foundIdx++ == childIndex)
-                {
-                    return findNode(node, components, currentIdx + 1);
-                }
+                return findNode(node, components, currentIdx + 1);
             }
         }
         throw new NoSuchElementException("Cannot resolve child "
