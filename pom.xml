@@ -570,7 +570,7 @@
     <commons.jacoco.version>0.8.6</commons.jacoco.version>
     <commons.spotbugs.version>4.2.0</commons.spotbugs.version>
     <commons.javadoc.version>3.1.1</commons.javadoc.version>
-    <checkstyle.version>8.39</checkstyle.version>
+    <checkstyle.version>8.41</checkstyle.version>
 
     <!-- Commons Release Plugin -->
     <commons.bc.version>2.7</commons.bc.version>
