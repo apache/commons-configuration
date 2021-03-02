@@ -50,7 +50,7 @@
        </action>
        <!-- UPDATES -->
        <action type="update" dev="ggregory" issue="CONFIGURATION-787" due-to="Gary Gregory">
-         Update from Apache Commons Lang 3.9 to 3.11.
+         Update from Apache Commons Lang 3.9 to 3.12.0.
        </action>
        <action type="add" dev="ggregory" issue="CONFIGURATION-789" due-to="Gary Gregory">
          Add ImmutableConfiguration.getEnum() methods.
