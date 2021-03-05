@@ -1036,14 +1036,11 @@ public class DataConfiguration extends AbstractConfiguration
         {
             return value;
         }
-        else if (isThrowExceptionOnMissing())
+        if (isThrowExceptionOnMissing())
         {
             throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
         }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 
     /**
@@ -1280,14 +1277,11 @@ public class DataConfiguration extends AbstractConfiguration
         {
             return value;
         }
-        else if (isThrowExceptionOnMissing())
+        if (isThrowExceptionOnMissing())
         {
             throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
         }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 
     /**

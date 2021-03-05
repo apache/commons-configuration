@@ -247,17 +247,14 @@ public class VFSFileSystem extends DefaultFileSystem
             {
                 return fileName;
             }
-            else if (basePath != null)
+            if (basePath != null)
             {
                 final FileName base = resolveURI(basePath);
                 return getManager().resolveName(base, fileName).getURI();
             }
-            else
-            {
-                final FileName name = resolveURI(fileName);
-                final FileName base = name.getParent();
-                return getManager().resolveName(base, name.getBaseName()).getURI();
-            }
+            final FileName name = resolveURI(fileName);
+            final FileName base = name.getParent();
+            return getManager().resolveName(base, name.getBaseName()).getURI();
         }
         catch (final FileSystemException fse)
         {

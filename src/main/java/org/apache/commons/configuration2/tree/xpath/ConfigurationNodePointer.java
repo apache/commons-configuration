@@ -206,7 +206,7 @@ class ConfigurationNodePointer<T> extends NodePointer
             {
                 return -1;
             }
-            else if (child == node2)
+            if (child == node2)
             {
                 return 1;
             }

@@ -147,15 +147,12 @@ public class AbstractYAMLBasedConfiguration extends BaseHierarchicalConfiguratio
         {
             return parseMap((Map<String, Object>) elem, key);
         }
-        else if (elem instanceof Collection)
+        if (elem instanceof Collection)
         {
             return parseCollection((Collection<Object>) elem, key);
         }
-        else
-        {
-            return Collections.singletonList(
-                    new ImmutableNode.Builder().name(key).value(elem).create());
-        }
+        return Collections.singletonList(
+                new ImmutableNode.Builder().name(key).value(elem).create());
     }
 
     /**

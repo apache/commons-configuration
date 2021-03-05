@@ -225,26 +225,22 @@ public class XPathExpressionEngine implements ExpressionEngine
             // name of the root node
             return StringUtils.EMPTY;
         }
-        else if (handler.nodeName(node) == null)
+        if (handler.nodeName(node) == null)
         {
             // paranoia check for undefined node names
             return parentKey;
         }
-
-        else
+        final StringBuilder buf =
+                new StringBuilder(parentKey.length()
+                        + handler.nodeName(node).length()
+                        + PATH_DELIMITER.length());
+        if (!parentKey.isEmpty())
         {
-            final StringBuilder buf =
-                    new StringBuilder(parentKey.length()
-                            + handler.nodeName(node).length()
-                            + PATH_DELIMITER.length());
-            if (!parentKey.isEmpty())
-            {
-                buf.append(parentKey);
-                buf.append(PATH_DELIMITER);
-            }
-            buf.append(handler.nodeName(node));
-            return buf.toString();
+            buf.append(parentKey);
+            buf.append(PATH_DELIMITER);
         }
+        buf.append(handler.nodeName(node));
+        return buf.toString();
     }
 
     @Override

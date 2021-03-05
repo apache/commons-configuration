@@ -530,7 +530,7 @@ public class TestBeanHelper
                 helper.initBean(bean, bcc.getBeanDeclaration());
                 return bean;
             }
-            else if (BeanCreationTestBeanWithListChild.class.equals(bcc
+            if (BeanCreationTestBeanWithListChild.class.equals(bcc
                     .getBeanClass()))
             {
                 final BeanCreationTestBeanWithListChild bean =
@@ -538,11 +538,8 @@ public class TestBeanHelper
                 helper.initBean(bean, bcc.getBeanDeclaration());
                 return bean;
             }
-            else
-            {
-                throw new IllegalArgumentException("Unsupported class: "
-                        + bcc.getBeanClass());
-            }
+            throw new IllegalArgumentException("Unsupported class: "
+                    + bcc.getBeanClass());
         }
 
         /**

@@ -120,8 +120,7 @@ class ConfigurationNodeIteratorChildren<T> extends
             return nameTest.isWildcard() ? createSubNodeListForWildcardName(
                     node, name) : createSubNodeListForName(node, name);
         }
-
-        else if (test instanceof NodeTypeTest)
+        if (test instanceof NodeTypeTest)
         {
             final NodeTypeTest typeTest = (NodeTypeTest) test;
             if (typeTest.getNodeType() == Compiler.NODE_TYPE_NODE

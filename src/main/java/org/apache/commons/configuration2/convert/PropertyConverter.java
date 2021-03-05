@@ -108,41 +108,41 @@ final class PropertyConverter
         {
             return toBoolean(value);
         }
-        else if (Character.class.equals(cls) || Character.TYPE.equals(cls))
+        if (Character.class.equals(cls) || Character.TYPE.equals(cls))
         {
             return toCharacter(value);
         }
-        else if (Number.class.isAssignableFrom(cls) || cls.isPrimitive())
+        if (Number.class.isAssignableFrom(cls) || cls.isPrimitive())
         {
             if (Integer.class.equals(cls) || Integer.TYPE.equals(cls))
             {
                 return toInteger(value);
             }
-            else if (Long.class.equals(cls) || Long.TYPE.equals(cls))
+            if (Long.class.equals(cls) || Long.TYPE.equals(cls))
             {
                 return toLong(value);
             }
-            else if (Byte.class.equals(cls) || Byte.TYPE.equals(cls))
+            if (Byte.class.equals(cls) || Byte.TYPE.equals(cls))
             {
                 return toByte(value);
             }
-            else if (Short.class.equals(cls) || Short.TYPE.equals(cls))
+            if (Short.class.equals(cls) || Short.TYPE.equals(cls))
             {
                 return toShort(value);
             }
-            else if (Float.class.equals(cls) || Float.TYPE.equals(cls))
+            if (Float.class.equals(cls) || Float.TYPE.equals(cls))
             {
                 return toFloat(value);
             }
-            else if (Double.class.equals(cls) || Double.TYPE.equals(cls))
+            if (Double.class.equals(cls) || Double.TYPE.equals(cls))
             {
                 return toDouble(value);
             }
-            else if (BigInteger.class.equals(cls))
+            if (BigInteger.class.equals(cls))
             {
                 return toBigInteger(value);
             }
-            else if (BigDecimal.class.equals(cls))
+            if (BigDecimal.class.equals(cls))
             {
                 return toBigDecimal(value);
             }
@@ -219,19 +219,15 @@ final class PropertyConverter
         {
             return (Boolean) value;
         }
-        else if (value instanceof String)
-        {
-            final Boolean b = BooleanUtils.toBooleanObject((String) value);
-            if (b == null)
-            {
-                throw new ConversionException("The value " + value + " can't be converted to a Boolean object");
-            }
-            return b;
+        if (!(value instanceof String)) {
+            throw new ConversionException("The value " + value + " can't be converted to a Boolean object");
         }
-        else
+        final Boolean b = BooleanUtils.toBooleanObject((String) value);
+        if (b == null)
         {
             throw new ConversionException("The value " + value + " can't be converted to a Boolean object");
         }
+        return b;
     }
 
     /**
@@ -474,18 +470,15 @@ final class PropertyConverter
         {
             return (File) value;
         }
-        else if (value instanceof Path)
+        if (value instanceof Path)
         {
             return ((Path) value).toFile();
         }
-        else if (value instanceof String)
+        if (value instanceof String)
         {
             return new File((String) value);
         }
-        else
-        {
-            throw new ConversionException("The value " + value + " can't be converted to a File");
-        }
+        throw new ConversionException("The value " + value + " can't be converted to a File");
     }
 
     /**
@@ -502,18 +495,15 @@ final class PropertyConverter
         {
             return ((File) value).toPath();
         }
-        else if (value instanceof Path)
+        if (value instanceof Path)
         {
             return (Path) value;
         }
-        else if (value instanceof String)
+        if (value instanceof String)
         {
             return Paths.get((String) value);
         }
-        else
-        {
-            throw new ConversionException("The value " + value + " can't be converted to a Path");
-        }
+        throw new ConversionException("The value " + value + " can't be converted to a Path");
     }
 
     /**
@@ -529,20 +519,16 @@ final class PropertyConverter
         {
             return (URI) value;
         }
-        else if (value instanceof String)
-        {
-            try
-            {
-                return new URI((String) value);
-            }
-            catch (final URISyntaxException e)
-            {
-                throw new ConversionException("The value " + value + " can't be converted to an URI", e);
-            }
-        }
-        else
-        {
+        if (!(value instanceof String)) {
             throw new ConversionException("The value " + value + " can't be converted to an URI");
+        }
+        try
+        {
+            return new URI((String) value);
+        }
+        catch (final URISyntaxException e)
+        {
+            throw new ConversionException("The value " + value + " can't be converted to an URI", e);
         }
     }
 
@@ -559,20 +545,16 @@ final class PropertyConverter
         {
             return (URL) value;
         }
-        else if (value instanceof String)
-        {
-            try
-            {
-                return new URL((String) value);
-            }
-            catch (final MalformedURLException e)
-            {
-                throw new ConversionException("The value " + value + " can't be converted to an URL", e);
-            }
-        }
-        else
-        {
+        if (!(value instanceof String)) {
             throw new ConversionException("The value " + value + " can't be converted to an URL");
+        }
+        try
+        {
+            return new URL((String) value);
+        }
+        catch (final MalformedURLException e)
+        {
+            throw new ConversionException("The value " + value + " can't be converted to an URL", e);
         }
     }
 
@@ -589,20 +571,16 @@ final class PropertyConverter
         {
             return (Pattern) value;
         }
-        else if (value instanceof String)
-        {
-            try
-            {
-                return Pattern.compile((String) value);
-            }
-            catch (final PatternSyntaxException e)
-            {
-                throw new ConversionException("The value " + value + " can't be converted to a Pattern", e);
-            }
-        }
-        else
-        {
+        if (!(value instanceof String)) {
             throw new ConversionException("The value " + value + " can't be converted to a Pattern");
+        }
+        try
+        {
+            return Pattern.compile((String) value);
+        }
+        catch (final PatternSyntaxException e)
+        {
+            throw new ConversionException("The value " + value + " can't be converted to a Pattern", e);
         }
     }
 
@@ -619,25 +597,21 @@ final class PropertyConverter
         {
             return (Locale) value;
         }
-        else if (value instanceof String)
-        {
-            final String[] elements = ((String) value).split("_");
-            final int size = elements.length;
-
-            if (size >= 1 && (elements[0].length() == 2 || elements[0].isEmpty()))
-            {
-                final String language = elements[0];
-                final String country = size >= 2 ? elements[1] : "";
-                final String variant = size >= 3 ? elements[2] : "";
-
-                return new Locale(language, country, variant);
-            }
+        if (!(value instanceof String)) {
             throw new ConversionException("The value " + value + " can't be converted to a Locale");
         }
-        else
+        final String[] elements = ((String) value).split("_");
+        final int size = elements.length;
+
+        if (size >= 1 && (elements[0].length() == 2 || elements[0].isEmpty()))
         {
-            throw new ConversionException("The value " + value + " can't be converted to a Locale");
+            final String language = elements[0];
+            final String country = size >= 2 ? elements[1] : "";
+            final String variant = size >= 3 ? elements[2] : "";
+
+            return new Locale(language, country, variant);
         }
+        throw new ConversionException("The value " + value + " can't be converted to a Locale");
     }
 
     /**
@@ -660,54 +634,50 @@ final class PropertyConverter
         {
             return (Color) value;
         }
-        else if (value instanceof String && !StringUtils.isBlank((String) value))
-        {
-            String color = ((String) value).trim();
-
-            final int[] components = new int[3];
-
-            // check the size of the string
-            final int minlength = components.length * 2;
-            if (color.length() < minlength)
-            {
-                throw new ConversionException("The value " + value + " can't be converted to a Color");
-            }
-
-            // remove the leading #
-            if (color.startsWith("#"))
-            {
-                color = color.substring(1);
-            }
-
-            try
-            {
-                // parse the components
-                for (int i = 0; i < components.length; i++)
-                {
-                    components[i] = Integer.parseInt(color.substring(2 * i, 2 * i + 2), HEX_RADIX);
-                }
-
-                // parse the transparency
-                int alpha;
-                if (color.length() >= minlength + 2)
-                {
-                    alpha = Integer.parseInt(color.substring(minlength, minlength + 2), HEX_RADIX);
-                }
-                else
-                {
-                    alpha = Color.black.getAlpha();
-                }
-
-                return new Color(components[0], components[1], components[2], alpha);
-            }
-            catch (final Exception e)
-            {
-                throw new ConversionException("The value " + value + " can't be converted to a Color", e);
-            }
+        if (!(value instanceof String) || StringUtils.isBlank((String) value)) {
+            throw new ConversionException("The value " + value + " can't be converted to a Color");
         }
-        else
+        String color = ((String) value).trim();
+
+        final int[] components = new int[3];
+
+        // check the size of the string
+        final int minlength = components.length * 2;
+        if (color.length() < minlength)
         {
             throw new ConversionException("The value " + value + " can't be converted to a Color");
+        }
+
+        // remove the leading #
+        if (color.startsWith("#"))
+        {
+            color = color.substring(1);
+        }
+
+        try
+        {
+            // parse the components
+            for (int i = 0; i < components.length; i++)
+            {
+                components[i] = Integer.parseInt(color.substring(2 * i, 2 * i + 2), HEX_RADIX);
+            }
+
+            // parse the transparency
+            int alpha;
+            if (color.length() >= minlength + 2)
+            {
+                alpha = Integer.parseInt(color.substring(minlength, minlength + 2), HEX_RADIX);
+            }
+            else
+            {
+                alpha = Color.black.getAlpha();
+            }
+
+            return new Color(components[0], components[1], components[2], alpha);
+        }
+        catch (final Exception e)
+        {
+            throw new ConversionException("The value " + value + " can't be converted to a Color", e);
         }
     }
 
@@ -726,20 +696,16 @@ final class PropertyConverter
         {
             return (InetAddress) value;
         }
-        else if (value instanceof String)
-        {
-            try
-            {
-                return InetAddress.getByName((String) value);
-            }
-            catch (final UnknownHostException e)
-            {
-                throw new ConversionException("The value " + value + " can't be converted to a InetAddress", e);
-            }
-        }
-        else
-        {
+        if (!(value instanceof String)) {
             throw new ConversionException("The value " + value + " can't be converted to a InetAddress");
+        }
+        try
+        {
+            return InetAddress.getByName((String) value);
+        }
+        catch (final UnknownHostException e)
+        {
+            throw new ConversionException("The value " + value + " can't be converted to a InetAddress", e);
         }
     }
 
@@ -758,22 +724,18 @@ final class PropertyConverter
         {
             return value;
         }
-        else if (value instanceof String)
-        {
-            try
-            {
-                final Constructor<?> ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME)
-                        .getConstructor(String.class);
-                return ctor.newInstance(value);
-            }
-            catch (final Exception e)
-            {
-                throw new ConversionException("The value " + value + " can't be converted to a InternetAddress", e);
-            }
-        }
-        else
-        {
+        if (!(value instanceof String)) {
             throw new ConversionException("The value " + value + " can't be converted to a InternetAddress");
+        }
+        try
+        {
+            final Constructor<?> ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME)
+                    .getConstructor(String.class);
+            return ctor.newInstance(value);
+        }
+        catch (final Exception e)
+        {
+            throw new ConversionException("The value " + value + " can't be converted to a InternetAddress", e);
         }
     }
 
@@ -801,7 +763,7 @@ final class PropertyConverter
         {
             return cls.cast(value);
         }
-        else if (value instanceof String)
+        if (value instanceof String)
         {
             try
             {
@@ -812,19 +774,15 @@ final class PropertyConverter
                 throw new ConversionException("The value " + value + " can't be converted to a " + cls.getName());
             }
         }
-        else if (value instanceof Number)
-        {
-            try
-            {
-                final E[] enumConstants = cls.getEnumConstants();
-                return enumConstants[((Number) value).intValue()];
-            }
-            catch (final Exception e)
-            {
-                throw new ConversionException("The value " + value + " can't be converted to a " + cls.getName());
-            }
+        if (!(value instanceof Number)) {
+            throw new ConversionException("The value " + value + " can't be converted to a " + cls.getName());
         }
-        else
+        try
+        {
+            final E[] enumConstants = cls.getEnumConstants();
+            return enumConstants[((Number) value).intValue()];
+        }
+        catch (final Exception e)
         {
             throw new ConversionException("The value " + value + " can't be converted to a " + cls.getName());
         }
@@ -844,24 +802,20 @@ final class PropertyConverter
         {
             return (Date) value;
         }
-        else if (value instanceof Calendar)
+        if (value instanceof Calendar)
         {
             return ((Calendar) value).getTime();
         }
-        else if (value instanceof String)
-        {
-            try
-            {
-                return new SimpleDateFormat(format).parse((String) value);
-            }
-            catch (final ParseException e)
-            {
-                throw new ConversionException("The value " + value + " can't be converted to a Date", e);
-            }
-        }
-        else
-        {
+        if (!(value instanceof String)) {
             throw new ConversionException("The value " + value + " can't be converted to a Date");
+        }
+        try
+        {
+            return new SimpleDateFormat(format).parse((String) value);
+        }
+        catch (final ParseException e)
+        {
+            throw new ConversionException("The value " + value + " can't be converted to a Date", e);
         }
     }
 
@@ -879,28 +833,24 @@ final class PropertyConverter
         {
             return (Calendar) value;
         }
-        else if (value instanceof Date)
+        if (value instanceof Date)
         {
             final Calendar calendar = Calendar.getInstance();
             calendar.setTime((Date) value);
             return calendar;
         }
-        else if (value instanceof String)
-        {
-            try
-            {
-                final Calendar calendar = Calendar.getInstance();
-                calendar.setTime(new SimpleDateFormat(format).parse((String) value));
-                return calendar;
-            }
-            catch (final ParseException e)
-            {
-                throw new ConversionException("The value " + value + " can't be converted to a Calendar", e);
-            }
-        }
-        else
-        {
+        if (!(value instanceof String)) {
             throw new ConversionException("The value " + value + " can't be converted to a Calendar");
+        }
+        try
+        {
+            final Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new SimpleDateFormat(format).parse((String) value));
+            return calendar;
+        }
+        catch (final ParseException e)
+        {
+            throw new ConversionException("The value " + value + " can't be converted to a Calendar", e);
         }
     }
 

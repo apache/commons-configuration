@@ -246,15 +246,12 @@ public class FileHandler
         {
             return null;
         }
-        else if (loc.getSourceURL() != null)
+        if (loc.getSourceURL() != null)
         {
             return FileLocatorUtils.fileFromURL(loc.getSourceURL());
         }
-        else
-        {
-            return FileLocatorUtils.getFile(loc.getBasePath(),
-                    loc.getFileName());
-        }
+        return FileLocatorUtils.getFile(loc.getBasePath(),
+                loc.getFileName());
     }
 
     /**

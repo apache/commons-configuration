@@ -50,7 +50,7 @@ public class StrictConfigurationComparator implements ConfigurationComparator
         {
             return true;
         }
-        else if (a == null || b == null)
+        if (a == null || b == null)
         {
             return false;
         }

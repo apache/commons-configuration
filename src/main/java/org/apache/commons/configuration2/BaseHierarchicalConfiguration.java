@@ -817,14 +817,10 @@ public class BaseHierarchicalConfiguration extends AbstractHierarchicalConfigura
                     while (children.hasNext())
                     {
                         nd = children.next();
-                        if (refHandler.getReference(nd) == null)
-                        {
-                            newNodes.add(nd);
-                        }
-                        else
-                        {
+                        if (refHandler.getReference(nd) != null) {
                             break;
                         }
+                        newNodes.add(nd);
                     }
 
                     // Insert all new nodes

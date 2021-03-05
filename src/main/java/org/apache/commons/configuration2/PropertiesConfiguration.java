@@ -434,16 +434,12 @@ public class PropertiesConfiguration extends BaseConfiguration
                     line = line.substring(i);
                 }
 
-                if (checkCombineLines(line))
-                {
-                    line = line.substring(0, line.length() - 1);
-                    buffer.append(line);
-                }
-                else
-                {
+                if (!checkCombineLines(line)) {
                     buffer.append(line);
                     break;
                 }
+                line = line.substring(0, line.length() - 1);
+                buffer.append(line);
             }
             return buffer.toString();
         }
@@ -793,16 +789,12 @@ public class PropertiesConfiguration extends BaseConfiguration
 
                 line = line.trim();
 
-                if (checkCombineLines(line))
-                {
-                    line = line.substring(0, line.length() - 1);
-                    buffer.append(line);
-                }
-                else
-                {
+                if (!checkCombineLines(line)) {
                     buffer.append(line);
                     break;
                 }
+                line = line.substring(0, line.length() - 1);
+                buffer.append(line);
             }
             return buffer.toString();
         }
@@ -1443,7 +1435,7 @@ public class PropertiesConfiguration extends BaseConfiguration
 
                 continue;
             }
-            else if (ch == '\\')
+            if (ch == '\\')
             {
                 hadSlash = true;
                 continue;

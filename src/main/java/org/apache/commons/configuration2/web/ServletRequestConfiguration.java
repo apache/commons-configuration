@@ -55,28 +55,25 @@ public class ServletRequestConfiguration extends BaseWebConfiguration
         {
             return null;
         }
-        else if (values.length == 1)
+        if (values.length == 1)
         {
             return handleDelimiters(values[0]);
         }
-        else
+        // ensure that escape characters in all list elements are removed
+        final List<Object> result = new ArrayList<>(values.length);
+        for (final String value : values)
         {
-            // ensure that escape characters in all list elements are removed
-            final List<Object> result = new ArrayList<>(values.length);
-            for (final String value : values)
+            final Object val = handleDelimiters(value);
+            if (val instanceof Collection)
             {
-                final Object val = handleDelimiters(value);
-                if (val instanceof Collection)
-                {
-                    result.addAll((Collection<?>) val);
-                }
-                else
-                {
-                    result.add(val);
-                }
+                result.addAll((Collection<?>) val);
             }
-            return result;
+            else
+            {
+                result.add(val);
+            }
         }
+        return result;
     }
 
     @Override
