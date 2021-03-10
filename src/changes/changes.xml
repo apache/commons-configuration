@@ -97,7 +97,7 @@
          Update servlet-api from 2.4 to 2.5 #58.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
-         Update maven-checkstyle-plugin from 3.1.0 to 3.1.1 #57.
+         Update maven-checkstyle-plugin from 3.1.0 to 3.1.2, #57, #97.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
          Update commons-pool2 from 2.8.0 to 2.9.0, #61.
@@ -109,7 +109,7 @@
          Update optional commons-codec from 1.14 to 1.15.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
-         Update checkstyle from 8.26 to 8.39, #66, #71, #90.
+         Update checkstyle from 8.26 to 8.41, #66, #71, #90, #101.
        </action>
        <action dev="ggregory" type="update" due-to="Gary Gregory">
          Update commons.jacoco.version 0.8.5 to 0.8.6 (Fixes Java 15 builds).
@@ -133,7 +133,10 @@
          Update Apache Commons VFS 2.6.0 -> 2.8.0.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
-         Bump jackson-databind from 2.11.3 to 2.12.1 ,#88, #94
+         Bump jackson-databind from 2.11.3 to 2.12.1 ,#88, #94.
+       </action>
+       <action type="update" dev="ggregory" due-to="Dependabot">
+         Bump actions/cache from v2 to v2.1.4 #99.
        </action>
     </release>
     <release version="2.7" date="2020-03-07"
