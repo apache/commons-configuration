@@ -56,7 +56,7 @@
          Add ImmutableConfiguration.getEnum() methods.
        </action>
        <action type="update" dev="ggregory" issue="CONFIGURATION-790" due-to="Gary Gregory, Dependabot">
-         Update optional com.fasterxml.jackson.core:jackson-databind from 2.10.3 to 2.11.3, #60.
+         Update optional com.fasterxml.jackson.core:jackson-databind from 2.10.3 to 2.12.2, #60.
        </action>
        <action type="update" dev="ggregory" due-to="Oliver B. Fischer">
          Mention EnvironmentConfiguration in the list of configuration sources #45.
@@ -81,8 +81,8 @@
        <action type="update" dev="ggregory" due-to="Dependabot">
          Update commons-parent from 50 to 51.
        </action>
-       <action type="update" dev="ggregory" due-to="Dependabot">
-         Update mailapi from 1.6.4 to 1.6.5 #48.
+       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
+         Update mailapi from 1.6.4 to 1.6.6 #48.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
          Update spotbugs-maven-plugin from 3.1.12.2 to 4.2.0, #55, #75, #79, #93.
@@ -120,14 +120,14 @@
        <action type="update" dev="ggregory" due-to="Dependabot">
          Bump actions/setup-java from v1.4.2 to v1.4.3 #73.
        </action>
-       <action type="update" dev="ggregory" due-to="Dependabot">
-         Bump snakeyaml from 1.26 to 1.27 #68.
+       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
+         Bump snakeyaml from 1.26 to 1.28 #68.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Update commons.japicmp.version 0.14.1 -> 0.15.2.
        </action>
-       <action type="update" dev="ggregory" due-to="Dependabot">
-         Bump junit from 4.13 to 4.13.1 #78.
+       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
+         Bump junit from 4.13 to 4.13.2 #78.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Update Apache Commons VFS 2.6.0 -> 2.8.0.
