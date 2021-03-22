@@ -568,7 +568,7 @@
     <commons.japicmp.version>0.15.2</commons.japicmp.version>
     <japicmp.skip>false</japicmp.skip>
     <commons.jacoco.version>0.8.6</commons.jacoco.version>
-    <commons.spotbugs.version>4.2.0</commons.spotbugs.version>
+    <commons.spotbugs.version>4.2.2</commons.spotbugs.version>
     <commons.javadoc.version>3.1.1</commons.javadoc.version>
     <checkstyle.version>8.41</checkstyle.version>
 
