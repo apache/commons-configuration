@@ -61,7 +61,7 @@ public class TestBaseConfiguration
 
     protected static Class<?> missingElementException = NoSuchElementException.class;
     protected static Class<?> incompatibleElementException = ConversionException.class;
-    protected BaseConfiguration config = null;
+    protected BaseConfiguration config;
 
     @Before
     public void setUp() throws Exception
