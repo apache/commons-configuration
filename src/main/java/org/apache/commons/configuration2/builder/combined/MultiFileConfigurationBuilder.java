@@ -110,7 +110,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * {@code MultiFileConfigurationBuilder}.
      */
     private final EventListener<ConfigurationBuilderEvent> managedBuilderDelegationListener =
-            event -> handleManagedBuilderEvent(event);
+            this::handleManagedBuilderEvent;
 
     /**
      * Creates a new instance of {@code MultiFileConfigurationBuilder} and sets

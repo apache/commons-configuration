@@ -657,23 +657,18 @@ public class TestInMemoryNodeModel
         for (int i = 0; i < threadCount; i++)
         {
             final String authorName = authorPrefix + i;
-            threads[i] = new Thread()
-            {
-                @Override
-                public void run()
+            threads[i] = new Thread(() -> {
+                try
                 {
-                    try
-                    {
-                        latch.await();
-                        model.addProperty(KEY,
-                                Collections.singleton(authorName), resolver);
-                    }
-                    catch (final InterruptedException iex)
-                    {
-                        // ignore
-                    }
+                    latch.await();
+                    model.addProperty(KEY,
+                            Collections.singleton(authorName), resolver);
                 }
-            };
+                catch (final InterruptedException iex)
+                {
+                    // ignore
+                }
+            });
             threads[i].start();
         }
         latch.countDown();
