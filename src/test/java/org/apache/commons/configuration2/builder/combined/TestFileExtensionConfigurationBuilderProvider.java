@@ -56,11 +56,9 @@ public class TestFileExtensionConfigurationBuilderProvider
      */
     private static FileExtensionConfigurationBuilderProvider setUpProvider()
     {
-        final FileExtensionConfigurationBuilderProvider provider =
-                new FileExtensionConfigurationBuilderProvider(
-                        BasicConfigurationBuilder.class.getName(), null,
-                        MATCH_CLASS, DEF_CLASS, EXT, null);
-        return provider;
+        return new FileExtensionConfigurationBuilderProvider(
+                BasicConfigurationBuilder.class.getName(), null,
+                MATCH_CLASS, DEF_CLASS, EXT, null);
     }
 
     /**

@@ -373,8 +373,7 @@ public class BaseConfigurationBuilderProvider implements
             throws Exception
     {
         final Class<?> cls = ConfigurationUtils.loadClass(paramcls);
-        final BuilderParameters p = (BuilderParameters) cls.newInstance();
-        return p;
+        return (BuilderParameters) cls.newInstance();
     }
 
     /**

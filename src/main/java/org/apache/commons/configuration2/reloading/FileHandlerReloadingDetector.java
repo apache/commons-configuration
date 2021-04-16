@@ -164,10 +164,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
                 }
                 else
                 {
-                    if (modifiedMillis != lastModifiedMillis)
-                    {
-                        return true;
-                    }
+                    return modifiedMillis != lastModifiedMillis;
                 }
             }
         }

@@ -147,9 +147,7 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
     protected String resolveFileURI()
     {
         final FileSystem fs = getFileHandler().getFileSystem();
-        final String uri =
-                fs.getPath(null, getFileHandler().getURL(), getFileHandler()
-                        .getBasePath(), getFileHandler().getFileName());
-        return uri;
+        return fs.getPath(null, getFileHandler().getURL(), getFileHandler()
+                .getBasePath(), getFileHandler().getFileName());
     }
 }

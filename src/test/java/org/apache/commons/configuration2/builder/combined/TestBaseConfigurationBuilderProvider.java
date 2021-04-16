@@ -91,16 +91,14 @@ public class TestBaseConfigurationBuilderProvider
                         }
                     }
                 };
-        final ConfigurationDeclaration decl =
-                new ConfigurationDeclaration(parentBuilder, declConfig)
-                {
-                    @Override
-                    protected Object interpolate(final Object value)
-                    {
-                        return value;
-                    }
-                };
-        return decl;
+        return new ConfigurationDeclaration(parentBuilder, declConfig)
+        {
+            @Override
+            protected Object interpolate(final Object value)
+            {
+                return value;
+            }
+        };
     }
 
     /**
