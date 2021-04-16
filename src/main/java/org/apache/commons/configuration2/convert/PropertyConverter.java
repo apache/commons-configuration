@@ -663,7 +663,7 @@ final class PropertyConverter
             }
 
             // parse the transparency
-            int alpha;
+            final int alpha;
             if (color.length() >= minlength + 2)
             {
                 alpha = Integer.parseInt(color.substring(minlength, minlength + 2), HEX_RADIX);

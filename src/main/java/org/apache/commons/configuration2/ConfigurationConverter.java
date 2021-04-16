@@ -67,7 +67,7 @@ public final class ConfigurationConverter
     public static Properties getProperties(final ImmutableConfiguration config)
     {
         final Properties props = new Properties();
-        ListDelimiterHandler listHandler;
+        final ListDelimiterHandler listHandler;
         boolean useDelimiterHandler;
 
         if (config instanceof AbstractConfiguration)

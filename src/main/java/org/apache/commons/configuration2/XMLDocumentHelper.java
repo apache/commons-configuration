@@ -139,8 +139,8 @@ class XMLDocumentHelper
     public static XMLDocumentHelper forSourceDocument(final Document srcDoc)
             throws ConfigurationException
     {
-        String pubID;
-        String sysID;
+        final String pubID;
+        final String sysID;
         if (srcDoc.getDoctype() != null)
         {
             pubID = srcDoc.getDoctype().getPublicId();

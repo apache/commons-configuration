@@ -1427,7 +1427,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     public List<Object> getList(final String key, final List<?> defaultValue)
     {
         final Object value = getProperty(key);
-        List<Object> list;
+        final List<Object> list;
 
         if (value instanceof String)
         {
@@ -1856,7 +1856,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
             return null;
         }
 
-        Collection<T> result;
+        final Collection<T> result;
         if (target == null)
         {
             result = new ArrayList<>(defaultValue);

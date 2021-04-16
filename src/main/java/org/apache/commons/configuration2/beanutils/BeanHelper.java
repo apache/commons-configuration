@@ -384,7 +384,7 @@ public final class BeanHelper
     private static Collection<Object> createPropertyCollection(final String propName,
             final Class<?> propertyClass)
     {
-        Collection<Object> beanCollection;
+        final Collection<Object> beanCollection;
 
         if (List.class.isAssignableFrom(propertyClass))
         {

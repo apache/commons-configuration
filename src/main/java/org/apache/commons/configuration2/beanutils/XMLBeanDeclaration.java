@@ -374,7 +374,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
                 if (nested.containsKey(child.nodeName()))
                 {
                     final Object obj = nested.get(child.nodeName());
-                    List<BeanDeclaration> list;
+                    final List<BeanDeclaration> list;
                     if (obj instanceof List)
                     {
                         // Safe because we created the lists ourselves.

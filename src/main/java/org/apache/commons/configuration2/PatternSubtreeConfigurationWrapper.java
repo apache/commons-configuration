@@ -441,7 +441,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
      */
     private String makePath(final String item)
     {
-        String pathPattern;
+        final String pathPattern;
         if ((item.isEmpty() || item.startsWith("/")) && trailing)
         {
             pathPattern = path.substring(0, path.length() - 1);

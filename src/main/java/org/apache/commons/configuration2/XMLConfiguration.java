@@ -709,8 +709,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             final boolean trim, final Map<String, String> attrmap,
             final Map<ImmutableNode, Object> elemRefs)
     {
-        ImmutableNode addedChildNode;
-        Collection<String> values;
+        final ImmutableNode addedChildNode;
+        final Collection<String> values;
 
         if (value != null)
         {

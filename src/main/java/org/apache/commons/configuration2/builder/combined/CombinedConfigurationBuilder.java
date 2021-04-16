@@ -1449,7 +1449,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                 throws ConfigurationException
         {
             final boolean createBuilders = builders.isEmpty();
-            List<ConfigurationBuilder<? extends Configuration>> newBuilders;
+            final List<ConfigurationBuilder<? extends Configuration>> newBuilders;
             if (createBuilders)
             {
                 newBuilders = new ArrayList<>(srcDecl.size());
@@ -1461,7 +1461,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
 
             for (int i = 0; i < srcDecl.size(); i++)
             {
-                ConfigurationBuilder<? extends Configuration> b;
+                final ConfigurationBuilder<? extends Configuration> b;
                 if (createBuilders)
                 {
                     b = createConfigurationBuilder(srcDecl.get(i));

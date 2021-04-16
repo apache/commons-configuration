@@ -785,7 +785,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         protected PreparedStatement createStatement(final String sql, final boolean nameCol)
                 throws SQLException
         {
-            String statement;
+            final String statement;
             if (nameCol && configurationNameColumn != null)
             {
                 final StringBuilder buf = new StringBuilder(sql);

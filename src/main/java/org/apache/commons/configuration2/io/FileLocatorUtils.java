@@ -157,7 +157,7 @@ public final class FileLocatorUtils
      */
     static File constructFile(final String basePath, final String fileName)
     {
-        File file;
+        final File file;
 
         final File absolute = new File(fileName);
         if (StringUtils.isEmpty(basePath) || absolute.isAbsolute())
