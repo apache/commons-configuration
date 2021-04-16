@@ -148,30 +148,11 @@ public class TestFileHandler
      */
     private static String readFile(final File f)
     {
-        Reader in = null;
-        try
-        {
-            in = new FileReader(f);
+        try (Reader in = new FileReader(f)) {
             return readReader(in);
-        }
-        catch (final IOException ioex)
-        {
+        } catch (final IOException ioex) {
             fail("Could not read file: " + ioex);
             return null; // cannot happen
-        }
-        finally
-        {
-            if (in != null)
-            {
-                try
-                {
-                    in.close();
-                }
-                catch (final IOException ioex)
-                {
-                    // ignore
-                }
-            }
         }
     }
 
@@ -726,15 +707,9 @@ public class TestFileHandler
     public void testSaveToStream() throws ConfigurationException, IOException
     {
         final File file = folder.newFile();
-        final FileOutputStream out = new FileOutputStream(file);
-        final FileHandler handler = new FileHandler(new FileBasedTestImpl());
-        try
-        {
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            final FileHandler handler = new FileHandler(new FileBasedTestImpl());
             handler.save(out);
-        }
-        finally
-        {
-            out.close();
         }
         assertEquals("Wrong content", CONTENT, readFile(file));
     }
