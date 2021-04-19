@@ -102,8 +102,8 @@
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
          Update commons-pool2 from 2.8.0 to 2.9.0, #61.
        </action>
-       <action type="update" dev="ggregory" due-to="Dependabot">
-         Update actions/setup-java from v1.4.0 to v1.4.2 #63, #65.
+       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
+         Update actions/setup-java from v1.4.0 to v2 #63, #65.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Update optional commons-codec from 1.14 to 1.15.
