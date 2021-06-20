@@ -103,7 +103,7 @@ public class DefaultListDelimiterHandler extends AbstractListDelimiterHandler
     @Override
     public Object escapeList(final List<?> values, final ValueTransformer transformer)
     {
-        final Object[] escapedValues = new String[values.size()];
+        final Object[] escapedValues = new Object[values.size()];
         int idx = 0;
         for (final Object v : values)
         {
