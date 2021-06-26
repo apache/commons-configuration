@@ -815,6 +815,27 @@
         <coveralls.skip>true</coveralls.skip>
       </properties>
     </profile>
+    <profile>
+      <id>java16</id>
+      <!-- For testing with CGLIB on Java 16 and 17-ea. -->
+      <activation>
+        <jdk>[16,)</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <argLine>
+                --illegal-access=permit
+                --add-opens java.base/java.lang=ALL-UNNAMED                     
+              </argLine>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <!-- Uncomment this and set the path accordingly to enable YourKit -->
     <!-- http://www.yourkit.com/docs/80/help/agent.jsp -->
     <!-- <profile>
