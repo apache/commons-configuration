@@ -739,15 +739,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
     {
         final Map<String, Object> filteredMap =
                 new HashMap<>(getParameters());
-        for (final Iterator<String> it = filteredMap.keySet().iterator(); it
-                .hasNext();)
-        {
-            final String key = it.next();
-            if (key.startsWith(BuilderParameters.RESERVED_PARAMETER_PREFIX))
-            {
-                it.remove();
-            }
-        }
+        filteredMap.keySet().removeIf(key -> key.startsWith(BuilderParameters.RESERVED_PARAMETER_PREFIX));
         return filteredMap;
     }
 

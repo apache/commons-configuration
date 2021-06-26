@@ -104,26 +104,21 @@ public class TestSystemConfiguration
         final AtomicBoolean stop = new AtomicBoolean();
         final String property =
                 SystemConfiguration.class.getName() + ".testProperty";
-        final Thread t = new Thread()
-        {
-            @Override
-            public void run()
+        final Thread t = new Thread(() -> {
+            boolean setValue = true;
+            while (!stop.get())
             {
-                boolean setValue = true;
-                while (!stop.get())
+                if (setValue)
                 {
-                    if (setValue)
-                    {
-                        System.setProperty(property, "true");
-                    }
-                    else
-                    {
-                        System.clearProperty(property);
-                    }
-                    setValue = !setValue;
+                    System.setProperty(property, "true");
                 }
+                else
+                {
+                    System.clearProperty(property);
+                }
+                setValue = !setValue;
             }
-        };
+        });
         try
         {
             t.start();

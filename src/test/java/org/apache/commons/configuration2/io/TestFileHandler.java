@@ -1351,38 +1351,10 @@ public class TestFileHandler
         for (int i = 0; i < loops; i++)
         {
             final FileHandler handler = new FileHandler();
-            final Thread t1 = new Thread()
-            {
-                @Override
-                public void run()
-                {
-                    handler.setFileSystem(fileSystem);
-                }
-            };
-            final Thread t2 = new Thread()
-            {
-                @Override
-                public void run()
-                {
-                    handler.setFileName(TEST_FILENAME);
-                }
-            };
-            final Thread t3 = new Thread()
-            {
-                @Override
-                public void run()
-                {
-                    handler.setEncoding(encoding);
-                }
-            };
-            final Thread t4 = new Thread()
-            {
-                @Override
-                public void run()
-                {
-                    handler.setLocationStrategy(locationStrategy);
-                }
-            };
+            final Thread t1 = new Thread(() -> handler.setFileSystem(fileSystem));
+            final Thread t2 = new Thread(() -> handler.setFileName(TEST_FILENAME));
+            final Thread t3 = new Thread(() -> handler.setEncoding(encoding));
+            final Thread t4 = new Thread(() -> handler.setLocationStrategy(locationStrategy));
             final List<Thread> threads = Arrays.asList(t1, t2, t3, t4);
             for (final Thread t : threads)
             {
