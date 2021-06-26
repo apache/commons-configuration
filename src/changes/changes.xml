@@ -28,6 +28,9 @@
        <action issue="CONFIGURATION-795" type="update" dev="ggregory" due-to="dpeger">
          Computation of blank lines after header comment #82.
        </action>
+       <action issue="CONFIGURATION-802" type="update" dev="ggregory" due-to="Arturo Bernal">
+         Use final #111.
+       </action>
        <action issue="CONFIGURATION-803" type="update" dev="ggregory" due-to="Arturo Bernal">
          Java 8 lambda improvements and more #112.
        </action>
