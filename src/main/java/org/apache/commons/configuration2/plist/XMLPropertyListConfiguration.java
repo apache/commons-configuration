@@ -421,7 +421,7 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
         }
         else if (value instanceof byte[])
         {
-            String base64;
+            final String base64;
             try
             {
                 base64 = new String(Base64.encodeBase64((byte[]) value), DATA_ENCODING);

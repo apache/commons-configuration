@@ -734,7 +734,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
      */
     private boolean lineContinues(final String line, final int pos)
     {
-        String s;
+        final String s;
 
         if (pos >= line.length())
         {
@@ -1116,7 +1116,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
                 private List<ImmutableNode> filterChildrenOfGlobalSection(
                         final ImmutableNode node, final List<ImmutableNode> children)
                 {
-                    List<ImmutableNode> filteredList;
+                    final List<ImmutableNode> filteredList;
                     if (node == getRootNode())
                     {
                         filteredList =

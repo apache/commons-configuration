@@ -273,7 +273,7 @@ public class TestReadWriteSynchronizer
             for (int i = 0; i < numberOfUpdates; i++)
             {
                 sync.beginWrite();
-                Account acSource;
+                final Account acSource;
                 Account acDest;
                 if (account1.getAmount() < account2.getAmount())
                 {

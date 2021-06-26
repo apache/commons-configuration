@@ -507,7 +507,7 @@ public class PropertiesConfiguration extends BaseConfiguration
             super(writer, delHandler, value -> {
                 String valueString = String.valueOf(value);
 
-                CharSequenceTranslator translator;
+                final CharSequenceTranslator translator;
                 if (escapeUnicode)
                 {
                     translator = new AggregateTranslator(new LookupTranslator(JUP_CHARS_ESCAPE), ESCAPER);
@@ -1744,7 +1744,7 @@ public class PropertiesConfiguration extends BaseConfiguration
     boolean propertyLoaded(final String key, final String value, final Deque<URL> seenStack)
             throws ConfigurationException
     {
-        boolean result;
+        final boolean result;
 
         if (StringUtils.isNotEmpty(getInclude())
                 && key.equalsIgnoreCase(getInclude()))

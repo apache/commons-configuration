@@ -64,7 +64,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
     @Override
     protected AbstractConfiguration getConfiguration()
     {
-        AbstractConfiguration config;
+        final AbstractConfiguration config;
         final Properties parameters = new Properties();
         parameters.setProperty("key1", "value1");
         parameters.setProperty("key2", "value2");

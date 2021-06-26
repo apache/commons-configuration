@@ -116,7 +116,7 @@ public class VFSFileSystem extends DefaultFileSystem
     @Override
     public InputStream getInputStream(final URL url) throws ConfigurationException
     {
-        FileObject file;
+        final FileObject file;
         try
         {
             final FileSystemOptions opts = getOptions(url.getProtocol());
@@ -273,7 +273,7 @@ public class VFSFileSystem extends DefaultFileSystem
         }
         try
         {
-            FileName path;
+            final FileName path;
             if (basePath != null && UriParser.extractScheme(file) == null)
             {
                 final FileName base = resolveURI(basePath);

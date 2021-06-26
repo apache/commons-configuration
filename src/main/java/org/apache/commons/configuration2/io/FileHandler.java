@@ -730,7 +730,7 @@ public class FileHandler
      */
     public void load(final File file) throws ConfigurationException
     {
-        URL url;
+        final URL url;
         try
         {
             url = FileLocatorUtils.toURL(file);
@@ -1221,7 +1221,7 @@ public class FileHandler
     private void save(final String fileName, final FileLocator locator)
             throws ConfigurationException
     {
-        URL url;
+        final URL url;
         try
         {
             url = FileLocatorUtils.obtainFileSystem(locator).getURL(

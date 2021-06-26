@@ -83,7 +83,7 @@ public class CombinedConfigurationBuilderProvider extends
             final ConfigurationDeclaration decl, final Collection<BuilderParameters> params)
             throws Exception
     {
-        CombinedConfigurationBuilder builder;
+        final CombinedConfigurationBuilder builder;
         if (decl.isReload())
         {
             builder = new ReloadingCombinedConfigurationBuilder();

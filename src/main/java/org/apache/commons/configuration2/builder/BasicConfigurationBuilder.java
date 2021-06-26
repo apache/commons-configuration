@@ -329,7 +329,7 @@ public class BasicConfigurationBuilder<T extends ImmutableConfiguration> impleme
      */
     public void resetResult()
     {
-        T oldResult;
+        final T oldResult;
         synchronized (this)
         {
             oldResult = result;
