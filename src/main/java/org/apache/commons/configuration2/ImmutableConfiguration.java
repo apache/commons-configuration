@@ -509,7 +509,7 @@ public interface ImmutableConfiguration
 
     /**
      * Gets a list of typed objects associated with the given configuration key
-     * returning an empty list if the key doesn't map to an existing object.
+     * returning a null if the key doesn't map to an existing object.
      *
      * @param <T> the type expected for the elements of the list
      * @param cls the class expected for the elements of the list
