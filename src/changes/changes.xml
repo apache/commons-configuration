@@ -136,7 +136,7 @@
          Bump actions/setup-java from v1.4.2 to v1.4.3 #73.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
-         Bump snakeyaml from 1.26 to 1.28 #68.
+         Bump snakeyaml from 1.26 to 1.29 #68, #126.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Update commons.japicmp.version 0.14.1 -> 0.15.2.
