@@ -28,6 +28,9 @@
        <action issue="CONFIGURATION-795" type="update" dev="ggregory" due-to="dpeger">
          Computation of blank lines after header comment #82.
        </action>
+       <action issue="CONFIGURATION-801" type="update" dev="ggregory" due-to="Arturo Bernal">
+         Remove redundant initializer #110.
+       </action>
        <action issue="CONFIGURATION-802" type="update" dev="ggregory" due-to="Arturo Bernal">
          Use final #111.
        </action>
