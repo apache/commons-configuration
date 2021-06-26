@@ -19,7 +19,6 @@ package org.apache.commons.configuration2.builder;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.configuration2.ConfigurationUtils;

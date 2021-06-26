@@ -18,6 +18,7 @@ package org.apache.commons.configuration2.tree;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -325,16 +326,16 @@ public class TestDefaultConfigurationKey
     public void testEquals()
     {
         final DefaultConfigurationKey k1 = key(TESTKEY);
-        assertTrue("Key not equal to itself", k1.equals(k1));
+        assertEquals("Key not equal to itself", k1, k1);
         final DefaultConfigurationKey k2 = key(TESTKEY);
-        assertTrue("Keys are not equal", k1.equals(k2));
-        assertTrue("Not reflexiv", k2.equals(k1));
+        assertEquals("Keys are not equal", k1, k2);
+        assertEquals("Not reflexiv", k2, k1);
         assertEquals("Hash codes not equal", k1.hashCode(), k2.hashCode());
         k2.append("anotherPart");
-        assertFalse("Keys considered equal", k1.equals(k2));
-        assertFalse("Keys considered equal (2)", k2.equals(k1));
-        assertFalse("Key equals null key", k1.equals(null));
-        assertFalse("Equal with string", k1.equals(TESTKEY));
+        assertNotEquals("Keys considered equal", k1, k2);
+        assertNotEquals("Keys considered equal (2)", k2, k1);
+        assertNotEquals("Key equals null key", null, k1);
+        assertNotEquals("Equal with string", TESTKEY, k1);
     }
 
     /**

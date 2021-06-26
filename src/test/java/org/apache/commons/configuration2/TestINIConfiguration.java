@@ -404,8 +404,7 @@ public class TestINIConfiguration
                 instance.getDouble("section2.var1"), .001);
         assertEquals("section2.var2", "bar",
                 instance.getString("section2.var2"));
-        assertEquals("section3.var1", true,
-                instance.getBoolean("section3.var1"));
+        assertTrue("section3.var1", instance.getBoolean("section3.var1"));
         assertEquals("Wrong number of sections", 3, instance.getSections()
                 .size());
         assertTrue(

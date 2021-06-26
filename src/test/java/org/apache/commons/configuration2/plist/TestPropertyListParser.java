@@ -18,6 +18,7 @@
 package org.apache.commons.configuration2.plist;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.io.Reader;
 import java.util.Calendar;
@@ -40,7 +41,7 @@ public class TestPropertyListParser
         assertEquals("quoted string", "abc", parser.removeQuotes("\"abc\""));
         assertEquals("empty quotes", "", parser.removeQuotes("\"\""));
         assertEquals("empty string", "", parser.removeQuotes(""));
-        assertEquals("null string", null, parser.removeQuotes(null));
+        assertNull("null string", parser.removeQuotes(null));
     }
 
     @Test

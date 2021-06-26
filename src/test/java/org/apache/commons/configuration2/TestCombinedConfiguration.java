@@ -681,9 +681,9 @@ public class TestCombinedConfiguration
         config.addConfiguration(pc, "props");
         final List<Configuration> list = config.getConfigurations();
         assertNotNull("No list of configurations returned", list);
-        assertTrue("Incorrect number of configurations", list.size() == 3);
+        assertEquals("Incorrect number of configurations", 3, list.size());
         final Configuration c = list.get(2);
-        assertTrue("Incorrect configuration", c == pc);
+        assertSame("Incorrect configuration", c, pc);
     }
 
     @Test
@@ -695,10 +695,10 @@ public class TestCombinedConfiguration
         config.addConfiguration(pc, "props");
         final List<String> list = config.getConfigurationNameList();
         assertNotNull("No list of configurations returned", list);
-        assertTrue("Incorrect number of configurations", list.size() == 3);
+        assertEquals("Incorrect number of configurations", 3, list.size());
         final String name = list.get(1);
         assertNotNull("No name returned", name);
-        assertTrue("Incorrect configuration name", TEST_NAME.equals(name));
+        assertEquals("Incorrect configuration name", TEST_NAME, name);
     }
 
     /**

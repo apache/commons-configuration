@@ -20,6 +20,7 @@ package org.apache.commons.configuration2;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -438,7 +439,7 @@ public class TestBaseConfiguration
         config.addProperty("booleanValue", "${boolean}");
 
         // primitive types
-        assertEquals("boolean interpolation", true, config.getBoolean("booleanValue"));
+        assertTrue("boolean interpolation", config.getBoolean("booleanValue"));
         assertEquals("byte interpolation", 1, config.getByte("value"));
         assertEquals("short interpolation", 1, config.getShort("value"));
         assertEquals("int interpolation", 1, config.getInt("value"));
@@ -509,7 +510,7 @@ public class TestBaseConfiguration
     public void testGetProperty()
     {
         /* should be empty and return null */
-        assertEquals("This returns null", config.getProperty("foo"), null);
+        assertNull("This returns null", config.getProperty("foo"));
 
         /* add a real value, and get it two different ways */
         config.setProperty("number", "1");

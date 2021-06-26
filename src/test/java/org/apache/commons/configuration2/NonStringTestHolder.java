@@ -153,7 +153,7 @@ public class NonStringTestHolder
 
     public void testIsEmpty() throws Exception
     {
-        Assert.assertTrue("Configuration should not be empty", !configuration.isEmpty());
+        Assert.assertFalse("Configuration should not be empty", configuration.isEmpty());
     }
 
 }

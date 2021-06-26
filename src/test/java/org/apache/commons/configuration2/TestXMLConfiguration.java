@@ -678,8 +678,7 @@ public class TestXMLConfiguration
         builder.configure(new FileBasedBuilderParametersImpl()
                 .setFileName(testProperties));
         XMLConfiguration config = builder.getConfiguration();
-        assertTrue("Property not found",
-                config.getProperty("test.short") != null);
+        assertNotNull("Property not found", config.getProperty("test.short"));
 
         final Thread testThreads[] = new Thread[THREAD_COUNT];
         for (int i = 0; i < testThreads.length; ++i)
@@ -691,7 +690,7 @@ public class TestXMLConfiguration
         for (int i = 0; i < LOOP_COUNT; i++)
         {
             config = builder.getConfiguration();
-            assertTrue("Property not found", config.getProperty("test.short") != null);
+            assertNotNull("Property not found", config.getProperty("test.short"));
         }
 
         for (final Thread testThread : testThreads) {

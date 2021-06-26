@@ -97,7 +97,7 @@ public class TestImmutableConfiguration
                 ConfigurationUtils
                         .unmodifiableConfiguration(createTestConfig());
         assertEquals("Wrong byte", (byte) 10, conf.getByte("test.byte"));
-        assertEquals("Wrong boolean", true, conf.getBoolean("test.boolean"));
+        assertTrue("Wrong boolean", conf.getBoolean("test.boolean"));
         assertEquals("Wrong double", 10.25, conf.getDouble("test.double"), .05);
         assertEquals("Wrong float", 20.25f, conf.getFloat("test.float"), .05);
         assertEquals("Wrong int", 10, conf.getInt("test.integer"));

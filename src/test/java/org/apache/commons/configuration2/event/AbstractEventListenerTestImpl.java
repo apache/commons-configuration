@@ -18,6 +18,7 @@ package org.apache.commons.configuration2.event;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.LinkedList;
@@ -97,7 +98,7 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements
         while (events.size() > 1)
         {
             final T e = events.remove(0);
-            assertTrue("Found end event in details", type != e.getEventType());
+            assertNotSame("Found end event in details", type, e.getEventType());
         }
     }
 

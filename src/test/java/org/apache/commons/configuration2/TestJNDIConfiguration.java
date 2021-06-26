@@ -179,11 +179,11 @@ public class TestJNDIConfiguration {
     public void testChangePrefix()
     {
         assertEquals("'test.boolean' property", "true", conf.getString("test.boolean"));
-        assertEquals("'boolean' property", null, conf.getString("boolean"));
+        assertNull("'boolean' property", conf.getString("boolean"));
 
         // change the prefix
         conf.setPrefix("test");
-        assertEquals("'test.boolean' property", null, conf.getString("test.boolean"));
+        assertNull("'test.boolean' property", conf.getString("test.boolean"));
         assertEquals("'boolean' property", "true", conf.getString("boolean"));
     }
 
@@ -194,7 +194,7 @@ public class TestJNDIConfiguration {
 
         // remove the property
         conf.clearProperty("test.boolean");
-        assertEquals("'test.boolean' property", null, conf.getString("test.boolean"));
+        assertNull("'test.boolean' property", conf.getString("test.boolean"));
 
         // change the context
         conf.setContext(new InitialContext());

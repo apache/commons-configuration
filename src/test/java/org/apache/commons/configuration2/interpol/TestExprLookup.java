@@ -132,7 +132,7 @@ public class TestExprLookup
         String str = lookup.lookup(PATTERN1);
         assertTrue(str.startsWith("Goodbye"));
         str = lookup.lookup(PATTERN2);
-        assertTrue("Incorrect value: " + str, str.equals("value Some text"));
+        assertEquals("Incorrect value: " + str, "value Some text", str);
         logger.removeAppender(app);
     }
 

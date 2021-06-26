@@ -18,9 +18,8 @@ package org.apache.commons.configuration2.tree;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -62,8 +61,8 @@ public class TestDefaultExpressionEngineSymbols
      */
     private static void expEqual(final Object o1, final Object o2)
     {
-        assertTrue("Not equal", o1.equals(o2));
-        assertTrue("Not symmetric", o2.equals(o1));
+        assertEquals("Not equal", o1, o2);
+        assertEquals("Not symmetric", o2, o1);
         assertEquals("Different hash codes", o1.hashCode(), o2.hashCode());
     }
 
@@ -75,10 +74,10 @@ public class TestDefaultExpressionEngineSymbols
      */
     private static void expNE(final Object o1, final Object o2)
     {
-        assertFalse("Equal", o1.equals(o2));
+        assertNotEquals("Equal", o1, o2);
         if (o2 != null)
         {
-            assertFalse("Not symmetric", o2.equals(o1));
+            assertNotEquals("Not symmetric", o2, o1);
         }
     }
 
