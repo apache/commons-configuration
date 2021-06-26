@@ -28,6 +28,9 @@
        <action issue="CONFIGURATION-795" type="update" dev="ggregory" due-to="dpeger">
          Computation of blank lines after header comment #82.
        </action>
+       <action issue="CONFIGURATION-805" type="update" dev="ggregory" due-to="Arturo Bernal">
+         Use try with resource #114.
+       </action>
        <!-- ADD -->
        <action type="update" dev="ggregory" due-to="SethiPandi">
          Implement Iterable in ImmutableNode #74.
