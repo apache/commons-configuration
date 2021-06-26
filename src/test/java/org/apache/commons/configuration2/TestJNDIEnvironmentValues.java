@@ -31,7 +31,7 @@ import org.junit.Test;
 
 public class TestJNDIEnvironmentValues
 {
-    private JNDIConfiguration conf = null;
+    private JNDIConfiguration conf;
 
     @Before
     public void setUp() throws Exception
