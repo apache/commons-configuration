@@ -930,12 +930,8 @@ public class PropertiesConfiguration extends BaseConfiguration
                 {
                     // escape the separator
                     newkey.append('\\');
-                    newkey.append(c);
                 }
-                else
-                {
-                    newkey.append(c);
-                }
+                newkey.append(c);
             }
 
             return newkey.toString();

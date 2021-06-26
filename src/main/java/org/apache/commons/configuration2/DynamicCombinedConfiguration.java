@@ -375,10 +375,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     protected void clearInternal()
     {
-        if (configs != null)
-        {
-            this.getCurrentConfig().clear();
-        }
+        this.getCurrentConfig().clear();
     }
 
     @Override
@@ -612,10 +609,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     protected void setPropertyInternal(final String key, final Object value)
     {
-        if (configs != null)
-        {
-            this.getCurrentConfig().setProperty(key, value);
-        }
+        this.getCurrentConfig().setProperty(key, value);
     }
 
     @Override

@@ -322,7 +322,7 @@ public class VFSFileSystem extends DefaultFileSystem
             }
             else
             {
-                final FileSystemOptions opts = fileScheme != null ? getOptions(fileScheme) : null;
+                final FileSystemOptions opts = getOptions(fileScheme);
                 file = getManager().resolveFile(fileName, opts);
             }
 
