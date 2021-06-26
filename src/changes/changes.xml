@@ -100,7 +100,7 @@
          Update maven-checkstyle-plugin from 3.1.0 to 3.1.2, #57, #97.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
-         Update commons-pool2 from 2.8.0 to 2.9.0, #61.
+         Update commons-pool2 from 2.8.0 to 2.10.0, #61, #124.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
          Update actions/setup-java from v1.4.0 to v2 #63, #65.
