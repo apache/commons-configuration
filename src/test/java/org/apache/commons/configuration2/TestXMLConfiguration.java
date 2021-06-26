@@ -1325,19 +1325,9 @@ public class TestXMLConfiguration
     @Test
     public void testSaveToStream() throws ConfigurationException, IOException
     {
-        FileOutputStream out = null;
         final FileHandler handler = new FileHandler(conf);
-        try
-        {
-            out = new FileOutputStream(testSaveConf);
+        try (FileOutputStream out = new FileOutputStream(testSaveConf)) {
             handler.save(out, "UTF8");
-        }
-        finally
-        {
-            if(out != null)
-            {
-                out.close();
-            }
         }
 
         checkSavedConfig(testSaveConf);
