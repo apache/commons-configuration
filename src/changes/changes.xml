@@ -43,6 +43,9 @@
        <action issue="CONFIGURATION-805" type="update" dev="ggregory" due-to="Arturo Bernal">
          Use try with resource #114.
        </action>
+       <action issue="CONFIGURATION-805" type="update" dev="ggregory" due-to="Roman Zaynetdinov">
+         [Javadoc] Specify that typed getList returns null for missing key #100.
+       </action>
        <!-- ADD -->
        <action type="update" dev="ggregory" due-to="SethiPandi">
          Implement Iterable in ImmutableNode #74.
