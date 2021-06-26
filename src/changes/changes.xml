@@ -151,7 +151,7 @@
          Update Apache Commons VFS 2.6.0 -> 2.8.0.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
-         Bump jackson-databind from 2.11.3 to 2.12.1 ,#88, #94.
+         Bump jackson-databind from 2.11.3 to 2.12.3 ,#88, #94, #127.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
          Bump actions/cache from v2 to v2.1.4 #99.
