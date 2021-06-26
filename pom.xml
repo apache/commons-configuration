@@ -432,6 +432,7 @@
     <dependency>
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
+      <!--  2.6.0 requires Java 11. -->
       <version>2.5.2</version>
       <scope>test</scope>
     </dependency>
