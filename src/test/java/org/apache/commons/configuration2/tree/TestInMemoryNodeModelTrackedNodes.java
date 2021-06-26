@@ -936,7 +936,7 @@ public class TestInMemoryNodeModelTrackedNodes
                 .andReturn(Collections.singletonList(node));
         EasyMock.expect(
                 resolver.nodeKey(EasyMock.anyObject(ImmutableNode.class),
-                        EasyMock.eq(new HashMap<ImmutableNode, String>()),
+                        EasyMock.eq(new HashMap<>()),
                         EasyMock.anyObject(TreeData.class)))
                 .andReturn(childKey);
         EasyMock.replay(resolver);
@@ -978,7 +978,7 @@ public class TestInMemoryNodeModelTrackedNodes
     @Test(expected = ConfigurationRuntimeException.class)
     public void testTrackChildNodeWithCreationNoResults()
     {
-        checkTrackChildNodeWithCreationInvalidKey(new ArrayList<ImmutableNode>());
+        checkTrackChildNodeWithCreationInvalidKey(new ArrayList<>());
     }
 
     /**

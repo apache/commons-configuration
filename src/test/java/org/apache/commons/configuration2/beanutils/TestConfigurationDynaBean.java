@@ -527,7 +527,7 @@ public class TestConfigurationDynaBean
     @Test
     public void testSetArrayValue()
     {
-        final MapConfiguration configuration = new MapConfiguration(new HashMap<String, Object>());
+        final MapConfiguration configuration = new MapConfiguration(new HashMap<>());
         configuration.getMap().put("objectArray", new Object[] {"value1", "value2", "value3"});
 
         final ConfigurationDynaBean bean = new ConfigurationDynaBean(configuration);

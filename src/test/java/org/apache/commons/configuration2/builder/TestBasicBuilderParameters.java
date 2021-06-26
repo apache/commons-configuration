@@ -162,7 +162,7 @@ public class TestBasicBuilderParameters
     @Test
     public void testSetPrefixLookupsNull()
     {
-        params.setPrefixLookups(new HashMap<String, Lookup>());
+        params.setPrefixLookups(new HashMap<>());
         params.setPrefixLookups(null);
         assertFalse("Found key",
                 params.getParameters().containsKey("prefixLookups"));
@@ -193,7 +193,7 @@ public class TestBasicBuilderParameters
     @Test
     public void testSetDefaultLookupsNull()
     {
-        params.setDefaultLookups(new ArrayList<Lookup>());
+        params.setDefaultLookups(new ArrayList<>());
         params.setDefaultLookups(null);
         assertFalse("Found key",
                 params.getParameters().containsKey("defaultLookups"));

@@ -63,7 +63,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration
     @Override
     protected AbstractConfiguration getEmptyConfiguration()
     {
-        return new MapConfiguration(new HashMap<String, Object>());
+        return new MapConfiguration(new HashMap<>());
     }
 
     @Test

@@ -205,7 +205,7 @@ public class JNDIConfiguration extends AbstractConfiguration
             final Set<String> keys = new HashSet<>();
             if (context != null)
             {
-                recursiveGetKeys(keys, context, prefix, new HashSet<Context>());
+                recursiveGetKeys(keys, context, prefix, new HashSet<>());
             }
             else if (containsKey(prefix))
             {

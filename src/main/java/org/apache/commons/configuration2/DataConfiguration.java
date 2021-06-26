@@ -238,7 +238,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List<Boolean> getBooleanList(final String key)
     {
-        return getBooleanList(key, new ArrayList<Boolean>());
+        return getBooleanList(key, new ArrayList<>());
     }
 
     /**
@@ -303,7 +303,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List<Byte> getByteList(final String key)
     {
-        return getByteList(key, new ArrayList<Byte>());
+        return getByteList(key, new ArrayList<>());
     }
 
     /**
@@ -368,7 +368,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List<Short> getShortList(final String key)
     {
-        return getShortList(key, new ArrayList<Short>());
+        return getShortList(key, new ArrayList<>());
     }
 
     /**
@@ -434,7 +434,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List<Integer> getIntegerList(final String key)
     {
-        return getIntegerList(key, new ArrayList<Integer>());
+        return getIntegerList(key, new ArrayList<>());
     }
 
     /**
@@ -499,7 +499,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List<Long> getLongList(final String key)
     {
-        return getLongList(key, new ArrayList<Long>());
+        return getLongList(key, new ArrayList<>());
     }
 
     /**
@@ -564,7 +564,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List<Float> getFloatList(final String key)
     {
-        return getFloatList(key, new ArrayList<Float>());
+        return getFloatList(key, new ArrayList<>());
     }
 
     /**
@@ -630,7 +630,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List<Double> getDoubleList(final String key)
     {
-        return getDoubleList(key, new ArrayList<Double>());
+        return getDoubleList(key, new ArrayList<>());
     }
 
     /**
@@ -695,7 +695,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List<BigInteger> getBigIntegerList(final String key)
     {
-        return getBigIntegerList(key, new ArrayList<BigInteger>());
+        return getBigIntegerList(key, new ArrayList<>());
     }
 
     /**
@@ -760,7 +760,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List<BigDecimal> getBigDecimalList(final String key)
     {
-        return getBigDecimalList(key, new ArrayList<BigDecimal>());
+        return getBigDecimalList(key, new ArrayList<>());
     }
 
     /**
@@ -887,7 +887,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List<URI> getURIList(final String key)
     {
-        return getURIList(key, new ArrayList<URI>());
+        return getURIList(key, new ArrayList<>());
     }
 
     /**
@@ -950,7 +950,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List<URL> getURLList(final String key)
     {
-        return getURLList(key, new ArrayList<URL>());
+        return getURLList(key, new ArrayList<>());
     }
 
     /**
@@ -1091,7 +1091,7 @@ public class DataConfiguration extends AbstractConfiguration
 
     public List<Date> getDateList(final String key)
     {
-        return getDateList(key, new ArrayList<Date>());
+        return getDateList(key, new ArrayList<>());
     }
 
     /**
@@ -1109,7 +1109,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List<Date> getDateList(final String key, final String format)
     {
-        return getDateList(key, new ArrayList<Date>(), format);
+        return getDateList(key, new ArrayList<>(), format);
     }
 
     /**
@@ -1345,7 +1345,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List<Calendar> getCalendarList(final String key)
     {
-        return getCalendarList(key, new ArrayList<Calendar>());
+        return getCalendarList(key, new ArrayList<>());
     }
 
     /**
@@ -1363,7 +1363,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List<Calendar> getCalendarList(final String key, final String format)
     {
-        return getCalendarList(key, new ArrayList<Calendar>(), format);
+        return getCalendarList(key, new ArrayList<>(), format);
     }
 
     /**
@@ -1549,7 +1549,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List<Locale> getLocaleList(final String key)
     {
-        return getLocaleList(key, new ArrayList<Locale>());
+        return getLocaleList(key, new ArrayList<>());
     }
 
     /**
@@ -1645,7 +1645,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List<Color> getColorList(final String key)
     {
-        return getColorList(key, new ArrayList<Color>());
+        return getColorList(key, new ArrayList<>());
     }
 
     /**

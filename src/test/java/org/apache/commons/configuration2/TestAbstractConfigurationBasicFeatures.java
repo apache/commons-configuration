@@ -939,7 +939,7 @@ public class TestAbstractConfigurationBasicFeatures
     {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         final List<Integer> expected = prepareListTest(config);
-        final Collection<Integer> result = config.getCollection(Integer.class, KEY_PREFIX, null, new ArrayList<Integer>());
+        final Collection<Integer> result = config.getCollection(Integer.class, KEY_PREFIX, null, new ArrayList<>());
         assertEquals("Wrong result", expected, result);
     }
 

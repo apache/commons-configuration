@@ -56,7 +56,7 @@ public class TestMultiFileBuilderParametersImpl
     {
         assertNull("Got an instance",
                 MultiFileBuilderParametersImpl
-                        .fromParameters(new HashMap<String, Object>()));
+                        .fromParameters(new HashMap<>()));
     }
 
     /**
@@ -79,7 +79,7 @@ public class TestMultiFileBuilderParametersImpl
     {
         params =
                 MultiFileBuilderParametersImpl.fromParameters(
-                        new HashMap<String, Object>(), true);
+                        new HashMap<>(), true);
         assertNotNull("No new instance", params);
     }
 

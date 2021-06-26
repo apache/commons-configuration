@@ -196,7 +196,7 @@ public class TestCombinedBeanDeclaration
         final CombinedBeanDeclaration cd = createCombinedDeclaration();
         EasyMock.expect(decl(0).getConstructorArgs()).andReturn(null);
         EasyMock.expect(decl(1).getConstructorArgs()).andReturn(
-                new ArrayList<ConstructorArg>());
+                new ArrayList<>());
         EasyMock.expect(decl(2).getConstructorArgs()).andReturn(null);
         replay();
         assertTrue("Got constructor arguments", cd.getConstructorArgs()

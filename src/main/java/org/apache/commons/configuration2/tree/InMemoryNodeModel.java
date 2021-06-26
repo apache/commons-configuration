@@ -1288,7 +1288,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode>
     {
         final NodeSelector selector =
                 new NodeSelector(resolver.nodeKey(node,
-                        new HashMap<ImmutableNode, String>(), current));
+                        new HashMap<>(), current));
         refSelector.setValue(selector);
         final NodeTracker newTracker =
                 current.getNodeTracker().trackNodes(

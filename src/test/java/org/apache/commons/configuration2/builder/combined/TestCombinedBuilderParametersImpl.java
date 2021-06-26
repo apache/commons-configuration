@@ -55,7 +55,7 @@ public class TestCombinedBuilderParametersImpl
     {
         assertNull("Got an instance",
                 CombinedBuilderParametersImpl
-                        .fromParameters(new HashMap<String, Object>()));
+                        .fromParameters(new HashMap<>()));
     }
 
     /**
@@ -67,7 +67,7 @@ public class TestCombinedBuilderParametersImpl
     {
         final CombinedBuilderParametersImpl params =
                 CombinedBuilderParametersImpl.fromParameters(
-                        new HashMap<String, Object>(), true);
+                        new HashMap<>(), true);
         assertNotNull("No instance", params);
         assertNull("Got data", params.getDefinitionBuilder());
     }
