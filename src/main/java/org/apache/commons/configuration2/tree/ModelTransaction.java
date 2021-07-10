@@ -360,7 +360,7 @@ class ModelTransaction
         final Integer nodeLevel =
                 Integer.valueOf(level == LEVEL_UNKNOWN ? level(target)
                         : level);
-        Map<ImmutableNode, Operations> levelOperations = operations.computeIfAbsent(nodeLevel, k -> new HashMap<>());
+        final Map<ImmutableNode, Operations> levelOperations = operations.computeIfAbsent(nodeLevel, k -> new HashMap<>());
         Operations ops = levelOperations.get(target);
         if (ops == null)
         {

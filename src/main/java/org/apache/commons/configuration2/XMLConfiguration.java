@@ -611,12 +611,12 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
                 final Map<String, String> attrmap =
                         constructHierarchy(childNode, refChildValue, child,
                                 elemRefs, trimFlag, level + 1);
-                final Boolean childTrim = Boolean.valueOf(attrmap.remove(ATTR_SPACE_INTERNAL));
+                final boolean childTrim = Boolean.parseBoolean(attrmap.remove(ATTR_SPACE_INTERNAL));
                 childNode.addAttributes(attrmap);
                 final ImmutableNode newChild =
                         createChildNodeWithValue(node, childNode, child,
                                 refChildValue.getValue(),
-                                childTrim.booleanValue(), attrmap, elemRefs);
+                                childTrim, attrmap, elemRefs);
                 if (elemRefs != null && !elemRefs.containsKey(newChild))
                 {
                     elemRefs.put(newChild, child);
