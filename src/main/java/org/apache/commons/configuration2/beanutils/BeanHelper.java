@@ -350,7 +350,7 @@ public final class BeanHelper
      * @param bean the bean
      * @param propName the name of the property
      * @param value the property's value
-     * @throws ConfigurationRuntimeException if the property is not writeable or
+     * @throws ConfigurationRuntimeException if the property is not writable or
      * an error occurred
      */
     private static void initProperty(final Object bean, final String propName, final Object value)
@@ -410,7 +410,7 @@ public final class BeanHelper
      * @param bean the bean
      * @param propName the name of the property
      * @param value the property's value
-     * @throws ConfigurationRuntimeException if the property is not writeable or
+     * @throws ConfigurationRuntimeException if the property is not writable or
      *         an error occurred
      */
     public static void setProperty(final Object bean, final String propName, final Object value)
