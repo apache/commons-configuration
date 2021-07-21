@@ -46,8 +46,11 @@
        <action issue="CONFIGURATION-805" type="update" dev="ggregory" due-to="Roman Zaynetdinov">
          [Javadoc] Specify that typed getList returns null for missing key #100.
        </action>
+       <action type="fix" dev="ggregory" due-to="Oliver B. Fischer">
+         Mention EnvironmentConfiguration in the list of configuration sources #45.
+       </action>
        <!-- ADD -->
-       <action type="update" dev="ggregory" due-to="SethiPandi">
+       <action type="add" dev="ggregory" due-to="SethiPandi">
          Implement Iterable in ImmutableNode #74.
        </action>
        <action issues="CONFIGURATION-794" type="update" dev="ggregory" due-to="Robin Jansohn, Gary Gregory, Rob Spoor">
@@ -66,18 +69,15 @@
        <action type="add" dev="ggregory" due-to="Gary Gregory">
          Add PropertiesConfigurationLayout.PropertyLayoutData.setBlankLines() and deprecate setBlancLines().  
        </action>
+       <action type="add" dev="ggregory" issue="CONFIGURATION-789" due-to="Gary Gregory">
+         Add ImmutableConfiguration.getEnum() methods.
+       </action>
        <!-- UPDATES -->
        <action type="update" dev="ggregory" issue="CONFIGURATION-787" due-to="Gary Gregory">
          Update from Apache Commons Lang 3.9 to 3.12.0.
        </action>
-       <action type="add" dev="ggregory" issue="CONFIGURATION-789" due-to="Gary Gregory">
-         Add ImmutableConfiguration.getEnum() methods.
-       </action>
        <action type="update" dev="ggregory" issue="CONFIGURATION-790" due-to="Gary Gregory, Dependabot">
          Update optional com.fasterxml.jackson.core:jackson-databind from 2.10.3 to 2.12.2, #60.
-       </action>
-       <action type="update" dev="ggregory" due-to="Oliver B. Fischer">
-         Mention EnvironmentConfiguration in the list of configuration sources #45.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Update Slf4j test dependencies:
