@@ -148,7 +148,7 @@
          Bump junit from 4.13 to 4.13.2 #78.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
-         Update Apache Commons VFS 2.6.0 -> 2.8.0.
+         Update Apache Commons VFS 2.6.0 -> 2.9.0.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
          Bump jackson-databind from 2.11.3 to 2.12.3 ,#88, #94, #127.
