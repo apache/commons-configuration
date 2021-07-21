@@ -159,6 +159,9 @@
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Bump commons.animal-sniffer.version 1.19 -> 1.20.
        </action>
+       <action type="update" dev="ggregory" due-to="Gary Gregory">
+         Bump commons.javadoc.version from 3.1.1 to 3.3.0.
+       </action>
     </release>
     <release version="2.7" date="2020-03-07"
              description="Minor release with new features and updated dependencies.">
