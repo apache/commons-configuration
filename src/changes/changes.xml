@@ -133,7 +133,7 @@
          Update commons.jacoco.version 0.8.5 to 0.8.7 (Fixes Java 15 builds).
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
-         Update tests from commons-dbcp2 2.7.0 to 2.8.0.
+         Update tests from commons-dbcp2 2.7.0 to 2.9.0.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
          Bump actions/setup-java from v1.4.2 to v1.4.3 #73.
