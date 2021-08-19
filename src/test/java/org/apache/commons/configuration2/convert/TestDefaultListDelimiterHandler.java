@@ -110,6 +110,14 @@ public class TestDefaultListDelimiterHandler
                 handler.escapeList(data, trans));
     }
 
+    @Test
+    public void testEscapeIntegerList()
+    {
+        final ValueTransformer trans = ListDelimiterHandler.NOOP_TRANSFORMER;
+        final List<Integer> data = Arrays.asList(1, 2, 3, 4);
+        assertEquals("1,2,3,4", handler.escapeList(data, trans));
+    }
+
     /**
      * Helper methods for testing a split operation. A split is executed with
      * the passed in parameters. Then the results are compared to the expected
