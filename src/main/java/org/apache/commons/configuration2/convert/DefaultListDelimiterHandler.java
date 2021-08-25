@@ -156,31 +156,26 @@ public class DefaultListDelimiterHandler extends AbstractListDelimiterHandler
                 }
                 token.append(c);
                 inEscape = false;
+            } else if (c == getDelimiter())
+            {
+                // found a list delimiter -> add token and
+                // reset buffer
+                String t = token.toString();
+                if (trim)
+                {
+                    t = t.trim();
+                }
+                list.add(t);
+                token = new StringBuilder();
             }
-
+            else if (c == ESCAPE)
+            {
+                // potentially escape next character
+                inEscape = true;
+            }
             else
             {
-                if (c == getDelimiter())
-                {
-                    // found a list delimiter -> add token and
-                    // reset buffer
-                    String t = token.toString();
-                    if (trim)
-                    {
-                        t = t.trim();
-                    }
-                    list.add(t);
-                    token = new StringBuilder();
-                }
-                else if (c == ESCAPE)
-                {
-                    // potentially escape next character
-                    inEscape = true;
-                }
-                else
-                {
-                    token.append(c);
-                }
+                token.append(c);
             }
         }
 

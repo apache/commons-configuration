@@ -69,7 +69,7 @@ public class TestPropertyListParser
     @Test
     public void testFilterData() throws Exception
     {
-        final byte[] expected = new byte[] {0x20, 0x20};
+        final byte[] expected = {0x20, 0x20};
         ArrayAssert.assertEquals("null string", null, parser.filterData(null));
         ArrayAssert.assertEquals("data with < >", expected, parser.filterData("<2020>"));
         ArrayAssert.assertEquals("data without < >", expected, parser.filterData("2020"));

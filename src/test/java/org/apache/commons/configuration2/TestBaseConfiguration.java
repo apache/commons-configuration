@@ -90,7 +90,7 @@ public class TestBaseConfiguration
         props.add("quick");
         props.add("brown");
         props.add("fox,jumps");
-        final Object[] data = new Object[] {
+        final Object[] data = {
                 "The", props, "over,the", "lazy", "dog."
         };
         config.setProperty("complex.property", data);
@@ -118,7 +118,7 @@ public class TestBaseConfiguration
     {
         for (int i = 0; i < 10; i++)
         {
-            config.addProperty("key" + i, new Integer(i));
+            config.addProperty("key" + i, Integer.valueOf(i));
         }
         final BaseConfiguration config2 = (BaseConfiguration) config.clone();
 
@@ -278,7 +278,7 @@ public class TestBaseConfiguration
         assertEquals("This returns true", boolT, config.getBoolean("boolA"));
         assertEquals("This returns true, not the default", boolT, config.getBoolean("boolA", boolF));
         assertEquals("This returns false(default)", boolF, config.getBoolean("boolNotInConfig", boolF));
-        assertEquals("This returns true(Boolean)", new Boolean(boolT), config.getBoolean("boolA", new Boolean(boolF)));
+        assertEquals("This returns true(Boolean)", Boolean.valueOf(boolT), config.getBoolean("boolA", Boolean.valueOf(boolF)));
     }
 
     @Test(expected = ConversionException.class)
@@ -303,7 +303,7 @@ public class TestBaseConfiguration
         assertEquals("This returns 1(byte)", oneB, config.getByte("number"));
         assertEquals("This returns 1(byte)", oneB, config.getByte("number", twoB));
         assertEquals("This returns 2(default byte)", twoB, config.getByte("numberNotInConfig", twoB));
-        assertEquals("This returns 1(Byte)", new Byte(oneB), config.getByte("number", new Byte("2")));
+        assertEquals("This returns 1(Byte)", Byte.valueOf(oneB), config.getByte("number", Byte.valueOf("2")));
     }
 
     @Test(expected = ConversionException.class)
@@ -328,7 +328,7 @@ public class TestBaseConfiguration
         assertEquals("This returns 1(double)", oneD, config.getDouble("numberD"), 0);
         assertEquals("This returns 1(double)", oneD, config.getDouble("numberD", twoD), 0);
         assertEquals("This returns 2(default double)", twoD, config.getDouble("numberNotInConfig", twoD), 0);
-        assertEquals("This returns 1(Double)", new Double(oneD), config.getDouble("numberD", new Double("2")));
+        assertEquals("This returns 1(Double)", Double.valueOf(oneD), config.getDouble("numberD", Double.valueOf("2")));
     }
 
     @Test(expected = ConversionException.class)
@@ -380,7 +380,7 @@ public class TestBaseConfiguration
         assertEquals("This returns 1(float)", oneF, config.getFloat("numberF"), 0);
         assertEquals("This returns 1(float)", oneF, config.getFloat("numberF", twoF), 0);
         assertEquals("This returns 2(default float)", twoF, config.getFloat("numberNotInConfig", twoF), 0);
-        assertEquals("This returns 1(Float)", new Float(oneF), config.getFloat("numberF", new Float("2")));
+        assertEquals("This returns 1(Float)", Float.valueOf(oneF), config.getFloat("numberF", Float.valueOf("2")));
     }
 
     @Test(expected = ConversionException.class)
@@ -448,12 +448,12 @@ public class TestBaseConfiguration
 
         // primitive wrappers
         assertEquals("Boolean interpolation", Boolean.TRUE, config.getBoolean("booleanValue", null));
-        assertEquals("Byte interpolation", new Byte("1"), config.getByte("value", null));
-        assertEquals("Short interpolation", new Short("1"), config.getShort("value", null));
-        assertEquals("Integer interpolation", new Integer("1"), config.getInteger("value", null));
-        assertEquals("Long interpolation", new Long("1"), config.getLong("value", null));
-        assertEquals("Float interpolation", new Float("1"), config.getFloat("value", null));
-        assertEquals("Double interpolation", new Double("1"), config.getDouble("value", null));
+        assertEquals("Byte interpolation", Byte.valueOf("1"), config.getByte("value", null));
+        assertEquals("Short interpolation", Short.valueOf("1"), config.getShort("value", null));
+        assertEquals("Integer interpolation", Integer.valueOf("1"), config.getInteger("value", null));
+        assertEquals("Long interpolation", Long.valueOf("1"), config.getLong("value", null));
+        assertEquals("Float interpolation", Float.valueOf("1"), config.getFloat("value", null));
+        assertEquals("Double interpolation", Double.valueOf("1"), config.getDouble("value", null));
 
         assertEquals("BigInteger interpolation", new BigInteger("1"), config.getBigInteger("value", null));
         assertEquals("BigDecimal interpolation", new BigDecimal("1"), config.getBigDecimal("value", null));
@@ -489,7 +489,7 @@ public class TestBaseConfiguration
         assertEquals("This returns 1(long)", oneL, config.getLong("numberL"));
         assertEquals("This returns 1(long)", oneL, config.getLong("numberL", twoL));
         assertEquals("This returns 2(default long)", twoL, config.getLong("numberNotInConfig", twoL));
-        assertEquals("This returns 1(Long)", new Long(oneL), config.getLong("numberL", new Long("2")));
+        assertEquals("This returns 1(Long)", Long.valueOf(oneL), config.getLong("numberL", Long.valueOf("2")));
     }
 
     @Test(expected = ConversionException.class)
@@ -526,7 +526,7 @@ public class TestBaseConfiguration
         assertEquals("This returns 1(short)", oneS, config.getShort("numberS"));
         assertEquals("This returns 1(short)", oneS, config.getShort("numberS", twoS));
         assertEquals("This returns 2(default short)", twoS, config.getShort("numberNotInConfig", twoS));
-        assertEquals("This returns 1(Short)", new Short(oneS), config.getShort("numberS", new Short("2")));
+        assertEquals("This returns 1(Short)", Short.valueOf(oneS), config.getShort("numberS", Short.valueOf("2")));
     }
 
     @Test(expected = ConversionException.class)
@@ -709,7 +709,7 @@ public class TestBaseConfiguration
     @Test
     public void testNumberConversions()
     {
-        config.setProperty(KEY_NUMBER, new Integer(42));
+        config.setProperty(KEY_NUMBER, Integer.valueOf(42));
         assertEquals("Wrong int returned", 42, config.getInt(KEY_NUMBER));
         assertEquals("Wrong long returned", 42L, config.getLong(KEY_NUMBER));
         assertEquals("Wrong byte returned", (byte) 42, config
@@ -719,7 +719,7 @@ public class TestBaseConfiguration
         assertEquals("Wrong double returned", 42.0, config
                 .getDouble(KEY_NUMBER), 0.001);
 
-        assertEquals("Wrong Long returned", new Long(42L), config.getLong(
+        assertEquals("Wrong Long returned", Long.valueOf(42L), config.getLong(
                 KEY_NUMBER, null));
         assertEquals("Wrong BigInt returned", new BigInteger("42"), config
                 .getBigInteger(KEY_NUMBER));

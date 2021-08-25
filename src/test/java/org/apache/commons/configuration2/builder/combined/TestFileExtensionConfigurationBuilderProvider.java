@@ -140,7 +140,7 @@ public class TestFileExtensionConfigurationBuilderProvider
         final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
         assertEquals("Wrong class", DEF_CLASS,
                 provider.determineConfigurationClass(decl,
-                        new ArrayList<BuilderParameters>()));
+                        new ArrayList<>()));
     }
 
     /**

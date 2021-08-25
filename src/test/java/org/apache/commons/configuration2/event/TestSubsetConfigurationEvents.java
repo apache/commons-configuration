@@ -31,6 +31,6 @@ public class TestSubsetConfigurationEvents extends AbstractTestConfigurationEven
     @Override
     protected AbstractConfiguration createConfiguration()
     {
-        return (SubsetConfiguration)new MapConfiguration(new HashMap<String, Object>()).subset("test");
+        return (SubsetConfiguration)new MapConfiguration(new HashMap<>()).subset("test");
     }
 }

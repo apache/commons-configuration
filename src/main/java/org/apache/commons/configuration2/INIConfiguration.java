@@ -664,17 +664,13 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
 
                         result.append(c);
                     }
+                } else if (isCommentChar(c) && Character.isWhitespace(lastChar))
+                {
+                    stop = true;
                 }
                 else
                 {
-                    if (isCommentChar(c) && Character.isWhitespace(lastChar))
-                    {
-                        stop = true;
-                    }
-                    else
-                    {
-                        result.append(c);
-                    }
+                    result.append(c);
                 }
 
                 i++;
@@ -874,7 +870,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
 
         if (quoted)
         {
-            return '"' + value.replaceAll("\"", "\\\\\\\"") + '"';
+            return '"' + value.replace("\"", "\\\"") + '"';
         }
         return value;
     }
@@ -934,14 +930,10 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
                 {
                     inSection = true;
                     sections.add(node.getNodeName());
-                }
-                else
+                } else if (!inSection && !globalSection)
                 {
-                    if (!inSection && !globalSection)
-                    {
-                        globalSection = true;
-                        sections.add(null);
-                    }
+                    globalSection = true;
+                    sections.add(null);
                 }
             }
         }

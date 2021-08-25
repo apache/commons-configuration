@@ -158,7 +158,7 @@ public class TestAbstractHierarchicalConfiguration
         config.setProperty("test.items.item", new int[] { 2, 4, 8, 16 });
         assertEquals(3, config.getMaxIndex("test.items.item"));
         assertEquals(8, config.getInt("test.items.item(2)"));
-        config.setProperty("test.items.item(2)", new Integer(6));
+        config.setProperty("test.items.item(2)", Integer.valueOf(6));
         assertEquals(6, config.getInt("test.items.item(2)"));
         config.setProperty("test.items.item(2)", new int[] { 7, 9, 11 });
         assertEquals(5, config.getMaxIndex("test.items.item"));
@@ -169,7 +169,7 @@ public class TestAbstractHierarchicalConfiguration
         assertTrue(config.getBoolean("test"));
         assertEquals("01/01/05", config.getProperty("test.items"));
 
-        config.setProperty("test.items.item", new Integer(42));
+        config.setProperty("test.items.item", Integer.valueOf(42));
         assertEquals(0, config.getMaxIndex("test.items.item"));
         assertEquals(42, config.getInt("test.items.item"));
     }

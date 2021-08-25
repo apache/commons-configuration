@@ -66,7 +66,7 @@ public class TestBaseConfigurationXMLReader
         config.addProperty("application.mail.account.type", "pop3");
         config.addProperty("application.mail.account.user", "postmaster");
         config.addProperty("application.mail.account.pwd", "?.-gulp*#");
-        config.addProperty("application.mail.timeout", new Integer(42));
+        config.addProperty("application.mail.timeout", Integer.valueOf(42));
         config.addProperty("test", Boolean.TRUE);
 
         configReader = new BaseConfigurationXMLReader(config);

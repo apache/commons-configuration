@@ -205,7 +205,7 @@ public class JNDIConfiguration extends AbstractConfiguration
             final Set<String> keys = new HashSet<>();
             if (context != null)
             {
-                recursiveGetKeys(keys, context, prefix, new HashSet<Context>());
+                recursiveGetKeys(keys, context, prefix, new HashSet<>());
             }
             else if (containsKey(prefix))
             {
@@ -352,7 +352,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         {
             return false;
         }
-        key = key.replaceAll("\\.", "/");
+        key = key.replace('.', '/');
         try
         {
             // throws a NamingException if JNDI doesn't contain the key.
@@ -410,7 +410,7 @@ public class JNDIConfiguration extends AbstractConfiguration
 
         try
         {
-            key = key.replaceAll("\\.", "/");
+            key = key.replace('.', '/');
             return getBaseContext().lookup(key);
         }
         catch (final NameNotFoundException | NotContextException nctxex)

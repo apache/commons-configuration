@@ -232,7 +232,7 @@ public class InterpolationTestHelper
      */
     public static void testInterpolationSubset(final Configuration config)
     {
-        config.addProperty("test.a", new Integer(42));
+        config.addProperty("test.a", Integer.valueOf(42));
         config.addProperty("test.b", "${test.a}");
         assertEquals("Wrong interpolated value", 42, config
                 .getInt("test.b"));

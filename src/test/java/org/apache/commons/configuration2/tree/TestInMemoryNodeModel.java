@@ -865,7 +865,7 @@ public class TestInMemoryNodeModel
                 resolver.resolveUpdateKey(
                         NodeStructureHelper.ROOT_PERSONAE_TREE, KEY, this,
                         model.getNodeHandler())).andReturn(
-                new NodeUpdateData<ImmutableNode>(null, null, null, null));
+                new NodeUpdateData<>(null, null, null, null));
         EasyMock.replay(resolver);
 
         model.setProperty(KEY, this, resolver);
@@ -919,7 +919,7 @@ public class TestInMemoryNodeModel
         EasyMock.expect(
                 resolver.resolveKey(NodeStructureHelper.ROOT_AUTHORS_TREE, KEY,
                         model.getNodeHandler())).andReturn(
-                new ArrayList<QueryResult<ImmutableNode>>(0));
+                new ArrayList<>(0));
         EasyMock.expect(
                 resolver.resolveAddKey(NodeStructureHelper.ROOT_AUTHORS_TREE,
                         KEY, model.getNodeHandler())).andReturn(

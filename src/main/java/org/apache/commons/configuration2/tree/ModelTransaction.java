@@ -777,17 +777,13 @@ class ModelTransaction
                 {
                     resultNodes.add(repl);
                     replacedNodes.put(nd, repl);
+                } else if (removals.contains(nd))
+                {
+                    removedNodes.add(nd);
                 }
                 else
                 {
-                    if (removals.contains(nd))
-                    {
-                        removedNodes.add(nd);
-                    }
-                    else
-                    {
-                        resultNodes.add(nd);
-                    }
+                    resultNodes.add(nd);
                 }
             }
 

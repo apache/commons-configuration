@@ -63,13 +63,9 @@ class ConfigurationNodeIteratorChildren<T> extends
         {
             setStartOffset(findStartIndex(subNodes,
                     startsWith.getConfigurationNode()));
-        }
-        else
+        } else if (reverse)
         {
-            if (reverse)
-            {
-                setStartOffset(size());
-            }
+            setStartOffset(size());
         }
     }
 

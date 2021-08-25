@@ -139,10 +139,8 @@ public class TestAbstractConfigurationBasicFeatures
     private void checkAddListProperty(final AbstractConfiguration config)
     {
         config.addProperty("test", "value1");
-        final Object[] lstValues1 = new Object[]
-        { "value2", "value3" };
-        final Object[] lstValues2 = new Object[]
-        { "value4", "value5", "value6" };
+        final Object[] lstValues1 = { "value2", "value3" };
+        final Object[] lstValues2 = { "value4", "value5", "value6" };
         config.addProperty("test", lstValues1);
         config.addProperty("test", Arrays.asList(lstValues2));
         final List<Object> lst = config.getList("test");
@@ -939,7 +937,7 @@ public class TestAbstractConfigurationBasicFeatures
     {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         final List<Integer> expected = prepareListTest(config);
-        final Collection<Integer> result = config.getCollection(Integer.class, KEY_PREFIX, null, new ArrayList<Integer>());
+        final Collection<Integer> result = config.getCollection(Integer.class, KEY_PREFIX, null, new ArrayList<>());
         assertEquals("Wrong result", expected, result);
     }
 

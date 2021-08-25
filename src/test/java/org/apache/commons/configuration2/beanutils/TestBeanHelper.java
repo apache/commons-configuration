@@ -354,7 +354,7 @@ public class TestBeanHelper
     @Test
     public void testCreateBeanWithParameter()
     {
-        final Object param = new Integer(42);
+        final Object param = Integer.valueOf(42);
         final TestBeanFactory factory = new TestBeanFactory();
         helper.registerBeanFactory(TEST_FACTORY, factory);
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
@@ -416,7 +416,7 @@ public class TestBeanHelper
         final BeanDeclarationTestImpl buddyData = new BeanDeclarationTestImpl();
         final Map<String, Object> properties2 = new HashMap<>();
         properties2.put("stringValue", "Another test string");
-        properties2.put("intValue", new Integer(100));
+        properties2.put("intValue", Integer.valueOf(100));
         buddyData.setBeanProperties(properties2);
         buddyData.setBeanClassName(BeanCreationTestBean.class.getName());
 
@@ -462,7 +462,7 @@ public class TestBeanHelper
         final BeanDeclarationTestImpl childBean = new BeanDeclarationTestImpl();
         final Map<String, Object> properties2 = new HashMap<>();
         properties2.put("stringValue", name + " Another test string");
-        properties2.put("intValue", new Integer(100));
+        properties2.put("intValue", Integer.valueOf(100));
         childBean.setBeanProperties(properties2);
         childBean.setBeanClassName(BeanCreationTestBean.class.getName());
 

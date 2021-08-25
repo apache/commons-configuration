@@ -351,7 +351,7 @@ public class TestPropertyListConfiguration
     public void testSetDataProperty() throws Exception
     {
         final File saveFile = folder.newFile();
-        final byte[] expected = new byte[]{1, 2, 3, 4};
+        final byte[] expected = {1, 2, 3, 4};
         config = new PropertyListConfiguration();
         config.setProperty("foo", expected);
         saveConfig(saveFile);
@@ -372,7 +372,7 @@ public class TestPropertyListConfiguration
     public void testAddDataProperty() throws Exception
     {
         final File saveFile = folder.newFile();
-        final byte[] expected = new byte[]{1, 2, 3, 4};
+        final byte[] expected = {1, 2, 3, 4};
         config = new PropertyListConfiguration();
         config.addProperty("foo", expected);
         saveConfig(saveFile);

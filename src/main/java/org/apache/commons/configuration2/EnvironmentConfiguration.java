@@ -48,7 +48,7 @@ public class EnvironmentConfiguration extends MapConfiguration
      */
     public EnvironmentConfiguration()
     {
-        super(new HashMap<String, Object>(System.getenv()));
+        super(new HashMap<>(System.getenv()));
     }
 
     /**

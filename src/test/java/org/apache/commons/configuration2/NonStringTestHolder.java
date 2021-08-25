@@ -48,8 +48,8 @@ public class NonStringTestHolder
         final boolean booleanValue = configuration.getBoolean("test.boolean.missing", true);
         Assert.assertTrue(booleanValue);
 
-        final Boolean booleanObject = configuration.getBoolean("test.boolean.missing", new Boolean(true));
-        Assert.assertEquals(new Boolean(true), booleanObject);
+        final Boolean booleanObject = configuration.getBoolean("test.boolean.missing", Boolean.valueOf(true));
+        Assert.assertEquals(Boolean.valueOf(true), booleanObject);
     }
 
     public void testByte() throws Exception

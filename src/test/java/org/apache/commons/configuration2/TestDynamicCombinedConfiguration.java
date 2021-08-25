@@ -317,8 +317,8 @@ public class TestDynamicCombinedConfiguration
 
         final Thread testThreads[] = new Thread[THREAD_COUNT];
         final int failures[] = new int[THREAD_COUNT];
-        final String[] ids = new String[] {null, "2002", "3001", "3002", "3003"};
-        final String[] expected = new String[] {"50", "25", "15", "25", "50"};
+        final String[] ids = {null, "2002", "3001", "3002", "3003"};
+        final String[] expected = {"50", "25", "15", "25", "50"};
         for (int i = 0; i < testThreads.length; ++i)
         {
             testThreads[i] = new ReloadThread(builder, failures, i, LOOP_COUNT, true, ids[i], expected[i]);

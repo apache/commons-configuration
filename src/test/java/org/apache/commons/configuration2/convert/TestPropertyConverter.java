@@ -138,7 +138,7 @@ public class TestPropertyConverter
     @Test
     public void testToNumberDirect()
     {
-        final Integer i = new Integer(42);
+        final Integer i = Integer.valueOf(42);
         assertSame("Wrong integer", i, PropertyConverter.toNumber(i, Integer.class));
         final BigDecimal d = new BigDecimal("3.1415");
         assertSame("Wrong BigDecimal", d, PropertyConverter.toNumber(d, Integer.class));
@@ -151,8 +151,8 @@ public class TestPropertyConverter
     @Test
     public void testToNumberFromString()
     {
-        assertEquals("Incorrect Integer value", new Integer(42), PropertyConverter.toNumber("42", Integer.class));
-        assertEquals("Incorrect Short value", new Short((short) 10), PropertyConverter.toNumber(new StringBuffer("10"), Short.class));
+        assertEquals("Incorrect Integer value", Integer.valueOf(42), PropertyConverter.toNumber("42", Integer.class));
+        assertEquals("Incorrect Short value", Short.valueOf((short) 10), PropertyConverter.toNumber(new StringBuffer("10"), Short.class));
     }
 
     /**

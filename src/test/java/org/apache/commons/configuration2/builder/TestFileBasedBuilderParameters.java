@@ -232,7 +232,7 @@ public class TestFileBasedBuilderParameters
     {
         assertNull("Got an instance",
                 FileBasedBuilderParametersImpl
-                        .fromParameters(new HashMap<String, Object>()));
+                        .fromParameters(new HashMap<>()));
     }
 
     /**
@@ -244,7 +244,7 @@ public class TestFileBasedBuilderParameters
     {
         final FileBasedBuilderParametersImpl params =
                 FileBasedBuilderParametersImpl.fromParameters(
-                        new HashMap<String, Object>(), true);
+                        new HashMap<>(), true);
         assertFalse("Got a location", params.getFileHandler()
                 .isLocationDefined());
     }
@@ -429,7 +429,7 @@ public class TestFileBasedBuilderParameters
                 new FileBasedBuilderParametersImpl()
                         .setReloadingRefreshDelay(20160213211429L);
 
-        params.inheritFrom(new HashMap<String, Object>());
+        params.inheritFrom(new HashMap<>());
         assertNotNull("Properties were overwritten",
                 params.getReloadingRefreshDelay());
     }

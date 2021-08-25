@@ -196,7 +196,7 @@ public class TestDefaultConversionHandler
     @Test
     public void testToCollectionSuccess()
     {
-        final Object[] src = new Object[] {
+        final Object[] src = {
                 VAR, "100"
         };
         final List<Integer> col = new ArrayList<>(src.length);
@@ -252,7 +252,7 @@ public class TestDefaultConversionHandler
     @Test
     public void testToArrayPrimitiveSameType()
     {
-        final int[] src = new int[] {
+        final int[] src = {
                 1, 2, 3, 4, 5, 6
         };
         final int[] array =
@@ -268,7 +268,7 @@ public class TestDefaultConversionHandler
     @Test
     public void testToArrayPrimitiveWrapperType()
     {
-        final Integer[] src = new Integer[] {
+        final Integer[] src = {
                 0, 1, 2, 4, 8, 16, 32, 64, 128
         };
         final int[] array =

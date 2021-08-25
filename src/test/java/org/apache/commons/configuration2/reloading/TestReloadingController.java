@@ -155,7 +155,7 @@ public class TestReloadingController
     {
         final EventListener<ReloadingEvent> l = createListenerMock();
         EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
-        expectEvent(l, new MutableObject<ReloadingEvent>());
+        expectEvent(l, new MutableObject<>());
         EasyMock.replay(detector, l);
         final ReloadingController ctrl = createController();
         ctrl.addEventListener(ReloadingEvent.ANY, l);

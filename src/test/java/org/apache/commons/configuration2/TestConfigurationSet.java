@@ -45,11 +45,11 @@ public class TestConfigurationSet {
 
     Object[] values = {
             Boolean.TRUE,
-            new Double(Double.MAX_VALUE),
-            new Float(Float.MAX_VALUE),
-            new Integer(Integer.MAX_VALUE),
-            new Long(Long.MAX_VALUE),
-            new Short(Short.MAX_VALUE),
+            Double.valueOf(Double.MAX_VALUE),
+            Float.valueOf(Float.MAX_VALUE),
+            Integer.valueOf(Integer.MAX_VALUE),
+            Long.valueOf(Long.MAX_VALUE),
+            Short.valueOf(Short.MAX_VALUE),
             "This is a string"
     };
 

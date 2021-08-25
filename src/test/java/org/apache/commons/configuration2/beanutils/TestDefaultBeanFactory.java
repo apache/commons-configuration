@@ -282,7 +282,7 @@ public class TestDefaultBeanFactory
         final BeanDeclarationTestImpl buddyData = new BeanDeclarationTestImpl();
         final Map<String, Object> properties2 = new HashMap<>();
         properties2.put("stringValue", "Another test string");
-        properties2.put("intValue", new Integer(100));
+        properties2.put("intValue", Integer.valueOf(100));
         buddyData.setBeanProperties(properties2);
         buddyData.setBeanClassName(BeanCreationTestBean.class.getName());
 

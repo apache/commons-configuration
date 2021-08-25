@@ -459,15 +459,15 @@ public final class FileLocatorUtils
     private static FileLocationStrategy initDefaultLocationStrategy()
     {
         final FileLocationStrategy[] subStrategies =
-                new FileLocationStrategy[] {
-                        new ProvidedURLLocationStrategy(),
-                        new FileSystemLocationStrategy(),
-                        new AbsoluteNameLocationStrategy(),
-                        new BasePathLocationStrategy(),
-                        new HomeDirectoryLocationStrategy(true),
-                        new HomeDirectoryLocationStrategy(false),
-                        new ClasspathLocationStrategy()
-                };
+                {
+                new ProvidedURLLocationStrategy(),
+                new FileSystemLocationStrategy(),
+                new AbsoluteNameLocationStrategy(),
+                new BasePathLocationStrategy(),
+                new HomeDirectoryLocationStrategy(true),
+                new HomeDirectoryLocationStrategy(false),
+                new ClasspathLocationStrategy()
+        };
         return new CombinedLocationStrategy(Arrays.asList(subStrategies));
     }
 

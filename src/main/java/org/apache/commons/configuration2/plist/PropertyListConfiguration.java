@@ -398,7 +398,7 @@ public class PropertyListConfiguration extends BaseHierarchicalConfiguration
                 || s.indexOf(',') != -1
                 || s.indexOf(';') != -1)
         {
-            s = s.replaceAll("\"", "\\\\\\\"");
+            s = s.replace("\"", "\\\"");
             s = "\"" + s + "\"";
         }
 

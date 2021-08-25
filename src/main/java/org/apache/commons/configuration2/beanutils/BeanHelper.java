@@ -89,7 +89,7 @@ public final class BeanHelper
 
     /** Stores a map with the registered bean factories. */
     private final Map<String, BeanFactory> beanFactories = Collections
-            .synchronizedMap(new HashMap<String, BeanFactory>());
+            .synchronizedMap(new HashMap<>());
 
     /**
      * Stores the default bean factory, which is used if no other factory

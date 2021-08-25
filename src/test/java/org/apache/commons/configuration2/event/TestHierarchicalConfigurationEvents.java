@@ -88,7 +88,7 @@ public class TestHierarchicalConfigurationEvents extends
     public void testAddNodesEmptyEvent()
     {
         ((BaseHierarchicalConfiguration) config).addNodes(TEST_PROPNAME,
-                new ArrayList<ImmutableNode>());
+                new ArrayList<>());
         listener.done();
     }
 

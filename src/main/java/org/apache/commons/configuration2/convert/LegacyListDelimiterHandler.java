@@ -162,31 +162,26 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler
                 }
                 token.append(c);
                 inEscape = false;
+            } else if (c == getDelimiter())
+            {
+                // found a list delimiter -> add token and
+                // resetDefaultFileSystem buffer
+                String t = token.toString();
+                if (trim)
+                {
+                    t = t.trim();
+                }
+                list.add(t);
+                token = new StringBuilder();
             }
-
+            else if (c == esc)
+            {
+                // eventually escape next character
+                inEscape = true;
+            }
             else
             {
-                if (c == getDelimiter())
-                {
-                    // found a list delimiter -> add token and
-                    // resetDefaultFileSystem buffer
-                    String t = token.toString();
-                    if (trim)
-                    {
-                        t = t.trim();
-                    }
-                    list.add(t);
-                    token = new StringBuilder();
-                }
-                else if (c == esc)
-                {
-                    // eventually escape next character
-                    inEscape = true;
-                }
-                else
-                {
-                    token.append(c);
-                }
+                token.append(c);
             }
 
             begin++;

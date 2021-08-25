@@ -75,17 +75,17 @@ public class TestConfigurationDynaBean
     Object[] values = {
             Boolean.TRUE,
             Boolean.TRUE,
-            new Double(Double.MAX_VALUE),
-            new Float(Float.MAX_VALUE),
-            new Integer(Integer.MAX_VALUE),
-            new Long(Long.MAX_VALUE),
+            Double.valueOf(Double.MAX_VALUE),
+            Float.valueOf(Float.MAX_VALUE),
+            Integer.valueOf(Integer.MAX_VALUE),
+            Long.valueOf(Long.MAX_VALUE),
             "First Value",
             "Second Value",
             "Third Value",
-            new Integer(Integer.MAX_VALUE),
-            new Short(Short.MAX_VALUE),
+            Integer.valueOf(Integer.MAX_VALUE),
+            Short.valueOf(Short.MAX_VALUE),
             "This is a string",
-            new Byte(Byte.MAX_VALUE),
+            Byte.valueOf(Byte.MAX_VALUE),
             Character.valueOf(Character.MAX_VALUE)
     };
 
@@ -114,7 +114,7 @@ public class TestConfigurationDynaBean
         }
 
         for (final int element : intArray) {
-            configuration.addProperty("intIndexed", new Integer(element));
+            configuration.addProperty("intIndexed", Integer.valueOf(element));
         }
 
         for (final String element : stringArray) {
@@ -472,7 +472,7 @@ public class TestConfigurationDynaBean
     @Test(expected = IndexOutOfBoundsException.class)
     public void testSetIndexedArguments()
     {
-        bean.set("intArray", -1, new Integer(0));
+        bean.set("intArray", -1, Integer.valueOf(0));
     }
 
     /**
@@ -481,7 +481,7 @@ public class TestConfigurationDynaBean
     @Test
     public void testSetIndexedValues()
     {
-        bean.set("intArray", 0, new Integer(1));
+        bean.set("intArray", 0, Integer.valueOf(1));
         Object value = bean.get("intArray", 0);
 
         assertNotNull("Returned new value 0", value);
@@ -489,7 +489,7 @@ public class TestConfigurationDynaBean
         assertEquals("Returned correct new value 0", 1, ((Integer) value).intValue());
 
 
-        bean.set("intIndexed", 1, new Integer(11));
+        bean.set("intIndexed", 1, Integer.valueOf(11));
         value = bean.get("intIndexed", 1);
 
         assertNotNull("Returned new value 1", value);
@@ -527,7 +527,7 @@ public class TestConfigurationDynaBean
     @Test
     public void testSetArrayValue()
     {
-        final MapConfiguration configuration = new MapConfiguration(new HashMap<String, Object>());
+        final MapConfiguration configuration = new MapConfiguration(new HashMap<>());
         configuration.getMap().put("objectArray", new Object[] {"value1", "value2", "value3"});
 
         final ConfigurationDynaBean bean = new ConfigurationDynaBean(configuration);
@@ -561,7 +561,7 @@ public class TestConfigurationDynaBean
     {
         final boolean oldValue = ((Boolean) bean.get("booleanProperty")).booleanValue();
         final boolean newValue = !oldValue;
-        bean.set("booleanProperty", new Boolean(newValue));
+        bean.set("booleanProperty", Boolean.valueOf(newValue));
         assertTrue("Matched new value", newValue == ((Boolean) bean.get("booleanProperty")).booleanValue());
     }
 
@@ -573,7 +573,7 @@ public class TestConfigurationDynaBean
     {
         final double oldValue = ((Double) bean.get("doubleProperty")).doubleValue();
         final double newValue = oldValue + 1.0;
-        bean.set("doubleProperty", new Double(newValue));
+        bean.set("doubleProperty", Double.valueOf(newValue));
         assertEquals("Matched new value", newValue, ((Double) bean.get("doubleProperty")).doubleValue(), 0.005);
     }
 
@@ -585,7 +585,7 @@ public class TestConfigurationDynaBean
     {
         final float oldValue = ((Float) bean.get("floatProperty")).floatValue();
         final float newValue = oldValue + (float) 1.0;
-        bean.set("floatProperty", new Float(newValue));
+        bean.set("floatProperty", Float.valueOf(newValue));
         assertEquals("Matched new value", newValue, ((Float) bean.get("floatProperty")).floatValue(), 0.005f);
     }
 
@@ -597,7 +597,7 @@ public class TestConfigurationDynaBean
     {
         final int oldValue = ((Integer) bean.get("intProperty")).intValue();
         final int newValue = oldValue + 1;
-        bean.set("intProperty", new Integer(newValue));
+        bean.set("intProperty", Integer.valueOf(newValue));
         assertEquals("Matched new value", newValue, ((Integer) bean.get("intProperty")).intValue());
     }
 
@@ -609,7 +609,7 @@ public class TestConfigurationDynaBean
     {
         final long oldValue = ((Long) bean.get("longProperty")).longValue();
         final long newValue = oldValue + 1;
-        bean.set("longProperty", new Long(newValue));
+        bean.set("longProperty", Long.valueOf(newValue));
         assertEquals("Matched new value", newValue, ((Long) bean.get("longProperty")).longValue());
     }
 
@@ -621,7 +621,7 @@ public class TestConfigurationDynaBean
     {
         final short oldValue = ((Short) bean.get("shortProperty")).shortValue();
         final short newValue = (short) (oldValue + 1);
-        bean.set("shortProperty", new Short(newValue));
+        bean.set("shortProperty", Short.valueOf(newValue));
         assertEquals("Matched new value", newValue, ((Short) bean.get("shortProperty")).shortValue());
     }
 

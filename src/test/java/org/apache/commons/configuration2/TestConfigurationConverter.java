@@ -129,7 +129,7 @@ public class TestConfigurationConverter
     public void testConfigurationToPropertiesScalarValue()
     {
         final BaseConfiguration config = new BaseConfiguration();
-        config.addProperty("scalar", new Integer(42));
+        config.addProperty("scalar", Integer.valueOf(42));
         final Properties props = ConfigurationConverter.getProperties(config);
         assertEquals("Wrong value", "42", props.getProperty("scalar"));
     }

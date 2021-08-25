@@ -612,7 +612,7 @@ public class TestImmutableNode
     @Test
     public void testSetAttributesEmpty()
     {
-        checkSetAttributesNoOp(new HashMap<String, Object>());
+        checkSetAttributesNoOp(new HashMap<>());
     }
 
     /**

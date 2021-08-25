@@ -1206,10 +1206,10 @@ public class PropertiesConfiguration extends BaseConfiguration
     private static String includeOptional = "includeoptional";
 
     /** The list of possible key/value separators */
-    private static final char[] SEPARATORS = new char[] {'=', ':'};
+    private static final char[] SEPARATORS = {'=', ':'};
 
     /** The white space characters used as key/value separators. */
-    private static final char[] WHITE_SPACE = new char[]{' ', '\t', '\f'};
+    private static final char[] WHITE_SPACE = {' ', '\t', '\f'};
 
     /** Constant for the platform specific line separator.*/
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");

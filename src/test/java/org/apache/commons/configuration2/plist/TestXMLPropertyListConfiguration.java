@@ -348,7 +348,7 @@ public class TestXMLPropertyListConfiguration
     public void testSetDataProperty() throws Exception
     {
         final File savedFile = folder.newFile();
-        final byte[] expected = new byte[]{1, 2, 3, 4};
+        final byte[] expected = {1, 2, 3, 4};
         config = new XMLPropertyListConfiguration();
         config.setProperty("foo", expected);
         save(savedFile);
@@ -369,7 +369,7 @@ public class TestXMLPropertyListConfiguration
     public void testAddDataProperty() throws Exception
     {
         final File savedFile = folder.newFile();
-        final byte[] expected = new byte[]{1, 2, 3, 4};
+        final byte[] expected = {1, 2, 3, 4};
         config = new XMLPropertyListConfiguration();
         config.addProperty("foo", expected);
         save(savedFile);

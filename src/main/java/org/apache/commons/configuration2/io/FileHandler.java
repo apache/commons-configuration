@@ -672,15 +672,11 @@ public class FileHandler
         if (url == null)
         {
             injectNullFileLocator();
-        }
-        else
+        } else if (getContent() instanceof FileLocatorAware)
         {
-            if (getContent() instanceof FileLocatorAware)
-            {
-                final FileLocator locator =
-                        prepareNullLocatorBuilder().sourceURL(url).create();
-                ((FileLocatorAware) getContent()).initFileLocator(locator);
-            }
+            final FileLocator locator =
+                    prepareNullLocatorBuilder().sourceURL(url).create();
+            ((FileLocatorAware) getContent()).initFileLocator(locator);
         }
     }
 

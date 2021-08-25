@@ -91,96 +91,96 @@ public class TestDataConfiguration
         conf.addProperty("byte.list1", "1");
         conf.addProperty("byte.list1", "2");
         conf.addProperty("byte.list2", "1, 2");
-        conf.addProperty("byte.list3", new Byte("1"));
-        conf.addProperty("byte.list3", new Byte("2"));
-        conf.addPropertyDirect("byte.list4", new Byte[] { new Byte("1"), new Byte("2") });
+        conf.addProperty("byte.list3", Byte.valueOf("1"));
+        conf.addProperty("byte.list3", Byte.valueOf("2"));
+        conf.addPropertyDirect("byte.list4", new Byte[] { Byte.valueOf("1"), Byte.valueOf("2") });
         conf.addPropertyDirect("byte.list5", new byte[] { 1, 2 });
         final List<Object> bytes = new ArrayList<>();
-        bytes.add(new Byte("1"));
-        bytes.add(new Byte("2"));
+        bytes.add(Byte.valueOf("1"));
+        bytes.add(Byte.valueOf("2"));
         conf.addProperty("byte.list6", bytes);
         conf.addProperty("byte.string", "1");
-        conf.addProperty("byte.object", new Byte("1"));
+        conf.addProperty("byte.object", Byte.valueOf("1"));
         conf.addProperty("byte.list.interpolated", "${byte.string},2");
 
         // lists of shorts
         conf.addProperty("short.list1", "1");
         conf.addProperty("short.list1", "2");
         conf.addProperty("short.list2", "1, 2");
-        conf.addProperty("short.list3", new Short("1"));
-        conf.addProperty("short.list3", new Short("2"));
-        conf.addPropertyDirect("short.list4", new Short[] { new Short("1"), new Short("2") });
+        conf.addProperty("short.list3", Short.valueOf("1"));
+        conf.addProperty("short.list3", Short.valueOf("2"));
+        conf.addPropertyDirect("short.list4", new Short[] { Short.valueOf("1"), Short.valueOf("2") });
         conf.addPropertyDirect("short.list5", new short[] { 1, 2 });
         final List<Object> shorts = new ArrayList<>();
-        shorts.add(new Short("1"));
-        shorts.add(new Short("2"));
+        shorts.add(Short.valueOf("1"));
+        shorts.add(Short.valueOf("2"));
         conf.addProperty("short.list6", shorts);
         conf.addProperty("short.string", "1");
-        conf.addProperty("short.object", new Short("1"));
+        conf.addProperty("short.object", Short.valueOf("1"));
         conf.addProperty("short.list.interpolated", "${short.string},2");
 
         // lists of integers
         conf.addProperty("integer.list1", "1");
         conf.addProperty("integer.list1", "2");
         conf.addProperty("integer.list2", "1, 2");
-        conf.addProperty("integer.list3", new Integer("1"));
-        conf.addProperty("integer.list3", new Integer("2"));
-        conf.addPropertyDirect("integer.list4", new Integer[] { new Integer("1"), new Integer("2") });
+        conf.addProperty("integer.list3", Integer.valueOf("1"));
+        conf.addProperty("integer.list3", Integer.valueOf("2"));
+        conf.addPropertyDirect("integer.list4", new Integer[] { Integer.valueOf("1"), Integer.valueOf("2") });
         conf.addPropertyDirect("integer.list5", new int[] { 1, 2 });
         final List<Object> integers = new ArrayList<>();
-        integers.add(new Integer("1"));
-        integers.add(new Integer("2"));
+        integers.add(Integer.valueOf("1"));
+        integers.add(Integer.valueOf("2"));
         conf.addProperty("integer.list6", integers);
         conf.addProperty("integer.string", "1");
-        conf.addProperty("integer.object", new Integer("1"));
+        conf.addProperty("integer.object", Integer.valueOf("1"));
         conf.addProperty("integer.list.interpolated", "${integer.string},2");
 
         // lists of longs
         conf.addProperty("long.list1", "1");
         conf.addProperty("long.list1", "2");
         conf.addProperty("long.list2", "1, 2");
-        conf.addProperty("long.list3", new Long("1"));
-        conf.addProperty("long.list3", new Long("2"));
-        conf.addPropertyDirect("long.list4", new Long[] { new Long("1"), new Long("2") });
+        conf.addProperty("long.list3", Long.valueOf("1"));
+        conf.addProperty("long.list3", Long.valueOf("2"));
+        conf.addPropertyDirect("long.list4", new Long[] { Long.valueOf("1"), Long.valueOf("2") });
         conf.addPropertyDirect("long.list5", new long[] { 1, 2 });
         final List<Object> longs = new ArrayList<>();
-        longs.add(new Long("1"));
-        longs.add(new Long("2"));
+        longs.add(Long.valueOf("1"));
+        longs.add(Long.valueOf("2"));
         conf.addProperty("long.list6", longs);
         conf.addProperty("long.string", "1");
-        conf.addProperty("long.object", new Long("1"));
+        conf.addProperty("long.object", Long.valueOf("1"));
         conf.addProperty("long.list.interpolated", "${long.string},2");
 
         // lists of floats
         conf.addProperty("float.list1", "1");
         conf.addProperty("float.list1", "2");
         conf.addProperty("float.list2", "1, 2");
-        conf.addProperty("float.list3", new Float("1"));
-        conf.addProperty("float.list3", new Float("2"));
-        conf.addPropertyDirect("float.list4", new Float[] { new Float("1"), new Float("2") });
+        conf.addProperty("float.list3", Float.valueOf("1"));
+        conf.addProperty("float.list3", Float.valueOf("2"));
+        conf.addPropertyDirect("float.list4", new Float[] { Float.valueOf("1"), Float.valueOf("2") });
         conf.addPropertyDirect("float.list5", new float[] { 1, 2 });
         final List<Object> floats = new ArrayList<>();
-        floats.add(new Float("1"));
-        floats.add(new Float("2"));
+        floats.add(Float.valueOf("1"));
+        floats.add(Float.valueOf("2"));
         conf.addProperty("float.list6", floats);
         conf.addProperty("float.string", "1");
-        conf.addProperty("float.object", new Float("1"));
+        conf.addProperty("float.object", Float.valueOf("1"));
         conf.addProperty("float.list.interpolated", "${float.string},2");
 
         // lists of doubles
         conf.addProperty("double.list1", "1");
         conf.addProperty("double.list1", "2");
         conf.addProperty("double.list2", "1, 2");
-        conf.addProperty("double.list3", new Double("1"));
-        conf.addProperty("double.list3", new Double("2"));
-        conf.addPropertyDirect("double.list4", new Double[] { new Double("1"), new Double("2") });
+        conf.addProperty("double.list3", Double.valueOf("1"));
+        conf.addProperty("double.list3", Double.valueOf("2"));
+        conf.addPropertyDirect("double.list4", new Double[] { Double.valueOf("1"), Double.valueOf("2") });
         conf.addPropertyDirect("double.list5", new double[] { 1, 2 });
         final List<Object> doubles = new ArrayList<>();
-        doubles.add(new Double("1"));
-        doubles.add(new Double("2"));
+        doubles.add(Double.valueOf("1"));
+        doubles.add(Double.valueOf("2"));
         conf.addProperty("double.list6", doubles);
         conf.addProperty("double.string", "1");
-        conf.addProperty("double.object", new Double("1"));
+        conf.addProperty("double.object", Double.valueOf("1"));
         conf.addProperty("double.list.interpolated", "${double.string},2");
 
         // lists of big integers
@@ -424,10 +424,10 @@ public class TestDataConfiguration
     public void testGetBooleanArray()
     {
         // missing list
-        final boolean[] defaultValue = new boolean[] { false, true };
+        final boolean[] defaultValue = { false, true };
         ArrayAssert.assertEquals(defaultValue, conf.getBooleanArray("boolean.list", defaultValue));
 
-        final boolean[] expected = new boolean[] { true, false };
+        final boolean[] expected = { true, false };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list1"));
@@ -503,10 +503,10 @@ public class TestDataConfiguration
     public void testGetByteArray()
     {
         // missing list
-        final byte[] defaultValue = new byte[] { 1, 2};
+        final byte[] defaultValue = { 1, 2};
         ArrayAssert.assertEquals(defaultValue, conf.getByteArray("byte.list", defaultValue));
 
-        final byte[] expected = new byte[] { 1, 2 };
+        final byte[] expected = { 1, 2 };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list1"));
@@ -544,8 +544,8 @@ public class TestDataConfiguration
         ListAssert.assertEquals(null, conf.getByteList("byte.list", null));
 
         List<Object> expected = new ArrayList<>();
-        expected.add(new Byte("1"));
-        expected.add(new Byte("2"));
+        expected.add(Byte.valueOf("1"));
+        expected.add(Byte.valueOf("2"));
 
         // list of strings
         ListAssert.assertEquals(expected, conf.getByteList("byte.list1"));
@@ -570,7 +570,7 @@ public class TestDataConfiguration
 
         // single byte values
         expected = new ArrayList<>();
-        expected.add(new Byte("1"));
+        expected.add(Byte.valueOf("1"));
         ListAssert.assertEquals(expected, conf.getByteList("byte.string"));
         ListAssert.assertEquals(expected, conf.getByteList("byte.object"));
 
@@ -582,10 +582,10 @@ public class TestDataConfiguration
     public void testGetShortArray()
     {
         // missing list
-        final short[] defaultValue = new short[] { 2, 1};
+        final short[] defaultValue = { 2, 1};
         ArrayAssert.assertEquals(defaultValue, conf.getShortArray("short.list", defaultValue));
 
-        final short[] expected = new short[] { 1, 2 };
+        final short[] expected = { 1, 2 };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getShortArray("short.list1"));
@@ -623,8 +623,8 @@ public class TestDataConfiguration
         ListAssert.assertEquals(null, conf.getShortList("short.list", null));
 
         List<Object> expected = new ArrayList<>();
-        expected.add(new Short("1"));
-        expected.add(new Short("2"));
+        expected.add(Short.valueOf("1"));
+        expected.add(Short.valueOf("2"));
 
         // list of strings
         ListAssert.assertEquals(expected, conf.getShortList("short.list1"));
@@ -649,7 +649,7 @@ public class TestDataConfiguration
 
         // single short values
         expected = new ArrayList<>();
-        expected.add(new Short("1"));
+        expected.add(Short.valueOf("1"));
         ListAssert.assertEquals(expected, conf.getShortList("short.string"));
         ListAssert.assertEquals(expected, conf.getShortList("short.object"));
 
@@ -661,10 +661,10 @@ public class TestDataConfiguration
     public void testGetIntegerArray()
     {
         // missing list
-        final int[] defaultValue = new int[] { 2, 1};
+        final int[] defaultValue = { 2, 1};
         ArrayAssert.assertEquals(defaultValue, conf.getIntArray("integer.list", defaultValue));
 
-        final int[] expected = new int[] { 1, 2 };
+        final int[] expected = { 1, 2 };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list1"));
@@ -702,8 +702,8 @@ public class TestDataConfiguration
         ListAssert.assertEquals(null, conf.getIntegerList("integer.list", null));
 
         List<Object> expected = new ArrayList<>();
-        expected.add(new Integer("1"));
-        expected.add(new Integer("2"));
+        expected.add(Integer.valueOf("1"));
+        expected.add(Integer.valueOf("2"));
 
         // list of strings
         ListAssert.assertEquals(expected, conf.getIntegerList("integer.list1"));
@@ -728,7 +728,7 @@ public class TestDataConfiguration
 
         // single int values
         expected = new ArrayList<>();
-        expected.add(new Integer("1"));
+        expected.add(Integer.valueOf("1"));
         ListAssert.assertEquals(expected, conf.getIntegerList("integer.string"));
         ListAssert.assertEquals(expected, conf.getIntegerList("integer.object"));
 
@@ -740,10 +740,10 @@ public class TestDataConfiguration
     public void testGetLongArray()
     {
         // missing list
-        final long[] defaultValue = new long[] { 2, 1};
+        final long[] defaultValue = { 2, 1};
         ArrayAssert.assertEquals(defaultValue, conf.getLongArray("long.list", defaultValue));
 
-        final long[] expected = new long[] { 1, 2 };
+        final long[] expected = { 1, 2 };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getLongArray("long.list1"));
@@ -781,8 +781,8 @@ public class TestDataConfiguration
         ListAssert.assertEquals(null, conf.getLongList("long.list", null));
 
         List<Object> expected = new ArrayList<>();
-        expected.add(new Long("1"));
-        expected.add(new Long("2"));
+        expected.add(Long.valueOf("1"));
+        expected.add(Long.valueOf("2"));
 
         // list of strings
         ListAssert.assertEquals(expected, conf.getLongList("long.list1"));
@@ -807,7 +807,7 @@ public class TestDataConfiguration
 
         // single long values
         expected = new ArrayList<>();
-        expected.add(new Long("1"));
+        expected.add(Long.valueOf("1"));
         ListAssert.assertEquals(expected, conf.getLongList("long.string"));
         ListAssert.assertEquals(expected, conf.getLongList("long.object"));
 
@@ -819,10 +819,10 @@ public class TestDataConfiguration
     public void testGetFloatArray()
     {
         // missing list
-        final float[] defaultValue = new float[] { 2, 1};
+        final float[] defaultValue = { 2, 1};
         ArrayAssert.assertEquals(defaultValue, conf.getFloatArray("float.list", defaultValue), 0);
 
-        final float[] expected = new float[] { 1, 2 };
+        final float[] expected = { 1, 2 };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list1"), 0);
@@ -860,8 +860,8 @@ public class TestDataConfiguration
         ListAssert.assertEquals(null, conf.getFloatList("float.list", null));
 
         List<Object> expected = new ArrayList<>();
-        expected.add(new Float("1"));
-        expected.add(new Float("2"));
+        expected.add(Float.valueOf("1"));
+        expected.add(Float.valueOf("2"));
 
         // list of strings
         ListAssert.assertEquals(expected, conf.getFloatList("float.list1"));
@@ -886,7 +886,7 @@ public class TestDataConfiguration
 
         // single float values
         expected = new ArrayList<>();
-        expected.add(new Float("1"));
+        expected.add(Float.valueOf("1"));
         ListAssert.assertEquals(expected, conf.getFloatList("float.string"));
         ListAssert.assertEquals(expected, conf.getFloatList("float.object"));
 
@@ -898,10 +898,10 @@ public class TestDataConfiguration
     public void testGetDoubleArray()
     {
         // missing list
-        final double[] defaultValue = new double[] { 2, 1 };
+        final double[] defaultValue = { 2, 1 };
         ArrayAssert.assertEquals(defaultValue, conf.getDoubleArray("double.list", defaultValue), 0);
 
-        final double[] expected = new double[] { 1, 2 };
+        final double[] expected = { 1, 2 };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list1"), 0);
@@ -939,8 +939,8 @@ public class TestDataConfiguration
         ListAssert.assertEquals(null, conf.getDoubleList("double.list", null));
 
         List<Object> expected = new ArrayList<>();
-        expected.add(new Double("1"));
-        expected.add(new Double("2"));
+        expected.add(Double.valueOf("1"));
+        expected.add(Double.valueOf("2"));
 
         // list of strings
         ListAssert.assertEquals(expected, conf.getDoubleList("double.list1"));
@@ -965,7 +965,7 @@ public class TestDataConfiguration
 
         // single double values
         expected = new ArrayList<>();
-        expected.add(new Double("1"));
+        expected.add(Double.valueOf("1"));
         ListAssert.assertEquals(expected, conf.getDoubleList("double.string"));
         ListAssert.assertEquals(expected, conf.getDoubleList("double.object"));
 
@@ -977,10 +977,10 @@ public class TestDataConfiguration
     public void testGetBigIntegerArray()
     {
         // missing list
-        final BigInteger[] defaultValue = new BigInteger[] { new BigInteger("2"), new BigInteger("1") };
+        final BigInteger[] defaultValue = { new BigInteger("2"), new BigInteger("1") };
         ArrayAssert.assertEquals(defaultValue, conf.getBigIntegerArray("biginteger.list", defaultValue));
 
-        final BigInteger[] expected = new BigInteger[] { new BigInteger("1"), new BigInteger("2") };
+        final BigInteger[] expected = { new BigInteger("1"), new BigInteger("2") };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getBigIntegerArray("biginteger.list1"));
@@ -1051,10 +1051,10 @@ public class TestDataConfiguration
     public void testGetBigDecimalArray()
     {
         // missing list
-        final BigDecimal[] defaultValue = new BigDecimal[] { new BigDecimal("2"), new BigDecimal("1") };
+        final BigDecimal[] defaultValue = { new BigDecimal("2"), new BigDecimal("1") };
         ArrayAssert.assertEquals(defaultValue, conf.getBigDecimalArray("bigdecimal.list", defaultValue));
 
-        final BigDecimal[] expected = new BigDecimal[] { new BigDecimal("1"), new BigDecimal("2") };
+        final BigDecimal[] expected = { new BigDecimal("1"), new BigDecimal("2") };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getBigDecimalArray("bigdecimal.list1"));
@@ -1143,10 +1143,10 @@ public class TestDataConfiguration
     public void testGetURIArray() throws Exception
     {
         // missing list
-        final URI[] defaultValue = new URI[] { new URI("http://www.apache.org"), new URI("http://jakarta.apache.org") };
+        final URI[] defaultValue = { new URI("http://www.apache.org"), new URI("http://jakarta.apache.org") };
         ArrayAssert.assertEquals(defaultValue, conf.getURIArray("url.list", defaultValue));
 
-        final URI[] expected = new URI[] { new URI("http://jakarta.apache.org"), new URI("http://www.apache.org") };
+        final URI[] expected = { new URI("http://jakarta.apache.org"), new URI("http://www.apache.org") };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list1"));
@@ -1235,10 +1235,10 @@ public class TestDataConfiguration
     public void testGetURLArray() throws Exception
     {
         // missing list
-        final URL[] defaultValue = new URL[] { new URL("http://www.apache.org"), new URL("http://jakarta.apache.org") };
+        final URL[] defaultValue = { new URL("http://www.apache.org"), new URL("http://jakarta.apache.org") };
         ArrayAssert.assertEquals(defaultValue, conf.getURLArray("url.list", defaultValue));
 
-        final URL[] expected = new URL[] { new URL("http://jakarta.apache.org"), new URL("http://www.apache.org") };
+        final URL[] expected = { new URL("http://jakarta.apache.org"), new URL("http://www.apache.org") };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getURLArray("url.list1"));
@@ -1344,10 +1344,10 @@ public class TestDataConfiguration
     public void testGetLocaleArray() throws Exception
     {
         // missing list
-        final Locale[] defaultValue = new Locale[] { Locale.GERMAN, Locale.FRENCH };
+        final Locale[] defaultValue = { Locale.GERMAN, Locale.FRENCH };
         ArrayAssert.assertEquals(defaultValue, conf.getLocaleArray("locale.list", defaultValue));
 
-        final Locale[] expected = new Locale[] { Locale.FRENCH, Locale.GERMAN };
+        final Locale[] expected = { Locale.FRENCH, Locale.GERMAN };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getLocaleArray("locale.list1"));
@@ -1444,10 +1444,10 @@ public class TestDataConfiguration
     public void testGetColorArray() throws Exception
     {
         // missing list
-        final Color[] defaultValue = new Color[] { Color.red, Color.blue };
+        final Color[] defaultValue = { Color.red, Color.blue };
         ArrayAssert.assertEquals(defaultValue, conf.getColorArray("color.list", defaultValue));
 
-        final Color[] expected = new Color[] { Color.red, Color.blue };
+        final Color[] expected = { Color.red, Color.blue };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getColorArray("color.list1"));
@@ -1595,10 +1595,10 @@ public class TestDataConfiguration
         final Date date2 = format.parse("2004-12-31");
 
         // missing list
-        final Date[] defaultValue = new Date[] { date2, date1 };
+        final Date[] defaultValue = { date2, date1 };
         ArrayAssert.assertEquals(defaultValue, conf.getDateArray("date.list", defaultValue));
 
-        final Date[] expected = new Date[] { date1, date2 };
+        final Date[] expected = { date1, date2 };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getDateArray("date.list1"));
@@ -1635,7 +1635,7 @@ public class TestDataConfiguration
         final DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
         final Date date1 = format.parse("01/01/2004");
         final Date date2 = format.parse("12/31/2004");
-        final Date[] expected = new Date[] { date1, date2 };
+        final Date[] expected = { date1, date2 };
 
         conf.addProperty("date.format", "01/01/2004");
         conf.addProperty("date.format", "12/31/2004");
@@ -1744,10 +1744,10 @@ public class TestDataConfiguration
         calendar2.setTime(date2);
 
         // missing list
-        final Calendar[] defaultValue = new Calendar[] { calendar2, calendar1 };
+        final Calendar[] defaultValue = { calendar2, calendar1 };
         ArrayAssert.assertEquals(defaultValue, conf.getCalendarArray("calendar.list", defaultValue));
 
-        final Calendar[] expected = new Calendar[] { calendar1, calendar2 };
+        final Calendar[] expected = { calendar1, calendar2 };
 
         // list of strings
         ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list1"));
@@ -1789,7 +1789,7 @@ public class TestDataConfiguration
         calendar1.setTime(date1);
         final Calendar calendar2 = Calendar.getInstance();
         calendar2.setTime(date2);
-        final Calendar[] expected = new Calendar[] { calendar1, calendar2 };
+        final Calendar[] expected = { calendar1, calendar2 };
 
         conf.addProperty("calendar.format", "01/01/2004");
         conf.addProperty("calendar.format", "12/31/2004");

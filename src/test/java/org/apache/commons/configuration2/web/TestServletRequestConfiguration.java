@@ -139,7 +139,7 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
 
         for (int i = 0; i < values.length; i++)
         {
-            assertEquals("Wrong value at index " + i, values[i].replaceAll("\\\\", ""), v.get(i));
+            assertEquals("Wrong value at index " + i, values[i].replace("\\", ""), v.get(i));
         }
     }
 }

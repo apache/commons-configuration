@@ -252,7 +252,7 @@ public class TestHierarchicalXMLConfiguration
         config.clearProperty("test.entity[@name]");
         config.setProperty("element", "new value");
         config.setProperty("test(0)", "A <new> value");
-        config.addProperty("test(1).int", new Integer(9));
+        config.addProperty("test(1).int", Integer.valueOf(9));
         config.addProperty("list(1).sublist.item", "seven");
         config.setProperty("clear", "yes");
         config.setProperty("mean", "now it's simple");

@@ -335,7 +335,7 @@ final class PropertyConverter
         {
             return (Float) n;
         }
-        return new Float(n.floatValue());
+        return Float.valueOf(n.floatValue());
     }
 
     /**
@@ -352,7 +352,7 @@ final class PropertyConverter
         {
             return (Double) n;
         }
-        return new Double(n.doubleValue());
+        return Double.valueOf(n.doubleValue());
     }
 
     /**

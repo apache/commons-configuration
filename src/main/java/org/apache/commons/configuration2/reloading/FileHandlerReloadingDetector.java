@@ -157,15 +157,11 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
             final long modifiedMillis = getLastModificationDate();
             if (modifiedMillis > 0)
             {
-                if (lastModifiedMillis == 0)
-                {
-                    // initialization
-                    updateLastModified(modifiedMillis);
-                }
-                else
-                {
+                if (lastModifiedMillis != 0) {
                     return modifiedMillis != lastModifiedMillis;
                 }
+                // initialization
+                updateLastModified(modifiedMillis);
             }
         }
 
