@@ -76,6 +76,12 @@ public class TestXMLConfiguration_605 {
     }
 
     @Test
+    public void testWithCommaSeparatedList() throws Exception {
+        final String source = "<configuration><key0></key0><key1>a,b</key1><key2></key2><key3></key3></configuration>";
+        checkConfiguration(create(source));
+    }
+
+    @Test
     public void testWithNoComma() throws Exception {
         final String source = "<configuration><key0></key0><key1></key1><key2></key2><key3></key3></configuration>";
         checkConfiguration(create(source));
@@ -84,24 +90,6 @@ public class TestXMLConfiguration_605 {
     @Test
     public void testWithOnlyComma() throws Exception {
         final String source = "<configuration><key0></key0><key1>,</key1><key2></key2><key3></key3></configuration>";
-        checkConfiguration(create(source));
-    }
-
-    @Test
-    public void testWithCommaSeparatedList() throws Exception {
-        final String source = "<configuration><key0></key0><key1>a,b</key1><key2></key2><key3></key3></configuration>";
-        checkConfiguration(create(source));
-    }
-
-    @Test
-    public void testWithSeparatingWhitespace() throws Exception {
-        final String source = "<configuration><key0></key0><key1>,</key1> <key2></key2><key3></key3></configuration>";
-        checkConfiguration(create(source));
-    }
-
-    @Test
-    public void testWithSeparatingNonWhitespace() throws Exception {
-        final String source = "<configuration><key0></key0><key1>,</key1>A<key2></key2><key3></key3></configuration>";
         checkConfiguration(create(source));
     }
 
@@ -131,5 +119,17 @@ public class TestXMLConfiguration_605 {
         sourceBuilder.append("<key3></key3>");
         sourceBuilder.append("</configuration>");
         checkConfiguration(create(sourceBuilder.toString(), DisabledListDelimiterHandler.INSTANCE));
+    }
+
+    @Test
+    public void testWithSeparatingNonWhitespace() throws Exception {
+        final String source = "<configuration><key0></key0><key1>,</key1>A<key2></key2><key3></key3></configuration>";
+        checkConfiguration(create(source));
+    }
+
+    @Test
+    public void testWithSeparatingWhitespace() throws Exception {
+        final String source = "<configuration><key0></key0><key1>,</key1> <key2></key2><key3></key3></configuration>";
+        checkConfiguration(create(source));
     }
 }

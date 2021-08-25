@@ -50,56 +50,6 @@ public class TestQueryResult {
     }
 
     /**
-     * Tests isAttributeResult() if the expected result is true.
-     */
-    @Test
-    public void testIsAttributeResultTrue() {
-        final QueryResult<ImmutableNode> result = QueryResult.createAttributeResult(attributeNode, ATTR);
-        assertTrue("Not an attribute result", result.isAttributeResult());
-    }
-
-    /**
-     * Tests is attributeResult() if the expected result is false.
-     */
-    @Test
-    public void testIsAttributeResultFalse() {
-        final QueryResult<ImmutableNode> result = QueryResult.createNodeResult(resultNode);
-        assertFalse("An attribute result", result.isAttributeResult());
-    }
-
-    /**
-     * Tests whether the attribute's value can be queried.
-     */
-    @Test
-    public void testGetAttributeValue() {
-        final QueryResult<ImmutableNode> result = QueryResult.createAttributeResult(attributeNode, ATTR);
-        assertEquals("Wrong value", VALUE, result.getAttributeValue(new InMemoryNodeModel().getNodeHandler()));
-    }
-
-    /**
-     * Tries to query an attribute value for a non-attribute result.
-     */
-    @Test(expected = IllegalStateException.class)
-    public void testGetAttributeValueNoAttributeResult() {
-        final QueryResult<ImmutableNode> result = QueryResult.createNodeResult(resultNode);
-        result.getAttributeValue(new InMemoryNodeModel().getNodeHandler());
-    }
-
-    /**
-     * Tests equals() if the expected result is true.
-     */
-    @Test
-    public void testEqualsTrue() {
-        QueryResult<ImmutableNode> r1 = QueryResult.createNodeResult(resultNode);
-        checkEquals(r1, r1, true);
-        QueryResult<ImmutableNode> r2 = QueryResult.createNodeResult(resultNode);
-        checkEquals(r1, r2, true);
-        r1 = QueryResult.createAttributeResult(attributeNode, ATTR);
-        r2 = QueryResult.createAttributeResult(attributeNode, ATTR);
-        checkEquals(r1, r2, true);
-    }
-
-    /**
      * Tests equals() if the expected result is false.
      */
     @Test
@@ -126,12 +76,53 @@ public class TestQueryResult {
     }
 
     /**
-     * Tests the string representation of a node result.
+     * Tests equals() if the expected result is true.
      */
     @Test
-    public void testToStringNodeResult() {
+    public void testEqualsTrue() {
+        QueryResult<ImmutableNode> r1 = QueryResult.createNodeResult(resultNode);
+        checkEquals(r1, r1, true);
+        QueryResult<ImmutableNode> r2 = QueryResult.createNodeResult(resultNode);
+        checkEquals(r1, r2, true);
+        r1 = QueryResult.createAttributeResult(attributeNode, ATTR);
+        r2 = QueryResult.createAttributeResult(attributeNode, ATTR);
+        checkEquals(r1, r2, true);
+    }
+
+    /**
+     * Tests whether the attribute's value can be queried.
+     */
+    @Test
+    public void testGetAttributeValue() {
+        final QueryResult<ImmutableNode> result = QueryResult.createAttributeResult(attributeNode, ATTR);
+        assertEquals("Wrong value", VALUE, result.getAttributeValue(new InMemoryNodeModel().getNodeHandler()));
+    }
+
+    /**
+     * Tries to query an attribute value for a non-attribute result.
+     */
+    @Test(expected = IllegalStateException.class)
+    public void testGetAttributeValueNoAttributeResult() {
         final QueryResult<ImmutableNode> result = QueryResult.createNodeResult(resultNode);
-        assertThat(result.toString(), containsString("resultNode=" + resultNode));
+        result.getAttributeValue(new InMemoryNodeModel().getNodeHandler());
+    }
+
+    /**
+     * Tests is attributeResult() if the expected result is false.
+     */
+    @Test
+    public void testIsAttributeResultFalse() {
+        final QueryResult<ImmutableNode> result = QueryResult.createNodeResult(resultNode);
+        assertFalse("An attribute result", result.isAttributeResult());
+    }
+
+    /**
+     * Tests isAttributeResult() if the expected result is true.
+     */
+    @Test
+    public void testIsAttributeResultTrue() {
+        final QueryResult<ImmutableNode> result = QueryResult.createAttributeResult(attributeNode, ATTR);
+        assertTrue("Not an attribute result", result.isAttributeResult());
     }
 
     /**
@@ -143,5 +134,14 @@ public class TestQueryResult {
         final String s = result.toString();
         assertThat(s, containsString("attribute=" + ATTR));
         assertThat(s, containsString("parentNode=" + attributeNode));
+    }
+
+    /**
+     * Tests the string representation of a node result.
+     */
+    @Test
+    public void testToStringNodeResult() {
+        final QueryResult<ImmutableNode> result = QueryResult.createNodeResult(resultNode);
+        assertThat(result.toString(), containsString("resultNode=" + resultNode));
     }
 }

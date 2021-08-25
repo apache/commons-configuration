@@ -30,8 +30,164 @@ import org.junit.Test;
  *
  */
 public class TestReadWriteSynchronizer {
+    /**
+     * A class representing an account.
+     */
+    private static class Account {
+        /** The amount stored in this account. */
+        private long amount;
+
+        /**
+         * Changes the amount of money by the given delata.
+         *
+         * @param delta the delta
+         */
+        public void change(final long delta) {
+            amount += delta;
+        }
+
+        /**
+         * Returns the amount of money stored in this account.
+         *
+         * @return the amount
+         */
+        public long getAmount() {
+            return amount;
+        }
+    }
+
+    /**
+     * A thread which performs a number of read operations on the bank's accounts and checks whether the amount of money is
+     * consistent.
+     */
+    private static class ReaderThread extends Thread {
+        /** The acounts to monitor. */
+        private final Account[] accounts;
+
+        /** The synchronizer object. */
+        private final Synchronizer sync;
+
+        /** The number of read operations. */
+        private final int numberOfReads;
+
+        /** Stores errors detected on read operations. */
+        private volatile int errors;
+
+        /**
+         * Creates a new instance of {@code ReaderThread}.
+         *
+         * @param s the synchronizer to be used
+         * @param readCount the number of read operations
+         * @param accs the accounts to monitor
+         */
+        public ReaderThread(final Synchronizer s, final int readCount, final Account... accs) {
+            accounts = accs;
+            sync = s;
+            numberOfReads = readCount;
+        }
+
+        /**
+         * Returns the number of errors occurred during read operations.
+         *
+         * @return the number of errors
+         */
+        public int getErrors() {
+            return errors;
+        }
+
+        /**
+         * Performs the given number of read operations.
+         */
+        @Override
+        public void run() {
+            for (int i = 0; i < numberOfReads; i++) {
+                sync.beginRead();
+                final long sum = sumUpAccounts(accounts);
+                sync.endRead();
+                if (sum != TOTAL_MONEY) {
+                    errors++;
+                }
+            }
+        }
+    }
+
+    /**
+     * A test thread for updating account objects. This thread executes a number of transactions on two accounts. Each
+     * transaction determines the account containing more money. Then a random number of money is transferred from this
+     * account to the other one.
+     */
+    private static class UpdateThread extends Thread {
+        /** The synchronizer. */
+        private final Synchronizer sync;
+
+        /** Account 1. */
+        private final Account account1;
+
+        /** Account 2. */
+        private final Account account2;
+
+        /** An object for creating random numbers. */
+        private final Random random;
+
+        /** The number of transactions. */
+        private final int numberOfUpdates;
+
+        /**
+         * Creates a new instance of {@code UpdateThread}.
+         *
+         * @param s the synchronizer
+         * @param updateCount the number of updates
+         * @param ac1 account 1
+         * @param ac2 account 2
+         */
+        public UpdateThread(final Synchronizer s, final int updateCount, final Account ac1, final Account ac2) {
+            sync = s;
+            account1 = ac1;
+            account2 = ac2;
+            numberOfUpdates = updateCount;
+            random = new Random();
+        }
+
+        /**
+         * Performs the given number of update transactions.
+         */
+        @Override
+        public void run() {
+            for (int i = 0; i < numberOfUpdates; i++) {
+                sync.beginWrite();
+                final Account acSource;
+                Account acDest;
+                if (account1.getAmount() < account2.getAmount()) {
+                    acSource = account1;
+                    acDest = account2;
+                } else {
+                    acSource = account2;
+                    acDest = account1;
+                }
+                final long x = Math.round(random.nextDouble() * (acSource.getAmount() - 1)) + 1;
+                acSource.change(-x);
+                acDest.change(x);
+                sync.endWrite();
+            }
+        }
+    }
+
     /** Constant for the total amount of money in the system. */
     private static final long TOTAL_MONEY = 1000000L;
+
+    /**
+     * Helper method to calculate the sum over all accounts.
+     *
+     * @param accounts the accounts to check
+     * @return the sum of the money on these accounts
+     */
+    private static long sumUpAccounts(final Account... accounts) {
+        long sum = 0;
+        for (final Account acc : accounts) {
+            sum += acc.getAmount();
+        }
+        return sum;
+    }
 
     /**
      * Tests whether a lock passed to the constructor is used.
@@ -102,161 +258,5 @@ public class TestReadWriteSynchronizer {
         sync.beginRead();
         assertEquals("Wrong sum of money", TOTAL_MONEY, sumUpAccounts(account1, account2));
         sync.endRead();
-    }
-
-    /**
-     * Helper method to calculate the sum over all accounts.
-     *
-     * @param accounts the accounts to check
-     * @return the sum of the money on these accounts
-     */
-    private static long sumUpAccounts(final Account... accounts) {
-        long sum = 0;
-        for (final Account acc : accounts) {
-            sum += acc.getAmount();
-        }
-        return sum;
-    }
-
-    /**
-     * A class representing an account.
-     */
-    private static class Account {
-        /** The amount stored in this account. */
-        private long amount;
-
-        /**
-         * Returns the amount of money stored in this account.
-         *
-         * @return the amount
-         */
-        public long getAmount() {
-            return amount;
-        }
-
-        /**
-         * Changes the amount of money by the given delata.
-         *
-         * @param delta the delta
-         */
-        public void change(final long delta) {
-            amount += delta;
-        }
-    }
-
-    /**
-     * A thread which performs a number of read operations on the bank's accounts and checks whether the amount of money is
-     * consistent.
-     */
-    private static class ReaderThread extends Thread {
-        /** The acounts to monitor. */
-        private final Account[] accounts;
-
-        /** The synchronizer object. */
-        private final Synchronizer sync;
-
-        /** The number of read operations. */
-        private final int numberOfReads;
-
-        /** Stores errors detected on read operations. */
-        private volatile int errors;
-
-        /**
-         * Creates a new instance of {@code ReaderThread}.
-         *
-         * @param s the synchronizer to be used
-         * @param readCount the number of read operations
-         * @param accs the accounts to monitor
-         */
-        public ReaderThread(final Synchronizer s, final int readCount, final Account... accs) {
-            accounts = accs;
-            sync = s;
-            numberOfReads = readCount;
-        }
-
-        /**
-         * Performs the given number of read operations.
-         */
-        @Override
-        public void run() {
-            for (int i = 0; i < numberOfReads; i++) {
-                sync.beginRead();
-                final long sum = sumUpAccounts(accounts);
-                sync.endRead();
-                if (sum != TOTAL_MONEY) {
-                    errors++;
-                }
-            }
-        }
-
-        /**
-         * Returns the number of errors occurred during read operations.
-         *
-         * @return the number of errors
-         */
-        public int getErrors() {
-            return errors;
-        }
-    }
-
-    /**
-     * A test thread for updating account objects. This thread executes a number of transactions on two accounts. Each
-     * transaction determines the account containing more money. Then a random number of money is transferred from this
-     * account to the other one.
-     */
-    private static class UpdateThread extends Thread {
-        /** The synchronizer. */
-        private final Synchronizer sync;
-
-        /** Account 1. */
-        private final Account account1;
-
-        /** Account 2. */
-        private final Account account2;
-
-        /** An object for creating random numbers. */
-        private final Random random;
-
-        /** The number of transactions. */
-        private final int numberOfUpdates;
-
-        /**
-         * Creates a new instance of {@code UpdateThread}.
-         *
-         * @param s the synchronizer
-         * @param updateCount the number of updates
-         * @param ac1 account 1
-         * @param ac2 account 2
-         */
-        public UpdateThread(final Synchronizer s, final int updateCount, final Account ac1, final Account ac2) {
-            sync = s;
-            account1 = ac1;
-            account2 = ac2;
-            numberOfUpdates = updateCount;
-            random = new Random();
-        }
-
-        /**
-         * Performs the given number of update transactions.
-         */
-        @Override
-        public void run() {
-            for (int i = 0; i < numberOfUpdates; i++) {
-                sync.beginWrite();
-                final Account acSource;
-                Account acDest;
-                if (account1.getAmount() < account2.getAmount()) {
-                    acSource = account1;
-                    acDest = account2;
-                } else {
-                    acSource = account2;
-                    acDest = account1;
-                }
-                final long x = Math.round(random.nextDouble() * (acSource.getAmount() - 1)) + 1;
-                acSource.change(-x);
-                acDest.change(x);
-                sync.endWrite();
-            }
-        }
     }
 }

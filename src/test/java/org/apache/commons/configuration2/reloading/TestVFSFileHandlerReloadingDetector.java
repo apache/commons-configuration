@@ -53,16 +53,14 @@ public class TestVFSFileHandlerReloadingDetector {
     public TemporaryFolder folder = new TemporaryFolder();
 
     /**
-     * Writes a test configuration file containing a single property with the given value.
-     *
-     * @param file the file to be written
-     * @param value the value of the test property
-     * @throws IOException if an error occurs
+     * Tests whether the refresh delay is correctly passed to the base class.
      */
-    private void writeTestFile(final File file, final String value) throws IOException {
-        try (final FileWriter out = new FileWriter(file)) {
-            out.write(String.format(FMT_XML, value));
-        }
+    @Test
+    public void testGetRefreshDelay() throws Exception {
+        final long delay = 20130325L;
+        final VFSFileHandlerReloadingDetector strategy = new VFSFileHandlerReloadingDetector(null, delay);
+        assertNotNull("No file handler was created", strategy.getFileHandler());
+        assertEquals("Wrong refresh delay", delay, strategy.getRefreshDelay());
     }
 
     /**
@@ -80,28 +78,6 @@ public class TestVFSFileHandlerReloadingDetector {
         // https://bugs.openjdk.java.net/browse/JDK-8177809
         final long expectedMillis = Files.getLastModifiedTime(file.toPath()).toMillis();
         assertEquals("Wrong modification date", expectedMillis, modificationDate);
-    }
-
-    /**
-     * Tests whether a non existing file is handled correctly.
-     */
-    @Test
-    public void testLastModificationDateNonExisting() {
-        final File file = ConfigurationAssert.getOutFile("NonExistingFile.xml");
-        final FileHandler handler = new FileHandler();
-        handler.setFileSystem(new VFSFileSystem());
-        handler.setFile(file);
-        final VFSFileHandlerReloadingDetector strategy = new VFSFileHandlerReloadingDetector(handler);
-        assertEquals("Got a modification date", 0, strategy.getLastModificationDate());
-    }
-
-    /**
-     * Tests whether an undefined file handler is handler correctly.
-     */
-    @Test
-    public void testLastModificationDateUndefinedHandler() {
-        final VFSFileHandlerReloadingDetector strategy = new VFSFileHandlerReloadingDetector();
-        assertEquals("Got a modification date", 0, strategy.getLastModificationDate());
     }
 
     /**
@@ -127,6 +103,28 @@ public class TestVFSFileHandlerReloadingDetector {
     }
 
     /**
+     * Tests whether a non existing file is handled correctly.
+     */
+    @Test
+    public void testLastModificationDateNonExisting() {
+        final File file = ConfigurationAssert.getOutFile("NonExistingFile.xml");
+        final FileHandler handler = new FileHandler();
+        handler.setFileSystem(new VFSFileSystem());
+        handler.setFile(file);
+        final VFSFileHandlerReloadingDetector strategy = new VFSFileHandlerReloadingDetector(handler);
+        assertEquals("Got a modification date", 0, strategy.getLastModificationDate());
+    }
+
+    /**
+     * Tests whether an undefined file handler is handler correctly.
+     */
+    @Test
+    public void testLastModificationDateUndefinedHandler() {
+        final VFSFileHandlerReloadingDetector strategy = new VFSFileHandlerReloadingDetector();
+        assertEquals("Got a modification date", 0, strategy.getLastModificationDate());
+    }
+
+    /**
      * Tests a URI which cannot be resolved.
      */
     @Test(expected = ConfigurationRuntimeException.class)
@@ -143,13 +141,15 @@ public class TestVFSFileHandlerReloadingDetector {
     }
 
     /**
-     * Tests whether the refresh delay is correctly passed to the base class.
+     * Writes a test configuration file containing a single property with the given value.
+     *
+     * @param file the file to be written
+     * @param value the value of the test property
+     * @throws IOException if an error occurs
      */
-    @Test
-    public void testGetRefreshDelay() throws Exception {
-        final long delay = 20130325L;
-        final VFSFileHandlerReloadingDetector strategy = new VFSFileHandlerReloadingDetector(null, delay);
-        assertNotNull("No file handler was created", strategy.getFileHandler());
-        assertEquals("Wrong refresh delay", delay, strategy.getRefreshDelay());
+    private void writeTestFile(final File file, final String value) throws IOException {
+        try (final FileWriter out = new FileWriter(file)) {
+            out.write(String.format(FMT_XML, value));
+        }
     }
 }

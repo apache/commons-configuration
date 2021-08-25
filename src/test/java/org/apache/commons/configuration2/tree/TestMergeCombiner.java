@@ -34,6 +34,26 @@ import org.junit.Test;
  */
 public class TestMergeCombiner extends AbstractCombinerTest {
     /**
+     * Helper method for checking the combined table structure.
+     *
+     * @param config the config
+     * @return the node for the table element
+     */
+    private ImmutableNode checkTable(final HierarchicalConfiguration<ImmutableNode> config) {
+        assertEquals("Wrong number of tables", 1, config.getMaxIndex("database.tables.table"));
+        final HierarchicalConfiguration<ImmutableNode> c = config.configurationAt("database.tables.table(0)");
+        assertEquals("Wrong table name", "documents", c.getString("name"));
+        assertEquals("Wrong number of fields", 2, c.getMaxIndex("fields.field.name"));
+        assertEquals("Wrong field", "docname", c.getString("fields.field(1).name"));
+
+        final NodeHandler<ImmutableNode> nodeHandler = config.getNodeModel().getNodeHandler();
+        final List<QueryResult<ImmutableNode>> nds = config.getExpressionEngine().query(nodeHandler.getRootNode(), "database.tables.table", nodeHandler);
+        assertFalse("No node found", nds.isEmpty());
+        assertFalse("Not a node result", nds.get(0).isAttributeResult());
+        return nds.get(0).getNode();
+    }
+
+    /**
      * Creates the combiner.
      *
      * @return the combiner
@@ -41,19 +61,6 @@ public class TestMergeCombiner extends AbstractCombinerTest {
     @Override
     protected NodeCombiner createCombiner() {
         return new MergeCombiner();
-    }
-
-    /**
-     * Tests combination of simple elements.
-     */
-    @Test
-    public void testSimpleValues() throws ConfigurationException {
-        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals("Wrong number of bgcolors", 0, config.getMaxIndex("gui.bgcolor"));
-        assertEquals("Wrong bgcolor", "green", config.getString("gui.bgcolor"));
-        assertEquals("Wrong selcolor", "yellow", config.getString("gui.selcolor"));
-        assertEquals("Wrong fgcolor", "blue", config.getString("gui.fgcolor"));
-        assertEquals("Wrong level", 1, config.getInt("gui.level"));
     }
 
     /**
@@ -69,15 +76,11 @@ public class TestMergeCombiner extends AbstractCombinerTest {
     }
 
     /**
-     * Tests whether property values are correctly overridden.
+     * Tests the combination of the table structure. With the merge combiner both table 1 and table 2 should be present.
      */
     @Test
-    public void testOverrideValues() throws ConfigurationException {
-        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals("Wrong user", "Admin", config.getString("base.services.security.login.user"));
-        assertEquals("Wrong user type", "default", config.getString("base.services.security.login.user[@type]"));
-        assertNull("Wrong password", config.getString("base.services.security.login.passwd"));
-        assertEquals("Wrong password type", "secret", config.getString("base.services.security.login.passwd[@type]"));
+    public void testCombinedTable() throws ConfigurationException {
+        checkTable(createCombinedConfiguration());
     }
 
     /**
@@ -101,14 +104,6 @@ public class TestMergeCombiner extends AbstractCombinerTest {
         assertEquals("Wrong server", "http://testsvr.com", config.getString("net.server.url(2)"));
     }
 
-    /**
-     * Tests the combination of the table structure. With the merge combiner both table 1 and table 2 should be present.
-     */
-    @Test
-    public void testCombinedTable() throws ConfigurationException {
-        checkTable(createCombinedConfiguration());
-    }
-
     @Test
     public void testMerge() throws ConfigurationException {
         // combiner.setDebugStream(System.out);
@@ -126,22 +121,27 @@ public class TestMergeCombiner extends AbstractCombinerTest {
     }
 
     /**
-     * Helper method for checking the combined table structure.
-     *
-     * @param config the config
-     * @return the node for the table element
+     * Tests whether property values are correctly overridden.
      */
-    private ImmutableNode checkTable(final HierarchicalConfiguration<ImmutableNode> config) {
-        assertEquals("Wrong number of tables", 1, config.getMaxIndex("database.tables.table"));
-        final HierarchicalConfiguration<ImmutableNode> c = config.configurationAt("database.tables.table(0)");
-        assertEquals("Wrong table name", "documents", c.getString("name"));
-        assertEquals("Wrong number of fields", 2, c.getMaxIndex("fields.field.name"));
-        assertEquals("Wrong field", "docname", c.getString("fields.field(1).name"));
+    @Test
+    public void testOverrideValues() throws ConfigurationException {
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        assertEquals("Wrong user", "Admin", config.getString("base.services.security.login.user"));
+        assertEquals("Wrong user type", "default", config.getString("base.services.security.login.user[@type]"));
+        assertNull("Wrong password", config.getString("base.services.security.login.passwd"));
+        assertEquals("Wrong password type", "secret", config.getString("base.services.security.login.passwd[@type]"));
+    }
 
-        final NodeHandler<ImmutableNode> nodeHandler = config.getNodeModel().getNodeHandler();
-        final List<QueryResult<ImmutableNode>> nds = config.getExpressionEngine().query(nodeHandler.getRootNode(), "database.tables.table", nodeHandler);
-        assertFalse("No node found", nds.isEmpty());
-        assertFalse("Not a node result", nds.get(0).isAttributeResult());
-        return nds.get(0).getNode();
+    /**
+     * Tests combination of simple elements.
+     */
+    @Test
+    public void testSimpleValues() throws ConfigurationException {
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        assertEquals("Wrong number of bgcolors", 0, config.getMaxIndex("gui.bgcolor"));
+        assertEquals("Wrong bgcolor", "green", config.getString("gui.bgcolor"));
+        assertEquals("Wrong selcolor", "yellow", config.getString("gui.selcolor"));
+        assertEquals("Wrong fgcolor", "blue", config.getString("gui.fgcolor"));
+        assertEquals("Wrong level", 1, config.getInt("gui.level"));
     }
 }

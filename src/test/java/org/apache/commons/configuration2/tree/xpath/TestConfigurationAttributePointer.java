@@ -61,11 +61,19 @@ public class TestConfigurationAttributePointer {
     }
 
     /**
-     * Tests whether the correct pointer is returned.
+     * Tests querying an iterator for attributes. Result should be null.
      */
     @Test
-    public void testGetParentPointer() {
-        assertSame("Wrong parent pointer", parent, pointer.getParentPointer());
+    public void testAttributeIterator() {
+        assertNull("Returned an attribute iterator", pointer.attributeIterator(new QName(null, "test")));
+    }
+
+    /**
+     * Tests querying an iterator for children. Result should be null.
+     */
+    @Test
+    public void testChildIterator() {
+        assertNull("Returned an iterator for children", pointer.childIterator(null, false, null));
     }
 
     /**
@@ -108,6 +116,30 @@ public class TestConfigurationAttributePointer {
     }
 
     /**
+     * Tests whether the correct pointer is returned.
+     */
+    @Test
+    public void testGetParentPointer() {
+        assertSame("Wrong parent pointer", parent, pointer.getParentPointer());
+    }
+
+    /**
+     * Tests querying the attribute's value.
+     */
+    @Test
+    public void testGetValue() {
+        assertEquals("Wrong value", ATTR_VALUE, pointer.getValue());
+    }
+
+    /**
+     * Tests the attribute flag.
+     */
+    @Test
+    public void testIsAttribute() {
+        assertTrue("Not an attribute", pointer.isAttribute());
+    }
+
+    /**
      * Tests the collection flag.
      */
     @Test
@@ -124,43 +156,11 @@ public class TestConfigurationAttributePointer {
     }
 
     /**
-     * Tests the attribute flag.
-     */
-    @Test
-    public void testIsAttribute() {
-        assertTrue("Not an attribute", pointer.isAttribute());
-    }
-
-    /**
-     * Tests querying the attribute's value.
-     */
-    @Test
-    public void testGetValue() {
-        assertEquals("Wrong value", ATTR_VALUE, pointer.getValue());
-    }
-
-    /**
      * Tries to set a new value.
      */
     @Test(expected = UnsupportedOperationException.class)
     public void testSetValue() {
         pointer.setValue("newValue");
-    }
-
-    /**
-     * Tests querying an iterator for attributes. Result should be null.
-     */
-    @Test
-    public void testAttributeIterator() {
-        assertNull("Returned an attribute iterator", pointer.attributeIterator(new QName(null, "test")));
-    }
-
-    /**
-     * Tests querying an iterator for children. Result should be null.
-     */
-    @Test
-    public void testChildIterator() {
-        assertNull("Returned an iterator for children", pointer.childIterator(null, false, null));
     }
 
     /**

@@ -41,6 +41,17 @@ public class TestCatalogResolver {
     private CatalogResolver resolver;
     private XMLConfiguration config;
 
+    /**
+     * Loads the test configuration from the specified file.
+     *
+     * @param fileName the file name
+     * @throws ConfigurationException if an error occurs
+     */
+    private void load(final String fileName) throws ConfigurationException {
+        final FileHandler handler = new FileHandler(config);
+        handler.load(fileName);
+    }
+
     @Before
     public void setUp() throws Exception {
         resolver = new CatalogResolver();
@@ -56,15 +67,19 @@ public class TestCatalogResolver {
         config = null;
     }
 
-    /**
-     * Loads the test configuration from the specified file.
-     *
-     * @param fileName the file name
-     * @throws ConfigurationException if an error occurs
-     */
-    private void load(final String fileName) throws ConfigurationException {
-        final FileHandler handler = new FileHandler(config);
-        handler.load(fileName);
+    @Test
+    public void testDebug() throws Exception {
+        resolver.setDebug(true);
+        // There is no really good way to check this except to do something
+        // that causes debug output.
+    }
+
+    @Test
+    public void testLogger() throws Exception {
+        final ConfigurationLogger log = new ConfigurationLogger(this.getClass());
+        resolver.setLogger(log);
+        assertNotNull("No Logger returned", resolver.getLogger());
+        assertSame("Incorrect Logger", log, resolver.getLogger());
     }
 
     @Test
@@ -85,21 +100,6 @@ public class TestCatalogResolver {
     @Test
     public void testSchemaResolver() throws ConfigurationException {
         load(REWRITE_SCHEMA_FILE);
-    }
-
-    @Test
-    public void testDebug() throws Exception {
-        resolver.setDebug(true);
-        // There is no really good way to check this except to do something
-        // that causes debug output.
-    }
-
-    @Test
-    public void testLogger() throws Exception {
-        final ConfigurationLogger log = new ConfigurationLogger(this.getClass());
-        resolver.setLogger(log);
-        assertNotNull("No Logger returned", resolver.getLogger());
-        assertSame("Incorrect Logger", log, resolver.getLogger());
     }
 
 }

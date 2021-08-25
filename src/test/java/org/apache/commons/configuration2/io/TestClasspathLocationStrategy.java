@@ -50,19 +50,6 @@ public class TestClasspathLocationStrategy {
     }
 
     /**
-     * Tests a successful location of a provided resource name.
-     */
-    @Test
-    public void testLocateSuccess() throws ConfigurationException {
-        final FileLocator locator = FileLocatorUtils.fileLocator().fileName(FILE_NAME).basePath("somePath").create();
-        final URL url = strategy.locate(fileSystem, locator);
-        final Configurations configurations = new Configurations();
-        final XMLConfiguration config1 = configurations.xml(url);
-        final XMLConfiguration config2 = configurations.xml(ConfigurationAssert.getTestURL(FILE_NAME));
-        ConfigurationAssert.assertConfigurationEquals(config1, config2);
-    }
-
-    /**
      * Tests a failed locate() operation.
      */
     @Test
@@ -78,5 +65,18 @@ public class TestClasspathLocationStrategy {
     public void testLocateNoFileName() {
         final FileLocator locator = FileLocatorUtils.fileLocator().fileName("").create();
         assertNull("Got a URL", strategy.locate(fileSystem, locator));
+    }
+
+    /**
+     * Tests a successful location of a provided resource name.
+     */
+    @Test
+    public void testLocateSuccess() throws ConfigurationException {
+        final FileLocator locator = FileLocatorUtils.fileLocator().fileName(FILE_NAME).basePath("somePath").create();
+        final URL url = strategy.locate(fileSystem, locator);
+        final Configurations configurations = new Configurations();
+        final XMLConfiguration config1 = configurations.xml(url);
+        final XMLConfiguration config2 = configurations.xml(ConfigurationAssert.getTestURL(FILE_NAME));
+        ConfigurationAssert.assertConfigurationEquals(config1, config2);
     }
 }

@@ -57,8 +57,28 @@ public class TestDataConfiguration {
     /** Constant for the date pattern used by tests. */
     private static final String DATE_PATTERN = "yyyy-MM-dd";
 
+    /**
+     * Returns the expected test date.
+     *
+     * @return the expected test date
+     * @throws ParseException if the date cannot be parsed
+     */
+    private static Date expectedDate() throws ParseException {
+        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
+        return format.parse("2004-01-01");
+    }
+
     /** The test instance. */
     private DataConfiguration conf;
+
+    /**
+     * Create an instance of InternetAddress. This trick is necessary to compile and run the test with Java 1.3 and the
+     * javamail-1.4 which is not compatible with Java 1.3
+     */
+    private Object createInternetAddress(final String email) throws Exception {
+        final Class<?> cls = Class.forName("javax.mail.internet.InternetAddress");
+        return cls.getConstructor(String.class).newInstance(email);
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -338,24 +358,40 @@ public class TestDataConfiguration {
         conf.addProperty("email.object", createInternetAddress("ebourg@apache.org"));
     }
 
+    /**
+     * Tests whether properties can be cleared.
+     */
     @Test
-    public void testGetConfiguration() {
-        final Configuration baseconf = new BaseConfiguration();
-        final DataConfiguration conf = new DataConfiguration(baseconf);
-
-        assertEquals("base configuration", baseconf, conf.getConfiguration());
+    public void testClearProperty() {
+        final String key = "test.property";
+        conf.addProperty(key, "someValue");
+        conf.clearProperty(key);
+        assertFalse("Property still found", conf.containsKey(key));
     }
 
+    /**
+     * Tests the implementation of clearPropertyDirect().
+     */
     @Test
-    public void testIsEmpty() {
-        final Configuration baseconf = new BaseConfiguration();
-        final DataConfiguration conf = new DataConfiguration(baseconf);
+    public void testClearPropertyDirect() {
+        final String key = "test.property";
+        conf.addProperty(key, "someValue");
+        conf.clearPropertyDirect(key);
+        assertFalse("Property still found", conf.containsKey(key));
+    }
 
-        assertTrue("not empty", conf.isEmpty());
-
-        baseconf.setProperty("foo", "bar");
-
-        assertFalse("empty", conf.isEmpty());
+    /**
+     * Tests clearPropertyDirect() if the wrapped configuration does not extend AbstractConfiguration.
+     */
+    @Test
+    public void testClearPropertyDirectNoAbstractConf() {
+        final Configuration wrapped = EasyMock.createMock(Configuration.class);
+        final String key = "test.property";
+        wrapped.clearProperty(key);
+        EasyMock.replay(wrapped);
+        conf = new DataConfiguration(wrapped);
+        conf.clearPropertyDirect(key);
+        EasyMock.verify(wrapped);
     }
 
     @Test
@@ -368,1484 +404,6 @@ public class TestDataConfiguration {
         baseconf.setProperty("foo", "bar");
 
         assertTrue(conf.containsKey("foo"));
-    }
-
-    @Test
-    public void testGetKeys() {
-        final Configuration baseconf = new BaseConfiguration();
-        final DataConfiguration conf = new DataConfiguration(baseconf);
-
-        baseconf.setProperty("foo", "bar");
-
-        final Iterator<String> it = conf.getKeys();
-        assertTrue("the iterator is empty", it.hasNext());
-        assertEquals("unique key", "foo", it.next());
-        assertFalse("the iterator is not exhausted", it.hasNext());
-    }
-
-    @Test(expected = ConversionException.class)
-    public void testGetInvalidType() {
-        conf.get(Boolean.class, "url.object", null);
-    }
-
-    @Test
-    public void testGetUnknown() {
-        assertNull("non null object for a missing key", conf.get(Object.class, "unknownkey"));
-    }
-
-    @Test(expected = NoSuchElementException.class)
-    public void testGetUnknownException() {
-        conf.setThrowExceptionOnMissing(true);
-        conf.get(Object.class, "unknownkey");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetArrayInvalidDefaultType() {
-        conf.getArray(Boolean.class, "unknownkey", new URL[] {});
-    }
-
-    @Test(expected = ConversionException.class)
-    public void testGetPrimitiveArrayInvalidType() {
-        conf.getArray(Boolean.TYPE, "calendar.list4");
-    }
-
-    @Test
-    public void testGetBooleanArray() {
-        // missing list
-        final boolean[] defaultValue = {false, true};
-        ArrayAssert.assertEquals(defaultValue, conf.getBooleanArray("boolean.list", defaultValue));
-
-        final boolean[] expected = {true, false};
-
-        // list of strings
-        ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list1"));
-
-        // list of strings, comma separated
-        ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list2"));
-
-        // list of Boolean objects
-        ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list3"));
-
-        // array of Boolean objects
-        ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list4"));
-
-        // array of boolean primitives
-        ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list5"));
-
-        // list of Boolean objects
-        ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list6"));
-
-        // list of interpolated values
-        ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list.interpolated"));
-
-        // single boolean values
-        ArrayAssert.assertEquals(new boolean[] {true}, conf.getBooleanArray("boolean.string"));
-        ArrayAssert.assertEquals(new boolean[] {true}, conf.getBooleanArray("boolean.object"));
-
-        // empty array
-        ArrayAssert.assertEquals(new boolean[] {}, conf.getBooleanArray("empty"));
-    }
-
-    @Test
-    public void testGetBooleanList() {
-        // missing list
-        ListAssert.assertEquals(null, conf.getBooleanList("boolean.list", null));
-
-        List<Object> expected = new ArrayList<>();
-        expected.add(Boolean.TRUE);
-        expected.add(Boolean.FALSE);
-
-        // list of strings
-        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list1"));
-
-        // list of strings, comma separated
-        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list2"));
-
-        // list of Boolean objects
-        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list3"));
-
-        // array of Boolean objects
-        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list4"));
-
-        // array of boolean primitives
-        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list5"));
-
-        // list of Boolean objects
-        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list6"));
-
-        // list of interpolated values
-        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list.interpolated"));
-
-        // single boolean values
-        expected = new ArrayList<>();
-        expected.add(Boolean.TRUE);
-        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.string"));
-        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.object"));
-
-        // empty list
-        ListAssert.assertEquals(new ArrayList<>(), conf.getBooleanList("empty"));
-    }
-
-    @Test
-    public void testGetByteArray() {
-        // missing list
-        final byte[] defaultValue = {1, 2};
-        ArrayAssert.assertEquals(defaultValue, conf.getByteArray("byte.list", defaultValue));
-
-        final byte[] expected = {1, 2};
-
-        // list of strings
-        ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list1"));
-
-        // list of strings, comma separated
-        ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list2"));
-
-        // list of Byte objects
-        ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list3"));
-
-        // array of Byte objects
-        ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list4"));
-
-        // array of byte primitives
-        ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list5"));
-
-        // list of Byte objects
-        ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list6"));
-
-        // list of interpolated values
-        ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list.interpolated"));
-
-        // single byte values
-        ArrayAssert.assertEquals(new byte[] {1}, conf.getByteArray("byte.string"));
-        ArrayAssert.assertEquals(new byte[] {1}, conf.getByteArray("byte.object"));
-
-        // empty array
-        ArrayAssert.assertEquals(new byte[] {}, conf.getByteArray("empty"));
-    }
-
-    @Test
-    public void testGetByteList() {
-        // missing list
-        ListAssert.assertEquals(null, conf.getByteList("byte.list", null));
-
-        List<Object> expected = new ArrayList<>();
-        expected.add(Byte.valueOf("1"));
-        expected.add(Byte.valueOf("2"));
-
-        // list of strings
-        ListAssert.assertEquals(expected, conf.getByteList("byte.list1"));
-
-        // list of strings, comma separated
-        ListAssert.assertEquals(expected, conf.getByteList("byte.list2"));
-
-        // list of Byte objects
-        ListAssert.assertEquals(expected, conf.getByteList("byte.list3"));
-
-        // array of Byte objects
-        ListAssert.assertEquals(expected, conf.getByteList("byte.list4"));
-
-        // array of byte primitives
-        ListAssert.assertEquals(expected, conf.getByteList("byte.list5"));
-
-        // list of Byte objects
-        ListAssert.assertEquals(expected, conf.getByteList("byte.list6"));
-
-        // list of interpolated values
-        ListAssert.assertEquals(expected, conf.getByteList("byte.list.interpolated"));
-
-        // single byte values
-        expected = new ArrayList<>();
-        expected.add(Byte.valueOf("1"));
-        ListAssert.assertEquals(expected, conf.getByteList("byte.string"));
-        ListAssert.assertEquals(expected, conf.getByteList("byte.object"));
-
-        // empty list
-        ListAssert.assertEquals(new ArrayList<>(), conf.getByteList("empty"));
-    }
-
-    @Test
-    public void testGetShortArray() {
-        // missing list
-        final short[] defaultValue = {2, 1};
-        ArrayAssert.assertEquals(defaultValue, conf.getShortArray("short.list", defaultValue));
-
-        final short[] expected = {1, 2};
-
-        // list of strings
-        ArrayAssert.assertEquals(expected, conf.getShortArray("short.list1"));
-
-        // list of strings, comma separated
-        ArrayAssert.assertEquals(expected, conf.getShortArray("short.list2"));
-
-        // list of Byte objects
-        ArrayAssert.assertEquals(expected, conf.getShortArray("short.list3"));
-
-        // array of Byte objects
-        ArrayAssert.assertEquals(expected, conf.getShortArray("short.list4"));
-
-        // array of byte primitives
-        ArrayAssert.assertEquals(expected, conf.getShortArray("short.list5"));
-
-        // list of Byte objects
-        ArrayAssert.assertEquals(expected, conf.getShortArray("short.list6"));
-
-        // list of interpolated values
-        ArrayAssert.assertEquals(expected, conf.getShortArray("short.list.interpolated"));
-
-        // single byte values
-        ArrayAssert.assertEquals(new short[] {1}, conf.getShortArray("short.string"));
-        ArrayAssert.assertEquals(new short[] {1}, conf.getShortArray("short.object"));
-
-        // empty array
-        ArrayAssert.assertEquals(new short[] {}, conf.getShortArray("empty"));
-    }
-
-    @Test
-    public void testGetShortList() {
-        // missing list
-        ListAssert.assertEquals(null, conf.getShortList("short.list", null));
-
-        List<Object> expected = new ArrayList<>();
-        expected.add(Short.valueOf("1"));
-        expected.add(Short.valueOf("2"));
-
-        // list of strings
-        ListAssert.assertEquals(expected, conf.getShortList("short.list1"));
-
-        // list of strings, comma separated
-        ListAssert.assertEquals(expected, conf.getShortList("short.list2"));
-
-        // list of Short objects
-        ListAssert.assertEquals(expected, conf.getShortList("short.list3"));
-
-        // array of Short objects
-        ListAssert.assertEquals(expected, conf.getShortList("short.list4"));
-
-        // array of short primitives
-        ListAssert.assertEquals(expected, conf.getShortList("short.list5"));
-
-        // list of Short objects
-        ListAssert.assertEquals(expected, conf.getShortList("short.list6"));
-
-        // list of interpolated values
-        ListAssert.assertEquals(expected, conf.getShortList("short.list.interpolated"));
-
-        // single short values
-        expected = new ArrayList<>();
-        expected.add(Short.valueOf("1"));
-        ListAssert.assertEquals(expected, conf.getShortList("short.string"));
-        ListAssert.assertEquals(expected, conf.getShortList("short.object"));
-
-        // empty list
-        ListAssert.assertEquals(new ArrayList<>(), conf.getShortList("empty"));
-    }
-
-    @Test
-    public void testGetIntegerArray() {
-        // missing list
-        final int[] defaultValue = {2, 1};
-        ArrayAssert.assertEquals(defaultValue, conf.getIntArray("integer.list", defaultValue));
-
-        final int[] expected = {1, 2};
-
-        // list of strings
-        ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list1"));
-
-        // list of strings, comma separated
-        ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list2"));
-
-        // list of Integer objects
-        ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list3"));
-
-        // array of Integer objects
-        ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list4"));
-
-        // array of int primitives
-        ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list5"));
-
-        // list of Integer objects
-        ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list6"));
-
-        // list of interpolated values
-        ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list.interpolated"));
-
-        // single int values
-        ArrayAssert.assertEquals(new int[] {1}, conf.getIntArray("integer.string"));
-        ArrayAssert.assertEquals(new int[] {1}, conf.getIntArray("integer.object"));
-
-        // empty array
-        ArrayAssert.assertEquals(new int[] {}, conf.getIntArray("empty"));
-    }
-
-    @Test
-    public void testGetIntegerList() {
-        // missing list
-        ListAssert.assertEquals(null, conf.getIntegerList("integer.list", null));
-
-        List<Object> expected = new ArrayList<>();
-        expected.add(Integer.valueOf("1"));
-        expected.add(Integer.valueOf("2"));
-
-        // list of strings
-        ListAssert.assertEquals(expected, conf.getIntegerList("integer.list1"));
-
-        // list of strings, comma separated
-        ListAssert.assertEquals(expected, conf.getIntegerList("integer.list2"));
-
-        // list of Integer objects
-        ListAssert.assertEquals(expected, conf.getIntegerList("integer.list3"));
-
-        // array of Integer objects
-        ListAssert.assertEquals(expected, conf.getIntegerList("integer.list4"));
-
-        // array of int primitives
-        ListAssert.assertEquals(expected, conf.getIntegerList("integer.list5"));
-
-        // list of Integer objects
-        ListAssert.assertEquals(expected, conf.getIntegerList("integer.list6"));
-
-        // list of interpolated values
-        ListAssert.assertEquals(expected, conf.getIntegerList("integer.list.interpolated"));
-
-        // single int values
-        expected = new ArrayList<>();
-        expected.add(Integer.valueOf("1"));
-        ListAssert.assertEquals(expected, conf.getIntegerList("integer.string"));
-        ListAssert.assertEquals(expected, conf.getIntegerList("integer.object"));
-
-        // empty list
-        ListAssert.assertEquals(new ArrayList<>(), conf.getIntegerList("empty"));
-    }
-
-    @Test
-    public void testGetLongArray() {
-        // missing list
-        final long[] defaultValue = {2, 1};
-        ArrayAssert.assertEquals(defaultValue, conf.getLongArray("long.list", defaultValue));
-
-        final long[] expected = {1, 2};
-
-        // list of strings
-        ArrayAssert.assertEquals(expected, conf.getLongArray("long.list1"));
-
-        // list of strings, comma separated
-        ArrayAssert.assertEquals(expected, conf.getLongArray("long.list2"));
-
-        // list of Long objects
-        ArrayAssert.assertEquals(expected, conf.getLongArray("long.list3"));
-
-        // array of Long objects
-        ArrayAssert.assertEquals(expected, conf.getLongArray("long.list4"));
-
-        // array of long primitives
-        ArrayAssert.assertEquals(expected, conf.getLongArray("long.list5"));
-
-        // list of Long objects
-        ArrayAssert.assertEquals(expected, conf.getLongArray("long.list6"));
-
-        // list of interpolated values
-        ArrayAssert.assertEquals(expected, conf.getLongArray("long.list.interpolated"));
-
-        // single long values
-        ArrayAssert.assertEquals(new long[] {1}, conf.getLongArray("long.string"));
-        ArrayAssert.assertEquals(new long[] {1}, conf.getLongArray("long.object"));
-
-        // empty array
-        ArrayAssert.assertEquals(new long[] {}, conf.getLongArray("empty"));
-    }
-
-    @Test
-    public void testGetLongList() {
-        // missing list
-        ListAssert.assertEquals(null, conf.getLongList("long.list", null));
-
-        List<Object> expected = new ArrayList<>();
-        expected.add(Long.valueOf("1"));
-        expected.add(Long.valueOf("2"));
-
-        // list of strings
-        ListAssert.assertEquals(expected, conf.getLongList("long.list1"));
-
-        // list of strings, comma separated
-        ListAssert.assertEquals(expected, conf.getLongList("long.list2"));
-
-        // list of Long objects
-        ListAssert.assertEquals(expected, conf.getLongList("long.list3"));
-
-        // array of Long objects
-        ListAssert.assertEquals(expected, conf.getLongList("long.list4"));
-
-        // array of long primitives
-        ListAssert.assertEquals(expected, conf.getLongList("long.list5"));
-
-        // list of Long objects
-        ListAssert.assertEquals(expected, conf.getLongList("long.list6"));
-
-        // list of interpolated values
-        ListAssert.assertEquals(expected, conf.getLongList("long.list.interpolated"));
-
-        // single long values
-        expected = new ArrayList<>();
-        expected.add(Long.valueOf("1"));
-        ListAssert.assertEquals(expected, conf.getLongList("long.string"));
-        ListAssert.assertEquals(expected, conf.getLongList("long.object"));
-
-        // empty list
-        ListAssert.assertEquals(new ArrayList<>(), conf.getLongList("empty"));
-    }
-
-    @Test
-    public void testGetFloatArray() {
-        // missing list
-        final float[] defaultValue = {2, 1};
-        ArrayAssert.assertEquals(defaultValue, conf.getFloatArray("float.list", defaultValue), 0);
-
-        final float[] expected = {1, 2};
-
-        // list of strings
-        ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list1"), 0);
-
-        // list of strings, comma separated
-        ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list2"), 0);
-
-        // list of Float objects
-        ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list3"), 0);
-
-        // array of Float objects
-        ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list4"), 0);
-
-        // array of float primitives
-        ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list5"), 0);
-
-        // list of Float objects
-        ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list6"), 0);
-
-        // list of interpolated values
-        ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list.interpolated"), 0);
-
-        // single float values
-        ArrayAssert.assertEquals(new float[] {1}, conf.getFloatArray("float.string"), 0);
-        ArrayAssert.assertEquals(new float[] {1}, conf.getFloatArray("float.object"), 0);
-
-        // empty array
-        ArrayAssert.assertEquals(new float[] {}, conf.getFloatArray("empty"), 0);
-    }
-
-    @Test
-    public void testGetFloatList() {
-        // missing list
-        ListAssert.assertEquals(null, conf.getFloatList("float.list", null));
-
-        List<Object> expected = new ArrayList<>();
-        expected.add(Float.valueOf("1"));
-        expected.add(Float.valueOf("2"));
-
-        // list of strings
-        ListAssert.assertEquals(expected, conf.getFloatList("float.list1"));
-
-        // list of strings, comma separated
-        ListAssert.assertEquals(expected, conf.getFloatList("float.list2"));
-
-        // list of Float objects
-        ListAssert.assertEquals(expected, conf.getFloatList("float.list3"));
-
-        // array of Float objects
-        ListAssert.assertEquals(expected, conf.getFloatList("float.list4"));
-
-        // array of float primitives
-        ListAssert.assertEquals(expected, conf.getFloatList("float.list5"));
-
-        // list of Float objects
-        ListAssert.assertEquals(expected, conf.getFloatList("float.list6"));
-
-        // list of interpolated values
-        ListAssert.assertEquals(expected, conf.getFloatList("float.list.interpolated"));
-
-        // single float values
-        expected = new ArrayList<>();
-        expected.add(Float.valueOf("1"));
-        ListAssert.assertEquals(expected, conf.getFloatList("float.string"));
-        ListAssert.assertEquals(expected, conf.getFloatList("float.object"));
-
-        // empty list
-        ListAssert.assertEquals(new ArrayList<>(), conf.getFloatList("empty"));
-    }
-
-    @Test
-    public void testGetDoubleArray() {
-        // missing list
-        final double[] defaultValue = {2, 1};
-        ArrayAssert.assertEquals(defaultValue, conf.getDoubleArray("double.list", defaultValue), 0);
-
-        final double[] expected = {1, 2};
-
-        // list of strings
-        ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list1"), 0);
-
-        // list of strings, comma separated
-        ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list2"), 0);
-
-        // list of Double objects
-        ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list3"), 0);
-
-        // array of Double objects
-        ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list4"), 0);
-
-        // array of double primitives
-        ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list5"), 0);
-
-        // list of Double objects
-        ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list6"), 0);
-
-        // list of interpolated values
-        ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list.interpolated"), 0);
-
-        // single double values
-        ArrayAssert.assertEquals(new double[] {1}, conf.getDoubleArray("double.string"), 0);
-        ArrayAssert.assertEquals(new double[] {1}, conf.getDoubleArray("double.object"), 0);
-
-        // empty array
-        ArrayAssert.assertEquals(new double[] {}, conf.getDoubleArray("empty"), 0);
-    }
-
-    @Test
-    public void testGetDoubleList() {
-        // missing list
-        ListAssert.assertEquals(null, conf.getDoubleList("double.list", null));
-
-        List<Object> expected = new ArrayList<>();
-        expected.add(Double.valueOf("1"));
-        expected.add(Double.valueOf("2"));
-
-        // list of strings
-        ListAssert.assertEquals(expected, conf.getDoubleList("double.list1"));
-
-        // list of strings, comma separated
-        ListAssert.assertEquals(expected, conf.getDoubleList("double.list2"));
-
-        // list of Double objects
-        ListAssert.assertEquals(expected, conf.getDoubleList("double.list3"));
-
-        // array of Double objects
-        ListAssert.assertEquals(expected, conf.getDoubleList("double.list4"));
-
-        // array of double primitives
-        ListAssert.assertEquals(expected, conf.getDoubleList("double.list5"));
-
-        // list of Double objects
-        ListAssert.assertEquals(expected, conf.getDoubleList("double.list6"));
-
-        // list of interpolated values
-        ListAssert.assertEquals(expected, conf.getDoubleList("double.list.interpolated"));
-
-        // single double values
-        expected = new ArrayList<>();
-        expected.add(Double.valueOf("1"));
-        ListAssert.assertEquals(expected, conf.getDoubleList("double.string"));
-        ListAssert.assertEquals(expected, conf.getDoubleList("double.object"));
-
-        // empty list
-        ListAssert.assertEquals(new ArrayList<>(), conf.getDoubleList("empty"));
-    }
-
-    @Test
-    public void testGetBigIntegerArray() {
-        // missing list
-        final BigInteger[] defaultValue = {new BigInteger("2"), new BigInteger("1")};
-        ArrayAssert.assertEquals(defaultValue, conf.getBigIntegerArray("biginteger.list", defaultValue));
-
-        final BigInteger[] expected = {new BigInteger("1"), new BigInteger("2")};
-
-        // list of strings
-        ArrayAssert.assertEquals(expected, conf.getBigIntegerArray("biginteger.list1"));
-
-        // list of strings, comma separated
-        ArrayAssert.assertEquals(expected, conf.getBigIntegerArray("biginteger.list2"));
-
-        // list of BigInteger objects
-        ArrayAssert.assertEquals(expected, conf.getBigIntegerArray("biginteger.list3"));
-
-        // array of BigInteger objects
-        ArrayAssert.assertEquals(expected, conf.getBigIntegerArray("biginteger.list4"));
-
-        // list of BigInteger objects
-        ArrayAssert.assertEquals(expected, conf.getBigIntegerArray("biginteger.list6"));
-
-        // list of interpolated values
-        ArrayAssert.assertEquals(expected, conf.getBigIntegerArray("biginteger.list.interpolated"));
-
-        // single BigInteger values
-        ArrayAssert.assertEquals(new BigInteger[] {new BigInteger("1")}, conf.getBigIntegerArray("biginteger.string"));
-        ArrayAssert.assertEquals(new BigInteger[] {new BigInteger("1")}, conf.getBigIntegerArray("biginteger.object"));
-
-        // empty array
-        ArrayAssert.assertEquals(new BigInteger[] {}, conf.getBigIntegerArray("empty"));
-    }
-
-    @Test
-    public void testGetBigIntegerList() {
-        // missing list
-        final List<BigInteger> bigIntegerList = conf.getBigIntegerList("biginteger.list", null);
-        ListAssert.assertEquals(null, bigIntegerList);
-
-        List<Object> expected = new ArrayList<>();
-        expected.add(new BigInteger("1"));
-        expected.add(new BigInteger("2"));
-
-        // list of strings
-        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.list1"));
-
-        // list of strings, comma separated
-        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.list2"));
-
-        // list of BigInteger objects
-        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.list3"));
-
-        // array of BigInteger objects
-        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.list4"));
-
-        // list of BigInteger objects
-        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.list6"));
-
-        // list of interpolated values
-        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.list.interpolated"));
-
-        // single BigInteger values
-        expected = new ArrayList<>();
-        expected.add(new BigInteger("1"));
-        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.string"));
-        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.object"));
-
-        // empty list
-        ListAssert.assertEquals(new ArrayList<>(), conf.getBigIntegerList("empty"));
-    }
-
-    @Test
-    public void testGetBigDecimalArray() {
-        // missing list
-        final BigDecimal[] defaultValue = {new BigDecimal("2"), new BigDecimal("1")};
-        ArrayAssert.assertEquals(defaultValue, conf.getBigDecimalArray("bigdecimal.list", defaultValue));
-
-        final BigDecimal[] expected = {new BigDecimal("1"), new BigDecimal("2")};
-
-        // list of strings
-        ArrayAssert.assertEquals(expected, conf.getBigDecimalArray("bigdecimal.list1"));
-
-        // list of strings, comma separated
-        ArrayAssert.assertEquals(expected, conf.getBigDecimalArray("bigdecimal.list2"));
-
-        // list of BigDecimal objects
-        ArrayAssert.assertEquals(expected, conf.getBigDecimalArray("bigdecimal.list3"));
-
-        // array of BigDecimal objects
-        ArrayAssert.assertEquals(expected, conf.getBigDecimalArray("bigdecimal.list4"));
-
-        // list of BigDecimal objects
-        ArrayAssert.assertEquals(expected, conf.getBigDecimalArray("bigdecimal.list6"));
-
-        // list of interpolated values
-        ArrayAssert.assertEquals(expected, conf.getBigDecimalArray("bigdecimal.list.interpolated"));
-
-        // single BigDecimal values
-        ArrayAssert.assertEquals(new BigDecimal[] {new BigDecimal("1")}, conf.getBigDecimalArray("bigdecimal.string"));
-        ArrayAssert.assertEquals(new BigDecimal[] {new BigDecimal("1")}, conf.getBigDecimalArray("bigdecimal.object"));
-
-        // empty array
-        ArrayAssert.assertEquals(new BigDecimal[] {}, conf.getBigDecimalArray("empty"));
-    }
-
-    @Test
-    public void testGetBigDecimalList() {
-        // missing list
-        ListAssert.assertEquals(null, conf.getBigDecimalList("bigdecimal.list", null));
-
-        List<Object> expected = new ArrayList<>();
-        expected.add(new BigDecimal("1"));
-        expected.add(new BigDecimal("2"));
-
-        // list of strings
-        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.list1"));
-
-        // list of strings, comma separated
-        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.list2"));
-
-        // list of BigDecimal objects
-        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.list3"));
-
-        // array of BigDecimal objects
-        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.list4"));
-
-        // list of BigDecimal objects
-        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.list6"));
-
-        // list of interpolated values
-        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.list.interpolated"));
-
-        // single BigDecimal values
-        expected = new ArrayList<>();
-        expected.add(new BigDecimal("1"));
-        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.string"));
-        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.object"));
-
-        // empty list
-        ListAssert.assertEquals(new ArrayList<>(), conf.getBigDecimalList("empty"));
-    }
-
-    @Test
-    public void testGetURI() throws Exception {
-        // missing URI
-        final URI defaultValue = new URI("http://www.google.com");
-        assertEquals(defaultValue, conf.getURI("url", defaultValue));
-
-        final URI expected = new URI("http://jakarta.apache.org");
-
-        // URI string
-        assertEquals(expected, conf.getURI("uri.string"));
-
-        // URI object
-        assertEquals(expected, conf.getURI("uri.object"));
-
-        // interpolated value
-        assertEquals(expected, conf.getURI("uri.string.interpolated"));
-    }
-
-    @Test
-    public void testGetURIArray() throws Exception {
-        // missing list
-        final URI[] defaultValue = {new URI("http://www.apache.org"), new URI("http://jakarta.apache.org")};
-        ArrayAssert.assertEquals(defaultValue, conf.getURIArray("url.list", defaultValue));
-
-        final URI[] expected = {new URI("http://jakarta.apache.org"), new URI("http://www.apache.org")};
-
-        // list of strings
-        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list1"));
-
-        // list of strings, comma separated
-        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list2"));
-
-        // list of URI objects
-        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list3"));
-
-        // array of URI objects
-        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list4"));
-
-        // list of URI objects
-        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list6"));
-
-        // list of interpolated values
-        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list.interpolated"));
-
-        // single URI values
-        ArrayAssert.assertEquals(new URI[] {new URI("http://jakarta.apache.org")}, conf.getURIArray("uri.string"));
-        ArrayAssert.assertEquals(new URI[] {new URI("http://jakarta.apache.org")}, conf.getURIArray("uri.object"));
-
-        // empty array
-        ArrayAssert.assertEquals(new URI[] {}, conf.getURIArray("empty"));
-    }
-
-    @Test
-    public void testGetURIList() throws Exception {
-        // missing list
-        ListAssert.assertEquals(null, conf.getURIList("uri.list", null));
-
-        List<Object> expected = new ArrayList<>();
-        expected.add(new URI("http://jakarta.apache.org"));
-        expected.add(new URI("http://www.apache.org"));
-
-        // list of strings
-        ListAssert.assertEquals(expected, conf.getURIList("uri.list1"));
-
-        // list of strings, comma separated
-        ListAssert.assertEquals(expected, conf.getURIList("uri.list2"));
-
-        // list of URI objects
-        ListAssert.assertEquals(expected, conf.getURIList("uri.list3"));
-
-        // array of URI objects
-        ListAssert.assertEquals(expected, conf.getURIList("uri.list4"));
-
-        // list of URI objects
-        ListAssert.assertEquals(expected, conf.getURIList("uri.list6"));
-
-        // list of interpolated values
-        ListAssert.assertEquals(expected, conf.getURIList("uri.list.interpolated"));
-
-        // single URI values
-        expected = new ArrayList<>();
-        expected.add(new URI("http://jakarta.apache.org"));
-        ListAssert.assertEquals(expected, conf.getURIList("uri.string"));
-        ListAssert.assertEquals(expected, conf.getURIList("uri.object"));
-
-        // empty list
-        ListAssert.assertEquals(new ArrayList<>(), conf.getURIList("empty"));
-    }
-
-    @Test
-    public void testGetURL() throws Exception {
-        // missing URL
-        final URL defaultValue = new URL("http://www.google.com");
-        assertEquals(defaultValue, conf.getURL("url", defaultValue));
-
-        final URL expected = new URL("http://jakarta.apache.org");
-
-        // URL string
-        assertEquals(expected, conf.getURL("url.string"));
-
-        // URL object
-        assertEquals(expected, conf.getURL("url.object"));
-
-        // interpolated value
-        assertEquals(expected, conf.getURL("url.string.interpolated"));
-    }
-
-    @Test
-    public void testGetURLArray() throws Exception {
-        // missing list
-        final URL[] defaultValue = {new URL("http://www.apache.org"), new URL("http://jakarta.apache.org")};
-        ArrayAssert.assertEquals(defaultValue, conf.getURLArray("url.list", defaultValue));
-
-        final URL[] expected = {new URL("http://jakarta.apache.org"), new URL("http://www.apache.org")};
-
-        // list of strings
-        ArrayAssert.assertEquals(expected, conf.getURLArray("url.list1"));
-
-        // list of strings, comma separated
-        ArrayAssert.assertEquals(expected, conf.getURLArray("url.list2"));
-
-        // list of URL objects
-        ArrayAssert.assertEquals(expected, conf.getURLArray("url.list3"));
-
-        // array of URL objects
-        ArrayAssert.assertEquals(expected, conf.getURLArray("url.list4"));
-
-        // list of URL objects
-        ArrayAssert.assertEquals(expected, conf.getURLArray("url.list6"));
-
-        // list of interpolated values
-        ArrayAssert.assertEquals(expected, conf.getURLArray("url.list.interpolated"));
-
-        // single URL values
-        ArrayAssert.assertEquals(new URL[] {new URL("http://jakarta.apache.org")}, conf.getURLArray("url.string"));
-        ArrayAssert.assertEquals(new URL[] {new URL("http://jakarta.apache.org")}, conf.getURLArray("url.object"));
-
-        // empty array
-        ArrayAssert.assertEquals(new URL[] {}, conf.getURLArray("empty"));
-    }
-
-    @Test
-    public void testGetURLList() throws Exception {
-        // missing list
-        ListAssert.assertEquals(null, conf.getURLList("url.list", null));
-
-        List<Object> expected = new ArrayList<>();
-        expected.add(new URL("http://jakarta.apache.org"));
-        expected.add(new URL("http://www.apache.org"));
-
-        // list of strings
-        ListAssert.assertEquals(expected, conf.getURLList("url.list1"));
-
-        // list of strings, comma separated
-        ListAssert.assertEquals(expected, conf.getURLList("url.list2"));
-
-        // list of URL objects
-        ListAssert.assertEquals(expected, conf.getURLList("url.list3"));
-
-        // array of URL objects
-        ListAssert.assertEquals(expected, conf.getURLList("url.list4"));
-
-        // list of URL objects
-        ListAssert.assertEquals(expected, conf.getURLList("url.list6"));
-
-        // list of interpolated values
-        ListAssert.assertEquals(expected, conf.getURLList("url.list.interpolated"));
-
-        // single URL values
-        expected = new ArrayList<>();
-        expected.add(new URL("http://jakarta.apache.org"));
-        ListAssert.assertEquals(expected, conf.getURLList("url.string"));
-        ListAssert.assertEquals(expected, conf.getURLList("url.object"));
-
-        // empty list
-        ListAssert.assertEquals(new ArrayList<>(), conf.getURLList("empty"));
-    }
-
-    @Test
-    public void testGetLocale() {
-        // language
-        conf.setProperty("locale", "fr");
-        assertEquals("language", new Locale("fr", ""), conf.getLocale("locale"));
-
-        // language + variant
-        conf.setProperty("locale", "fr__POSIX");
-        assertEquals("language + variant", new Locale("fr", "", "POSIX"), conf.getLocale("locale"));
-
-        // country
-        conf.setProperty("locale", "_FR");
-        assertEquals("country", new Locale("", "FR"), conf.getLocale("locale"));
-
-        // country + variant
-        conf.setProperty("locale", "_FR_WIN");
-        assertEquals("country + variant", new Locale("", "FR", "WIN"), conf.getLocale("locale"));
-
-        // language + country
-        conf.setProperty("locale", "fr_FR");
-        assertEquals("language + country", new Locale("fr", "FR"), conf.getLocale("locale"));
-
-        // language + country + variant
-        conf.setProperty("locale", "fr_FR_MAC");
-        assertEquals("language + country + variant", new Locale("fr", "FR", "MAC"), conf.getLocale("locale"));
-
-        // default value
-        conf.setProperty("locale", "fr");
-        assertEquals("Existing key with default value", Locale.FRENCH, conf.getLocale("locale", Locale.GERMAN));
-        assertEquals("Missing key with default value", Locale.GERMAN, conf.getLocale("localeNotInConfig", Locale.GERMAN));
-
-        // interpolated value
-        assertEquals(Locale.FRENCH, conf.getLocale("locale.string.interpolated"));
-    }
-
-    @Test
-    public void testGetLocaleArray() throws Exception {
-        // missing list
-        final Locale[] defaultValue = {Locale.GERMAN, Locale.FRENCH};
-        ArrayAssert.assertEquals(defaultValue, conf.getLocaleArray("locale.list", defaultValue));
-
-        final Locale[] expected = {Locale.FRENCH, Locale.GERMAN};
-
-        // list of strings
-        ArrayAssert.assertEquals(expected, conf.getLocaleArray("locale.list1"));
-
-        // list of strings, comma separated
-        ArrayAssert.assertEquals(expected, conf.getLocaleArray("locale.list2"));
-
-        // list of Locale objects
-        ArrayAssert.assertEquals(expected, conf.getLocaleArray("locale.list3"));
-
-        // array of Locale objects
-        ArrayAssert.assertEquals(expected, conf.getLocaleArray("locale.list4"));
-
-        // list of Locale objects
-        ArrayAssert.assertEquals(expected, conf.getLocaleArray("locale.list6"));
-
-        // list of interpolated values
-        ArrayAssert.assertEquals(expected, conf.getLocaleArray("locale.list.interpolated"));
-
-        // single Locale values
-        ArrayAssert.assertEquals(new Locale[] {Locale.FRENCH}, conf.getLocaleArray("locale.string"));
-        ArrayAssert.assertEquals(new Locale[] {Locale.FRENCH}, conf.getLocaleArray("locale.object"));
-
-        // empty array
-        ArrayAssert.assertEquals(new Locale[] {}, conf.getLocaleArray("empty"));
-    }
-
-    @Test
-    public void testGetLocaleList() throws Exception {
-        // missing list
-        ListAssert.assertEquals(null, conf.getLocaleList("locale.list", null));
-
-        List<Object> expected = new ArrayList<>();
-        expected.add(Locale.FRENCH);
-        expected.add(Locale.GERMAN);
-
-        // list of strings
-        ListAssert.assertEquals(expected, conf.getLocaleList("locale.list1"));
-
-        // list of strings, comma separated
-        ListAssert.assertEquals(expected, conf.getLocaleList("locale.list2"));
-
-        // list of Locale objects
-        ListAssert.assertEquals(expected, conf.getLocaleList("locale.list3"));
-
-        // array of Locale objects
-        ListAssert.assertEquals(expected, conf.getLocaleList("locale.list4"));
-
-        // list of Locale objects
-        ListAssert.assertEquals(expected, conf.getLocaleList("locale.list6"));
-
-        // list of interpolated values
-        ListAssert.assertEquals(expected, conf.getLocaleList("locale.list.interpolated"));
-
-        // single Locale values
-        expected = new ArrayList<>();
-        expected.add(Locale.FRENCH);
-        ListAssert.assertEquals(expected, conf.getLocaleList("locale.string"));
-        ListAssert.assertEquals(expected, conf.getLocaleList("locale.object"));
-
-        // empty list
-        ListAssert.assertEquals(new ArrayList<>(), conf.getLocaleList("empty"));
-    }
-
-    @Test
-    public void testGetColor() {
-        // RRGGBB
-        conf.setProperty("color", "FF0000");
-        assertEquals("color", Color.red, conf.getColor("color"));
-
-        // #RRGGBB
-        conf.setProperty("color", "#00FF00");
-        assertEquals("color", Color.green, conf.getColor("color"));
-
-        // #RRGGBBAA
-        conf.setProperty("color", "#01030507");
-        final Color color = conf.getColor("color");
-        assertNotNull("null color", color);
-        assertEquals("red", 1, color.getRed());
-        assertEquals("green", 3, color.getGreen());
-        assertEquals("blue", 5, color.getBlue());
-        assertEquals("alpha", 7, color.getAlpha());
-
-        // interpolated value
-        assertEquals(Color.red, conf.getColor("color.string.interpolated"));
-
-        // default value
-        assertEquals(Color.cyan, conf.getColor("unknownkey", Color.cyan));
-    }
-
-    @Test
-    public void testGetColorArray() throws Exception {
-        // missing list
-        final Color[] defaultValue = {Color.red, Color.blue};
-        ArrayAssert.assertEquals(defaultValue, conf.getColorArray("color.list", defaultValue));
-
-        final Color[] expected = {Color.red, Color.blue};
-
-        // list of strings
-        ArrayAssert.assertEquals(expected, conf.getColorArray("color.list1"));
-
-        // list of strings, comma separated
-        ArrayAssert.assertEquals(expected, conf.getColorArray("color.list2"));
-
-        // list of Color objects
-        ArrayAssert.assertEquals(expected, conf.getColorArray("color.list3"));
-
-        // array of Color objects
-        ArrayAssert.assertEquals(expected, conf.getColorArray("color.list4"));
-
-        // list of Color objects
-        ArrayAssert.assertEquals(expected, conf.getColorArray("color.list6"));
-
-        // list of interpolated values
-        ArrayAssert.assertEquals(expected, conf.getColorArray("color.list.interpolated"));
-
-        // single Color values
-        ArrayAssert.assertEquals(new Color[] {Color.red}, conf.getColorArray("color.string"));
-        ArrayAssert.assertEquals(new Color[] {Color.red}, conf.getColorArray("color.object"));
-
-        // empty array
-        ArrayAssert.assertEquals(new Color[] {}, conf.getColorArray("empty"));
-    }
-
-    @Test
-    public void testGetColorList() throws Exception {
-        // missing list
-        ListAssert.assertEquals(null, conf.getColorList("color.list", null));
-
-        List<Object> expected = new ArrayList<>();
-        expected.add(Color.red);
-        expected.add(Color.blue);
-
-        // list of strings
-        ListAssert.assertEquals(expected, conf.getColorList("color.list1"));
-
-        // list of strings, comma separated
-        ListAssert.assertEquals(expected, conf.getColorList("color.list2"));
-
-        // list of Color objects
-        ListAssert.assertEquals(expected, conf.getColorList("color.list3"));
-
-        // array of Color objects
-        ListAssert.assertEquals(expected, conf.getColorList("color.list4"));
-
-        // list of Color objects
-        ListAssert.assertEquals(expected, conf.getColorList("color.list6"));
-
-        // list of interpolated values
-        ListAssert.assertEquals(expected, conf.getColorList("color.list.interpolated"));
-
-        // single Color values
-        expected = new ArrayList<>();
-        expected.add(Color.red);
-        ListAssert.assertEquals(expected, conf.getColorList("color.string"));
-        ListAssert.assertEquals(expected, conf.getColorList("color.object"));
-
-        // empty list
-        ListAssert.assertEquals(new ArrayList<>(), conf.getColorList("empty"));
-    }
-
-    /**
-     * Returns the expected test date.
-     *
-     * @return the expected test date
-     * @throws ParseException if the date cannot be parsed
-     */
-    private static Date expectedDate() throws ParseException {
-        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
-        return format.parse("2004-01-01");
-    }
-
-    @Test
-    public void testGetDate() throws Exception {
-        final Date expected = expectedDate();
-
-        // missing Date
-        final Date defaultValue = new Date();
-        assertEquals(defaultValue, conf.getDate("date", defaultValue));
-        assertNull("non null object for a missing key", conf.getDate("unknownkey", DATE_PATTERN));
-
-        conf.setThrowExceptionOnMissing(true);
-
-        try {
-            conf.getDate("unknownkey", DATE_PATTERN);
-            fail("NoSuchElementException should be thrown for missing properties");
-        } catch (final NoSuchElementException e) {
-            // expected
-        }
-
-        // Date string
-        assertEquals(expected, conf.getDate("date.string"));
-        assertEquals(expected, conf.getDate("date.string", DATE_PATTERN));
-
-        // Date object
-        assertEquals(expected, conf.getDate("date.object"));
-
-        // Calendar object
-        assertEquals(expected, conf.getDate("calendar.object"));
-
-        // interpolated value
-        assertEquals(expected, conf.getDate("date.string.interpolated"));
-    }
-
-    /**
-     * Tests a conversion to a Date if no property is set with the date format, and the format is directly passed in.
-     */
-    @Test
-    public void testGetDateNoFormatPropertyDirectlySpecified() throws Exception {
-        conf.clearProperty(DataConfiguration.DATE_FORMAT_KEY);
-        assertEquals("Wrong result", expectedDate(), conf.getDate("date.string", DATE_PATTERN));
-    }
-
-    /**
-     * Tests a conversion to a Date if no property is set with the date format, and the format is specified in the
-     * conversion handler.
-     */
-    @Test
-    public void testGetDateNoFormatPropertyConversionHandler() throws Exception {
-        conf.clearProperty(DataConfiguration.DATE_FORMAT_KEY);
-        final DefaultConversionHandler handler = new DefaultConversionHandler();
-        handler.setDateFormat(DATE_PATTERN);
-        conf.setConversionHandler(handler);
-        assertEquals("Wrong result", expectedDate(), conf.getDate("date.string"));
-    }
-
-    @Test
-    public void testGetDateArray() throws Exception {
-        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
-        final Date date1 = format.parse("2004-01-01");
-        final Date date2 = format.parse("2004-12-31");
-
-        // missing list
-        final Date[] defaultValue = {date2, date1};
-        ArrayAssert.assertEquals(defaultValue, conf.getDateArray("date.list", defaultValue));
-
-        final Date[] expected = {date1, date2};
-
-        // list of strings
-        ArrayAssert.assertEquals(expected, conf.getDateArray("date.list1"));
-
-        // list of strings, comma separated
-        ArrayAssert.assertEquals(expected, conf.getDateArray("date.list2"));
-
-        // list of Date objects
-        ArrayAssert.assertEquals(expected, conf.getDateArray("date.list3"));
-
-        // array of Date objects
-        ArrayAssert.assertEquals(expected, conf.getDateArray("date.list4"));
-
-        // list of Calendar objects
-        ArrayAssert.assertEquals(expected, conf.getDateArray("date.list5"));
-
-        // list of Date objects
-        ArrayAssert.assertEquals(expected, conf.getDateArray("date.list6"));
-
-        // list of interpolated values
-        ArrayAssert.assertEquals(expected, conf.getDateArray("date.list.interpolated"));
-
-        // single Date values
-        ArrayAssert.assertEquals(new Date[] {date1}, conf.getDateArray("date.string"));
-        ArrayAssert.assertEquals(new Date[] {date1}, conf.getDateArray("date.object"));
-
-        // empty array
-        ArrayAssert.assertEquals(new Date[] {}, conf.getDateArray("empty"));
-    }
-
-    @Test
-    public void testGetDateArrayWithFormat() throws Exception {
-        final DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-        final Date date1 = format.parse("01/01/2004");
-        final Date date2 = format.parse("12/31/2004");
-        final Date[] expected = {date1, date2};
-
-        conf.addProperty("date.format", "01/01/2004");
-        conf.addProperty("date.format", "12/31/2004");
-        ArrayAssert.assertEquals("Wrong dates with format", expected, conf.getDateArray("date.format", "MM/dd/yyyy"));
-    }
-
-    @Test
-    public void testGetDateList() throws Exception {
-        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
-        final Date date1 = format.parse("2004-01-01");
-        final Date date2 = format.parse("2004-12-31");
-
-        // missing list
-        final List<Date> nullList = null;
-        ListAssert.assertEquals(null, conf.getDateList("date.list", nullList));
-
-        List<Object> expected = new ArrayList<>();
-        expected.add(date1);
-        expected.add(date2);
-
-        // list of strings
-        ListAssert.assertEquals(expected, conf.getDateList("date.list1"));
-        ListAssert.assertEquals(expected, conf.getList(Date.class, "date.list1"));
-
-        // list of strings, comma separated
-        ListAssert.assertEquals(expected, conf.getDateList("date.list2"));
-
-        // list of Date objects
-        ListAssert.assertEquals(expected, conf.getDateList("date.list3"));
-
-        // array of Date objects
-        ListAssert.assertEquals(expected, conf.getDateList("date.list4"));
-
-        // list of Calendar objects
-        ListAssert.assertEquals(expected, conf.getDateList("date.list5"));
-
-        // list of Date objects
-        ListAssert.assertEquals(expected, conf.getDateList("date.list6"));
-
-        // array of strings
-        ListAssert.assertEquals(expected, conf.getList(Date.class, "date.list7"));
-
-        // list of interpolated values
-        ListAssert.assertEquals(expected, conf.getDateList("date.list.interpolated"));
-
-        // single Date values
-        expected = new ArrayList<>();
-        expected.add(date1);
-        ListAssert.assertEquals(expected, conf.getDateList("date.string"));
-        ListAssert.assertEquals(expected, conf.getDateList("date.object"));
-
-        // empty list
-        ListAssert.assertEquals(new ArrayList<>(), conf.getDateList("empty"));
-    }
-
-    @Test
-    public void testGetCalendar() throws Exception {
-        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
-
-        // missing Date
-        final Calendar defaultValue = Calendar.getInstance();
-        defaultValue.setTime(new Date());
-        assertEquals(defaultValue, conf.getCalendar("calendar", defaultValue));
-        assertNull("non null object for a missing key", conf.getCalendar("unknownkey", DATE_PATTERN));
-
-        conf.setThrowExceptionOnMissing(true);
-
-        try {
-            conf.getCalendar("unknownkey", DATE_PATTERN);
-            fail("NoSuchElementException should be thrown for missing properties");
-        } catch (final NoSuchElementException e) {
-            // expected
-        }
-
-        final Calendar expected = Calendar.getInstance();
-        expected.setTime(format.parse("2004-01-01"));
-
-        // Calendar string
-        assertEquals(expected, conf.getCalendar("calendar.string"));
-        assertEquals(expected, conf.getCalendar("calendar.string", DATE_PATTERN));
-
-        // Calendar object
-        assertEquals(expected, conf.getCalendar("calendar.object"));
-
-        // Date object
-        assertEquals(expected, conf.getCalendar("date.object"));
-
-        // interpolated value
-        assertEquals(expected, conf.getCalendar("calendar.string.interpolated"));
-    }
-
-    @Test
-    public void testGetCalendarArray() throws Exception {
-        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
-        final Date date1 = format.parse("2004-01-01");
-        final Date date2 = format.parse("2004-12-31");
-        final Calendar calendar1 = Calendar.getInstance();
-        calendar1.setTime(date1);
-        final Calendar calendar2 = Calendar.getInstance();
-        calendar2.setTime(date2);
-
-        // missing list
-        final Calendar[] defaultValue = {calendar2, calendar1};
-        ArrayAssert.assertEquals(defaultValue, conf.getCalendarArray("calendar.list", defaultValue));
-
-        final Calendar[] expected = {calendar1, calendar2};
-
-        // list of strings
-        ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list1"));
-
-        // list of strings, comma separated
-        ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list2"));
-
-        // list of Calendar objects
-        ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list3"));
-
-        // array of Calendar objects
-        ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list4"));
-
-        // list of Date objects
-        ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list5"));
-
-        // list of Calendar objects
-        ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list6"));
-
-        // list of interpolated values
-        ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list.interpolated"));
-
-        // single Calendar values
-        ArrayAssert.assertEquals(new Calendar[] {calendar1}, conf.getCalendarArray("calendar.string"));
-        ArrayAssert.assertEquals(new Calendar[] {calendar1}, conf.getCalendarArray("calendar.object"));
-
-        // empty array
-        ArrayAssert.assertEquals(new Calendar[] {}, conf.getCalendarArray("empty"));
-    }
-
-    @Test
-    public void testGetCalendarArrayWithFormat() throws Exception {
-        final DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-        final Date date1 = format.parse("01/01/2004");
-        final Date date2 = format.parse("12/31/2004");
-
-        final Calendar calendar1 = Calendar.getInstance();
-        calendar1.setTime(date1);
-        final Calendar calendar2 = Calendar.getInstance();
-        calendar2.setTime(date2);
-        final Calendar[] expected = {calendar1, calendar2};
-
-        conf.addProperty("calendar.format", "01/01/2004");
-        conf.addProperty("calendar.format", "12/31/2004");
-        ArrayAssert.assertEquals("Wrong calendars with format", expected, conf.getCalendarArray("calendar.format", "MM/dd/yyyy"));
-    }
-
-    @Test
-    public void testGetCalendarList() throws Exception {
-        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
-        final Date date1 = format.parse("2004-01-01");
-        final Date date2 = format.parse("2004-12-31");
-        final Calendar calendar1 = Calendar.getInstance();
-        calendar1.setTime(date1);
-        final Calendar calendar2 = Calendar.getInstance();
-        calendar2.setTime(date2);
-
-        // missing list
-        final List<Calendar> nullList = null;
-        ListAssert.assertEquals(null, conf.getCalendarList("calendar.list", nullList));
-
-        List<Object> expected = new ArrayList<>();
-        expected.add(calendar1);
-        expected.add(calendar2);
-
-        // list of strings
-        ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list1"));
-        ListAssert.assertEquals(expected, conf.getList(Calendar.class, "calendar.list1"));
-
-        // list of strings, comma separated
-        ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list2"));
-
-        // list of Calendar objects
-        ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list3"));
-
-        // array of Calendar objects
-        ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list4"));
-
-        // list of Date objects
-        ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list5"));
-
-        // list of Calendar objects
-        ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list6"));
-
-        // array of strings
-        ListAssert.assertEquals(expected, conf.getList(Calendar.class, "calendar.list7"));
-
-        // list of interpolated values
-        ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list.interpolated"));
-
-        // single Calendar values
-        expected = new ArrayList<>();
-        expected.add(calendar1);
-        ListAssert.assertEquals(expected, conf.getCalendarList("date.string"));
-        ListAssert.assertEquals(expected, conf.getCalendarList("date.object"));
-
-        // empty list
-        ListAssert.assertEquals(new ArrayList<>(), conf.getCalendarList("empty"));
-    }
-
-    @Test
-    public void testGetInetAddress() throws Exception {
-        final InetAddress expected = InetAddress.getByName("127.0.0.1");
-
-        // address as string
-        assertEquals(expected, conf.get(InetAddress.class, "ip.string"));
-
-        // address object
-        assertEquals(expected, conf.get(InetAddress.class, "ip.object"));
-
-        // interpolated value
-        assertEquals(expected, conf.get(InetAddress.class, "ip.string.interpolated"));
-    }
-
-    @Test(expected = ConversionException.class)
-    public void testGetInetAddressInvalidType() {
-        conf.setProperty("ip.unknownhost", "foo");
-        conf.get(InetAddress.class, "ip.unknownhost");
-    }
-
-    @Test
-    public void testGetInternetAddress() throws Exception {
-        final Object expected = createInternetAddress("ebourg@apache.org");
-
-        // address as string
-        assertEquals(expected, conf.get(expected.getClass(), "email.string"));
-
-        // address object
-        assertEquals(expected, conf.get(expected.getClass(), "email.object"));
-
-        // interpolated value
-        assertEquals(expected, conf.get(expected.getClass(), "email.string.interpolated"));
-
-        conf.setProperty("email.invalid", "ebourg@apache@org");
-        try {
-            conf.get(expected.getClass(), "email.invalid");
-            fail("ConversionException should be thrown for invalid emails");
-        } catch (final ConversionException e) {
-            // expected
-        }
-    }
-
-    @Test(expected = ConversionException.class)
-    public void testGetInternetAddressInvalidType() throws Exception {
-        final Object expected = createInternetAddress("ebourg@apache.org");
-        conf.setProperty("email.invalid", "ebourg@apache@org");
-        conf.get(expected.getClass(), "email.invalid");
-    }
-
-    /**
-     * Create an instance of InternetAddress. This trick is necessary to compile and run the test with Java 1.3 and the
-     * javamail-1.4 which is not compatible with Java 1.3
-     */
-    private Object createInternetAddress(final String email) throws Exception {
-        final Class<?> cls = Class.forName("javax.mail.internet.InternetAddress");
-        return cls.getConstructor(String.class).newInstance(email);
     }
 
     @Test
@@ -2289,53 +847,6 @@ public class TestDataConfiguration {
     }
 
     /**
-     * Tests whether a string property can be obtained through get() if no type conversion is required.
-     */
-    @Test
-    public void testGetPropertyWithoutConversion() {
-        final String key = "test.str";
-        final String value = "someTestValue";
-        conf.addProperty(key, value);
-        assertEquals("Wrong result", value, conf.get(String.class, key));
-    }
-
-    /**
-     * Tests whether properties can be cleared.
-     */
-    @Test
-    public void testClearProperty() {
-        final String key = "test.property";
-        conf.addProperty(key, "someValue");
-        conf.clearProperty(key);
-        assertFalse("Property still found", conf.containsKey(key));
-    }
-
-    /**
-     * Tests the implementation of clearPropertyDirect().
-     */
-    @Test
-    public void testClearPropertyDirect() {
-        final String key = "test.property";
-        conf.addProperty(key, "someValue");
-        conf.clearPropertyDirect(key);
-        assertFalse("Property still found", conf.containsKey(key));
-    }
-
-    /**
-     * Tests clearPropertyDirect() if the wrapped configuration does not extend AbstractConfiguration.
-     */
-    @Test
-    public void testClearPropertyDirectNoAbstractConf() {
-        final Configuration wrapped = EasyMock.createMock(Configuration.class);
-        final String key = "test.property";
-        wrapped.clearProperty(key);
-        EasyMock.replay(wrapped);
-        conf = new DataConfiguration(wrapped);
-        conf.clearPropertyDirect(key);
-        EasyMock.verify(wrapped);
-    }
-
-    /**
      * Tests that the cause of a conversion exception is kept.
      */
     @Test
@@ -2346,5 +857,1494 @@ public class TestDataConfiguration {
         } catch (final ConversionException cex) {
             assertTrue("Wrong cause", cex.getCause() instanceof NumberFormatException);
         }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetArrayInvalidDefaultType() {
+        conf.getArray(Boolean.class, "unknownkey", new URL[] {});
+    }
+
+    @Test
+    public void testGetBigDecimalArray() {
+        // missing list
+        final BigDecimal[] defaultValue = {new BigDecimal("2"), new BigDecimal("1")};
+        ArrayAssert.assertEquals(defaultValue, conf.getBigDecimalArray("bigdecimal.list", defaultValue));
+
+        final BigDecimal[] expected = {new BigDecimal("1"), new BigDecimal("2")};
+
+        // list of strings
+        ArrayAssert.assertEquals(expected, conf.getBigDecimalArray("bigdecimal.list1"));
+
+        // list of strings, comma separated
+        ArrayAssert.assertEquals(expected, conf.getBigDecimalArray("bigdecimal.list2"));
+
+        // list of BigDecimal objects
+        ArrayAssert.assertEquals(expected, conf.getBigDecimalArray("bigdecimal.list3"));
+
+        // array of BigDecimal objects
+        ArrayAssert.assertEquals(expected, conf.getBigDecimalArray("bigdecimal.list4"));
+
+        // list of BigDecimal objects
+        ArrayAssert.assertEquals(expected, conf.getBigDecimalArray("bigdecimal.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getBigDecimalArray("bigdecimal.list.interpolated"));
+
+        // single BigDecimal values
+        ArrayAssert.assertEquals(new BigDecimal[] {new BigDecimal("1")}, conf.getBigDecimalArray("bigdecimal.string"));
+        ArrayAssert.assertEquals(new BigDecimal[] {new BigDecimal("1")}, conf.getBigDecimalArray("bigdecimal.object"));
+
+        // empty array
+        ArrayAssert.assertEquals(new BigDecimal[] {}, conf.getBigDecimalArray("empty"));
+    }
+
+    @Test
+    public void testGetBigDecimalList() {
+        // missing list
+        ListAssert.assertEquals(null, conf.getBigDecimalList("bigdecimal.list", null));
+
+        List<Object> expected = new ArrayList<>();
+        expected.add(new BigDecimal("1"));
+        expected.add(new BigDecimal("2"));
+
+        // list of strings
+        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.list1"));
+
+        // list of strings, comma separated
+        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.list2"));
+
+        // list of BigDecimal objects
+        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.list3"));
+
+        // array of BigDecimal objects
+        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.list4"));
+
+        // list of BigDecimal objects
+        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.list.interpolated"));
+
+        // single BigDecimal values
+        expected = new ArrayList<>();
+        expected.add(new BigDecimal("1"));
+        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.string"));
+        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.object"));
+
+        // empty list
+        ListAssert.assertEquals(new ArrayList<>(), conf.getBigDecimalList("empty"));
+    }
+
+    @Test
+    public void testGetBigIntegerArray() {
+        // missing list
+        final BigInteger[] defaultValue = {new BigInteger("2"), new BigInteger("1")};
+        ArrayAssert.assertEquals(defaultValue, conf.getBigIntegerArray("biginteger.list", defaultValue));
+
+        final BigInteger[] expected = {new BigInteger("1"), new BigInteger("2")};
+
+        // list of strings
+        ArrayAssert.assertEquals(expected, conf.getBigIntegerArray("biginteger.list1"));
+
+        // list of strings, comma separated
+        ArrayAssert.assertEquals(expected, conf.getBigIntegerArray("biginteger.list2"));
+
+        // list of BigInteger objects
+        ArrayAssert.assertEquals(expected, conf.getBigIntegerArray("biginteger.list3"));
+
+        // array of BigInteger objects
+        ArrayAssert.assertEquals(expected, conf.getBigIntegerArray("biginteger.list4"));
+
+        // list of BigInteger objects
+        ArrayAssert.assertEquals(expected, conf.getBigIntegerArray("biginteger.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getBigIntegerArray("biginteger.list.interpolated"));
+
+        // single BigInteger values
+        ArrayAssert.assertEquals(new BigInteger[] {new BigInteger("1")}, conf.getBigIntegerArray("biginteger.string"));
+        ArrayAssert.assertEquals(new BigInteger[] {new BigInteger("1")}, conf.getBigIntegerArray("biginteger.object"));
+
+        // empty array
+        ArrayAssert.assertEquals(new BigInteger[] {}, conf.getBigIntegerArray("empty"));
+    }
+
+    @Test
+    public void testGetBigIntegerList() {
+        // missing list
+        final List<BigInteger> bigIntegerList = conf.getBigIntegerList("biginteger.list", null);
+        ListAssert.assertEquals(null, bigIntegerList);
+
+        List<Object> expected = new ArrayList<>();
+        expected.add(new BigInteger("1"));
+        expected.add(new BigInteger("2"));
+
+        // list of strings
+        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.list1"));
+
+        // list of strings, comma separated
+        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.list2"));
+
+        // list of BigInteger objects
+        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.list3"));
+
+        // array of BigInteger objects
+        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.list4"));
+
+        // list of BigInteger objects
+        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.list.interpolated"));
+
+        // single BigInteger values
+        expected = new ArrayList<>();
+        expected.add(new BigInteger("1"));
+        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.string"));
+        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.object"));
+
+        // empty list
+        ListAssert.assertEquals(new ArrayList<>(), conf.getBigIntegerList("empty"));
+    }
+
+    @Test
+    public void testGetBooleanArray() {
+        // missing list
+        final boolean[] defaultValue = {false, true};
+        ArrayAssert.assertEquals(defaultValue, conf.getBooleanArray("boolean.list", defaultValue));
+
+        final boolean[] expected = {true, false};
+
+        // list of strings
+        ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list1"));
+
+        // list of strings, comma separated
+        ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list2"));
+
+        // list of Boolean objects
+        ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list3"));
+
+        // array of Boolean objects
+        ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list4"));
+
+        // array of boolean primitives
+        ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list5"));
+
+        // list of Boolean objects
+        ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list.interpolated"));
+
+        // single boolean values
+        ArrayAssert.assertEquals(new boolean[] {true}, conf.getBooleanArray("boolean.string"));
+        ArrayAssert.assertEquals(new boolean[] {true}, conf.getBooleanArray("boolean.object"));
+
+        // empty array
+        ArrayAssert.assertEquals(new boolean[] {}, conf.getBooleanArray("empty"));
+    }
+
+    @Test
+    public void testGetBooleanList() {
+        // missing list
+        ListAssert.assertEquals(null, conf.getBooleanList("boolean.list", null));
+
+        List<Object> expected = new ArrayList<>();
+        expected.add(Boolean.TRUE);
+        expected.add(Boolean.FALSE);
+
+        // list of strings
+        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list1"));
+
+        // list of strings, comma separated
+        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list2"));
+
+        // list of Boolean objects
+        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list3"));
+
+        // array of Boolean objects
+        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list4"));
+
+        // array of boolean primitives
+        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list5"));
+
+        // list of Boolean objects
+        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list.interpolated"));
+
+        // single boolean values
+        expected = new ArrayList<>();
+        expected.add(Boolean.TRUE);
+        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.string"));
+        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.object"));
+
+        // empty list
+        ListAssert.assertEquals(new ArrayList<>(), conf.getBooleanList("empty"));
+    }
+
+    @Test
+    public void testGetByteArray() {
+        // missing list
+        final byte[] defaultValue = {1, 2};
+        ArrayAssert.assertEquals(defaultValue, conf.getByteArray("byte.list", defaultValue));
+
+        final byte[] expected = {1, 2};
+
+        // list of strings
+        ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list1"));
+
+        // list of strings, comma separated
+        ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list2"));
+
+        // list of Byte objects
+        ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list3"));
+
+        // array of Byte objects
+        ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list4"));
+
+        // array of byte primitives
+        ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list5"));
+
+        // list of Byte objects
+        ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list.interpolated"));
+
+        // single byte values
+        ArrayAssert.assertEquals(new byte[] {1}, conf.getByteArray("byte.string"));
+        ArrayAssert.assertEquals(new byte[] {1}, conf.getByteArray("byte.object"));
+
+        // empty array
+        ArrayAssert.assertEquals(new byte[] {}, conf.getByteArray("empty"));
+    }
+
+    @Test
+    public void testGetByteList() {
+        // missing list
+        ListAssert.assertEquals(null, conf.getByteList("byte.list", null));
+
+        List<Object> expected = new ArrayList<>();
+        expected.add(Byte.valueOf("1"));
+        expected.add(Byte.valueOf("2"));
+
+        // list of strings
+        ListAssert.assertEquals(expected, conf.getByteList("byte.list1"));
+
+        // list of strings, comma separated
+        ListAssert.assertEquals(expected, conf.getByteList("byte.list2"));
+
+        // list of Byte objects
+        ListAssert.assertEquals(expected, conf.getByteList("byte.list3"));
+
+        // array of Byte objects
+        ListAssert.assertEquals(expected, conf.getByteList("byte.list4"));
+
+        // array of byte primitives
+        ListAssert.assertEquals(expected, conf.getByteList("byte.list5"));
+
+        // list of Byte objects
+        ListAssert.assertEquals(expected, conf.getByteList("byte.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getByteList("byte.list.interpolated"));
+
+        // single byte values
+        expected = new ArrayList<>();
+        expected.add(Byte.valueOf("1"));
+        ListAssert.assertEquals(expected, conf.getByteList("byte.string"));
+        ListAssert.assertEquals(expected, conf.getByteList("byte.object"));
+
+        // empty list
+        ListAssert.assertEquals(new ArrayList<>(), conf.getByteList("empty"));
+    }
+
+    @Test
+    public void testGetCalendar() throws Exception {
+        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
+
+        // missing Date
+        final Calendar defaultValue = Calendar.getInstance();
+        defaultValue.setTime(new Date());
+        assertEquals(defaultValue, conf.getCalendar("calendar", defaultValue));
+        assertNull("non null object for a missing key", conf.getCalendar("unknownkey", DATE_PATTERN));
+
+        conf.setThrowExceptionOnMissing(true);
+
+        try {
+            conf.getCalendar("unknownkey", DATE_PATTERN);
+            fail("NoSuchElementException should be thrown for missing properties");
+        } catch (final NoSuchElementException e) {
+            // expected
+        }
+
+        final Calendar expected = Calendar.getInstance();
+        expected.setTime(format.parse("2004-01-01"));
+
+        // Calendar string
+        assertEquals(expected, conf.getCalendar("calendar.string"));
+        assertEquals(expected, conf.getCalendar("calendar.string", DATE_PATTERN));
+
+        // Calendar object
+        assertEquals(expected, conf.getCalendar("calendar.object"));
+
+        // Date object
+        assertEquals(expected, conf.getCalendar("date.object"));
+
+        // interpolated value
+        assertEquals(expected, conf.getCalendar("calendar.string.interpolated"));
+    }
+
+    @Test
+    public void testGetCalendarArray() throws Exception {
+        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
+        final Date date1 = format.parse("2004-01-01");
+        final Date date2 = format.parse("2004-12-31");
+        final Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTime(date1);
+        final Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTime(date2);
+
+        // missing list
+        final Calendar[] defaultValue = {calendar2, calendar1};
+        ArrayAssert.assertEquals(defaultValue, conf.getCalendarArray("calendar.list", defaultValue));
+
+        final Calendar[] expected = {calendar1, calendar2};
+
+        // list of strings
+        ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list1"));
+
+        // list of strings, comma separated
+        ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list2"));
+
+        // list of Calendar objects
+        ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list3"));
+
+        // array of Calendar objects
+        ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list4"));
+
+        // list of Date objects
+        ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list5"));
+
+        // list of Calendar objects
+        ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list.interpolated"));
+
+        // single Calendar values
+        ArrayAssert.assertEquals(new Calendar[] {calendar1}, conf.getCalendarArray("calendar.string"));
+        ArrayAssert.assertEquals(new Calendar[] {calendar1}, conf.getCalendarArray("calendar.object"));
+
+        // empty array
+        ArrayAssert.assertEquals(new Calendar[] {}, conf.getCalendarArray("empty"));
+    }
+
+    @Test
+    public void testGetCalendarArrayWithFormat() throws Exception {
+        final DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        final Date date1 = format.parse("01/01/2004");
+        final Date date2 = format.parse("12/31/2004");
+
+        final Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTime(date1);
+        final Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTime(date2);
+        final Calendar[] expected = {calendar1, calendar2};
+
+        conf.addProperty("calendar.format", "01/01/2004");
+        conf.addProperty("calendar.format", "12/31/2004");
+        ArrayAssert.assertEquals("Wrong calendars with format", expected, conf.getCalendarArray("calendar.format", "MM/dd/yyyy"));
+    }
+
+    @Test
+    public void testGetCalendarList() throws Exception {
+        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
+        final Date date1 = format.parse("2004-01-01");
+        final Date date2 = format.parse("2004-12-31");
+        final Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTime(date1);
+        final Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTime(date2);
+
+        // missing list
+        final List<Calendar> nullList = null;
+        ListAssert.assertEquals(null, conf.getCalendarList("calendar.list", nullList));
+
+        List<Object> expected = new ArrayList<>();
+        expected.add(calendar1);
+        expected.add(calendar2);
+
+        // list of strings
+        ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list1"));
+        ListAssert.assertEquals(expected, conf.getList(Calendar.class, "calendar.list1"));
+
+        // list of strings, comma separated
+        ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list2"));
+
+        // list of Calendar objects
+        ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list3"));
+
+        // array of Calendar objects
+        ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list4"));
+
+        // list of Date objects
+        ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list5"));
+
+        // list of Calendar objects
+        ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list6"));
+
+        // array of strings
+        ListAssert.assertEquals(expected, conf.getList(Calendar.class, "calendar.list7"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list.interpolated"));
+
+        // single Calendar values
+        expected = new ArrayList<>();
+        expected.add(calendar1);
+        ListAssert.assertEquals(expected, conf.getCalendarList("date.string"));
+        ListAssert.assertEquals(expected, conf.getCalendarList("date.object"));
+
+        // empty list
+        ListAssert.assertEquals(new ArrayList<>(), conf.getCalendarList("empty"));
+    }
+
+    @Test
+    public void testGetColor() {
+        // RRGGBB
+        conf.setProperty("color", "FF0000");
+        assertEquals("color", Color.red, conf.getColor("color"));
+
+        // #RRGGBB
+        conf.setProperty("color", "#00FF00");
+        assertEquals("color", Color.green, conf.getColor("color"));
+
+        // #RRGGBBAA
+        conf.setProperty("color", "#01030507");
+        final Color color = conf.getColor("color");
+        assertNotNull("null color", color);
+        assertEquals("red", 1, color.getRed());
+        assertEquals("green", 3, color.getGreen());
+        assertEquals("blue", 5, color.getBlue());
+        assertEquals("alpha", 7, color.getAlpha());
+
+        // interpolated value
+        assertEquals(Color.red, conf.getColor("color.string.interpolated"));
+
+        // default value
+        assertEquals(Color.cyan, conf.getColor("unknownkey", Color.cyan));
+    }
+
+    @Test
+    public void testGetColorArray() throws Exception {
+        // missing list
+        final Color[] defaultValue = {Color.red, Color.blue};
+        ArrayAssert.assertEquals(defaultValue, conf.getColorArray("color.list", defaultValue));
+
+        final Color[] expected = {Color.red, Color.blue};
+
+        // list of strings
+        ArrayAssert.assertEquals(expected, conf.getColorArray("color.list1"));
+
+        // list of strings, comma separated
+        ArrayAssert.assertEquals(expected, conf.getColorArray("color.list2"));
+
+        // list of Color objects
+        ArrayAssert.assertEquals(expected, conf.getColorArray("color.list3"));
+
+        // array of Color objects
+        ArrayAssert.assertEquals(expected, conf.getColorArray("color.list4"));
+
+        // list of Color objects
+        ArrayAssert.assertEquals(expected, conf.getColorArray("color.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getColorArray("color.list.interpolated"));
+
+        // single Color values
+        ArrayAssert.assertEquals(new Color[] {Color.red}, conf.getColorArray("color.string"));
+        ArrayAssert.assertEquals(new Color[] {Color.red}, conf.getColorArray("color.object"));
+
+        // empty array
+        ArrayAssert.assertEquals(new Color[] {}, conf.getColorArray("empty"));
+    }
+
+    @Test
+    public void testGetColorList() throws Exception {
+        // missing list
+        ListAssert.assertEquals(null, conf.getColorList("color.list", null));
+
+        List<Object> expected = new ArrayList<>();
+        expected.add(Color.red);
+        expected.add(Color.blue);
+
+        // list of strings
+        ListAssert.assertEquals(expected, conf.getColorList("color.list1"));
+
+        // list of strings, comma separated
+        ListAssert.assertEquals(expected, conf.getColorList("color.list2"));
+
+        // list of Color objects
+        ListAssert.assertEquals(expected, conf.getColorList("color.list3"));
+
+        // array of Color objects
+        ListAssert.assertEquals(expected, conf.getColorList("color.list4"));
+
+        // list of Color objects
+        ListAssert.assertEquals(expected, conf.getColorList("color.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getColorList("color.list.interpolated"));
+
+        // single Color values
+        expected = new ArrayList<>();
+        expected.add(Color.red);
+        ListAssert.assertEquals(expected, conf.getColorList("color.string"));
+        ListAssert.assertEquals(expected, conf.getColorList("color.object"));
+
+        // empty list
+        ListAssert.assertEquals(new ArrayList<>(), conf.getColorList("empty"));
+    }
+
+    @Test
+    public void testGetConfiguration() {
+        final Configuration baseconf = new BaseConfiguration();
+        final DataConfiguration conf = new DataConfiguration(baseconf);
+
+        assertEquals("base configuration", baseconf, conf.getConfiguration());
+    }
+
+    @Test
+    public void testGetDate() throws Exception {
+        final Date expected = expectedDate();
+
+        // missing Date
+        final Date defaultValue = new Date();
+        assertEquals(defaultValue, conf.getDate("date", defaultValue));
+        assertNull("non null object for a missing key", conf.getDate("unknownkey", DATE_PATTERN));
+
+        conf.setThrowExceptionOnMissing(true);
+
+        try {
+            conf.getDate("unknownkey", DATE_PATTERN);
+            fail("NoSuchElementException should be thrown for missing properties");
+        } catch (final NoSuchElementException e) {
+            // expected
+        }
+
+        // Date string
+        assertEquals(expected, conf.getDate("date.string"));
+        assertEquals(expected, conf.getDate("date.string", DATE_PATTERN));
+
+        // Date object
+        assertEquals(expected, conf.getDate("date.object"));
+
+        // Calendar object
+        assertEquals(expected, conf.getDate("calendar.object"));
+
+        // interpolated value
+        assertEquals(expected, conf.getDate("date.string.interpolated"));
+    }
+
+    @Test
+    public void testGetDateArray() throws Exception {
+        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
+        final Date date1 = format.parse("2004-01-01");
+        final Date date2 = format.parse("2004-12-31");
+
+        // missing list
+        final Date[] defaultValue = {date2, date1};
+        ArrayAssert.assertEquals(defaultValue, conf.getDateArray("date.list", defaultValue));
+
+        final Date[] expected = {date1, date2};
+
+        // list of strings
+        ArrayAssert.assertEquals(expected, conf.getDateArray("date.list1"));
+
+        // list of strings, comma separated
+        ArrayAssert.assertEquals(expected, conf.getDateArray("date.list2"));
+
+        // list of Date objects
+        ArrayAssert.assertEquals(expected, conf.getDateArray("date.list3"));
+
+        // array of Date objects
+        ArrayAssert.assertEquals(expected, conf.getDateArray("date.list4"));
+
+        // list of Calendar objects
+        ArrayAssert.assertEquals(expected, conf.getDateArray("date.list5"));
+
+        // list of Date objects
+        ArrayAssert.assertEquals(expected, conf.getDateArray("date.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getDateArray("date.list.interpolated"));
+
+        // single Date values
+        ArrayAssert.assertEquals(new Date[] {date1}, conf.getDateArray("date.string"));
+        ArrayAssert.assertEquals(new Date[] {date1}, conf.getDateArray("date.object"));
+
+        // empty array
+        ArrayAssert.assertEquals(new Date[] {}, conf.getDateArray("empty"));
+    }
+
+    @Test
+    public void testGetDateArrayWithFormat() throws Exception {
+        final DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        final Date date1 = format.parse("01/01/2004");
+        final Date date2 = format.parse("12/31/2004");
+        final Date[] expected = {date1, date2};
+
+        conf.addProperty("date.format", "01/01/2004");
+        conf.addProperty("date.format", "12/31/2004");
+        ArrayAssert.assertEquals("Wrong dates with format", expected, conf.getDateArray("date.format", "MM/dd/yyyy"));
+    }
+
+    @Test
+    public void testGetDateList() throws Exception {
+        final DateFormat format = new SimpleDateFormat(DATE_PATTERN);
+        final Date date1 = format.parse("2004-01-01");
+        final Date date2 = format.parse("2004-12-31");
+
+        // missing list
+        final List<Date> nullList = null;
+        ListAssert.assertEquals(null, conf.getDateList("date.list", nullList));
+
+        List<Object> expected = new ArrayList<>();
+        expected.add(date1);
+        expected.add(date2);
+
+        // list of strings
+        ListAssert.assertEquals(expected, conf.getDateList("date.list1"));
+        ListAssert.assertEquals(expected, conf.getList(Date.class, "date.list1"));
+
+        // list of strings, comma separated
+        ListAssert.assertEquals(expected, conf.getDateList("date.list2"));
+
+        // list of Date objects
+        ListAssert.assertEquals(expected, conf.getDateList("date.list3"));
+
+        // array of Date objects
+        ListAssert.assertEquals(expected, conf.getDateList("date.list4"));
+
+        // list of Calendar objects
+        ListAssert.assertEquals(expected, conf.getDateList("date.list5"));
+
+        // list of Date objects
+        ListAssert.assertEquals(expected, conf.getDateList("date.list6"));
+
+        // array of strings
+        ListAssert.assertEquals(expected, conf.getList(Date.class, "date.list7"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getDateList("date.list.interpolated"));
+
+        // single Date values
+        expected = new ArrayList<>();
+        expected.add(date1);
+        ListAssert.assertEquals(expected, conf.getDateList("date.string"));
+        ListAssert.assertEquals(expected, conf.getDateList("date.object"));
+
+        // empty list
+        ListAssert.assertEquals(new ArrayList<>(), conf.getDateList("empty"));
+    }
+
+    /**
+     * Tests a conversion to a Date if no property is set with the date format, and the format is specified in the
+     * conversion handler.
+     */
+    @Test
+    public void testGetDateNoFormatPropertyConversionHandler() throws Exception {
+        conf.clearProperty(DataConfiguration.DATE_FORMAT_KEY);
+        final DefaultConversionHandler handler = new DefaultConversionHandler();
+        handler.setDateFormat(DATE_PATTERN);
+        conf.setConversionHandler(handler);
+        assertEquals("Wrong result", expectedDate(), conf.getDate("date.string"));
+    }
+
+    /**
+     * Tests a conversion to a Date if no property is set with the date format, and the format is directly passed in.
+     */
+    @Test
+    public void testGetDateNoFormatPropertyDirectlySpecified() throws Exception {
+        conf.clearProperty(DataConfiguration.DATE_FORMAT_KEY);
+        assertEquals("Wrong result", expectedDate(), conf.getDate("date.string", DATE_PATTERN));
+    }
+
+    @Test
+    public void testGetDoubleArray() {
+        // missing list
+        final double[] defaultValue = {2, 1};
+        ArrayAssert.assertEquals(defaultValue, conf.getDoubleArray("double.list", defaultValue), 0);
+
+        final double[] expected = {1, 2};
+
+        // list of strings
+        ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list1"), 0);
+
+        // list of strings, comma separated
+        ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list2"), 0);
+
+        // list of Double objects
+        ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list3"), 0);
+
+        // array of Double objects
+        ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list4"), 0);
+
+        // array of double primitives
+        ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list5"), 0);
+
+        // list of Double objects
+        ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list6"), 0);
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list.interpolated"), 0);
+
+        // single double values
+        ArrayAssert.assertEquals(new double[] {1}, conf.getDoubleArray("double.string"), 0);
+        ArrayAssert.assertEquals(new double[] {1}, conf.getDoubleArray("double.object"), 0);
+
+        // empty array
+        ArrayAssert.assertEquals(new double[] {}, conf.getDoubleArray("empty"), 0);
+    }
+
+    @Test
+    public void testGetDoubleList() {
+        // missing list
+        ListAssert.assertEquals(null, conf.getDoubleList("double.list", null));
+
+        List<Object> expected = new ArrayList<>();
+        expected.add(Double.valueOf("1"));
+        expected.add(Double.valueOf("2"));
+
+        // list of strings
+        ListAssert.assertEquals(expected, conf.getDoubleList("double.list1"));
+
+        // list of strings, comma separated
+        ListAssert.assertEquals(expected, conf.getDoubleList("double.list2"));
+
+        // list of Double objects
+        ListAssert.assertEquals(expected, conf.getDoubleList("double.list3"));
+
+        // array of Double objects
+        ListAssert.assertEquals(expected, conf.getDoubleList("double.list4"));
+
+        // array of double primitives
+        ListAssert.assertEquals(expected, conf.getDoubleList("double.list5"));
+
+        // list of Double objects
+        ListAssert.assertEquals(expected, conf.getDoubleList("double.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getDoubleList("double.list.interpolated"));
+
+        // single double values
+        expected = new ArrayList<>();
+        expected.add(Double.valueOf("1"));
+        ListAssert.assertEquals(expected, conf.getDoubleList("double.string"));
+        ListAssert.assertEquals(expected, conf.getDoubleList("double.object"));
+
+        // empty list
+        ListAssert.assertEquals(new ArrayList<>(), conf.getDoubleList("empty"));
+    }
+
+    @Test
+    public void testGetFloatArray() {
+        // missing list
+        final float[] defaultValue = {2, 1};
+        ArrayAssert.assertEquals(defaultValue, conf.getFloatArray("float.list", defaultValue), 0);
+
+        final float[] expected = {1, 2};
+
+        // list of strings
+        ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list1"), 0);
+
+        // list of strings, comma separated
+        ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list2"), 0);
+
+        // list of Float objects
+        ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list3"), 0);
+
+        // array of Float objects
+        ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list4"), 0);
+
+        // array of float primitives
+        ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list5"), 0);
+
+        // list of Float objects
+        ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list6"), 0);
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list.interpolated"), 0);
+
+        // single float values
+        ArrayAssert.assertEquals(new float[] {1}, conf.getFloatArray("float.string"), 0);
+        ArrayAssert.assertEquals(new float[] {1}, conf.getFloatArray("float.object"), 0);
+
+        // empty array
+        ArrayAssert.assertEquals(new float[] {}, conf.getFloatArray("empty"), 0);
+    }
+
+    @Test
+    public void testGetFloatList() {
+        // missing list
+        ListAssert.assertEquals(null, conf.getFloatList("float.list", null));
+
+        List<Object> expected = new ArrayList<>();
+        expected.add(Float.valueOf("1"));
+        expected.add(Float.valueOf("2"));
+
+        // list of strings
+        ListAssert.assertEquals(expected, conf.getFloatList("float.list1"));
+
+        // list of strings, comma separated
+        ListAssert.assertEquals(expected, conf.getFloatList("float.list2"));
+
+        // list of Float objects
+        ListAssert.assertEquals(expected, conf.getFloatList("float.list3"));
+
+        // array of Float objects
+        ListAssert.assertEquals(expected, conf.getFloatList("float.list4"));
+
+        // array of float primitives
+        ListAssert.assertEquals(expected, conf.getFloatList("float.list5"));
+
+        // list of Float objects
+        ListAssert.assertEquals(expected, conf.getFloatList("float.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getFloatList("float.list.interpolated"));
+
+        // single float values
+        expected = new ArrayList<>();
+        expected.add(Float.valueOf("1"));
+        ListAssert.assertEquals(expected, conf.getFloatList("float.string"));
+        ListAssert.assertEquals(expected, conf.getFloatList("float.object"));
+
+        // empty list
+        ListAssert.assertEquals(new ArrayList<>(), conf.getFloatList("empty"));
+    }
+
+    @Test
+    public void testGetInetAddress() throws Exception {
+        final InetAddress expected = InetAddress.getByName("127.0.0.1");
+
+        // address as string
+        assertEquals(expected, conf.get(InetAddress.class, "ip.string"));
+
+        // address object
+        assertEquals(expected, conf.get(InetAddress.class, "ip.object"));
+
+        // interpolated value
+        assertEquals(expected, conf.get(InetAddress.class, "ip.string.interpolated"));
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testGetInetAddressInvalidType() {
+        conf.setProperty("ip.unknownhost", "foo");
+        conf.get(InetAddress.class, "ip.unknownhost");
+    }
+
+    @Test
+    public void testGetIntegerArray() {
+        // missing list
+        final int[] defaultValue = {2, 1};
+        ArrayAssert.assertEquals(defaultValue, conf.getIntArray("integer.list", defaultValue));
+
+        final int[] expected = {1, 2};
+
+        // list of strings
+        ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list1"));
+
+        // list of strings, comma separated
+        ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list2"));
+
+        // list of Integer objects
+        ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list3"));
+
+        // array of Integer objects
+        ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list4"));
+
+        // array of int primitives
+        ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list5"));
+
+        // list of Integer objects
+        ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list.interpolated"));
+
+        // single int values
+        ArrayAssert.assertEquals(new int[] {1}, conf.getIntArray("integer.string"));
+        ArrayAssert.assertEquals(new int[] {1}, conf.getIntArray("integer.object"));
+
+        // empty array
+        ArrayAssert.assertEquals(new int[] {}, conf.getIntArray("empty"));
+    }
+
+    @Test
+    public void testGetIntegerList() {
+        // missing list
+        ListAssert.assertEquals(null, conf.getIntegerList("integer.list", null));
+
+        List<Object> expected = new ArrayList<>();
+        expected.add(Integer.valueOf("1"));
+        expected.add(Integer.valueOf("2"));
+
+        // list of strings
+        ListAssert.assertEquals(expected, conf.getIntegerList("integer.list1"));
+
+        // list of strings, comma separated
+        ListAssert.assertEquals(expected, conf.getIntegerList("integer.list2"));
+
+        // list of Integer objects
+        ListAssert.assertEquals(expected, conf.getIntegerList("integer.list3"));
+
+        // array of Integer objects
+        ListAssert.assertEquals(expected, conf.getIntegerList("integer.list4"));
+
+        // array of int primitives
+        ListAssert.assertEquals(expected, conf.getIntegerList("integer.list5"));
+
+        // list of Integer objects
+        ListAssert.assertEquals(expected, conf.getIntegerList("integer.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getIntegerList("integer.list.interpolated"));
+
+        // single int values
+        expected = new ArrayList<>();
+        expected.add(Integer.valueOf("1"));
+        ListAssert.assertEquals(expected, conf.getIntegerList("integer.string"));
+        ListAssert.assertEquals(expected, conf.getIntegerList("integer.object"));
+
+        // empty list
+        ListAssert.assertEquals(new ArrayList<>(), conf.getIntegerList("empty"));
+    }
+
+    @Test
+    public void testGetInternetAddress() throws Exception {
+        final Object expected = createInternetAddress("ebourg@apache.org");
+
+        // address as string
+        assertEquals(expected, conf.get(expected.getClass(), "email.string"));
+
+        // address object
+        assertEquals(expected, conf.get(expected.getClass(), "email.object"));
+
+        // interpolated value
+        assertEquals(expected, conf.get(expected.getClass(), "email.string.interpolated"));
+
+        conf.setProperty("email.invalid", "ebourg@apache@org");
+        try {
+            conf.get(expected.getClass(), "email.invalid");
+            fail("ConversionException should be thrown for invalid emails");
+        } catch (final ConversionException e) {
+            // expected
+        }
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testGetInternetAddressInvalidType() throws Exception {
+        final Object expected = createInternetAddress("ebourg@apache.org");
+        conf.setProperty("email.invalid", "ebourg@apache@org");
+        conf.get(expected.getClass(), "email.invalid");
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testGetInvalidType() {
+        conf.get(Boolean.class, "url.object", null);
+    }
+
+    @Test
+    public void testGetKeys() {
+        final Configuration baseconf = new BaseConfiguration();
+        final DataConfiguration conf = new DataConfiguration(baseconf);
+
+        baseconf.setProperty("foo", "bar");
+
+        final Iterator<String> it = conf.getKeys();
+        assertTrue("the iterator is empty", it.hasNext());
+        assertEquals("unique key", "foo", it.next());
+        assertFalse("the iterator is not exhausted", it.hasNext());
+    }
+
+    @Test
+    public void testGetLocale() {
+        // language
+        conf.setProperty("locale", "fr");
+        assertEquals("language", new Locale("fr", ""), conf.getLocale("locale"));
+
+        // language + variant
+        conf.setProperty("locale", "fr__POSIX");
+        assertEquals("language + variant", new Locale("fr", "", "POSIX"), conf.getLocale("locale"));
+
+        // country
+        conf.setProperty("locale", "_FR");
+        assertEquals("country", new Locale("", "FR"), conf.getLocale("locale"));
+
+        // country + variant
+        conf.setProperty("locale", "_FR_WIN");
+        assertEquals("country + variant", new Locale("", "FR", "WIN"), conf.getLocale("locale"));
+
+        // language + country
+        conf.setProperty("locale", "fr_FR");
+        assertEquals("language + country", new Locale("fr", "FR"), conf.getLocale("locale"));
+
+        // language + country + variant
+        conf.setProperty("locale", "fr_FR_MAC");
+        assertEquals("language + country + variant", new Locale("fr", "FR", "MAC"), conf.getLocale("locale"));
+
+        // default value
+        conf.setProperty("locale", "fr");
+        assertEquals("Existing key with default value", Locale.FRENCH, conf.getLocale("locale", Locale.GERMAN));
+        assertEquals("Missing key with default value", Locale.GERMAN, conf.getLocale("localeNotInConfig", Locale.GERMAN));
+
+        // interpolated value
+        assertEquals(Locale.FRENCH, conf.getLocale("locale.string.interpolated"));
+    }
+
+    @Test
+    public void testGetLocaleArray() throws Exception {
+        // missing list
+        final Locale[] defaultValue = {Locale.GERMAN, Locale.FRENCH};
+        ArrayAssert.assertEquals(defaultValue, conf.getLocaleArray("locale.list", defaultValue));
+
+        final Locale[] expected = {Locale.FRENCH, Locale.GERMAN};
+
+        // list of strings
+        ArrayAssert.assertEquals(expected, conf.getLocaleArray("locale.list1"));
+
+        // list of strings, comma separated
+        ArrayAssert.assertEquals(expected, conf.getLocaleArray("locale.list2"));
+
+        // list of Locale objects
+        ArrayAssert.assertEquals(expected, conf.getLocaleArray("locale.list3"));
+
+        // array of Locale objects
+        ArrayAssert.assertEquals(expected, conf.getLocaleArray("locale.list4"));
+
+        // list of Locale objects
+        ArrayAssert.assertEquals(expected, conf.getLocaleArray("locale.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getLocaleArray("locale.list.interpolated"));
+
+        // single Locale values
+        ArrayAssert.assertEquals(new Locale[] {Locale.FRENCH}, conf.getLocaleArray("locale.string"));
+        ArrayAssert.assertEquals(new Locale[] {Locale.FRENCH}, conf.getLocaleArray("locale.object"));
+
+        // empty array
+        ArrayAssert.assertEquals(new Locale[] {}, conf.getLocaleArray("empty"));
+    }
+
+    @Test
+    public void testGetLocaleList() throws Exception {
+        // missing list
+        ListAssert.assertEquals(null, conf.getLocaleList("locale.list", null));
+
+        List<Object> expected = new ArrayList<>();
+        expected.add(Locale.FRENCH);
+        expected.add(Locale.GERMAN);
+
+        // list of strings
+        ListAssert.assertEquals(expected, conf.getLocaleList("locale.list1"));
+
+        // list of strings, comma separated
+        ListAssert.assertEquals(expected, conf.getLocaleList("locale.list2"));
+
+        // list of Locale objects
+        ListAssert.assertEquals(expected, conf.getLocaleList("locale.list3"));
+
+        // array of Locale objects
+        ListAssert.assertEquals(expected, conf.getLocaleList("locale.list4"));
+
+        // list of Locale objects
+        ListAssert.assertEquals(expected, conf.getLocaleList("locale.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getLocaleList("locale.list.interpolated"));
+
+        // single Locale values
+        expected = new ArrayList<>();
+        expected.add(Locale.FRENCH);
+        ListAssert.assertEquals(expected, conf.getLocaleList("locale.string"));
+        ListAssert.assertEquals(expected, conf.getLocaleList("locale.object"));
+
+        // empty list
+        ListAssert.assertEquals(new ArrayList<>(), conf.getLocaleList("empty"));
+    }
+
+    @Test
+    public void testGetLongArray() {
+        // missing list
+        final long[] defaultValue = {2, 1};
+        ArrayAssert.assertEquals(defaultValue, conf.getLongArray("long.list", defaultValue));
+
+        final long[] expected = {1, 2};
+
+        // list of strings
+        ArrayAssert.assertEquals(expected, conf.getLongArray("long.list1"));
+
+        // list of strings, comma separated
+        ArrayAssert.assertEquals(expected, conf.getLongArray("long.list2"));
+
+        // list of Long objects
+        ArrayAssert.assertEquals(expected, conf.getLongArray("long.list3"));
+
+        // array of Long objects
+        ArrayAssert.assertEquals(expected, conf.getLongArray("long.list4"));
+
+        // array of long primitives
+        ArrayAssert.assertEquals(expected, conf.getLongArray("long.list5"));
+
+        // list of Long objects
+        ArrayAssert.assertEquals(expected, conf.getLongArray("long.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getLongArray("long.list.interpolated"));
+
+        // single long values
+        ArrayAssert.assertEquals(new long[] {1}, conf.getLongArray("long.string"));
+        ArrayAssert.assertEquals(new long[] {1}, conf.getLongArray("long.object"));
+
+        // empty array
+        ArrayAssert.assertEquals(new long[] {}, conf.getLongArray("empty"));
+    }
+
+    @Test
+    public void testGetLongList() {
+        // missing list
+        ListAssert.assertEquals(null, conf.getLongList("long.list", null));
+
+        List<Object> expected = new ArrayList<>();
+        expected.add(Long.valueOf("1"));
+        expected.add(Long.valueOf("2"));
+
+        // list of strings
+        ListAssert.assertEquals(expected, conf.getLongList("long.list1"));
+
+        // list of strings, comma separated
+        ListAssert.assertEquals(expected, conf.getLongList("long.list2"));
+
+        // list of Long objects
+        ListAssert.assertEquals(expected, conf.getLongList("long.list3"));
+
+        // array of Long objects
+        ListAssert.assertEquals(expected, conf.getLongList("long.list4"));
+
+        // array of long primitives
+        ListAssert.assertEquals(expected, conf.getLongList("long.list5"));
+
+        // list of Long objects
+        ListAssert.assertEquals(expected, conf.getLongList("long.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getLongList("long.list.interpolated"));
+
+        // single long values
+        expected = new ArrayList<>();
+        expected.add(Long.valueOf("1"));
+        ListAssert.assertEquals(expected, conf.getLongList("long.string"));
+        ListAssert.assertEquals(expected, conf.getLongList("long.object"));
+
+        // empty list
+        ListAssert.assertEquals(new ArrayList<>(), conf.getLongList("empty"));
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testGetPrimitiveArrayInvalidType() {
+        conf.getArray(Boolean.TYPE, "calendar.list4");
+    }
+
+    /**
+     * Tests whether a string property can be obtained through get() if no type conversion is required.
+     */
+    @Test
+    public void testGetPropertyWithoutConversion() {
+        final String key = "test.str";
+        final String value = "someTestValue";
+        conf.addProperty(key, value);
+        assertEquals("Wrong result", value, conf.get(String.class, key));
+    }
+
+    @Test
+    public void testGetShortArray() {
+        // missing list
+        final short[] defaultValue = {2, 1};
+        ArrayAssert.assertEquals(defaultValue, conf.getShortArray("short.list", defaultValue));
+
+        final short[] expected = {1, 2};
+
+        // list of strings
+        ArrayAssert.assertEquals(expected, conf.getShortArray("short.list1"));
+
+        // list of strings, comma separated
+        ArrayAssert.assertEquals(expected, conf.getShortArray("short.list2"));
+
+        // list of Byte objects
+        ArrayAssert.assertEquals(expected, conf.getShortArray("short.list3"));
+
+        // array of Byte objects
+        ArrayAssert.assertEquals(expected, conf.getShortArray("short.list4"));
+
+        // array of byte primitives
+        ArrayAssert.assertEquals(expected, conf.getShortArray("short.list5"));
+
+        // list of Byte objects
+        ArrayAssert.assertEquals(expected, conf.getShortArray("short.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getShortArray("short.list.interpolated"));
+
+        // single byte values
+        ArrayAssert.assertEquals(new short[] {1}, conf.getShortArray("short.string"));
+        ArrayAssert.assertEquals(new short[] {1}, conf.getShortArray("short.object"));
+
+        // empty array
+        ArrayAssert.assertEquals(new short[] {}, conf.getShortArray("empty"));
+    }
+
+    @Test
+    public void testGetShortList() {
+        // missing list
+        ListAssert.assertEquals(null, conf.getShortList("short.list", null));
+
+        List<Object> expected = new ArrayList<>();
+        expected.add(Short.valueOf("1"));
+        expected.add(Short.valueOf("2"));
+
+        // list of strings
+        ListAssert.assertEquals(expected, conf.getShortList("short.list1"));
+
+        // list of strings, comma separated
+        ListAssert.assertEquals(expected, conf.getShortList("short.list2"));
+
+        // list of Short objects
+        ListAssert.assertEquals(expected, conf.getShortList("short.list3"));
+
+        // array of Short objects
+        ListAssert.assertEquals(expected, conf.getShortList("short.list4"));
+
+        // array of short primitives
+        ListAssert.assertEquals(expected, conf.getShortList("short.list5"));
+
+        // list of Short objects
+        ListAssert.assertEquals(expected, conf.getShortList("short.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getShortList("short.list.interpolated"));
+
+        // single short values
+        expected = new ArrayList<>();
+        expected.add(Short.valueOf("1"));
+        ListAssert.assertEquals(expected, conf.getShortList("short.string"));
+        ListAssert.assertEquals(expected, conf.getShortList("short.object"));
+
+        // empty list
+        ListAssert.assertEquals(new ArrayList<>(), conf.getShortList("empty"));
+    }
+
+    @Test
+    public void testGetUnknown() {
+        assertNull("non null object for a missing key", conf.get(Object.class, "unknownkey"));
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testGetUnknownException() {
+        conf.setThrowExceptionOnMissing(true);
+        conf.get(Object.class, "unknownkey");
+    }
+
+    @Test
+    public void testGetURI() throws Exception {
+        // missing URI
+        final URI defaultValue = new URI("http://www.google.com");
+        assertEquals(defaultValue, conf.getURI("url", defaultValue));
+
+        final URI expected = new URI("http://jakarta.apache.org");
+
+        // URI string
+        assertEquals(expected, conf.getURI("uri.string"));
+
+        // URI object
+        assertEquals(expected, conf.getURI("uri.object"));
+
+        // interpolated value
+        assertEquals(expected, conf.getURI("uri.string.interpolated"));
+    }
+
+    @Test
+    public void testGetURIArray() throws Exception {
+        // missing list
+        final URI[] defaultValue = {new URI("http://www.apache.org"), new URI("http://jakarta.apache.org")};
+        ArrayAssert.assertEquals(defaultValue, conf.getURIArray("url.list", defaultValue));
+
+        final URI[] expected = {new URI("http://jakarta.apache.org"), new URI("http://www.apache.org")};
+
+        // list of strings
+        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list1"));
+
+        // list of strings, comma separated
+        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list2"));
+
+        // list of URI objects
+        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list3"));
+
+        // array of URI objects
+        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list4"));
+
+        // list of URI objects
+        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getURIArray("uri.list.interpolated"));
+
+        // single URI values
+        ArrayAssert.assertEquals(new URI[] {new URI("http://jakarta.apache.org")}, conf.getURIArray("uri.string"));
+        ArrayAssert.assertEquals(new URI[] {new URI("http://jakarta.apache.org")}, conf.getURIArray("uri.object"));
+
+        // empty array
+        ArrayAssert.assertEquals(new URI[] {}, conf.getURIArray("empty"));
+    }
+
+    @Test
+    public void testGetURIList() throws Exception {
+        // missing list
+        ListAssert.assertEquals(null, conf.getURIList("uri.list", null));
+
+        List<Object> expected = new ArrayList<>();
+        expected.add(new URI("http://jakarta.apache.org"));
+        expected.add(new URI("http://www.apache.org"));
+
+        // list of strings
+        ListAssert.assertEquals(expected, conf.getURIList("uri.list1"));
+
+        // list of strings, comma separated
+        ListAssert.assertEquals(expected, conf.getURIList("uri.list2"));
+
+        // list of URI objects
+        ListAssert.assertEquals(expected, conf.getURIList("uri.list3"));
+
+        // array of URI objects
+        ListAssert.assertEquals(expected, conf.getURIList("uri.list4"));
+
+        // list of URI objects
+        ListAssert.assertEquals(expected, conf.getURIList("uri.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getURIList("uri.list.interpolated"));
+
+        // single URI values
+        expected = new ArrayList<>();
+        expected.add(new URI("http://jakarta.apache.org"));
+        ListAssert.assertEquals(expected, conf.getURIList("uri.string"));
+        ListAssert.assertEquals(expected, conf.getURIList("uri.object"));
+
+        // empty list
+        ListAssert.assertEquals(new ArrayList<>(), conf.getURIList("empty"));
+    }
+
+    @Test
+    public void testGetURL() throws Exception {
+        // missing URL
+        final URL defaultValue = new URL("http://www.google.com");
+        assertEquals(defaultValue, conf.getURL("url", defaultValue));
+
+        final URL expected = new URL("http://jakarta.apache.org");
+
+        // URL string
+        assertEquals(expected, conf.getURL("url.string"));
+
+        // URL object
+        assertEquals(expected, conf.getURL("url.object"));
+
+        // interpolated value
+        assertEquals(expected, conf.getURL("url.string.interpolated"));
+    }
+
+    @Test
+    public void testGetURLArray() throws Exception {
+        // missing list
+        final URL[] defaultValue = {new URL("http://www.apache.org"), new URL("http://jakarta.apache.org")};
+        ArrayAssert.assertEquals(defaultValue, conf.getURLArray("url.list", defaultValue));
+
+        final URL[] expected = {new URL("http://jakarta.apache.org"), new URL("http://www.apache.org")};
+
+        // list of strings
+        ArrayAssert.assertEquals(expected, conf.getURLArray("url.list1"));
+
+        // list of strings, comma separated
+        ArrayAssert.assertEquals(expected, conf.getURLArray("url.list2"));
+
+        // list of URL objects
+        ArrayAssert.assertEquals(expected, conf.getURLArray("url.list3"));
+
+        // array of URL objects
+        ArrayAssert.assertEquals(expected, conf.getURLArray("url.list4"));
+
+        // list of URL objects
+        ArrayAssert.assertEquals(expected, conf.getURLArray("url.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getURLArray("url.list.interpolated"));
+
+        // single URL values
+        ArrayAssert.assertEquals(new URL[] {new URL("http://jakarta.apache.org")}, conf.getURLArray("url.string"));
+        ArrayAssert.assertEquals(new URL[] {new URL("http://jakarta.apache.org")}, conf.getURLArray("url.object"));
+
+        // empty array
+        ArrayAssert.assertEquals(new URL[] {}, conf.getURLArray("empty"));
+    }
+
+    @Test
+    public void testGetURLList() throws Exception {
+        // missing list
+        ListAssert.assertEquals(null, conf.getURLList("url.list", null));
+
+        List<Object> expected = new ArrayList<>();
+        expected.add(new URL("http://jakarta.apache.org"));
+        expected.add(new URL("http://www.apache.org"));
+
+        // list of strings
+        ListAssert.assertEquals(expected, conf.getURLList("url.list1"));
+
+        // list of strings, comma separated
+        ListAssert.assertEquals(expected, conf.getURLList("url.list2"));
+
+        // list of URL objects
+        ListAssert.assertEquals(expected, conf.getURLList("url.list3"));
+
+        // array of URL objects
+        ListAssert.assertEquals(expected, conf.getURLList("url.list4"));
+
+        // list of URL objects
+        ListAssert.assertEquals(expected, conf.getURLList("url.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getURLList("url.list.interpolated"));
+
+        // single URL values
+        expected = new ArrayList<>();
+        expected.add(new URL("http://jakarta.apache.org"));
+        ListAssert.assertEquals(expected, conf.getURLList("url.string"));
+        ListAssert.assertEquals(expected, conf.getURLList("url.object"));
+
+        // empty list
+        ListAssert.assertEquals(new ArrayList<>(), conf.getURLList("empty"));
+    }
+
+    @Test
+    public void testIsEmpty() {
+        final Configuration baseconf = new BaseConfiguration();
+        final DataConfiguration conf = new DataConfiguration(baseconf);
+
+        assertTrue("not empty", conf.isEmpty());
+
+        baseconf.setProperty("foo", "bar");
+
+        assertFalse("empty", conf.isEmpty());
     }
 }

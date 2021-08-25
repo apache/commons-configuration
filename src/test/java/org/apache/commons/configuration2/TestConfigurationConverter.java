@@ -33,23 +33,6 @@ import org.junit.Test;
  *
  */
 public class TestConfigurationConverter {
-    @Test
-    public void testPropertiesToConfiguration() {
-        final Properties props = new Properties();
-        props.setProperty("string", "teststring");
-        props.setProperty("int", "123");
-        props.setProperty("list", "item 1, item 2");
-
-        final AbstractConfiguration config = (AbstractConfiguration) ConfigurationConverter.getConfiguration(props);
-        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
-
-        assertEquals("This returns 'teststring'", "teststring", config.getString("string"));
-        final List<Object> item1 = config.getList("list");
-        assertEquals("This returns 'item 1'", "item 1", item1.get(0));
-
-        assertEquals("This returns 123", 123, config.getInt("int"));
-    }
-
     /**
      * Creates a configuration object with some test values.
      *
@@ -64,6 +47,17 @@ public class TestConfigurationConverter {
         config.addProperty("interpolated-array", "${interpolated}");
         config.addProperty("interpolated-array", "${interpolated}");
         return config;
+    }
+
+    @Test
+    public void testConfigurationToMap() {
+        final Configuration config = new BaseConfiguration();
+        config.addProperty("string", "teststring");
+
+        final Map<Object, Object> map = ConfigurationConverter.getMap(config);
+
+        assertNotNull("null map", map);
+        assertEquals("'string' property", "teststring", map.get("string"));
     }
 
     /**
@@ -124,14 +118,20 @@ public class TestConfigurationConverter {
     }
 
     @Test
-    public void testConfigurationToMap() {
-        final Configuration config = new BaseConfiguration();
-        config.addProperty("string", "teststring");
+    public void testPropertiesToConfiguration() {
+        final Properties props = new Properties();
+        props.setProperty("string", "teststring");
+        props.setProperty("int", "123");
+        props.setProperty("list", "item 1, item 2");
 
-        final Map<Object, Object> map = ConfigurationConverter.getMap(config);
+        final AbstractConfiguration config = (AbstractConfiguration) ConfigurationConverter.getConfiguration(props);
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
 
-        assertNotNull("null map", map);
-        assertEquals("'string' property", "teststring", map.get("string"));
+        assertEquals("This returns 'teststring'", "teststring", config.getString("string"));
+        final List<Object> item1 = config.getList("list");
+        assertEquals("This returns 'item 1'", "item 1", item1.get(0));
+
+        assertEquals("This returns 123", 123, config.getInt("int"));
     }
 
 }

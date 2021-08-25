@@ -54,13 +54,6 @@ public class TestCombinedReloadingController {
     }
 
     /**
-     * Verifies the mocks for the sub controllers.
-     */
-    private void verifySubSontrollers() {
-        EasyMock.verify((Object[]) subControllers);
-    }
-
-    /**
      * Creates a test instance with default settings.
      *
      * @return the test instance
@@ -72,39 +65,6 @@ public class TestCombinedReloadingController {
         // check whether a defensive copy is created
         lstCtrls.clear();
         return result;
-    }
-
-    /**
-     * Tries to create an instance without a collection.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testInitNull() {
-        new CombinedReloadingController(null);
-    }
-
-    /**
-     * Tries to create an instance with a collection containing a null entry.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testInitNullEntries() {
-        initSubControllers();
-        final Collection<ReloadingController> ctrls = new ArrayList<>(Arrays.asList(subControllers));
-        ctrls.add(null);
-        new CombinedReloadingController(ctrls);
-    }
-
-    /**
-     * Tests a check for a reloading operation which results in true.
-     */
-    @Test
-    public void testCheckForReloadingTrue() {
-        final CombinedReloadingController ctrl = setUpController();
-        EasyMock.expect(subControllers[0].checkForReloading(null)).andReturn(Boolean.FALSE);
-        EasyMock.expect(subControllers[1].checkForReloading(null)).andReturn(Boolean.TRUE);
-        EasyMock.expect(subControllers[2].checkForReloading(null)).andReturn(Boolean.FALSE);
-        replaySubControllers();
-        assertTrue("Wrong result", ctrl.checkForReloading("someData"));
-        verifySubSontrollers();
     }
 
     /**
@@ -122,34 +82,16 @@ public class TestCombinedReloadingController {
     }
 
     /**
-     * Tests whether the reloading state can be reset.
+     * Tests a check for a reloading operation which results in true.
      */
     @Test
-    public void testResetReloadingState() {
+    public void testCheckForReloadingTrue() {
         final CombinedReloadingController ctrl = setUpController();
-        EasyMock.expect(subControllers[0].checkForReloading(null)).andReturn(Boolean.TRUE);
-        EasyMock.expect(subControllers[1].checkForReloading(null)).andReturn(Boolean.FALSE);
+        EasyMock.expect(subControllers[0].checkForReloading(null)).andReturn(Boolean.FALSE);
+        EasyMock.expect(subControllers[1].checkForReloading(null)).andReturn(Boolean.TRUE);
         EasyMock.expect(subControllers[2].checkForReloading(null)).andReturn(Boolean.FALSE);
-        for (final ReloadingController rc : subControllers) {
-            rc.resetReloadingState();
-        }
         replaySubControllers();
-        ctrl.checkForReloading(null);
-        ctrl.resetReloadingState();
-        verifySubSontrollers();
-    }
-
-    /**
-     * Tests whether the sub controller's reloading state can be reset unconditionally.
-     */
-    @Test
-    public void testResetInitialReloadingState() {
-        final CombinedReloadingController ctrl = setUpController();
-        for (final ReloadingController rc : subControllers) {
-            rc.resetReloadingState();
-        }
-        replaySubControllers();
-        ctrl.resetInitialReloadingState();
+        assertTrue("Wrong result", ctrl.checkForReloading("someData"));
         verifySubSontrollers();
     }
 
@@ -172,5 +114,63 @@ public class TestCombinedReloadingController {
     public void testGetSubControllersModify() {
         final Collection<ReloadingController> subs = setUpController().getSubControllers();
         subs.clear();
+    }
+
+    /**
+     * Tries to create an instance without a collection.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testInitNull() {
+        new CombinedReloadingController(null);
+    }
+
+    /**
+     * Tries to create an instance with a collection containing a null entry.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testInitNullEntries() {
+        initSubControllers();
+        final Collection<ReloadingController> ctrls = new ArrayList<>(Arrays.asList(subControllers));
+        ctrls.add(null);
+        new CombinedReloadingController(ctrls);
+    }
+
+    /**
+     * Tests whether the sub controller's reloading state can be reset unconditionally.
+     */
+    @Test
+    public void testResetInitialReloadingState() {
+        final CombinedReloadingController ctrl = setUpController();
+        for (final ReloadingController rc : subControllers) {
+            rc.resetReloadingState();
+        }
+        replaySubControllers();
+        ctrl.resetInitialReloadingState();
+        verifySubSontrollers();
+    }
+
+    /**
+     * Tests whether the reloading state can be reset.
+     */
+    @Test
+    public void testResetReloadingState() {
+        final CombinedReloadingController ctrl = setUpController();
+        EasyMock.expect(subControllers[0].checkForReloading(null)).andReturn(Boolean.TRUE);
+        EasyMock.expect(subControllers[1].checkForReloading(null)).andReturn(Boolean.FALSE);
+        EasyMock.expect(subControllers[2].checkForReloading(null)).andReturn(Boolean.FALSE);
+        for (final ReloadingController rc : subControllers) {
+            rc.resetReloadingState();
+        }
+        replaySubControllers();
+        ctrl.checkForReloading(null);
+        ctrl.resetReloadingState();
+        verifySubSontrollers();
+    }
+
+    /**
+     * Verifies the mocks for the sub controllers.
+     */
+    private void verifySubSontrollers() {
+        EasyMock.verify((Object[]) subControllers);
     }
 }

@@ -35,21 +35,6 @@ import org.junit.Test;
  *
  */
 public class TestEqualBehavior {
-    private Configuration setupSimpleConfiguration() throws Exception {
-        final String simpleConfigurationFile = ConfigurationAssert.getTestFile("testEqual.properties").getAbsolutePath();
-        final PropertiesConfiguration c = new PropertiesConfiguration();
-        final FileHandler handler = new FileHandler(c);
-        handler.setFileName(simpleConfigurationFile);
-        handler.load();
-        return c;
-    }
-
-    private Configuration setupCompositeConfiguration() throws ConfigurationException {
-        final CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
-        builder.configure(new FileBasedBuilderParametersImpl().setFile(ConfigurationAssert.getTestFile("testEqualDigester.xml")));
-        return builder.getConfiguration();
-    }
-
     /**
      * Checks whether two configurations have the same size, the same key sequence and contain the same key -> value
      * mappings
@@ -96,15 +81,64 @@ public class TestEqualBehavior {
         assertEquals(msg + ", Iterator End: ", it1.hasNext(), it2.hasNext());
     }
 
+    private Configuration setupCompositeConfiguration() throws ConfigurationException {
+        final CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
+        builder.configure(new FileBasedBuilderParametersImpl().setFile(ConfigurationAssert.getTestFile("testEqualDigester.xml")));
+        return builder.getConfiguration();
+    }
+
+    private Configuration setupSimpleConfiguration() throws Exception {
+        final String simpleConfigurationFile = ConfigurationAssert.getTestFile("testEqual.properties").getAbsolutePath();
+        final PropertiesConfiguration c = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(c);
+        handler.setFileName(simpleConfigurationFile);
+        handler.load();
+        return c;
+    }
+
     /**
-     * Are both configurations equal after loading?
+     * If we add a to an existing key, does it work?
      */
     @Test
-    public void testLoading() throws Exception {
+    public void testAddingSet() throws Exception {
         final Configuration simple = setupSimpleConfiguration();
         final Configuration composite = setupCompositeConfiguration();
 
-        checkEquality("testLoading", simple, composite);
+        final String key = "existing.property";
+        final String value = "new value";
+
+        assertTrue(simple.containsKey(key));
+        assertEquals(simple.containsKey(key), composite.containsKey(key));
+
+        simple.addProperty(key, value);
+        composite.addProperty(key, value);
+
+        assertTrue(simple.containsKey(key));
+        assertEquals(simple.containsKey(key), composite.containsKey(key));
+
+        checkSameKey("testAddingSet", key, simple, composite);
+        checkEquality("testAddingSet", simple, composite);
+    }
+
+    /**
+     * If we add a key, does it work?
+     */
+    @Test
+    public void testAddingUnset() throws Exception {
+        final Configuration simple = setupSimpleConfiguration();
+        final Configuration composite = setupCompositeConfiguration();
+
+        final String key = "nonexisting.property";
+        final String value = "new value";
+
+        assertFalse(simple.containsKey(key));
+        assertEquals(simple.containsKey(key), composite.containsKey(key));
+
+        simple.addProperty(key, value);
+        composite.addProperty(key, value);
+
+        checkSameKey("testAddingUnset", key, simple, composite);
+        checkEquality("testAddingUnset", simple, composite);
     }
 
     /**
@@ -149,27 +183,14 @@ public class TestEqualBehavior {
     }
 
     /**
-     * If we set a key, does it work? How about an existing key? Can we change it?
+     * Are both configurations equal after loading?
      */
     @Test
-    public void testSettingNonExisting() throws Exception {
+    public void testLoading() throws Exception {
         final Configuration simple = setupSimpleConfiguration();
         final Configuration composite = setupCompositeConfiguration();
 
-        final String key = "nonexisting.property";
-        final String value = "new value";
-
-        assertFalse(simple.containsKey(key));
-        assertEquals(simple.containsKey(key), composite.containsKey(key));
-
-        simple.setProperty(key, value);
-        composite.setProperty(key, value);
-
-        assertTrue(simple.containsKey(key));
-        assertEquals(simple.containsKey(key), composite.containsKey(key));
-
-        checkSameKey("testSettingNonExisting", key, simple, composite);
-        checkEquality("testSettingNonExisting", simple, composite);
+        checkEquality("testLoading", simple, composite);
     }
 
     @Test
@@ -196,10 +217,10 @@ public class TestEqualBehavior {
     }
 
     /**
-     * If we add a key, does it work?
+     * If we set a key, does it work? How about an existing key? Can we change it?
      */
     @Test
-    public void testAddingUnset() throws Exception {
+    public void testSettingNonExisting() throws Exception {
         final Configuration simple = setupSimpleConfiguration();
         final Configuration composite = setupCompositeConfiguration();
 
@@ -209,34 +230,13 @@ public class TestEqualBehavior {
         assertFalse(simple.containsKey(key));
         assertEquals(simple.containsKey(key), composite.containsKey(key));
 
-        simple.addProperty(key, value);
-        composite.addProperty(key, value);
-
-        checkSameKey("testAddingUnset", key, simple, composite);
-        checkEquality("testAddingUnset", simple, composite);
-    }
-
-    /**
-     * If we add a to an existing key, does it work?
-     */
-    @Test
-    public void testAddingSet() throws Exception {
-        final Configuration simple = setupSimpleConfiguration();
-        final Configuration composite = setupCompositeConfiguration();
-
-        final String key = "existing.property";
-        final String value = "new value";
+        simple.setProperty(key, value);
+        composite.setProperty(key, value);
 
         assertTrue(simple.containsKey(key));
         assertEquals(simple.containsKey(key), composite.containsKey(key));
 
-        simple.addProperty(key, value);
-        composite.addProperty(key, value);
-
-        assertTrue(simple.containsKey(key));
-        assertEquals(simple.containsKey(key), composite.containsKey(key));
-
-        checkSameKey("testAddingSet", key, simple, composite);
-        checkEquality("testAddingSet", simple, composite);
+        checkSameKey("testSettingNonExisting", key, simple, composite);
+        checkEquality("testSettingNonExisting", simple, composite);
     }
 }

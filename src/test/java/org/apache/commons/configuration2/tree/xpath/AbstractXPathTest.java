@@ -57,20 +57,6 @@ public abstract class AbstractXPathTest {
     /** The node handler. */
     protected NodeHandler<ImmutableNode> handler;
 
-    @Before
-    public void setUp() throws Exception {
-        root = constructHierarchy(LEVEL_COUNT);
-        handler = new InMemoryNodeModel(root).getNodeHandler();
-    }
-
-    /**
-     * Clears the test environment.
-     */
-    @After
-    public void tearDown() throws Exception {
-        root = null;
-    }
-
     /**
      * Builds up a hierarchy of nodes. Each node has {@code CHILD_COUNT} child nodes having the names {@code CHILD_NAME1} or
      * {@code CHILD_NAME2}. Their values are named like their parent node with an additional index. Each node has an
@@ -85,40 +71,6 @@ public abstract class AbstractXPathTest {
         createLevel(resultBuilder, null, levels);
         resultBuilder.addAttribute(ATTR_ROOT, String.valueOf(true));
         return resultBuilder.create();
-    }
-
-    /**
-     * Determines the number of elements contained in the given iterator.
-     *
-     * @param iterator the iterator
-     * @return the number of elements in this iteration
-     */
-    protected int iteratorSize(final NodeIterator iterator) {
-        int cnt = 0;
-        boolean ok;
-
-        do {
-            ok = iterator.setPosition(cnt + 1);
-            if (ok) {
-                cnt++;
-            }
-        } while (ok);
-
-        return cnt;
-    }
-
-    /**
-     * Returns a list with all node pointers contained in the specified iteration.
-     *
-     * @param iterator the iterator
-     * @return a list with the node pointers obtained from the iterator
-     */
-    protected List<NodePointer> iterationElements(final NodeIterator iterator) {
-        final List<NodePointer> result = new ArrayList<>();
-        for (int pos = 1; iterator.setPosition(pos); pos++) {
-            result.add(iterator.getNodePointer());
-        }
-        return result;
     }
 
     /**
@@ -141,5 +93,53 @@ public abstract class AbstractXPathTest {
                 parentBuilder.addChild(childBuilder.create());
             }
         }
+    }
+
+    /**
+     * Returns a list with all node pointers contained in the specified iteration.
+     *
+     * @param iterator the iterator
+     * @return a list with the node pointers obtained from the iterator
+     */
+    protected List<NodePointer> iterationElements(final NodeIterator iterator) {
+        final List<NodePointer> result = new ArrayList<>();
+        for (int pos = 1; iterator.setPosition(pos); pos++) {
+            result.add(iterator.getNodePointer());
+        }
+        return result;
+    }
+
+    /**
+     * Determines the number of elements contained in the given iterator.
+     *
+     * @param iterator the iterator
+     * @return the number of elements in this iteration
+     */
+    protected int iteratorSize(final NodeIterator iterator) {
+        int cnt = 0;
+        boolean ok;
+
+        do {
+            ok = iterator.setPosition(cnt + 1);
+            if (ok) {
+                cnt++;
+            }
+        } while (ok);
+
+        return cnt;
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        root = constructHierarchy(LEVEL_COUNT);
+        handler = new InMemoryNodeModel(root).getNodeHandler();
+    }
+
+    /**
+     * Clears the test environment.
+     */
+    @After
+    public void tearDown() throws Exception {
+        root = null;
     }
 }

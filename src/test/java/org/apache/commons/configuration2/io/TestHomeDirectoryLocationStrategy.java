@@ -76,6 +76,17 @@ public class TestHomeDirectoryLocationStrategy {
     }
 
     /**
+     * Tests whether the base is actually evaluated if the flag is set.
+     */
+    @Test
+    public void testLocateFailedWithBasePath() throws IOException {
+        folder.newFile(FILE_NAME);
+        final FileLocator locator = FileLocatorUtils.fileLocator().basePath(BASE_PATH).fileName(FILE_NAME).create();
+        final HomeDirectoryLocationStrategy strategy = setUpStrategy(true);
+        assertNull("Got a URL", strategy.locate(fileSystem, locator));
+    }
+
+    /**
      * Tests whether a file can be located if the base path is ignored.
      */
     @Test
@@ -85,17 +96,6 @@ public class TestHomeDirectoryLocationStrategy {
         final HomeDirectoryLocationStrategy strategy = setUpStrategy(false);
         final URL url = strategy.locate(fileSystem, locator);
         assertEquals("Wrong URL", file.getAbsoluteFile(), FileLocatorUtils.fileFromURL(url).getAbsoluteFile());
-    }
-
-    /**
-     * Tests whether the base is actually evaluated if the flag is set.
-     */
-    @Test
-    public void testLocateFailedWithBasePath() throws IOException {
-        folder.newFile(FILE_NAME);
-        final FileLocator locator = FileLocatorUtils.fileLocator().basePath(BASE_PATH).fileName(FILE_NAME).create();
-        final HomeDirectoryLocationStrategy strategy = setUpStrategy(true);
-        assertNull("Got a URL", strategy.locate(fileSystem, locator));
     }
 
     /**

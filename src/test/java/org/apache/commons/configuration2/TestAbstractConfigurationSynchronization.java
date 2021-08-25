@@ -40,6 +40,20 @@ public class TestAbstractConfigurationSynchronization {
     /** Constant for the test property accessed by all tests. */
     private static final String PROP = "configuration.loaded";
 
+    /**
+     * Prepares a mock configuration for a copy operation.
+     *
+     * @return the mock configuration
+     */
+    private static Configuration prepareConfigurationMockForCopy() {
+        final Configuration config2 = EasyMock.createStrictMock(Configuration.class);
+        config2.lock(LockMode.READ);
+        EasyMock.expect(config2.getKeys()).andReturn(Collections.<String>emptySet().iterator());
+        config2.unlock(LockMode.READ);
+        EasyMock.replay(config2);
+        return config2;
+    }
+
     /** The synchronizer used for testing. */
     private SynchronizerTestImpl sync;
 
@@ -57,58 +71,6 @@ public class TestAbstractConfigurationSynchronization {
     }
 
     /**
-     * Tests the Synchronizer used by default.
-     */
-    @Test
-    public void testDefaultSynchronizer() {
-        assertSame("Wrong default synchronizer", NoOpSynchronizer.INSTANCE, new PropertiesConfiguration().getSynchronizer());
-    }
-
-    /**
-     * Tests whether a read lock can be obtained.
-     */
-    @Test
-    public void testLockRead() {
-        config.lock(LockMode.READ);
-        sync.verify(Methods.BEGIN_READ);
-    }
-
-    /**
-     * Tests whether a write lock can be obtained.
-     */
-    @Test
-    public void testLockWrite() {
-        config.lock(LockMode.WRITE);
-        sync.verify(Methods.BEGIN_WRITE);
-    }
-
-    /**
-     * Tests lock() with a null argument.
-     */
-    @Test(expected = NullPointerException.class)
-    public void testLockNull() {
-        config.lock(null);
-    }
-
-    /**
-     * Tests whether a read lock can be released.
-     */
-    @Test
-    public void testUnlockRead() {
-        config.unlock(LockMode.READ);
-        sync.verify(Methods.END_READ);
-    }
-
-    /**
-     * Tests whether a write lock can be released.
-     */
-    @Test
-    public void testUnlockWrite() {
-        config.unlock(LockMode.WRITE);
-        sync.verify(Methods.END_WRITE);
-    }
-
-    /**
      * Tests the correct synchronization of addProperty().
      */
     @Test
@@ -118,13 +80,13 @@ public class TestAbstractConfigurationSynchronization {
     }
 
     /**
-     * Tests the correct synchronization of setProperty().
+     * Tests whether the append() method uses synchronization.
      */
     @Test
-    public void testSetPropertySynchronized() {
-        config.setProperty(PROP, "yes");
-        sync.verifyStart(Methods.BEGIN_WRITE);
-        sync.verifyEnd(Methods.END_WRITE);
+    public void testAppendSynchronized() {
+        final Configuration config2 = prepareConfigurationMockForCopy();
+        config.append(config2);
+        EasyMock.verify(config2);
     }
 
     /**
@@ -147,16 +109,6 @@ public class TestAbstractConfigurationSynchronization {
     }
 
     /**
-     * Tests whether read access to properties is synchronized.
-     */
-    @Test
-    public void testGetPropertySynchronized() {
-        assertEquals("Wrong raw value", "true", config.getProperty(PROP));
-        assertTrue("Wrong boolean value", config.getBoolean(PROP));
-        sync.verify(Methods.BEGIN_READ, Methods.END_READ, Methods.BEGIN_READ, Methods.END_READ);
-    }
-
-    /**
      * Tests whether containsKey() is correctly synchronized.
      */
     @Test
@@ -166,20 +118,29 @@ public class TestAbstractConfigurationSynchronization {
     }
 
     /**
-     * Tests whether isEmpty() is correctly synchronized.
+     * Tests whether the copy() method uses synchronization.
      */
     @Test
-    public void testIsEmptySynchronized() {
-        assertFalse("Configuration is empty", config.isEmpty());
-        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+    public void testCopySynchronized() {
+        final Configuration config2 = prepareConfigurationMockForCopy();
+        config.copy(config2);
+        EasyMock.verify(config2);
     }
 
     /**
-     * Tests whether size() is correctly synchronized.
+     * Tests the Synchronizer used by default.
      */
     @Test
-    public void testSizeSynchronized() {
-        assertFalse("Wrong size", config.isEmpty());
+    public void testDefaultSynchronizer() {
+        assertSame("Wrong default synchronizer", NoOpSynchronizer.INSTANCE, new PropertiesConfiguration().getSynchronizer());
+    }
+
+    /**
+     * Tests whether getKeys(String prefix) is correctly synchronized.
+     */
+    @Test
+    public void testGetKeysPrefixSynchronized() {
+        config.getKeys("test");
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -193,11 +154,66 @@ public class TestAbstractConfigurationSynchronization {
     }
 
     /**
-     * Tests whether getKeys(String prefix) is correctly synchronized.
+     * Tests whether read access to properties is synchronized.
      */
     @Test
-    public void testGetKeysPrefixSynchronized() {
-        config.getKeys("test");
+    public void testGetPropertySynchronized() {
+        assertEquals("Wrong raw value", "true", config.getProperty(PROP));
+        assertTrue("Wrong boolean value", config.getBoolean(PROP));
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ, Methods.BEGIN_READ, Methods.END_READ);
+    }
+
+    /**
+     * Tests whether isEmpty() is correctly synchronized.
+     */
+    @Test
+    public void testIsEmptySynchronized() {
+        assertFalse("Configuration is empty", config.isEmpty());
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+    }
+
+    /**
+     * Tests lock() with a null argument.
+     */
+    @Test(expected = NullPointerException.class)
+    public void testLockNull() {
+        config.lock(null);
+    }
+
+    /**
+     * Tests whether a read lock can be obtained.
+     */
+    @Test
+    public void testLockRead() {
+        config.lock(LockMode.READ);
+        sync.verify(Methods.BEGIN_READ);
+    }
+
+    /**
+     * Tests whether a write lock can be obtained.
+     */
+    @Test
+    public void testLockWrite() {
+        config.lock(LockMode.WRITE);
+        sync.verify(Methods.BEGIN_WRITE);
+    }
+
+    /**
+     * Tests the correct synchronization of setProperty().
+     */
+    @Test
+    public void testSetPropertySynchronized() {
+        config.setProperty(PROP, "yes");
+        sync.verifyStart(Methods.BEGIN_WRITE);
+        sync.verifyEnd(Methods.END_WRITE);
+    }
+
+    /**
+     * Tests whether size() is correctly synchronized.
+     */
+    @Test
+    public void testSizeSynchronized() {
+        assertFalse("Wrong size", config.isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -212,36 +228,20 @@ public class TestAbstractConfigurationSynchronization {
     }
 
     /**
-     * Prepares a mock configuration for a copy operation.
-     *
-     * @return the mock configuration
+     * Tests whether a read lock can be released.
      */
-    private static Configuration prepareConfigurationMockForCopy() {
-        final Configuration config2 = EasyMock.createStrictMock(Configuration.class);
-        config2.lock(LockMode.READ);
-        EasyMock.expect(config2.getKeys()).andReturn(Collections.<String>emptySet().iterator());
-        config2.unlock(LockMode.READ);
-        EasyMock.replay(config2);
-        return config2;
+    @Test
+    public void testUnlockRead() {
+        config.unlock(LockMode.READ);
+        sync.verify(Methods.END_READ);
     }
 
     /**
-     * Tests whether the append() method uses synchronization.
+     * Tests whether a write lock can be released.
      */
     @Test
-    public void testAppendSynchronized() {
-        final Configuration config2 = prepareConfigurationMockForCopy();
-        config.append(config2);
-        EasyMock.verify(config2);
-    }
-
-    /**
-     * Tests whether the copy() method uses synchronization.
-     */
-    @Test
-    public void testCopySynchronized() {
-        final Configuration config2 = prepareConfigurationMockForCopy();
-        config.copy(config2);
-        EasyMock.verify(config2);
+    public void testUnlockWrite() {
+        config.unlock(LockMode.WRITE);
+        sync.verify(Methods.END_WRITE);
     }
 }

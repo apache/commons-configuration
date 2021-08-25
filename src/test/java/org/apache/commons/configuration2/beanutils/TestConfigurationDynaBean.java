@@ -72,6 +72,15 @@ public class TestConfigurationDynaBean {
     String[] stringArray = {"String 0", "String 1", "String 2", "String 3", "String 4"};
 
     /**
+     * Creates the underlying configuration object for the dyna bean.
+     *
+     * @return the underlying configuration object
+     */
+    protected Configuration createConfiguration() {
+        return new BaseConfiguration();
+    }
+
+    /**
      * Set up instance variables required by this test case.
      */
     @Before
@@ -108,12 +117,11 @@ public class TestConfigurationDynaBean {
     }
 
     /**
-     * Creates the underlying configuration object for the dyna bean.
-     *
-     * @return the underlying configuration object
+     * Tests set on a null value: should throw NPE.
      */
-    protected Configuration createConfiguration() {
-        return new BaseConfiguration();
+    @Test(expected = NullPointerException.class)
+    public void testAddNullPropertyValue() {
+        bean.set("nullProperty", null);
     }
 
     /**
@@ -124,6 +132,19 @@ public class TestConfigurationDynaBean {
         final DynaProperty descriptor = bean.getDynaClass().getDynaProperty("unknown");
         assertNull("Unknown property descriptor should be null", descriptor);
         bean.getDynaClass().getDynaProperty(null);
+    }
+
+    /**
+     * Base for testGetDescriptorXxxxx() series of tests.
+     *
+     * @param name Name of the property to be retrieved
+     * @param type Expected class type of this property
+     */
+    protected void testGetDescriptorBase(final String name, final Class<?> type) {
+        final DynaProperty descriptor = bean.getDynaClass().getDynaProperty(name);
+
+        assertNotNull("Failed to get descriptor", descriptor);
+        assertEquals("Got incorrect type", type, descriptor.getType());
     }
 
     /**
@@ -167,30 +188,6 @@ public class TestConfigurationDynaBean {
     }
 
     /**
-     * Positive getDynaProperty on property {@code booleanSecond} that uses an "is" method as the getter.
-     */
-    @Test
-    public void testGetDescriptorSecond() {
-        testGetDescriptorBase("booleanSecond", Boolean.TYPE);
-    }
-
-    /**
-     * Positive getDynaProperty on property {@code shortProperty}.
-     */
-    @Test
-    public void testGetDescriptorShort() {
-        testGetDescriptorBase("shortProperty", Short.TYPE);
-    }
-
-    /**
-     * Positive getDynaProperty on property {@code stringProperty}.
-     */
-    @Test
-    public void testGetDescriptorString() {
-        testGetDescriptorBase("stringProperty", String.class);
-    }
-
-    /**
      * Positive test for getDynaPropertys(). Each property name listed in {@code properties} should be returned exactly
      * once.
      */
@@ -218,11 +215,52 @@ public class TestConfigurationDynaBean {
     }
 
     /**
+     * Positive getDynaProperty on property {@code booleanSecond} that uses an "is" method as the getter.
+     */
+    @Test
+    public void testGetDescriptorSecond() {
+        testGetDescriptorBase("booleanSecond", Boolean.TYPE);
+    }
+
+    /**
+     * Positive getDynaProperty on property {@code shortProperty}.
+     */
+    @Test
+    public void testGetDescriptorShort() {
+        testGetDescriptorBase("shortProperty", Short.TYPE);
+    }
+
+    /**
+     * Positive getDynaProperty on property {@code stringProperty}.
+     */
+    @Test
+    public void testGetDescriptorString() {
+        testGetDescriptorBase("stringProperty", String.class);
+    }
+
+    /**
      * Corner cases on getIndexedProperty invalid arguments.
      */
     @Test(expected = IndexOutOfBoundsException.class)
     public void testGetIndexedArguments() {
         bean.get("intArray", -1);
+    }
+
+    /**
+     * Tests whether an indexed access to a non-existing property causes an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetIndexedNonExisting() {
+        bean.get("Non existing property", 0);
+    }
+
+    /**
+     * Tests whether accessing a non-indexed string property using the index get method causes an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetIndexedString() {
+        bean.set("stringProp", "value");
+        bean.get("stringProp", 0);
     }
 
     /**
@@ -290,6 +328,22 @@ public class TestConfigurationDynaBean {
 
         value = bean.get("mappedProperty", "key3");
         assertNotNull("Cannot find third value", value);
+    }
+
+    /**
+     * Test the retrieval of a non-existent property.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetNonExistentProperty() {
+        bean.get("nonexistProperty");
+    }
+
+    /**
+     * Tests if reading a non-indexed property using the index get method throws an IllegalArgumentException as it should.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetNonIndexedProperties() {
+        bean.get("booleanProperty", 0);
     }
 
     /**
@@ -401,6 +455,38 @@ public class TestConfigurationDynaBean {
     }
 
     /**
+     * Tests whether nested properties can be accessed.
+     */
+    @Test
+    public void testNestedPropeties() {
+        final ConfigurationDynaBean nested = (ConfigurationDynaBean) bean.get("mappedProperty");
+
+        final String value = (String) nested.get("key1");
+        assertEquals("Can find first value", "First Value", value);
+
+        nested.set("key1", "undefined");
+        assertEquals("Incorrect value returned", "undefined", bean.get("mappedProperty.key1"));
+    }
+
+    /**
+     * Test the modification of a configuration property stored internally as an array.
+     */
+    @Test
+    public void testSetArrayValue() {
+        final MapConfiguration configuration = new MapConfiguration(new HashMap<>());
+        configuration.getMap().put("objectArray", new Object[] {"value1", "value2", "value3"});
+
+        final ConfigurationDynaBean bean = new ConfigurationDynaBean(configuration);
+
+        bean.set("objectArray", 1, "New Value 1");
+        final Object value = bean.get("objectArray", 1);
+
+        assertNotNull("Returned new value 1", value);
+        ObjectAssert.assertInstanceOf("Returned String new value 1", String.class, value);
+        assertEquals("Returned correct new value 1", "New Value 1", value);
+    }
+
+    /**
      * Corner cases on setIndexedProperty invalid arguments.
      */
     @Test(expected = IndexOutOfBoundsException.class)
@@ -450,24 +536,6 @@ public class TestConfigurationDynaBean {
     }
 
     /**
-     * Test the modification of a configuration property stored internally as an array.
-     */
-    @Test
-    public void testSetArrayValue() {
-        final MapConfiguration configuration = new MapConfiguration(new HashMap<>());
-        configuration.getMap().put("objectArray", new Object[] {"value1", "value2", "value3"});
-
-        final ConfigurationDynaBean bean = new ConfigurationDynaBean(configuration);
-
-        bean.set("objectArray", 1, "New Value 1");
-        final Object value = bean.get("objectArray", 1);
-
-        assertNotNull("Returned new value 1", value);
-        ObjectAssert.assertInstanceOf("Returned String new value 1", String.class, value);
-        assertEquals("Returned correct new value 1", "New Value 1", value);
-    }
-
-    /**
      * Positive and negative tests on setMappedProperty valid arguments.
      */
     @Test
@@ -477,6 +545,15 @@ public class TestConfigurationDynaBean {
 
         bean.set("mappedProperty", "Fourth Key", "Fourth Value");
         assertEquals("Can set new value", "Fourth Value", bean.get("mappedProperty", "Fourth Key"));
+    }
+
+    /**
+     * Tests if writing a non-indexed property using the index set method with an index &gt; 0 throws an
+     * IllegalArgumentException as it should.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetNonIndexedProperties() {
+        bean.set("booleanProperty", 1, Boolean.TRUE);
     }
 
     /**
@@ -554,82 +631,5 @@ public class TestConfigurationDynaBean {
         final String newValue = oldValue + " Extra Value";
         bean.set("stringProperty", newValue);
         assertEquals("Matched new value", newValue, bean.get("stringProperty"));
-    }
-
-    /**
-     * Tests set on a null value: should throw NPE.
-     */
-    @Test(expected = NullPointerException.class)
-    public void testAddNullPropertyValue() {
-        bean.set("nullProperty", null);
-    }
-
-    /**
-     * Test the retrieval of a non-existent property.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetNonExistentProperty() {
-        bean.get("nonexistProperty");
-    }
-
-    /**
-     * Base for testGetDescriptorXxxxx() series of tests.
-     *
-     * @param name Name of the property to be retrieved
-     * @param type Expected class type of this property
-     */
-    protected void testGetDescriptorBase(final String name, final Class<?> type) {
-        final DynaProperty descriptor = bean.getDynaClass().getDynaProperty(name);
-
-        assertNotNull("Failed to get descriptor", descriptor);
-        assertEquals("Got incorrect type", type, descriptor.getType());
-    }
-
-    /**
-     * Tests whether nested properties can be accessed.
-     */
-    @Test
-    public void testNestedPropeties() {
-        final ConfigurationDynaBean nested = (ConfigurationDynaBean) bean.get("mappedProperty");
-
-        final String value = (String) nested.get("key1");
-        assertEquals("Can find first value", "First Value", value);
-
-        nested.set("key1", "undefined");
-        assertEquals("Incorrect value returned", "undefined", bean.get("mappedProperty.key1"));
-    }
-
-    /**
-     * Tests if reading a non-indexed property using the index get method throws an IllegalArgumentException as it should.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetNonIndexedProperties() {
-        bean.get("booleanProperty", 0);
-    }
-
-    /**
-     * Tests whether accessing a non-indexed string property using the index get method causes an exception.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetIndexedString() {
-        bean.set("stringProp", "value");
-        bean.get("stringProp", 0);
-    }
-
-    /**
-     * Tests whether an indexed access to a non-existing property causes an exception.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetIndexedNonExisting() {
-        bean.get("Non existing property", 0);
-    }
-
-    /**
-     * Tests if writing a non-indexed property using the index set method with an index &gt; 0 throws an
-     * IllegalArgumentException as it should.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testSetNonIndexedProperties() {
-        bean.set("booleanProperty", 1, Boolean.TRUE);
     }
 }

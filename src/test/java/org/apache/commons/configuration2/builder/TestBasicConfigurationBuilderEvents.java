@@ -44,15 +44,6 @@ public class TestBasicConfigurationBuilderEvents {
     }
 
     /**
-     * Tests whether the reset builder event type is correctly configured.
-     */
-    @Test
-    public void testBuilderResetEventType() {
-        final EventType<ConfigurationBuilderEvent> builderResetType = ConfigurationBuilderEvent.RESET;
-        assertEquals("Wrong super type", ConfigurationBuilderEvent.ANY, builderResetType.getSuperType());
-    }
-
-    /**
      * Tests whether builder reset events are correctly distributed.
      */
     @Test
@@ -68,6 +59,40 @@ public class TestBasicConfigurationBuilderEvents {
         event = listener.nextEvent(ConfigurationBuilderEvent.RESET);
         assertSame("Wrong builder (2)", builder, event.getSource());
         listener.assertNoMoreEvents();
+    }
+
+    /**
+     * Tests whether the reset builder event type is correctly configured.
+     */
+    @Test
+    public void testBuilderResetEventType() {
+        final EventType<ConfigurationBuilderEvent> builderResetType = ConfigurationBuilderEvent.RESET;
+        assertEquals("Wrong super type", ConfigurationBuilderEvent.ANY, builderResetType.getSuperType());
+    }
+
+    /**
+     * Tests whether a configuration request event is generated.
+     */
+    @Test
+    public void testConfigurationRequestEvent() throws ConfigurationException {
+        final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
+        builder.getConfiguration();
+        final BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        builder.addEventListener(ConfigurationBuilderEvent.ANY, listener);
+
+        builder.getConfiguration();
+        final ConfigurationBuilderEvent event = listener.nextEvent(ConfigurationBuilderEvent.CONFIGURATION_REQUEST);
+        assertSame("Wrong builder", builder, event.getSource());
+        listener.assertNoMoreEvents();
+    }
+
+    /**
+     * Tests whether the configuration request event type is correctly configured.
+     */
+    @Test
+    public void testConfigurationRequestEventType() {
+        final EventType<ConfigurationBuilderEvent> eventType = ConfigurationBuilderEvent.CONFIGURATION_REQUEST;
+        assertEquals("Wrong super type", ConfigurationBuilderEvent.ANY, eventType.getSuperType());
     }
 
     /**
@@ -98,31 +123,6 @@ public class TestBasicConfigurationBuilderEvents {
     }
 
     /**
-     * Tests whether the configuration request event type is correctly configured.
-     */
-    @Test
-    public void testConfigurationRequestEventType() {
-        final EventType<ConfigurationBuilderEvent> eventType = ConfigurationBuilderEvent.CONFIGURATION_REQUEST;
-        assertEquals("Wrong super type", ConfigurationBuilderEvent.ANY, eventType.getSuperType());
-    }
-
-    /**
-     * Tests whether a configuration request event is generated.
-     */
-    @Test
-    public void testConfigurationRequestEvent() throws ConfigurationException {
-        final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
-        builder.getConfiguration();
-        final BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
-        builder.addEventListener(ConfigurationBuilderEvent.ANY, listener);
-
-        builder.getConfiguration();
-        final ConfigurationBuilderEvent event = listener.nextEvent(ConfigurationBuilderEvent.CONFIGURATION_REQUEST);
-        assertSame("Wrong builder", builder, event.getSource());
-        listener.assertNoMoreEvents();
-    }
-
-    /**
      * Tests the use case that a listener on the request event triggers a reset of the builder.
      */
     @Test
@@ -140,6 +140,22 @@ public class TestBasicConfigurationBuilderEvents {
     }
 
     /**
+     * Tests whether a result created event is correctly generated.
+     */
+    @Test
+    public void testResultCreatedEvent() throws ConfigurationException {
+        final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
+        final BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+        builder.addEventListener(ConfigurationBuilderEvent.ANY, listener);
+
+        final PropertiesConfiguration configuration = builder.getConfiguration();
+        listener.nextEvent(ConfigurationBuilderEvent.CONFIGURATION_REQUEST);
+        final ConfigurationBuilderResultCreatedEvent event = listener.nextEvent(ConfigurationBuilderResultCreatedEvent.RESULT_CREATED);
+        assertSame("Wrong builder", builder, event.getSource());
+        assertSame("Wrong configuration", configuration, event.getConfiguration());
+    }
+
+    /**
      * Tries to create an event about a newly created configuration without a configuration instance.
      */
     @Test(expected = IllegalArgumentException.class)
@@ -154,21 +170,5 @@ public class TestBasicConfigurationBuilderEvents {
     @Test
     public void testResultCreatedEventType() {
         assertEquals("Wrong super type", ConfigurationBuilderEvent.ANY, ConfigurationBuilderResultCreatedEvent.RESULT_CREATED.getSuperType());
-    }
-
-    /**
-     * Tests whether a result created event is correctly generated.
-     */
-    @Test
-    public void testResultCreatedEvent() throws ConfigurationException {
-        final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
-        final BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
-        builder.addEventListener(ConfigurationBuilderEvent.ANY, listener);
-
-        final PropertiesConfiguration configuration = builder.getConfiguration();
-        listener.nextEvent(ConfigurationBuilderEvent.CONFIGURATION_REQUEST);
-        final ConfigurationBuilderResultCreatedEvent event = listener.nextEvent(ConfigurationBuilderResultCreatedEvent.RESULT_CREATED);
-        assertSame("Wrong builder", builder, event.getSource());
-        assertSame("Wrong configuration", configuration, event.getConfiguration());
     }
 }

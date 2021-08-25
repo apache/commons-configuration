@@ -31,30 +31,6 @@ import org.junit.Test;
  */
 public class TestCopyObjectDefaultHandler {
     /**
-     * Tries to create an instance without a source object.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testInitNull() {
-        new CopyObjectDefaultHandler(null);
-    }
-
-    /**
-     * Tests whether default values can be copied onto an object of the same type.
-     */
-    @Test
-    public void testInitializeDefaultsSameType() {
-        final Long refresh = 50000L;
-        final FileBasedBuilderParametersImpl source = new FileBasedBuilderParametersImpl();
-        source.setReloadingRefreshDelay(refresh).setThrowExceptionOnMissing(true);
-        final CopyObjectDefaultHandler handler = new CopyObjectDefaultHandler(source);
-        final FileBasedBuilderParametersImpl copy = new FileBasedBuilderParametersImpl();
-        handler.initializeDefaults(copy);
-        final Map<String, Object> map = copy.getParameters();
-        assertEquals("Wrong exception flag", Boolean.TRUE, map.get("throwExceptionOnMissing"));
-        assertEquals("Wrong refresh", refresh, copy.getReloadingRefreshDelay());
-    }
-
-    /**
      * Tests whether a base type can be initialized with default values. Unknown properties should silently be ignored.
      */
     @Test
@@ -85,5 +61,29 @@ public class TestCopyObjectDefaultHandler {
 
         final CopyObjectDefaultHandler handler = new CopyObjectDefaultHandler(source);
         handler.initializeDefaults(dest);
+    }
+
+    /**
+     * Tests whether default values can be copied onto an object of the same type.
+     */
+    @Test
+    public void testInitializeDefaultsSameType() {
+        final Long refresh = 50000L;
+        final FileBasedBuilderParametersImpl source = new FileBasedBuilderParametersImpl();
+        source.setReloadingRefreshDelay(refresh).setThrowExceptionOnMissing(true);
+        final CopyObjectDefaultHandler handler = new CopyObjectDefaultHandler(source);
+        final FileBasedBuilderParametersImpl copy = new FileBasedBuilderParametersImpl();
+        handler.initializeDefaults(copy);
+        final Map<String, Object> map = copy.getParameters();
+        assertEquals("Wrong exception flag", Boolean.TRUE, map.get("throwExceptionOnMissing"));
+        assertEquals("Wrong refresh", refresh, copy.getReloadingRefreshDelay());
+    }
+
+    /**
+     * Tries to create an instance without a source object.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testInitNull() {
+        new CopyObjectDefaultHandler(null);
     }
 }

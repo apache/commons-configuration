@@ -58,33 +58,6 @@ public abstract class TestAbstractConfiguration {
     protected abstract AbstractConfiguration getEmptyConfiguration();
 
     @Test
-    public void testGetProperty() {
-        final Configuration config = getConfiguration();
-        assertEquals("key1", "value1", config.getProperty("key1"));
-        assertEquals("key2", "value2", config.getProperty("key2"));
-        assertNull("key3", config.getProperty("key3"));
-    }
-
-    @Test
-    public void testList() {
-        final Configuration config = getConfiguration();
-
-        final List<?> list = config.getList("list");
-        assertNotNull("list not found", config.getProperty("list"));
-        assertEquals("list size", 2, list.size());
-        assertTrue("'value1' is not in the list", list.contains("value1"));
-        assertTrue("'value2' is not in the list", list.contains("value2"));
-    }
-
-    /**
-     * Tests whether the escape character for list delimiters is recocknized and removed.
-     */
-    @Test
-    public void testListEscaped() {
-        assertEquals("Wrong value for escaped list", "value1,value2", getConfiguration().getString("listesc"));
-    }
-
-    @Test
     public void testAddPropertyDirect() {
         final AbstractConfiguration config = getConfiguration();
         config.addPropertyDirect("key3", "value3");
@@ -104,20 +77,10 @@ public abstract class TestAbstractConfiguration {
     }
 
     @Test
-    public void testIsEmpty() {
+    public void testClearProperty() {
         final Configuration config = getConfiguration();
-        assertFalse("the configuration is empty", config.isEmpty());
-        assertTrue("the configuration is not empty", getEmptyConfiguration().isEmpty());
-    }
-
-    @Test
-    public void testSize() {
-        assertEquals("Wrong size", 4, getConfiguration().size());
-    }
-
-    @Test
-    public void testSizeEmpty() {
-        assertEquals("Wrong size of empty configuration", 0, getEmptyConfiguration().size());
+        config.clearProperty("key2");
+        assertFalse("key2 not cleared", config.containsKey("key2"));
     }
 
     @Test
@@ -127,11 +90,20 @@ public abstract class TestAbstractConfiguration {
         assertFalse("key3 found", config.containsKey("key3"));
     }
 
+    /**
+     * Tests the exception message triggered by the conversion to BigInteger. This test is related to CONFIGURATION-357.
+     */
     @Test
-    public void testClearProperty() {
+    public void testGetBigIntegerConversion() {
         final Configuration config = getConfiguration();
-        config.clearProperty("key2");
-        assertFalse("key2 not cleared", config.containsKey("key2"));
+        try {
+            config.getBigInteger("key1");
+            fail("No conversion exception thrown!");
+        } catch (final ConversionException cex) {
+            assertTrue("Key not found in exception message: " + cex, cex.getMessage().contains("'key1'"));
+            assertTrue("Target class not found in exception message: " + cex, cex.getMessage().contains(BigInteger.class.getName()));
+            assertTrue("Value not found in exception message: " + cex, cex.getMessage().contains(config.getString("key1")));
+        }
     }
 
     @Test
@@ -156,6 +128,40 @@ public abstract class TestAbstractConfiguration {
         ListAssert.assertEquals("keys", expectedKeys, actualKeys);
     }
 
+    @Test
+    public void testGetProperty() {
+        final Configuration config = getConfiguration();
+        assertEquals("key1", "value1", config.getProperty("key1"));
+        assertEquals("key2", "value2", config.getProperty("key2"));
+        assertNull("key3", config.getProperty("key3"));
+    }
+
+    @Test
+    public void testIsEmpty() {
+        final Configuration config = getConfiguration();
+        assertFalse("the configuration is empty", config.isEmpty());
+        assertTrue("the configuration is not empty", getEmptyConfiguration().isEmpty());
+    }
+
+    @Test
+    public void testList() {
+        final Configuration config = getConfiguration();
+
+        final List<?> list = config.getList("list");
+        assertNotNull("list not found", config.getProperty("list"));
+        assertEquals("list size", 2, list.size());
+        assertTrue("'value1' is not in the list", list.contains("value1"));
+        assertTrue("'value2' is not in the list", list.contains("value2"));
+    }
+
+    /**
+     * Tests whether the escape character for list delimiters is recocknized and removed.
+     */
+    @Test
+    public void testListEscaped() {
+        assertEquals("Wrong value for escaped list", "value1,value2", getConfiguration().getString("listesc"));
+    }
+
     /**
      * Tests accessing the configuration's logger.
      */
@@ -168,19 +174,13 @@ public abstract class TestAbstractConfiguration {
         assertSame("Logger was not set", log, config.getLogger());
     }
 
-    /**
-     * Tests the exception message triggered by the conversion to BigInteger. This test is related to CONFIGURATION-357.
-     */
     @Test
-    public void testGetBigIntegerConversion() {
-        final Configuration config = getConfiguration();
-        try {
-            config.getBigInteger("key1");
-            fail("No conversion exception thrown!");
-        } catch (final ConversionException cex) {
-            assertTrue("Key not found in exception message: " + cex, cex.getMessage().contains("'key1'"));
-            assertTrue("Target class not found in exception message: " + cex, cex.getMessage().contains(BigInteger.class.getName()));
-            assertTrue("Value not found in exception message: " + cex, cex.getMessage().contains(config.getString("key1")));
-        }
+    public void testSize() {
+        assertEquals("Wrong size", 4, getConfiguration().size());
+    }
+
+    @Test
+    public void testSizeEmpty() {
+        assertEquals("Wrong size of empty configuration", 0, getEmptyConfiguration().size());
     }
 }

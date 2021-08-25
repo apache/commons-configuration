@@ -593,6 +593,45 @@ public class TestPropertiesConfiguration {
         assertEquals("String with an escaped list separator", "This string contains , an escaped list separator", property);
     }
 
+    @Test
+    public void testIncludeIncludeLoadAllOnNotFound() throws Exception {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-include-not-found.properties");
+        handler.load();
+        assertEquals("valueA", pc.getString("keyA"));
+        assertEquals("valueB", pc.getString("keyB"));
+    }
+
+    @Test
+    public void testIncludeIncludeLoadCyclicalReferenceFail() throws Exception {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-include-cyclical-reference.properties");
+        try {
+            handler.load();
+            Assert.fail("Expected " + Configuration.class.getCanonicalName());
+        } catch (final ConfigurationException e) {
+            // expected
+            // e.printStackTrace();
+        }
+        assertNull(pc.getString("keyA"));
+    }
+
+    @Test
+    public void testIncludeIncludeLoadCyclicalReferenceIgnore() throws Exception {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-include-cyclical-reference.properties");
+        handler.load();
+        assertEquals("valueA", pc.getString("keyA"));
+    }
+
     /**
      * Tests including properties when they are loaded from a nested directory structure.
      */
@@ -604,6 +643,82 @@ public class TestPropertiesConfiguration {
         assertTrue(config.getBoolean("deeptest"));
         assertTrue(config.getBoolean("deepinclude"));
         assertFalse(config.containsKey("deeptestinvalid"));
+    }
+
+    @Test
+    public void testIncludeLoadAllOnLoadException() throws Exception {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-load-exception.properties");
+        handler.load();
+        assertEquals("valueA", pc.getString("keyA"));
+    }
+
+    @Test
+    public void testIncludeLoadAllOnNotFound() throws Exception {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-not-found.properties");
+        handler.load();
+        assertEquals("valueA", pc.getString("keyA"));
+    }
+
+    @Test
+    public void testIncludeLoadCyclicalMultiStepReferenceFail() throws Exception {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-cyclical-root.properties");
+        try {
+            handler.load();
+            Assert.fail("Expected " + Configuration.class.getCanonicalName());
+        } catch (final ConfigurationException e) {
+            // expected
+            // e.printStackTrace();
+        }
+        assertNull(pc.getString("keyA"));
+    }
+
+    @Test
+    public void testIncludeLoadCyclicalMultiStepReferenceIgnore() throws Exception {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-cyclical-root.properties");
+        handler.load();
+        assertEquals("valueA", pc.getString("keyA"));
+    }
+
+    @Test
+    public void testIncludeLoadCyclicalReferenceFail() throws Exception {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-cyclical-reference.properties");
+        try {
+            handler.load();
+            Assert.fail("Expected " + Configuration.class.getCanonicalName());
+        } catch (final ConfigurationException e) {
+            // expected
+            // e.printStackTrace();
+        }
+        assertNull(pc.getString("keyA"));
+    }
+
+    @Test
+    public void testIncludeLoadCyclicalReferenceIgnore() throws Exception {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("include-cyclical-reference.properties");
+        handler.load();
+        assertEquals("valueA", pc.getString("keyA"));
     }
 
     /**
@@ -920,6 +1035,17 @@ public class TestPropertiesConfiguration {
         assertEquals("true", loaded);
     }
 
+    @Test
+    public void testLoadIncludeOptional() throws Exception {
+        final PropertiesConfiguration pc = new PropertiesConfiguration();
+        final FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("includeoptional.properties");
+        handler.load();
+
+        assertTrue("Make sure we have multiple keys", pc.getBoolean("includeoptional.loaded"));
+    }
+
     @Test(expected = ConfigurationException.class)
     public void testLoadUnexistingFile() throws ConfigurationException {
         load(conf, "unexisting file");
@@ -934,132 +1060,6 @@ public class TestPropertiesConfiguration {
         handler.load();
 
         assertTrue("Make sure we have multiple keys", pc.getBoolean("test.boolean"));
-    }
-
-    @Test
-    public void testLoadIncludeOptional() throws Exception {
-        final PropertiesConfiguration pc = new PropertiesConfiguration();
-        final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
-        handler.setFileName("includeoptional.properties");
-        handler.load();
-
-        assertTrue("Make sure we have multiple keys", pc.getBoolean("includeoptional.loaded"));
-    }
-
-    @Test
-    public void testIncludeLoadAllOnNotFound() throws Exception {
-        final PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
-        final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
-        handler.setFileName("include-not-found.properties");
-        handler.load();
-        assertEquals("valueA", pc.getString("keyA"));
-    }
-
-    @Test
-    public void testIncludeIncludeLoadAllOnNotFound() throws Exception {
-        final PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
-        final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
-        handler.setFileName("include-include-not-found.properties");
-        handler.load();
-        assertEquals("valueA", pc.getString("keyA"));
-        assertEquals("valueB", pc.getString("keyB"));
-    }
-
-    @Test
-    public void testIncludeLoadAllOnLoadException() throws Exception {
-        final PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
-        final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
-        handler.setFileName("include-load-exception.properties");
-        handler.load();
-        assertEquals("valueA", pc.getString("keyA"));
-    }
-
-    @Test
-    public void testIncludeLoadCyclicalReferenceFail() throws Exception {
-        final PropertiesConfiguration pc = new PropertiesConfiguration();
-        final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
-        handler.setFileName("include-cyclical-reference.properties");
-        try {
-            handler.load();
-            Assert.fail("Expected " + Configuration.class.getCanonicalName());
-        } catch (final ConfigurationException e) {
-            // expected
-            // e.printStackTrace();
-        }
-        assertNull(pc.getString("keyA"));
-    }
-
-    @Test
-    public void testIncludeLoadCyclicalMultiStepReferenceFail() throws Exception {
-        final PropertiesConfiguration pc = new PropertiesConfiguration();
-        final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
-        handler.setFileName("include-cyclical-root.properties");
-        try {
-            handler.load();
-            Assert.fail("Expected " + Configuration.class.getCanonicalName());
-        } catch (final ConfigurationException e) {
-            // expected
-            // e.printStackTrace();
-        }
-        assertNull(pc.getString("keyA"));
-    }
-
-    @Test
-    public void testIncludeLoadCyclicalMultiStepReferenceIgnore() throws Exception {
-        final PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
-        final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
-        handler.setFileName("include-cyclical-root.properties");
-        handler.load();
-        assertEquals("valueA", pc.getString("keyA"));
-    }
-
-    @Test
-    public void testIncludeIncludeLoadCyclicalReferenceFail() throws Exception {
-        final PropertiesConfiguration pc = new PropertiesConfiguration();
-        final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
-        handler.setFileName("include-include-cyclical-reference.properties");
-        try {
-            handler.load();
-            Assert.fail("Expected " + Configuration.class.getCanonicalName());
-        } catch (final ConfigurationException e) {
-            // expected
-            // e.printStackTrace();
-        }
-        assertNull(pc.getString("keyA"));
-    }
-
-    @Test
-    public void testIncludeIncludeLoadCyclicalReferenceIgnore() throws Exception {
-        final PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
-        final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
-        handler.setFileName("include-include-cyclical-reference.properties");
-        handler.load();
-        assertEquals("valueA", pc.getString("keyA"));
-    }
-
-    @Test
-    public void testIncludeLoadCyclicalReferenceIgnore() throws Exception {
-        final PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER);
-        final FileHandler handler = new FileHandler(pc);
-        handler.setBasePath(testBasePath);
-        handler.setFileName("include-cyclical-reference.properties");
-        handler.load();
-        assertEquals("valueA", pc.getString("keyA"));
     }
 
     @Test

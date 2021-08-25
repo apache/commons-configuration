@@ -64,6 +64,105 @@ public class MockInitialContextFactory implements InitialContextFactory {
     private static final String[] MISSING_NAMES = {"missing/list", "test/imaginarykey", "foo/bar"};
 
     /**
+     * Adds a new name-and-value pair to an enum mock.
+     *
+     * @param mockEnum the enum mock
+     * @param name the name
+     * @param value the value
+     */
+    private void addEnumPair(final Mock mockEnum, final String name, final Object value) {
+        final NameClassPair ncp = new NameClassPair(name, value.getClass().getName());
+        mockEnum.expectAndReturn("hasMore", true);
+        mockEnum.expectAndReturn("next", ncp);
+    }
+
+    /**
+     * Binds a property value to the mock context.
+     *
+     * @param mockCtx the context
+     * @param name the name of the property
+     * @param value the value of the property
+     */
+    private void bind(final Mock mockCtx, final String name, final String value) {
+        mockCtx.matchAndReturn(METHOD_LOOKUP, C.eq(name), value);
+        bindError(mockCtx, name + MISSING_PROP);
+    }
+
+    /**
+     * Configures the mock to expect a call for a non existing property.
+     *
+     * @param mockCtx the mock
+     * @param name the name of the property
+     */
+    private void bindError(final Mock mockCtx, final String name) {
+        mockCtx.matchAndThrow(METHOD_LOOKUP, C.eq(name), new NameNotFoundException("unknown property"));
+    }
+
+    /**
+     * Closes an enumeration mock.
+     *
+     * @param mockEnum the mock
+     */
+    private void closeEnum(final Mock mockEnum) {
+        mockEnum.expectAndReturn("hasMore", false);
+        mockEnum.expect(METHOD_CLOSE);
+    }
+
+    /**
+     * Creates a mock for a Context with the specified prefix.
+     *
+     * @param prefix the prefix
+     * @return the mock for the context
+     */
+    private Mock createCtxMock(final String prefix) {
+        final Mock mockCtx = new Mock(Context.class);
+        for (int i = 0; i < PROP_NAMES.length; i++) {
+            bind(mockCtx, prefix + PROP_NAMES[i], PROP_VALUES[i]);
+            final String errProp = prefix.isEmpty() ? PREFIX + PROP_NAMES[i] : PROP_NAMES[i];
+            bindError(mockCtx, errProp);
+        }
+        for (final String element : MISSING_NAMES) {
+            bindError(mockCtx, element);
+        }
+        mockCtx.matchAndReturn("hashCode", System.identityHashCode(mockCtx.proxy()));
+
+        return mockCtx;
+    }
+
+    /**
+     * Creates and initializes a mock for a naming enumeration that expects to be closed. This is a shortcut of
+     * createEnumMock(mockCtx, names, values, true);
+     *
+     * @param mockCtx the mock representing the context
+     * @param names the names contained in the iteration
+     * @param values the corresponding values
+     * @return the mock for the enumeration
+     */
+    private Mock createEnumMock(final Mock mockCtx, final String[] names, final Object[] values) {
+        return createEnumMock(mockCtx, names, values, true);
+    }
+
+    /**
+     * Creates and initializes a mock for a naming enumeration.
+     *
+     * @param mockCtx the mock representing the context
+     * @param names the names contained in the iteration
+     * @param values the corresponding values
+     * @param close a flag whether the enumeration should expect to be closed
+     * @return the mock for the enumeration
+     */
+    private Mock createEnumMock(final Mock mockCtx, final String[] names, final Object[] values, final boolean close) {
+        final Mock mockEnum = new Mock(NamingEnumeration.class);
+        for (int i = 0; i < names.length; i++) {
+            addEnumPair(mockEnum, names[i], values[i]);
+        }
+        if (close) {
+            closeEnum(mockEnum);
+        }
+        return mockEnum;
+    }
+
+    /**
      * Creates a {@code Context} object that is backed by a mock object. The mock context can be queried for the values of
      * certain test properties. It also supports listing the contained (sub) properties.
      *
@@ -96,104 +195,5 @@ public class MockInitialContextFactory implements InitialContextFactory {
             mockTopCtx.matchAndReturn(METHOD_LIST, C.eq(""), createEnumMock(mockTopCtx, new String[] {"test"}, new Object[] {mockPrfxCtx.proxy()}).proxy());
         }
         return (Context) mockBaseCtx.proxy();
-    }
-
-    /**
-     * Creates a mock for a Context with the specified prefix.
-     *
-     * @param prefix the prefix
-     * @return the mock for the context
-     */
-    private Mock createCtxMock(final String prefix) {
-        final Mock mockCtx = new Mock(Context.class);
-        for (int i = 0; i < PROP_NAMES.length; i++) {
-            bind(mockCtx, prefix + PROP_NAMES[i], PROP_VALUES[i]);
-            final String errProp = prefix.isEmpty() ? PREFIX + PROP_NAMES[i] : PROP_NAMES[i];
-            bindError(mockCtx, errProp);
-        }
-        for (final String element : MISSING_NAMES) {
-            bindError(mockCtx, element);
-        }
-        mockCtx.matchAndReturn("hashCode", System.identityHashCode(mockCtx.proxy()));
-
-        return mockCtx;
-    }
-
-    /**
-     * Binds a property value to the mock context.
-     *
-     * @param mockCtx the context
-     * @param name the name of the property
-     * @param value the value of the property
-     */
-    private void bind(final Mock mockCtx, final String name, final String value) {
-        mockCtx.matchAndReturn(METHOD_LOOKUP, C.eq(name), value);
-        bindError(mockCtx, name + MISSING_PROP);
-    }
-
-    /**
-     * Configures the mock to expect a call for a non existing property.
-     *
-     * @param mockCtx the mock
-     * @param name the name of the property
-     */
-    private void bindError(final Mock mockCtx, final String name) {
-        mockCtx.matchAndThrow(METHOD_LOOKUP, C.eq(name), new NameNotFoundException("unknown property"));
-    }
-
-    /**
-     * Creates and initializes a mock for a naming enumeration.
-     *
-     * @param mockCtx the mock representing the context
-     * @param names the names contained in the iteration
-     * @param values the corresponding values
-     * @param close a flag whether the enumeration should expect to be closed
-     * @return the mock for the enumeration
-     */
-    private Mock createEnumMock(final Mock mockCtx, final String[] names, final Object[] values, final boolean close) {
-        final Mock mockEnum = new Mock(NamingEnumeration.class);
-        for (int i = 0; i < names.length; i++) {
-            addEnumPair(mockEnum, names[i], values[i]);
-        }
-        if (close) {
-            closeEnum(mockEnum);
-        }
-        return mockEnum;
-    }
-
-    /**
-     * Creates and initializes a mock for a naming enumeration that expects to be closed. This is a shortcut of
-     * createEnumMock(mockCtx, names, values, true);
-     *
-     * @param mockCtx the mock representing the context
-     * @param names the names contained in the iteration
-     * @param values the corresponding values
-     * @return the mock for the enumeration
-     */
-    private Mock createEnumMock(final Mock mockCtx, final String[] names, final Object[] values) {
-        return createEnumMock(mockCtx, names, values, true);
-    }
-
-    /**
-     * Adds a new name-and-value pair to an enum mock.
-     *
-     * @param mockEnum the enum mock
-     * @param name the name
-     * @param value the value
-     */
-    private void addEnumPair(final Mock mockEnum, final String name, final Object value) {
-        final NameClassPair ncp = new NameClassPair(name, value.getClass().getName());
-        mockEnum.expectAndReturn("hasMore", true);
-        mockEnum.expectAndReturn("next", ncp);
-    }
-
-    /**
-     * Closes an enumeration mock.
-     *
-     * @param mockEnum the mock
-     */
-    private void closeEnum(final Mock mockEnum) {
-        mockEnum.expectAndReturn("hasMore", false);
-        mockEnum.expect(METHOD_CLOSE);
     }
 }

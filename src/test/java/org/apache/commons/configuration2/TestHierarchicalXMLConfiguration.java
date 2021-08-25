@@ -65,12 +65,6 @@ public class TestHierarchicalXMLConfiguration {
     /** Instance config used for tests. */
     private XMLConfiguration config;
 
-    /** Fixture setup. */
-    @Before
-    public void setUp() throws Exception {
-        config = new XMLConfiguration();
-    }
-
     private void configTest(final XMLConfiguration config) {
         assertEquals(1, config.getMaxIndex("tables.table"));
         assertEquals("system", config.getProperty("tables.table(0)[@tableType]"));
@@ -92,19 +86,18 @@ public class TestHierarchicalXMLConfiguration {
         assertEquals(5, ((Collection<?>) prop).size());
     }
 
+    /** Fixture setup. */
+    @Before
+    public void setUp() throws Exception {
+        config = new XMLConfiguration();
+    }
+
     @Test
     public void testGetProperty() throws Exception {
         final FileHandler handler = new FileHandler(config);
         handler.setFileName(TEST_FILE);
         handler.load();
 
-        configTest(config);
-    }
-
-    @Test
-    public void testLoadURL() throws Exception {
-        final FileHandler handler = new FileHandler(config);
-        handler.load(new File(TEST_FILE).getAbsoluteFile().toURI().toURL());
         configTest(config);
     }
 
@@ -126,41 +119,21 @@ public class TestHierarchicalXMLConfiguration {
         configTest(config);
     }
 
+    @Test
+    public void testLoadURL() throws Exception {
+        final FileHandler handler = new FileHandler(config);
+        handler.load(new File(TEST_FILE).getAbsoluteFile().toURI().toURL());
+        configTest(config);
+    }
+
     /**
-     * Ensure various node types are correctly processed in config.
+     * Tests manipulation of the root element's name.
      */
     @Test
-    public void testXmlNodeTypes() throws Exception {
-        // Number of keys expected from test configuration file
-        final int KEY_COUNT = 5;
-
-        // Load the configuration file
-        final FileHandler handler = new FileHandler(config);
-        handler.load(new File(TEST_FILE2).getAbsoluteFile().toURI().toURL());
-
-        // Validate comment in element ignored
-        assertEquals("Comment in element must not change element value.", "Case1Text", config.getString("case1"));
-
-        // Validate sibling comment ignored
-        assertEquals("Comment as sibling must not change element value.", "Case2Text", config.getString("case2.child"));
-
-        // Validate comment ignored, CDATA processed
-        assertEquals("Comment and use of CDATA must not change element value.", "Case3Text", config.getString("case3"));
-
-        // Validate comment and processing instruction ignored
-        assertEquals("Comment and use of PI must not change element value.", "Case4Text", config.getString("case4"));
-
-        // Validate comment ignored in parent attribute
-        assertEquals("Comment must not change attribute node value.", "Case5Text", config.getString("case5[@attr]"));
-
-        // Validate non-text nodes haven't snuck in as keys
-        final Iterator<String> iter = config.getKeys();
-        int count = 0;
-        while (iter.hasNext()) {
-            iter.next();
-            count++;
-        }
-        assertEquals("Config must contain only " + KEY_COUNT + " keys.", KEY_COUNT, count);
+    public void testRootElement() throws Exception {
+        assertEquals("configuration", config.getRootElementName());
+        config.setRootElementName("newRootName");
+        assertEquals("newRootName", config.getRootElementName());
     }
 
     @Test
@@ -180,44 +153,6 @@ public class TestHierarchicalXMLConfiguration {
         assertEquals("one", config.getString("list(0).item(0)[@name]"));
         assertEquals("two", config.getString("list(0).item(1)"));
         assertEquals("six", config.getString("list(1).sublist.item(1)"));
-    }
-
-    /**
-     * Tests to save a newly created configuration.
-     */
-    @Test
-    public void testSaveNew() throws Exception {
-        config.addProperty("connection.url", "jdbc://mydb:1234");
-        config.addProperty("connection.user", "scott");
-        config.addProperty("connection.passwd", "tiger");
-        config.addProperty("connection[@type]", "system");
-        config.addProperty("tables.table.name", "tests");
-        config.addProperty("tables.table(0).fields.field.name", "test_id");
-        config.addProperty("tables.table(0).fields.field(-1).name", "test_name");
-        config.addProperty("tables.table(-1).name", "results");
-        config.addProperty("tables.table(1).fields.field.name", "res_id");
-        config.addProperty("tables.table(1).fields.field(0).type", "int");
-        config.addProperty("tables.table(1).fields.field(-1).name", "value");
-        config.addProperty("tables.table(1).fields.field(1).type", "string");
-        config.addProperty("tables.table(1).fields.field(1)[@null]", "true");
-
-        config.setRootElementName("myconfig");
-        final File saveFile = folder.newFile(TEST_SAVENAME);
-        FileHandler handler = new FileHandler(config);
-        handler.setFile(saveFile);
-        handler.save();
-
-        config = new XMLConfiguration();
-        handler = new FileHandler(config);
-        handler.load(saveFile);
-        assertEquals(1, config.getMaxIndex("tables.table.name"));
-        assertEquals("tests", config.getString("tables.table(0).name"));
-        assertEquals("test_name", config.getString("tables.table(0).fields.field(1).name"));
-        assertEquals("int", config.getString("tables.table(1).fields.field(0).type"));
-        assertTrue(config.getBoolean("tables.table(1).fields.field(1)[@null]"));
-        assertEquals("tiger", config.getString("connection.passwd"));
-        assertEquals("system", config.getProperty("connection[@type]"));
-        assertEquals("myconfig", config.getRootElementName());
     }
 
     /**
@@ -261,13 +196,41 @@ public class TestHierarchicalXMLConfiguration {
     }
 
     /**
-     * Tests manipulation of the root element's name.
+     * Tests to save a newly created configuration.
      */
     @Test
-    public void testRootElement() throws Exception {
-        assertEquals("configuration", config.getRootElementName());
-        config.setRootElementName("newRootName");
-        assertEquals("newRootName", config.getRootElementName());
+    public void testSaveNew() throws Exception {
+        config.addProperty("connection.url", "jdbc://mydb:1234");
+        config.addProperty("connection.user", "scott");
+        config.addProperty("connection.passwd", "tiger");
+        config.addProperty("connection[@type]", "system");
+        config.addProperty("tables.table.name", "tests");
+        config.addProperty("tables.table(0).fields.field.name", "test_id");
+        config.addProperty("tables.table(0).fields.field(-1).name", "test_name");
+        config.addProperty("tables.table(-1).name", "results");
+        config.addProperty("tables.table(1).fields.field.name", "res_id");
+        config.addProperty("tables.table(1).fields.field(0).type", "int");
+        config.addProperty("tables.table(1).fields.field(-1).name", "value");
+        config.addProperty("tables.table(1).fields.field(1).type", "string");
+        config.addProperty("tables.table(1).fields.field(1)[@null]", "true");
+
+        config.setRootElementName("myconfig");
+        final File saveFile = folder.newFile(TEST_SAVENAME);
+        FileHandler handler = new FileHandler(config);
+        handler.setFile(saveFile);
+        handler.save();
+
+        config = new XMLConfiguration();
+        handler = new FileHandler(config);
+        handler.load(saveFile);
+        assertEquals(1, config.getMaxIndex("tables.table.name"));
+        assertEquals("tests", config.getString("tables.table(0).name"));
+        assertEquals("test_name", config.getString("tables.table(0).fields.field(1).name"));
+        assertEquals("int", config.getString("tables.table(1).fields.field(0).type"));
+        assertTrue(config.getBoolean("tables.table(1).fields.field(1)[@null]"));
+        assertEquals("tiger", config.getString("connection.passwd"));
+        assertEquals("system", config.getProperty("connection[@type]"));
+        assertEquals("myconfig", config.getRootElementName());
     }
 
     /**
@@ -280,5 +243,42 @@ public class TestHierarchicalXMLConfiguration {
         handler.load();
         assertEquals("testconfig", config.getRootElementName());
         config.setRootElementName("anotherRootElement");
+    }
+
+    /**
+     * Ensure various node types are correctly processed in config.
+     */
+    @Test
+    public void testXmlNodeTypes() throws Exception {
+        // Number of keys expected from test configuration file
+        final int KEY_COUNT = 5;
+
+        // Load the configuration file
+        final FileHandler handler = new FileHandler(config);
+        handler.load(new File(TEST_FILE2).getAbsoluteFile().toURI().toURL());
+
+        // Validate comment in element ignored
+        assertEquals("Comment in element must not change element value.", "Case1Text", config.getString("case1"));
+
+        // Validate sibling comment ignored
+        assertEquals("Comment as sibling must not change element value.", "Case2Text", config.getString("case2.child"));
+
+        // Validate comment ignored, CDATA processed
+        assertEquals("Comment and use of CDATA must not change element value.", "Case3Text", config.getString("case3"));
+
+        // Validate comment and processing instruction ignored
+        assertEquals("Comment and use of PI must not change element value.", "Case4Text", config.getString("case4"));
+
+        // Validate comment ignored in parent attribute
+        assertEquals("Comment must not change attribute node value.", "Case5Text", config.getString("case5[@attr]"));
+
+        // Validate non-text nodes haven't snuck in as keys
+        final Iterator<String> iter = config.getKeys();
+        int count = 0;
+        while (iter.hasNext()) {
+            iter.next();
+            count++;
+        }
+        assertEquals("Config must contain only " + KEY_COUNT + " keys.", KEY_COUNT, count);
     }
 }

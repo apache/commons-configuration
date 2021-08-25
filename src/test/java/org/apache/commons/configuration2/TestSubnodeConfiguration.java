@@ -52,15 +52,14 @@ public class TestSubnodeConfiguration {
     /** The selector used by the test configuration. */
     private static final NodeSelector SELECTOR = new NodeSelector(SUB_KEY);
 
-    /** The parent configuration. */
-    private BaseHierarchicalConfiguration parent;
-
-    /** The subnode configuration to be tested. */
-    private SubnodeConfiguration config;
-
-    @Before
-    public void setUp() throws Exception {
-        parent = setUpParentConfig();
+    /**
+     * Adds a tree structure to the root node of the given configuration.
+     *
+     * @param configuration the configuration
+     * @param root the root of the tree structure to be added
+     */
+    private static void appendTree(final BaseHierarchicalConfiguration configuration, final ImmutableNode root) {
+        configuration.addNodes(null, Collections.singleton(root));
     }
 
     /**
@@ -74,14 +73,45 @@ public class TestSubnodeConfiguration {
         return conf;
     }
 
+    /** The parent configuration. */
+    private BaseHierarchicalConfiguration parent;
+
+    /** The subnode configuration to be tested. */
+    private SubnodeConfiguration config;
+
     /**
-     * Adds a tree structure to the root node of the given configuration.
+     * Helper method for testing interpolation facilities between a sub and its parent configuration.
      *
-     * @param configuration the configuration
-     * @param root the root of the tree structure to be added
+     * @param withUpdates the supports updates flag
      */
-    private static void appendTree(final BaseHierarchicalConfiguration configuration, final ImmutableNode root) {
-        configuration.addNodes(null, Collections.singleton(root));
+    private void checkInterpolationFromConfigurationAt(final boolean withUpdates) {
+        parent.addProperty("base.dir", "/home/foo");
+        parent.addProperty("test.absolute.dir.dir1", "${base.dir}/path1");
+        parent.addProperty("test.absolute.dir.dir2", "${base.dir}/path2");
+        parent.addProperty("test.absolute.dir.dir3", "${base.dir}/path3");
+
+        final Configuration sub = parent.configurationAt("test.absolute.dir", withUpdates);
+        for (int i = 1; i < 4; i++) {
+            assertEquals("Wrong interpolation in parent", "/home/foo/path" + i, parent.getString("test.absolute.dir.dir" + i));
+            assertEquals("Wrong interpolation in sub", "/home/foo/path" + i, sub.getString("dir" + i));
+        }
+    }
+
+    /**
+     * Checks whether the sub configuration has the expected content.
+     */
+    private void checkSubConfigContent() {
+        assertEquals("Wrong table name", NodeStructureHelper.table(0), config.getString("name"));
+        final List<Object> fields = config.getList("fields.field.name");
+        assertEquals("Wrong number of fields", NodeStructureHelper.fieldsLength(0), fields.size());
+        for (int i = 0; i < NodeStructureHelper.fieldsLength(0); i++) {
+            assertEquals("Wrong field at position " + i, NodeStructureHelper.field(0, i), fields.get(i));
+        }
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        parent = setUpParentConfig();
     }
 
     /**
@@ -113,70 +143,6 @@ public class TestSubnodeConfiguration {
     }
 
     /**
-     * Tests creation of a subnode config.
-     */
-    @Test
-    public void testInitSubNodeConfig() {
-        setUpSubnodeConfig();
-        assertSame("Wrong root node in subnode", NodeStructureHelper.nodeForKey(parent.getModel().getNodeHandler().getRootNode(), "tables/table(0)"),
-            config.getModel().getNodeHandler().getRootNode());
-        assertSame("Wrong parent config", parent, config.getParent());
-    }
-
-    /**
-     * Tests constructing a subnode configuration with a null parent. This should cause an exception.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testInitSubNodeConfigWithNullParent() {
-        config = new SubnodeConfiguration(null, setUpTrackedModel(SELECTOR));
-    }
-
-    /**
-     * Tests constructing a subnode configuration with a null node model. This should cause an exception.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testInitSubNodeConfigWithNullNode() {
-        config = new SubnodeConfiguration(parent, null);
-    }
-
-    /**
-     * Tests if properties of the sub node can be accessed.
-     */
-    @Test
-    public void testGetProperties() {
-        setUpSubnodeConfig();
-        checkSubConfigContent();
-    }
-
-    /**
-     * Checks whether the sub configuration has the expected content.
-     */
-    private void checkSubConfigContent() {
-        assertEquals("Wrong table name", NodeStructureHelper.table(0), config.getString("name"));
-        final List<Object> fields = config.getList("fields.field.name");
-        assertEquals("Wrong number of fields", NodeStructureHelper.fieldsLength(0), fields.size());
-        for (int i = 0; i < NodeStructureHelper.fieldsLength(0); i++) {
-            assertEquals("Wrong field at position " + i, NodeStructureHelper.field(0, i), fields.get(i));
-        }
-    }
-
-    /**
-     * Tests setting of properties in both the parent and the subnode configuration and whether the changes are visible to
-     * each other.
-     */
-    @Test
-    public void testSetProperty() {
-        setUpSubnodeConfig();
-        config.setProperty(null, "testTable");
-        config.setProperty("name", NodeStructureHelper.table(0) + "_tested");
-        assertEquals("Root value was not set", "testTable", parent.getString("tables.table(0)"));
-        assertEquals("Table name was not changed", NodeStructureHelper.table(0) + "_tested", parent.getString("tables.table(0).name"));
-
-        parent.setProperty("tables.table(0).fields.field(1).name", "testField");
-        assertEquals("Field name was not changed", "testField", config.getString("fields.field(1).name"));
-    }
-
-    /**
      * Tests adding of properties.
      */
     @Test
@@ -192,70 +158,37 @@ public class TestSubnodeConfiguration {
     }
 
     /**
-     * Tests listing the defined keys.
+     * Tests whether a clone of a sub configuration can be created.
      */
     @Test
-    public void testGetKeys() {
+    public void testClone() {
         setUpSubnodeConfig();
-        final Set<String> keys = new HashSet<>(ConfigurationAssert.keysToList(config));
-        assertEquals("Incorrect number of keys", 2, keys.size());
-        assertTrue("Key 1 not contained", keys.contains("name"));
-        assertTrue("Key 2 not contained", keys.contains("fields.field.name"));
+        final SubnodeConfiguration copy = (SubnodeConfiguration) config.clone();
+        assertNotSame("Same model", config.getModel(), copy.getModel());
+        final TrackedNodeModel subModel = (TrackedNodeModel) copy.getModel();
+        assertEquals("Wrong selector", SELECTOR, subModel.getSelector());
+        final InMemoryNodeModel parentModel = (InMemoryNodeModel) parent.getModel();
+        assertEquals("Wrong parent model", parentModel, subModel.getParentModel());
+
+        // Check whether the track count was increased
+        parentModel.untrackNode(SELECTOR);
+        parentModel.untrackNode(SELECTOR);
+        assertTrue("Wrong finalize flag", subModel.isReleaseTrackedNodeOnFinalize());
     }
 
     /**
-     * Tests setting the exception on missing flag. The subnode config obtains this flag from its parent.
-     */
-    @Test(expected = NoSuchElementException.class)
-    public void testSetThrowExceptionOnMissing() {
-        parent.setThrowExceptionOnMissing(true);
-        setUpSubnodeConfig();
-        assertTrue("Exception flag not fetchted from parent", config.isThrowExceptionOnMissing());
-        config.getString("non existing key");
-    }
-
-    /**
-     * Tests whether the exception flag can be set independently from the parent.
+     * Tests whether the configuration can be closed.
      */
     @Test
-    public void testSetThrowExceptionOnMissingAffectsParent() {
-        parent.setThrowExceptionOnMissing(true);
-        setUpSubnodeConfig();
-        config.setThrowExceptionOnMissing(false);
-        assertTrue("Exception flag reset on parent", parent.isThrowExceptionOnMissing());
-    }
+    public void testClose() {
+        final TrackedNodeModel model = EasyMock.createMock(TrackedNodeModel.class);
+        EasyMock.expect(model.getSelector()).andReturn(SELECTOR).anyTimes();
+        model.close();
+        EasyMock.replay(model);
 
-    /**
-     * Tests manipulating the list delimiter handler. This object is derived from the parent.
-     */
-    @Test
-    public void testSetListDelimiterHandler() {
-        final ListDelimiterHandler handler1 = new DefaultListDelimiterHandler('/');
-        final ListDelimiterHandler handler2 = new DefaultListDelimiterHandler(';');
-        parent.setListDelimiterHandler(handler1);
-        setUpSubnodeConfig();
-        parent.setListDelimiterHandler(handler2);
-        assertEquals("List delimiter handler not obtained from parent", handler1, config.getListDelimiterHandler());
-        config.addProperty("newProp", "test1,test2/test3");
-        assertEquals("List was incorrectly splitted", "test1,test2", parent.getString("tables.table(0).newProp"));
-        config.setListDelimiterHandler(DisabledListDelimiterHandler.INSTANCE);
-        assertEquals("List delimiter changed on parent", handler2, parent.getListDelimiterHandler());
-    }
-
-    /**
-     * Tests changing the expression engine.
-     */
-    @Test
-    public void testSetExpressionEngine() {
-        parent.setExpressionEngine(new XPathExpressionEngine());
-        setUpSubnodeConfig("tables/table[1]");
-        assertEquals("Wrong field name", NodeStructureHelper.field(0, 1), config.getString("fields/field[2]/name"));
-        final Set<String> keys = ConfigurationAssert.keysToSet(config);
-        assertEquals("Wrong number of keys", 2, keys.size());
-        assertTrue("Key 1 not contained", keys.contains("name"));
-        assertTrue("Key 2 not contained", keys.contains("fields/field/name"));
-        config.setExpressionEngine(null);
-        assertTrue("Expression engine reset on parent", parent.getExpressionEngine() instanceof XPathExpressionEngine);
+        final SubnodeConfiguration config = new SubnodeConfiguration(parent, model);
+        config.close();
+        EasyMock.verify(model);
     }
 
     /**
@@ -282,6 +215,65 @@ public class TestSubnodeConfiguration {
     }
 
     /**
+     * Tests listing the defined keys.
+     */
+    @Test
+    public void testGetKeys() {
+        setUpSubnodeConfig();
+        final Set<String> keys = new HashSet<>(ConfigurationAssert.keysToList(config));
+        assertEquals("Incorrect number of keys", 2, keys.size());
+        assertTrue("Key 1 not contained", keys.contains("name"));
+        assertTrue("Key 2 not contained", keys.contains("fields.field.name"));
+    }
+
+    /**
+     * Tests whether a correct node model is returned for the sub configuration. This test is related to CONFIGURATION-670.
+     */
+    @Test
+    public void testGetNodeModel() {
+        setUpSubnodeConfig();
+        final InMemoryNodeModel nodeModel = config.getNodeModel();
+
+        assertEquals("Wrong root node", "table", nodeModel.getNodeHandler().getRootNode().getNodeName());
+    }
+
+    /**
+     * Tests if properties of the sub node can be accessed.
+     */
+    @Test
+    public void testGetProperties() {
+        setUpSubnodeConfig();
+        checkSubConfigContent();
+    }
+
+    /**
+     * Tests creation of a subnode config.
+     */
+    @Test
+    public void testInitSubNodeConfig() {
+        setUpSubnodeConfig();
+        assertSame("Wrong root node in subnode", NodeStructureHelper.nodeForKey(parent.getModel().getNodeHandler().getRootNode(), "tables/table(0)"),
+            config.getModel().getNodeHandler().getRootNode());
+        assertSame("Wrong parent config", parent, config.getParent());
+    }
+
+    /**
+     * Tests constructing a subnode configuration with a null node model. This should cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testInitSubNodeConfigWithNullNode() {
+        config = new SubnodeConfiguration(parent, null);
+    }
+
+    /**
+     * Tests constructing a subnode configuration with a null parent. This should cause an exception.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testInitSubNodeConfigWithNullParent() {
+        config = new SubnodeConfiguration(null, setUpTrackedModel(SELECTOR));
+    }
+
+    /**
      * Tests interpolation features. The subnode config should use its parent for interpolation.
      */
     @Test
@@ -293,24 +285,6 @@ public class TestSubnodeConfiguration {
 
         setUpSubnodeConfig();
         assertEquals("Wrong interpolated tablespace in subnode", "default", config.getString("tablespace"));
-    }
-
-    /**
-     * Helper method for testing interpolation facilities between a sub and its parent configuration.
-     *
-     * @param withUpdates the supports updates flag
-     */
-    private void checkInterpolationFromConfigurationAt(final boolean withUpdates) {
-        parent.addProperty("base.dir", "/home/foo");
-        parent.addProperty("test.absolute.dir.dir1", "${base.dir}/path1");
-        parent.addProperty("test.absolute.dir.dir2", "${base.dir}/path2");
-        parent.addProperty("test.absolute.dir.dir3", "${base.dir}/path3");
-
-        final Configuration sub = parent.configurationAt("test.absolute.dir", withUpdates);
-        for (int i = 1; i < 4; i++) {
-            assertEquals("Wrong interpolation in parent", "/home/foo/path" + i, parent.getString("test.absolute.dir.dir" + i));
-            assertEquals("Wrong interpolation in sub", "/home/foo/path" + i, sub.getString("dir" + i));
-        }
     }
 
     /**
@@ -331,6 +305,18 @@ public class TestSubnodeConfiguration {
     }
 
     /**
+     * Tests manipulating the interpolator.
+     */
+    @Test
+    public void testInterpolator() {
+        parent.addProperty("tablespaces.tablespace.name", "default");
+        parent.addProperty("tablespaces.tablespace(-1).name", "test");
+
+        setUpSubnodeConfig();
+        InterpolationTestHelper.testGetInterpolator(config);
+    }
+
+    /**
      * An additional test for interpolation when the configurationAt() method is involved for a local interpolation.
      */
     @Test
@@ -342,18 +328,6 @@ public class TestSubnodeConfiguration {
         final Configuration sub = parent.configurationAt("test.absolute.dir");
         assertEquals("Wrong interpolation in subnode", "/home/foo/path1", sub.getString("dir1"));
         assertEquals("Wrong local interpolation in subnode", "/home/foo/path1", sub.getString("dir2"));
-    }
-
-    /**
-     * Tests manipulating the interpolator.
-     */
-    @Test
-    public void testInterpolator() {
-        parent.addProperty("tablespaces.tablespace.name", "default");
-        parent.addProperty("tablespaces.tablespace(-1).name", "test");
-
-        setUpSubnodeConfig();
-        InterpolationTestHelper.testGetInterpolator(config);
     }
 
     @Test
@@ -392,47 +366,73 @@ public class TestSubnodeConfiguration {
     }
 
     /**
-     * Tests whether a clone of a sub configuration can be created.
+     * Tests changing the expression engine.
      */
     @Test
-    public void testClone() {
-        setUpSubnodeConfig();
-        final SubnodeConfiguration copy = (SubnodeConfiguration) config.clone();
-        assertNotSame("Same model", config.getModel(), copy.getModel());
-        final TrackedNodeModel subModel = (TrackedNodeModel) copy.getModel();
-        assertEquals("Wrong selector", SELECTOR, subModel.getSelector());
-        final InMemoryNodeModel parentModel = (InMemoryNodeModel) parent.getModel();
-        assertEquals("Wrong parent model", parentModel, subModel.getParentModel());
-
-        // Check whether the track count was increased
-        parentModel.untrackNode(SELECTOR);
-        parentModel.untrackNode(SELECTOR);
-        assertTrue("Wrong finalize flag", subModel.isReleaseTrackedNodeOnFinalize());
+    public void testSetExpressionEngine() {
+        parent.setExpressionEngine(new XPathExpressionEngine());
+        setUpSubnodeConfig("tables/table[1]");
+        assertEquals("Wrong field name", NodeStructureHelper.field(0, 1), config.getString("fields/field[2]/name"));
+        final Set<String> keys = ConfigurationAssert.keysToSet(config);
+        assertEquals("Wrong number of keys", 2, keys.size());
+        assertTrue("Key 1 not contained", keys.contains("name"));
+        assertTrue("Key 2 not contained", keys.contains("fields/field/name"));
+        config.setExpressionEngine(null);
+        assertTrue("Expression engine reset on parent", parent.getExpressionEngine() instanceof XPathExpressionEngine);
     }
 
     /**
-     * Tests whether the configuration can be closed.
+     * Tests manipulating the list delimiter handler. This object is derived from the parent.
      */
     @Test
-    public void testClose() {
-        final TrackedNodeModel model = EasyMock.createMock(TrackedNodeModel.class);
-        EasyMock.expect(model.getSelector()).andReturn(SELECTOR).anyTimes();
-        model.close();
-        EasyMock.replay(model);
-
-        final SubnodeConfiguration config = new SubnodeConfiguration(parent, model);
-        config.close();
-        EasyMock.verify(model);
+    public void testSetListDelimiterHandler() {
+        final ListDelimiterHandler handler1 = new DefaultListDelimiterHandler('/');
+        final ListDelimiterHandler handler2 = new DefaultListDelimiterHandler(';');
+        parent.setListDelimiterHandler(handler1);
+        setUpSubnodeConfig();
+        parent.setListDelimiterHandler(handler2);
+        assertEquals("List delimiter handler not obtained from parent", handler1, config.getListDelimiterHandler());
+        config.addProperty("newProp", "test1,test2/test3");
+        assertEquals("List was incorrectly splitted", "test1,test2", parent.getString("tables.table(0).newProp"));
+        config.setListDelimiterHandler(DisabledListDelimiterHandler.INSTANCE);
+        assertEquals("List delimiter changed on parent", handler2, parent.getListDelimiterHandler());
     }
 
     /**
-     * Tests whether a correct node model is returned for the sub configuration. This test is related to CONFIGURATION-670.
+     * Tests setting of properties in both the parent and the subnode configuration and whether the changes are visible to
+     * each other.
      */
     @Test
-    public void testGetNodeModel() {
+    public void testSetProperty() {
         setUpSubnodeConfig();
-        final InMemoryNodeModel nodeModel = config.getNodeModel();
+        config.setProperty(null, "testTable");
+        config.setProperty("name", NodeStructureHelper.table(0) + "_tested");
+        assertEquals("Root value was not set", "testTable", parent.getString("tables.table(0)"));
+        assertEquals("Table name was not changed", NodeStructureHelper.table(0) + "_tested", parent.getString("tables.table(0).name"));
 
-        assertEquals("Wrong root node", "table", nodeModel.getNodeHandler().getRootNode().getNodeName());
+        parent.setProperty("tables.table(0).fields.field(1).name", "testField");
+        assertEquals("Field name was not changed", "testField", config.getString("fields.field(1).name"));
+    }
+
+    /**
+     * Tests setting the exception on missing flag. The subnode config obtains this flag from its parent.
+     */
+    @Test(expected = NoSuchElementException.class)
+    public void testSetThrowExceptionOnMissing() {
+        parent.setThrowExceptionOnMissing(true);
+        setUpSubnodeConfig();
+        assertTrue("Exception flag not fetchted from parent", config.isThrowExceptionOnMissing());
+        config.getString("non existing key");
+    }
+
+    /**
+     * Tests whether the exception flag can be set independently from the parent.
+     */
+    @Test
+    public void testSetThrowExceptionOnMissingAffectsParent() {
+        parent.setThrowExceptionOnMissing(true);
+        setUpSubnodeConfig();
+        config.setThrowExceptionOnMissing(false);
+        assertTrue("Exception flag reset on parent", parent.isThrowExceptionOnMissing());
     }
 }

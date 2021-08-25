@@ -39,6 +39,29 @@ public class TestUnionCombiner extends AbstractCombinerTest {
     }
 
     /**
+     * Tests combination of attributes.
+     */
+    @Test
+    public void testAttributes() throws ConfigurationException {
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        assertEquals("Wrong number of attributes", 0, config.getMaxIndex("database.tables.table(0)[@id]"));
+        assertEquals("Wrong value of attribute", 1, config.getInt("database.tables.table(0)[@id](0)"));
+    }
+
+    /**
+     * Tests combination of lists.
+     */
+    @Test
+    public void testLists() throws ConfigurationException {
+        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
+        assertEquals("Too few list elements", 2, config.getMaxIndex("net.service.url"));
+        assertEquals("Wrong first service", "http://service1.org", config.getString("net.service.url(0)"));
+        assertEquals("Wrong second service", "http://service2.org", config.getString("net.service.url(1)"));
+        assertEquals("Wrong service attribute", 2, config.getInt("net.service.url(2)[@type]"));
+        assertEquals("Wrong number of server elements", 3, config.getMaxIndex("net.server.url"));
+    }
+
+    /**
      * Tests combination of simple values (no lists).
      */
     @Test
@@ -63,29 +86,6 @@ public class TestUnionCombiner extends AbstractCombinerTest {
         assertEquals("Wrong value of first attribute", 2, config.getInt("gui.level(0)[@default]"));
         assertFalse("Found wrong attribute", config.containsKey("gui.level(0)[@min]"));
         assertEquals("Wrong value of second attribute", 1, config.getInt("gui.level(1)[@min]"));
-    }
-
-    /**
-     * Tests combination of attributes.
-     */
-    @Test
-    public void testAttributes() throws ConfigurationException {
-        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals("Wrong number of attributes", 0, config.getMaxIndex("database.tables.table(0)[@id]"));
-        assertEquals("Wrong value of attribute", 1, config.getInt("database.tables.table(0)[@id](0)"));
-    }
-
-    /**
-     * Tests combination of lists.
-     */
-    @Test
-    public void testLists() throws ConfigurationException {
-        final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals("Too few list elements", 2, config.getMaxIndex("net.service.url"));
-        assertEquals("Wrong first service", "http://service1.org", config.getString("net.service.url(0)"));
-        assertEquals("Wrong second service", "http://service2.org", config.getString("net.service.url(1)"));
-        assertEquals("Wrong service attribute", 2, config.getInt("net.service.url(2)[@type]"));
-        assertEquals("Wrong number of server elements", 3, config.getMaxIndex("net.server.url"));
     }
 
     /**

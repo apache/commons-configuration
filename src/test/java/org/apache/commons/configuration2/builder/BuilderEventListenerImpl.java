@@ -40,11 +40,22 @@ public class BuilderEventListenerImpl implements EventListener<ConfigurationBuil
     private Iterator<ConfigurationBuilderEvent> iterator;
 
     /**
-     * {@inheritDoc} This implementation just records the event.
+     * Checks that no further events have been received by this listener.
      */
-    @Override
-    public void onEvent(final ConfigurationBuilderEvent event) {
-        events.add(event);
+    public void assertNoMoreEvents() {
+        assertFalse("Too many events", initIterator().hasNext());
+    }
+
+    /**
+     * Ensures that the iterator for received events has been initialized.
+     *
+     * @return the iterator to be used
+     */
+    private Iterator<ConfigurationBuilderEvent> initIterator() {
+        if (iterator == null) {
+            iterator = events.iterator();
+        }
+        return iterator;
     }
 
     /**
@@ -67,21 +78,10 @@ public class BuilderEventListenerImpl implements EventListener<ConfigurationBuil
     }
 
     /**
-     * Checks that no further events have been received by this listener.
+     * {@inheritDoc} This implementation just records the event.
      */
-    public void assertNoMoreEvents() {
-        assertFalse("Too many events", initIterator().hasNext());
-    }
-
-    /**
-     * Ensures that the iterator for received events has been initialized.
-     *
-     * @return the iterator to be used
-     */
-    private Iterator<ConfigurationBuilderEvent> initIterator() {
-        if (iterator == null) {
-            iterator = events.iterator();
-        }
-        return iterator;
+    @Override
+    public void onEvent(final ConfigurationBuilderEvent event) {
+        events.add(event);
     }
 }

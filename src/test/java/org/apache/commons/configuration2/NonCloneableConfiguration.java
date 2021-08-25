@@ -31,12 +31,8 @@ public class NonCloneableConfiguration extends AbstractConfiguration {
     protected void addPropertyDirect(final String key, final Object value) {
     }
 
-    /**
-     * Dummy implementation of this method.
-     */
     @Override
-    protected boolean isEmptyInternal() {
-        return true;
+    protected void clearPropertyDirect(final String key) {
     }
 
     /**
@@ -63,7 +59,11 @@ public class NonCloneableConfiguration extends AbstractConfiguration {
         return null;
     }
 
+    /**
+     * Dummy implementation of this method.
+     */
     @Override
-    protected void clearPropertyDirect(final String key) {
+    protected boolean isEmptyInternal() {
+        return true;
     }
 }

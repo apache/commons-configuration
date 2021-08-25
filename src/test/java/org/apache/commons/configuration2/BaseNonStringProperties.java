@@ -37,15 +37,15 @@ public abstract class BaseNonStringProperties {
     }
 
     @Test
-    public void testBooleanDefaultValue() throws Exception {
-        nonStringTestHolder.testBooleanDefaultValue();
-    }
-
-    @Test
     public void testBooleanArrayValue() throws Exception {
         final boolean booleanValue = conf.getBoolean("test.boolean");
         assertTrue(booleanValue);
         assertEquals(2, conf.getList("test.boolean.array").size());
+    }
+
+    @Test
+    public void testBooleanDefaultValue() throws Exception {
+        nonStringTestHolder.testBooleanDefaultValue();
     }
 
     @Test
@@ -67,11 +67,6 @@ public abstract class BaseNonStringProperties {
     }
 
     @Test
-    public void testDoubleDefaultValue() throws Exception {
-        nonStringTestHolder.testDoubleDefaultValue();
-    }
-
-    @Test
     public void testDoubleArrayValue() throws Exception {
         final double testValue = 10.25;
         final double doubleValue = conf.getDouble("test.double");
@@ -80,14 +75,13 @@ public abstract class BaseNonStringProperties {
     }
 
     @Test
-    public void testFloat() throws Exception {
-        nonStringTestHolder.testFloat();
+    public void testDoubleDefaultValue() throws Exception {
+        nonStringTestHolder.testDoubleDefaultValue();
     }
 
     @Test
-    public void testFloatDefaultValue() throws Exception {
-        nonStringTestHolder.testFloatDefaultValue();
-
+    public void testFloat() throws Exception {
+        nonStringTestHolder.testFloat();
     }
 
     @Test
@@ -99,13 +93,14 @@ public abstract class BaseNonStringProperties {
     }
 
     @Test
-    public void testInteger() throws Exception {
-        nonStringTestHolder.testInteger();
+    public void testFloatDefaultValue() throws Exception {
+        nonStringTestHolder.testFloatDefaultValue();
+
     }
 
     @Test
-    public void testIntegerDefaultValue() throws Exception {
-        nonStringTestHolder.testIntegerDefaultValue();
+    public void testInteger() throws Exception {
+        nonStringTestHolder.testInteger();
     }
 
     @Test
@@ -116,13 +111,23 @@ public abstract class BaseNonStringProperties {
     }
 
     @Test
-    public void testLong() throws Exception {
-        nonStringTestHolder.testLong();
+    public void testIntegerDefaultValue() throws Exception {
+        nonStringTestHolder.testIntegerDefaultValue();
     }
 
     @Test
-    public void testLongDefaultValue() throws Exception {
-        nonStringTestHolder.testLongDefaultValue();
+    public void testIsEmpty() throws Exception {
+        nonStringTestHolder.testIsEmpty();
+    }
+
+    @Test
+    public void testListMissing() throws Exception {
+        nonStringTestHolder.testListMissing();
+    }
+
+    @Test
+    public void testLong() throws Exception {
+        nonStringTestHolder.testLong();
     }
 
     @Test
@@ -133,13 +138,13 @@ public abstract class BaseNonStringProperties {
     }
 
     @Test
-    public void testShort() throws Exception {
-        nonStringTestHolder.testShort();
+    public void testLongDefaultValue() throws Exception {
+        nonStringTestHolder.testLongDefaultValue();
     }
 
     @Test
-    public void testShortDefaultValue() throws Exception {
-        nonStringTestHolder.testShortDefaultValue();
+    public void testShort() throws Exception {
+        nonStringTestHolder.testShort();
     }
 
     @Test
@@ -150,17 +155,12 @@ public abstract class BaseNonStringProperties {
     }
 
     @Test
-    public void testListMissing() throws Exception {
-        nonStringTestHolder.testListMissing();
+    public void testShortDefaultValue() throws Exception {
+        nonStringTestHolder.testShortDefaultValue();
     }
 
     @Test
     public void testSubset() throws Exception {
         nonStringTestHolder.testSubset();
-    }
-
-    @Test
-    public void testIsEmpty() throws Exception {
-        nonStringTestHolder.testIsEmpty();
     }
 }

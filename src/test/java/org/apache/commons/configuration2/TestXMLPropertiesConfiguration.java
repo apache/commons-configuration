@@ -46,10 +46,6 @@ public class TestXMLPropertiesConfiguration {
     /** Constant for the name of the test file. */
     private static final String TEST_PROPERTIES_FILE = "test.properties.xml";
 
-    /** A helper object for creating temporary files. */
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
-
     /**
      * Helper method for loading a configuration file.
      *
@@ -64,16 +60,9 @@ public class TestXMLPropertiesConfiguration {
         return conf;
     }
 
-    @Test
-    public void testLoad() throws Exception {
-        final XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
-        assertEquals("header", "Description of the property list", conf.getHeader());
-
-        assertFalse("The configuration is empty", conf.isEmpty());
-        assertEquals("'key1' property", "value1", conf.getProperty("key1"));
-        assertEquals("'key2' property", "value2", conf.getProperty("key2"));
-        assertEquals("'key3' property", "value3", conf.getProperty("key3"));
-    }
+    /** A helper object for creating temporary files. */
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     @Test
     public void testDOMLoad() throws Exception {
@@ -91,33 +80,6 @@ public class TestXMLPropertiesConfiguration {
         assertEquals("'key1' property", "value1", conf.getProperty("key1"));
         assertEquals("'key2' property", "value2", conf.getProperty("key2"));
         assertEquals("'key3' property", "value3", conf.getProperty("key3"));
-    }
-
-    @Test
-    public void testSave() throws Exception {
-        // load the configuration
-        final XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
-
-        // update the configuration
-        conf.addProperty("key4", "value4");
-        conf.clearProperty("key2");
-        conf.setHeader("Description of the new property list");
-
-        // save the configuration
-        final File saveFile = folder.newFile("test2.properties.xml");
-        final FileHandler saveHandler = new FileHandler(conf);
-        saveHandler.save(saveFile);
-
-        // reload the configuration
-        final XMLPropertiesConfiguration conf2 = load(saveFile.getAbsolutePath());
-
-        // test the configuration
-        assertEquals("header", "Description of the new property list", conf2.getHeader());
-
-        assertFalse("The configuration is empty", conf2.isEmpty());
-        assertEquals("'key1' property", "value1", conf2.getProperty("key1"));
-        assertEquals("'key3' property", "value3", conf2.getProperty("key3"));
-        assertEquals("'key4' property", "value4", conf2.getProperty("key4"));
     }
 
     @Test
@@ -143,6 +105,44 @@ public class TestXMLPropertiesConfiguration {
         final DOMSource source = new DOMSource(document);
         final Result result = new StreamResult(saveFile);
         transformer.transform(source, result);
+
+        // reload the configuration
+        final XMLPropertiesConfiguration conf2 = load(saveFile.getAbsolutePath());
+
+        // test the configuration
+        assertEquals("header", "Description of the new property list", conf2.getHeader());
+
+        assertFalse("The configuration is empty", conf2.isEmpty());
+        assertEquals("'key1' property", "value1", conf2.getProperty("key1"));
+        assertEquals("'key3' property", "value3", conf2.getProperty("key3"));
+        assertEquals("'key4' property", "value4", conf2.getProperty("key4"));
+    }
+
+    @Test
+    public void testLoad() throws Exception {
+        final XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
+        assertEquals("header", "Description of the property list", conf.getHeader());
+
+        assertFalse("The configuration is empty", conf.isEmpty());
+        assertEquals("'key1' property", "value1", conf.getProperty("key1"));
+        assertEquals("'key2' property", "value2", conf.getProperty("key2"));
+        assertEquals("'key3' property", "value3", conf.getProperty("key3"));
+    }
+
+    @Test
+    public void testSave() throws Exception {
+        // load the configuration
+        final XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
+
+        // update the configuration
+        conf.addProperty("key4", "value4");
+        conf.clearProperty("key2");
+        conf.setHeader("Description of the new property list");
+
+        // save the configuration
+        final File saveFile = folder.newFile("test2.properties.xml");
+        final FileHandler saveHandler = new FileHandler(conf);
+        saveHandler.save(saveFile);
 
         // reload the configuration
         final XMLPropertiesConfiguration conf2 = load(saveFile.getAbsolutePath());

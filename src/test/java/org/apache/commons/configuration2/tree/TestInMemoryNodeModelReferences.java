@@ -46,32 +46,6 @@ public class TestInMemoryNodeModelReferences {
     /** The test model. */
     private InMemoryNodeModel model;
 
-    @Before
-    public void setUp() throws Exception {
-        resolver = NodeStructureHelper.createResolverMock();
-        NodeStructureHelper.expectResolveKeyForQueries(resolver);
-        NodeStructureHelper.expectResolveAddKeys(resolver);
-        EasyMock.replay(resolver);
-        model = new InMemoryNodeModel();
-        final Map<ImmutableNode, String> references = createReferences();
-        model.mergeRoot(NodeStructureHelper.ROOT_AUTHORS_TREE, null, references, NodeStructureHelper.ROOT_AUTHORS_TREE.getNodeName(), resolver);
-    }
-
-    /**
-     * Creates the initial reference data for the test hierarchy.
-     *
-     * @return the map with reference data
-     */
-    private Map<ImmutableNode, String> createReferences() {
-        final Collection<ImmutableNode> nodes = collectNodes(NodeStructureHelper.ROOT_AUTHORS_TREE);
-        nodes.remove(NodeStructureHelper.ROOT_AUTHORS_TREE);
-        final Map<ImmutableNode, String> refs = new HashMap<>();
-        for (final ImmutableNode node : nodes) {
-            refs.put(node, node.getNodeName());
-        }
-        return refs;
-    }
-
     /**
      * Returns a flat collection of all nodes contained in the specified nodes hierarchy.
      *
@@ -90,6 +64,84 @@ public class TestInMemoryNodeModelReferences {
     }
 
     /**
+     * Creates the initial reference data for the test hierarchy.
+     *
+     * @return the map with reference data
+     */
+    private Map<ImmutableNode, String> createReferences() {
+        final Collection<ImmutableNode> nodes = collectNodes(NodeStructureHelper.ROOT_AUTHORS_TREE);
+        nodes.remove(NodeStructureHelper.ROOT_AUTHORS_TREE);
+        final Map<ImmutableNode, String> refs = new HashMap<>();
+        for (final ImmutableNode node : nodes) {
+            refs.put(node, node.getNodeName());
+        }
+        return refs;
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        resolver = NodeStructureHelper.createResolverMock();
+        NodeStructureHelper.expectResolveKeyForQueries(resolver);
+        NodeStructureHelper.expectResolveAddKeys(resolver);
+        EasyMock.replay(resolver);
+        model = new InMemoryNodeModel();
+        final Map<ImmutableNode, String> references = createReferences();
+        model.mergeRoot(NodeStructureHelper.ROOT_AUTHORS_TREE, null, references, NodeStructureHelper.ROOT_AUTHORS_TREE.getNodeName(), resolver);
+    }
+
+    /**
+     * Tests whether the name of the root node can be changed during a merge operation.
+     */
+    @Test
+    public void testMergeRootOverrideName() {
+        final ImmutableNode node = NodeStructureHelper.createNode("newNode", null);
+        final String newName = "newRootNode";
+
+        model.mergeRoot(node, newName, null, null, resolver);
+        final ImmutableNode root = model.getNodeHandler().getRootNode();
+        assertEquals("Wrong root name", newName, root.getNodeName());
+    }
+
+    /**
+     * Tests whether mergeRoot() handles an explicit reference object for the root node correctly.
+     */
+    @Test
+    public void testMergeRootReference() {
+        final Object rootRef = 20140404210508L;
+        final ImmutableNode node = NodeStructureHelper.createNode("newNode", null);
+
+        model.mergeRoot(node, null, null, rootRef, resolver);
+        final ReferenceNodeHandler refHandler = model.getReferenceNodeHandler();
+        final ImmutableNode checkNode = NodeStructureHelper.nodeForKey(model, "Simmons/Ilium");
+        assertEquals("Wrong reference for node", checkNode.getNodeName(), refHandler.getReference(checkNode));
+        assertEquals("Wrong root reference", rootRef, refHandler.getReference(refHandler.getRootNode()));
+    }
+
+    /**
+     * Tests whether attributes are taken into account by a merge operation.
+     */
+    @Test
+    public void testMergeRootWithAttributes() {
+        final ImmutableNode node = new ImmutableNode.Builder().addAttribute("key", "value").create();
+        model.mergeRoot(node, null, null, null, resolver);
+        final ImmutableNode root = model.getNodeHandler().getRootNode();
+        assertEquals("Wrong number of attributes", 1, root.getAttributes().size());
+        assertEquals("Wrong attribute", "value", root.getAttributes().get("key"));
+    }
+
+    /**
+     * Tests whether a value is taken into account when the root node is merged.
+     */
+    @Test
+    public void testMergeRootWithValue() {
+        final ImmutableNode node = NodeStructureHelper.createNode("newNode", "test");
+        model.mergeRoot(node, null, null, null, resolver);
+        final ImmutableNode root = model.getNodeHandler().getRootNode();
+        assertEquals("Wrong node name", NodeStructureHelper.ROOT_AUTHORS_TREE.getNodeName(), root.getNodeName());
+        assertEquals("Wrong node value", "test", root.getValue());
+    }
+
+    /**
      * Tests whether the stored references can be queried.
      */
     @Test
@@ -99,15 +151,6 @@ public class TestInMemoryNodeModelReferences {
         for (final ImmutableNode node : nodes) {
             assertEquals("Wrong reference", node.getNodeName(), handler.getReference(node));
         }
-    }
-
-    /**
-     * Tests the reference returned for an unknown node.
-     */
-    @Test
-    public void testQueryReferenceUnknown() {
-        final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
-        assertNull("Got a reference", handler.getReference(new ImmutableNode.Builder().create()));
     }
 
     /**
@@ -122,12 +165,12 @@ public class TestInMemoryNodeModelReferences {
     }
 
     /**
-     * Tests whether the removed references can be queried if there are none.
+     * Tests the reference returned for an unknown node.
      */
     @Test
-    public void testQueryRemovedReferencesEmpty() {
+    public void testQueryReferenceUnknown() {
         final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
-        assertTrue("Got removed references", handler.removedReferences().isEmpty());
+        assertNull("Got a reference", handler.getReference(new ImmutableNode.Builder().create()));
     }
 
     /**
@@ -148,6 +191,15 @@ public class TestInMemoryNodeModelReferences {
     }
 
     /**
+     * Tests whether the removed references can be queried if there are none.
+     */
+    @Test
+    public void testQueryRemovedReferencesEmpty() {
+        final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
+        assertTrue("Got removed references", handler.removedReferences().isEmpty());
+    }
+
+    /**
      * Tests that the list with removed references cannot be modified.
      */
     @Test(expected = UnsupportedOperationException.class)
@@ -156,58 +208,6 @@ public class TestInMemoryNodeModelReferences {
         final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
         final List<Object> removedRefs = handler.removedReferences();
         removedRefs.add("another one");
-    }
-
-    /**
-     * Tests whether a value is taken into account when the root node is merged.
-     */
-    @Test
-    public void testMergeRootWithValue() {
-        final ImmutableNode node = NodeStructureHelper.createNode("newNode", "test");
-        model.mergeRoot(node, null, null, null, resolver);
-        final ImmutableNode root = model.getNodeHandler().getRootNode();
-        assertEquals("Wrong node name", NodeStructureHelper.ROOT_AUTHORS_TREE.getNodeName(), root.getNodeName());
-        assertEquals("Wrong node value", "test", root.getValue());
-    }
-
-    /**
-     * Tests whether the name of the root node can be changed during a merge operation.
-     */
-    @Test
-    public void testMergeRootOverrideName() {
-        final ImmutableNode node = NodeStructureHelper.createNode("newNode", null);
-        final String newName = "newRootNode";
-
-        model.mergeRoot(node, newName, null, null, resolver);
-        final ImmutableNode root = model.getNodeHandler().getRootNode();
-        assertEquals("Wrong root name", newName, root.getNodeName());
-    }
-
-    /**
-     * Tests whether attributes are taken into account by a merge operation.
-     */
-    @Test
-    public void testMergeRootWithAttributes() {
-        final ImmutableNode node = new ImmutableNode.Builder().addAttribute("key", "value").create();
-        model.mergeRoot(node, null, null, null, resolver);
-        final ImmutableNode root = model.getNodeHandler().getRootNode();
-        assertEquals("Wrong number of attributes", 1, root.getAttributes().size());
-        assertEquals("Wrong attribute", "value", root.getAttributes().get("key"));
-    }
-
-    /**
-     * Tests whether mergeRoot() handles an explicit reference object for the root node correctly.
-     */
-    @Test
-    public void testMergeRootReference() {
-        final Object rootRef = 20140404210508L;
-        final ImmutableNode node = NodeStructureHelper.createNode("newNode", null);
-
-        model.mergeRoot(node, null, null, rootRef, resolver);
-        final ReferenceNodeHandler refHandler = model.getReferenceNodeHandler();
-        final ImmutableNode checkNode = NodeStructureHelper.nodeForKey(model, "Simmons/Ilium");
-        assertEquals("Wrong reference for node", checkNode.getNodeName(), refHandler.getReference(checkNode));
-        assertEquals("Wrong root reference", rootRef, refHandler.getReference(refHandler.getRootNode()));
     }
 
     /**

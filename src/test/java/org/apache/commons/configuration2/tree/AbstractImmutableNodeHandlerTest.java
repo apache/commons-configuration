@@ -38,12 +38,40 @@ import org.junit.Test;
  */
 public abstract class AbstractImmutableNodeHandlerTest {
     /**
+     * A dummy NodeMatcher implementation that will simply accept all passed in nodes.
+     */
+    private static class DummyNodeMatcher implements NodeMatcher<Object> {
+        @Override
+        public <T> boolean matches(final T node, final NodeHandler<T> handler, final Object criterion) {
+            return true;
+        }
+    }
+
+    /**
      * Creates a new {@code NodeHandler} object for the specified nodes structure.
      *
      * @param root the root of the nodes structure
      * @return the handler object
      */
     protected abstract NodeHandler<ImmutableNode> createHandler(ImmutableNode root);
+
+    /**
+     * Tests whether the correct parent for the root node is returned.
+     */
+    @Test
+    public void testGetParentForRoot() {
+        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
+        assertNull("Got a parent", handler.getParent(ROOT_AUTHORS_TREE));
+    }
+
+    /**
+     * Tries to query the parent node for a node which does not belong to the managed tree.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetParentInvalidNode() {
+        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
+        handler.getParent(new ImmutableNode.Builder().name("unknown").create());
+    }
 
     /**
      * Tests whether the correct parent nodes are returned. All nodes in the tree are checked.
@@ -68,43 +96,43 @@ public abstract class AbstractImmutableNodeHandlerTest {
     }
 
     /**
-     * Tests whether the correct parent for the root node is returned.
+     * Tests whether a node's attributes can be queried.
      */
     @Test
-    public void testGetParentForRoot() {
-        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
-        assertNull("Got a parent", handler.getParent(ROOT_AUTHORS_TREE));
+    public void testNodeHandlerGetAttributes() {
+        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
+        final ImmutableNode node = nodeForKey(handler, "Puck");
+        assertEquals("Wrong attributes", node.getAttributes().keySet(), handler.getAttributes(node));
     }
 
     /**
-     * Tries to query the parent node for a node which does not belong to the managed tree.
+     * Tests that the keys of attributes cannot be modified.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testGetParentInvalidNode() {
-        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
-        handler.getParent(new ImmutableNode.Builder().name("unknown").create());
+    @Test(expected = UnsupportedOperationException.class)
+    public void testNodeHandlerGetAttributesImmutable() {
+        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
+        final ImmutableNode node = nodeForKey(handler, "Puck");
+        handler.getAttributes(node).add("test");
     }
 
     /**
-     * Tests whether the name of a node can be queried.
+     * Tests whether the value of an attribute can be queried.
      */
     @Test
-    public void testNodeHandlerName() {
-        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
-        final ImmutableNode author = nodeForKey(handler, NodeStructureHelper.author(0));
-        assertEquals("Wrong node name", NodeStructureHelper.author(0), handler.nodeName(author));
+    public void testNodeHandlerGetAttributeValue() {
+        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
+        final ImmutableNode node = nodeForKey(handler, "Prospero");
+        assertEquals("Wrong value", "Shakespeare", handler.getAttributeValue(node, NodeStructureHelper.ATTR_AUTHOR));
     }
 
     /**
-     * Tests whether the value of a node can be queried.
+     * Tests whether a child at a given index can be accessed.
      */
     @Test
-    public void testNodeHandlerValue() {
+    public void testNodeHandlerGetChildAtIndex() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
-        ImmutableNode work = nodeForKey(handler, "Shakespeare/The Tempest");
-        final int year = 1611;
-        work = work.setValue(year);
-        assertEquals("Wrong value", year, handler.getValue(work));
+        final ImmutableNode node = nodeForKey(handler, NodeStructureHelper.author(0));
+        assertSame("Wrong child", node.getChildren().get(1), handler.getChild(node, 1));
     }
 
     /**
@@ -142,39 +170,6 @@ public abstract class AbstractImmutableNodeHandlerTest {
     }
 
     /**
-     * Tests whether a child at a given index can be accessed.
-     */
-    @Test
-    public void testNodeHandlerGetChildAtIndex() {
-        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
-        final ImmutableNode node = nodeForKey(handler, NodeStructureHelper.author(0));
-        assertSame("Wrong child", node.getChildren().get(1), handler.getChild(node, 1));
-    }
-
-    /**
-     * Tests whether the index of a given child can be queried.
-     */
-    @Test
-    public void testNodeHandlerIndexOfChild() {
-        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
-        final String key = "Simmons/Hyperion";
-        final ImmutableNode parent = nodeForKey(handler, key);
-        final ImmutableNode child = nodeForKey(handler, key + "/Weintraub");
-        assertEquals("Wrong child index", 3, handler.indexOfChild(parent, child));
-    }
-
-    /**
-     * Tests the indexOfChild() method for an unknown child node.
-     */
-    @Test
-    public void testNodeHandlerIndexOfUnknownChild() {
-        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
-        final ImmutableNode parent = nodeForKey(handler, "Homer/Ilias");
-        final ImmutableNode child = nodeForKey(handler, "Shakespeare/Troilus and Cressida/Achilles");
-        assertEquals("Wrong child index", -1, handler.indexOfChild(parent, child));
-    }
-
-    /**
      * Tests whether the number of all children can be queried.
      */
     @Test
@@ -191,95 +186,6 @@ public abstract class AbstractImmutableNodeHandlerTest {
     public void testNodeHandlerGetChildrenCountSpecific() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
         assertEquals("Wrong number of children", 3, handler.getChildrenCount(ROOT_PERSONAE_TREE, "Achilles"));
-    }
-
-    /**
-     * Tests whether a node's attributes can be queried.
-     */
-    @Test
-    public void testNodeHandlerGetAttributes() {
-        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
-        final ImmutableNode node = nodeForKey(handler, "Puck");
-        assertEquals("Wrong attributes", node.getAttributes().keySet(), handler.getAttributes(node));
-    }
-
-    /**
-     * Tests that the keys of attributes cannot be modified.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testNodeHandlerGetAttributesImmutable() {
-        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
-        final ImmutableNode node = nodeForKey(handler, "Puck");
-        handler.getAttributes(node).add("test");
-    }
-
-    /**
-     * Tests a positive check whether a node has attributes.
-     */
-    @Test
-    public void testNodeHandlerHasAttributesTrue() {
-        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
-        final ImmutableNode node = nodeForKey(handler, "Puck");
-        assertTrue("No attributes", handler.hasAttributes(node));
-    }
-
-    /**
-     * Tests a negative check whether a node has attributes.
-     */
-    @Test
-    public void testNodeHandlerHasAttributesFalse() {
-        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
-        assertFalse("Got attributes", handler.hasAttributes(ROOT_PERSONAE_TREE));
-    }
-
-    /**
-     * Tests whether the value of an attribute can be queried.
-     */
-    @Test
-    public void testNodeHandlerGetAttributeValue() {
-        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
-        final ImmutableNode node = nodeForKey(handler, "Prospero");
-        assertEquals("Wrong value", "Shakespeare", handler.getAttributeValue(node, NodeStructureHelper.ATTR_AUTHOR));
-    }
-
-    /**
-     * Tests whether a node with children is defined.
-     */
-    @Test
-    public void testNodeHandlerIsDefinedChildren() {
-        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
-        final ImmutableNode node = nodeForKey(handler, NodeStructureHelper.author(2));
-        assertTrue("Not defined", handler.isDefined(node));
-    }
-
-    /**
-     * Tests whether a node with attributes is defined.
-     */
-    @Test
-    public void testNodeHandlerIsDefinedAttributes() {
-        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
-        final ImmutableNode node = new ImmutableNode.Builder().addAttribute(NodeStructureHelper.ATTR_AUTHOR, NodeStructureHelper.author(0)).create();
-        assertTrue("Not defined", handler.isDefined(node));
-    }
-
-    /**
-     * Tests whether a node with a value is defined.
-     */
-    @Test
-    public void testNodeHandlerIsDefinedValue() {
-        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
-        final ImmutableNode node = new ImmutableNode.Builder().value(42).create();
-        assertTrue("Not defined", handler.isDefined(node));
-    }
-
-    /**
-     * Tests whether an undefined node is correctly detected.
-     */
-    @Test
-    public void testNodeHandlerIsDefinedFalse() {
-        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
-        final ImmutableNode node = new ImmutableNode.Builder().name(NodeStructureHelper.author(1)).create();
-        assertFalse("Defined", handler.isDefined(node));
     }
 
     /**
@@ -309,16 +215,6 @@ public abstract class AbstractImmutableNodeHandlerTest {
     }
 
     /**
-     * Tests that the list returned by getMatchingChildren() cannot be modified.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testNodeHandlerGetMatchingChildrenImmutable() {
-        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
-        final List<ImmutableNode> result = handler.getMatchingChildren(handler.getRootNode(), new DummyNodeMatcher(), this);
-        result.clear();
-    }
-
-    /**
      * Tests whether filtered nodes can be counted.
      */
     @Test
@@ -329,12 +225,116 @@ public abstract class AbstractImmutableNodeHandlerTest {
     }
 
     /**
-     * A dummy NodeMatcher implementation that will simply accept all passed in nodes.
+     * Tests that the list returned by getMatchingChildren() cannot be modified.
      */
-    private static class DummyNodeMatcher implements NodeMatcher<Object> {
-        @Override
-        public <T> boolean matches(final T node, final NodeHandler<T> handler, final Object criterion) {
-            return true;
-        }
+    @Test(expected = UnsupportedOperationException.class)
+    public void testNodeHandlerGetMatchingChildrenImmutable() {
+        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
+        final List<ImmutableNode> result = handler.getMatchingChildren(handler.getRootNode(), new DummyNodeMatcher(), this);
+        result.clear();
+    }
+
+    /**
+     * Tests a negative check whether a node has attributes.
+     */
+    @Test
+    public void testNodeHandlerHasAttributesFalse() {
+        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
+        assertFalse("Got attributes", handler.hasAttributes(ROOT_PERSONAE_TREE));
+    }
+
+    /**
+     * Tests a positive check whether a node has attributes.
+     */
+    @Test
+    public void testNodeHandlerHasAttributesTrue() {
+        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
+        final ImmutableNode node = nodeForKey(handler, "Puck");
+        assertTrue("No attributes", handler.hasAttributes(node));
+    }
+
+    /**
+     * Tests whether the index of a given child can be queried.
+     */
+    @Test
+    public void testNodeHandlerIndexOfChild() {
+        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
+        final String key = "Simmons/Hyperion";
+        final ImmutableNode parent = nodeForKey(handler, key);
+        final ImmutableNode child = nodeForKey(handler, key + "/Weintraub");
+        assertEquals("Wrong child index", 3, handler.indexOfChild(parent, child));
+    }
+
+    /**
+     * Tests the indexOfChild() method for an unknown child node.
+     */
+    @Test
+    public void testNodeHandlerIndexOfUnknownChild() {
+        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
+        final ImmutableNode parent = nodeForKey(handler, "Homer/Ilias");
+        final ImmutableNode child = nodeForKey(handler, "Shakespeare/Troilus and Cressida/Achilles");
+        assertEquals("Wrong child index", -1, handler.indexOfChild(parent, child));
+    }
+
+    /**
+     * Tests whether a node with attributes is defined.
+     */
+    @Test
+    public void testNodeHandlerIsDefinedAttributes() {
+        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
+        final ImmutableNode node = new ImmutableNode.Builder().addAttribute(NodeStructureHelper.ATTR_AUTHOR, NodeStructureHelper.author(0)).create();
+        assertTrue("Not defined", handler.isDefined(node));
+    }
+
+    /**
+     * Tests whether a node with children is defined.
+     */
+    @Test
+    public void testNodeHandlerIsDefinedChildren() {
+        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
+        final ImmutableNode node = nodeForKey(handler, NodeStructureHelper.author(2));
+        assertTrue("Not defined", handler.isDefined(node));
+    }
+
+    /**
+     * Tests whether an undefined node is correctly detected.
+     */
+    @Test
+    public void testNodeHandlerIsDefinedFalse() {
+        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
+        final ImmutableNode node = new ImmutableNode.Builder().name(NodeStructureHelper.author(1)).create();
+        assertFalse("Defined", handler.isDefined(node));
+    }
+
+    /**
+     * Tests whether a node with a value is defined.
+     */
+    @Test
+    public void testNodeHandlerIsDefinedValue() {
+        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
+        final ImmutableNode node = new ImmutableNode.Builder().value(42).create();
+        assertTrue("Not defined", handler.isDefined(node));
+    }
+
+    /**
+     * Tests whether the name of a node can be queried.
+     */
+    @Test
+    public void testNodeHandlerName() {
+        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
+        final ImmutableNode author = nodeForKey(handler, NodeStructureHelper.author(0));
+        assertEquals("Wrong node name", NodeStructureHelper.author(0), handler.nodeName(author));
+    }
+
+    /**
+     * Tests whether the value of a node can be queried.
+     */
+    @Test
+    public void testNodeHandlerValue() {
+        final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
+        ImmutableNode work = nodeForKey(handler, "Shakespeare/The Tempest");
+        final int year = 1611;
+        work = work.setValue(year);
+        assertEquals("Wrong value", year, handler.getValue(work));
     }
 }

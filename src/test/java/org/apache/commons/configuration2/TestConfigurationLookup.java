@@ -44,14 +44,22 @@ public class TestConfigurationLookup {
     }
 
     /**
-     * Tests whether an existing variable can be resolved.
+     * Tests lookup() for a complex property value.
      */
     @Test
-    public void testLookupSuccess() {
+    public void testLookupComplex() {
+        final int count = 5;
         final Configuration conf = new BaseConfiguration();
-        conf.addProperty(VAR, VALUE);
+        for (int i = 0; i < count; i++) {
+            conf.addProperty(VAR, String.valueOf(VALUE) + i);
+        }
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);
-        assertEquals("Wrong result", VALUE, lookup.lookup(VAR));
+        final Collection<?> col = (Collection<?>) lookup.lookup(VAR);
+        assertEquals("Wrong number of elements", count, col.size());
+        final Iterator<?> it = col.iterator();
+        for (int i = 0; i < count; i++) {
+            assertEquals("Wrong element at " + i, String.valueOf(VALUE) + i, it.next());
+        }
     }
 
     /**
@@ -76,21 +84,13 @@ public class TestConfigurationLookup {
     }
 
     /**
-     * Tests lookup() for a complex property value.
+     * Tests whether an existing variable can be resolved.
      */
     @Test
-    public void testLookupComplex() {
-        final int count = 5;
+    public void testLookupSuccess() {
         final Configuration conf = new BaseConfiguration();
-        for (int i = 0; i < count; i++) {
-            conf.addProperty(VAR, String.valueOf(VALUE) + i);
-        }
+        conf.addProperty(VAR, VALUE);
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);
-        final Collection<?> col = (Collection<?>) lookup.lookup(VAR);
-        assertEquals("Wrong number of elements", count, col.size());
-        final Iterator<?> it = col.iterator();
-        for (int i = 0; i < count; i++) {
-            assertEquals("Wrong element at " + i, String.valueOf(VALUE) + i, it.next());
-        }
+        assertEquals("Wrong result", VALUE, lookup.lookup(VAR));
     }
 }

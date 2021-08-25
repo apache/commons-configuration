@@ -30,16 +30,12 @@ import org.junit.Test;
  */
 public class TestDefaultExpressionEngineSymbols {
     /**
-     * Tests the instance with default symbols.
+     * Helper method for creating a builder object which is initialized with the default symbols.
+     *
+     * @return the initialized builder
      */
-    @Test
-    public void testDefaultSymbols() {
-        assertEquals("Wrong delimiter", ".", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getPropertyDelimiter());
-        assertEquals("Wrong escaped delimiter", "..", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getEscapedDelimiter());
-        assertEquals("Wrong index start", "(", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexStart());
-        assertEquals("Wrong index end", ")", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexEnd());
-        assertEquals("Wrong attribute start", "[@", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getAttributeStart());
-        assertEquals("Wrong attribute end", "]", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getAttributeEnd());
+    private static DefaultExpressionEngineSymbols.Builder builder() {
+        return new DefaultExpressionEngineSymbols.Builder(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
     }
 
     /**
@@ -68,22 +64,16 @@ public class TestDefaultExpressionEngineSymbols {
     }
 
     /**
-     * Tests equals() if the expected result is true.
+     * Tests the instance with default symbols.
      */
     @Test
-    public void testEqualsTrue() {
-        expEqual(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS, DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
-        final DefaultExpressionEngineSymbols s2 = new DefaultExpressionEngineSymbols.Builder(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS).create();
-        expEqual(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS, s2);
-    }
-
-    /**
-     * Helper method for creating a builder object which is initialized with the default symbols.
-     *
-     * @return the initialized builder
-     */
-    private static DefaultExpressionEngineSymbols.Builder builder() {
-        return new DefaultExpressionEngineSymbols.Builder(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
+    public void testDefaultSymbols() {
+        assertEquals("Wrong delimiter", ".", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getPropertyDelimiter());
+        assertEquals("Wrong escaped delimiter", "..", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getEscapedDelimiter());
+        assertEquals("Wrong index start", "(", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexStart());
+        assertEquals("Wrong index end", ")", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexEnd());
+        assertEquals("Wrong attribute start", "[@", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getAttributeStart());
+        assertEquals("Wrong attribute end", "]", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getAttributeEnd());
     }
 
     /**
@@ -120,6 +110,16 @@ public class TestDefaultExpressionEngineSymbols {
     @Test
     public void testEqualsOtherClass() {
         expNE(builder().create(), this);
+    }
+
+    /**
+     * Tests equals() if the expected result is true.
+     */
+    @Test
+    public void testEqualsTrue() {
+        expEqual(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS, DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
+        final DefaultExpressionEngineSymbols s2 = new DefaultExpressionEngineSymbols.Builder(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS).create();
+        expEqual(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS, s2);
     }
 
     /**

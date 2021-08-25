@@ -34,21 +34,21 @@ public class BeanCreationTestBeanWithListChild {
         return children;
     }
 
+    public int getIntValue() {
+        return intValue;
+    }
+
+    public String getStringValue() {
+        return stringValue;
+    }
+
     public void setChildren(final List<BeanCreationTestBean> buddies) {
         this.children.clear();
         this.children.addAll(buddies);
     }
 
-    public int getIntValue() {
-        return intValue;
-    }
-
     public void setIntValue(final int intValue) {
         this.intValue = intValue;
-    }
-
-    public String getStringValue() {
-        return stringValue;
     }
 
     public void setStringValue(final String stringValue) {

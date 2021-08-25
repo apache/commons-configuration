@@ -41,17 +41,6 @@ public class TestHierarchicalBuilderParametersImpl {
     }
 
     /**
-     * Tests whether the expression engine can be set.
-     */
-    @Test
-    public void testSetExpressionEngine() {
-        final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
-        EasyMock.replay(engine);
-        assertSame("Wrong result", params, params.setExpressionEngine(engine));
-        assertSame("Wrong expression engine", engine, params.getParameters().get("expressionEngine"));
-    }
-
-    /**
      * Tests whether properties can be set via BeanUtils.
      */
     @Test
@@ -79,5 +68,16 @@ public class TestHierarchicalBuilderParametersImpl {
         final Map<String, Object> parameters = params2.getParameters();
         assertEquals("Exception flag not set", Boolean.TRUE, parameters.get("throwExceptionOnMissing"));
         assertEquals("Expression engine not set", engine, parameters.get("expressionEngine"));
+    }
+
+    /**
+     * Tests whether the expression engine can be set.
+     */
+    @Test
+    public void testSetExpressionEngine() {
+        final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
+        EasyMock.replay(engine);
+        assertSame("Wrong result", params, params.setExpressionEngine(engine));
+        assertSame("Wrong expression engine", engine, params.getParameters().get("expressionEngine"));
     }
 }

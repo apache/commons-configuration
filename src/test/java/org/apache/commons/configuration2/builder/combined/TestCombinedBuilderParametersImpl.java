@@ -47,11 +47,31 @@ import org.junit.Test;
  */
 public class TestCombinedBuilderParametersImpl {
     /**
-     * Tests fromParameters() if the map does not contain an instance.
+     * Creates a mock for a defaults handler.
+     *
+     * @return the handler mock
+     */
+    private static DefaultParametersHandler<BuilderParameters> createDefaultsHandlerMock() {
+        @SuppressWarnings("unchecked")
+        final DefaultParametersHandler<BuilderParameters> mock = EasyMock.createMock(DefaultParametersHandler.class);
+        return mock;
+    }
+
+    /**
+     * Tests whether cloning works as expected.
      */
     @Test
-    public void testFromParametersNotFound() {
-        assertNull("Got an instance", CombinedBuilderParametersImpl.fromParameters(new HashMap<>()));
+    public void testClone() {
+        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        params.setBasePath("some base path");
+        final XMLBuilderParametersImpl defParams = new XMLBuilderParametersImpl();
+        defParams.setSystemID("someSysID");
+        params.setDefinitionBuilderParameters(defParams);
+        final CombinedBuilderParametersImpl clone = params.clone();
+        assertEquals("Wrong field value", params.getBasePath(), clone.getBasePath());
+        assertNotSame("Parameters object not cloned", params.getDefinitionBuilderParameters(), clone.getDefinitionBuilderParameters());
+        assertEquals("Wrong field value in parameters object", params.getDefinitionBuilderParameters().getParameters().get("systemID"),
+            clone.getDefinitionBuilderParameters().getParameters().get("systemID"));
     }
 
     /**
@@ -75,228 +95,11 @@ public class TestCombinedBuilderParametersImpl {
     }
 
     /**
-     * Tests that inherited properties are also stored in the parameters map.
+     * Tests fromParameters() if the map does not contain an instance.
      */
     @Test
-    public void testGetParametersInherited() {
-        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        params.setThrowExceptionOnMissing(true);
-        final Map<String, Object> map = params.getParameters();
-        assertEquals("Exception flag not found", Boolean.TRUE, map.get("throwExceptionOnMissing"));
-    }
-
-    /**
-     * Tests whether the flag that controls settings inheritance can be set.
-     */
-    @Test
-    public void testSetInheritSettings() {
-        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        assertTrue("Wrong initial value", params.isInheritSettings());
-        assertSame("Wrong result", params, params.setInheritSettings(false));
-        assertFalse("Property not set", params.isInheritSettings());
-    }
-
-    /**
-     * Tests whether the definition builder can be set.
-     */
-    @Test
-    public void testSetDefinitionBuilder() {
-        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        assertNull("Got a definition builder", params.getDefinitionBuilder());
-        final ConfigurationBuilder<XMLConfiguration> builder = new BasicConfigurationBuilder<>(XMLConfiguration.class);
-        assertSame("Wrong result", params, params.setDefinitionBuilder(builder));
-        assertSame("Builder was not set", builder, params.getDefinitionBuilder());
-    }
-
-    /**
-     * Tests whether the map with providers is initially empty.
-     */
-    @Test
-    public void testGetProvidersInitial() {
-        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        assertTrue("Got providers", params.getProviders().isEmpty());
-    }
-
-    /**
-     * Tests whether a new builder provider can be registered.
-     */
-    @Test
-    public void testRegisterProvider() {
-        final ConfigurationBuilderProvider provider = EasyMock.createMock(ConfigurationBuilderProvider.class);
-        EasyMock.replay(provider);
-        final String tagName = "testTag";
-        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        assertSame("Wrong result", params, params.registerProvider(tagName, provider));
-        final Map<String, ConfigurationBuilderProvider> providers = params.getProviders();
-        assertEquals("Wrong number of providers", 1, providers.size());
-        assertSame("Wrong provider (1)", provider, providers.get(tagName));
-        assertSame("Wrong provider (2)", provider, params.providerForTag(tagName));
-    }
-
-    /**
-     * Tries to register a provider without a tag name.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRegisterProviderNoTag() {
-        new CombinedBuilderParametersImpl().registerProvider(null, EasyMock.createMock(ConfigurationBuilderProvider.class));
-    }
-
-    /**
-     * Tries to register a null provider.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRegisterProviderNoProvider() {
-        new CombinedBuilderParametersImpl().registerProvider("aTag", null);
-    }
-
-    /**
-     * Tests that the map with providers cannot be modified.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testGetProvidersModify() {
-        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        params.getProviders().put("tag", EasyMock.createMock(ConfigurationBuilderProvider.class));
-    }
-
-    /**
-     * Tests whether missing providers can be registered.
-     */
-    @Test
-    public void testRegisterMissingProviders() {
-        final ConfigurationBuilderProvider provider1 = EasyMock.createMock(ConfigurationBuilderProvider.class);
-        final ConfigurationBuilderProvider provider2 = EasyMock.createMock(ConfigurationBuilderProvider.class);
-        final ConfigurationBuilderProvider provider3 = EasyMock.createMock(ConfigurationBuilderProvider.class);
-        final String tagPrefix = "testTag";
-        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        params.registerProvider(tagPrefix, provider1);
-        final Map<String, ConfigurationBuilderProvider> map = new HashMap<>();
-        map.put(tagPrefix, provider2);
-        map.put(tagPrefix + 1, provider3);
-        assertSame("Wrong result", params, params.registerMissingProviders(map));
-        assertEquals("Wrong number of providers", 2, params.getProviders().size());
-        assertSame("Wrong provider (1)", provider1, params.providerForTag(tagPrefix));
-        assertSame("Wrong provider (2)", provider3, params.providerForTag(tagPrefix + 1));
-    }
-
-    /**
-     * Tries to register a null map with missing providers.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRegisterMissingProvidersNullMap() {
-        final Map<String, ConfigurationBuilderProvider> map = null;
-        new CombinedBuilderParametersImpl().registerMissingProviders(map);
-    }
-
-    /**
-     * Tries to register a map with missing providers containing a null entry.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRegisterMissingProvidersNullEntry() {
-        final Map<String, ConfigurationBuilderProvider> map = new HashMap<>();
-        map.put("tag", null);
-        new CombinedBuilderParametersImpl().registerMissingProviders(map);
-    }
-
-    /**
-     * Tests whether missing providers can be copied from a parameters object.
-     */
-    @Test
-    public void testRegisterMissingProvidersParams() {
-        final ConfigurationBuilderProvider provider1 = EasyMock.createMock(ConfigurationBuilderProvider.class);
-        final ConfigurationBuilderProvider provider2 = EasyMock.createMock(ConfigurationBuilderProvider.class);
-        final ConfigurationBuilderProvider provider3 = EasyMock.createMock(ConfigurationBuilderProvider.class);
-        final String tagPrefix = "testTag";
-        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        final CombinedBuilderParametersImpl params2 = new CombinedBuilderParametersImpl();
-        params.registerProvider(tagPrefix, provider1);
-        params2.registerProvider(tagPrefix, provider2);
-        params2.registerProvider(tagPrefix + 1, provider3);
-        assertSame("Wrong result", params, params.registerMissingProviders(params2));
-        assertEquals("Wrong number of providers", 2, params.getProviders().size());
-        assertSame("Wrong provider (1)", provider1, params.providerForTag(tagPrefix));
-        assertSame("Wrong provider (2)", provider3, params.providerForTag(tagPrefix + 1));
-    }
-
-    /**
-     * Tries to copy providers from a null parameters object.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testRegisterMissingProvidersParamsNull() {
-        new CombinedBuilderParametersImpl().registerMissingProviders((CombinedBuilderParametersImpl) null);
-    }
-
-    /**
-     * Tests the result for an unknown provider.
-     */
-    @Test
-    public void testProviderForUnknown() {
-        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        assertNull("Got a provider", params.providerForTag("someTag"));
-    }
-
-    /**
-     * Tests whether the base path can be set.
-     */
-    @Test
-    public void testSetBasePath() {
-        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        final String basePath = ConfigurationAssert.OUT_DIR.getAbsolutePath();
-        assertSame("Wrong result", params, params.setBasePath(basePath));
-        assertEquals("Wrong base path", basePath, params.getBasePath());
-    }
-
-    /**
-     * Tests whether a parameters object for the definition builder can be set.
-     */
-    @Test
-    public void testSetDefinitionBuilderParameters() {
-        final BuilderParameters defparams = EasyMock.createMock(BuilderParameters.class);
-        EasyMock.replay(defparams);
-        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        assertSame("Wrong result", params, params.setDefinitionBuilderParameters(defparams));
-        assertSame("Wrong parameters object", defparams, params.getDefinitionBuilderParameters());
-    }
-
-    /**
-     * Tests whether properties can be set using BeanUtils.
-     */
-    @Test
-    public void testSetBeanProperties() throws Exception {
-        final BuilderParameters defparams = EasyMock.createMock(BuilderParameters.class);
-        EasyMock.replay(defparams);
-        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        BeanHelper.setProperty(params, "basePath", "testPath");
-        BeanHelper.setProperty(params, "definitionBuilderParameters", defparams);
-        BeanHelper.setProperty(params, "inheritSettings", false);
-        assertEquals("Wrong path", "testPath", params.getBasePath());
-        assertSame("Wrong def parameters", defparams, params.getDefinitionBuilderParameters());
-        assertFalse("Wrong inherit flag", params.isInheritSettings());
-    }
-
-    /**
-     * Tests whether cloning works as expected.
-     */
-    @Test
-    public void testClone() {
-        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        params.setBasePath("some base path");
-        final XMLBuilderParametersImpl defParams = new XMLBuilderParametersImpl();
-        defParams.setSystemID("someSysID");
-        params.setDefinitionBuilderParameters(defParams);
-        final CombinedBuilderParametersImpl clone = params.clone();
-        assertEquals("Wrong field value", params.getBasePath(), clone.getBasePath());
-        assertNotSame("Parameters object not cloned", params.getDefinitionBuilderParameters(), clone.getDefinitionBuilderParameters());
-        assertEquals("Wrong field value in parameters object", params.getDefinitionBuilderParameters().getParameters().get("systemID"),
-            clone.getDefinitionBuilderParameters().getParameters().get("systemID"));
-    }
-
-    /**
-     * Tests whether a default parameters manager is dynamically created if it has not been set.
-     */
-    @Test
-    public void testGetChildDefaultParametersManagerUndefined() {
-        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        assertNotNull("No default manager", params.getChildDefaultParametersManager());
+    public void testFromParametersNotFound() {
+        assertNull("Got an instance", CombinedBuilderParametersImpl.fromParameters(new HashMap<>()));
     }
 
     /**
@@ -312,14 +115,80 @@ public class TestCombinedBuilderParametersImpl {
     }
 
     /**
-     * Creates a mock for a defaults handler.
-     *
-     * @return the handler mock
+     * Tests whether a default parameters manager is dynamically created if it has not been set.
      */
-    private static DefaultParametersHandler<BuilderParameters> createDefaultsHandlerMock() {
-        @SuppressWarnings("unchecked")
-        final DefaultParametersHandler<BuilderParameters> mock = EasyMock.createMock(DefaultParametersHandler.class);
-        return mock;
+    @Test
+    public void testGetChildDefaultParametersManagerUndefined() {
+        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        assertNotNull("No default manager", params.getChildDefaultParametersManager());
+    }
+
+    /**
+     * Tests that inherited properties are also stored in the parameters map.
+     */
+    @Test
+    public void testGetParametersInherited() {
+        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        params.setThrowExceptionOnMissing(true);
+        final Map<String, Object> map = params.getParameters();
+        assertEquals("Exception flag not found", Boolean.TRUE, map.get("throwExceptionOnMissing"));
+    }
+
+    /**
+     * Tests whether the map with providers is initially empty.
+     */
+    @Test
+    public void testGetProvidersInitial() {
+        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        assertTrue("Got providers", params.getProviders().isEmpty());
+    }
+
+    /**
+     * Tests that the map with providers cannot be modified.
+     */
+    @Test(expected = UnsupportedOperationException.class)
+    public void testGetProvidersModify() {
+        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        params.getProviders().put("tag", EasyMock.createMock(ConfigurationBuilderProvider.class));
+    }
+
+    /**
+     * Tests whether properties can be inherited.
+     */
+    @Test
+    public void testInheritFrom() {
+        final DefaultParametersManager manager = EasyMock.createMock(DefaultParametersManager.class);
+        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl().setInheritSettings(false).setChildDefaultParametersManager(manager);
+        params.setThrowExceptionOnMissing(true);
+        final CombinedBuilderParametersImpl params2 = new CombinedBuilderParametersImpl();
+
+        params2.inheritFrom(params.getParameters());
+        final Map<String, Object> parameters = params2.getParameters();
+        assertEquals("Exception flag not set", Boolean.TRUE, parameters.get("throwExceptionOnMissing"));
+        assertEquals("Default manager not set", manager, params2.getChildDefaultParametersManager());
+        assertFalse("Inherit flag not set", params2.isInheritSettings());
+    }
+
+    /**
+     * Tests that inheritFrom() can handle a map which does not contain a parameters object.
+     */
+    @Test
+    public void testInheritFromNoParametersInMap() {
+        final BasicBuilderParameters params = new BasicBuilderParameters().setThrowExceptionOnMissing(true);
+        final CombinedBuilderParametersImpl params2 = new CombinedBuilderParametersImpl();
+
+        params2.inheritFrom(params.getParameters());
+        final Map<String, Object> parameters = params2.getParameters();
+        assertEquals("Exception flag not set", Boolean.TRUE, parameters.get("throwExceptionOnMissing"));
+    }
+
+    /**
+     * Tests the result for an unknown provider.
+     */
+    @Test
+    public void testProviderForUnknown() {
+        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        assertNull("Got a provider", params.providerForTag("someTag"));
     }
 
     /**
@@ -353,32 +222,163 @@ public class TestCombinedBuilderParametersImpl {
     }
 
     /**
-     * Tests whether properties can be inherited.
+     * Tests whether missing providers can be registered.
      */
     @Test
-    public void testInheritFrom() {
-        final DefaultParametersManager manager = EasyMock.createMock(DefaultParametersManager.class);
-        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl().setInheritSettings(false).setChildDefaultParametersManager(manager);
-        params.setThrowExceptionOnMissing(true);
-        final CombinedBuilderParametersImpl params2 = new CombinedBuilderParametersImpl();
-
-        params2.inheritFrom(params.getParameters());
-        final Map<String, Object> parameters = params2.getParameters();
-        assertEquals("Exception flag not set", Boolean.TRUE, parameters.get("throwExceptionOnMissing"));
-        assertEquals("Default manager not set", manager, params2.getChildDefaultParametersManager());
-        assertFalse("Inherit flag not set", params2.isInheritSettings());
+    public void testRegisterMissingProviders() {
+        final ConfigurationBuilderProvider provider1 = EasyMock.createMock(ConfigurationBuilderProvider.class);
+        final ConfigurationBuilderProvider provider2 = EasyMock.createMock(ConfigurationBuilderProvider.class);
+        final ConfigurationBuilderProvider provider3 = EasyMock.createMock(ConfigurationBuilderProvider.class);
+        final String tagPrefix = "testTag";
+        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        params.registerProvider(tagPrefix, provider1);
+        final Map<String, ConfigurationBuilderProvider> map = new HashMap<>();
+        map.put(tagPrefix, provider2);
+        map.put(tagPrefix + 1, provider3);
+        assertSame("Wrong result", params, params.registerMissingProviders(map));
+        assertEquals("Wrong number of providers", 2, params.getProviders().size());
+        assertSame("Wrong provider (1)", provider1, params.providerForTag(tagPrefix));
+        assertSame("Wrong provider (2)", provider3, params.providerForTag(tagPrefix + 1));
     }
 
     /**
-     * Tests that inheritFrom() can handle a map which does not contain a parameters object.
+     * Tries to register a map with missing providers containing a null entry.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testRegisterMissingProvidersNullEntry() {
+        final Map<String, ConfigurationBuilderProvider> map = new HashMap<>();
+        map.put("tag", null);
+        new CombinedBuilderParametersImpl().registerMissingProviders(map);
+    }
+
+    /**
+     * Tries to register a null map with missing providers.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testRegisterMissingProvidersNullMap() {
+        final Map<String, ConfigurationBuilderProvider> map = null;
+        new CombinedBuilderParametersImpl().registerMissingProviders(map);
+    }
+
+    /**
+     * Tests whether missing providers can be copied from a parameters object.
      */
     @Test
-    public void testInheritFromNoParametersInMap() {
-        final BasicBuilderParameters params = new BasicBuilderParameters().setThrowExceptionOnMissing(true);
+    public void testRegisterMissingProvidersParams() {
+        final ConfigurationBuilderProvider provider1 = EasyMock.createMock(ConfigurationBuilderProvider.class);
+        final ConfigurationBuilderProvider provider2 = EasyMock.createMock(ConfigurationBuilderProvider.class);
+        final ConfigurationBuilderProvider provider3 = EasyMock.createMock(ConfigurationBuilderProvider.class);
+        final String tagPrefix = "testTag";
+        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         final CombinedBuilderParametersImpl params2 = new CombinedBuilderParametersImpl();
+        params.registerProvider(tagPrefix, provider1);
+        params2.registerProvider(tagPrefix, provider2);
+        params2.registerProvider(tagPrefix + 1, provider3);
+        assertSame("Wrong result", params, params.registerMissingProviders(params2));
+        assertEquals("Wrong number of providers", 2, params.getProviders().size());
+        assertSame("Wrong provider (1)", provider1, params.providerForTag(tagPrefix));
+        assertSame("Wrong provider (2)", provider3, params.providerForTag(tagPrefix + 1));
+    }
 
-        params2.inheritFrom(params.getParameters());
-        final Map<String, Object> parameters = params2.getParameters();
-        assertEquals("Exception flag not set", Boolean.TRUE, parameters.get("throwExceptionOnMissing"));
+    /**
+     * Tries to copy providers from a null parameters object.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testRegisterMissingProvidersParamsNull() {
+        new CombinedBuilderParametersImpl().registerMissingProviders((CombinedBuilderParametersImpl) null);
+    }
+
+    /**
+     * Tests whether a new builder provider can be registered.
+     */
+    @Test
+    public void testRegisterProvider() {
+        final ConfigurationBuilderProvider provider = EasyMock.createMock(ConfigurationBuilderProvider.class);
+        EasyMock.replay(provider);
+        final String tagName = "testTag";
+        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        assertSame("Wrong result", params, params.registerProvider(tagName, provider));
+        final Map<String, ConfigurationBuilderProvider> providers = params.getProviders();
+        assertEquals("Wrong number of providers", 1, providers.size());
+        assertSame("Wrong provider (1)", provider, providers.get(tagName));
+        assertSame("Wrong provider (2)", provider, params.providerForTag(tagName));
+    }
+
+    /**
+     * Tries to register a null provider.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testRegisterProviderNoProvider() {
+        new CombinedBuilderParametersImpl().registerProvider("aTag", null);
+    }
+
+    /**
+     * Tries to register a provider without a tag name.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testRegisterProviderNoTag() {
+        new CombinedBuilderParametersImpl().registerProvider(null, EasyMock.createMock(ConfigurationBuilderProvider.class));
+    }
+
+    /**
+     * Tests whether the base path can be set.
+     */
+    @Test
+    public void testSetBasePath() {
+        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        final String basePath = ConfigurationAssert.OUT_DIR.getAbsolutePath();
+        assertSame("Wrong result", params, params.setBasePath(basePath));
+        assertEquals("Wrong base path", basePath, params.getBasePath());
+    }
+
+    /**
+     * Tests whether properties can be set using BeanUtils.
+     */
+    @Test
+    public void testSetBeanProperties() throws Exception {
+        final BuilderParameters defparams = EasyMock.createMock(BuilderParameters.class);
+        EasyMock.replay(defparams);
+        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        BeanHelper.setProperty(params, "basePath", "testPath");
+        BeanHelper.setProperty(params, "definitionBuilderParameters", defparams);
+        BeanHelper.setProperty(params, "inheritSettings", false);
+        assertEquals("Wrong path", "testPath", params.getBasePath());
+        assertSame("Wrong def parameters", defparams, params.getDefinitionBuilderParameters());
+        assertFalse("Wrong inherit flag", params.isInheritSettings());
+    }
+
+    /**
+     * Tests whether the definition builder can be set.
+     */
+    @Test
+    public void testSetDefinitionBuilder() {
+        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        assertNull("Got a definition builder", params.getDefinitionBuilder());
+        final ConfigurationBuilder<XMLConfiguration> builder = new BasicConfigurationBuilder<>(XMLConfiguration.class);
+        assertSame("Wrong result", params, params.setDefinitionBuilder(builder));
+        assertSame("Builder was not set", builder, params.getDefinitionBuilder());
+    }
+
+    /**
+     * Tests whether a parameters object for the definition builder can be set.
+     */
+    @Test
+    public void testSetDefinitionBuilderParameters() {
+        final BuilderParameters defparams = EasyMock.createMock(BuilderParameters.class);
+        EasyMock.replay(defparams);
+        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        assertSame("Wrong result", params, params.setDefinitionBuilderParameters(defparams));
+        assertSame("Wrong parameters object", defparams, params.getDefinitionBuilderParameters());
+    }
+
+    /**
+     * Tests whether the flag that controls settings inheritance can be set.
+     */
+    @Test
+    public void testSetInheritSettings() {
+        final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
+        assertTrue("Wrong initial value", params.isInheritSettings());
+        assertSame("Wrong result", params, params.setInheritSettings(false));
+        assertFalse("Property not set", params.isInheritSettings());
     }
 }

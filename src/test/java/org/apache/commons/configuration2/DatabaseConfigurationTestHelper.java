@@ -42,18 +42,6 @@ import org.dbunit.operation.DatabaseOperation;
  *
  */
 public class DatabaseConfigurationTestHelper {
-    /** Constant for the JDBC driver class. */
-    public final String DATABASE_DRIVER = "org.hsqldb.jdbcDriver";
-
-    /** Constant for the connection URL. */
-    public final String DATABASE_URL = "jdbc:hsqldb:mem:testdb";
-
-    /** Constant for the DB user name. */
-    public final String DATABASE_USERNAME = "sa";
-
-    /** Constant for the DB password. */
-    public final String DATABASE_PASSWORD = "";
-
     /** Constant for the configuration table. */
     public static final String TABLE = "configuration";
 
@@ -72,6 +60,18 @@ public class DatabaseConfigurationTestHelper {
     /** Constant for the name of the test configuration. */
     public static final String CONFIG_NAME = "test";
 
+    /** Constant for the JDBC driver class. */
+    public final String DATABASE_DRIVER = "org.hsqldb.jdbcDriver";
+
+    /** Constant for the connection URL. */
+    public final String DATABASE_URL = "jdbc:hsqldb:mem:testdb";
+
+    /** Constant for the DB user name. */
+    public final String DATABASE_USERNAME = "sa";
+
+    /** Constant for the DB password. */
+    public final String DATABASE_PASSWORD = "";
+
     /** Stores the in-process database. */
     private HsqlDB hsqlDB;
 
@@ -82,6 +82,35 @@ public class DatabaseConfigurationTestHelper {
      * The auto-commit mode for the configuration instances created by this helper.
      */
     private boolean autoCommit;
+
+    /**
+     * Creates a configuration instance of the specified class with the given parameters.
+     *
+     * @param <T> the type of the result configuration
+     * @param configCls the configuration class
+     * @param params the parameters object
+     * @return the newly created configuration instance
+     * @throws ConfigurationException if an error occurs
+     */
+    public <T extends DatabaseConfiguration> T createConfig(final Class<T> configCls, final DatabaseBuilderParameters params) throws ConfigurationException {
+        return new BasicConfigurationBuilder<>(configCls).configure(params).getConfiguration();
+    }
+
+    /**
+     * Returns the {@code DataSource} managed by this class. The data source is created on first access.
+     *
+     * @return the {@code DataSource}
+     */
+    public DataSource getDatasource() {
+        if (datasource == null) {
+            try {
+                datasource = setUpDataSource();
+            } catch (final Exception ex) {
+                throw new ConfigurationRuntimeException("Could not create data source", ex);
+            }
+        }
+        return datasource;
+    }
 
     /**
      * Returns the auto-commit mode of the configuration instances created by this helper.
@@ -113,50 +142,13 @@ public class DatabaseConfigurationTestHelper {
     }
 
     /**
-     * Frees the resources used by this helper class. This method can be called by a {@code tearDown()} method of a unit
-     * test class.
+     * Creates a database configuration with default settings.
      *
-     * @throws Exception if an error occurs
-     */
-    public void tearDown() throws Exception {
-        if (datasource != null) {
-            datasource.getConnection().close();
-        }
-        hsqlDB.close();
-    }
-
-    /**
-     * Returns a parameters object with default settings.
-     *
-     * @return the parameters object
-     */
-    public DatabaseBuilderParameters setUpDefaultParameters() {
-        return new Parameters().database().setDataSource(getDatasource()).setTable(TABLE).setKeyColumn(COL_KEY).setValueColumn(COL_VALUE)
-            .setAutoCommit(isAutoCommit());
-    }
-
-    /**
-     * Returns a parameters object with settings for a configuration table containing the data of multiple configurations.
-     *
-     * @param configName the name of the configuration instance or <b>null</b> for the default name
-     * @return the parameters object
-     */
-    public DatabaseBuilderParameters setUpMultiParameters(final String configName) {
-        return setUpDefaultParameters().setTable(TABLE_MULTI).setConfigurationNameColumn(COL_NAME)
-            .setConfigurationName(configName != null ? configName : CONFIG_NAME);
-    }
-
-    /**
-     * Creates a configuration instance of the specified class with the given parameters.
-     *
-     * @param <T> the type of the result configuration
-     * @param configCls the configuration class
-     * @param params the parameters object
-     * @return the newly created configuration instance
+     * @return the configuration
      * @throws ConfigurationException if an error occurs
      */
-    public <T extends DatabaseConfiguration> T createConfig(final Class<T> configCls, final DatabaseBuilderParameters params) throws ConfigurationException {
-        return new BasicConfigurationBuilder<>(configCls).configure(params).getConfiguration();
+    public DatabaseConfiguration setUpConfig() throws ConfigurationException {
+        return setUpConfig(DatabaseConfiguration.class);
     }
 
     /**
@@ -169,55 +161,6 @@ public class DatabaseConfigurationTestHelper {
      */
     public <T extends DatabaseConfiguration> T setUpConfig(final Class<T> configCls) throws ConfigurationException {
         return createConfig(configCls, setUpDefaultParameters());
-    }
-
-    /**
-     * Creates a database configuration with default settings.
-     *
-     * @return the configuration
-     * @throws ConfigurationException if an error occurs
-     */
-    public DatabaseConfiguration setUpConfig() throws ConfigurationException {
-        return setUpConfig(DatabaseConfiguration.class);
-    }
-
-    /**
-     * Creates a configuration with support for multiple configuration instances in a single table of the specified class.
-     *
-     * @param <T> the type of the result configuration
-     * @param configCls the configuration class
-     * @param configName the name of the configuration instance or <b>null</b> for the default name
-     * @return the newly created configuration instance
-     * @throws ConfigurationException if an error occurs
-     */
-    public <T extends DatabaseConfiguration> T setUpMultiConfig(final Class<T> configCls, final String configName) throws ConfigurationException {
-        return createConfig(configCls, setUpMultiParameters(configName));
-    }
-
-    /**
-     * Creates a database configuration that supports multiple configurations in a table with default values.
-     *
-     * @return the configuration
-     * @throws ConfigurationException if an error occurs
-     */
-    public DatabaseConfiguration setUpMultiConfig() throws ConfigurationException {
-        return setUpMultiConfig(DatabaseConfiguration.class, null);
-    }
-
-    /**
-     * Returns the {@code DataSource} managed by this class. The data source is created on first access.
-     *
-     * @return the {@code DataSource}
-     */
-    public DataSource getDatasource() {
-        if (datasource == null) {
-            try {
-                datasource = setUpDataSource();
-            } catch (final Exception ex) {
-                throw new ConfigurationRuntimeException("Could not create data source", ex);
-            }
-        }
-        return datasource;
     }
 
     /**
@@ -249,5 +192,62 @@ public class DatabaseConfigurationTestHelper {
         }
 
         return ds;
+    }
+
+    /**
+     * Returns a parameters object with default settings.
+     *
+     * @return the parameters object
+     */
+    public DatabaseBuilderParameters setUpDefaultParameters() {
+        return new Parameters().database().setDataSource(getDatasource()).setTable(TABLE).setKeyColumn(COL_KEY).setValueColumn(COL_VALUE)
+            .setAutoCommit(isAutoCommit());
+    }
+
+    /**
+     * Creates a database configuration that supports multiple configurations in a table with default values.
+     *
+     * @return the configuration
+     * @throws ConfigurationException if an error occurs
+     */
+    public DatabaseConfiguration setUpMultiConfig() throws ConfigurationException {
+        return setUpMultiConfig(DatabaseConfiguration.class, null);
+    }
+
+    /**
+     * Creates a configuration with support for multiple configuration instances in a single table of the specified class.
+     *
+     * @param <T> the type of the result configuration
+     * @param configCls the configuration class
+     * @param configName the name of the configuration instance or <b>null</b> for the default name
+     * @return the newly created configuration instance
+     * @throws ConfigurationException if an error occurs
+     */
+    public <T extends DatabaseConfiguration> T setUpMultiConfig(final Class<T> configCls, final String configName) throws ConfigurationException {
+        return createConfig(configCls, setUpMultiParameters(configName));
+    }
+
+    /**
+     * Returns a parameters object with settings for a configuration table containing the data of multiple configurations.
+     *
+     * @param configName the name of the configuration instance or <b>null</b> for the default name
+     * @return the parameters object
+     */
+    public DatabaseBuilderParameters setUpMultiParameters(final String configName) {
+        return setUpDefaultParameters().setTable(TABLE_MULTI).setConfigurationNameColumn(COL_NAME)
+            .setConfigurationName(configName != null ? configName : CONFIG_NAME);
+    }
+
+    /**
+     * Frees the resources used by this helper class. This method can be called by a {@code tearDown()} method of a unit
+     * test class.
+     *
+     * @throws Exception if an error occurs
+     */
+    public void tearDown() throws Exception {
+        if (datasource != null) {
+            datasource.getConnection().close();
+        }
+        hsqlDB.close();
     }
 }

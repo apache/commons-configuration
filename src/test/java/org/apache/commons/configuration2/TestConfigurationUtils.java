@@ -54,6 +54,43 @@ import org.junit.Test;
  *
  */
 public class TestConfigurationUtils {
+    /**
+     * A test Synchronizer implementation which can be cloned.
+     */
+    private static class CloneableSynchronizer extends NonCloneableSynchronizer implements Cloneable {
+        /** A flag whether clone() was called. */
+        private final boolean cloned;
+
+        /**
+         * Creates a new instance of {@code CloneableSynchronizer} and sets the clone flag.
+         *
+         * @param clone the clone flag
+         */
+        public CloneableSynchronizer(final boolean clone) {
+            cloned = clone;
+        }
+
+        @Override
+        public Object clone() {
+            return new CloneableSynchronizer(true);
+        }
+
+        /**
+         * Returns a flag whether this object was cloned.
+         *
+         * @return the clone flag
+         */
+        public boolean isCloned() {
+            return cloned;
+        }
+    }
+
+    /**
+     * A test Synchronizer implementation which cannot be cloned.
+     */
+    private static class NonCloneableSynchronizer extends SynchronizerTestImpl {
+    }
+
     /** Constant for the name of a class to be loaded. */
     private static final String CLS_NAME = "org.apache.commons.configuration2.PropertiesConfiguration";
 
@@ -68,45 +105,6 @@ public class TestConfigurationUtils {
     @After
     public void tearDown() throws Exception {
         Thread.currentThread().setContextClassLoader(ccl);
-    }
-
-    @Test
-    public void testToString() {
-        final Configuration config = new BaseConfiguration();
-        final String lineSeparator = System.getProperty("line.separator");
-
-        assertEquals("String representation of an empty configuration", "", ConfigurationUtils.toString(config));
-
-        config.setProperty("one", "1");
-        assertEquals("String representation of a configuration", "one=1", ConfigurationUtils.toString(config));
-
-        config.setProperty("two", "2");
-        assertEquals("String representation of a configuration", "one=1" + lineSeparator + "two=2", ConfigurationUtils.toString(config));
-
-        config.clearProperty("one");
-        assertEquals("String representation of a configuration", "two=2", ConfigurationUtils.toString(config));
-
-        config.setProperty("one", "1");
-        assertEquals("String representation of a configuration", "two=2" + lineSeparator + "one=1", ConfigurationUtils.toString(config));
-    }
-
-    @Test
-    public void testCopy() {
-        // create the source configuration
-        final Configuration conf1 = new BaseConfiguration();
-        conf1.addProperty("key1", "value1");
-        conf1.addProperty("key2", "value2");
-
-        // create the target configuration
-        final Configuration conf2 = new BaseConfiguration();
-        conf2.addProperty("key1", "value3");
-        conf2.addProperty("key2", "value4");
-
-        // copy the source configuration into the target configuration
-        ConfigurationUtils.copy(conf1, conf2);
-
-        assertEquals("'key1' property", "value1", conf2.getProperty("key1"));
-        assertEquals("'key2' property", "value2", conf2.getProperty("key2"));
     }
 
     @Test
@@ -136,6 +134,202 @@ public class TestConfigurationUtils {
     }
 
     /**
+     * Tests asEventSource() if an exception is expected.
+     */
+    @Test(expected = ConfigurationRuntimeException.class)
+    public void testAsEventSourceNonSupportedEx() {
+        ConfigurationUtils.asEventSource(this, false);
+    }
+
+    /**
+     * Tests asEventSource() if the passed in object implements this interface.
+     */
+    @Test
+    public void testAsEventSourceSupported() {
+        final XMLConfiguration src = new XMLConfiguration();
+        assertSame("Wrong result", src, ConfigurationUtils.asEventSource(src, true));
+    }
+
+    /**
+     * Tests asEventSource() if a mock object has to be returned.
+     */
+    @Test
+    public void testAsEventSourceUnsupportedMock() {
+        @SuppressWarnings("unchecked")
+        final EventListener<ConfigurationEvent> cl = EasyMock.createMock(EventListener.class);
+        EasyMock.replay(cl);
+        final EventSource source = ConfigurationUtils.asEventSource(this, true);
+        source.addEventListener(ConfigurationEvent.ANY, cl);
+        assertFalse("Wrong result (1)", source.removeEventListener(ConfigurationEvent.ANY, cl));
+        source.addEventListener(ConfigurationEvent.ANY, null);
+    }
+
+    /**
+     * Tests cloning a configuration that supports this operation.
+     */
+    @Test
+    public void testCloneConfiguration() {
+        final BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
+        conf.addProperty("test", "yes");
+        final BaseHierarchicalConfiguration copy = (BaseHierarchicalConfiguration) ConfigurationUtils.cloneConfiguration(conf);
+        assertNotSame("Same object was returned", conf, copy);
+        assertEquals("Property was not cloned", "yes", copy.getString("test"));
+    }
+
+    /**
+     * Tests cloning a configuration that does not support this operation. This should cause an exception.
+     */
+    @Test(expected = ConfigurationRuntimeException.class)
+    public void testCloneConfigurationNotSupported() {
+        final Configuration myNonCloneableConfig = new NonCloneableConfiguration();
+        ConfigurationUtils.cloneConfiguration(myNonCloneableConfig);
+    }
+
+    /**
+     * Tests cloning a <b>null</b> configuration.
+     */
+    @Test
+    public void testCloneConfigurationNull() {
+        assertNull("Wrong return value", ConfigurationUtils.cloneConfiguration(null));
+    }
+
+    /**
+     * Tests whether errors are handled correctly by cloneIfPossible().
+     */
+    @Test
+    public void testCloneIfPossibleError() {
+        final XMLBuilderParametersImpl params = new XMLBuilderParametersImpl() {
+            @Override
+            public XMLBuilderParametersImpl clone() {
+                throw new ConfigurationRuntimeException();
+            }
+        };
+        assertSame("Wrong result", params, ConfigurationUtils.cloneIfPossible(params));
+    }
+
+    /**
+     * Tests cloneIfPossible() if the passed in object does not support cloning.
+     */
+    @Test
+    public void testCloneIfPossibleNotSupported() {
+        final Long value = 20130116221714L;
+        assertSame("Wrong result", value, ConfigurationUtils.cloneIfPossible(value));
+    }
+
+    /**
+     * Tests whether cloneIfPossible() can handle null parameters.
+     */
+    @Test
+    public void testCloneIfPossibleNull() {
+        assertNull("Wrong result", ConfigurationUtils.cloneIfPossible(null));
+    }
+
+    /**
+     * Tests whether an object can be cloned which supports cloning.
+     */
+    @Test
+    public void testCloneIfPossibleSupported() {
+        final XMLBuilderParametersImpl params = new XMLBuilderParametersImpl();
+        params.setPublicID("testID");
+        params.setSchemaValidation(true);
+        final XMLBuilderParametersImpl clone = (XMLBuilderParametersImpl) ConfigurationUtils.cloneIfPossible(params);
+        assertNotSame("No clone was created", params, clone);
+        final Map<String, Object> map = clone.getParameters();
+        for (final Map.Entry<String, Object> e : params.getParameters().entrySet()) {
+            if (!e.getKey().startsWith("config-")) {
+                assertEquals("Wrong value for field " + e.getKey(), e.getValue(), map.get(e.getKey()));
+            }
+        }
+    }
+
+    /**
+     * Tests whether a Synchronizer can be cloned using its clone() method.
+     */
+    @Test
+    public void testCloneSynchronizerClone() {
+        final CloneableSynchronizer sync = new CloneableSynchronizer(false);
+        final CloneableSynchronizer sync2 = (CloneableSynchronizer) ConfigurationUtils.cloneSynchronizer(sync);
+        assertTrue("Not cloned", sync2.isCloned());
+    }
+
+    /**
+     * Tests cloneSynchronizer() if the argument cannot be cloned.
+     */
+    @Test(expected = ConfigurationRuntimeException.class)
+    public void testCloneSynchronizerFailed() {
+        ConfigurationUtils.cloneSynchronizer(new NonCloneableSynchronizer());
+    }
+
+    /**
+     * Tests whether a new Synchronizer can be created using reflection.
+     */
+    @Test
+    public void testCloneSynchronizerNewInstance() {
+        final SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        final SynchronizerTestImpl sync2 = (SynchronizerTestImpl) ConfigurationUtils.cloneSynchronizer(sync);
+        assertNotNull("Clone is null", sync2);
+        assertNotSame("Same instance", sync, sync2);
+    }
+
+    /**
+     * Tests whether the NoOpSyhnchronizer can be cloned.
+     */
+    @Test
+    public void testCloneSynchronizerNoOp() {
+        assertSame("Wrong result", NoOpSynchronizer.INSTANCE, ConfigurationUtils.cloneSynchronizer(NoOpSynchronizer.INSTANCE));
+    }
+
+    /**
+     * Tries to clone a null Synchronizer.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testCloneSynchronizerNull() {
+        ConfigurationUtils.cloneSynchronizer(null);
+    }
+
+    /**
+     * Tests converting a configuration into a hierarchical one that is already hierarchical.
+     */
+    @Test
+    public void testConvertHierarchicalToHierarchical() {
+        final Configuration conf = new BaseHierarchicalConfiguration();
+        conf.addProperty("test", "yes");
+        assertSame("Wrong configuration returned", conf, ConfigurationUtils.convertToHierarchical(conf));
+    }
+
+    /**
+     * Tests converting an already hierarchical configuration using an expression engine. The new engine should be set.
+     */
+    @Test
+    public void testConvertHierarchicalToHierarchicalEngine() {
+        final BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
+        final ExpressionEngine engine = new DefaultExpressionEngine(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
+        assertSame("Created new configuration", hc, ConfigurationUtils.convertToHierarchical(hc, engine));
+        assertSame("Engine was not set", engine, hc.getExpressionEngine());
+    }
+
+    /**
+     * Tests converting an already hierarchical configuration using a null expression engine. In this case the expression
+     * engine of the configuration should not be touched.
+     */
+    @Test
+    public void testConvertHierarchicalToHierarchicalNullEngine() {
+        final BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
+        final ExpressionEngine engine = new DefaultExpressionEngine(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
+        hc.setExpressionEngine(engine);
+        assertSame("Created new configuration", hc, ConfigurationUtils.convertToHierarchical(hc, null));
+        assertSame("Expression engine was changed", engine, hc.getExpressionEngine());
+    }
+
+    /**
+     * Tests converting a null configuration to a hierarchical one. The result should be null, too.
+     */
+    @Test
+    public void testConvertNullToHierarchical() {
+        assertNull("Wrong conversion result for null config", ConfigurationUtils.convertToHierarchical(null));
+    }
+
+    /**
      * Tests converting a configuration into a hierarchical one.
      */
     @Test
@@ -151,24 +345,6 @@ public class TestConfigurationUtils {
             final String key = it.next();
             assertEquals("Wrong value for key " + key, conf.getProperty(key), hc.getProperty(key));
         }
-    }
-
-    /**
-     * Tests converting a configuration into a hierarchical one that is already hierarchical.
-     */
-    @Test
-    public void testConvertHierarchicalToHierarchical() {
-        final Configuration conf = new BaseHierarchicalConfiguration();
-        conf.addProperty("test", "yes");
-        assertSame("Wrong configuration returned", conf, ConfigurationUtils.convertToHierarchical(conf));
-    }
-
-    /**
-     * Tests converting a null configuration to a hierarchical one. The result should be null, too.
-     */
-    @Test
-    public void testConvertNullToHierarchical() {
-        assertNull("Wrong conversion result for null config", ConfigurationUtils.convertToHierarchical(null));
     }
 
     /**
@@ -198,30 +374,6 @@ public class TestConfigurationUtils {
         final HierarchicalConfiguration<?> hc = ConfigurationUtils.convertToHierarchical(conf, engine);
         assertTrue("Wrong value for test(a)", hc.getBoolean("test(a)"));
         assertFalse("Wrong value for test(b)", hc.getBoolean("test(b)"));
-    }
-
-    /**
-     * Tests converting an already hierarchical configuration using an expression engine. The new engine should be set.
-     */
-    @Test
-    public void testConvertHierarchicalToHierarchicalEngine() {
-        final BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
-        final ExpressionEngine engine = new DefaultExpressionEngine(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
-        assertSame("Created new configuration", hc, ConfigurationUtils.convertToHierarchical(hc, engine));
-        assertSame("Engine was not set", engine, hc.getExpressionEngine());
-    }
-
-    /**
-     * Tests converting an already hierarchical configuration using a null expression engine. In this case the expression
-     * engine of the configuration should not be touched.
-     */
-    @Test
-    public void testConvertHierarchicalToHierarchicalNullEngine() {
-        final BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
-        final ExpressionEngine engine = new DefaultExpressionEngine(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
-        hc.setExpressionEngine(engine);
-        assertSame("Created new configuration", hc, ConfigurationUtils.convertToHierarchical(hc, null));
-        assertSame("Expression engine was changed", engine, hc.getExpressionEngine());
     }
 
     /**
@@ -255,82 +407,23 @@ public class TestConfigurationUtils {
         assertEquals("Wrong number of children of x", 1, nodeX.getChildren().size());
     }
 
-    /**
-     * Tests cloning a configuration that supports this operation.
-     */
     @Test
-    public void testCloneConfiguration() {
-        final BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
-        conf.addProperty("test", "yes");
-        final BaseHierarchicalConfiguration copy = (BaseHierarchicalConfiguration) ConfigurationUtils.cloneConfiguration(conf);
-        assertNotSame("Same object was returned", conf, copy);
-        assertEquals("Property was not cloned", "yes", copy.getString("test"));
-    }
+    public void testCopy() {
+        // create the source configuration
+        final Configuration conf1 = new BaseConfiguration();
+        conf1.addProperty("key1", "value1");
+        conf1.addProperty("key2", "value2");
 
-    /**
-     * Tests cloning a configuration that does not support this operation. This should cause an exception.
-     */
-    @Test(expected = ConfigurationRuntimeException.class)
-    public void testCloneConfigurationNotSupported() {
-        final Configuration myNonCloneableConfig = new NonCloneableConfiguration();
-        ConfigurationUtils.cloneConfiguration(myNonCloneableConfig);
-    }
+        // create the target configuration
+        final Configuration conf2 = new BaseConfiguration();
+        conf2.addProperty("key1", "value3");
+        conf2.addProperty("key2", "value4");
 
-    /**
-     * Tests cloning a <b>null</b> configuration.
-     */
-    @Test
-    public void testCloneConfigurationNull() {
-        assertNull("Wrong return value", ConfigurationUtils.cloneConfiguration(null));
-    }
+        // copy the source configuration into the target configuration
+        ConfigurationUtils.copy(conf1, conf2);
 
-    /**
-     * Tests whether an object can be cloned which supports cloning.
-     */
-    @Test
-    public void testCloneIfPossibleSupported() {
-        final XMLBuilderParametersImpl params = new XMLBuilderParametersImpl();
-        params.setPublicID("testID");
-        params.setSchemaValidation(true);
-        final XMLBuilderParametersImpl clone = (XMLBuilderParametersImpl) ConfigurationUtils.cloneIfPossible(params);
-        assertNotSame("No clone was created", params, clone);
-        final Map<String, Object> map = clone.getParameters();
-        for (final Map.Entry<String, Object> e : params.getParameters().entrySet()) {
-            if (!e.getKey().startsWith("config-")) {
-                assertEquals("Wrong value for field " + e.getKey(), e.getValue(), map.get(e.getKey()));
-            }
-        }
-    }
-
-    /**
-     * Tests cloneIfPossible() if the passed in object does not support cloning.
-     */
-    @Test
-    public void testCloneIfPossibleNotSupported() {
-        final Long value = 20130116221714L;
-        assertSame("Wrong result", value, ConfigurationUtils.cloneIfPossible(value));
-    }
-
-    /**
-     * Tests whether errors are handled correctly by cloneIfPossible().
-     */
-    @Test
-    public void testCloneIfPossibleError() {
-        final XMLBuilderParametersImpl params = new XMLBuilderParametersImpl() {
-            @Override
-            public XMLBuilderParametersImpl clone() {
-                throw new ConfigurationRuntimeException();
-            }
-        };
-        assertSame("Wrong result", params, ConfigurationUtils.cloneIfPossible(params));
-    }
-
-    /**
-     * Tests whether cloneIfPossible() can handle null parameters.
-     */
-    @Test
-    public void testCloneIfPossibleNull() {
-        assertNull("Wrong result", ConfigurationUtils.cloneIfPossible(null));
+        assertEquals("'key1' property", "value1", conf2.getProperty("key1"));
+        assertEquals("'key2' property", "value2", conf2.getProperty("key2"));
     }
 
     /**
@@ -370,24 +463,6 @@ public class TestConfigurationUtils {
     }
 
     /**
-     * Tests whether a class can be loaded from CCL.
-     */
-    @Test
-    public void testLoadClassFromCCL() throws ClassNotFoundException {
-        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-        assertEquals("Wrong class", CLS_NAME, ConfigurationUtils.loadClass(CLS_NAME).getName());
-    }
-
-    /**
-     * Tests whether a class can be loaded if there is no CCL.
-     */
-    @Test
-    public void testLoadClassCCLNull() throws ClassNotFoundException {
-        Thread.currentThread().setContextClassLoader(null);
-        assertEquals("Wrong class", CLS_NAME, ConfigurationUtils.loadClass(CLS_NAME).getName());
-    }
-
-    /**
      * Tests whether a class can be loaded if it is not found by the CCL.
      */
     @Test
@@ -402,11 +477,21 @@ public class TestConfigurationUtils {
     }
 
     /**
-     * Tests the behavior of loadClass() for a non-existing class.
+     * Tests whether a class can be loaded if there is no CCL.
      */
-    @Test(expected = ClassNotFoundException.class)
-    public void testLoadClassNotFound() throws ClassNotFoundException {
-        ConfigurationUtils.loadClass("a non existing class!");
+    @Test
+    public void testLoadClassCCLNull() throws ClassNotFoundException {
+        Thread.currentThread().setContextClassLoader(null);
+        assertEquals("Wrong class", CLS_NAME, ConfigurationUtils.loadClass(CLS_NAME).getName());
+    }
+
+    /**
+     * Tests whether a class can be loaded from CCL.
+     */
+    @Test
+    public void testLoadClassFromCCL() throws ClassNotFoundException {
+        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+        assertEquals("Wrong class", CLS_NAME, ConfigurationUtils.loadClass(CLS_NAME).getName());
     }
 
     /**
@@ -426,115 +511,30 @@ public class TestConfigurationUtils {
     }
 
     /**
-     * Tests asEventSource() if the passed in object implements this interface.
+     * Tests the behavior of loadClass() for a non-existing class.
      */
+    @Test(expected = ClassNotFoundException.class)
+    public void testLoadClassNotFound() throws ClassNotFoundException {
+        ConfigurationUtils.loadClass("a non existing class!");
+    }
+
     @Test
-    public void testAsEventSourceSupported() {
-        final XMLConfiguration src = new XMLConfiguration();
-        assertSame("Wrong result", src, ConfigurationUtils.asEventSource(src, true));
-    }
+    public void testToString() {
+        final Configuration config = new BaseConfiguration();
+        final String lineSeparator = System.getProperty("line.separator");
 
-    /**
-     * Tests asEventSource() if an exception is expected.
-     */
-    @Test(expected = ConfigurationRuntimeException.class)
-    public void testAsEventSourceNonSupportedEx() {
-        ConfigurationUtils.asEventSource(this, false);
-    }
+        assertEquals("String representation of an empty configuration", "", ConfigurationUtils.toString(config));
 
-    /**
-     * Tests asEventSource() if a mock object has to be returned.
-     */
-    @Test
-    public void testAsEventSourceUnsupportedMock() {
-        @SuppressWarnings("unchecked")
-        final EventListener<ConfigurationEvent> cl = EasyMock.createMock(EventListener.class);
-        EasyMock.replay(cl);
-        final EventSource source = ConfigurationUtils.asEventSource(this, true);
-        source.addEventListener(ConfigurationEvent.ANY, cl);
-        assertFalse("Wrong result (1)", source.removeEventListener(ConfigurationEvent.ANY, cl));
-        source.addEventListener(ConfigurationEvent.ANY, null);
-    }
+        config.setProperty("one", "1");
+        assertEquals("String representation of a configuration", "one=1", ConfigurationUtils.toString(config));
 
-    /**
-     * Tries to clone a null Synchronizer.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testCloneSynchronizerNull() {
-        ConfigurationUtils.cloneSynchronizer(null);
-    }
+        config.setProperty("two", "2");
+        assertEquals("String representation of a configuration", "one=1" + lineSeparator + "two=2", ConfigurationUtils.toString(config));
 
-    /**
-     * Tests whether the NoOpSyhnchronizer can be cloned.
-     */
-    @Test
-    public void testCloneSynchronizerNoOp() {
-        assertSame("Wrong result", NoOpSynchronizer.INSTANCE, ConfigurationUtils.cloneSynchronizer(NoOpSynchronizer.INSTANCE));
-    }
+        config.clearProperty("one");
+        assertEquals("String representation of a configuration", "two=2", ConfigurationUtils.toString(config));
 
-    /**
-     * Tests whether a new Synchronizer can be created using reflection.
-     */
-    @Test
-    public void testCloneSynchronizerNewInstance() {
-        final SynchronizerTestImpl sync = new SynchronizerTestImpl();
-        final SynchronizerTestImpl sync2 = (SynchronizerTestImpl) ConfigurationUtils.cloneSynchronizer(sync);
-        assertNotNull("Clone is null", sync2);
-        assertNotSame("Same instance", sync, sync2);
-    }
-
-    /**
-     * Tests whether a Synchronizer can be cloned using its clone() method.
-     */
-    @Test
-    public void testCloneSynchronizerClone() {
-        final CloneableSynchronizer sync = new CloneableSynchronizer(false);
-        final CloneableSynchronizer sync2 = (CloneableSynchronizer) ConfigurationUtils.cloneSynchronizer(sync);
-        assertTrue("Not cloned", sync2.isCloned());
-    }
-
-    /**
-     * Tests cloneSynchronizer() if the argument cannot be cloned.
-     */
-    @Test(expected = ConfigurationRuntimeException.class)
-    public void testCloneSynchronizerFailed() {
-        ConfigurationUtils.cloneSynchronizer(new NonCloneableSynchronizer());
-    }
-
-    /**
-     * A test Synchronizer implementation which cannot be cloned.
-     */
-    private static class NonCloneableSynchronizer extends SynchronizerTestImpl {
-    }
-
-    /**
-     * A test Synchronizer implementation which can be cloned.
-     */
-    private static class CloneableSynchronizer extends NonCloneableSynchronizer implements Cloneable {
-        /** A flag whether clone() was called. */
-        private final boolean cloned;
-
-        /**
-         * Creates a new instance of {@code CloneableSynchronizer} and sets the clone flag.
-         *
-         * @param clone the clone flag
-         */
-        public CloneableSynchronizer(final boolean clone) {
-            cloned = clone;
-        }
-
-        /**
-         * Returns a flag whether this object was cloned.
-         *
-         * @return the clone flag
-         */
-        public boolean isCloned() {
-            return cloned;
-        }
-
-        @Override
-        public Object clone() {
-            return new CloneableSynchronizer(true);
-        }
+        config.setProperty("one", "1");
+        assertEquals("String representation of a configuration", "two=2" + lineSeparator + "one=1", ConfigurationUtils.toString(config));
     }
 }

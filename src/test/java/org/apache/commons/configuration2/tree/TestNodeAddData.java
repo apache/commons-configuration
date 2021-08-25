@@ -46,24 +46,6 @@ public class TestNodeAddData {
     }
 
     /**
-     * Tests whether the constructor can handle a null collection of path nodes.
-     */
-    @Test
-    public void testPathNodesNull() {
-        final NodeAddData<ImmutableNode> data = new NodeAddData<>(parentNode, TEST_NODENAME, false, null);
-        assertTrue("Got path nodes", data.getPathNodes().isEmpty());
-    }
-
-    /**
-     * Tests whether the collection with path nodes cannot be modified if no data is available.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testPathNodesNullModify() {
-        final NodeAddData<ImmutableNode> data = new NodeAddData<>(parentNode, TEST_NODENAME, false, null);
-        data.getPathNodes().add("test");
-    }
-
-    /**
      * Tests whether a defensive copy of the collection with path nodes is created.
      */
     @Test
@@ -83,5 +65,23 @@ public class TestNodeAddData {
     public void testPathNodesDefinedModify() {
         final NodeAddData<ImmutableNode> data = new NodeAddData<>(parentNode, TEST_NODENAME, false, Collections.singleton(PATH_NODE_NAME));
         data.getPathNodes().add("anotherNode");
+    }
+
+    /**
+     * Tests whether the constructor can handle a null collection of path nodes.
+     */
+    @Test
+    public void testPathNodesNull() {
+        final NodeAddData<ImmutableNode> data = new NodeAddData<>(parentNode, TEST_NODENAME, false, null);
+        assertTrue("Got path nodes", data.getPathNodes().isEmpty());
+    }
+
+    /**
+     * Tests whether the collection with path nodes cannot be modified if no data is available.
+     */
+    @Test(expected = UnsupportedOperationException.class)
+    public void testPathNodesNullModify() {
+        final NodeAddData<ImmutableNode> data = new NodeAddData<>(parentNode, TEST_NODENAME, false, null);
+        data.getPathNodes().add("test");
     }
 }

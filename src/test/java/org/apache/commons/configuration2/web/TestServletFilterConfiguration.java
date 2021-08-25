@@ -33,6 +33,34 @@ import org.junit.Test;
  *
  */
 public class TestServletFilterConfiguration extends TestAbstractConfiguration {
+    private class MockFilterConfig implements FilterConfig {
+        private final Properties parameters = new Properties();
+
+        @Override
+        public String getFilterName() {
+            return null;
+        }
+
+        @Override
+        public String getInitParameter(final String key) {
+            return parameters.getProperty(key);
+        }
+
+        @Override
+        public Enumeration<?> getInitParameterNames() {
+            return parameters.keys();
+        }
+
+        @Override
+        public ServletContext getServletContext() {
+            return null;
+        }
+
+        public void setInitParameter(final String key, final String value) {
+            parameters.setProperty(key, value);
+        }
+    }
+
     @Override
     protected AbstractConfiguration getConfiguration() {
         final MockFilterConfig config = new MockFilterConfig();
@@ -49,34 +77,6 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration {
     @Override
     protected AbstractConfiguration getEmptyConfiguration() {
         return new ServletFilterConfiguration(new MockFilterConfig());
-    }
-
-    private class MockFilterConfig implements FilterConfig {
-        private final Properties parameters = new Properties();
-
-        @Override
-        public String getFilterName() {
-            return null;
-        }
-
-        @Override
-        public ServletContext getServletContext() {
-            return null;
-        }
-
-        @Override
-        public String getInitParameter(final String key) {
-            return parameters.getProperty(key);
-        }
-
-        @Override
-        public Enumeration<?> getInitParameterNames() {
-            return parameters.keys();
-        }
-
-        public void setInitParameter(final String key, final String value) {
-            parameters.setProperty(key, value);
-        }
     }
 
     @Override

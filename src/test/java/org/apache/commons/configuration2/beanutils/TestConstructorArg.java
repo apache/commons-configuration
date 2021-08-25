@@ -36,6 +36,15 @@ public class TestConstructorArg {
     }
 
     /**
+     * Tests whether an argument with a simple value is detected.
+     */
+    @Test
+    public void testIsNestedBeanDeclarationFalse() {
+        final ConstructorArg arg = ConstructorArg.forValue("test");
+        assertFalse("A bean declaration", arg.isNestedBeanDeclaration());
+    }
+
+    /**
      * Tests whether an argument representing a bean declaration is detected.
      */
     @Test
@@ -44,15 +53,6 @@ public class TestConstructorArg {
         EasyMock.replay(decl);
         final ConstructorArg arg = ConstructorArg.forBeanDeclaration(decl);
         assertTrue("No bean declaration", arg.isNestedBeanDeclaration());
-    }
-
-    /**
-     * Tests whether an argument with a simple value is detected.
-     */
-    @Test
-    public void testIsNestedBeanDeclarationFalse() {
-        final ConstructorArg arg = ConstructorArg.forValue("test");
-        assertFalse("A bean declaration", arg.isNestedBeanDeclaration());
     }
 
     /**
@@ -66,6 +66,15 @@ public class TestConstructorArg {
     }
 
     /**
+     * Tests whether matches() deals with a null argument.
+     */
+    @Test
+    public void testMatchesNull() {
+        final ConstructorArg arg = ConstructorArg.forValue(0);
+        assertFalse("Wrong result", arg.matches(null));
+    }
+
+    /**
      * Tests whether a specified data type is evaluated by matches().
      */
     @Test
@@ -74,14 +83,5 @@ public class TestConstructorArg {
         assertTrue("Wrong result (1)", arg.matches(Integer.TYPE));
         assertFalse("Wrong result (2)", arg.matches(Integer.class));
         assertFalse("Wrong result (3)", arg.matches(String.class));
-    }
-
-    /**
-     * Tests whether matches() deals with a null argument.
-     */
-    @Test
-    public void testMatchesNull() {
-        final ConstructorArg arg = ConstructorArg.forValue(0);
-        assertFalse("Wrong result", arg.matches(null));
     }
 }

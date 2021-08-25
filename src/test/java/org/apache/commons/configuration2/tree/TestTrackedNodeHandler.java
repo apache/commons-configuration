@@ -31,16 +31,16 @@ public class TestTrackedNodeHandler {
     /** A test root node. */
     private static ImmutableNode root;
 
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        root = new ImmutableNode.Builder().name("ROOT").create();
+    }
+
     /** A mock node handler. */
     private NodeHandler<ImmutableNode> parentHandler;
 
     /** The handler to be tested. */
     private TrackedNodeHandler handler;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        root = new ImmutableNode.Builder().name("ROOT").create();
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -48,14 +48,6 @@ public class TestTrackedNodeHandler {
         final NodeHandler<ImmutableNode> h = EasyMock.createMock(NodeHandler.class);
         parentHandler = h;
         handler = new TrackedNodeHandler(root, parentHandler);
-    }
-
-    /**
-     * Tests whether the correct root node is returned.
-     */
-    @Test
-    public void testGetRootNode() {
-        assertSame("Wrong root node", root, handler.getRootNode());
     }
 
     /**
@@ -70,5 +62,13 @@ public class TestTrackedNodeHandler {
 
         assertSame("Wrong parent node", parent, handler.getParent(node));
         EasyMock.verify(parentHandler);
+    }
+
+    /**
+     * Tests whether the correct root node is returned.
+     */
+    @Test
+    public void testGetRootNode() {
+        assertSame("Wrong root node", root, handler.getRootNode());
     }
 }

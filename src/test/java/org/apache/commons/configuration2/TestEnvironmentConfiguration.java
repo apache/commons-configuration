@@ -39,6 +39,31 @@ public class TestEnvironmentConfiguration {
     }
 
     /**
+     * Tries to add another property. This should cause an exception.
+     */
+    @Test(expected = UnsupportedOperationException.class)
+    public void testAddProperty() {
+        config.addProperty("JAVA_HOME", "C:\\java");
+    }
+
+    /**
+     * Tests removing all properties. This should not be possible.
+     */
+    @Test(expected = UnsupportedOperationException.class)
+    public void testClear() {
+        config.clear();
+    }
+
+    /**
+     * Tests removing properties. This should not be possible.
+     */
+    @Test(expected = UnsupportedOperationException.class)
+    public void testClearProperty() {
+        final String key = config.getKeys().next();
+        config.clearProperty(key);
+    }
+
+    /**
      * Tests whether a newly created configuration contains some properties. (We expect that at least some properties are
      * set in each environment.)
      */
@@ -53,31 +78,6 @@ public class TestEnvironmentConfiguration {
             found = true;
         }
         assertTrue("No property keys returned", found);
-    }
-
-    /**
-     * Tests removing properties. This should not be possible.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testClearProperty() {
-        final String key = config.getKeys().next();
-        config.clearProperty(key);
-    }
-
-    /**
-     * Tests removing all properties. This should not be possible.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testClear() {
-        config.clear();
-    }
-
-    /**
-     * Tries to add another property. This should cause an exception.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testAddProperty() {
-        config.addProperty("JAVA_HOME", "C:\\java");
     }
 
     /**

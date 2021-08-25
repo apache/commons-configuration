@@ -26,8 +26,24 @@ import org.apache.commons.configuration2.sync.Synchronizer;
  *
  */
 public class SynchronizerTestImpl implements Synchronizer {
+    /**
+     * An enumeration with the methods of the Synchronizer which can be called.
+     */
+    public enum Methods {
+        BEGIN_READ, END_READ, BEGIN_WRITE, END_WRITE
+    }
+
     /** A buffer for registering the methods invoked by clients. */
     private final StringBuilder methods = new StringBuilder();
+
+    /**
+     * Adds a method name to the internal buffer. Called by all interface methods.
+     *
+     * @param m the method that was invoked
+     */
+    private void append(final Methods m) {
+        methods.append(m);
+    }
 
     /**
      * {@inheritDoc} Registers this invocation.
@@ -41,60 +57,8 @@ public class SynchronizerTestImpl implements Synchronizer {
      * {@inheritDoc} Registers this invocation.
      */
     @Override
-    public void endRead() {
-        append(Methods.END_READ);
-    }
-
-    /**
-     * {@inheritDoc} Registers this invocation.
-     */
-    @Override
     public void beginWrite() {
         append(Methods.BEGIN_WRITE);
-    }
-
-    /**
-     * {@inheritDoc} Registers this invocation.
-     */
-    @Override
-    public void endWrite() {
-        append(Methods.END_WRITE);
-    }
-
-    /**
-     * Verifies that the passed in methods were called in this order.
-     *
-     * @param expMethods the expected methods
-     */
-    public void verify(final Methods... expMethods) {
-        assertEquals("Wrong methods invoked", constructExpectedMethods(expMethods), methods.toString());
-    }
-
-    /**
-     * Verifies that the specified methods were called at the beginning of the interaction with the synchronizer.
-     *
-     * @param expMethods the expected methods
-     */
-    public void verifyStart(final Methods... expMethods) {
-        assertTrue("Wrong methods at start: " + methods, methods.toString().startsWith(constructExpectedMethods(expMethods)));
-    }
-
-    /**
-     * Verifies that the specified methods were called at the end of the interaction with the synchronizer.
-     *
-     * @param expMethods the expected methods
-     */
-    public void verifyEnd(final Methods... expMethods) {
-        assertTrue("Wrong methods at start: " + methods, methods.toString().endsWith(constructExpectedMethods(expMethods)));
-    }
-
-    /**
-     * Verifies that the specified sequence of methods was called somewhere in the interaction with the synchronizer.
-     *
-     * @param expMethods the expected methods
-     */
-    public void verifyContains(final Methods... expMethods) {
-        assertTrue("Expected methods not found: " + methods, methods.toString().indexOf(constructExpectedMethods(expMethods)) >= 0);
     }
 
     /**
@@ -119,18 +83,54 @@ public class SynchronizerTestImpl implements Synchronizer {
     }
 
     /**
-     * Adds a method name to the internal buffer. Called by all interface methods.
-     *
-     * @param m the method that was invoked
+     * {@inheritDoc} Registers this invocation.
      */
-    private void append(final Methods m) {
-        methods.append(m);
+    @Override
+    public void endRead() {
+        append(Methods.END_READ);
     }
 
     /**
-     * An enumeration with the methods of the Synchronizer which can be called.
+     * {@inheritDoc} Registers this invocation.
      */
-    public enum Methods {
-        BEGIN_READ, END_READ, BEGIN_WRITE, END_WRITE
+    @Override
+    public void endWrite() {
+        append(Methods.END_WRITE);
+    }
+
+    /**
+     * Verifies that the passed in methods were called in this order.
+     *
+     * @param expMethods the expected methods
+     */
+    public void verify(final Methods... expMethods) {
+        assertEquals("Wrong methods invoked", constructExpectedMethods(expMethods), methods.toString());
+    }
+
+    /**
+     * Verifies that the specified sequence of methods was called somewhere in the interaction with the synchronizer.
+     *
+     * @param expMethods the expected methods
+     */
+    public void verifyContains(final Methods... expMethods) {
+        assertTrue("Expected methods not found: " + methods, methods.toString().indexOf(constructExpectedMethods(expMethods)) >= 0);
+    }
+
+    /**
+     * Verifies that the specified methods were called at the end of the interaction with the synchronizer.
+     *
+     * @param expMethods the expected methods
+     */
+    public void verifyEnd(final Methods... expMethods) {
+        assertTrue("Wrong methods at start: " + methods, methods.toString().endsWith(constructExpectedMethods(expMethods)));
+    }
+
+    /**
+     * Verifies that the specified methods were called at the beginning of the interaction with the synchronizer.
+     *
+     * @param expMethods the expected methods
+     */
+    public void verifyStart(final Methods... expMethods) {
+        assertTrue("Wrong methods at start: " + methods, methods.toString().startsWith(constructExpectedMethods(expMethods)));
     }
 }

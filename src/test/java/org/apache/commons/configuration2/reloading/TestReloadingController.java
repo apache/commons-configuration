@@ -33,39 +33,6 @@ import org.junit.Test;
  *
  */
 public class TestReloadingController {
-    /** A mock for the detector. */
-    private ReloadingDetector detector;
-
-    @Before
-    public void setUp() throws Exception {
-        detector = EasyMock.createMock(ReloadingDetector.class);
-    }
-
-    /**
-     * Creates a default test instance.
-     *
-     * @return the test instance
-     */
-    private ReloadingController createController() {
-        return new ReloadingController(detector);
-    }
-
-    /**
-     * Tries to create an instance without a detector.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testInitNoDetector() {
-        new ReloadingController(null);
-    }
-
-    /**
-     * Tests that a newly created instance is not in reloading state.
-     */
-    @Test
-    public void testReloadingStateAfterInit() {
-        assertFalse("In reloading state", createController().isInReloadingState());
-    }
-
     /**
      * Creates a mock event listener.
      *
@@ -75,6 +42,18 @@ public class TestReloadingController {
         @SuppressWarnings("unchecked")
         final EventListener<ReloadingEvent> listener = EasyMock.createMock(EventListener.class);
         return listener;
+    }
+
+    /** A mock for the detector. */
+    private ReloadingDetector detector;
+
+    /**
+     * Creates a default test instance.
+     *
+     * @return the test instance
+     */
+    private ReloadingController createController() {
+        return new ReloadingController(detector);
     }
 
     /**
@@ -92,28 +71,9 @@ public class TestReloadingController {
         });
     }
 
-    /**
-     * Tests a reloading check with a positive result.
-     */
-    @Test
-    public void testCheckForReloadingTrue() {
-        final EventListener<ReloadingEvent> l = createListenerMock();
-        final EventListener<ReloadingEvent> lRemoved = createListenerMock();
-        final MutableObject<ReloadingEvent> evRef = new MutableObject<>();
-        expectEvent(l, evRef);
-        EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
-        EasyMock.replay(detector, l, lRemoved);
-        final ReloadingController ctrl = createController();
-        ctrl.addEventListener(ReloadingEvent.ANY, lRemoved);
-        ctrl.addEventListener(ReloadingEvent.ANY, l);
-        assertTrue("Wrong result", ctrl.removeEventListener(ReloadingEvent.ANY, lRemoved));
-        final Object testData = "Some test data";
-        assertTrue("Wrong result", ctrl.checkForReloading(testData));
-        assertTrue("Not in reloading state", ctrl.isInReloadingState());
-        assertSame("Wrong event source", ctrl, evRef.getValue().getSource());
-        assertSame("Wrong controller", ctrl, evRef.getValue().getController());
-        assertEquals("Wrong event data", testData, evRef.getValue().getData());
-        EasyMock.verify(l, lRemoved, detector);
+    @Before
+    public void setUp() throws Exception {
+        detector = EasyMock.createMock(ReloadingDetector.class);
     }
 
     /**
@@ -148,18 +108,51 @@ public class TestReloadingController {
     }
 
     /**
-     * Tests that the reloading state can be reset.
+     * Tests a reloading check with a positive result.
      */
     @Test
-    public void testResetReloadingState() {
+    public void testCheckForReloadingTrue() {
+        final EventListener<ReloadingEvent> l = createListenerMock();
+        final EventListener<ReloadingEvent> lRemoved = createListenerMock();
+        final MutableObject<ReloadingEvent> evRef = new MutableObject<>();
+        expectEvent(l, evRef);
         EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
-        detector.reloadingPerformed();
-        EasyMock.replay(detector);
+        EasyMock.replay(detector, l, lRemoved);
         final ReloadingController ctrl = createController();
-        ctrl.checkForReloading(null);
-        ctrl.resetReloadingState();
-        assertFalse("In reloading state", ctrl.isInReloadingState());
-        EasyMock.verify(detector);
+        ctrl.addEventListener(ReloadingEvent.ANY, lRemoved);
+        ctrl.addEventListener(ReloadingEvent.ANY, l);
+        assertTrue("Wrong result", ctrl.removeEventListener(ReloadingEvent.ANY, lRemoved));
+        final Object testData = "Some test data";
+        assertTrue("Wrong result", ctrl.checkForReloading(testData));
+        assertTrue("Not in reloading state", ctrl.isInReloadingState());
+        assertSame("Wrong event source", ctrl, evRef.getValue().getSource());
+        assertSame("Wrong controller", ctrl, evRef.getValue().getController());
+        assertEquals("Wrong event data", testData, evRef.getValue().getData());
+        EasyMock.verify(l, lRemoved, detector);
+    }
+
+    /**
+     * Tries to create an instance without a detector.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testInitNoDetector() {
+        new ReloadingController(null);
+    }
+
+    /**
+     * Tests the event type of the reloading event.
+     */
+    @Test
+    public void testReloadingEventType() {
+        assertEquals("Wrong super event type", Event.ANY, ReloadingEvent.ANY.getSuperType());
+    }
+
+    /**
+     * Tests that a newly created instance is not in reloading state.
+     */
+    @Test
+    public void testReloadingStateAfterInit() {
+        assertFalse("In reloading state", createController().isInReloadingState());
     }
 
     /**
@@ -172,10 +165,17 @@ public class TestReloadingController {
     }
 
     /**
-     * Tests the event type of the reloading event.
+     * Tests that the reloading state can be reset.
      */
     @Test
-    public void testReloadingEventType() {
-        assertEquals("Wrong super event type", Event.ANY, ReloadingEvent.ANY.getSuperType());
+    public void testResetReloadingState() {
+        EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
+        detector.reloadingPerformed();
+        EasyMock.replay(detector);
+        final ReloadingController ctrl = createController();
+        ctrl.checkForReloading(null);
+        ctrl.resetReloadingState();
+        assertFalse("In reloading state", ctrl.isInReloadingState());
+        EasyMock.verify(detector);
     }
 }

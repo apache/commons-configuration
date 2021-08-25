@@ -32,15 +32,6 @@ public class TestNodeNameMatchers {
     /** Constant for a test node name. */
     private static final String NODE_NAME = "TestNodeName";
 
-    /** A node handler. */
-    private NodeHandler<ImmutableNode> handler;
-
-    @Before
-    public void setUp() throws Exception {
-        final InMemoryNodeModel model = new InMemoryNodeModel();
-        handler = model.getNodeHandler();
-    }
-
     /**
      * Creates a node with the given name.
      *
@@ -51,24 +42,8 @@ public class TestNodeNameMatchers {
         return new ImmutableNode.Builder().name(name).create();
     }
 
-    /**
-     * Tests the equals matcher if the expected result is true.
-     */
-    @Test
-    public void testEqualsMatch() {
-        final ImmutableNode node = createNode(NODE_NAME);
-        assertTrue("No match", NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME));
-    }
-
-    /**
-     * Tests the equals matcher for a non matching name.
-     */
-    @Test
-    public void testEqualsNoMatch() {
-        final ImmutableNode node = createNode(NODE_NAME);
-        assertFalse("Match (1)", NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME + "_other"));
-        assertFalse("Match (2)", NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME.toLowerCase(Locale.ENGLISH)));
-    }
+    /** A node handler. */
+    private NodeHandler<ImmutableNode> handler;
 
     /**
      * Tests whether a matcher can handle null input safely.
@@ -80,12 +55,10 @@ public class TestNodeNameMatchers {
         assertFalse("Match (2)", matcher.matches(createNode(null), handler, NODE_NAME));
     }
 
-    /**
-     * Tests whether the equals matcher can handle a null criterion.
-     */
-    @Test
-    public void testEqualsNullCriterion() {
-        checkMatcherWithNullInput(NodeNameMatchers.EQUALS);
+    @Before
+    public void setUp() throws Exception {
+        final InMemoryNodeModel model = new InMemoryNodeModel();
+        handler = model.getNodeHandler();
     }
 
     /**
@@ -114,5 +87,32 @@ public class TestNodeNameMatchers {
     @Test
     public void testEqualsIgnoreCaseNullCriterion() {
         checkMatcherWithNullInput(NodeNameMatchers.EQUALS_IGNORE_CASE);
+    }
+
+    /**
+     * Tests the equals matcher if the expected result is true.
+     */
+    @Test
+    public void testEqualsMatch() {
+        final ImmutableNode node = createNode(NODE_NAME);
+        assertTrue("No match", NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME));
+    }
+
+    /**
+     * Tests the equals matcher for a non matching name.
+     */
+    @Test
+    public void testEqualsNoMatch() {
+        final ImmutableNode node = createNode(NODE_NAME);
+        assertFalse("Match (1)", NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME + "_other"));
+        assertFalse("Match (2)", NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME.toLowerCase(Locale.ENGLISH)));
+    }
+
+    /**
+     * Tests whether the equals matcher can handle a null criterion.
+     */
+    @Test
+    public void testEqualsNullCriterion() {
+        checkMatcherWithNullInput(NodeNameMatchers.EQUALS);
     }
 }

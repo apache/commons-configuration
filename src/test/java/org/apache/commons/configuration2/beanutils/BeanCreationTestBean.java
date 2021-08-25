@@ -31,20 +31,20 @@ public class BeanCreationTestBean {
         return buddy;
     }
 
-    public void setBuddy(final BeanCreationTestBean buddy) {
-        this.buddy = buddy;
-    }
-
     public int getIntValue() {
         return intValue;
     }
 
-    public void setIntValue(final int intValue) {
-        this.intValue = intValue;
-    }
-
     public String getStringValue() {
         return stringValue;
+    }
+
+    public void setBuddy(final BeanCreationTestBean buddy) {
+        this.buddy = buddy;
+    }
+
+    public void setIntValue(final int intValue) {
+        this.intValue = intValue;
     }
 
     public void setStringValue(final String stringValue) {

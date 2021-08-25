@@ -38,34 +38,6 @@ public class AbstractMultiFileConfigurationBuilderTest {
     protected static String PATTERN = "target/test-classes/testMultiConfiguration_" + PATTERN_VAR + ".xml";
 
     /**
-     * Sets a system property for accessing a specific configuration file from the test builder. The passed in id can be
-     * null, then the system property is removed.
-     *
-     * @param id the ID of the managed configuration to load
-     */
-    protected static void switchToConfig(final String id) {
-        if (id != null) {
-            System.setProperty(PROP, id);
-        } else {
-            System.getProperties().remove(PROP);
-        }
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        switchToConfig(null);
-    }
-
-    /**
-     * Selects a specific configuration to be obtained from the builder.
-     *
-     * @param index the index of the configuration to be accessed (valid indices are 1-3)
-     */
-    protected static void switchToConfig(final int index) {
-        switchToConfig("100" + index);
-    }
-
-    /**
      * Creates a {@code ConfigurationInterpolator} to be used by tests. This object contains a lookup for system properties.
      *
      * @return the new {@code ConfigurationInterpolator}
@@ -84,5 +56,33 @@ public class AbstractMultiFileConfigurationBuilderTest {
      */
     protected static BasicBuilderParameters createTestBuilderParameters(final BuilderParameters managedParams) {
         return new MultiFileBuilderParametersImpl().setFilePattern(PATTERN).setManagedBuilderParameters(managedParams).setInterpolator(createInterpolator());
+    }
+
+    /**
+     * Selects a specific configuration to be obtained from the builder.
+     *
+     * @param index the index of the configuration to be accessed (valid indices are 1-3)
+     */
+    protected static void switchToConfig(final int index) {
+        switchToConfig("100" + index);
+    }
+
+    /**
+     * Sets a system property for accessing a specific configuration file from the test builder. The passed in id can be
+     * null, then the system property is removed.
+     *
+     * @param id the ID of the managed configuration to load
+     */
+    protected static void switchToConfig(final String id) {
+        if (id != null) {
+            System.setProperty(PROP, id);
+        } else {
+            System.getProperties().remove(PROP);
+        }
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        switchToConfig(null);
     }
 }

@@ -32,17 +32,6 @@ import org.junit.Test;
  */
 public class TestNodeUpdateData {
     /**
-     * Tests whether null parameters for collections are converted to empty collections.
-     */
-    @Test
-    public void testInitNoData() {
-        final NodeUpdateData<Object> data = new NodeUpdateData<>(null, null, null, null);
-        assertTrue("Got changed values", data.getChangedValues().isEmpty());
-        assertTrue("Got new values", data.getNewValues().isEmpty());
-        assertTrue("Got removed nodes", data.getRemovedNodes().isEmpty());
-    }
-
-    /**
      * Convenience method for creating a query result object.
      *
      * @param value the value of this result
@@ -50,48 +39,6 @@ public class TestNodeUpdateData {
      */
     private static QueryResult<Object> result(final Object value) {
         return QueryResult.createNodeResult(value);
-    }
-
-    /**
-     * Tests whether a defensive copy is created from the changed values.
-     */
-    @Test
-    public void testInitChangedValuesDefensiveCopy() {
-        final Map<QueryResult<Object>, Object> map = new HashMap<>();
-        map.put(result("test"), "value");
-        final NodeUpdateData<Object> data = new NodeUpdateData<>(map, null, null, null);
-        map.put(result("anotherTest"), "anotherValue");
-        final Map<QueryResult<Object>, Object> changedValues = data.getChangedValues();
-        assertEquals("Wrong number of changed values", 1, changedValues.size());
-        assertEquals("Wrong changed value", "value", changedValues.get(result("test")));
-    }
-
-    /**
-     * Tests whether a defensive copy is created from the new values.
-     */
-    @Test
-    public void testInitNewValuesDefensiveCopy() {
-        final Collection<Object> col = new LinkedList<>();
-        col.add(42);
-        final NodeUpdateData<Object> data = new NodeUpdateData<>(null, col, null, null);
-        col.add("anotherValue");
-        final Collection<Object> newValues = data.getNewValues();
-        assertEquals("Wrong number of new values", 1, newValues.size());
-        assertEquals("Wrong value", 42, newValues.iterator().next());
-    }
-
-    /**
-     * Tests whether a defensive copy is created from the removed nodes.
-     */
-    @Test
-    public void testInitRemovedNodesDefensiveCopy() {
-        final Collection<QueryResult<Object>> col = new LinkedList<>();
-        col.add(result("n1"));
-        final NodeUpdateData<Object> data = new NodeUpdateData<>(null, null, col, null);
-        col.add(result("n2"));
-        final Collection<QueryResult<Object>> removedNodes = data.getRemovedNodes();
-        assertEquals("Wrong number of new values", 1, removedNodes.size());
-        assertEquals("Wrong value", result("n1"), removedNodes.iterator().next());
     }
 
     /**
@@ -125,5 +72,58 @@ public class TestNodeUpdateData {
         col.add(result("n1"));
         final NodeUpdateData<Object> data = new NodeUpdateData<>(null, null, col, null);
         data.getRemovedNodes().add(result("newNode"));
+    }
+
+    /**
+     * Tests whether a defensive copy is created from the changed values.
+     */
+    @Test
+    public void testInitChangedValuesDefensiveCopy() {
+        final Map<QueryResult<Object>, Object> map = new HashMap<>();
+        map.put(result("test"), "value");
+        final NodeUpdateData<Object> data = new NodeUpdateData<>(map, null, null, null);
+        map.put(result("anotherTest"), "anotherValue");
+        final Map<QueryResult<Object>, Object> changedValues = data.getChangedValues();
+        assertEquals("Wrong number of changed values", 1, changedValues.size());
+        assertEquals("Wrong changed value", "value", changedValues.get(result("test")));
+    }
+
+    /**
+     * Tests whether a defensive copy is created from the new values.
+     */
+    @Test
+    public void testInitNewValuesDefensiveCopy() {
+        final Collection<Object> col = new LinkedList<>();
+        col.add(42);
+        final NodeUpdateData<Object> data = new NodeUpdateData<>(null, col, null, null);
+        col.add("anotherValue");
+        final Collection<Object> newValues = data.getNewValues();
+        assertEquals("Wrong number of new values", 1, newValues.size());
+        assertEquals("Wrong value", 42, newValues.iterator().next());
+    }
+
+    /**
+     * Tests whether null parameters for collections are converted to empty collections.
+     */
+    @Test
+    public void testInitNoData() {
+        final NodeUpdateData<Object> data = new NodeUpdateData<>(null, null, null, null);
+        assertTrue("Got changed values", data.getChangedValues().isEmpty());
+        assertTrue("Got new values", data.getNewValues().isEmpty());
+        assertTrue("Got removed nodes", data.getRemovedNodes().isEmpty());
+    }
+
+    /**
+     * Tests whether a defensive copy is created from the removed nodes.
+     */
+    @Test
+    public void testInitRemovedNodesDefensiveCopy() {
+        final Collection<QueryResult<Object>> col = new LinkedList<>();
+        col.add(result("n1"));
+        final NodeUpdateData<Object> data = new NodeUpdateData<>(null, null, col, null);
+        col.add(result("n2"));
+        final Collection<QueryResult<Object>> removedNodes = data.getRemovedNodes();
+        assertEquals("Wrong number of new values", 1, removedNodes.size());
+        assertEquals("Wrong value", result("n1"), removedNodes.iterator().next());
     }
 }

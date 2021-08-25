@@ -44,187 +44,6 @@ import org.junit.Test;
  */
 public class TestFileBasedBuilderParameters {
     /**
-     * Tests the standard constructor.
-     */
-    @Test
-    public void testInitDefaults() {
-        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
-        assertFalse("Got a location", params.getFileHandler().isLocationDefined());
-        assertNull("Got a refresh delay", params.getReloadingRefreshDelay());
-    }
-
-    /**
-     * Tests whether a file handler is accepted by the constructor.
-     */
-    @Test
-    public void testInitFileHandler() {
-        final FileHandler handler = new FileHandler();
-        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl(handler);
-        assertSame("Wrong handler", handler, params.getFileHandler());
-    }
-
-    /**
-     * Tests whether the refresh delay can be set.
-     */
-    @Test
-    public void testSetReloadingRefreshDelay() {
-        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
-        final Long delay = 10000L;
-        assertSame("Wrong result", params, params.setReloadingRefreshDelay(delay));
-        assertEquals("Wrong delay", delay, params.getReloadingRefreshDelay());
-    }
-
-    /**
-     * Tests whether a factory for reloading detectors can be set.
-     */
-    @Test
-    public void testSetReloadingDetectorFactory() {
-        final ReloadingDetectorFactory factory = EasyMock.createMock(ReloadingDetectorFactory.class);
-        EasyMock.replay(factory);
-        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
-        assertNull("Got a factory", params.getReloadingDetectorFactory());
-        assertSame("Wrong result", params, params.setReloadingDetectorFactory(factory));
-        assertSame("Factory not set", factory, params.getReloadingDetectorFactory());
-    }
-
-    /**
-     * Tests whether a file can be set.
-     */
-    @Test
-    public void testSetFile() {
-        final File file = ConfigurationAssert.getTestFile("test.properties").getAbsoluteFile();
-        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
-        assertSame("Wrong result", params, params.setFile(file));
-        assertEquals("Wrong file", file, params.getFileHandler().getFile());
-    }
-
-    /**
-     * Tests whether a URL can be set.
-     */
-    @Test
-    public void testSetURL() {
-        final URL url = ConfigurationAssert.getTestURL("test.properties");
-        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
-        assertSame("Wrong result", params, params.setURL(url));
-        assertEquals("Wrong URL", url.toExternalForm(), params.getFileHandler().getURL().toExternalForm());
-    }
-
-    /**
-     * Tests whether a path can be set.
-     */
-    @Test
-    public void testSetPath() {
-        final String path = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
-        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
-        assertSame("Wrong result", params, params.setPath(path));
-        assertEquals("Wrong path", path, params.getFileHandler().getPath());
-    }
-
-    /**
-     * Tests whether a file name can be set.
-     */
-    @Test
-    public void testSetFileName() {
-        final String name = "testConfig.xml";
-        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
-        assertSame("Wrong result", params, params.setFileName(name));
-        assertEquals("Wrong name", name, params.getFileHandler().getFileName());
-    }
-
-    /**
-     * Tests whether a base path can be set.
-     */
-    @Test
-    public void testSetBasePath() {
-        final String path = ConfigurationAssert.getTestFile("test.properties").getParentFile().getAbsolutePath();
-        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
-        assertSame("Wrong result", params, params.setBasePath(path));
-        assertEquals("Wrong path", path, params.getFileHandler().getBasePath());
-    }
-
-    /**
-     * Tests whether a file system can be set.
-     */
-    @Test
-    public void testSetFileSystem() {
-        final FileSystem fs = EasyMock.createMock(FileSystem.class);
-        EasyMock.replay(fs);
-        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
-        assertSame("Wrong result", params, params.setFileSystem(fs));
-        assertSame("Wrong file system", fs, params.getFileHandler().getFileSystem());
-    }
-
-    /**
-     * Tests whether a location strategy can be set.
-     */
-    @Test
-    public void testSetLocationStrategy() {
-        final FileLocationStrategy strat = EasyMock.createMock(FileLocationStrategy.class);
-        EasyMock.replay(strat);
-        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
-        assertSame("Wrong result", params, params.setLocationStrategy(strat));
-        assertSame("Wrong location strategy", strat, params.getFileHandler().getLocationStrategy());
-    }
-
-    /**
-     * Tests whether an encoding can be set.
-     */
-    @Test
-    public void testSetEncoding() {
-        final String enc = "ISO-8859-1";
-        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
-        assertSame("Wrong result", params, params.setEncoding(enc));
-        assertSame("Wrong encoding", enc, params.getFileHandler().getEncoding());
-    }
-
-    /**
-     * Tests whether a map with parameters can be queried.
-     */
-    @Test
-    public void testGetParameters() {
-        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl().setReloadingRefreshDelay(1000L);
-        params.setThrowExceptionOnMissing(true);
-        final Map<String, Object> map = params.getParameters();
-        assertTrue("Object not stored", map.containsValue(params));
-        assertEquals("Wrong exception flag", Boolean.TRUE, params.getParameters().get("throwExceptionOnMissing"));
-    }
-
-    /**
-     * Tests fromParameters() if the map does not contain an instance.
-     */
-    @Test
-    public void testFromParametersNotFound() {
-        assertNull("Got an instance", FileBasedBuilderParametersImpl.fromParameters(new HashMap<>()));
-    }
-
-    /**
-     * Tests whether fromParameters() can return a default instance if the map does not contain an instance.
-     */
-    @Test
-    public void testFromParametersDefaultInstance() {
-        final FileBasedBuilderParametersImpl params = FileBasedBuilderParametersImpl.fromParameters(new HashMap<>(), true);
-        assertFalse("Got a location", params.getFileHandler().isLocationDefined());
-    }
-
-    /**
-     * Tests whether an instance can be extracted from a parameters map.
-     */
-    @Test
-    public void testFromParametersExtract() {
-        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
-        final Map<String, Object> map = params.getParameters();
-        assertSame("Wrong parameters", params, FileBasedBuilderParametersImpl.fromParameters(map));
-    }
-
-    /**
-     * Tries to obtain an instance from a null parameters map.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testFromParametersNull() {
-        FileBasedBuilderParametersImpl.fromParameters(null);
-    }
-
-    /**
      * Tests whether reflection-based property access through BeanUtils is possible.
      */
     @Test
@@ -289,6 +108,53 @@ public class TestFileBasedBuilderParameters {
     }
 
     /**
+     * Tests whether fromParameters() can return a default instance if the map does not contain an instance.
+     */
+    @Test
+    public void testFromParametersDefaultInstance() {
+        final FileBasedBuilderParametersImpl params = FileBasedBuilderParametersImpl.fromParameters(new HashMap<>(), true);
+        assertFalse("Got a location", params.getFileHandler().isLocationDefined());
+    }
+
+    /**
+     * Tests whether an instance can be extracted from a parameters map.
+     */
+    @Test
+    public void testFromParametersExtract() {
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
+        final Map<String, Object> map = params.getParameters();
+        assertSame("Wrong parameters", params, FileBasedBuilderParametersImpl.fromParameters(map));
+    }
+
+    /**
+     * Tests fromParameters() if the map does not contain an instance.
+     */
+    @Test
+    public void testFromParametersNotFound() {
+        assertNull("Got an instance", FileBasedBuilderParametersImpl.fromParameters(new HashMap<>()));
+    }
+
+    /**
+     * Tries to obtain an instance from a null parameters map.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testFromParametersNull() {
+        FileBasedBuilderParametersImpl.fromParameters(null);
+    }
+
+    /**
+     * Tests whether a map with parameters can be queried.
+     */
+    @Test
+    public void testGetParameters() {
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl().setReloadingRefreshDelay(1000L);
+        params.setThrowExceptionOnMissing(true);
+        final Map<String, Object> map = params.getParameters();
+        assertTrue("Object not stored", map.containsValue(params));
+        assertEquals("Wrong exception flag", Boolean.TRUE, params.getParameters().get("throwExceptionOnMissing"));
+    }
+
+    /**
      * Tests whether properties can be inherited from another object.
      */
     @Test
@@ -314,6 +180,17 @@ public class TestFileBasedBuilderParameters {
     }
 
     /**
+     * Tests inheritFrom() if no parameters object can be found in the map.
+     */
+    @Test
+    public void testInheritFromNoParametersObject() {
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl().setReloadingRefreshDelay(20160213211429L);
+
+        params.inheritFrom(new HashMap<>());
+        assertNotNull("Properties were overwritten", params.getReloadingRefreshDelay());
+    }
+
+    /**
      * Tests that missing properties in the passed in map are skipped by inheritFrom().
      */
     @Test
@@ -331,13 +208,136 @@ public class TestFileBasedBuilderParameters {
     }
 
     /**
-     * Tests inheritFrom() if no parameters object can be found in the map.
+     * Tests the standard constructor.
      */
     @Test
-    public void testInheritFromNoParametersObject() {
-        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl().setReloadingRefreshDelay(20160213211429L);
+    public void testInitDefaults() {
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
+        assertFalse("Got a location", params.getFileHandler().isLocationDefined());
+        assertNull("Got a refresh delay", params.getReloadingRefreshDelay());
+    }
 
-        params.inheritFrom(new HashMap<>());
-        assertNotNull("Properties were overwritten", params.getReloadingRefreshDelay());
+    /**
+     * Tests whether a file handler is accepted by the constructor.
+     */
+    @Test
+    public void testInitFileHandler() {
+        final FileHandler handler = new FileHandler();
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl(handler);
+        assertSame("Wrong handler", handler, params.getFileHandler());
+    }
+
+    /**
+     * Tests whether a base path can be set.
+     */
+    @Test
+    public void testSetBasePath() {
+        final String path = ConfigurationAssert.getTestFile("test.properties").getParentFile().getAbsolutePath();
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
+        assertSame("Wrong result", params, params.setBasePath(path));
+        assertEquals("Wrong path", path, params.getFileHandler().getBasePath());
+    }
+
+    /**
+     * Tests whether an encoding can be set.
+     */
+    @Test
+    public void testSetEncoding() {
+        final String enc = "ISO-8859-1";
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
+        assertSame("Wrong result", params, params.setEncoding(enc));
+        assertSame("Wrong encoding", enc, params.getFileHandler().getEncoding());
+    }
+
+    /**
+     * Tests whether a file can be set.
+     */
+    @Test
+    public void testSetFile() {
+        final File file = ConfigurationAssert.getTestFile("test.properties").getAbsoluteFile();
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
+        assertSame("Wrong result", params, params.setFile(file));
+        assertEquals("Wrong file", file, params.getFileHandler().getFile());
+    }
+
+    /**
+     * Tests whether a file name can be set.
+     */
+    @Test
+    public void testSetFileName() {
+        final String name = "testConfig.xml";
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
+        assertSame("Wrong result", params, params.setFileName(name));
+        assertEquals("Wrong name", name, params.getFileHandler().getFileName());
+    }
+
+    /**
+     * Tests whether a file system can be set.
+     */
+    @Test
+    public void testSetFileSystem() {
+        final FileSystem fs = EasyMock.createMock(FileSystem.class);
+        EasyMock.replay(fs);
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
+        assertSame("Wrong result", params, params.setFileSystem(fs));
+        assertSame("Wrong file system", fs, params.getFileHandler().getFileSystem());
+    }
+
+    /**
+     * Tests whether a location strategy can be set.
+     */
+    @Test
+    public void testSetLocationStrategy() {
+        final FileLocationStrategy strat = EasyMock.createMock(FileLocationStrategy.class);
+        EasyMock.replay(strat);
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
+        assertSame("Wrong result", params, params.setLocationStrategy(strat));
+        assertSame("Wrong location strategy", strat, params.getFileHandler().getLocationStrategy());
+    }
+
+    /**
+     * Tests whether a path can be set.
+     */
+    @Test
+    public void testSetPath() {
+        final String path = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
+        assertSame("Wrong result", params, params.setPath(path));
+        assertEquals("Wrong path", path, params.getFileHandler().getPath());
+    }
+
+    /**
+     * Tests whether a factory for reloading detectors can be set.
+     */
+    @Test
+    public void testSetReloadingDetectorFactory() {
+        final ReloadingDetectorFactory factory = EasyMock.createMock(ReloadingDetectorFactory.class);
+        EasyMock.replay(factory);
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
+        assertNull("Got a factory", params.getReloadingDetectorFactory());
+        assertSame("Wrong result", params, params.setReloadingDetectorFactory(factory));
+        assertSame("Factory not set", factory, params.getReloadingDetectorFactory());
+    }
+
+    /**
+     * Tests whether the refresh delay can be set.
+     */
+    @Test
+    public void testSetReloadingRefreshDelay() {
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
+        final Long delay = 10000L;
+        assertSame("Wrong result", params, params.setReloadingRefreshDelay(delay));
+        assertEquals("Wrong delay", delay, params.getReloadingRefreshDelay());
+    }
+
+    /**
+     * Tests whether a URL can be set.
+     */
+    @Test
+    public void testSetURL() {
+        final URL url = ConfigurationAssert.getTestURL("test.properties");
+        final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
+        assertSame("Wrong result", params, params.setURL(url));
+        assertEquals("Wrong URL", url.toExternalForm(), params.getFileHandler().getURL().toExternalForm());
     }
 }

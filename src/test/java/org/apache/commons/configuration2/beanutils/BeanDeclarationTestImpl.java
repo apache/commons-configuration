@@ -42,17 +42,9 @@ class BeanDeclarationTestImpl implements BeanDeclaration {
         return beanClassName;
     }
 
-    public void setBeanClassName(final String beanClassName) {
-        this.beanClassName = beanClassName;
-    }
-
     @Override
     public String getBeanFactoryName() {
         return beanFactoryName;
-    }
-
-    public void setBeanFactoryName(final String beanFactoryName) {
-        this.beanFactoryName = beanFactoryName;
     }
 
     @Override
@@ -60,26 +52,9 @@ class BeanDeclarationTestImpl implements BeanDeclaration {
         return beanFactoryParameter;
     }
 
-    public void setBeanFactoryParameter(final Object beanFactoryParameter) {
-        this.beanFactoryParameter = beanFactoryParameter;
-    }
-
     @Override
     public Map<String, Object> getBeanProperties() {
         return beanProperties;
-    }
-
-    public void setBeanProperties(final Map<String, Object> beanProperties) {
-        this.beanProperties = beanProperties;
-    }
-
-    @Override
-    public Map<String, Object> getNestedBeanDeclarations() {
-        return nestedBeanDeclarations;
-    }
-
-    public void setNestedBeanDeclarations(final Map<String, Object> nestedBeanDeclarations) {
-        this.nestedBeanDeclarations = nestedBeanDeclarations;
     }
 
     @Override
@@ -87,7 +62,32 @@ class BeanDeclarationTestImpl implements BeanDeclaration {
         return constructorArgs;
     }
 
+    @Override
+    public Map<String, Object> getNestedBeanDeclarations() {
+        return nestedBeanDeclarations;
+    }
+
+    public void setBeanClassName(final String beanClassName) {
+        this.beanClassName = beanClassName;
+    }
+
+    public void setBeanFactoryName(final String beanFactoryName) {
+        this.beanFactoryName = beanFactoryName;
+    }
+
+    public void setBeanFactoryParameter(final Object beanFactoryParameter) {
+        this.beanFactoryParameter = beanFactoryParameter;
+    }
+
+    public void setBeanProperties(final Map<String, Object> beanProperties) {
+        this.beanProperties = beanProperties;
+    }
+
     public void setConstructorArgs(final Collection<ConstructorArg> args) {
         constructorArgs = args;
+    }
+
+    public void setNestedBeanDeclarations(final Map<String, Object> nestedBeanDeclarations) {
+        this.nestedBeanDeclarations = nestedBeanDeclarations;
     }
 }

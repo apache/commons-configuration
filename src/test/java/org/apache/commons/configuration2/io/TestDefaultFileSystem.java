@@ -48,6 +48,14 @@ public class TestDefaultFileSystem {
     }
 
     /**
+     * Tests that an invalid output path causes an exception to be thrown when creating an ouput stream.
+     */
+    @Test(expected = ConfigurationException.class)
+    public void testGetOutputStreamInvalidPath() throws ConfigurationException {
+        fileSystem.getOutputStream(new File(""));
+    }
+
+    /**
      * Tests whether the logger can be changed.
      */
     @Test
@@ -55,13 +63,5 @@ public class TestDefaultFileSystem {
         final ConfigurationLogger log = new ConfigurationLogger(getClass());
         fileSystem.setLogger(log);
         assertSame("Logger not set", log, fileSystem.getLogger());
-    }
-
-    /**
-     * Tests that an invalid output path causes an exception to be thrown when creating an ouput stream.
-     */
-    @Test(expected = ConfigurationException.class)
-    public void testGetOutputStreamInvalidPath() throws ConfigurationException {
-        fileSystem.getOutputStream(new File(""));
     }
 }

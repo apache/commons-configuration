@@ -76,6 +76,35 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest {
     }
 
     /**
+     * Tests whether a specific attribute with a namespace can be selected.
+     */
+    @Test
+    public void testIterateNamespaceAttribute() {
+        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(NAMESPACE, "attr"));
+        assertEquals("Wrong number of attributes", 1, iteratorSize(it));
+        assertEquals("Wrong attribute", NS_ATTR, iterationElements(it).get(0).getName().getName());
+    }
+
+    /**
+     * Tests iteration if an unknown namespace is specified.
+     */
+    @Test
+    public void testIterateNamespaceUnknown() {
+        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName("test", "*"));
+        assertEquals("Found attributes", 0, iteratorSize(it));
+    }
+
+    /**
+     * Tests whether a wildcard can be used together with a namespace.
+     */
+    @Test
+    public void testIterateNamespaceWildcard() {
+        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(NAMESPACE, "*"));
+        assertEquals("Wrong number of attributes", 1, iteratorSize(it));
+        assertEquals("Wrong attribute", NS_ATTR, iterationElements(it).get(0).getName().getName());
+    }
+
+    /**
      * Tests to iterate over attributes with a specific name.
      */
     @Test
@@ -92,34 +121,5 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest {
     public void testIterateUnknownAttribute() {
         final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(null, "unknown"));
         assertEquals("Found attributes", 0, iteratorSize(it));
-    }
-
-    /**
-     * Tests iteration if an unknown namespace is specified.
-     */
-    @Test
-    public void testIterateNamespaceUnknown() {
-        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName("test", "*"));
-        assertEquals("Found attributes", 0, iteratorSize(it));
-    }
-
-    /**
-     * Tests whether a specific attribute with a namespace can be selected.
-     */
-    @Test
-    public void testIterateNamespaceAttribute() {
-        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(NAMESPACE, "attr"));
-        assertEquals("Wrong number of attributes", 1, iteratorSize(it));
-        assertEquals("Wrong attribute", NS_ATTR, iterationElements(it).get(0).getName().getName());
-    }
-
-    /**
-     * Tests whether a wildcard can be used together with a namespace.
-     */
-    @Test
-    public void testIterateNamespaceWildcard() {
-        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(NAMESPACE, "*"));
-        assertEquals("Wrong number of attributes", 1, iteratorSize(it));
-        assertEquals("Wrong attribute", NS_ATTR, iterationElements(it).get(0).getName().getName());
     }
 }

@@ -63,17 +63,17 @@ public class Logging extends Log4JLogger {
     }
 
     /**
-     * Base constructor.
-     */
-    public Logging(final String name) {
-        super(name);
-    }
-
-    /**
      * For use with a log4j factory.
      */
     public Logging(final org.apache.log4j.Logger logger) {
         super(logger);
+    }
+
+    /**
+     * Base constructor.
+     */
+    public Logging(final String name) {
+        super(name);
     }
 
     // ---------------------------------------------------------
@@ -92,31 +92,6 @@ public class Logging extends Log4JLogger {
     // methods taking Level objects and then would fail to run against
     // version 1.2 of log4j.
     // ---------------------------------------------------------
-
-    /**
-     * Logs a message with {@code org.apache.log4j.Priority.TRACE}. When using a log4j version that does not support the
-     * {@code TRACE} level, the message will be logged at the {@code DEBUG} level.
-     *
-     * @param message to log
-     * @see org.apache.commons.logging.Log#trace(Object)
-     */
-    @Override
-    public void trace(final Object message) {
-        getLogger().log(FQCN, traceLevel, message, null);
-    }
-
-    /**
-     * Logs a message with {@code org.apache.log4j.Priority.TRACE}. When using a log4j version that does not support the
-     * {@code TRACE} level, the message will be logged at the {@code DEBUG} level.
-     *
-     * @param message to log
-     * @param t log this cause
-     * @see org.apache.commons.logging.Log#trace(Object, Throwable)
-     */
-    @Override
-    public void trace(final Object message, final Throwable t) {
-        getLogger().log(FQCN, traceLevel, message, t);
-    }
 
     /**
      * Logs a message with {@code org.apache.log4j.Priority.DEBUG}.
@@ -139,52 +114,6 @@ public class Logging extends Log4JLogger {
     @Override
     public void debug(final Object message, final Throwable t) {
         getLogger().log(FQCN, Level.DEBUG, message, t);
-    }
-
-    /**
-     * Logs a message with {@code org.apache.log4j.Priority.INFO}.
-     *
-     * @param message to log
-     * @see org.apache.commons.logging.Log#info(Object)
-     */
-    @Override
-    public void info(final Object message) {
-        getLogger().log(FQCN, Level.INFO, message, null);
-    }
-
-    /**
-     * Logs a message with {@code org.apache.log4j.Priority.INFO}.
-     *
-     * @param message to log
-     * @param t log this cause
-     * @see org.apache.commons.logging.Log#info(Object, Throwable)
-     */
-    @Override
-    public void info(final Object message, final Throwable t) {
-        getLogger().log(FQCN, Level.INFO, message, t);
-    }
-
-    /**
-     * Logs a message with {@code org.apache.log4j.Priority.WARN}.
-     *
-     * @param message to log
-     * @see org.apache.commons.logging.Log#warn(Object)
-     */
-    @Override
-    public void warn(final Object message) {
-        getLogger().log(FQCN, Level.WARN, message, null);
-    }
-
-    /**
-     * Logs a message with {@code org.apache.log4j.Priority.WARN}.
-     *
-     * @param message to log
-     * @param t log this cause
-     * @see org.apache.commons.logging.Log#warn(Object, Throwable)
-     */
-    @Override
-    public void warn(final Object message, final Throwable t) {
-        getLogger().log(FQCN, Level.WARN, message, t);
     }
 
     /**
@@ -231,6 +160,77 @@ public class Logging extends Log4JLogger {
     @Override
     public void fatal(final Object message, final Throwable t) {
         getLogger().log(FQCN, Level.FATAL, message, t);
+    }
+
+    /**
+     * Logs a message with {@code org.apache.log4j.Priority.INFO}.
+     *
+     * @param message to log
+     * @see org.apache.commons.logging.Log#info(Object)
+     */
+    @Override
+    public void info(final Object message) {
+        getLogger().log(FQCN, Level.INFO, message, null);
+    }
+
+    /**
+     * Logs a message with {@code org.apache.log4j.Priority.INFO}.
+     *
+     * @param message to log
+     * @param t log this cause
+     * @see org.apache.commons.logging.Log#info(Object, Throwable)
+     */
+    @Override
+    public void info(final Object message, final Throwable t) {
+        getLogger().log(FQCN, Level.INFO, message, t);
+    }
+
+    /**
+     * Logs a message with {@code org.apache.log4j.Priority.TRACE}. When using a log4j version that does not support the
+     * {@code TRACE} level, the message will be logged at the {@code DEBUG} level.
+     *
+     * @param message to log
+     * @see org.apache.commons.logging.Log#trace(Object)
+     */
+    @Override
+    public void trace(final Object message) {
+        getLogger().log(FQCN, traceLevel, message, null);
+    }
+
+    /**
+     * Logs a message with {@code org.apache.log4j.Priority.TRACE}. When using a log4j version that does not support the
+     * {@code TRACE} level, the message will be logged at the {@code DEBUG} level.
+     *
+     * @param message to log
+     * @param t log this cause
+     * @see org.apache.commons.logging.Log#trace(Object, Throwable)
+     */
+    @Override
+    public void trace(final Object message, final Throwable t) {
+        getLogger().log(FQCN, traceLevel, message, t);
+    }
+
+    /**
+     * Logs a message with {@code org.apache.log4j.Priority.WARN}.
+     *
+     * @param message to log
+     * @see org.apache.commons.logging.Log#warn(Object)
+     */
+    @Override
+    public void warn(final Object message) {
+        getLogger().log(FQCN, Level.WARN, message, null);
+    }
+
+    /**
+     * Logs a message with {@code org.apache.log4j.Priority.WARN}.
+     *
+     * @param message to log
+     * @param t log this cause
+     * @see org.apache.commons.logging.Log#warn(Object, Throwable)
+     */
+    @Override
+    public void warn(final Object message, final Throwable t) {
+        getLogger().log(FQCN, Level.WARN, message, t);
     }
 
 }

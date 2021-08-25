@@ -40,6 +40,30 @@ import com.mockobjects.servlet.MockHttpServletRequest;
  *
  */
 public class TestServletRequestConfiguration extends TestAbstractConfiguration {
+    /**
+     * Returns a new servlet request configuration that is backed by the passed in configuration.
+     *
+     * @param base the configuration with the underlying values
+     * @return the servlet request configuration
+     */
+    private ServletRequestConfiguration createConfiguration(final Configuration base) {
+        final ServletRequest request = new MockHttpServletRequest() {
+            @Override
+            public Map<?, ?> getParameterMap() {
+                return new ConfigurationMap(base);
+            }
+
+            @Override
+            public String[] getParameterValues(final String key) {
+                return base.getStringArray(key);
+            }
+        };
+
+        final ServletRequestConfiguration config = new ServletRequestConfiguration(request);
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        return config;
+    }
+
     @Override
     protected AbstractConfiguration getConfiguration() {
         final Configuration configuration = new BaseConfiguration();
@@ -67,30 +91,6 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration {
         };
 
         return new ServletRequestConfiguration(request);
-    }
-
-    /**
-     * Returns a new servlet request configuration that is backed by the passed in configuration.
-     *
-     * @param base the configuration with the underlying values
-     * @return the servlet request configuration
-     */
-    private ServletRequestConfiguration createConfiguration(final Configuration base) {
-        final ServletRequest request = new MockHttpServletRequest() {
-            @Override
-            public String[] getParameterValues(final String key) {
-                return base.getStringArray(key);
-            }
-
-            @Override
-            public Map<?, ?> getParameterMap() {
-                return new ConfigurationMap(base);
-            }
-        };
-
-        final ServletRequestConfiguration config = new ServletRequestConfiguration(request);
-        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
-        return config;
     }
 
     @Override

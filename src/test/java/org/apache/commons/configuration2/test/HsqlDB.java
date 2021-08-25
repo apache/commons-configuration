@@ -33,8 +33,8 @@ import org.apache.commons.logging.LogFactory;
  */
 
 public class HsqlDB {
-    private final Connection connection;
     private static final Log log = LogFactory.getLog(HsqlDB.class);
+    private final Connection connection;
 
     public HsqlDB(final String uri, final String databaseDriver, final String loadFile) throws Exception {
         Class.forName(databaseDriver);
@@ -47,14 +47,28 @@ public class HsqlDB {
         this.connection.commit();
     }
 
-    public Connection getConnection() {
-        return connection;
-    }
-
     public void close() {
         try {
             connection.close();
         } catch (final Exception e) {
+        }
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    private String getFileContents(final String fileName) throws Exception {
+        try (final FileReader fr = new FileReader(fileName)) {
+
+            final char fileBuf[] = new char[1024];
+            final StringBuilder sb = new StringBuilder(1000);
+            int res = -1;
+
+            while ((res = fr.read(fileBuf, 0, 1024)) > -1) {
+                sb.append(fileBuf, 0, res);
+            }
+            return sb.toString();
         }
     }
 
@@ -72,20 +86,6 @@ public class HsqlDB {
 
                 commands = commands.substring(targetPos + 2);
             }
-        }
-    }
-
-    private String getFileContents(final String fileName) throws Exception {
-        try (final FileReader fr = new FileReader(fileName)) {
-
-            final char fileBuf[] = new char[1024];
-            final StringBuilder sb = new StringBuilder(1000);
-            int res = -1;
-
-            while ((res = fr.read(fileBuf, 0, 1024)) > -1) {
-                sb.append(fileBuf, 0, res);
-            }
-            return sb.toString();
         }
     }
 }

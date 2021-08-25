@@ -49,47 +49,6 @@ public class TestXPathExpressionEngineInConfig {
     }
 
     /**
-     * Tests whether an already existing property can be changed using setProperty().
-     */
-    @Test
-    public void testSetPropertyExisting() {
-        config.addProperty(" " + KEY, "failure");
-        config.setProperty(KEY, VALUE);
-        assertEquals("Value not changed", VALUE, config.getString(KEY));
-    }
-
-    /**
-     * Tests setProperty() if the specified path partly exists.
-     */
-    @Test
-    public void testSetPropertyPartlyExisting() {
-        final String testKey = KEY + "/sub";
-        config.addProperty(" " + KEY, "test");
-        config.setProperty(testKey, VALUE);
-        assertEquals("Value not set", VALUE, config.getString(testKey));
-    }
-
-    /**
-     * Tests whether setProperty() can be used to add a new attribute.
-     */
-    @Test
-    public void testSetPropertyNewAttribute() {
-        final String keyAttr = KEY + "/@attr";
-        config.addProperty(" " + KEY, "test");
-        config.setProperty(keyAttr, VALUE);
-        assertEquals("Value not set", VALUE, config.getString(keyAttr));
-    }
-
-    /**
-     * Tests whether setProperty() can be used to create a completely new key.
-     */
-    @Test
-    public void testSetPropertyNewKey() {
-        config.setProperty(KEY, VALUE);
-        assertEquals("Value not set", VALUE, config.getString(KEY));
-    }
-
-    /**
      * Tests whether addProperty() can be used to create more complex hierarchical structures.
      */
     @Test
@@ -120,5 +79,46 @@ public class TestXPathExpressionEngineInConfig {
             final String key = it.next();
             assertNotNull("No value for " + key, config.getString(key));
         }
+    }
+
+    /**
+     * Tests whether an already existing property can be changed using setProperty().
+     */
+    @Test
+    public void testSetPropertyExisting() {
+        config.addProperty(" " + KEY, "failure");
+        config.setProperty(KEY, VALUE);
+        assertEquals("Value not changed", VALUE, config.getString(KEY));
+    }
+
+    /**
+     * Tests whether setProperty() can be used to add a new attribute.
+     */
+    @Test
+    public void testSetPropertyNewAttribute() {
+        final String keyAttr = KEY + "/@attr";
+        config.addProperty(" " + KEY, "test");
+        config.setProperty(keyAttr, VALUE);
+        assertEquals("Value not set", VALUE, config.getString(keyAttr));
+    }
+
+    /**
+     * Tests whether setProperty() can be used to create a completely new key.
+     */
+    @Test
+    public void testSetPropertyNewKey() {
+        config.setProperty(KEY, VALUE);
+        assertEquals("Value not set", VALUE, config.getString(KEY));
+    }
+
+    /**
+     * Tests setProperty() if the specified path partly exists.
+     */
+    @Test
+    public void testSetPropertyPartlyExisting() {
+        final String testKey = KEY + "/sub";
+        config.addProperty(" " + KEY, "test");
+        config.setProperty(testKey, VALUE);
+        assertEquals("Value not set", VALUE, config.getString(testKey));
     }
 }

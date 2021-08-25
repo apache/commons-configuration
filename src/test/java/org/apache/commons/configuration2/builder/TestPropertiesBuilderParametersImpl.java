@@ -45,47 +45,6 @@ public class TestPropertiesBuilderParametersImpl {
     }
 
     /**
-     * Tests whether the includesAllowed property can be set.
-     */
-    @Test
-    public void testSetIncludesAllowed() {
-        assertSame("Wrong result", params, params.setIncludesAllowed(true));
-        assertEquals("Value not set", Boolean.TRUE, params.getParameters().get("includesAllowed"));
-    }
-
-    /**
-     * Tests whether the layout object can be set.
-     */
-    @Test
-    public void testSetLayout() {
-        final PropertiesConfigurationLayout layout = new PropertiesConfigurationLayout();
-        assertSame("Wrong result", params, params.setLayout(layout));
-        assertSame("Layout not set", layout, params.getParameters().get("layout"));
-    }
-
-    /**
-     * Tests whether the include listener can be set.
-     */
-    @Test
-    public void testSetIncludeListener() {
-        final ConfigurationConsumer<ConfigurationException> includeListener = EasyMock.createMock(ConfigurationConsumer.class);
-        EasyMock.replay(includeListener);
-        assertSame("Wrong result", params, params.setIncludeListener(includeListener));
-        assertSame("IncludeListener not set", includeListener, params.getParameters().get("includeListener"));
-    }
-
-    /**
-     * Tests whether the IO factory can be set.
-     */
-    @Test
-    public void testSetIOFactory() {
-        final PropertiesConfiguration.IOFactory factory = EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
-        EasyMock.replay(factory);
-        assertSame("Wrong result", params, params.setIOFactory(factory));
-        assertSame("Factory not set", factory, params.getParameters().get("IOFactory"));
-    }
-
-    /**
      * Tests whether properties can be set using BeanUtils.
      */
     @Test
@@ -122,16 +81,14 @@ public class TestPropertiesBuilderParametersImpl {
     }
 
     /**
-     * Tests whether the IOFactory property can be correctly set. This test is related to CONFIGURATION-648.
+     * Tests whether the include listener can be set.
      */
     @Test
-    public void testSetIOFactoryProperty() throws ConfigurationException {
-        final PropertiesConfiguration.IOFactory factory = new PropertiesConfiguration.DefaultIOFactory();
-        final ConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
-            .configure(params.setIOFactory(factory));
-
-        final PropertiesConfiguration config = builder.getConfiguration();
-        assertEquals("Wrong IO factory", factory, config.getIOFactory());
+    public void testSetIncludeListener() {
+        final ConfigurationConsumer<ConfigurationException> includeListener = EasyMock.createMock(ConfigurationConsumer.class);
+        EasyMock.replay(includeListener);
+        assertSame("Wrong result", params, params.setIncludeListener(includeListener));
+        assertSame("IncludeListener not set", includeListener, params.getParameters().get("includeListener"));
     }
 
     /**
@@ -145,5 +102,48 @@ public class TestPropertiesBuilderParametersImpl {
 
         final PropertiesConfiguration config = builder.getConfiguration();
         assertEquals("Wrong IncludeListener", includeListener, config.getIncludeListener());
+    }
+
+    /**
+     * Tests whether the includesAllowed property can be set.
+     */
+    @Test
+    public void testSetIncludesAllowed() {
+        assertSame("Wrong result", params, params.setIncludesAllowed(true));
+        assertEquals("Value not set", Boolean.TRUE, params.getParameters().get("includesAllowed"));
+    }
+
+    /**
+     * Tests whether the IO factory can be set.
+     */
+    @Test
+    public void testSetIOFactory() {
+        final PropertiesConfiguration.IOFactory factory = EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
+        EasyMock.replay(factory);
+        assertSame("Wrong result", params, params.setIOFactory(factory));
+        assertSame("Factory not set", factory, params.getParameters().get("IOFactory"));
+    }
+
+    /**
+     * Tests whether the IOFactory property can be correctly set. This test is related to CONFIGURATION-648.
+     */
+    @Test
+    public void testSetIOFactoryProperty() throws ConfigurationException {
+        final PropertiesConfiguration.IOFactory factory = new PropertiesConfiguration.DefaultIOFactory();
+        final ConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
+            .configure(params.setIOFactory(factory));
+
+        final PropertiesConfiguration config = builder.getConfiguration();
+        assertEquals("Wrong IO factory", factory, config.getIOFactory());
+    }
+
+    /**
+     * Tests whether the layout object can be set.
+     */
+    @Test
+    public void testSetLayout() {
+        final PropertiesConfigurationLayout layout = new PropertiesConfigurationLayout();
+        assertSame("Wrong result", params, params.setLayout(layout));
+        assertSame("Layout not set", layout, params.getParameters().get("layout"));
     }
 }

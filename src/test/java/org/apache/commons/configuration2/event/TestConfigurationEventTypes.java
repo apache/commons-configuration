@@ -33,12 +33,86 @@ import org.junit.Test;
  */
 public class TestConfigurationEventTypes {
     /**
-     * Tests whether the set of super event types for null input can be obtained.
+     * Helper method for checking the relevant properties of an error event type.
+     *
+     * @param type the type to be checked
+     */
+    private void checkErrorEvent(final EventType<ConfigurationErrorEvent> type) {
+        assertSame("Wrong super type for " + type, ConfigurationErrorEvent.ANY, type.getSuperType());
+    }
+
+    /**
+     * Helper method for checking the relevant properties of a given event type representing a hierarchical update event.
+     *
+     * @param eventType the event type to check
+     */
+    private void checkHierarchicalEvent(final EventType<ConfigurationEvent> eventType) {
+        assertSame("Wrong super type for " + eventType, ConfigurationEvent.ANY_HIERARCHICAL, eventType.getSuperType());
+    }
+
+    /**
+     * Helper method for checking the relevant properties of a given event type representing a configuration update event.
+     *
+     * @param eventType the event type to check
+     */
+    private void checkUpdateEvent(final EventType<ConfigurationEvent> eventType) {
+        assertSame("Wrong super type for " + eventType, ConfigurationEvent.ANY, eventType.getSuperType());
+    }
+
+    /**
+     * Tests the event type for an add nodes operation.
      */
     @Test
-    public void testFetchSuperEventTypesNull() {
-        final Set<EventType<?>> superTypes = EventType.fetchSuperEventTypes(null);
-        assertTrue("Got super types", superTypes.isEmpty());
+    public void testAddNodesEventType() {
+        checkHierarchicalEvent(ConfigurationEvent.ADD_NODES);
+    }
+
+    /**
+     * Tests the event type for adding a property.
+     */
+    @Test
+    public void testAddPropertyEventType() {
+        checkUpdateEvent(ConfigurationEvent.ADD_PROPERTY);
+    }
+
+    /**
+     * Tests the common base event type for error events.
+     */
+    @Test
+    public void testBaseErrorEventType() {
+        assertEquals("Wrong super type", Event.ANY, ConfigurationErrorEvent.ANY.getSuperType());
+    }
+
+    /**
+     * Tests the event type for clearing a whole configuration.
+     */
+    @Test
+    public void testClearEventType() {
+        checkUpdateEvent(ConfigurationEvent.CLEAR);
+    }
+
+    /**
+     * Tests the event type for clearing a property.
+     */
+    @Test
+    public void testClearPropertyEventType() {
+        checkUpdateEvent(ConfigurationEvent.CLEAR_PROPERTY);
+    }
+
+    /**
+     * Tests the event type for a clear tree operation.
+     */
+    @Test
+    public void testClearTreeEventType() {
+        checkHierarchicalEvent(ConfigurationEvent.CLEAR_TREE);
+    }
+
+    /**
+     * Tests the base event type for configuration events.
+     */
+    @Test
+    public void testConfigurationEventType() {
+        assertSame("Wrong super type", Event.ANY, ConfigurationEvent.ANY.getSuperType());
     }
 
     /**
@@ -49,6 +123,15 @@ public class TestConfigurationEventTypes {
         final Set<EventType<?>> superTypes = EventType.fetchSuperEventTypes(Event.ANY);
         assertEquals("Wrong number of super types", 1, superTypes.size());
         assertTrue("Wrong super types", superTypes.contains(Event.ANY));
+    }
+
+    /**
+     * Tests whether the set of super event types for null input can be obtained.
+     */
+    @Test
+    public void testFetchSuperEventTypesNull() {
+        final Set<EventType<?>> superTypes = EventType.fetchSuperEventTypes(null);
+        assertTrue("Got super types", superTypes.isEmpty());
     }
 
     /**
@@ -67,11 +150,11 @@ public class TestConfigurationEventTypes {
     }
 
     /**
-     * Tests isInstanceOf() if the derived type is null.
+     * Tests the common base event type for hierarchical update events.
      */
     @Test
-    public void testIsInstanceOfDerivedNull() {
-        assertFalse("Wrong result", EventType.isInstanceOf(null, Event.ANY));
+    public void testHierarchicalEventType() {
+        checkUpdateEvent(ConfigurationEvent.ANY_HIERARCHICAL);
     }
 
     /**
@@ -80,6 +163,14 @@ public class TestConfigurationEventTypes {
     @Test
     public void testIsInstanceOfBaseNull() {
         assertFalse("Wrong result", EventType.isInstanceOf(ConfigurationEvent.ANY, null));
+    }
+
+    /**
+     * Tests isInstanceOf() if the derived type is null.
+     */
+    @Test
+    public void testIsInstanceOfDerivedNull() {
+        assertFalse("Wrong result", EventType.isInstanceOf(null, Event.ANY));
     }
 
     /**
@@ -102,28 +193,11 @@ public class TestConfigurationEventTypes {
     }
 
     /**
-     * Tests the base event type for configuration events.
+     * Tests the event type indicating a read error.
      */
     @Test
-    public void testConfigurationEventType() {
-        assertSame("Wrong super type", Event.ANY, ConfigurationEvent.ANY.getSuperType());
-    }
-
-    /**
-     * Helper method for checking the relevant properties of a given event type representing a configuration update event.
-     *
-     * @param eventType the event type to check
-     */
-    private void checkUpdateEvent(final EventType<ConfigurationEvent> eventType) {
-        assertSame("Wrong super type for " + eventType, ConfigurationEvent.ANY, eventType.getSuperType());
-    }
-
-    /**
-     * Tests the event type for adding a property.
-     */
-    @Test
-    public void testAddPropertyEventType() {
-        checkUpdateEvent(ConfigurationEvent.ADD_PROPERTY);
+    public void testReadErrorEventType() {
+        checkErrorEvent(ConfigurationErrorEvent.READ);
     }
 
     /**
@@ -135,85 +209,11 @@ public class TestConfigurationEventTypes {
     }
 
     /**
-     * Tests the event type for clearing a property.
-     */
-    @Test
-    public void testClearPropertyEventType() {
-        checkUpdateEvent(ConfigurationEvent.CLEAR_PROPERTY);
-    }
-
-    /**
-     * Tests the event type for clearing a whole configuration.
-     */
-    @Test
-    public void testClearEventType() {
-        checkUpdateEvent(ConfigurationEvent.CLEAR);
-    }
-
-    /**
-     * Tests the common base event type for hierarchical update events.
-     */
-    @Test
-    public void testHierarchicalEventType() {
-        checkUpdateEvent(ConfigurationEvent.ANY_HIERARCHICAL);
-    }
-
-    /**
-     * Helper method for checking the relevant properties of a given event type representing a hierarchical update event.
-     *
-     * @param eventType the event type to check
-     */
-    private void checkHierarchicalEvent(final EventType<ConfigurationEvent> eventType) {
-        assertSame("Wrong super type for " + eventType, ConfigurationEvent.ANY_HIERARCHICAL, eventType.getSuperType());
-    }
-
-    /**
-     * Tests the event type for an add nodes operation.
-     */
-    @Test
-    public void testAddNodesEventType() {
-        checkHierarchicalEvent(ConfigurationEvent.ADD_NODES);
-    }
-
-    /**
-     * Tests the event type for a clear tree operation.
-     */
-    @Test
-    public void testClearTreeEventType() {
-        checkHierarchicalEvent(ConfigurationEvent.CLEAR_TREE);
-    }
-
-    /**
      * Tests the event type indicating a change on a sub configuration.
      */
     @Test
     public void testSubnodeChangedEventType() {
         checkHierarchicalEvent(ConfigurationEvent.SUBNODE_CHANGED);
-    }
-
-    /**
-     * Tests the common base event type for error events.
-     */
-    @Test
-    public void testBaseErrorEventType() {
-        assertEquals("Wrong super type", Event.ANY, ConfigurationErrorEvent.ANY.getSuperType());
-    }
-
-    /**
-     * Helper method for checking the relevant properties of an error event type.
-     *
-     * @param type the type to be checked
-     */
-    private void checkErrorEvent(final EventType<ConfigurationErrorEvent> type) {
-        assertSame("Wrong super type for " + type, ConfigurationErrorEvent.ANY, type.getSuperType());
-    }
-
-    /**
-     * Tests the event type indicating a read error.
-     */
-    @Test
-    public void testReadErrorEventType() {
-        checkErrorEvent(ConfigurationErrorEvent.READ);
     }
 
     /**

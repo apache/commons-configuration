@@ -81,12 +81,16 @@ public class NodeStructureHelper {
     public static final ImmutableNode ROOT_TABLES_TREE = createTablesTree();
 
     /**
-     * Returns the number of authors.
+     * Appends a component to a node path. The component is added separated by a path separator.
      *
-     * @return the number of authors
+     * @param path the path
+     * @param component the component to be added
+     * @return the resulting path
      */
-    public static int authorsLength() {
-        return AUTHORS.length;
+    public static String appendPath(final String path, final String component) {
+        final StringBuilder buf = new StringBuilder(StringUtils.length(path) + StringUtils.length(component) + 1);
+        buf.append(path).append(PATH_SEPARATOR).append(component);
+        return buf.toString();
     }
 
     /**
@@ -100,76 +104,164 @@ public class NodeStructureHelper {
     }
 
     /**
-     * Returns the number of works for the author with the given index.
+     * Returns the number of authors.
      *
-     * @param authorIdx the author index
-     * @return the number of works of this author
+     * @return the number of authors
      */
-    public static int worksLength(final int authorIdx) {
-        return WORKS[authorIdx].length;
+    public static int authorsLength() {
+        return AUTHORS.length;
     }
 
     /**
-     * Returns the work of an author with a given index.
+     * Creates a tree with a root node whose children are the test authors. Each other has his works as child nodes. Each
+     * work has its personae as children.
      *
-     * @param authorIdx the author index
-     * @param idx the index of the work
-     * @return the desired work
+     * @return the root node of the authors tree
      */
-    public static String work(final int authorIdx, final int idx) {
-        return WORKS[authorIdx][idx];
+    private static ImmutableNode createAuthorsTree() {
+        final ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder(AUTHORS.length);
+        for (int author = 0; author < AUTHORS.length; author++) {
+            final ImmutableNode.Builder authorBuilder = new ImmutableNode.Builder();
+            authorBuilder.name(AUTHORS[author]);
+            for (int work = 0; work < WORKS[author].length; work++) {
+                final ImmutableNode.Builder workBuilder = new ImmutableNode.Builder();
+                workBuilder.name(WORKS[author][work]);
+                for (final String person : PERSONAE[author][work]) {
+                    workBuilder.addChild(new ImmutableNode.Builder().name(person).create());
+                }
+                authorBuilder.addChild(workBuilder.create());
+            }
+            rootBuilder.addChild(authorBuilder.create());
+        }
+        return rootBuilder.name("authorTree").create();
     }
 
     /**
-     * Returns the number of personae in the given work of the specified author.
+     * Helper method for creating a field node with its children. Nodes of this type are used within the tables tree. They
+     * define a single column of a table.
      *
-     * @param authorIdx the author index
-     * @param workIdx the index of the work
-     * @return the number of personae in this work
+     * @param name the name of the field
+     * @return the field node
      */
-    public static int personaeLength(final int authorIdx, final int workIdx) {
-        return PERSONAE[authorIdx][workIdx].length;
+    public static ImmutableNode createFieldNode(final String name) {
+        final ImmutableNode.Builder fldBuilder = new ImmutableNode.Builder(1);
+        fldBuilder.addChild(createNode("name", name));
+        return fldBuilder.name("field").create();
     }
 
     /**
-     * Returns the name of a persona.
+     * Helper method for creating an immutable node with a name and a value.
      *
-     * @param authorIdx the author index
-     * @param workIdx the index of the work
-     * @param personaIdx the index of the persona
-     * @return the name of this persona
+     * @param name the node's name
+     * @param value the node's value
+     * @return the new node
      */
-    public static String persona(final int authorIdx, final int workIdx, final int personaIdx) {
-        return PERSONAE[authorIdx][workIdx][personaIdx];
+    public static ImmutableNode createNode(final String name, final Object value) {
+        return new ImmutableNode.Builder().name(name).value(value).create();
     }
 
     /**
-     * Returns the number of tables in the tables tree.
+     * Creates a tree with a root node whose children are the test personae. Each node represents a person and has an
+     * attribute pointing to the author who invented this person. There is a single child node for the associated work which
+     * has again a child and an attribute.
      *
-     * @return the number of tables
+     * @return the root node of the personae tree
      */
-    public static int tablesLength() {
-        return TABLES.length;
+    private static ImmutableNode createPersonaeTree() {
+        final ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
+        for (int author = 0; author < AUTHORS.length; author++) {
+            for (int work = 0; work < WORKS[author].length; work++) {
+                for (final String person : PERSONAE[author][work]) {
+                    final ImmutableNode orgValue = new ImmutableNode.Builder().name(ELEM_ORG_VALUE).value("yes").addAttribute(ATTR_TESTED, Boolean.FALSE)
+                        .create();
+                    final ImmutableNode workNode = new ImmutableNode.Builder(1).name(WORKS[author][work]).addChild(orgValue).create();
+                    final ImmutableNode personNode = new ImmutableNode.Builder(1).name(person).addAttribute(ATTR_AUTHOR, AUTHORS[author]).addChild(workNode)
+                        .create();
+                    rootBuilder.addChild(personNode);
+                }
+            }
+        }
+        return rootBuilder.create();
     }
 
     /**
-     * Returns the name of the test table with the given index.
+     * Creates a mock for a resolver.
      *
-     * @param idx the index of the table
-     * @return the name of the test table with this index
+     * @return the resolver mock
      */
-    public static String table(final int idx) {
-        return TABLES[idx];
+    public static NodeKeyResolver<ImmutableNode> createResolverMock() {
+        @SuppressWarnings("unchecked")
+        final NodeKeyResolver<ImmutableNode> mock = EasyMock.createMock(NodeKeyResolver.class);
+        return mock;
     }
 
     /**
-     * Returns the number of fields in the test table with the given index.
+     * Creates a tree with database table data with the following structure:
      *
-     * @param tabIdx the index of the table
-     * @return the number of fields in this table
+     * tables table name fields field name field name
+     *
+     * @return the resulting nodes structure
      */
-    public static int fieldsLength(final int tabIdx) {
-        return FIELDS[tabIdx].length;
+    private static ImmutableNode createTablesTree() {
+        return createTablesTree(TABLES, FIELDS);
+    }
+
+    /**
+     * Creates as tree with database table data based on the passed in arrays of table names and fields for tables. Works
+     * like the method without parameters, but allows defining the data of the structure.
+     *
+     * @param tables an array with the names of the tables
+     * @param fields an array with the fields of the single tables
+     * @return the resulting nodes structure
+     */
+    public static ImmutableNode createTablesTree(final String[] tables, final String[][] fields) {
+        final ImmutableNode.Builder bldTables = new ImmutableNode.Builder(tables.length);
+        bldTables.name("tables");
+        for (int i = 0; i < tables.length; i++) {
+            final ImmutableNode.Builder bldTable = new ImmutableNode.Builder(2);
+            bldTable.addChild(createNode("name", tables[i]));
+            final ImmutableNode.Builder bldFields = new ImmutableNode.Builder(fields[i].length);
+            bldFields.name("fields");
+
+            for (int j = 0; j < fields[i].length; j++) {
+                bldFields.addChild(createFieldNode(fields[i][j]));
+            }
+            bldTable.addChild(bldFields.create());
+            bldTables.addChild(bldTable.name("table").create());
+        }
+        return bldTables.create();
+    }
+
+    /**
+     * Prepares the passed in resolver mock to resolve add keys. They are interpreted on a default expression engine.
+     *
+     * @param resolver the {@code NodeKeyResolver} mock
+     */
+    public static void expectResolveAddKeys(final NodeKeyResolver<ImmutableNode> resolver) {
+        EasyMock.expect(resolver.resolveAddKey(EasyMock.anyObject(ImmutableNode.class), EasyMock.anyString(), EasyMock.anyObject(TreeData.class)))
+            .andAnswer(() -> {
+                final ImmutableNode root = (ImmutableNode) EasyMock.getCurrentArguments()[0];
+                final String key = (String) EasyMock.getCurrentArguments()[1];
+                final TreeData handler = (TreeData) EasyMock.getCurrentArguments()[2];
+                return DefaultExpressionEngine.INSTANCE.prepareAdd(root, key, handler);
+            }).anyTimes();
+    }
+
+    /**
+     * Prepares a mock for a resolver to expect arbitrary resolve operations. These operations are implemented on top of a
+     * default expression engine.
+     *
+     * @param resolver the mock resolver
+     */
+    @SuppressWarnings("unchecked")
+    public static void expectResolveKeyForQueries(final NodeKeyResolver<ImmutableNode> resolver) {
+        EasyMock.expect(resolver.resolveKey(EasyMock.anyObject(ImmutableNode.class), EasyMock.anyObject(String.class),
+            (NodeHandler<ImmutableNode>) EasyMock.anyObject(NoHandler.class))).andAnswer(() -> {
+                final ImmutableNode root = (ImmutableNode) EasyMock.getCurrentArguments()[0];
+                final String key = (String) EasyMock.getCurrentArguments()[1];
+                final NodeHandler<ImmutableNode> handler = (NodeHandler<ImmutableNode>) EasyMock.getCurrentArguments()[2];
+                return DefaultExpressionEngine.INSTANCE.query(root, key, handler);
+            }).anyTimes();
     }
 
     /**
@@ -184,16 +276,71 @@ public class NodeStructureHelper {
     }
 
     /**
-     * Appends a component to a node path. The component is added separated by a path separator.
+     * Returns the number of fields in the test table with the given index.
      *
-     * @param path the path
-     * @param component the component to be added
-     * @return the resulting path
+     * @param tabIdx the index of the table
+     * @return the number of fields in this table
      */
-    public static String appendPath(final String path, final String component) {
-        final StringBuilder buf = new StringBuilder(StringUtils.length(path) + StringUtils.length(component) + 1);
-        buf.append(path).append(PATH_SEPARATOR).append(component);
-        return buf.toString();
+    public static int fieldsLength(final int tabIdx) {
+        return FIELDS[tabIdx].length;
+    }
+
+    /**
+     * Helper method for evaluating a single component of a node key.
+     *
+     * @param parent the current parent node
+     * @param components the array with the components of the node key
+     * @param currentIdx the index of the current path component
+     * @return the found target node
+     * @throws NoSuchElementException if the desired node cannot be found
+     */
+    private static ImmutableNode findNode(final ImmutableNode parent, final String[] components, final int currentIdx) {
+        if (currentIdx >= components.length) {
+            return parent;
+        }
+
+        final Matcher m = PAT_KEY_WITH_INDEX.matcher(components[currentIdx]);
+        final String childName;
+        final int childIndex;
+        if (m.matches()) {
+            childName = m.group(1);
+            childIndex = Integer.parseInt(m.group(2));
+        } else {
+            childName = components[currentIdx];
+            childIndex = 0;
+        }
+
+        int foundIdx = 0;
+        for (final ImmutableNode node : parent) {
+            if (childName.equals(node.getNodeName()) && (foundIdx++ == childIndex)) {
+                return findNode(node, components, currentIdx + 1);
+            }
+        }
+        throw new NoSuchElementException("Cannot resolve child " + components[currentIdx]);
+    }
+
+    /**
+     * Returns a clone of the array with the table fields. This is useful if a slightly different tree structure should be
+     * created.
+     *
+     * @return the cloned field names
+     */
+    public static String[][] getClonedFields() {
+        final String[][] fieldNamesNew = new String[FIELDS.length][];
+        for (int i = 0; i < FIELDS.length; i++) {
+            fieldNamesNew[i] = FIELDS[i].clone();
+        }
+        return fieldNamesNew;
+    }
+
+    /**
+     * Returns a clone of the array with the table names. This is useful if a slightly different tree structure should be
+     * created.
+     *
+     * @return the cloned table names
+     */
+    public static String[] getClonedTables() {
+        return TABLES.clone();
     }
 
     /**
@@ -260,212 +407,65 @@ public class NodeStructureHelper {
     }
 
     /**
-     * Helper method for creating an immutable node with a name and a value.
+     * Returns the name of a persona.
      *
-     * @param name the node's name
-     * @param value the node's value
-     * @return the new node
+     * @param authorIdx the author index
+     * @param workIdx the index of the work
+     * @param personaIdx the index of the persona
+     * @return the name of this persona
      */
-    public static ImmutableNode createNode(final String name, final Object value) {
-        return new ImmutableNode.Builder().name(name).value(value).create();
+    public static String persona(final int authorIdx, final int workIdx, final int personaIdx) {
+        return PERSONAE[authorIdx][workIdx][personaIdx];
     }
 
     /**
-     * Helper method for creating a field node with its children. Nodes of this type are used within the tables tree. They
-     * define a single column of a table.
+     * Returns the number of personae in the given work of the specified author.
      *
-     * @param name the name of the field
-     * @return the field node
+     * @param authorIdx the author index
+     * @param workIdx the index of the work
+     * @return the number of personae in this work
      */
-    public static ImmutableNode createFieldNode(final String name) {
-        final ImmutableNode.Builder fldBuilder = new ImmutableNode.Builder(1);
-        fldBuilder.addChild(createNode("name", name));
-        return fldBuilder.name("field").create();
+    public static int personaeLength(final int authorIdx, final int workIdx) {
+        return PERSONAE[authorIdx][workIdx].length;
     }
 
     /**
-     * Creates a mock for a resolver.
+     * Returns the name of the test table with the given index.
      *
-     * @return the resolver mock
+     * @param idx the index of the table
+     * @return the name of the test table with this index
      */
-    public static NodeKeyResolver<ImmutableNode> createResolverMock() {
-        @SuppressWarnings("unchecked")
-        final NodeKeyResolver<ImmutableNode> mock = EasyMock.createMock(NodeKeyResolver.class);
-        return mock;
+    public static String table(final int idx) {
+        return TABLES[idx];
     }
 
     /**
-     * Prepares a mock for a resolver to expect arbitrary resolve operations. These operations are implemented on top of a
-     * default expression engine.
+     * Returns the number of tables in the tables tree.
      *
-     * @param resolver the mock resolver
+     * @return the number of tables
      */
-    @SuppressWarnings("unchecked")
-    public static void expectResolveKeyForQueries(final NodeKeyResolver<ImmutableNode> resolver) {
-        EasyMock.expect(resolver.resolveKey(EasyMock.anyObject(ImmutableNode.class), EasyMock.anyObject(String.class),
-            (NodeHandler<ImmutableNode>) EasyMock.anyObject(NoHandler.class))).andAnswer(() -> {
-                final ImmutableNode root = (ImmutableNode) EasyMock.getCurrentArguments()[0];
-                final String key = (String) EasyMock.getCurrentArguments()[1];
-                final NodeHandler<ImmutableNode> handler = (NodeHandler<ImmutableNode>) EasyMock.getCurrentArguments()[2];
-                return DefaultExpressionEngine.INSTANCE.query(root, key, handler);
-            }).anyTimes();
+    public static int tablesLength() {
+        return TABLES.length;
     }
 
     /**
-     * Prepares the passed in resolver mock to resolve add keys. They are interpreted on a default expression engine.
+     * Returns the work of an author with a given index.
      *
-     * @param resolver the {@code NodeKeyResolver} mock
+     * @param authorIdx the author index
+     * @param idx the index of the work
+     * @return the desired work
      */
-    public static void expectResolveAddKeys(final NodeKeyResolver<ImmutableNode> resolver) {
-        EasyMock.expect(resolver.resolveAddKey(EasyMock.anyObject(ImmutableNode.class), EasyMock.anyString(), EasyMock.anyObject(TreeData.class)))
-            .andAnswer(() -> {
-                final ImmutableNode root = (ImmutableNode) EasyMock.getCurrentArguments()[0];
-                final String key = (String) EasyMock.getCurrentArguments()[1];
-                final TreeData handler = (TreeData) EasyMock.getCurrentArguments()[2];
-                return DefaultExpressionEngine.INSTANCE.prepareAdd(root, key, handler);
-            }).anyTimes();
+    public static String work(final int authorIdx, final int idx) {
+        return WORKS[authorIdx][idx];
     }
 
     /**
-     * Creates as tree with database table data based on the passed in arrays of table names and fields for tables. Works
-     * like the method without parameters, but allows defining the data of the structure.
+     * Returns the number of works for the author with the given index.
      *
-     * @param tables an array with the names of the tables
-     * @param fields an array with the fields of the single tables
-     * @return the resulting nodes structure
+     * @param authorIdx the author index
+     * @return the number of works of this author
      */
-    public static ImmutableNode createTablesTree(final String[] tables, final String[][] fields) {
-        final ImmutableNode.Builder bldTables = new ImmutableNode.Builder(tables.length);
-        bldTables.name("tables");
-        for (int i = 0; i < tables.length; i++) {
-            final ImmutableNode.Builder bldTable = new ImmutableNode.Builder(2);
-            bldTable.addChild(createNode("name", tables[i]));
-            final ImmutableNode.Builder bldFields = new ImmutableNode.Builder(fields[i].length);
-            bldFields.name("fields");
-
-            for (int j = 0; j < fields[i].length; j++) {
-                bldFields.addChild(createFieldNode(fields[i][j]));
-            }
-            bldTable.addChild(bldFields.create());
-            bldTables.addChild(bldTable.name("table").create());
-        }
-        return bldTables.create();
-    }
-
-    /**
-     * Returns a clone of the array with the table names. This is useful if a slightly different tree structure should be
-     * created.
-     *
-     * @return the cloned table names
-     */
-    public static String[] getClonedTables() {
-        return TABLES.clone();
-    }
-
-    /**
-     * Returns a clone of the array with the table fields. This is useful if a slightly different tree structure should be
-     * created.
-     *
-     * @return the cloned field names
-     */
-    public static String[][] getClonedFields() {
-        final String[][] fieldNamesNew = new String[FIELDS.length][];
-        for (int i = 0; i < FIELDS.length; i++) {
-            fieldNamesNew[i] = FIELDS[i].clone();
-        }
-        return fieldNamesNew;
-    }
-
-    /**
-     * Creates a tree with a root node whose children are the test authors. Each other has his works as child nodes. Each
-     * work has its personae as children.
-     *
-     * @return the root node of the authors tree
-     */
-    private static ImmutableNode createAuthorsTree() {
-        final ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder(AUTHORS.length);
-        for (int author = 0; author < AUTHORS.length; author++) {
-            final ImmutableNode.Builder authorBuilder = new ImmutableNode.Builder();
-            authorBuilder.name(AUTHORS[author]);
-            for (int work = 0; work < WORKS[author].length; work++) {
-                final ImmutableNode.Builder workBuilder = new ImmutableNode.Builder();
-                workBuilder.name(WORKS[author][work]);
-                for (final String person : PERSONAE[author][work]) {
-                    workBuilder.addChild(new ImmutableNode.Builder().name(person).create());
-                }
-                authorBuilder.addChild(workBuilder.create());
-            }
-            rootBuilder.addChild(authorBuilder.create());
-        }
-        return rootBuilder.name("authorTree").create();
-    }
-
-    /**
-     * Creates a tree with a root node whose children are the test personae. Each node represents a person and has an
-     * attribute pointing to the author who invented this person. There is a single child node for the associated work which
-     * has again a child and an attribute.
-     *
-     * @return the root node of the personae tree
-     */
-    private static ImmutableNode createPersonaeTree() {
-        final ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder();
-        for (int author = 0; author < AUTHORS.length; author++) {
-            for (int work = 0; work < WORKS[author].length; work++) {
-                for (final String person : PERSONAE[author][work]) {
-                    final ImmutableNode orgValue = new ImmutableNode.Builder().name(ELEM_ORG_VALUE).value("yes").addAttribute(ATTR_TESTED, Boolean.FALSE)
-                        .create();
-                    final ImmutableNode workNode = new ImmutableNode.Builder(1).name(WORKS[author][work]).addChild(orgValue).create();
-                    final ImmutableNode personNode = new ImmutableNode.Builder(1).name(person).addAttribute(ATTR_AUTHOR, AUTHORS[author]).addChild(workNode)
-                        .create();
-                    rootBuilder.addChild(personNode);
-                }
-            }
-        }
-        return rootBuilder.create();
-    }
-
-    /**
-     * Creates a tree with database table data with the following structure:
-     *
-     * tables table name fields field name field name
-     *
-     * @return the resulting nodes structure
-     */
-    private static ImmutableNode createTablesTree() {
-        return createTablesTree(TABLES, FIELDS);
-    }
-
-    /**
-     * Helper method for evaluating a single component of a node key.
-     *
-     * @param parent the current parent node
-     * @param components the array with the components of the node key
-     * @param currentIdx the index of the current path component
-     * @return the found target node
-     * @throws NoSuchElementException if the desired node cannot be found
-     */
-    private static ImmutableNode findNode(final ImmutableNode parent, final String[] components, final int currentIdx) {
-        if (currentIdx >= components.length) {
-            return parent;
-        }
-
-        final Matcher m = PAT_KEY_WITH_INDEX.matcher(components[currentIdx]);
-        final String childName;
-        final int childIndex;
-        if (m.matches()) {
-            childName = m.group(1);
-            childIndex = Integer.parseInt(m.group(2));
-        } else {
-            childName = components[currentIdx];
-            childIndex = 0;
-        }
-
-        int foundIdx = 0;
-        for (final ImmutableNode node : parent) {
-            if (childName.equals(node.getNodeName()) && (foundIdx++ == childIndex)) {
-                return findNode(node, components, currentIdx + 1);
-            }
-        }
-        throw new NoSuchElementException("Cannot resolve child " + components[currentIdx]);
+    public static int worksLength(final int authorIdx) {
+        return WORKS[authorIdx].length;
     }
 }

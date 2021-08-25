@@ -46,12 +46,14 @@ public class TestAbsoluteNameLocationStrategy {
     }
 
     /**
-     * Tests a locate() operation if no file name is provided.
+     * Tests a successful locate() operation.
      */
     @Test
-    public void testNoFileName() {
-        final FileLocator locator = FileLocatorUtils.fileLocator().create();
-        assertNull("Got a URL", strategy.locate(fileSystem, locator));
+    public void testExistingAbsoluteFile() {
+        final File file = ConfigurationAssert.getTestFile("test.xml");
+        final FileLocator locator = FileLocatorUtils.fileLocator().fileName(file.getAbsolutePath()).create();
+        final URL url = strategy.locate(fileSystem, locator);
+        assertEquals("Wrong URL", file.getAbsoluteFile(), FileLocatorUtils.fileFromURL(url).getAbsoluteFile());
     }
 
     /**
@@ -64,6 +66,15 @@ public class TestAbsoluteNameLocationStrategy {
     }
 
     /**
+     * Tests a locate() operation if no file name is provided.
+     */
+    @Test
+    public void testNoFileName() {
+        final FileLocator locator = FileLocatorUtils.fileLocator().create();
+        assertNull("Got a URL", strategy.locate(fileSystem, locator));
+    }
+
+    /**
      * Tests a locate() operation if an absolute file name is provided, but this file does not exist.
      */
     @Test
@@ -71,16 +82,5 @@ public class TestAbsoluteNameLocationStrategy {
         final File file = ConfigurationAssert.getOutFile("NotExistingFile.tst");
         final FileLocator locator = FileLocatorUtils.fileLocator().fileName(file.getAbsolutePath()).create();
         assertNull("Got a URL", strategy.locate(fileSystem, locator));
-    }
-
-    /**
-     * Tests a successful locate() operation.
-     */
-    @Test
-    public void testExistingAbsoluteFile() {
-        final File file = ConfigurationAssert.getTestFile("test.xml");
-        final FileLocator locator = FileLocatorUtils.fileLocator().fileName(file.getAbsolutePath()).create();
-        final URL url = strategy.locate(fileSystem, locator);
-        assertEquals("Wrong URL", file.getAbsoluteFile(), FileLocatorUtils.fileFromURL(url).getAbsoluteFile());
     }
 }

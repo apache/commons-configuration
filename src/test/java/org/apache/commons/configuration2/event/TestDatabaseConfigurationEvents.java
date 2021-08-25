@@ -31,6 +31,15 @@ public class TestDatabaseConfigurationEvents extends AbstractTestConfigurationEv
     private DatabaseConfigurationTestHelper helper;
 
     @Override
+    protected AbstractConfiguration createConfiguration() {
+        try {
+            return helper.setUpConfig();
+        } catch (final ConfigurationException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    @Override
     @Before
     public void setUp() throws Exception {
         helper = new DatabaseConfigurationTestHelper();
@@ -42,14 +51,5 @@ public class TestDatabaseConfigurationEvents extends AbstractTestConfigurationEv
     @After
     public void tearDown() throws Exception {
         helper.tearDown();
-    }
-
-    @Override
-    protected AbstractConfiguration createConfiguration() {
-        try {
-            return helper.setUpConfig();
-        } catch (final ConfigurationException e) {
-            throw new AssertionError(e);
-        }
     }
 }

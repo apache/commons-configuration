@@ -44,19 +44,6 @@ public abstract class AbstractCombinerTest {
     /** The combiner to be tested. */
     protected NodeCombiner combiner;
 
-    @Before
-    public void setUp() throws Exception {
-        combiner = createCombiner();
-    }
-
-    /**
-     * Creates the combiner to be tested. This method is called by {@code setUp()}. It must be implemented in concrete sub
-     * classes.
-     *
-     * @return the combiner to be tested
-     */
-    protected abstract NodeCombiner createCombiner();
-
     /**
      * Constructs a union configuration based on the source configurations.
      *
@@ -74,6 +61,19 @@ public abstract class AbstractCombinerTest {
         result.getNodeModel().setRootNode(cn);
 
         return result;
+    }
+
+    /**
+     * Creates the combiner to be tested. This method is called by {@code setUp()}. It must be implemented in concrete sub
+     * classes.
+     *
+     * @return the combiner to be tested
+     */
+    protected abstract NodeCombiner createCombiner();
+
+    @Before
+    public void setUp() throws Exception {
+        combiner = createCombiner();
     }
 
     /**

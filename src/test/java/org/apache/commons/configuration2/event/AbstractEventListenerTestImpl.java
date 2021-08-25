@@ -46,11 +46,6 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements 
         events = new LinkedList<>();
     }
 
-    @Override
-    public void onEvent(final T event) {
-        events.add(event);
-    }
-
     /**
      * Checks if at least {@code minEvents} events have been received.
      *
@@ -58,6 +53,13 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements 
      */
     public void checkEventCount(final int minEvents) {
         assertTrue("Too view events received", events.size() >= minEvents);
+    }
+
+    /**
+     * Checks if all events has been processed.
+     */
+    public void done() {
+        assertTrue("Too many events received", events.isEmpty());
     }
 
     /**
@@ -76,6 +78,11 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements 
         return e;
     }
 
+    @Override
+    public void onEvent(final T event) {
+        events.add(event);
+    }
+
     /**
      * Skips to the last received event and checks that no events of the given type have been received. This method is used
      * by checks for detail events to ignore the detail events.
@@ -87,12 +94,5 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements 
             final T e = events.remove(0);
             assertTrue("Found end event in details", type != e.getEventType());
         }
-    }
-
-    /**
-     * Checks if all events has been processed.
-     */
-    public void done() {
-        assertTrue("Too many events received", events.isEmpty());
     }
 }

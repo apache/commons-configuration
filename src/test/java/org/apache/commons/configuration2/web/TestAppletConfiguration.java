@@ -38,22 +38,6 @@ public class TestAppletConfiguration extends TestAbstractConfiguration {
     /** A flag whether tests with an applet can be run. */
     boolean supportsApplet;
 
-    /**
-     * Initializes the tests. This implementation checks whether an applet can be used. Some environments, which do not
-     * support a GUI, don't allow creating an {@code Applet} instance. If we are in such an environment, some tests need to
-     * behave differently or be completely dropped.
-     */
-    @Before
-    public void setUp() throws Exception {
-        try {
-            new Applet();
-            supportsApplet = true;
-        } catch (final Exception ex) {
-            // cannot use applets
-            supportsApplet = false;
-        }
-    }
-
     @Override
     protected AbstractConfiguration getConfiguration() {
         final AbstractConfiguration config;
@@ -96,6 +80,22 @@ public class TestAppletConfiguration extends TestAbstractConfiguration {
             return new AppletConfiguration(new Applet());
         }
         return new BaseConfiguration();
+    }
+
+    /**
+     * Initializes the tests. This implementation checks whether an applet can be used. Some environments, which do not
+     * support a GUI, don't allow creating an {@code Applet} instance. If we are in such an environment, some tests need to
+     * behave differently or be completely dropped.
+     */
+    @Before
+    public void setUp() throws Exception {
+        try {
+            new Applet();
+            supportsApplet = true;
+        } catch (final Exception ex) {
+            // cannot use applets
+            supportsApplet = false;
+        }
     }
 
     @Override

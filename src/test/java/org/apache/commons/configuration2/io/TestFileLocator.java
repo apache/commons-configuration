@@ -53,28 +53,6 @@ public class TestFileLocator {
     /** A test location strategy. */
     private static FileLocationStrategy locationStrategy;
 
-    @BeforeClass
-    public static void setUpOnce() throws Exception {
-        sourceURL = ConfigurationAssert.getTestURL(FILE_NAME);
-        fileSystem = EasyMock.createMock(FileSystem.class);
-        locationStrategy = EasyMock.createMock(FileLocationStrategy.class);
-        EasyMock.replay(fileSystem, locationStrategy);
-    }
-
-    /**
-     * Tests whether an undefined file locator can be created.
-     */
-    @Test
-    public void testCreateFileLocatorUndefined() {
-        final FileLocator locator = FileLocatorUtils.fileLocator().create();
-        assertNull("Got a base path", locator.getBasePath());
-        assertNull("Got a file name", locator.getFileName());
-        assertNull("Got a URL", locator.getSourceURL());
-        assertNull("Got an encoding", locator.getEncoding());
-        assertNull("Got a file system", locator.getFileSystem());
-        assertNull("Got a location strategy", locator.getLocationStrategy());
-    }
-
     /**
      * Tests whether a locator has the expected properties.
      *
@@ -87,6 +65,14 @@ public class TestFileLocator {
         assertEquals("Wrong URL", sourceURL.toExternalForm(), locator.getSourceURL().toExternalForm());
         assertSame("Wrong file system", fileSystem, locator.getFileSystem());
         assertSame("Wrong location strategy", locationStrategy, locator.getLocationStrategy());
+    }
+
+    @BeforeClass
+    public static void setUpOnce() throws Exception {
+        sourceURL = ConfigurationAssert.getTestURL(FILE_NAME);
+        fileSystem = EasyMock.createMock(FileSystem.class);
+        locationStrategy = EasyMock.createMock(FileLocationStrategy.class);
+        EasyMock.replay(fileSystem, locationStrategy);
     }
 
     /**
@@ -111,19 +97,17 @@ public class TestFileLocator {
     }
 
     /**
-     * Tests the equals() implementation of FileLocator if the expected result is true.
+     * Tests whether an undefined file locator can be created.
      */
     @Test
-    public void testFileLocatorEqualsTrue() {
-        FileLocator loc1 = FileLocatorUtils.fileLocator().create();
-        ConfigurationAssert.checkEquals(loc1, loc1, true);
-        FileLocator loc2 = FileLocatorUtils.fileLocator().create();
-        ConfigurationAssert.checkEquals(loc1, loc2, true);
-        loc1 = FileLocatorUtils.fileLocator().basePath(BASE_PATH).fileName(FILE_NAME).encoding(ENCODING).fileSystem(fileSystem).sourceURL(sourceURL)
-            .locationStrategy(locationStrategy).create();
-        loc2 = FileLocatorUtils.fileLocator().basePath(BASE_PATH).fileName(FILE_NAME).encoding(ENCODING).fileSystem(fileSystem).sourceURL(sourceURL)
-            .locationStrategy(locationStrategy).create();
-        ConfigurationAssert.checkEquals(loc1, loc2, true);
+    public void testCreateFileLocatorUndefined() {
+        final FileLocator locator = FileLocatorUtils.fileLocator().create();
+        assertNull("Got a base path", locator.getBasePath());
+        assertNull("Got a file name", locator.getFileName());
+        assertNull("Got a URL", locator.getSourceURL());
+        assertNull("Got an encoding", locator.getEncoding());
+        assertNull("Got a file system", locator.getFileSystem());
+        assertNull("Got a location strategy", locator.getLocationStrategy());
     }
 
     /**
@@ -163,6 +147,22 @@ public class TestFileLocator {
     public void testFileLocatorEqualsOtherClass() {
         final FileLocator loc = FileLocatorUtils.fileLocator().fileName(FILE_NAME).create();
         assertFalse("Wrong result", loc.equals(this));
+    }
+
+    /**
+     * Tests the equals() implementation of FileLocator if the expected result is true.
+     */
+    @Test
+    public void testFileLocatorEqualsTrue() {
+        FileLocator loc1 = FileLocatorUtils.fileLocator().create();
+        ConfigurationAssert.checkEquals(loc1, loc1, true);
+        FileLocator loc2 = FileLocatorUtils.fileLocator().create();
+        ConfigurationAssert.checkEquals(loc1, loc2, true);
+        loc1 = FileLocatorUtils.fileLocator().basePath(BASE_PATH).fileName(FILE_NAME).encoding(ENCODING).fileSystem(fileSystem).sourceURL(sourceURL)
+            .locationStrategy(locationStrategy).create();
+        loc2 = FileLocatorUtils.fileLocator().basePath(BASE_PATH).fileName(FILE_NAME).encoding(ENCODING).fileSystem(fileSystem).sourceURL(sourceURL)
+            .locationStrategy(locationStrategy).create();
+        ConfigurationAssert.checkEquals(loc1, loc2, true);
     }
 
     /**

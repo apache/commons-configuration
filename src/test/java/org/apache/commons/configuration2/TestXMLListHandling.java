@@ -51,51 +51,6 @@ public class TestXMLListHandling {
     /** The XML element name for the single values of the split list. */
     private static final String ELEM_SPLIT = "value";
 
-    /** Configuration to be tested. */
-    private XMLConfiguration config;
-
-    @Before
-    public void setUp() throws Exception {
-        config = readFromString(SOURCE);
-    }
-
-    /**
-     * Parses the specified string into an XML configuration.
-     *
-     * @param xml the XML to be parsed
-     * @return the resulting configuration
-     */
-    private static XMLConfiguration readFromString(final String xml) throws ConfigurationException {
-        final XMLConfiguration config = new XMLConfiguration();
-        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
-        final FileHandler handler = new FileHandler(config);
-        handler.load(new StringReader(xml));
-        return config;
-    }
-
-    /**
-     * Saves the test configuration into a string.
-     *
-     * @return the resulting string
-     */
-    private String saveToString() throws ConfigurationException {
-        final StringWriter writer = new StringWriter(4096);
-        final FileHandler handler = new FileHandler(config);
-        handler.save(writer);
-        return writer.toString();
-    }
-
-    /**
-     * Generates an XML element with the specified value as body.
-     *
-     * @param key the key
-     * @param value the value
-     * @return the string representation of this element
-     */
-    private static String element(final String key, final String value) {
-        return "<" + key + '>' + value + "</" + key + '>';
-    }
-
     /**
      * Checks whether the specified XML contains a list of values as a single, comma-separated string.
      *
@@ -123,14 +78,48 @@ public class TestXMLListHandling {
     }
 
     /**
-     * Tests that the list format is kept if properties are not touched,
+     * Generates an XML element with the specified value as body.
+     *
+     * @param key the key
+     * @param value the value
+     * @return the string representation of this element
      */
-    @Test
-    public void testSaveNoChanges() throws ConfigurationException {
-        final String xml = saveToString();
+    private static String element(final String key, final String value) {
+        return "<" + key + '>' + value + "</" + key + '>';
+    }
 
-        checkSplit(xml, ELEM_SPLIT, "1", "2");
-        checkCommaSeparated(xml, KEY_VALUES, "a", "b", "c");
+    /**
+     * Parses the specified string into an XML configuration.
+     *
+     * @param xml the XML to be parsed
+     * @return the resulting configuration
+     */
+    private static XMLConfiguration readFromString(final String xml) throws ConfigurationException {
+        final XMLConfiguration config = new XMLConfiguration();
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        final FileHandler handler = new FileHandler(config);
+        handler.load(new StringReader(xml));
+        return config;
+    }
+
+    /** Configuration to be tested. */
+    private XMLConfiguration config;
+
+    /**
+     * Saves the test configuration into a string.
+     *
+     * @return the resulting string
+     */
+    private String saveToString() throws ConfigurationException {
+        final StringWriter writer = new StringWriter(4096);
+        final FileHandler handler = new FileHandler(config);
+        handler.save(writer);
+        return writer.toString();
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        config = readFromString(SOURCE);
     }
 
     /**
@@ -147,16 +136,13 @@ public class TestXMLListHandling {
     }
 
     /**
-     * Tests that a list item can be removed without affecting the format.
+     * Tries to save the configuration with a different list delimiter handler which does not support escaping of lists.
+     * This should fail with a meaningful exception message.
      */
-    @Test
-    public void testRemoveListItem() throws ConfigurationException {
-        config.clearProperty(KEY_VALUES + "(2)");
-        config.clearProperty(KEY_SPLIT + "(1)");
-        final String xml = saveToString();
-
-        checkSplit(xml, ELEM_SPLIT, "1");
-        checkCommaSeparated(xml, KEY_VALUES, "a", "b");
+    @Test(expected = ConfigurationRuntimeException.class)
+    public void testIncompatibleListDelimiterOnSaving() throws ConfigurationException {
+        config.setListDelimiterHandler(DisabledListDelimiterHandler.INSTANCE);
+        saveToString();
     }
 
     /**
@@ -173,12 +159,26 @@ public class TestXMLListHandling {
     }
 
     /**
-     * Tries to save the configuration with a different list delimiter handler which does not support escaping of lists.
-     * This should fail with a meaningful exception message.
+     * Tests that a list item can be removed without affecting the format.
      */
-    @Test(expected = ConfigurationRuntimeException.class)
-    public void testIncompatibleListDelimiterOnSaving() throws ConfigurationException {
-        config.setListDelimiterHandler(DisabledListDelimiterHandler.INSTANCE);
-        saveToString();
+    @Test
+    public void testRemoveListItem() throws ConfigurationException {
+        config.clearProperty(KEY_VALUES + "(2)");
+        config.clearProperty(KEY_SPLIT + "(1)");
+        final String xml = saveToString();
+
+        checkSplit(xml, ELEM_SPLIT, "1");
+        checkCommaSeparated(xml, KEY_VALUES, "a", "b");
+    }
+
+    /**
+     * Tests that the list format is kept if properties are not touched,
+     */
+    @Test
+    public void testSaveNoChanges() throws ConfigurationException {
+        final String xml = saveToString();
+
+        checkSplit(xml, ELEM_SPLIT, "1", "2");
+        checkCommaSeparated(xml, KEY_VALUES, "a", "b", "c");
     }
 }

@@ -50,14 +50,6 @@ public class TestDefaultBeanFactory {
     /** Constant for the test value of the numeric property. */
     private static final int TEST_INT = 42;
 
-    /** The object to be tested. */
-    private DefaultBeanFactory factory;
-
-    @Before
-    public void setUp() throws Exception {
-        factory = new DefaultBeanFactory();
-    }
-
     /**
      * Creates a bean creation context for a create operation.
      *
@@ -70,18 +62,8 @@ public class TestDefaultBeanFactory {
             private final BeanHelper beanHelper = new BeanHelper();
 
             @Override
-            public void initBean(final Object bean, final BeanDeclaration data) {
-                beanHelper.initBean(bean, data);
-            }
-
-            @Override
-            public Object getParameter() {
-                return null;
-            }
-
-            @Override
-            public BeanDeclaration getBeanDeclaration() {
-                return decl;
+            public Object createBean(final BeanDeclaration data) {
+                return beanHelper.createBean(data);
             }
 
             @Override
@@ -90,37 +72,52 @@ public class TestDefaultBeanFactory {
             }
 
             @Override
-            public Object createBean(final BeanDeclaration data) {
-                return beanHelper.createBean(data);
+            public BeanDeclaration getBeanDeclaration() {
+                return decl;
+            }
+
+            @Override
+            public Object getParameter() {
+                return null;
+            }
+
+            @Override
+            public void initBean(final Object bean, final BeanDeclaration data) {
+                beanHelper.initBean(bean, data);
             }
         };
     }
 
     /**
-     * Tests obtaining the default class. This should be null.
+     * Returns an initialized bean declaration.
+     *
+     * @return the bean declaration
      */
-    @Test
-    public void testGetDefaultBeanClass() {
-        assertNull("Default class is not null", factory.getDefaultBeanClass());
+    private static BeanDeclarationTestImpl setUpBeanDeclaration() {
+        final BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
+        final Map<String, Object> properties = new HashMap<>();
+        properties.put("stringValue", TEST_STRING);
+        properties.put("intValue", String.valueOf(TEST_INT));
+        data.setBeanProperties(properties);
+        final BeanDeclarationTestImpl buddyData = new BeanDeclarationTestImpl();
+        final Map<String, Object> properties2 = new HashMap<>();
+        properties2.put("stringValue", "Another test string");
+        properties2.put("intValue", Integer.valueOf(100));
+        buddyData.setBeanProperties(properties2);
+        buddyData.setBeanClassName(BeanCreationTestBean.class.getName());
+
+        final Map<String, Object> nested = new HashMap<>();
+        nested.put("buddy", buddyData);
+        data.setNestedBeanDeclarations(nested);
+        return data;
     }
 
-    /**
-     * Tests whether a correct default conversion handler is set.
-     */
-    @Test
-    public void testDefaultConversionHandler() {
-        assertSame("Wrong default conversion handler", DefaultConversionHandler.INSTANCE, factory.getConversionHandler());
-    }
+    /** The object to be tested. */
+    private DefaultBeanFactory factory;
 
-    /**
-     * Tests whether a custom conversion handler can be passed to the constructor.
-     */
-    @Test
-    public void testInitWithConversionHandler() {
-        final ConversionHandler handler = EasyMock.createMock(ConversionHandler.class);
-        EasyMock.replay(handler);
-        factory = new DefaultBeanFactory(handler);
-        assertSame("Wrong conversion handler", handler, factory.getConversionHandler());
+    @Before
+    public void setUp() throws Exception {
+        factory = new DefaultBeanFactory();
     }
 
     /**
@@ -172,13 +169,23 @@ public class TestDefaultBeanFactory {
     }
 
     /**
-     * Tests whether the standard constructor can be found.
+     * Tests whether a correct default conversion handler is set.
      */
     @Test
-    public void testFindMatchingConstructorNoArgs() {
+    public void testDefaultConversionHandler() {
+        assertSame("Wrong default conversion handler", DefaultConversionHandler.INSTANCE, factory.getConversionHandler());
+    }
+
+    /**
+     * Tests whether ambiguous constructor arguments are detected.
+     */
+    @Test(expected = ConfigurationRuntimeException.class)
+    public void testFindMatchingConstructorAmbiguous() {
         final BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
-        final Constructor<BeanCreationTestBean> ctor = DefaultBeanFactory.findMatchingConstructor(BeanCreationTestBean.class, decl);
-        assertEquals("Not the standard constructor", 0, ctor.getParameterTypes().length);
+        final Collection<ConstructorArg> args = new ArrayList<>();
+        args.add(ConstructorArg.forValue(TEST_STRING));
+        decl.setConstructorArgs(args);
+        DefaultBeanFactory.findMatchingConstructor(BeanCreationTestCtorBean.class, decl);
     }
 
     /**
@@ -199,18 +206,6 @@ public class TestDefaultBeanFactory {
     }
 
     /**
-     * Tests whether ambiguous constructor arguments are detected.
-     */
-    @Test(expected = ConfigurationRuntimeException.class)
-    public void testFindMatchingConstructorAmbiguous() {
-        final BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
-        final Collection<ConstructorArg> args = new ArrayList<>();
-        args.add(ConstructorArg.forValue(TEST_STRING));
-        decl.setConstructorArgs(args);
-        DefaultBeanFactory.findMatchingConstructor(BeanCreationTestCtorBean.class, decl);
-    }
-
-    /**
      * Tests whether explicit type declarations are used to resolve ambiguous parameter types.
      */
     @Test
@@ -226,27 +221,13 @@ public class TestDefaultBeanFactory {
     }
 
     /**
-     * Returns an initialized bean declaration.
-     *
-     * @return the bean declaration
+     * Tests whether the standard constructor can be found.
      */
-    private static BeanDeclarationTestImpl setUpBeanDeclaration() {
-        final BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
-        final Map<String, Object> properties = new HashMap<>();
-        properties.put("stringValue", TEST_STRING);
-        properties.put("intValue", String.valueOf(TEST_INT));
-        data.setBeanProperties(properties);
-        final BeanDeclarationTestImpl buddyData = new BeanDeclarationTestImpl();
-        final Map<String, Object> properties2 = new HashMap<>();
-        properties2.put("stringValue", "Another test string");
-        properties2.put("intValue", Integer.valueOf(100));
-        buddyData.setBeanProperties(properties2);
-        buddyData.setBeanClassName(BeanCreationTestBean.class.getName());
-
-        final Map<String, Object> nested = new HashMap<>();
-        nested.put("buddy", buddyData);
-        data.setNestedBeanDeclarations(nested);
-        return data;
+    @Test
+    public void testFindMatchingConstructorNoArgs() {
+        final BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
+        final Constructor<BeanCreationTestBean> ctor = DefaultBeanFactory.findMatchingConstructor(BeanCreationTestBean.class, decl);
+        assertEquals("Not the standard constructor", 0, ctor.getParameterTypes().length);
     }
 
     /**
@@ -267,5 +248,24 @@ public class TestDefaultBeanFactory {
             assertTrue("Parameter value not found: " + msg, msg.indexOf(TEST_STRING) > 0);
             assertTrue("Parameter type not found: " + msg, msg.indexOf("(" + getClass().getName() + ')') > 0);
         }
+    }
+
+    /**
+     * Tests obtaining the default class. This should be null.
+     */
+    @Test
+    public void testGetDefaultBeanClass() {
+        assertNull("Default class is not null", factory.getDefaultBeanClass());
+    }
+
+    /**
+     * Tests whether a custom conversion handler can be passed to the constructor.
+     */
+    @Test
+    public void testInitWithConversionHandler() {
+        final ConversionHandler handler = EasyMock.createMock(ConversionHandler.class);
+        EasyMock.replay(handler);
+        factory = new DefaultBeanFactory(handler);
+        assertSame("Wrong conversion handler", handler, factory.getConversionHandler());
     }
 }

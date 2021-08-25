@@ -43,34 +43,6 @@ public class TestConfigurationDeclaration {
     }
 
     /**
-     * Tests the isReservedNode() method of ConfigurationDeclaration.
-     */
-    @Test
-    public void testConfigurationDeclarationIsReserved() {
-        final ConfigurationDeclaration decl = createDeclaration(null);
-        assertTrue("Attribute at not recognized", decl.isReservedAttributeName("at"));
-        assertTrue("Attribute optional not recognized", decl.isReservedAttributeName("optional"));
-        assertTrue("Inherited attribute not recognized", decl.isReservedAttributeName("config-class"));
-        assertFalse("Wrong reserved attribute", decl.isReservedAttributeName("different"));
-    }
-
-    /**
-     * Tests if the at attribute is correctly detected as reserved attribute.
-     */
-    @Test
-    public void testConfigurationDeclarationIsReservedAt() {
-        checkOldReservedAttribute("at");
-    }
-
-    /**
-     * Tests if the optional attribute is correctly detected as reserved attribute.
-     */
-    @Test
-    public void testConfigurationDeclarationIsReservedOptional() {
-        checkOldReservedAttribute("optional");
-    }
-
-    /**
      * Tests if special reserved attributes are recognized by the isReservedNode() method. For compatibility reasons the
      * attributes "at" and "optional" are also treated as reserved attributes, but only if there are no corresponding
      * attributes with the "config-" prefix.
@@ -117,6 +89,34 @@ public class TestConfigurationDeclaration {
         config.setProperty("xml[@optional]", Boolean.TRUE);
         decl = createDeclaration(config.configurationAt("xml"));
         assertTrue("Old optional attribute not detected", decl.isOptional());
+    }
+
+    /**
+     * Tests the isReservedNode() method of ConfigurationDeclaration.
+     */
+    @Test
+    public void testConfigurationDeclarationIsReserved() {
+        final ConfigurationDeclaration decl = createDeclaration(null);
+        assertTrue("Attribute at not recognized", decl.isReservedAttributeName("at"));
+        assertTrue("Attribute optional not recognized", decl.isReservedAttributeName("optional"));
+        assertTrue("Inherited attribute not recognized", decl.isReservedAttributeName("config-class"));
+        assertFalse("Wrong reserved attribute", decl.isReservedAttributeName("different"));
+    }
+
+    /**
+     * Tests if the at attribute is correctly detected as reserved attribute.
+     */
+    @Test
+    public void testConfigurationDeclarationIsReservedAt() {
+        checkOldReservedAttribute("at");
+    }
+
+    /**
+     * Tests if the optional attribute is correctly detected as reserved attribute.
+     */
+    @Test
+    public void testConfigurationDeclarationIsReservedOptional() {
+        checkOldReservedAttribute("optional");
     }
 
     /**

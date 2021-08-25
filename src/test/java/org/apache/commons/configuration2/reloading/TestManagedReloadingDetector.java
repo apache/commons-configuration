@@ -37,14 +37,6 @@ public class TestManagedReloadingDetector {
     }
 
     /**
-     * Tests the result of isReloadingRequired() for a newly created instance.
-     */
-    @Test
-    public void testReloadingRequiredInitial() {
-        assertFalse("Wrong result", strategy.isReloadingRequired());
-    }
-
-    /**
      * Tests the refresh() method.
      */
     @Test
@@ -62,5 +54,13 @@ public class TestManagedReloadingDetector {
         strategy.refresh();
         strategy.reloadingPerformed();
         assertFalse("Reloading state not reset", strategy.isReloadingRequired());
+    }
+
+    /**
+     * Tests the result of isReloadingRequired() for a newly created instance.
+     */
+    @Test
+    public void testReloadingRequiredInitial() {
+        assertFalse("Wrong result", strategy.isReloadingRequired());
     }
 }

@@ -42,54 +42,24 @@ public class TestDatabaseBuilderParametersImpl {
     }
 
     /**
-     * Tests whether the data source property can be set.
+     * Tests whether properties can be set through BeanUtils.
      */
     @Test
-    public void testSetDataSource() {
-        final DataSource src = EasyMock.createMock(DataSource.class);
-        EasyMock.replay(src);
-        assertSame("Wrong result", params, params.setDataSource(src));
-        assertSame("Data source not set", src, params.getParameters().get("dataSource"));
+    public void testBeanProperties() throws Exception {
+        BeanHelper.setProperty(params, "table", "testTable");
+        BeanHelper.setProperty(params, "autoCommit", Boolean.FALSE);
+        final Map<String, Object> map = params.getParameters();
+        assertEquals("Wrong table name", "testTable", map.get("table"));
+        assertEquals("Wrong auto commit", Boolean.FALSE, map.get("autoCommit"));
     }
 
     /**
-     * Tests whether the table name can be set.
+     * Tests whether the auto commit flag can be set.
      */
     @Test
-    public void testSetTable() {
-        final String table = "TestTable";
-        assertSame("Wrong result", params, params.setTable(table));
-        assertEquals("Wrong table name", table, params.getParameters().get("table"));
-    }
-
-    /**
-     * Tests whether the key column name can be set.
-     */
-    @Test
-    public void testSetKeyColumn() {
-        final String colName = "KEY_COLUMN";
-        assertSame("Wrong result", params, params.setKeyColumn(colName));
-        assertEquals("Wrong key column name", colName, params.getParameters().get("keyColumn"));
-    }
-
-    /**
-     * Tests whether the value column name can be set.
-     */
-    @Test
-    public void testSetValueColumn() {
-        final String colName = "VALUE_COLUMN";
-        assertSame("Wrong result", params, params.setValueColumn(colName));
-        assertEquals("Wrong value column name", colName, params.getParameters().get("valueColumn"));
-    }
-
-    /**
-     * Tests whether the configuration name column can be set.
-     */
-    @Test
-    public void testSetConfigurationNameColumn() {
-        final String colName = "CONFIG_COLUMN";
-        assertSame("Wrong result", params, params.setConfigurationNameColumn(colName));
-        assertEquals("Wrong configuration name column", colName, params.getParameters().get("configurationNameColumn"));
+    public void testSetAutoCommit() {
+        assertSame("Wrong result", params, params.setAutoCommit(true));
+        assertEquals("Wrong auto commit flag", Boolean.TRUE, params.getParameters().get("autoCommit"));
     }
 
     /**
@@ -103,23 +73,53 @@ public class TestDatabaseBuilderParametersImpl {
     }
 
     /**
-     * Tests whether the auto commit flag can be set.
+     * Tests whether the configuration name column can be set.
      */
     @Test
-    public void testSetAutoCommit() {
-        assertSame("Wrong result", params, params.setAutoCommit(true));
-        assertEquals("Wrong auto commit flag", Boolean.TRUE, params.getParameters().get("autoCommit"));
+    public void testSetConfigurationNameColumn() {
+        final String colName = "CONFIG_COLUMN";
+        assertSame("Wrong result", params, params.setConfigurationNameColumn(colName));
+        assertEquals("Wrong configuration name column", colName, params.getParameters().get("configurationNameColumn"));
     }
 
     /**
-     * Tests whether properties can be set through BeanUtils.
+     * Tests whether the data source property can be set.
      */
     @Test
-    public void testBeanProperties() throws Exception {
-        BeanHelper.setProperty(params, "table", "testTable");
-        BeanHelper.setProperty(params, "autoCommit", Boolean.FALSE);
-        final Map<String, Object> map = params.getParameters();
-        assertEquals("Wrong table name", "testTable", map.get("table"));
-        assertEquals("Wrong auto commit", Boolean.FALSE, map.get("autoCommit"));
+    public void testSetDataSource() {
+        final DataSource src = EasyMock.createMock(DataSource.class);
+        EasyMock.replay(src);
+        assertSame("Wrong result", params, params.setDataSource(src));
+        assertSame("Data source not set", src, params.getParameters().get("dataSource"));
+    }
+
+    /**
+     * Tests whether the key column name can be set.
+     */
+    @Test
+    public void testSetKeyColumn() {
+        final String colName = "KEY_COLUMN";
+        assertSame("Wrong result", params, params.setKeyColumn(colName));
+        assertEquals("Wrong key column name", colName, params.getParameters().get("keyColumn"));
+    }
+
+    /**
+     * Tests whether the table name can be set.
+     */
+    @Test
+    public void testSetTable() {
+        final String table = "TestTable";
+        assertSame("Wrong result", params, params.setTable(table));
+        assertEquals("Wrong table name", table, params.getParameters().get("table"));
+    }
+
+    /**
+     * Tests whether the value column name can be set.
+     */
+    @Test
+    public void testSetValueColumn() {
+        final String colName = "VALUE_COLUMN";
+        assertSame("Wrong result", params, params.setValueColumn(colName));
+        assertEquals("Wrong value column name", colName, params.getParameters().get("valueColumn"));
     }
 }

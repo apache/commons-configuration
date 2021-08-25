@@ -50,6 +50,18 @@ public class ConfigurationAssert {
     public static final File OUT_DIR = new File(OUT_DIR_NAME);
 
     /**
+     * Appends all keys in the specified configuration to the given collection.
+     *
+     * @param config the configuration
+     * @param collection the target collection
+     */
+    public static void appendKeys(final ImmutableConfiguration config, final Collection<String> collection) {
+        for (final Iterator<String> it = config.getKeys(); it.hasNext();) {
+            collection.add(it.next());
+        }
+    }
+
+    /**
      * Checks the content of a configuration.
      *
      * @param expected the expected properties
@@ -71,46 +83,6 @@ public class ConfigurationAssert {
     }
 
     /**
-     * Returns a {@code File} object for the specified test file.
-     *
-     * @param name the name of the test file
-     * @return a {@code File} object pointing to that test file
-     */
-    public static File getTestFile(final String name) {
-        return new File(TEST_DIR, name);
-    }
-
-    /**
-     * Returns a {@code File} object for the specified out file.
-     *
-     * @param name the name of the out file
-     * @return a {@code File} object pointing to that out file
-     */
-    public static File getOutFile(final String name) {
-        return new File(OUT_DIR, name);
-    }
-
-    /**
-     * Returns a URL pointing to the specified test file. If the URL cannot be constructed, a runtime exception is thrown.
-     *
-     * @param name the name of the test file
-     * @return the corresponding URL
-     */
-    public static URL getTestURL(final String name) {
-        return urlFromFile(getTestFile(name));
-    }
-
-    /**
-     * Returns a URL pointing to the specified output file. If the URL cannot be constructed, a runtime exception is thrown.
-     *
-     * @param name the name of the output file
-     * @return the corresponding URL
-     */
-    public static URL getOutURL(final String name) {
-        return urlFromFile(getOutFile(name));
-    }
-
-    /**
      * Helper method for testing the equals() implementation of a class. It is also checked, whether hashCode() is
      * compatible with equals().
      *
@@ -126,6 +98,46 @@ public class ConfigurationAssert {
         if (expEquals) {
             assertEquals("Different hash codes", o1.hashCode(), o2.hashCode());
         }
+    }
+
+    /**
+     * Returns a {@code File} object for the specified out file.
+     *
+     * @param name the name of the out file
+     * @return a {@code File} object pointing to that out file
+     */
+    public static File getOutFile(final String name) {
+        return new File(OUT_DIR, name);
+    }
+
+    /**
+     * Returns a URL pointing to the specified output file. If the URL cannot be constructed, a runtime exception is thrown.
+     *
+     * @param name the name of the output file
+     * @return the corresponding URL
+     */
+    public static URL getOutURL(final String name) {
+        return urlFromFile(getOutFile(name));
+    }
+
+    /**
+     * Returns a {@code File} object for the specified test file.
+     *
+     * @param name the name of the test file
+     * @return a {@code File} object pointing to that test file
+     */
+    public static File getTestFile(final String name) {
+        return new File(TEST_DIR, name);
+    }
+
+    /**
+     * Returns a URL pointing to the specified test file. If the URL cannot be constructed, a runtime exception is thrown.
+     *
+     * @param name the name of the test file
+     * @return the corresponding URL
+     */
+    public static URL getTestURL(final String name) {
+        return urlFromFile(getTestFile(name));
     }
 
     /**
@@ -150,18 +162,6 @@ public class ConfigurationAssert {
         final Set<String> keySet = new HashSet<>();
         appendKeys(config, keySet);
         return keySet;
-    }
-
-    /**
-     * Appends all keys in the specified configuration to the given collection.
-     *
-     * @param config the configuration
-     * @param collection the target collection
-     */
-    public static void appendKeys(final ImmutableConfiguration config, final Collection<String> collection) {
-        for (final Iterator<String> it = config.getKeys(); it.hasNext();) {
-            collection.add(it.next());
-        }
     }
 
     /**

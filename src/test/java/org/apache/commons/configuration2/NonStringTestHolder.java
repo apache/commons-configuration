@@ -92,6 +92,15 @@ public class NonStringTestHolder {
         Assert.assertEquals(10, intValue);
     }
 
+    public void testIsEmpty() throws Exception {
+        Assert.assertTrue("Configuration should not be empty", !configuration.isEmpty());
+    }
+
+    public void testListMissing() throws Exception {
+        final List<?> list = configuration.getList("missing.list");
+        Assert.assertTrue("'missing.list' is not empty", list.isEmpty());
+    }
+
     public void testLong() throws Exception {
         final long longValue = configuration.getLong("test.long");
         Assert.assertEquals(1000000, longValue);
@@ -114,11 +123,6 @@ public class NonStringTestHolder {
         Assert.assertEquals(1, shortValue);
     }
 
-    public void testListMissing() throws Exception {
-        final List<?> list = configuration.getList("missing.list");
-        Assert.assertTrue("'missing.list' is not empty", list.isEmpty());
-    }
-
     public void testSubset() throws Exception {
         final Configuration subset = configuration.subset("test");
 
@@ -131,10 +135,6 @@ public class NonStringTestHolder {
         }
 
         Assert.assertTrue("'short' key not found in the subset key iterator", foundKeyValue);
-    }
-
-    public void testIsEmpty() throws Exception {
-        Assert.assertTrue("Configuration should not be empty", !configuration.isEmpty());
     }
 
 }

@@ -48,13 +48,6 @@ public class TestNodeSelector {
     /** The node handler object. */
     private static NodeHandler<ImmutableNode> handler;
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        resolver = createResolver();
-        handler = new InMemoryNodeModel().getNodeHandler();
-        root = new ImmutableNode.Builder(1).addChild(NodeStructureHelper.ROOT_TABLES_TREE).create();
-    }
-
     /**
      * Creates a {@code NodeKeyResolver} object to be used in the tests. This resolver object uses a
      * {@code DefaultExpressionEngine} instance for resolving keys. Methods for obtaining add or update data objects are not
@@ -69,28 +62,47 @@ public class TestNodeSelector {
         return resolver;
     }
 
-    /**
-     * Tests a successful select operation for a single key.
-     */
-    @Test
-    public void testSelectSingleKeySuccess() {
-        final NodeSelector selector = new NodeSelector("tables.table(0).name");
-        final ImmutableNode target = selector.select(root, resolver, handler);
-        assertEquals("Wrong name", "name", target.getNodeName());
-        assertEquals("Wrong value", NodeStructureHelper.table(0), target.getValue());
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        resolver = createResolver();
+        handler = new InMemoryNodeModel().getNodeHandler();
+        root = new ImmutableNode.Builder(1).addChild(NodeStructureHelper.ROOT_TABLES_TREE).create();
     }
 
     /**
-     * Tests a select operation if the key selects an attribute node.
+     * Tests equals() if the expected result is false.
      */
     @Test
-    public void testSelectSingleAttributeKey() {
-        final NodeKeyResolver<ImmutableNode> resolverMock = NodeStructureHelper.createResolverMock();
-        EasyMock.expect(resolverMock.resolveKey(root, KEY, handler)).andReturn(Collections.singletonList(QueryResult.createAttributeResult(root, KEY)));
-        EasyMock.replay(resolverMock);
-
+    public void testEqualsFalse() {
         final NodeSelector selector = new NodeSelector(KEY);
-        assertNull("Got a result", selector.select(root, resolverMock, handler));
+        NodeSelector sel2 = new NodeSelector("other" + KEY);
+        ConfigurationAssert.checkEquals(selector, sel2, false);
+        sel2 = new NodeSelector(KEY).subSelector(KEY);
+        ConfigurationAssert.checkEquals(selector, sel2, false);
+    }
+
+    /**
+     * Tests equals() with other objects.
+     */
+    @Test
+    public void testEqualsOtherObjects() {
+        final NodeSelector selector = new NodeSelector(KEY);
+        ConfigurationAssert.checkEquals(selector, null, false);
+        ConfigurationAssert.checkEquals(selector, this, false);
+    }
+
+    /**
+     * Tests equals() if the expected result is true.
+     */
+    @Test
+    public void testEqualsTrue() {
+        final NodeSelector selector = new NodeSelector(KEY);
+        ConfigurationAssert.checkEquals(selector, selector, true);
+        final NodeSelector sel2 = new NodeSelector(KEY);
+        ConfigurationAssert.checkEquals(selector, sel2, true);
+        final NodeSelector sub1 = selector.subSelector("k2");
+        final NodeSelector sub2 = sel2.subSelector("k2");
+        ConfigurationAssert.checkEquals(sub1, sub2, true);
     }
 
     /**
@@ -121,6 +133,30 @@ public class TestNodeSelector {
     }
 
     /**
+     * Tests a select operation if the key selects an attribute node.
+     */
+    @Test
+    public void testSelectSingleAttributeKey() {
+        final NodeKeyResolver<ImmutableNode> resolverMock = NodeStructureHelper.createResolverMock();
+        EasyMock.expect(resolverMock.resolveKey(root, KEY, handler)).andReturn(Collections.singletonList(QueryResult.createAttributeResult(root, KEY)));
+        EasyMock.replay(resolverMock);
+
+        final NodeSelector selector = new NodeSelector(KEY);
+        assertNull("Got a result", selector.select(root, resolverMock, handler));
+    }
+
+    /**
+     * Tests a successful select operation for a single key.
+     */
+    @Test
+    public void testSelectSingleKeySuccess() {
+        final NodeSelector selector = new NodeSelector("tables.table(0).name");
+        final ImmutableNode target = selector.select(root, resolver, handler);
+        assertEquals("Wrong name", "name", target.getNodeName());
+        assertEquals("Wrong value", NodeStructureHelper.table(0), target.getValue());
+    }
+
+    /**
      * Tests a select operation with a sub key.
      */
     @Test
@@ -129,26 +165,6 @@ public class TestNodeSelector {
         final NodeSelector selector = selectorParent.subSelector("fields.field(1).name");
         final ImmutableNode target = selector.select(root, resolver, handler);
         assertEquals("Wrong node selected", NodeStructureHelper.field(0, 1), target.getValue());
-    }
-
-    /**
-     * Tests select() if a key is used which does not yield any results.
-     */
-    @Test
-    public void testSelectSubKeyUnknown() {
-        final NodeSelector selectorParent = new NodeSelector("tables.unknown");
-        final NodeSelector selector = selectorParent.subSelector("fields.field(1).name");
-        assertNull("Got a result", selector.select(root, resolver, handler));
-    }
-
-    /**
-     * Tests a select operation with a sub key which produces multiple results.
-     */
-    @Test
-    public void testSelectSubKeyMultipleResults() {
-        final NodeSelector selectorParent = new NodeSelector("tables.table");
-        final NodeSelector selector = selectorParent.subSelector("fields.field(1).name");
-        assertNull("Got a result", selector.select(root, resolver, handler));
     }
 
     /**
@@ -166,39 +182,23 @@ public class TestNodeSelector {
     }
 
     /**
-     * Tests equals() if the expected result is true.
+     * Tests a select operation with a sub key which produces multiple results.
      */
     @Test
-    public void testEqualsTrue() {
-        final NodeSelector selector = new NodeSelector(KEY);
-        ConfigurationAssert.checkEquals(selector, selector, true);
-        final NodeSelector sel2 = new NodeSelector(KEY);
-        ConfigurationAssert.checkEquals(selector, sel2, true);
-        final NodeSelector sub1 = selector.subSelector("k2");
-        final NodeSelector sub2 = sel2.subSelector("k2");
-        ConfigurationAssert.checkEquals(sub1, sub2, true);
+    public void testSelectSubKeyMultipleResults() {
+        final NodeSelector selectorParent = new NodeSelector("tables.table");
+        final NodeSelector selector = selectorParent.subSelector("fields.field(1).name");
+        assertNull("Got a result", selector.select(root, resolver, handler));
     }
 
     /**
-     * Tests equals() if the expected result is false.
+     * Tests select() if a key is used which does not yield any results.
      */
     @Test
-    public void testEqualsFalse() {
-        final NodeSelector selector = new NodeSelector(KEY);
-        NodeSelector sel2 = new NodeSelector("other" + KEY);
-        ConfigurationAssert.checkEquals(selector, sel2, false);
-        sel2 = new NodeSelector(KEY).subSelector(KEY);
-        ConfigurationAssert.checkEquals(selector, sel2, false);
-    }
-
-    /**
-     * Tests equals() with other objects.
-     */
-    @Test
-    public void testEqualsOtherObjects() {
-        final NodeSelector selector = new NodeSelector(KEY);
-        ConfigurationAssert.checkEquals(selector, null, false);
-        ConfigurationAssert.checkEquals(selector, this, false);
+    public void testSelectSubKeyUnknown() {
+        final NodeSelector selectorParent = new NodeSelector("tables.unknown");
+        final NodeSelector selector = selectorParent.subSelector("fields.field(1).name");
+        assertNull("Got a result", selector.select(root, resolver, handler));
     }
 
     /**

@@ -43,17 +43,46 @@ import org.junit.Test;
  */
 public class TestReloadingMultiFileConfigurationBuilder extends AbstractMultiFileConfigurationBuilderTest {
     /**
-     * Tests whether parameters passed to the constructor are passed to the super class.
+     * A test implementation of the class under test which allows access to reloading controllers of managed configuration
+     * builders.
+     *
      */
-    @Test
-    public void testInitWithParameters() throws ConfigurationException {
-        final ExpressionEngine engine = new XPathExpressionEngine();
-        final BasicBuilderParameters params = createTestBuilderParameters(new XMLBuilderParametersImpl().setExpressionEngine(engine));
-        final ReloadingMultiFileConfigurationBuilder<XMLConfiguration> builder = new ReloadingMultiFileConfigurationBuilder<>(XMLConfiguration.class,
-            params.getParameters());
-        switchToConfig(1);
-        final XMLConfiguration config = builder.getConfiguration();
-        assertSame("Expression engine not set", engine, config.getExpressionEngine());
+    private static class ReloadingMultiFileConfigurationBuilderTestImpl extends ReloadingMultiFileConfigurationBuilder<XMLConfiguration> {
+        /**
+         * A list with mocks for reloading controllers created by this instance.
+         */
+        private final List<ReloadingController> reloadingControllers;
+
+        public ReloadingMultiFileConfigurationBuilderTestImpl() {
+            super(XMLConfiguration.class, createTestBuilderParameters(null).getParameters());
+            reloadingControllers = new ArrayList<>();
+        }
+
+        /**
+         * {@inheritDoc} This implementation creates a specialized reloading builder which is associated with a mock reloading
+         * controller.
+         */
+        @Override
+        protected FileBasedConfigurationBuilder<XMLConfiguration> createManagedBuilder(final String fileName, final Map<String, Object> params)
+            throws ConfigurationException {
+            final ReloadingController ctrl = EasyMock.createMock(ReloadingController.class);
+            reloadingControllers.add(ctrl);
+            return new ReloadingFileBasedConfigurationBuilder<XMLConfiguration>(getResultClass(), params) {
+                @Override
+                public ReloadingController getReloadingController() {
+                    return ctrl;
+                }
+            };
+        }
+
+        /**
+         * Returns the list with the mock reloading controllers for the managed configuration builders created by this instance.
+         *
+         * @return the list with mock reloading controllers
+         */
+        public List<ReloadingController> getReloadingControllers() {
+            return reloadingControllers;
+        }
     }
 
     /**
@@ -78,6 +107,20 @@ public class TestReloadingMultiFileConfigurationBuilder extends AbstractMultiFil
         final FileBasedConfigurationBuilder<XMLConfiguration> managedBuilder = builder.createManagedBuilder("test.xml",
             createTestBuilderParameters(null).getParameters());
         assertTrue("Wrong flag value", managedBuilder.isAllowFailOnInit());
+    }
+
+    /**
+     * Tests whether parameters passed to the constructor are passed to the super class.
+     */
+    @Test
+    public void testInitWithParameters() throws ConfigurationException {
+        final ExpressionEngine engine = new XPathExpressionEngine();
+        final BasicBuilderParameters params = createTestBuilderParameters(new XMLBuilderParametersImpl().setExpressionEngine(engine));
+        final ReloadingMultiFileConfigurationBuilder<XMLConfiguration> builder = new ReloadingMultiFileConfigurationBuilder<>(XMLConfiguration.class,
+            params.getParameters());
+        switchToConfig(1);
+        final XMLConfiguration config = builder.getConfiguration();
+        assertSame("Expression engine not set", engine, config.getExpressionEngine());
     }
 
     /**
@@ -141,48 +184,5 @@ public class TestReloadingMultiFileConfigurationBuilder extends AbstractMultiFil
         builder.getReloadingController().checkForReloading(null);
         builder.getReloadingController().resetReloadingState();
         EasyMock.verify(controllers.toArray());
-    }
-
-    /**
-     * A test implementation of the class under test which allows access to reloading controllers of managed configuration
-     * builders.
-     *
-     */
-    private static class ReloadingMultiFileConfigurationBuilderTestImpl extends ReloadingMultiFileConfigurationBuilder<XMLConfiguration> {
-        /**
-         * A list with mocks for reloading controllers created by this instance.
-         */
-        private final List<ReloadingController> reloadingControllers;
-
-        public ReloadingMultiFileConfigurationBuilderTestImpl() {
-            super(XMLConfiguration.class, createTestBuilderParameters(null).getParameters());
-            reloadingControllers = new ArrayList<>();
-        }
-
-        /**
-         * Returns the list with the mock reloading controllers for the managed configuration builders created by this instance.
-         *
-         * @return the list with mock reloading controllers
-         */
-        public List<ReloadingController> getReloadingControllers() {
-            return reloadingControllers;
-        }
-
-        /**
-         * {@inheritDoc} This implementation creates a specialized reloading builder which is associated with a mock reloading
-         * controller.
-         */
-        @Override
-        protected FileBasedConfigurationBuilder<XMLConfiguration> createManagedBuilder(final String fileName, final Map<String, Object> params)
-            throws ConfigurationException {
-            final ReloadingController ctrl = EasyMock.createMock(ReloadingController.class);
-            reloadingControllers.add(ctrl);
-            return new ReloadingFileBasedConfigurationBuilder<XMLConfiguration>(getResultClass(), params) {
-                @Override
-                public ReloadingController getReloadingController() {
-                    return ctrl;
-                }
-            };
-        }
     }
 }

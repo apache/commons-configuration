@@ -55,49 +55,82 @@ import org.junit.Test;
  *
  */
 public class TestAbstractHierarchicalConfiguration {
-    /** The test configuration. */
-    private AbstractHierarchicalConfiguration<ImmutableNode> config;
+    /**
+     * A concrete test implementation of {@code AbstractHierarchicalConfiguration}.
+     */
+    private static class AbstractHierarchicalConfigurationTestImpl extends AbstractHierarchicalConfiguration<ImmutableNode> {
+        public AbstractHierarchicalConfigurationTestImpl(final InMemoryNodeModel model) {
+            super(model);
+        }
 
-    @Before
-    public void setUp() throws Exception {
-        final ImmutableNode root = new ImmutableNode.Builder(1).addChild(NodeStructureHelper.ROOT_TABLES_TREE).create();
-        config = new AbstractHierarchicalConfigurationTestImpl(new InMemoryNodeModel(root));
+        @Override
+        public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(final String key) {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        @Override
+        public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(final String key, final boolean supportUpdates) {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        @Override
+        protected NodeModel<ImmutableNode> cloneNodeModel() {
+            return new InMemoryNodeModel(getModel().getNodeHandler().getRootNode());
+        }
+
+        @Override
+        public SubnodeConfiguration configurationAt(final String key) {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        @Override
+        public SubnodeConfiguration configurationAt(final String key, final boolean supportUpdates) {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        @Override
+        public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(final String key) {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        @Override
+        public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(final String key, final boolean supportUpdates) {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        @Override
+        public List<ImmutableHierarchicalConfiguration> immutableChildConfigurationsAt(final String key) {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        @Override
+        public ImmutableHierarchicalConfiguration immutableConfigurationAt(final String key) {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        @Override
+        public ImmutableHierarchicalConfiguration immutableConfigurationAt(final String key, final boolean supportUpdates) {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
+
+        @Override
+        public List<ImmutableHierarchicalConfiguration> immutableConfigurationsAt(final String key) {
+            throw new UnsupportedOperationException("Unexpected method call!");
+        }
     }
 
     /**
-     * Convenience method for obtaining the root node of the test configuration.
+     * Checks the content of the passed in configuration object. Used by some tests that copy a configuration.
      *
-     * @return the root node of the test configuration
+     * @param c the configuration to check
      */
-    private ImmutableNode getRootNode() {
-        return config.getModel().getNodeHandler().getRootNode();
-    }
-
-    @Test
-    public void testIsEmptyFalse() {
-        assertFalse(config.isEmpty());
-    }
-
-    /**
-     * Tests isEmpty() if only the root node exists.
-     */
-    @Test
-    public void testIsEmptyRootOnly() {
-        config = new AbstractHierarchicalConfigurationTestImpl(new InMemoryNodeModel());
-        assertTrue("Not empty", config.isEmpty());
-    }
-
-    /**
-     * Tests isEmpty() if the structure contains some nodes without values.
-     */
-    @Test
-    public void testIsEmptyNodesWithNoValues() {
-        final ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder(1);
-        final ImmutableNode.Builder nodeBuilder = new ImmutableNode.Builder(1);
-        nodeBuilder.addChild(NodeStructureHelper.createNode("child", null));
-        rootBuilder.addChild(nodeBuilder.create());
-        config = new AbstractHierarchicalConfigurationTestImpl(new InMemoryNodeModel(rootBuilder.create()));
-        assertTrue("Not empty", config.isEmpty());
+    private static void checkContent(final Configuration c) {
+        for (int i = 0; i < NodeStructureHelper.tablesLength(); i++) {
+            assertEquals(NodeStructureHelper.table(i), c.getString("tables.table(" + i + ").name"));
+            for (int j = 0; j < NodeStructureHelper.fieldsLength(i); j++) {
+                assertEquals(NodeStructureHelper.field(i, j), c.getString("tables.table(" + i + ").fields.field(" + j + ").name"));
+            }
+        }
     }
 
     private static void checkGetProperty(final AbstractHierarchicalConfiguration<?> testConfig) {
@@ -124,37 +157,222 @@ public class TestAbstractHierarchicalConfiguration {
         assertEquals("creationDate", prop.toString());
     }
 
-    @Test
-    public void testGetProperty() {
-        checkGetProperty(config);
+    /**
+     * Creates a {@code DefaultConfigurationKey} object.
+     *
+     * @return the new key object
+     */
+    private static DefaultConfigurationKey createConfigurationKey() {
+        return new DefaultConfigurationKey(DefaultExpressionEngine.INSTANCE);
+    }
+
+    /**
+     * Returns the total number of fields in the test data structure.
+     *
+     * @return the total number of fields
+     */
+    private static int totalFieldCount() {
+        int fieldCount = 0;
+        for (int i = 0; i < NodeStructureHelper.tablesLength(); i++) {
+            fieldCount += NodeStructureHelper.fieldsLength(i);
+        }
+        return fieldCount;
+    }
+
+    /** The test configuration. */
+    private AbstractHierarchicalConfiguration<ImmutableNode> config;
+
+    /**
+     * Helper method for checking keys using an alternative syntax.
+     */
+    private void checkAlternativeSyntax() {
+        assertNull(config.getProperty("tables/table/resultset"));
+        assertNull(config.getProperty("tables/table/fields/field"));
+
+        Object prop = config.getProperty("tables/table[0]/fields/field/name");
+        assertNotNull(prop);
+        assertTrue(prop instanceof Collection);
+        assertEquals(NodeStructureHelper.fieldsLength(0), ((Collection<?>) prop).size());
+
+        prop = config.getProperty("tables/table/fields/field/name");
+        assertNotNull(prop);
+        assertTrue(prop instanceof Collection);
+        assertEquals(totalFieldCount(), ((Collection<?>) prop).size());
+
+        prop = config.getProperty("tables/table/fields/field[3]/name");
+        assertNotNull(prop);
+        assertTrue(prop instanceof Collection);
+        assertEquals(2, ((Collection<?>) prop).size());
+
+        prop = config.getProperty("tables/table[1]/fields/field[2]/name");
+        assertNotNull(prop);
+        assertEquals("creationDate", prop.toString());
+
+        final Set<String> keys = ConfigurationAssert.keysToSet(config);
+        assertEquals("Wrong number of defined keys", 2, keys.size());
+        assertTrue("Key not found", keys.contains("tables/table/name"));
+        assertTrue("Key not found", keys.contains("tables/table/fields/field/name"));
+    }
+
+    /**
+     * Helper method for testing the getKeys(String) method.
+     *
+     * @param prefix the key to pass into getKeys()
+     * @param expected the expected result
+     */
+    private void checkKeys(final String prefix, final String[] expected) {
+        final Set<String> values = new HashSet<>();
+        for (final String anExpected : expected) {
+            values.add(anExpected.startsWith(prefix) ? anExpected : prefix + "." + anExpected);
+        }
+
+        final Iterator<String> itKeys = config.getKeys(prefix);
+        while (itKeys.hasNext()) {
+            final String key = itKeys.next();
+            if (!values.contains(key)) {
+                fail("Found unexpected key: " + key);
+            } else {
+                values.remove(key);
+            }
+        }
+
+        assertTrue("Remaining keys " + values, values.isEmpty());
+    }
+
+    private ExpressionEngine createAlternativeExpressionEngine() {
+        return new DefaultExpressionEngine(new DefaultExpressionEngineSymbols.Builder(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS).setPropertyDelimiter("/")
+            .setIndexStart("[").setIndexEnd("]").create());
+    }
+
+    /**
+     * Convenience method for obtaining the root node of the test configuration.
+     *
+     * @return the root node of the test configuration
+     */
+    private ImmutableNode getRootNode() {
+        return config.getModel().getNodeHandler().getRootNode();
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        final ImmutableNode root = new ImmutableNode.Builder(1).addChild(NodeStructureHelper.ROOT_TABLES_TREE).create();
+        config = new AbstractHierarchicalConfigurationTestImpl(new InMemoryNodeModel(root));
     }
 
     @Test
-    public void testSetProperty() {
+    public void testAddNodes() {
+        final Collection<ImmutableNode> nodes = new ArrayList<>();
+        nodes.add(NodeStructureHelper.createFieldNode("birthDate"));
+        nodes.add(NodeStructureHelper.createFieldNode("lastLogin"));
+        nodes.add(NodeStructureHelper.createFieldNode("language"));
+        config.addNodes("tables.table(0).fields", nodes);
+        assertEquals(7, config.getMaxIndex("tables.table(0).fields.field"));
+        assertEquals("birthDate", config.getString("tables.table(0).fields.field(5).name"));
+        assertEquals("lastLogin", config.getString("tables.table(0).fields.field(6).name"));
+        assertEquals("language", config.getString("tables.table(0).fields.field(7).name"));
+    }
+
+    /**
+     * Tests copying nodes from one configuration to another one.
+     */
+    @Test
+    public void testAddNodesCopy() {
+        final AbstractHierarchicalConfigurationTestImpl configDest = new AbstractHierarchicalConfigurationTestImpl(new InMemoryNodeModel());
+        configDest.addProperty("test", "TEST");
+        final Collection<ImmutableNode> nodes = getRootNode().getChildren();
+        assertEquals("Wrong number of children", 1, nodes.size());
+        configDest.addNodes("newNodes", nodes);
+        for (int i = 0; i < NodeStructureHelper.tablesLength(); i++) {
+            final String keyTab = "newNodes.tables.table(" + i + ").";
+            assertEquals("Table " + i + " not found", NodeStructureHelper.table(i), configDest.getString(keyTab + "name"));
+            for (int j = 0; j < NodeStructureHelper.fieldsLength(i); j++) {
+                assertEquals("Invalid field " + j + " in table " + i, NodeStructureHelper.field(i, j),
+                    configDest.getString(keyTab + "fields.field(" + j + ").name"));
+            }
+        }
+    }
+
+    /**
+     * Tests the addNodes() method if the provided key does not exist. In this case, a new node (or even a completely new
+     * branch) is created.
+     */
+    @Test
+    public void testAddNodesForNonExistingKey() {
+        final Collection<ImmutableNode> nodes = new ArrayList<>();
+        final ImmutableNode newNode = new ImmutableNode.Builder().name("usr").value("scott").addAttribute("pwd", "tiger").create();
+        nodes.add(newNode);
+        config.addNodes("database.connection.settings", nodes);
+
+        assertEquals("Usr node not found", "scott", config.getString("database.connection.settings.usr"));
+        assertEquals("Pwd node not found", "tiger", config.getString("database.connection.settings.usr[@pwd]"));
+    }
+
+    /**
+     * Tests the addNodes() method when the new nodes should be added to an attribute node. This is not allowed.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddNodesWithAttributeKey() {
+        final Collection<ImmutableNode> nodes = new ArrayList<>();
+        nodes.add(NodeStructureHelper.createNode("testNode", "yes"));
+        config.addNodes("database.connection[@settings]", nodes);
+    }
+
+    @Test
+    public void testAddProperty() {
+        config.addProperty("tables.table(0).fields.field(-1).name", "phone");
+        Object prop = config.getProperty("tables.table(0).fields.field.name");
+        assertNotNull(prop);
+        assertTrue(prop instanceof Collection);
+        assertEquals(6, ((Collection<?>) prop).size());
+
+        config.addProperty("tables.table(0).fields.field.name", "fax");
+        prop = config.getProperty("tables.table.fields.field(5).name");
+        assertNotNull(prop);
+        assertTrue(prop instanceof List);
+        final List<?> list = (List<?>) prop;
+        assertEquals("phone", list.get(0));
+        assertEquals("fax", list.get(1));
+
+        config.addProperty("tables.table(-1).name", "config");
+        prop = config.getProperty("tables.table.name");
+        assertNotNull(prop);
+        assertTrue(prop instanceof Collection);
+        assertEquals(3, ((Collection<?>) prop).size());
+        config.addProperty("tables.table(2).fields.field(0).name", "cid");
+        config.addProperty("tables.table(2).fields.field(-1).name", "confName");
+        prop = config.getProperty("tables.table(2).fields.field.name");
+        assertNotNull(prop);
+        assertTrue(prop instanceof Collection);
+        assertEquals(2, ((Collection<?>) prop).size());
+        assertEquals("confName", config.getProperty("tables.table(2).fields.field(1).name"));
+
+        config.addProperty("connection.user", "scott");
+        config.addProperty("connection.passwd", "tiger");
+        assertEquals("tiger", config.getProperty("connection.passwd"));
+
+        final DefaultConfigurationKey key = createConfigurationKey();
+        key.append("tables").append("table").appendIndex(0);
+        key.appendAttribute("tableType");
+        config.addProperty(key.toString(), "system");
+        assertEquals("system", config.getProperty(key.toString()));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddPropertyInvalidKey() {
+        config.addProperty(".", "InvalidKey");
+    }
+
+    /**
+     * Tests whether list handling works correctly when adding properties.
+     */
+    @Test
+    public void testAddPropertyWithListHandling() {
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
-        config.setProperty("tables.table(0).name", "resources");
-        assertEquals("resources", config.getString("tables.table(0).name"));
-        config.setProperty("tables.table.name", "tab1,tab2");
-        assertEquals("tab1", config.getString("tables.table(0).name"));
-        assertEquals("tab2", config.getString("tables.table(1).name"));
-
-        config.setProperty("test.items.item", new int[] {2, 4, 8, 16});
-        assertEquals(3, config.getMaxIndex("test.items.item"));
-        assertEquals(8, config.getInt("test.items.item(2)"));
-        config.setProperty("test.items.item(2)", Integer.valueOf(6));
-        assertEquals(6, config.getInt("test.items.item(2)"));
-        config.setProperty("test.items.item(2)", new int[] {7, 9, 11});
-        assertEquals(5, config.getMaxIndex("test.items.item"));
-
-        config.setProperty("test", Boolean.TRUE);
-        config.setProperty("test.items", "01/01/05");
-        assertEquals(5, config.getMaxIndex("test.items.item"));
-        assertTrue(config.getBoolean("test"));
-        assertEquals("01/01/05", config.getProperty("test.items"));
-
-        config.setProperty("test.items.item", Integer.valueOf(42));
-        assertEquals(0, config.getMaxIndex("test.items.item"));
-        assertEquals(42, config.getInt("test.items.item"));
+        final String key = "list.delimiter.value";
+        config.addProperty(key + ".escaped", "3\\,1415");
+        config.addProperty(key + ".elements", "3,1415");
+        assertEquals("Wrong escaped property", "3,1415", config.getString(key + ".escaped"));
+        assertEquals("Wrong list property", "3", config.getString(key + ".elements"));
     }
 
     @Test
@@ -261,6 +479,40 @@ public class TestAbstractHierarchicalConfiguration {
     }
 
     @Test
+    public void testClone() {
+        final Configuration copy = (Configuration) config.clone();
+        assertTrue("Wrong clone result", copy instanceof AbstractHierarchicalConfiguration);
+        checkContent(copy);
+    }
+
+    /**
+     * Tests whether interpolation works as expected after cloning.
+     */
+    @Test
+    public void testCloneInterpolation() {
+        final String keyAnswer = "answer";
+        final String keyValue = "value";
+        config.addProperty(keyAnswer, "The answer is ${" + keyValue + "}.");
+        config.addProperty(keyValue, 42);
+        final Configuration clone = (Configuration) config.clone();
+        clone.setProperty(keyValue, 43);
+        assertEquals("Wrong interpolation in original", "The answer is 42.", config.getString(keyAnswer));
+        assertEquals("Wrong interpolation in clone", "The answer is 43.", clone.getString(keyAnswer));
+    }
+
+    /**
+     * Tests whether registered event handlers are handled correctly when a configuration is cloned. They should not be
+     * registered at the clone.
+     */
+    @Test
+    public void testCloneWithEventListeners() {
+        final EventListener<ConfigurationEvent> l = new EventListenerTestImpl(null);
+        config.addEventListener(ConfigurationEvent.ANY, l);
+        final AbstractHierarchicalConfiguration<?> copy = (AbstractHierarchicalConfiguration<?>) config.clone();
+        assertFalse("Event listener registered at clone", copy.getEventListeners(ConfigurationEvent.ANY).contains(l));
+    }
+
+    @Test
     public void testContainsKey() {
         assertTrue(config.containsKey("tables.table(0).name"));
         assertTrue(config.containsKey("tables.table(1).name"));
@@ -287,21 +539,6 @@ public class TestAbstractHierarchicalConfiguration {
     }
 
     /**
-     * Tests whether keys are returned in a defined order.
-     */
-    @Test
-    public void testGetKeysOrder() {
-        config.addProperty("order.key1", "value1");
-        config.addProperty("order.key2", "value2");
-        config.addProperty("order.key3", "value3");
-
-        final Iterator<String> it = config.getKeys("order");
-        assertEquals("1st key", "order.key1", it.next());
-        assertEquals("2nd key", "order.key2", it.next());
-        assertEquals("3rd key", "order.key3", it.next());
-    }
-
-    /**
      * Tests whether attribute keys are contained in the iteration of keys.
      */
     @Test
@@ -323,6 +560,21 @@ public class TestAbstractHierarchicalConfiguration {
         final Iterator<String> itKeys = config.getKeys("tables.table[@type]");
         assertEquals("Wrong key", "tables.table[@type]", itKeys.next());
         assertFalse("Too many keys", itKeys.hasNext());
+    }
+
+    /**
+     * Tests whether keys are returned in a defined order.
+     */
+    @Test
+    public void testGetKeysOrder() {
+        config.addProperty("order.key1", "value1");
+        config.addProperty("order.key2", "value2");
+        config.addProperty("order.key3", "value3");
+
+        final Iterator<String> it = config.getKeys("order");
+        assertEquals("1st key", "order.key1", it.next());
+        assertEquals("2nd key", "order.key2", it.next());
+        assertEquals("3rd key", "order.key3", it.next());
     }
 
     @Test
@@ -373,68 +625,6 @@ public class TestAbstractHierarchicalConfiguration {
         assertFalse("More keys than expected", it.hasNext());
     }
 
-    /**
-     * Tests whether the correct size is calculated.
-     */
-    @Test
-    public void testSize() {
-        assertEquals("Wrong size", 2, config.size());
-    }
-
-    @Test
-    public void testAddProperty() {
-        config.addProperty("tables.table(0).fields.field(-1).name", "phone");
-        Object prop = config.getProperty("tables.table(0).fields.field.name");
-        assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
-        assertEquals(6, ((Collection<?>) prop).size());
-
-        config.addProperty("tables.table(0).fields.field.name", "fax");
-        prop = config.getProperty("tables.table.fields.field(5).name");
-        assertNotNull(prop);
-        assertTrue(prop instanceof List);
-        final List<?> list = (List<?>) prop;
-        assertEquals("phone", list.get(0));
-        assertEquals("fax", list.get(1));
-
-        config.addProperty("tables.table(-1).name", "config");
-        prop = config.getProperty("tables.table.name");
-        assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
-        assertEquals(3, ((Collection<?>) prop).size());
-        config.addProperty("tables.table(2).fields.field(0).name", "cid");
-        config.addProperty("tables.table(2).fields.field(-1).name", "confName");
-        prop = config.getProperty("tables.table(2).fields.field.name");
-        assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
-        assertEquals(2, ((Collection<?>) prop).size());
-        assertEquals("confName", config.getProperty("tables.table(2).fields.field(1).name"));
-
-        config.addProperty("connection.user", "scott");
-        config.addProperty("connection.passwd", "tiger");
-        assertEquals("tiger", config.getProperty("connection.passwd"));
-
-        final DefaultConfigurationKey key = createConfigurationKey();
-        key.append("tables").append("table").appendIndex(0);
-        key.appendAttribute("tableType");
-        config.addProperty(key.toString(), "system");
-        assertEquals("system", config.getProperty(key.toString()));
-    }
-
-    /**
-     * Creates a {@code DefaultConfigurationKey} object.
-     *
-     * @return the new key object
-     */
-    private static DefaultConfigurationKey createConfigurationKey() {
-        return new DefaultConfigurationKey(DefaultExpressionEngine.INSTANCE);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddPropertyInvalidKey() {
-        config.addProperty(".", "InvalidKey");
-    }
-
     @Test
     public void testGetMaxIndex() {
         assertEquals(NodeStructureHelper.fieldsLength(0) - 1, config.getMaxIndex("tables.table(0).fields.field"));
@@ -453,109 +643,56 @@ public class TestAbstractHierarchicalConfiguration {
         }
     }
 
+    /**
+     * Tests whether the configuration's node model can be correctly accessed.
+     */
     @Test
-    public void testClone() {
-        final Configuration copy = (Configuration) config.clone();
-        assertTrue("Wrong clone result", copy instanceof AbstractHierarchicalConfiguration);
-        checkContent(copy);
+    public void testGetNodeModel() {
+        final SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        config.setSynchronizer(sync);
+        final NodeModel<ImmutableNode> model = config.getNodeModel();
+
+        assertTrue("Wrong node model: " + model, model instanceof InMemoryNodeModel);
+        final ImmutableNode rootNode = model.getNodeHandler().getRootNode();
+        assertEquals("Wrong number of children of root node", 1, rootNode.getChildren().size());
+        assertTrue("Wrong children of root node", rootNode.getChildren().contains(NodeStructureHelper.ROOT_TABLES_TREE));
+        sync.verify(SynchronizerTestImpl.Methods.BEGIN_READ, SynchronizerTestImpl.Methods.END_READ);
+    }
+
+    @Test
+    public void testGetProperty() {
+        checkGetProperty(config);
     }
 
     /**
-     * Tests whether registered event handlers are handled correctly when a configuration is cloned. They should not be
-     * registered at the clone.
+     * Tests whether keys that contains brackets can be used.
      */
     @Test
-    public void testCloneWithEventListeners() {
-        final EventListener<ConfigurationEvent> l = new EventListenerTestImpl(null);
-        config.addEventListener(ConfigurationEvent.ANY, l);
-        final AbstractHierarchicalConfiguration<?> copy = (AbstractHierarchicalConfiguration<?>) config.clone();
-        assertFalse("Event listener registered at clone", copy.getEventListeners(ConfigurationEvent.ANY).contains(l));
+    public void testGetPropertyKeyWithBrackets() {
+        final String key = "test.directory.platform(x86)";
+        config.addProperty(key, "C:\\Temp");
+        assertEquals("Wrong property value", "C:\\Temp", config.getString(key));
     }
 
     /**
-     * Tests whether interpolation works as expected after cloning.
+     * Tests the copy constructor when a null reference is passed.
      */
     @Test
-    public void testCloneInterpolation() {
-        final String keyAnswer = "answer";
-        final String keyValue = "value";
-        config.addProperty(keyAnswer, "The answer is ${" + keyValue + "}.");
-        config.addProperty(keyValue, 42);
-        final Configuration clone = (Configuration) config.clone();
-        clone.setProperty(keyValue, 43);
-        assertEquals("Wrong interpolation in original", "The answer is 42.", config.getString(keyAnswer));
-        assertEquals("Wrong interpolation in clone", "The answer is 43.", clone.getString(keyAnswer));
-    }
-
-    @Test
-    public void testAddNodes() {
-        final Collection<ImmutableNode> nodes = new ArrayList<>();
-        nodes.add(NodeStructureHelper.createFieldNode("birthDate"));
-        nodes.add(NodeStructureHelper.createFieldNode("lastLogin"));
-        nodes.add(NodeStructureHelper.createFieldNode("language"));
-        config.addNodes("tables.table(0).fields", nodes);
-        assertEquals(7, config.getMaxIndex("tables.table(0).fields.field"));
-        assertEquals("birthDate", config.getString("tables.table(0).fields.field(5).name"));
-        assertEquals("lastLogin", config.getString("tables.table(0).fields.field(6).name"));
-        assertEquals("language", config.getString("tables.table(0).fields.field(7).name"));
+    public void testInitCopyNull() {
+        final BaseHierarchicalConfiguration copy = new BaseHierarchicalConfiguration((BaseHierarchicalConfiguration) null);
+        assertTrue("Configuration not empty", copy.isEmpty());
     }
 
     /**
-     * Tests the addNodes() method if the provided key does not exist. In this case, a new node (or even a completely new
-     * branch) is created.
+     * Tests obtaining a configuration with all variables substituted.
      */
     @Test
-    public void testAddNodesForNonExistingKey() {
-        final Collection<ImmutableNode> nodes = new ArrayList<>();
-        final ImmutableNode newNode = new ImmutableNode.Builder().name("usr").value("scott").addAttribute("pwd", "tiger").create();
-        nodes.add(newNode);
-        config.addNodes("database.connection.settings", nodes);
+    public void testInterpolatedConfiguration() {
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        final AbstractHierarchicalConfiguration<?> c = (AbstractHierarchicalConfiguration<?>) InterpolationTestHelper.testInterpolatedConfiguration(config);
 
-        assertEquals("Usr node not found", "scott", config.getString("database.connection.settings.usr"));
-        assertEquals("Pwd node not found", "tiger", config.getString("database.connection.settings.usr[@pwd]"));
-    }
-
-    /**
-     * Tests the addNodes() method when the new nodes should be added to an attribute node. This is not allowed.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testAddNodesWithAttributeKey() {
-        final Collection<ImmutableNode> nodes = new ArrayList<>();
-        nodes.add(NodeStructureHelper.createNode("testNode", "yes"));
-        config.addNodes("database.connection[@settings]", nodes);
-    }
-
-    /**
-     * Tests copying nodes from one configuration to another one.
-     */
-    @Test
-    public void testAddNodesCopy() {
-        final AbstractHierarchicalConfigurationTestImpl configDest = new AbstractHierarchicalConfigurationTestImpl(new InMemoryNodeModel());
-        configDest.addProperty("test", "TEST");
-        final Collection<ImmutableNode> nodes = getRootNode().getChildren();
-        assertEquals("Wrong number of children", 1, nodes.size());
-        configDest.addNodes("newNodes", nodes);
-        for (int i = 0; i < NodeStructureHelper.tablesLength(); i++) {
-            final String keyTab = "newNodes.tables.table(" + i + ").";
-            assertEquals("Table " + i + " not found", NodeStructureHelper.table(i), configDest.getString(keyTab + "name"));
-            for (int j = 0; j < NodeStructureHelper.fieldsLength(i); j++) {
-                assertEquals("Invalid field " + j + " in table " + i, NodeStructureHelper.field(i, j),
-                    configDest.getString(keyTab + "fields.field(" + j + ").name"));
-            }
-        }
-    }
-
-    /**
-     * Tests setting a custom expression engine, which uses a slightly different syntax.
-     */
-    @Test
-    public void testSetExpressionEngine() {
-        config.setExpressionEngine(null);
-        assertNotNull("Expression engine is null", config.getExpressionEngine());
-        assertSame("Default engine is not used", DefaultExpressionEngine.INSTANCE, config.getExpressionEngine());
-
-        config.setExpressionEngine(createAlternativeExpressionEngine());
-        checkAlternativeSyntax();
+        // tests whether the hierarchical structure has been maintained
+        checkGetProperty(c);
     }
 
     /**
@@ -583,59 +720,6 @@ public class TestAbstractHierarchicalConfiguration {
     }
 
     /**
-     * Tests multiple levels of interpolation.
-     */
-    @Test
-    public void testInterpolationMultipleLevels() {
-        InterpolationTestHelper.testMultipleInterpolation(config);
-    }
-
-    /**
-     * Tests an invalid interpolation that causes an endless loop.
-     */
-    @Test
-    public void testInterpolationLoop() {
-        InterpolationTestHelper.testInterpolationLoop(config);
-    }
-
-    /**
-     * Tests interpolation with a subset.
-     */
-    @Test
-    public void testInterpolationSubset() {
-        InterpolationTestHelper.testInterpolationSubset(config);
-    }
-
-    /**
-     * Tests whether interpolation with a subset configuration works over multiple layers.
-     */
-    @Test
-    public void testInterpolationSubsetMultipleLayers() {
-        config.clear();
-        config.addProperty("var", "value");
-        config.addProperty("prop2.prop[@attr]", "${var}");
-        final Configuration sub1 = config.subset("prop2");
-        final Configuration sub2 = sub1.subset("prop");
-        assertEquals("Wrong value", "value", sub2.getString("[@attr]"));
-    }
-
-    /**
-     * Tests interpolation of a variable, which cannot be resolved.
-     */
-    @Test
-    public void testInterpolationUnknownProperty() {
-        InterpolationTestHelper.testInterpolationUnknownProperty(config);
-    }
-
-    /**
-     * Tests interpolation with system properties.
-     */
-    @Test
-    public void testInterpolationSystemProperties() {
-        InterpolationTestHelper.testInterpolationSystemProperties(config);
-    }
-
-    /**
      * Tests interpolation with constant values.
      */
     @Test
@@ -660,6 +744,59 @@ public class TestAbstractHierarchicalConfiguration {
     }
 
     /**
+     * Tests an invalid interpolation that causes an endless loop.
+     */
+    @Test
+    public void testInterpolationLoop() {
+        InterpolationTestHelper.testInterpolationLoop(config);
+    }
+
+    /**
+     * Tests multiple levels of interpolation.
+     */
+    @Test
+    public void testInterpolationMultipleLevels() {
+        InterpolationTestHelper.testMultipleInterpolation(config);
+    }
+
+    /**
+     * Tests interpolation with a subset.
+     */
+    @Test
+    public void testInterpolationSubset() {
+        InterpolationTestHelper.testInterpolationSubset(config);
+    }
+
+    /**
+     * Tests whether interpolation with a subset configuration works over multiple layers.
+     */
+    @Test
+    public void testInterpolationSubsetMultipleLayers() {
+        config.clear();
+        config.addProperty("var", "value");
+        config.addProperty("prop2.prop[@attr]", "${var}");
+        final Configuration sub1 = config.subset("prop2");
+        final Configuration sub2 = sub1.subset("prop");
+        assertEquals("Wrong value", "value", sub2.getString("[@attr]"));
+    }
+
+    /**
+     * Tests interpolation with system properties.
+     */
+    @Test
+    public void testInterpolationSystemProperties() {
+        InterpolationTestHelper.testInterpolationSystemProperties(config);
+    }
+
+    /**
+     * Tests interpolation of a variable, which cannot be resolved.
+     */
+    @Test
+    public void testInterpolationUnknownProperty() {
+        InterpolationTestHelper.testInterpolationUnknownProperty(config);
+    }
+
+    /**
      * Tests manipulating the interpolator.
      */
     @Test
@@ -667,82 +804,42 @@ public class TestAbstractHierarchicalConfiguration {
         InterpolationTestHelper.testGetInterpolator(config);
     }
 
-    /**
-     * Tests obtaining a configuration with all variables substituted.
-     */
     @Test
-    public void testInterpolatedConfiguration() {
-        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
-        final AbstractHierarchicalConfiguration<?> c = (AbstractHierarchicalConfiguration<?>) InterpolationTestHelper.testInterpolatedConfiguration(config);
-
-        // tests whether the hierarchical structure has been maintained
-        checkGetProperty(c);
+    public void testIsEmptyFalse() {
+        assertFalse(config.isEmpty());
     }
 
     /**
-     * Tests the copy constructor when a null reference is passed.
+     * Tests isEmpty() if the structure contains some nodes without values.
      */
     @Test
-    public void testInitCopyNull() {
-        final BaseHierarchicalConfiguration copy = new BaseHierarchicalConfiguration((BaseHierarchicalConfiguration) null);
-        assertTrue("Configuration not empty", copy.isEmpty());
+    public void testIsEmptyNodesWithNoValues() {
+        final ImmutableNode.Builder rootBuilder = new ImmutableNode.Builder(1);
+        final ImmutableNode.Builder nodeBuilder = new ImmutableNode.Builder(1);
+        nodeBuilder.addChild(NodeStructureHelper.createNode("child", null));
+        rootBuilder.addChild(nodeBuilder.create());
+        config = new AbstractHierarchicalConfigurationTestImpl(new InMemoryNodeModel(rootBuilder.create()));
+        assertTrue("Not empty", config.isEmpty());
     }
 
     /**
-     * Tests whether keys that contains brackets can be used.
+     * Tests isEmpty() if only the root node exists.
      */
     @Test
-    public void testGetPropertyKeyWithBrackets() {
-        final String key = "test.directory.platform(x86)";
-        config.addProperty(key, "C:\\Temp");
-        assertEquals("Wrong property value", "C:\\Temp", config.getString(key));
+    public void testIsEmptyRootOnly() {
+        config = new AbstractHierarchicalConfigurationTestImpl(new InMemoryNodeModel());
+        assertTrue("Not empty", config.isEmpty());
     }
 
     /**
-     * Tests whether list handling works correctly when adding properties.
+     * Tests nodeKey() if the key is directly found in the cache.
      */
     @Test
-    public void testAddPropertyWithListHandling() {
-        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
-        final String key = "list.delimiter.value";
-        config.addProperty(key + ".escaped", "3\\,1415");
-        config.addProperty(key + ".elements", "3,1415");
-        assertEquals("Wrong escaped property", "3,1415", config.getString(key + ".escaped"));
-        assertEquals("Wrong list property", "3", config.getString(key + ".elements"));
-    }
-
-    /**
-     * Tests whether node keys can be resolved.
-     */
-    @Test
-    public void testResolveNodeKey() {
-        final List<ImmutableNode> nodes = config.resolveNodeKey(getRootNode(), "tables.table.name", config.getModel().getNodeHandler());
-        assertEquals("Wrong number of nodes", NodeStructureHelper.tablesLength(), nodes.size());
-        for (int i = 0; i < NodeStructureHelper.tablesLength(); i++) {
-            assertEquals("Wrong node value at " + i, NodeStructureHelper.table(i), nodes.get(i).getValue());
-        }
-    }
-
-    /**
-     * Tests whether attribute keys are filtered out when resolving node keys.
-     */
-    @Test
-    public void testResolveNodeKeyAttribute() {
-        final String attrKey = "tables.table(0)[@type]";
-        config.addProperty(attrKey, "system");
-        assertTrue("Got attribute results", config.resolveNodeKey(getRootNode(), attrKey, config.getModel().getNodeHandler()).isEmpty());
-    }
-
-    /**
-     * Tests whether a correct node key is generated if no data is contained in the cache.
-     */
-    @Test
-    public void testNodeKeyEmptyCache() {
+    public void testNodeKeyCacheHit() {
         final Map<ImmutableNode, String> cache = new HashMap<>();
-        final ImmutableNode nodeTabName = NodeStructureHelper.nodeForKey(getRootNode(), "tables/table(0)/name");
-        final ImmutableNode nodeFldName = NodeStructureHelper.nodeForKey(getRootNode(), "tables/table(0)/fields/field(1)/name");
-        assertEquals("Wrong key (1)", "tables(0).table(0).name(0)", config.nodeKey(nodeTabName, cache, config.getModel().getNodeHandler()));
-        assertEquals("Wrong key (2)", "tables(0).table(0).fields(0).field(1).name(0)", config.nodeKey(nodeFldName, cache, config.getModel().getNodeHandler()));
+        final String key = "someResultKey";
+        cache.put(getRootNode(), key);
+        assertEquals("Wrong result", key, config.nodeKey(getRootNode(), cache, config.getModel().getNodeHandler()));
     }
 
     /**
@@ -774,6 +871,18 @@ public class TestAbstractHierarchicalConfiguration {
     }
 
     /**
+     * Tests whether a correct node key is generated if no data is contained in the cache.
+     */
+    @Test
+    public void testNodeKeyEmptyCache() {
+        final Map<ImmutableNode, String> cache = new HashMap<>();
+        final ImmutableNode nodeTabName = NodeStructureHelper.nodeForKey(getRootNode(), "tables/table(0)/name");
+        final ImmutableNode nodeFldName = NodeStructureHelper.nodeForKey(getRootNode(), "tables/table(0)/fields/field(1)/name");
+        assertEquals("Wrong key (1)", "tables(0).table(0).name(0)", config.nodeKey(nodeTabName, cache, config.getModel().getNodeHandler()));
+        assertEquals("Wrong key (2)", "tables(0).table(0).fields(0).field(1).name(0)", config.nodeKey(nodeFldName, cache, config.getModel().getNodeHandler()));
+    }
+
+    /**
      * Tests whether a node key for the root node can be generated.
      */
     @Test
@@ -783,182 +892,73 @@ public class TestAbstractHierarchicalConfiguration {
     }
 
     /**
-     * Tests nodeKey() if the key is directly found in the cache.
+     * Tests whether node keys can be resolved.
      */
     @Test
-    public void testNodeKeyCacheHit() {
-        final Map<ImmutableNode, String> cache = new HashMap<>();
-        final String key = "someResultKey";
-        cache.put(getRootNode(), key);
-        assertEquals("Wrong result", key, config.nodeKey(getRootNode(), cache, config.getModel().getNodeHandler()));
+    public void testResolveNodeKey() {
+        final List<ImmutableNode> nodes = config.resolveNodeKey(getRootNode(), "tables.table.name", config.getModel().getNodeHandler());
+        assertEquals("Wrong number of nodes", NodeStructureHelper.tablesLength(), nodes.size());
+        for (int i = 0; i < NodeStructureHelper.tablesLength(); i++) {
+            assertEquals("Wrong node value at " + i, NodeStructureHelper.table(i), nodes.get(i).getValue());
+        }
     }
 
     /**
-     * Tests whether the configuration's node model can be correctly accessed.
+     * Tests whether attribute keys are filtered out when resolving node keys.
      */
     @Test
-    public void testGetNodeModel() {
-        final SynchronizerTestImpl sync = new SynchronizerTestImpl();
-        config.setSynchronizer(sync);
-        final NodeModel<ImmutableNode> model = config.getNodeModel();
-
-        assertTrue("Wrong node model: " + model, model instanceof InMemoryNodeModel);
-        final ImmutableNode rootNode = model.getNodeHandler().getRootNode();
-        assertEquals("Wrong number of children of root node", 1, rootNode.getChildren().size());
-        assertTrue("Wrong children of root node", rootNode.getChildren().contains(NodeStructureHelper.ROOT_TABLES_TREE));
-        sync.verify(SynchronizerTestImpl.Methods.BEGIN_READ, SynchronizerTestImpl.Methods.END_READ);
+    public void testResolveNodeKeyAttribute() {
+        final String attrKey = "tables.table(0)[@type]";
+        config.addProperty(attrKey, "system");
+        assertTrue("Got attribute results", config.resolveNodeKey(getRootNode(), attrKey, config.getModel().getNodeHandler()).isEmpty());
     }
 
     /**
-     * Helper method for testing the getKeys(String) method.
-     *
-     * @param prefix the key to pass into getKeys()
-     * @param expected the expected result
+     * Tests setting a custom expression engine, which uses a slightly different syntax.
      */
-    private void checkKeys(final String prefix, final String[] expected) {
-        final Set<String> values = new HashSet<>();
-        for (final String anExpected : expected) {
-            values.add(anExpected.startsWith(prefix) ? anExpected : prefix + "." + anExpected);
-        }
+    @Test
+    public void testSetExpressionEngine() {
+        config.setExpressionEngine(null);
+        assertNotNull("Expression engine is null", config.getExpressionEngine());
+        assertSame("Default engine is not used", DefaultExpressionEngine.INSTANCE, config.getExpressionEngine());
 
-        final Iterator<String> itKeys = config.getKeys(prefix);
-        while (itKeys.hasNext()) {
-            final String key = itKeys.next();
-            if (!values.contains(key)) {
-                fail("Found unexpected key: " + key);
-            } else {
-                values.remove(key);
-            }
-        }
+        config.setExpressionEngine(createAlternativeExpressionEngine());
+        checkAlternativeSyntax();
+    }
 
-        assertTrue("Remaining keys " + values, values.isEmpty());
+    @Test
+    public void testSetProperty() {
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        config.setProperty("tables.table(0).name", "resources");
+        assertEquals("resources", config.getString("tables.table(0).name"));
+        config.setProperty("tables.table.name", "tab1,tab2");
+        assertEquals("tab1", config.getString("tables.table(0).name"));
+        assertEquals("tab2", config.getString("tables.table(1).name"));
+
+        config.setProperty("test.items.item", new int[] {2, 4, 8, 16});
+        assertEquals(3, config.getMaxIndex("test.items.item"));
+        assertEquals(8, config.getInt("test.items.item(2)"));
+        config.setProperty("test.items.item(2)", Integer.valueOf(6));
+        assertEquals(6, config.getInt("test.items.item(2)"));
+        config.setProperty("test.items.item(2)", new int[] {7, 9, 11});
+        assertEquals(5, config.getMaxIndex("test.items.item"));
+
+        config.setProperty("test", Boolean.TRUE);
+        config.setProperty("test.items", "01/01/05");
+        assertEquals(5, config.getMaxIndex("test.items.item"));
+        assertTrue(config.getBoolean("test"));
+        assertEquals("01/01/05", config.getProperty("test.items"));
+
+        config.setProperty("test.items.item", Integer.valueOf(42));
+        assertEquals(0, config.getMaxIndex("test.items.item"));
+        assertEquals(42, config.getInt("test.items.item"));
     }
 
     /**
-     * Helper method for checking keys using an alternative syntax.
+     * Tests whether the correct size is calculated.
      */
-    private void checkAlternativeSyntax() {
-        assertNull(config.getProperty("tables/table/resultset"));
-        assertNull(config.getProperty("tables/table/fields/field"));
-
-        Object prop = config.getProperty("tables/table[0]/fields/field/name");
-        assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
-        assertEquals(NodeStructureHelper.fieldsLength(0), ((Collection<?>) prop).size());
-
-        prop = config.getProperty("tables/table/fields/field/name");
-        assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
-        assertEquals(totalFieldCount(), ((Collection<?>) prop).size());
-
-        prop = config.getProperty("tables/table/fields/field[3]/name");
-        assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
-        assertEquals(2, ((Collection<?>) prop).size());
-
-        prop = config.getProperty("tables/table[1]/fields/field[2]/name");
-        assertNotNull(prop);
-        assertEquals("creationDate", prop.toString());
-
-        final Set<String> keys = ConfigurationAssert.keysToSet(config);
-        assertEquals("Wrong number of defined keys", 2, keys.size());
-        assertTrue("Key not found", keys.contains("tables/table/name"));
-        assertTrue("Key not found", keys.contains("tables/table/fields/field/name"));
-    }
-
-    /**
-     * Returns the total number of fields in the test data structure.
-     *
-     * @return the total number of fields
-     */
-    private static int totalFieldCount() {
-        int fieldCount = 0;
-        for (int i = 0; i < NodeStructureHelper.tablesLength(); i++) {
-            fieldCount += NodeStructureHelper.fieldsLength(i);
-        }
-        return fieldCount;
-    }
-
-    /**
-     * Checks the content of the passed in configuration object. Used by some tests that copy a configuration.
-     *
-     * @param c the configuration to check
-     */
-    private static void checkContent(final Configuration c) {
-        for (int i = 0; i < NodeStructureHelper.tablesLength(); i++) {
-            assertEquals(NodeStructureHelper.table(i), c.getString("tables.table(" + i + ").name"));
-            for (int j = 0; j < NodeStructureHelper.fieldsLength(i); j++) {
-                assertEquals(NodeStructureHelper.field(i, j), c.getString("tables.table(" + i + ").fields.field(" + j + ").name"));
-            }
-        }
-    }
-
-    private ExpressionEngine createAlternativeExpressionEngine() {
-        return new DefaultExpressionEngine(new DefaultExpressionEngineSymbols.Builder(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS).setPropertyDelimiter("/")
-            .setIndexStart("[").setIndexEnd("]").create());
-    }
-
-    /**
-     * A concrete test implementation of {@code AbstractHierarchicalConfiguration}.
-     */
-    private static class AbstractHierarchicalConfigurationTestImpl extends AbstractHierarchicalConfiguration<ImmutableNode> {
-        public AbstractHierarchicalConfigurationTestImpl(final InMemoryNodeModel model) {
-            super(model);
-        }
-
-        @Override
-        protected NodeModel<ImmutableNode> cloneNodeModel() {
-            return new InMemoryNodeModel(getModel().getNodeHandler().getRootNode());
-        }
-
-        @Override
-        public SubnodeConfiguration configurationAt(final String key, final boolean supportUpdates) {
-            throw new UnsupportedOperationException("Unexpected method call!");
-        }
-
-        @Override
-        public SubnodeConfiguration configurationAt(final String key) {
-            throw new UnsupportedOperationException("Unexpected method call!");
-        }
-
-        @Override
-        public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(final String key) {
-            throw new UnsupportedOperationException("Unexpected method call!");
-        }
-
-        @Override
-        public List<HierarchicalConfiguration<ImmutableNode>> configurationsAt(final String key, final boolean supportUpdates) {
-            throw new UnsupportedOperationException("Unexpected method call!");
-        }
-
-        @Override
-        public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(final String key) {
-            throw new UnsupportedOperationException("Unexpected method call!");
-        }
-
-        @Override
-        public List<HierarchicalConfiguration<ImmutableNode>> childConfigurationsAt(final String key, final boolean supportUpdates) {
-            throw new UnsupportedOperationException("Unexpected method call!");
-        }
-
-        @Override
-        public ImmutableHierarchicalConfiguration immutableConfigurationAt(final String key, final boolean supportUpdates) {
-            throw new UnsupportedOperationException("Unexpected method call!");
-        }
-
-        @Override
-        public ImmutableHierarchicalConfiguration immutableConfigurationAt(final String key) {
-            throw new UnsupportedOperationException("Unexpected method call!");
-        }
-
-        @Override
-        public List<ImmutableHierarchicalConfiguration> immutableConfigurationsAt(final String key) {
-            throw new UnsupportedOperationException("Unexpected method call!");
-        }
-
-        @Override
-        public List<ImmutableHierarchicalConfiguration> immutableChildConfigurationsAt(final String key) {
-            throw new UnsupportedOperationException("Unexpected method call!");
-        }
+    @Test
+    public void testSize() {
+        assertEquals("Wrong size", 2, config.size());
     }
 }

@@ -31,24 +31,6 @@ import org.junit.Test;
  */
 public class TestEventListenerParameters {
     /**
-     * Tests the map with parameters.
-     */
-    @Test
-    public void testGetParameters() {
-        final EventListenerParameters parameters = new EventListenerParameters();
-        assertTrue("Got parameters", parameters.getParameters().isEmpty());
-    }
-
-    /**
-     * Tests that the list of event listeners is empty for a newly created instance.
-     */
-    @Test
-    public void testRegistrationsAfterCreation() {
-        final EventListenerParameters parameters = new EventListenerParameters();
-        assertTrue("Got registrations", parameters.getListeners().getRegistrations().isEmpty());
-    }
-
-    /**
      * Tests whether an event listener with its type can be added.
      */
     @Test
@@ -73,5 +55,23 @@ public class TestEventListenerParameters {
         assertSame("Wrong result", parameters, parameters.addEventListener(reg));
         assertEquals("Wrong number of registrations", 1, parameters.getListeners().getRegistrations().size());
         assertEquals("Wrong registration", reg, parameters.getListeners().getRegistrations().get(0));
+    }
+
+    /**
+     * Tests the map with parameters.
+     */
+    @Test
+    public void testGetParameters() {
+        final EventListenerParameters parameters = new EventListenerParameters();
+        assertTrue("Got parameters", parameters.getParameters().isEmpty());
+    }
+
+    /**
+     * Tests that the list of event listeners is empty for a newly created instance.
+     */
+    @Test
+    public void testRegistrationsAfterCreation() {
+        final EventListenerParameters parameters = new EventListenerParameters();
+        assertTrue("Got registrations", parameters.getListeners().getRegistrations().isEmpty());
     }
 }

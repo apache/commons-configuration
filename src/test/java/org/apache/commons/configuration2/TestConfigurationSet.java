@@ -58,11 +58,6 @@ public class TestConfigurationSet {
         set = null;
     }
 
-    @Test
-    public void testSize() {
-        assertEquals("Entry set does not match properties size.", properties.length, set.size());
-    }
-
     /**
      * Class under test for Iterator iterator()
      */
@@ -82,5 +77,10 @@ public class TestConfigurationSet {
             iterator.remove();
         }
         assertTrue("Iterator failed to remove all properties.", set.isEmpty());
+    }
+
+    @Test
+    public void testSize() {
+        assertEquals("Entry set does not match properties size.", properties.length, set.size());
     }
 }

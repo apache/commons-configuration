@@ -42,11 +42,103 @@ public class TestConfigurationLogger {
     private static final String MSG = "Interesting log output";
 
     /**
-     * Tries to create an instance without passing in a logger name.
+     * Tests the logger set per default.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testInitNoLoggerName() {
-        new ConfigurationLogger((String) null);
+    @Test
+    public void testAbstractConfigurationDefaultLogger() {
+        final AbstractConfiguration config = new BaseConfiguration();
+        assertThat("Wrong default logger", config.getLogger().getLog(), instanceOf(NoOpLog.class));
+    }
+
+    /**
+     * Tests whether the logger can be set.
+     */
+    @Test
+    public void testAbstractConfigurationSetLogger() {
+        final ConfigurationLogger logger = new ConfigurationLogger(getClass());
+        final AbstractConfiguration config = new BaseConfiguration();
+
+        config.setLogger(logger);
+        assertThat("Logger not set", config.getLogger(), sameInstance(logger));
+    }
+
+    /**
+     * Tests that the logger can be disabled by setting it to null.
+     */
+    @Test
+    public void testAbstractConfigurationSetLoggerNull() {
+        final AbstractConfiguration config = new BaseConfiguration();
+        config.setLogger(new ConfigurationLogger(getClass()));
+
+        config.setLogger(null);
+        assertThat("Logger not disabled", config.getLogger().getLog(), instanceOf(NoOpLog.class));
+    }
+
+    /**
+     * Tests whether debug logging is possible.
+     */
+    @Test
+    public void testDebug() {
+        final Log log = EasyMock.createMock(Log.class);
+        log.debug(MSG);
+        EasyMock.replay(log);
+        final ConfigurationLogger logger = new ConfigurationLogger(log);
+
+        logger.debug(MSG);
+        EasyMock.verify(log);
+    }
+
+    /**
+     * Tests whether a dummy logger can be created.
+     */
+    @Test
+    public void testDummyLogger() {
+        final ConfigurationLogger logger = ConfigurationLogger.newDummyLogger();
+
+        assertThat("Wrong internal logger", logger.getLog(), instanceOf(NoOpLog.class));
+    }
+
+    /**
+     * Tests whether error logging is possible.
+     */
+    @Test
+    public void testError() {
+        final Log log = EasyMock.createMock(Log.class);
+        log.error(MSG);
+        EasyMock.replay(log);
+        final ConfigurationLogger logger = new ConfigurationLogger(log);
+
+        logger.error(MSG);
+        EasyMock.verify(log);
+    }
+
+    /**
+     * Tests whether an exception can be logged on error level.
+     */
+    @Test
+    public void testErrorWithException() {
+        final Log log = EasyMock.createMock(Log.class);
+        final Throwable ex = new Exception("Test exception");
+        log.error(MSG, ex);
+        EasyMock.replay(log);
+        final ConfigurationLogger logger = new ConfigurationLogger(log);
+
+        logger.error(MSG, ex);
+        EasyMock.verify(log);
+    }
+
+    /**
+     * Tests whether info logging is possible.
+     */
+    @Test
+    public void testInfo() {
+        final Log log = EasyMock.createMock(Log.class);
+        log.info(MSG);
+        EasyMock.replay(log);
+        final ConfigurationLogger logger = new ConfigurationLogger(log);
+
+        logger.info(MSG);
+        EasyMock.verify(log);
     }
 
     /**
@@ -55,6 +147,14 @@ public class TestConfigurationLogger {
     @Test(expected = IllegalArgumentException.class)
     public void testInitNoLoggerClass() {
         new ConfigurationLogger((Class<?>) null);
+    }
+
+    /**
+     * Tries to create an instance without passing in a logger name.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testInitNoLoggerName() {
+        new ConfigurationLogger((String) null);
     }
 
     /**
@@ -98,31 +198,21 @@ public class TestConfigurationLogger {
     }
 
     /**
-     * Tests whether debug logging is possible.
+     * Tests that a derived class can be created for a logger.
      */
     @Test
-    public void testDebug() {
-        final Log log = EasyMock.createMock(Log.class);
-        log.debug(MSG);
-        EasyMock.replay(log);
-        final ConfigurationLogger logger = new ConfigurationLogger(log);
+    public void testSubClass() {
+        final StringBuilder buf = new StringBuilder();
+        final ConfigurationLogger logger = new ConfigurationLogger() {
+            @Override
+            public void info(final String msg) {
+                buf.append(msg);
+            }
+        };
 
-        logger.debug(MSG);
-        EasyMock.verify(log);
-    }
-
-    /**
-     * Tests whether info logging is possible.
-     */
-    @Test
-    public void testInfo() {
-        final Log log = EasyMock.createMock(Log.class);
-        log.info(MSG);
-        EasyMock.replay(log);
-        final ConfigurationLogger logger = new ConfigurationLogger(log);
-
+        assertNull("Got an internal logger", logger.getLog());
         logger.info(MSG);
-        EasyMock.verify(log);
+        assertEquals("Message not logged", MSG, buf.toString());
     }
 
     /**
@@ -152,95 +242,5 @@ public class TestConfigurationLogger {
 
         logger.warn(MSG, ex);
         EasyMock.verify(log);
-    }
-
-    /**
-     * Tests whether error logging is possible.
-     */
-    @Test
-    public void testError() {
-        final Log log = EasyMock.createMock(Log.class);
-        log.error(MSG);
-        EasyMock.replay(log);
-        final ConfigurationLogger logger = new ConfigurationLogger(log);
-
-        logger.error(MSG);
-        EasyMock.verify(log);
-    }
-
-    /**
-     * Tests whether an exception can be logged on error level.
-     */
-    @Test
-    public void testErrorWithException() {
-        final Log log = EasyMock.createMock(Log.class);
-        final Throwable ex = new Exception("Test exception");
-        log.error(MSG, ex);
-        EasyMock.replay(log);
-        final ConfigurationLogger logger = new ConfigurationLogger(log);
-
-        logger.error(MSG, ex);
-        EasyMock.verify(log);
-    }
-
-    /**
-     * Tests whether a dummy logger can be created.
-     */
-    @Test
-    public void testDummyLogger() {
-        final ConfigurationLogger logger = ConfigurationLogger.newDummyLogger();
-
-        assertThat("Wrong internal logger", logger.getLog(), instanceOf(NoOpLog.class));
-    }
-
-    /**
-     * Tests that a derived class can be created for a logger.
-     */
-    @Test
-    public void testSubClass() {
-        final StringBuilder buf = new StringBuilder();
-        final ConfigurationLogger logger = new ConfigurationLogger() {
-            @Override
-            public void info(final String msg) {
-                buf.append(msg);
-            }
-        };
-
-        assertNull("Got an internal logger", logger.getLog());
-        logger.info(MSG);
-        assertEquals("Message not logged", MSG, buf.toString());
-    }
-
-    /**
-     * Tests the logger set per default.
-     */
-    @Test
-    public void testAbstractConfigurationDefaultLogger() {
-        final AbstractConfiguration config = new BaseConfiguration();
-        assertThat("Wrong default logger", config.getLogger().getLog(), instanceOf(NoOpLog.class));
-    }
-
-    /**
-     * Tests whether the logger can be set.
-     */
-    @Test
-    public void testAbstractConfigurationSetLogger() {
-        final ConfigurationLogger logger = new ConfigurationLogger(getClass());
-        final AbstractConfiguration config = new BaseConfiguration();
-
-        config.setLogger(logger);
-        assertThat("Logger not set", config.getLogger(), sameInstance(logger));
-    }
-
-    /**
-     * Tests that the logger can be disabled by setting it to null.
-     */
-    @Test
-    public void testAbstractConfigurationSetLoggerNull() {
-        final AbstractConfiguration config = new BaseConfiguration();
-        config.setLogger(new ConfigurationLogger(getClass()));
-
-        config.setLogger(null);
-        assertThat("Logger not disabled", config.getLogger().getLog(), instanceOf(NoOpLog.class));
     }
 }

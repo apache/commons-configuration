@@ -43,17 +43,22 @@ public class TestPeriodicReloadingTrigger {
     /** Constant for the period's time unit. */
     private static final TimeUnit UNIT = TimeUnit.SECONDS;
 
+    /**
+     * Creates a mock object for a scheduled future.
+     *
+     * @return the mock
+     */
+    private static ScheduledFuture<Void> createFutureMock() {
+        @SuppressWarnings("unchecked")
+        final ScheduledFuture<Void> mock = EasyMock.createMock(ScheduledFuture.class);
+        return mock;
+    }
+
     /** A mock for the executor service. */
     private ScheduledExecutorService executor;
 
     /** A mock for the reloading controller. */
     private ReloadingController controller;
-
-    @Before
-    public void setUp() throws Exception {
-        executor = EasyMock.createMock(ScheduledExecutorService.class);
-        controller = EasyMock.createMock(ReloadingController.class);
-    }
 
     /**
      * Creates a test instance with default parameters.
@@ -62,6 +67,24 @@ public class TestPeriodicReloadingTrigger {
      */
     private PeriodicReloadingTrigger createTrigger() {
         return new PeriodicReloadingTrigger(controller, CTRL_PARAM, PERIOD, UNIT, executor);
+    }
+
+    /**
+     * Prepares the executor mock to expect an invocation which schedules the trigger task.
+     *
+     * @param future the future object to return
+     */
+    private void expectSchedule(final ScheduledFuture<Void> future) {
+        executor.scheduleAtFixedRate(EasyMock.anyObject(Runnable.class), EasyMock.eq(PERIOD), EasyMock.eq(PERIOD), EasyMock.eq(UNIT));
+        if (future != null) {
+            EasyMock.expectLastCall().andReturn(future);
+        }
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        executor = EasyMock.createMock(ScheduledExecutorService.class);
+        controller = EasyMock.createMock(ReloadingController.class);
     }
 
     /**
@@ -90,26 +113,28 @@ public class TestPeriodicReloadingTrigger {
     }
 
     /**
-     * Creates a mock object for a scheduled future.
-     *
-     * @return the mock
+     * Tests a shutdown operation.
      */
-    private static ScheduledFuture<Void> createFutureMock() {
-        @SuppressWarnings("unchecked")
-        final ScheduledFuture<Void> mock = EasyMock.createMock(ScheduledFuture.class);
-        return mock;
+    @Test
+    public void testShutdown() {
+        final ScheduledFuture<Void> future = createFutureMock();
+        expectSchedule(future);
+        EasyMock.expect(future.cancel(false)).andReturn(Boolean.TRUE);
+        executor.shutdown();
+        EasyMock.replay(future, controller, executor);
+        final PeriodicReloadingTrigger trigger = createTrigger();
+        trigger.start();
+        trigger.shutdown();
+        EasyMock.verify(future, controller, executor);
     }
 
     /**
-     * Prepares the executor mock to expect an invocation which schedules the trigger task.
-     *
-     * @param future the future object to return
+     * Tests a shutdown operation which excludes the executor service.
      */
-    private void expectSchedule(final ScheduledFuture<Void> future) {
-        executor.scheduleAtFixedRate(EasyMock.anyObject(Runnable.class), EasyMock.eq(PERIOD), EasyMock.eq(PERIOD), EasyMock.eq(UNIT));
-        if (future != null) {
-            EasyMock.expectLastCall().andReturn(future);
-        }
+    @Test
+    public void testShutdownNoExecutor() {
+        EasyMock.replay(controller, executor);
+        createTrigger().shutdown(false);
     }
 
     /**
@@ -148,15 +173,6 @@ public class TestPeriodicReloadingTrigger {
     }
 
     /**
-     * Tests stop() if the trigger is not running.
-     */
-    @Test
-    public void testStopNotRunning() {
-        EasyMock.replay(controller, executor);
-        createTrigger().stop();
-    }
-
-    /**
      * Tests whether a running trigger can be stopped.
      */
     @Test
@@ -173,27 +189,11 @@ public class TestPeriodicReloadingTrigger {
     }
 
     /**
-     * Tests a shutdown operation.
+     * Tests stop() if the trigger is not running.
      */
     @Test
-    public void testShutdown() {
-        final ScheduledFuture<Void> future = createFutureMock();
-        expectSchedule(future);
-        EasyMock.expect(future.cancel(false)).andReturn(Boolean.TRUE);
-        executor.shutdown();
-        EasyMock.replay(future, controller, executor);
-        final PeriodicReloadingTrigger trigger = createTrigger();
-        trigger.start();
-        trigger.shutdown();
-        EasyMock.verify(future, controller, executor);
-    }
-
-    /**
-     * Tests a shutdown operation which excludes the executor service.
-     */
-    @Test
-    public void testShutdownNoExecutor() {
+    public void testStopNotRunning() {
         EasyMock.replay(controller, executor);
-        createTrigger().shutdown(false);
+        createTrigger().stop();
     }
 }

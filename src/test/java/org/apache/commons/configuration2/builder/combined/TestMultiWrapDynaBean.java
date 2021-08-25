@@ -39,6 +39,44 @@ import org.junit.Test;
  *
  */
 public class TestMultiWrapDynaBean {
+    /**
+     * A simple test bean class used as wrapped bean.
+     */
+    public static class WrappedBeanTestImpl {
+        /** Stores mapped properties. */
+        private final Map<String, String> mapProperties = new HashMap<>();
+
+        /** Stores indexed properties. */
+        private final int[] indexedValues = new int[8];
+
+        /** A simple property. */
+        private String text;
+
+        public int getIndexedProperty(final int idx) {
+            return indexedValues[idx];
+        }
+
+        public String getMapProperty(final String key) {
+            return mapProperties.get(key);
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setIndexedProperty(final int idx, final int value) {
+            indexedValues[idx] = value;
+        }
+
+        public void setMapProperty(final String key, final String value) {
+            mapProperties.put(key, value);
+        }
+
+        public void setText(final String text) {
+            this.text = text;
+        }
+    }
+
     /** Constant for a mapped property. */
     private static final String MAPPED_PROPERTY = "testMappedProperty";
 
@@ -72,32 +110,37 @@ public class TestMultiWrapDynaBean {
     }
 
     /**
-     * Tests whether a simple property can be set.
+     * Tests the contains() implementation. This operation is not available.
      */
-    @Test
-    public void testSetSimpleProperty() throws Exception {
-        PropertyUtils.setProperty(createBean(false), "throwExceptionOnMissing", Boolean.TRUE);
-        assertEquals("Property not set", Boolean.TRUE, params.getParameters().get("throwExceptionOnMissing"));
+    @Test(expected = UnsupportedOperationException.class)
+    public void testContains() {
+        createBean(false).contains(MAPPED_PROPERTY, "someKey");
     }
 
     /**
-     * Tests whether a simple property can be read.
+     * Tests whether the class of bean can be queried.
      */
     @Test
-    public void testGetSimpleProperty() throws Exception {
-        final MultiWrapDynaBean bean = createBean(false);
-        final String text = "testText";
-        wrapBean.setText(text);
-        assertEquals("Wrong value", text, PropertyUtils.getProperty(bean, "text"));
+    public void testGetDynaClass() {
+        final DynaClass cls = createBean(false).getDynaClass();
+        assertNotNull("Property not found (1)", cls.getDynaProperty("throwExceptionOnMissing"));
+        assertNotNull("Property not found (2)", cls.getDynaProperty("text"));
     }
 
     /**
-     * Tests whether an indexed property can be set.
+     * Checks the name of the DynaClass.
      */
     @Test
-    public void testSetIndexedProperty() throws Exception {
-        PropertyUtils.setIndexedProperty(createBean(false), "indexedProperty", 1, 42);
-        assertEquals("Property not set", 42, wrapBean.getIndexedProperty(1));
+    public void testGetDynaClassName() {
+        assertNull("Got a class name", createBean(false).getDynaClass().getName());
+    }
+
+    /**
+     * Tries to create a new instance of the DynaClass. This is not possible.
+     */
+    @Test(expected = UnsupportedOperationException.class)
+    public void testGetDynaClassNewInstance() throws Exception {
+        createBean(false).getDynaClass().newInstance();
     }
 
     /**
@@ -108,18 +151,6 @@ public class TestMultiWrapDynaBean {
         final MultiWrapDynaBean bean = createBean(false);
         wrapBean.setIndexedProperty(3, 20121117);
         assertEquals("Wrong value", 20121117, PropertyUtils.getIndexedProperty(bean, "indexedProperty", 3));
-    }
-
-    /**
-     * Tests whether a map property can be set.
-     */
-    @Test
-    public void testSetMappedProperty() throws Exception {
-        final MultiWrapDynaBean bean = createBean(true);
-        final String key = "testKey";
-        final String text = "Hello World";
-        PropertyUtils.setMappedProperty(bean, MAPPED_PROPERTY, key, text);
-        assertEquals("Property not set", text, wrapDynaBean.get(MAPPED_PROPERTY, key));
     }
 
     /**
@@ -143,45 +174,14 @@ public class TestMultiWrapDynaBean {
     }
 
     /**
-     * Tests whether the class of bean can be queried.
+     * Tests whether a simple property can be read.
      */
     @Test
-    public void testGetDynaClass() {
-        final DynaClass cls = createBean(false).getDynaClass();
-        assertNotNull("Property not found (1)", cls.getDynaProperty("throwExceptionOnMissing"));
-        assertNotNull("Property not found (2)", cls.getDynaProperty("text"));
-    }
-
-    /**
-     * Tries to create a new instance of the DynaClass. This is not possible.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testGetDynaClassNewInstance() throws Exception {
-        createBean(false).getDynaClass().newInstance();
-    }
-
-    /**
-     * Checks the name of the DynaClass.
-     */
-    @Test
-    public void testGetDynaClassName() {
-        assertNull("Got a class name", createBean(false).getDynaClass().getName());
-    }
-
-    /**
-     * Tests the remove() implementation. This operation is not available.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testRemove() {
-        createBean(false).remove(MAPPED_PROPERTY, "someKey");
-    }
-
-    /**
-     * Tests the contains() implementation. This operation is not available.
-     */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testContains() {
-        createBean(false).contains(MAPPED_PROPERTY, "someKey");
+    public void testGetSimpleProperty() throws Exception {
+        final MultiWrapDynaBean bean = createBean(false);
+        final String text = "testText";
+        wrapBean.setText(text);
+        assertEquals("Wrong value", text, PropertyUtils.getProperty(bean, "text"));
     }
 
     /**
@@ -206,40 +206,40 @@ public class TestMultiWrapDynaBean {
     }
 
     /**
-     * A simple test bean class used as wrapped bean.
+     * Tests the remove() implementation. This operation is not available.
      */
-    public static class WrappedBeanTestImpl {
-        /** Stores mapped properties. */
-        private final Map<String, String> mapProperties = new HashMap<>();
+    @Test(expected = UnsupportedOperationException.class)
+    public void testRemove() {
+        createBean(false).remove(MAPPED_PROPERTY, "someKey");
+    }
 
-        /** Stores indexed properties. */
-        private final int[] indexedValues = new int[8];
+    /**
+     * Tests whether an indexed property can be set.
+     */
+    @Test
+    public void testSetIndexedProperty() throws Exception {
+        PropertyUtils.setIndexedProperty(createBean(false), "indexedProperty", 1, 42);
+        assertEquals("Property not set", 42, wrapBean.getIndexedProperty(1));
+    }
 
-        /** A simple property. */
-        private String text;
+    /**
+     * Tests whether a map property can be set.
+     */
+    @Test
+    public void testSetMappedProperty() throws Exception {
+        final MultiWrapDynaBean bean = createBean(true);
+        final String key = "testKey";
+        final String text = "Hello World";
+        PropertyUtils.setMappedProperty(bean, MAPPED_PROPERTY, key, text);
+        assertEquals("Property not set", text, wrapDynaBean.get(MAPPED_PROPERTY, key));
+    }
 
-        public String getMapProperty(final String key) {
-            return mapProperties.get(key);
-        }
-
-        public void setMapProperty(final String key, final String value) {
-            mapProperties.put(key, value);
-        }
-
-        public int getIndexedProperty(final int idx) {
-            return indexedValues[idx];
-        }
-
-        public void setIndexedProperty(final int idx, final int value) {
-            indexedValues[idx] = value;
-        }
-
-        public String getText() {
-            return text;
-        }
-
-        public void setText(final String text) {
-            this.text = text;
-        }
+    /**
+     * Tests whether a simple property can be set.
+     */
+    @Test
+    public void testSetSimpleProperty() throws Exception {
+        PropertyUtils.setProperty(createBean(false), "throwExceptionOnMissing", Boolean.TRUE);
+        assertEquals("Property not set", Boolean.TRUE, params.getParameters().get("throwExceptionOnMissing"));
     }
 }

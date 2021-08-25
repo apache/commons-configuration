@@ -34,72 +34,6 @@ public class TestDefaultListDelimiterHandler {
     /** The handler to be tested. */
     private DefaultListDelimiterHandler handler;
 
-    @Before
-    public void setUp() throws Exception {
-        handler = new DefaultListDelimiterHandler(',');
-    }
-
-    /**
-     * Tests whether a string is correctly escaped which does not contain any special character.
-     */
-    @Test
-    public void testEscapeStringNoSpecialCharacter() {
-        assertEquals("Wrong result", "test", handler.escapeString("test"));
-    }
-
-    /**
-     * Tests whether the list delimiter character is correctly escaped in a string.
-     */
-    @Test
-    public void testEscapeStringListDelimiter() {
-        assertEquals("Wrong result", "3\\,1415", handler.escapeString("3,1415"));
-    }
-
-    /**
-     * Tests whether a backslash is correctly escaped.
-     */
-    @Test
-    public void testEscapeStringBackslash() {
-        assertEquals("Wrong result", "C:\\\\Temp\\\\", handler.escapeString("C:\\Temp\\"));
-    }
-
-    /**
-     * Tests whether combinations of list delimiters and backslashes are correctly escaped.
-     */
-    @Test
-    public void testEscapeStringListDelimiterAndBackslash() {
-        assertEquals("Wrong result", "C:\\\\Temp\\\\\\,\\\\\\\\Share\\,/root", handler.escapeString("C:\\Temp\\,\\\\Share,/root"));
-    }
-
-    /**
-     * Tests whether a value transformer is correctly called when escaping a single value.
-     */
-    @Test
-    public void testEscapeWithTransformer() {
-        final ValueTransformer trans = EasyMock.createMock(ValueTransformer.class);
-        EasyMock.expect(trans.transformValue("a\\,b")).andReturn("ok");
-        EasyMock.replay(trans);
-        assertEquals("Wrong result", "ok", handler.escape("a,b", trans));
-        EasyMock.verify(trans);
-    }
-
-    /**
-     * Tests whether a list is correctly escaped.
-     */
-    @Test
-    public void testEscapeList() {
-        final ValueTransformer trans = value -> String.valueOf(value) + "_trans";
-        final List<String> data = Arrays.asList("simple", "Hello,world!", "\\,\\", "end");
-        assertEquals("Wrong result", "simple_trans,Hello\\,world!_trans," + "\\\\\\,\\\\_trans,end_trans", handler.escapeList(data, trans));
-    }
-
-    @Test
-    public void testEscapeIntegerList() {
-        final ValueTransformer trans = ListDelimiterHandler.NOOP_TRANSFORMER;
-        final List<Integer> data = Arrays.asList(1, 2, 3, 4);
-        assertEquals("1,2,3,4", handler.escapeList(data, trans));
-    }
-
     /**
      * Helper methods for testing a split operation. A split is executed with the passed in parameters. Then the results are
      * compared to the expected elements.
@@ -117,12 +51,94 @@ public class TestDefaultListDelimiterHandler {
         }
     }
 
+    @Before
+    public void setUp() throws Exception {
+        handler = new DefaultListDelimiterHandler(',');
+    }
+
+    @Test
+    public void testEscapeIntegerList() {
+        final ValueTransformer trans = ListDelimiterHandler.NOOP_TRANSFORMER;
+        final List<Integer> data = Arrays.asList(1, 2, 3, 4);
+        assertEquals("1,2,3,4", handler.escapeList(data, trans));
+    }
+
     /**
-     * Tests split() if there is only a single element.
+     * Tests whether a list is correctly escaped.
      */
     @Test
-    public void testSplitSingleElement() {
-        checkSplit("test", true, "test");
+    public void testEscapeList() {
+        final ValueTransformer trans = value -> String.valueOf(value) + "_trans";
+        final List<String> data = Arrays.asList("simple", "Hello,world!", "\\,\\", "end");
+        assertEquals("Wrong result", "simple_trans,Hello\\,world!_trans," + "\\\\\\,\\\\_trans,end_trans", handler.escapeList(data, trans));
+    }
+
+    /**
+     * Tests whether a backslash is correctly escaped.
+     */
+    @Test
+    public void testEscapeStringBackslash() {
+        assertEquals("Wrong result", "C:\\\\Temp\\\\", handler.escapeString("C:\\Temp\\"));
+    }
+
+    /**
+     * Tests whether the list delimiter character is correctly escaped in a string.
+     */
+    @Test
+    public void testEscapeStringListDelimiter() {
+        assertEquals("Wrong result", "3\\,1415", handler.escapeString("3,1415"));
+    }
+
+    /**
+     * Tests whether combinations of list delimiters and backslashes are correctly escaped.
+     */
+    @Test
+    public void testEscapeStringListDelimiterAndBackslash() {
+        assertEquals("Wrong result", "C:\\\\Temp\\\\\\,\\\\\\\\Share\\,/root", handler.escapeString("C:\\Temp\\,\\\\Share,/root"));
+    }
+
+    /**
+     * Tests whether a string is correctly escaped which does not contain any special character.
+     */
+    @Test
+    public void testEscapeStringNoSpecialCharacter() {
+        assertEquals("Wrong result", "test", handler.escapeString("test"));
+    }
+
+    /**
+     * Tests whether a value transformer is correctly called when escaping a single value.
+     */
+    @Test
+    public void testEscapeWithTransformer() {
+        final ValueTransformer trans = EasyMock.createMock(ValueTransformer.class);
+        EasyMock.expect(trans.transformValue("a\\,b")).andReturn("ok");
+        EasyMock.replay(trans);
+        assertEquals("Wrong result", "ok", handler.escape("a,b", trans));
+        EasyMock.verify(trans);
+    }
+
+    /**
+     * Tests whether split() deals correctly with escaped backslashes.
+     */
+    @Test
+    public void testSplitEscapeBackslash() {
+        checkSplit("C:\\\\Temp\\\\", true, "C:\\Temp\\");
+    }
+
+    /**
+     * Tests whether a line delimiter can be escaped when splitting a list.
+     */
+    @Test
+    public void testSplitEscapeLineDelimiter() {
+        checkSplit("3\\,1415", true, "3,1415");
+    }
+
+    /**
+     * Tests a split operation with a complex combination of list delimiters and backslashes.
+     */
+    @Test
+    public void testSplitEscapeListDelimiterAndBackslashes() {
+        checkSplit("C:\\\\Temp\\\\\\,\\\\\\\\Share\\\\,/root", false, "C:\\Temp\\,\\\\Share\\", "/root");
     }
 
     /**
@@ -142,27 +158,11 @@ public class TestDefaultListDelimiterHandler {
     }
 
     /**
-     * Tests whether a line delimiter can be escaped when splitting a list.
+     * Tests split() if there is only a single element.
      */
     @Test
-    public void testSplitEscapeLineDelimiter() {
-        checkSplit("3\\,1415", true, "3,1415");
-    }
-
-    /**
-     * Tests whether split() deals correctly with escaped backslashes.
-     */
-    @Test
-    public void testSplitEscapeBackslash() {
-        checkSplit("C:\\\\Temp\\\\", true, "C:\\Temp\\");
-    }
-
-    /**
-     * Tests a split operation with a complex combination of list delimiters and backslashes.
-     */
-    @Test
-    public void testSplitEscapeListDelimiterAndBackslashes() {
-        checkSplit("C:\\\\Temp\\\\\\,\\\\\\\\Share\\\\,/root", false, "C:\\Temp\\,\\\\Share\\", "/root");
+    public void testSplitSingleElement() {
+        checkSplit("test", true, "test");
     }
 
     /**

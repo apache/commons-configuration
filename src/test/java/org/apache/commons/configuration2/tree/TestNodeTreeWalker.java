@@ -30,6 +30,80 @@ import org.junit.Test;
  */
 public class TestNodeTreeWalker {
     /**
+     * A visitor implementation used for testing purposes. The visitor produces a list with the names of the nodes visited
+     * in the order it was called. With this it can be tested whether the nodes were visited in the correct order.
+     */
+    private static class TestVisitor implements ConfigurationNodeVisitor<ImmutableNode> {
+        /** A list with the names of the visited nodes. */
+        private final List<String> visitedNodes = new LinkedList<>();
+
+        /** The maximum number of nodes to be visited. */
+        private int maxNodeCount = Integer.MAX_VALUE;
+
+        /**
+         * Returns the maximum number of nodes visited by this visitor.
+         *
+         * @return the maximum number of nodes
+         */
+        public int getMaxNodeCount() {
+            return maxNodeCount;
+        }
+
+        /**
+         * Returns the list with the names of the visited nodes.
+         *
+         * @return the visit list
+         */
+        public List<String> getVisitedNodes() {
+            return visitedNodes;
+        }
+
+        /**
+         * Sets the maximum number of nodes to be visited. After this the terminate flag is set.
+         *
+         * @param maxNodeCount the maximum number of nodes
+         */
+        public void setMaxNodeCount(final int maxNodeCount) {
+            this.maxNodeCount = maxNodeCount;
+        }
+
+        @Override
+        public boolean terminate() {
+            return visitedNodes.size() >= getMaxNodeCount();
+        }
+
+        @Override
+        public void visitAfterChildren(final ImmutableNode node, final NodeHandler<ImmutableNode> handler) {
+            visitedNodes.add(visitAfterName(handler.nodeName(node)));
+        }
+
+        @Override
+        public void visitBeforeChildren(final ImmutableNode node, final NodeHandler<ImmutableNode> handler) {
+            visitedNodes.add(handler.nodeName(node));
+        }
+    }
+
+    /**
+     * Creates a dummy node handler.
+     *
+     * @return the node handler
+     */
+    private static NodeHandler<ImmutableNode> createHandler() {
+        return new InMemoryNodeModel().getNodeHandler();
+    }
+
+    /**
+     * Creates a mock for a node handler.
+     *
+     * @return the handler mock
+     */
+    private static NodeHandler<ImmutableNode> handlerMock() {
+        @SuppressWarnings("unchecked")
+        final NodeHandler<ImmutableNode> handler = EasyMock.createMock(NodeHandler.class);
+        return handler;
+    }
+
+    /**
      * Generates a name which indicates that the corresponding node was visited after its children.
      *
      * @param name the node name to be decorated
@@ -51,61 +125,27 @@ public class TestNodeTreeWalker {
     }
 
     /**
-     * Creates a mock for a node handler.
+     * Prepares a list with the names of nodes encountered during a BFS walk.
      *
-     * @return the handler mock
+     * @return the expected node names in BFS mode
      */
-    private static NodeHandler<ImmutableNode> handlerMock() {
-        @SuppressWarnings("unchecked")
-        final NodeHandler<ImmutableNode> handler = EasyMock.createMock(NodeHandler.class);
-        return handler;
-    }
-
-    /**
-     * Creates a dummy node handler.
-     *
-     * @return the node handler
-     */
-    private static NodeHandler<ImmutableNode> createHandler() {
-        return new InMemoryNodeModel().getNodeHandler();
-    }
-
-    /**
-     * Tries a walk() operation without a node handler.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testWalkNoNodeHandler() {
-        NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE, new TestVisitor(), null);
-    }
-
-    /**
-     * Tries a walk operation without a visitor.
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void testWalkNoVisitor() {
-        NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE, null, createHandler());
-    }
-
-    /**
-     * Tests whether walkDFS() can handle a null node.
-     */
-    @Test
-    public void testWalkDFSNoNode() {
-        final ConfigurationNodeVisitor<ImmutableNode> visitor = visitorMock();
-        final NodeHandler<ImmutableNode> handler = handlerMock();
-        EasyMock.replay(visitor, handler);
-        NodeTreeWalker.INSTANCE.walkDFS(null, visitor, handler);
-    }
-
-    /**
-     * Tests a DFS traversal.
-     */
-    @Test
-    public void testWalkDFS() {
-        final List<String> expected = expectDFS();
-        final TestVisitor visitor = new TestVisitor();
-        NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE, visitor, createHandler());
-        assertEquals("Wrong visited nodes", expected, visitor.getVisitedNodes());
+    private List<String> expectBFS() {
+        final List<String> expected = new LinkedList<>();
+        final List<String> works = new LinkedList<>();
+        final List<String> personae = new LinkedList<>();
+        expected.add(NodeStructureHelper.ROOT_AUTHORS_TREE.getNodeName());
+        for (int authorIdx = 0; authorIdx < NodeStructureHelper.authorsLength(); authorIdx++) {
+            expected.add(NodeStructureHelper.author(authorIdx));
+            for (int workIdx = 0; workIdx < NodeStructureHelper.worksLength(authorIdx); workIdx++) {
+                works.add(NodeStructureHelper.work(authorIdx, workIdx));
+                for (int personIdx = 0; personIdx < NodeStructureHelper.personaeLength(authorIdx, workIdx); personIdx++) {
+                    personae.add(NodeStructureHelper.persona(authorIdx, workIdx, personIdx));
+                }
+            }
+        }
+        expected.addAll(works);
+        expected.addAll(personae);
+        return expected;
     }
 
     /**
@@ -134,29 +174,6 @@ public class TestNodeTreeWalker {
     }
 
     /**
-     * Tests whether the terminate flag is taken into account during a DFS walk.
-     */
-    @Test
-    public void testWalkDFSTerminate() {
-        final TestVisitor visitor = new TestVisitor();
-        final int nodeCount = 5;
-        visitor.setMaxNodeCount(nodeCount);
-        NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE, visitor, createHandler());
-        assertEquals("Wrong number of visited nodes", nodeCount, visitor.getVisitedNodes().size());
-    }
-
-    /**
-     * Tests a BFS walk if node is passed in.
-     */
-    @Test
-    public void testWalkBFSNoNode() {
-        final ConfigurationNodeVisitor<ImmutableNode> visitor = visitorMock();
-        final NodeHandler<ImmutableNode> handler = handlerMock();
-        EasyMock.replay(visitor, handler);
-        NodeTreeWalker.INSTANCE.walkBFS(null, visitor, handler);
-    }
-
-    /**
      * Tests a traversal in BFS mode.
      */
     @Test
@@ -168,27 +185,14 @@ public class TestNodeTreeWalker {
     }
 
     /**
-     * Prepares a list with the names of nodes encountered during a BFS walk.
-     *
-     * @return the expected node names in BFS mode
+     * Tests a BFS walk if node is passed in.
      */
-    private List<String> expectBFS() {
-        final List<String> expected = new LinkedList<>();
-        final List<String> works = new LinkedList<>();
-        final List<String> personae = new LinkedList<>();
-        expected.add(NodeStructureHelper.ROOT_AUTHORS_TREE.getNodeName());
-        for (int authorIdx = 0; authorIdx < NodeStructureHelper.authorsLength(); authorIdx++) {
-            expected.add(NodeStructureHelper.author(authorIdx));
-            for (int workIdx = 0; workIdx < NodeStructureHelper.worksLength(authorIdx); workIdx++) {
-                works.add(NodeStructureHelper.work(authorIdx, workIdx));
-                for (int personIdx = 0; personIdx < NodeStructureHelper.personaeLength(authorIdx, workIdx); personIdx++) {
-                    personae.add(NodeStructureHelper.persona(authorIdx, workIdx, personIdx));
-                }
-            }
-        }
-        expected.addAll(works);
-        expected.addAll(personae);
-        return expected;
+    @Test
+    public void testWalkBFSNoNode() {
+        final ConfigurationNodeVisitor<ImmutableNode> visitor = visitorMock();
+        final NodeHandler<ImmutableNode> handler = handlerMock();
+        EasyMock.replay(visitor, handler);
+        NodeTreeWalker.INSTANCE.walkBFS(null, visitor, handler);
     }
 
     /**
@@ -204,56 +208,52 @@ public class TestNodeTreeWalker {
     }
 
     /**
-     * A visitor implementation used for testing purposes. The visitor produces a list with the names of the nodes visited
-     * in the order it was called. With this it can be tested whether the nodes were visited in the correct order.
+     * Tests a DFS traversal.
      */
-    private static class TestVisitor implements ConfigurationNodeVisitor<ImmutableNode> {
-        /** A list with the names of the visited nodes. */
-        private final List<String> visitedNodes = new LinkedList<>();
+    @Test
+    public void testWalkDFS() {
+        final List<String> expected = expectDFS();
+        final TestVisitor visitor = new TestVisitor();
+        NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE, visitor, createHandler());
+        assertEquals("Wrong visited nodes", expected, visitor.getVisitedNodes());
+    }
 
-        /** The maximum number of nodes to be visited. */
-        private int maxNodeCount = Integer.MAX_VALUE;
+    /**
+     * Tests whether walkDFS() can handle a null node.
+     */
+    @Test
+    public void testWalkDFSNoNode() {
+        final ConfigurationNodeVisitor<ImmutableNode> visitor = visitorMock();
+        final NodeHandler<ImmutableNode> handler = handlerMock();
+        EasyMock.replay(visitor, handler);
+        NodeTreeWalker.INSTANCE.walkDFS(null, visitor, handler);
+    }
 
-        /**
-         * Returns the list with the names of the visited nodes.
-         *
-         * @return the visit list
-         */
-        public List<String> getVisitedNodes() {
-            return visitedNodes;
-        }
+    /**
+     * Tests whether the terminate flag is taken into account during a DFS walk.
+     */
+    @Test
+    public void testWalkDFSTerminate() {
+        final TestVisitor visitor = new TestVisitor();
+        final int nodeCount = 5;
+        visitor.setMaxNodeCount(nodeCount);
+        NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE, visitor, createHandler());
+        assertEquals("Wrong number of visited nodes", nodeCount, visitor.getVisitedNodes().size());
+    }
 
-        /**
-         * Returns the maximum number of nodes visited by this visitor.
-         *
-         * @return the maximum number of nodes
-         */
-        public int getMaxNodeCount() {
-            return maxNodeCount;
-        }
+    /**
+     * Tries a walk() operation without a node handler.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testWalkNoNodeHandler() {
+        NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE, new TestVisitor(), null);
+    }
 
-        /**
-         * Sets the maximum number of nodes to be visited. After this the terminate flag is set.
-         *
-         * @param maxNodeCount the maximum number of nodes
-         */
-        public void setMaxNodeCount(final int maxNodeCount) {
-            this.maxNodeCount = maxNodeCount;
-        }
-
-        @Override
-        public void visitBeforeChildren(final ImmutableNode node, final NodeHandler<ImmutableNode> handler) {
-            visitedNodes.add(handler.nodeName(node));
-        }
-
-        @Override
-        public void visitAfterChildren(final ImmutableNode node, final NodeHandler<ImmutableNode> handler) {
-            visitedNodes.add(visitAfterName(handler.nodeName(node)));
-        }
-
-        @Override
-        public boolean terminate() {
-            return visitedNodes.size() >= getMaxNodeCount();
-        }
+    /**
+     * Tries a walk operation without a visitor.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testWalkNoVisitor() {
+        NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE, null, createHandler());
     }
 }

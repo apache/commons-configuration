@@ -34,12 +34,6 @@ public class TestAutoSaveListener {
     /** The listener to be tested. */
     private AutoSaveListener listener;
 
-    @Before
-    public void setUp() throws Exception {
-        builder = EasyMock.createMock(FileBasedConfigurationBuilder.class);
-        listener = new AutoSaveListener(builder);
-    }
-
     /**
      * Sends a configuration changed notification to the test listener.
      *
@@ -49,35 +43,25 @@ public class TestAutoSaveListener {
         listener.onEvent(new ConfigurationEvent(this, ConfigurationEvent.ADD_PROPERTY, "someProperty", "someValue", before));
     }
 
-    /**
-     * Tests whether the file handler can be updated and is correctly initialized.
-     */
-    @Test
-    public void testUpdateFileHandler() {
-        final FileHandler handler = EasyMock.createMock(FileHandler.class);
-        final FileHandler handler2 = EasyMock.createMock(FileHandler.class);
-        handler.addFileHandlerListener(listener);
-        handler.removeFileHandlerListener(listener);
-        handler2.addFileHandlerListener(listener);
-        EasyMock.replay(handler, handler2);
-        listener.updateFileHandler(handler);
-        listener.updateFileHandler(handler2);
-        EasyMock.verify(handler, handler2);
+    @Before
+    public void setUp() throws Exception {
+        builder = EasyMock.createMock(FileBasedConfigurationBuilder.class);
+        listener = new AutoSaveListener(builder);
     }
 
     /**
-     * Tests whether updateFileHandler() can deal with null input. This is used for removing the listener when it is no
-     * longer needed.
+     * Tests that after a load operation changes on the monitored configuration are detected again.
      */
     @Test
-    public void testUpdateFileHandlerNull() {
-        final FileHandler handler = EasyMock.createMock(FileHandler.class);
-        handler.addFileHandlerListener(listener);
-        handler.removeFileHandlerListener(listener);
-        EasyMock.replay(handler);
-        listener.updateFileHandler(handler);
-        listener.updateFileHandler(null);
-        EasyMock.verify(handler);
+    public void testConfigurationChangedAfterLoading() throws ConfigurationException {
+        builder.save();
+        EasyMock.replay(builder);
+        final FileHandler handler = new FileHandler();
+        listener.loading(handler);
+        fireChangeEvent(false);
+        listener.loaded(handler);
+        fireChangeEvent(false);
+        EasyMock.verify(builder);
     }
 
     /**
@@ -123,17 +107,33 @@ public class TestAutoSaveListener {
     }
 
     /**
-     * Tests that after a load operation changes on the monitored configuration are detected again.
+     * Tests whether the file handler can be updated and is correctly initialized.
      */
     @Test
-    public void testConfigurationChangedAfterLoading() throws ConfigurationException {
-        builder.save();
-        EasyMock.replay(builder);
-        final FileHandler handler = new FileHandler();
-        listener.loading(handler);
-        fireChangeEvent(false);
-        listener.loaded(handler);
-        fireChangeEvent(false);
-        EasyMock.verify(builder);
+    public void testUpdateFileHandler() {
+        final FileHandler handler = EasyMock.createMock(FileHandler.class);
+        final FileHandler handler2 = EasyMock.createMock(FileHandler.class);
+        handler.addFileHandlerListener(listener);
+        handler.removeFileHandlerListener(listener);
+        handler2.addFileHandlerListener(listener);
+        EasyMock.replay(handler, handler2);
+        listener.updateFileHandler(handler);
+        listener.updateFileHandler(handler2);
+        EasyMock.verify(handler, handler2);
+    }
+
+    /**
+     * Tests whether updateFileHandler() can deal with null input. This is used for removing the listener when it is no
+     * longer needed.
+     */
+    @Test
+    public void testUpdateFileHandlerNull() {
+        final FileHandler handler = EasyMock.createMock(FileHandler.class);
+        handler.addFileHandlerListener(listener);
+        handler.removeFileHandlerListener(listener);
+        EasyMock.replay(handler);
+        listener.updateFileHandler(handler);
+        listener.updateFileHandler(null);
+        EasyMock.verify(handler);
     }
 }
