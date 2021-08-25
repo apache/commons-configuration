@@ -343,7 +343,7 @@ public interface ImmutableConfiguration {
      *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         String.
-     * @since 2.8
+     * @since 2.8.0
      */
     default <T extends Enum<T>> T getEnum(final String key, final Class<T> enumType) {
         try {
@@ -365,7 +365,7 @@ public interface ImmutableConfiguration {
      *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         Enum.
-     * @since 2.8
+     * @since 2.8.0
      */
     default <T extends Enum<T>> T getEnum(final String key, final Class<T> enumType, final T defaultValue) {
         final String strValue = getString(key, null);
