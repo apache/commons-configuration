@@ -49,6 +49,9 @@
        <action type="fix" dev="ggregory" due-to="Oliver B. Fischer">
          Mention EnvironmentConfiguration in the list of configuration sources #45.
        </action>
+       <action issue="CONFIGURATION-808" type="fix" dev="ggregory" due-to="cigaly">
+         DefaultListDelimiterHandler.escapeList working only for List&gt;String&lt; #137.
+       </action>       
        <!-- ADD -->
        <action type="add" dev="ggregory" due-to="SethiPandi">
          Implement Iterable in ImmutableNode #74.
