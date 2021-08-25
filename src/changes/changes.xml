@@ -25,25 +25,25 @@
     <release version="2.8.0" date="2020-MM-DD"
              description="Minor release with new features and updated dependencies.">
        <!-- FIX -->
-       <action issue="CONFIGURATION-795" type="update" dev="ggregory" due-to="dpeger">
+       <action issue="CONFIGURATION-795" type="fix" dev="ggregory" due-to="dpeger">
          Computation of blank lines after header comment #82.
        </action>
-       <action issue="CONFIGURATION-801" type="update" dev="ggregory" due-to="Arturo Bernal">
+       <action issue="CONFIGURATION-801" type="fix" dev="ggregory" due-to="Arturo Bernal">
          Remove redundant initializer #110.
        </action>
-       <action issue="CONFIGURATION-802" type="update" dev="ggregory" due-to="Arturo Bernal">
+       <action issue="CONFIGURATION-802" type="fix" dev="ggregory" due-to="Arturo Bernal">
          Use final #111.
        </action>
-       <action issue="CONFIGURATION-803" type="update" dev="ggregory" due-to="Arturo Bernal">
+       <action issue="CONFIGURATION-803" type="fix" dev="ggregory" due-to="Arturo Bernal">
          Java 8 lambda improvements and more #112.
        </action>
-       <action issue="CONFIGURATION-804" type="update" dev="ggregory" due-to="Arturo Bernal">
+       <action issue="CONFIGURATION-804" type="fix" dev="ggregory" due-to="Arturo Bernal">
          Redundant local variable #113.
        </action>
-       <action issue="CONFIGURATION-805" type="update" dev="ggregory" due-to="Arturo Bernal">
+       <action issue="CONFIGURATION-805" type="fix" dev="ggregory" due-to="Arturo Bernal">
          Use try with resource #114.
        </action>
-       <action issue="CONFIGURATION-805" type="update" dev="ggregory" due-to="Roman Zaynetdinov">
+       <action issue="CONFIGURATION-805" type="fix" dev="ggregory" due-to="Roman Zaynetdinov">
          [Javadoc] Specify that typed getList returns null for missing key #100.
        </action>
        <action type="fix" dev="ggregory" due-to="Oliver B. Fischer">
