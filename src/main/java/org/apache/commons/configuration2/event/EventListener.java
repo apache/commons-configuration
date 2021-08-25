@@ -21,28 +21,21 @@ package org.apache.commons.configuration2.event;
  * Definition of a generic event listener interface.
  * </p>
  * <p>
- * This event listener interface is used throughout the
- * <em>Commons Configuration</em> library for reacting on all kinds of supported
- * events. The interface is pretty minimalistic, defining only a single
- * {@code onEvent()} method. This simplifies the implementation of custom event
- * listeners and also supports the new language features introduced with Java 8
- * ({@code EventListener} is a functional interface and thus can be represented
- * by a Lambda expression).
+ * This event listener interface is used throughout the <em>Commons Configuration</em> library for reacting on all kinds
+ * of supported events. The interface is pretty minimalistic, defining only a single {@code onEvent()} method. This
+ * simplifies the implementation of custom event listeners and also supports the new language features introduced with
+ * Java 8 ({@code EventListener} is a functional interface and thus can be represented by a Lambda expression).
  * </p>
  *
  * @since 2.0
  * @param <T> the type of events this listener can process
  */
-public interface EventListener<T extends Event>
-{
+public interface EventListener<T extends Event> {
     /**
-     * Notifies this event listener about the arrival of a new event. Typically,
-     * event listeners are registered at an event source providing an
-     * {@link EventType}. This event type acts as a filter; all events matched
-     * by the filter are passed to the listener. The type parameters defined by
-     * the {@code EventType} class and this interface guarantee that the events
-     * delivered to the handler are compatible with the concrete method
-     * signature of {@code onEvent()}.
+     * Notifies this event listener about the arrival of a new event. Typically, event listeners are registered at an event
+     * source providing an {@link EventType}. This event type acts as a filter; all events matched by the filter are passed
+     * to the listener. The type parameters defined by the {@code EventType} class and this interface guarantee that the
+     * events delivered to the handler are compatible with the concrete method signature of {@code onEvent()}.
      *
      * @param event the event
      */

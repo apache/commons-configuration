@@ -30,10 +30,8 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @param <T> the type of the nodes this iterator deals with
  */
-class ConfigurationNodeIteratorAttribute<T> extends
-        ConfigurationNodeIteratorBase<T>
-{
-    /** Constant for the wildcard node name.*/
+class ConfigurationNodeIteratorAttribute<T> extends ConfigurationNodeIteratorBase<T> {
+    /** Constant for the wildcard node name. */
     private static final String WILDCARD = "*";
 
     /** Stores the parent node pointer. */
@@ -44,12 +42,11 @@ class ConfigurationNodeIteratorAttribute<T> extends
 
     /**
      * Creates a new instance of {@code ConfigurationNodeIteratorAttribute}.
+     *
      * @param parent the parent node pointer
      * @param name the name of the selected attribute
      */
-    public ConfigurationNodeIteratorAttribute(
-            final ConfigurationNodePointer<T> parent, final QName name)
-    {
+    public ConfigurationNodeIteratorAttribute(final ConfigurationNodePointer<T> parent, final QName name) {
         super(parent, false);
         parentPointer = parent;
         attributeNames = createAttributeDataList(parent, name);
@@ -62,10 +59,8 @@ class ConfigurationNodeIteratorAttribute<T> extends
      * @return a pointer for the attribute at this position
      */
     @Override
-    protected NodePointer createNodePointer(final int position)
-    {
-        return new ConfigurationAttributePointer<>(parentPointer,
-                attributeNames.get(position));
+    protected NodePointer createNodePointer(final int position) {
+        return new ConfigurationAttributePointer<>(parentPointer, attributeNames.get(position));
     }
 
     /**
@@ -74,39 +69,26 @@ class ConfigurationNodeIteratorAttribute<T> extends
      * @return the iteration size
      */
     @Override
-    protected int size()
-    {
+    protected int size() {
         return attributeNames.size();
     }
 
     /**
-     * Determines which attributes are selected based on the passed in node
-     * name.
+     * Determines which attributes are selected based on the passed in node name.
      *
      * @param parent the parent node pointer
      * @param name the name of the selected attribute
      * @return a list with the selected attributes
      */
-    private List<String> createAttributeDataList(
-            final ConfigurationNodePointer<T> parent, final QName name)
-    {
+    private List<String> createAttributeDataList(final ConfigurationNodePointer<T> parent, final QName name) {
         final List<String> result = new ArrayList<>();
-        if (!WILDCARD.equals(name.getName()))
-        {
+        if (!WILDCARD.equals(name.getName())) {
             addAttributeData(parent, result, qualifiedName(name));
-        }
-        else
-        {
-            final Set<String> names =
-                    new LinkedHashSet<>(parent.getNodeHandler()
-                            .getAttributes(parent.getConfigurationNode()));
-            final String prefix =
-                    name.getPrefix() != null ? prefixName(name.getPrefix(),
-                            null) : null;
-            for (final String n : names)
-            {
-                if (prefix == null || StringUtils.startsWith(n, prefix))
-                {
+        } else {
+            final Set<String> names = new LinkedHashSet<>(parent.getNodeHandler().getAttributes(parent.getConfigurationNode()));
+            final String prefix = name.getPrefix() != null ? prefixName(name.getPrefix(), null) : null;
+            for (final String n : names) {
+                if (prefix == null || StringUtils.startsWith(n, prefix)) {
                     addAttributeData(parent, result, n);
                 }
             }
@@ -116,19 +98,14 @@ class ConfigurationNodeIteratorAttribute<T> extends
     }
 
     /**
-     * Helper method for checking whether an attribute is defined and adding it
-     * to the list of attributes to iterate over.
+     * Helper method for checking whether an attribute is defined and adding it to the list of attributes to iterate over.
      *
      * @param parent the parent node pointer
      * @param result the result list
      * @param name the name of the current attribute
      */
-    private void addAttributeData(final ConfigurationNodePointer<T> parent,
-            final List<String> result, final String name)
-    {
-        if (parent.getNodeHandler().getAttributeValue(
-                parent.getConfigurationNode(), name) != null)
-        {
+    private void addAttributeData(final ConfigurationNodePointer<T> parent, final List<String> result, final String name) {
+        if (parent.getNodeHandler().getAttributeValue(parent.getConfigurationNode(), name) != null) {
             result.add(name);
         }
     }

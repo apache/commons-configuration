@@ -28,8 +28,7 @@ import org.junit.Test;
  * Test class for {@code ConfigurationLookup}.
  *
  */
-public class TestConfigurationLookup
-{
+public class TestConfigurationLookup {
     /** Constant for a test variable name. */
     private static final String VAR = "testVariable";
 
@@ -40,8 +39,7 @@ public class TestConfigurationLookup
      * Tries to create an instance without a configuration.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testInitNoConfig()
-    {
+    public void testInitNoConfig() {
         new ConfigurationLookup(null);
     }
 
@@ -49,8 +47,7 @@ public class TestConfigurationLookup
      * Tests whether an existing variable can be resolved.
      */
     @Test
-    public void testLookupSuccess()
-    {
+    public void testLookupSuccess() {
         final Configuration conf = new BaseConfiguration();
         conf.addProperty(VAR, VALUE);
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);
@@ -61,20 +58,17 @@ public class TestConfigurationLookup
      * Tests lookup() if the variable cannot be resolved.
      */
     @Test
-    public void testLookupNotFound()
-    {
+    public void testLookupNotFound() {
         final Configuration conf = new BaseConfiguration();
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);
         assertNull("Got a value", lookup.lookup(VAR));
     }
 
     /**
-     * Tests lookup() if the variable cannot be resolved, and the configuration
-     * throws an exception.
+     * Tests lookup() if the variable cannot be resolved, and the configuration throws an exception.
      */
     @Test
-    public void testLookupNotFoundEx()
-    {
+    public void testLookupNotFoundEx() {
         final BaseConfiguration conf = new BaseConfiguration();
         conf.setThrowExceptionOnMissing(true);
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);
@@ -85,22 +79,18 @@ public class TestConfigurationLookup
      * Tests lookup() for a complex property value.
      */
     @Test
-    public void testLookupComplex()
-    {
+    public void testLookupComplex() {
         final int count = 5;
         final Configuration conf = new BaseConfiguration();
-        for (int i = 0; i < count; i++)
-        {
+        for (int i = 0; i < count; i++) {
             conf.addProperty(VAR, String.valueOf(VALUE) + i);
         }
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);
         final Collection<?> col = (Collection<?>) lookup.lookup(VAR);
         assertEquals("Wrong number of elements", count, col.size());
         final Iterator<?> it = col.iterator();
-        for (int i = 0; i < count; i++)
-        {
-            assertEquals("Wrong element at " + i, String.valueOf(VALUE) + i,
-                    it.next());
+        for (int i = 0; i < count; i++) {
+            assertEquals("Wrong element at " + i, String.valueOf(VALUE) + i, it.next());
         }
     }
 }

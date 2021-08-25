@@ -35,20 +35,18 @@ import org.junit.Test;
  * Tests for MapConfiguration.
  *
  */
-public class TestMapConfiguration extends TestAbstractConfiguration
-{
-    /** Constant for a test key.*/
+public class TestMapConfiguration extends TestAbstractConfiguration {
+    /** Constant for a test key. */
     private static final String KEY = "key1";
 
-    /** Constant for a test property value with whitespace.*/
+    /** Constant for a test property value with whitespace. */
     private static final String SPACE_VALUE = "   Value with whitespace  ";
 
-    /** The trimmed test value.*/
+    /** The trimmed test value. */
     private static final String TRIM_VALUE = SPACE_VALUE.trim();
 
     @Override
-    protected AbstractConfiguration getConfiguration()
-    {
+    protected AbstractConfiguration getConfiguration() {
         final Map<String, Object> map = new HashMap<>();
         map.put(KEY, "value1");
         map.put("key2", "value2");
@@ -61,14 +59,12 @@ public class TestMapConfiguration extends TestAbstractConfiguration
     }
 
     @Override
-    protected AbstractConfiguration getEmptyConfiguration()
-    {
+    protected AbstractConfiguration getEmptyConfiguration() {
         return new MapConfiguration(new HashMap<>());
     }
 
     @Test
-    public void testGetMap()
-    {
+    public void testGetMap() {
         final Map<String, Object> map = new HashMap<>();
 
         final MapConfiguration conf = new MapConfiguration(map);
@@ -76,8 +72,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration
     }
 
     @Test
-    public void testClone()
-    {
+    public void testClone() {
         final MapConfiguration config = (MapConfiguration) getConfiguration();
         final MapConfiguration copy = (MapConfiguration) config.clone();
         final StrictConfigurationComparator comp = new StrictConfigurationComparator();
@@ -88,27 +83,23 @@ public class TestMapConfiguration extends TestAbstractConfiguration
      * Tests if the cloned configuration is decoupled from the original.
      */
     @Test
-    public void testCloneModify()
-    {
+    public void testCloneModify() {
         final MapConfiguration config = (MapConfiguration) getConfiguration();
         config.addEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(config));
         final MapConfiguration copy = (MapConfiguration) config.clone();
-        assertTrue("Event listeners were copied", copy
-                .getEventListeners(ConfigurationEvent.ANY).isEmpty());
+        assertTrue("Event listeners were copied", copy.getEventListeners(ConfigurationEvent.ANY).isEmpty());
 
         config.addProperty("cloneTest", Boolean.TRUE);
         assertFalse("Map not decoupled", copy.containsKey("cloneTest"));
         copy.clearProperty("key1");
-        assertEquals("Map not decoupled (2)", "value1", config
-                .getString("key1"));
+        assertEquals("Map not decoupled (2)", "value1", config.getString("key1"));
     }
 
     /**
      * Tests whether interpolation works as expected after cloning.
      */
     @Test
-    public void testCloneInterpolation()
-    {
+    public void testCloneInterpolation() {
         final String keyAnswer = "answer";
         final String keyValue = "value";
         final MapConfiguration config = (MapConfiguration) getConfiguration();
@@ -116,18 +107,15 @@ public class TestMapConfiguration extends TestAbstractConfiguration
         config.addProperty(keyValue, 42);
         final MapConfiguration clone = (MapConfiguration) config.clone();
         clone.setProperty(keyValue, 43);
-        assertEquals("Wrong interpolation in original", "The answer is 42.",
-                config.getString(keyAnswer));
-        assertEquals("Wrong interpolation in clone", "The answer is 43.",
-                clone.getString(keyAnswer));
+        assertEquals("Wrong interpolation in original", "The answer is 42.", config.getString(keyAnswer));
+        assertEquals("Wrong interpolation in clone", "The answer is 43.", clone.getString(keyAnswer));
     }
 
     /**
      * Tests adding another value to an existing property.
      */
     @Test
-    public void testAddProperty()
-    {
+    public void testAddProperty() {
         final MapConfiguration config = (MapConfiguration) getConfiguration();
         config.addProperty(KEY, TRIM_VALUE);
         config.addProperty(KEY, "anotherValue");
@@ -139,8 +127,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration
      * Tests querying a property when trimming is active.
      */
     @Test
-    public void testGetPropertyTrim()
-    {
+    public void testGetPropertyTrim() {
         final MapConfiguration config = (MapConfiguration) getConfiguration();
         config.getMap().put(KEY, SPACE_VALUE);
         assertEquals("Wrong trimmed value", TRIM_VALUE, config.getProperty(KEY));
@@ -150,8 +137,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration
      * Tests querying a property when trimming is disabled.
      */
     @Test
-    public void testGetPropertyTrimDisabled()
-    {
+    public void testGetPropertyTrimDisabled() {
         final MapConfiguration config = (MapConfiguration) getConfiguration();
         config.getMap().put(KEY, SPACE_VALUE);
         config.setTrimmingDisabled(true);
@@ -159,13 +145,11 @@ public class TestMapConfiguration extends TestAbstractConfiguration
     }
 
     /**
-     * Tests querying a property if trimming is enabled, but list splitting is
-     * disabled. In this case no trimming is performed (trimming only works if
-     * list splitting is enabled).
+     * Tests querying a property if trimming is enabled, but list splitting is disabled. In this case no trimming is
+     * performed (trimming only works if list splitting is enabled).
      */
     @Test
-    public void testGetPropertyTrimNoSplit()
-    {
+    public void testGetPropertyTrimNoSplit() {
         final MapConfiguration config = (MapConfiguration) getConfiguration();
         config.getMap().put(KEY, SPACE_VALUE);
         config.setListDelimiterHandler(new DisabledListDelimiterHandler());

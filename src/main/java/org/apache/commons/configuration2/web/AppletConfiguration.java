@@ -22,41 +22,34 @@ import java.util.Arrays;
 import java.util.Iterator;
 
 /**
- * A configuration wrapper to read applet parameters. This configuration is
- * read only, adding or removing a property will throw an
- * UnsupportedOperationException.
+ * A configuration wrapper to read applet parameters. This configuration is read only, adding or removing a property
+ * will throw an UnsupportedOperationException.
  *
  * @since 1.1
  */
-public class AppletConfiguration extends BaseWebConfiguration
-{
-    /** Stores the wrapped applet.*/
+public class AppletConfiguration extends BaseWebConfiguration {
+    /** Stores the wrapped applet. */
     protected Applet applet;
 
     /**
-     * Create an AppletConfiguration using the initialization parameters of
-     * the specified Applet.
+     * Create an AppletConfiguration using the initialization parameters of the specified Applet.
      *
      * @param applet the applet
      */
-    public AppletConfiguration(final Applet applet)
-    {
+    public AppletConfiguration(final Applet applet) {
         this.applet = applet;
     }
 
     @Override
-    protected Object getPropertyInternal(final String key)
-    {
+    protected Object getPropertyInternal(final String key) {
         return handleDelimiters(applet.getParameter(key));
     }
 
     @Override
-    protected Iterator<String> getKeysInternal()
-    {
+    protected Iterator<String> getKeysInternal() {
         final String[][] paramsInfo = applet.getParameterInfo();
         final String[] keys = new String[paramsInfo != null ? paramsInfo.length : 0];
-        for (int i = 0; i < keys.length; i++)
-        {
+        for (int i = 0; i < keys.length; i++) {
             keys[i] = paramsInfo[i][0];
         }
 

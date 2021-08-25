@@ -24,14 +24,12 @@ import org.junit.Before;
  * Test if non-string properties are handled correctly.
  *
  */
-public class TestNonStringProperties extends BaseNonStringProperties
-{
+public class TestNonStringProperties extends BaseNonStringProperties {
     /** The File that we test with */
     private final String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         final PropertiesConfiguration c = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(c);
         handler.setFileName(testProperties);

@@ -36,31 +36,26 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests some basic functions of the BaseConfiguration class. Missing keys might
- * return null.
+ * Tests some basic functions of the BaseConfiguration class. Missing keys might return null.
  *
  */
-public class TestBaseNullConfiguration
-{
+public class TestBaseNullConfiguration {
     protected BaseConfiguration config;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         config = new BaseConfiguration();
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         config.setThrowExceptionOnMissing(false);
     }
 
     @Test
-    public void testThrowExceptionOnMissing()
-    {
+    public void testThrowExceptionOnMissing() {
         assertFalse("Throw Exception Property is set!", config.isThrowExceptionOnMissing());
     }
 
     @Test
-    public void testGetProperty()
-    {
+    public void testGetProperty() {
         /* should be empty and return null */
         assertEquals("This returns null", config.getProperty("foo"), null);
 
@@ -71,8 +66,7 @@ public class TestBaseNullConfiguration
     }
 
     @Test
-    public void testGetByte()
-    {
+    public void testGetByte() {
         config.setProperty("number", "1");
         final byte oneB = 1;
         final byte twoB = 2;
@@ -83,21 +77,18 @@ public class TestBaseNullConfiguration
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetByteUnknown()
-    {
+    public void testGetByteUnknown() {
         config.getByte("numberNotInConfig");
     }
 
     @Test(expected = ConversionException.class)
-    public void testGetByteIncompatibleType()
-    {
+    public void testGetByteIncompatibleType() {
         config.setProperty("test.empty", "");
         config.getByte("test.empty");
     }
 
     @Test
-    public void testGetShort()
-    {
+    public void testGetShort() {
         config.setProperty("numberS", "1");
         final short oneS = 1;
         final short twoS = 2;
@@ -108,21 +99,18 @@ public class TestBaseNullConfiguration
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetShortUnknown()
-    {
+    public void testGetShortUnknown() {
         config.getShort("numberNotInConfig");
     }
 
     @Test(expected = ConversionException.class)
-    public void testGetShortIncompatibleType()
-    {
+    public void testGetShortIncompatibleType() {
         config.setProperty("test.empty", "");
         config.getShort("test.empty");
     }
 
     @Test
-    public void testGetLong()
-    {
+    public void testGetLong() {
         config.setProperty("numberL", "1");
         final long oneL = 1;
         final long twoL = 2;
@@ -133,21 +121,18 @@ public class TestBaseNullConfiguration
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetLongUnknown()
-    {
+    public void testGetLongUnknown() {
         config.getLong("numberNotInConfig");
     }
 
     @Test(expected = ConversionException.class)
-    public void testGetLongIncompatibleTypes()
-    {
+    public void testGetLongIncompatibleTypes() {
         config.setProperty("test.empty", "");
         config.getLong("test.empty");
     }
 
     @Test
-    public void testGetFloat()
-    {
+    public void testGetFloat() {
         config.setProperty("numberF", "1.0");
         final float oneF = 1;
         final float twoF = 2;
@@ -158,21 +143,18 @@ public class TestBaseNullConfiguration
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetFloatUnknown()
-    {
+    public void testGetFloatUnknown() {
         config.getFloat("numberNotInConfig");
     }
 
     @Test(expected = ConversionException.class)
-    public void testGetFloatIncompatibleType()
-    {
+    public void testGetFloatIncompatibleType() {
         config.setProperty("test.empty", "");
         config.getFloat("test.empty");
     }
 
     @Test
-    public void testGetDouble()
-    {
+    public void testGetDouble() {
         config.setProperty("numberD", "1.0");
         final double oneD = 1;
         final double twoD = 2;
@@ -183,21 +165,18 @@ public class TestBaseNullConfiguration
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetDoubleUnknown()
-    {
+    public void testGetDoubleUnknown() {
         config.getDouble("numberNotInConfig");
     }
 
     @Test(expected = ConversionException.class)
-    public void testGetDoubleIncompatibleType()
-    {
+    public void testGetDoubleIncompatibleType() {
         config.setProperty("test.empty", "");
         config.getDouble("test.empty");
     }
 
     @Test
-    public void testGetBigDecimal()
-    {
+    public void testGetBigDecimal() {
         config.setProperty("numberBigD", "123.456");
         final BigDecimal number = new BigDecimal("123.456");
         final BigDecimal defaultValue = new BigDecimal("654.321");
@@ -208,21 +187,18 @@ public class TestBaseNullConfiguration
     }
 
     @Test
-    public void testGetBigDecimalUnknown()
-    {
+    public void testGetBigDecimalUnknown() {
         assertNull("Missing Key is not null!", config.getBigDecimal("numberNotInConfig"));
     }
 
     @Test(expected = ConversionException.class)
-    public void testGetBigDecimalIncompatibleType()
-    {
+    public void testGetBigDecimalIncompatibleType() {
         config.setProperty("test.empty", "");
         config.getBigDecimal("test.empty");
     }
 
     @Test
-    public void testGetBigInteger()
-    {
+    public void testGetBigInteger() {
         config.setProperty("numberBigI", "1234567890");
         final BigInteger number = new BigInteger("1234567890");
         final BigInteger defaultValue = new BigInteger("654321");
@@ -233,22 +209,18 @@ public class TestBaseNullConfiguration
     }
 
     @Test
-    public void testGetBigIntegerUnknown()
-    {
+    public void testGetBigIntegerUnknown() {
         assertNull("Missing Key is not null!", config.getBigInteger("numberNotInConfig"));
     }
 
     @Test(expected = ConversionException.class)
-    public void testGetBigIntegerIncompatibleType()
-    {
+    public void testGetBigIntegerIncompatibleType() {
         config.setProperty("test.empty", "");
         config.getBigInteger("test.empty");
     }
 
-
     @Test
-    public void testGetString()
-    {
+    public void testGetString() {
         config.setProperty("testString", "The quick brown fox");
         final String string = "The quick brown fox";
         final String defaultValue = "jumps over the lazy dog";
@@ -259,14 +231,12 @@ public class TestBaseNullConfiguration
     }
 
     @Test
-    public void testGetStringUnknown()
-    {
+    public void testGetStringUnknown() {
         assertNull("Missing Key is not null!", config.getString("stringNotInConfig"));
     }
 
     @Test
-    public void testGetBoolean()
-    {
+    public void testGetBoolean() {
         config.setProperty("boolA", Boolean.TRUE);
         final boolean boolT = true, boolF = false;
         assertEquals("This returns true", boolT, config.getBoolean("boolA"));
@@ -276,21 +246,18 @@ public class TestBaseNullConfiguration
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetBooleanUnknown()
-    {
+    public void testGetBooleanUnknown() {
         config.getBoolean("numberNotInConfig");
     }
 
     @Test(expected = ConversionException.class)
-    public void testGetBooleanIncompatibleType()
-    {
+    public void testGetBooleanIncompatibleType() {
         config.setProperty("test.empty", "");
         config.getBoolean("test.empty");
     }
 
     @Test
-    public void testGetList()
-    {
+    public void testGetList() {
         config.addProperty("number", "1");
         config.addProperty("number", "2");
         final List<Object> list = config.getList("number");
@@ -301,16 +268,14 @@ public class TestBaseNullConfiguration
     }
 
     @Test
-    public void testGetListAsScalar()
-    {
+    public void testGetListAsScalar() {
         config.addProperty("number", "1");
         config.addProperty("number", "2");
         assertEquals("Wrong value", "1", config.getString("number"));
     }
 
     @Test
-    public void testCommaSeparatedString()
-    {
+    public void testCommaSeparatedString() {
         final String prop = "hey, that's a test";
         config.setProperty("prop.string", prop);
         final List<Object> list = config.getList("prop.string");
@@ -319,8 +284,7 @@ public class TestBaseNullConfiguration
     }
 
     @Test
-    public void testCommaSeparatedStringEscaped()
-    {
+    public void testCommaSeparatedStringEscaped() {
         final String prop2 = "hey\\, that's a test";
         config.clearProperty("prop.string");
         config.setProperty("prop.string", prop2);
@@ -328,14 +292,10 @@ public class TestBaseNullConfiguration
     }
 
     @Test
-    public void testPropertyAccess()
-    {
+    public void testPropertyAccess() {
         config.clearProperty("prop.properties");
         config.setProperty("prop.properties", "");
-        assertEquals(
-            "This returns an empty Properties object",
-            config.getProperties("prop.properties"),
-            new Properties());
+        assertEquals("This returns an empty Properties object", config.getProperties("prop.properties"), new Properties());
         config.clearProperty("prop.properties");
         config.setProperty("prop.properties", "foo=bar, baz=moo, seal=clubber");
 
@@ -343,18 +303,13 @@ public class TestBaseNullConfiguration
         p.setProperty("foo", "bar");
         p.setProperty("baz", "moo");
         p.setProperty("seal", "clubber");
-        assertEquals(
-            "This returns a filled in Properties object",
-            config.getProperties("prop.properties"),
-            p);
+        assertEquals("This returns a filled in Properties object", config.getProperties("prop.properties"), p);
     }
 
     @Test
-    public void testSubset()
-    {
+    public void testSubset() {
         /*
-         * test subset : assure we don't reprocess the data elements
-         * when generating the subset
+         * test subset : assure we don't reprocess the data elements when generating the subset
          */
 
         final String prop = "hey, that's a test";
@@ -364,10 +319,7 @@ public class TestBaseNullConfiguration
 
         Configuration subEprop = config.subset("prop");
 
-        assertEquals(
-            "Returns the full string",
-            prop,
-            subEprop.getString("string"));
+        assertEquals("Returns the full string", prop, subEprop.getString("string"));
         assertEquals("Wrong list size", 1, subEprop.getList("string").size());
 
         Iterator<String> it = subEprop.getKeys();
@@ -380,57 +332,40 @@ public class TestBaseNullConfiguration
     }
 
     @Test
-    public void testInterpolation() throws Exception
-    {
+    public void testInterpolation() throws Exception {
         config.setProperty("applicationRoot", "/home/applicationRoot");
         config.setProperty("db", "${applicationRoot}/db/hypersonic");
         final String unInterpolatedValue = "${applicationRoot2}/db/hypersonic";
         config.setProperty("dbFailedInterpolate", unInterpolatedValue);
         final String dbProp = "/home/applicationRoot/db/hypersonic";
 
-        //construct a new config, using config as the defaults config for it.
+        // construct a new config, using config as the defaults config for it.
         final BaseConfiguration superProp = config;
 
-        assertEquals(
-            "Checking interpolated variable",dbProp,
-            superProp.getString("db"));
-        assertEquals(
-            "lookup fails, leave variable as is",
-            superProp.getString("dbFailedInterpolate"),
-            unInterpolatedValue);
+        assertEquals("Checking interpolated variable", dbProp, superProp.getString("db"));
+        assertEquals("lookup fails, leave variable as is", superProp.getString("dbFailedInterpolate"), unInterpolatedValue);
 
         superProp.setProperty("arrayInt", "${applicationRoot}/1");
         final String[] arrayInt = superProp.getStringArray("arrayInt");
-        assertEquals(
-            "check first entry was interpolated",
-            "/home/applicationRoot/1",
-            arrayInt[0]);
+        assertEquals("check first entry was interpolated", "/home/applicationRoot/1", arrayInt[0]);
     }
 
     @Test
-    public void testMultipleInterpolation() throws Exception
-    {
+    public void testMultipleInterpolation() throws Exception {
         config.setProperty("test.base-level", "/base-level");
         config.setProperty("test.first-level", "${test.base-level}/first-level");
-        config.setProperty(
-            "test.second-level",
-            "${test.first-level}/second-level");
-        config.setProperty(
-            "test.third-level",
-            "${test.second-level}/third-level");
+        config.setProperty("test.second-level", "${test.first-level}/second-level");
+        config.setProperty("test.third-level", "${test.second-level}/third-level");
 
-        final String expectedValue =
-            "/base-level/first-level/second-level/third-level";
+        final String expectedValue = "/base-level/first-level/second-level/third-level";
 
         assertEquals(config.getString("test.third-level"), expectedValue);
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testInterpolationLoop() throws Exception
-    {
+    public void testInterpolationLoop() throws Exception {
         config.setProperty("test.a", "${test.b}");
         config.setProperty("test.b", "${test.a}");
         config.getString("test.a");
     }
 }
-

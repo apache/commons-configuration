@@ -23,16 +23,13 @@ package org.apache.commons.configuration2;
  * @since 1.0
  *
  */
-public interface ConfigurationComparator
-{
+public interface ConfigurationComparator {
     /**
      * Compare two configuration objects.
      *
      * @param a the first configuration
      * @param b the second configuration
-     * @return true if the two configurations are identical according to
-     *         the implemented rules
+     * @return true if the two configurations are identical according to the implemented rules
      */
     boolean compare(Configuration a, Configuration b);
 }
-

@@ -20,47 +20,39 @@ package org.apache.commons.configuration2.builder;
  * A test bean used to check whether all properties can be found.
  *
  */
-public class ParametersBeanTestImpl extends BasicBuilderParameters
-{
+public class ParametersBeanTestImpl extends BasicBuilderParameters {
     private int intProperty;
 
     private String stringProperty;
 
     private String fluentGetProperty;
 
-    public int getIntProperty()
-    {
+    public int getIntProperty() {
         return intProperty;
     }
 
-    public void setIntProperty(final int intProperty)
-    {
+    public void setIntProperty(final int intProperty) {
         this.intProperty = intProperty;
     }
 
-    public String getStringProperty()
-    {
+    public String getStringProperty() {
         return stringProperty;
     }
 
-    public void setStringProperty(final String stringProperty)
-    {
+    public void setStringProperty(final String stringProperty) {
         this.stringProperty = stringProperty;
     }
 
-    public ParametersBeanTestImpl setFluentProperty(final String value)
-    {
+    public ParametersBeanTestImpl setFluentProperty(final String value) {
         setStringProperty(value);
         return this;
     }
 
-    public String getFluentPropertyWithGet()
-    {
+    public String getFluentPropertyWithGet() {
         return fluentGetProperty;
     }
 
-    public ParametersBeanTestImpl setFluentPropertyWithGet(final String s)
-    {
+    public ParametersBeanTestImpl setFluentPropertyWithGet(final String s) {
         fluentGetProperty = s;
         return this;
     }

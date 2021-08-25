@@ -33,12 +33,10 @@ import java.util.Set;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 
 /**
- * Assertions on configurations for the unit tests. This class also provides
- * access to test files.
+ * Assertions on configurations for the unit tests. This class also provides access to test files.
  *
  */
-public class ConfigurationAssert
-{
+public class ConfigurationAssert {
     /** Constant for the name of the directory with the test files. */
     public static final String TEST_DIR_NAME = "target/test-classes";
 
@@ -57,19 +55,16 @@ public class ConfigurationAssert
      * @param expected the expected properties
      * @param actual the configuration to check
      */
-    public static void assertConfigurationEquals(final ImmutableConfiguration expected, final ImmutableConfiguration actual)
-    {
+    public static void assertConfigurationEquals(final ImmutableConfiguration expected, final ImmutableConfiguration actual) {
         // check that the actual configuration contains all the properties of the expected configuration
-        for (final Iterator<String> it = expected.getKeys(); it.hasNext();)
-        {
+        for (final Iterator<String> it = expected.getKeys(); it.hasNext();) {
             final String key = it.next();
             assertTrue("The actual configuration doesn't contain the expected key '" + key + "'", actual.containsKey(key));
             assertEquals("Value of the '" + key + "' property", expected.getProperty(key), actual.getProperty(key));
         }
 
         // check that the actual configuration has no extra properties
-        for (final Iterator<String> it = actual.getKeys(); it.hasNext();)
-        {
+        for (final Iterator<String> it = actual.getKeys(); it.hasNext();) {
             final String key = it.next();
             assertTrue("The actual configuration contains an extra key '" + key + "'", expected.containsKey(key));
         }
@@ -81,8 +76,7 @@ public class ConfigurationAssert
      * @param name the name of the test file
      * @return a {@code File} object pointing to that test file
      */
-    public static File getTestFile(final String name)
-    {
+    public static File getTestFile(final String name) {
         return new File(TEST_DIR, name);
     }
 
@@ -92,52 +86,44 @@ public class ConfigurationAssert
      * @param name the name of the out file
      * @return a {@code File} object pointing to that out file
      */
-    public static File getOutFile(final String name)
-    {
+    public static File getOutFile(final String name) {
         return new File(OUT_DIR, name);
     }
 
     /**
-     * Returns a URL pointing to the specified test file. If the URL cannot be
-     * constructed, a runtime exception is thrown.
+     * Returns a URL pointing to the specified test file. If the URL cannot be constructed, a runtime exception is thrown.
      *
      * @param name the name of the test file
      * @return the corresponding URL
      */
-    public static URL getTestURL(final String name)
-    {
+    public static URL getTestURL(final String name) {
         return urlFromFile(getTestFile(name));
     }
 
     /**
-     * Returns a URL pointing to the specified output file. If the URL cannot be
-     * constructed, a runtime exception is thrown.
+     * Returns a URL pointing to the specified output file. If the URL cannot be constructed, a runtime exception is thrown.
      *
      * @param name the name of the output file
      * @return the corresponding URL
      */
-    public static URL getOutURL(final String name)
-    {
+    public static URL getOutURL(final String name) {
         return urlFromFile(getOutFile(name));
     }
 
     /**
-     * Helper method for testing the equals() implementation of a class. It is
-     * also checked, whether hashCode() is compatible with equals().
+     * Helper method for testing the equals() implementation of a class. It is also checked, whether hashCode() is
+     * compatible with equals().
      *
      * @param o1 test object 1
      * @param o2 test object 2
      * @param expEquals the expected result of equals()
      */
-    public static void checkEquals(final Object o1, final Object o2, final boolean expEquals)
-    {
+    public static void checkEquals(final Object o1, final Object o2, final boolean expEquals) {
         assertEquals("Wrong result of equals()", expEquals, o1.equals(o2));
-        if (o2 != null)
-        {
+        if (o2 != null) {
             assertEquals("Not symmetric", expEquals, o2.equals(o1));
         }
-        if (expEquals)
-        {
+        if (expEquals) {
             assertEquals("Different hash codes", o1.hashCode(), o2.hashCode());
         }
     }
@@ -148,8 +134,7 @@ public class ConfigurationAssert
      * @param config the configuration
      * @return a list with all keys of this configuration
      */
-    public static List<String> keysToList(final ImmutableConfiguration config)
-    {
+    public static List<String> keysToList(final ImmutableConfiguration config) {
         final List<String> keyList = new LinkedList<>();
         appendKeys(config, keyList);
         return keyList;
@@ -161,8 +146,7 @@ public class ConfigurationAssert
      * @param config the configuration
      * @return a set with all keys of this configuration
      */
-    public static Set<String> keysToSet(final ImmutableConfiguration config)
-    {
+    public static Set<String> keysToSet(final ImmutableConfiguration config) {
         final Set<String> keySet = new HashSet<>();
         appendKeys(config, keySet);
         return keySet;
@@ -174,11 +158,8 @@ public class ConfigurationAssert
      * @param config the configuration
      * @param collection the target collection
      */
-    public static void appendKeys(final ImmutableConfiguration config,
-            final Collection<String> collection)
-    {
-        for (final Iterator<String> it = config.getKeys(); it.hasNext();)
-        {
+    public static void appendKeys(final ImmutableConfiguration config, final Collection<String> collection) {
+        for (final Iterator<String> it = config.getKeys(); it.hasNext();) {
             collection.add(it.next());
         }
     }
@@ -190,14 +171,10 @@ public class ConfigurationAssert
      * @return the corresponding URL
      * @throws ConfigurationRuntimeException if the URL cannot be constructed
      */
-    private static URL urlFromFile(final File file)
-    {
-        try
-        {
+    private static URL urlFromFile(final File file) {
+        try {
             return file.toURI().toURL();
-        }
-        catch (final MalformedURLException mex)
-        {
+        } catch (final MalformedURLException mex) {
             throw new ConfigurationRuntimeException(mex);
         }
     }

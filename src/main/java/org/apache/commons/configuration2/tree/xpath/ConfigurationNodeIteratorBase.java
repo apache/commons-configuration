@@ -27,16 +27,14 @@ import org.apache.commons.lang3.StringUtils;
  * A base class for implementing iterators over configuration nodes.
  * </p>
  * <p>
- * This class already provides common functionality for implementing the
- * iteration process. Derived classes will implement specific behavior based on
- * the concrete node type (child node or attribute node).
+ * This class already provides common functionality for implementing the iteration process. Derived classes will
+ * implement specific behavior based on the concrete node type (child node or attribute node).
  * </p>
  *
  * @since 1.3
  * @param <T> the type of the nodes this iterator deals with
  */
-abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
-{
+abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator {
     /** Constant for the prefix separator. */
     private static final String PREFIX_SEPARATOR = ":";
 
@@ -56,15 +54,12 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
     private final boolean reverse;
 
     /**
-     * Creates a new instance of {@code ConfigurationNodeIteratorBase}
-     * and initializes it.
+     * Creates a new instance of {@code ConfigurationNodeIteratorBase} and initializes it.
      *
      * @param parent the parent pointer
      * @param reverse the reverse flag
      */
-    protected ConfigurationNodeIteratorBase(final ConfigurationNodePointer<T> parent,
-            final boolean reverse)
-    {
+    protected ConfigurationNodeIteratorBase(final ConfigurationNodePointer<T> parent, final boolean reverse) {
         this.parent = parent;
         this.reverse = reverse;
     }
@@ -75,8 +70,7 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
      * @return the position
      */
     @Override
-    public int getPosition()
-    {
+    public int getPosition() {
         return position;
     }
 
@@ -87,8 +81,7 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
      * @return a flag if this is a valid position
      */
     @Override
-    public boolean setPosition(final int pos)
-    {
+    public boolean setPosition(final int pos) {
         position = pos;
         return pos >= 1 && pos <= getMaxPosition();
     }
@@ -99,10 +92,8 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
      * @return the current pointer in this iteration
      */
     @Override
-    public NodePointer getNodePointer()
-    {
-        if (getPosition() < 1 && !setPosition(1))
-        {
+    public NodePointer getNodePointer() {
+        if (getPosition() < 1 && !setPosition(1)) {
             return null;
         }
 
@@ -114,19 +105,16 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
      *
      * @return the parent node pointer
      */
-    protected ConfigurationNodePointer<T> getParent()
-    {
+    protected ConfigurationNodePointer<T> getParent() {
         return parent;
     }
 
     /**
-     * Returns the node handler for the managed nodes. This is a convenience
-     * method.
+     * Returns the node handler for the managed nodes. This is a convenience method.
      *
      * @return the node handler
      */
-    protected NodeHandler<T> getNodeHandler()
-    {
+    protected NodeHandler<T> getNodeHandler() {
         return getParent().getNodeHandler();
     }
 
@@ -135,26 +123,20 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
      *
      * @return the start offset
      */
-    protected int getStartOffset()
-    {
+    protected int getStartOffset() {
         return startOffset;
     }
 
     /**
-     * Sets the start offset of the iteration. This is used when a start element
-     * was set.
+     * Sets the start offset of the iteration. This is used when a start element was set.
      *
      * @param startOffset the start offset
      */
-    protected void setStartOffset(final int startOffset)
-    {
+    protected void setStartOffset(final int startOffset) {
         this.startOffset = startOffset;
-        if (reverse)
-        {
+        if (reverse) {
             this.startOffset--;
-        }
-        else
-        {
+        } else {
             this.startOffset++;
         }
     }
@@ -164,27 +146,23 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
      *
      * @return the maximum allowed position
      */
-    protected int getMaxPosition()
-    {
+    protected int getMaxPosition() {
         return reverse ? getStartOffset() + 1 : size() - getStartOffset();
     }
 
     /**
-     * Returns the index in the data list for the given position. This method
-     * also checks the reverse flag.
+     * Returns the index in the data list for the given position. This method also checks the reverse flag.
      *
      * @param pos the position (1-based)
      * @return the corresponding list index
      */
-    protected int positionToIndex(final int pos)
-    {
+    protected int positionToIndex(final int pos) {
         return (reverse ? 1 - pos : pos - 1) + getStartOffset();
     }
 
     /**
-     * Creates the configuration node pointer for the current position. This
-     * method is called by {@code getNodePointer()}. Derived classes
-     * must create the correct pointer object.
+     * Creates the configuration node pointer for the current position. This method is called by {@code getNodePointer()}.
+     * Derived classes must create the correct pointer object.
      *
      * @param position the current position in the iteration
      * @return the node pointer
@@ -205,23 +183,18 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
      * @param name the name (may be <b>null</b>)
      * @return the qualified name
      */
-    protected static String prefixName(final String prefix, final String name)
-    {
-        return String.format(FMT_NAMESPACE, prefix,
-                StringUtils.defaultString(name));
+    protected static String prefixName(final String prefix, final String name) {
+        return String.format(FMT_NAMESPACE, prefix, StringUtils.defaultString(name));
     }
 
     /**
-     * Returns the qualified name from the given {@code QName}. If the name has
-     * no namespace, result is the simple name. Otherwise, the namespace prefix
-     * is added.
+     * Returns the qualified name from the given {@code QName}. If the name has no namespace, result is the simple name.
+     * Otherwise, the namespace prefix is added.
      *
      * @param name the {@code QName}
      * @return the qualified name
      */
-    protected static String qualifiedName(final QName name)
-    {
-        return name.getPrefix() == null ? name.getName() : prefixName(
-                name.getPrefix(), name.getName());
+    protected static String qualifiedName(final QName name) {
+        return name.getPrefix() == null ? name.getName() : prefixName(name.getPrefix(), name.getName());
     }
 }

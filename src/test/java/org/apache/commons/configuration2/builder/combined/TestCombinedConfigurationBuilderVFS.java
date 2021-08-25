@@ -34,20 +34,16 @@ import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.junit.Test;
 
 /**
- * A specialized test class for {@code CombinedConfigurationBuilder} which uses
- * a VFS file system for accessing file-based configurations.
+ * A specialized test class for {@code CombinedConfigurationBuilder} which uses a VFS file system for accessing
+ * file-based configurations.
  *
  */
-public class TestCombinedConfigurationBuilderVFS extends
-        TestCombinedConfigurationBuilder
-{
+public class TestCombinedConfigurationBuilderVFS extends TestCombinedConfigurationBuilder {
     /**
-     * {@inheritDoc} This implementation initializes the parameters object with
-     * the VFS file system.
+     * {@inheritDoc} This implementation initializes the parameters object with the VFS file system.
      */
     @Override
-    protected FileBasedBuilderParameters createParameters()
-    {
+    protected FileBasedBuilderParameters createParameters() {
         final FileBasedBuilderParameters params = super.createParameters();
         return params.setFileSystem(new VFSFileSystem());
     }
@@ -56,22 +52,15 @@ public class TestCombinedConfigurationBuilderVFS extends
      * Tests if the base path is correctly evaluated.
      */
     @Test
-    public void testSetConfigurationBasePath() throws ConfigurationException
-    {
+    public void testSetConfigurationBasePath() throws ConfigurationException {
         final File deepDir = new File(ConfigurationAssert.TEST_DIR, "config/deep");
         final Map<String, Object> params = new HashMap<>();
         params.put("fileName", "test.properties");
-        final BaseHierarchicalConfiguration defConfig =
-                createDefinitionConfig("properties", params);
-        defConfig.addProperty("override.properties.fileSystem[@config-class]",
-                VFSFileSystem.class.getName());
-        final BasicConfigurationBuilder<? extends HierarchicalConfiguration<ImmutableNode>> defBuilder =
-                createDefinitionBuilder(defConfig);
-        builder.configure(new CombinedBuilderParametersImpl()
-                .setDefinitionBuilder(defBuilder).setBasePath(
-                        deepDir.getAbsolutePath()));
+        final BaseHierarchicalConfiguration defConfig = createDefinitionConfig("properties", params);
+        defConfig.addProperty("override.properties.fileSystem[@config-class]", VFSFileSystem.class.getName());
+        final BasicConfigurationBuilder<? extends HierarchicalConfiguration<ImmutableNode>> defBuilder = createDefinitionBuilder(defConfig);
+        builder.configure(new CombinedBuilderParametersImpl().setDefinitionBuilder(defBuilder).setBasePath(deepDir.getAbsolutePath()));
         final Configuration config = builder.getConfiguration();
-        assertEquals("Wrong property value", "somevalue",
-                config.getString("somekey"));
+        assertEquals("Wrong property value", "somevalue", config.getString("somekey"));
     }
 }

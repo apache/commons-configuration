@@ -18,34 +18,33 @@
 package org.apache.commons.configuration2;
 
 /**
- * <p>A specialized SAX2 XML parser that processes configuration objects.</p>
+ * <p>
+ * A specialized SAX2 XML parser that processes configuration objects.
+ * </p>
  *
- * <p>This class mimics to be a SAX compliant XML parser. It is able to iterate
- * over the keys in a configuration object and to generate corresponding SAX
- * events. By registering a {@code ContentHandler} at an instance
- * it is possible to perform XML processing on a configuration object.</p>
+ * <p>
+ * This class mimics to be a SAX compliant XML parser. It is able to iterate over the keys in a configuration object and
+ * to generate corresponding SAX events. By registering a {@code ContentHandler} at an instance it is possible to
+ * perform XML processing on a configuration object.
+ * </p>
  *
  */
-public class BaseConfigurationXMLReader extends ConfigurationXMLReader
-{
-    /** Stores the actual configuration.*/
+public class BaseConfigurationXMLReader extends ConfigurationXMLReader {
+    /** Stores the actual configuration. */
     private Configuration config;
 
     /**
      * Creates a new instance of {@code BaseConfigurationXMLReader}.
      */
-    public BaseConfigurationXMLReader()
-    {
+    public BaseConfigurationXMLReader() {
     }
 
     /**
-     * Creates a new instance of {@code BaseConfigurationXMLReader} and
-     * sets the configuration object to be parsed.
+     * Creates a new instance of {@code BaseConfigurationXMLReader} and sets the configuration object to be parsed.
      *
      * @param conf the configuration to be parsed
      */
-    public BaseConfigurationXMLReader(final Configuration conf)
-    {
+    public BaseConfigurationXMLReader(final Configuration conf) {
         this();
         setConfiguration(conf);
     }
@@ -55,8 +54,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
      *
      * @return the actual configuration
      */
-    public Configuration getConfiguration()
-    {
+    public Configuration getConfiguration() {
         return config;
     }
 
@@ -65,8 +63,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
      *
      * @param conf the configuration
      */
-    public void setConfiguration(final Configuration conf)
-    {
+    public void setConfiguration(final Configuration conf) {
         config = conf;
     }
 
@@ -76,32 +73,26 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
      * @return the actual configuration
      */
     @Override
-    public Configuration getParsedConfiguration()
-    {
+    public Configuration getParsedConfiguration() {
         return getConfiguration();
     }
 
     /**
-     * The main SAX event generation method. This element uses an internal
-     * {@code HierarchicalConfigurationConverter} object to iterate over
-     * all keys in the actual configuration and to generate corresponding SAX
-     * events.
+     * The main SAX event generation method. This element uses an internal {@code HierarchicalConfigurationConverter} object
+     * to iterate over all keys in the actual configuration and to generate corresponding SAX events.
      */
     @Override
-    protected void processKeys()
-    {
+    protected void processKeys() {
         fireElementStart(getRootName(), null);
         new SAXConverter().process(getConfiguration());
         fireElementEnd(getRootName());
     }
 
     /**
-     * An internally used helper class to iterate over all configuration keys
-     * ant to generate corresponding SAX events.
+     * An internally used helper class to iterate over all configuration keys ant to generate corresponding SAX events.
      *
      */
-    class SAXConverter extends HierarchicalConfigurationConverter
-    {
+    class SAXConverter extends HierarchicalConfigurationConverter {
         /**
          * Callback for the start of an element.
          *
@@ -109,11 +100,9 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
          * @param value the element value
          */
         @Override
-        protected void elementStart(final String name, final Object value)
-        {
+        protected void elementStart(final String name, final Object value) {
             fireElementStart(name, null);
-            if (value != null)
-            {
+            if (value != null) {
                 fireCharacters(value.toString());
             }
         }
@@ -124,8 +113,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
          * @param name the element name
          */
         @Override
-        protected void elementEnd(final String name)
-        {
+        protected void elementEnd(final String name) {
             fireElementEnd(name);
         }
     }

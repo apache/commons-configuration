@@ -26,10 +26,10 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 
 /**
  * Abstract layer to allow various types of file systems.
+ *
  * @since 1.7
  */
-public abstract class FileSystem
-{
+public abstract class FileSystem {
     /** Constant for the default logger. */
     private static final ConfigurationLogger DEFAULT_LOG = ConfigurationLogger.newDummyLogger();
 
@@ -43,8 +43,7 @@ public abstract class FileSystem
 
     public abstract String getFileName(String path);
 
-    public FileOptionsProvider getFileOptionsProvider()
-    {
+    public FileOptionsProvider getFileOptionsProvider() {
         return this.optionsProvider;
     }
 
@@ -53,10 +52,14 @@ public abstract class FileSystem
     /**
      * Not abstract for binary compatibility.
      *
+     * @param url TODO
+     * @param urlConnectionOptions Ignored.
+     * @return TODO
+     * @throws ConfigurationException TODO
+     *
      * @since 2.8.0
      */
-    public InputStream getInputStream(final URL url, final URLConnectionOptions urlConnectionOptions)
-        throws ConfigurationException {
+    public InputStream getInputStream(final URL url, final URLConnectionOptions urlConnectionOptions) throws ConfigurationException {
         return getInputStream(url);
     }
 
@@ -65,8 +68,7 @@ public abstract class FileSystem
      *
      * @return the logger
      */
-    public ConfigurationLogger getLogger()
-    {
+    public ConfigurationLogger getLogger() {
         final ConfigurationLogger result = log;
         return result != null ? result : DEFAULT_LOG;
     }
@@ -83,25 +85,22 @@ public abstract class FileSystem
 
     /**
      * Set the FileOptionsProvider
+     *
      * @param provider The FileOptionsProvider
      */
-    public void setFileOptionsProvider(final FileOptionsProvider provider)
-    {
+    public void setFileOptionsProvider(final FileOptionsProvider provider) {
         this.optionsProvider = provider;
     }
 
     /**
-     * Allows setting the logger to be used by this FileSystem. This
-     * method makes it possible for clients to exactly control logging behavior.
-     * Per default a logger is set that will ignore all log messages. Derived
-     * classes that want to enable logging should call this method during their
-     * initialization with the logger to be used. Passing in a <b>null</b> argument
-     * disables logging.
+     * Allows setting the logger to be used by this FileSystem. This method makes it possible for clients to exactly control
+     * logging behavior. Per default a logger is set that will ignore all log messages. Derived classes that want to enable
+     * logging should call this method during their initialization with the logger to be used. Passing in a <b>null</b>
+     * argument disables logging.
      *
      * @param log the new logger
      */
-    public void setLogger(final ConfigurationLogger log)
-    {
+    public void setLogger(final ConfigurationLogger log) {
         this.log = log;
     }
 }

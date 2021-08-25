@@ -34,12 +34,24 @@ public final class URLConnectionOptions {
      */
     public static final URLConnectionOptions DEFAULT = new URLConnectionOptions();
 
+    /**
+     * TODO
+     */
     private boolean allowUserInteraction;
 
+    /**
+     * TODO
+     */
     private int connectTimeoutMillis;
 
+    /**
+     * TODO
+     */
     private int readTimeoutMillis;
 
+    /**
+     * TODO
+     */
     private boolean useCaches = true;
 
     /**
@@ -161,7 +173,7 @@ public final class URLConnectionOptions {
 
     @Override
     public String toString() {
-        return "URLConnectionOptions [allowUserInteraction=" + allowUserInteraction + ", connectTimeoutMillis="
-            + connectTimeoutMillis + ", readTimeoutMillis=" + readTimeoutMillis + ", useCaches=" + useCaches + "]";
+        return "URLConnectionOptions [allowUserInteraction=" + allowUserInteraction + ", connectTimeoutMillis=" + connectTimeoutMillis + ", readTimeoutMillis="
+            + readTimeoutMillis + ", useCaches=" + useCaches + "]";
     }
 }

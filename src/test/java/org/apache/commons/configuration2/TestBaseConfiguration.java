@@ -50,13 +50,11 @@ import org.junit.Test;
 import junitx.framework.ListAssert;
 
 /**
- * Tests some basic functions of the BaseConfiguration class. Missing keys will
- * throw Exceptions
+ * Tests some basic functions of the BaseConfiguration class. Missing keys will throw Exceptions
  *
  */
-public class TestBaseConfiguration
-{
-    /** Constant for the number key.*/
+public class TestBaseConfiguration {
+    /** Constant for the number key. */
     static final String KEY_NUMBER = "number";
 
     protected static Class<?> missingElementException = NoSuchElementException.class;
@@ -64,20 +62,18 @@ public class TestBaseConfiguration
     protected BaseConfiguration config;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         config = new BaseConfiguration();
         config.setThrowExceptionOnMissing(true);
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
     }
 
     @Test
-    public void testAddProperty() throws Exception
-    {
+    public void testAddProperty() throws Exception {
         Collection<Object> props = new ArrayList<>();
         props.add("one");
         props.add("two,three,four");
-        props.add(new String[] { "5.1", "5.2", "5.3,5.4", "5.5" });
+        props.add(new String[] {"5.1", "5.2", "5.3,5.4", "5.5"});
         props.add("six");
         config.addProperty("complex.property", props);
 
@@ -90,17 +86,14 @@ public class TestBaseConfiguration
         props.add("quick");
         props.add("brown");
         props.add("fox,jumps");
-        final Object[] data = {
-                "The", props, "over,the", "lazy", "dog."
-        };
+        final Object[] data = {"The", props, "over,the", "lazy", "dog."};
         config.setProperty("complex.property", data);
         val = config.getProperty("complex.property");
         assertTrue(val instanceof Collection);
         col = (Collection<?>) val;
         final Iterator<?> it = col.iterator();
         final StringTokenizer tok = new StringTokenizer("The quick brown fox jumps over the lazy dog.", " ");
-        while(tok.hasMoreTokens())
-        {
+        while (tok.hasMoreTokens()) {
             assertTrue(it.hasNext());
             assertEquals(tok.nextToken(), it.next());
         }
@@ -114,20 +107,16 @@ public class TestBaseConfiguration
      * Tests cloning a BaseConfiguration.
      */
     @Test
-    public void testClone()
-    {
-        for (int i = 0; i < 10; i++)
-        {
+    public void testClone() {
+        for (int i = 0; i < 10; i++) {
             config.addProperty("key" + i, Integer.valueOf(i));
         }
         final BaseConfiguration config2 = (BaseConfiguration) config.clone();
 
-        for (final Iterator<String> it = config.getKeys(); it.hasNext();)
-        {
+        for (final Iterator<String> it = config.getKeys(); it.hasNext();) {
             final String key = it.next();
             assertTrue("Key not found: " + key, config2.containsKey(key));
-            assertEquals("Wrong value for key " + key, config.getProperty(key),
-                    config2.getProperty(key));
+            assertEquals("Wrong value for key " + key, config.getProperty(key), config2.getProperty(key));
         }
     }
 
@@ -135,40 +124,34 @@ public class TestBaseConfiguration
      * Tests whether interpolation works as expected after cloning.
      */
     @Test
-    public void testCloneInterpolation()
-    {
+    public void testCloneInterpolation() {
         final String keyAnswer = "answer";
         config.addProperty(keyAnswer, "The answer is ${" + KEY_NUMBER + "}.");
         config.addProperty(KEY_NUMBER, 42);
         final BaseConfiguration clone = (BaseConfiguration) config.clone();
         clone.setProperty(KEY_NUMBER, 43);
-        assertEquals("Wrong interpolation in original", "The answer is 42.",
-                config.getString(keyAnswer));
-        assertEquals("Wrong interpolation in clone", "The answer is 43.",
-                clone.getString(keyAnswer));
+        assertEquals("Wrong interpolation in original", "The answer is 42.", config.getString(keyAnswer));
+        assertEquals("Wrong interpolation in clone", "The answer is 43.", clone.getString(keyAnswer));
     }
 
     /**
      * Tests the clone() method if a list property is involved.
      */
     @Test
-    public void testCloneListProperty()
-    {
+    public void testCloneListProperty() {
         final String key = "list";
         config.addProperty(key, "value1");
         config.addProperty(key, "value2");
         final BaseConfiguration config2 = (BaseConfiguration) config.clone();
         config2.addProperty(key, "value3");
-        assertEquals("Wrong number of original properties", 2, config.getList(
-                key).size());
+        assertEquals("Wrong number of original properties", 2, config.getList(key).size());
     }
 
     /**
      * Tests whether a cloned configuration is decoupled from its original.
      */
     @Test
-    public void testCloneModify()
-    {
+    public void testCloneModify() {
         final EventListener<ConfigurationEvent> l = new EventListenerTestImpl(config);
         config.addEventListener(ConfigurationEvent.ANY, l);
         config.addProperty("original", Boolean.TRUE);
@@ -177,16 +160,13 @@ public class TestBaseConfiguration
         config2.addProperty("clone", Boolean.TRUE);
         assertFalse("New key appears in original", config.containsKey("clone"));
         config2.setProperty("original", Boolean.FALSE);
-        assertTrue("Wrong value of original property", config
-                .getBoolean("original"));
+        assertTrue("Wrong value of original property", config.getBoolean("original"));
 
-        assertTrue("Event listener was copied", config2
-                .getEventListeners(ConfigurationEvent.ANY).isEmpty());
+        assertTrue("Event listener was copied", config2.getEventListeners(ConfigurationEvent.ANY).isEmpty());
     }
 
     @Test
-    public void testCommaSeparatedString()
-    {
+    public void testCommaSeparatedString() {
         final String prop = "hey, that's a test";
         config.setProperty("prop.string", prop);
         final List<Object> list = config.getList("prop.string");
@@ -195,16 +175,14 @@ public class TestBaseConfiguration
     }
 
     @Test
-    public void testCommaSeparatedStringEscaped()
-    {
+    public void testCommaSeparatedStringEscaped() {
         final String prop2 = "hey\\, that's a test";
         config.setProperty("prop.string", prop2);
         assertEquals("Wrong value", "hey, that's a test", config.getString("prop.string"));
     }
 
     @Test
-    public void testGetBigDecimal()
-    {
+    public void testGetBigDecimal() {
         config.setProperty("numberBigD", "123.456");
         final BigDecimal number = new BigDecimal("123.456");
         final BigDecimal defaultValue = new BigDecimal("654.321");
@@ -215,21 +193,18 @@ public class TestBaseConfiguration
     }
 
     @Test(expected = ConversionException.class)
-    public void testGetBigDecimalIncompatibleType()
-    {
+    public void testGetBigDecimalIncompatibleType() {
         config.setProperty("test.empty", "");
         config.getBigDecimal("test.empty");
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetBigDecimalUnknown()
-    {
+    public void testGetBigDecimalUnknown() {
         config.getBigDecimal("numberNotInConfig");
     }
 
     @Test
-    public void testGetBigInteger()
-    {
+    public void testGetBigInteger() {
         config.setProperty("numberBigI", "1234567890");
         final BigInteger number = new BigInteger("1234567890");
         final BigInteger defaultValue = new BigInteger("654321");
@@ -240,21 +215,18 @@ public class TestBaseConfiguration
     }
 
     @Test(expected = ConversionException.class)
-    public void testGetBigIntegerIncompatibleType()
-    {
+    public void testGetBigIntegerIncompatibleType() {
         config.setProperty("test.empty", "");
         config.getBigInteger("test.empty");
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetBigIntegerUnknown()
-    {
+    public void testGetBigIntegerUnknown() {
         config.getBigInteger("numberNotInConfig");
     }
 
     @Test
-    public void testGetBinaryValue()
-    {
+    public void testGetBinaryValue() {
         config.setProperty("number", "0b11111111");
         assertEquals("byte value", (byte) 0xFF, config.getByte("number"));
 
@@ -271,8 +243,7 @@ public class TestBaseConfiguration
     }
 
     @Test
-    public void testGetBoolean()
-    {
+    public void testGetBoolean() {
         config.setProperty("boolA", Boolean.TRUE);
         final boolean boolT = true, boolF = false;
         assertEquals("This returns true", boolT, config.getBoolean("boolA"));
@@ -282,21 +253,18 @@ public class TestBaseConfiguration
     }
 
     @Test(expected = ConversionException.class)
-    public void testGetBooleanIncompatibleType()
-    {
+    public void testGetBooleanIncompatibleType() {
         config.setProperty("test.empty", "");
         config.getBoolean("test.empty");
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetBooleanUnknown()
-    {
+    public void testGetBooleanUnknown() {
         config.getBoolean("numberNotInConfig");
     }
 
     @Test
-    public void testGetByte()
-    {
+    public void testGetByte() {
         config.setProperty("number", "1");
         final byte oneB = 1;
         final byte twoB = 2;
@@ -307,21 +275,18 @@ public class TestBaseConfiguration
     }
 
     @Test(expected = ConversionException.class)
-    public void testGetByteIncompatibleType()
-    {
+    public void testGetByteIncompatibleType() {
         config.setProperty("test.empty", "");
         config.getByte("test.empty");
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetByteUnknown()
-    {
+    public void testGetByteUnknown() {
         config.getByte("numberNotInConfig");
     }
 
     @Test
-    public void testGetDouble()
-    {
+    public void testGetDouble() {
         config.setProperty("numberD", "1.0");
         final double oneD = 1;
         final double twoD = 2;
@@ -332,21 +297,18 @@ public class TestBaseConfiguration
     }
 
     @Test(expected = ConversionException.class)
-    public void testGetDoubleIncompatibleType()
-    {
+    public void testGetDoubleIncompatibleType() {
         config.setProperty("test.empty", "");
         config.getDouble("test.empty");
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetDoubleUnknown()
-    {
+    public void testGetDoubleUnknown() {
         config.getDouble("numberNotInConfig");
     }
 
     @Test
-    public void testGetEnum()
-    {
+    public void testGetEnum() {
         config.setProperty("testEnum", EnumFixture.SMALLTALK.name());
         config.setProperty("testBadEnum", "This is not an enum value.");
         final EnumFixture enum1 = EnumFixture.SMALLTALK;
@@ -372,8 +334,7 @@ public class TestBaseConfiguration
     }
 
     @Test
-    public void testGetFloat()
-    {
+    public void testGetFloat() {
         config.setProperty("numberF", "1.0");
         final float oneF = 1;
         final float twoF = 2;
@@ -384,21 +345,18 @@ public class TestBaseConfiguration
     }
 
     @Test(expected = ConversionException.class)
-    public void testGetFloatIncompatibleType()
-    {
+    public void testGetFloatIncompatibleType() {
         config.setProperty("test.empty", "");
         config.getFloat("test.empty");
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetFloatUnknown()
-    {
+    public void testGetFloatUnknown() {
         config.getFloat("numberNotInConfig");
     }
 
     @Test
-    public void testGetHexadecimalValue()
-    {
+    public void testGetHexadecimalValue() {
         config.setProperty("number", "0xFF");
         assertEquals("byte value", (byte) 0xFF, config.getByte("number"));
 
@@ -415,8 +373,7 @@ public class TestBaseConfiguration
     }
 
     @Test
-    public void testGetInterpolatedList()
-    {
+    public void testGetInterpolatedList() {
         config.addProperty("number", "1");
         config.addProperty("array", "${number}");
         config.addProperty("array", "${number}");
@@ -429,8 +386,7 @@ public class TestBaseConfiguration
     }
 
     @Test
-    public void testGetInterpolatedPrimitives()
-    {
+    public void testGetInterpolatedPrimitives() {
         config.addProperty("number", "1");
         config.addProperty("value", "${number}");
 
@@ -463,14 +419,12 @@ public class TestBaseConfiguration
      * Tests accessing and manipulating the interpolator object.
      */
     @Test
-    public void testGetInterpolator()
-    {
+    public void testGetInterpolator() {
         InterpolationTestHelper.testGetInterpolator(config);
     }
 
     @Test
-    public void testGetList()
-    {
+    public void testGetList() {
         config.addProperty("number", "1");
         config.addProperty("number", "2");
         final List<Object> list = config.getList("number");
@@ -481,8 +435,7 @@ public class TestBaseConfiguration
     }
 
     @Test
-    public void testGetLong()
-    {
+    public void testGetLong() {
         config.setProperty("numberL", "1");
         final long oneL = 1;
         final long twoL = 2;
@@ -493,21 +446,18 @@ public class TestBaseConfiguration
     }
 
     @Test(expected = ConversionException.class)
-    public void testGetLongIncompatibleTypes()
-    {
+    public void testGetLongIncompatibleTypes() {
         config.setProperty("test.empty", "");
         config.getLong("test.empty");
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetLongUnknown()
-    {
+    public void testGetLongUnknown() {
         config.getLong("numberNotInConfig");
     }
 
     @Test
-    public void testGetProperty()
-    {
+    public void testGetProperty() {
         /* should be empty and return null */
         assertEquals("This returns null", config.getProperty("foo"), null);
 
@@ -518,8 +468,7 @@ public class TestBaseConfiguration
     }
 
     @Test
-    public void testGetShort()
-    {
+    public void testGetShort() {
         config.setProperty("numberS", "1");
         final short oneS = 1;
         final short twoS = 2;
@@ -530,21 +479,18 @@ public class TestBaseConfiguration
     }
 
     @Test(expected = ConversionException.class)
-    public void testGetShortIncompatibleType()
-    {
+    public void testGetShortIncompatibleType() {
         config.setProperty("test.empty", "");
         config.getShort("test.empty");
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetShortUnknown()
-    {
+    public void testGetShortUnknown() {
         config.getShort("numberNotInConfig");
     }
 
     @Test
-    public void testGetString()
-    {
+    public void testGetString() {
         config.setProperty("testString", "The quick brown fox");
         final String string = "The quick brown fox";
         final String defaultValue = "jumps over the lazy dog";
@@ -558,26 +504,22 @@ public class TestBaseConfiguration
      * Tests that the first scalar of a list is returned.
      */
     @Test
-    public void testGetStringForListValue()
-    {
+    public void testGetStringForListValue() {
         config.addProperty("number", "1");
         config.addProperty("number", "2");
         assertEquals("Wrong result", "1", config.getString("number"));
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void testGetStringUnknown()
-    {
+    public void testGetStringUnknown() {
         config.getString("stringNotInConfig");
     }
 
     /**
-     * Tests whether a {@code ConfigurationInterpolator} can be created and
-     * installed.
+     * Tests whether a {@code ConfigurationInterpolator} can be created and installed.
      */
     @Test
-    public void testInstallInterpolator()
-    {
+    public void testInstallInterpolator() {
         final Lookup prefixLookup = EasyMock.createMock(Lookup.class);
         final Lookup defLookup = EasyMock.createMock(Lookup.class);
         EasyMock.replay(prefixLookup, defLookup);
@@ -587,31 +529,26 @@ public class TestBaseConfiguration
         defLookups.add(defLookup);
         config.installInterpolator(prefixLookups, defLookups);
         final ConfigurationInterpolator interpolator = config.getInterpolator();
-        assertEquals("Wrong prefix lookups", prefixLookups,
-                interpolator.getLookups());
+        assertEquals("Wrong prefix lookups", prefixLookups, interpolator.getLookups());
         final List<Lookup> defLookups2 = interpolator.getDefaultLookups();
         assertEquals("Wrong number of default lookups", 2, defLookups2.size());
         assertSame("Wrong default lookup 1", defLookup, defLookups2.get(0));
         final String var = "testVariable";
         final Object value = 42;
         config.addProperty(var, value);
-        assertEquals("Wrong lookup result", value,
-                defLookups2.get(1).lookup(var));
+        assertEquals("Wrong lookup result", value, defLookups2.get(1).lookup(var));
     }
 
     /**
-     * Tests obtaining a configuration with all variables replaced by their
-     * actual values.
+     * Tests obtaining a configuration with all variables replaced by their actual values.
      */
     @Test
-    public void testInterpolatedConfiguration()
-    {
+    public void testInterpolatedConfiguration() {
         InterpolationTestHelper.testInterpolatedConfiguration(config);
     }
 
     @Test
-    public void testInterpolation()
-    {
+    public void testInterpolation() {
         InterpolationTestHelper.testInterpolation(config);
     }
 
@@ -619,8 +556,7 @@ public class TestBaseConfiguration
      * Tests interpolation of constant values.
      */
     @Test
-    public void testInterpolationConstants()
-    {
+    public void testInterpolationConstants() {
         InterpolationTestHelper.testInterpolationConstants(config);
     }
 
@@ -628,18 +564,15 @@ public class TestBaseConfiguration
      * Tests interpolation of environment properties.
      */
     @Test
-    public void testInterpolationEnvironment()
-    {
+    public void testInterpolationEnvironment() {
         InterpolationTestHelper.testInterpolationEnvironment(config);
     }
 
     /**
-     * Tests whether a variable can be escaped, so that it won't be
-     * interpolated.
+     * Tests whether a variable can be escaped, so that it won't be interpolated.
      */
     @Test
-    public void testInterpolationEscaped()
-    {
+    public void testInterpolationEscaped() {
         InterpolationTestHelper.testInterpolationEscaped(config);
     }
 
@@ -647,14 +580,12 @@ public class TestBaseConfiguration
      * Tests interpolation with localhost values.
      */
     @Test
-    public void testInterpolationLocalhost()
-    {
+    public void testInterpolationLocalhost() {
         InterpolationTestHelper.testInterpolationLocalhost(config);
     }
 
     @Test
-    public void testInterpolationLoop()
-    {
+    public void testInterpolationLoop() {
         InterpolationTestHelper.testInterpolationLoop(config);
     }
 
@@ -662,8 +593,7 @@ public class TestBaseConfiguration
      * Tests interpolation when a subset configuration is involved.
      */
     @Test
-    public void testInterpolationSubset()
-    {
+    public void testInterpolationSubset() {
         InterpolationTestHelper.testInterpolationSubset(config);
     }
 
@@ -671,8 +601,7 @@ public class TestBaseConfiguration
      * Tests interpolation of system properties.
      */
     @Test
-    public void testInterpolationSystemProperties()
-    {
+    public void testInterpolationSystemProperties() {
         InterpolationTestHelper.testInterpolationSystemProperties(config);
     }
 
@@ -680,24 +609,20 @@ public class TestBaseConfiguration
      * Tests interpolation when the referred property is not found.
      */
     @Test
-    public void testInterpolationUnknownProperty()
-    {
+    public void testInterpolationUnknownProperty() {
         InterpolationTestHelper.testInterpolationUnknownProperty(config);
     }
 
     @Test
-    public void testMultipleInterpolation()
-    {
+    public void testMultipleInterpolation() {
         InterpolationTestHelper.testMultipleInterpolation(config);
     }
 
     /**
-     * Tests whether property access is possible without a
-     * {@code ConfigurationInterpolator}.
+     * Tests whether property access is possible without a {@code ConfigurationInterpolator}.
      */
     @Test
-    public void testNoInterpolator()
-    {
+    public void testNoInterpolator() {
         config.setProperty("test", "${value}");
         config.setInterpolator(null);
         assertEquals("Wrong result", "${value}", config.getString("test"));
@@ -707,35 +632,24 @@ public class TestBaseConfiguration
      * Tests if conversion between number types is possible.
      */
     @Test
-    public void testNumberConversions()
-    {
+    public void testNumberConversions() {
         config.setProperty(KEY_NUMBER, Integer.valueOf(42));
         assertEquals("Wrong int returned", 42, config.getInt(KEY_NUMBER));
         assertEquals("Wrong long returned", 42L, config.getLong(KEY_NUMBER));
-        assertEquals("Wrong byte returned", (byte) 42, config
-                .getByte(KEY_NUMBER));
-        assertEquals("Wrong float returned", 42.0f,
-                config.getFloat(KEY_NUMBER), 0.01f);
-        assertEquals("Wrong double returned", 42.0, config
-                .getDouble(KEY_NUMBER), 0.001);
+        assertEquals("Wrong byte returned", (byte) 42, config.getByte(KEY_NUMBER));
+        assertEquals("Wrong float returned", 42.0f, config.getFloat(KEY_NUMBER), 0.01f);
+        assertEquals("Wrong double returned", 42.0, config.getDouble(KEY_NUMBER), 0.001);
 
-        assertEquals("Wrong Long returned", Long.valueOf(42L), config.getLong(
-                KEY_NUMBER, null));
-        assertEquals("Wrong BigInt returned", new BigInteger("42"), config
-                .getBigInteger(KEY_NUMBER));
-        assertEquals("Wrong DigDecimal returned", new BigDecimal("42"), config
-                .getBigDecimal(KEY_NUMBER));
+        assertEquals("Wrong Long returned", Long.valueOf(42L), config.getLong(KEY_NUMBER, null));
+        assertEquals("Wrong BigInt returned", new BigInteger("42"), config.getBigInteger(KEY_NUMBER));
+        assertEquals("Wrong DigDecimal returned", new BigDecimal("42"), config.getBigDecimal(KEY_NUMBER));
     }
 
     @Test
-    public void testPropertyAccess()
-    {
+    public void testPropertyAccess() {
         config.clearProperty("prop.properties");
         config.setProperty("prop.properties", "");
-        assertEquals(
-                "This returns an empty Properties object",
-                config.getProperties("prop.properties"),
-                new Properties());
+        assertEquals("This returns an empty Properties object", config.getProperties("prop.properties"), new Properties());
         config.clearProperty("prop.properties");
         config.setProperty("prop.properties", "foo=bar, baz=moo, seal=clubber");
 
@@ -743,46 +657,36 @@ public class TestBaseConfiguration
         p.setProperty("foo", "bar");
         p.setProperty("baz", "moo");
         p.setProperty("seal", "clubber");
-        assertEquals(
-                "This returns a filled in Properties object",
-                config.getProperties("prop.properties"),
-                p);
+        assertEquals("This returns a filled in Properties object", config.getProperties("prop.properties"), p);
     }
 
     /**
      * Tests whether a {@code ConfigurationInterpolator} can be set.
      */
     @Test
-    public void testSetInterpolator()
-    {
-        final ConfigurationInterpolator interpolator =
-                EasyMock.createMock(ConfigurationInterpolator.class);
+    public void testSetInterpolator() {
+        final ConfigurationInterpolator interpolator = EasyMock.createMock(ConfigurationInterpolator.class);
         EasyMock.replay(interpolator);
         config.setInterpolator(interpolator);
-        assertSame("Interpolator not set", interpolator,
-                config.getInterpolator());
+        assertSame("Interpolator not set", interpolator, config.getInterpolator());
     }
 
     /**
      * Tests the specific size() implementation.
      */
     @Test
-    public void testSize()
-    {
+    public void testSize() {
         final int count = 16;
-        for (int i = 0; i < count; i++)
-        {
+        for (int i = 0; i < count; i++) {
             config.addProperty("key" + i, "value" + i);
         }
         assertEquals("Wrong size", count, config.size());
     }
 
     @Test
-    public void testSubset()
-    {
+    public void testSubset() {
         /*
-         * test subset : assure we don't reprocess the data elements
-         * when generating the subset
+         * test subset : assure we don't reprocess the data elements when generating the subset
          */
 
         final String prop = "hey, that's a test";
@@ -792,10 +696,7 @@ public class TestBaseConfiguration
 
         Configuration subEprop = config.subset("prop");
 
-        assertEquals(
-                "Returns the full string",
-                prop,
-                subEprop.getString("string"));
+        assertEquals("Returns the full string", prop, subEprop.getString("string"));
         assertEquals("Wrong list size", 1, subEprop.getList("string").size());
 
         Iterator<String> it = subEprop.getKeys();
@@ -808,8 +709,7 @@ public class TestBaseConfiguration
     }
 
     @Test
-    public void testThrowExceptionOnMissing()
-    {
+    public void testThrowExceptionOnMissing() {
         assertTrue("Throw Exception Property is not set!", config.isThrowExceptionOnMissing());
     }
 }

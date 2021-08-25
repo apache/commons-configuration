@@ -17,8 +17,8 @@
 
 /**
  * <p>
- * This package contains some implementations of the {@code Configuration}
- * interface that are useful in web environments.
+ * This package contains some implementations of the {@code Configuration} interface that are useful in web
+ * environments.
  * </p>
  *
  */

@@ -29,13 +29,11 @@ import org.apache.commons.vfs2.VFS;
 
 /**
  * <p>
- * A file-based reloading strategy that uses <a
- * href="https://commons.apache.org/vfs/">Commons VFS</a> to determine when a
- * file was changed.
+ * A file-based reloading strategy that uses <a href="https://commons.apache.org/vfs/">Commons VFS</a> to determine when
+ * a file was changed.
  * </p>
  * <p>
- * This reloading strategy is very similar to
- * {@link FileHandlerReloadingDetector}, except for the fact that it uses VFS
+ * This reloading strategy is very similar to {@link FileHandlerReloadingDetector}, except for the fact that it uses VFS
  * and thus can deal with a variety of different configuration sources.
  * </p>
  * <p>
@@ -44,94 +42,76 @@ import org.apache.commons.vfs2.VFS;
  *
  * @since 1.7
  */
-public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetector
-{
-    /** Stores the logger.*/
+public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetector {
+    /** Stores the logger. */
     private final Log log = LogFactory.getLog(getClass());
 
     /**
-     * Creates a new instance of {@code VFSFileHandlerReloadingDetector} and
-     * initializes it with an empty {@code FileHandler} object.
+     * Creates a new instance of {@code VFSFileHandlerReloadingDetector} and initializes it with an empty
+     * {@code FileHandler} object.
      */
-    public VFSFileHandlerReloadingDetector()
-    {
+    public VFSFileHandlerReloadingDetector() {
     }
 
     /**
-     * Creates a new instance of {@code VFSFileHandlerReloadingDetector} and
-     * initializes it with the given {@code FileHandler} object and the given
-     * refresh delay.
+     * Creates a new instance of {@code VFSFileHandlerReloadingDetector} and initializes it with the given
+     * {@code FileHandler} object and the given refresh delay.
      *
      * @param handler the {@code FileHandler}
      * @param refreshDelay the refresh delay
      */
-    public VFSFileHandlerReloadingDetector(final FileHandler handler,
-            final long refreshDelay)
-    {
+    public VFSFileHandlerReloadingDetector(final FileHandler handler, final long refreshDelay) {
         super(handler, refreshDelay);
     }
 
     /**
-     * Creates a new instance of {@code VFSFileHandlerReloadingDetector} and
-     * initializes it with the given {@code FileHandler} object.
+     * Creates a new instance of {@code VFSFileHandlerReloadingDetector} and initializes it with the given
+     * {@code FileHandler} object.
      *
      * @param handler the {@code FileHandler}
      */
-    public VFSFileHandlerReloadingDetector(final FileHandler handler)
-    {
+    public VFSFileHandlerReloadingDetector(final FileHandler handler) {
         super(handler);
     }
 
     /**
-     * {@inheritDoc} This implementation uses Commons VFS to obtain a
-     * {@code FileObject} and read the date of the last modification.
+     * {@inheritDoc} This implementation uses Commons VFS to obtain a {@code FileObject} and read the date of the last
+     * modification.
      */
     @Override
-    protected long getLastModificationDate()
-    {
+    protected long getLastModificationDate() {
         final FileObject file = getFileObject();
-        try
-        {
-            if (file == null || !file.exists())
-            {
+        try {
+            if (file == null || !file.exists()) {
                 return 0;
             }
 
             return file.getContent().getLastModifiedTime();
-        }
-        catch (final FileSystemException ex)
-        {
-            log.error("Unable to get last modified time for"
-                    + file.getName().getURI(), ex);
+        } catch (final FileSystemException ex) {
+            log.error("Unable to get last modified time for" + file.getName().getURI(), ex);
             return 0;
         }
     }
 
     /**
-     * Returns the file that is monitored by this strategy. Note that the return
-     * value can be <b>null </b> under some circumstances.
+     * Returns the file that is monitored by this strategy. Note that the return value can be <b>null </b> under some
+     * circumstances.
      *
      * @return the monitored file
      */
-    protected FileObject getFileObject()
-    {
-        if (!getFileHandler().isLocationDefined())
-        {
+    protected FileObject getFileObject() {
+        if (!getFileHandler().isLocationDefined()) {
             return null;
         }
 
-        try
-        {
+        try {
             final FileSystemManager fsManager = VFS.getManager();
             final String uri = resolveFileURI();
-            if (uri == null)
-            {
+            if (uri == null) {
                 throw new ConfigurationRuntimeException("Unable to determine file to monitor");
             }
             return fsManager.resolveFile(uri);
-        }
-        catch (final FileSystemException fse)
-        {
+        } catch (final FileSystemException fse) {
             final String msg = "Unable to monitor " + getFileHandler().getURL().toString();
             log.error(msg);
             throw new ConfigurationRuntimeException(msg, fse);
@@ -141,13 +121,10 @@ public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetecto
     /**
      * Resolves the URI of the monitored file.
      *
-     * @return the URI of the monitored file or <b>null</b> if it cannot be
-     *         resolved
+     * @return the URI of the monitored file or <b>null</b> if it cannot be resolved
      */
-    protected String resolveFileURI()
-    {
+    protected String resolveFileURI() {
         final FileSystem fs = getFileHandler().getFileSystem();
-        return fs.getPath(null, getFileHandler().getURL(), getFileHandler()
-                .getBasePath(), getFileHandler().getFileName());
+        return fs.getPath(null, getFileHandler().getURL(), getFileHandler().getBasePath(), getFileHandler().getFileName());
     }
 }

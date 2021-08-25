@@ -39,11 +39,9 @@ import com.mockobjects.servlet.MockHttpServletRequest;
  * Test case for the {@link ServletRequestConfiguration} class.
  *
  */
-public class TestServletRequestConfiguration extends TestAbstractConfiguration
-{
+public class TestServletRequestConfiguration extends TestAbstractConfiguration {
     @Override
-    protected AbstractConfiguration getConfiguration()
-    {
+    protected AbstractConfiguration getConfiguration() {
         final Configuration configuration = new BaseConfiguration();
         configuration.setProperty("key1", "value1");
         configuration.setProperty("key2", "value2");
@@ -55,19 +53,15 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
     }
 
     @Override
-    protected AbstractConfiguration getEmptyConfiguration()
-    {
-        final ServletRequest request = new MockHttpServletRequest()
-        {
+    protected AbstractConfiguration getEmptyConfiguration() {
+        final ServletRequest request = new MockHttpServletRequest() {
             @Override
-            public String getParameter(final String key)
-            {
+            public String getParameter(final String key) {
                 return null;
             }
 
             @Override
-            public Map<?, ?> getParameterMap()
-            {
+            public Map<?, ?> getParameterMap() {
                 return new HashMap<>();
             }
         };
@@ -76,25 +70,20 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
     }
 
     /**
-     * Returns a new servlet request configuration that is backed by the passed
-     * in configuration.
+     * Returns a new servlet request configuration that is backed by the passed in configuration.
      *
      * @param base the configuration with the underlying values
      * @return the servlet request configuration
      */
-    private ServletRequestConfiguration createConfiguration(final Configuration base)
-    {
-        final ServletRequest request = new MockHttpServletRequest()
-        {
+    private ServletRequestConfiguration createConfiguration(final Configuration base) {
+        final ServletRequest request = new MockHttpServletRequest() {
             @Override
-            public String[] getParameterValues(final String key)
-            {
+            public String[] getParameterValues(final String key) {
                 return base.getStringArray(key);
             }
 
             @Override
-            public Map<?, ?> getParameterMap()
-            {
+            public Map<?, ?> getParameterMap() {
                 return new ConfigurationMap(base);
             }
         };
@@ -106,15 +95,13 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
 
     @Override
     @Test(expected = UnsupportedOperationException.class)
-    public void testAddPropertyDirect()
-    {
+    public void testAddPropertyDirect() {
         super.testAddPropertyDirect();
     }
 
     @Override
     @Test(expected = UnsupportedOperationException.class)
-    public void testClearProperty()
-    {
+    public void testClearProperty() {
         super.testClearProperty();
     }
 
@@ -122,9 +109,8 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
      * Tests a list with elements that contain an escaped list delimiter.
      */
     @Test
-    public void testListWithEscapedElements()
-    {
-        final String[] values = { "test1", "test2\\,test3", "test4\\,test5" };
+    public void testListWithEscapedElements() {
+        final String[] values = {"test1", "test2\\,test3", "test4\\,test5"};
         final String listKey = "test.list";
 
         final BaseConfiguration config = new BaseConfiguration();
@@ -137,8 +123,7 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
 
         assertEquals("Wrong number of elements in list", values.length, v.size());
 
-        for (int i = 0; i < values.length; i++)
-        {
+        for (int i = 0; i < values.length; i++) {
             assertEquals("Wrong value at index " + i, values[i].replace("\\", ""), v.get(i));
         }
     }

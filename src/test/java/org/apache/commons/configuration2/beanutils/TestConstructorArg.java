@@ -26,14 +26,12 @@ import org.junit.Test;
  * Test class for {@code ConstructorArg}.
  *
  */
-public class TestConstructorArg
-{
+public class TestConstructorArg {
     /**
      * Tries to create an instance for a null bean declaration.
      */
     @Test(expected = NullPointerException.class)
-    public void testForBeanDeclarationNull()
-    {
+    public void testForBeanDeclarationNull() {
         ConstructorArg.forBeanDeclaration(null);
     }
 
@@ -41,8 +39,7 @@ public class TestConstructorArg
      * Tests whether an argument representing a bean declaration is detected.
      */
     @Test
-    public void testIsNestedBeanDeclarationTrue()
-    {
+    public void testIsNestedBeanDeclarationTrue() {
         final BeanDeclaration decl = EasyMock.createMock(BeanDeclaration.class);
         EasyMock.replay(decl);
         final ConstructorArg arg = ConstructorArg.forBeanDeclaration(decl);
@@ -53,8 +50,7 @@ public class TestConstructorArg
      * Tests whether an argument with a simple value is detected.
      */
     @Test
-    public void testIsNestedBeanDeclarationFalse()
-    {
+    public void testIsNestedBeanDeclarationFalse() {
         final ConstructorArg arg = ConstructorArg.forValue("test");
         assertFalse("A bean declaration", arg.isNestedBeanDeclaration());
     }
@@ -63,8 +59,7 @@ public class TestConstructorArg
      * Tests matches() if no data type is provided.
      */
     @Test
-    public void testMatchesNoType()
-    {
+    public void testMatchesNoType() {
         final ConstructorArg arg = ConstructorArg.forValue(42);
         assertTrue("No match (1)", arg.matches(String.class));
         assertTrue("No match (2)", arg.matches(getClass()));
@@ -74,8 +69,7 @@ public class TestConstructorArg
      * Tests whether a specified data type is evaluated by matches().
      */
     @Test
-    public void testMatchesWithType()
-    {
+    public void testMatchesWithType() {
         final ConstructorArg arg = ConstructorArg.forValue("42", int.class.getName());
         assertTrue("Wrong result (1)", arg.matches(Integer.TYPE));
         assertFalse("Wrong result (2)", arg.matches(Integer.class));
@@ -86,8 +80,7 @@ public class TestConstructorArg
      * Tests whether matches() deals with a null argument.
      */
     @Test
-    public void testMatchesNull()
-    {
+    public void testMatchesNull() {
         final ConstructorArg arg = ConstructorArg.forValue(0);
         assertFalse("Wrong result", arg.matches(null));
     }

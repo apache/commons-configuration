@@ -20,15 +20,12 @@ package org.apache.commons.configuration2.tree;
  * Test class for {@code TreeData}
  *
  */
-public class TestTreeData extends AbstractImmutableNodeHandlerTest
-{
+public class TestTreeData extends AbstractImmutableNodeHandlerTest {
     /**
-     * {@inheritDoc} This implementation creates a TreeData object initialized
-     * with the given root node.
+     * {@inheritDoc} This implementation creates a TreeData object initialized with the given root node.
      */
     @Override
-    protected NodeHandler<ImmutableNode> createHandler(final ImmutableNode root)
-    {
+    protected NodeHandler<ImmutableNode> createHandler(final ImmutableNode root) {
         final InMemoryNodeModel model = new InMemoryNodeModel(root);
         return model.getTreeData();
     }

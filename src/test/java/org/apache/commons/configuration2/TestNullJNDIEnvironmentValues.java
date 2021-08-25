@@ -28,13 +28,11 @@ import java.util.Iterator;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TestNullJNDIEnvironmentValues
-{
+public class TestNullJNDIEnvironmentValues {
     private JNDIConfiguration conf;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         System.setProperty("java.naming.factory.initial", TestJNDIConfiguration.CONTEXT_FACTORY);
 
         conf = new JNDIConfiguration();
@@ -42,21 +40,18 @@ public class TestNullJNDIEnvironmentValues
     }
 
     @Test
-    public void testThrowExceptionOnMissing()
-    {
+    public void testThrowExceptionOnMissing() {
         assertFalse("Throw Exception Property is set!", conf.isThrowExceptionOnMissing());
     }
 
     @Test
-    public void testSimpleGet() throws Exception
-    {
+    public void testSimpleGet() throws Exception {
         final String s = conf.getString("test.key");
         assertEquals("jndivalue", s);
     }
 
     @Test
-    public void testMoreGets() throws Exception
-    {
+    public void testMoreGets() throws Exception {
         final String s = conf.getString("test.key");
         assertEquals("jndivalue", s);
         assertEquals("jndivalue2", conf.getString("test.key2"));
@@ -64,49 +59,42 @@ public class TestNullJNDIEnvironmentValues
     }
 
     @Test
-    public void testGetMissingKey() throws Exception
-    {
+    public void testGetMissingKey() throws Exception {
         assertNull("Missing Key is not null!", conf.getString("test.imaginarykey"));
     }
 
     @Test
-    public void testGetMissingKeyWithDefault() throws Exception
-    {
+    public void testGetMissingKeyWithDefault() throws Exception {
         final String result = conf.getString("test.imaginarykey", "bob");
         assertEquals("bob", result);
     }
 
     @Test
-    public void testContainsKey() throws Exception
-    {
+    public void testContainsKey() throws Exception {
         assertTrue(conf.containsKey("test.key"));
         assertTrue(!conf.containsKey("test.imaginarykey"));
     }
 
     @Test
-    public void testClearProperty()
-    {
+    public void testClearProperty() {
         assertNotNull("null short for the 'test.short' key", conf.getShort("test.short", null));
         conf.clearProperty("test.short");
         assertNull("'test.short' property not cleared", conf.getShort("test.short", null));
     }
 
     @Test
-    public void testIsEmpty()
-    {
+    public void testIsEmpty() {
         assertFalse("the configuration shouldn't be empty", conf.isEmpty());
     }
 
     @Test
-    public void testGetKeys() throws Exception
-    {
+    public void testGetKeys() throws Exception {
         boolean found = false;
         final Iterator<String> it = conf.getKeys();
 
         assertTrue("no key found", it.hasNext());
 
-        while (it.hasNext() && !found)
-        {
+        while (it.hasNext() && !found) {
             found = "test.boolean".equals(it.next());
         }
 
@@ -114,21 +102,18 @@ public class TestNullJNDIEnvironmentValues
     }
 
     @Test
-    public void testGetKeysWithUnknownPrefix()
-    {
+    public void testGetKeysWithUnknownPrefix() {
         // test for a unknown prefix
         final Iterator<String> it = conf.getKeys("foo.bar");
         assertFalse("no key should be found", it.hasNext());
     }
 
     @Test
-    public void testGetKeysWithExistingPrefix()
-    {
+    public void testGetKeysWithExistingPrefix() {
         // test for an existing prefix
         final Iterator<String> it = conf.getKeys("test");
         boolean found = false;
-        while (it.hasNext() && !found)
-        {
+        while (it.hasNext() && !found) {
             found = "test.boolean".equals(it.next());
         }
 
@@ -136,13 +121,11 @@ public class TestNullJNDIEnvironmentValues
     }
 
     @Test
-    public void testGetKeysWithKeyAsPrefix()
-    {
+    public void testGetKeysWithKeyAsPrefix() {
         // test for a prefix matching exactly the key of a property
         final Iterator<String> it = conf.getKeys("test.boolean");
         boolean found = false;
-        while (it.hasNext() && !found)
-        {
+        while (it.hasNext() && !found) {
             found = "test.boolean".equals(it.next());
         }
 

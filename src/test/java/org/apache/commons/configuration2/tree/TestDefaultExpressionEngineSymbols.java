@@ -28,30 +28,18 @@ import org.junit.Test;
  * Test class for {@code DefaultExpressionEngineSymbols}.
  *
  */
-public class TestDefaultExpressionEngineSymbols
-{
+public class TestDefaultExpressionEngineSymbols {
     /**
      * Tests the instance with default symbols.
      */
     @Test
-    public void testDefaultSymbols()
-    {
-        assertEquals("Wrong delimiter", ".",
-                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS
-                        .getPropertyDelimiter());
-        assertEquals("Wrong escaped delimiter", "..",
-                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS
-                        .getEscapedDelimiter());
-        assertEquals("Wrong index start", "(",
-                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexStart());
-        assertEquals("Wrong index end", ")",
-                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexEnd());
-        assertEquals("Wrong attribute start", "[@",
-                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS
-                        .getAttributeStart());
-        assertEquals("Wrong attribute end", "]",
-                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS
-                        .getAttributeEnd());
+    public void testDefaultSymbols() {
+        assertEquals("Wrong delimiter", ".", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getPropertyDelimiter());
+        assertEquals("Wrong escaped delimiter", "..", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getEscapedDelimiter());
+        assertEquals("Wrong index start", "(", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexStart());
+        assertEquals("Wrong index end", ")", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexEnd());
+        assertEquals("Wrong attribute start", "[@", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getAttributeStart());
+        assertEquals("Wrong attribute end", "]", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getAttributeEnd());
     }
 
     /**
@@ -60,8 +48,7 @@ public class TestDefaultExpressionEngineSymbols
      * @param o1 object 1
      * @param o2 object 2
      */
-    private static void expEqual(final Object o1, final Object o2)
-    {
+    private static void expEqual(final Object o1, final Object o2) {
         assertTrue("Not equal", o1.equals(o2));
         assertTrue("Not symmetric", o2.equals(o1));
         assertEquals("Different hash codes", o1.hashCode(), o2.hashCode());
@@ -73,11 +60,9 @@ public class TestDefaultExpressionEngineSymbols
      * @param o1 object 1
      * @param o2 object 2
      */
-    private static void expNE(final Object o1, final Object o2)
-    {
+    private static void expNE(final Object o1, final Object o2) {
         assertFalse("Equal", o1.equals(o2));
-        if (o2 != null)
-        {
+        if (o2 != null) {
             assertFalse("Not symmetric", o2.equals(o1));
         }
     }
@@ -86,39 +71,28 @@ public class TestDefaultExpressionEngineSymbols
      * Tests equals() if the expected result is true.
      */
     @Test
-    public void testEqualsTrue()
-    {
-        expEqual(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS,
-                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
-        final DefaultExpressionEngineSymbols s2 =
-                new DefaultExpressionEngineSymbols.Builder(
-                        DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS)
-                        .create();
+    public void testEqualsTrue() {
+        expEqual(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS, DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
+        final DefaultExpressionEngineSymbols s2 = new DefaultExpressionEngineSymbols.Builder(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS).create();
         expEqual(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS, s2);
     }
 
     /**
-     * Helper method for creating a builder object which is initialized with the
-     * default symbols.
+     * Helper method for creating a builder object which is initialized with the default symbols.
      *
      * @return the initialized builder
      */
-    private static DefaultExpressionEngineSymbols.Builder builder()
-    {
-        return new DefaultExpressionEngineSymbols.Builder(
-                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
+    private static DefaultExpressionEngineSymbols.Builder builder() {
+        return new DefaultExpressionEngineSymbols.Builder(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
     }
 
     /**
      * Tests equals() if the expected result is false.
      */
     @Test
-    public void testEqualsFalse()
-    {
-        final DefaultExpressionEngineSymbols s1 =
-                DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS;
-        DefaultExpressionEngineSymbols s2 =
-                builder().setPropertyDelimiter("/").create();
+    public void testEqualsFalse() {
+        final DefaultExpressionEngineSymbols s1 = DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS;
+        DefaultExpressionEngineSymbols s2 = builder().setPropertyDelimiter("/").create();
         expNE(s1, s2);
         s2 = builder().setEscapedDelimiter("\\.").create();
         expNE(s1, s2);
@@ -136,8 +110,7 @@ public class TestDefaultExpressionEngineSymbols
      * Tests equals for null input.
      */
     @Test
-    public void testEqualsNull()
-    {
+    public void testEqualsNull() {
         expNE(builder().create(), null);
     }
 
@@ -145,8 +118,7 @@ public class TestDefaultExpressionEngineSymbols
      * Tests equals with an object of another class.
      */
     @Test
-    public void testEqualsOtherClass()
-    {
+    public void testEqualsOtherClass() {
         expNE(builder().create(), this);
     }
 
@@ -154,23 +126,14 @@ public class TestDefaultExpressionEngineSymbols
      * Tests the string representation.
      */
     @Test
-    public void testToString()
-    {
+    public void testToString() {
         final DefaultExpressionEngineSymbols symbols = builder().create();
         final String s = symbols.toString();
-        assertThat(
-                s,
-                containsString("propertyDelimiter="
-                        + symbols.getPropertyDelimiter()));
-        assertThat(
-                s,
-                containsString("escapedDelimiter="
-                        + symbols.getEscapedDelimiter()));
+        assertThat(s, containsString("propertyDelimiter=" + symbols.getPropertyDelimiter()));
+        assertThat(s, containsString("escapedDelimiter=" + symbols.getEscapedDelimiter()));
         assertThat(s, containsString("indexStart=" + symbols.getIndexStart()));
         assertThat(s, containsString("indexEnd=" + symbols.getIndexEnd()));
-        assertThat(s,
-                containsString("attributeStart=" + symbols.getAttributeStart()));
-        assertThat(s,
-                containsString("attributeEnd=" + symbols.getAttributeEnd()));
+        assertThat(s, containsString("attributeStart=" + symbols.getAttributeStart()));
+        assertThat(s, containsString("attributeEnd=" + symbols.getAttributeEnd()));
     }
 }

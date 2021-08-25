@@ -27,8 +27,7 @@ package org.apache.commons.configuration2.tree;
  * @since 2.0
  * @param <T> the type of the supported {@code NodeModel}
  */
-public interface NodeModelSupport<T>
-{
+public interface NodeModelSupport<T> {
     /**
      * Returns the {@code NodeModel} supported by this object.
      *

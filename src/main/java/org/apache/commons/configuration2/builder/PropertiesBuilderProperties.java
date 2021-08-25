@@ -26,20 +26,18 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * Definition of a parameters interface for properties configurations.
  * </p>
  * <p>
- * This interface defines additional properties which can be set when
- * initializing a {@code PropertiesConfiguration} object.
+ * This interface defines additional properties which can be set when initializing a {@code PropertiesConfiguration}
+ * object.
  * </p>
  * <p>
- * <strong>Important note:</strong> This interface is not intended to be
- * implemented by client code! It defines a set of available properties and may
- * be extended even in minor releases.
+ * <strong>Important note:</strong> This interface is not intended to be implemented by client code! It defines a set of
+ * available properties and may be extended even in minor releases.
  * </p>
  *
  * @since 2.0
  * @param <T> the type of the result of all set methods for method chaining
  */
-public interface PropertiesBuilderProperties<T>
-{
+public interface PropertiesBuilderProperties<T> {
     /**
      * Sets the current include listener, may be null.
      *
@@ -47,15 +45,13 @@ public interface PropertiesBuilderProperties<T>
      * @return a reference to this object for method chaining
      * @since 2.6
      */
-    default T setIncludeListener(final ConfigurationConsumer<ConfigurationException> includeListener)
-    {
+    default T setIncludeListener(final ConfigurationConsumer<ConfigurationException> includeListener) {
         return (T) this;
     }
 
     /**
-     * Sets a flag whether include files are supported by the properties
-     * configuration object. If set to <b>true</b>, files listed by an include
-     * property are loaded automatically.
+     * Sets a flag whether include files are supported by the properties configuration object. If set to <b>true</b>, files
+     * listed by an include property are loaded automatically.
      *
      * @param f the value of the flag
      * @return a reference to this object for method chaining
@@ -63,22 +59,18 @@ public interface PropertiesBuilderProperties<T>
     T setIncludesAllowed(boolean f);
 
     /**
-     * Sets the layout object for the properties configuration object. With this
-     * method a custom layout object can be set. If no layout is provided, the
-     * configuration will use a default layout.
+     * Sets the layout object for the properties configuration object. With this method a custom layout object can be set.
+     * If no layout is provided, the configuration will use a default layout.
      *
-     * @param layout the {@code PropertiesConfigurationLayout} object to be used
-     *        by the configuration
+     * @param layout the {@code PropertiesConfigurationLayout} object to be used by the configuration
      * @return a reference to this object for method chaining
      */
     T setLayout(PropertiesConfigurationLayout layout);
 
     /**
-     * Sets the {@code IOFactory} to be used by the properties configuration
-     * object. With this method a custom factory for input and output streams
-     * can be set. This allows customizing the format of properties read or
-     * written by the configuration. If no {@code IOFactory} is provided, the
-     * configuration uses a default one.
+     * Sets the {@code IOFactory} to be used by the properties configuration object. With this method a custom factory for
+     * input and output streams can be set. This allows customizing the format of properties read or written by the
+     * configuration. If no {@code IOFactory} is provided, the configuration uses a default one.
      *
      * @param factory the {@code IOFactory} to be used by the configuration
      * @return a reference to this object for method chaining

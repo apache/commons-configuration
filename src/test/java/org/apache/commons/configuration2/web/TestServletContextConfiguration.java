@@ -37,11 +37,9 @@ import com.mockobjects.servlet.MockServletContext;
  * Test case for the {@link ServletContextConfiguration} class.
  *
  */
-public class TestServletContextConfiguration extends TestAbstractConfiguration
-{
+public class TestServletContextConfiguration extends TestAbstractConfiguration {
     @Override
-    protected AbstractConfiguration getConfiguration()
-    {
+    protected AbstractConfiguration getConfiguration() {
         final Properties parameters = new Properties();
         parameters.setProperty("key1", "value1");
         parameters.setProperty("key2", "value2");
@@ -49,17 +47,14 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration
         parameters.setProperty("listesc", "value1\\,value2");
 
         // create a servlet context
-        final ServletContext context = new MockServletContext()
-        {
+        final ServletContext context = new MockServletContext() {
             @Override
-            public String getInitParameter(final String key)
-            {
+            public String getInitParameter(final String key) {
                 return parameters.getProperty(key);
             }
 
             @Override
-            public Enumeration<?> getInitParameterNames()
-            {
+            public Enumeration<?> getInitParameterNames() {
                 return parameters.keys();
             }
         };
@@ -69,16 +64,14 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration
         config.setServletContext(context);
 
         // create a servlet
-        final Servlet servlet = new HttpServlet()
-        {
+        final Servlet servlet = new HttpServlet() {
             /**
              * Serial version UID.
              */
             private static final long serialVersionUID = 1L;
 
             @Override
-            public ServletConfig getServletConfig()
-            {
+            public ServletConfig getServletConfig() {
                 return config;
             }
         };
@@ -89,14 +82,11 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration
     }
 
     @Override
-    protected AbstractConfiguration getEmptyConfiguration()
-    {
+    protected AbstractConfiguration getEmptyConfiguration() {
         // create a servlet context
-        final ServletContext context = new MockServletContext()
-        {
+        final ServletContext context = new MockServletContext() {
             @Override
-            public Enumeration<?> getInitParameterNames()
-            {
+            public Enumeration<?> getInitParameterNames() {
                 return new Properties().keys();
             }
         };
@@ -106,15 +96,13 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration
 
     @Override
     @Test(expected = UnsupportedOperationException.class)
-    public void testAddPropertyDirect()
-    {
+    public void testAddPropertyDirect() {
         super.testAddPropertyDirect();
     }
 
     @Override
     @Test(expected = UnsupportedOperationException.class)
-    public void testClearProperty()
-    {
+    public void testClearProperty() {
         super.testClearProperty();
     }
 }

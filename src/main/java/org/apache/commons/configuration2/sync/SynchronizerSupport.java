@@ -18,54 +18,44 @@ package org.apache.commons.configuration2.sync;
 
 /**
  * <p>
- * Definition of an interface for objects that can be associated with a
- * {@link Synchronizer}.
+ * Definition of an interface for objects that can be associated with a {@link Synchronizer}.
  * </p>
  * <p>
- * This interface defines methods for querying and setting the
- * {@code Synchronizer}. In addition, it is possible to lock the object for a
- * certain operation. This is useful if some complex operations are to be
- * performed on the {@code SynchronizerSupport} object in an atomic way.
+ * This interface defines methods for querying and setting the {@code Synchronizer}. In addition, it is possible to lock
+ * the object for a certain operation. This is useful if some complex operations are to be performed on the
+ * {@code SynchronizerSupport} object in an atomic way.
  * </p>
  * <p>
- * Note that the actual effect of these methods depends on the concrete
- * {@code Synchronizer} implementation in use! If only a dummy
- * {@code Synchronizer} is involved (which is appropriate if objects are only
- * accessed by a single thread), locking an object does not really prohibit
- * concurrent access.
+ * Note that the actual effect of these methods depends on the concrete {@code Synchronizer} implementation in use! If
+ * only a dummy {@code Synchronizer} is involved (which is appropriate if objects are only accessed by a single thread),
+ * locking an object does not really prohibit concurrent access.
  * </p>
  *
  * @since 2.0
  */
-public interface SynchronizerSupport
-{
+public interface SynchronizerSupport {
     /**
-     * Returns the {@code Synchronizer} used by this object. An implementation
-     * must not return <b>null</b>. If no {@code Synchronizer} has been set so
-     * far, a meaningful default {@code Synchronizer} has to be returned.
+     * Returns the {@code Synchronizer} used by this object. An implementation must not return <b>null</b>. If no
+     * {@code Synchronizer} has been set so far, a meaningful default {@code Synchronizer} has to be returned.
      *
      * @return the {@code Synchronizer} used by this object
      */
     Synchronizer getSynchronizer();
 
     /**
-     * Sets the {@code Synchronizer} to be used by this object. Calling this
-     * method and setting an appropriate {@code Synchronizer} determines whether
-     * this object can be accessed in a thread-safe way or not. The argument may
-     * be <b>null</b>; in this case an implementation should switch to a default
-     * {@code Synchronizer}.
+     * Sets the {@code Synchronizer} to be used by this object. Calling this method and setting an appropriate
+     * {@code Synchronizer} determines whether this object can be accessed in a thread-safe way or not. The argument may be
+     * <b>null</b>; in this case an implementation should switch to a default {@code Synchronizer}.
      *
      * @param sync the {@code Synchronizer} for this object
      */
     void setSynchronizer(Synchronizer sync);
 
     /**
-     * Locks this object for the specified mode. This call may block until this
-     * object is released from other lock operations. When it returns the caller
-     * can access the object in a way compatible to the specified
-     * {@code LockMode}. When done the {@code unlock()} must be called with the
-     * same {@code LockMode} argument. In practice, a <b>try</b>-<b>finally</b>
-     * construct should be used as in the following example:
+     * Locks this object for the specified mode. This call may block until this object is released from other lock
+     * operations. When it returns the caller can access the object in a way compatible to the specified {@code LockMode}.
+     * When done the {@code unlock()} must be called with the same {@code LockMode} argument. In practice, a
+     * <b>try</b>-<b>finally</b> construct should be used as in the following example:
      *
      * <pre>
      * SynchronizerSupport syncSupport = ...;
@@ -80,21 +70,18 @@ public interface SynchronizerSupport
      * }
      * </pre>
      *
-     * <em>Note:</em> Always use this method for obtaining a lock rather than
-     * accessing the object's {@link Synchronizer} directly. An implementation
-     * may perform additional actions which are not executed when only
-     * interacting with the {@code Synchronizer}.
+     * <em>Note:</em> Always use this method for obtaining a lock rather than accessing the object's {@link Synchronizer}
+     * directly. An implementation may perform additional actions which are not executed when only interacting with the
+     * {@code Synchronizer}.
      *
      * @param mode the {@code LockMode}
      */
     void lock(LockMode mode);
 
     /**
-     * Releases a lock of this object that was obtained using the
-     * {@link #lock(LockMode)} method. This method must always be called
-     * pair-wise with {@code lock()}. The argument must match to the one passed
-     * to the corresponding {@code lock()} call; otherwise, the behavior of the
-     * {@link Synchronizer} is unspecified.
+     * Releases a lock of this object that was obtained using the {@link #lock(LockMode)} method. This method must always be
+     * called pair-wise with {@code lock()}. The argument must match to the one passed to the corresponding {@code lock()}
+     * call; otherwise, the behavior of the {@link Synchronizer} is unspecified.
      *
      * @param mode the {@code LockMode}
      */

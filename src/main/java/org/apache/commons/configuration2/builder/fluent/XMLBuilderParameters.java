@@ -24,21 +24,15 @@ import org.apache.commons.configuration2.builder.XMLBuilderProperties;
 
 /**
  * <p>
- * Definition of a parameters interface providing a fluent API for setting all
- * properties for a XML configuration.
+ * Definition of a parameters interface providing a fluent API for setting all properties for a XML configuration.
  * </p>
  * <p>
- * <strong>Important note:</strong> This interface is not intended to be
- * implemented by client code! It defines a set of available properties and may
- * be extended even in minor releases.
+ * <strong>Important note:</strong> This interface is not intended to be implemented by client code! It defines a set of
+ * available properties and may be extended even in minor releases.
  * </p>
  *
  * @since 2.0
  */
-public interface XMLBuilderParameters extends
-        BasicBuilderProperties<XMLBuilderParameters>,
-        FileBasedBuilderProperties<XMLBuilderParameters>,
-        HierarchicalBuilderProperties<XMLBuilderParameters>,
-        XMLBuilderProperties<XMLBuilderParameters>, BuilderParameters
-{
+public interface XMLBuilderParameters extends BasicBuilderProperties<XMLBuilderParameters>, FileBasedBuilderProperties<XMLBuilderParameters>,
+    HierarchicalBuilderProperties<XMLBuilderParameters>, XMLBuilderProperties<XMLBuilderParameters>, BuilderParameters {
 }

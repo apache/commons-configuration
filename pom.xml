@@ -632,7 +632,6 @@
             <propertyExpansion>basedir=${basedir}</propertyExpansion>
             <includeResources>false</includeResources>
             <includeTestResources>false</includeTestResources>
-            <failOnViolation>false</failOnViolation>
             <sourceDirectories>
               <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
             </sourceDirectories>

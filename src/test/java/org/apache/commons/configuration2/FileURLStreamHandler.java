@@ -28,33 +28,28 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 
 /**
- * A custom URLStreamHandler to test loading and saving configurations to non
- * standard URLs. This handler acts like a file handler with write support.
+ * A custom URLStreamHandler to test loading and saving configurations to non standard URLs. This handler acts like a
+ * file handler with write support.
  *
  */
-public class FileURLStreamHandler extends URLStreamHandler
-{
+public class FileURLStreamHandler extends URLStreamHandler {
     @Override
-    protected URLConnection openConnection(final URL u) throws IOException
-    {
+    protected URLConnection openConnection(final URL u) throws IOException {
         final File file = new File(u.getFile());
 
         return new URLConnection(u) {
 
             @Override
-            public void connect() throws IOException
-            {
+            public void connect() throws IOException {
             }
 
             @Override
-            public InputStream getInputStream() throws IOException
-            {
+            public InputStream getInputStream() throws IOException {
                 return new FileInputStream(file);
             }
 
             @Override
-            public OutputStream getOutputStream() throws IOException
-            {
+            public OutputStream getOutputStream() throws IOException {
                 return new FileOutputStream(file);
             }
         };

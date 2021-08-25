@@ -24,21 +24,15 @@ import org.apache.commons.configuration2.builder.INIBuilderProperties;
 
 /**
  * <p>
- * Definition of a parameters interface providing a fluent API for setting all
- * properties for a INI configuration.
+ * Definition of a parameters interface providing a fluent API for setting all properties for a INI configuration.
  * </p>
  * <p>
- * <strong>Important note:</strong> This interface is not intended to be
- * implemented by client code! It defines a set of available properties and may
- * be extended even in minor releases.
+ * <strong>Important note:</strong> This interface is not intended to be implemented by client code! It defines a set of
+ * available properties and may be extended even in minor releases.
  * </p>
  *
  * @since 2.2
  */
-public interface INIBuilderParameters extends
-        BasicBuilderProperties<INIBuilderParameters>,
-        FileBasedBuilderProperties<INIBuilderParameters>,
-        HierarchicalBuilderProperties<INIBuilderParameters>,
-        INIBuilderProperties<INIBuilderParameters>, BuilderParameters
-{
+public interface INIBuilderParameters extends BasicBuilderProperties<INIBuilderParameters>, FileBasedBuilderProperties<INIBuilderParameters>,
+    HierarchicalBuilderProperties<INIBuilderParameters>, INIBuilderProperties<INIBuilderParameters>, BuilderParameters {
 }

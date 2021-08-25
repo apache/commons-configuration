@@ -26,44 +26,34 @@ import org.apache.commons.lang3.StringUtils;
  * A class describing the location of a file.
  * </p>
  * <p>
- * An instance of this class provides information for locating and accessing a
- * file. The file location can be defined
+ * An instance of this class provides information for locating and accessing a file. The file location can be defined
  * </p>
  * <ul>
  * <li>as a URL; this identifies a file in a unique way</li>
- * <li>as a combination of base path and file name; if this variant is used,
- * there may be an additional location step required in order to identify the
- * referenced file (for instance, the file name may be interpreted as the name
- * of a resource to be loaded from class path).</li>
+ * <li>as a combination of base path and file name; if this variant is used, there may be an additional location step
+ * required in order to identify the referenced file (for instance, the file name may be interpreted as the name of a
+ * resource to be loaded from class path).</li>
  * </ul>
  * <p>
- * In addition, other properties are available which are also needed for loading
- * or saving a file, like the underlying {@link FileSystem}. The encoding to be
- * used when accessing the represented data is also part of the data contained
- * in an instance; if no encoding is set explicitly, the platform's default
- * encoding is used.
+ * In addition, other properties are available which are also needed for loading or saving a file, like the underlying
+ * {@link FileSystem}. The encoding to be used when accessing the represented data is also part of the data contained in
+ * an instance; if no encoding is set explicitly, the platform's default encoding is used.
  * <p>
- * Instances of this class are immutable and thus can be safely shared between
- * arbitrary components. {@link FileHandler} also uses an instance to reference
- * the associated file. Instances are created using a <em>builder</em>.
- * {@link FileLocatorUtils} offers convenience methods for obtaining such a
- * builder.
+ * Instances of this class are immutable and thus can be safely shared between arbitrary components. {@link FileHandler}
+ * also uses an instance to reference the associated file. Instances are created using a <em>builder</em>.
+ * {@link FileLocatorUtils} offers convenience methods for obtaining such a builder.
  * </p>
  *
  * @since 2.0
  */
-public final class FileLocator
-{
+public final class FileLocator {
     /**
-     * A typical <em>builder</em> implementation for creating
-     * {@code FileLocator} objects. An instance of this class is returned by the
-     * {@code fileLocator()} method of {link FileLocatorUtils}. It can be used
-     * to define the various components of the {@code FileLocator} object. By
-     * calling {@code create()} the new immutable {@code FileLocator} instance
-     * is created.
+     * A typical <em>builder</em> implementation for creating {@code FileLocator} objects. An instance of this class is
+     * returned by the {@code fileLocator()} method of {link FileLocatorUtils}. It can be used to define the various
+     * components of the {@code FileLocator} object. By calling {@code create()} the new immutable {@code FileLocator}
+     * instance is created.
      */
-    public static final class FileLocatorBuilder
-    {
+    public static final class FileLocatorBuilder {
         /** The base path. */
         private String basePath;
 
@@ -86,16 +76,13 @@ public final class FileLocator
         private URLConnectionOptions urlConnectionOptions;
 
         /**
-         * Creates a new instance of {@code FileLocatorBuilder} and initializes
-         * the builder's properties from the passed in {@code FileLocator}
-         * object.
+         * Creates a new instance of {@code FileLocatorBuilder} and initializes the builder's properties from the passed in
+         * {@code FileLocator} object.
          *
          * @param src the source {@code FileLocator} (may be <b>null</b>)
          */
-        FileLocatorBuilder(final FileLocator src)
-        {
-            if (src != null)
-            {
+        FileLocatorBuilder(final FileLocator src) {
+            if (src != null) {
                 initBuilder(src);
             }
         }
@@ -106,20 +93,17 @@ public final class FileLocator
          * @param path the base path
          * @return a reference to this builder for method chaining
          */
-        public FileLocatorBuilder basePath(final String path)
-        {
+        public FileLocatorBuilder basePath(final String path) {
             basePath = path;
             return this;
         }
 
         /**
-         * Creates a new immutable {@code FileLocatorImpl} object based on the
-         * properties set so far for this builder.
+         * Creates a new immutable {@code FileLocatorImpl} object based on the properties set so far for this builder.
          *
          * @return the newly created {@code FileLocator} object
          */
-        public FileLocator create()
-        {
+        public FileLocator create() {
             return new FileLocator(this);
         }
 
@@ -129,8 +113,7 @@ public final class FileLocator
          * @param enc the encoding
          * @return a reference to this builder for method chaining
          */
-        public FileLocatorBuilder encoding(final String enc)
-        {
+        public FileLocatorBuilder encoding(final String enc) {
             encoding = enc;
             return this;
         }
@@ -141,8 +124,7 @@ public final class FileLocator
          * @param name the file name
          * @return a reference to this builder for method chaining
          */
-        public FileLocatorBuilder fileName(final String name)
-        {
+        public FileLocatorBuilder fileName(final String name) {
             fileName = name;
             return this;
         }
@@ -153,20 +135,17 @@ public final class FileLocator
          * @param fs the {@code FileSystem}
          * @return a reference to this builder for method chaining
          */
-        public FileLocatorBuilder fileSystem(final FileSystem fs)
-        {
+        public FileLocatorBuilder fileSystem(final FileSystem fs) {
             fileSystem = fs;
             return this;
         }
 
         /**
-         * Initializes the properties of this builder from the passed in locator
-         * object.
+         * Initializes the properties of this builder from the passed in locator object.
          *
          * @param src the source {@code FileLocator}
          */
-        private void initBuilder(final FileLocator src)
-        {
+        private void initBuilder(final FileLocator src) {
             basePath = src.getBasePath();
             fileName = src.getFileName();
             sourceURL = src.getSourceURL();
@@ -177,14 +156,12 @@ public final class FileLocator
         }
 
         /**
-         * Specifies the {@code FileLocationStrategy} to be used when the
-         * referenced file is to be located.
+         * Specifies the {@code FileLocationStrategy} to be used when the referenced file is to be located.
          *
          * @param strategy the {@code FileLocationStrategy}
          * @return a reference to this builder for method chaining
          */
-        public FileLocatorBuilder locationStrategy(final FileLocationStrategy strategy)
-        {
+        public FileLocatorBuilder locationStrategy(final FileLocationStrategy strategy) {
             locationStrategy = strategy;
             return this;
         }
@@ -195,8 +172,7 @@ public final class FileLocator
          * @param url the source URL
          * @return a reference to this builder for method chaining
          */
-        public FileLocatorBuilder sourceURL(final URL url)
-        {
+        public FileLocatorBuilder sourceURL(final URL url) {
             this.sourceURL = url;
             return this;
         }
@@ -236,13 +212,11 @@ public final class FileLocator
     private final URLConnectionOptions urlConnectionOptions;
 
     /**
-     * Creates a new instance of {@code FileLocatorImpl} and initializes it from
-     * the given builder instance
+     * Creates a new instance of {@code FileLocatorImpl} and initializes it from the given builder instance
      *
      * @param builder the builder
      */
-    public FileLocator(final FileLocatorBuilder builder)
-    {
+    public FileLocator(final FileLocatorBuilder builder) {
         fileName = builder.fileName;
         basePath = builder.basePath;
         sourceURL = builder.sourceURL;
@@ -253,9 +227,8 @@ public final class FileLocator
     }
 
     /**
-     * Compares this object with another one. Two instances of
-     * {@code FileLocatorImpl} are considered equal if all of their properties
-     * are equal.
+     * Compares this object with another one. Two instances of {@code FileLocatorImpl} are considered equal if all of their
+     * properties are equal.
      *
      * @param obj the object to compare to
      * @return a flag whether these objects are equal
@@ -269,77 +242,65 @@ public final class FileLocator
             return false;
         }
         final FileLocator other = (FileLocator) obj;
-        return Objects.equals(basePath, other.basePath) && Objects.equals(encoding, other.encoding)
-            && Objects.equals(fileName, other.fileName) && Objects.equals(fileSystem, other.fileSystem)
-            && Objects.equals(locationStrategy, other.locationStrategy) && Objects.equals(sourceURL, other.sourceURL)
-            && Objects.equals(urlConnectionOptions, other.urlConnectionOptions);
+        return Objects.equals(basePath, other.basePath) && Objects.equals(encoding, other.encoding) && Objects.equals(fileName, other.fileName)
+            && Objects.equals(fileSystem, other.fileSystem) && Objects.equals(locationStrategy, other.locationStrategy)
+            && Objects.equals(sourceURL, other.sourceURL) && Objects.equals(urlConnectionOptions, other.urlConnectionOptions);
     }
 
     /**
-     * Returns the base path stored in this locator or <b>null</b> if it is
-     * undefined.
+     * Returns the base path stored in this locator or <b>null</b> if it is undefined.
      *
      * @return the base path
      */
-    public String getBasePath()
-    {
+    public String getBasePath() {
         return basePath;
     }
 
     /**
-     * Returns the encoding stored in this locator or <b>null</b> if it is
-     * undefined.
+     * Returns the encoding stored in this locator or <b>null</b> if it is undefined.
      *
      * @return the encoding
      */
-    public String getEncoding()
-    {
+    public String getEncoding() {
         return encoding;
     }
 
     /**
-     * Returns the file name stored in this locator or <b>null</b> if it is
-     * undefined.
+     * Returns the file name stored in this locator or <b>null</b> if it is undefined.
      *
      * @return the file name
      */
-    public String getFileName()
-    {
+    public String getFileName() {
         return fileName;
     }
 
     /**
-     * Returns the {@code FileSystem} to be used for accessing the file
-     * referenced by this locator or <b>null</b> if it is undefined.
+     * Returns the {@code FileSystem} to be used for accessing the file referenced by this locator or <b>null</b> if it is
+     * undefined.
      *
      * @return the {@code FileSystem}
      */
-    public FileSystem getFileSystem()
-    {
+    public FileSystem getFileSystem() {
         return fileSystem;
     }
 
     /**
-     * Returns the {@code FileLocationStrategy} to be used for locating the
-     * referenced file. If no specific {@code FileLocationStrategy} has been
-     * set, result is <b>null</b>. This means that the default strategy should
-     * be used.
+     * Returns the {@code FileLocationStrategy} to be used for locating the referenced file. If no specific
+     * {@code FileLocationStrategy} has been set, result is <b>null</b>. This means that the default strategy should be
+     * used.
      *
      * @return the {@code FileLocationStrategy} to be used
      */
-    public FileLocationStrategy getLocationStrategy()
-    {
+    public FileLocationStrategy getLocationStrategy() {
         return locationStrategy;
     }
 
     /**
-     * Returns the URL pointing to the referenced source file or <b>null</b> if
-     * it is undefined.
+     * Returns the URL pointing to the referenced source file or <b>null</b> if it is undefined.
      *
      * @return the source URL
      */
-    public URL getSourceURL()
-    {
+    public URL getSourceURL() {
         return sourceURL;
     }
 
@@ -348,8 +309,7 @@ public final class FileLocator
      *
      * @return the URLConnectionOptions
      */
-    public URLConnectionOptions getURLConnectionOptions()
-    {
+    public URLConnectionOptions getURLConnectionOptions() {
         return urlConnectionOptions;
     }
 
@@ -360,26 +320,22 @@ public final class FileLocator
      */
     @Override
     public int hashCode() {
-        return Objects.hash(basePath, encoding, fileName, fileSystem, locationStrategy, sourceURL,
-            urlConnectionOptions);
+        return Objects.hash(basePath, encoding, fileName, fileSystem, locationStrategy, sourceURL, urlConnectionOptions);
     }
 
     /**
-     * Returns the source URL as a string. Result is never null. Comparisons are
-     * done on this string to avoid blocking network calls.
+     * Returns the source URL as a string. Result is never null. Comparisons are done on this string to avoid blocking
+     * network calls.
      *
      * @return the source URL as a string (not null)
      */
-    private String sourceURLAsString()
-    {
-        return sourceURL != null ? sourceURL.toExternalForm()
-                : StringUtils.EMPTY;
+    private String sourceURLAsString() {
+        return sourceURL != null ? sourceURL.toExternalForm() : StringUtils.EMPTY;
     }
 
     @Override
     public String toString() {
-        return "FileLocator [basePath=" + basePath + ", encoding=" + encoding + ", fileName=" + fileName
-            + ", fileSystem=" + fileSystem + ", locationStrategy=" + locationStrategy + ", sourceURL=" + sourceURL
-            + ", urlConnectionOptions=" + urlConnectionOptions + "]";
+        return "FileLocator [basePath=" + basePath + ", encoding=" + encoding + ", fileName=" + fileName + ", fileSystem=" + fileSystem + ", locationStrategy="
+            + locationStrategy + ", sourceURL=" + sourceURL + ", urlConnectionOptions=" + urlConnectionOptions + "]";
     }
 }

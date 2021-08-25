@@ -17,8 +17,8 @@
 
 /**
  * <p>
- * This package contains the {@code XPathExpressionEngine} class which
- * enables XPATH support for querying configuration properties.
+ * This package contains the {@code XPathExpressionEngine} class which enables XPATH support for querying configuration
+ * properties.
  * </p>
  *
  */

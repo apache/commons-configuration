@@ -17,18 +17,16 @@
 package org.apache.commons.configuration2.reloading;
 
 /**
- * A reloading detector implementation which always indicates that a reload is
- * required. This is used by some test classes.
+ * A reloading detector implementation which always indicates that a reload is required. This is used by some test
+ * classes.
  *
  */
-public class AlwaysReloadingDetector implements ReloadingDetector
-{
+public class AlwaysReloadingDetector implements ReloadingDetector {
     /**
      * {@inheritDoc} This implementation always returns <b>true</b>.
      */
     @Override
-    public boolean isReloadingRequired()
-    {
+    public boolean isReloadingRequired() {
         return true;
     }
 
@@ -36,7 +34,6 @@ public class AlwaysReloadingDetector implements ReloadingDetector
      * Empty dummy implementation of this interface method.
      */
     @Override
-    public void reloadingPerformed()
-    {
+    public void reloadingPerformed() {
     }
 }

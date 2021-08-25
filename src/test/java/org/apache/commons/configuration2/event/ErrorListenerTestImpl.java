@@ -22,18 +22,13 @@ import static org.junit.Assert.assertEquals;
  * A test event listener implementation for error events.
  *
  */
-public class ErrorListenerTestImpl extends
-        AbstractEventListenerTestImpl<ConfigurationErrorEvent>
-{
+public class ErrorListenerTestImpl extends AbstractEventListenerTestImpl<ConfigurationErrorEvent> {
     /**
-     * Creates a new instance of {@code ErrorListenerTestImpl} and sets the
-     * expected event source.
+     * Creates a new instance of {@code ErrorListenerTestImpl} and sets the expected event source.
      *
-     * @param source the event source (<b>null</b> if the source need not to be
-     *        checked)
+     * @param source the event source (<b>null</b> if the source need not to be checked)
      */
-    public ErrorListenerTestImpl(final Object source)
-    {
+    public ErrorListenerTestImpl(final Object source) {
         super(source);
     }
 
@@ -46,12 +41,9 @@ public class ErrorListenerTestImpl extends
      * @param propValue the expected property value
      * @return the exception stored in the next error event
      */
-    public Throwable checkEvent(final EventType<?> type, final EventType<?> opType,
-            final String propName, final Object propValue)
-    {
+    public Throwable checkEvent(final EventType<?> type, final EventType<?> opType, final String propName, final Object propValue) {
         final ConfigurationErrorEvent e = nextEvent(type);
-        assertEquals("Wrong operation event type", opType,
-                e.getErrorOperationType());
+        assertEquals("Wrong operation event type", opType, e.getErrorOperationType());
         assertEquals("Wrong property name", propName, e.getPropertyName());
         assertEquals("Wrong property value", propValue, e.getPropertyValue());
         return e.getCause();

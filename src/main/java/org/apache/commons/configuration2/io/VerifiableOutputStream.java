@@ -21,9 +21,9 @@ import java.io.OutputStream;
 
 /**
  * OutputStream that can be checked for errors after it is written to.
+ *
  * @since 1.7
  */
-public abstract class VerifiableOutputStream extends OutputStream
-{
+public abstract class VerifiableOutputStream extends OutputStream {
     public abstract void verify() throws IOException;
 }

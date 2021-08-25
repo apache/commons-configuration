@@ -34,9 +34,8 @@ import org.junit.Test;
  * Test class for {@code ConfigurationNodeIteratorAttributes}.
  *
  */
-public class TestConfigurationIteratorAttributes extends AbstractXPathTest
-{
-    /** Constant for the name of another test attribute.*/
+public class TestConfigurationIteratorAttributes extends AbstractXPathTest {
+    /** Constant for the name of another test attribute. */
     private static final String TEST_ATTR = "test";
 
     /** Constant for a namespace prefix. */
@@ -45,39 +44,30 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
     /** Constant for an attribute with a namespace prefix. */
     private static final String NS_ATTR = NAMESPACE + ":attr";
 
-    /** Stores the node pointer of the test node.*/
+    /** Stores the node pointer of the test node. */
     private ConfigurationNodePointer<ImmutableNode> pointer;
 
     @Override
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         super.setUp();
 
         // Adds further attributes to the test node
         final ImmutableNode orgNode = root.getChildren().get(1);
-        final ImmutableNode testNode =
-                orgNode.setAttribute(TEST_ATTR, "yes").setAttribute(NS_ATTR,
-                        "configuration");
-        pointer =
-                new ConfigurationNodePointer<>(testNode,
-                        Locale.getDefault(), handler);
+        final ImmutableNode testNode = orgNode.setAttribute(TEST_ATTR, "yes").setAttribute(NS_ATTR, "configuration");
+        pointer = new ConfigurationNodePointer<>(testNode, Locale.getDefault(), handler);
     }
 
     /**
      * Tests to iterate over all attributes.
      */
     @Test
-    public void testIterateAllAttributes()
-    {
-        final ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<>(pointer,
-                        new QName(null, "*"));
+    public void testIterateAllAttributes() {
+        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(null, "*"));
         assertEquals("Wrong number of attributes", 3, iteratorSize(it));
         final List<NodePointer> attrs = iterationElements(it);
         final Set<String> attrNames = new HashSet<>();
-        for (final NodePointer np : attrs)
-        {
+        for (final NodePointer np : attrs) {
             attrNames.add(np.getName().getName());
         }
         assertTrue("First attribute not found", attrNames.contains(ATTR_NAME));
@@ -89,25 +79,18 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
      * Tests to iterate over attributes with a specific name.
      */
     @Test
-    public void testIterateSpecificAttribute()
-    {
-        final ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<>(pointer,
-                        new QName(null, TEST_ATTR));
+    public void testIterateSpecificAttribute() {
+        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(null, TEST_ATTR));
         assertEquals("Wrong number of attributes", 1, iteratorSize(it));
-        assertEquals("Wrong attribute", TEST_ATTR, iterationElements(it).get(0)
-                .getName().getName());
+        assertEquals("Wrong attribute", TEST_ATTR, iterationElements(it).get(0).getName().getName());
     }
 
     /**
      * Tests to iterate over non existing attributes.
      */
     @Test
-    public void testIterateUnknownAttribute()
-    {
-        final ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<>(pointer,
-                        new QName(null, "unknown"));
+    public void testIterateUnknownAttribute() {
+        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(null, "unknown"));
         assertEquals("Found attributes", 0, iteratorSize(it));
     }
 
@@ -115,11 +98,8 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
      * Tests iteration if an unknown namespace is specified.
      */
     @Test
-    public void testIterateNamespaceUnknown()
-    {
-        final ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<>(pointer,
-                        new QName("test", "*"));
+    public void testIterateNamespaceUnknown() {
+        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName("test", "*"));
         assertEquals("Found attributes", 0, iteratorSize(it));
     }
 
@@ -127,27 +107,19 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
      * Tests whether a specific attribute with a namespace can be selected.
      */
     @Test
-    public void testIterateNamespaceAttribute()
-    {
-        final ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<>(pointer,
-                        new QName(NAMESPACE, "attr"));
+    public void testIterateNamespaceAttribute() {
+        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(NAMESPACE, "attr"));
         assertEquals("Wrong number of attributes", 1, iteratorSize(it));
-        assertEquals("Wrong attribute", NS_ATTR, iterationElements(it).get(0)
-                .getName().getName());
+        assertEquals("Wrong attribute", NS_ATTR, iterationElements(it).get(0).getName().getName());
     }
 
     /**
      * Tests whether a wildcard can be used together with a namespace.
      */
     @Test
-    public void testIterateNamespaceWildcard()
-    {
-        final ConfigurationNodeIteratorAttribute<ImmutableNode> it =
-                new ConfigurationNodeIteratorAttribute<>(pointer,
-                        new QName(NAMESPACE, "*"));
+    public void testIterateNamespaceWildcard() {
+        final ConfigurationNodeIteratorAttribute<ImmutableNode> it = new ConfigurationNodeIteratorAttribute<>(pointer, new QName(NAMESPACE, "*"));
         assertEquals("Wrong number of attributes", 1, iteratorSize(it));
-        assertEquals("Wrong attribute", NS_ATTR, iterationElements(it).get(0)
-                .getName().getName());
+        assertEquals("Wrong attribute", NS_ATTR, iterationElements(it).get(0).getName().getName());
     }
 }

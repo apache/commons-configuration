@@ -30,14 +30,12 @@ import org.junit.Test;
  * Test class for {@code ProvidedURLLocationStrategy}.
  *
  */
-public class TestProvidedURLLocationStrategy
-{
+public class TestProvidedURLLocationStrategy {
     /** The strategy to be tested. */
     private ProvidedURLLocationStrategy strategy;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         strategy = new ProvidedURLLocationStrategy();
     }
 
@@ -45,13 +43,11 @@ public class TestProvidedURLLocationStrategy
      * Tests a successful locate() operation.
      */
     @Test
-    public void testLocateSuccess()
-    {
+    public void testLocateSuccess() {
         final FileSystem fs = EasyMock.createMock(FileSystem.class);
         EasyMock.replay(fs);
         final URL url = ConfigurationAssert.getTestURL("test.xml");
-        final FileLocator locator =
-                FileLocatorUtils.fileLocator().sourceURL(url).create();
+        final FileLocator locator = FileLocatorUtils.fileLocator().sourceURL(url).create();
         assertSame("Wrong URL", url, strategy.locate(fs, locator));
     }
 
@@ -59,13 +55,10 @@ public class TestProvidedURLLocationStrategy
      * Tests a failed locate() operation.
      */
     @Test
-    public void testLocateFail()
-    {
+    public void testLocateFail() {
         final FileSystem fs = EasyMock.createMock(FileSystem.class);
         EasyMock.replay(fs);
-        final FileLocator locator =
-                FileLocatorUtils.fileLocator().basePath("somePath")
-                        .fileName("someFile.xml").create();
+        final FileLocator locator = FileLocatorUtils.fileLocator().basePath("somePath").fileName("someFile.xml").create();
         assertNull("Got a URL", strategy.locate(fs, locator));
     }
 }

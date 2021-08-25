@@ -29,11 +29,11 @@ import org.xml.sax.SAXException;
 
 /**
  * The DefaultEntityResolver used by XML Configurations.
+ *
  * @since 1.7
  */
-public class DefaultEntityResolver implements EntityResolver, EntityRegistry
-{
-    /** Stores a map with the registered public IDs.*/
+public class DefaultEntityResolver implements EntityResolver, EntityRegistry {
+    /** Stores a map with the registered public IDs. */
     private final Map<String, URL> registeredEntities = new HashMap<>();
 
     /**
@@ -41,17 +41,13 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry
      * Registers the specified URL for the specified public identifier.
      * </p>
      * <p>
-     * This implementation maps {@code PUBLICID}'s to URLs (from which
-     * the resource will be loaded). A common use case for this method is to
-     * register local URLs (possibly computed at runtime by a class loader) for
-     * DTDs and Schemas. This allows the performance advantage of using a local
-     * version without having to ensure every {@code SYSTEM} URI on every
-     * processed XML document is local. This implementation provides only basic
-     * functionality. If more sophisticated features are required, either calling
-     * {@code XMLConfiguration.setDocumentBuilder(DocumentBuilder)} to set a custom
-     * {@code DocumentBuilder} (which also can be initialized with a
-     * custom {@code EntityResolver}) or creating a custom entity resolver
-     * and registering it with the XMLConfiguration is recommended.
+     * This implementation maps {@code PUBLICID}'s to URLs (from which the resource will be loaded). A common use case for
+     * this method is to register local URLs (possibly computed at runtime by a class loader) for DTDs and Schemas. This
+     * allows the performance advantage of using a local version without having to ensure every {@code SYSTEM} URI on every
+     * processed XML document is local. This implementation provides only basic functionality. If more sophisticated
+     * features are required, either calling {@code XMLConfiguration.setDocumentBuilder(DocumentBuilder)} to set a custom
+     * {@code DocumentBuilder} (which also can be initialized with a custom {@code EntityResolver}) or creating a custom
+     * entity resolver and registering it with the XMLConfiguration is recommended.
      * </p>
      *
      * @param publicId Public identifier of the Entity to be resolved
@@ -59,20 +55,16 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry
      * @throws IllegalArgumentException if the public ID is undefined
      */
     @Override
-    public void registerEntityId(final String publicId, final URL entityURL)
-    {
-        if (publicId == null)
-        {
+    public void registerEntityId(final String publicId, final URL entityURL) {
+        if (publicId == null) {
             throw new IllegalArgumentException("Public ID must not be null!");
         }
         getRegisteredEntities().put(publicId, entityURL);
     }
 
     /**
-     * Resolves the requested external entity. This is the default
-     * implementation of the {@code EntityResolver} interface. It checks
-     * the passed in public ID against the registered entity IDs and uses a
-     * local URL if possible.
+     * Resolves the requested external entity. This is the default implementation of the {@code EntityResolver} interface.
+     * It checks the passed in public ID against the registered entity IDs and uses a local URL if possible.
      *
      * @param publicId the public identifier of the entity being referenced
      * @param systemId the system identifier of the entity being referenced
@@ -81,31 +73,24 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry
      */
     @SuppressWarnings("resource") // The stream is managed by the InputSource returned by this method.
     @Override
-    public InputSource resolveEntity(final String publicId, final String systemId)
-            throws SAXException
-    {
+    public InputSource resolveEntity(final String publicId, final String systemId) throws SAXException {
         // Has this system identifier been registered?
         URL entityURL = null;
-        if (publicId != null)
-        {
+        if (publicId != null) {
             entityURL = getRegisteredEntities().get(publicId);
         }
 
-        if (entityURL != null)
-        {
+        if (entityURL != null) {
             // Obtain an InputSource for this URL. This code is based on the
             // createInputSourceFromURL() method of Commons Digester.
-            try
-            {
+            try {
                 final URLConnection connection = entityURL.openConnection();
                 connection.setUseCaches(false);
                 final InputStream stream = connection.getInputStream();
                 final InputSource source = new InputSource(stream);
                 source.setSystemId(entityURL.toExternalForm());
                 return source;
-            }
-            catch (final IOException e)
-            {
+            } catch (final IOException e) {
                 throw new SAXException(e);
             }
         }
@@ -114,14 +99,12 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry
     }
 
     /**
-     * Returns a map with the entity IDs that have been registered using the
-     * {@code registerEntityId()} method.
+     * Returns a map with the entity IDs that have been registered using the {@code registerEntityId()} method.
      *
      * @return a map with the registered entity IDs
      */
     @Override
-    public Map<String, URL> getRegisteredEntities()
-    {
+    public Map<String, URL> getRegisteredEntities() {
         return registeredEntities;
     }
 }

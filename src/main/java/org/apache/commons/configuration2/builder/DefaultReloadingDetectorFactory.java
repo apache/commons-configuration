@@ -26,26 +26,19 @@ import org.apache.commons.configuration2.reloading.ReloadingDetector;
  * A default implementation of the {@code ReloadingDetectorFactory} interface.
  * </p>
  * <p>
- * This factory creates objects of type {@link FileHandlerReloadingDetector}.
- * Instances have no state and can be shared between multiple builders.
+ * This factory creates objects of type {@link FileHandlerReloadingDetector}. Instances have no state and can be shared
+ * between multiple builders.
  * </p>
  *
  * @since 2.0
  */
-public class DefaultReloadingDetectorFactory implements
-        ReloadingDetectorFactory
-{
+public class DefaultReloadingDetectorFactory implements ReloadingDetectorFactory {
     @Override
-    public ReloadingDetector createReloadingDetector(final FileHandler handler,
-            final FileBasedBuilderParametersImpl params)
-            throws ConfigurationException
-    {
+    public ReloadingDetector createReloadingDetector(final FileHandler handler, final FileBasedBuilderParametersImpl params) throws ConfigurationException {
         final Long refreshDelay = params.getReloadingRefreshDelay();
 
-        final FileHandlerReloadingDetector fileHandlerReloadingDetector =
-                refreshDelay != null ? new FileHandlerReloadingDetector(
-                handler, refreshDelay) : new FileHandlerReloadingDetector(
-                handler);
+        final FileHandlerReloadingDetector fileHandlerReloadingDetector = refreshDelay != null ? new FileHandlerReloadingDetector(handler, refreshDelay)
+            : new FileHandlerReloadingDetector(handler);
 
         fileHandlerReloadingDetector.refresh();
 

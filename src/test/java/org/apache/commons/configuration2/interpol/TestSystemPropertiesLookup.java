@@ -28,14 +28,12 @@ import org.junit.Test;
  * Test class for {@code SystemPropertiesLookup}.
  *
  */
-public class TestSystemPropertiesLookup
-{
-    /** The lookup object to be tested.*/
+public class TestSystemPropertiesLookup {
+    /** The lookup object to be tested. */
     private Lookup lookup;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         lookup = DefaultLookups.SYSTEM_PROPERTIES.getLookup();
     }
 
@@ -43,10 +41,8 @@ public class TestSystemPropertiesLookup
      * Tests whether system properties can be looked up.
      */
     @Test
-    public void testLookupProperties()
-    {
-        for(final Map.Entry<Object, Object> e : System.getProperties().entrySet())
-        {
+    public void testLookupProperties() {
+        for (final Map.Entry<Object, Object> e : System.getProperties().entrySet()) {
             assertEquals("Wrong property value for " + e.getKey(), e.getValue(), lookup.lookup(String.valueOf(e.getKey())));
         }
     }
@@ -55,8 +51,7 @@ public class TestSystemPropertiesLookup
      * Tests whether an unknown property is handled correctly.
      */
     @Test
-    public void testLookupUnknownProperty()
-    {
+    public void testLookupUnknownProperty() {
         assertNull("Got a value", lookup.lookup("a non existing system property!"));
     }
 }

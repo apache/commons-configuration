@@ -32,11 +32,9 @@ import com.mockobjects.servlet.MockServletConfig;
  * Test case for the {@link ServletConfiguration} class.
  *
  */
-public class TestServletConfiguration extends TestAbstractConfiguration
-{
+public class TestServletConfiguration extends TestAbstractConfiguration {
     @Override
-    protected AbstractConfiguration getConfiguration()
-    {
+    protected AbstractConfiguration getConfiguration() {
         final MockServletConfig config = new MockServletConfig();
         config.setInitParameter("key1", "value1");
         config.setInitParameter("key2", "value2");
@@ -50,8 +48,7 @@ public class TestServletConfiguration extends TestAbstractConfiguration
             private static final long serialVersionUID = 1L;
 
             @Override
-            public ServletConfig getServletConfig()
-            {
+            public ServletConfig getServletConfig() {
                 return config;
             }
         };
@@ -62,22 +59,19 @@ public class TestServletConfiguration extends TestAbstractConfiguration
     }
 
     @Override
-    protected AbstractConfiguration getEmptyConfiguration()
-    {
+    protected AbstractConfiguration getEmptyConfiguration() {
         return new ServletConfiguration(new MockServletConfig());
     }
 
     @Override
     @Test(expected = UnsupportedOperationException.class)
-    public void testAddPropertyDirect()
-    {
+    public void testAddPropertyDirect() {
         super.testAddPropertyDirect();
     }
 
     @Override
     @Test(expected = UnsupportedOperationException.class)
-    public void testClearProperty()
-    {
-       super.testClearProperty();
+    public void testClearProperty() {
+        super.testClearProperty();
     }
 }

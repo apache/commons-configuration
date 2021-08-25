@@ -20,18 +20,15 @@
  * This package contains interfaces and classes related to data type conversions.
  * </p>
  * <p>
- * An {@code AbstractConfiguration} object is associated with an object
- * responsible for data type conversions. Each conversion is done by this object.
- * By replacing the default conversion handler by a custom version, client
+ * An {@code AbstractConfiguration} object is associated with an object responsible for data type conversions. Each
+ * conversion is done by this object. By replacing the default conversion handler by a custom version, client
  * applications can adapt and extend the type conversions available.
  * </p>
  * <p>
- * Related to data type conversion is also the topic of list delimiter parsing
- * and splitting; before a string value can be converted to a target data type,
- * it must be clear whether it is to be interpreted as a single value or as a
- * list containing multiple values. In this package there are classes implementing
- * different strategies for list delimiter handling. Client code can choose the
- * one which is most suitable for the current use case.
+ * Related to data type conversion is also the topic of list delimiter parsing and splitting; before a string value can
+ * be converted to a target data type, it must be clear whether it is to be interpreted as a single value or as a list
+ * containing multiple values. In this package there are classes implementing different strategies for list delimiter
+ * handling. Client code can choose the one which is most suitable for the current use case.
  * </p>
  *
  */

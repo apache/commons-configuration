@@ -29,84 +29,62 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * The {@code ConfigurationDynaClass} dynamically determines properties for
- * a {@code ConfigurationDynaBean} from a wrapped configuration-collection
- * {@link org.apache.commons.configuration2.Configuration} instance.
+ * The {@code ConfigurationDynaClass} dynamically determines properties for a {@code ConfigurationDynaBean} from a
+ * wrapped configuration-collection {@link org.apache.commons.configuration2.Configuration} instance.
  *
  * @since 1.0-rc1
  */
-public class ConfigurationDynaClass implements DynaClass
-{
-    /** The logger.*/
+public class ConfigurationDynaClass implements DynaClass {
+    /** The logger. */
     private static final Log LOG = LogFactory.getLog(ConfigurationDynaClass.class);
 
-    /** Stores the associated configuration.*/
+    /** Stores the associated configuration. */
     private final Configuration configuration;
 
     /**
-     * Construct an instance of a {@code ConfigurationDynaClass}
-     * wrapping the specified {@code Configuration} instance.
+     * Construct an instance of a {@code ConfigurationDynaClass} wrapping the specified {@code Configuration} instance.
+     *
      * @param configuration {@code Configuration} instance.
      */
-    public ConfigurationDynaClass(final Configuration configuration)
-    {
-        if (LOG.isTraceEnabled())
-        {
+    public ConfigurationDynaClass(final Configuration configuration) {
+        if (LOG.isTraceEnabled()) {
             LOG.trace("ConfigurationDynaClass(" + configuration + ")");
         }
         this.configuration = configuration;
     }
 
     @Override
-    public DynaProperty getDynaProperty(final String name)
-    {
-        if (LOG.isTraceEnabled())
-        {
+    public DynaProperty getDynaProperty(final String name) {
+        if (LOG.isTraceEnabled()) {
             LOG.trace("getDynaProperty(" + name + ")");
         }
 
-        if (name == null)
-        {
+        if (name == null) {
             throw new IllegalArgumentException("Property name must not be null!");
         }
 
         final Object value = configuration.getProperty(name);
-        if (value == null)
-        {
+        if (value == null) {
             return null;
         }
         Class<?> type = value.getClass();
 
-        if (type == Byte.class)
-        {
+        if (type == Byte.class) {
             type = Byte.TYPE;
         }
-        if (type == Character.class)
-        {
+        if (type == Character.class) {
             type = Character.TYPE;
-        }
-        else if (type == Boolean.class)
-        {
+        } else if (type == Boolean.class) {
             type = Boolean.TYPE;
-        }
-        else if (type == Double.class)
-        {
+        } else if (type == Double.class) {
             type = Double.TYPE;
-        }
-        else if (type == Float.class)
-        {
+        } else if (type == Float.class) {
             type = Float.TYPE;
-        }
-        else if (type == Integer.class)
-        {
+        } else if (type == Integer.class) {
             type = Integer.TYPE;
-        }
-        else if (type == Long.class)
-        {
+        } else if (type == Long.class) {
             type = Long.TYPE;
-        }
-        else if (type == Short.class)
-        {
+        } else if (type == Short.class) {
             type = Short.TYPE;
         }
 
@@ -114,17 +92,14 @@ public class ConfigurationDynaClass implements DynaClass
     }
 
     @Override
-    public DynaProperty[] getDynaProperties()
-    {
-        if (LOG.isTraceEnabled())
-        {
+    public DynaProperty[] getDynaProperties() {
+        if (LOG.isTraceEnabled()) {
             LOG.trace("getDynaProperties()");
         }
 
         final Iterator<String> keys = configuration.getKeys();
         final List<DynaProperty> properties = new ArrayList<>();
-        while (keys.hasNext())
-        {
+        while (keys.hasNext()) {
             final String key = keys.next();
             final DynaProperty property = getDynaProperty(key);
             properties.add(property);
@@ -132,8 +107,7 @@ public class ConfigurationDynaClass implements DynaClass
 
         final DynaProperty[] propertyArray = new DynaProperty[properties.size()];
         properties.toArray(propertyArray);
-        if (LOG.isDebugEnabled())
-        {
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Found " + properties.size() + " properties.");
         }
 
@@ -141,14 +115,12 @@ public class ConfigurationDynaClass implements DynaClass
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return ConfigurationDynaBean.class.getName();
     }
 
     @Override
-    public DynaBean newInstance() throws IllegalAccessException, InstantiationException
-    {
+    public DynaBean newInstance() throws IllegalAccessException, InstantiationException {
         return new ConfigurationDynaBean(configuration);
     }
 }

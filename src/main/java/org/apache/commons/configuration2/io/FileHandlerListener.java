@@ -18,55 +18,49 @@ package org.apache.commons.configuration2.io;
 
 /**
  * <p>
- * A listener interface for receiving notifications about updates of a
- * {@code FileHandler}.
+ * A listener interface for receiving notifications about updates of a {@code FileHandler}.
  * </p>
  * <p>
- * Objects implementing this interface are notified when properties of a
- * {@code FileHandler} change or when a load or save operation is performed.
- * This can be useful for various use cases, e.g. when monitoring file-based
+ * Objects implementing this interface are notified when properties of a {@code FileHandler} change or when a load or
+ * save operation is performed. This can be useful for various use cases, e.g. when monitoring file-based
  * configurations.
  * </p>
  *
  * @since 2.0
  */
-public interface FileHandlerListener
-{
+public interface FileHandlerListener {
     /**
-     * Notification that the associated file is about to be loaded. This method
-     * is called immediately before the load operation.
+     * Notification that the associated file is about to be loaded. This method is called immediately before the load
+     * operation.
      *
      * @param handler the file handler
      */
     void loading(FileHandler handler);
 
     /**
-     * Notification that the associated file has been loaded. This method is
-     * called directly after the load operation.
+     * Notification that the associated file has been loaded. This method is called directly after the load operation.
      *
      * @param handler the file handler
      */
     void loaded(FileHandler handler);
 
     /**
-     * Notification that the associated file is about to be saved. This method
-     * is called immediately before the save operation.
+     * Notification that the associated file is about to be saved. This method is called immediately before the save
+     * operation.
      *
      * @param handler the file handler
      */
     void saving(FileHandler handler);
 
     /**
-     * Notification that the associated file has been saved. This method is
-     * called directly after the save operation.
+     * Notification that the associated file has been saved. This method is called directly after the save operation.
      *
      * @param handler the file handler
      */
     void saved(FileHandler handler);
 
     /**
-     * Notification that a property of the monitored {@code FileHandler} has
-     * changed.
+     * Notification that a property of the monitored {@code FileHandler} has changed.
      *
      * @param handler the file handler
      */

@@ -25,46 +25,37 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * <p>
- * A specialized SAX2 XML parser that "parses" hierarchical configuration
- * objects.
+ * A specialized SAX2 XML parser that "parses" hierarchical configuration objects.
  * </p>
  * <p>
- * This class mimics to be a SAX conform XML parser. Instead of parsing XML
- * documents it processes a {@code Configuration} object and generates SAX
- * events for the single properties defined there. This enables the whole world
- * of XML processing for configuration objects.
+ * This class mimics to be a SAX conform XML parser. Instead of parsing XML documents it processes a
+ * {@code Configuration} object and generates SAX events for the single properties defined there. This enables the whole
+ * world of XML processing for configuration objects.
  * </p>
  * <p>
- * The {@code HierarchicalConfiguration} object to be parsed can be specified
- * using a constructor or the {@code setConfiguration()} method. This object
- * will be processed by the {@code parse()} methods. Note that these methods
- * ignore their argument.
+ * The {@code HierarchicalConfiguration} object to be parsed can be specified using a constructor or the
+ * {@code setConfiguration()} method. This object will be processed by the {@code parse()} methods. Note that these
+ * methods ignore their argument.
  * </p>
  *
  * @param <T> the type of the nodes supported by this reader
  */
-public class HierarchicalConfigurationXMLReader<T> extends
-        ConfigurationXMLReader
-{
+public class HierarchicalConfigurationXMLReader<T> extends ConfigurationXMLReader {
     /** Stores the configuration object to be parsed. */
     private HierarchicalConfiguration<T> configuration;
 
     /**
      * Creates a new instance of {@code HierarchicalConfigurationXMLReader}.
      */
-    public HierarchicalConfigurationXMLReader()
-    {
+    public HierarchicalConfigurationXMLReader() {
     }
 
     /**
-     * Creates a new instance of {@code HierarchicalConfigurationXMLReader} and
-     * sets the configuration to be parsed.
+     * Creates a new instance of {@code HierarchicalConfigurationXMLReader} and sets the configuration to be parsed.
      *
      * @param config the configuration object
      */
-    public HierarchicalConfigurationXMLReader(
-            final HierarchicalConfiguration<T> config)
-    {
+    public HierarchicalConfigurationXMLReader(final HierarchicalConfiguration<T> config) {
         this();
         setConfiguration(config);
     }
@@ -74,8 +65,7 @@ public class HierarchicalConfigurationXMLReader<T> extends
      *
      * @return the configuration object to be parsed
      */
-    public HierarchicalConfiguration<T> getConfiguration()
-    {
+    public HierarchicalConfiguration<T> getConfiguration() {
         return configuration;
     }
 
@@ -84,8 +74,7 @@ public class HierarchicalConfigurationXMLReader<T> extends
      *
      * @param config the configuration object to be parsed
      */
-    public void setConfiguration(final HierarchicalConfiguration<T> config)
-    {
+    public void setConfiguration(final HierarchicalConfiguration<T> config) {
         configuration = config;
     }
 
@@ -95,8 +84,7 @@ public class HierarchicalConfigurationXMLReader<T> extends
      * @return the actual configuration object
      */
     @Override
-    public Configuration getParsedConfiguration()
-    {
+    public Configuration getParsedConfiguration() {
         return getConfiguration();
     }
 
@@ -104,20 +92,15 @@ public class HierarchicalConfigurationXMLReader<T> extends
      * Processes the actual configuration object to generate SAX parsing events.
      */
     @Override
-    protected void processKeys()
-    {
-        final NodeHandler<T> nodeHandler =
-                getConfiguration().getNodeModel().getNodeHandler();
-        NodeTreeWalker.INSTANCE.walkDFS(nodeHandler.getRootNode(),
-                new SAXVisitor(), nodeHandler);
+    protected void processKeys() {
+        final NodeHandler<T> nodeHandler = getConfiguration().getNodeModel().getNodeHandler();
+        NodeTreeWalker.INSTANCE.walkDFS(nodeHandler.getRootNode(), new SAXVisitor(), nodeHandler);
     }
 
     /**
-     * A specialized visitor class for generating SAX events for a hierarchical
-     * node structure.
+     * A specialized visitor class for generating SAX events for a hierarchical node structure.
      */
-    private class SAXVisitor extends ConfigurationNodeVisitorAdapter<T>
-    {
+    private class SAXVisitor extends ConfigurationNodeVisitorAdapter<T> {
         /** Constant for the attribute type. */
         private static final String ATTR_TYPE = "CDATA";
 
@@ -128,8 +111,7 @@ public class HierarchicalConfigurationXMLReader<T> extends
          * @param handler the node handler
          */
         @Override
-        public void visitAfterChildren(final T node, final NodeHandler<T> handler)
-        {
+        public void visitAfterChildren(final T node, final NodeHandler<T> handler) {
             fireElementEnd(nodeName(node, handler));
         }
 
@@ -140,27 +122,22 @@ public class HierarchicalConfigurationXMLReader<T> extends
          * @param handler the node handler
          */
         @Override
-        public void visitBeforeChildren(final T node, final NodeHandler<T> handler)
-        {
-            fireElementStart(nodeName(node, handler),
-                    fetchAttributes(node, handler));
+        public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
+            fireElementStart(nodeName(node, handler), fetchAttributes(node, handler));
 
             final Object value = handler.getValue(node);
-            if (value != null)
-            {
+            if (value != null) {
                 fireCharacters(value.toString());
             }
         }
 
         /**
-         * Checks if iteration should be terminated. This implementation stops
-         * iteration after an exception has occurred.
+         * Checks if iteration should be terminated. This implementation stops iteration after an exception has occurred.
          *
          * @return a flag if iteration should be stopped
          */
         @Override
-        public boolean terminate()
-        {
+        public boolean terminate() {
             return getException() != null;
         }
 
@@ -171,17 +148,13 @@ public class HierarchicalConfigurationXMLReader<T> extends
          * @param handler the node handler
          * @return an object with all attributes of this node
          */
-        protected Attributes fetchAttributes(final T node, final NodeHandler<T> handler)
-        {
+        protected Attributes fetchAttributes(final T node, final NodeHandler<T> handler) {
             final AttributesImpl attrs = new AttributesImpl();
 
-            for (final String attr : handler.getAttributes(node))
-            {
+            for (final String attr : handler.getAttributes(node)) {
                 final Object value = handler.getAttributeValue(node, attr);
-                if (value != null)
-                {
-                    attrs.addAttribute(NS_URI, attr, attr, ATTR_TYPE,
-                            value.toString());
+                if (value != null) {
+                    attrs.addAttribute(NS_URI, attr, attr, ATTR_TYPE, value.toString());
                 }
             }
 
@@ -189,16 +162,14 @@ public class HierarchicalConfigurationXMLReader<T> extends
         }
 
         /**
-         * Helper method for determining the name of a node. If a node has no
-         * name (which is true for the root node), the specified default name
-         * will be used.
+         * Helper method for determining the name of a node. If a node has no name (which is true for the root node), the
+         * specified default name will be used.
          *
          * @param node the node to be checked
          * @param handler the node handler
          * @return the name for this node
          */
-        private String nodeName(final T node, final NodeHandler<T> handler)
-        {
+        private String nodeName(final T node, final NodeHandler<T> handler) {
             final String nodeName = handler.nodeName(node);
             return nodeName == null ? getRootName() : nodeName;
         }

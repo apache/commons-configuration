@@ -21,82 +21,69 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * <p>
- * A special implementation of {@code Synchronizer} based on the JDK's
- * {@code ReentrantReadWriteLock} class.
+ * A special implementation of {@code Synchronizer} based on the JDK's {@code ReentrantReadWriteLock} class.
  * </p>
  * <p>
- * This class manages a {@code ReadWriteLock} object internally. The methods of
- * the {@code Synchronizer} interface are delegated to this lock. So this class
- * behaves in the same way as documented for {@code ReentrantReadWriteLock}.
+ * This class manages a {@code ReadWriteLock} object internally. The methods of the {@code Synchronizer} interface are
+ * delegated to this lock. So this class behaves in the same way as documented for {@code ReentrantReadWriteLock}.
  * </p>
  * <p>
- * Using this {@code Synchronizer} implementation is appropriate to make
- * configuration objects thread-safe. This means that multiple threads can read
- * configuration data in parallel; if one thread wants to update the
- * configuration, this happens with an exclusive lock.
+ * Using this {@code Synchronizer} implementation is appropriate to make configuration objects thread-safe. This means
+ * that multiple threads can read configuration data in parallel; if one thread wants to update the configuration, this
+ * happens with an exclusive lock.
  * </p>
  *
  * @since 2.0
  */
-public class ReadWriteSynchronizer implements Synchronizer
-{
+public class ReadWriteSynchronizer implements Synchronizer {
     /** The lock object used by this Synchronizer. */
     private final ReadWriteLock lock;
 
     /**
-     * Creates a new instance of {@code ReadWriteSynchronizer} and initializes
-     * it with the given lock object. This constructor can be used to pass a
-     * lock object which has been configured externally. If the lock object is
+     * Creates a new instance of {@code ReadWriteSynchronizer} and initializes it with the given lock object. This
+     * constructor can be used to pass a lock object which has been configured externally. If the lock object is
      * <b>null</b>, a default lock object is created.
      *
      * @param l the lock object to be used (can be <b>null</b>)
      */
-    public ReadWriteSynchronizer(final ReadWriteLock l)
-    {
+    public ReadWriteSynchronizer(final ReadWriteLock l) {
         lock = l != null ? l : createDefaultLock();
     }
 
     /**
-     * Creates a new instance of {@code ReadWriteSynchronizer} and initializes
-     * it with a lock object of type {@code ReentrantReadWriteLock}.
+     * Creates a new instance of {@code ReadWriteSynchronizer} and initializes it with a lock object of type
+     * {@code ReentrantReadWriteLock}.
      */
-    public ReadWriteSynchronizer()
-    {
+    public ReadWriteSynchronizer() {
         this(null);
     }
 
     @Override
-    public void beginRead()
-    {
+    public void beginRead() {
         lock.readLock().lock();
     }
 
     @Override
-    public void endRead()
-    {
+    public void endRead() {
         lock.readLock().unlock();
     }
 
     @Override
-    public void beginWrite()
-    {
+    public void beginWrite() {
         lock.writeLock().lock();
     }
 
     @Override
-    public void endWrite()
-    {
+    public void endWrite() {
         lock.writeLock().unlock();
     }
 
     /**
-     * Returns a new default lock object which is used if no lock is passed to
-     * the constructor.
+     * Returns a new default lock object which is used if no lock is passed to the constructor.
      *
      * @return the new default lock object
      */
-    private static ReadWriteLock createDefaultLock()
-    {
+    private static ReadWriteLock createDefaultLock() {
         return new ReentrantReadWriteLock();
     }
 }

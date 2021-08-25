@@ -32,8 +32,7 @@ import org.junit.Test;
  * Test class for {@code ClasspathLocationStrategy}.
  *
  */
-public class TestClasspathLocationStrategy
-{
+public class TestClasspathLocationStrategy {
     /** Constant for a test file name. */
     private static final String FILE_NAME = "test.xml";
 
@@ -44,8 +43,7 @@ public class TestClasspathLocationStrategy
     private ClasspathLocationStrategy strategy;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         fileSystem = EasyMock.createMock(FileSystem.class);
         EasyMock.replay(fileSystem);
         strategy = new ClasspathLocationStrategy();
@@ -55,11 +53,8 @@ public class TestClasspathLocationStrategy
      * Tests a successful location of a provided resource name.
      */
     @Test
-    public void testLocateSuccess() throws ConfigurationException
-    {
-        final FileLocator locator =
-                FileLocatorUtils.fileLocator().fileName(FILE_NAME)
-                        .basePath("somePath").create();
+    public void testLocateSuccess() throws ConfigurationException {
+        final FileLocator locator = FileLocatorUtils.fileLocator().fileName(FILE_NAME).basePath("somePath").create();
         final URL url = strategy.locate(fileSystem, locator);
         final Configurations configurations = new Configurations();
         final XMLConfiguration config1 = configurations.xml(url);
@@ -71,11 +66,8 @@ public class TestClasspathLocationStrategy
      * Tests a failed locate() operation.
      */
     @Test
-    public void testLocateFailed()
-    {
-        final FileLocator locator =
-                FileLocatorUtils.fileLocator()
-                        .fileName("non existing resource name!").create();
+    public void testLocateFailed() {
+        final FileLocator locator = FileLocatorUtils.fileLocator().fileName("non existing resource name!").create();
         assertNull("Got a URL", strategy.locate(fileSystem, locator));
     }
 
@@ -83,10 +75,8 @@ public class TestClasspathLocationStrategy
      * Tests a locate() operation if no file name is provided.
      */
     @Test
-    public void testLocateNoFileName()
-    {
-        final FileLocator locator =
-                FileLocatorUtils.fileLocator().fileName("").create();
+    public void testLocateNoFileName() {
+        final FileLocator locator = FileLocatorUtils.fileLocator().fileName("").create();
         assertNull("Got a URL", strategy.locate(fileSystem, locator));
     }
 }

@@ -32,133 +32,101 @@ import org.apache.commons.configuration2.reloading.ReloadingControllerSupport;
 
 /**
  * <p>
- * A specialized {@code MultiFileConfigurationBuilder} implementation which adds
- * support for reloading.
+ * A specialized {@code MultiFileConfigurationBuilder} implementation which adds support for reloading.
  * </p>
  * <p>
- * This class - as its super class - allows operating on multiple configuration
- * files whose file names are determined using a file name pattern and a
- * {@code ConfigurationInterpolator} object. It provides the following
- * additional features:
+ * This class - as its super class - allows operating on multiple configuration files whose file names are determined
+ * using a file name pattern and a {@code ConfigurationInterpolator} object. It provides the following additional
+ * features:
  * </p>
  * <ul>
- * <li>Configuration builder for managed configurations have reloading support.
- * So reloading is possible for all configuration sources loaded by this builder
- * instance.</li>
- * <li>A {@link ReloadingController} is provided which can be used to trigger
- * reload checks on all managed configurations.</li>
+ * <li>Configuration builder for managed configurations have reloading support. So reloading is possible for all
+ * configuration sources loaded by this builder instance.</li>
+ * <li>A {@link ReloadingController} is provided which can be used to trigger reload checks on all managed
+ * configurations.</li>
  * </ul>
  * <p>
- * Although this builder manages an arbitrary number of child configurations, to
- * clients only a single configuration is visible - the one selected by the
- * evaluation of the file name pattern. Builder reset notifications triggered by
- * the reloading mechanism do not really take this fact into account; they are
- * not limited to the currently selected child configuration, but occur for each
- * of the managed configuration.
+ * Although this builder manages an arbitrary number of child configurations, to clients only a single configuration is
+ * visible - the one selected by the evaluation of the file name pattern. Builder reset notifications triggered by the
+ * reloading mechanism do not really take this fact into account; they are not limited to the currently selected child
+ * configuration, but occur for each of the managed configuration.
  * </p>
  *
  * @since 2.0
- * @param <T> the concrete type of {@code Configuration} objects created by this
- *        builder
+ * @param <T> the concrete type of {@code Configuration} objects created by this builder
  */
-public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfiguration>
-        extends MultiFileConfigurationBuilder<T> implements
-        ReloadingControllerSupport
-{
+public class ReloadingMultiFileConfigurationBuilder<T extends FileBasedConfiguration> extends MultiFileConfigurationBuilder<T>
+    implements ReloadingControllerSupport {
     /** The reloading controller used by this builder. */
-    private final ReloadingController reloadingController =
-            createReloadingController();
+    private final ReloadingController reloadingController = createReloadingController();
 
     /**
-     * Creates a new instance of {@code ReloadingMultiFileConfigurationBuilder}
-     * and sets initialization parameters and a flag whether initialization
-     * failures should be ignored.
+     * Creates a new instance of {@code ReloadingMultiFileConfigurationBuilder} and sets initialization parameters and a
+     * flag whether initialization failures should be ignored.
      *
      * @param resCls the result configuration class
      * @param params a map with initialization parameters
-     * @param allowFailOnInit a flag whether initialization errors should be
-     *        ignored
+     * @param allowFailOnInit a flag whether initialization errors should be ignored
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public ReloadingMultiFileConfigurationBuilder(final Class<T> resCls,
-            final Map<String, Object> params, final boolean allowFailOnInit)
-    {
+    public ReloadingMultiFileConfigurationBuilder(final Class<T> resCls, final Map<String, Object> params, final boolean allowFailOnInit) {
         super(resCls, params, allowFailOnInit);
     }
 
     /**
-     * Creates a new instance of {@code ReloadingMultiFileConfigurationBuilder}
-     * and sets initialization parameters.
+     * Creates a new instance of {@code ReloadingMultiFileConfigurationBuilder} and sets initialization parameters.
      *
      * @param resCls the result configuration class
      * @param params a map with initialization parameters
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public ReloadingMultiFileConfigurationBuilder(final Class<T> resCls,
-            final Map<String, Object> params)
-    {
+    public ReloadingMultiFileConfigurationBuilder(final Class<T> resCls, final Map<String, Object> params) {
         super(resCls, params);
     }
 
     /**
-     * Creates a new instance of {@code ReloadingMultiFileConfigurationBuilder}
-     * without setting initialization parameters.
+     * Creates a new instance of {@code ReloadingMultiFileConfigurationBuilder} without setting initialization parameters.
      *
      * @param resCls the result configuration class
      * @throws IllegalArgumentException if the result class is <b>null</b>
      */
-    public ReloadingMultiFileConfigurationBuilder(final Class<T> resCls)
-    {
+    public ReloadingMultiFileConfigurationBuilder(final Class<T> resCls) {
         super(resCls);
     }
 
     /**
-     * {@inheritDoc} This implementation returns a special
-     * {@code ReloadingController} that delegates to the reloading controllers
-     * of the managed builders created so far.
+     * {@inheritDoc} This implementation returns a special {@code ReloadingController} that delegates to the reloading
+     * controllers of the managed builders created so far.
      */
     @Override
-    public ReloadingController getReloadingController()
-    {
+    public ReloadingController getReloadingController() {
         return reloadingController;
     }
 
     /**
-     * {@inheritDoc} This implementation returns a file-based configuration
-     * builder with reloading support.
+     * {@inheritDoc} This implementation returns a file-based configuration builder with reloading support.
      */
     @Override
-    protected FileBasedConfigurationBuilder<T> createManagedBuilder(
-            final String fileName, final Map<String, Object> params)
-            throws ConfigurationException
-    {
-        return new ReloadingFileBasedConfigurationBuilder<>(getResultClass(),
-                params, isAllowFailOnInit());
+    protected FileBasedConfigurationBuilder<T> createManagedBuilder(final String fileName, final Map<String, Object> params) throws ConfigurationException {
+        return new ReloadingFileBasedConfigurationBuilder<>(getResultClass(), params, isAllowFailOnInit());
     }
 
     /**
-     * Creates the reloading controller used by this builder. This method
-     * creates a specialized {@link CombinedReloadingController} which operates
-     * on the reloading controllers of the managed builders created so far.
+     * Creates the reloading controller used by this builder. This method creates a specialized
+     * {@link CombinedReloadingController} which operates on the reloading controllers of the managed builders created so
+     * far.
      *
      * @return the newly created {@code ReloadingController}
      */
-    private ReloadingController createReloadingController()
-    {
+    private ReloadingController createReloadingController() {
         final Set<ReloadingController> empty = Collections.emptySet();
-        return new CombinedReloadingController(empty)
-        {
+        return new CombinedReloadingController(empty) {
             @Override
-            public Collection<ReloadingController> getSubControllers()
-            {
-                final Collection<FileBasedConfigurationBuilder<T>> builders =
-                        getManagedBuilders().values();
-                final Collection<ReloadingController> controllers =
-                        new ArrayList<>(builders.size());
-                for (final FileBasedConfigurationBuilder<T> b : builders)
-                {
-                    controllers.add(((ReloadingControllerSupport) b)
-                            .getReloadingController());
+            public Collection<ReloadingController> getSubControllers() {
+                final Collection<FileBasedConfigurationBuilder<T>> builders = getManagedBuilders().values();
+                final Collection<ReloadingController> controllers = new ArrayList<>(builders.size());
+                for (final FileBasedConfigurationBuilder<T> b : builders) {
+                    controllers.add(((ReloadingControllerSupport) b).getReloadingController());
                 }
                 return controllers;
             }

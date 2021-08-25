@@ -18,23 +18,18 @@ package org.apache.commons.configuration2.tree;
 
 /**
  * <p>
- * A specialized version of the {@code NodeModelSupport} interface which allows
- * querying an {@link InMemoryNodeModel}.
+ * A specialized version of the {@code NodeModelSupport} interface which allows querying an {@link InMemoryNodeModel}.
  * </p>
  * <p>
- * This interface is needed by some special node model implementations used by
- * in-memory configurations. Such implementations require the extended
- * capabilities of an {@code InMemoryNodeModel}.
+ * This interface is needed by some special node model implementations used by in-memory configurations. Such
+ * implementations require the extended capabilities of an {@code InMemoryNodeModel}.
  * </p>
  *
  * @since 2.0
  */
-public interface InMemoryNodeModelSupport extends
-        NodeModelSupport<ImmutableNode>
-{
+public interface InMemoryNodeModelSupport extends NodeModelSupport<ImmutableNode> {
     /**
-     * {@inheritDoc} This variant specializes the return type to
-     * {@code InMemoryNodeModel}.
+     * {@inheritDoc} This variant specializes the return type to {@code InMemoryNodeModel}.
      */
     @Override
     InMemoryNodeModel getNodeModel();

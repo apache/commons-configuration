@@ -28,14 +28,12 @@ import org.apache.commons.configuration2.io.URLConnectionOptions;
  * Definition of a properties interface for parameters of file-based configurations.
  * </p>
  * <p>
- * This interface defines a set of properties which can be used to specify the
- * location of a configuration source.
+ * This interface defines a set of properties which can be used to specify the location of a configuration source.
  * </p>
  *
  * @param <T> the type of the result of all set methods for method chaining
  */
-public interface FileBasedBuilderProperties<T>
-{
+public interface FileBasedBuilderProperties<T> {
     /**
      * Sets the base path of the associated {@code FileHandler}.
      *
@@ -53,8 +51,7 @@ public interface FileBasedBuilderProperties<T>
     T setEncoding(String enc);
 
     /**
-     * Sets the location of the associated {@code FileHandler} as a {@code File}
-     * object.
+     * Sets the location of the associated {@code FileHandler} as a {@code File} object.
      *
      * @param file the {@code File} location
      * @return a reference to this object for method chaining
@@ -86,8 +83,7 @@ public interface FileBasedBuilderProperties<T>
     T setLocationStrategy(FileLocationStrategy strategy);
 
     /**
-     * Sets the location of the associated {@code FileHandler} as an absolute
-     * file path.
+     * Sets the location of the associated {@code FileHandler} as an absolute file path.
      *
      * @param path the path location
      * @return a reference to this object for method chaining
@@ -95,10 +91,8 @@ public interface FileBasedBuilderProperties<T>
     T setPath(String path);
 
     /**
-     * Sets the factory for creating {@code ReloadingDetector} objects. With
-     * this method a custom factory for reloading detectors can be installed.
-     * Per default, a factory creating {@code FileHandlerReloadingDetector}
-     * objects is used.
+     * Sets the factory for creating {@code ReloadingDetector} objects. With this method a custom factory for reloading
+     * detectors can be installed. Per default, a factory creating {@code FileHandlerReloadingDetector} objects is used.
      *
      * @param factory the {@code ReloadingDetectorFactory}
      * @return a reference to this object for method chaining
@@ -114,8 +108,7 @@ public interface FileBasedBuilderProperties<T>
     T setReloadingRefreshDelay(Long reloadingRefreshDelay);
 
     /**
-     * Sets the location of the associated {@code FileHandler} as a {@code URL}
-     * object.
+     * Sets the location of the associated {@code FileHandler} as a {@code URL} object.
      *
      * @param url the {@code URL} location
      * @return a reference to this object for method chaining
@@ -123,8 +116,7 @@ public interface FileBasedBuilderProperties<T>
     T setURL(URL url);
 
     /**
-     * Sets the location of the associated {@code FileHandler} as a {@code URL}
-     * object.
+     * Sets the location of the associated {@code FileHandler} as a {@code URL} object.
      *
      * @param url the {@code URL} location
      * @param urlConnectionOptions options

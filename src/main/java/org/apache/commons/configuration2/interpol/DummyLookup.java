@@ -21,20 +21,17 @@ package org.apache.commons.configuration2.interpol;
  * A simple dummy {@code Lookup} implementation.
  * </p>
  * <p>
- * This implementation always returns <b>null</b> for a passed in variable
- * indicating that it cannot resolve that variable. This is useful for instance
- * as an application of the <em>null object</em> pattern.
+ * This implementation always returns <b>null</b> for a passed in variable indicating that it cannot resolve that
+ * variable. This is useful for instance as an application of the <em>null object</em> pattern.
  * </p>
  * <p>
- * This class does not define any state, therefore a single instance can be
- * shared. To enforce usage of only a single instance this class is actually an
- * enumeration.
+ * This class does not define any state, therefore a single instance can be shared. To enforce usage of only a single
+ * instance this class is actually an enumeration.
  * </p>
  *
  * @since 2.0
  */
-public enum DummyLookup implements Lookup
-{
+public enum DummyLookup implements Lookup {
     /** The single instance of this class. */
     INSTANCE;
 
@@ -42,8 +39,7 @@ public enum DummyLookup implements Lookup
      * {@inheritDoc} This implementation always returns <b>null</b>.
      */
     @Override
-    public Object lookup(final String variable)
-    {
+    public Object lookup(final String variable) {
         return null;
     }
 }

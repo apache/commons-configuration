@@ -17,58 +17,47 @@
 
 package org.apache.commons.configuration2.ex;
 
-
 /**
- * Any exception that occurs while initializing a Configuration
- * object.
+ * Any exception that occurs while initializing a Configuration object.
  *
  */
-public class ConfigurationException extends Exception
-{
+public class ConfigurationException extends Exception {
     /**
      * The serial version ID.
      */
     private static final long serialVersionUID = -1316746661346991484L;
 
     /**
-     * Constructs a new {@code ConfigurationException} without specified
-     * detail message.
+     * Constructs a new {@code ConfigurationException} without specified detail message.
      */
-    public ConfigurationException()
-    {
+    public ConfigurationException() {
     }
 
     /**
-     * Constructs a new {@code ConfigurationException} with specified
-     * detail message.
+     * Constructs a new {@code ConfigurationException} with specified detail message.
      *
-     * @param message  the error message
+     * @param message the error message
      */
-    public ConfigurationException(final String message)
-    {
+    public ConfigurationException(final String message) {
         super(message);
     }
 
     /**
-     * Constructs a new {@code ConfigurationException} with specified
-     * nested {@code Throwable}.
+     * Constructs a new {@code ConfigurationException} with specified nested {@code Throwable}.
      *
-     * @param cause  the exception or error that caused this exception to be thrown
+     * @param cause the exception or error that caused this exception to be thrown
      */
-    public ConfigurationException(final Throwable cause)
-    {
+    public ConfigurationException(final Throwable cause) {
         super(cause);
     }
 
     /**
-     * Constructs a new {@code ConfigurationException} with specified
-     * detail message and nested {@code Throwable}.
+     * Constructs a new {@code ConfigurationException} with specified detail message and nested {@code Throwable}.
      *
-     * @param message  the error message
-     * @param cause    the exception or error that caused this exception to be thrown
+     * @param message the error message
+     * @param cause the exception or error that caused this exception to be thrown
      */
-    public ConfigurationException(final String message, final Throwable cause)
-    {
+    public ConfigurationException(final String message, final Throwable cause) {
         super(message, cause);
     }
 }

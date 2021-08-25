@@ -21,52 +21,44 @@ package org.apache.commons.configuration2.builder;
  * Definition of a parameters interface for INI configurations.
  * </p>
  * <p>
- * The {@code INIConfiguration} class defines a bunch of additional properties
- * related to INI processing.
+ * The {@code INIConfiguration} class defines a bunch of additional properties related to INI processing.
  * </p>
  * <p>
- * <strong>Important note:</strong> This interface is not intended to be
- * implemented by client code! It defines a set of available properties and may
- * be extended even in minor releases.
+ * <strong>Important note:</strong> This interface is not intended to be implemented by client code! It defines a set of
+ * available properties and may be extended even in minor releases.
  * </p>
  *
  * @since 2.2
  * @param <T> the type of the result of all set methods for method chaining
  */
-public interface INIBuilderProperties<T>
-{
+public interface INIBuilderProperties<T> {
 
     /**
-     * Allows setting the leading comment separator which is used in reading an INI
-     * file.
+     * Allows setting the leading comment separator which is used in reading an INI file.
      *
      * @param separator String of the new separator for INI reading
      * @return a reference to this object for method chaining
      * @since 2.5
      */
-    default T setCommentLeadingCharsUsedInInput(final String separator)
-    {
+    default T setCommentLeadingCharsUsedInInput(final String separator) {
         // NoOp
         return (T) this;
     }
 
     /**
-     * Allows setting the key and value separator which is used in reading an INI
-     * file.
+     * Allows setting the key and value separator which is used in reading an INI file.
      *
      * @param separator String of the new separator for INI reading
      * @return a reference to this object for method chaining
      * @since 2.5
      */
-    default T setSeparatorUsedInInput(final String separator)
-    {
+    default T setSeparatorUsedInInput(final String separator) {
         // NoOp
         return (T) this;
     }
 
     /**
-     * Allows setting the separator between key and value to be used when writing an
-     * INI file.
+     * Allows setting the separator between key and value to be used when writing an INI file.
      *
      * @param separator the new separator for INI output
      * @return a reference to this object for method chaining

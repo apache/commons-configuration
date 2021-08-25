@@ -36,50 +36,38 @@ import org.junit.Test;
  * Test class for {@code MultiFileBuilderParametersImpl}.
  *
  */
-public class TestMultiFileBuilderParametersImpl
-{
+public class TestMultiFileBuilderParametersImpl {
     /** The parameters object to be tested. */
     private MultiFileBuilderParametersImpl params;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         params = new MultiFileBuilderParametersImpl();
     }
 
     /**
-     * Tests whether an instance can be obtained from a map if it cannot be
-     * found.
+     * Tests whether an instance can be obtained from a map if it cannot be found.
      */
     @Test
-    public void testFromParatersNotFound()
-    {
-        assertNull("Got an instance",
-                MultiFileBuilderParametersImpl
-                        .fromParameters(new HashMap<>()));
+    public void testFromParatersNotFound() {
+        assertNull("Got an instance", MultiFileBuilderParametersImpl.fromParameters(new HashMap<>()));
     }
 
     /**
      * Tests whether an instance can be obtained from a parameters map.
      */
     @Test
-    public void testFromParametersFound()
-    {
+    public void testFromParametersFound() {
         final Map<String, Object> map = params.getParameters();
-        assertSame("Instance not found", params,
-                MultiFileBuilderParametersImpl.fromParameters(map, true));
+        assertSame("Instance not found", params, MultiFileBuilderParametersImpl.fromParameters(map, true));
     }
 
     /**
-     * Tests whether a new instance is created if the parameters map does not
-     * contain one.
+     * Tests whether a new instance is created if the parameters map does not contain one.
      */
     @Test
-    public void testFromParametersNewInstance()
-    {
-        params =
-                MultiFileBuilderParametersImpl.fromParameters(
-                        new HashMap<>(), true);
+    public void testFromParametersNewInstance() {
+        params = MultiFileBuilderParametersImpl.fromParameters(new HashMap<>(), true);
         assertNotNull("No new instance", params);
     }
 
@@ -87,8 +75,7 @@ public class TestMultiFileBuilderParametersImpl
      * Tests whether a file pattern can be set.
      */
     @Test
-    public void testSetFilePattern()
-    {
+    public void testSetFilePattern() {
         final String pattern = "somePattern";
         assertSame("Wrong result", params, params.setFilePattern(pattern));
         assertEquals("Pattern not set", pattern, params.getFilePattern());
@@ -98,59 +85,44 @@ public class TestMultiFileBuilderParametersImpl
      * Tests whether parameters for managed configurations can be set.
      */
     @Test
-    public void testSetManagedBuilderParameters()
-    {
+    public void testSetManagedBuilderParameters() {
         final BuilderParameters bp = EasyMock.createMock(BuilderParameters.class);
         EasyMock.replay(bp);
         assertSame("Wrong result", params, params.setManagedBuilderParameters(bp));
-        assertSame("Parameters not set", bp,
-                params.getManagedBuilderParameters());
+        assertSame("Parameters not set", bp, params.getManagedBuilderParameters());
     }
 
     /**
      * Tests whether bean property access is possible.
      */
     @Test
-    public void testBeanProperties() throws Exception
-    {
+    public void testBeanProperties() throws Exception {
         final BuilderParameters bp = EasyMock.createMock(BuilderParameters.class);
         EasyMock.replay(bp);
         final String pattern = "testPattern";
         BeanHelper.setProperty(params, "filePattern", pattern);
         BeanHelper.setProperty(params, "managedBuilderParameters", bp);
-        BeanHelper.setProperty(params, "throwExceptionOnMissing",
-                Boolean.TRUE);
+        BeanHelper.setProperty(params, "throwExceptionOnMissing", Boolean.TRUE);
         final Map<String, Object> map = params.getParameters();
-        assertEquals("Exception flag not set", Boolean.TRUE,
-                map.get("throwExceptionOnMissing"));
-        assertSame("Wrong parameters instance", params,
-                MultiFileBuilderParametersImpl.fromParameters(map));
+        assertEquals("Exception flag not set", Boolean.TRUE, map.get("throwExceptionOnMissing"));
+        assertSame("Wrong parameters instance", params, MultiFileBuilderParametersImpl.fromParameters(map));
         assertEquals("Wrong pattern", pattern, params.getFilePattern());
-        assertSame("Wrong managed parameters", bp,
-                params.getManagedBuilderParameters());
+        assertSame("Wrong managed parameters", bp, params.getManagedBuilderParameters());
     }
 
     /**
      * Tests extended cloning functionality.
      */
     @Test
-    public void testClone()
-    {
-        final FileBasedBuilderParametersImpl managedParams =
-                new FileBasedBuilderParametersImpl();
+    public void testClone() {
+        final FileBasedBuilderParametersImpl managedParams = new FileBasedBuilderParametersImpl();
         managedParams.setFileName("test.xml");
         params.setManagedBuilderParameters(managedParams);
         params.setFilePattern("somePattern");
         final MultiFileBuilderParametersImpl clone = params.clone();
-        assertEquals("Wrong pattern", params.getFilePattern(),
-                clone.getFilePattern());
-        assertNotSame("Managed parameters not cloned",
-                params.getManagedBuilderParameters(),
-                clone.getManagedBuilderParameters());
-        assertEquals("Wrong file name", managedParams.getFileHandler()
-                .getFileName(),
-                ((FileBasedBuilderParametersImpl) clone
-                        .getManagedBuilderParameters()).getFileHandler()
-                        .getFileName());
+        assertEquals("Wrong pattern", params.getFilePattern(), clone.getFilePattern());
+        assertNotSame("Managed parameters not cloned", params.getManagedBuilderParameters(), clone.getManagedBuilderParameters());
+        assertEquals("Wrong file name", managedParams.getFileHandler().getFileName(),
+            ((FileBasedBuilderParametersImpl) clone.getManagedBuilderParameters()).getFileHandler().getFileName());
     }
 }

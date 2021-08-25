@@ -32,14 +32,12 @@ import org.junit.Test;
  * Test class for {@code JndiBuilderParametersImpl}.
  *
  */
-public class TestJndiBuilderParametersImpl
-{
+public class TestJndiBuilderParametersImpl {
     /** The parameters object to be tested. */
     private JndiBuilderParametersImpl params;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         params = new JndiBuilderParametersImpl();
     }
 
@@ -47,8 +45,7 @@ public class TestJndiBuilderParametersImpl
      * Tests whether a JNDI context can be set.
      */
     @Test
-    public void testSetContext()
-    {
+    public void testSetContext() {
         final Context ctx = EasyMock.createMock(Context.class);
         EasyMock.replay(ctx);
         assertSame("Wrong result", params, params.setContext(ctx));
@@ -60,8 +57,7 @@ public class TestJndiBuilderParametersImpl
      * Tests whether a prefix can be set.
      */
     @Test
-    public void testSetPrefix()
-    {
+    public void testSetPrefix() {
         final String prefix = "testJndiPrefix";
         assertSame("Wrong result", params, params.setPrefix(prefix));
         final Map<String, Object> paramsMap = params.getParameters();
@@ -72,21 +68,18 @@ public class TestJndiBuilderParametersImpl
      * Tests whether the parameters map contains inherited properties, too.
      */
     @Test
-    public void testGetParametersBaseProperties()
-    {
+    public void testGetParametersBaseProperties() {
         params.setPrefix("somePrefix");
         params.setThrowExceptionOnMissing(true);
         final Map<String, Object> paramsMap = params.getParameters();
-        assertEquals("Wrong exception flag", Boolean.TRUE,
-                paramsMap.get("throwExceptionOnMissing"));
+        assertEquals("Wrong exception flag", Boolean.TRUE, paramsMap.get("throwExceptionOnMissing"));
     }
 
     /**
      * Tests whether properties can be set through BeanUtils.
      */
     @Test
-    public void testSetBeanProperties() throws Exception
-    {
+    public void testSetBeanProperties() throws Exception {
         final Context ctx = EasyMock.createMock(Context.class);
         EasyMock.replay(ctx);
         final String prefix = "testJndiPrefix";

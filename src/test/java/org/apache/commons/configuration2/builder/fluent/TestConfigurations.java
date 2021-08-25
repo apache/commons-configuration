@@ -42,8 +42,7 @@ import org.junit.Test;
  * Test class for {@code Configurations}.
  *
  */
-public class TestConfigurations
-{
+public class TestConfigurations {
     /** Constant for the name of the test properties file. */
     private static final String TEST_PROPERTIES = "test.properties";
 
@@ -65,18 +64,15 @@ public class TestConfigurations
      * @param name the name of the test file
      * @return the full path to this file
      */
-    private static String absolutePath(final String name)
-    {
+    private static String absolutePath(final String name) {
         return ConfigurationAssert.getTestFile(name).getAbsolutePath();
     }
 
     /**
-     * Tests whether a default {@code Parameters} instance is created if
-     * necessary.
+     * Tests whether a default {@code Parameters} instance is created if necessary.
      */
     @Test
-    public void testDefaultParameters()
-    {
+    public void testDefaultParameters() {
         final Configurations configs = new Configurations();
         assertNotNull("No parameters", configs.getParameters());
     }
@@ -85,56 +81,43 @@ public class TestConfigurations
      * Tests whether parameters can be passed in at construction time.
      */
     @Test
-    public void testInitWithParameters()
-    {
+    public void testInitWithParameters() {
         final Parameters params = new Parameters();
         final Configurations configs = new Configurations(params);
         assertSame("Wrong parameters", params, configs.getParameters());
     }
 
     /**
-     * Tests whether a builder for a file-based configuration can be created if
-     * an input File is specified.
+     * Tests whether a builder for a file-based configuration can be created if an input File is specified.
      */
     @Test
-    public void testFileBasedBuilderWithFile()
-    {
+    public void testFileBasedBuilderWithFile() {
         final Configurations configs = new Configurations();
         final File file = ConfigurationAssert.getTestFile(TEST_PROPERTIES);
-        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-                configs.fileBasedBuilder(PropertiesConfiguration.class, file);
-        assertEquals("Wrong file", file.toURI(), builder.getFileHandler()
-                .getFile().toURI());
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = configs.fileBasedBuilder(PropertiesConfiguration.class, file);
+        assertEquals("Wrong file", file.toURI(), builder.getFileHandler().getFile().toURI());
     }
 
     /**
-     * Tests whether a builder for a file-based configuration can be created if
-     * a URL is specified.
+     * Tests whether a builder for a file-based configuration can be created if a URL is specified.
      */
     @Test
-    public void testFileBasedBuilderWithURL()
-    {
+    public void testFileBasedBuilderWithURL() {
         final Configurations configs = new Configurations();
         final URL url = ConfigurationAssert.getTestURL("test.properties");
-        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-                configs.fileBasedBuilder(PropertiesConfiguration.class, url);
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = configs.fileBasedBuilder(PropertiesConfiguration.class, url);
         assertEquals("Wrong URL", url, builder.getFileHandler().getURL());
     }
 
     /**
-     * Tests whether a builder for a file-based configuration can be created if
-     * a file name is specified.
+     * Tests whether a builder for a file-based configuration can be created if a file name is specified.
      */
     @Test
-    public void testFileBasedBuilderWithPath()
-    {
+    public void testFileBasedBuilderWithPath() {
         final Configurations configs = new Configurations();
         final String filePath = absolutePath(TEST_PROPERTIES);
-        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-                configs.fileBasedBuilder(PropertiesConfiguration.class,
-                        filePath);
-        assertEquals("Wrong path", filePath, builder.getFileHandler()
-                .getFileName());
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = configs.fileBasedBuilder(PropertiesConfiguration.class, filePath);
+        assertEquals("Wrong path", filePath, builder.getFileHandler().getFileName());
     }
 
     /**
@@ -142,8 +125,7 @@ public class TestConfigurations
      *
      * @param config the configuration instance to be checked.
      */
-    private static void checkPList(final Configuration config)
-    {
+    private static void checkPList(final Configuration config) {
         assertEquals("string1", config.getProperty("simple-string"));
     }
 
@@ -151,12 +133,9 @@ public class TestConfigurations
      * Tests whether a file-based configuration can be loaded from a file.
      */
     @Test
-    public void testFileBasedFile() throws ConfigurationException
-    {
+    public void testFileBasedFile() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final PropertyListConfiguration config =
-                configs.fileBased(PropertyListConfiguration.class,
-                        ConfigurationAssert.getTestFile(TEST_PLIST));
+        final PropertyListConfiguration config = configs.fileBased(PropertyListConfiguration.class, ConfigurationAssert.getTestFile(TEST_PLIST));
         checkPList(config);
     }
 
@@ -164,12 +143,9 @@ public class TestConfigurations
      * Tests whether a file-based configuration can be loaded from a URL.
      */
     @Test
-    public void testFileBasedURL() throws ConfigurationException
-    {
+    public void testFileBasedURL() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final PropertyListConfiguration config =
-                configs.fileBased(PropertyListConfiguration.class,
-                        ConfigurationAssert.getTestURL(TEST_PLIST));
+        final PropertyListConfiguration config = configs.fileBased(PropertyListConfiguration.class, ConfigurationAssert.getTestURL(TEST_PLIST));
         checkPList(config);
     }
 
@@ -177,12 +153,9 @@ public class TestConfigurations
      * Tests whether a file-based configuration can be loaded from a file path.
      */
     @Test
-    public void testFileBasedPath() throws ConfigurationException
-    {
+    public void testFileBasedPath() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final PropertyListConfiguration config =
-                configs.fileBased(PropertyListConfiguration.class,
-                        absolutePath(TEST_PLIST));
+        final PropertyListConfiguration config = configs.fileBased(PropertyListConfiguration.class, absolutePath(TEST_PLIST));
         checkPList(config);
     }
 
@@ -191,22 +164,17 @@ public class TestConfigurations
      *
      * @param config the configuration instance to be checked.
      */
-    private static void checkProperties(final Configuration config)
-    {
+    private static void checkProperties(final Configuration config) {
         assertEquals("true", config.getString("configuration.loaded"));
     }
 
     /**
-     * Tests whether a builder for a properties configuration can be created for
-     * a given file.
+     * Tests whether a builder for a properties configuration can be created for a given file.
      */
     @Test
-    public void testPropertiesBuilderFromFile() throws ConfigurationException
-    {
+    public void testPropertiesBuilderFromFile() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-                configs.propertiesBuilder(ConfigurationAssert
-                        .getTestFile(TEST_PROPERTIES));
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = configs.propertiesBuilder(ConfigurationAssert.getTestFile(TEST_PROPERTIES));
         checkProperties(builder.getConfiguration());
     }
 
@@ -214,26 +182,19 @@ public class TestConfigurations
      * Tests whether a properties configuration can be loaded from a file.
      */
     @Test
-    public void testPropertiesFromFile() throws ConfigurationException
-    {
+    public void testPropertiesFromFile() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final PropertiesConfiguration config =
-                configs.properties(ConfigurationAssert
-                        .getTestFile(TEST_PROPERTIES));
+        final PropertiesConfiguration config = configs.properties(ConfigurationAssert.getTestFile(TEST_PROPERTIES));
         checkProperties(config);
     }
 
     /**
-     * Tests whether a builder for a properties configuration can be created for
-     * a given URL.
+     * Tests whether a builder for a properties configuration can be created for a given URL.
      */
     @Test
-    public void testPropertiesBuilderFromURL() throws ConfigurationException
-    {
+    public void testPropertiesBuilderFromURL() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-                configs.propertiesBuilder(ConfigurationAssert
-                        .getTestURL(TEST_PROPERTIES));
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = configs.propertiesBuilder(ConfigurationAssert.getTestURL(TEST_PROPERTIES));
         checkProperties(builder.getConfiguration());
     }
 
@@ -241,76 +202,59 @@ public class TestConfigurations
      * Tests whether a properties configuration can be loaded from a URL.
      */
     @Test
-    public void testPropertiesFromURL() throws ConfigurationException
-    {
+    public void testPropertiesFromURL() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final PropertiesConfiguration config =
-                configs.properties(ConfigurationAssert
-                        .getTestURL(TEST_PROPERTIES));
+        final PropertiesConfiguration config = configs.properties(ConfigurationAssert.getTestURL(TEST_PROPERTIES));
         checkProperties(config);
     }
 
     /**
-     * Tests whether a builder for a properties configuration can be created for
-     * a given file path.
+     * Tests whether a builder for a properties configuration can be created for a given file path.
      */
     @Test
-    public void testPropertiesBuilderFromPath() throws ConfigurationException
-    {
+    public void testPropertiesBuilderFromPath() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-                configs.propertiesBuilder(absolutePath(TEST_PROPERTIES));
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = configs.propertiesBuilder(absolutePath(TEST_PROPERTIES));
         checkProperties(builder.getConfiguration());
     }
 
     /**
-     * Tests whether a builder for a properties configuration can be created for
-     * a given file path when an include is not found.
+     * Tests whether a builder for a properties configuration can be created for a given file path when an include is not
+     * found.
      */
     @Test
-    public void testPropertiesBuilderFromPathIncludeNotFoundFail() throws ConfigurationException
-    {
+    public void testPropertiesBuilderFromPathIncludeNotFoundFail() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
-                configs.propertiesBuilder(absolutePath("include-not-found.properties"));
-        try
-        {
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = configs.propertiesBuilder(absolutePath("include-not-found.properties"));
+        try {
             builder.getConfiguration();
             Assert.fail("Expected ConfigurationException");
-        }
-        catch (final ConfigurationException e) {
+        } catch (final ConfigurationException e) {
             // ignore
         }
     }
 
     /**
-     * Tests whether a builder for a properties configuration can be created for
-     * a given file path when an include is not found.
+     * Tests whether a builder for a properties configuration can be created for a given file path when an include is not
+     * found.
      */
     @Test
-    public void testPropertiesBuilderFromPathIncludeNotFoundPass() throws ConfigurationException
-    {
+    public void testPropertiesBuilderFromPathIncludeNotFoundPass() throws ConfigurationException {
         final Configurations configs = new Configurations();
         final String absPath = absolutePath("include-not-found.properties");
-        final FileBasedConfigurationBuilder<PropertiesConfiguration> builderFail =
-                configs.propertiesBuilder(absPath);
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builderFail = configs.propertiesBuilder(absPath);
         // Expect failure:
-        try
-        {
+        try {
             builderFail.getConfiguration();
             Assert.fail("Expected ConfigurationException");
-        }
-        catch (final ConfigurationException e)
-        {
+        } catch (final ConfigurationException e) {
             // Ignore
             // e.printStackTrace();
         }
         // Expect failure:
-        try
-        {
+        try {
             configs.properties(absPath);
-        }
-        catch (final ConfigurationException e) {
+        } catch (final ConfigurationException e) {
             // Ignore
             // e.printStackTrace();
         }
@@ -323,8 +267,7 @@ public class TestConfigurations
                             .setIncludeListener(PropertiesConfiguration.NOOP_INCLUDE_LISTENER)
                             .getParameters();
             // @formatter:on
-            final BasicConfigurationBuilder<PropertiesConfiguration> builderOk = configs.propertiesBuilder(absPath)
-                    .addParameters(map);
+            final BasicConfigurationBuilder<PropertiesConfiguration> builderOk = configs.propertiesBuilder(absPath).addParameters(map);
             final PropertiesConfiguration configuration = builderOk.getConfiguration();
             assertEquals("valueA", configuration.getString("keyA"));
         }
@@ -345,11 +288,9 @@ public class TestConfigurations
      * Tests whether a properties configuration can be loaded from a file path.
      */
     @Test
-    public void testPropertiesFromPath() throws ConfigurationException
-    {
+    public void testPropertiesFromPath() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final PropertiesConfiguration config =
-                configs.properties(absolutePath(TEST_PROPERTIES));
+        final PropertiesConfiguration config = configs.properties(absolutePath(TEST_PROPERTIES));
         checkProperties(config);
     }
 
@@ -358,21 +299,17 @@ public class TestConfigurations
      *
      * @param config the configuration instance to be checked.
      */
-    private static void checkXML(final Configuration config)
-    {
+    private static void checkXML(final Configuration config) {
         assertEquals("value", config.getProperty("element"));
     }
 
     /**
-     * Tests whether a builder for a XML configuration can be created for a
-     * given file.
+     * Tests whether a builder for a XML configuration can be created for a given file.
      */
     @Test
-    public void testXMLBuilderFromFile() throws ConfigurationException
-    {
+    public void testXMLBuilderFromFile() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final FileBasedConfigurationBuilder<XMLConfiguration> builder =
-                configs.xmlBuilder(ConfigurationAssert.getTestFile(TEST_XML));
+        final FileBasedConfigurationBuilder<XMLConfiguration> builder = configs.xmlBuilder(ConfigurationAssert.getTestFile(TEST_XML));
         checkXML(builder.getConfiguration());
     }
 
@@ -380,24 +317,19 @@ public class TestConfigurations
      * Tests whether a XML configuration can be loaded from a file.
      */
     @Test
-    public void testXMLFromFile() throws ConfigurationException
-    {
+    public void testXMLFromFile() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final XMLConfiguration config =
-                configs.xml(ConfigurationAssert.getTestFile(TEST_XML));
+        final XMLConfiguration config = configs.xml(ConfigurationAssert.getTestFile(TEST_XML));
         checkXML(config);
     }
 
     /**
-     * Tests whether a builder for a XML configuration can be created for a
-     * given URL.
+     * Tests whether a builder for a XML configuration can be created for a given URL.
      */
     @Test
-    public void testXMLBuilderFromURL() throws ConfigurationException
-    {
+    public void testXMLBuilderFromURL() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final FileBasedConfigurationBuilder<XMLConfiguration> builder =
-                configs.xmlBuilder(ConfigurationAssert.getTestURL(TEST_XML));
+        final FileBasedConfigurationBuilder<XMLConfiguration> builder = configs.xmlBuilder(ConfigurationAssert.getTestURL(TEST_XML));
         checkXML(builder.getConfiguration());
     }
 
@@ -405,24 +337,19 @@ public class TestConfigurations
      * Tests whether a XML configuration can be loaded from a URL.
      */
     @Test
-    public void testXMLFromURL() throws ConfigurationException
-    {
+    public void testXMLFromURL() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final XMLConfiguration config =
-                configs.xml(ConfigurationAssert.getTestURL(TEST_XML));
+        final XMLConfiguration config = configs.xml(ConfigurationAssert.getTestURL(TEST_XML));
         checkXML(config);
     }
 
     /**
-     * Tests whether a builder for a XML configuration can be created for a
-     * given file path.
+     * Tests whether a builder for a XML configuration can be created for a given file path.
      */
     @Test
-    public void testXMLBuilderFromPath() throws ConfigurationException
-    {
+    public void testXMLBuilderFromPath() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final FileBasedConfigurationBuilder<XMLConfiguration> builder =
-                configs.xmlBuilder(absolutePath(TEST_XML));
+        final FileBasedConfigurationBuilder<XMLConfiguration> builder = configs.xmlBuilder(absolutePath(TEST_XML));
         checkXML(builder.getConfiguration());
     }
 
@@ -430,8 +357,7 @@ public class TestConfigurations
      * Tests whether a XML configuration can be loaded from a URL.
      */
     @Test
-    public void testXMLFromPath() throws ConfigurationException
-    {
+    public void testXMLFromPath() throws ConfigurationException {
         final Configurations configs = new Configurations();
         final XMLConfiguration config = configs.xml(absolutePath(TEST_XML));
         checkXML(config);
@@ -442,21 +368,17 @@ public class TestConfigurations
      *
      * @param config the configuration instance to be checked.
      */
-    private static void checkINI(final INIConfiguration config)
-    {
+    private static void checkINI(final INIConfiguration config) {
         assertEquals("yes", config.getProperty("testini.loaded"));
     }
 
     /**
-     * Tests whether a builder for a INI configuration can be created for a
-     * given file.
+     * Tests whether a builder for a INI configuration can be created for a given file.
      */
     @Test
-    public void testINIBuilderFromFile() throws ConfigurationException
-    {
+    public void testINIBuilderFromFile() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final FileBasedConfigurationBuilder<INIConfiguration> builder =
-                configs.iniBuilder(ConfigurationAssert.getTestFile(TEST_INI));
+        final FileBasedConfigurationBuilder<INIConfiguration> builder = configs.iniBuilder(ConfigurationAssert.getTestFile(TEST_INI));
         checkINI(builder.getConfiguration());
     }
 
@@ -464,24 +386,19 @@ public class TestConfigurations
      * Tests whether a INI configuration can be loaded from a file.
      */
     @Test
-    public void testINIFromFile() throws ConfigurationException
-    {
+    public void testINIFromFile() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final INIConfiguration config =
-                configs.ini(ConfigurationAssert.getTestFile(TEST_INI));
+        final INIConfiguration config = configs.ini(ConfigurationAssert.getTestFile(TEST_INI));
         checkINI(config);
     }
 
     /**
-     * Tests whether a builder for a INI configuration can be created for a
-     * given URL.
+     * Tests whether a builder for a INI configuration can be created for a given URL.
      */
     @Test
-    public void testINIBuilderFromURL() throws ConfigurationException
-    {
+    public void testINIBuilderFromURL() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final FileBasedConfigurationBuilder<INIConfiguration> builder =
-                configs.iniBuilder(ConfigurationAssert.getTestURL(TEST_INI));
+        final FileBasedConfigurationBuilder<INIConfiguration> builder = configs.iniBuilder(ConfigurationAssert.getTestURL(TEST_INI));
         checkINI(builder.getConfiguration());
     }
 
@@ -489,24 +406,19 @@ public class TestConfigurations
      * Tests whether a INI configuration can be loaded from a URL.
      */
     @Test
-    public void testINIFromURL() throws ConfigurationException
-    {
+    public void testINIFromURL() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final INIConfiguration config =
-                configs.ini(ConfigurationAssert.getTestURL(TEST_INI));
+        final INIConfiguration config = configs.ini(ConfigurationAssert.getTestURL(TEST_INI));
         checkINI(config);
     }
 
     /**
-     * Tests whether a builder for a INI configuration can be created for a
-     * given file path.
+     * Tests whether a builder for a INI configuration can be created for a given file path.
      */
     @Test
-    public void testINIBuilderFromPath() throws ConfigurationException
-    {
+    public void testINIBuilderFromPath() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final FileBasedConfigurationBuilder<INIConfiguration> builder =
-                configs.iniBuilder(absolutePath(TEST_INI));
+        final FileBasedConfigurationBuilder<INIConfiguration> builder = configs.iniBuilder(absolutePath(TEST_INI));
         checkINI(builder.getConfiguration());
     }
 
@@ -514,8 +426,7 @@ public class TestConfigurations
      * Tests whether a INI configuration can be loaded from a file path.
      */
     @Test
-    public void testINIFromPath() throws ConfigurationException
-    {
+    public void testINIFromPath() throws ConfigurationException {
         final Configurations configs = new Configurations();
         final INIConfiguration config = configs.ini(absolutePath(TEST_INI));
         checkINI(config);
@@ -526,23 +437,18 @@ public class TestConfigurations
      *
      * @param config the configuration instance to be checked.
      */
-    private static void checkCombined(final Configuration config)
-    {
+    private static void checkCombined(final Configuration config) {
         checkProperties(config);
         checkXML(config);
     }
 
     /**
-     * Tests whether a combined configuration builder can be constructed for a
-     * file.
+     * Tests whether a combined configuration builder can be constructed for a file.
      */
     @Test
-    public void testCombinedBuilderFromFile() throws ConfigurationException
-    {
+    public void testCombinedBuilderFromFile() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final CombinedConfigurationBuilder builder =
-                configs.combinedBuilder(ConfigurationAssert
-                        .getTestFile(TEST_COMBINED));
+        final CombinedConfigurationBuilder builder = configs.combinedBuilder(ConfigurationAssert.getTestFile(TEST_COMBINED));
         checkCombined(builder.getConfiguration());
     }
 
@@ -550,25 +456,19 @@ public class TestConfigurations
      * Tests whether a combined configuration can be loaded from a file.
      */
     @Test
-    public void testCombinedFromFile() throws ConfigurationException
-    {
+    public void testCombinedFromFile() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final CombinedConfiguration config =
-                configs.combined(ConfigurationAssert.getTestFile(TEST_COMBINED));
+        final CombinedConfiguration config = configs.combined(ConfigurationAssert.getTestFile(TEST_COMBINED));
         checkCombined(config);
     }
 
     /**
-     * Tests whether a combined configuration builder can be constructed for a
-     * URL.
+     * Tests whether a combined configuration builder can be constructed for a URL.
      */
     @Test
-    public void testCombinedBuilderFromURL() throws ConfigurationException
-    {
+    public void testCombinedBuilderFromURL() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final CombinedConfigurationBuilder builder =
-                configs.combinedBuilder(ConfigurationAssert
-                        .getTestURL(TEST_COMBINED));
+        final CombinedConfigurationBuilder builder = configs.combinedBuilder(ConfigurationAssert.getTestURL(TEST_COMBINED));
         checkCombined(builder.getConfiguration());
     }
 
@@ -576,24 +476,19 @@ public class TestConfigurations
      * Tests whether a combined configuration can be loaded from a URL.
      */
     @Test
-    public void testCombinedFromURL() throws ConfigurationException
-    {
+    public void testCombinedFromURL() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final CombinedConfiguration config =
-                configs.combined(ConfigurationAssert.getTestURL(TEST_COMBINED));
+        final CombinedConfiguration config = configs.combined(ConfigurationAssert.getTestURL(TEST_COMBINED));
         checkCombined(config);
     }
 
     /**
-     * Tests whether a combined configuration builder can be constructed for a
-     * file path.
+     * Tests whether a combined configuration builder can be constructed for a file path.
      */
     @Test
-    public void testCombinedBuilderFromPath() throws ConfigurationException
-    {
+    public void testCombinedBuilderFromPath() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final CombinedConfigurationBuilder builder =
-                configs.combinedBuilder(absolutePath(TEST_COMBINED));
+        final CombinedConfigurationBuilder builder = configs.combinedBuilder(absolutePath(TEST_COMBINED));
         checkCombined(builder.getConfiguration());
     }
 
@@ -601,11 +496,9 @@ public class TestConfigurations
      * Tests whether a combined configuration can be loaded from a file path.
      */
     @Test
-    public void testCombinedFromPath() throws ConfigurationException
-    {
+    public void testCombinedFromPath() throws ConfigurationException {
         final Configurations configs = new Configurations();
-        final CombinedConfiguration config =
-                configs.combined(absolutePath(TEST_COMBINED));
+        final CombinedConfiguration config = configs.combined(absolutePath(TEST_COMBINED));
         checkCombined(config);
     }
 }

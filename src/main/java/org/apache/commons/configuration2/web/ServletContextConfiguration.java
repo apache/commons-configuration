@@ -25,48 +25,40 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 
 /**
- * A configuration wrapper to read the initialization parameters of a servlet
- * context. This configuration is read only, adding or removing a property will
- * throw an UnsupportedOperationException.
+ * A configuration wrapper to read the initialization parameters of a servlet context. This configuration is read only,
+ * adding or removing a property will throw an UnsupportedOperationException.
  *
  * @since 1.1
  */
-public class ServletContextConfiguration extends BaseWebConfiguration
-{
-    /** Stores the wrapped servlet context.*/
+public class ServletContextConfiguration extends BaseWebConfiguration {
+    /** Stores the wrapped servlet context. */
     protected ServletContext context;
 
     /**
-     * Create a ServletContextConfiguration using the context of
-     * the specified servlet.
+     * Create a ServletContextConfiguration using the context of the specified servlet.
      *
      * @param servlet the servlet
      */
-    public ServletContextConfiguration(final Servlet servlet)
-    {
+    public ServletContextConfiguration(final Servlet servlet) {
         this.context = servlet.getServletConfig().getServletContext();
     }
 
     /**
-     * Create a ServletContextConfiguration using the servlet context
-     * initialization parameters.
+     * Create a ServletContextConfiguration using the servlet context initialization parameters.
      *
      * @param context the servlet context
      */
-    public ServletContextConfiguration(final ServletContext context)
-    {
+    public ServletContextConfiguration(final ServletContext context) {
         this.context = context;
     }
 
     @Override
-    protected Object getPropertyInternal(final String key)
-    {
+    protected Object getPropertyInternal(final String key) {
         return handleDelimiters(context.getInitParameter(key));
     }
 
     @Override
-    protected Iterator<String> getKeysInternal()
-    {
+    protected Iterator<String> getKeysInternal() {
         // According to the documentation of getInitParameterNames() the
         // enumeration is of type String.
         final Enumeration<String> en = context.getInitParameterNames();

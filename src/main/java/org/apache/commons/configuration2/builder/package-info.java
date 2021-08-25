@@ -17,25 +17,22 @@
 
 /**
  * <p>
- * This package contains the implementations of <em>configuration builder</em>
- * classes used to create new {@code Configuration} objects.
+ * This package contains the implementations of <em>configuration builder</em> classes used to create new
+ * {@code Configuration} objects.
  * </p>
  * <p>
- * In <em>Commons Configuration</em>, configuration builders are responsible for
- * the creation and initialization of {@code Configuration} objects. The typical
- * use case is that a builder is created and configured with initialization
- * parameters defining specific settings for the configuration to be created.
- * The builder can then be stored centrally. Each component requiring access to
- * configuration information queries the builder for its managed
+ * In <em>Commons Configuration</em>, configuration builders are responsible for the creation and initialization of
+ * {@code Configuration} objects. The typical use case is that a builder is created and configured with initialization
+ * parameters defining specific settings for the configuration to be created. The builder can then be stored centrally.
+ * Each component requiring access to configuration information queries the builder for its managed
  * {@code Configuration} and can read or write properties as its pleasure.
  * </p>
  * <h3>Important note</h3>
  * <p>
- * <strong>This package contains a number of interfaces that reflect the
- * initialization parameters available for supported configuration implementations.
- * These interfaces are not intended to be implemented by client code! When new
- * features are added to the represented configuration classes corresponding new
- * methods will be added to them. This can happen even in minor releases.</strong>
+ * <strong>This package contains a number of interfaces that reflect the initialization parameters available for
+ * supported configuration implementations. These interfaces are not intended to be implemented by client code! When new
+ * features are added to the represented configuration classes corresponding new methods will be added to them. This can
+ * happen even in minor releases.</strong>
  * </p>
  *
  */

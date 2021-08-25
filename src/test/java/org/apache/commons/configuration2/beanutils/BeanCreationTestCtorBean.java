@@ -20,24 +20,19 @@ package org.apache.commons.configuration2.beanutils;
  * Another test bean class for bean creation operations which defines some constructors.
  *
  */
-public class BeanCreationTestCtorBean extends BeanCreationTestBean
-{
-    public BeanCreationTestCtorBean()
-    {
+public class BeanCreationTestCtorBean extends BeanCreationTestBean {
+    public BeanCreationTestCtorBean() {
     }
 
-    public BeanCreationTestCtorBean(final BeanCreationTestBean buddy)
-    {
+    public BeanCreationTestCtorBean(final BeanCreationTestBean buddy) {
         setBuddy(buddy);
     }
 
-    public BeanCreationTestCtorBean(final String s)
-    {
+    public BeanCreationTestCtorBean(final String s) {
         setStringValue(s);
     }
 
-    public BeanCreationTestCtorBean(final String s, final int i)
-    {
+    public BeanCreationTestCtorBean(final String s, final int i) {
         this(s);
         setIntValue(i);
     }

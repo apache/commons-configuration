@@ -26,19 +26,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test class for {@code DefaultFileSystem}. Note: This class tests only basic
- * functionality. Other parts are tested by actual access to configuration files
- * in other test classes.
+ * Test class for {@code DefaultFileSystem}. Note: This class tests only basic functionality. Other parts are tested by
+ * actual access to configuration files in other test classes.
  *
  */
-public class TestDefaultFileSystem
-{
+public class TestDefaultFileSystem {
     /** The file system to be tested. */
     private DefaultFileSystem fileSystem;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         fileSystem = new DefaultFileSystem();
     }
 
@@ -46,8 +43,7 @@ public class TestDefaultFileSystem
      * Tests the default logger.
      */
     @Test
-    public void testDefaultLogger()
-    {
+    public void testDefaultLogger() {
         assertNotNull("No default logger", fileSystem.getLogger());
     }
 
@@ -55,20 +51,17 @@ public class TestDefaultFileSystem
      * Tests whether the logger can be changed.
      */
     @Test
-    public void testSetLogger()
-    {
+    public void testSetLogger() {
         final ConfigurationLogger log = new ConfigurationLogger(getClass());
         fileSystem.setLogger(log);
         assertSame("Logger not set", log, fileSystem.getLogger());
     }
 
     /**
-     * Tests that an invalid output path causes an exception to be thrown when creating
-     * an ouput stream.
+     * Tests that an invalid output path causes an exception to be thrown when creating an ouput stream.
      */
     @Test(expected = ConfigurationException.class)
-    public void testGetOutputStreamInvalidPath() throws ConfigurationException
-    {
+    public void testGetOutputStreamInvalidPath() throws ConfigurationException {
         fileSystem.getOutputStream(new File(""));
     }
 }

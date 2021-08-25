@@ -26,14 +26,12 @@ import org.junit.Test;
  * test if properties that contain a "=" will be loaded correctly.
  *
  */
-public class TestEqualsProperty
-{
+public class TestEqualsProperty {
     /** The File that we test with */
     private final String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
 
     @Test
-    public void testEquals() throws Exception
-    {
+    public void testEquals() throws Exception {
         final PropertiesConfiguration conf = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(conf);
         handler.setFileName(testProperties);

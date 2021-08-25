@@ -20,18 +20,20 @@ import org.xml.sax.EntityResolver;
 
 /**
  * Interface that identifies the class as using an EntityResolver
+ *
  * @since 1.7
  */
-public interface EntityResolverSupport
-{
+public interface EntityResolverSupport {
     /**
      * Return the EntityResolver associated with the class.
+     *
      * @return The EntityResolver.
      */
     EntityResolver getEntityResolver();
 
     /**
      * Set the EntityResolver to associate with this class.
+     *
      * @param resolver The EntityResolver
      */
     void setEntityResolver(EntityResolver resolver);

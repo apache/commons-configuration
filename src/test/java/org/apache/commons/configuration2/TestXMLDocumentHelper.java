@@ -54,8 +54,7 @@ import org.xml.sax.SAXException;
  * Test class for {@code XMLDocumentHelper}.
  *
  */
-public class TestXMLDocumentHelper
-{
+public class TestXMLDocumentHelper {
     /** Constant for the name of an element. */
     private static final String ELEMENT = "testElementName";
 
@@ -67,9 +66,7 @@ public class TestXMLDocumentHelper
      *
      * @return the test document
      */
-    private static Document loadDocument() throws ParserConfigurationException,
-            IOException, SAXException
-    {
+    private static Document loadDocument() throws ParserConfigurationException, IOException, SAXException {
         return loadDocument(TEST_FILE);
     }
 
@@ -79,11 +76,8 @@ public class TestXMLDocumentHelper
      * @param name the name of the test document
      * @return the parsed document
      */
-    private static Document loadDocument(final String name) throws IOException,
-            SAXException, ParserConfigurationException
-    {
-        final DocumentBuilder builder =
-                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    private static Document loadDocument(final String name) throws IOException, SAXException, ParserConfigurationException {
+        final DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         return builder.parse(ConfigurationAssert.getTestFile(name));
     }
 
@@ -94,9 +88,7 @@ public class TestXMLDocumentHelper
      * @return the document serialized to a string
      * @throws ConfigurationException if an error occurs
      */
-    private static String documentToString(final XMLDocumentHelper helper)
-            throws ConfigurationException
-    {
+    private static String documentToString(final XMLDocumentHelper helper) throws ConfigurationException {
         return documentToString(helper.getDocument());
     }
 
@@ -107,14 +99,11 @@ public class TestXMLDocumentHelper
      * @return the document serialized to a string
      * @throws ConfigurationException if an error occurs
      */
-    private static String documentToString(final Document document)
-            throws ConfigurationException
-    {
+    private static String documentToString(final Document document) throws ConfigurationException {
         final Transformer transformer = XMLDocumentHelper.createTransformer();
         final StringWriter writer = new StringWriter();
         final Result result = new StreamResult(writer);
-        XMLDocumentHelper.transform(transformer,
-                new DOMSource(document.getDocumentElement()), result);
+        XMLDocumentHelper.transform(transformer, new DOMSource(document.getDocumentElement()), result);
         return writer.toString();
     }
 
@@ -122,33 +111,23 @@ public class TestXMLDocumentHelper
      * Tests whether a correct transformer factory can be created.
      */
     @Test
-    public void testCreateTransformerFactory()
-    {
-        assertNotNull("No factory",
-                XMLDocumentHelper.createTransformerFactory());
+    public void testCreateTransformerFactory() {
+        assertNotNull("No factory", XMLDocumentHelper.createTransformerFactory());
     }
 
     /**
-     * Tests whether exceptions while creating transformers are correctly
-     * handled.
+     * Tests whether exceptions while creating transformers are correctly handled.
      */
     @Test
-    public void testCreateTransformerFactoryException()
-            throws TransformerConfigurationException
-    {
-        final TransformerFactory factory =
-                EasyMock.createMock(TransformerFactory.class);
-        final TransformerConfigurationException cause =
-                new TransformerConfigurationException();
+    public void testCreateTransformerFactoryException() throws TransformerConfigurationException {
+        final TransformerFactory factory = EasyMock.createMock(TransformerFactory.class);
+        final TransformerConfigurationException cause = new TransformerConfigurationException();
         EasyMock.expect(factory.newTransformer()).andThrow(cause);
         EasyMock.replay(factory);
-        try
-        {
+        try {
             XMLDocumentHelper.createTransformer(factory);
             fail("Exception not detected!");
-        }
-        catch (final ConfigurationException cex)
-        {
+        } catch (final ConfigurationException cex) {
             assertEquals("Wrong cause", cause, cex.getCause());
         }
     }
@@ -157,8 +136,7 @@ public class TestXMLDocumentHelper
      * Tests whether transform() handles a TransformerException.
      */
     @Test
-    public void testTransformException() throws TransformerException
-    {
+    public void testTransformException() throws TransformerException {
         final Transformer transformer = EasyMock.createMock(Transformer.class);
         final Source src = EasyMock.createMock(Source.class);
         final Result res = EasyMock.createMock(Result.class);
@@ -167,38 +145,28 @@ public class TestXMLDocumentHelper
         EasyMock.expectLastCall().andThrow(tex);
         EasyMock.replay(transformer, src, res);
 
-        try
-        {
+        try {
             XMLDocumentHelper.transform(transformer, src, res);
             fail("Exception not detected!");
-        }
-        catch (final ConfigurationException cex)
-        {
+        } catch (final ConfigurationException cex) {
             assertEquals("Wrong cause", tex, cex.getCause());
         }
     }
 
     /**
-     * Tests whether an exception thrown by a document builder factory is
-     * handled correctly.
+     * Tests whether an exception thrown by a document builder factory is handled correctly.
      */
     @Test
-    public void testCreateDocumentBuilderFromFactoryException()
-            throws ParserConfigurationException
-    {
-        final DocumentBuilderFactory factory =
-                EasyMock.createMock(DocumentBuilderFactory.class);
+    public void testCreateDocumentBuilderFromFactoryException() throws ParserConfigurationException {
+        final DocumentBuilderFactory factory = EasyMock.createMock(DocumentBuilderFactory.class);
         final ParserConfigurationException pcex = new ParserConfigurationException();
         EasyMock.expect(factory.newDocumentBuilder()).andThrow(pcex);
         EasyMock.replay(factory);
 
-        try
-        {
+        try {
             XMLDocumentHelper.createDocumentBuilder(factory);
             fail("Exception not detected!");
-        }
-        catch (final ConfigurationException cex)
-        {
+        } catch (final ConfigurationException cex) {
             assertEquals("Wrong cause", pcex, cex.getCause());
         }
     }
@@ -207,13 +175,11 @@ public class TestXMLDocumentHelper
      * Tests whether an instance can be created wrapping a new document.
      */
     @Test
-    public void testInitForNewDocument() throws ConfigurationException
-    {
+    public void testInitForNewDocument() throws ConfigurationException {
         final XMLDocumentHelper helper = XMLDocumentHelper.forNewDocument(ELEMENT);
         final Document doc = helper.getDocument();
         final Element rootElement = doc.getDocumentElement();
-        assertEquals("Wrong root element name", ELEMENT,
-                rootElement.getNodeName());
+        assertEquals("Wrong root element name", ELEMENT, rootElement.getNodeName());
         final NodeList childNodes = rootElement.getChildNodes();
         assertEquals("Got child nodes", 0, childNodes.getLength());
         assertNull("Got a public ID", helper.getSourcePublicID());
@@ -224,50 +190,40 @@ public class TestXMLDocumentHelper
      * Tests the content of the element mapping for a newly created document.
      */
     @Test
-    public void testElementMappingForNewDocument()
-            throws ConfigurationException
-    {
+    public void testElementMappingForNewDocument() throws ConfigurationException {
         final XMLDocumentHelper helper = XMLDocumentHelper.forNewDocument(ELEMENT);
-        assertTrue("Got an element mapping", helper.getElementMapping()
-                .isEmpty());
+        assertTrue("Got an element mapping", helper.getElementMapping().isEmpty());
     }
 
     /**
      * Tests whether an instance can be created based on a source document.
      */
     @Test
-    public void testInitForSourceDocument() throws Exception
-    {
+    public void testInitForSourceDocument() throws Exception {
         final Document doc = loadDocument();
         final XMLDocumentHelper helper = XMLDocumentHelper.forSourceDocument(doc);
         assertNotSame("Same source document", doc, helper.getDocument());
-        assertEquals("Wrong document content", documentToString(doc),
-                documentToString(helper));
+        assertEquals("Wrong document content", documentToString(doc), documentToString(helper));
     }
 
     /**
      * Tests the content of the element mapping for a source document.
      */
     @Test
-    public void testElementMappingForSourceDocument() throws Exception
-    {
+    public void testElementMappingForSourceDocument() throws Exception {
         final Document doc = loadDocument();
         final XMLDocumentHelper helper = XMLDocumentHelper.forSourceDocument(doc);
-        assertTrue("Got an element mapping", helper.getElementMapping()
-                .isEmpty());
+        assertTrue("Got an element mapping", helper.getElementMapping().isEmpty());
     }
 
     /**
      * Tests whether a document can be copied.
      */
     @Test
-    public void testCopyDocument() throws Exception
-    {
-        final XMLDocumentHelper helper =
-                XMLDocumentHelper.forSourceDocument(loadDocument());
+    public void testCopyDocument() throws Exception {
+        final XMLDocumentHelper helper = XMLDocumentHelper.forSourceDocument(loadDocument());
         final XMLDocumentHelper copy = helper.createCopy();
-        assertNotSame("Same documents", helper.getDocument(),
-                copy.getDocument());
+        assertNotSame("Same documents", helper.getDocument(), copy.getDocument());
         final String doc1 = documentToString(helper);
         final String doc2 = documentToString(copy);
         assertEquals("Different document contents", doc1, doc2);
@@ -278,15 +234,12 @@ public class TestXMLDocumentHelper
      *
      * @param file the name of the test file
      */
-    private void checkCopyElementMapping(final String file) throws Exception
-    {
-        final XMLDocumentHelper helper =
-                XMLDocumentHelper.forSourceDocument(loadDocument(file));
+    private void checkCopyElementMapping(final String file) throws Exception {
+        final XMLDocumentHelper helper = XMLDocumentHelper.forSourceDocument(loadDocument(file));
         final XMLDocumentHelper copy = helper.createCopy();
         final Collection<Node> texts = findTextElements(helper.getDocument());
         assertFalse("No texts", texts.isEmpty());
-        for (final Node n : texts)
-        {
+        for (final Node n : texts) {
             final Text txtSrc = (Text) n;
             final Text txtCopy = (Text) copy.getElementMapping().get(n);
             assertNotNull("No matching element for " + n, txtCopy);
@@ -300,8 +253,7 @@ public class TestXMLDocumentHelper
      * @param document the document
      * @return a collection with all text elements
      */
-    private static Collection<Node> findTextElements(final Document document)
-    {
+    private static Collection<Node> findTextElements(final Document document) {
         final Collection<Node> texts = new HashSet<>();
         findTextElementsForNode(document.getDocumentElement(), texts);
         return texts;
@@ -313,16 +265,12 @@ public class TestXMLDocumentHelper
      * @param node the node
      * @param texts the collection with text elements
      */
-    private static void findTextElementsForNode(final Node node,
-            final Collection<Node> texts)
-    {
-        if (node instanceof Text)
-        {
+    private static void findTextElementsForNode(final Node node, final Collection<Node> texts) {
+        if (node instanceof Text) {
             texts.add(node);
         }
         final NodeList childNodes = node.getChildNodes();
-        for (int i = 0; i < childNodes.getLength(); i++)
-        {
+        for (int i = 0; i < childNodes.getLength(); i++) {
             findTextElementsForNode(childNodes.item(i), texts);
         }
     }
@@ -331,18 +279,15 @@ public class TestXMLDocumentHelper
      * Tests the element mapping of a copied document.
      */
     @Test
-    public void testCopyElementMapping() throws Exception
-    {
+    public void testCopyElementMapping() throws Exception {
         checkCopyElementMapping(TEST_FILE);
     }
 
     /**
-     * Tests whether the element is correctly constructed for a more complex
-     * document.
+     * Tests whether the element is correctly constructed for a more complex document.
      */
     @Test
-    public void testCopyElementMappingForComplexDocument() throws Exception
-    {
+    public void testCopyElementMappingForComplexDocument() throws Exception {
         checkCopyElementMapping("test.xml");
     }
 }

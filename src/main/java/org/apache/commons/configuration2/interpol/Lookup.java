@@ -21,36 +21,28 @@ package org.apache.commons.configuration2.interpol;
  * Definition of an interface for looking up variables during interpolation.
  * </p>
  * <p>
- * Objects implementing this interface can be assigned a variable prefix and
- * added to a {@link ConfigurationInterpolator} object. Whenever the
- * {@code ConfigurationInterpolator} encounters a property value referencing a
- * variable, e.g. {@code ${prefix:variableName}}, it extracts the prefix
- * and finds the matching {@code Lookup} object. Then this object is asked to
- * resolve the variable name and provide the corresponding value.
+ * Objects implementing this interface can be assigned a variable prefix and added to a
+ * {@link ConfigurationInterpolator} object. Whenever the {@code ConfigurationInterpolator} encounters a property value
+ * referencing a variable, e.g. {@code ${prefix:variableName}}, it extracts the prefix and finds the matching
+ * {@code Lookup} object. Then this object is asked to resolve the variable name and provide the corresponding value.
  * </p>
  * <p>
- * This interface defines a single method for performing variable lookup. It is
- * passed the name of a variable and has to return the corresponding value. It
- * is of course up to a specific implementation how this is done. If the
- * variable name cannot be resolved, an implementation has to return
- * <b>null</b>.
+ * This interface defines a single method for performing variable lookup. It is passed the name of a variable and has to
+ * return the corresponding value. It is of course up to a specific implementation how this is done. If the variable
+ * name cannot be resolved, an implementation has to return <b>null</b>.
  * </p>
  * <p>
- * Note: Implementations must be aware that they can be accessed concurrently.
- * This is for instance the case if a configuration object is read by multiple
- * threads or if a {@code Lookup} object is shared by multiple configurations.
+ * Note: Implementations must be aware that they can be accessed concurrently. This is for instance the case if a
+ * configuration object is read by multiple threads or if a {@code Lookup} object is shared by multiple configurations.
  * </p>
  *
  * @since 2.0
  */
-public interface Lookup
-{
+public interface Lookup {
     /**
-     * Looks up the value of the specified variable. This method is called by
-     * {@link ConfigurationInterpolator} with the variable name extracted from
-     * the expression to interpolate (i.e. the prefix name has already been
-     * removed). A concrete implementation has to return the value of this
-     * variable or <b>null</b> if the variable name is unknown.
+     * Looks up the value of the specified variable. This method is called by {@link ConfigurationInterpolator} with the
+     * variable name extracted from the expression to interpolate (i.e. the prefix name has already been removed). A
+     * concrete implementation has to return the value of this variable or <b>null</b> if the variable name is unknown.
      *
      * @param variable the name of the variable to be resolved
      * @return the value of this variable or <b>null</b>

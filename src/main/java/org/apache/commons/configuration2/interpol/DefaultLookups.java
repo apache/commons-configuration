@@ -56,24 +56,21 @@ import org.apache.commons.text.lookup.StringLookupFactory;
  *
  * @since 2.0
  */
-public enum DefaultLookups
-{
+public enum DefaultLookups {
 
     /**
      * The lookup for Base64 decoding.
      *
      * @since 2.4
      */
-    BASE64_DECODER(StringLookupFactory.KEY_BASE64_DECODER,
-            new StringLookupAdapter(StringLookupFactory.INSTANCE.base64DecoderStringLookup())),
+    BASE64_DECODER(StringLookupFactory.KEY_BASE64_DECODER, new StringLookupAdapter(StringLookupFactory.INSTANCE.base64DecoderStringLookup())),
 
     /**
      * The lookup for Base64 decoding.
      *
      * @since 2.4
      */
-    BASE64_ENCODER(StringLookupFactory.KEY_BASE64_ENCODER,
-            new StringLookupAdapter(StringLookupFactory.INSTANCE.base64EncoderStringLookup())),
+    BASE64_ENCODER(StringLookupFactory.KEY_BASE64_ENCODER, new StringLookupAdapter(StringLookupFactory.INSTANCE.base64EncoderStringLookup())),
 
     /**
      * The lookup for constants.
@@ -99,8 +96,7 @@ public enum DefaultLookups
     /**
      * The lookup for environment properties.
      */
-    ENVIRONMENT(StringLookupFactory.KEY_ENV,
-            new StringLookupAdapter(StringLookupFactory.INSTANCE.environmentVariableStringLookup())),
+    ENVIRONMENT(StringLookupFactory.KEY_ENV, new StringLookupAdapter(StringLookupFactory.INSTANCE.environmentVariableStringLookup())),
 
     /**
      * The lookup for files.
@@ -114,32 +110,28 @@ public enum DefaultLookups
      *
      * @since 2.4
      */
-    JAVA(StringLookupFactory.KEY_JAVA,
-            new StringLookupAdapter(StringLookupFactory.INSTANCE.javaPlatformStringLookup())),
+    JAVA(StringLookupFactory.KEY_JAVA, new StringLookupAdapter(StringLookupFactory.INSTANCE.javaPlatformStringLookup())),
 
     /**
      * The lookup for localhost information.
      *
      * @since 2.4
      */
-    LOCAL_HOST(StringLookupFactory.KEY_LOCALHOST,
-            new StringLookupAdapter(StringLookupFactory.INSTANCE.localHostStringLookup())),
+    LOCAL_HOST(StringLookupFactory.KEY_LOCALHOST, new StringLookupAdapter(StringLookupFactory.INSTANCE.localHostStringLookup())),
 
     /**
      * The lookup for properties.
      *
      * @since 2.4
      */
-    PROPERTIES(StringLookupFactory.KEY_PROPERTIES,
-            new StringLookupAdapter(StringLookupFactory.INSTANCE.propertiesStringLookup())),
+    PROPERTIES(StringLookupFactory.KEY_PROPERTIES, new StringLookupAdapter(StringLookupFactory.INSTANCE.propertiesStringLookup())),
 
     /**
      * The lookup for resource bundles.
      *
      * @since 2.4
      */
-    RESOURCE_BUNDLE(StringLookupFactory.KEY_RESOURCE_BUNDLE,
-            new StringLookupAdapter(StringLookupFactory.INSTANCE.resourceBundleStringLookup())),
+    RESOURCE_BUNDLE(StringLookupFactory.KEY_RESOURCE_BUNDLE, new StringLookupAdapter(StringLookupFactory.INSTANCE.resourceBundleStringLookup())),
 
     /**
      * The lookup for scripts.
@@ -151,8 +143,7 @@ public enum DefaultLookups
     /**
      * The lookup for system properties.
      */
-    SYSTEM_PROPERTIES(StringLookupFactory.KEY_SYS,
-            new StringLookupAdapter(StringLookupFactory.INSTANCE.systemPropertyStringLookup())),
+    SYSTEM_PROPERTIES(StringLookupFactory.KEY_SYS, new StringLookupAdapter(StringLookupFactory.INSTANCE.systemPropertyStringLookup())),
 
     /**
      * The lookup for URLs.
@@ -166,16 +157,14 @@ public enum DefaultLookups
      *
      * @since 2.4
      */
-    URL_DECODER(StringLookupFactory.KEY_URL_DECODER,
-            new StringLookupAdapter(StringLookupFactory.INSTANCE.urlDecoderStringLookup())),
+    URL_DECODER(StringLookupFactory.KEY_URL_DECODER, new StringLookupAdapter(StringLookupFactory.INSTANCE.urlDecoderStringLookup())),
 
     /**
      * The lookup for URL decoding.
      *
      * @since 2.4
      */
-    URL_ENCODER(StringLookupFactory.KEY_URL_ENCODER,
-            new StringLookupAdapter(StringLookupFactory.INSTANCE.urlEncoderStringLookup())),
+    URL_ENCODER(StringLookupFactory.KEY_URL_ENCODER, new StringLookupAdapter(StringLookupFactory.INSTANCE.urlEncoderStringLookup())),
 
     /**
      * The lookup for URL decoding.
@@ -193,13 +182,10 @@ public enum DefaultLookups
     /**
      * Creates a new instance of {@code DefaultLookups} and sets the prefix and the associated lookup instance.
      *
-     * @param prefix
-     *            the prefix
-     * @param lookup
-     *            the {@code Lookup} instance
+     * @param prefix the prefix
+     * @param lookup the {@code Lookup} instance
      */
-    DefaultLookups(final String prefix, final Lookup lookup)
-    {
+    DefaultLookups(final String prefix, final Lookup lookup) {
         this.prefix = prefix;
         this.lookup = lookup;
     }
@@ -209,8 +195,7 @@ public enum DefaultLookups
      *
      * @return the associated {@code Lookup} object
      */
-    public Lookup getLookup()
-    {
+    public Lookup getLookup() {
         return lookup;
     }
 
@@ -219,8 +204,7 @@ public enum DefaultLookups
      *
      * @return the prefix
      */
-    public String getPrefix()
-    {
+    public String getPrefix() {
         return prefix;
     }
 }

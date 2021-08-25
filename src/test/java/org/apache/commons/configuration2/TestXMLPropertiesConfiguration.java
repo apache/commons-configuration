@@ -42,8 +42,7 @@ import org.xml.sax.InputSource;
  * Test class for {@code XMLPropertiesConfiguration}.
  *
  */
-public class TestXMLPropertiesConfiguration
-{
+public class TestXMLPropertiesConfiguration {
     /** Constant for the name of the test file. */
     private static final String TEST_PROPERTIES_FILE = "test.properties.xml";
 
@@ -58,9 +57,7 @@ public class TestXMLPropertiesConfiguration
      * @return the configuration instance
      * @throws ConfigurationException if an error occurs
      */
-    private static XMLPropertiesConfiguration load(final String fileName)
-            throws ConfigurationException
-    {
+    private static XMLPropertiesConfiguration load(final String fileName) throws ConfigurationException {
         final XMLPropertiesConfiguration conf = new XMLPropertiesConfiguration();
         final FileHandler handler = new FileHandler(conf);
         handler.load(fileName);
@@ -68,8 +65,7 @@ public class TestXMLPropertiesConfiguration
     }
 
     @Test
-    public void testLoad() throws Exception
-    {
+    public void testLoad() throws Exception {
         final XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
         assertEquals("header", "Description of the property list", conf.getHeader());
 
@@ -80,13 +76,11 @@ public class TestXMLPropertiesConfiguration
     }
 
     @Test
-    public void testDOMLoad() throws Exception
-    {
+    public void testDOMLoad() throws Exception {
         final URL location = ConfigurationAssert.getTestURL(TEST_PROPERTIES_FILE);
         final DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         final DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        dBuilder.setEntityResolver((publicId, systemId) -> new InputSource(getClass().getClassLoader()
-                .getResourceAsStream("properties.dtd")));
+        dBuilder.setEntityResolver((publicId, systemId) -> new InputSource(getClass().getClassLoader().getResourceAsStream("properties.dtd")));
         final File file = new File(location.toURI());
         final Document doc = dBuilder.parse(file);
         final XMLPropertiesConfiguration conf = new XMLPropertiesConfiguration(doc.getDocumentElement());
@@ -100,8 +94,7 @@ public class TestXMLPropertiesConfiguration
     }
 
     @Test
-    public void testSave() throws Exception
-    {
+    public void testSave() throws Exception {
         // load the configuration
         final XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
 
@@ -128,8 +121,7 @@ public class TestXMLPropertiesConfiguration
     }
 
     @Test
-    public void testDOMSave() throws Exception
-    {
+    public void testDOMSave() throws Exception {
         // load the configuration
         final XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
 

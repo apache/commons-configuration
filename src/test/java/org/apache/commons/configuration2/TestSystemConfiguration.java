@@ -36,15 +36,13 @@ import org.junit.rules.TemporaryFolder;
  * Tests for {@code SystemConfiguration}.
  *
  */
-public class TestSystemConfiguration
-{
+public class TestSystemConfiguration {
     /** An object for creating temporary files. */
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
 
     @Test
-    public void testSystemConfiguration()
-    {
+    public void testSystemConfiguration() {
         final Properties props = System.getProperties();
         props.put("test.number", "123");
 
@@ -53,8 +51,7 @@ public class TestSystemConfiguration
     }
 
     @Test
-    public void testSetSystemProperties()
-    {
+    public void testSetSystemProperties() {
         final PropertiesConfiguration props = new PropertiesConfiguration();
         props.addProperty("test.name", "Apache");
         SystemConfiguration.setSystemProperties(props);
@@ -65,17 +62,14 @@ public class TestSystemConfiguration
      * Tests whether system properties can be set from a configuration file.
      */
     @Test
-    public void testSetSystemPropertiesFromPropertiesFile()
-            throws ConfigurationException, IOException
-    {
+    public void testSetSystemPropertiesFromPropertiesFile() throws ConfigurationException, IOException {
         final File file = folder.newFile("sys.properties");
         final PropertiesConfiguration pconfig = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(pconfig);
         pconfig.addProperty("fromFile", Boolean.TRUE);
         handler.setFile(file);
         handler.save();
-        SystemConfiguration.setSystemProperties(handler.getBasePath(),
-                handler.getFileName());
+        SystemConfiguration.setSystemProperties(handler.getBasePath(), handler.getFileName());
         final SystemConfiguration sconf = new SystemConfiguration();
         assertTrue("Property from file not found", sconf.getBoolean("fromFile"));
     }
@@ -84,43 +78,33 @@ public class TestSystemConfiguration
      * Tests whether the configuration can be used to change system properties.
      */
     @Test
-    public void testChangeSystemProperties()
-    {
+    public void testChangeSystemProperties() {
         final String testProperty = "someTest";
         final SystemConfiguration config = new SystemConfiguration();
         config.setProperty(testProperty, "true");
-        assertEquals("System property not changed", "true",
-                System.getProperty(testProperty));
+        assertEquals("System property not changed", "true", System.getProperty(testProperty));
     }
 
     /**
-     * Tests an append operation with a system configuration while system
-     * properties are modified from another thread. This is related to
-     * CONFIGURATION-570.
+     * Tests an append operation with a system configuration while system properties are modified from another thread. This
+     * is related to CONFIGURATION-570.
      */
     @Test
-    public void testAppendWhileConcurrentAccess() throws InterruptedException
-    {
+    public void testAppendWhileConcurrentAccess() throws InterruptedException {
         final AtomicBoolean stop = new AtomicBoolean();
-        final String property =
-                SystemConfiguration.class.getName() + ".testProperty";
+        final String property = SystemConfiguration.class.getName() + ".testProperty";
         final Thread t = new Thread(() -> {
             boolean setValue = true;
-            while (!stop.get())
-            {
-                if (setValue)
-                {
+            while (!stop.get()) {
+                if (setValue) {
                     System.setProperty(property, "true");
-                }
-                else
-                {
+                } else {
                     System.clearProperty(property);
                 }
                 setValue = !setValue;
             }
         });
-        try
-        {
+        try {
             t.start();
 
             final SystemConfiguration config = new SystemConfiguration();
@@ -129,18 +113,13 @@ public class TestSystemConfiguration
 
             stop.set(true);
             t.join();
-            for (final Iterator<String> keys = config.getKeys(); keys.hasNext();)
-            {
+            for (final Iterator<String> keys = config.getKeys(); keys.hasNext();) {
                 final String key = keys.next();
-                if (!property.equals(key))
-                {
-                    assertEquals("Wrong value for " + key,
-                            config.getString(key), props.getString(key));
+                if (!property.equals(key)) {
+                    assertEquals("Wrong value for " + key, config.getString(key), props.getString(key));
                 }
             }
-        }
-        finally
-        {
+        } finally {
             System.clearProperty(property);
         }
     }

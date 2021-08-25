@@ -29,8 +29,7 @@ import org.junit.Test;
  * Test class for ConstantLookup.
  *
  */
-public class TestConstantLookup
-{
+public class TestConstantLookup {
     /** A public field that can be read by the lookup. */
     public static final String FIELD = "Field that can be read";
 
@@ -42,18 +41,15 @@ public class TestConstantLookup
     private ConstantLookup lookup;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         lookup = new ConstantLookup();
     }
 
     /**
-     * Clears the test environment. Here the static cache of the constant lookup
-     * class is wiped out.
+     * Clears the test environment. Here the static cache of the constant lookup class is wiped out.
      */
     @After
-    public void tearDown()
-    {
+    public void tearDown() {
         ConstantLookup.clear();
     }
 
@@ -61,8 +57,7 @@ public class TestConstantLookup
      * Tests accessing the cache by querying a variable twice.
      */
     @Test
-    public void testLookupCache()
-    {
+    public void testLookupCache() {
         testLookupConstant();
         testLookupConstant();
     }
@@ -71,44 +66,34 @@ public class TestConstantLookup
      * Tests resolving a valid constant.
      */
     @Test
-    public void testLookupConstant()
-    {
-        assertEquals("Wrong value of constant", FIELD,
-                lookup.lookup(variable("FIELD")));
+    public void testLookupConstant() {
+        assertEquals("Wrong value of constant", FIELD, lookup.lookup(variable("FIELD")));
     }
 
     /**
-     * Tries to resolve a variable with an invalid syntax: The name does not
-     * contain a dot as a field separator.
+     * Tries to resolve a variable with an invalid syntax: The name does not contain a dot as a field separator.
      */
     @Test
-    public void testLookupInvalidSyntax()
-    {
-        assertNull("Non null return value for invalid variable name", lookup
-                .lookup("InvalidVariableName"));
+    public void testLookupInvalidSyntax() {
+        assertNull("Non null return value for invalid variable name", lookup.lookup("InvalidVariableName"));
     }
 
     /**
      * Tests resolving a non existing constant. Result should be null.
      */
     @Test
-    public void testLookupNonExisting()
-    {
-        assertNull("Non null return value for non existing constant",
-                lookup.lookup(variable("NO_FIELD")));
+    public void testLookupNonExisting() {
+        assertNull("Non null return value for non existing constant", lookup.lookup(variable("NO_FIELD")));
     }
 
     /**
-     * Tests resolving a non string constant. Then looks the same variable up
-     * from the cache.
+     * Tests resolving a non string constant. Then looks the same variable up from the cache.
      */
     @Test
-    public void testLookupNonStringFromCache()
-    {
+    public void testLookupNonStringFromCache() {
         final String var = KeyEvent.class.getName() + ".VK_ESCAPE";
         final Object expected = KeyEvent.VK_ESCAPE;
-        assertEquals("Wrong result of first lookup", expected, lookup
-                .lookup(var));
+        assertEquals("Wrong result of first lookup", expected, lookup.lookup(var));
         assertEquals("Wrong result of 2nd lookup", expected, lookup.lookup(var));
     }
 
@@ -116,43 +101,33 @@ public class TestConstantLookup
      * Tests looking up a null variable.
      */
     @Test
-    public void testLookupNull()
-    {
-        assertNull("Non null return value for null variable", lookup
-                .lookup(null));
+    public void testLookupNull() {
+        assertNull("Non null return value for null variable", lookup.lookup(null));
     }
 
     /**
-     * Tests resolving a private constant. Because a private field cannot be
-     * accessed this should again yield null.
+     * Tests resolving a private constant. Because a private field cannot be accessed this should again yield null.
      */
     @Test
-    public void testLookupPrivate()
-    {
-        assertNull("Non null return value for non accessible field", lookup
-                .lookup(variable("PRIVATE_FIELD")));
+    public void testLookupPrivate() {
+        assertNull("Non null return value for non accessible field", lookup.lookup(variable("PRIVATE_FIELD")));
     }
 
     /**
      * Tests resolving a field from an unknown class.
      */
     @Test
-    public void testLookupUnknownClass()
-    {
-        assertNull("Non null return value for unknown class", lookup
-                .lookup("org.apache.commons.configuration.NonExistingConfig."
-                        + FIELD));
+    public void testLookupUnknownClass() {
+        assertNull("Non null return value for unknown class", lookup.lookup("org.apache.commons.configuration.NonExistingConfig." + FIELD));
     }
 
     /**
-     * Generates the name of a variable for a lookup operation based on the
-     * given field name of this class.
+     * Generates the name of a variable for a lookup operation based on the given field name of this class.
      *
      * @param field the field name
      * @return the variable for looking up this field
      */
-    private String variable(final String field)
-    {
+    private String variable(final String field) {
         return getClass().getName() + '.' + field;
     }
 }

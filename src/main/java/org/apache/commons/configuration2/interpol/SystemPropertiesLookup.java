@@ -20,13 +20,11 @@ import org.apache.commons.text.lookup.StringLookupFactory;
 
 /**
  * <p>
- * A specialized implementation of the {@code Lookup} interface that allows
- * access to system properties.
+ * A specialized implementation of the {@code Lookup} interface that allows access to system properties.
  * </p>
  * <p>
- * This implementation relies on {@code StrLookup.systemPropertiesLookup()} from
- * the Commons Lang project to resolve system properties. It can be used for
- * referencing system properties in configuration files in an easy way, for
+ * This implementation relies on {@code StrLookup.systemPropertiesLookup()} from the Commons Lang project to resolve
+ * system properties. It can be used for referencing system properties in configuration files in an easy way, for
  * instance:
  * </p>
  *
@@ -35,19 +33,16 @@ import org.apache.commons.text.lookup.StringLookupFactory;
  * </pre>
  *
  * <p>
- * {@code SystemPropertiesLookup} is one of the standard lookups that is
- * registered per default for each configuration.
+ * {@code SystemPropertiesLookup} is one of the standard lookups that is registered per default for each configuration.
  * </p>
  *
  * @since 2.0
  * @deprecated Use {@link DefaultLookups#SYSTEM_PROPERTIES}.
  */
 @Deprecated
-public class SystemPropertiesLookup implements Lookup
-{
+public class SystemPropertiesLookup implements Lookup {
     @Override
-    public Object lookup(final String variable)
-    {
+    public Object lookup(final String variable) {
         return StringLookupFactory.INSTANCE.systemPropertyStringLookup().lookup(variable);
     }
 }

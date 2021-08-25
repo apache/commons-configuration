@@ -18,43 +18,36 @@ package org.apache.commons.configuration2.tree;
 
 /**
  * <p>
- * A simple adapter class that simplifies writing custom node visitor
- * implementations.
+ * A simple adapter class that simplifies writing custom node visitor implementations.
  * </p>
  * <p>
- * This class provides dummy implementations for the methods defined in the
- * {@code ConfigurationNodeVisitor} interface. Derived classes only need
- * to override the methods they really need.
+ * This class provides dummy implementations for the methods defined in the {@code ConfigurationNodeVisitor} interface.
+ * Derived classes only need to override the methods they really need.
  * </p>
  *
- * @param  <T> the type of the nodes processed by this visitor
+ * @param <T> the type of the nodes processed by this visitor
  */
-public class ConfigurationNodeVisitorAdapter<T> implements
-        ConfigurationNodeVisitor<T>
-{
+public class ConfigurationNodeVisitorAdapter<T> implements ConfigurationNodeVisitor<T> {
     /**
      * {@inheritDoc} Empty dummy implementation of this interface method.
      */
     @Override
-    public void visitBeforeChildren(final T node, final NodeHandler<T> handler)
-    {
+    public void visitBeforeChildren(final T node, final NodeHandler<T> handler) {
     }
 
     /**
      * {@inheritDoc} Empty dummy implementation of this interface method.
      */
     @Override
-    public void visitAfterChildren(final T node, final NodeHandler<T> handler)
-    {
+    public void visitAfterChildren(final T node, final NodeHandler<T> handler) {
     }
 
     /**
-     * {@inheritDoc} This implementation returns always <b>false</b>; this means
-     * that all nodes in the current hierarchy are traversed.
+     * {@inheritDoc} This implementation returns always <b>false</b>; this means that all nodes in the current hierarchy are
+     * traversed.
      */
     @Override
-    public boolean terminate()
-    {
+    public boolean terminate() {
         return false;
     }
 }

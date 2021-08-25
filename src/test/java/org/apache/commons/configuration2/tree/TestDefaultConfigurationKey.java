@@ -31,8 +31,7 @@ import org.junit.Test;
  * Test class for DefaultConfigurationKey.
  *
  */
-public class TestDefaultConfigurationKey
-{
+public class TestDefaultConfigurationKey {
     /** Constant for a test key. */
     private static final String TESTPROPS = "tables.table(0).fields.field(1)";
 
@@ -49,8 +48,7 @@ public class TestDefaultConfigurationKey
     private DefaultConfigurationKey key;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         expressionEngine = DefaultExpressionEngine.INSTANCE;
         key = new DefaultConfigurationKey(expressionEngine);
     }
@@ -61,8 +59,7 @@ public class TestDefaultConfigurationKey
      * @param k the key for initialization
      * @return the newly created {@code DefaultConfigurationKey} instance
      */
-    private DefaultConfigurationKey key(final String k)
-    {
+    private DefaultConfigurationKey key(final String k) {
         return new DefaultConfigurationKey(expressionEngine, k);
     }
 
@@ -70,8 +67,7 @@ public class TestDefaultConfigurationKey
      * Tests setting the expression engine to null. This should not be allowed.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testSetNullExpressionEngine()
-    {
+    public void testSetNullExpressionEngine() {
         new DefaultConfigurationKey(null);
     }
 
@@ -79,13 +75,10 @@ public class TestDefaultConfigurationKey
      * Tests the isAttributeKey() method with several keys.
      */
     @Test
-    public void testIsAttributeKey()
-    {
+    public void testIsAttributeKey() {
         assertTrue("Attribute key not detected", key.isAttributeKey(TESTATTR));
-        assertFalse("Property key considered as attribute", key
-                .isAttributeKey(TESTPROPS));
-        assertFalse("Null key considered as attribute", key
-                .isAttributeKey(null));
+        assertFalse("Property key considered as attribute", key.isAttributeKey(TESTPROPS));
+        assertFalse("Null key considered as attribute", key.isAttributeKey(null));
     }
 
     /**
@@ -93,78 +86,57 @@ public class TestDefaultConfigurationKey
      *
      * @return the initialized builder object
      */
-    private DefaultExpressionEngineSymbols.Builder symbols()
-    {
-        return new DefaultExpressionEngineSymbols.Builder(
-                expressionEngine.getSymbols());
+    private DefaultExpressionEngineSymbols.Builder symbols() {
+        return new DefaultExpressionEngineSymbols.Builder(expressionEngine.getSymbols());
     }
 
     /**
-     * Tests if attribute keys are correctly detected if no end markers are set.
-     * (In this test case we use the same delimiter for attributes as for simple
-     * properties.)
+     * Tests if attribute keys are correctly detected if no end markers are set. (In this test case we use the same
+     * delimiter for attributes as for simple properties.)
      */
     @Test
-    public void testIsAttributeKeyWithoutEndMarkers()
-    {
-        final DefaultExpressionEngineSymbols symbols =
-                symbols()
-                        .setAttributeEnd(null)
-                        .setAttributeStart(
-                                DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER)
-                        .create();
+    public void testIsAttributeKeyWithoutEndMarkers() {
+        final DefaultExpressionEngineSymbols symbols = symbols().setAttributeEnd(null)
+            .setAttributeStart(DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER).create();
         expressionEngine = new DefaultExpressionEngine(symbols);
         key = new DefaultConfigurationKey(expressionEngine);
-        assertTrue(
-                "Attribute key not detected",
-                key.isAttributeKey(DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER
-                        + "test"));
-        assertFalse("Property key considered as attribute key",
-                key.isAttributeKey(TESTATTR));
+        assertTrue("Attribute key not detected", key.isAttributeKey(DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER + "test"));
+        assertFalse("Property key considered as attribute key", key.isAttributeKey(TESTATTR));
     }
 
     /**
      * Tests removing leading delimiters.
      */
     @Test
-    public void testTrimLeft()
-    {
-        assertEquals("Key was not left trimmed", "test.", key
-                .trimLeft(".test."));
-        assertEquals("Too much left trimming", "..test.", key
-                .trimLeft("..test."));
+    public void testTrimLeft() {
+        assertEquals("Key was not left trimmed", "test.", key.trimLeft(".test."));
+        assertEquals("Too much left trimming", "..test.", key.trimLeft("..test."));
     }
 
     /**
      * Tests removing trailing delimiters.
      */
     @Test
-    public void testTrimRight()
-    {
-        assertEquals("Key was not right trimmed", ".test", key
-                .trimRight(".test."));
-        assertEquals("Too much right trimming", ".test..", key
-                .trimRight(".test.."));
+    public void testTrimRight() {
+        assertEquals("Key was not right trimmed", ".test", key.trimRight(".test."));
+        assertEquals("Too much right trimming", ".test..", key.trimRight(".test.."));
     }
 
     /**
      * Tests removing delimiters.
      */
     @Test
-    public void testTrim()
-    {
+    public void testTrim() {
         assertEquals("Key was not trimmed", "test", key.trim(".test."));
         assertEquals("Null key could not be processed", "", key.trim(null));
-        assertEquals("Delimiter could not be processed", "", key
-                .trim(DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER));
+        assertEquals("Delimiter could not be processed", "", key.trim(DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER));
     }
 
     /**
      * Tests appending keys.
      */
     @Test
-    public void testAppend()
-    {
+    public void testAppend() {
         key.append("tables").append("table(0).");
         key.append("fields.").append("field(1)");
         key.append(null).append(TESTATTR);
@@ -175,127 +147,99 @@ public class TestDefaultConfigurationKey
      * Tests appending keys that contain delimiters.
      */
     @Test
-    public void testAppendDelimiters()
-    {
+    public void testAppendDelimiters() {
         key.append("key..").append("test").append(".");
         key.append(".more").append("..tests");
         assertEquals("Wrong key", "key...test.more...tests", key.toString());
     }
 
     /**
-     * Tests appending keys that contain delimiters when no escaped delimiter
-     * is defined.
+     * Tests appending keys that contain delimiters when no escaped delimiter is defined.
      */
     @Test
-    public void testAppendDelimitersWithoutEscaping()
-    {
-        expressionEngine =
-                new DefaultExpressionEngine(symbols().setEscapedDelimiter(null)
-                        .create());
+    public void testAppendDelimitersWithoutEscaping() {
+        expressionEngine = new DefaultExpressionEngine(symbols().setEscapedDelimiter(null).create());
         key = new DefaultConfigurationKey(expressionEngine);
         key.append("key.......").append("test").append(".");
         key.append(".more").append("..tests");
-        assertEquals("Wrong constructed key", "key.test.more.tests", key
-                .toString());
+        assertEquals("Wrong constructed key", "key.test.more.tests", key.toString());
     }
 
     /**
      * Tests calling append with the escape flag.
      */
     @Test
-    public void testAppendWithEscapeFlag()
-    {
+    public void testAppendWithEscapeFlag() {
         key.append(".key.test.", true);
         key.append(".more").append(".tests", true);
-        assertEquals("Wrong constructed key", "..key..test...more...tests", key
-                .toString());
+        assertEquals("Wrong constructed key", "..key..test...more...tests", key.toString());
     }
 
     /**
      * Tests constructing keys for attributes.
      */
     @Test
-    public void testConstructAttributeKey()
-    {
-        assertEquals("Wrong attribute key", TESTATTR, key
-                .constructAttributeKey("dataType"));
-        assertEquals("Attribute key was incorrectly converted", TESTATTR, key
-                .constructAttributeKey(TESTATTR));
-        assertEquals("Null key could not be processed", "", key
-                .constructAttributeKey(null));
+    public void testConstructAttributeKey() {
+        assertEquals("Wrong attribute key", TESTATTR, key.constructAttributeKey("dataType"));
+        assertEquals("Attribute key was incorrectly converted", TESTATTR, key.constructAttributeKey(TESTATTR));
+        assertEquals("Null key could not be processed", "", key.constructAttributeKey(null));
     }
 
     /**
-     * Tests constructing attribute keys when no end markers are defined. In
-     * this test case we use the property delimiter as attribute prefix.
+     * Tests constructing attribute keys when no end markers are defined. In this test case we use the property delimiter as
+     * attribute prefix.
      */
     @Test
-    public void testConstructAttributeKeyWithoutEndMarkers()
-    {
-        final DefaultExpressionEngineSymbols symbols =
-                symbols()
-                        .setAttributeEnd(null)
-                        .setAttributeStart(
-                                expressionEngine.getSymbols()
-                                        .getPropertyDelimiter()).create();
+    public void testConstructAttributeKeyWithoutEndMarkers() {
+        final DefaultExpressionEngineSymbols symbols = symbols().setAttributeEnd(null).setAttributeStart(expressionEngine.getSymbols().getPropertyDelimiter())
+            .create();
         expressionEngine = new DefaultExpressionEngine(symbols);
         key = new DefaultConfigurationKey(expressionEngine);
-        assertEquals("Wrong attribute key", ".test", key
-                .constructAttributeKey("test"));
-        assertEquals("Attribute key was incorrectly converted", ".test", key
-                .constructAttributeKey(".test"));
+        assertEquals("Wrong attribute key", ".test", key.constructAttributeKey("test"));
+        assertEquals("Attribute key was incorrectly converted", ".test", key.constructAttributeKey(".test"));
     }
 
     /**
      * Tests appending attribute keys.
      */
     @Test
-    public void testAppendAttribute()
-    {
+    public void testAppendAttribute() {
         key.appendAttribute("dataType");
-        assertEquals("Attribute key not correctly appended", TESTATTR, key
-                .toString());
+        assertEquals("Attribute key not correctly appended", TESTATTR, key.toString());
     }
 
     /**
      * Tests appending an attribute key that is already decorated-
      */
     @Test
-    public void testAppendDecoratedAttributeKey()
-    {
+    public void testAppendDecoratedAttributeKey() {
         key.appendAttribute(TESTATTR);
-        assertEquals("Decorated attribute key not correctly appended",
-                TESTATTR, key.toString());
+        assertEquals("Decorated attribute key not correctly appended", TESTATTR, key.toString());
     }
 
     /**
      * Tests appending a null attribute key.
      */
     @Test
-    public void testAppendNullAttributeKey()
-    {
+    public void testAppendNullAttributeKey() {
         key.appendAttribute(null);
-        assertEquals("Null attribute key not correctly appended", "", key
-                .toString());
+        assertEquals("Null attribute key not correctly appended", "", key.toString());
     }
 
     /**
      * Tests appending an index to a key.
      */
     @Test
-    public void testAppendIndex()
-    {
+    public void testAppendIndex() {
         key.append("test").appendIndex(42);
-        assertEquals("Index was not correctly appended", "test(42)", key
-                .toString());
+        assertEquals("Index was not correctly appended", "test(42)", key.toString());
     }
 
     /**
      * Tests constructing a complex key by chaining multiple append operations.
      */
     @Test
-    public void testAppendComplexKey()
-    {
+    public void testAppendComplexKey() {
         key.append("tables").append("table.").appendIndex(0);
         key.append("fields.").append("field").appendIndex(1);
         key.appendAttribute("dataType");
@@ -306,15 +250,13 @@ public class TestDefaultConfigurationKey
      * Tests getting and setting the key's length.
      */
     @Test
-    public void testLength()
-    {
+    public void testLength() {
         key.append(TESTPROPS);
         assertEquals("Wrong length", TESTPROPS.length(), key.length());
         key.appendAttribute("dataType");
         assertEquals("Wrong length", TESTKEY.length(), key.length());
         key.setLength(TESTPROPS.length());
-        assertEquals("Wrong length after shortening", TESTPROPS.length(), key
-                .length());
+        assertEquals("Wrong length after shortening", TESTPROPS.length(), key.length());
         assertEquals("Wrong resulting key", TESTPROPS, key.toString());
     }
 
@@ -322,8 +264,7 @@ public class TestDefaultConfigurationKey
      * Tests comparing configuration keys.
      */
     @Test
-    public void testEquals()
-    {
+    public void testEquals() {
         final DefaultConfigurationKey k1 = key(TESTKEY);
         assertTrue("Key not equal to itself", k1.equals(k1));
         final DefaultConfigurationKey k2 = key(TESTKEY);
@@ -341,12 +282,9 @@ public class TestDefaultConfigurationKey
      * Tests determining an attribute key's name.
      */
     @Test
-    public void testAttributeName()
-    {
-        assertEquals("Plain key not detected", "test", key
-                .attributeName("test"));
-        assertEquals("Attribute markers not stripped", "dataType", key
-                .attributeName(TESTATTR));
+    public void testAttributeName() {
+        assertEquals("Plain key not detected", "test", key.attributeName("test"));
+        assertEquals("Attribute markers not stripped", "dataType", key.attributeName(TESTATTR));
         assertNull("Null key not processed", key.attributeName(null));
     }
 
@@ -354,8 +292,7 @@ public class TestDefaultConfigurationKey
      * Tests to iterate over a simple key.
      */
     @Test
-    public void testIterate()
-    {
+    public void testIterate() {
         key.append(TESTKEY);
         final DefaultConfigurationKey.KeyIterator it = key.iterator();
         assertTrue("No key parts", it.hasNext());
@@ -370,28 +307,22 @@ public class TestDefaultConfigurationKey
         assertFalse("Found an attribute", it.isAttribute());
         assertEquals("Wrong current key", "field", it.currentKey(true));
         assertEquals("Wrong key part", "dataType", it.nextKey());
-        assertEquals("Wrong decorated key part", "[@dataType]", it
-                .currentKey(true));
+        assertEquals("Wrong decorated key part", "[@dataType]", it.currentKey(true));
         assertTrue("Attribute not found", it.isAttribute());
         assertFalse("Too many key parts", it.hasNext());
-        try
-        {
+        try {
             it.next();
             fail("Could iterate over the iteration's end!");
-        }
-        catch (final NoSuchElementException nex)
-        {
+        } catch (final NoSuchElementException nex) {
             // ok
         }
     }
 
     /**
-     * Tests an iteration where the remove() method is called. This is not
-     * supported.
+     * Tests an iteration where the remove() method is called. This is not supported.
      */
     @Test(expected = UnsupportedOperationException.class)
-    public void testIterateWithRemove()
-    {
+    public void testIterateWithRemove() {
         assertFalse(key.iterator().hasNext());
         key.append("simple");
         final DefaultConfigurationKey.KeyIterator it = key.iterator();
@@ -404,8 +335,7 @@ public class TestDefaultConfigurationKey
      * Tests iterating over some funny keys.
      */
     @Test
-    public void testIterateStrangeKeys()
-    {
+    public void testIterateStrangeKeys() {
         key = new DefaultConfigurationKey(expressionEngine, "key.");
         DefaultConfigurationKey.KeyIterator it = key.iterator();
         assertTrue("Too few key parts", it.hasNext());
@@ -416,8 +346,7 @@ public class TestDefaultConfigurationKey
         it = key.iterator();
         assertFalse("Simple delimiter key has more parts", it.hasNext());
 
-        key = new DefaultConfigurationKey(expressionEngine,
-                "key().index()undefined(0).test");
+        key = new DefaultConfigurationKey(expressionEngine, "key().index()undefined(0).test");
         it = key.iterator();
         assertEquals("Wrong first part", "key()", it.next());
         assertFalse("Index detected in first part", it.hasIndex());
@@ -430,8 +359,7 @@ public class TestDefaultConfigurationKey
      * Tests iterating over keys with escaped delimiters.
      */
     @Test
-    public void testIterateEscapedDelimiters()
-    {
+    public void testIterateEscapedDelimiters() {
         key.append("my..elem");
         key.append("trailing..dot..");
         key.append(".strange");
@@ -447,11 +375,8 @@ public class TestDefaultConfigurationKey
      * Tests iterating over keys when a different escaped delimiter is used.
      */
     @Test
-    public void testIterateAlternativeEscapeDelimiter()
-    {
-        expressionEngine =
-                new DefaultExpressionEngine(symbols()
-                        .setEscapedDelimiter("\\.").create());
+    public void testIterateAlternativeEscapeDelimiter() {
+        expressionEngine = new DefaultExpressionEngine(symbols().setEscapedDelimiter("\\.").create());
         key = new DefaultConfigurationKey(expressionEngine);
         key.append("\\.my\\.elem");
         key.append("trailing\\.dot\\.");
@@ -468,20 +393,14 @@ public class TestDefaultConfigurationKey
      * Tests iterating when no escape delimiter is defined.
      */
     @Test
-    public void testIterateWithoutEscapeDelimiter()
-    {
-        expressionEngine =
-                new DefaultExpressionEngine(symbols()
-                        .setEscapedDelimiter(null).create());
+    public void testIterateWithoutEscapeDelimiter() {
+        expressionEngine = new DefaultExpressionEngine(symbols().setEscapedDelimiter(null).create());
         key = new DefaultConfigurationKey(expressionEngine);
         key.append("..my..elem.trailing..dot...strange");
-        assertEquals("Wrong key", "my..elem.trailing..dot...strange", key
-                .toString());
+        assertEquals("Wrong key", "my..elem.trailing..dot...strange", key.toString());
         final DefaultConfigurationKey.KeyIterator kit = key.iterator();
-        final String[] parts =
-        { "my", "elem", "trailing", "dot", "strange"};
-        for (int i = 0; i < parts.length; i++)
-        {
+        final String[] parts = {"my", "elem", "trailing", "dot", "strange"};
+        for (int i = 0; i < parts.length; i++) {
             assertEquals("Wrong key part " + i, parts[i], kit.next());
         }
         assertFalse("Too many parts", kit.hasNext());
@@ -491,8 +410,7 @@ public class TestDefaultConfigurationKey
      * Tests whether a key with brackets in it can be iterated over.
      */
     @Test
-    public void testIterateWithBrackets()
-    {
+    public void testIterateWithBrackets() {
         key.append("directory.platform(x86).path");
         final DefaultConfigurationKey.KeyIterator kit = key.iterator();
         String part = kit.nextKey();
@@ -511,12 +429,10 @@ public class TestDefaultConfigurationKey
      * Tests iterating over an attribute key that has an index.
      */
     @Test
-    public void testAttributeKeyWithIndex()
-    {
+    public void testAttributeKeyWithIndex() {
         key.append(TESTATTR);
         key.appendIndex(0);
-        assertEquals("Wrong attribute key with index", TESTATTR + "(0)", key
-                .toString());
+        assertEquals("Wrong attribute key with index", TESTATTR + "(0)", key.toString());
 
         final DefaultConfigurationKey.KeyIterator it = key.iterator();
         assertTrue("No first element", it.hasNext());
@@ -532,15 +448,9 @@ public class TestDefaultConfigurationKey
      * Tests iteration when the attribute markers equals the property delimiter.
      */
     @Test
-    public void testIterateAttributeEqualsPropertyDelimiter()
-    {
-        expressionEngine =
-                new DefaultExpressionEngine(
-                        symbols()
-                                .setAttributeEnd(null)
-                                .setAttributeStart(
-                                        DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER)
-                                .create());
+    public void testIterateAttributeEqualsPropertyDelimiter() {
+        expressionEngine = new DefaultExpressionEngine(
+            symbols().setAttributeEnd(null).setAttributeStart(DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER).create());
         key = new DefaultConfigurationKey(expressionEngine);
         key.append("this.isa.key");
         final DefaultConfigurationKey.KeyIterator kit = key.iterator();
@@ -560,8 +470,7 @@ public class TestDefaultConfigurationKey
      * Tests whether common key parts can be extracted.
      */
     @Test
-    public void testCommonKey()
-    {
+    public void testCommonKey() {
         final DefaultConfigurationKey k1 = key(TESTKEY);
         DefaultConfigurationKey k2 = key("tables.table(0).name");
         DefaultConfigurationKey kc = k1.commonKey(k2);
@@ -587,8 +496,7 @@ public class TestDefaultConfigurationKey
      * Tries to call commonKey() with null input.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testCommonKeyNull()
-    {
+    public void testCommonKeyNull() {
         key.commonKey(null);
     }
 
@@ -596,8 +504,7 @@ public class TestDefaultConfigurationKey
      * Tests differenceKey() on the same object.
      */
     @Test
-    public void testDifferenceKeySame()
-    {
+    public void testDifferenceKeySame() {
         final DefaultConfigurationKey k1 = key(TESTKEY);
         final DefaultConfigurationKey kd = k1.differenceKey(k1);
         assertEquals("Got difference for same keys", 0, kd.length());
@@ -607,8 +514,7 @@ public class TestDefaultConfigurationKey
      * Tests the differenceKey() method.
      */
     @Test
-    public void testDifferenceKey()
-    {
+    public void testDifferenceKey() {
         final DefaultConfigurationKey k1 = key(TESTKEY);
         DefaultConfigurationKey k2 = key("tables.table(0).name");
         DefaultConfigurationKey kd = k1.differenceKey(k2);

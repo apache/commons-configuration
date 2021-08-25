@@ -19,21 +19,16 @@ package org.apache.commons.configuration2.event;
 import static org.junit.Assert.assertEquals;
 
 /**
- * A test event listener class that can be used for testing whether
- * event sources generated correct events.
+ * A test event listener class that can be used for testing whether event sources generated correct events.
  *
  */
-public class EventListenerTestImpl extends AbstractEventListenerTestImpl<ConfigurationEvent>
-{
+public class EventListenerTestImpl extends AbstractEventListenerTestImpl<ConfigurationEvent> {
     /**
-     * Creates a new instance of {@code EventListenerTestImpl} and sets
-     * the expected event source.
+     * Creates a new instance of {@code EventListenerTestImpl} and sets the expected event source.
      *
-     * @param source the event source (<b>null</b> if the source need not to be
-     *        checked)
+     * @param source the event source (<b>null</b> if the source need not to be checked)
      */
-    public EventListenerTestImpl(final Object source)
-    {
+    public EventListenerTestImpl(final Object source) {
         super(source);
     }
 
@@ -45,9 +40,7 @@ public class EventListenerTestImpl extends AbstractEventListenerTestImpl<Configu
      * @param propValue the expected property value
      * @param before the expected before flag
      */
-    public void checkEvent(final EventType<?> type, final String propName, final Object propValue,
-            final boolean before)
-    {
+    public void checkEvent(final EventType<?> type, final String propName, final Object propValue, final boolean before) {
         final ConfigurationEvent e = nextEvent(type);
         assertEquals("Wrong property name", propName, e.getPropertyName());
         assertEquals("Wrong property value", propValue, e.getPropertyValue());

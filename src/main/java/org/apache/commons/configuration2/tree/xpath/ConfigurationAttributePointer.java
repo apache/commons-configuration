@@ -26,15 +26,13 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
 
 /**
  * <p>
- * A specialized {@code NodePointer} implementation for the attributes of
- * a configuration node.
+ * A specialized {@code NodePointer} implementation for the attributes of a configuration node.
  * </p>
  *
  * @since 2.0
  * @param <T> the type of the nodes this pointer deals with
  */
-class ConfigurationAttributePointer<T> extends NodePointer
-{
+class ConfigurationAttributePointer<T> extends NodePointer {
     /**
      * The serial version UID.
      */
@@ -49,13 +47,9 @@ class ConfigurationAttributePointer<T> extends NodePointer
      * @param parent the parent node pointer
      * @param attrName the name of the managed attribute
      */
-    public ConfigurationAttributePointer(final ConfigurationNodePointer<T> parent,
-            final String attrName)
-    {
+    public ConfigurationAttributePointer(final ConfigurationNodePointer<T> parent, final String attrName) {
         super(parent);
-        attributeResult =
-                QueryResult.createAttributeResult(
-                        parent.getConfigurationNode(), attrName);
+        attributeResult = QueryResult.createAttributeResult(parent.getConfigurationNode(), attrName);
     }
 
     /**
@@ -63,28 +57,23 @@ class ConfigurationAttributePointer<T> extends NodePointer
      *
      * @return the parent pointer
      */
-    public ConfigurationNodePointer<T> getParentPointer()
-    {
+    public ConfigurationNodePointer<T> getParentPointer() {
         // safe to cast because the constructor only expects pointers of this
         // type
         @SuppressWarnings("unchecked")
-        final
-        ConfigurationNodePointer<T> configurationNodePointer =
-                (ConfigurationNodePointer<T>) getParent();
+        final ConfigurationNodePointer<T> configurationNodePointer = (ConfigurationNodePointer<T>) getParent();
         return configurationNodePointer;
     }
 
     /**
-     * Compares two child node pointers. Attributes do not have any children, so
-     * this is just a dummy implementation.
+     * Compares two child node pointers. Attributes do not have any children, so this is just a dummy implementation.
      *
      * @param p1 the first pointer
      * @param p2 the second pointer
      * @return the order of these pointers
      */
     @Override
-    public int compareChildNodePointers(final NodePointer p1, final NodePointer p2)
-    {
+    public int compareChildNodePointers(final NodePointer p1, final NodePointer p2) {
         return 0;
     }
 
@@ -94,20 +83,17 @@ class ConfigurationAttributePointer<T> extends NodePointer
      * @return the base value
      */
     @Override
-    public Object getBaseValue()
-    {
+    public Object getBaseValue() {
         return getValue();
     }
 
     /**
-     * Returns the immediate node. This is actually a {@link QueryResult}
-     * object describing the represented attribute.
+     * Returns the immediate node. This is actually a {@link QueryResult} object describing the represented attribute.
      *
      * @return the immediate node
      */
     @Override
-    public Object getImmediateNode()
-    {
+    public Object getImmediateNode() {
         return attributeResult;
     }
 
@@ -117,8 +103,7 @@ class ConfigurationAttributePointer<T> extends NodePointer
      * @return the length
      */
     @Override
-    public int getLength()
-    {
+    public int getLength() {
         return 1;
     }
 
@@ -128,44 +113,37 @@ class ConfigurationAttributePointer<T> extends NodePointer
      * @return the name of this node
      */
     @Override
-    public QName getName()
-    {
+    public QName getName() {
         return new QName(null, attributeResult.getAttributeName());
     }
 
     /**
-     * Returns a flag whether the represented node is a collection. This is not
-     * the case.
+     * Returns a flag whether the represented node is a collection. This is not the case.
      *
      * @return the collection flag
      */
     @Override
-    public boolean isCollection()
-    {
+    public boolean isCollection() {
         return false;
     }
 
     /**
-     * Returns a flag whether the represented node is a leaf. This is the case
-     * for attributes.
+     * Returns a flag whether the represented node is a leaf. This is the case for attributes.
      *
      * @return the leaf flag
      */
     @Override
-    public boolean isLeaf()
-    {
+    public boolean isLeaf() {
         return true;
     }
 
     /**
-     * Returns a flag whether this node is an attribute. Of course, this is the
-     * case.
+     * Returns a flag whether this node is an attribute. Of course, this is the case.
      *
      * @return the attribute flag
      */
     @Override
-    public boolean isAttribute()
-    {
+    public boolean isAttribute() {
         return true;
     }
 
@@ -175,51 +153,41 @@ class ConfigurationAttributePointer<T> extends NodePointer
      * @return this node's value
      */
     @Override
-    public Object getValue()
-    {
+    public Object getValue() {
         return attributeResult.getAttributeValue(getNodeHandler());
     }
 
     /**
-     * Sets the value of this node. This is not supported because the classes of
-     * the {@code XPathExpressionEngine} are only used for queries. This
-     * implementation always throws an exception.
+     * Sets the value of this node. This is not supported because the classes of the {@code XPathExpressionEngine} are only
+     * used for queries. This implementation always throws an exception.
      *
      * @param value the new value
      */
     @Override
-    public void setValue(final Object value)
-    {
-        throw new UnsupportedOperationException(
-                "Updating the value is not supported!");
+    public void setValue(final Object value) {
+        throw new UnsupportedOperationException("Updating the value is not supported!");
     }
 
     /**
-     * Tests if this node matches the given test. Attribute nodes are text
-     * nodes, too, because they can contain a value.
+     * Tests if this node matches the given test. Attribute nodes are text nodes, too, because they can contain a value.
      *
      * @param test the test object
      * @return a flag if this node corresponds to the test
      */
     @Override
-    public boolean testNode(final NodeTest test)
-    {
-        if (test instanceof NodeTypeTest
-                && ((NodeTypeTest) test).getNodeType() == Compiler.NODE_TYPE_TEXT)
-        {
+    public boolean testNode(final NodeTest test) {
+        if (test instanceof NodeTypeTest && ((NodeTypeTest) test).getNodeType() == Compiler.NODE_TYPE_TEXT) {
             return true;
         }
         return super.testNode(test);
     }
 
     /**
-     * Returns a reference to the current node handler. The handler is obtained
-     * from the parent pointer.
+     * Returns a reference to the current node handler. The handler is obtained from the parent pointer.
      *
      * @return the node handler
      */
-    private NodeHandler<T> getNodeHandler()
-    {
+    private NodeHandler<T> getNodeHandler() {
         return getParentPointer().getNodeHandler();
     }
 }

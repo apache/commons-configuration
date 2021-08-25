@@ -24,16 +24,13 @@ import org.junit.Test;
  * Test class for {@code DummyLookup}.
  *
  */
-public class TestDummyLookup
-{
+public class TestDummyLookup {
     /**
      * Tests the lookup() method.
      */
     @Test
-    public void testLookup()
-    {
-        assertNull("Got a result (1)",
-                DummyLookup.INSTANCE.lookup("someVariable"));
+    public void testLookup() {
+        assertNull("Got a result (1)", DummyLookup.INSTANCE.lookup("someVariable"));
         assertNull("Got a result (2)", DummyLookup.INSTANCE.lookup(null));
     }
 }

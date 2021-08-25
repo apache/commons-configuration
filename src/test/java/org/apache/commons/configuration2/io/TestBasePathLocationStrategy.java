@@ -31,8 +31,7 @@ import org.junit.Test;
  * Test class for {@code BasePathLocationStrategy}.
  *
  */
-public class TestBasePathLocationStrategy
-{
+public class TestBasePathLocationStrategy {
     /** Constant for the name of the test file. */
     private static final String TEST_FILE = "test.xml";
 
@@ -43,8 +42,7 @@ public class TestBasePathLocationStrategy
     private BasePathLocationStrategy strategy;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         fileSystem = EasyMock.createMock(FileSystem.class);
         EasyMock.replay(fileSystem);
         strategy = new BasePathLocationStrategy();
@@ -55,24 +53,17 @@ public class TestBasePathLocationStrategy
      *
      * @param url the URL to be checked
      */
-    private static void checkURL(final URL url)
-    {
-        assertEquals("Wrong URL", FileLocatorUtils.fileFromURL(url)
-                .getAbsoluteFile(), ConfigurationAssert.getTestFile(TEST_FILE)
-                .getAbsoluteFile());
+    private static void checkURL(final URL url) {
+        assertEquals("Wrong URL", FileLocatorUtils.fileFromURL(url).getAbsoluteFile(), ConfigurationAssert.getTestFile(TEST_FILE).getAbsoluteFile());
     }
 
     /**
-     * Tests a successful locate() operation with a valid base path and file
-     * name.
+     * Tests a successful locate() operation with a valid base path and file name.
      */
     @Test
-    public void testLocateSuccess()
-    {
+    public void testLocateSuccess() {
         final File path = ConfigurationAssert.TEST_DIR;
-        final FileLocator locator =
-                FileLocatorUtils.fileLocator().basePath(path.getAbsolutePath())
-                        .fileName(TEST_FILE).create();
+        final FileLocator locator = FileLocatorUtils.fileLocator().basePath(path.getAbsolutePath()).fileName(TEST_FILE).create();
         checkURL(strategy.locate(fileSystem, locator));
     }
 
@@ -80,12 +71,9 @@ public class TestBasePathLocationStrategy
      * Tests whether a prefix for relative file names is handled correctly.
      */
     @Test
-    public void testLocateSuccessRelativePrefix()
-    {
+    public void testLocateSuccessRelativePrefix() {
         final File path = ConfigurationAssert.TEST_DIR;
-        final FileLocator locator =
-                FileLocatorUtils.fileLocator().basePath(path.getAbsolutePath())
-                        .fileName("." + File.separator + TEST_FILE).create();
+        final FileLocator locator = FileLocatorUtils.fileLocator().basePath(path.getAbsolutePath()).fileName("." + File.separator + TEST_FILE).create();
         checkURL(strategy.locate(fileSystem, locator));
     }
 
@@ -93,14 +81,8 @@ public class TestBasePathLocationStrategy
      * Tests a locate() operation if no file name is provided.
      */
     @Test
-    public void testNullFileName()
-    {
-        final FileLocator locator =
-                FileLocatorUtils
-                        .fileLocator()
-                        .basePath(
-                                ConfigurationAssert.getTestFile(TEST_FILE)
-                                        .getAbsolutePath()).create();
+    public void testNullFileName() {
+        final FileLocator locator = FileLocatorUtils.fileLocator().basePath(ConfigurationAssert.getTestFile(TEST_FILE).getAbsolutePath()).create();
         assertNull("Got a URL", strategy.locate(fileSystem, locator));
     }
 
@@ -108,10 +90,8 @@ public class TestBasePathLocationStrategy
      * Tests whether a null base path is handled correctly.
      */
     @Test
-    public void testNullBasePath()
-    {
-        final FileLocator locator =
-                FileLocatorUtils.fileLocator().fileName(TEST_FILE).create();
+    public void testNullBasePath() {
+        final FileLocator locator = FileLocatorUtils.fileLocator().fileName(TEST_FILE).create();
         assertNull("Got a URL", strategy.locate(fileSystem, locator));
     }
 }

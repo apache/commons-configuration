@@ -42,27 +42,20 @@ import org.junit.Test;
  * Test class for {@code BaseConfigurationBuilderProvider}.
  *
  */
-public class TestBaseConfigurationBuilderProvider
-{
+public class TestBaseConfigurationBuilderProvider {
     /**
      * Creates a configuration object describing a configuration source.
      *
      * @param reload a flag whether reload operations are supported
      * @return the configuration object
      */
-    private HierarchicalConfiguration<?> setUpConfig(final boolean reload)
-    {
+    private HierarchicalConfiguration<?> setUpConfig(final boolean reload) {
         final HierarchicalConfiguration<?> config = new BaseHierarchicalConfiguration();
-        config.addProperty(CombinedConfigurationBuilder.ATTR_RELOAD,
-                Boolean.valueOf(reload));
+        config.addProperty(CombinedConfigurationBuilder.ATTR_RELOAD, Boolean.valueOf(reload));
         config.addProperty("[@throwExceptionOnMissing]", Boolean.TRUE);
-        config.addProperty("[@path]",
-                ConfigurationAssert.getTestFile("test.properties")
-                        .getAbsolutePath());
-        config.addProperty("listDelimiterHandler[@config-class]",
-                DefaultListDelimiterHandler.class.getName());
-        config.addProperty(
-                "listDelimiterHandler.config-constrarg[@config-value]", ";");
+        config.addProperty("[@path]", ConfigurationAssert.getTestFile("test.properties").getAbsolutePath());
+        config.addProperty("listDelimiterHandler[@config-class]", DefaultListDelimiterHandler.class.getName());
+        config.addProperty("listDelimiterHandler.config-constrarg[@config-value]", ";");
         return config;
     }
 
@@ -72,30 +65,20 @@ public class TestBaseConfigurationBuilderProvider
      * @param declConfig the configuration for the declaration
      * @return the declaration
      */
-    private ConfigurationDeclaration createDeclaration(
-            final HierarchicalConfiguration<?> declConfig)
-    {
-        final CombinedConfigurationBuilder parentBuilder =
-                new CombinedConfigurationBuilder()
-                {
-                    @Override
-                    protected void initChildBuilderParameters(
-                            final BuilderParameters params)
-                    {
-                        // set a property value; this should be overridden by
-                        // child builders
-                        if (params instanceof BasicBuilderParameters)
-                        {
-                            ((BasicBuilderParameters) params)
-                                    .setListDelimiterHandler(DisabledListDelimiterHandler.INSTANCE);
-                        }
-                    }
-                };
-        return new ConfigurationDeclaration(parentBuilder, declConfig)
-        {
+    private ConfigurationDeclaration createDeclaration(final HierarchicalConfiguration<?> declConfig) {
+        final CombinedConfigurationBuilder parentBuilder = new CombinedConfigurationBuilder() {
             @Override
-            protected Object interpolate(final Object value)
-            {
+            protected void initChildBuilderParameters(final BuilderParameters params) {
+                // set a property value; this should be overridden by
+                // child builders
+                if (params instanceof BasicBuilderParameters) {
+                    ((BasicBuilderParameters) params).setListDelimiterHandler(DisabledListDelimiterHandler.INSTANCE);
+                }
+            }
+        };
+        return new ConfigurationDeclaration(parentBuilder, declConfig) {
+            @Override
+            protected Object interpolate(final Object value) {
                 return value;
             }
         };
@@ -106,41 +89,29 @@ public class TestBaseConfigurationBuilderProvider
      *
      * @return the test instance
      */
-    private BaseConfigurationBuilderProvider createProvider()
-    {
-        return new BaseConfigurationBuilderProvider(
-                FileBasedConfigurationBuilder.class.getName(),
-                ReloadingFileBasedConfigurationBuilder.class.getName(),
-                PropertiesConfiguration.class.getName(),
-                Arrays.asList(FileBasedBuilderParametersImpl.class.getName()));
+    private BaseConfigurationBuilderProvider createProvider() {
+        return new BaseConfigurationBuilderProvider(FileBasedConfigurationBuilder.class.getName(), ReloadingFileBasedConfigurationBuilder.class.getName(),
+            PropertiesConfiguration.class.getName(), Arrays.asList(FileBasedBuilderParametersImpl.class.getName()));
     }
 
     /**
-     * Helper method for setting up a builder and checking properties of the
-     * created configuration object.
+     * Helper method for setting up a builder and checking properties of the created configuration object.
      *
      * @param reload a flag whether reloading is supported
      * @return the builder created by the provider
      * @throws ConfigurationException if an error occurs
      */
-    private ConfigurationBuilder<? extends Configuration> checkBuilder(
-            final boolean reload) throws ConfigurationException
-    {
+    private ConfigurationBuilder<? extends Configuration> checkBuilder(final boolean reload) throws ConfigurationException {
         final HierarchicalConfiguration<?> declConfig = setUpConfig(reload);
         final ConfigurationDeclaration decl = createDeclaration(declConfig);
-        final ConfigurationBuilder<? extends Configuration> builder =
-                createProvider().getConfigurationBuilder(decl);
+        final ConfigurationBuilder<? extends Configuration> builder = createProvider().getConfigurationBuilder(decl);
         final Configuration config = builder.getConfiguration();
-        assertEquals("Wrong configuration class",
-                PropertiesConfiguration.class, config.getClass());
+        assertEquals("Wrong configuration class", PropertiesConfiguration.class, config.getClass());
         final PropertiesConfiguration pconfig = (PropertiesConfiguration) config;
-        assertTrue("Wrong exception flag",
-                pconfig.isThrowExceptionOnMissing());
-        final DefaultListDelimiterHandler listHandler =
-                (DefaultListDelimiterHandler) pconfig.getListDelimiterHandler();
+        assertTrue("Wrong exception flag", pconfig.isThrowExceptionOnMissing());
+        final DefaultListDelimiterHandler listHandler = (DefaultListDelimiterHandler) pconfig.getListDelimiterHandler();
         assertEquals("Wrong list delimiter", ';', listHandler.getDelimiter());
-        assertTrue("Configuration not loaded",
-                pconfig.getBoolean("configuration.loaded"));
+        assertTrue("Configuration not loaded", pconfig.getBoolean("configuration.loaded"));
         return builder;
     }
 
@@ -148,148 +119,106 @@ public class TestBaseConfigurationBuilderProvider
      * Tries to create an instance without a builder class.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testInitNoBuilderClass()
-    {
-        new BaseConfigurationBuilderProvider(null, null,
-                PropertiesConfiguration.class.getName(), null);
+    public void testInitNoBuilderClass() {
+        new BaseConfigurationBuilderProvider(null, null, PropertiesConfiguration.class.getName(), null);
     }
 
     /**
      * Tries to create an instance without a configuration class.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testInitNoConfigurationClass()
-    {
-        new BaseConfigurationBuilderProvider(BasicConfigurationBuilder.class.getName(),
-                null, null, null);
+    public void testInitNoConfigurationClass() {
+        new BaseConfigurationBuilderProvider(BasicConfigurationBuilder.class.getName(), null, null, null);
     }
 
     /**
      * Tests whether a builder without reloading support can be created.
      */
     @Test
-    public void testGetBuilderNotReloading() throws ConfigurationException
-    {
-        final ConfigurationBuilder<? extends Configuration> builder =
-                checkBuilder(false);
-        assertEquals("Wrong builder class",
-                FileBasedConfigurationBuilder.class, builder.getClass());
+    public void testGetBuilderNotReloading() throws ConfigurationException {
+        final ConfigurationBuilder<? extends Configuration> builder = checkBuilder(false);
+        assertEquals("Wrong builder class", FileBasedConfigurationBuilder.class, builder.getClass());
     }
 
     /**
      * Tests whether a builder with reloading support can be created.
      */
     @Test
-    public void testGetBuilderReloading() throws ConfigurationException
-    {
-        final ConfigurationBuilder<? extends Configuration> builder =
-                checkBuilder(true);
-        assertEquals("Wrong builder class",
-                ReloadingFileBasedConfigurationBuilder.class,
-                builder.getClass());
+    public void testGetBuilderReloading() throws ConfigurationException {
+        final ConfigurationBuilder<? extends Configuration> builder = checkBuilder(true);
+        assertEquals("Wrong builder class", ReloadingFileBasedConfigurationBuilder.class, builder.getClass());
     }
 
     /**
-     * Tries to create a reloading builder if this is not supported by the
-     * provider.
+     * Tries to create a reloading builder if this is not supported by the provider.
      */
     @Test(expected = ConfigurationException.class)
-    public void testGetReloadingBuilderNotSupported()
-            throws ConfigurationException
-    {
-        final BaseConfigurationBuilderProvider provider =
-                new BaseConfigurationBuilderProvider(
-                        FileBasedConfigurationBuilder.class.getName(), null,
-                        PropertiesConfiguration.class.getName(),
-                        Arrays.asList(FileBasedBuilderParametersImpl.class
-                                .getName()));
+    public void testGetReloadingBuilderNotSupported() throws ConfigurationException {
+        final BaseConfigurationBuilderProvider provider = new BaseConfigurationBuilderProvider(FileBasedConfigurationBuilder.class.getName(), null,
+            PropertiesConfiguration.class.getName(), Arrays.asList(FileBasedBuilderParametersImpl.class.getName()));
         final HierarchicalConfiguration<?> declConfig = setUpConfig(true);
         final ConfigurationDeclaration decl = createDeclaration(declConfig);
         provider.getConfigurationBuilder(decl);
     }
 
     /**
-     * Helper method for testing whether the builder's allowFailOnInit flag is
-     * set correctly.
+     * Helper method for testing whether the builder's allowFailOnInit flag is set correctly.
      *
      * @param expFlag the expected flag value
-     * @param props the properties to set in the configuration for the
-     *        declaration
+     * @param props the properties to set in the configuration for the declaration
      * @throws ConfigurationException if an error occurs
      */
-    private void checkAllowFailOnInit(final boolean expFlag, final String... props)
-            throws ConfigurationException
-    {
+    private void checkAllowFailOnInit(final boolean expFlag, final String... props) throws ConfigurationException {
         final HierarchicalConfiguration<?> declConfig = setUpConfig(false);
-        for (final String key : props)
-        {
+        for (final String key : props) {
             declConfig.addProperty(key, Boolean.TRUE);
         }
         final ConfigurationDeclaration decl = createDeclaration(declConfig);
-        final BasicConfigurationBuilder<? extends Configuration> builder =
-                (BasicConfigurationBuilder<? extends Configuration>) createProvider()
-                        .getConfigurationBuilder(decl);
+        final BasicConfigurationBuilder<? extends Configuration> builder = (BasicConfigurationBuilder<? extends Configuration>) createProvider()
+            .getConfigurationBuilder(decl);
         assertEquals("Wrong flag value", expFlag, builder.isAllowFailOnInit());
     }
 
     /**
-     * Tests that the allowFailOnInit flag is not set per default on the
-     * builder.
+     * Tests that the allowFailOnInit flag is not set per default on the builder.
      */
     @Test
-    public void testGetBuilderNoFailOnInit() throws ConfigurationException
-    {
+    public void testGetBuilderNoFailOnInit() throws ConfigurationException {
         checkAllowFailOnInit(false);
     }
 
     /**
-     * Tests that the allowFailOnInit flag is not set for builders which are not
-     * optional.
+     * Tests that the allowFailOnInit flag is not set for builders which are not optional.
      */
-    public void testGetBuilderAllowFailOnInitNotOptional()
-            throws ConfigurationException
-    {
-        checkAllowFailOnInit(false,
-                CombinedConfigurationBuilder.ATTR_FORCECREATE);
+    public void testGetBuilderAllowFailOnInitNotOptional() throws ConfigurationException {
+        checkAllowFailOnInit(false, CombinedConfigurationBuilder.ATTR_FORCECREATE);
     }
 
     /**
      * Tests whether the allowFailOnInit flag can be enabled on the builder.
      */
     @Test
-    public void testGetBuilderAllowFailOnInit() throws ConfigurationException
-    {
-        checkAllowFailOnInit(true,
-                CombinedConfigurationBuilder.ATTR_OPTIONAL_RES,
-                CombinedConfigurationBuilder.ATTR_FORCECREATE);
+    public void testGetBuilderAllowFailOnInit() throws ConfigurationException {
+        checkAllowFailOnInit(true, CombinedConfigurationBuilder.ATTR_OPTIONAL_RES, CombinedConfigurationBuilder.ATTR_FORCECREATE);
     }
 
     /**
-     * Tests whether a null collection of parameter classes is handled
-     * correctly.
+     * Tests whether a null collection of parameter classes is handled correctly.
      */
     @Test
-    public void testInitNoParameterClasses()
-    {
-        final BaseConfigurationBuilderProvider provider =
-                new BaseConfigurationBuilderProvider(
-                        BasicConfigurationBuilder.class.getName(), null,
-                        PropertiesConfiguration.class.getName(), null);
-        assertTrue("Got parameter classes", provider.getParameterClasses()
-                .isEmpty());
+    public void testInitNoParameterClasses() {
+        final BaseConfigurationBuilderProvider provider = new BaseConfigurationBuilderProvider(BasicConfigurationBuilder.class.getName(), null,
+            PropertiesConfiguration.class.getName(), null);
+        assertTrue("Got parameter classes", provider.getParameterClasses().isEmpty());
     }
 
     /**
      * Tests that the collection with parameter classes cannot be modified.
      */
     @Test(expected = UnsupportedOperationException.class)
-    public void testGetParameterClassesModify()
-    {
-        final BaseConfigurationBuilderProvider provider =
-                new BaseConfigurationBuilderProvider(
-                        BasicConfigurationBuilder.class.getName(), null,
-                        PropertiesConfiguration.class.getName(),
-                        Arrays.asList(BasicBuilderParameters.class.getName()));
+    public void testGetParameterClassesModify() {
+        final BaseConfigurationBuilderProvider provider = new BaseConfigurationBuilderProvider(BasicConfigurationBuilder.class.getName(), null,
+            PropertiesConfiguration.class.getName(), Arrays.asList(BasicBuilderParameters.class.getName()));
         provider.getParameterClasses().clear();
     }
 }

@@ -25,42 +25,36 @@ import org.junit.Test;
  * Test if non-string properties are handled correctly.
  *
  */
-public abstract class BaseNonStringProperties
-{
+public abstract class BaseNonStringProperties {
 
     protected NonStringTestHolder nonStringTestHolder = new NonStringTestHolder();
 
     protected Configuration conf;
 
     @Test
-    public void testBoolean() throws Exception
-    {
+    public void testBoolean() throws Exception {
         nonStringTestHolder.testBoolean();
     }
 
     @Test
-    public void testBooleanDefaultValue() throws Exception
-    {
+    public void testBooleanDefaultValue() throws Exception {
         nonStringTestHolder.testBooleanDefaultValue();
     }
 
     @Test
-    public void testBooleanArrayValue() throws Exception
-    {
+    public void testBooleanArrayValue() throws Exception {
         final boolean booleanValue = conf.getBoolean("test.boolean");
         assertTrue(booleanValue);
         assertEquals(2, conf.getList("test.boolean.array").size());
     }
 
     @Test
-    public void testByte() throws Exception
-    {
+    public void testByte() throws Exception {
         nonStringTestHolder.testByte();
     }
 
     @Test
-    public void testByteArrayValue() throws Exception
-    {
+    public void testByteArrayValue() throws Exception {
         final byte testValue = 10;
         final byte byteValue = conf.getByte("test.byte");
         assertEquals(testValue, byteValue);
@@ -68,20 +62,17 @@ public abstract class BaseNonStringProperties
     }
 
     @Test
-    public void testDouble() throws Exception
-    {
+    public void testDouble() throws Exception {
         nonStringTestHolder.testDouble();
     }
 
     @Test
-    public void testDoubleDefaultValue() throws Exception
-    {
+    public void testDoubleDefaultValue() throws Exception {
         nonStringTestHolder.testDoubleDefaultValue();
     }
 
     @Test
-    public void testDoubleArrayValue() throws Exception
-    {
+    public void testDoubleArrayValue() throws Exception {
         final double testValue = 10.25;
         final double doubleValue = conf.getDouble("test.double");
         assertEquals(testValue, doubleValue, 0.01);
@@ -89,21 +80,18 @@ public abstract class BaseNonStringProperties
     }
 
     @Test
-    public void testFloat() throws Exception
-    {
+    public void testFloat() throws Exception {
         nonStringTestHolder.testFloat();
     }
 
     @Test
-    public void testFloatDefaultValue() throws Exception
-    {
+    public void testFloatDefaultValue() throws Exception {
         nonStringTestHolder.testFloatDefaultValue();
 
     }
 
     @Test
-    public void testFloatArrayValue() throws Exception
-    {
+    public void testFloatArrayValue() throws Exception {
         final float testValue = (float) 20.25;
         final float floatValue = conf.getFloat("test.float");
         assertEquals(testValue, floatValue, 0.01);
@@ -111,80 +99,68 @@ public abstract class BaseNonStringProperties
     }
 
     @Test
-    public void testInteger() throws Exception
-    {
+    public void testInteger() throws Exception {
         nonStringTestHolder.testInteger();
     }
 
     @Test
-    public void testIntegerDefaultValue() throws Exception
-    {
+    public void testIntegerDefaultValue() throws Exception {
         nonStringTestHolder.testIntegerDefaultValue();
     }
 
     @Test
-    public void testIntegerArrayValue() throws Exception
-    {
+    public void testIntegerArrayValue() throws Exception {
         final int intValue = conf.getInt("test.integer");
         assertEquals(10, intValue);
         assertEquals(2, conf.getList("test.integer.array").size());
     }
 
     @Test
-    public void testLong() throws Exception
-    {
+    public void testLong() throws Exception {
         nonStringTestHolder.testLong();
     }
 
     @Test
-    public void testLongDefaultValue() throws Exception
-    {
+    public void testLongDefaultValue() throws Exception {
         nonStringTestHolder.testLongDefaultValue();
     }
 
     @Test
-    public void testLongArrayValue() throws Exception
-    {
+    public void testLongArrayValue() throws Exception {
         final long longValue = conf.getLong("test.long");
         assertEquals(1000000, longValue);
         assertEquals(2, conf.getList("test.long.array").size());
     }
 
     @Test
-    public void testShort() throws Exception
-    {
+    public void testShort() throws Exception {
         nonStringTestHolder.testShort();
     }
 
     @Test
-    public void testShortDefaultValue() throws Exception
-    {
+    public void testShortDefaultValue() throws Exception {
         nonStringTestHolder.testShortDefaultValue();
     }
 
     @Test
-    public void testShortArrayValue() throws Exception
-    {
+    public void testShortArrayValue() throws Exception {
         final short shortValue = conf.getShort("test.short");
         assertEquals(1, shortValue);
         assertEquals(2, conf.getList("test.short.array").size());
     }
 
     @Test
-    public void testListMissing() throws Exception
-    {
+    public void testListMissing() throws Exception {
         nonStringTestHolder.testListMissing();
     }
 
     @Test
-    public void testSubset() throws Exception
-    {
+    public void testSubset() throws Exception {
         nonStringTestHolder.testSubset();
     }
 
     @Test
-    public void testIsEmpty() throws Exception
-    {
+    public void testIsEmpty() throws Exception {
         nonStringTestHolder.testIsEmpty();
     }
 }

@@ -52,8 +52,7 @@ import org.junit.rules.TemporaryFolder;
 
 /**
  */
-public class TestPropertyListConfiguration
-{
+public class TestPropertyListConfiguration {
     /** A helper object for dealing with temporary files. */
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
@@ -63,8 +62,7 @@ public class TestPropertyListConfiguration
     private final File testProperties = ConfigurationAssert.getTestFile("test.plist");
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         config = new PropertyListConfiguration();
         load(config, testProperties);
     }
@@ -76,21 +74,17 @@ public class TestPropertyListConfiguration
      * @param f the file to be loaded
      * @throws ConfigurationException if an error occurs
      */
-    private static void load(final PropertyListConfiguration c, final File f)
-            throws ConfigurationException
-    {
+    private static void load(final PropertyListConfiguration c, final File f) throws ConfigurationException {
         new FileHandler(c).load(f);
     }
 
     @Test
-    public void testLoad()
-    {
+    public void testLoad() {
         assertFalse("the configuration is empty", config.isEmpty());
     }
 
     @Test
-    public void testLoadWithError()
-    {
+    public void testLoadWithError() {
         config = new PropertyListConfiguration();
         try {
             new FileHandler(config).load(new StringReader(""));
@@ -102,22 +96,19 @@ public class TestPropertyListConfiguration
     }
 
     @Test
-    public void testString()
-    {
+    public void testString() {
         assertEquals("simple-string", "string1", config.getProperty("simple-string"));
     }
 
     @Test
-    public void testQuotedString()
-    {
+    public void testQuotedString() {
         assertEquals("quoted-string", "string2", config.getProperty("quoted-string"));
         assertEquals("quoted-string2", "this is a string", config.getProperty("quoted-string2"));
         assertEquals("complex-string", "this is a \"complex\" string {(=,;)}", config.getProperty("complex-string"));
     }
 
     @Test
-    public void testEmptyArray()
-    {
+    public void testEmptyArray() {
         final String key = "empty-array";
         assertNotNull("array null", config.getProperty(key));
 
@@ -126,8 +117,7 @@ public class TestPropertyListConfiguration
     }
 
     @Test
-    public void testArray()
-    {
+    public void testArray() {
         final String key = "array";
         assertNotNull("array null", config.getProperty(key));
 
@@ -140,8 +130,7 @@ public class TestPropertyListConfiguration
     }
 
     @Test
-    public void testNestedArrays()
-    {
+    public void testNestedArrays() {
         final String key = "nested-arrays";
 
         final Object array = config.getProperty(key);
@@ -172,15 +161,13 @@ public class TestPropertyListConfiguration
     }
 
     @Test
-    public void testDictionary()
-    {
+    public void testDictionary() {
         assertEquals("1st element in dictionary", "bar1", config.getProperty("dictionary.foo1"));
         assertEquals("2nd element in dictionary", "bar2", config.getProperty("dictionary.foo2"));
     }
 
     @Test
-    public void testDictionaryArray()
-    {
+    public void testDictionaryArray() {
         final String key = "dictionary-array";
 
         final Object array = config.getProperty(key);
@@ -207,21 +194,18 @@ public class TestPropertyListConfiguration
     }
 
     @Test
-    public void testNestedDictionaries()
-    {
+    public void testNestedDictionaries() {
         assertEquals("nested property", "value", config.getString("nested-dictionaries.foo.bar.key"));
     }
 
     @Test
-    public void testData()
-    {
+    public void testData() {
         ObjectAssert.assertInstanceOf("data", ArrayUtils.EMPTY_BYTE_ARRAY.getClass(), config.getProperty("data"));
         ArrayAssert.assertEquals("data", "foo bar".getBytes(), (byte[]) config.getProperty("data"));
     }
 
     @Test
-    public void testDate() throws Exception
-    {
+    public void testDate() throws Exception {
         final Calendar cal = Calendar.getInstance();
         cal.clear();
         cal.set(2002, Calendar.MARCH, 22, 11, 30, 0);
@@ -237,14 +221,12 @@ public class TestPropertyListConfiguration
      * @param file the target file
      * @throws ConfigurationException if an error occurs
      */
-    private void saveConfig(final File file) throws ConfigurationException
-    {
+    private void saveConfig(final File file) throws ConfigurationException {
         new FileHandler(config).save(file);
     }
 
     @Test
-    public void testSave() throws Exception
-    {
+    public void testSave() throws Exception {
         final File savedFile = folder.newFile("testsave.plist");
 
         // save the configuration
@@ -256,44 +238,35 @@ public class TestPropertyListConfiguration
         load(checkConfig, savedFile);
 
         final Iterator<String> it = config.getKeys();
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             final String key = it.next();
             assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
 
             final Object value = checkConfig.getProperty(key);
-            if (value instanceof byte[])
-            {
+            if (value instanceof byte[]) {
                 final byte[] array = (byte[]) value;
                 ArrayAssert.assertEquals("Value of the '" + key + "' property", (byte[]) config.getProperty(key), array);
-            }
-            else if (value instanceof List)
-            {
+            } else if (value instanceof List) {
                 final List<?> list1 = (List<?>) config.getProperty(key);
                 final List<?> list2 = (List<?>) value;
 
                 assertEquals("The size of the list for the key '" + key + "' doesn't match", list1.size(), list2.size());
 
-                for (int i = 0; i < list2.size(); i++)
-                {
+                for (int i = 0; i < list2.size(); i++) {
                     final Object value1 = list1.get(i);
                     final Object value2 = list2.get(i);
 
-                    if (value1 instanceof Configuration)
-                    {
+                    if (value1 instanceof Configuration) {
                         final ConfigurationComparator comparator = new StrictConfigurationComparator();
-                        assertTrue("The dictionnary at index " + i + " for the key '" + key + "' doesn't match", comparator.compare((Configuration) value1, (Configuration) value2));
-                    }
-                    else
-                    {
+                        assertTrue("The dictionnary at index " + i + " for the key '" + key + "' doesn't match",
+                            comparator.compare((Configuration) value1, (Configuration) value2));
+                    } else {
                         assertEquals("Element at index " + i + " for the key '" + key + "'", value1, value2);
                     }
                 }
 
                 ListAssert.assertEquals("Value of the '" + key + "' property", (List<?>) config.getProperty(key), list1);
-            }
-            else
-            {
+            } else {
                 assertEquals("Value of the '" + key + "' property", config.getProperty(key), checkConfig.getProperty(key));
             }
 
@@ -301,8 +274,7 @@ public class TestPropertyListConfiguration
     }
 
     @Test
-    public void testSaveEmptyDictionary() throws Exception
-    {
+    public void testSaveEmptyDictionary() throws Exception {
         final File savedFile = folder.newFile("testsave.plist");
 
         // save the configuration
@@ -318,24 +290,19 @@ public class TestPropertyListConfiguration
     }
 
     /**
-     * Returns a list with the children of the given configuration's root note
-     * with the specified name.
+     * Returns a list with the children of the given configuration's root note with the specified name.
      *
      * @param config the configuration
      * @param name the name of the desired children
      * @return the list with the corresponding child nodes
      */
-    private static List<ImmutableNode> getNamedChildren(
-            final HierarchicalConfiguration<ImmutableNode> config, final String name)
-    {
-        final NodeHandler<ImmutableNode> handler =
-                config.getNodeModel().getNodeHandler();
+    private static List<ImmutableNode> getNamedChildren(final HierarchicalConfiguration<ImmutableNode> config, final String name) {
+        final NodeHandler<ImmutableNode> handler = config.getNodeModel().getNodeHandler();
         return handler.getChildren(handler.getRootNode(), name);
     }
 
     @Test
-    public void testQuoteString()
-    {
+    public void testQuoteString() {
         assertEquals("null string", null, config.quoteString(null));
         assertEquals("simple string", "abcd", config.quoteString("abcd"));
         assertEquals("string with a space", "\"ab cd\"", config.quoteString("ab cd"));
@@ -344,12 +311,10 @@ public class TestPropertyListConfiguration
     }
 
     /**
-     * Ensure that setProperty doesn't alter an array of byte
-     * since it's a first class type in plist file
+     * Ensure that setProperty doesn't alter an array of byte since it's a first class type in plist file
      */
     @Test
-    public void testSetDataProperty() throws Exception
-    {
+    public void testSetDataProperty() throws Exception {
         final File saveFile = folder.newFile();
         final byte[] expected = {1, 2, 3, 4};
         config = new PropertyListConfiguration();
@@ -369,8 +334,7 @@ public class TestPropertyListConfiguration
      * Ensure that addProperty doesn't alter an array of byte
      */
     @Test
-    public void testAddDataProperty() throws Exception
-    {
+    public void testAddDataProperty() throws Exception {
         final File saveFile = folder.newFile();
         final byte[] expected = {1, 2, 3, 4};
         config = new PropertyListConfiguration();
@@ -387,8 +351,7 @@ public class TestPropertyListConfiguration
     }
 
     @Test
-    public void testInitCopy()
-    {
+    public void testInitCopy() {
         final PropertyListConfiguration copy = new PropertyListConfiguration(config);
         assertFalse("Nothing was copied", copy.isEmpty());
     }
@@ -397,18 +360,15 @@ public class TestPropertyListConfiguration
      * Tests parsing a date with an invalid numeric value.
      */
     @Test(expected = ParseException.class)
-    public void testParseDateNoNumber() throws ParseException
-    {
-        PropertyListConfiguration
-                .parseDate("<*D2002-03-22 1c:30:00 +0100>");
+    public void testParseDateNoNumber() throws ParseException {
+        PropertyListConfiguration.parseDate("<*D2002-03-22 1c:30:00 +0100>");
     }
 
     /**
      * Tests parsing a date that is not long enough.
      */
     @Test(expected = ParseException.class)
-    public void testParseDateTooShort() throws ParseException
-    {
+    public void testParseDateTooShort() throws ParseException {
         PropertyListConfiguration.parseDate("<*D2002-03-22 11:3>");
     }
 
@@ -416,18 +376,15 @@ public class TestPropertyListConfiguration
      * Tests parsing a date that contains an invalid separator character.
      */
     @Test(expected = ParseException.class)
-    public void testParseDateInvalidChar() throws ParseException
-    {
-        PropertyListConfiguration
-                .parseDate("<*D2002+03-22 11:30:00 +0100>");
+    public void testParseDateInvalidChar() throws ParseException {
+        PropertyListConfiguration.parseDate("<*D2002+03-22 11:30:00 +0100>");
     }
 
     /**
      * Tries parsing a null date. This should cause an exception.n
      */
     @Test(expected = ParseException.class)
-    public void testParseDateNull() throws ParseException
-    {
+    public void testParseDateNull() throws ParseException {
         PropertyListConfiguration.parseDate(null);
     }
 
@@ -435,18 +392,15 @@ public class TestPropertyListConfiguration
      * Tests formatting a date.
      */
     @Test
-    public void testFormatDate()
-    {
+    public void testFormatDate() {
         final Calendar cal = Calendar.getInstance();
         cal.clear();
         cal.set(2007, Calendar.OCTOBER, 29, 23, 4, 30);
         cal.setTimeZone(TimeZone.getTimeZone("GMT-0230"));
-        assertEquals("Wrong date literal (1)", "<*D2007-10-29 23:04:30 -0230>",
-                PropertyListConfiguration.formatDate(cal));
+        assertEquals("Wrong date literal (1)", "<*D2007-10-29 23:04:30 -0230>", PropertyListConfiguration.formatDate(cal));
         cal.clear();
         cal.set(2007, Calendar.OCTOBER, 30, 22, 2, 15);
         cal.setTimeZone(TimeZone.getTimeZone("GMT+1111"));
-        assertEquals("Wrong date literal (2)", "<*D2007-10-30 22:02:15 +1111>",
-                PropertyListConfiguration.formatDate(cal));
+        assertEquals("Wrong date literal (2)", "<*D2007-10-30 22:02:15 +1111>", PropertyListConfiguration.formatDate(cal));
     }
 }

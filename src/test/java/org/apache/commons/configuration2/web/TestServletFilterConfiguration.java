@@ -32,11 +32,9 @@ import org.junit.Test;
  * Test case for the {@link ServletFilterConfiguration} class.
  *
  */
-public class TestServletFilterConfiguration extends TestAbstractConfiguration
-{
+public class TestServletFilterConfiguration extends TestAbstractConfiguration {
     @Override
-    protected AbstractConfiguration getConfiguration()
-    {
+    protected AbstractConfiguration getConfiguration() {
         final MockFilterConfig config = new MockFilterConfig();
         config.setInitParameter("key1", "value1");
         config.setInitParameter("key2", "value2");
@@ -49,56 +47,47 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration
     }
 
     @Override
-    protected AbstractConfiguration getEmptyConfiguration()
-    {
+    protected AbstractConfiguration getEmptyConfiguration() {
         return new ServletFilterConfiguration(new MockFilterConfig());
     }
 
-    private class MockFilterConfig implements FilterConfig
-    {
+    private class MockFilterConfig implements FilterConfig {
         private final Properties parameters = new Properties();
 
         @Override
-        public String getFilterName()
-        {
+        public String getFilterName() {
             return null;
         }
 
         @Override
-        public ServletContext getServletContext()
-        {
+        public ServletContext getServletContext() {
             return null;
         }
 
         @Override
-        public String getInitParameter(final String key)
-        {
+        public String getInitParameter(final String key) {
             return parameters.getProperty(key);
         }
 
         @Override
-        public Enumeration<?> getInitParameterNames()
-        {
+        public Enumeration<?> getInitParameterNames() {
             return parameters.keys();
         }
 
-        public void setInitParameter(final String key, final String value)
-        {
+        public void setInitParameter(final String key, final String value) {
             parameters.setProperty(key, value);
         }
     }
 
     @Override
     @Test(expected = UnsupportedOperationException.class)
-    public void testAddPropertyDirect()
-    {
+    public void testAddPropertyDirect() {
         super.testAddPropertyDirect();
     }
 
     @Override
     @Test(expected = UnsupportedOperationException.class)
-    public void testClearProperty()
-    {
+    public void testClearProperty() {
         super.testClearProperty();
     }
 }

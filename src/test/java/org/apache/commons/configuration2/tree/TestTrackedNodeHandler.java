@@ -27,8 +27,7 @@ import org.junit.Test;
  * Test class for {@code TrackedNodeHandler}.
  *
  */
-public class TestTrackedNodeHandler
-{
+public class TestTrackedNodeHandler {
     /** A test root node. */
     private static ImmutableNode root;
 
@@ -39,17 +38,14 @@ public class TestTrackedNodeHandler
     private TrackedNodeHandler handler;
 
     @BeforeClass
-    public static void setUpBeforeClass() throws Exception
-    {
+    public static void setUpBeforeClass() throws Exception {
         root = new ImmutableNode.Builder().name("ROOT").create();
     }
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         @SuppressWarnings("unchecked")
-        final
-        NodeHandler<ImmutableNode> h = EasyMock.createMock(NodeHandler.class);
+        final NodeHandler<ImmutableNode> h = EasyMock.createMock(NodeHandler.class);
         parentHandler = h;
         handler = new TrackedNodeHandler(root, parentHandler);
     }
@@ -58,8 +54,7 @@ public class TestTrackedNodeHandler
      * Tests whether the correct root node is returned.
      */
     @Test
-    public void testGetRootNode()
-    {
+    public void testGetRootNode() {
         assertSame("Wrong root node", root, handler.getRootNode());
     }
 
@@ -67,8 +62,7 @@ public class TestTrackedNodeHandler
      * Tests whether a parent node can be queried.
      */
     @Test
-    public void testGetParent()
-    {
+    public void testGetParent() {
         final ImmutableNode node = new ImmutableNode.Builder().name("node").create();
         final ImmutableNode parent = new ImmutableNode.Builder().name("parent").create();
         EasyMock.expect(parentHandler.getParent(node)).andReturn(parent);

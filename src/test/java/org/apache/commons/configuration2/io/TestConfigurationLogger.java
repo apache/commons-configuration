@@ -37,8 +37,7 @@ import org.junit.Test;
  * Test class for {@code ConfigurationLogger}.
  *
  */
-public class TestConfigurationLogger
-{
+public class TestConfigurationLogger {
     /** Constant for a message to be logged. */
     private static final String MSG = "Interesting log output";
 
@@ -46,8 +45,7 @@ public class TestConfigurationLogger
      * Tries to create an instance without passing in a logger name.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testInitNoLoggerName()
-    {
+    public void testInitNoLoggerName() {
         new ConfigurationLogger((String) null);
     }
 
@@ -55,8 +53,7 @@ public class TestConfigurationLogger
      * Tries to create an instance without passing a logger class.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testInitNoLoggerClass()
-    {
+    public void testInitNoLoggerClass() {
         new ConfigurationLogger((Class<?>) null);
     }
 
@@ -64,23 +61,19 @@ public class TestConfigurationLogger
      * Tests whether a correct internal logger is created.
      */
     @Test
-    public void testInitWithLoggerSpec()
-    {
-        final ConfigurationLogger logger1 =
-                new ConfigurationLogger(getClass().getName());
+    public void testInitWithLoggerSpec() {
+        final ConfigurationLogger logger1 = new ConfigurationLogger(getClass().getName());
         final ConfigurationLogger logger2 = new ConfigurationLogger(getClass());
 
         assertNotNull("No internal logger", logger1.getLog());
-        assertEquals("Different internal loggers", logger1.getLog(),
-                logger2.getLog());
+        assertEquals("Different internal loggers", logger1.getLog(), logger2.getLog());
     }
 
     /**
      * Tests whether the debug status can be queried.
      */
     @Test
-    public void testIsDebugEnabled()
-    {
+    public void testIsDebugEnabled() {
         final Log log = EasyMock.createMock(Log.class);
         EasyMock.expect(log.isDebugEnabled()).andReturn(Boolean.TRUE);
         EasyMock.replay(log);
@@ -94,8 +87,7 @@ public class TestConfigurationLogger
      * Tests whether the info status can be queried.
      */
     @Test
-    public void testIsInfoEnabled()
-    {
+    public void testIsInfoEnabled() {
         final Log log = EasyMock.createMock(Log.class);
         EasyMock.expect(log.isInfoEnabled()).andReturn(Boolean.FALSE);
         EasyMock.replay(log);
@@ -109,8 +101,7 @@ public class TestConfigurationLogger
      * Tests whether debug logging is possible.
      */
     @Test
-    public void testDebug()
-    {
+    public void testDebug() {
         final Log log = EasyMock.createMock(Log.class);
         log.debug(MSG);
         EasyMock.replay(log);
@@ -124,8 +115,7 @@ public class TestConfigurationLogger
      * Tests whether info logging is possible.
      */
     @Test
-    public void testInfo()
-    {
+    public void testInfo() {
         final Log log = EasyMock.createMock(Log.class);
         log.info(MSG);
         EasyMock.replay(log);
@@ -139,8 +129,7 @@ public class TestConfigurationLogger
      * Tests whether warn logging is possible.
      */
     @Test
-    public void testWarn()
-    {
+    public void testWarn() {
         final Log log = EasyMock.createMock(Log.class);
         log.warn(MSG);
         EasyMock.replay(log);
@@ -154,8 +143,7 @@ public class TestConfigurationLogger
      * Tests whether an exception can be logged on warn level.
      */
     @Test
-    public void testWarnWithException()
-    {
+    public void testWarnWithException() {
         final Log log = EasyMock.createMock(Log.class);
         final Throwable ex = new Exception("Test exception");
         log.warn(MSG, ex);
@@ -170,8 +158,7 @@ public class TestConfigurationLogger
      * Tests whether error logging is possible.
      */
     @Test
-    public void testError()
-    {
+    public void testError() {
         final Log log = EasyMock.createMock(Log.class);
         log.error(MSG);
         EasyMock.replay(log);
@@ -185,8 +172,7 @@ public class TestConfigurationLogger
      * Tests whether an exception can be logged on error level.
      */
     @Test
-    public void testErrorWithException()
-    {
+    public void testErrorWithException() {
         final Log log = EasyMock.createMock(Log.class);
         final Throwable ex = new Exception("Test exception");
         log.error(MSG, ex);
@@ -201,26 +187,21 @@ public class TestConfigurationLogger
      * Tests whether a dummy logger can be created.
      */
     @Test
-    public void testDummyLogger()
-    {
+    public void testDummyLogger() {
         final ConfigurationLogger logger = ConfigurationLogger.newDummyLogger();
 
-        assertThat("Wrong internal logger", logger.getLog(),
-                instanceOf(NoOpLog.class));
+        assertThat("Wrong internal logger", logger.getLog(), instanceOf(NoOpLog.class));
     }
 
     /**
      * Tests that a derived class can be created for a logger.
      */
     @Test
-    public void testSubClass()
-    {
+    public void testSubClass() {
         final StringBuilder buf = new StringBuilder();
-        final ConfigurationLogger logger = new ConfigurationLogger()
-        {
+        final ConfigurationLogger logger = new ConfigurationLogger() {
             @Override
-            public void info(final String msg)
-            {
+            public void info(final String msg) {
                 buf.append(msg);
             }
         };
@@ -234,8 +215,7 @@ public class TestConfigurationLogger
      * Tests the logger set per default.
      */
     @Test
-    public void testAbstractConfigurationDefaultLogger()
-    {
+    public void testAbstractConfigurationDefaultLogger() {
         final AbstractConfiguration config = new BaseConfiguration();
         assertThat("Wrong default logger", config.getLogger().getLog(), instanceOf(NoOpLog.class));
     }
@@ -244,8 +224,7 @@ public class TestConfigurationLogger
      * Tests whether the logger can be set.
      */
     @Test
-    public void testAbstractConfigurationSetLogger()
-    {
+    public void testAbstractConfigurationSetLogger() {
         final ConfigurationLogger logger = new ConfigurationLogger(getClass());
         final AbstractConfiguration config = new BaseConfiguration();
 
@@ -257,8 +236,7 @@ public class TestConfigurationLogger
      * Tests that the logger can be disabled by setting it to null.
      */
     @Test
-    public void testAbstractConfigurationSetLoggerNull()
-    {
+    public void testAbstractConfigurationSetLoggerNull() {
         final AbstractConfiguration config = new BaseConfiguration();
         config.setLogger(new ConfigurationLogger(getClass()));
 

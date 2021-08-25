@@ -27,34 +27,28 @@ import org.springframework.core.env.EnumerablePropertySource;
 /**
  * Allow use of Apache Commons Configuration Objects as Spring PropertySources
  */
-public class ConfigurationPropertySource extends EnumerablePropertySource<Configuration>
-{
+public class ConfigurationPropertySource extends EnumerablePropertySource<Configuration> {
 
-    public ConfigurationPropertySource(final String name, final Configuration source)
-    {
-       super(name, source);
+    public ConfigurationPropertySource(final String name, final Configuration source) {
+        super(name, source);
     }
 
-    protected ConfigurationPropertySource(final String name)
-    {
-       super(name);
+    protected ConfigurationPropertySource(final String name) {
+        super(name);
     }
 
     @Override
-    public String[] getPropertyNames()
-    {
-       final List<String> keys = new ArrayList<>();
-       final Iterator<String> keysIterator = source.getKeys();
-       while (keysIterator.hasNext())
-       {
-          keys.add(keysIterator.next());
-       }
-       return keys.toArray(new String[keys.size()]);
+    public String[] getPropertyNames() {
+        final List<String> keys = new ArrayList<>();
+        final Iterator<String> keysIterator = source.getKeys();
+        while (keysIterator.hasNext()) {
+            keys.add(keysIterator.next());
+        }
+        return keys.toArray(new String[keys.size()]);
     }
 
     @Override
-    public Object getProperty(final String name)
-    {
-       return source.getProperty(name);
-   }
+    public Object getProperty(final String name) {
+        return source.getProperty(name);
+    }
 }

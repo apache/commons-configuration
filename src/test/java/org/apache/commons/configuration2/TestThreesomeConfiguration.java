@@ -27,18 +27,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * A base class for testing {@link
- * org.apache.commons.configuration2.BasePropertiesConfiguration}
- * extensions.
+ * A base class for testing {@link org.apache.commons.configuration2.BasePropertiesConfiguration} extensions.
  *
  */
-public class TestThreesomeConfiguration
-{
+public class TestThreesomeConfiguration {
     protected Configuration conf;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         final PropertiesConfiguration c = new PropertiesConfiguration();
         c.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
         final FileHandler handler = new FileHandler(c);
@@ -48,24 +44,21 @@ public class TestThreesomeConfiguration
     }
 
     @Test
-    public void testList1() throws Exception
-    {
+    public void testList1() throws Exception {
         final List<Object> packages = conf.getList("test.threesome.one");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }
 
     @Test
-    public void testList2() throws Exception
-    {
+    public void testList2() throws Exception {
         final List<Object> packages = conf.getList("test.threesome.two");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }
 
     @Test
-    public void testList3() throws Exception
-    {
+    public void testList3() throws Exception {
         final List<Object> packages = conf.getList("test.threesome.three");
         // we should get 3 packages here
         assertEquals(3, packages.size());

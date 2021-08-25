@@ -25,23 +25,20 @@ import org.xml.sax.EntityResolver;
  * Definition of a parameters interface for XML configurations.
  * </p>
  * <p>
- * The {@code XMLConfiguration} class defines a bunch of additional properties
- * related to XML processing.
+ * The {@code XMLConfiguration} class defines a bunch of additional properties related to XML processing.
  * </p>
  * <p>
- * <strong>Important note:</strong> This interface is not intended to be
- * implemented by client code! It defines a set of available properties and may
- * be extended even in minor releases.
+ * <strong>Important note:</strong> This interface is not intended to be implemented by client code! It defines a set of
+ * available properties and may be extended even in minor releases.
  * </p>
  *
  * @since 2.0
  * @param <T> the type of the result of all set methods for method chaining
  */
-public interface XMLBuilderProperties<T>
-{
+public interface XMLBuilderProperties<T> {
     /**
-     * Allows setting the {@code DocumentBuilder} for parsing an XML document.
-     * This is the most flexible way of customizing XML processing.
+     * Allows setting the {@code DocumentBuilder} for parsing an XML document. This is the most flexible way of customizing
+     * XML processing.
      *
      * @param docBuilder the {@code DocumentBuilder} to use
      * @return a reference to this object for method chaining
@@ -49,8 +46,7 @@ public interface XMLBuilderProperties<T>
     T setDocumentBuilder(DocumentBuilder docBuilder);
 
     /**
-     * Allows setting the {@code EntityResolver} which maps entity references
-     * during XML parsing.
+     * Allows setting the {@code EntityResolver} which maps entity references during XML parsing.
      *
      * @param resolver the {@code EntityResolver} to use
      * @return a reference to this object for method chaining
@@ -82,11 +78,9 @@ public interface XMLBuilderProperties<T>
     T setValidating(boolean f);
 
     /**
-     * Sets the value of the schemaValidation flag. This flag determines whether
-     * DTD or Schema validation should be used.
+     * Sets the value of the schemaValidation flag. This flag determines whether DTD or Schema validation should be used.
      *
-     * @param f the flag value, <b>true</b> for schema validation, <b>false</b>
-     *        for DTD validation
+     * @param f the flag value, <b>true</b> for schema validation, <b>false</b> for DTD validation
      * @return a reference to this object for method chaining
      */
     T setSchemaValidation(boolean f);

@@ -34,18 +34,19 @@ import org.apache.commons.text.lookup.StringLookup;
  * Lookup that allows expressions to be evaluated.
  *
  * <pre>
- *     ExprLookup.Variables vars = new ExprLookup.Variables();
- *     vars.add(new ExprLookup.Variable("String", org.apache.commons.lang.StringUtils.class));
- *     vars.add(new ExprLookup.Variable("Util", new Utility("Hello")));
- *     vars.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
- *     XMLConfiguration config = new XMLConfiguration(TEST_FILE);
- *     config.setLogger(log);
- *     ExprLookup lookup = new ExprLookup(vars);
- *     lookup.setConfiguration(config);
- *     String str = lookup.lookup("'$[element] ' + String.trimToEmpty('$[space.description]')");
+ * ExprLookup.Variables vars = new ExprLookup.Variables();
+ * vars.add(new ExprLookup.Variable("String", org.apache.commons.lang.StringUtils.class));
+ * vars.add(new ExprLookup.Variable("Util", new Utility("Hello")));
+ * vars.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
+ * XMLConfiguration config = new XMLConfiguration(TEST_FILE);
+ * config.setLogger(log);
+ * ExprLookup lookup = new ExprLookup(vars);
+ * lookup.setConfiguration(config);
+ * String str = lookup.lookup("'$[element] ' + String.trimToEmpty('$[space.description]')");
  * </pre>
  *
  * In the example above TEST_FILE contains xml that looks like:
+ *
  * <pre>
  * &lt;configuration&gt;
  *   &lt;element&gt;value&lt;/element&gt;
@@ -57,13 +58,11 @@ import org.apache.commons.text.lookup.StringLookup;
  *
  * The result will be "value Some text".
  *
- * This lookup uses Apache Commons Jexl and requires that the dependency be added to any
- * projects which use this.
+ * This lookup uses Apache Commons Jexl and requires that the dependency be added to any projects which use this.
  *
  * @since 1.7
  */
-public class ExprLookup implements Lookup
-{
+public class ExprLookup implements Lookup {
     /** Prefix to identify a Java Class object */
     private static final String CLASS = "Class:";
 
@@ -95,73 +94,69 @@ public class ExprLookup implements Lookup
     private String suffixMatcher = DEFAULT_SUFFIX;
 
     /**
-     * The default constructor. Will get used when the Lookup is constructed via
-     * configuration.
+     * The default constructor. Will get used when the Lookup is constructed via configuration.
      */
-    public ExprLookup()
-    {
+    public ExprLookup() {
     }
 
     /**
      * Constructor for use by applications.
+     *
      * @param list The list of objects to be accessible in expressions.
      */
-    public ExprLookup(final Variables list)
-    {
+    public ExprLookup(final Variables list) {
         setVariables(list);
     }
 
     /**
      * Constructor for use by applications.
+     *
      * @param list The list of objects to be accessible in expressions.
      * @param prefix The prefix to use for subordinate lookups.
      * @param suffix The suffix to use for subordinate lookups.
      */
-    public ExprLookup(final Variables list, final String prefix, final String suffix)
-    {
+    public ExprLookup(final Variables list, final String prefix, final String suffix) {
         this(list);
         setVariablePrefixMatcher(prefix);
         setVariableSuffixMatcher(suffix);
     }
 
     /**
-     * Set the prefix to use to identify subordinate expressions. This cannot be the
-     * same as the prefix used for the primary expression.
+     * Set the prefix to use to identify subordinate expressions. This cannot be the same as the prefix used for the primary
+     * expression.
+     *
      * @param prefix The String identifying the beginning of the expression.
      */
-    public void setVariablePrefixMatcher(final String prefix)
-    {
+    public void setVariablePrefixMatcher(final String prefix) {
         prefixMatcher = prefix;
     }
 
     /**
-     * Set the suffix to use to identify subordinate expressions. This cannot be the
-     * same as the suffix used for the primary expression.
+     * Set the suffix to use to identify subordinate expressions. This cannot be the same as the suffix used for the primary
+     * expression.
+     *
      * @param suffix The String identifying the end of the expression.
      */
-    public void setVariableSuffixMatcher(final String suffix)
-    {
+    public void setVariableSuffixMatcher(final String suffix) {
         suffixMatcher = suffix;
     }
 
     /**
      * Add the Variables that will be accessible within expressions.
+     *
      * @param list The list of Variables.
      */
-    public void setVariables(final Variables list)
-    {
+    public void setVariables(final Variables list) {
         variables = new Variables(list);
     }
 
     /**
-     * Returns the list of Variables that are accessible within expressions.
-     * This method returns a copy of the variables managed by this lookup; so
-     * modifying this object has no impact on this lookup.
+     * Returns the list of Variables that are accessible within expressions. This method returns a copy of the variables
+     * managed by this lookup; so modifying this object has no impact on this lookup.
      *
      * @return the List of Variables that are accessible within expressions.
      */
-    public Variables getVariables()
-    {
+    public Variables getVariables() {
         return new Variables(variables);
     }
 
@@ -171,20 +166,17 @@ public class ExprLookup implements Lookup
      * @return the {@code Log}
      * @since 2.0
      */
-    public ConfigurationLogger getLogger()
-    {
+    public ConfigurationLogger getLogger() {
         return logger;
     }
 
     /**
-     * Sets the logger to be used by this object. If no logger is passed in, no
-     * log output is generated.
+     * Sets the logger to be used by this object. If no logger is passed in, no log output is generated.
      *
      * @param logger the {@code Log}
      * @since 2.0
      */
-    public void setLogger(final ConfigurationLogger logger)
-    {
+    public void setLogger(final ConfigurationLogger logger) {
         this.logger = logger;
     }
 
@@ -194,49 +186,41 @@ public class ExprLookup implements Lookup
      * @return the {@code ConfigurationInterpolator}
      * @since 2.0
      */
-    public ConfigurationInterpolator getInterpolator()
-    {
+    public ConfigurationInterpolator getInterpolator() {
         return interpolator;
     }
 
     /**
      * Sets the {@code ConfigurationInterpolator} to be used by this object.
      *
-     * @param interpolator the {@code ConfigurationInterpolator} (may be
-     *        <b>null</b>)
+     * @param interpolator the {@code ConfigurationInterpolator} (may be <b>null</b>)
      * @since 2.0
      */
-    public void setInterpolator(final ConfigurationInterpolator interpolator)
-    {
+    public void setInterpolator(final ConfigurationInterpolator interpolator) {
         this.interpolator = interpolator;
         installSubstitutor(interpolator);
     }
 
     /**
      * Evaluates the expression.
+     *
      * @param var The expression.
      * @return The String result of the expression.
      */
     @Override
-    public String lookup(final String var)
-    {
-        if (substitutor == null)
-        {
+    public String lookup(final String var) {
+        if (substitutor == null) {
             return var;
         }
 
         String result = substitutor.replace(var);
-        try
-        {
+        try {
             final Expression exp = engine.createExpression(result);
             final Object exprResult = exp.evaluate(createContext());
             result = exprResult != null ? String.valueOf(exprResult) : null;
-        }
-        catch (final Exception e)
-        {
+        } catch (final Exception e) {
             final ConfigurationLogger l = getLogger();
-            if (l != null)
-            {
+            if (l != null) {
                 l.debug("Error encountered evaluating " + result + ": " + e);
             }
         }
@@ -245,59 +229,46 @@ public class ExprLookup implements Lookup
     }
 
     /**
-     * Creates a {@code StringSubstitutor} object which uses the passed in
-     * {@code ConfigurationInterpolator} as lookup object.
+     * Creates a {@code StringSubstitutor} object which uses the passed in {@code ConfigurationInterpolator} as lookup
+     * object.
      *
      * @param ip the {@code ConfigurationInterpolator} to be used
      */
-    private void installSubstitutor(final ConfigurationInterpolator ip)
-    {
-        if (ip == null)
-        {
+    private void installSubstitutor(final ConfigurationInterpolator ip) {
+        if (ip == null) {
             substitutor = null;
-        }
-        else
-        {
+        } else {
             final StringLookup variableResolver = key -> Objects.toString(ip.resolve(key), null);
-            substitutor =
-                    new StringSubstitutor(variableResolver, prefixMatcher,
-                            suffixMatcher, StringSubstitutor.DEFAULT_ESCAPE);
+            substitutor = new StringSubstitutor(variableResolver, prefixMatcher, suffixMatcher, StringSubstitutor.DEFAULT_ESCAPE);
         }
     }
 
     /**
-     * Creates a new {@code JexlContext} and initializes it with the variables
-     * managed by this Lookup object.
+     * Creates a new {@code JexlContext} and initializes it with the variables managed by this Lookup object.
      *
      * @return the newly created context
      */
-    private JexlContext createContext()
-    {
+    private JexlContext createContext() {
         final JexlContext ctx = new MapContext();
         initializeContext(ctx);
         return ctx;
     }
 
     /**
-     * Initializes the specified context with the variables managed by this
-     * Lookup object.
+     * Initializes the specified context with the variables managed by this Lookup object.
      *
      * @param ctx the context to be initialized
      */
-    private void initializeContext(final JexlContext ctx)
-    {
-        for (final Variable var : variables)
-        {
+    private void initializeContext(final JexlContext ctx) {
+        for (final Variable var : variables) {
             ctx.set(var.getName(), var.getValue());
         }
     }
 
     /**
-     * List wrapper used to allow the Variables list to be created as beans in
-     * DefaultConfigurationBuilder.
+     * List wrapper used to allow the Variables list to be created as beans in DefaultConfigurationBuilder.
      */
-    public static class Variables extends ArrayList<Variable>
-    {
+    public static class Variables extends ArrayList<Variable> {
         /**
          * The serial version UID.
          */
@@ -306,88 +277,69 @@ public class ExprLookup implements Lookup
         /**
          * Creates a new empty instance of {@code Variables}.
          */
-        public Variables()
-        {
+        public Variables() {
         }
 
         /**
-         * Creates a new instance of {@code Variables} and copies the content of
-         * the given object.
+         * Creates a new instance of {@code Variables} and copies the content of the given object.
          *
          * @param vars the {@code Variables} object to be copied
          */
-        public Variables(final Variables vars)
-        {
+        public Variables(final Variables vars) {
             super(vars);
         }
 
-        public Variable getVariable()
-        {
+        public Variable getVariable() {
             return !isEmpty() ? get(size() - 1) : null;
         }
 
     }
 
     /**
-     * The key and corresponding object that will be made available to the
-     * JexlContext for use in expressions.
+     * The key and corresponding object that will be made available to the JexlContext for use in expressions.
      */
-    public static class Variable
-    {
+    public static class Variable {
         /** The name to be used in expressions */
         private String key;
 
         /** The object to be accessed in expressions */
         private Object value;
 
-        public Variable()
-        {
+        public Variable() {
         }
 
-        public Variable(final String name, final Object value)
-        {
+        public Variable(final String name, final Object value) {
             setName(name);
             setValue(value);
         }
 
-        public String getName()
-        {
+        public String getName() {
             return key;
         }
 
-        public void setName(final String name)
-        {
+        public void setName(final String name) {
             this.key = name;
         }
 
-        public Object getValue()
-        {
+        public Object getValue() {
             return value;
         }
 
-        public void setValue(final Object value) throws ConfigurationRuntimeException
-        {
-            try
-            {
-                if (!(value instanceof String))
-                {
+        public void setValue(final Object value) throws ConfigurationRuntimeException {
+            try {
+                if (!(value instanceof String)) {
                     this.value = value;
                     return;
                 }
                 final String val = (String) value;
                 final String name = StringUtils.removeStartIgnoreCase(val, CLASS);
                 final Class<?> clazz = ClassUtils.getClass(name);
-                if (name.length() == val.length())
-                {
+                if (name.length() == val.length()) {
                     this.value = clazz.newInstance();
-                }
-                else
-                {
+                } else {
                     this.value = clazz;
                 }
-            }
-            catch (final Exception e)
-            {
+            } catch (final Exception e) {
                 throw new ConfigurationRuntimeException("Unable to create " + value, e);
             }
 

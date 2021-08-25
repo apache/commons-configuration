@@ -35,77 +35,58 @@ import java.util.Map;
 
 /**
  * <p>
- * A specialized hierarchical configuration class that is able to parse YAML
- * documents.
+ * A specialized hierarchical configuration class that is able to parse YAML documents.
  * </p>
  *
  * @since 2.2
  */
-public class YAMLConfiguration extends AbstractYAMLBasedConfiguration
-        implements FileBasedConfiguration, InputStreamSupport
-{
+public class YAMLConfiguration extends AbstractYAMLBasedConfiguration implements FileBasedConfiguration, InputStreamSupport {
     /**
      * Creates a new instance of {@code YAMLConfiguration}.
      */
-    public YAMLConfiguration()
-    {
+    public YAMLConfiguration() {
     }
 
     /**
-     * Creates a new instance of {@code YAMLConfiguration} as a copy of the
-     * specified configuration.
+     * Creates a new instance of {@code YAMLConfiguration} as a copy of the specified configuration.
      *
      * @param c the configuration to be copied
      */
-    public YAMLConfiguration(final HierarchicalConfiguration<ImmutableNode> c)
-    {
+    public YAMLConfiguration(final HierarchicalConfiguration<ImmutableNode> c) {
         super(c);
     }
 
     @Override
-    public void read(final Reader in) throws ConfigurationException
-    {
-        try
-        {
+    public void read(final Reader in) throws ConfigurationException {
+        try {
             final Yaml yaml = createYamlForReading(new LoaderOptions());
             final Map<String, Object> map = (Map) yaml.load(in);
             load(map);
-        }
-        catch (final Exception e)
-        {
+        } catch (final Exception e) {
             rethrowException(e);
         }
     }
 
-    public void read(final Reader in, final LoaderOptions options)
-            throws ConfigurationException
-    {
-        try
-        {
+    public void read(final Reader in, final LoaderOptions options) throws ConfigurationException {
+        try {
             final Yaml yaml = createYamlForReading(options);
             final Map<String, Object> map = (Map) yaml.load(in);
             load(map);
-        }
-        catch (final Exception e)
-        {
+        } catch (final Exception e) {
             rethrowException(e);
         }
     }
 
     @Override
-    public void write(final Writer out) throws ConfigurationException, IOException
-    {
+    public void write(final Writer out) throws ConfigurationException, IOException {
         final DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         dump(out, options);
     }
 
-    public void dump(final Writer out, final DumperOptions options)
-            throws ConfigurationException, IOException
-    {
+    public void dump(final Writer out, final DumperOptions options) throws ConfigurationException, IOException {
         final Yaml yaml = new Yaml(options);
-        yaml.dump(constructMap(getNodeModel().getNodeHandler().getRootNode()),
-                out);
+        yaml.dump(constructMap(getNodeModel().getNodeHandler().getRootNode()), out);
     }
 
     /**
@@ -115,61 +96,46 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration
      * @throws ConfigurationException if an error occurs
      */
     @Override
-    public void read(final InputStream in) throws ConfigurationException
-    {
-        try
-        {
+    public void read(final InputStream in) throws ConfigurationException {
+        try {
             final Yaml yaml = createYamlForReading(new LoaderOptions());
             final Map<String, Object> map = (Map) yaml.load(in);
             load(map);
-        }
-        catch (final Exception e)
-        {
+        } catch (final Exception e) {
             rethrowException(e);
         }
     }
 
-    public void read(final InputStream in, final LoaderOptions options)
-            throws ConfigurationException
-    {
-        try
-        {
+    public void read(final InputStream in, final LoaderOptions options) throws ConfigurationException {
+        try {
             final Yaml yaml = createYamlForReading(options);
             final Map<String, Object> map = (Map) yaml.load(in);
             load(map);
-        }
-        catch (final Exception e)
-        {
+        } catch (final Exception e) {
             rethrowException(e);
         }
     }
 
     /**
-     * Creates a {@code Yaml} object for reading a Yaml file. The object is
-     * configured with some default settings.
+     * Creates a {@code Yaml} object for reading a Yaml file. The object is configured with some default settings.
      *
      * @param options options for loading the file
      * @return the {@code Yaml} instance for loading a file
      */
-    private static Yaml createYamlForReading(final LoaderOptions options)
-    {
+    private static Yaml createYamlForReading(final LoaderOptions options) {
         return new Yaml(createClassLoadingDisablingConstructor(), new Representer(), new DumperOptions(), options);
     }
 
     /**
-     * Returns a {@code Constructor} object for the YAML parser that prevents
-     * all classes from being loaded. This effectively disables the dynamic
-     * creation of Java objects that are declared in YAML files to be loaded.
+     * Returns a {@code Constructor} object for the YAML parser that prevents all classes from being loaded. This
+     * effectively disables the dynamic creation of Java objects that are declared in YAML files to be loaded.
      *
      * @return the {@code Constructor} preventing object creation
      */
-    private static Constructor createClassLoadingDisablingConstructor()
-    {
-        return new Constructor()
-        {
+    private static Constructor createClassLoadingDisablingConstructor() {
+        return new Constructor() {
             @Override
-            protected Class<?> getClassForName(final String name)
-            {
+            protected Class<?> getClassForName(final String name) {
                 throw new ConfigurationRuntimeException("Class instantiation is disabled.");
             }
         };

@@ -103,8 +103,7 @@ public class TestFileBasedConfigurationBuilder {
     public void testGetConfigurationNoLocation() throws ConfigurationException {
         final Map<String, Object> params = new HashMap<>();
         params.put("throwExceptionOnMissing", Boolean.TRUE);
-        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<>(
-            PropertiesConfiguration.class, params);
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class, params);
         final PropertiesConfiguration conf = builder.getConfiguration();
         assertTrue("Property not set", conf.isThrowExceptionOnMissing());
         assertTrue("Not empty", conf.isEmpty());
@@ -116,16 +115,16 @@ public class TestFileBasedConfigurationBuilder {
     @Test
     public void testGetConfigurationLoadFromFile() throws ConfigurationException {
         final File file = createTestFile(1);
-        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<>(
-            PropertiesConfiguration.class).configure(new FileBasedBuilderParametersImpl().setFile(file));
+        final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = new FileBasedConfigurationBuilder<>(PropertiesConfiguration.class)
+            .configure(new FileBasedBuilderParametersImpl().setFile(file));
         final PropertiesConfiguration config = builder.getConfiguration();
         assertEquals("Not read from file", 1, config.getInt(PROP));
         assertSame("FileHandler not initialized", config, builder.getFileHandler().getContent());
     }
 
     /**
-     * Tests whether a configuration is loaded from a JAR file if a location is provided.
-     * CONFIGURATION-794: Unclosed file handle when reading config from JAR file URL.
+     * Tests whether a configuration is loaded from a JAR file if a location is provided. CONFIGURATION-794: Unclosed file
+     * handle when reading config from JAR file URL.
      */
     @Test
     public void testGetConfigurationLoadFromJarFile() throws ConfigurationException, IOException {

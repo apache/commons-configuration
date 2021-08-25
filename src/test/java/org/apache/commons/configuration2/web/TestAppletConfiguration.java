@@ -34,36 +34,28 @@ import org.junit.Test;
  * Test case for the {@link AppletConfiguration} class.
  *
  */
-public class TestAppletConfiguration extends TestAbstractConfiguration
-{
+public class TestAppletConfiguration extends TestAbstractConfiguration {
     /** A flag whether tests with an applet can be run. */
     boolean supportsApplet;
 
     /**
-     * Initializes the tests. This implementation checks whether an applet can
-     * be used. Some environments, which do not support a GUI, don't allow
-     * creating an {@code Applet} instance. If we are in such an
-     * environment, some tests need to behave differently or be completely
-     * dropped.
+     * Initializes the tests. This implementation checks whether an applet can be used. Some environments, which do not
+     * support a GUI, don't allow creating an {@code Applet} instance. If we are in such an environment, some tests need to
+     * behave differently or be completely dropped.
      */
     @Before
-    public void setUp() throws Exception
-    {
-        try
-        {
+    public void setUp() throws Exception {
+        try {
             new Applet();
             supportsApplet = true;
-        }
-        catch (final Exception ex)
-        {
+        } catch (final Exception ex) {
             // cannot use applets
             supportsApplet = false;
         }
     }
 
     @Override
-    protected AbstractConfiguration getConfiguration()
-    {
+    protected AbstractConfiguration getConfiguration() {
         final AbstractConfiguration config;
         final Properties parameters = new Properties();
         parameters.setProperty("key1", "value1");
@@ -71,37 +63,26 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
         parameters.setProperty("list", "value1, value2");
         parameters.setProperty("listesc", "value1\\,value2");
 
-        if (supportsApplet)
-        {
-            final Applet applet = new Applet()
-            {
+        if (supportsApplet) {
+            final Applet applet = new Applet() {
                 /**
                  * Serial version UID.
                  */
                 private static final long serialVersionUID = 1L;
 
                 @Override
-                public String getParameter(final String key)
-                {
+                public String getParameter(final String key) {
                     return parameters.getProperty(key);
                 }
 
                 @Override
-                public String[][] getParameterInfo()
-                {
-                    return new String[][]
-                    {
-                    { "key1", "String", "" },
-                    { "key2", "String", "" },
-                    { "list", "String[]", "" },
-                    { "listesc", "String", "" } };
+                public String[][] getParameterInfo() {
+                    return new String[][] {{"key1", "String", ""}, {"key2", "String", ""}, {"list", "String[]", ""}, {"listesc", "String", ""}};
                 }
             };
 
             config = new AppletConfiguration(applet);
-        }
-        else
-        {
+        } else {
             config = new MapConfiguration(parameters);
         }
 
@@ -110,10 +91,8 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
     }
 
     @Override
-    protected AbstractConfiguration getEmptyConfiguration()
-    {
-        if (supportsApplet)
-        {
+    protected AbstractConfiguration getEmptyConfiguration() {
+        if (supportsApplet) {
             return new AppletConfiguration(new Applet());
         }
         return new BaseConfiguration();
@@ -121,17 +100,12 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
 
     @Override
     @Test
-    public void testAddPropertyDirect()
-    {
-        if (supportsApplet)
-        {
-            try
-            {
+    public void testAddPropertyDirect() {
+        if (supportsApplet) {
+            try {
                 super.testAddPropertyDirect();
                 fail("addPropertyDirect should throw an UnsupportedException");
-            }
-            catch (final UnsupportedOperationException e)
-            {
+            } catch (final UnsupportedOperationException e) {
                 // ok
             }
         }
@@ -139,17 +113,12 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
 
     @Override
     @Test
-    public void testClearProperty()
-    {
-        if (supportsApplet)
-        {
-            try
-            {
+    public void testClearProperty() {
+        if (supportsApplet) {
+            try {
                 super.testClearProperty();
                 fail("testClearProperty should throw an UnsupportedException");
-            }
-            catch (final UnsupportedOperationException e)
-            {
+            } catch (final UnsupportedOperationException e) {
                 // ok
             }
         }

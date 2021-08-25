@@ -23,23 +23,19 @@ import org.apache.commons.configuration2.tree.ExpressionEngine;
  * Definition of a parameters interface for hierarchical configurations.
  * </p>
  * <p>
- * This interface defines set methods for additional properties common to all
- * hierarchical configurations.
+ * This interface defines set methods for additional properties common to all hierarchical configurations.
  * </p>
  * <p>
- * <strong>Important note:</strong> This interface is not intended to be
- * implemented by client code! It defines a set of available properties and may
- * be extended even in minor releases.
+ * <strong>Important note:</strong> This interface is not intended to be implemented by client code! It defines a set of
+ * available properties and may be extended even in minor releases.
  * </p>
  *
  * @since 2.0
  * @param <T> the type of the result of all set methods for method chaining
  */
-public interface HierarchicalBuilderProperties<T>
-{
+public interface HierarchicalBuilderProperties<T> {
     /**
-     * Sets the {@code ExpressionEngine} to be used when querying the
-     * configuration.
+     * Sets the {@code ExpressionEngine} to be used when querying the configuration.
      *
      * @param engine the {@code ExpressionEngine}
      * @return a reference to this object for method chaining

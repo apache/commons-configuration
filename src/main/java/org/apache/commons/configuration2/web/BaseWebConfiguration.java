@@ -25,25 +25,21 @@ import org.apache.commons.configuration2.AbstractConfiguration;
  * An abstract base class for all web configurations.
  * </p>
  * <p>
- * This class implements common functionality used by all web based
- * configurations. E.g. some methods are not supported by configurations of this
- * type, so they throw a {@code UnsupportedOperationException} exception.
+ * This class implements common functionality used by all web based configurations. E.g. some methods are not supported
+ * by configurations of this type, so they throw a {@code UnsupportedOperationException} exception.
  * </p>
  *
  * @since 1.2
  */
-abstract class BaseWebConfiguration extends AbstractConfiguration
-{
+abstract class BaseWebConfiguration extends AbstractConfiguration {
     /**
-     * Checks if this configuration is empty. This implementation makes use of
-     * the {@code getKeys()} method (which must be defined by concrete
-     * sub classes) to find out whether properties exist.
+     * Checks if this configuration is empty. This implementation makes use of the {@code getKeys()} method (which must be
+     * defined by concrete sub classes) to find out whether properties exist.
      *
      * @return a flag whether this configuration is empty
      */
     @Override
-    protected boolean isEmptyInternal()
-    {
+    protected boolean isEmptyInternal() {
         return !getKeysInternal().hasNext();
     }
 
@@ -54,54 +50,45 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
      * @return a flag whether this key exists in this configuration
      */
     @Override
-    protected boolean containsKeyInternal(final String key)
-    {
+    protected boolean containsKeyInternal(final String key) {
         return getPropertyInternal(key) != null;
     }
 
     /**
-     * Removes the property with the given key. <strong>This operation is not
-     * supported and will throw an UnsupportedOperationException.</strong>
+     * Removes the property with the given key. <strong>This operation is not supported and will throw an
+     * UnsupportedOperationException.</strong>
      *
      * @param key the key of the property to be removed
-     * @throws UnsupportedOperationException because this operation is not
-     * allowed
+     * @throws UnsupportedOperationException because this operation is not allowed
      */
     @Override
-    protected void clearPropertyDirect(final String key)
-    {
+    protected void clearPropertyDirect(final String key) {
         throw new UnsupportedOperationException("Read only configuration");
     }
 
     /**
-     * Adds a property to this configuration. <strong>This operation is not
-     * supported and will throw an UnsupportedOperationException.</strong>
+     * Adds a property to this configuration. <strong>This operation is not supported and will throw an
+     * UnsupportedOperationException.</strong>
      *
      * @param key the key of the property
      * @param obj the value to be added
-     * @throws UnsupportedOperationException because this operation is not
-     * allowed
+     * @throws UnsupportedOperationException because this operation is not allowed
      */
     @Override
-    protected void addPropertyDirect(final String key, final Object obj)
-    {
+    protected void addPropertyDirect(final String key, final Object obj) {
         throw new UnsupportedOperationException("Read only configuration");
     }
 
     /**
-     * Takes care of list delimiters in property values. This method checks if
-     * delimiter parsing is enabled and the passed in value contains a delimiter
-     * character. If this is the case, a split operation is performed.
+     * Takes care of list delimiters in property values. This method checks if delimiter parsing is enabled and the passed
+     * in value contains a delimiter character. If this is the case, a split operation is performed.
      *
      * @param value the property value to be examined
      * @return the processed value
      */
-    protected Object handleDelimiters(Object value)
-    {
-        if (value instanceof String)
-        {
-            final Collection<String> values =
-                    getListDelimiterHandler().split((String) value, true);
+    protected Object handleDelimiters(Object value) {
+        if (value instanceof String) {
+            final Collection<String> values = getListDelimiterHandler().split((String) value, true);
             value = values.size() > 1 ? values : values.iterator().next();
         }
 

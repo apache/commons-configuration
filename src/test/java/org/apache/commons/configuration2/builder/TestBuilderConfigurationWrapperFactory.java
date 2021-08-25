@@ -41,18 +41,14 @@ import org.junit.Test;
  * Test class for {@code BuilderConfigurationWrapperFactory}.
  *
  */
-public class TestBuilderConfigurationWrapperFactory
-{
+public class TestBuilderConfigurationWrapperFactory {
     /**
      * Tests the default event source support level.
      */
     @Test
-    public void testDefaultEventSourceSupport()
-    {
-        final BuilderConfigurationWrapperFactory factory =
-                new BuilderConfigurationWrapperFactory();
-        assertEquals("Wrong result", EventSourceSupport.NONE,
-                factory.getEventSourceSupport());
+    public void testDefaultEventSourceSupport() {
+        final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory();
+        assertEquals("Wrong result", EventSourceSupport.NONE, factory.getEventSourceSupport());
     }
 
     /**
@@ -61,20 +57,12 @@ public class TestBuilderConfigurationWrapperFactory
      * @param conf the builder's result configuration
      * @return the mock builder
      */
-    private ConfigurationBuilder<BaseHierarchicalConfiguration> createBuilderMock(
-            final BaseHierarchicalConfiguration conf)
-    {
+    private ConfigurationBuilder<BaseHierarchicalConfiguration> createBuilderMock(final BaseHierarchicalConfiguration conf) {
         @SuppressWarnings("unchecked")
-        final
-        ConfigurationBuilder<BaseHierarchicalConfiguration> builder =
-                EasyMock.createMock(ConfigurationBuilder.class);
-        try
-        {
-            EasyMock.expect(builder.getConfiguration()).andReturn(conf)
-                    .anyTimes();
-        }
-        catch (final ConfigurationException e)
-        {
+        final ConfigurationBuilder<BaseHierarchicalConfiguration> builder = EasyMock.createMock(ConfigurationBuilder.class);
+        try {
+            EasyMock.expect(builder.getConfiguration()).andReturn(conf).anyTimes();
+        } catch (final ConfigurationException e) {
             // Cannot happen
             fail("Unexpected exception: " + e);
         }
@@ -85,43 +73,29 @@ public class TestBuilderConfigurationWrapperFactory
      * Tests whether the returned configuration correctly wraps the builder.
      */
     @Test
-    public void testConfigurationBuilderWrapper()
-    {
-        final BaseHierarchicalConfiguration conf =
-                new BaseHierarchicalConfiguration();
-        final ConfigurationBuilder<BaseHierarchicalConfiguration> builder =
-                createBuilderMock(conf);
+    public void testConfigurationBuilderWrapper() {
+        final BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
+        final ConfigurationBuilder<BaseHierarchicalConfiguration> builder = createBuilderMock(conf);
         EasyMock.replay(builder);
         conf.addProperty("test1", "value1");
         conf.addProperty("test2", "42");
-        final BuilderConfigurationWrapperFactory factory =
-                new BuilderConfigurationWrapperFactory();
-        final HierarchicalConfiguration<?> wrapper =
-                factory.createBuilderConfigurationWrapper(
-                        HierarchicalConfiguration.class, builder);
+        final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory();
+        final HierarchicalConfiguration<?> wrapper = factory.createBuilderConfigurationWrapper(HierarchicalConfiguration.class, builder);
         assertEquals("Wrong value (1)", "value1", wrapper.getString("test1"));
         assertEquals("Wrong value (2)", 42, wrapper.getInt("test2"));
-        assertSame("Wrong root node", conf.getNodeModel().getNodeHandler()
-                .getRootNode(), wrapper.getNodeModel().getNodeHandler()
-                .getRootNode());
+        assertSame("Wrong root node", conf.getNodeModel().getNodeHandler().getRootNode(), wrapper.getNodeModel().getNodeHandler().getRootNode());
     }
 
     /**
      * Tests the factory if support for EventSource is disabled.
      */
     @Test
-    public void testEventSourceSupportNone()
-    {
-        final BaseHierarchicalConfiguration conf =
-                new BaseHierarchicalConfiguration();
-        final ConfigurationBuilder<BaseHierarchicalConfiguration> builder =
-                createBuilderMock(conf);
+    public void testEventSourceSupportNone() {
+        final BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
+        final ConfigurationBuilder<BaseHierarchicalConfiguration> builder = createBuilderMock(conf);
         EasyMock.replay(builder);
-        final BuilderConfigurationWrapperFactory factory =
-                new BuilderConfigurationWrapperFactory();
-        final HierarchicalConfiguration<?> wrapper =
-                factory.createBuilderConfigurationWrapper(
-                        HierarchicalConfiguration.class, builder);
+        final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory();
+        final HierarchicalConfiguration<?> wrapper = factory.createBuilderConfigurationWrapper(HierarchicalConfiguration.class, builder);
         assertFalse("EventSource support", wrapper instanceof EventSource);
     }
 
@@ -129,18 +103,12 @@ public class TestBuilderConfigurationWrapperFactory
      * Tests the EventSource support level 'dummy'.
      */
     @Test
-    public void testEventSourceSupportDummy()
-    {
-        final BaseHierarchicalConfiguration conf =
-                new BaseHierarchicalConfiguration();
-        final ConfigurationBuilder<BaseHierarchicalConfiguration> builder =
-                createBuilderMock(conf);
+    public void testEventSourceSupportDummy() {
+        final BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
+        final ConfigurationBuilder<BaseHierarchicalConfiguration> builder = createBuilderMock(conf);
         EasyMock.replay(builder);
-        final BuilderConfigurationWrapperFactory factory =
-                new BuilderConfigurationWrapperFactory(EventSourceSupport.DUMMY);
-        final EventSource src =
-                (EventSource) factory.createBuilderConfigurationWrapper(
-                        HierarchicalConfiguration.class, builder);
+        final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory(EventSourceSupport.DUMMY);
+        final EventSource src = (EventSource) factory.createBuilderConfigurationWrapper(HierarchicalConfiguration.class, builder);
         src.addEventListener(ConfigurationEvent.ANY, null);
     }
 
@@ -148,55 +116,36 @@ public class TestBuilderConfigurationWrapperFactory
      * Tests whether EventSource methods can be delegated to the builder.
      */
     @Test
-    public void testEventSourceSupportBuilder() throws ConfigurationException
-    {
-        final BasicConfigurationBuilder<PropertiesConfiguration> builder =
-                new BasicConfigurationBuilder<>(
-                        PropertiesConfiguration.class);
+    public void testEventSourceSupportBuilder() throws ConfigurationException {
+        final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
         final EventListener<ConfigurationEvent> l1 = new EventListenerTestImpl(null);
         final EventListener<ConfigurationEvent> l2 = new EventListenerTestImpl(null);
-        final BuilderConfigurationWrapperFactory factory =
-                new BuilderConfigurationWrapperFactory(
-                        EventSourceSupport.BUILDER);
-        final EventSource src =
-                (EventSource) factory.createBuilderConfigurationWrapper(
-                        Configuration.class, builder);
+        final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory(EventSourceSupport.BUILDER);
+        final EventSource src = (EventSource) factory.createBuilderConfigurationWrapper(Configuration.class, builder);
 
         src.addEventListener(ConfigurationEvent.ANY, l1);
         src.addEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2);
-        assertTrue(
-                "Wrong result for existing listener",
-                src.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2));
-        assertFalse(
-                "Wrong result for non-existing listener",
-                src.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2));
+        assertTrue("Wrong result for existing listener", src.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2));
+        assertFalse("Wrong result for non-existing listener", src.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2));
         final PropertiesConfiguration config = builder.getConfiguration();
-        final Collection<EventListener<? super ConfigurationEvent>> listeners =
-                config.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL);
+        final Collection<EventListener<? super ConfigurationEvent>> listeners = config.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL);
         assertTrue("Registered listener not found", listeners.contains(l1));
         assertFalse("Removed listener still found", listeners.contains(l2));
     }
 
     /**
-     * Tests whether event source support of level builder is possible even for a
-     * mock builder.
+     * Tests whether event source support of level builder is possible even for a mock builder.
      */
     @Test
-    public void testEventSourceSupportMockBuilder()
-    {
-        final BaseHierarchicalConfiguration conf =
-                new BaseHierarchicalConfiguration();
-        final ConfigurationBuilder<BaseHierarchicalConfiguration> builder =
-                createBuilderMock(conf);
+    public void testEventSourceSupportMockBuilder() {
+        final BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
+        final ConfigurationBuilder<BaseHierarchicalConfiguration> builder = createBuilderMock(conf);
         final EventListenerTestImpl listener = new EventListenerTestImpl(null);
         builder.addEventListener(ConfigurationEvent.ANY, listener);
         EasyMock.replay(builder);
 
-        final BuilderConfigurationWrapperFactory factory =
-                new BuilderConfigurationWrapperFactory(EventSourceSupport.BUILDER);
-        final EventSource src =
-                (EventSource) factory.createBuilderConfigurationWrapper(
-                        HierarchicalConfiguration.class, builder);
+        final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory(EventSourceSupport.BUILDER);
+        final EventSource src = (EventSource) factory.createBuilderConfigurationWrapper(HierarchicalConfiguration.class, builder);
         src.addEventListener(ConfigurationEvent.ANY, listener);
         EasyMock.verify(builder);
     }
@@ -205,23 +154,17 @@ public class TestBuilderConfigurationWrapperFactory
      * Tries to create a wrapper without passing an interface class.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testCreateBuilderConfigurationWrapperNoClass()
-    {
-        final BuilderConfigurationWrapperFactory factory =
-                new BuilderConfigurationWrapperFactory(
-                        EventSourceSupport.BUILDER);
-        factory.createBuilderConfigurationWrapper(null,
-                createBuilderMock(new BaseHierarchicalConfiguration()));
+    public void testCreateBuilderConfigurationWrapperNoClass() {
+        final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory(EventSourceSupport.BUILDER);
+        factory.createBuilderConfigurationWrapper(null, createBuilderMock(new BaseHierarchicalConfiguration()));
     }
 
     /**
      * Tries to create a wrapper without passing a builder.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testCreateBuilderConfigurationWrapperNoBuilder()
-    {
-        final BuilderConfigurationWrapperFactory factory =
-                new BuilderConfigurationWrapperFactory();
+    public void testCreateBuilderConfigurationWrapperNoBuilder() {
+        final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory();
         factory.createBuilderConfigurationWrapper(Configuration.class, null);
     }
 }

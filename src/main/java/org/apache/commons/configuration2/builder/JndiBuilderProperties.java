@@ -23,20 +23,17 @@ import javax.naming.Context;
  * Definition of a properties interface for parameters of a JNDI configuration.
  * </p>
  * <p>
- * This interface defines properties related to the JNDI tree to be represented
- * by a {@code JNDIConfiguration}.
+ * This interface defines properties related to the JNDI tree to be represented by a {@code JNDIConfiguration}.
  * </p>
  * <p>
- * <strong>Important note:</strong> This interface is not intended to be
- * implemented by client code! It defines a set of available properties and may
- * be extended even in minor releases.
+ * <strong>Important note:</strong> This interface is not intended to be implemented by client code! It defines a set of
+ * available properties and may be extended even in minor releases.
  * </p>
  *
  * @since 2.0
  * @param <T> the type of the result of all set methods for method chaining
  */
-public interface JndiBuilderProperties<T>
-{
+public interface JndiBuilderProperties<T> {
     /**
      * Sets the JNDI context to be used by the JNDI configuration.
      *
@@ -46,8 +43,7 @@ public interface JndiBuilderProperties<T>
     T setContext(Context ctx);
 
     /**
-     * Sets the prefix in the JNDI tree. When creating the root JNDI context
-     * this prefix is taken into account.
+     * Sets the prefix in the JNDI tree. When creating the root JNDI context this prefix is taken into account.
      *
      * @param p the prefix
      * @return a reference to this object for method chaining

@@ -32,14 +32,12 @@ import org.junit.Test;
  * Test class for {@code DatabaseBuilderParametersImpl}.
  *
  */
-public class TestDatabaseBuilderParametersImpl
-{
+public class TestDatabaseBuilderParametersImpl {
     /** The parameters object to be tested. */
     private DatabaseBuilderParametersImpl params;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         params = new DatabaseBuilderParametersImpl();
     }
 
@@ -47,94 +45,77 @@ public class TestDatabaseBuilderParametersImpl
      * Tests whether the data source property can be set.
      */
     @Test
-    public void testSetDataSource()
-    {
+    public void testSetDataSource() {
         final DataSource src = EasyMock.createMock(DataSource.class);
         EasyMock.replay(src);
         assertSame("Wrong result", params, params.setDataSource(src));
-        assertSame("Data source not set", src,
-                params.getParameters().get("dataSource"));
+        assertSame("Data source not set", src, params.getParameters().get("dataSource"));
     }
 
     /**
      * Tests whether the table name can be set.
      */
     @Test
-    public void testSetTable()
-    {
+    public void testSetTable() {
         final String table = "TestTable";
         assertSame("Wrong result", params, params.setTable(table));
-        assertEquals("Wrong table name", table,
-                params.getParameters().get("table"));
+        assertEquals("Wrong table name", table, params.getParameters().get("table"));
     }
 
     /**
      * Tests whether the key column name can be set.
      */
     @Test
-    public void testSetKeyColumn()
-    {
+    public void testSetKeyColumn() {
         final String colName = "KEY_COLUMN";
         assertSame("Wrong result", params, params.setKeyColumn(colName));
-        assertEquals("Wrong key column name", colName, params.getParameters()
-                .get("keyColumn"));
+        assertEquals("Wrong key column name", colName, params.getParameters().get("keyColumn"));
     }
 
     /**
      * Tests whether the value column name can be set.
      */
     @Test
-    public void testSetValueColumn()
-    {
+    public void testSetValueColumn() {
         final String colName = "VALUE_COLUMN";
         assertSame("Wrong result", params, params.setValueColumn(colName));
-        assertEquals("Wrong value column name", colName, params.getParameters()
-                .get("valueColumn"));
+        assertEquals("Wrong value column name", colName, params.getParameters().get("valueColumn"));
     }
 
     /**
      * Tests whether the configuration name column can be set.
      */
     @Test
-    public void testSetConfigurationNameColumn()
-    {
+    public void testSetConfigurationNameColumn() {
         final String colName = "CONFIG_COLUMN";
-        assertSame("Wrong result", params,
-                params.setConfigurationNameColumn(colName));
-        assertEquals("Wrong configuration name column", colName, params
-                .getParameters().get("configurationNameColumn"));
+        assertSame("Wrong result", params, params.setConfigurationNameColumn(colName));
+        assertEquals("Wrong configuration name column", colName, params.getParameters().get("configurationNameColumn"));
     }
 
     /**
      * Tests whether the configuration name can be set.
      */
     @Test
-    public void testSetConfigurationName()
-    {
+    public void testSetConfigurationName() {
         final String confName = "TestConfiguration";
-        assertSame("Wrong result", params,
-                params.setConfigurationName(confName));
-        assertEquals("Wrong configuration name", confName, params
-                .getParameters().get("configurationName"));
+        assertSame("Wrong result", params, params.setConfigurationName(confName));
+        assertEquals("Wrong configuration name", confName, params.getParameters().get("configurationName"));
     }
 
     /**
      * Tests whether the auto commit flag can be set.
      */
     @Test
-    public void testSetAutoCommit()
-    {
+    public void testSetAutoCommit() {
         assertSame("Wrong result", params, params.setAutoCommit(true));
-        assertEquals("Wrong auto commit flag", Boolean.TRUE, params
-                .getParameters().get("autoCommit"));
+        assertEquals("Wrong auto commit flag", Boolean.TRUE, params.getParameters().get("autoCommit"));
     }
 
     /**
      * Tests whether properties can be set through BeanUtils.
      */
     @Test
-    public void testBeanProperties() throws Exception
-    {
+    public void testBeanProperties() throws Exception {
         BeanHelper.setProperty(params, "table", "testTable");
         BeanHelper.setProperty(params, "autoCommit", Boolean.FALSE);
         final Map<String, Object> map = params.getParameters();

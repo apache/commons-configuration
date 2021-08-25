@@ -29,28 +29,24 @@ import org.junit.Test;
 /**
  * Test class for EnvironmentConfiguration.
  */
-public class TestEnvironmentConfiguration
-{
+public class TestEnvironmentConfiguration {
     /** Stores the configuration to be tested. */
     private EnvironmentConfiguration config;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         config = new EnvironmentConfiguration();
     }
 
     /**
-     * Tests whether a newly created configuration contains some properties. (We
-     * expect that at least some properties are set in each environment.)
+     * Tests whether a newly created configuration contains some properties. (We expect that at least some properties are
+     * set in each environment.)
      */
     @Test
-    public void testInit()
-    {
+    public void testInit() {
         boolean found = false;
         assertFalse("No properties found", config.isEmpty());
-        for (final Iterator<String> it = config.getKeys(); it.hasNext();)
-        {
+        for (final Iterator<String> it = config.getKeys(); it.hasNext();) {
             final String key = it.next();
             assertTrue("Key not found: " + key, config.containsKey(key));
             assertNotNull("No value for property " + key, config.getString(key));
@@ -63,8 +59,7 @@ public class TestEnvironmentConfiguration
      * Tests removing properties. This should not be possible.
      */
     @Test(expected = UnsupportedOperationException.class)
-    public void testClearProperty()
-    {
+    public void testClearProperty() {
         final String key = config.getKeys().next();
         config.clearProperty(key);
     }
@@ -73,8 +68,7 @@ public class TestEnvironmentConfiguration
      * Tests removing all properties. This should not be possible.
      */
     @Test(expected = UnsupportedOperationException.class)
-    public void testClear()
-    {
+    public void testClear() {
         config.clear();
     }
 
@@ -82,8 +76,7 @@ public class TestEnvironmentConfiguration
      * Tries to add another property. This should cause an exception.
      */
     @Test(expected = UnsupportedOperationException.class)
-    public void testAddProperty()
-    {
+    public void testAddProperty() {
         config.addProperty("JAVA_HOME", "C:\\java");
     }
 
@@ -91,8 +84,7 @@ public class TestEnvironmentConfiguration
      * Tries to set the value of a property. This should cause an exception.
      */
     @Test(expected = UnsupportedOperationException.class)
-    public void testSetProperty()
-    {
+    public void testSetProperty() {
         config.setProperty("JAVA_HOME", "C:\\java");
     }
 }

@@ -43,70 +43,57 @@ import static org.junit.Assert.fail;
 /**
  * Unit test for {@link YAMLConfiguration}
  */
-public class TestYAMLConfiguration
-{
+public class TestYAMLConfiguration {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     /** The files that we test with. */
-    private final String testYaml =
-            ConfigurationAssert.getTestFile("test.yaml").getAbsolutePath();
+    private final String testYaml = ConfigurationAssert.getTestFile("test.yaml").getAbsolutePath();
 
     private YAMLConfiguration yamlConfiguration;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         yamlConfiguration = new YAMLConfiguration();
         yamlConfiguration.read(new FileReader(testYaml));
     }
 
     @Test
-    public void testGetProperty_simple()
-    {
+    public void testGetProperty_simple() {
         assertEquals("value1", yamlConfiguration.getProperty("key1"));
     }
 
     @Test
-    public void testGetProperty_nested()
-    {
+    public void testGetProperty_nested() {
         assertEquals("value23", yamlConfiguration.getProperty("key2.key3"));
     }
 
     @Test
-    public void testGetProperty_nested_with_list()
-    {
-        assertEquals(Arrays.asList("col1", "col2"),
-                yamlConfiguration.getProperty("key4.key5"));
+    public void testGetProperty_nested_with_list() {
+        assertEquals(Arrays.asList("col1", "col2"), yamlConfiguration.getProperty("key4.key5"));
     }
 
     @Test
-    public void testGetProperty_subset()
-    {
+    public void testGetProperty_subset() {
         final Configuration subset = yamlConfiguration.subset("key4");
         assertEquals(Arrays.asList("col1", "col2"), subset.getProperty("key5"));
     }
 
     @Test
-    public void testGetProperty_very_nested_properties()
-    {
-        final Object property =
-                yamlConfiguration.getProperty("very.nested.properties");
+    public void testGetProperty_very_nested_properties() {
+        final Object property = yamlConfiguration.getProperty("very.nested.properties");
         assertEquals(Arrays.asList("nested1", "nested2", "nested3"), property);
     }
 
     @Test
-    public void testGetProperty_integer()
-    {
+    public void testGetProperty_integer() {
         final Object property = yamlConfiguration.getProperty("int1");
-        assertTrue("property should be an Integer",
-                property instanceof Integer);
+        assertTrue("property should be an Integer", property instanceof Integer);
         assertEquals(37, property);
     }
 
     @Test
-    public void testSave() throws IOException, ConfigurationException
-    {
+    public void testSave() throws IOException, ConfigurationException {
         // save the YAMLConfiguration as a String...
         final StringWriter sw = new StringWriter();
         yamlConfiguration.write(sw);
@@ -120,25 +107,21 @@ public class TestYAMLConfiguration
         final Map key2 = (Map) parsed.get("key2");
         assertEquals("value23", key2.get("key3"));
 
-        final List<String> key5 =
-                (List<String>) ((Map) parsed.get("key4")).get("key5");
+        final List<String> key5 = (List<String>) ((Map) parsed.get("key4")).get("key5");
         assertEquals(2, key5.size());
         assertEquals("col1", key5.get(0));
         assertEquals("col2", key5.get(1));
     }
 
     @Test
-    public void testGetProperty_dictionary()
-    {
-        assertEquals("Martin D'vloper",
-                yamlConfiguration.getProperty("martin.name"));
+    public void testGetProperty_dictionary() {
+        assertEquals("Martin D'vloper", yamlConfiguration.getProperty("martin.name"));
         assertEquals("Developer", yamlConfiguration.getProperty("martin.job"));
         assertEquals("Elite", yamlConfiguration.getProperty("martin.skill"));
     }
 
     @Test
-    public void testCopyConstructor()
-    {
+    public void testCopyConstructor() {
         final BaseHierarchicalConfiguration c = new BaseHierarchicalConfiguration();
         c.addProperty("foo", "bar");
 
@@ -147,37 +130,29 @@ public class TestYAMLConfiguration
     }
 
     @Test
-    public void testObjectCreationFromReader()
-    {
+    public void testObjectCreationFromReader() {
         final File createdFile = new File(temporaryFolder.getRoot(), "data.txt");
         final String yaml = "!!java.io.FileOutputStream [" + createdFile.getAbsolutePath() + "]";
 
-        try
-        {
+        try {
             yamlConfiguration.read(new StringReader(yaml));
             fail("Loading configuration did not cause an exception!");
-        }
-        catch (final ConfigurationException e)
-        {
-            //expected
+        } catch (final ConfigurationException e) {
+            // expected
         }
         assertFalse("Java object was created", createdFile.exists());
     }
 
     @Test
-    public void testObjectCreationFromStream()
-    {
+    public void testObjectCreationFromStream() {
         final File createdFile = new File(temporaryFolder.getRoot(), "data.txt");
         final String yaml = "!!java.io.FileOutputStream [" + createdFile.getAbsolutePath() + "]";
 
-        try
-        {
+        try {
             yamlConfiguration.read(new ByteArrayInputStream(yaml.getBytes(StandardCharsets.UTF_8)));
             fail("Loading configuration did not cause an exception!");
-        }
-        catch (final ConfigurationException e)
-        {
-            //expected
+        } catch (final ConfigurationException e) {
+            // expected
         }
         assertFalse("Java object was created", createdFile.exists());
     }

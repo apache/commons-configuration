@@ -29,14 +29,12 @@ import org.junit.Test;
  * Test class for {@code FileSystemLocationStrategy}.
  *
  */
-public class TestFileSystemLocationStrategy
-{
+public class TestFileSystemLocationStrategy {
     /** The strategy to be tested. */
     private FileSystemLocationStrategy strategy;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         strategy = new FileSystemLocationStrategy();
     }
 
@@ -44,24 +42,15 @@ public class TestFileSystemLocationStrategy
      * Tests a locate() operation.
      */
     @Test
-    public void testLocate()
-    {
+    public void testLocate() {
         final FileSystem fs = EasyMock.createMock(FileSystem.class);
         final URL url = ConfigurationAssert.getTestURL("test.xml");
         final String basePath = "testBasePath";
         final String fileName = "testFileName.txt";
         EasyMock.expect(fs.locateFromURL(basePath, fileName)).andReturn(url);
         EasyMock.replay(fs);
-        final FileLocator locator =
-                FileLocatorUtils
-                        .fileLocator()
-                        .basePath(basePath)
-                        .fileName(fileName)
-                        .fileSystem(FileLocatorUtils.DEFAULT_FILE_SYSTEM)
-                        .sourceURL(
-                                ConfigurationAssert
-                                        .getTestURL("test.properties"))
-                        .create();
+        final FileLocator locator = FileLocatorUtils.fileLocator().basePath(basePath).fileName(fileName).fileSystem(FileLocatorUtils.DEFAULT_FILE_SYSTEM)
+            .sourceURL(ConfigurationAssert.getTestURL("test.properties")).create();
 
         assertSame("Wrong result", url, strategy.locate(fs, locator));
         EasyMock.verify(fs);

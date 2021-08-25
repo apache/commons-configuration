@@ -43,19 +43,14 @@ import org.xml.sax.helpers.DefaultHandler;
  * Test class for BaseConfigurationXMLReader.
  *
  */
-public class TestBaseConfigurationXMLReader
-{
-    private static final String[] CONTINENTS =
-    {
-        "Africa", "America", "Asia", "Australia", "Europe"
-    };
+public class TestBaseConfigurationXMLReader {
+    private static final String[] CONTINENTS = {"Africa", "America", "Asia", "Australia", "Europe"};
 
     private BaseConfiguration config;
     private BaseConfigurationXMLReader configReader;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         config = new BaseConfiguration();
         config.addProperty("world.continents.continent", Arrays.asList(CONTINENTS));
         config.addProperty("world.greeting", "Hello");
@@ -73,36 +68,30 @@ public class TestBaseConfigurationXMLReader
     }
 
     @Test
-    public void testParse() throws Exception
-    {
+    public void testParse() throws Exception {
         checkDocument(configReader, "config");
     }
 
     @Test(expected = SAXException.class)
-    public void testParseSAXException() throws IOException, SAXException
-    {
+    public void testParseSAXException() throws IOException, SAXException {
         configReader.setContentHandler(new TestContentHandler());
         configReader.parse("systemID");
     }
 
     @Test(expected = IOException.class)
-    public void testParseIOException() throws SAXException, IOException
-    {
+    public void testParseIOException() throws SAXException, IOException {
         final BaseConfigurationXMLReader reader = new BaseConfigurationXMLReader();
         reader.parse("document");
     }
 
     @Test
-    public void testSetRootName() throws Exception
-    {
+    public void testSetRootName() throws Exception {
         final BaseConfigurationXMLReader reader = new BaseConfigurationXMLReader(config);
         reader.setRootName("apache");
         checkDocument(reader, "apache");
     }
 
-    private void checkDocument(final BaseConfigurationXMLReader creader,
-    final String rootName) throws Exception
-    {
+    private void checkDocument(final BaseConfigurationXMLReader creader, final String rootName) throws Exception {
         final SAXSource source = new SAXSource(creader, new InputSource());
         final DOMResult result = new DOMResult();
         final Transformer trans = TransformerFactory.newInstance().newTransformer();
@@ -114,7 +103,7 @@ public class TestBaseConfigurationXMLReader
         assertEquals("Wrong number of children", 3, ctx.selectNodes("/*").size());
 
         check(ctx, "world/continents/continent", CONTINENTS);
-        check(ctx, "world/greeting", new String[] { "Hello", "Salute" });
+        check(ctx, "world/greeting", new String[] {"Hello", "Salute"});
         check(ctx, "world/wish", "Peace");
         check(ctx, "application/mail/smtp", "smtp.mymail.org");
         check(ctx, "application/mail/timeout", "42");
@@ -130,8 +119,7 @@ public class TestBaseConfigurationXMLReader
      * @param path the path to be checked
      * @param values the expected element values
      */
-    private void check(final JXPathContext ctx, final String path, final String[] values)
-    {
+    private void check(final JXPathContext ctx, final String path, final String[] values) {
         final Iterator<?> it = ctx.iterate(path);
         for (final String value : values) {
             assertTrue("Too few values", it.hasNext());
@@ -140,19 +128,14 @@ public class TestBaseConfigurationXMLReader
         assertFalse("Too many values", it.hasNext());
     }
 
-    private void check(final JXPathContext ctx, final String path, final String value)
-    {
-        check(ctx, path, new String[]
-        { value });
+    private void check(final JXPathContext ctx, final String path, final String value) {
+        check(ctx, path, new String[] {value});
     }
 
     // A ContentHandler that raises an exception
-    private static class TestContentHandler extends DefaultHandler
-     {
+    private static class TestContentHandler extends DefaultHandler {
         @Override
-        public void characters(final char[] ch, final int start, final int length)
-            throws SAXException
-        {
+        public void characters(final char[] ch, final int start, final int length) throws SAXException {
             throw new SAXException("Test exception during parsing");
         }
     }

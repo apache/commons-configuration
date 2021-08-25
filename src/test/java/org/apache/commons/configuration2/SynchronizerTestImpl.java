@@ -22,12 +22,10 @@ import static org.junit.Assert.assertTrue;
 import org.apache.commons.configuration2.sync.Synchronizer;
 
 /**
- * A test implementation of Synchronizer which allows keeping track about
- * the methods called by the configuration.
+ * A test implementation of Synchronizer which allows keeping track about the methods called by the configuration.
  *
  */
-public class SynchronizerTestImpl implements Synchronizer
-{
+public class SynchronizerTestImpl implements Synchronizer {
     /** A buffer for registering the methods invoked by clients. */
     private final StringBuilder methods = new StringBuilder();
 
@@ -35,8 +33,7 @@ public class SynchronizerTestImpl implements Synchronizer
      * {@inheritDoc} Registers this invocation.
      */
     @Override
-    public void beginRead()
-    {
+    public void beginRead() {
         append(Methods.BEGIN_READ);
     }
 
@@ -44,8 +41,7 @@ public class SynchronizerTestImpl implements Synchronizer
      * {@inheritDoc} Registers this invocation.
      */
     @Override
-    public void endRead()
-    {
+    public void endRead() {
         append(Methods.END_READ);
     }
 
@@ -53,8 +49,7 @@ public class SynchronizerTestImpl implements Synchronizer
      * {@inheritDoc} Registers this invocation.
      */
     @Override
-    public void beginWrite()
-    {
+    public void beginWrite() {
         append(Methods.BEGIN_WRITE);
     }
 
@@ -62,8 +57,7 @@ public class SynchronizerTestImpl implements Synchronizer
      * {@inheritDoc} Registers this invocation.
      */
     @Override
-    public void endWrite()
-    {
+    public void endWrite() {
         append(Methods.END_WRITE);
     }
 
@@ -72,53 +66,41 @@ public class SynchronizerTestImpl implements Synchronizer
      *
      * @param expMethods the expected methods
      */
-    public void verify(final Methods... expMethods)
-    {
-        assertEquals("Wrong methods invoked",
-                constructExpectedMethods(expMethods), methods.toString());
+    public void verify(final Methods... expMethods) {
+        assertEquals("Wrong methods invoked", constructExpectedMethods(expMethods), methods.toString());
     }
 
     /**
-     * Verifies that the specified methods were called at the beginning of
-     * the interaction with the synchronizer.
+     * Verifies that the specified methods were called at the beginning of the interaction with the synchronizer.
      *
      * @param expMethods the expected methods
      */
-    public void verifyStart(final Methods... expMethods)
-    {
-        assertTrue("Wrong methods at start: " + methods, methods.toString()
-                .startsWith(constructExpectedMethods(expMethods)));
+    public void verifyStart(final Methods... expMethods) {
+        assertTrue("Wrong methods at start: " + methods, methods.toString().startsWith(constructExpectedMethods(expMethods)));
     }
 
     /**
-     * Verifies that the specified methods were called at the end of the
-     * interaction with the synchronizer.
+     * Verifies that the specified methods were called at the end of the interaction with the synchronizer.
      *
      * @param expMethods the expected methods
      */
-    public void verifyEnd(final Methods... expMethods)
-    {
-        assertTrue("Wrong methods at start: " + methods, methods.toString()
-                .endsWith(constructExpectedMethods(expMethods)));
+    public void verifyEnd(final Methods... expMethods) {
+        assertTrue("Wrong methods at start: " + methods, methods.toString().endsWith(constructExpectedMethods(expMethods)));
     }
 
     /**
-     * Verifies that the specified sequence of methods was called somewhere in
-     * the interaction with the synchronizer.
+     * Verifies that the specified sequence of methods was called somewhere in the interaction with the synchronizer.
      *
      * @param expMethods the expected methods
      */
-    public void verifyContains(final Methods... expMethods)
-    {
-        assertTrue("Expected methods not found: " + methods, methods.toString()
-                .indexOf(constructExpectedMethods(expMethods)) >= 0);
+    public void verifyContains(final Methods... expMethods) {
+        assertTrue("Expected methods not found: " + methods, methods.toString().indexOf(constructExpectedMethods(expMethods)) >= 0);
     }
 
     /**
      * Clears the methods recorded so far.
      */
-    public void clear()
-    {
+    public void clear() {
         methods.setLength(0);
     }
 
@@ -128,32 +110,27 @@ public class SynchronizerTestImpl implements Synchronizer
      * @param expMethods the array with expected methods
      * @return a corresponding string representation
      */
-    private String constructExpectedMethods(final Methods... expMethods)
-    {
+    private String constructExpectedMethods(final Methods... expMethods) {
         final StringBuilder buf = new StringBuilder();
-        for (final Methods m : expMethods)
-        {
+        for (final Methods m : expMethods) {
             buf.append(m);
         }
         return buf.toString();
     }
 
     /**
-     * Adds a method name to the internal buffer. Called by all interface
-     * methods.
+     * Adds a method name to the internal buffer. Called by all interface methods.
      *
      * @param m the method that was invoked
      */
-    private void append(final Methods m)
-    {
+    private void append(final Methods m) {
         methods.append(m);
     }
 
     /**
      * An enumeration with the methods of the Synchronizer which can be called.
      */
-    public enum Methods
-    {
+    public enum Methods {
         BEGIN_READ, END_READ, BEGIN_WRITE, END_WRITE
     }
 }

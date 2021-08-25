@@ -34,18 +34,15 @@ import org.junit.Test;
  * Test class for {@code CombinedBeanDeclaration}.
  *
  */
-public class TestCombinedBeanDeclaration
-{
+public class TestCombinedBeanDeclaration {
     /** An array with the mocks for the child bean declarations. */
     private BeanDeclaration[] declarations;
 
     /**
      * Helper method for replaying the mock objects used by the tests.
      */
-    private void replay()
-    {
-        if (declarations != null)
-        {
+    private void replay() {
+        if (declarations != null) {
             EasyMock.replay((Object[]) declarations);
         }
     }
@@ -53,10 +50,8 @@ public class TestCombinedBeanDeclaration
     /**
      * Helper method for verifying the mock objects used by the tests.
      */
-    private void verify()
-    {
-        if (declarations != null)
-        {
+    private void verify() {
+        if (declarations != null) {
             EasyMock.verify((Object[]) declarations);
         }
     }
@@ -67,8 +62,7 @@ public class TestCombinedBeanDeclaration
      * @param idx the index
      * @return the corresponding mock child bean declaration
      */
-    private BeanDeclaration decl(final int idx)
-    {
+    private BeanDeclaration decl(final int idx) {
         return declarations[idx];
     }
 
@@ -77,23 +71,19 @@ public class TestCombinedBeanDeclaration
      *
      * @return the test instance
      */
-    private CombinedBeanDeclaration createCombinedDeclaration()
-    {
+    private CombinedBeanDeclaration createCombinedDeclaration() {
         declarations = new BeanDeclaration[3];
-        for (int i = 0; i < declarations.length; i++)
-        {
+        for (int i = 0; i < declarations.length; i++) {
             declarations[i] = EasyMock.createMock(BeanDeclaration.class);
         }
         return new CombinedBeanDeclaration(declarations);
     }
 
     /**
-     * Tests whether the bean factory can be obtained if it is set for one child
-     * declarations.
+     * Tests whether the bean factory can be obtained if it is set for one child declarations.
      */
     @Test
-    public void testGetBeanFactoryNameDefined()
-    {
+    public void testGetBeanFactoryNameDefined() {
         final CombinedBeanDeclaration cd = createCombinedDeclaration();
         final String name = "someTestBeanFactory";
         EasyMock.expect(decl(0).getBeanFactoryName()).andReturn(null);
@@ -104,23 +94,19 @@ public class TestCombinedBeanDeclaration
     }
 
     /**
-     * Tests getBeanFactoryName() if none of the child declarations provide a
-     * value.
+     * Tests getBeanFactoryName() if none of the child declarations provide a value.
      */
     @Test
-    public void testGetBeanFactoryNameUndefined()
-    {
+    public void testGetBeanFactoryNameUndefined() {
         final CombinedBeanDeclaration cd = new CombinedBeanDeclaration();
         assertNull("Got a factory name", cd.getBeanFactoryName());
     }
 
     /**
-     * Tests whether the bean factory parameter can be obtained if it is set for
-     * one of the child declarations.
+     * Tests whether the bean factory parameter can be obtained if it is set for one of the child declarations.
      */
     @Test
-    public void testGetBeanFactoryParameterDefined()
-    {
+    public void testGetBeanFactoryParameterDefined() {
         final CombinedBeanDeclaration cd = createCombinedDeclaration();
         final Object param = new Object();
         EasyMock.expect(decl(0).getBeanFactoryParameter()).andReturn(null);
@@ -131,54 +117,43 @@ public class TestCombinedBeanDeclaration
     }
 
     /**
-     * Tests getBeanFactoryParameter() if none of the child declarations provide
-     * a value.
+     * Tests getBeanFactoryParameter() if none of the child declarations provide a value.
      */
     @Test
-    public void testGetBeanFactoryParameterUndefined()
-    {
+    public void testGetBeanFactoryParameterUndefined() {
         final CombinedBeanDeclaration cd = new CombinedBeanDeclaration();
         assertNull("Got a factory parameter", cd.getBeanFactoryParameter());
     }
 
     /**
-     * Tests whether the bean class name can be obtained if it is set for one of
-     * the child declarations.
+     * Tests whether the bean class name can be obtained if it is set for one of the child declarations.
      */
     @Test
-    public void testGetBeanClassNameDefined()
-    {
+    public void testGetBeanClassNameDefined() {
         final CombinedBeanDeclaration cd = createCombinedDeclaration();
         EasyMock.expect(decl(0).getBeanClassName()).andReturn(null);
-        EasyMock.expect(decl(1).getBeanClassName()).andReturn(
-                getClass().getName());
+        EasyMock.expect(decl(1).getBeanClassName()).andReturn(getClass().getName());
         replay();
-        assertEquals("Wrong bean class", getClass().getName(),
-                cd.getBeanClassName());
+        assertEquals("Wrong bean class", getClass().getName(), cd.getBeanClassName());
         verify();
     }
 
     /**
-     * Tests getBeanClassName() if none of the child declarations provide a
-     * value.
+     * Tests getBeanClassName() if none of the child declarations provide a value.
      */
     @Test
-    public void testGetBeanClassNameUndefined()
-    {
+    public void testGetBeanClassNameUndefined() {
         final CombinedBeanDeclaration cd = new CombinedBeanDeclaration();
         assertNull("Got a bean class name", cd.getBeanClassName());
     }
 
     /**
-     * Tests whether constructor arguments can be obtained if one of the child
-     * declarations provide this data.
+     * Tests whether constructor arguments can be obtained if one of the child declarations provide this data.
      */
     @Test
-    public void testGetConstructorArgsDefined()
-    {
+    public void testGetConstructorArgsDefined() {
         final CombinedBeanDeclaration cd = createCombinedDeclaration();
-        final Collection<ConstructorArg> args =
-                Arrays.asList(ConstructorArg.forValue(42));
+        final Collection<ConstructorArg> args = Arrays.asList(ConstructorArg.forValue(42));
         EasyMock.expect(decl(0).getConstructorArgs()).andReturn(null);
         EasyMock.expect(decl(1).getConstructorArgs()).andReturn(args);
         replay();
@@ -187,20 +162,16 @@ public class TestCombinedBeanDeclaration
     }
 
     /**
-     * Tests getConstructorArgs() if none of the child declarations provide a
-     * value.
+     * Tests getConstructorArgs() if none of the child declarations provide a value.
      */
     @Test
-    public void testGetConstructorArgsUndefined()
-    {
+    public void testGetConstructorArgsUndefined() {
         final CombinedBeanDeclaration cd = createCombinedDeclaration();
         EasyMock.expect(decl(0).getConstructorArgs()).andReturn(null);
-        EasyMock.expect(decl(1).getConstructorArgs()).andReturn(
-                new ArrayList<>());
+        EasyMock.expect(decl(1).getConstructorArgs()).andReturn(new ArrayList<>());
         EasyMock.expect(decl(2).getConstructorArgs()).andReturn(null);
         replay();
-        assertTrue("Got constructor arguments", cd.getConstructorArgs()
-                .isEmpty());
+        assertTrue("Got constructor arguments", cd.getConstructorArgs().isEmpty());
         verify();
     }
 
@@ -208,8 +179,7 @@ public class TestCombinedBeanDeclaration
      * Tests whether a combined map of bean properties can be obtained.
      */
     @Test
-    public void testGetBeanProperties()
-    {
+    public void testGetBeanProperties() {
         final Map<String, Object> props1 = new HashMap<>();
         final Map<String, Object> props2 = new HashMap<>();
         final Map<String, Object> props3 = new HashMap<>();
@@ -226,20 +196,17 @@ public class TestCombinedBeanDeclaration
         replay();
         final Map<String, Object> props = cd.getBeanProperties();
         assertEquals("Wrong number of properties", 4, props.size());
-        for (int i = 1; i <= 4; i++)
-        {
+        for (int i = 1; i <= 4; i++) {
             assertEquals("Wrong property", "value" + i, props.get("param" + i));
         }
         verify();
     }
 
     /**
-     * Tests whether null return values of bean property maps are handled
-     * correctly.
+     * Tests whether null return values of bean property maps are handled correctly.
      */
     @Test
-    public void testGetBeanPropertiesNull()
-    {
+    public void testGetBeanPropertiesNull() {
         final BeanDeclaration child = EasyMock.createMock(BeanDeclaration.class);
         EasyMock.expect(child.getBeanProperties()).andReturn(null);
         EasyMock.replay(child);
@@ -251,8 +218,7 @@ public class TestCombinedBeanDeclaration
      * Tests whether a combined map of nested bean declarations can be obtained.
      */
     @Test
-    public void testGetNestedBeanDeclarations()
-    {
+    public void testGetNestedBeanDeclarations() {
         final Map<String, Object> decls1 = new HashMap<>();
         final Map<String, Object> decls2 = new HashMap<>();
         final Map<String, Object> decls3 = new HashMap<>();
@@ -269,26 +235,21 @@ public class TestCombinedBeanDeclaration
         replay();
         final Map<String, Object> decls = cd.getNestedBeanDeclarations();
         assertEquals("Wrong number of declarations", 4, decls.size());
-        for (int i = 1; i <= 4; i++)
-        {
-            assertEquals("Wrong declaration", "value" + i,
-                    decls.get("param" + i));
+        for (int i = 1; i <= 4; i++) {
+            assertEquals("Wrong declaration", "value" + i, decls.get("param" + i));
         }
         verify();
     }
 
     /**
-     * Tests whether null return values of bean declaration maps are handled
-     * correctly.
+     * Tests whether null return values of bean declaration maps are handled correctly.
      */
     @Test
-    public void testGetNestedBeanDeclarationsNull()
-    {
+    public void testGetNestedBeanDeclarationsNull() {
         final BeanDeclaration child = EasyMock.createMock(BeanDeclaration.class);
         EasyMock.expect(child.getNestedBeanDeclarations()).andReturn(null);
         EasyMock.replay(child);
         final CombinedBeanDeclaration cd = new CombinedBeanDeclaration(child);
-        assertTrue("Got bean declarations", cd.getNestedBeanDeclarations()
-                .isEmpty());
+        assertTrue("Got bean declarations", cd.getNestedBeanDeclarations().isEmpty());
     }
 }

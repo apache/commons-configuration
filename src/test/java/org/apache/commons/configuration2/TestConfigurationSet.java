@@ -33,34 +33,18 @@ public class TestConfigurationSet {
 
     ConfigurationMap.ConfigurationSet set;
 
-    String[] properties = {
-            "booleanProperty",
-            "doubleProperty",
-            "floatProperty",
-            "intProperty",
-            "longProperty",
-            "shortProperty",
-            "stringProperty"
-    };
+    String[] properties = {"booleanProperty", "doubleProperty", "floatProperty", "intProperty", "longProperty", "shortProperty", "stringProperty"};
 
-    Object[] values = {
-            Boolean.TRUE,
-            Double.valueOf(Double.MAX_VALUE),
-            Float.valueOf(Float.MAX_VALUE),
-            Integer.valueOf(Integer.MAX_VALUE),
-            Long.valueOf(Long.MAX_VALUE),
-            Short.valueOf(Short.MAX_VALUE),
-            "This is a string"
-    };
+    Object[] values = {Boolean.TRUE, Double.valueOf(Double.MAX_VALUE), Float.valueOf(Float.MAX_VALUE), Integer.valueOf(Integer.MAX_VALUE),
+        Long.valueOf(Long.MAX_VALUE), Short.valueOf(Short.MAX_VALUE), "This is a string"};
 
     /**
      * Set up instance variables required by this test case.
      */
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         final BaseConfiguration configuration = new BaseConfiguration();
-        for(int i = 0; i < properties.length ; i++) {
+        for (int i = 0; i < properties.length; i++) {
             configuration.setProperty(properties[i], values[i]);
         }
         set = new ConfigurationMap.ConfigurationSet(configuration);
@@ -70,8 +54,7 @@ public class TestConfigurationSet {
      * Tear down instance variables required by this test case.
      */
     @After
-    public void tearDown()
-    {
+    public void tearDown() {
         set = null;
     }
 
@@ -86,19 +69,18 @@ public class TestConfigurationSet {
     @Test
     public void testIterator() {
         final Iterator<Map.Entry<Object, Object>> iterator = set.iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             final Map.Entry<Object, Object> entry = iterator.next();
             boolean found = false;
-            for(int i = 0; i < properties.length; i++) {
-                if(entry.getKey().equals(properties[i])) {
-                    assertEquals("Incorrect value for property " +
-                            properties[i],values[i],entry.getValue());
+            for (int i = 0; i < properties.length; i++) {
+                if (entry.getKey().equals(properties[i])) {
+                    assertEquals("Incorrect value for property " + properties[i], values[i], entry.getValue());
                     found = true;
                 }
             }
-            assertTrue("Could not find property " + entry.getKey(),found);
+            assertTrue("Could not find property " + entry.getKey(), found);
             iterator.remove();
         }
-        assertTrue("Iterator failed to remove all properties.",set.isEmpty());
+        assertTrue("Iterator failed to remove all properties.", set.isEmpty());
     }
 }

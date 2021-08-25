@@ -50,7 +50,7 @@ public class TestJNDIConfiguration {
     private PotentialErrorJNDIConfiguration conf;
     private NonStringTestHolder nonStringTestHolder;
 
-    /** A test error listener for counting internal errors.*/
+    /** A test error listener for counting internal errors. */
     private ErrorListenerTestImpl listener;
 
     @Before
@@ -71,14 +71,11 @@ public class TestJNDIConfiguration {
     }
 
     /**
-     * Clears the test environment. If an error listener is defined, checks
-     * whether no error event was received.
+     * Clears the test environment. If an error listener is defined, checks whether no error event was received.
      */
     @After
-    public void tearDown() throws Exception
-    {
-        if (listener != null)
-        {
+    public void tearDown() throws Exception {
+        if (listener != null) {
             listener.done();
         }
     }
@@ -166,8 +163,7 @@ public class TestJNDIConfiguration {
     }
 
     @Test
-    public void testContainsKey()
-    {
+    public void testContainsKey() {
         final String key = "test.boolean";
         assertTrue("'" + key + "' not found", conf.containsKey(key));
 
@@ -176,8 +172,7 @@ public class TestJNDIConfiguration {
     }
 
     @Test
-    public void testChangePrefix()
-    {
+    public void testChangePrefix() {
         assertEquals("'test.boolean' property", "true", conf.getString("test.boolean"));
         assertEquals("'boolean' property", null, conf.getString("boolean"));
 
@@ -188,8 +183,7 @@ public class TestJNDIConfiguration {
     }
 
     @Test
-    public void testResetRemovedProperties() throws Exception
-    {
+    public void testResetRemovedProperties() throws Exception {
         assertEquals("'test.boolean' property", "true", conf.getString("test.boolean"));
 
         // remove the property
@@ -204,8 +198,7 @@ public class TestJNDIConfiguration {
     }
 
     @Test
-    public void testConstructor() throws Exception
-    {
+    public void testConstructor() throws Exception {
         // test the constructor accepting a context
         JNDIConfiguration c = new JNDIConfiguration(new InitialContext());
 
@@ -220,12 +213,10 @@ public class TestJNDIConfiguration {
     /**
      * Configures the test config to throw an exception.
      */
-    private PotentialErrorJNDIConfiguration setUpErrorConfig()
-    {
+    private PotentialErrorJNDIConfiguration setUpErrorConfig() {
         conf.installException();
         // remove log error listener to avoid output in tests
-        final Iterator<EventListener<? super ConfigurationErrorEvent>> iterator =
-                conf.getEventListeners(ConfigurationErrorEvent.ANY).iterator();
+        final Iterator<EventListener<? super ConfigurationErrorEvent>> iterator = conf.getEventListeners(ConfigurationErrorEvent.ANY).iterator();
         conf.removeEventListener(ConfigurationErrorEvent.ANY, iterator.next());
         return conf;
     }
@@ -238,14 +229,10 @@ public class TestJNDIConfiguration {
      * @param propName the name of the property
      * @param propValue the property value
      */
-    private void checkErrorListener(
-            final EventType<? extends ConfigurationErrorEvent> type,
-            final EventType<?> opEventType, final String propName, final Object propValue)
-    {
-        final Throwable exception =
-                listener.checkEvent(type, opEventType, propName, propValue);
-        assertTrue("Wrong exception class",
-                exception instanceof NamingException);
+    private void checkErrorListener(final EventType<? extends ConfigurationErrorEvent> type, final EventType<?> opEventType, final String propName,
+        final Object propValue) {
+        final Throwable exception = listener.checkEvent(type, opEventType, propName, propValue);
+        assertTrue("Wrong exception class", exception instanceof NamingException);
         listener = null;
     }
 
@@ -253,66 +240,52 @@ public class TestJNDIConfiguration {
      * Tests whether a JNDI configuration registers an error log listener.
      */
     @Test
-    public void testLogListener() throws NamingException
-    {
+    public void testLogListener() throws NamingException {
         final JNDIConfiguration c = new JNDIConfiguration();
-        assertEquals("No error log listener registered", 1, c
-                .getEventListeners(ConfigurationErrorEvent.ANY).size());
+        assertEquals("No error log listener registered", 1, c.getEventListeners(ConfigurationErrorEvent.ANY).size());
     }
 
     /**
      * Tests handling of errors in getKeys().
      */
     @Test
-    public void testGetKeysError()
-    {
-        assertFalse("Iteration not empty", setUpErrorConfig().getKeys()
-                .hasNext());
-        checkErrorListener(ConfigurationErrorEvent.READ,
-                ConfigurationErrorEvent.READ, null, null);
+    public void testGetKeysError() {
+        assertFalse("Iteration not empty", setUpErrorConfig().getKeys().hasNext());
+        checkErrorListener(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null);
     }
 
     /**
      * Tests handling of errors in isEmpty().
      */
     @Test
-    public void testIsEmptyError() throws Exception
-    {
+    public void testIsEmptyError() throws Exception {
         assertTrue("Error config not empty", setUpErrorConfig().isEmpty());
-        checkErrorListener(ConfigurationErrorEvent.READ,
-                ConfigurationErrorEvent.READ, null, null);
+        checkErrorListener(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null);
     }
 
     /**
      * Tests handling of errors in the containsKey() method.
      */
     @Test
-    public void testContainsKeyError()
-    {
-        assertFalse("Key contained after error", setUpErrorConfig()
-                .containsKey("key"));
-        checkErrorListener(ConfigurationErrorEvent.READ,
-                ConfigurationErrorEvent.READ, "key", null);
+    public void testContainsKeyError() {
+        assertFalse("Key contained after error", setUpErrorConfig().containsKey("key"));
+        checkErrorListener(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, "key", null);
     }
 
     /**
      * Tests handling of errors in getProperty().
      */
     @Test
-    public void testGetPropertyError()
-    {
-        assertNull("Wrong property value after error", setUpErrorConfig()
-                .getProperty("key"));
-        checkErrorListener(ConfigurationErrorEvent.READ,
-                ConfigurationErrorEvent.READ, "key", null);
+    public void testGetPropertyError() {
+        assertNull("Wrong property value after error", setUpErrorConfig().getProperty("key"));
+        checkErrorListener(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, "key", null);
     }
 
     /**
      * Tests the getKeys() method when there are cycles in the tree.
      */
     @Test
-    public void testGetKeysWithCycles() throws NamingException
-    {
+    public void testGetKeysWithCycles() throws NamingException {
         final Hashtable<Object, Object> env = new Hashtable<>();
         env.put(MockInitialContextFactory.PROP_CYCLES, Boolean.TRUE);
         final InitialContext initCtx = new InitialContext(env);
@@ -321,50 +294,40 @@ public class TestJNDIConfiguration {
     }
 
     /**
-     * Tests getKeys() if no data is found. This should not cause a problem and
-     * not notify the error listeners.
+     * Tests getKeys() if no data is found. This should not cause a problem and not notify the error listeners.
      */
     @Test
-    public void testGetKeysNoData()
-    {
+    public void testGetKeysNoData() {
         conf.installException(new NameNotFoundException("Test exception"));
         assertFalse("Got keys", conf.getKeys().hasNext());
         listener.done();
     }
 
     /**
-     * A special JNDI configuration implementation that can be configured to
-     * throw an exception when accessing the base context. Used for testing the
-     * exception handling.
+     * A special JNDI configuration implementation that can be configured to throw an exception when accessing the base
+     * context. Used for testing the exception handling.
      */
-    public static class PotentialErrorJNDIConfiguration extends
-            JNDIConfiguration
-    {
+    public static class PotentialErrorJNDIConfiguration extends JNDIConfiguration {
         /** An exception to be thrown by getBaseContext(). */
         private NamingException exception;
 
-        public PotentialErrorJNDIConfiguration(final Context ctx)
-        {
+        public PotentialErrorJNDIConfiguration(final Context ctx) {
             super(ctx);
         }
 
         /**
-         * Prepares this object to throw an exception when the JNDI context is
-         * queried.
+         * Prepares this object to throw an exception when the JNDI context is queried.
          *
          * @param nex the exception to be thrown
          */
-        public void installException(final NamingException nex)
-        {
+        public void installException(final NamingException nex) {
             exception = nex;
         }
 
         /**
-         * Prepares this object to throw a standard exception when the JNDI
-         * context is queried.
+         * Prepares this object to throw a standard exception when the JNDI context is queried.
          */
-        public void installException()
-        {
+        public void installException() {
             installException(new NamingException("Simulated JNDI exception!"));
         }
 
@@ -372,10 +335,8 @@ public class TestJNDIConfiguration {
          * Returns the JNDI context. Optionally throws an exception.
          */
         @Override
-        public Context getBaseContext() throws NamingException
-        {
-            if (exception != null)
-            {
+        public Context getBaseContext() throws NamingException {
+            if (exception != null) {
                 throw exception;
             }
             return super.getBaseContext();

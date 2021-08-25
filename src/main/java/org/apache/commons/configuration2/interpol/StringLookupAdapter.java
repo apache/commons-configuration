@@ -25,22 +25,19 @@ import org.apache.commons.text.lookup.StringLookup;
  *
  * @since 2.4
  */
-class StringLookupAdapter implements Lookup
-{
+class StringLookupAdapter implements Lookup {
 
     /**
      * The StringLookup delegate.
      */
     private final StringLookup stringLookup;
 
-    StringLookupAdapter(final StringLookup stringLookup)
-    {
+    StringLookupAdapter(final StringLookup stringLookup) {
         this.stringLookup = Objects.requireNonNull(stringLookup, "stringLookup");
     }
 
     @Override
-    public Object lookup(final String key)
-    {
+    public Object lookup(final String key) {
         return stringLookup.lookup(key);
     }
 

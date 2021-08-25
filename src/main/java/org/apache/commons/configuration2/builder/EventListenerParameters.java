@@ -27,47 +27,39 @@ import org.apache.commons.configuration2.event.EventType;
 
 /**
  * <p>
- * A specialized parameters implementation for {@link BasicConfigurationBuilder}
- * which allows for a convenient event listener initialization.
+ * A specialized parameters implementation for {@link BasicConfigurationBuilder} which allows for a convenient event
+ * listener initialization.
  * </p>
  * <p>
- * This class offers a fluent interface for registering event listeners. A fully
- * initialized instance can be passed to the
- * {@link BasicConfigurationBuilder#configure(BuilderParameters...)} method. All
- * event listeners which have been registered at the instance are then copied
- * over to the configuration builder.
+ * This class offers a fluent interface for registering event listeners. A fully initialized instance can be passed to
+ * the {@link BasicConfigurationBuilder#configure(BuilderParameters...)} method. All event listeners which have been
+ * registered at the instance are then copied over to the configuration builder.
  * </p>
  * <p>
  * The code fragment below shows a typical usage scenario:
  * </p>
  *
  * <pre>
- * BasicConfigurationBuilder&lt;Configuration&gt; builder =
- *         new BasicConfigurationBuilder&lt;Configuration&gt;(
- *                 PropertiesConfiguration.class)
- *                 .configure(new EventListenerParameters().addEventListener(
- *                         ConfigurationEvent.ANY, myListener));
+ * BasicConfigurationBuilder&lt;Configuration&gt; builder = new BasicConfigurationBuilder&lt;Configuration&gt;(PropertiesConfiguration.class)
+ *     .configure(new EventListenerParameters().addEventListener(ConfigurationEvent.ANY, myListener));
  * </pre>
  *
  * <p>
- * In order to support a configuration builder's {@code configure()} method,
- * this class implements the {@code BuilderParameters} interface. However, this
- * is just a dummy implementation; no parameters are propagated to the builder.
+ * In order to support a configuration builder's {@code configure()} method, this class implements the
+ * {@code BuilderParameters} interface. However, this is just a dummy implementation; no parameters are propagated to
+ * the builder.
  * </p>
  *
  * @since 2.0
  */
-public class EventListenerParameters implements BuilderParameters,
-        EventListenerProvider
-{
+public class EventListenerParameters implements BuilderParameters, EventListenerProvider {
     /** Stores the event listener registrations added to this object. */
     private final EventListenerList eventListeners;
 
     /**
      * Creates a new instance of {@code EventListenerParameters}.
      */
-    public EventListenerParameters()
-    {
+    public EventListenerParameters() {
         eventListeners = new EventListenerList();
     }
 
@@ -79,24 +71,19 @@ public class EventListenerParameters implements BuilderParameters,
      * @param <T> the event type
      * @return a reference to this object for method chaining
      */
-    public <T extends Event> EventListenerParameters addEventListener(
-            final EventType<T> eventType, final EventListener<? super T> listener)
-    {
+    public <T extends Event> EventListenerParameters addEventListener(final EventType<T> eventType, final EventListener<? super T> listener) {
         eventListeners.addEventListener(eventType, listener);
         return this;
     }
 
     /**
-     * Adds the specified {@code EventListenerRegistrationData} instance to this
-     * object.
+     * Adds the specified {@code EventListenerRegistrationData} instance to this object.
      *
      * @param registrationData the registration object to be added
      * @param <T> the event type of the contained event listener
      * @return a reference to this object for method chaining
      */
-    public <T extends Event> EventListenerParameters addEventListener(
-            final EventListenerRegistrationData<T> registrationData)
-    {
+    public <T extends Event> EventListenerParameters addEventListener(final EventListenerRegistrationData<T> registrationData) {
         eventListeners.addEventListener(registrationData);
         return this;
     }
@@ -105,14 +92,12 @@ public class EventListenerParameters implements BuilderParameters,
      * {@inheritDoc} This implementation returns an empty map.
      */
     @Override
-    public Map<String, Object> getParameters()
-    {
+    public Map<String, Object> getParameters() {
         return Collections.emptyMap();
     }
 
     @Override
-    public EventListenerList getListeners()
-    {
+    public EventListenerList getListeners() {
         return eventListeners;
     }
 }

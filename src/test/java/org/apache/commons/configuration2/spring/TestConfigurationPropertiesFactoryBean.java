@@ -36,26 +36,22 @@ import org.springframework.core.io.Resource;
 /**
  * Spring FactoryBean test.
  */
-public class TestConfigurationPropertiesFactoryBean
-{
+public class TestConfigurationPropertiesFactoryBean {
 
     private ConfigurationPropertiesFactoryBean configurationFactory;
 
     @Before
-    public void setUp()
-    {
+    public void setUp() {
         configurationFactory = new ConfigurationPropertiesFactoryBean();
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testAfterPropertiesSet() throws Exception
-    {
+    public void testAfterPropertiesSet() throws Exception {
         configurationFactory.afterPropertiesSet();
     }
 
     @Test
-    public void testGetObject() throws Exception
-    {
+    public void testGetObject() throws Exception {
         configurationFactory.setConfigurations(new BaseConfiguration());
         Assert.assertNull(configurationFactory.getObject());
         configurationFactory.afterPropertiesSet();
@@ -63,16 +59,13 @@ public class TestConfigurationPropertiesFactoryBean
     }
 
     @Test
-    public void testMergeConfigurations() throws Exception
-    {
+    public void testMergeConfigurations() throws Exception {
         final Configuration one = new BaseConfiguration();
         one.setProperty("foo", "bar");
-        final String properties =
-                "## some header \n" + "foo = bar1\n" + "bar = foo\n";
+        final String properties = "## some header \n" + "foo = bar1\n" + "bar = foo\n";
 
         final PropertiesConfiguration two = new PropertiesConfiguration();
-        final PropertiesConfigurationLayout layout =
-                new PropertiesConfigurationLayout();
+        final PropertiesConfigurationLayout layout = new PropertiesConfigurationLayout();
         layout.load(two, new StringReader(properties));
 
         configurationFactory.setConfigurations(one, two);
@@ -83,8 +76,7 @@ public class TestConfigurationPropertiesFactoryBean
     }
 
     @Test
-    public void testLoadResources() throws Exception
-    {
+    public void testLoadResources() throws Exception {
         configurationFactory.setLocations(new ClassPathResource("testConfigurationFactoryBean.file"));
         configurationFactory.setConfigurations(new BaseConfiguration());
         configurationFactory.afterPropertiesSet();
@@ -94,74 +86,55 @@ public class TestConfigurationPropertiesFactoryBean
     }
 
     @Test
-    public void testInitialConfiguration() throws Exception
-    {
-        configurationFactory =
-                new ConfigurationPropertiesFactoryBean(new BaseConfiguration());
+    public void testInitialConfiguration() throws Exception {
+        configurationFactory = new ConfigurationPropertiesFactoryBean(new BaseConfiguration());
         configurationFactory.afterPropertiesSet();
         Assert.assertNotNull(configurationFactory.getConfiguration());
     }
 
     @Test
-    public void testSetLocationsDefensiveCopy()
-    {
-        final Resource[] locations = {
-                new ClassPathResource("f1"), new ClassPathResource("f2")
-        };
+    public void testSetLocationsDefensiveCopy() {
+        final Resource[] locations = {new ClassPathResource("f1"), new ClassPathResource("f2")};
         final Resource[] locationsUpdate = locations.clone();
 
         configurationFactory.setLocations(locationsUpdate);
         locationsUpdate[0] = new ClassPathResource("other");
-        assertArrayEquals("Locations were changed", locations,
-                configurationFactory.getLocations());
+        assertArrayEquals("Locations were changed", locations, configurationFactory.getLocations());
     }
 
     @Test
-    public void testSetLocationsNull()
-    {
+    public void testSetLocationsNull() {
         configurationFactory.setLocations(null);
         assertNull("Got locations", configurationFactory.getLocations());
     }
 
     @Test
-    public void testGetLocationsDefensiveCopy()
-    {
-        final Resource[] locations = {
-                new ClassPathResource("f1"), new ClassPathResource("f2")
-        };
+    public void testGetLocationsDefensiveCopy() {
+        final Resource[] locations = {new ClassPathResource("f1"), new ClassPathResource("f2")};
         configurationFactory.setLocations(locations);
 
         final Resource[] locationsGet = configurationFactory.getLocations();
         locationsGet[1] = null;
-        assertArrayEquals("Locations were changed", locations,
-                configurationFactory.getLocations());
+        assertArrayEquals("Locations were changed", locations, configurationFactory.getLocations());
     }
 
     @Test
-    public void testSetConfigurationsDefensiveCopy()
-    {
-        final Configuration[] configs = {
-                new PropertiesConfiguration(), new XMLConfiguration()
-        };
+    public void testSetConfigurationsDefensiveCopy() {
+        final Configuration[] configs = {new PropertiesConfiguration(), new XMLConfiguration()};
         final Configuration[] configsUpdate = configs.clone();
 
         configurationFactory.setConfigurations(configsUpdate);
         configsUpdate[0] = null;
-        assertArrayEquals("Configurations were changed", configs,
-                configurationFactory.getConfigurations());
+        assertArrayEquals("Configurations were changed", configs, configurationFactory.getConfigurations());
     }
 
     @Test
-    public void testGetConfigurationDefensiveCopy()
-    {
-        final Configuration[] configs = {
-                new PropertiesConfiguration(), new XMLConfiguration()
-        };
+    public void testGetConfigurationDefensiveCopy() {
+        final Configuration[] configs = {new PropertiesConfiguration(), new XMLConfiguration()};
         configurationFactory.setConfigurations(configs);
 
         final Configuration[] configsGet = configurationFactory.getConfigurations();
         configsGet[0] = null;
-        assertArrayEquals("Configurations were changed", configs,
-                configurationFactory.getConfigurations());
+        assertArrayEquals("Configurations were changed", configs, configurationFactory.getConfigurations());
     }
 }

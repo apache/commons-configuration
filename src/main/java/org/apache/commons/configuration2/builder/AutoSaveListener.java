@@ -26,27 +26,22 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>
- * A listener class implementing an auto save mechanism for file-based
- * configurations.
+ * A listener class implementing an auto save mechanism for file-based configurations.
  * </p>
  * <p>
- * Instances of this class are used by {@link FileBasedConfigurationBuilder} to
- * save their managed configuration instances when they are changed. Objects are
- * registered at {@code Configuration} objects as event listeners and thus can
- * trigger save operations whenever a change event is received.
+ * Instances of this class are used by {@link FileBasedConfigurationBuilder} to save their managed configuration
+ * instances when they are changed. Objects are registered at {@code Configuration} objects as event listeners and thus
+ * can trigger save operations whenever a change event is received.
  * </p>
  * <p>
- * There is one complication however: Some configuration implementations fire
- * change events during a load operation. Such events must be ignored to prevent
- * corruption of the source file. This is achieved by monitoring the associated
+ * There is one complication however: Some configuration implementations fire change events during a load operation.
+ * Such events must be ignored to prevent corruption of the source file. This is achieved by monitoring the associated
  * {@code FileHandler}: during load operations no auto-save is performed.
  * </p>
  *
  * @since 2.0
  */
-class AutoSaveListener extends FileHandlerListenerAdapter implements
-        EventListener<ConfigurationEvent>
-{
+class AutoSaveListener extends FileHandlerListenerAdapter implements EventListener<ConfigurationEvent> {
     /** The logger. */
     private final Log log = LogFactory.getLog(getClass());
 
@@ -57,81 +52,64 @@ class AutoSaveListener extends FileHandlerListenerAdapter implements
     private FileHandler handler;
 
     /**
-     * A counter to keep track whether a load operation is currently in
-     * progress.
+     * A counter to keep track whether a load operation is currently in progress.
      */
     private int loading;
 
     /**
-     * Creates a new instance of {@code AutoSaveListener} and initializes it
-     * with the associated builder.
+     * Creates a new instance of {@code AutoSaveListener} and initializes it with the associated builder.
      *
      * @param bldr the associated builder
      */
-    public AutoSaveListener(final FileBasedConfigurationBuilder<?> bldr)
-    {
+    public AutoSaveListener(final FileBasedConfigurationBuilder<?> bldr) {
         builder = bldr;
     }
 
     /**
-     * {@inheritDoc} This implementation checks whether an auto-safe operation
-     * should be performed. This is the case if the event indicates that an
-     * update of the configuration has been performed and currently no load
-     * operation is in progress.
+     * {@inheritDoc} This implementation checks whether an auto-safe operation should be performed. This is the case if the
+     * event indicates that an update of the configuration has been performed and currently no load operation is in
+     * progress.
      */
     @Override
-    public void onEvent(final ConfigurationEvent event)
-    {
-        if (autoSaveRequired(event))
-        {
-            try
-            {
+    public void onEvent(final ConfigurationEvent event) {
+        if (autoSaveRequired(event)) {
+            try {
                 builder.save();
-            }
-            catch (final ConfigurationException ce)
-            {
+            } catch (final ConfigurationException ce) {
                 log.warn("Auto save failed!", ce);
             }
         }
     }
 
     /**
-     * {@inheritDoc} This implementation increments the counter for load
-     * operations in progress.
+     * {@inheritDoc} This implementation increments the counter for load operations in progress.
      */
     @Override
-    public synchronized void loading(final FileHandler handler)
-    {
+    public synchronized void loading(final FileHandler handler) {
         loading++;
     }
 
     /**
-     * {@inheritDoc} This implementation decrements the counter for load
-     * operations in progress.
+     * {@inheritDoc} This implementation decrements the counter for load operations in progress.
      */
     @Override
-    public synchronized void loaded(final FileHandler handler)
-    {
+    public synchronized void loaded(final FileHandler handler) {
         loading--;
     }
 
     /**
-     * Updates the {@code FileHandler}. This method is called by the builder
-     * when a new configuration instance was created which is associated with a
-     * new file handler. It updates the internal file handler reference and
-     * performs necessary listener registrations.
+     * Updates the {@code FileHandler}. This method is called by the builder when a new configuration instance was created
+     * which is associated with a new file handler. It updates the internal file handler reference and performs necessary
+     * listener registrations.
      *
      * @param fh the new {@code FileHandler} (can be <b>null</b>)
      */
-    public synchronized void updateFileHandler(final FileHandler fh)
-    {
-        if (handler != null)
-        {
+    public synchronized void updateFileHandler(final FileHandler fh) {
+        if (handler != null) {
             handler.removeFileHandlerListener(this);
         }
 
-        if (fh != null)
-        {
+        if (fh != null) {
             fh.addFileHandlerListener(this);
         }
         handler = fh;
@@ -142,21 +120,18 @@ class AutoSaveListener extends FileHandlerListenerAdapter implements
      *
      * @return a flag whether a load operation is in progress
      */
-    private synchronized boolean inLoadOperation()
-    {
+    private synchronized boolean inLoadOperation() {
         return loading > 0;
     }
 
     /**
-     * Checks whether an auto save operation has to be performed based on the
-     * passed in event and the current state of this object.
+     * Checks whether an auto save operation has to be performed based on the passed in event and the current state of this
+     * object.
      *
      * @param event the configuration change event
-     * @return <b>true</b> if a save operation should be performed, <b>false</b>
-     *         otherwise
+     * @return <b>true</b> if a save operation should be performed, <b>false</b> otherwise
      */
-    private boolean autoSaveRequired(final ConfigurationEvent event)
-    {
+    private boolean autoSaveRequired(final ConfigurationEvent event) {
         return !event.isBeforeUpdate() && !inLoadOperation();
     }
 }

@@ -46,24 +46,20 @@ import org.apache.commons.vfs2.provider.UriParser;
  *
  * @since 1.7
  */
-public class VFSFileSystem extends DefaultFileSystem
-{
+public class VFSFileSystem extends DefaultFileSystem {
     /**
      * Stream handler required to create URL.
      */
-    private static class VFSURLStreamHandler extends URLStreamHandler
-    {
+    private static class VFSURLStreamHandler extends URLStreamHandler {
         /** The Protocol used */
         private final String protocol;
 
-        public VFSURLStreamHandler(final FileName file)
-        {
+        public VFSURLStreamHandler(final FileName file) {
             this.protocol = file.getScheme();
         }
 
         @Override
-        protected URLConnection openConnection(final URL url) throws IOException
-        {
+        protected URLConnection openConnection(final URL url) throws IOException {
             throw new IOException("VFS URLs can only be used with VFS APIs");
         }
     }
@@ -71,74 +67,56 @@ public class VFSFileSystem extends DefaultFileSystem
     /** The logger. */
     private final Log log = LogFactory.getLog(getClass());
 
-    public VFSFileSystem()
-    {
+    public VFSFileSystem() {
         // empty
     }
 
     @Override
-    public String getBasePath(final String path)
-    {
-        if (UriParser.extractScheme(path) == null)
-        {
+    public String getBasePath(final String path) {
+        if (UriParser.extractScheme(path) == null) {
             return super.getBasePath(path);
         }
-        try
-        {
+        try {
             final FileName parent = resolveURI(path).getParent();
             return parent != null ? parent.getURI() : null;
-        }
-        catch (final FileSystemException fse)
-        {
+        } catch (final FileSystemException fse) {
             fse.printStackTrace();
             return null;
         }
     }
 
     @Override
-    public String getFileName(final String path)
-    {
-        if (UriParser.extractScheme(path) == null)
-        {
+    public String getFileName(final String path) {
+        if (UriParser.extractScheme(path) == null) {
             return super.getFileName(path);
         }
-        try
-        {
+        try {
             return resolveURI(path).getBaseName();
-        }
-        catch (final FileSystemException fse)
-        {
+        } catch (final FileSystemException fse) {
             fse.printStackTrace();
             return null;
         }
     }
 
     @Override
-    public InputStream getInputStream(final URL url) throws ConfigurationException
-    {
+    public InputStream getInputStream(final URL url) throws ConfigurationException {
         final FileObject file;
-        try
-        {
+        try {
             final FileSystemOptions opts = getOptions(url.getProtocol());
             file = getManager().resolveFile(url.toString(), opts);
-            if (!file.exists())
-            {
+            if (!file.exists()) {
                 throw new ConfigurationException("File not found");
             }
-            if (!file.isFile())
-            {
+            if (!file.isFile()) {
                 throw new ConfigurationException("Cannot load a configuration from a directory");
             }
             final FileContent content = file.getContent();
-            if (content == null)
-            {
+            if (content == null) {
                 final String msg = "Cannot access content of " + file.getName().getFriendlyURI();
                 throw new ConfigurationException(msg);
             }
             return content.getInputStream();
-        }
-        catch (final FileSystemException fse)
-        {
+        } catch (final FileSystemException fse) {
             final String msg = "Unable to access " + url.toString();
             throw new ConfigurationException(msg, fse);
         }
@@ -148,50 +126,38 @@ public class VFSFileSystem extends DefaultFileSystem
         return VFS.getManager();
     }
 
-    private FileSystemOptions getOptions(final String scheme)
-    {
+    private FileSystemOptions getOptions(final String scheme) {
         if (scheme == null) {
             return null;
         }
         final FileSystemOptions opts = new FileSystemOptions();
         FileSystemConfigBuilder builder;
-        try
-        {
+        try {
             builder = getManager().getFileSystemConfigBuilder(scheme);
-        }
-        catch (final Exception ex)
-        {
+        } catch (final Exception ex) {
             return null;
         }
         final FileOptionsProvider provider = getFileOptionsProvider();
-        if (provider != null)
-        {
+        if (provider != null) {
             final Map<String, Object> map = provider.getOptions();
-            if (map == null)
-            {
+            if (map == null) {
                 return null;
             }
             int count = 0;
-            for (final Map.Entry<String, Object> entry : map.entrySet())
-            {
-                try
-                {
+            for (final Map.Entry<String, Object> entry : map.entrySet()) {
+                try {
                     String key = entry.getKey();
-                    if (FileOptionsProvider.CURRENT_USER.equals(key))
-                    {
+                    if (FileOptionsProvider.CURRENT_USER.equals(key)) {
                         key = "creatorName";
                     }
                     setProperty(builder, opts, key, entry.getValue());
                     ++count;
-                }
-                catch (final Exception ex)
-                {
+                } catch (final Exception ex) {
                     // Ignore an incorrect property.
                     continue;
                 }
             }
-            if (count > 0)
-            {
+            if (count > 0) {
                 return opts;
             }
         }
@@ -200,142 +166,107 @@ public class VFSFileSystem extends DefaultFileSystem
     }
 
     @Override
-    public OutputStream getOutputStream(final URL url) throws ConfigurationException
-    {
-        try
-        {
+    public OutputStream getOutputStream(final URL url) throws ConfigurationException {
+        try {
             final FileSystemOptions opts = getOptions(url.getProtocol());
             final FileObject file = getManager().resolveFile(url.toString(), opts);
             // throw an exception if the target URL is a directory
-            if (file == null || file.isFolder())
-            {
+            if (file == null || file.isFolder()) {
                 throw new ConfigurationException("Cannot save a configuration to a directory");
             }
             final FileContent content = file.getContent();
 
-            if (content == null)
-            {
+            if (content == null) {
                 throw new ConfigurationException("Cannot access content of " + url);
             }
             return content.getOutputStream();
-        }
-        catch (final FileSystemException fse)
-        {
+        } catch (final FileSystemException fse) {
             throw new ConfigurationException("Unable to access " + url, fse);
         }
     }
 
     @Override
-    public String getPath(final File file, final URL url, final String basePath, final String fileName)
-    {
-        if (file != null)
-        {
+    public String getPath(final File file, final URL url, final String basePath, final String fileName) {
+        if (file != null) {
             return super.getPath(file, url, basePath, fileName);
         }
-        try
-        {
-            if (url != null)
-            {
+        try {
+            if (url != null) {
                 final FileName name = resolveURI(url.toString());
-                if (name != null)
-                {
+                if (name != null) {
                     return name.toString();
                 }
             }
 
-            if (UriParser.extractScheme(fileName) != null)
-            {
+            if (UriParser.extractScheme(fileName) != null) {
                 return fileName;
             }
-            if (basePath != null)
-            {
+            if (basePath != null) {
                 final FileName base = resolveURI(basePath);
                 return getManager().resolveName(base, fileName).getURI();
             }
             final FileName name = resolveURI(fileName);
             final FileName base = name.getParent();
             return getManager().resolveName(base, name.getBaseName()).getURI();
-        }
-        catch (final FileSystemException fse)
-        {
+        } catch (final FileSystemException fse) {
             fse.printStackTrace();
             return null;
         }
     }
 
     @Override
-    public URL getURL(final String basePath, final String file) throws MalformedURLException
-    {
-        if ((basePath != null && UriParser.extractScheme(basePath) == null)
-            || (basePath == null && UriParser.extractScheme(file) == null))
-        {
+    public URL getURL(final String basePath, final String file) throws MalformedURLException {
+        if ((basePath != null && UriParser.extractScheme(basePath) == null) || (basePath == null && UriParser.extractScheme(file) == null)) {
             return super.getURL(basePath, file);
         }
-        try
-        {
+        try {
             final FileName path;
-            if (basePath != null && UriParser.extractScheme(file) == null)
-            {
+            if (basePath != null && UriParser.extractScheme(file) == null) {
                 final FileName base = resolveURI(basePath);
                 path = getManager().resolveName(base, file);
-            }
-            else
-            {
+            } else {
                 path = resolveURI(file);
             }
 
             final URLStreamHandler handler = new VFSURLStreamHandler(path);
             return new URL(null, path.getURI(), handler);
-        }
-        catch (final FileSystemException fse)
-        {
-            throw new ConfigurationRuntimeException("Could not parse basePath: " + basePath
-                + " and fileName: " + file, fse);
+        } catch (final FileSystemException fse) {
+            throw new ConfigurationRuntimeException("Could not parse basePath: " + basePath + " and fileName: " + file, fse);
         }
     }
 
     @Override
-    public URL locateFromURL(final String basePath, final String fileName)
-    {
+    public URL locateFromURL(final String basePath, final String fileName) {
         final String fileScheme = UriParser.extractScheme(fileName);
 
         // Use DefaultFileSystem if basePath and fileName don't have a scheme.
-        if ((basePath == null || UriParser.extractScheme(basePath) == null) && fileScheme == null)
-        {
+        if ((basePath == null || UriParser.extractScheme(basePath) == null) && fileScheme == null) {
             return super.locateFromURL(basePath, fileName);
         }
-        try
-        {
+        try {
             FileObject file;
             // Only use the base path if the file name doesn't have a scheme.
-            if (basePath != null && fileScheme == null)
-            {
+            if (basePath != null && fileScheme == null) {
                 final String scheme = UriParser.extractScheme(basePath);
                 final FileSystemOptions opts = getOptions(scheme);
                 FileObject base = getManager().resolveFile(basePath, opts);
-                if (base.isFile())
-                {
+                if (base.isFile()) {
                     base = base.getParent();
                 }
 
                 file = getManager().resolveFile(base, fileName);
-            }
-            else
-            {
+            } else {
                 final FileSystemOptions opts = fileScheme != null ? getOptions(fileScheme) : null;
                 file = getManager().resolveFile(fileName, opts);
             }
 
-            if (!file.exists())
-            {
+            if (!file.exists()) {
                 return null;
             }
             final FileName path = file.getName();
             final URLStreamHandler handler = new VFSURLStreamHandler(path);
             return new URL(null, path.getURI(), handler);
-        }
-        catch (final FileSystemException | MalformedURLException fse)
-        {
+        } catch (final FileSystemException | MalformedURLException fse) {
             return null;
         }
     }
@@ -344,24 +275,19 @@ public class VFSFileSystem extends DefaultFileSystem
         return getManager().resolveURI(path);
     }
 
-    private void setProperty(final FileSystemConfigBuilder builder, final FileSystemOptions options,
-                             final String key, final Object value)
-    {
+    private void setProperty(final FileSystemConfigBuilder builder, final FileSystemOptions options, final String key, final Object value) {
         final String methodName = "set" + key.substring(0, 1).toUpperCase() + key.substring(1);
         final Class<?>[] paramTypes = new Class<?>[2];
         paramTypes[0] = FileSystemOptions.class;
         paramTypes[1] = value.getClass();
 
-        try
-        {
+        try {
             final Method method = builder.getClass().getMethod(methodName, paramTypes);
             final Object[] params = new Object[2];
             params[0] = options;
             params[1] = value;
             method.invoke(builder, params);
-        }
-        catch (final Exception ex)
-        {
+        } catch (final Exception ex) {
             log.warn("Cannot access property '" + key + "'! Ignoring.", ex);
         }
 

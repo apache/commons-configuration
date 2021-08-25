@@ -26,39 +26,22 @@ import org.junit.Test;
 
 /**
  */
-public class TestConfigurationMap
-{
+public class TestConfigurationMap {
 
     ConfigurationMap map;
 
-    String[] properties = {
-            "booleanProperty",
-            "doubleProperty",
-            "floatProperty",
-            "intProperty",
-            "longProperty",
-            "shortProperty",
-            "stringProperty"
-    };
+    String[] properties = {"booleanProperty", "doubleProperty", "floatProperty", "intProperty", "longProperty", "shortProperty", "stringProperty"};
 
-    Object[] values = {
-            Boolean.TRUE,
-            Double.valueOf(Double.MAX_VALUE),
-            Float.valueOf(Float.MAX_VALUE),
-            Integer.valueOf(Integer.MAX_VALUE),
-            Long.valueOf(Long.MAX_VALUE),
-            Short.valueOf(Short.MAX_VALUE),
-            "This is a string"
-    };
+    Object[] values = {Boolean.TRUE, Double.valueOf(Double.MAX_VALUE), Float.valueOf(Float.MAX_VALUE), Integer.valueOf(Integer.MAX_VALUE),
+        Long.valueOf(Long.MAX_VALUE), Short.valueOf(Short.MAX_VALUE), "This is a string"};
 
     /**
      * Set up instance variables required by this test case.
      */
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         final BaseConfiguration configuration = new BaseConfiguration();
-        for(int i = 0; i < properties.length ; i++) {
+        for (int i = 0; i < properties.length; i++) {
             configuration.setProperty(properties[i], values[i]);
         }
         map = new ConfigurationMap(configuration);
@@ -68,8 +51,7 @@ public class TestConfigurationMap
      * Tear down instance variables required by this test case.
      */
     @After
-    public void tearDown()
-    {
+    public void tearDown() {
         map = null;
     }
 
@@ -77,15 +59,14 @@ public class TestConfigurationMap
      * Class under test for Object put(Object, Object)
      */
     @Test
-    public void testPut()
-    {
-        for(int i = 0; i < properties.length; i++) {
+    public void testPut() {
+        for (int i = 0; i < properties.length; i++) {
             Object object = map.put(properties[i], values[i]);
-            assertNotNull("Returned null from put.",object);
-            assertEquals("Returned wrong result.",values[i],object);
+            assertNotNull("Returned null from put.", object);
+            assertEquals("Returned wrong result.", values[i], object);
             object = map.get(properties[i]);
-            assertNotNull("Returned null from get.",object);
-            assertEquals("Returned wrong result.",values[i],object);
+            assertNotNull("Returned null from get.", object);
+            assertEquals("Returned wrong result.", values[i], object);
         }
     }
 

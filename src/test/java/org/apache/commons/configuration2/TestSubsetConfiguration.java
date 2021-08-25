@@ -43,8 +43,7 @@ import org.junit.Test;
  * Test case for the {@link SubsetConfiguration} class.
  *
  */
-public class TestSubsetConfiguration
-{
+public class TestSubsetConfiguration {
     static final String TEST_DIR = ConfigurationAssert.TEST_DIR_NAME;
     static final String TEST_FILE = "testDigesterConfiguration2.xml";
 
@@ -57,8 +56,7 @@ public class TestSubsetConfiguration
     }
 
     @Test
-    public void testGetProperty()
-    {
+    public void testGetProperty() {
         final Configuration conf = new BaseConfiguration();
         conf.setProperty("test.key1", "value1");
         conf.setProperty("testing.key2", "value1");
@@ -70,8 +68,7 @@ public class TestSubsetConfiguration
     }
 
     @Test
-    public void testSetProperty()
-    {
+    public void testSetProperty() {
         final Configuration conf = new BaseConfiguration();
         final Configuration subset = new SubsetConfiguration(conf, "test", ".");
 
@@ -87,8 +84,7 @@ public class TestSubsetConfiguration
     }
 
     @Test
-    public void testGetParentKey()
-    {
+    public void testGetParentKey() {
         final Configuration conf = new BaseConfiguration();
         // subset with delimiter
         SubsetConfiguration subset = new SubsetConfiguration(conf, "prefix", ".");
@@ -102,8 +98,7 @@ public class TestSubsetConfiguration
     }
 
     @Test
-    public void testGetChildKey()
-    {
+    public void testGetChildKey() {
         final Configuration conf = new BaseConfiguration();
         // subset with delimiter
         SubsetConfiguration subset = new SubsetConfiguration(conf, "prefix", ".");
@@ -117,8 +112,7 @@ public class TestSubsetConfiguration
     }
 
     @Test
-    public void testGetKeys()
-    {
+    public void testGetKeys() {
         final Configuration conf = new BaseConfiguration();
         conf.setProperty("test", "value0");
         conf.setProperty("test.key1", "value1");
@@ -133,8 +127,7 @@ public class TestSubsetConfiguration
     }
 
     @Test
-    public void testGetKeysWithPrefix()
-    {
+    public void testGetKeysWithPrefix() {
         final Configuration conf = new BaseConfiguration();
         conf.setProperty("test.abc", "value0");
         conf.setProperty("test.abc.key1", "value1");
@@ -149,8 +142,7 @@ public class TestSubsetConfiguration
     }
 
     @Test
-    public void testGetList()
-    {
+    public void testGetList() {
         final BaseConfiguration conf = new BaseConfiguration();
         conf.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         conf.setProperty("test.abc", "value0,value1");
@@ -162,8 +154,7 @@ public class TestSubsetConfiguration
     }
 
     @Test
-    public void testGetParent()
-    {
+    public void testGetParent() {
         final Configuration conf = new BaseConfiguration();
         final SubsetConfiguration subset = new SubsetConfiguration(conf, "prefix", ".");
 
@@ -171,8 +162,7 @@ public class TestSubsetConfiguration
     }
 
     @Test
-    public void testGetPrefix()
-    {
+    public void testGetPrefix() {
         final Configuration conf = new BaseConfiguration();
         final SubsetConfiguration subset = new SubsetConfiguration(conf, "prefix", ".");
 
@@ -180,8 +170,7 @@ public class TestSubsetConfiguration
     }
 
     @Test
-    public void testSetPrefix()
-    {
+    public void testSetPrefix() {
         final Configuration conf = new BaseConfiguration();
         final SubsetConfiguration subset = new SubsetConfiguration(conf, null, ".");
         subset.setPrefix("prefix");
@@ -190,46 +179,35 @@ public class TestSubsetConfiguration
     }
 
     @Test
-    public void testThrowExceptionOnMissing()
-    {
+    public void testThrowExceptionOnMissing() {
         final BaseConfiguration config = new BaseConfiguration();
         config.setThrowExceptionOnMissing(true);
 
         final SubsetConfiguration subset = new SubsetConfiguration(config, "prefix");
 
-        try
-        {
+        try {
             subset.getString("foo");
             fail("NoSuchElementException expected");
-        }
-        catch (final NoSuchElementException e)
-        {
+        } catch (final NoSuchElementException e) {
             // expected
         }
 
         config.setThrowExceptionOnMissing(false);
         assertNull(subset.getString("foo"));
 
-
         subset.setThrowExceptionOnMissing(true);
-        try
-        {
+        try {
             config.getString("foo");
             fail("NoSuchElementException expected");
-        }
-        catch (final NoSuchElementException e)
-        {
+        } catch (final NoSuchElementException e) {
             // expected
         }
     }
 
     @Test
-    public void testNested() throws Exception
-    {
-        final CombinedConfigurationBuilder builder =
-                new CombinedConfigurationBuilder();
-        builder.configure(new FileBasedBuilderParametersImpl()
-                .setFile(ConfigurationAssert.getTestFile(TEST_FILE)));
+    public void testNested() throws Exception {
+        final CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
+        builder.configure(new FileBasedBuilderParametersImpl().setFile(ConfigurationAssert.getTestFile(TEST_FILE)));
         final Configuration config = builder.getConfiguration();
         final Configuration subConf = config.subset("tables.table(0)");
         assertTrue(subConf.getKeys().hasNext());
@@ -238,8 +216,7 @@ public class TestSubsetConfiguration
         final Set<String> keys = new HashSet<>();
         keys.add("name");
         keys.add("type");
-        while(itKeys.hasNext())
-        {
+        while (itKeys.hasNext()) {
             final String k = itKeys.next();
             assertTrue(keys.contains(k));
             keys.remove(k);
@@ -248,8 +225,7 @@ public class TestSubsetConfiguration
     }
 
     @Test
-    public void testClear()
-    {
+    public void testClear() {
         final Configuration config = new BaseConfiguration();
         config.setProperty("test.key1", "value1");
         config.setProperty("testing.key2", "value1");
@@ -265,79 +241,63 @@ public class TestSubsetConfiguration
      * Tests whether a list delimiter handler is used correctly.
      */
     @Test
-    public void testListDelimiterHandling()
-    {
+    public void testListDelimiterHandling() {
         final BaseConfiguration config = new BaseConfiguration();
         final Configuration subset = config.subset("prefix");
         config.setListDelimiterHandler(new DefaultListDelimiterHandler('/'));
         subset.addProperty("list", "a/b/c");
-        assertEquals("Wrong size of list", 3, config.getList("prefix.list")
-                .size());
+        assertEquals("Wrong size of list", 3, config.getList("prefix.list").size());
 
-        ((AbstractConfiguration) subset)
-                .setListDelimiterHandler(new DefaultListDelimiterHandler(';'));
+        ((AbstractConfiguration) subset).setListDelimiterHandler(new DefaultListDelimiterHandler(';'));
         subset.addProperty("list2", "a;b;c");
-        assertEquals("Wrong size of list2", 3, config.getList("prefix.list2")
-                .size());
+        assertEquals("Wrong size of list2", 3, config.getList("prefix.list2").size());
     }
 
     /**
-     * Tests whether the list delimiter handler is also set for the parent
-     * configuration.
+     * Tests whether the list delimiter handler is also set for the parent configuration.
      */
     @Test
-    public void testSetListDelimiterHandlerInParent()
-    {
+    public void testSetListDelimiterHandlerInParent() {
         final BaseConfiguration config = new BaseConfiguration();
-        final AbstractConfiguration subset =
-                (AbstractConfiguration) config.subset("prefix");
+        final AbstractConfiguration subset = (AbstractConfiguration) config.subset("prefix");
         final ListDelimiterHandler listHandler = new DefaultListDelimiterHandler(',');
         subset.setListDelimiterHandler(listHandler);
-        assertSame("Handler not passed to parent", listHandler,
-                config.getListDelimiterHandler());
+        assertSame("Handler not passed to parent", listHandler, config.getListDelimiterHandler());
     }
 
     /**
-     * Tests whether the list delimiter handler from the parent configuration is
-     * used.
+     * Tests whether the list delimiter handler from the parent configuration is used.
      */
     @Test
-    public void testGetListDelimiterHandlerFromParent()
-    {
+    public void testGetListDelimiterHandlerFromParent() {
         final BaseConfiguration config = new BaseConfiguration();
-        final AbstractConfiguration subset =
-                (AbstractConfiguration) config.subset("prefix");
+        final AbstractConfiguration subset = (AbstractConfiguration) config.subset("prefix");
         final ListDelimiterHandler listHandler = new DefaultListDelimiterHandler(',');
         config.setListDelimiterHandler(listHandler);
-        assertSame("Not list handler from parent", listHandler,
-                subset.getListDelimiterHandler());
+        assertSame("Not list handler from parent", listHandler, subset.getListDelimiterHandler());
     }
 
     /**
-     * Tests the case that the parent configuration is not derived from
-     * AbstractConfiguration and thus does not support a list delimiter handler.
+     * Tests the case that the parent configuration is not derived from AbstractConfiguration and thus does not support a
+     * list delimiter handler.
      */
     @Test
-    public void testSetListDelimiterHandlerParentNotSupported()
-    {
+    public void testSetListDelimiterHandlerParentNotSupported() {
         final Configuration config = EasyMock.createNiceMock(Configuration.class);
         EasyMock.replay(config);
         final SubsetConfiguration subset = new SubsetConfiguration(config, "prefix");
         final ListDelimiterHandler listHandler = new DefaultListDelimiterHandler(',');
         subset.setListDelimiterHandler(listHandler);
-        assertSame("List delimiter handler not set", listHandler,
-                subset.getListDelimiterHandler());
+        assertSame("List delimiter handler not set", listHandler, subset.getListDelimiterHandler());
     }
 
     /**
      * Tests manipulating the interpolator.
      */
     @Test
-    public void testInterpolator()
-    {
+    public void testInterpolator() {
         final BaseConfiguration config = new BaseConfiguration();
-        final AbstractConfiguration subset = (AbstractConfiguration) config
-                .subset("prefix");
+        final AbstractConfiguration subset = (AbstractConfiguration) config.subset("prefix");
         InterpolationTestHelper.testGetInterpolator(subset);
     }
 
@@ -345,12 +305,10 @@ public class TestSubsetConfiguration
     public void testLocalLookupsInInterpolatorAreInherited() {
         final BaseConfiguration config = new BaseConfiguration();
         final ConfigurationInterpolator interpolator = config.getInterpolator();
-        interpolator.registerLookup("brackets", key -> "(" + key +")");
+        interpolator.registerLookup("brackets", key -> "(" + key + ")");
         config.setProperty("prefix.var", "${brackets:x}");
-        final AbstractConfiguration subset = (AbstractConfiguration) config
-                .subset("prefix");
-        assertEquals("Local lookup was not inherited", "(x)", subset
-                .getString("var", ""));
+        final AbstractConfiguration subset = (AbstractConfiguration) config.subset("prefix");
+        assertEquals("Local lookup was not inherited", "(x)", subset.getString("var", ""));
     }
 
     @Test
@@ -358,9 +316,7 @@ public class TestSubsetConfiguration
         final BaseConfiguration config = new BaseConfiguration();
         config.setProperty("test", "junit");
         config.setProperty("prefix.key", "${test}");
-        final AbstractConfiguration subset = (AbstractConfiguration) config
-                .subset("prefix");
-        assertEquals("Interpolation does not resolve parent keys", "junit",
-                subset.getString("key", ""));
+        final AbstractConfiguration subset = (AbstractConfiguration) config.subset("prefix");
+        assertEquals("Interpolation does not resolve parent keys", "junit", subset.getString("key", ""));
     }
 }

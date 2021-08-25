@@ -32,18 +32,15 @@ import org.junit.Test;
  * Tests the ConfigurationConverter class.
  *
  */
-public class TestConfigurationConverter
-{
+public class TestConfigurationConverter {
     @Test
-    public void testPropertiesToConfiguration()
-    {
+    public void testPropertiesToConfiguration() {
         final Properties props = new Properties();
         props.setProperty("string", "teststring");
         props.setProperty("int", "123");
         props.setProperty("list", "item 1, item 2");
 
-        final AbstractConfiguration config =
-                (AbstractConfiguration) ConfigurationConverter.getConfiguration(props);
+        final AbstractConfiguration config = (AbstractConfiguration) ConfigurationConverter.getConfiguration(props);
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
 
         assertEquals("This returns 'teststring'", "teststring", config.getString("string"));
@@ -55,10 +52,10 @@ public class TestConfigurationConverter
 
     /**
      * Creates a configuration object with some test values.
+     *
      * @return the test configuration
      */
-    private static BaseConfiguration createTestConfiguration()
-    {
+    private static BaseConfiguration createTestConfiguration() {
         final BaseConfiguration config = new BaseConfiguration();
         config.addProperty("string", "teststring");
         config.addProperty("array", "item 1");
@@ -70,12 +67,10 @@ public class TestConfigurationConverter
     }
 
     /**
-     * Tests a conversion to Properties if the default list delimiter handler
-     * is used (which does not support list joining).
+     * Tests a conversion to Properties if the default list delimiter handler is used (which does not support list joining).
      */
     @Test
-    public void testConfigurationToPropertiesDefaultListHandling()
-    {
+    public void testConfigurationToPropertiesDefaultListHandling() {
         final BaseConfiguration config = createTestConfiguration();
         final Properties props = ConfigurationConverter.getProperties(config);
 
@@ -87,12 +82,10 @@ public class TestConfigurationConverter
     }
 
     /**
-     * Tests a conversion to Properties if the list delimiter handler supports
-     * list joining.
+     * Tests a conversion to Properties if the list delimiter handler supports list joining.
      */
     @Test
-    public void testConfigurationToPropertiesListDelimiterHandler()
-    {
+    public void testConfigurationToPropertiesListDelimiterHandler() {
         final BaseConfiguration config = createTestConfiguration();
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(';'));
         final Properties props = ConfigurationConverter.getProperties(config);
@@ -100,13 +93,11 @@ public class TestConfigurationConverter
     }
 
     /**
-     * Tests a conversion to Properties if the source configuration does not
-     * extend AbstractConfiguration. In this case, properties with multiple
-     * values have to be handled in a special way.
+     * Tests a conversion to Properties if the source configuration does not extend AbstractConfiguration. In this case,
+     * properties with multiple values have to be handled in a special way.
      */
     @Test
-    public void testConfigurationToPropertiesNoAbstractConfiguration()
-    {
+    public void testConfigurationToPropertiesNoAbstractConfiguration() {
         final Configuration src = EasyMock.createMock(Configuration.class);
         final BaseConfiguration config = createTestConfiguration();
         EasyMock.expect(src.getKeys()).andReturn(config.getKeys());
@@ -117,17 +108,15 @@ public class TestConfigurationConverter
         }).anyTimes();
         EasyMock.replay(src);
         final Properties props = ConfigurationConverter.getProperties(src);
-        assertEquals("'array' property", "item 1,item 2",
-                props.getProperty("array"));
+        assertEquals("'array' property", "item 1,item 2", props.getProperty("array"));
     }
 
     /**
-     * Tests the conversion of a configuration object to properties if scalar
-     * values are involved. This test is related to CONFIGURATION-432.
+     * Tests the conversion of a configuration object to properties if scalar values are involved. This test is related to
+     * CONFIGURATION-432.
      */
     @Test
-    public void testConfigurationToPropertiesScalarValue()
-    {
+    public void testConfigurationToPropertiesScalarValue() {
         final BaseConfiguration config = new BaseConfiguration();
         config.addProperty("scalar", Integer.valueOf(42));
         final Properties props = ConfigurationConverter.getProperties(config);
@@ -135,8 +124,7 @@ public class TestConfigurationConverter
     }
 
     @Test
-    public void testConfigurationToMap()
-    {
+    public void testConfigurationToMap() {
         final Configuration config = new BaseConfiguration();
         config.addProperty("string", "teststring");
 

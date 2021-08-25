@@ -26,8 +26,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * @since 2.6
  */
 @FunctionalInterface
-public interface ConfigurationConsumer<T>
-{
+public interface ConfigurationConsumer<T> {
 
     /**
      * Performs this operation on the given argument.

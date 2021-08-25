@@ -31,119 +31,97 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * The {@code ConfigurationDynaBean} dynamically reads and writes
- * configurations properties from a wrapped configuration-collection
- * {@link org.apache.commons.configuration2.Configuration} instance. It also
- * implements a {@link java.util.Map} interface so that it can be used in
- * JSP 2.0 Expression Language expressions.
+ * The {@code ConfigurationDynaBean} dynamically reads and writes configurations properties from a wrapped
+ * configuration-collection {@link org.apache.commons.configuration2.Configuration} instance. It also implements a
+ * {@link java.util.Map} interface so that it can be used in JSP 2.0 Expression Language expressions.
  *
- * <p>The {@code ConfigurationDynaBean} maps nested and mapped properties
- * to the appropriate {@code Configuration} subset using the
- * {@link org.apache.commons.configuration2.Configuration#subset}
- * method. Similarly, indexed properties reference lists of configuration
- * properties using the
- * {@link org.apache.commons.configuration2.Configuration#getList(String)}
- * method. Setting an indexed property is supported, too.</p>
+ * <p>
+ * The {@code ConfigurationDynaBean} maps nested and mapped properties to the appropriate {@code Configuration} subset
+ * using the {@link org.apache.commons.configuration2.Configuration#subset} method. Similarly, indexed properties
+ * reference lists of configuration properties using the
+ * {@link org.apache.commons.configuration2.Configuration#getList(String)} method. Setting an indexed property is
+ * supported, too.
+ * </p>
  *
- * <p>Note: Some of the methods expect that a dot (&quot;.&quot;) is used as
- * property delimiter for the wrapped configuration. This is true for most of
- * the default configurations. Hierarchical configurations, for which a specific
- * expression engine is set, may cause problems.</p>
+ * <p>
+ * Note: Some of the methods expect that a dot (&quot;.&quot;) is used as property delimiter for the wrapped
+ * configuration. This is true for most of the default configurations. Hierarchical configurations, for which a specific
+ * expression engine is set, may cause problems.
+ * </p>
  *
  * @since 1.0-rc1
  */
-public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
-{
-    /** Constant for the property delimiter.*/
+public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean {
+    /** Constant for the property delimiter. */
     private static final String PROPERTY_DELIMITER = ".";
 
-    /** The logger.*/
+    /** The logger. */
     private static final Log LOG = LogFactory.getLog(ConfigurationDynaBean.class);
 
     /**
-     * Creates a new instance of {@code ConfigurationDynaBean} and sets
-     * the configuration this bean is associated with.
+     * Creates a new instance of {@code ConfigurationDynaBean} and sets the configuration this bean is associated with.
      *
      * @param configuration the configuration
      */
-    public ConfigurationDynaBean(final Configuration configuration)
-    {
+    public ConfigurationDynaBean(final Configuration configuration) {
         super(configuration);
-        if (LOG.isTraceEnabled())
-        {
+        if (LOG.isTraceEnabled()) {
             LOG.trace("ConfigurationDynaBean(" + configuration + ")");
         }
     }
 
     @Override
-    public void set(final String name, final Object value)
-    {
-        if (LOG.isTraceEnabled())
-        {
+    public void set(final String name, final Object value) {
+        if (LOG.isTraceEnabled()) {
             LOG.trace("set(" + name + "," + value + ")");
         }
         Objects.requireNonNull(value, "Error trying to set property to null.");
 
-        if (value instanceof Collection)
-        {
+        if (value instanceof Collection) {
             final Collection<?> collection = (Collection<?>) value;
-            for (final Object v : collection)
-            {
+            for (final Object v : collection) {
                 getConfiguration().addProperty(name, v);
             }
-        }
-        else if (value.getClass().isArray())
-        {
+        } else if (value.getClass().isArray()) {
             final int length = Array.getLength(value);
-            for (int i = 0; i < length; i++)
-            {
+            for (int i = 0; i < length; i++) {
                 getConfiguration().addProperty(name, Array.get(value, i));
             }
-        }
-        else
-        {
+        } else {
             getConfiguration().setProperty(name, value);
         }
     }
 
     @Override
-    public Object get(final String name)
-    {
-        if (LOG.isTraceEnabled())
-        {
+    public Object get(final String name) {
+        if (LOG.isTraceEnabled()) {
             LOG.trace("get(" + name + ")");
         }
 
         // get configuration property
         Object result = getConfiguration().getProperty(name);
-        if (result == null)
-        {
+        if (result == null) {
             // otherwise attempt to create bean from configuration subset
             final Configuration subset = new SubsetConfiguration(getConfiguration(), name, PROPERTY_DELIMITER);
-            if (!subset.isEmpty())
-            {
+            if (!subset.isEmpty()) {
                 result = new ConfigurationDynaBean(subset);
             }
         }
 
-        if (LOG.isDebugEnabled())
-        {
+        if (LOG.isDebugEnabled()) {
             LOG.debug(name + "=[" + result + "]");
         }
 
-        if (result == null)
-        {
+        if (result == null) {
             throw new IllegalArgumentException("Property '" + name + "' does not exist.");
         }
         return result;
     }
 
     @Override
-    public boolean contains(final String name, final String key)
-    {
+    public boolean contains(final String name, final String key) {
         final Configuration subset = getConfiguration().subset(name);
-        if (subset == null)
-        {
+        if (subset == null) {
             throw new IllegalArgumentException("Mapped property '" + name + "' does not exist.");
         }
 
@@ -151,12 +129,9 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
     }
 
     @Override
-    public Object get(final String name, final int index)
-    {
-        if (!checkIndexedProperty(name))
-        {
-            throw new IllegalArgumentException("Property '" + name
-                    + "' is not indexed.");
+    public Object get(final String name, final int index) {
+        if (!checkIndexedProperty(name)) {
+            throw new IllegalArgumentException("Property '" + name + "' is not indexed.");
         }
 
         final List<Object> list = getConfiguration().getList(name);
@@ -164,11 +139,9 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
     }
 
     @Override
-    public Object get(final String name, final String key)
-    {
+    public Object get(final String name, final String key) {
         final Configuration subset = getConfiguration().subset(name);
-        if (subset == null)
-        {
+        if (subset == null) {
             throw new IllegalArgumentException("Mapped property '" + name + "' does not exist.");
         }
 
@@ -176,72 +149,56 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
     }
 
     @Override
-    public DynaClass getDynaClass()
-    {
+    public DynaClass getDynaClass() {
         return new ConfigurationDynaClass(getConfiguration());
     }
 
     @Override
-    public void remove(final String name, final String key)
-    {
+    public void remove(final String name, final String key) {
         final Configuration subset = new SubsetConfiguration(getConfiguration(), name, PROPERTY_DELIMITER);
         subset.setProperty(key, null);
     }
 
     @Override
-    public void set(final String name, final int index, final Object value)
-    {
-        if (!checkIndexedProperty(name) && index > 0)
-        {
-            throw new IllegalArgumentException("Property '" + name
-                    + "' is not indexed.");
+    public void set(final String name, final int index, final Object value) {
+        if (!checkIndexedProperty(name) && index > 0) {
+            throw new IllegalArgumentException("Property '" + name + "' is not indexed.");
         }
 
         final Object property = getConfiguration().getProperty(name);
 
-        if (property instanceof List)
-        {
+        if (property instanceof List) {
             // This is safe because multiple values of a configuration property
             // are always stored as lists of type Object.
             @SuppressWarnings("unchecked")
-            final
-            List<Object> list = (List<Object>) property;
+            final List<Object> list = (List<Object>) property;
             list.set(index, value);
             getConfiguration().setProperty(name, list);
-        }
-        else if (property.getClass().isArray())
-        {
+        } else if (property.getClass().isArray()) {
             Array.set(property, index, value);
-        }
-        else if (index == 0)
-        {
+        } else if (index == 0) {
             getConfiguration().setProperty(name, value);
         }
     }
 
     @Override
-    public void set(final String name, final String key, final Object value)
-    {
+    public void set(final String name, final String key, final Object value) {
         getConfiguration().setProperty(name + "." + key, value);
     }
 
     /**
-     * Tests whether the given name references an indexed property. This
-     * implementation tests for properties of type list or array. If the
-     * property does not exist, an exception is thrown.
+     * Tests whether the given name references an indexed property. This implementation tests for properties of type list or
+     * array. If the property does not exist, an exception is thrown.
      *
      * @param name the name of the property to check
      * @return a flag whether this is an indexed property
      * @throws IllegalArgumentException if the property does not exist
      */
-    private boolean checkIndexedProperty(final String name)
-    {
+    private boolean checkIndexedProperty(final String name) {
         final Object property = getConfiguration().getProperty(name);
 
-        if (property == null)
-        {
-            throw new IllegalArgumentException("Property '" + name
-                    + "' does not exist.");
+        if (property == null) {
+            throw new IllegalArgumentException("Property '" + name + "' does not exist.");
         }
 
         return property instanceof List || property.getClass().isArray();

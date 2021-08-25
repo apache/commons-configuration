@@ -22,19 +22,15 @@ import org.apache.commons.configuration2.builder.DatabaseBuilderProperties;
 
 /**
  * <p>
- * Definition of a parameters interface providing a fluent API for setting all
- * properties for a database configuration.
+ * Definition of a parameters interface providing a fluent API for setting all properties for a database configuration.
  * </p>
  * <p>
- * <strong>Important note:</strong> This interface is not intended to be
- * implemented by client code! It defines a set of available properties and may
- * be extended even in minor releases.
+ * <strong>Important note:</strong> This interface is not intended to be implemented by client code! It defines a set of
+ * available properties and may be extended even in minor releases.
  * </p>
  *
  * @since 2.0
  */
-public interface DatabaseBuilderParameters extends
-        BasicBuilderProperties<DatabaseBuilderParameters>,
-        DatabaseBuilderProperties<DatabaseBuilderParameters>, BuilderParameters
-{
+public interface DatabaseBuilderParameters
+    extends BasicBuilderProperties<DatabaseBuilderParameters>, DatabaseBuilderProperties<DatabaseBuilderParameters>, BuilderParameters {
 }

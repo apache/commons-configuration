@@ -24,14 +24,12 @@ import org.junit.Test;
  * Test class for {@code Event}.
  *
  */
-public class TestEvent
-{
+public class TestEvent {
     /**
      * Tries to create an instance without a source.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testInitNoSource()
-    {
+    public void testInitNoSource() {
         new Event(null, Event.ANY);
     }
 
@@ -39,8 +37,7 @@ public class TestEvent
      * Tries to create an instance without a type.
      */
     @Test(expected = IllegalArgumentException.class)
-    public void testInitNoType()
-    {
+    public void testInitNoType() {
         new Event(this, null);
     }
 
@@ -48,11 +45,9 @@ public class TestEvent
      * Tests the string representation.
      */
     @Test
-    public void testToString()
-    {
+    public void testToString() {
         final Event event = new Event(this, Event.ANY);
         final String s = event.toString();
-        assertEquals("Wrong string representation", "Event [ source=" + this
-                + " eventType=" + Event.ANY + " ]", s);
+        assertEquals("Wrong string representation", "Event [ source=" + this + " eventType=" + Event.ANY + " ]", s);
     }
 }
