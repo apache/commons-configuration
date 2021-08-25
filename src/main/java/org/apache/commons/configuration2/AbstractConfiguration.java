@@ -19,6 +19,7 @@ package org.apache.commons.configuration2;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -984,6 +985,16 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     @Override
     public Double getDouble(final String key, final Double defaultValue) {
         return convert(Double.class, key, defaultValue, false);
+    }
+
+    @Override
+    public Duration getDuration(final String key) {
+        return checkNonNullValue(key, convert(Duration.class, key, null, true));
+    }
+
+    @Override
+    public Duration getDuration(final String key, final Duration defaultValue) {
+        return convert(Duration.class, key, defaultValue, false);
     }
 
     @Override

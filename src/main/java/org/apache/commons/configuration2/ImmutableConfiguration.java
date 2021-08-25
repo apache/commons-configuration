@@ -18,11 +18,14 @@ package org.apache.commons.configuration2;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Properties;
 
+import org.apache.commons.configuration2.convert.PropertyConverter;
 import org.apache.commons.configuration2.ex.ConversionException;
 
 /**
@@ -307,6 +310,38 @@ public interface ImmutableConfiguration {
      *         Double.
      */
     Double getDouble(String key, Double defaultValue);
+
+    /**
+     * Gets a {@link Duration} associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     * @return The associated Duration if key is found and has valid format, default value otherwise.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
+     *         Duration.
+     * @since 2.8.0
+     */
+    default Duration getDuration(final String key) {
+        final String string = getString(key);
+        if (string == null) {
+            throw new NoSuchElementException(key);
+        }
+        return PropertyConverter.toDuration(string);
+    }
+
+    /**
+     * Gets a {@link Duration} associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     * @param defaultValue The default value.
+     * @return The associated Duration if key is found and has valid format, default value otherwise.
+     * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
+     *         Duration.
+     * @since 2.8.0
+     */
+    default Duration getDuration(final String key, final Duration defaultValue) {
+        Object value = getProperty(key);
+        return value == null ? defaultValue : PropertyConverter.toDuration(value);
+    }
 
     /**
      * Gets the value of a string property that is stored in encoded form in this configuration using a default

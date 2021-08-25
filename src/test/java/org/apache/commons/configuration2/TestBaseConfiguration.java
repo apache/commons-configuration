@@ -26,6 +26,7 @@ import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -305,6 +306,29 @@ public class TestBaseConfiguration {
     @Test(expected = NoSuchElementException.class)
     public void testGetDoubleUnknown() {
         config.getDouble("numberNotInConfig");
+    }
+
+    @Test
+    public void testGetDuration() {
+        final Duration d = Duration.ofSeconds(1);
+        config.setProperty("durationD", d.toString());
+        final Duration oneD = Duration.ofSeconds(1);
+        final Duration twoD = Duration.ofSeconds(2);
+        assertEquals("This returns 1(Duration)", oneD, config.getDuration("durationD"));
+        assertEquals("This returns 1(Duration)", oneD, config.getDuration("durationD", twoD));
+        assertEquals("This returns 2(default Duration)", twoD, config.getDuration("numberNotInConfig", twoD));
+        assertEquals("This returns 1(Duration)", oneD, config.getDuration("durationD", twoD));
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testGetDurationIncompatibleType() {
+        config.setProperty("test.empty", "");
+        config.getDuration("test.empty");
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testGetDurationUnknown() {
+        config.getDuration("numberNotInConfig");
     }
 
     @Test

@@ -75,6 +75,9 @@
        <action type="add" dev="ggregory" issue="CONFIGURATION-789" due-to="Gary Gregory">
          Add ImmutableConfiguration.getEnum() methods.
        </action>
+       <action type="add" dev="ggregory" issue="CONFIGURATION-789" due-to="Gary Gregory">
+         Add ImmutableConfiguration.getDuration() methods.
+       </action>       
        <!-- UPDATES -->
        <action type="update" dev="ggregory" issue="CONFIGURATION-787" due-to="Gary Gregory">
          Update from Apache Commons Lang 3.9 to 3.12.0.

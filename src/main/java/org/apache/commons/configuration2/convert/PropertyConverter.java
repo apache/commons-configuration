@@ -33,6 +33,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.format.DateTimeParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -46,9 +48,9 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * A utility class to convert the configuration properties into any type.
  *
- * @since 1.1
+ * @since 2.8.0
  */
-final class PropertyConverter {
+public final class PropertyConverter {
 
     /** Constant for the prefix of hex numbers. */
     private static final String HEX_PREFIX = "0x";
@@ -150,6 +152,8 @@ final class PropertyConverter {
             return toInternetAddress(value);
         } else if (InetAddress.class.isAssignableFrom(cls)) {
             return toInetAddress(value);
+        } else if (Duration.class.equals(cls)) {
+            return toDuration(value);
         }
 
         throw new ConversionException("The value '" + value + "' (" + value.getClass() + ")" + " can't be converted to a " + cls.getName() + " object");
@@ -283,6 +287,28 @@ final class PropertyConverter {
             return (Double) n;
         }
         return Double.valueOf(n.doubleValue());
+    }
+
+    /**
+     * Convert the specified object into a Duration.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to a Duration
+     * @since 2.8.0
+     */
+    public static Duration toDuration(final Object value) throws ConversionException {
+        if (value instanceof Duration) {
+            return (Duration) value;
+        }
+        if (value instanceof CharSequence) {
+            try {
+                return Duration.parse((CharSequence) value);
+            } catch (DateTimeParseException e) {
+                throw new ConversionException("Could not convert " + value + " to Duration", e);
+            }
+        }
+        throw new ConversionException("The value " + value + " can't be converted to a Duration");
     }
 
     /**
