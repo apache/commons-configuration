@@ -709,10 +709,11 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
         final String commentChars = getCommentLeadingCharsUsedInInput();
         boolean quoted = false;
 
-        for (int i = 0; i < commentChars.length() && !quoted; i++) {
+        for (int i = 0; i < commentChars.length(); i++) {
             final char c = commentChars.charAt(i);
             if (value.indexOf(c) != -1) {
                 quoted = true;
+                break;
             }
         }
 
