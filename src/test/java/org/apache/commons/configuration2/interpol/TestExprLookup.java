@@ -104,10 +104,10 @@ public class TestExprLookup {
     public void testLookup() throws Exception {
         final ConsoleAppender app = new ConsoleAppender(new SimpleLayout());
         final Log log = LogFactory.getLog("TestLogger");
-        final Logger logger = ((Log4JLogger) log).getLogger();
-        logger.addAppender(app);
-        logger.setLevel(Level.DEBUG);
-        logger.setAdditivity(false);
+        //final Logger logger = ((Log4JLogger) log).getLogger();
+        //logger.addAppender(app);
+        //logger.setLevel(Level.DEBUG);
+        //logger.setAdditivity(false);
         final ExprLookup.Variables vars = new ExprLookup.Variables();
         vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
         vars.add(new ExprLookup.Variable("Util", new Utility("Hello")));
@@ -122,7 +122,34 @@ public class TestExprLookup {
         assertTrue(str.startsWith("Goodbye"));
         str = lookup.lookup(PATTERN2);
         assertTrue("Incorrect value: " + str, str.equals("value Some text"));
-        logger.removeAppender(app);
+        //logger.removeAppender(app);
+    }
+
+    @Test
+    public void testLookupLog4j1() throws Exception {
+        final ConsoleAppender app = new ConsoleAppender(new SimpleLayout());
+        final Log log = LogFactory.getLog("TestLogger");
+        if (log instanceof Log4JLogger) {
+            final Logger logger = ((Log4JLogger) log).getLogger();
+            logger.addAppender(app);
+            logger.setLevel(Level.DEBUG);
+            logger.setAdditivity(false);
+            final ExprLookup.Variables vars = new ExprLookup.Variables();
+            vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
+            vars.add(new ExprLookup.Variable("Util", new Utility("Hello")));
+            vars.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
+            final XMLConfiguration config = loadConfig();
+            final ConfigurationLogger testLogger = new ConfigurationLogger("TestLogger");
+            config.setLogger(testLogger);
+            final ExprLookup lookup = new ExprLookup(vars);
+            lookup.setInterpolator(config.getInterpolator());
+            lookup.setLogger(testLogger);
+            String str = lookup.lookup(PATTERN1);
+            assertTrue(str.startsWith("Goodbye"));
+            str = lookup.lookup(PATTERN2);
+            assertTrue("Incorrect value: " + str, str.equals("value Some text"));
+            logger.removeAppender(app);
+        }
     }
 
     /**
