@@ -1057,7 +1057,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
 
             // special treatment for root node of the hierarchy
             final Object reference = refHandler.getReference(node);
-            Node element;
+            final Node element;
             if (reference instanceof XMLDocumentHelper) {
                 element = ((XMLDocumentHelper) reference).getDocument().getDocumentElement();
             } else if (reference instanceof XMLListReference) {

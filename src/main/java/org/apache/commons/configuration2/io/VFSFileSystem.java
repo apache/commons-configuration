@@ -131,7 +131,7 @@ public class VFSFileSystem extends DefaultFileSystem {
             return null;
         }
         final FileSystemOptions opts = new FileSystemOptions();
-        FileSystemConfigBuilder builder;
+        final FileSystemConfigBuilder builder;
         try {
             builder = getManager().getFileSystemConfigBuilder(scheme);
         } catch (final Exception ex) {
@@ -244,7 +244,7 @@ public class VFSFileSystem extends DefaultFileSystem {
             return super.locateFromURL(basePath, fileName);
         }
         try {
-            FileObject file;
+            final FileObject file;
             // Only use the base path if the file name doesn't have a scheme.
             if (basePath != null && fileScheme == null) {
                 final String scheme = UriParser.extractScheme(basePath);

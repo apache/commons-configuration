@@ -304,7 +304,7 @@ public final class PropertyConverter {
         if (value instanceof CharSequence) {
             try {
                 return Duration.parse((CharSequence) value);
-            } catch (DateTimeParseException e) {
+            } catch (final DateTimeParseException e) {
                 throw new ConversionException("Could not convert " + value + " to Duration", e);
             }
         }

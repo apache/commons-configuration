@@ -339,7 +339,7 @@ public interface ImmutableConfiguration {
      * @since 2.8.0
      */
     default Duration getDuration(final String key, final Duration defaultValue) {
-        Object value = getProperty(key);
+        final Object value = getProperty(key);
         return value == null ? defaultValue : PropertyConverter.toDuration(value);
     }
 
