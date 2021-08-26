@@ -19,6 +19,7 @@ package org.apache.commons.configuration2;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
@@ -202,7 +203,7 @@ public class TestEqualBehavior {
         final String value = "new value";
 
         assertTrue(simple.containsKey(key));
-        assertFalse(simple.getString(key).equals(value));
+        assertNotEquals(value, simple.getString(key));
         assertEquals(simple.containsKey(key), composite.containsKey(key));
 
         simple.setProperty(key, value);

@@ -345,7 +345,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
             while (cause != null && !(cause instanceof SAXParseException)) {
                 cause = cause.getCause();
             }
-            assertTrue("SAXParseException was not thrown", cause != null);
+            assertNotNull("SAXParseException was not thrown", cause);
         }
     }
 }

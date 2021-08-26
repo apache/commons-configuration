@@ -18,6 +18,7 @@ package org.apache.commons.configuration2;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -467,7 +468,7 @@ public class TestPropertiesConfigurationLayout {
         layout.setComment(TEST_KEY, "A new comment");
         assertEquals("Comment was changed", TEST_COMMENT, l2.getCanonicalComment(TEST_KEY, false));
         l2.setBlankLinesBefore(TEST_KEY, l2.getBlankLinesBefore(TEST_KEY) + 1);
-        assertFalse("Blanc lines do not differ", layout.getBlankLinesBefore(TEST_KEY) == l2.getBlankLinesBefore(TEST_KEY));
+        assertNotEquals("Blanc lines do not differ", layout.getBlankLinesBefore(TEST_KEY), l2.getBlankLinesBefore(TEST_KEY));
     }
 
     /**
@@ -608,8 +609,8 @@ public class TestPropertiesConfigurationLayout {
         fillLayout();
         layout.setComment("NonExistingKey", "NonExistingComment");
         final String output = getLayoutString();
-        assertTrue("Non existing key was found", !output.contains("NonExistingKey"));
-        assertTrue("Non existing comment was found", !output.contains("NonExistingComment"));
+        assertFalse("Non existing key was found", output.contains("NonExistingKey"));
+        assertFalse("Non existing comment was found", output.contains("NonExistingComment"));
     }
 
     /**

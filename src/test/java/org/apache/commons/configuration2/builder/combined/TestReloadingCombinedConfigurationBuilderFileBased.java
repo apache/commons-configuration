@@ -236,7 +236,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
             testThreads[i].join();
             totalFailures += failures[i];
         }
-        assertTrue(totalFailures + " failures Occurred", totalFailures == 0);
+        assertEquals(totalFailures + " failures Occurred", 0, totalFailures);
     }
 
     /**

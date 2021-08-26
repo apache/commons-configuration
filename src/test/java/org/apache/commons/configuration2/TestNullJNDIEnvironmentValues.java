@@ -49,7 +49,7 @@ public class TestNullJNDIEnvironmentValues {
     @Test
     public void testContainsKey() throws Exception {
         assertTrue(conf.containsKey("test.key"));
-        assertTrue(!conf.containsKey("test.imaginarykey"));
+        assertFalse(conf.containsKey("test.imaginarykey"));
     }
 
     @Test

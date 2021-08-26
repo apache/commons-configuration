@@ -18,7 +18,7 @@ package org.apache.commons.configuration2.io;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
@@ -137,7 +137,7 @@ public class TestFileLocator {
     @Test
     public void testFileLocatorEqualsNull() {
         final FileLocator loc = FileLocatorUtils.fileLocator().fileName(FILE_NAME).create();
-        assertFalse("Wrong result", loc.equals(null));
+        assertNotEquals("Wrong result", null, loc);
     }
 
     /**
@@ -146,7 +146,7 @@ public class TestFileLocator {
     @Test
     public void testFileLocatorEqualsOtherClass() {
         final FileLocator loc = FileLocatorUtils.fileLocator().fileName(FILE_NAME).create();
-        assertFalse("Wrong result", loc.equals(this));
+        assertNotEquals("Wrong result", loc, this);
     }
 
     /**

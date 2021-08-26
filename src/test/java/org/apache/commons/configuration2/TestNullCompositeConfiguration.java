@@ -147,7 +147,7 @@ public class TestNullCompositeConfiguration {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
         cc.clearProperty("test.short");
-        assertTrue("Make sure test.short is gone!", !cc.containsKey("test.short"));
+        assertFalse("Make sure test.short is gone!", cc.containsKey("test.short"));
     }
 
     /**
@@ -158,8 +158,8 @@ public class TestNullCompositeConfiguration {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
         assertEquals("default", cc.getString("bogus", "default"));
-        assertTrue(1.4 == cc.getDouble("bogus", 1.4));
-        assertTrue(1.4 == cc.getDouble("bogus", 1.4));
+        assertEquals(1.4, cc.getDouble("bogus", 1.4), 0.0);
+        assertEquals(1.4, cc.getDouble("bogus", 1.4), 0.0);
     }
 
     /**
@@ -253,7 +253,7 @@ public class TestNullCompositeConfiguration {
 
         assertNull("Bogus property is not null!", cc.getString("bogus.property"));
 
-        assertTrue("Should be false", !cc.getBoolean("test.missing.boolean", false));
+        assertFalse("Should be false", cc.getBoolean("test.missing.boolean", false));
         assertTrue("Should be true", cc.getBoolean("test.missing.boolean.true", true));
     }
 

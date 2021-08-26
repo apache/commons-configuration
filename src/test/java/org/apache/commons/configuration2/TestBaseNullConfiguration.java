@@ -240,7 +240,7 @@ public class TestBaseNullConfiguration {
     @Test
     public void testGetProperty() {
         /* should be empty and return null */
-        assertEquals("This returns null", config.getProperty("foo"), null);
+        assertNull("This returns null", config.getProperty("foo"));
 
         /* add a real value, and get it two different ways */
         config.setProperty("number", "1");
