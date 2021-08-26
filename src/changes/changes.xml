@@ -127,7 +127,7 @@
          Update commons-pool2 from 2.8.0 to 2.10.0, #61, #124.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
-         Update actions/setup-java from v1.4.0 to v2 #63, #65.
+         Bump actions/setup-java from v1.4.0 to v2 #63, #65, #73.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Update optional commons-codec from 1.14 to 1.15.
@@ -143,9 +143,6 @@
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Update tests from commons-dbcp2 2.7.0 to 2.9.0.
-       </action>
-       <action type="update" dev="ggregory" due-to="Dependabot">
-         Bump actions/setup-java from v1.4.2 to v1.4.3 #73.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
          Bump snakeyaml from 1.26 to 1.29 #68, #126.
