@@ -535,6 +535,13 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <properties>
@@ -568,6 +575,7 @@
     </commons.osgi.import>
     <slf4j.version>1.7.30</slf4j.version>
     <spring.version>5.3.9</spring.version>
+    <mockito.version>3.9.0</mockito.version>
 
     <commons.japicmp.version>0.15.3</commons.japicmp.version>
     <japicmp.skip>false</japicmp.skip>

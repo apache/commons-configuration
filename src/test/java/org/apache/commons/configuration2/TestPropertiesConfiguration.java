@@ -79,25 +79,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import static org.mockito.Mockito.*;
 
 /**
  * Test for loading and saving properties files.
  *
  */
 public class TestPropertiesConfiguration {
-    /**
-     * A dummy layout implementation for checking whether certain methods are correctly called by the configuration.
-     */
-    static class DummyLayout extends PropertiesConfigurationLayout {
-        /** Stores the number how often load() was called. */
-        public int loadCalls;
-
-        @Override
-        public void load(final PropertiesConfiguration config, final Reader in) throws ConfigurationException {
-            loadCalls++;
-        }
-    }
-
     /**
      * A mock implementation of a HttpURLConnection used for testing saving to a HTTP server.
      */
@@ -1122,10 +1110,13 @@ public class TestPropertiesConfiguration {
      */
     @Test
     public void testPropertyLoaded() throws ConfigurationException {
-        final DummyLayout layout = new DummyLayout();
+        // Construct mock object
+        final PropertiesConfigurationLayout layout = spy(PropertiesConfigurationLayout.class);
+        // Method Stubs
+        doNothing().when(layout).load(any(PropertiesConfiguration.class), any(Reader.class));
         conf.setLayout(layout);
         conf.propertyLoaded("layoutLoadedProperty", "yes", null);
-        assertEquals("Layout's load() was called", 0, layout.loadCalls);
+        verify(layout, times(0)).load(any(PropertiesConfiguration.class), any(Reader.class));
         assertEquals("Property not added", "yes", conf.getString("layoutLoadedProperty"));
     }
 
@@ -1134,10 +1125,13 @@ public class TestPropertiesConfiguration {
      */
     @Test
     public void testPropertyLoadedInclude() throws ConfigurationException {
-        final DummyLayout layout = new DummyLayout();
+        // Construct mock object
+        final PropertiesConfigurationLayout layout = spy(PropertiesConfigurationLayout.class);
+        // Method Stubs
+        doNothing().when(layout).load(any(PropertiesConfiguration.class), any(Reader.class));
         conf.setLayout(layout);
         conf.propertyLoaded(PropertiesConfiguration.getInclude(), "testClasspath.properties,testEqual.properties", new ArrayDeque<>());
-        assertEquals("Layout's load() was not correctly called", 2, layout.loadCalls);
+        verify(layout, times(2)).load(any(PropertiesConfiguration.class), any(Reader.class));
         assertFalse("Property was added", conf.containsKey(PropertiesConfiguration.getInclude()));
     }
 
@@ -1146,11 +1140,14 @@ public class TestPropertiesConfiguration {
      */
     @Test
     public void testPropertyLoadedIncludeNotAllowed() throws ConfigurationException {
-        final DummyLayout layout = new DummyLayout();
+        // Construct mock object
+        final PropertiesConfigurationLayout layout = spy(PropertiesConfigurationLayout.class);
+        // Method Stubs
+        doNothing().when(layout).load(any(PropertiesConfiguration.class), any(Reader.class));
         conf.setLayout(layout);
         conf.setIncludesAllowed(false);
         conf.propertyLoaded(PropertiesConfiguration.getInclude(), "testClassPath.properties,testEqual.properties", null);
-        assertEquals("Layout's load() was called", 0, layout.loadCalls);
+        verify(layout, times(0)).load(any(PropertiesConfiguration.class), any(Reader.class));
         assertFalse("Property was added", conf.containsKey(PropertiesConfiguration.getInclude()));
     }
 
