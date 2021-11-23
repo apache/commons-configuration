@@ -160,7 +160,7 @@
          Bump jackson-databind from 2.11.3 to 2.12.3 ,#88, #94, #127.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
-         Bump actions/cache from v2 to v2.1.4 #99.
+         Bump actions/cache from v2 to v2.1.7 #99, #151.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Bump commons.animal-sniffer.version 1.19 -> 1.20.
