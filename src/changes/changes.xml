@@ -20,7 +20,6 @@
     <title>Apache Commons Configuration Release Notes</title>
     <author email="dev@commons.apache.org">Apache Commons Community</author>
   </properties>
-
   <body>
     <release version="2.8.0" date="2020-MM-DD"
              description="Minor release with new features and updated dependencies.">
@@ -145,7 +144,7 @@
          Update tests from commons-dbcp2 2.7.0 to 2.9.0.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
-         Bump snakeyaml from 1.26 to 1.29 #68, #126.
+         Bump snakeyaml from 1.26 to 1.30 #68, #126, #137.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Update commons.japicmp.version 0.14.1 -> 0.15.3.
