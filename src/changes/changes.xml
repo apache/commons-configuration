@@ -86,10 +86,10 @@
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Update Slf4j test dependencies:
-         org.slf4j:slf4j-api 1.7.26 -> 1.7.30,
-         org.slf4j:slf4j-ext 1.7.26 -> 1.7.30,
-         org.slf4j:slf4j-log4j12 1.7.26 -> 1.7.30,
-         org.slf4j:slf4j-nop 1.7.26 -> 1.7.30.
+         org.slf4j:slf4j-api 1.7.26 -> 1.7.33,
+         org.slf4j:slf4j-ext 1.7.26 -> 1.7.33,
+         org.slf4j:slf4j-log4j12 1.7.26 -> 1.7.33,
+         org.slf4j:slf4j-nop 1.7.26 -> 1.7.33.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">
          Bump optional org.springframework from 4.3.26.RELEASE to 5.3.15:
