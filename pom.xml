@@ -584,6 +584,7 @@
     <commons.distSvnStagingUrl>scm:svn:https://dist.apache.org/repos/dist/dev/commons/${commons.componentid}</commons.distSvnStagingUrl>
     <commons.releaseManagerName>Rob Tompkins</commons.releaseManagerName>
     <commons.releaseManagerKey>B6E73D84EA4FCC47166087253FAAD2CD5ECBB314</commons.releaseManagerKey>
+  	<closeTestReports>true</closeTestReports>
   </properties>
 
   <build>
@@ -660,6 +661,7 @@
             <java.awt.headless>true</java.awt.headless>
             <org.apache.commons.logging.Log>org.apache.commons.configuration2.Logging</org.apache.commons.logging.Log>
           </systemPropertyVariables>
+        	<disableXmlReport>${closeTestReports}</disableXmlReport>
         </configuration>
       </plugin>
       <plugin>
@@ -803,6 +805,7 @@
                 --illegal-access=permit
                 --add-opens java.base/java.lang=ALL-UNNAMED                     
               </argLine>
+        	<disableXmlReport>${closeTestReports}</disableXmlReport>
             </configuration>
           </plugin>
         </plugins>
