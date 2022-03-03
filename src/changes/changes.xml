@@ -50,7 +50,10 @@
        </action>
        <action issue="CONFIGURATION-808" type="fix" dev="ggregory" due-to="cigaly">
          DefaultListDelimiterHandler.escapeList working only for List&gt;String&lt; #137.
-       </action>       
+       </action>
+       <action type="fix" dev="ggregory" due-to="Arturo Bernal">
+         Use final #141.
+       </action>
        <!-- ADD -->
        <action type="add" dev="ggregory" due-to="SethiPandi">
          Implement Iterable in ImmutableNode #74.
