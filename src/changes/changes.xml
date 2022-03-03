@@ -54,6 +54,9 @@
        <action type="fix" dev="ggregory" due-to="Arturo Bernal">
          Use final #141.
        </action>
+       <action type="fix" dev="ggregory" due-to="Arturo Bernal">
+         Replace test asserts by simpler but equivalent calls. #139
+       </action>
        <!-- ADD -->
        <action type="add" dev="ggregory" due-to="SethiPandi">
          Implement Iterable in ImmutableNode #74.
