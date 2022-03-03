@@ -170,6 +170,9 @@
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Bump org.dbunit:dbunit from 2.7.0 to 2.7.2.
        </action>
+       <action type="update" dev="ggregory" due-to="John Patrick ">
+         Bump jackson-databind from 2.12.4 to 2.13.1 #159.
+       </action>
     </release>
     <release version="2.7" date="2020-03-07"
              description="Minor release with new features and updated dependencies.">
