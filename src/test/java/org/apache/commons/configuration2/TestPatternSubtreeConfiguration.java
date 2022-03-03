@@ -17,7 +17,7 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.StringWriter;
@@ -53,13 +53,13 @@ public class TestPatternSubtreeConfiguration {
         config.setExpressionEngine(new XPathExpressionEngine());
 
         System.setProperty("Id", "1001");
-        assertTrue(config.getInt("rowsPerPage") == 15);
+        assertEquals(15, config.getInt("rowsPerPage"));
 
         System.setProperty("Id", "1002");
-        assertTrue(config.getInt("rowsPerPage") == 25);
+        assertEquals(25, config.getInt("rowsPerPage"));
 
         System.setProperty("Id", "1003");
-        assertTrue(config.getInt("rowsPerPage") == 35);
+        assertEquals(35, config.getInt("rowsPerPage"));
     }
 
     /**

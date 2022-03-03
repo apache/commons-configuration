@@ -936,7 +936,7 @@ public class TestPropertiesConfiguration {
         final StringWriter out = new StringWriter();
         new FileHandler(conf).save(out);
         final String content = out.toString();
-        assertTrue("Header could not be found", content.indexOf("# My header" + EOL + EOL) == 0);
+        assertEquals("Header could not be found", 0, content.indexOf("# My header" + EOL + EOL));
         assertTrue("Property could not be found", content.indexOf("prop = value" + EOL) > 0);
     }
 
@@ -1102,7 +1102,7 @@ public class TestPropertiesConfiguration {
         handler.load(ConfigurationAssert.getTestFile("config/testMultiInclude.properties"));
         assertEquals("Wrong top-level property", "topValue", conf.getString("top"));
         assertEquals("Wrong included property (1)", 100, conf.getInt("property.c"));
-        assertEquals("Wrong included property (2)", true, conf.getBoolean("include.loaded"));
+        assertTrue("Wrong included property (2)", conf.getBoolean("include.loaded"));
     }
 
     /**

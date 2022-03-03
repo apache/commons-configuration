@@ -19,6 +19,7 @@ package org.apache.commons.configuration2;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import javax.sql.DataSource;
@@ -436,7 +437,7 @@ public class TestDatabaseConfiguration {
 
         assertEquals("property1", "value1", config.getProperty("key1"));
         assertEquals("property2", "value2", config.getProperty("key2"));
-        assertEquals("unknown property", null, config.getProperty("key3"));
+        assertNull("unknown property", config.getProperty("key3"));
     }
 
     @Test
@@ -445,7 +446,7 @@ public class TestDatabaseConfiguration {
 
         assertEquals("property1", "value1", config.getProperty("key1"));
         assertEquals("property2", "value2", config.getProperty("key2"));
-        assertEquals("unknown property", null, config.getProperty("key3"));
+        assertNull("unknown property", config.getProperty("key3"));
     }
 
     /**

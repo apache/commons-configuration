@@ -437,7 +437,7 @@ public class TestConfigurationDynaBean {
     @Test
     public void testMappedContains() {
         assertTrue("Can't see first key", bean.contains("mappedProperty", "key1"));
-        assertTrue("Can see unknown key", !bean.contains("mappedProperty", "Unknown Key"));
+        assertFalse("Can see unknown key", bean.contains("mappedProperty", "Unknown Key"));
     }
 
     /**
@@ -447,11 +447,11 @@ public class TestConfigurationDynaBean {
     public void testMappedRemove() {
         assertTrue("Can see first key", bean.contains("mappedProperty", "key1"));
         bean.remove("mappedProperty", "key1");
-        assertTrue("Can not see first key", !bean.contains("mappedProperty", "key1"));
+        assertFalse("Can not see first key", bean.contains("mappedProperty", "key1"));
 
-        assertTrue("Can not see unknown key", !bean.contains("mappedProperty", "key4"));
+        assertFalse("Can not see unknown key", bean.contains("mappedProperty", "key4"));
         bean.remove("mappedProperty", "key4");
-        assertTrue("Can not see unknown key", !bean.contains("mappedProperty", "key4"));
+        assertFalse("Can not see unknown key", bean.contains("mappedProperty", "key4"));
     }
 
     /**
@@ -564,7 +564,7 @@ public class TestConfigurationDynaBean {
         final boolean oldValue = ((Boolean) bean.get("booleanProperty")).booleanValue();
         final boolean newValue = !oldValue;
         bean.set("booleanProperty", Boolean.valueOf(newValue));
-        assertTrue("Matched new value", newValue == ((Boolean) bean.get("booleanProperty")).booleanValue());
+        assertEquals("Matched new value", newValue, ((Boolean) bean.get("booleanProperty")).booleanValue());
     }
 
     /**

@@ -20,6 +20,7 @@ package org.apache.commons.configuration2.plist;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -308,7 +309,7 @@ public class TestPropertyListConfiguration {
 
     @Test
     public void testQuoteString() {
-        assertEquals("null string", null, config.quoteString(null));
+        assertNull("null string", config.quoteString(null));
         assertEquals("simple string", "abcd", config.quoteString("abcd"));
         assertEquals("string with a space", "\"ab cd\"", config.quoteString("ab cd"));
         assertEquals("string with a quote", "\"foo\\\"bar\"", config.quoteString("foo\"bar"));

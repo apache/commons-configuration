@@ -259,10 +259,10 @@ public class TestFileLocatorUtils {
 
     @Test
     public void testGetFileName() throws Exception {
-        assertEquals("file name for a null URL", null, FileLocatorUtils.getFileName(null));
+        assertNull("file name for a null URL", FileLocatorUtils.getFileName(null));
 
         URL url = new URL("http://xyz.net/foo/");
-        assertEquals("file for a directory URL " + url, null, FileLocatorUtils.getFileName(url));
+        assertNull("file for a directory URL " + url, FileLocatorUtils.getFileName(url));
 
         url = new URL("http://xyz.net/foo/bar.xml");
         assertEquals("file name for a valid URL " + url, "bar.xml", FileLocatorUtils.getFileName(url));

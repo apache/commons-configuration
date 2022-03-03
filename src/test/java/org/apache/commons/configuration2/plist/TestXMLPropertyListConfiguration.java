@@ -21,6 +21,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -165,8 +166,8 @@ public class TestXMLPropertyListConfiguration {
 
     @Test
     public void testBoolean() throws Exception {
-        assertEquals("'boolean1' property", true, config.getBoolean("boolean1"));
-        assertEquals("'boolean2' property", false, config.getBoolean("boolean2"));
+        assertTrue("'boolean1' property", config.getBoolean("boolean1"));
+        assertFalse("'boolean2' property", config.getBoolean("boolean2"));
     }
 
     @Test
@@ -366,8 +367,8 @@ public class TestXMLPropertyListConfiguration {
         final XMLPropertyListConfiguration checkConfig = new XMLPropertyListConfiguration();
         load(checkConfig, savedFile);
 
-        assertEquals(null, config.getProperty("empty-dictionary"));
-        assertEquals(null, checkConfig.getProperty("empty-dictionary"));
+        assertNull(config.getProperty("empty-dictionary"));
+        assertNull(checkConfig.getProperty("empty-dictionary"));
     }
 
     /**

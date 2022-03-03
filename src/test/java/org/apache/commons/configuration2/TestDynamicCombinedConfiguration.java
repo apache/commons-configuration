@@ -479,6 +479,6 @@ public class TestDynamicCombinedConfiguration {
 
     private void verify(final String key, final DynamicCombinedConfiguration config, final int rows) {
         System.setProperty("Id", key);
-        assertTrue(config.getInt("rowsPerPage") == rows);
+        assertEquals(config.getInt("rowsPerPage"), rows);
     }
 }
