@@ -105,7 +105,7 @@
          org.springframework:spring-test 4.3.26.RELEASE -> 5.3.15.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
-         Update GitHub actions/checkout from v1 to v2.4.0 #47, #62, #70, #85, #150.
+         Update GitHub actions/checkout from 1 to 3 #47, #62, #70, #85, #150, #163.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
          Update commons-parent from 50 to 52.
