@@ -173,8 +173,8 @@
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Bump commons.javadoc.version from 3.1.1 to 3.3.0.
        </action>
-       <action type="update" dev="ggregory" due-to="Gary Gregory">
-         Bump org.dbunit:dbunit from 2.7.0 to 2.7.2.
+       <action type="update" dev="ggregory" due-to="Gary Gregory, Dependabot">
+         Bump org.dbunit:dbunit from 2.7.0 to 2.7.3, #167.
        </action>
        <action type="update" dev="ggregory" due-to="John Patrick">
          Bump tests to hamcrest v2.2 #143.
