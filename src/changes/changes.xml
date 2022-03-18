@@ -85,13 +85,13 @@
        </action>       
        <!-- UPDATES -->
        <action type="update" dev="ggregory" issue="CONFIGURATION-787" due-to="Gary Gregory">
-         Update from Apache Commons Lang 3.9 to 3.12.0.
+         Bump Apache Commons Lang from 3.9 to 3.12.0.
        </action>
        <action type="update" dev="ggregory" issue="CONFIGURATION-790" due-to="Gary Gregory, Dependabot">
-         Update optional com.fasterxml.jackson.core:jackson-databind from 2.10.3 to 2.12.4, #60.
+         Bump com.fasterxml.jackson.core:jackson-databind from 2.10.3 to 2.12.4, #60.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
-         Update Slf4j test dependencies:
+         Bump Slf4j test dependencies:
          org.slf4j:slf4j-api 1.7.26 -> 1.7.33,
          org.slf4j:slf4j-ext 1.7.26 -> 1.7.33,
          org.slf4j:slf4j-log4j12 1.7.26 -> 1.7.33,
@@ -105,61 +105,61 @@
          org.springframework:spring-test 4.3.26.RELEASE -> 5.3.15.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
-         Update GitHub actions/checkout from 1 to 3 #47, #62, #70, #85, #150, #163.
+         Bump GitHub actions/checkout from 1 to 3 #47, #62, #70, #85, #150, #163.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
-         Update commons-parent from 50 to 52.
+         Bump commons-parent from 50 to 52.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
-         Update mailapi from 1.6.4 to 1.6.6 #48.
+         Bump mailapi from 1.6.4 to 1.6.6 #48.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
-         Update spotbugs-maven-plugin from 3.1.12.2 to 4.2.3, #55, #75, #79, #93, #116.
+         Bump spotbugs-maven-plugin from 3.1.12.2 to 4.2.3, #55, #75, #79, #93, #116.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
-         Update tests from hsqldb from 2.5.0 to 2.5.2 #54, #128.
+         Bump hsqldb from 2.5.0 to 2.5.2 #54, #128.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
-         Update commons-text from 1.8 to 1.9.
+         Bump commons-text from 1.8 to 1.9.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
-         Update servlet-api from 2.4 to 2.5 #58.
+         Bump servlet-api from 2.4 to 2.5 #58.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
-         Update maven-checkstyle-plugin from 3.1.0 to 3.1.2, #57, #97.
+         Bump maven-checkstyle-plugin from 3.1.0 to 3.1.2, #57, #97.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
-         Update commons-pool2 from 2.8.0 to 2.10.0, #61, #124.
+         Bump commons-pool2 from 2.8.0 to 2.10.0, #61, #124.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
          Bump actions/setup-java from v1.4.0 to v2 #63, #65, #73.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
-         Update optional commons-codec from 1.14 to 1.15.
+         Bump optional commons-codec from 1.14 to 1.15.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
-         Update checkstyle from 8.26 to 9.2.1, #66, #71, #90, #101, #118, #121, #132, #155.
+         Bump checkstyle from 8.26 to 9.2.1, #66, #71, #90, #101, #118, #121, #132, #155.
        </action>
        <action dev="ggregory" type="update" due-to="Gary Gregory">
-         Update commons.jacoco.version 0.8.5 to 0.8.7 (Fixes Java 15 builds).
+         Bump commons.jacoco.version 0.8.5 to 0.8.7 (Fixes Java 15 builds).
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
-         Update tests from commons-pool2 2.10.0 to 2.11.1.
+         Bump tests from commons-pool2 2.10.0 to 2.11.1.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
-         Update tests from commons-dbcp2 2.7.0 to 2.9.0.
+         Bump tests from commons-dbcp2 2.7.0 to 2.9.0.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
          Bump snakeyaml from 1.26 to 1.30 #68, #126, #137.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
-         Update commons.japicmp.version 0.14.1 -> 0.15.3.
+         Bump commons.japicmp.version 0.14.1 -> 0.15.3.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
          Bump junit from 4.13 to 4.13.2 #78.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
-         Update Apache Commons VFS 2.6.0 -> 2.9.0.
+         Bump Apache Commons VFS 2.6.0 -> 2.9.0.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
          Bump jackson-databind from 2.11.3 to 2.13.1 ,#88, #94, #127, #159.
@@ -177,7 +177,7 @@
          Bump org.dbunit:dbunit from 2.7.0 to 2.7.2.
        </action>
        <action type="update" dev="ggregory" due-to="John Patrick">
-         Update tests to hamcrest v2.2 #143.
+         Bump tests to hamcrest v2.2 #143.
        </action>
        <action type="update" dev="kinow" due-to="Dependabot">
          Bump spring.version from 5.3.15 to 5.3.16 #165.
@@ -192,10 +192,10 @@
         Use variable arguments.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Update com.puppycrawl.tools:checkstyle from 8.24 to  8.25.
+        Bump com.puppycrawl.tools:checkstyle from 8.24 to  8.25.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-763" due-to="Gary Gregory">
-        Update com.fasterxml.jackson.core:jackson-databind from 2.9.9 to 2.10.0.
+        Bump com.fasterxml.jackson.core:jackson-databind from 2.9.9 to 2.10.0.
       </action>
       <action dev="ggregory" type="add" issue="CONFIGURATION-765" due-to="Gary Gregory">
         Refactor XMLConfiguration.write(Writer) to add XMLConfiguration.write(Writer, Transformer).
@@ -207,7 +207,7 @@
         XMLConfiguration#write does not indent XML elements.
       </action>
       <action dev="ggregory" type="fix" issue="CONFIGURATION-771" due-to="Gary Gregory">
-        Update com.fasterxml.jackson.core:jackson-databind 2.10.0 -> 2.10.1.
+        Bump com.fasterxml.jackson.core:jackson-databind 2.10.0 -> 2.10.1.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         [test] org.easymock:easymock 4.0.2 -> 4.1.
@@ -216,31 +216,31 @@
         User's Guide &gt; Properties files &gt; Saving - small documentation bugs #41.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-775" due-to="Gary Gregory">
-        Update Apache Commons VFS from 2.4.1 to 2.5.0.
+        Bump Apache Commons VFS from 2.4.1 to 2.5.0.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-777" due-to="Gary Gregory">
-        Update Apache Commons VFS from 2.5.0 to 2.6.0.
+        Bump Apache Commons VFS from 2.5.0 to 2.6.0.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-778" due-to="Gary Gregory">
-        Update optional Apache Commons Codec from 1.13 to 1.14.
+        Bump optional Apache Commons Codec from 1.13 to 1.14.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Update tests from JUnit 4.12 to 4.13.
+        Bump tests from JUnit 4.12 to 4.13.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-779" due-to="Gary Gregory">
-        Update optional jackson-databind from 2.10.1 to 2.10.2.
+        Bump optional jackson-databind from 2.10.1 to 2.10.2.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-783" due-to="Gary Gregory">
-        Update com.fasterxml.jackson.core:jackson-databind from 2.10.2 to 2.10.3.
+        Bump com.fasterxml.jackson.core:jackson-databind from 2.10.2 to 2.10.3.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-784" due-to="Gary Gregory">
         Update org.yaml:snakeyaml from 1.25 to 1.26 and tweak parser configuration.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-785" due-to="Gary Gregory">
-        Update org.springframework:spring-* from 4.3.25.RELEASE to 4.3.26.RELEASE.
+        Bump org.springframework:spring-* from 4.3.25.RELEASE to 4.3.26.RELEASE.
       </action>
       <action dev="chtompki" type="update" due-to="Rob Tompkins">
-        Update org.apache.commons:commons-parent from 48 to 50
+        Bump org.apache.commons:commons-parent from 48 to 50
       </action>
     </release>
     
@@ -250,13 +250,13 @@
         XMLPropertyListConfiguration cannot set arrays in the correct plist form.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-751" due-to="Gary Gregory">
-        Update Apache Commons Text from 1.6 to 1.7.
+        Bump Apache Commons Text from 1.6 to 1.7.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-752" due-to="Gary Gregory">
-        Update Apache Commons VFS from 2.3 to 2.4.1.
+        Bump Apache Commons VFS from 2.3 to 2.4.1.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-754" due-to="Gary Gregory">
-        Update Apache Commons Text from 1.7 to 1.8.
+        Bump Apache Commons Text from 1.7 to 1.8.
       </action>
       <action dev="ggregory" type="fix" due-to="Gary Gregory">
         Fix Javadoc for org.apache.commons.configuration2.PropertiesConfiguration.getIncludeOptional().
@@ -265,7 +265,7 @@
         Document "includeOptional" on the site.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-755" due-to="Gary Gregory">
-        [CVE-2014-0114] Update Apache Commons BeanUtils from 1.9.3 to 1.9.4.
+        [CVE-2014-0114] Bump Apache Commons BeanUtils from 1.9.3 to 1.9.4.
       </action>
       <action dev="ggregory" type="update" due-to="Kevin Wang">
         Fix syntax in user guide documentation #33.
@@ -274,31 +274,31 @@
         Allow for custom behavior to handle errors loading included properties files.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-757" due-to="Gary Gregory">
-        Update org.yaml:snakeyaml from 1.24 to 1.25.
+        Bump org.yaml:snakeyaml from 1.24 to 1.25.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Update tests from org.apache.commons:commons-dbcp2 2.6.0 to 2.7.0.
+        Bump tests from org.apache.commons:commons-dbcp2 2.6.0 to 2.7.0.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Update tests from org.apache.commons:commons-pool2 2.6.2 to 2.7.0.
+        Bump tests from org.apache.commons:commons-pool2 2.6.2 to 2.7.0.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-758" due-to="Gary Gregory">
-        Update commons-codec:commons-codec from 1.12 to 1.13.
+        Bump commons-codec:commons-codec from 1.12 to 1.13.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Update tests from org.hsqldb:hsqldb 2.4.1 to 2.5.0.
+        Bump tests from org.hsqldb:hsqldb 2.4.1 to 2.5.0.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Update tests from com.sun.mail:mailapi 1.6.3 to 1.6.4.
+        Bump tests from com.sun.mail:mailapi 1.6.3 to 1.6.4.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-759" due-to="Gary Gregory">
-        Update Spring from 4.3.24.RELEASE to 4.3.25.RELEASE.
+        Bump Spring from 4.3.24.RELEASE to 4.3.25.RELEASE.
       </action>
       <action dev="ggregory" type="fix" issue="CONFIGURATION-760" due-to="Gary Gregory">
         Properties file using cyclical includes cause a StackOverflowError instead of detecting the misconfiguration.
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
-        Update maven-checkstyle-plugin from 3.0.0 to 3.1.0. 
+        Bump maven-checkstyle-plugin from 3.0.0 to 3.1.0. 
       </action>
       <action dev="ggregory" type="update" due-to="Gary Gregory">
         Use current version of Checkstyle: 6.18 to 8.24.
@@ -310,28 +310,28 @@
         Allow user to specify the comments and separator chars.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-738" due-to="Gary Gregory">
-        Update Jackson from 2.9.7 to 2.9.8.
+        Bump Jackson from 2.9.7 to 2.9.8.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-739" due-to="Gary Gregory">
-        Update Apache Commons Codec from 1.11 to 1.12.
+        Bump Apache Commons Codec from 1.11 to 1.12.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-740" due-to="Gary Gregory">
-        Update Apache Commons VFS from 2.2 to 2.3.
+        Bump Apache Commons VFS from 2.2 to 2.3.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-741" due-to="Gary Gregory">
-        Update Spring from 4.3.19 to 4.3.22.
+        Bump Spring from 4.3.19 to 4.3.22.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-743" due-to="Gary Gregory">
-        Update optional library snakeyaml from 1.23 to 1.24.
+        Bump optional library snakeyaml from 1.23 to 1.24.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-747" due-to="Gary Gregory">
-        Update Apache Commons Lang from 3.8.1 to 3.9.
+        Bump Apache Commons Lang from 3.8.1 to 3.9.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-746" due-to="Gary Gregory">
-        Update Jackson from 2.9.8 to 2.9.9.
+        Bump Jackson from 2.9.8 to 2.9.9.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-747" due-to="Gary Gregory">
-        Update Spring from 4.3.22 to 4.3.24.
+        Bump Spring from 4.3.22 to 4.3.24.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-745" due-to="Gary Gregory">
         Add the special key "includeoptional" for properties files.
@@ -343,7 +343,7 @@
         Fixed numerous typos in user guides.
       </action>
       <action dev="ggregory" type="fix" issue="CONFIGURATION-711">
-        Update Apache Commons Lang from 3.7 to 3.8.1.
+        Bump Apache Commons Lang from 3.7 to 3.8.1.
       </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-712" due-to="Rolland Hobbie">
         FileHandlerReloadingDetector now has a new refresh() method to
@@ -370,22 +370,22 @@
         Replace use of deprecated Commons Lang string substitution code for Commons Text.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-694">
-        Update Java requirement from version 7 to 8.
+        Bump Java requirement from version 7 to 8.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-721">
-        Update Jackson from 2.9.6 to 2.9.7.
+        Bump Jackson from 2.9.6 to 2.9.7.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-722">
-        Update optional dependency snakeyaml from 1.21 to 1.23.
+        Bump optional dependency snakeyaml from 1.21 to 1.23.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-723">
-        Update optional Spring dependencies from 4.3.18.RELEASE to 4.3.19.RELEASE.
+        Bump optional Spring dependencies from 4.3.18.RELEASE to 4.3.19.RELEASE.
       </action>
       <action dev="ggregory" type="add" issue="CONFIGURATION-724">
         Add support for Commons Text 1.4 localhost string lookup as a default lookup.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-725">
-        Update Apache Commons Text from 1.4 to 1.5.
+        Bump Apache Commons Text from 1.4 to 1.5.
       </action>
       <action dev="ggregory" type="add" issue="CONFIGURATION-726">
         Add support for Commons Text 1.5 new string lookups as default lookups.
@@ -394,20 +394,20 @@
         org.apache.commons.configuration2.DatabaseConfiguration never closes result sets and statements.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-728">
-        Update Apache Commons Text from 1.5 to 1.6.
+        Bump Apache Commons Text from 1.5 to 1.6.
       </action>
     </release>
 
     <release version="2.3" date="2018-08-04"
              description="Minor release with new features and updated dependencies.">
       <action dev="ggregory" type="update" issue="CONFIGURATION-707">
-        Update Spring from 4.3.14.RELEASE to 4.3.18.RELEASE.
+        Bump Spring from 4.3.14.RELEASE to 4.3.18.RELEASE.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-706">
-        Update optional dependency snakeyaml from 1.20 to 1.21.
+        Bump optional dependency snakeyaml from 1.20 to 1.21.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-705">
-        Update Jackson from 2.9.5 to 2.9.6.
+        Bump Jackson from 2.9.5 to 2.9.6.
       </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-652" due-to="Claude Warren">
         Root node attributes are now updated correctly when loading XML
@@ -417,31 +417,31 @@
         Added a .gitignore file to the project.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-678">
-        Update Apache Commons Codec from 1.10 to 1.11.
+        Bump Apache Commons Codec from 1.10 to 1.11.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-679">
-        Update Jackson from 2.8.9 to 2.9.3.
+        Bump Jackson from 2.8.9 to 2.9.3.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-680">
-        Update Apache Commons Lang from 3.6 to 3.7.
+        Bump Apache Commons Lang from 3.6 to 3.7.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-681">
-        Update Apache Commons VFS from 2.1 to 2.2.
+        Bump Apache Commons VFS from 2.1 to 2.2.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-682">
-        Update Snakeyaml from 1.18 to 1.19.
+        Bump Snakeyaml from 1.18 to 1.19.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-696">
-        Update optional dependency snakeyaml from 1.19 to 1.20.
+        Bump optional dependency snakeyaml from 1.19 to 1.20.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-683">
-        Update Spring from 4.3.9.RELEASE to 4.3.13.RELEASE.
+        Bump Spring from 4.3.9.RELEASE to 4.3.13.RELEASE.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-695">
-        Update optional dependency Jackson from 2.9.3 to 2.9.5.
+        Bump optional dependency Jackson from 2.9.3 to 2.9.5.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-697">
-        Update optional dependency Spring from 4.3.13.RELEASE to 4.3.14.RELEASE.
+        Bump optional dependency Spring from 4.3.13.RELEASE to 4.3.14.RELEASE.
       </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-686">
         JSONConfiguration can now handle list structures with complex objects
@@ -503,10 +503,10 @@
         the correct root node set.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-669">
-        Update optional Spring dependency from 4.2.5.RELEASE to 4.3.9.RELEASE.
+        Bump optional Spring dependency from 4.2.5.RELEASE to 4.3.9.RELEASE.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-667">
-        Update Apache Commons Lang from 3.3.2 to 3.6.
+        Bump Apache Commons Lang from 3.3.2 to 3.6.
       </action>
       <action dev="ggregory" type="add" issue="CONFIGURATION-666">
         Add convenience ctor ConfigurationRuntimeException(String, Object...).
@@ -521,7 +521,7 @@
         Fixed a typo in the upgrade to 2.0 guide.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-661">
-        Update platform requirement from Java 6 to 7.
+        Bump platform requirement from Java 6 to 7.
       </action>
       <action dev="ggregory" type="add" issue="CONFIGURATION-660">
         Add toString() methods here and there to help debugging.
@@ -629,10 +629,10 @@
         are now handled correctly when the configuration is saved.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-631">
-        Update Apache Commons VFS from 2.0 to 2.1.
+        Bump Apache Commons VFS from 2.0 to 2.1.
       </action>
       <action dev="ggregory" type="update" issue="CONFIGURATION-635">
-        Update optional dependency Apache Commons Codec from 1.9 to 1.10.
+        Bump optional dependency Apache Commons Codec from 1.9 to 1.10.
       </action>
     </release>
 
