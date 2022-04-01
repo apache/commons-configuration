@@ -176,7 +176,7 @@
          Bump spring.version from 4.3.26.RELEASE to 5.3.18 #165, #172.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
-         Bump slf4j.version from 1.7.33 to 1.7.36 #166
+         Bump slf4j.version from 1.7.33 to 1.7.36 #166.
        </action>
     </release>
     <release version="2.7" date="2020-03-07"
