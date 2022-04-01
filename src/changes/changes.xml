@@ -104,7 +104,7 @@
          Bump commons-parent from 50 to 52.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
-         Bump mailapi from 1.6.4 to 1.6.6 #48.
+         Bump mailapi from 1.6.4 to 1.6.7 #48.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
          Bump spotbugs-maven-plugin from 3.1.12.2 to 4.6.0.0, #55, #75, #79, #93, #116.
