@@ -93,4 +93,15 @@
     <Field name="attributeResult" />
     <Bug pattern="SE_BAD_FIELD" />
   </Match>
+  
+  <!-- Reason: TODO, perhaps? -->
+  <Match>
+    <Class name="~.*" />
+    <Or>
+      <Bug pattern="EI_EXPOSE_REP" />
+      <Bug pattern="EI_EXPOSE_REP2" />
+      <Bug pattern="MS_EXPOSE_REP" />
+    </Or>
+  </Match>
+  
 </FindBugsFilter>
