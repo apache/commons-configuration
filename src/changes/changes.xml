@@ -125,7 +125,7 @@
          Bump commons-pool2 from 2.8.0 to 2.10.0, #61, #124.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
-         Bump actions/setup-java from v1.4.0 to v2 #63, #65, #73.
+         Bump actions/setup-java from v1.4.0 to 3 #63, #65, #73, #174.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Bump optional commons-codec from 1.14 to 1.15.
