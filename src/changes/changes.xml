@@ -84,6 +84,15 @@
          Add ImmutableConfiguration.getDuration() methods.
        </action>       
        <!-- UPDATES -->
+       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
+         Bump actions/setup-java from v1.4.0 to 3 #63, #65, #73, #174.
+       </action>
+       <action type="update" dev="ggregory" due-to="Dependabot">
+         Bump actions/cache from v2 to v3 #99, #151, #169.
+       </action>
+       <action type="update" dev="ggregory" due-to="Dependabot">
+         Bump actions/checkout from 1 to 3 #47, #62, #70, #85, #150, #163.
+       </action>
        <action type="update" dev="ggregory" issue="CONFIGURATION-787" due-to="Gary Gregory">
          Bump Apache Commons Lang from 3.9 to 3.12.0.
        </action>
@@ -96,9 +105,6 @@
          org.slf4j:slf4j-ext 1.7.26 -> 1.7.33,
          org.slf4j:slf4j-log4j12 1.7.26 -> 1.7.33,
          org.slf4j:slf4j-nop 1.7.26 -> 1.7.33.
-       </action>
-       <action type="update" dev="ggregory" due-to="Dependabot">
-         Bump GitHub actions/checkout from 1 to 3 #47, #62, #70, #85, #150, #163.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
          Bump commons-parent from 50 to 52.
@@ -123,9 +129,6 @@
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
          Bump commons-pool2 from 2.8.0 to 2.10.0, #61, #124.
-       </action>
-       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
-         Bump actions/setup-java from v1.4.0 to 3 #63, #65, #73, #174.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Bump optional commons-codec from 1.14 to 1.15.
@@ -156,9 +159,6 @@
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
          Bump jackson-databind from 2.11.3 to 2.13.2.2 ,#88, #94, #127, #159, #168, #173.
-       </action>
-       <action type="update" dev="ggregory" due-to="Dependabot">
-         Bump actions/cache from v2 to v3 #99, #151, #169.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Bump commons.animal-sniffer.version 1.19 -> 1.20.
