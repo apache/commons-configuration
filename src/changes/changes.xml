@@ -68,6 +68,9 @@
        <action type="fix" dev="ggregory" due-to="Gary Gregory">
          Implement proper concurrency in ConstantLookup.
        </action>
+       <action issue="CONFIGURATION-813" type="fix" dev="kinow" due-to="Dependabot">
+         Support new namespace jakarta.mail.* used by javamail 2.0+ (first release October 2020) #107.
+       </action>
        <!-- ADD -->
        <action type="add" dev="ggregory" due-to="SethiPandi">
          Implement Iterable in ImmutableNode #74.
@@ -199,6 +202,9 @@
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
          Bump slf4j.version from 1.7.33 to 1.7.36 #166.
+       </action>
+       <action type="update" dev="kinow" due-to="Dependabot">
+          Bump mailapi from 1.6.6 to 2.0.1 #107.
        </action>
     </release>
     <release version="2.7" date="2020-03-07"

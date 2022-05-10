@@ -70,6 +70,9 @@ public final class PropertyConverter {
     /** The fully qualified name of {@code javax.mail.internet.InternetAddress} */
     private static final String INTERNET_ADDRESS_CLASSNAME = "javax.mail.internet.InternetAddress";
 
+    /** The fully qualified name of {@code jakarta.mail.internet.InternetAddress} */
+    private static final String INTERNET_ADDRESS_CLASSNAME_JAKARTA = "jakarta.mail.internet.InternetAddress";
+
     /**
      * Private constructor prevents instances from being created.
      */
@@ -149,6 +152,8 @@ public final class PropertyConverter {
         } else if (Color.class.equals(cls)) {
             return toColor(value);
         } else if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME)) {
+            return toInternetAddress(value);
+        } else if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME_JAKARTA)) {
             return toInternetAddress(value);
         } else if (InetAddress.class.isAssignableFrom(cls)) {
             return toInetAddress(value);
@@ -607,12 +612,22 @@ public final class PropertyConverter {
         if (value.getClass().getName().equals(INTERNET_ADDRESS_CLASSNAME)) {
             return value;
         }
+        if (value.getClass().getName().equals(INTERNET_ADDRESS_CLASSNAME_JAKARTA)) {
+            return value;
+        }
         if (!(value instanceof String)) {
             throw new ConversionException("The value " + value + " can't be converted to a InternetAddress");
         }
         try {
-            final Constructor<?> ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME).getConstructor(String.class);
-            return ctor.newInstance(value);
+            try {
+                // javamail-2.0+, with jakarta.mail.* namespace.
+                final Constructor<?> ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME_JAKARTA).getConstructor(String.class);
+                return ctor.newInstance(value);
+            } catch (ClassNotFoundException e) {
+                // maybe javamail-1.*? With javax.mail.* namespace.
+                final Constructor<?> ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME).getConstructor(String.class);
+                return ctor.newInstance(value);
+            }
         } catch (final Exception e) {
             throw new ConversionException("The value " + value + " can't be converted to a InternetAddress", e);
         }

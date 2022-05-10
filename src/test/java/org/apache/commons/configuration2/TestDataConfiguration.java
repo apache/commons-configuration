@@ -73,10 +73,13 @@ public class TestDataConfiguration {
 
     /**
      * Create an instance of InternetAddress. This trick is necessary to compile and run the test with Java 1.3 and the
-     * javamail-1.4 which is not compatible with Java 1.3
+     * javamail-1.4 which is not compatible with Java 1.3.
+     *
+     * <p>javamail-2.0 had a namespace change, moving javax.mail.* to jakarta.mail.*. This test verifies if we have
+     * javax.mail.* in the classpath before trying the Jakarta classes.</p>
      */
     private Object createInternetAddress(final String email) throws Exception {
-        final Class<?> cls = Class.forName("javax.mail.internet.InternetAddress");
+        final Class<?> cls = Class.forName("jakarta.mail.internet.InternetAddress");
         return cls.getConstructor(String.class).newInstance(email);
     }
 
@@ -839,7 +842,7 @@ public class TestDataConfiguration {
         }
 
         try {
-            conf.get(Class.forName("javax.mail.internet.InternetAddress"), "key1");
+            conf.get(Class.forName("jakarta.mail.internet.InternetAddress"), "key1");
             fail("getInternetAddress didn't throw a ConversionException");
         } catch (final ConversionException e) {
             // expected
