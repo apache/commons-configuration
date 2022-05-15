@@ -789,10 +789,8 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
                 if (ArrayUtils.contains(SEPARATORS, c) || ArrayUtils.contains(WHITE_SPACE, c) || c == '\\') {
                     // escape the separator
                     newkey.append('\\');
-                    newkey.append(c);
-                } else {
-                    newkey.append(c);
                 }
+                newkey.append(c);
             }
 
             return newkey.toString();
@@ -1229,12 +1227,12 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
                     } else if (ch == 'u') {
                         // uh-oh, we're in unicode country....
                         inUnicode = true;
-                    } else if (needsUnescape(ch)) {
-                        out.append(ch);
                     } else {
-                        // JUP simply throws away the \ of unknown escape sequences
-                        if (!jupCompatible) {
-                            out.append('\\');
+                        if (!needsUnescape(ch)) {
+                            // JUP simply throws away the \ of unknown escape sequences
+                            if (!jupCompatible) {
+                                out.append('\\');
+                            }
                         }
                         out.append(ch);
                     }
