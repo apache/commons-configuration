@@ -162,7 +162,7 @@
          Bump snakeyaml from 1.26 to 1.30 #68, #126, #137.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
-         Bump commons.japicmp.version 0.14.1 -> 0.15.3.
+         Bump commons.japicmp.version from 0.14.1 to 0.15.7.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
          Bump junit from 4.13 to 4.13.2 #78.
