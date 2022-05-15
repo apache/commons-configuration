@@ -89,10 +89,10 @@
        </action>
        <action type="update" dev="mattjuntunen" due-to="Dependabot, Matt Juntunen">
          Bump Spring dependency versions:
-         org.springframework:spring-beans 5.3.18 -> 5.3.19
-         org.springframework:spring-context 5.3.18 -> 5.3.19
-         org.springframework:spring-core 5.3.18 -> 5.3.19
-         org.springframework:spring-test 5.3.18 -> 5.3.19
+         org.springframework:spring-beans 5.3.18 -> 5.3.20
+         org.springframework:spring-context 5.3.18 -> 5.3.20
+         org.springframework:spring-core 5.3.18 -> 5.3.20
+         org.springframework:spring-test 5.3.18 -> 5.3.20
        </action>
        <action type="update" dev="mattjuntunen" due-to="Dependabot, Matt Juntunen">
          Bump commons-parent from 52 to 53.
