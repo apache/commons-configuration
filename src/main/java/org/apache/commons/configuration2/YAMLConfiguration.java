@@ -84,7 +84,7 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration implements
         dump(out, options);
     }
 
-    public void dump(final Writer out, final DumperOptions options) throws ConfigurationException, IOException {
+    public void dump(final Writer out, final DumperOptions options) {
         final Yaml yaml = new Yaml(options);
         yaml.dump(constructMap(getNodeModel().getNodeHandler().getRootNode()), out);
     }
