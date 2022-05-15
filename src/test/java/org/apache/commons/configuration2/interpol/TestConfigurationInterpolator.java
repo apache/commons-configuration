@@ -311,6 +311,17 @@ public class TestConfigurationInterpolator {
     }
 
     /**
+     * Tests an interpolated string that begins and ends with variable lookups that have
+     * the potential to fail. Part of CONFIGURATION-764.
+     */
+    @Test
+    public void testInterpolationBeginningAndEndingRiskyVariableLookups() {
+        interpolator.registerLookups(ConfigurationInterpolator.getDefaultPrefixLookups());
+        final String result = (String) interpolator.interpolate("${date:yyyy-MM}-${date:dd}");
+        assertTrue("Wrong result: " + result, result.matches("\\d{4}-\\d{2}-\\d{2}"));
+    }
+
+    /**
      * Tests nullSafeLookup() if a lookup object was provided.
      */
     @Test
