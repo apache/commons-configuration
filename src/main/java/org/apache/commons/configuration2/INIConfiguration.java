@@ -452,7 +452,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
                         key = line;
                     }
                     key = key.trim();
-                    if (key.length() < 1) {
+                    if (key.isEmpty()) {
                         // use space for properties with no key
                         key = " ";
                     }
@@ -734,7 +734,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
             return false;
         }
         // blank lines are also treated as comment lines
-        return line.length() < 1 || getCommentLeadingCharsUsedInInput().indexOf(line.charAt(0)) >= 0;
+        return line.isEmpty() || getCommentLeadingCharsUsedInInput().indexOf(line.charAt(0)) >= 0;
     }
 
     /**

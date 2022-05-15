@@ -1107,7 +1107,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     static boolean isCommentLine(final String line) {
         final String s = line.trim();
         // blank lines are also treated as comment lines
-        return s.length() < 1 || COMMENT_CHARS.indexOf(s.charAt(0)) >= 0;
+        return s.isEmpty() || COMMENT_CHARS.indexOf(s.charAt(0)) >= 0;
     }
 
     /**
