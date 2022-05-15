@@ -18,16 +18,21 @@ package org.apache.commons.configuration2.interpol;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -162,14 +167,20 @@ public class TestConfigurationInterpolator {
         final Lookup defLookup = EasyMock.createMock(Lookup.class);
         final Lookup preLookup = EasyMock.createMock(Lookup.class);
         EasyMock.replay(defLookup, preLookup);
-        final InterpolatorSpecification spec = new InterpolatorSpecification.Builder().withDefaultLookup(defLookup).withPrefixLookup("p", preLookup)
-            .withParentInterpolator(interpolator).create();
+        final Function<Object, String> stringConverter = obj -> Objects.toString(obj, null);
+        final InterpolatorSpecification spec = new InterpolatorSpecification.Builder()
+            .withDefaultLookup(defLookup)
+            .withPrefixLookup("p", preLookup)
+            .withParentInterpolator(interpolator)
+            .withStringConverter(stringConverter)
+            .create();
         final ConfigurationInterpolator ci = ConfigurationInterpolator.fromSpecification(spec);
         assertEquals("Wrong number of default lookups", 1, ci.getDefaultLookups().size());
         assertTrue("Wrong default lookup", ci.getDefaultLookups().contains(defLookup));
         assertEquals("Wrong number of prefix lookups", 1, ci.getLookups().size());
         assertSame("Wrong prefix lookup", preLookup, ci.getLookups().get("p"));
         assertSame("Wrong parent", interpolator, ci.getParentInterpolator());
+        assertSame("Wrong string converter", stringConverter, ci.getStringConverter());
     }
 
     /**
@@ -221,13 +232,43 @@ public class TestConfigurationInterpolator {
     }
 
     /**
-     * Tests creating an instance. Does it contain some predefined lookups?
+     * Tests that a custom string converter can be used.
+     */
+    @Test
+    public void testSetStringConverter() {
+        final Function<Object, String> stringConverter = obj -> "'" + obj + "'";
+        interpolator.addDefaultLookup(setUpTestLookup("x", Arrays.asList(1, 2)));
+        interpolator.addDefaultLookup(setUpTestLookup("y", "abc"));
+        interpolator.setStringConverter(stringConverter);
+        assertSame("Wrong string converter", stringConverter, interpolator.getStringConverter());
+        assertEquals("Wrong value", "'abc': '[1, 2]'", interpolator.interpolate("${y}: ${x}"));
+    }
+
+    /**
+     * Tests that the default string converter can be reapplied by passing {@code null}.
+     */
+    @Test
+    public void testSetStringConverterNullArgumentUsesDefault() {
+        final Function<Object, String> stringConverter = obj -> "'" + obj + "'";
+        interpolator.addDefaultLookup(setUpTestLookup("x", Arrays.asList(1, 2)));
+        interpolator.addDefaultLookup(setUpTestLookup("y", "abc"));
+        interpolator.setStringConverter(stringConverter);
+        interpolator.setStringConverter(null);
+        assertNotSame("Wrong string converter", stringConverter, interpolator.getStringConverter());
+        assertEquals("Wrong value", "abc: 1", interpolator.interpolate("${y}: ${x}"));
+    }
+
+    /**
+     * Tests creating an instance. Does it contain some predefined lookups and a default string converter?
      */
     @Test
     public void testInit() {
         assertTrue("A default lookup is set", interpolator.getDefaultLookups().isEmpty());
         assertTrue("Got predefined lookups", interpolator.getLookups().isEmpty());
         assertNull("Got a parent interpolator", interpolator.getParentInterpolator());
+        assertNotNull("Missing string converter", interpolator.getStringConverter());
+        assertEquals("Incorrect string converter value", "1",
+                interpolator.getStringConverter().apply(Arrays.asList(1, 2)));
     }
 
     /**
@@ -240,11 +281,38 @@ public class TestConfigurationInterpolator {
     }
 
     /**
+     * Tests that a blank variable definition does not cause problems.
+     */
+    @Test
+    public void testInterpolateBlankVariable() {
+        final String value = "${ }";
+        assertEquals("Wrong result", value, interpolator.interpolate(value));
+    }
+
+    /**
      * Tests interpolation of a non string argument.
      */
     @Test
     public void testInterpolateObject() {
         final Object value = 42;
+        assertSame("Value was changed", value, interpolator.interpolate(value));
+    }
+
+    /**
+     * Tests interpolation of a collection argument.
+     */
+    @Test
+    public void testInterpolateCollection() {
+        final List<Integer> value = Arrays.asList(1, 2);
+        assertSame("Value was changed", value, interpolator.interpolate(value));
+    }
+
+    /**
+     * Tests interpolation of an array argument.
+     */
+    @Test
+    public void testInterpolateArray() {
+        final int[] value = {1, 2};
         assertSame("Value was changed", value, interpolator.interpolate(value));
     }
 
@@ -279,11 +347,82 @@ public class TestConfigurationInterpolator {
     }
 
     /**
+     * Tests interpolation with variables containing multiple simple non-string variables.
+     */
+    @Test
+    public void testInterpolationMultipleSimpleNonStringVariables() {
+        final String value = "${x} = ${y} is ${result}";
+        interpolator.addDefaultLookup(setUpTestLookup("x", 1));
+        interpolator.addDefaultLookup(setUpTestLookup("y", 2));
+        interpolator.addDefaultLookup(setUpTestLookup("result", false));
+        assertEquals("Wrong result", "1 = 2 is false", interpolator.interpolate(value));
+    }
+
+    /**
+     * Tests interpolation with multiple variables containing collections and iterators.
+     */
+    @Test
+    public void testInterpolationMultipleCollectionVariables() {
+        final String value = "${single}bc${multi}23${empty}${null}${multiIt}${emptyIt}${nullIt}";
+        final List<Integer> multi = Arrays.asList(1, 0, 0);
+        final List<String> single = Arrays.asList("a");
+        final List<Object> empty = Collections.emptyList();
+        final List<Object> containsNull = Arrays.asList((Object) null);
+        interpolator.addDefaultLookup(setUpTestLookup("multi", multi));
+        interpolator.addDefaultLookup(setUpTestLookup("multiIt", multi.iterator()));
+        interpolator.addDefaultLookup(setUpTestLookup("single", single));
+        interpolator.addDefaultLookup(setUpTestLookup("empty", empty));
+        interpolator.addDefaultLookup(setUpTestLookup("emptyIt", empty.iterator()));
+        interpolator.addDefaultLookup(setUpTestLookup("null", containsNull));
+        interpolator.addDefaultLookup(setUpTestLookup("nullIt", containsNull.iterator()));
+        assertEquals("Wrong result", "abc123${empty}${null}1${emptyIt}${nullIt}", interpolator.interpolate(value));
+    }
+
+    /**
+     * Tests interpolation with multiple variables containing arrays.
+     */
+    @Test
+    public void testInterpolationMultipleArrayVariables() {
+        final String value = "${single}bc${multi}23${empty}${null}";
+        final int[] multi = {1, 0, 0};
+        final String[] single = {"a"};
+        final int[] empty = {};
+        final Object[] containsNull = {null};
+        interpolator.addDefaultLookup(setUpTestLookup("multi", multi));
+        interpolator.addDefaultLookup(setUpTestLookup("single", single));
+        interpolator.addDefaultLookup(setUpTestLookup("empty", empty));
+        interpolator.addDefaultLookup(setUpTestLookup("null", containsNull));
+        assertEquals("Wrong result", "abc123${empty}${null}", interpolator.interpolate(value));
+    }
+
+    /**
      * Tests an interpolation that consists of a single variable only. The variable's value should be returned verbatim.
      */
     @Test
     public void testInterpolationSingleVariable() {
         final Object value = 42;
+        interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
+        assertEquals("Wrong result", value, interpolator.interpolate("${" + TEST_NAME + "}"));
+    }
+
+    /**
+     * Tests an interpolation that consists of a single collection variable only. The variable's value
+     * should be returned verbatim.
+     */
+    @Test
+    public void testInterpolationSingleCollectionVariable() {
+        final List<Integer> value = Arrays.asList(42);
+        interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
+        assertEquals("Wrong result", value, interpolator.interpolate("${" + TEST_NAME + "}"));
+    }
+
+    /**
+     * Tests an interpolation that consists of a single array variable only. The variable's value
+     * should be returned verbatim.
+     */
+    @Test
+    public void testInterpolationSingleArrayVariable() {
+        final int[] value = {42, -1};
         interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
         assertEquals("Wrong result", value, interpolator.interpolate("${" + TEST_NAME + "}"));
     }

@@ -24,6 +24,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -100,17 +102,29 @@ public class TestInterpolatorSpecification {
      */
     @Test
     public void testBuilderReuse() {
-        builder.withDefaultLookup(createLookup()).withInterpolator(createMock(ConfigurationInterpolator.class)).withPrefixLookup("test", createLookup())
-            .withParentInterpolator(createMock(ConfigurationInterpolator.class)).create();
+        builder
+            .withDefaultLookup(createLookup())
+            .withInterpolator(createMock(ConfigurationInterpolator.class))
+            .withPrefixLookup("test", createLookup())
+            .withParentInterpolator(createMock(ConfigurationInterpolator.class))
+            .withStringConverter(obj -> "test")
+            .create();
         final Lookup prefLook1 = createLookup();
         final Lookup prefLook2 = createLookup();
         final Lookup defLook1 = createLookup();
         final Lookup defLook2 = createLookup();
         final ConfigurationInterpolator parent = createMock(ConfigurationInterpolator.class);
-        final InterpolatorSpecification spec = builder.withPrefixLookup(PREFIX1, prefLook1).withPrefixLookup(PREFIX2, prefLook2)
-            .withDefaultLookups(Arrays.asList(defLook1, defLook2)).withParentInterpolator(parent).create();
+        final Function<Object, String> stringConverter = Objects::toString;
+        final InterpolatorSpecification spec = builder
+            .withPrefixLookup(PREFIX1, prefLook1)
+            .withPrefixLookup(PREFIX2, prefLook2)
+            .withDefaultLookups(Arrays.asList(defLook1, defLook2))
+            .withParentInterpolator(parent)
+            .withStringConverter(stringConverter)
+            .create();
         assertNull("Got an interpolator", spec.getInterpolator());
         assertSame("Wrong parent interpolator", parent, spec.getParentInterpolator());
+        assertSame("Wrong string converter", stringConverter, spec.getStringConverter());
         checkPrefixLookups(spec, prefLook1, prefLook2);
         checkDefaultLookups(spec, defLook1, defLook2);
     }
@@ -126,10 +140,19 @@ public class TestInterpolatorSpecification {
         final Lookup defLook2 = createLookup();
         final ConfigurationInterpolator interpolator = createMock(ConfigurationInterpolator.class);
         final ConfigurationInterpolator parent = createMock(ConfigurationInterpolator.class);
-        final InterpolatorSpecification spec = builder.withPrefixLookup(PREFIX1, prefLook1).withDefaultLookup(defLook1).withPrefixLookup(PREFIX2, prefLook2)
-            .withParentInterpolator(parent).withDefaultLookup(defLook2).withInterpolator(interpolator).create();
+        final Function<Object, String> stringConverter = Objects::toString;
+        final InterpolatorSpecification spec = builder
+            .withPrefixLookup(PREFIX1, prefLook1)
+            .withDefaultLookup(defLook1)
+            .withPrefixLookup(PREFIX2, prefLook2)
+            .withParentInterpolator(parent)
+            .withDefaultLookup(defLook2)
+            .withInterpolator(interpolator)
+            .withStringConverter(stringConverter)
+            .create();
         assertSame("Wrong interpolator", interpolator, spec.getInterpolator());
         assertSame("Wrong parent interpolator", parent, spec.getParentInterpolator());
+        assertSame("Wrong string converter", stringConverter, spec.getStringConverter());
         checkPrefixLookups(spec, prefLook1, prefLook2);
         checkDefaultLookups(spec, defLook1, defLook2);
     }
@@ -146,7 +169,10 @@ public class TestInterpolatorSpecification {
         final Map<String, Lookup> prefixLookups = new HashMap<>();
         prefixLookups.put(PREFIX1, prefLook1);
         prefixLookups.put(PREFIX2, prefLook2);
-        final InterpolatorSpecification spec = builder.withPrefixLookups(prefixLookups).withDefaultLookups(Arrays.asList(defLook1, defLook2)).create();
+        final InterpolatorSpecification spec = builder
+            .withPrefixLookups(prefixLookups)
+            .withDefaultLookups(Arrays.asList(defLook1, defLook2))
+            .create();
         checkPrefixLookups(spec, prefLook1, prefLook2);
         checkDefaultLookups(spec, defLook1, defLook2);
     }

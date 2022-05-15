@@ -200,7 +200,7 @@ public class TestAbstractConfigurationBasicFeatures {
         final BaseConfiguration config = new BaseConfiguration();
         config.addProperty(KEY_PREFIX, value);
         final String[] array = config.getStringArray(KEY_PREFIX);
-        assertEquals("Weong number of elements", 1, array.length);
+        assertEquals("Wrong number of elements", 1, array.length);
         assertEquals("Wrong value", value.toString(), array[0]);
     }
 
@@ -856,6 +856,21 @@ public class TestAbstractConfigurationBasicFeatures {
         config.addProperty("target", "lazy dog");
         config.addProperty(KEY_PREFIX, SUBST_TXT);
         assertEquals("Wrong interpolation", "The quick brown fox jumps over the lazy dog.", config.getString(KEY_PREFIX));
+    }
+
+    /**
+     * Tests that variables with list values in interpolated string are resolved with the first element
+     * in the list.
+     */
+    @Test
+    public void testInterpolateStringWithListVariable() {
+        final PropertiesConfiguration config = new PropertiesConfiguration();
+        final List<String> values = Arrays.asList("some", "test", "values");
+        final String keyList = "testList";
+        config.addProperty(keyList, values);
+        config.addProperty(KEY_PREFIX, "result = ${" + keyList + "}");
+
+        assertEquals("Wrong interpolation", "result = some", config.getString(KEY_PREFIX));
     }
 
     /**

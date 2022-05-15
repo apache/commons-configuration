@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * <p>
@@ -37,6 +38,7 @@ import java.util.Map;
  * <li>a map with {@code Lookup} objects associated with a specific prefix</li>
  * <li>a collection with default {@code Lookup} objects (without a prefix)</li>
  * <li>a parent {@code ConfigurationInterpolator}</li>
+ * <li>a function used to convert interpolated values into strings</li>
  * </ul>
  * <p>
  * When setting up a configuration it is possible to define the {@code ConfigurationInterpolator} in terms of this
@@ -62,6 +64,9 @@ public final class InterpolatorSpecification {
     /** The collection with default lookups. */
     private final Collection<Lookup> defaultLookups;
 
+    /** Function used to convert interpolated values to strings. */
+    private final Function<Object, String> stringConverter;
+
     /**
      * Creates a new instance of {@code InterpolatorSpecification} with the properties defined by the given builder object.
      *
@@ -72,6 +77,7 @@ public final class InterpolatorSpecification {
         parentInterpolator = builder.parentInterpolator;
         prefixLookups = Collections.unmodifiableMap(new HashMap<>(builder.prefixLookups));
         defaultLookups = Collections.unmodifiableCollection(new ArrayList<>(builder.defLookups));
+        stringConverter = builder.stringConverter;
     }
 
     /**
@@ -112,6 +118,17 @@ public final class InterpolatorSpecification {
     }
 
     /**
+     * Returns the function used to convert interpolated values to strings or {@code null}
+     * if the default conversion function is to be used.
+     *
+     * @return function used to convert interpolated values to strings or {@code null} if
+     *      the default conversion function is to be used
+     */
+    public Function<Object, String> getStringConverter() {
+        return stringConverter;
+    }
+
+    /**
      * <p>
      * A <em>builder</em> class for creating instances of {@code InterpolatorSpecification}.
      * </p>
@@ -132,6 +149,9 @@ public final class InterpolatorSpecification {
 
         /** The parent {@code ConfigurationInterpolator}. */
         private ConfigurationInterpolator parentInterpolator;
+
+        /** Function used to convert interpolated values to strings. */
+        private Function<Object, String> stringConverter;
 
         public Builder() {
             prefixLookups = new HashMap<>();
@@ -227,6 +247,20 @@ public final class InterpolatorSpecification {
         }
 
         /**
+         * Sets the function used to convert interpolated values to strings. Pass {@code null}
+         * if the default conversion function is to be used.
+         *
+         * @param fn function used to convert interpolated values to string or {@code null} if the
+         *      default conversion function is to be used
+         * @return a reference to this builder for method chaining
+         */
+        public Builder withStringConverter(final Function<Object, String> fn) {
+            this.stringConverter = fn;
+            return this;
+        }
+
+
+        /**
          * Creates a new {@code InterpolatorSpecification} instance with the properties set so far. After that this builder
          * instance is reset so that it can be reused for creating further specification objects.
          *
@@ -247,6 +281,7 @@ public final class InterpolatorSpecification {
             parentInterpolator = null;
             prefixLookups.clear();
             defLookups.clear();
+            stringConverter = null;
         }
 
         /**

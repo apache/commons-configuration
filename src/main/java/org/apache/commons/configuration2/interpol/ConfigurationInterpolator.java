@@ -16,16 +16,19 @@
  */
 package org.apache.commons.configuration2.interpol;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Function;
 
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.commons.text.lookup.DefaultStringLookup;
@@ -65,9 +68,22 @@ import org.apache.commons.text.lookup.DefaultStringLookup;
  * result is the passed in value with variables replaced. Alternatively, the {@code resolve()} method can be called to
  * obtain the values of specific variables without performing interpolation.
  * </p>
+ * <p><strong>String Conversion</strong></p>
  * <p>
- * Implementation node: This class is thread-safe. Lookup objects can be added or removed at any time concurrent to
- * interpolation operations.
+ * When variables are part of larger interpolated strings, the variable values, which can be of any type, must be
+ * converted to strings to produce the full result. Each interpolator instance has a configurable
+ * {@link #setStringConverter() string converter} to perform this conversion. The default implementation of this
+ * function simply uses the value's {@code toString} method in the majority of cases. However, for maximum
+ * consistency with
+ * {@link org.apache.commons.configuration3convert.DefaultConversionHandler DefaultConversionHandler}, when a variable
+ * value is a container type (such as a collection or array), then only the first element of the container is converted
+ * to a string instead of the container itself. For example, if the variable {@code x} resolves to the integer array
+ * {@code [1, 2, 3]}, then the string <code>"my value = ${x}"</code> will by default be interpolated to
+ * {@code "my value = 1"}.
+ * </p>
+ * <p>
+ * <strong>Implementation note:</strong> This class is thread-safe. Lookup objects can be added or removed at any time
+ * concurrent to interpolation operations.
  * </p>
  *
  * @since 1.4
@@ -117,6 +133,9 @@ public class ConfigurationInterpolator {
     /** Stores a parent interpolator objects if the interpolator is nested hierarchically. */
     private volatile ConfigurationInterpolator parentInterpolator;
 
+    /** Function used to convert interpolated values to strings. */
+    private volatile Function<Object, String> stringConverter = DefaultStringConverter.INSTANCE;
+
     /**
      * Creates a new instance of {@code ConfigurationInterpolator}.
      */
@@ -137,6 +156,7 @@ public class ConfigurationInterpolator {
         ci.addDefaultLookups(spec.getDefaultLookups());
         ci.registerLookups(spec.getPrefixLookups());
         ci.setParentInterpolator(spec.getParentInterpolator());
+        ci.setStringConverter(spec.getStringConverter());
         return ci;
     }
 
@@ -281,13 +301,34 @@ public class ConfigurationInterpolator {
      * @return the {@code StringSubstitutor} used by this object
      */
     private StringSubstitutor initSubstitutor() {
-        return new StringSubstitutor(key -> Objects.toString(resolve(key), null));
+        return new StringSubstitutor(key -> {
+            final Object value = resolve(key);
+            return value != null
+                ? stringConverter.apply(value)
+                : null;
+        });
     }
 
     /**
-     * Performs interpolation of the passed in value. If the value is of type String, this method checks whether it contains
-     * variables. If so, all variables are replaced by their current values (if possible). For non string arguments, the
-     * value is returned without changes.
+     * Performs interpolation of the passed in value. If the value is of type {@code String}, this method checks
+     * whether it contains variables. If so, all variables are replaced by their current values (if possible). For
+     * non string arguments, the value is returned without changes. In the special case where the value is a string
+     * consisting of a single variable reference, the interpolated variable value is <em>not</em> converted to a
+     * string before returning, so that callers can access the raw value. However, if the variable is part of a larger
+     * interpolated string, then the variable value is converted to a string using the configured
+     * {@link #getStringConverter() string converter}. (See the discussion on string conversion in the class
+     * documentation for more details.)
+     *
+     * <p><strong>Examples</strong></p>
+     * <p>
+     * For the following examples, assume that the default string conversion function is in place and that the
+     * variable {@code i} maps to the integer value {@code 42}.
+     * <pre>
+     *      interpolator.interpolate(1) &rarr; 1 // non-string argument returned unchanged
+     *      interpolator.interpolate("${i}") &rarr; 42 // single variable value returned with raw type
+     *      interpolator.interpolate("answer = ${i}") &rarr; "answer = 42" // variable value converted to string
+     * </pre>
+     * </p>
      *
      * @param value the value to be interpolated
      * @return the interpolated value
@@ -318,6 +359,24 @@ public class ConfigurationInterpolator {
      */
     public boolean isEnableSubstitutionInVariables() {
         return substitutor.isEnableSubstitutionInVariables();
+    }
+
+    /** Get the function used to convert interpolated values to strings.
+     * @return function used to convert interpolated values to strings
+     */
+    public Function<Object, String> getStringConverter() {
+        return stringConverter;
+    }
+
+    /** Set the function used to convert interpolated values to strings. Pass
+     * {@code null} to use the default conversion function.
+     * @param stringConverter function used to convert interpolated values to strings
+     *      or {@code null} to use the default conversion function
+     */
+    public void setStringConverter(final Function<Object, String> stringConverter) {
+        this.stringConverter = stringConverter != null
+                ? stringConverter
+                : DefaultStringConverter.INSTANCE;
     }
 
     /**
@@ -451,5 +510,52 @@ public class ConfigurationInterpolator {
      */
     public void setParentInterpolator(final ConfigurationInterpolator parentInterpolator) {
         this.parentInterpolator = parentInterpolator;
+    }
+
+    /** Class encapsulating the default logic to convert resolved variable values into strings.
+     * This class is thread-safe.
+     */
+    private static final class DefaultStringConverter implements Function<Object, String> {
+
+        /** Shared instance. */
+        static final DefaultStringConverter INSTANCE = new DefaultStringConverter();
+
+        /** {@inheritDoc} */
+        @Override
+        public String apply(final Object obj) {
+            return Objects.toString(extractSimpleValue(obj), null);
+        }
+
+        /** Attempt to extract a simple value from {@code obj} for use in string conversion.
+         * If the input represents a collection of some sort (e.g., an iterable or array),
+         * the first item from the collection is returned.
+         * @param obj input object
+         * @return extracted simple object
+         */
+        private Object extractSimpleValue(final Object obj) {
+            if (!(obj instanceof String)) {
+                if (obj instanceof Iterable) {
+                   return nextOrNull(((Iterable<?>) obj).iterator());
+                } else if (obj instanceof Iterator) {
+                    return nextOrNull((Iterator<?>) obj);
+                } else if (obj.getClass().isArray()) {
+                    return Array.getLength(obj) > 0
+                            ? Array.get(obj, 0)
+                            : null;
+                }
+            }
+            return obj;
+        }
+
+        /** Return the next value from {@code it} or {@code null} if no values remain.
+         * @param <T> iterated type
+         * @param it iterator
+         * @return next value from {@code it} or {@code null} if no values remain
+         */
+        private <T> T nextOrNull(final Iterator<T> it) {
+            return it.hasNext()
+                    ? it.next()
+                    : null;
+        }
     }
 }
