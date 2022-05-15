@@ -69,8 +69,8 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
      */
     public NodePointer createNodePointer(final QName name, final Object bean, final Locale locale) {
         if (bean instanceof NodeWrapper) {
-            final NodeWrapper<?> wrapper = (NodeWrapper<?>) bean;
-            return new ConfigurationNodePointer(wrapper.getNode(), locale, wrapper.getNodeHandler());
+            final NodeWrapper<Object> wrapper = (NodeWrapper<Object>) bean;
+            return new ConfigurationNodePointer<>(wrapper.getNode(), locale, wrapper.getNodeHandler());
         }
         return null;
     }
@@ -92,8 +92,8 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory {
      */
     public NodePointer createNodePointer(final NodePointer parent, final QName name, final Object bean) {
         if (bean instanceof NodeWrapper) {
-            final NodeWrapper<?> wrapper = (NodeWrapper<?>) bean;
-            return new ConfigurationNodePointer((ConfigurationNodePointer) parent, wrapper.getNode(), wrapper.getNodeHandler());
+            final NodeWrapper<Object> wrapper = (NodeWrapper<Object>) bean;
+            return new ConfigurationNodePointer<>((ConfigurationNodePointer<Object>) parent, wrapper.getNode(), wrapper.getNodeHandler());
         }
         return null;
     }
