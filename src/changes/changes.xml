@@ -110,7 +110,7 @@
          Bump Apache Commons Lang from 3.9 to 3.12.0.
        </action>
        <action type="update" dev="ggregory" issue="CONFIGURATION-790" due-to="Gary Gregory, Dependabot">
-         Bump com.fasterxml.jackson.core:jackson-databind from 2.10.3 to 2.12.4, #60.
+         Bump com.fasterxml.jackson.core:jackson-databind from 2.10.3 to 2.13.3, #60.
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Bump Slf4j test dependencies:
