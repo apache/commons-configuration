@@ -150,7 +150,7 @@
          Bump checkstyle from 8.26 to 9.3, #66, #71, #90, #101, #118, #121, #132, #155.
        </action>
        <action dev="ggregory" type="update" due-to="Gary Gregory">
-         Bump commons.jacoco.version 0.8.5 to 0.8.7 (Fixes Java 15 builds).
+         Bump commons.jacoco.version 0.8.5 to 0.8.8 (Fixes Java 15 builds).
        </action>
        <action type="update" dev="ggregory" due-to="Gary Gregory">
          Bump tests from commons-pool2 2.10.0 to 2.11.1.
