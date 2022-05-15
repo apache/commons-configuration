@@ -25,11 +25,8 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
+import java.nio.file.StandardCopyOption;
 import java.util.Random;
 
 import org.apache.commons.configuration2.SynchronizerTestImpl.Methods;
@@ -50,9 +47,10 @@ import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.sync.LockMode;
 import org.apache.commons.configuration2.sync.ReadWriteSynchronizer;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
+import org.apache.commons.io.FileUtils;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 public class TestDynamicCombinedConfiguration {
@@ -170,6 +168,7 @@ public class TestDynamicCombinedConfiguration {
 
         }
     }
+
     private static final String PATTERN = "${sys:Id}";
     private static final String PATTERN1 = "target/test-classes/testMultiConfiguration_${sys:Id}.xml";
 
@@ -198,15 +197,7 @@ public class TestDynamicCombinedConfiguration {
     public TemporaryFolder folder = new TemporaryFolder();
 
     private void copyFile(final File input, final File output) throws IOException {
-        final Reader reader = new FileReader(input);
-        final Writer writer = new FileWriter(output);
-        final char[] buffer = new char[4096];
-        int n = 0;
-        while (-1 != (n = reader.read(buffer))) {
-            writer.write(buffer, 0, n);
-        }
-        reader.close();
-        writer.close();
+        FileUtils.copyFile(input, output, StandardCopyOption.REPLACE_EXISTING);
     }
 
     /**
