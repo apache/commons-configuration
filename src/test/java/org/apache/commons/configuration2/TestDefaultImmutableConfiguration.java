@@ -42,7 +42,7 @@ import org.junit.Test;
 public class TestDefaultImmutableConfiguration {
 
     /** Tests default methods. This class MUST NOT override the default methods! */
-    private class MapImmutableConfiguration implements ImmutableConfiguration {
+    private static class MapImmutableConfiguration implements ImmutableConfiguration {
 
         Map<String, Object> map = new HashMap<>();
 

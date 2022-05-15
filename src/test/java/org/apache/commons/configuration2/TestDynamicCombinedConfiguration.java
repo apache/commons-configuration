@@ -99,7 +99,7 @@ public class TestDynamicCombinedConfiguration {
         }
 
     }
-    private class ReloadThread extends Thread {
+    private static class ReloadThread extends Thread {
         private final CombinedConfigurationBuilder builder;
         private final int[] failures;
         private final int index;

@@ -33,7 +33,7 @@ import org.junit.Test;
  *
  */
 public class TestServletFilterConfiguration extends TestAbstractConfiguration {
-    private class MockFilterConfig implements FilterConfig {
+    private static class MockFilterConfig implements FilterConfig {
         private final Properties parameters = new Properties();
 
         @Override
