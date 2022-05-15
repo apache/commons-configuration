@@ -341,7 +341,7 @@ public class TestConfigurations {
      * found.
      */
     @Test
-    public void testPropertiesBuilderFromPathIncludeNotFoundFail() throws ConfigurationException {
+    public void testPropertiesBuilderFromPathIncludeNotFoundFail() {
         final Configurations configs = new Configurations();
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = configs.propertiesBuilder(absolutePath("include-not-found.properties"));
         try {
