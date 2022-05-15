@@ -562,7 +562,7 @@ class ModelTransaction {
      * An abstract base class representing an operation to be performed on a node. Concrete subclasses implement specific
      * update operations.
      */
-    private abstract class Operation {
+    private abstract static class Operation {
         /**
          * Executes this operation on the provided target node returning the result.
          *
