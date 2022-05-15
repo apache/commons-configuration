@@ -98,7 +98,6 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
     @Test
     public void testAddConfigurationListener() throws ConfigurationException {
         final EventListener<ConfigurationEvent> l1 = new EventListenerTestImpl(null);
-        @SuppressWarnings("unchecked")
         final EventListener<Event> l2 = EasyMock.createMock(EventListener.class);
         EasyMock.replay(l2);
         final MultiFileConfigurationBuilder<XMLConfiguration> builder = createTestBuilder(null);

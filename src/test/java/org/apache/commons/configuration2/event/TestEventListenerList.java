@@ -253,7 +253,6 @@ public class TestEventListenerList {
     public void testGetEventListenerRegistrationsForSuperType() {
         final ListenerTestImpl l1 = new ListenerTestImpl();
         final ListenerTestImpl l2 = new ListenerTestImpl();
-        @SuppressWarnings("unchecked")
         final EventListener<Event> l3 = EasyMock.createMock(EventListener.class);
         list.addEventListener(typeSub1, l1);
         list.addEventListener(Event.ANY, l3);

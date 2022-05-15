@@ -98,9 +98,7 @@ public class TestNodeTreeWalker {
      * @return the handler mock
      */
     private static NodeHandler<ImmutableNode> handlerMock() {
-        @SuppressWarnings("unchecked")
-        final NodeHandler<ImmutableNode> handler = EasyMock.createMock(NodeHandler.class);
-        return handler;
+        return EasyMock.createMock(NodeHandler.class);
     }
 
     /**
@@ -119,9 +117,7 @@ public class TestNodeTreeWalker {
      * @return the visitor mock
      */
     private static ConfigurationNodeVisitor<ImmutableNode> visitorMock() {
-        @SuppressWarnings("unchecked")
-        final ConfigurationNodeVisitor<ImmutableNode> visitor = EasyMock.createMock(ConfigurationNodeVisitor.class);
-        return visitor;
+        return EasyMock.createMock(ConfigurationNodeVisitor.class);
     }
 
     /**

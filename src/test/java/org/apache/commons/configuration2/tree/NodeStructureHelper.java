@@ -190,9 +190,7 @@ public class NodeStructureHelper {
      * @return the resolver mock
      */
     public static NodeKeyResolver<ImmutableNode> createResolverMock() {
-        @SuppressWarnings("unchecked")
-        final NodeKeyResolver<ImmutableNode> mock = EasyMock.createMock(NodeKeyResolver.class);
-        return mock;
+        return EasyMock.createMock(NodeKeyResolver.class);
     }
 
     /**

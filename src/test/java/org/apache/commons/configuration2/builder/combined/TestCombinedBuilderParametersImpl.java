@@ -52,9 +52,7 @@ public class TestCombinedBuilderParametersImpl {
      * @return the handler mock
      */
     private static DefaultParametersHandler<BuilderParameters> createDefaultsHandlerMock() {
-        @SuppressWarnings("unchecked")
-        final DefaultParametersHandler<BuilderParameters> mock = EasyMock.createMock(DefaultParametersHandler.class);
-        return mock;
+        return EasyMock.createMock(DefaultParametersHandler.class);
     }
 
     /**

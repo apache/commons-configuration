@@ -39,9 +39,7 @@ public class TestReloadingController {
      * @return the mock listener
      */
     private static EventListener<ReloadingEvent> createListenerMock() {
-        @SuppressWarnings("unchecked")
-        final EventListener<ReloadingEvent> listener = EasyMock.createMock(EventListener.class);
-        return listener;
+        return EasyMock.createMock(EventListener.class);
     }
 
     /** A mock for the detector. */

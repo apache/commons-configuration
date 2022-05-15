@@ -362,7 +362,6 @@ public class TestCombinedConfigurationBuilder {
     private void checkFileSystem(final File fsFile) throws ConfigurationException {
         builder.configure(createParameters().setFile(fsFile));
         builder.getConfiguration();
-        @SuppressWarnings("unchecked") // this is the minimum bound for type arguments
         final FileBasedConfigurationBuilder<? extends Configuration> xmlBuilder = (FileBasedConfigurationBuilder<? extends Configuration>) builder
             .getNamedBuilder("xml");
         assertTrue("Wrong file system: " + xmlBuilder.getFileHandler().getFileSystem(),
@@ -632,9 +631,7 @@ public class TestCombinedConfigurationBuilder {
      */
     @Test
     public void testConfigurationBuilderProviderInheritEventListeners() throws ConfigurationException {
-        @SuppressWarnings("unchecked")
         final EventListener<Event> l1 = EasyMock.createNiceMock(EventListener.class);
-        @SuppressWarnings("unchecked")
         final EventListener<ConfigurationEvent> l2 = EasyMock.createNiceMock(EventListener.class);
         EasyMock.replay(l1, l2);
         final File testFile = ConfigurationAssert.getTestFile("testCCCombinedChildBuilder.xml");

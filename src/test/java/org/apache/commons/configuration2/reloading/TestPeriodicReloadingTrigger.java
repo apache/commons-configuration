@@ -49,9 +49,7 @@ public class TestPeriodicReloadingTrigger {
      * @return the mock
      */
     private static ScheduledFuture<Void> createFutureMock() {
-        @SuppressWarnings("unchecked")
-        final ScheduledFuture<Void> mock = EasyMock.createMock(ScheduledFuture.class);
-        return mock;
+        return EasyMock.createMock(ScheduledFuture.class);
     }
 
     /** A mock for the executor service. */

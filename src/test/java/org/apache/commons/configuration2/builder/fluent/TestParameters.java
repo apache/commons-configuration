@@ -92,9 +92,7 @@ public class TestParameters {
      * @return the mock object
      */
     private static DefaultParametersHandler<XMLBuilderParameters> createHandlerMock() {
-        @SuppressWarnings("unchecked")
-        final DefaultParametersHandler<XMLBuilderParameters> handler = EasyMock.createMock(DefaultParametersHandler.class);
-        return handler;
+        return EasyMock.createMock(DefaultParametersHandler.class);
     }
 
     @BeforeClass

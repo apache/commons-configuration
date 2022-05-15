@@ -49,7 +49,6 @@ public class TestBuilderConfigurationWrapperFactory {
      * @return the mock builder
      */
     private ConfigurationBuilder<BaseHierarchicalConfiguration> createBuilderMock(final BaseHierarchicalConfiguration conf) {
-        @SuppressWarnings("unchecked")
         final ConfigurationBuilder<BaseHierarchicalConfiguration> builder = EasyMock.createMock(ConfigurationBuilder.class);
         try {
             EasyMock.expect(builder.getConfiguration()).andReturn(conf).anyTimes();

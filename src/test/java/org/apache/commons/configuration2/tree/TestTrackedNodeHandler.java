@@ -44,9 +44,7 @@ public class TestTrackedNodeHandler {
 
     @Before
     public void setUp() throws Exception {
-        @SuppressWarnings("unchecked")
-        final NodeHandler<ImmutableNode> h = EasyMock.createMock(NodeHandler.class);
-        parentHandler = h;
+        parentHandler = EasyMock.createMock(NodeHandler.class);
         handler = new TrackedNodeHandler(root, parentHandler);
     }
 

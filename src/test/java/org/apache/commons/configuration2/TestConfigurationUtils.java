@@ -155,7 +155,6 @@ public class TestConfigurationUtils {
      */
     @Test
     public void testAsEventSourceUnsupportedMock() {
-        @SuppressWarnings("unchecked")
         final EventListener<ConfigurationEvent> cl = EasyMock.createMock(EventListener.class);
         EasyMock.replay(cl);
         final EventSource source = ConfigurationUtils.asEventSource(this, true);

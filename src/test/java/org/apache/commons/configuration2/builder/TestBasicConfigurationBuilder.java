@@ -152,9 +152,7 @@ public class TestBasicConfigurationBuilder {
      * @return the event listener mock
      */
     private static EventListener<ConfigurationEvent> createEventListener() {
-        @SuppressWarnings("unchecked")
-        final EventListener<ConfigurationEvent> listener = EasyMock.createMock(EventListener.class);
-        return listener;
+        return EasyMock.createMock(EventListener.class);
     }
 
     /**

@@ -44,7 +44,6 @@ public class TestTrackedNodeModel {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         selector = new NodeSelector("someKey");
-        @SuppressWarnings("unchecked")
         final NodeKeyResolver<ImmutableNode> resolverMock = EasyMock.createMock(NodeKeyResolver.class);
         EasyMock.replay(resolverMock);
         resolver = resolverMock;
@@ -62,7 +61,6 @@ public class TestTrackedNodeModel {
      * @return the mock for the node handler
      */
     private NodeHandler<ImmutableNode> expectGetNodeHandler() {
-        @SuppressWarnings("unchecked")
         final NodeHandler<ImmutableNode> handler = EasyMock.createMock(NodeHandler.class);
         EasyMock.expect(parentModel.getTrackedNodeHandler(selector)).andReturn(handler);
         return handler;

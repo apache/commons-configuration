@@ -76,9 +76,7 @@ public class TestInMemoryNodeModel {
      * @return the mock for the resolver
      */
     private static NodeKeyResolver<ImmutableNode> createResolver() {
-        @SuppressWarnings("unchecked")
-        final NodeKeyResolver<ImmutableNode> resolver = EasyMock.createMock(NodeKeyResolver.class);
-        return resolver;
+        return EasyMock.createMock(NodeKeyResolver.class);
     }
 
     /**
