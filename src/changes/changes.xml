@@ -132,7 +132,7 @@
          Bump mailapi from 1.6.4 to 1.6.7 #48.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
-         Bump spotbugs-maven-plugin from 3.1.12.2 to 4.6.0.0, #55, #75, #79, #93, #116.
+         Bump spotbugs-maven-plugin from 3.1.12.2 to 4.7.0.0, #55, #75, #79, #93, #116, #183.
        </action>
        <action type="update" dev="ggregory" due-to="Dependabot">
          Bump hsqldb from 2.5.0 to 2.5.2 #54, #128.
