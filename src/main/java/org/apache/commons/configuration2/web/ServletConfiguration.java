@@ -31,11 +31,12 @@ import javax.servlet.ServletConfig;
  * @since 1.1
  */
 public class ServletConfiguration extends BaseWebConfiguration {
+
     /** Stores a reference to the wrapped {@code ServletConfig}. */
     protected ServletConfig config;
 
     /**
-     * Create a ServletConfiguration using the initialization parameter of the specified servlet.
+     * Creates a ServletConfiguration using the initialization parameter of the specified servlet.
      *
      * @param servlet the servlet
      */
@@ -44,7 +45,7 @@ public class ServletConfiguration extends BaseWebConfiguration {
     }
 
     /**
-     * Create a ServletConfiguration using the servlet initialization parameters.
+     * Creates a ServletConfiguration using the servlet initialization parameters.
      *
      * @param config the servlet configuration
      */
