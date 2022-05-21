@@ -66,8 +66,7 @@ public class JSONConfiguration extends AbstractYAMLBasedConfiguration implements
     @Override
     public void read(final Reader in) throws ConfigurationException {
         try {
-            final Map<String, Object> map = mapper.readValue(in, this.type);
-            load(map);
+            load(mapper.readValue(in, this.type));
         } catch (final Exception e) {
             rethrowException(e);
         }
@@ -87,8 +86,7 @@ public class JSONConfiguration extends AbstractYAMLBasedConfiguration implements
     @Override
     public void read(final InputStream in) throws ConfigurationException {
         try {
-            final Map<String, Object> map = mapper.readValue(in, this.type);
-            load(map);
+            load(mapper.readValue(in, this.type));
         } catch (final Exception e) {
             rethrowException(e);
         }
