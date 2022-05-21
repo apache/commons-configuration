@@ -72,10 +72,10 @@ import org.apache.commons.text.lookup.DefaultStringLookup;
  * <p>
  * When variables are part of larger interpolated strings, the variable values, which can be of any type, must be
  * converted to strings to produce the full result. Each interpolator instance has a configurable
- * {@link #setStringConverter() string converter} to perform this conversion. The default implementation of this
+ * {@link #setStringConverter(Function) string converter} to perform this conversion. The default implementation of this
  * function simply uses the value's {@code toString} method in the majority of cases. However, for maximum
  * consistency with
- * {@link org.apache.commons.configuration3convert.DefaultConversionHandler DefaultConversionHandler}, when a variable
+ * {@link org.apache.commons.configuration2.convert.DefaultConversionHandler DefaultConversionHandler}, when a variable
  * value is a container type (such as a collection or array), then only the first element of the container is converted
  * to a string instead of the container itself. For example, if the variable {@code x} resolves to the integer array
  * {@code [1, 2, 3]}, then the string <code>"my value = ${x}"</code> will by default be interpolated to
@@ -323,12 +323,12 @@ public class ConfigurationInterpolator {
      * <p>
      * For the following examples, assume that the default string conversion function is in place and that the
      * variable {@code i} maps to the integer value {@code 42}.
+     * </p>
      * <pre>
      *      interpolator.interpolate(1) &rarr; 1 // non-string argument returned unchanged
      *      interpolator.interpolate("${i}") &rarr; 42 // single variable value returned with raw type
      *      interpolator.interpolate("answer = ${i}") &rarr; "answer = 42" // variable value converted to string
      * </pre>
-     * </p>
      *
      * @param value the value to be interpolated
      * @return the interpolated value
