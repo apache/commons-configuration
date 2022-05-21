@@ -27,7 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * A base class for testing {@link org.apache.commons.configuration2.BasePropertiesConfiguration} extensions.
+ * A base class for testing {@link org.apache.commons.configuration2.BaseHierarchicalConfiguration} extensions.
  *
  */
 public class TestThreesomeConfiguration {
