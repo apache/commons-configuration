@@ -1055,8 +1055,8 @@ public class TestCombinedConfigurationBuilder {
             assertTrue("Not a reloading builder", childBuilder instanceof ReloadingControllerSupport);
             final ReloadingController ctrl = ((ReloadingControllerSupport) childBuilder).getReloadingController();
             ctrl.checkForReloading(null); // initialize reloading
-            final BuilderEventListenerImpl l = new BuilderEventListenerImpl();
-            childBuilder.addEventListener(ConfigurationBuilderEvent.RESET, l);
+            final BuilderEventListenerImpl listener = new BuilderEventListenerImpl();
+            childBuilder.addEventListener(ConfigurationBuilderEvent.RESET, listener);
             reloadConfig.setProperty(key, "yes");
             handler.save();
 
@@ -1071,12 +1071,12 @@ public class TestCombinedConfigurationBuilder {
             } while (!changeDetected && --attempts > 0);
             assertTrue("No change detected", changeDetected);
             assertEquals("Wrong updated property", "yes", builder.getConfiguration().getString(key));
-            final ConfigurationBuilderEvent event = l.nextEvent(ConfigurationBuilderEvent.RESET);
-            l.assertNoMoreEvents();
+            final ConfigurationBuilderEvent event = listener.nextEvent(ConfigurationBuilderEvent.RESET);
+            listener.assertNoMoreEvents();
             final BasicConfigurationBuilder<? extends Configuration> multiBuilder = (BasicConfigurationBuilder<? extends Configuration>) event.getSource();
-            childBuilder.removeEventListener(ConfigurationBuilderEvent.RESET, l);
+            childBuilder.removeEventListener(ConfigurationBuilderEvent.RESET, listener);
             multiBuilder.resetResult();
-            l.assertNoMoreEvents();
+            listener.assertNoMoreEvents();
         } finally {
             assertTrue("Output file could not be deleted", outFile.delete());
         }
