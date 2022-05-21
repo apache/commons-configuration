@@ -32,11 +32,14 @@ import java.util.EventObject;
  * @since 2.0
  */
 public class Event extends EventObject {
+
     /**
      * The root event type for all configuration-related events. All specific event types have this type as super direct
      * (directly or indirectly).
      */
     public static final EventType<Event> ANY = new EventType<>(null, "ANY");
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Constant for the format used in toString() for a property representation.

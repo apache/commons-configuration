@@ -32,6 +32,9 @@ import org.apache.commons.configuration2.event.EventType;
  * @since 2.0
  */
 public class ConfigurationBuilderEvent extends Event {
+
+    private static final long serialVersionUID = 1L;
+
     /** The common super type for all events related to configuration builders. */
     public static final EventType<ConfigurationBuilderEvent> ANY = new EventType<>(Event.ANY, "BUILDER");
 
