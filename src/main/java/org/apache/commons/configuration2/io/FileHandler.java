@@ -321,6 +321,7 @@ public class FileHandler {
      * object, an exception is thrown. This is a typical operation to be performed before a load() or save() operation.
      *
      * @return the current {@code FileLocator} to be used for the calling operation
+     * @throws ConfigurationException if not content object is defined
      */
     private FileLocator checkContentAndGetLocator() throws ConfigurationException {
         checkContent();
