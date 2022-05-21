@@ -60,7 +60,7 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration implements
     public void read(final Reader in) throws ConfigurationException {
         try {
             final Yaml yaml = createYamlForReading(new LoaderOptions());
-            final Map<String, Object> map = (Map) yaml.load(in);
+            final Map<String, Object> map = yaml.load(in);
             load(map);
         } catch (final Exception e) {
             rethrowException(e);
@@ -70,7 +70,7 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration implements
     public void read(final Reader in, final LoaderOptions options) throws ConfigurationException {
         try {
             final Yaml yaml = createYamlForReading(options);
-            final Map<String, Object> map = (Map) yaml.load(in);
+            final Map<String, Object> map = yaml.load(in);
             load(map);
         } catch (final Exception e) {
             rethrowException(e);
@@ -99,7 +99,7 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration implements
     public void read(final InputStream in) throws ConfigurationException {
         try {
             final Yaml yaml = createYamlForReading(new LoaderOptions());
-            final Map<String, Object> map = (Map) yaml.load(in);
+            final Map<String, Object> map = yaml.load(in);
             load(map);
         } catch (final Exception e) {
             rethrowException(e);
@@ -109,7 +109,7 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration implements
     public void read(final InputStream in, final LoaderOptions options) throws ConfigurationException {
         try {
             final Yaml yaml = createYamlForReading(options);
-            final Map<String, Object> map = (Map) yaml.load(in);
+            final Map<String, Object> map = yaml.load(in);
             load(map);
         } catch (final Exception e) {
             rethrowException(e);
