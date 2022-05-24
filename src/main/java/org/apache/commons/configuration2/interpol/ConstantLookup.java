@@ -16,7 +16,6 @@
  */
 package org.apache.commons.configuration2.interpol;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -117,9 +116,7 @@ public class ConstantLookup implements Lookup {
      * @throws Exception if an error occurs
      */
     protected Object resolveField(final String className, final String fieldName) throws Exception {
-        final Class<?> clazz = fetchClass(className);
-        final Field field = clazz.getField(fieldName);
-        return field.get(null);
+        return fetchClass(className).getField(fieldName).get(null);
     }
 
     /**
