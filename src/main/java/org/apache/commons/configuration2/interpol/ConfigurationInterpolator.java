@@ -336,7 +336,7 @@ public class ConfigurationInterpolator {
     public Object interpolate(final Object value) {
         if (value instanceof String) {
             final String strValue = (String) value;
-            if (looksLikeSingleVariable(strValue)) {
+            if (isSingleVariable(strValue)) {
                 final Object resolvedValue = resolveSingleVariable(strValue);
                 if (resolvedValue != null && !(resolvedValue instanceof String)) {
                     // If the value is again a string, it needs no special
@@ -380,15 +380,16 @@ public class ConfigurationInterpolator {
     }
 
     /**
-     * Checks whether a value to be interpolated seems to be a single variable. In this case, it is resolved directly
-     * without using the {@code StringSubstitutor}. Note that it is okay if this method returns a false positive: In this
-     * case, resolving is going to fail, and standard mechanism is used.
+     * Checks whether a value to be interpolated consists of single, simple variable reference, e.g.,
+     * <code>${myvar}</code>. In this case, the variable is resolved directly without using the
+     * {@code StringSubstitutor}.
      *
      * @param strValue the value to be interpolated
-     * @return a flag whether this value seems to be a single variable
+     * @return {@code true} if the value contains a single, simple variable reference
      */
-    private boolean looksLikeSingleVariable(final String strValue) {
-        return strValue.startsWith(VAR_START) && strValue.endsWith(VAR_END);
+    private boolean isSingleVariable(final String strValue) {
+        return strValue.startsWith(VAR_START)
+                && strValue.indexOf(VAR_END, VAR_START_LENGTH) == strValue.length() - VAR_END_LENGTH;
     }
 
     /**
@@ -483,7 +484,7 @@ public class ConfigurationInterpolator {
     }
 
     /**
-     * Interpolates a string value that seems to be a single variable.
+     * Interpolates a string value that consists of a single variable.
      *
      * @param strValue the string to be interpolated
      * @return the resolved value or <b>null</b> if resolving failed
