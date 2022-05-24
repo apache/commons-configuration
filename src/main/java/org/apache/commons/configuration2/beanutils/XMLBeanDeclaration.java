@@ -511,7 +511,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * @param nd the node
          * @param hndlr the handler
          */
-        public NodeData(final T nd, final NodeHandler<T> hndlr) {
+        NodeData(final T nd, final NodeHandler<T> hndlr) {
             node = nd;
             handler = hndlr;
         }
@@ -521,7 +521,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          *
          * @return the node name
          */
-        public String nodeName() {
+        String nodeName() {
             return handler.nodeName(node);
         }
 
@@ -533,7 +533,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * @param config the configuration
          * @return the escaped node name
          */
-        public String escapedNodeName(final HierarchicalConfiguration<?> config) {
+        String escapedNodeName(final HierarchicalConfiguration<?> config) {
             return config.getExpressionEngine().nodeKey(node, StringUtils.EMPTY, handler);
         }
 
@@ -542,7 +542,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          *
          * @return a list with the children
          */
-        public List<NodeData<T>> getChildren() {
+        List<NodeData<T>> getChildren() {
             return wrapInNodeData(handler.getChildren(node));
         }
 
@@ -553,7 +553,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * @param name the name of the desired child nodes
          * @return a list with the children with this name
          */
-        public List<NodeData<T>> getChildren(final String name) {
+        List<NodeData<T>> getChildren(final String name) {
             return wrapInNodeData(handler.getChildren(node, name));
         }
 
@@ -562,7 +562,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          *
          * @return the attribute names of this node
          */
-        public Set<String> getAttributes() {
+        Set<String> getAttributes() {
             return handler.getAttributes(node);
         }
 
@@ -572,7 +572,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * @param key the key of the attribute
          * @return the value of this attribute
          */
-        public Object getAttribute(final String key) {
+        Object getAttribute(final String key) {
             return handler.getAttributeValue(node, key);
         }
 
@@ -582,7 +582,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * @param config the configuration
          * @return a flag whether this node is the configuration's root node
          */
-        public boolean matchesConfigRootNode(final HierarchicalConfiguration<?> config) {
+        boolean matchesConfigRootNode(final HierarchicalConfiguration<?> config) {
             return config.getNodeModel().getNodeHandler().getRootNode().equals(node);
         }
 
@@ -592,7 +592,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * @param nodes the list with nodes
          * @return the wrapped nodes
          */
-        private List<NodeData<T>> wrapInNodeData(final List<T> nodes) {
+        List<NodeData<T>> wrapInNodeData(final List<T> nodes) {
             final List<NodeData<T>> result = new ArrayList<>(nodes.size());
             for (final T node : nodes) {
                 result.add(new NodeData<>(node, handler));
