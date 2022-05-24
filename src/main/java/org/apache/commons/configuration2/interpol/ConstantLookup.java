@@ -16,8 +16,8 @@
  */
 package org.apache.commons.configuration2.interpol;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.logging.Log;
@@ -25,14 +25,13 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>
- * A specialized lookup implementation that allows access to constant fields of classes.
+ * Looks up constant fields in classes.
  * </p>
  * <p>
- * Sometimes it is necessary in a configuration file to refer to a constant defined in a class. This can be done with
- * this lookup implementation. Variable names passed in must be of the form {@code mypackage.MyClass.FIELD}. The
- * {@code lookup()} method will split the passed in string at the last dot, separating the fully qualified class name
- * and the name of the constant (i.e. <strong>static final</strong>) member field. Then the class is loaded and the
- * field's value is obtained using reflection.
+ * Variable names passed in must be of the form {@code mypackage.MyClass.FIELD}. The {@code lookup()} method will split
+ * the passed in string at the last dot, separating the fully qualified class name and the name of the constant (i.e.
+ * <strong>static final</strong>) member field. Then the class is loaded and the field's value is obtained using
+ * reflection.
  * </p>
  * <p>
  * Once retrieved values are cached for fast access. This class is thread-safe. It can be used as a standard (i.e.
@@ -42,20 +41,20 @@ import org.apache.commons.logging.LogFactory;
  * @since 1.4
  */
 public class ConstantLookup implements Lookup {
+
     /** Constant for the field separator. */
     private static final char FIELD_SEPRATOR = '.';
 
-    /** An internally used cache for already retrieved values. */
-    private static final Map<String, Object> CONSTANT_CACHE = new HashMap<>();
+    /** Cache of field values. */
+    private static final Map<String, Object> CACHE = new ConcurrentHashMap<>();
 
     /** The logger. */
     private final Log log = LogFactory.getLog(getClass());
 
     /**
-     * Tries to resolve the specified variable. The passed in variable name is interpreted as the name of a <b>static
-     * final</b> member field of a class. If the value has already been obtained, it can be retrieved from an internal
-     * cache. Otherwise this method will invoke the {@code resolveField()} method and pass in the name of the class and the
-     * field.
+     * Looks up a variable. The passed in variable name is interpreted as the name of a <b>static final</b> member field of
+     * a class. If the value has already been obtained, it can be retrieved from an internal cache. Otherwise this method
+     * will invoke the {@code resolveField()} method and pass in the name of the class and the field.
      *
      * @param var the name of the variable to be resolved
      * @return the value of this variable or <b>null</b> if it cannot be resolved
@@ -65,50 +64,30 @@ public class ConstantLookup implements Lookup {
         if (var == null) {
             return null;
         }
-
-        Object result;
-        synchronized (CONSTANT_CACHE) {
-            result = CONSTANT_CACHE.get(var);
-        }
-        if (result != null) {
-            return result;
-        }
-
-        final int fieldPos = var.lastIndexOf(FIELD_SEPRATOR);
-        if (fieldPos < 0) {
-            return null;
-        }
-        try {
-            final Object value = resolveField(var.substring(0, fieldPos), var.substring(fieldPos + 1));
-            if (value != null) {
-                synchronized (CONSTANT_CACHE) {
-                    // In worst case, the value will be fetched multiple times
-                    // because of this lax synchronization, but for constant
-                    // values this shouldn't be a problem.
-                    CONSTANT_CACHE.put(var, value);
+        return CACHE.computeIfAbsent(var, k -> {
+            final int fieldPos = var.lastIndexOf(FIELD_SEPRATOR);
+            if (fieldPos >= 0) {
+                try {
+                    return resolveField(var.substring(0, fieldPos), var.substring(fieldPos + 1));
+                } catch (final Exception ex) {
+                    log.warn("Could not obtain value for variable " + var, ex);
                 }
-                result = value;
             }
-        } catch (final Exception ex) {
-            log.warn("Could not obtain value for variable " + var, ex);
-        }
-
-        return result;
+            return null;
+        });
     }
 
     /**
      * Clears the shared cache with the so far resolved constants.
      */
     public static void clear() {
-        synchronized (CONSTANT_CACHE) {
-            CONSTANT_CACHE.clear();
-        }
+        CACHE.clear();
     }
 
     /**
      * Determines the value of the specified constant member field of a class. This implementation will call
      * {@code fetchClass()} to obtain the {@code java.lang.Class} object for the target class. Then it will use reflection
-     * to obtain the field's value. For this to work the field must be accessable.
+     * to obtain the field's value. For this to work the field must be accessible.
      *
      * @param className the name of the class
      * @param fieldName the name of the member field of that class to read
