@@ -135,7 +135,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     private final HierarchicalConfiguration<?> configuration;
 
     /** Stores the configuration node that contains the bean declaration. */
-    private final NodeData<?> node;
+    private final NodeData<?> nodeData;
 
     /** The name of the default bean class. */
     private final String defaultBeanClassName;
@@ -202,7 +202,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
             }
             tmpconfiguration = new BaseHierarchicalConfiguration();
         }
-        this.node = createNodeDataFromConfiguration(tmpconfiguration);
+        this.nodeData = createNodeDataFromConfiguration(tmpconfiguration);
         this.configuration = tmpconfiguration;
         defaultBeanClassName = defBeanClsName;
         initSubnodeConfiguration(getConfiguration());
@@ -227,7 +227,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * @param node the node with the bean declaration.
      */
     XMLBeanDeclaration(final HierarchicalConfiguration<?> config, final NodeData<?> node) {
-        this.node = node;
+        this.nodeData = node;
         configuration = config;
         defaultBeanClassName = null;
         initSubnodeConfiguration(config);
@@ -415,7 +415,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * @return the node with the bean declaration
      */
     NodeData<?> getNode() {
-        return node;
+        return nodeData;
     }
 
     /**
@@ -424,16 +424,16 @@ public class XMLBeanDeclaration implements BeanDeclaration {
      * in if they need a specific initialization. This base implementation creates a {@code XMLBeanDeclaration} that is
      * properly initialized from the passed in node.
      *
-     * @param node the child node, for which a {@code BeanDeclaration} is to be created
+     * @param nodeData the child node, for which a {@code BeanDeclaration} is to be created
      * @return the {@code BeanDeclaration} for this child node
      */
-    BeanDeclaration createBeanDeclaration(final NodeData<?> node) {
-        for (final HierarchicalConfiguration<?> config : getConfiguration().configurationsAt(node.escapedNodeName(getConfiguration()))) {
-            if (node.matchesConfigRootNode(config)) {
-                return new XMLBeanDeclaration(config, node);
+    BeanDeclaration createBeanDeclaration(final NodeData<?> nodeData) {
+        for (final HierarchicalConfiguration<?> config : getConfiguration().configurationsAt(nodeData.escapedNodeName(getConfiguration()))) {
+            if (nodeData.matchesConfigRootNode(config)) {
+                return new XMLBeanDeclaration(config, nodeData);
             }
         }
-        throw new ConfigurationRuntimeException("Unable to match node for " + node.nodeName());
+        throw new ConfigurationRuntimeException("Unable to match node for " + nodeData.nodeName());
     }
 
     /**
@@ -462,23 +462,23 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     /**
      * Gets an attribute of a configuration node. This method also takes interpolation into account.
      *
-     * @param nd the node
-     * @param attr the name of the attribute
+     * @param nodeData the node
+     * @param attribute the name of the attribute
      * @return the string value of this attribute (can be <b>null</b>)
      */
-    private String getAttribute(final NodeData<?> nd, final String attr) {
-        final Object value = nd.getAttribute(attr);
+    private String getAttribute(final NodeData<?> nodeData, final String attribute) {
+        final Object value = nodeData.getAttribute(attribute);
         return value == null ? null : String.valueOf(interpolate(value));
     }
 
     /**
      * Tests whether the constructor argument represented by the given configuration node is a bean declaration.
      *
-     * @param nd the configuration node in question
+     * @param nodeData the configuration node in question
      * @return a flag whether this constructor argument is a bean declaration
      */
-    private static boolean isBeanDeclarationArgument(final NodeData<?> nd) {
-        return !nd.getAttributes().contains(ATTR_BEAN_CLASS_NAME);
+    private static boolean isBeanDeclarationArgument(final NodeData<?> nodeData) {
+        return !nodeData.getAttributes().contains(ATTR_BEAN_CLASS_NAME);
     }
 
     /**
@@ -504,17 +504,17 @@ public class XMLBeanDeclaration implements BeanDeclaration {
         private final T node;
 
         /** The node handler for interacting with this node. */
-        private final NodeHandler<T> handler;
+        private final NodeHandler<T> nodeHandler;
 
         /**
          * Constructs a new instance of {@code NodeData}.
          *
-         * @param nd the node
-         * @param hndlr the handler
+         * @param node the node
+         * @param nodeHandler the node handler
          */
-        NodeData(final T nd, final NodeHandler<T> hndlr) {
-            node = nd;
-            handler = hndlr;
+        NodeData(final T node, final NodeHandler<T> nodeHandler) {
+            this.node = node;
+            this.nodeHandler = nodeHandler;
         }
 
         /**
@@ -523,7 +523,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * @return the node name
          */
         String nodeName() {
-            return handler.nodeName(node);
+            return nodeHandler.nodeName(node);
         }
 
         /**
@@ -535,7 +535,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * @return the escaped node name
          */
         String escapedNodeName(final HierarchicalConfiguration<?> config) {
-            return config.getExpressionEngine().nodeKey(node, StringUtils.EMPTY, handler);
+            return config.getExpressionEngine().nodeKey(node, StringUtils.EMPTY, nodeHandler);
         }
 
         /**
@@ -544,7 +544,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * @return a list with the children
          */
         List<NodeData<T>> getChildren() {
-            return wrapInNodeData(handler.getChildren(node));
+            return wrapInNodeData(nodeHandler.getChildren(node));
         }
 
         /**
@@ -555,7 +555,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * @return a list with the children with this name
          */
         List<NodeData<T>> getChildren(final String name) {
-            return wrapInNodeData(handler.getChildren(node, name));
+            return wrapInNodeData(nodeHandler.getChildren(node, name));
         }
 
         /**
@@ -564,7 +564,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * @return the attribute names of this node
          */
         Set<String> getAttributes() {
-            return handler.getAttributes(node);
+            return nodeHandler.getAttributes(node);
         }
 
         /**
@@ -574,7 +574,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * @return the value of this attribute
          */
         Object getAttribute(final String key) {
-            return handler.getAttributeValue(node, key);
+            return nodeHandler.getAttributeValue(node, key);
         }
 
         /**
@@ -594,7 +594,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * @return the wrapped nodes
          */
         List<NodeData<T>> wrapInNodeData(final List<T> nodes) {
-            return nodes.stream().map(n -> new NodeData<>(n, handler)).collect(Collectors.toList());
+            return nodes.stream().map(n -> new NodeData<>(n, nodeHandler)).collect(Collectors.toList());
         }
     }
 }
