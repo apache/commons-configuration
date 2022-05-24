@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
@@ -593,11 +594,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
          * @return the wrapped nodes
          */
         List<NodeData<T>> wrapInNodeData(final List<T> nodes) {
-            final List<NodeData<T>> result = new ArrayList<>(nodes.size());
-            for (final T node : nodes) {
-                result.add(new NodeData<>(node, handler));
-            }
-            return result;
+            return nodes.stream().map(n -> new NodeData<>(n, handler)).collect(Collectors.toList());
         }
     }
 }
