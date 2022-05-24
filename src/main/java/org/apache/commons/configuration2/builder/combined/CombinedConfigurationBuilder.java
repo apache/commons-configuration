@@ -1001,9 +1001,8 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * Registers providers defined in the configuration.
      *
      * @param defConfig the definition configuration
-     * @throws ConfigurationException if an error occurs
      */
-    private void registerConfiguredProviders(final HierarchicalConfiguration<?> defConfig) throws ConfigurationException {
+    private void registerConfiguredProviders(final HierarchicalConfiguration<?> defConfig) {
         final List<? extends HierarchicalConfiguration<?>> nodes = defConfig.configurationsAt(KEY_CONFIGURATION_PROVIDERS);
         for (final HierarchicalConfiguration<?> config : nodes) {
             final XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
