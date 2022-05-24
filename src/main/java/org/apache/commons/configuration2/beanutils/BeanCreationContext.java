@@ -29,15 +29,16 @@ package org.apache.commons.configuration2.beanutils;
  * @since 2.0
  */
 public interface BeanCreationContext {
+
     /**
-     * Returns the class of the bean to be created.
+     * Gets the class of the bean to be created.
      *
      * @return the bean class
      */
     Class<?> getBeanClass();
 
     /**
-     * Returns the {@code BeanDeclaration} with the data for the new bean. This data is used to initialize the bean's
+     * Gets the {@code BeanDeclaration} with the data for the new bean. This data is used to initialize the bean's
      * properties.
      *
      * @return the {@code BeanDeclaration} defining the bean to be created
@@ -45,7 +46,7 @@ public interface BeanCreationContext {
     BeanDeclaration getBeanDeclaration();
 
     /**
-     * Returns the (optional) parameter object for the bean factory. This is a mechanism which can be used to pass custom
+     * Gets the (optional) parameter object for the bean factory. This is a mechanism which can be used to pass custom
      * parameters to a {@link BeanFactory}.
      *
      * @return the parameter for the bean factory

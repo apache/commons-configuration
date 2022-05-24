@@ -98,6 +98,7 @@ import org.apache.commons.lang3.StringUtils;
  * @since 1.3
  */
 public class XMLBeanDeclaration implements BeanDeclaration {
+
     /** Constant for the prefix of reserved attributes. */
     public static final String RESERVED_PREFIX = "config-";
 
@@ -139,7 +140,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     private final String defaultBeanClassName;
 
     /**
-     * Creates a new instance of {@code XMLBeanDeclaration} and initializes it from the given configuration. The passed in
+     * Constructs a new instance of {@code XMLBeanDeclaration} and initializes it from the given configuration. The passed in
      * key points to the bean declaration.
      *
      * @param config the configuration (must not be <b>null</b>)
@@ -153,7 +154,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Creates a new instance of {@code XMLBeanDeclaration} and initializes it from the given configuration supporting
+     * Constructs a new instance of {@code XMLBeanDeclaration} and initializes it from the given configuration supporting
      * optional declarations.
      *
      * @param config the configuration (must not be <b>null</b>)
@@ -168,7 +169,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Creates a new instance of {@code XMLBeanDeclaration} and initializes it from the given configuration supporting
+     * Constructs a new instance of {@code XMLBeanDeclaration} and initializes it from the given configuration supporting
      * optional declarations and a default bean class name. The passed in key points to the bean declaration. If the key
      * does not exist and the boolean argument is <b>true</b>, the declaration is initialized with an empty configuration.
      * It is possible to create objects from such an empty declaration if a default class is provided. If the key on the
@@ -207,7 +208,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Creates a new instance of {@code XMLBeanDeclaration} and initializes it from the given configuration. The
+     * Constructs a new instance of {@code XMLBeanDeclaration} and initializes it from the given configuration. The
      * configuration's root node must contain the bean declaration.
      *
      * @param config the configuration with the bean declaration
@@ -218,7 +219,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Creates a new instance of {@code XMLBeanDeclaration} and initializes it with the configuration node that contains the
+     * Constructs a new instance of {@code XMLBeanDeclaration} and initializes it with the configuration node that contains the
      * bean declaration. This constructor is used internally.
      *
      * @param config the configuration
@@ -232,7 +233,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Returns the configuration object this bean declaration is based on.
+     * Gets the configuration object this bean declaration is based on.
      *
      * @return the associated configuration
      */
@@ -241,7 +242,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Returns the name of the default bean class. This class is used if no bean class is specified in the configuration. It
+     * Gets the name of the default bean class. This class is used if no bean class is specified in the configuration. It
      * may be <b>null</b> if no default class was set.
      *
      * @return the default bean class name
@@ -252,7 +253,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Returns the name of the bean factory. This information is fetched from the {@code config-factory} attribute.
+     * Gets the name of the bean factory. This information is fetched from the {@code config-factory} attribute.
      *
      * @return the name of the bean factory
      */
@@ -262,7 +263,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Returns a parameter for the bean factory. This information is fetched from the {@code config-factoryParam} attribute.
+     * Gets a parameter for the bean factory. This information is fetched from the {@code config-factoryParam} attribute.
      *
      * @return the parameter for the bean factory
      */
@@ -272,7 +273,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Returns the name of the class of the bean to be created. This information is obtained from the {@code config-class}
+     * Gets the name of the class of the bean to be created. This information is obtained from the {@code config-class}
      * attribute.
      *
      * @return the name of the bean's class
@@ -283,7 +284,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Returns a map with the bean's (simple) properties. The properties are collected from all attribute nodes, which are
+     * Gets a map with the bean's (simple) properties. The properties are collected from all attribute nodes, which are
      * not reserved.
      *
      * @return a map with the bean's properties
@@ -301,7 +302,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Returns a map with bean declarations for the complex properties of the bean to be created. These declarations are
+     * Gets a map with bean declarations for the complex properties of the bean to be created. These declarations are
      * obtained from the child nodes of this declaration's root node.
      *
      * @return a map with bean declarations for complex properties
@@ -361,7 +362,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Checks if the specified child node name is reserved and thus should be ignored. This method is called when processing
+     * Tests if the specified child node name is reserved and thus should be ignored. This method is called when processing
      * child nodes of this bean declaration. It is then possible to ignore some nodes with a specific meaning. This
      * implementation delegates to {@link #isReservedName(String)} .
      *
@@ -374,7 +375,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Checks if the specified attribute name is reserved and thus does not point to a property of the bean to be created.
+     * Tests if the specified attribute name is reserved and thus does not point to a property of the bean to be created.
      * This method is called when processing the attributes of this bean declaration. It is then possible to ignore some
      * attributes with a specific meaning. This implementation delegates to {@link #isReservedName(String)}.
      *
@@ -387,7 +388,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Checks if the specified name of a node or attribute is reserved and thus should be ignored. This method is called per
+     * Tests if the specified name of a node or attribute is reserved and thus should be ignored. This method is called per
      * default by the methods for checking attribute and child node names. It checks whether the passed in name starts with
      * the reserved prefix.
      *
@@ -399,7 +400,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Returns a set with the names of the attributes of the configuration node holding the data of this bean declaration.
+     * Gets a set with the names of the attributes of the configuration node holding the data of this bean declaration.
      *
      * @return the attribute names of the underlying configuration node
      */
@@ -408,7 +409,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Returns the data about the associated node.
+     * Gets the data about the associated node.
      *
      * @return the node with the bean declaration
      */
@@ -458,7 +459,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Helper method for obtaining an attribute of a configuration node. This method also takes interpolation into account.
+     * Gets an attribute of a configuration node. This method also takes interpolation into account.
      *
      * @param nd the node
      * @param attr the name of the attribute
@@ -470,7 +471,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * Checks whether the constructor argument represented by the given configuration node is a bean declaration.
+     * Tests whether the constructor argument represented by the given configuration node is a bean declaration.
      *
      * @param nd the configuration node in question
      * @return a flag whether this constructor argument is a bean declaration
@@ -492,11 +493,12 @@ public class XMLBeanDeclaration implements BeanDeclaration {
     }
 
     /**
-     * An internally used helper class which wraps the node with the bean declaration and the corresponding node handler.
+     * An internal helper class which wraps the node with the bean declaration and the corresponding node handler.
      *
      * @param <T> the type of the node
      */
     static class NodeData<T> {
+
         /** The wrapped node. */
         private final T node;
 
@@ -504,7 +506,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
         private final NodeHandler<T> handler;
 
         /**
-         * Creates a new instance of {@code NodeData}.
+         * Constructs a new instance of {@code NodeData}.
          *
          * @param nd the node
          * @param hndlr the handler
@@ -536,7 +538,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
         }
 
         /**
-         * Returns a list with the children of the wrapped node, again wrapped into {@code NodeData} objects.
+         * Gets a list with the children of the wrapped node, again wrapped into {@code NodeData} objects.
          *
          * @return a list with the children
          */
@@ -545,7 +547,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
         }
 
         /**
-         * Returns a list with the children of the wrapped node with the given name, again wrapped into {@code NodeData}
+         * Gets a list with the children of the wrapped node with the given name, again wrapped into {@code NodeData}
          * objects.
          *
          * @param name the name of the desired child nodes
@@ -556,7 +558,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
         }
 
         /**
-         * Returns a set with the names of the attributes of the wrapped node.
+         * Gets a set with the names of the attributes of the wrapped node.
          *
          * @return the attribute names of this node
          */
@@ -565,7 +567,7 @@ public class XMLBeanDeclaration implements BeanDeclaration {
         }
 
         /**
-         * Returns the value of the attribute with the given name of the wrapped node.
+         * Gets the value of the attribute with the given name of the wrapped node.
          *
          * @param key the key of the attribute
          * @return the value of this attribute

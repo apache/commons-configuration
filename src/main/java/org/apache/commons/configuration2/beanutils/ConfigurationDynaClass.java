@@ -35,6 +35,7 @@ import org.apache.commons.logging.LogFactory;
  * @since 1.0-rc1
  */
 public class ConfigurationDynaClass implements DynaClass {
+
     /** The logger. */
     private static final Log LOG = LogFactory.getLog(ConfigurationDynaClass.class);
 
@@ -42,7 +43,7 @@ public class ConfigurationDynaClass implements DynaClass {
     private final Configuration configuration;
 
     /**
-     * Construct an instance of a {@code ConfigurationDynaClass} wrapping the specified {@code Configuration} instance.
+     * Constructs an instance of a {@code ConfigurationDynaClass} wrapping the specified {@code Configuration} instance.
      *
      * @param configuration {@code Configuration} instance.
      */

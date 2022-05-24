@@ -40,8 +40,9 @@ import java.util.Map;
  * @since 1.3
  */
 public interface BeanDeclaration {
+
     /**
-     * Returns the name of the {@code BeanFactory} that should be used for creating the bean instance. This can be
+     * Gets the name of the {@code BeanFactory} that should be used for creating the bean instance. This can be
      * <b>null</b>, then a default factory will be used.
      *
      * @return the name of the bean factory
@@ -49,7 +50,7 @@ public interface BeanDeclaration {
     String getBeanFactoryName();
 
     /**
-     * Here an arbitrary object can be returned that will be passed to the bean factory. Its meaning is not further
+     * Gets an arbitrary object that will be passed to the bean factory. Its meaning is not further
      * specified. The purpose of this additional parameter is to support a further configuration of the bean factory that
      * can be placed directly at the bean declaration.
      *
@@ -58,7 +59,7 @@ public interface BeanDeclaration {
     Object getBeanFactoryParameter();
 
     /**
-     * Returns the name of the bean class, from which an instance is to be created. This value must be defined unless a
+     * Gets the name of the bean class, from which an instance is to be created. This value must be defined unless a
      * default class is provided for the bean creation operation.
      *
      * @return the name of the bean class
@@ -66,7 +67,7 @@ public interface BeanDeclaration {
     String getBeanClassName();
 
     /**
-     * Returns a map with properties that should be initialized on the newly created bean. The map's keys are the names of
+     * Gets a map with properties that should be initialized on the newly created bean. The map's keys are the names of
      * the properties; the corresponding values are the properties' values. The return value can be <b>null</b> if no
      * properties should be set.
      *
@@ -75,7 +76,7 @@ public interface BeanDeclaration {
     Map<String, Object> getBeanProperties();
 
     /**
-     * Returns a map with declarations for beans that should be set as properties of the newly created bean. This allows for
+     * Gets a map with declarations for beans that should be set as properties of the newly created bean. This allows for
      * complex initialization scenarios: a bean for a bean that contains complex properties (e.g. other beans) can have
      * nested declarations for defining these complex properties. The returned map's key are the names of the properties to
      * initialize. The values are either {@code BeanDeclaration} implementations or collections thereof. They will be
@@ -87,7 +88,7 @@ public interface BeanDeclaration {
     Map<String, Object> getNestedBeanDeclarations();
 
     /**
-     * Returns a collection with constructor arguments. This data is used to determine the constructor of the bean class to
+     * Gets a collection with constructor arguments. This data is used to determine the constructor of the bean class to
      * be invoked. The values of the arguments are passed to the constructor. An implementation can return <b>null</b> or an
      * empty collection; then the standard constructor of the bean class is called.
      *

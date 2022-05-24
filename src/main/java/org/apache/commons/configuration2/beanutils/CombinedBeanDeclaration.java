@@ -44,11 +44,12 @@ import java.util.Map;
  * @since 2.0
  */
 public class CombinedBeanDeclaration implements BeanDeclaration {
+
     /** A list with the child declarations. */
     private final List<BeanDeclaration> childDeclarations;
 
     /**
-     * Creates a new instance of {@code CombinedBeanDeclaration} and initializes it with the given child declarations.
+     * Constructs a new instance of {@code CombinedBeanDeclaration} and initializes it with the given child declarations.
      *
      * @param decl the child declarations
      * @throws NullPointerException if the array with child declarations is <b>null</b>

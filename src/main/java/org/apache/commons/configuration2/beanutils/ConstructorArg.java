@@ -35,6 +35,7 @@ import java.util.Objects;
  * @since 2.0
  */
 public final class ConstructorArg {
+
     /** The bean declaration referenced by this constructor argument. */
     private final BeanDeclaration beanDeclaration;
 
@@ -45,7 +46,7 @@ public final class ConstructorArg {
     private final String typeName;
 
     /**
-     * Creates a new instance of {@code ConstructorArg}.
+     * Constructs a new instance of {@code ConstructorArg}.
      *
      * @param decl the associated bean declaration
      * @param val the value of the argument
@@ -119,19 +120,19 @@ public final class ConstructorArg {
     }
 
     /**
-     * Returns a flag whether this constructor argument represents a {@code BeanDeclaration}. If this method returns
+     * Tests whether this constructor argument represents a {@code BeanDeclaration}. If this method returns
      * <b>true</b>, the actual value of this argument can be obtained by resolving the bean declaration returned by
      * {@link #getBeanDeclaration()}. Otherwise, this argument has a simple value which can be queried using
      * {@link #getValue()}.
      *
-     * @return a flag whether this constructor argument references a bean declaration
+     * @return whether this constructor argument references a bean declaration
      */
     public boolean isNestedBeanDeclaration() {
         return getBeanDeclaration() != null;
     }
 
     /**
-     * Returns the value of this constructor argument. This method can be queried if {@link #isNestedBeanDeclaration()}
+     * Gets the value of this constructor argument. This method can be queried if {@link #isNestedBeanDeclaration()}
      * returns <b>false</b>. Note that a return value of <b>null</b> is legal (to pass <b>null</b> to a constructor
      * argument).
      *
@@ -142,7 +143,7 @@ public final class ConstructorArg {
     }
 
     /**
-     * Returns the optional data type name of this constructor argument. The type name can be specified as a hint to select
+     * Gets the optional data type name of this constructor argument. The type name can be specified as a hint to select
      * a specific constructor if there are ambiguities. Note that it does not necessarily has to match the data type of this
      * argument's value because a type conversion may be performed before invoking the constructor.
      *

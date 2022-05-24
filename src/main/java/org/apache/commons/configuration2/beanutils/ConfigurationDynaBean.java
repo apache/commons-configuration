@@ -52,6 +52,7 @@ import org.apache.commons.logging.LogFactory;
  * @since 1.0-rc1
  */
 public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean {
+
     /** Constant for the property delimiter. */
     private static final String PROPERTY_DELIMITER = ".";
 
@@ -59,7 +60,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
     private static final Log LOG = LogFactory.getLog(ConfigurationDynaBean.class);
 
     /**
-     * Creates a new instance of {@code ConfigurationDynaBean} and sets the configuration this bean is associated with.
+     * Constructs a new instance of {@code ConfigurationDynaBean} and sets the configuration this bean is associated with.
      *
      * @param configuration the configuration
      */
@@ -187,7 +188,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
     }
 
     /**
-     * Tests whether the given name references an indexed property. This implementation tests for properties of type list or
+     * Checks whether the given name references an indexed property. This implementation tests for properties of type list or
      * array. If the property does not exist, an exception is thrown.
      *
      * @param name the name of the property to check

@@ -62,6 +62,7 @@ import org.apache.commons.lang3.ClassUtils;
  * @since 1.3
  */
 public final class BeanHelper {
+
     /**
      * A default instance of {@code BeanHelper} which can be shared between arbitrary components. If no special
      * configuration is needed, this instance can be used throughout an application. Otherwise, new instances can be created
@@ -85,7 +86,7 @@ public final class BeanHelper {
     private final BeanFactory defaultBeanFactory;
 
     /**
-     * Creates a new instance of {@code BeanHelper} with the default instance of {@link DefaultBeanFactory} as default
+     * Constructs a new instance of {@code BeanHelper} with the default instance of {@link DefaultBeanFactory} as default
      * {@link BeanFactory}.
      */
     public BeanHelper() {
@@ -93,7 +94,7 @@ public final class BeanHelper {
     }
 
     /**
-     * Creates a new instance of {@code BeanHelper} and sets the specified default {@code BeanFactory}.
+     * Constructs a new instance of {@code BeanHelper} and sets the specified default {@code BeanFactory}.
      *
      * @param defFactory the default {@code BeanFactory} (can be <b>null</b>, then a default instance is used)
      */
@@ -102,7 +103,7 @@ public final class BeanHelper {
     }
 
     /**
-     * Register a bean factory under a symbolic name. This factory object can then be specified in bean declarations with
+     * Registers a bean factory under a symbolic name. This factory object can then be specified in bean declarations with
      * the effect that this factory will be used to obtain an instance for the corresponding bean declaration.
      *
      * @param name the name of the factory
@@ -130,7 +131,7 @@ public final class BeanHelper {
     }
 
     /**
-     * Returns a set with the names of all currently registered bean factories.
+     * Gets a set with the names of all currently registered bean factories.
      *
      * @return a set with the names of the registered bean factories
      */
@@ -139,7 +140,7 @@ public final class BeanHelper {
     }
 
     /**
-     * Returns the default bean factory.
+     * Gets the default bean factory.
      *
      * @return the default bean factory
      */
@@ -255,7 +256,7 @@ public final class BeanHelper {
     }
 
     /**
-     * Return the Class of the property if it can be determined.
+     * Gets the Class of the property if it can be determined.
      *
      * @param bean The bean containing the property.
      * @param propName The name of the property.
@@ -316,7 +317,7 @@ public final class BeanHelper {
     }
 
     /**
-     * Set a property on the bean only if the property exists
+     * Sets a property on the bean only if the property exists
      *
      * @param bean the bean
      * @param propName the name of the property
@@ -358,7 +359,7 @@ public final class BeanHelper {
     }
 
     /**
-     * Returns a bean instance for the specified declaration. This method is a short cut for
+     * Creates a bean instance for the specified declaration. This method is a short cut for
      * {@code createBean(data, null, null);}.
      *
      * @param data the bean declaration
@@ -371,7 +372,7 @@ public final class BeanHelper {
     }
 
     /**
-     * Returns a bean instance for the specified declaration. This method is a short cut for
+     * Creates a bean instance for the specified declaration. This method is a short cut for
      * {@code createBean(data, null);}.
      *
      * @param data the bean declaration
@@ -383,7 +384,7 @@ public final class BeanHelper {
     }
 
     /**
-     * Returns a {@code java.lang.Class} object for the specified name. Because class loading can be tricky in some
+     * Loads a {@code java.lang.Class} object for the specified name. Because class loading can be tricky in some
      * environments the code for retrieving a class by its name was extracted into this helper method. So if changes are
      * necessary, they can be made at a single place.
      *
@@ -396,7 +397,7 @@ public final class BeanHelper {
     }
 
     /**
-     * Checks whether the specified property of the given bean instance supports write access.
+     * Tests whether the specified property of the given bean instance supports write access.
      *
      * @param bean the bean instance
      * @param propName the name of the property in question

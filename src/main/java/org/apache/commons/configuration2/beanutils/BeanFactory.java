@@ -37,8 +37,9 @@ package org.apache.commons.configuration2.beanutils;
  * @since 1.3
  */
 public interface BeanFactory {
+
     /**
-     * Returns a bean instance for the given context object. All information about the bean to be created are contained in
+     * Creates a bean instance for the given context object. All information about the bean to be created are contained in
      * the provided {@code BeanCreationContext} object. This includes a {@link BeanDeclaration} defining the properties of
      * the bean. It is up to a concrete implementation how the bean is created and initialized.
      *
@@ -50,7 +51,7 @@ public interface BeanFactory {
     Object createBean(BeanCreationContext bcc) throws Exception;
 
     /**
-     * Returns the default bean class of this bean factory. If an implementation here returns a non <b>null</b> value, bean
+     * Gets the default bean class of this bean factory. If an implementation here returns a non <b>null</b> value, bean
      * declarations using this factory do not need to provide the name of the bean class. In such a case an instance of the
      * default class will be created.
      *

@@ -47,6 +47,7 @@ import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
  * @since 1.3
  */
 public class DefaultBeanFactory implements BeanFactory {
+
     /** Stores the default instance of this class. */
     public static final DefaultBeanFactory INSTANCE = new DefaultBeanFactory();
 
@@ -57,14 +58,14 @@ public class DefaultBeanFactory implements BeanFactory {
     private final ConversionHandler conversionHandler;
 
     /**
-     * Creates a new instance of {@code DefaultBeanFactory} using a default {@code ConversionHandler}.
+     * Constructs a new instance of {@code DefaultBeanFactory} using a default {@code ConversionHandler}.
      */
     public DefaultBeanFactory() {
         this(null);
     }
 
     /**
-     * Creates a new instance of {@code DefaultBeanFactory} using the specified {@code ConversionHandler} for data type
+     * Constructs a new instance of {@code DefaultBeanFactory} using the specified {@code ConversionHandler} for data type
      * conversions.
      *
      * @param convHandler the {@code ConversionHandler}; can be <b>null</b>, then a default handler is used
@@ -75,7 +76,7 @@ public class DefaultBeanFactory implements BeanFactory {
     }
 
     /**
-     * Returns the {@code ConversionHandler} used by this object.
+     * Gets the {@code ConversionHandler} used by this object.
      *
      * @return the {@code ConversionHandler}
      * @since 2.0
@@ -101,7 +102,7 @@ public class DefaultBeanFactory implements BeanFactory {
     }
 
     /**
-     * Returns the default bean class used by this factory. This is always <b>null</b> for this implementation.
+     * Gets the default bean class used by this factory. This is always <b>null</b> for this implementation.
      *
      * @return the default bean class
      */
@@ -238,7 +239,7 @@ public class DefaultBeanFactory implements BeanFactory {
     }
 
     /**
-     * Helper method for extracting constructor arguments from a bean declaration. Deals with <b>null</b> values.
+     * Gets constructor arguments from a bean declaration. Deals with <b>null</b> values.
      *
      * @param data the bean declaration
      * @return the collection with constructor arguments (never <b>null</b>)
@@ -252,7 +253,7 @@ public class DefaultBeanFactory implements BeanFactory {
     }
 
     /**
-     * Helper method for testing whether exactly one matching constructor was found. Throws a meaningful exception if there
+     * Checks whether exactly one matching constructor was found. Throws a meaningful exception if there
      * is not a single matching constructor.
      *
      * @param beanClass the bean class
@@ -271,7 +272,7 @@ public class DefaultBeanFactory implements BeanFactory {
     }
 
     /**
-     * Creates an exception if no single matching constructor was found with a meaningful error message.
+     * Constructs an exception if no single matching constructor was found with a meaningful error message.
      *
      * @param beanClass the affected bean class
      * @param data the bean declaration
