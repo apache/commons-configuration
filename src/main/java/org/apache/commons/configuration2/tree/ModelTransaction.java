@@ -30,7 +30,7 @@ import java.util.TreeMap;
 
 /**
  * <p>
- * An internally used helper class for an atomic update of an {@link InMemoryNodeModel}.
+ * An internal helper class for a atomic updates of an {@link InMemoryNodeModel}.
  * </p>
  * <p>
  * This class performs updates on the node structure of a node model consisting of {@link ImmutableNode} objects.
@@ -56,6 +56,7 @@ import java.util.TreeMap;
  *
  */
 class ModelTransaction {
+
     /**
      * Constant for the maximum number of entries in the replacement mapping. If this number is exceeded, the parent mapping
      * is reconstructed. The number is a bit arbitrary. If it is too low, updates - especially on large node structures -
@@ -688,7 +689,7 @@ class ModelTransaction {
     /**
      * A specialized operation class for adding an attribute to a target node.
      */
-    private class AddAttributeOperation extends Operation {
+    private static class AddAttributeOperation extends Operation {
         /** The attribute name. */
         private final String attributeName;
 
@@ -715,7 +716,7 @@ class ModelTransaction {
     /**
      * A specialized operation class for adding multiple attributes to a target node.
      */
-    private class AddAttributesOperation extends Operation {
+    private static class AddAttributesOperation extends Operation {
         /** The map with attributes. */
         private final Map<String, Object> attributes;
 
@@ -737,7 +738,7 @@ class ModelTransaction {
     /**
      * A specialized operation class for removing an attribute from a target node.
      */
-    private class RemoveAttributeOperation extends Operation {
+    private static class RemoveAttributeOperation extends Operation {
         /** The attribute name. */
         private final String attributeName;
 
@@ -759,7 +760,7 @@ class ModelTransaction {
     /**
      * A specialized operation class which changes the value of a node.
      */
-    private class ChangeNodeValueOperation extends Operation {
+    private static class ChangeNodeValueOperation extends Operation {
         /** The new value for the affected node. */
         private final Object newValue;
 
@@ -781,7 +782,7 @@ class ModelTransaction {
     /**
      * A specialized operation class which changes the name of a node.
      */
-    private class ChangeNodeNameOperation extends Operation {
+    private static class ChangeNodeNameOperation extends Operation {
         /** The new node name. */
         private final String newName;
 
