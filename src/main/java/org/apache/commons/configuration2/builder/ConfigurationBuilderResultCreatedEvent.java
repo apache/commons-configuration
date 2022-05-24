@@ -44,6 +44,14 @@ public class ConfigurationBuilderResultCreatedEvent extends ConfigurationBuilder
      */
     public static final EventType<ConfigurationBuilderResultCreatedEvent> RESULT_CREATED = new EventType<>(ANY, "RESULT_CREATED");
 
+    // SpotBugs
+    // [ERROR] Medium: Class org.apache.commons.configuration2.builder.ConfigurationBuilderResultCreatedEvent defines
+    // non-transient non-serializable instance field configuration
+    // [org.apache.commons.configuration2.builder.ConfigurationBuilderResultCreatedEvent] In
+    // ConfigurationBuilderResultCreatedEvent.java SE_BAD_FIELD
+    //
+    // private static final long serialVersionUID = 1L;
+
     /** The newly created configuration object. */
     private final ImmutableConfiguration configuration;
 
