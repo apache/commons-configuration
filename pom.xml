@@ -594,7 +594,7 @@
     <commons.jacoco.version>0.8.8</commons.jacoco.version>
     <commons.spotbugs.version>4.7.0.0</commons.spotbugs.version>
     <commons.javadoc.version>3.4.0</commons.javadoc.version>
-    <checkstyle.version>9.3</checkstyle.version>
+    <checkstyle.version>10.3</checkstyle.version>
     <!-- commons.animal-sniffer.version 1.21 fails on Java 17. -->
     <commons.animal-sniffer.version>1.20</commons.animal-sniffer.version>
 
