@@ -95,6 +95,15 @@
          Add ImmutableConfiguration.getDuration() methods.
        </action>       
        <!-- UPDATES -->
+       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
+         Bump actions/cache from 2 to 3.0.3 #99, #151, #169.
+       </action>
+       <action type="update" dev="ggregory" due-to="Dependabot">
+         Bump actions/checkout from 1 to 3 #47, #62, #70, #85, #150, #163.
+       </action>
+       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
+         Bump actions/setup-java from 1.4.0 to 3 #63, #65, #73, #174.
+       </action>
        <action type="update" dev="mattjuntunen" due-to="Dependabot, Matt Juntunen">
          Bump codeql-action from v1 to v2.
        </action>
@@ -108,15 +117,6 @@
        </action>
        <action type="update" dev="mattjuntunen" due-to="Dependabot, Matt Juntunen">
          Bump commons-parent from 52 to 53.
-       </action>
-       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
-         Bump actions/setup-java from 1.4.0 to 3 #63, #65, #73, #174.
-       </action>
-       <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
-         Bump actions/cache from 2 to 3.0.3 #99, #151, #169.
-       </action>
-       <action type="update" dev="ggregory" due-to="Dependabot">
-         Bump actions/checkout from 1 to 3 #47, #62, #70, #85, #150, #163.
        </action>
        <action type="update" dev="ggregory" issue="CONFIGURATION-787" due-to="Gary Gregory">
          Bump Apache Commons Lang from 3.9 to 3.12.0.
