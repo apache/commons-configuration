@@ -25,13 +25,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 
 import org.apache.commons.text.StringSubstitutor;
-import org.apache.commons.text.lookup.DefaultStringLookup;
 
 /**
  * <p>
@@ -89,6 +89,17 @@ import org.apache.commons.text.lookup.DefaultStringLookup;
  * @since 1.4
  */
 public class ConfigurationInterpolator {
+
+    /**
+     * Name of the system property used to determine the lookups added by the
+     * {@link #getDefaultPrefixLookups()} method. Use of this property is only required
+     * in cases where the set of default lookups must be modified.
+     *
+     * @since 2.8
+     */
+    public static final String DEFAULT_PREFIX_LOOKUPS_PROPERTY =
+            "org.apache.commons.configuration2.interpol.ConfigurationInterpolator.defaultPrefixLookups";
+
     /** Constant for the prefix separator. */
     private static final char PREFIX_SEPARATOR = ':';
 
@@ -103,23 +114,6 @@ public class ConfigurationInterpolator {
 
     /** The length of {@link #VAR_END}. */
     private static final int VAR_END_LENGTH = VAR_END.length();
-
-    /** A map containing the default prefix lookups. */
-    private static final Map<String, Lookup> DEFAULT_PREFIX_LOOKUPS;
-
-    static {
-        // TODO Perhaps a 3.0 version should only use Commons Text lookups.
-        // Add our own lookups.
-        final Map<String, Lookup> lookups = new HashMap<>();
-        for (final DefaultLookups lookup : DefaultLookups.values()) {
-            lookups.put(lookup.getPrefix(), lookup.getLookup());
-        }
-        // Add Apache Commons Text lookups but don't override existing keys.
-        for (final DefaultStringLookup lookup : DefaultStringLookup.values()) {
-            lookups.putIfAbsent(lookup.getKey(), new StringLookupAdapter(lookup.getStringLookup()));
-        }
-        DEFAULT_PREFIX_LOOKUPS = Collections.unmodifiableMap(lookups);
-    }
 
     /** A map with the currently registered lookup objects. */
     private final Map<String, Lookup> prefixLookups;
@@ -189,14 +183,111 @@ public class ConfigurationInterpolator {
 
     /**
      * Returns a map containing the default prefix lookups. Every configuration object derived from
-     * {@code AbstractConfiguration} is by default initialized with a {@code ConfigurationInterpolator} containing these
-     * {@code Lookup} objects and their prefixes. The map cannot be modified
+     * {@code AbstractConfiguration} is by default initialized with a {@code ConfigurationInterpolator} containing
+     * these {@code Lookup} objects and their prefixes. The map cannot be modified.
+     *
+     * <p>
+     * All of the lookups present in the returned map are from {@link DefaultLookups}. However, not all of the
+     * available lookups are included by default. Specifically, lookups that can execute code (e.g.,
+     * {@link DefaultLookups#SCRIPT SCRIPT}) and those that can result in contact with remote servers (e.g.,
+     * {@link DefaultLookups#URL URL} and {@link DefaultLookups#DNS DNS}) are not included. If this behavior
+     * must be modified, users can define the {@value #DEFAULT_PREFIX_LOOKUPS_PROPERTY} system property
+     * with a comma-separated list of {@link DefaultLookups} enum names to be included in the set of defaults.
+     * For example, setting this system property to {@code "BASE64_ENCODER,ENVIRONMENT"} will only include the
+     * {@link DefaultLookups#BASE64_ENCODER BASE64_ENCODER} and
+     * {@link DefaultLookups#ENVIRONMENT ENVIRONMENT} lookups. Setting the property to the empty string will
+     * cause no defaults to be configured.
+     * </p>
+     *
+     * <p><strong>Default Lookups</strong></p>
+     * <table>
+     * <tr>
+     *  <th>Prefix</th>
+     *  <th>Lookup</th>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_BASE64_DECODER}</td>
+     *  <td>{@link DefaultLookups#BASE64_DECODER BASE64_DECODER}</td>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_BASE64_ENCODER}</td>
+     *  <td>{@link DefaultLookups#BASE64_ENCODER BASE64_ENCODER}</td>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_CONST}</td>
+     *  <td>{@link DefaultLookups#CONST CONST}</td>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_DATE}</td>
+     *  <td>{@link DefaultLookups#DATE DATE}</td>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_ENV}</td>
+     *  <td>{@link DefaultLookups#ENVIRONMENT ENVIRONMENT}</td>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_FILE}</td>
+     *  <td>{@link DefaultLookups#FILE FILE}</td>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_JAVA}</td>
+     *  <td>{@link DefaultLookups#JAVA JAVA}</td>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_LOCALHOST}</td>
+     *  <td>{@link DefaultLookups#LOCAL_HOST LOCAL_HOST}</td>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_PROPERTIES}</td>
+     *  <td>{@link DefaultLookups#PROPERTIES PROPERTIES}</td>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_RESOURCE_BUNDLE}</td>
+     *  <td>{@link DefaultLookups#RESOURCE_BUNDLE RESOURCE_BUNDLE}</td>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_SYS}</td>
+     *  <td>{@link DefaultLookups#SYSTEM_PROPERTIES SYSTEM_PROPERTIES}</td>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_URL_DECODER}</td>
+     *  <td>{@link DefaultLookups#URL_DECODER URL_DECODER}</td>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_URL_ENCODER}</td>
+     *  <td>{@link DefaultLookups#URL_ENCODER URL_ENCODER}</td>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_XML}</td>
+     *  <td>{@link DefaultLookups#XML XML}</td>
+     * </tr>
+     * </table>
+     *
+     * <p><strong>Additional Lookups (not included by default)</strong></p>
+     * <table>
+     * <tr>
+     *  <th>Prefix</th>
+     *  <th>Lookup</th>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_DNS}</td>
+     *  <td>{@link DefaultLookups#DNS DNS}</td>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_URL}</td>
+     *  <td>{@link DefaultLookups#URL URL}</td>
+     * </tr>
+     * <tr>
+     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_SCRIPT}</td>
+     *  <td>{@link DefaultLookups#SCRIPT SCRIPT}</td>
+     * </tr>
+     * </table>
      *
      * @return a map with the default prefix {@code Lookup} objects and their prefixes
      * @since 2.0
      */
     public static Map<String, Lookup> getDefaultPrefixLookups() {
-        return DEFAULT_PREFIX_LOOKUPS;
+        return DefaultPrefixLookupsHolder.INSTANCE.getDefaultPrefixLookups();
     }
 
     /**
@@ -511,6 +602,98 @@ public class ConfigurationInterpolator {
      */
     public void setParentInterpolator(final ConfigurationInterpolator parentInterpolator) {
         this.parentInterpolator = parentInterpolator;
+    }
+
+    /**
+     * Internal class used to construct the default {@link Lookup} map used by
+     * {@link ConfigurationInterpolator#getDefaultPrefixLookups()}.
+     */
+    static final class DefaultPrefixLookupsHolder {
+
+        /** Singleton instance, initialized with the system properties. */
+        static final DefaultPrefixLookupsHolder INSTANCE = new DefaultPrefixLookupsHolder(System.getProperties());
+
+        /** Default lookup map. */
+        private final Map<String, Lookup> defaultLookups;
+
+        /**
+         * Construct a new instance initialized with the given properties.
+         * @param props initialization properties
+         */
+        DefaultPrefixLookupsHolder(final Properties props) {
+            final Map<String, Lookup> lookups =
+                    props.containsKey(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY)
+                        ? parseLookups(props.getProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY))
+                        : createDefaultLookups();
+
+            defaultLookups = Collections.unmodifiableMap(lookups);
+        }
+
+        /**
+         * Get the default prefix lookups map.
+         * @return default prefix lookups map
+         */
+        Map<String, Lookup> getDefaultPrefixLookups() {
+            return defaultLookups;
+        }
+
+        /**
+         * Create the lookup map used when the user has requested no customization.
+         * @return default lookup map
+         */
+        private static Map<String, Lookup> createDefaultLookups() {
+            final Map<String, Lookup> lookupMap = new HashMap<>();
+
+            addLookup(DefaultLookups.BASE64_DECODER, lookupMap);
+            addLookup(DefaultLookups.BASE64_ENCODER, lookupMap);
+            addLookup(DefaultLookups.CONST, lookupMap);
+            addLookup(DefaultLookups.DATE, lookupMap);
+            addLookup(DefaultLookups.ENVIRONMENT, lookupMap);
+            addLookup(DefaultLookups.FILE, lookupMap);
+            addLookup(DefaultLookups.JAVA, lookupMap);
+            addLookup(DefaultLookups.LOCAL_HOST, lookupMap);
+            addLookup(DefaultLookups.PROPERTIES, lookupMap);
+            addLookup(DefaultLookups.RESOURCE_BUNDLE, lookupMap);
+            addLookup(DefaultLookups.SYSTEM_PROPERTIES, lookupMap);
+            addLookup(DefaultLookups.URL_DECODER, lookupMap);
+            addLookup(DefaultLookups.URL_ENCODER, lookupMap);
+            addLookup(DefaultLookups.XML, lookupMap);
+
+            return lookupMap;
+        }
+
+        /**
+         * Construct a lookup map by parsing the given string. The string is expected to contain
+         * comma or space-separated names of values from the {@link DefaultLookups} enum.
+         * @param str string to parse; not null
+         * @return lookup map parsed from the given string
+         * @throws IllegalArgumentException if the string does not contain a valid default lookup
+         *      definition
+         */
+        private static Map<String, Lookup> parseLookups(final String str) {
+            final Map<String, Lookup> lookupMap = new HashMap<>();
+
+            try {
+                for (final String lookupName : str.split("[\\s,]+")) {
+                    if (!lookupName.isEmpty()) {
+                        addLookup(DefaultLookups.valueOf(lookupName.toUpperCase()), lookupMap);
+                    }
+                }
+            } catch (IllegalArgumentException exc) {
+                throw new IllegalArgumentException("Invalid default lookups definition: " + str, exc);
+            }
+
+            return lookupMap;
+        }
+
+        /**
+         * Add the prefix and lookup from {@code lookup} to {@code map}.
+         * @param lookup lookup to add
+         * @param map map to add to
+         */
+        private static void addLookup(final DefaultLookups lookup, final Map<String, Lookup> map) {
+            map.put(lookup.getPrefix(), lookup.getLookup());
+        }
     }
 
     /** Class encapsulating the default logic to convert resolved variable values into strings.

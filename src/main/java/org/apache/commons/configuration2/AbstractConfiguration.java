@@ -211,9 +211,13 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     /**
      * Returns the {@code ConfigurationInterpolator} object that manages the lookup objects for resolving variables.
+     * Unless a custom interpolator has been set or the instance has been modified, the returned interpolator will
+     * resolve values from this configuration instance and support the
+     * {@link ConfigurationInterpolator#getDefaultPrefixLookups() default prefix lookups}.
      *
      * @return the {@code ConfigurationInterpolator} associated with this configuration
      * @since 1.4
+     * @see ConfigurationInterpolator#getDefaultPrefixLookups()
      */
     @Override
     public ConfigurationInterpolator getInterpolator() {

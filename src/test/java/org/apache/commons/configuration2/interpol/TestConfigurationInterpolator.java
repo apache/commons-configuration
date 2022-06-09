@@ -23,17 +23,23 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
+import java.util.Set;
 import java.util.function.Function;
 
+import org.apache.commons.text.lookup.StringLookupFactory;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -206,10 +212,22 @@ public class TestConfigurationInterpolator {
      */
     @Test
     public void testGetDefaultPrefixLookups() {
+        final EnumSet<DefaultLookups> excluded = EnumSet.of(
+                DefaultLookups.DNS,
+                DefaultLookups.URL,
+                DefaultLookups.SCRIPT);
+
+        final EnumSet<DefaultLookups> included = EnumSet.complementOf(excluded);
+
         final Map<String, Lookup> lookups = ConfigurationInterpolator.getDefaultPrefixLookups();
-        assertEquals("Wrong number of lookups", DefaultLookups.values().length, lookups.size());
-        for (final DefaultLookups l : DefaultLookups.values()) {
+
+        assertEquals("Wrong number of lookups", included.size(), lookups.size());
+        for (final DefaultLookups l : included) {
             assertSame("Wrong entry for " + l, l.getLookup(), lookups.get(l.getPrefix()));
+        }
+
+        for (final DefaultLookups l : excluded) {
+            assertNull("Unexpected entry for " + l, lookups.get(l.getPrefix()));
         }
     }
 
@@ -683,5 +701,143 @@ public class TestConfigurationInterpolator {
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
         assertNull("Variable could be resolved", interpolator.resolve("UnknownPrefix:" + TEST_NAME));
         assertNull("Variable with empty prefix could be resolved", interpolator.resolve(":" + TEST_NAME));
+    }
+
+    @Test
+    public void testDefaultStringLookupsHolder_lookupsPropertyNotPresent() {
+        checkDefaultPrefixLookupsHolder(new Properties(),
+                "base64",
+                StringLookupFactory.KEY_BASE64_DECODER,
+                StringLookupFactory.KEY_BASE64_ENCODER,
+                StringLookupFactory.KEY_CONST,
+                StringLookupFactory.KEY_DATE,
+                StringLookupFactory.KEY_ENV,
+                StringLookupFactory.KEY_FILE,
+                StringLookupFactory.KEY_JAVA,
+                StringLookupFactory.KEY_LOCALHOST,
+                StringLookupFactory.KEY_PROPERTIES,
+                StringLookupFactory.KEY_RESOURCE_BUNDLE,
+                StringLookupFactory.KEY_SYS,
+                StringLookupFactory.KEY_URL_DECODER,
+                StringLookupFactory.KEY_URL_ENCODER,
+                StringLookupFactory.KEY_XML);
+    }
+
+    @Test
+    public void testDefaultStringLookupsHolder_lookupsPropertyEmptyAndBlank() {
+        final Properties propsWithNull = new Properties();
+        propsWithNull.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "");
+
+        checkDefaultPrefixLookupsHolder(propsWithNull);
+
+        final Properties propsWithBlank = new Properties();
+        propsWithBlank.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, " ");
+
+        checkDefaultPrefixLookupsHolder(propsWithBlank);
+    }
+
+    @Test
+    public void testDefaultStringLookupsHolder_givenSingleLookup() {
+        final Properties props = new Properties();
+        props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "base64_encoder");
+
+        checkDefaultPrefixLookupsHolder(props,
+                "base64",
+                StringLookupFactory.KEY_BASE64_ENCODER);
+    }
+
+    @Test
+    public void testDefaultStringLookupsHolder_givenSingleLookup_weirdString() {
+        final Properties props = new Properties();
+        props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, " \n \t  ,, DnS , , ");
+
+        checkDefaultPrefixLookupsHolder(props, StringLookupFactory.KEY_DNS);
+    }
+
+    @Test
+    public void testDefaultStringLookupsHolder_multipleLookups() {
+        final Properties props = new Properties();
+        props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "dns, url script ");
+
+        checkDefaultPrefixLookupsHolder(props,
+                StringLookupFactory.KEY_DNS,
+                StringLookupFactory.KEY_URL,
+                StringLookupFactory.KEY_SCRIPT);
+    }
+
+    @Test
+    public void testDefaultStringLookupsHolder_allLookups() {
+        final Properties props = new Properties();
+        props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY,
+                "BASE64_DECODER BASE64_ENCODER const, date, dns, environment "
+                + "file ,java, local_host properties, resource_bundle,script,system_properties "
+                + "url url_decoder  , url_encoder, xml");
+
+        checkDefaultPrefixLookupsHolder(props,
+                "base64",
+                StringLookupFactory.KEY_BASE64_DECODER,
+                StringLookupFactory.KEY_BASE64_ENCODER,
+                StringLookupFactory.KEY_CONST,
+                StringLookupFactory.KEY_DATE,
+                StringLookupFactory.KEY_ENV,
+                StringLookupFactory.KEY_FILE,
+                StringLookupFactory.KEY_JAVA,
+                StringLookupFactory.KEY_LOCALHOST,
+                StringLookupFactory.KEY_PROPERTIES,
+                StringLookupFactory.KEY_RESOURCE_BUNDLE,
+                StringLookupFactory.KEY_SYS,
+                StringLookupFactory.KEY_URL_DECODER,
+                StringLookupFactory.KEY_URL_ENCODER,
+                StringLookupFactory.KEY_XML,
+
+                StringLookupFactory.KEY_DNS,
+                StringLookupFactory.KEY_URL,
+                StringLookupFactory.KEY_SCRIPT);
+    }
+
+    @Test
+    public void testDefaultStringLookupsHolder_invalidLookupsDefinition() {
+        final Properties props = new Properties();
+        props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "base64_encoder nope");
+
+        try {
+            new ConfigurationInterpolator.DefaultPrefixLookupsHolder(props);
+
+            fail("Operation should have failed");
+        } catch (Exception exc) {
+            assertEquals("Invalid default lookups definition: base64_encoder nope", exc.getMessage());
+        }
+    }
+
+    private static void checkDefaultPrefixLookupsHolder(final Properties props, final String... keys) {
+        final ConfigurationInterpolator.DefaultPrefixLookupsHolder holder =
+                new ConfigurationInterpolator.DefaultPrefixLookupsHolder(props);
+
+        final Map<String, Lookup> lookupMap = holder.getDefaultPrefixLookups();
+
+        assertMappedLookups(lookupMap, keys);
+    }
+
+    private static void assertMappedLookups(final Map<String, Lookup> lookupMap, final String... keys) {
+        final Set<String> remainingKeys = new HashSet<>(lookupMap.keySet());
+
+        for (final String key : keys) {
+            assertNotNull("Expected map to contain string lookup for key " + key, key);
+
+            remainingKeys.remove(key);
+        }
+
+        assertTrue("Unexpected keys in lookup map: " + remainingKeys, remainingKeys.isEmpty());
+    }
+
+    /**
+     * Main method used to verify the default lookups resolved during JVM execution.
+     * @param args
+     */
+    public static void main(final String[] args) {
+        System.out.println("Default lookups");
+        for (final String key : ConfigurationInterpolator.getDefaultPrefixLookups().keySet()) {
+            System.out.println("- " + key);
+        }
     }
 }

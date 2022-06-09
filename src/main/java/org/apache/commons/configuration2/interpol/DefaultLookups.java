@@ -20,16 +20,17 @@ import org.apache.commons.text.lookup.StringLookupFactory;
 
 /**
  * <p>
- * An enumeration class defining constants for the {@code Lookup} objects available for each {@code Configuration}
- * object per default.
+ * An enumeration class defining constants for built-in {@code Lookup} objects available for
+ * {@code Configuration} instances.
  * </p>
  * <p>
- * When a new configuration object derived from {@code AbstractConfiguration} is created it installs a
- * {@link ConfigurationInterpolator} with a default set of {@link Lookup} objects. These lookups are defined by this
- * enumeration class.
+ * When a new configuration object derived from {@code AbstractConfiguration} is created, it installs a
+ * {@link ConfigurationInterpolator} containing a default set of {@link Lookup} objects. These lookups are
+ * defined by this enumeration class, however not all lookups may be included in the defaults. See
+ * {@link ConfigurationInterpolator#getDefaultPrefixLookups()} for details.
  * </p>
  * <p>
- * All the default {@code Lookup} classes are state-less, thus their instances can be shared between multiple
+ * All the {@code Lookup}s defined here are state-less, thus their instances can be shared between multiple
  * configuration objects. Therefore, it makes sense to keep shared instances in this enumeration class.
  * </p>
  *

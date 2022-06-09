@@ -98,6 +98,11 @@
          Add ImmutableConfiguration.getDuration() methods.
        </action>       
        <!-- UPDATES -->
+       <action type="update" dev="mattjuntunen">
+        Make default interpolation prefix lookups configurable via system property. Remove dns, url, and script 
+        lookups from defaults. If these lookups are required for use in AbstractConfiguration subclasses, they must 
+        be enabled via system property. See ConfigurationInterpolator.getDefaultPrefixLookups() for details.
+       </action>
        <action type="update" dev="ggregory" due-to="Dependabot, Gary Gregory">
          Bump actions/cache from 2 to 3.0.4 #99, #151, #169.
        </action>
