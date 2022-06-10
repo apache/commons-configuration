@@ -67,8 +67,8 @@ public final class PropertyConverter {
     /** Constant for the argument classes of the Number constructor that takes a String. */
     private static final Class<?>[] CONSTR_ARGS = {String.class};
 
-    /** The fully qualified name of {@code javax.mail.internet.InternetAddress} */
-    private static final String INTERNET_ADDRESS_CLASSNAME = "javax.mail.internet.InternetAddress";
+    /** The fully qualified name of {@code jakarta.mail.internet.InternetAddress} */
+    private static final String INTERNET_ADDRESS_CLASSNAME = "jakarta.mail.internet.InternetAddress";
 
     /**
      * Private constructor prevents instances from being created.

@@ -48,6 +48,7 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
+import jakarta.mail.internet.InternetAddress;
 import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;
 
@@ -72,12 +73,10 @@ public class TestDataConfiguration {
     private DataConfiguration conf;
 
     /**
-     * Create an instance of InternetAddress. This trick is necessary to compile and run the test with Java 1.3 and the
-     * javamail-1.4 which is not compatible with Java 1.3
+     * Create an instance of {@code jakarta.mail.internet.InternetAddress}..
      */
     private Object createInternetAddress(final String email) throws Exception {
-        final Class<?> cls = Class.forName("javax.mail.internet.InternetAddress");
-        return cls.getConstructor(String.class).newInstance(email);
+        return new InternetAddress(email);
     }
 
     @Before
@@ -839,7 +838,7 @@ public class TestDataConfiguration {
         }
 
         try {
-            conf.get(Class.forName("javax.mail.internet.InternetAddress"), "key1");
+            conf.get(Class.forName("jakarta.mail.internet.InternetAddress"), "key1");
             fail("getInternetAddress didn't throw a ConversionException");
         } catch (final ConversionException e) {
             // expected
