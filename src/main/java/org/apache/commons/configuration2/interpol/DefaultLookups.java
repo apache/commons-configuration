@@ -60,116 +60,136 @@ import org.apache.commons.text.lookup.StringLookupFactory;
 public enum DefaultLookups {
 
     /**
-     * The lookup for Base64 decoding.
+     * The lookup for Base64 decoding, accessed using the prefix "{@value StringLookupFactory#KEY_BASE64_DECODER}".
      *
+     * @see StringLookupFactory#base64DecoderStringLookup()
      * @since 2.4
      */
     BASE64_DECODER(StringLookupFactory.KEY_BASE64_DECODER, new StringLookupAdapter(StringLookupFactory.INSTANCE.base64DecoderStringLookup())),
 
     /**
-     * The lookup for Base64 decoding.
+     * The lookup for Base64 encoding, accessed using the prefix "{@value StringLookupFactory#KEY_BASE64_ENCODER}".
      *
+     * @see StringLookupFactory#base64EncoderStringLookup()
      * @since 2.4
      */
     BASE64_ENCODER(StringLookupFactory.KEY_BASE64_ENCODER, new StringLookupAdapter(StringLookupFactory.INSTANCE.base64EncoderStringLookup())),
 
     /**
-     * The lookup for constants.
+     * The lookup for Java constants, accessed using the prefix "{@value StringLookupFactory#KEY_CONST}".
      *
+     * @see StringLookupFactory#constantStringLookup()
      * @since 2.4
      */
     CONST(StringLookupFactory.KEY_CONST, new StringLookupAdapter(StringLookupFactory.INSTANCE.constantStringLookup())),
 
     /**
-     * The lookup for dates.
+     * The lookup for the current date in a specified format, accessed using the prefix
+     * "{@value StringLookupFactory#KEY_DATE}".
      *
+     * @see StringLookupFactory#dateStringLookup()
      * @since 2.4
      */
     DATE(StringLookupFactory.KEY_DATE, new StringLookupAdapter(StringLookupFactory.INSTANCE.dateStringLookup())),
 
     /**
-     * The lookup for DNS.
+     * The lookup for DNS, accessed using the prefix "{@value StringLookupFactory#KEY_DNS}".
      *
+     * @see StringLookupFactory#dnsStringLookup()
      * @since 2.6
      */
     DNS(StringLookupFactory.KEY_DNS, new StringLookupAdapter(StringLookupFactory.INSTANCE.dnsStringLookup())),
 
     /**
-     * The lookup for environment properties.
+     * The lookup for environment properties, accessed using the prefix "{@value StringLookupFactory#KEY_ENV}".
+     *
+     * @see StringLookupFactory#environmentVariableStringLookup()
      */
     ENVIRONMENT(StringLookupFactory.KEY_ENV, new StringLookupAdapter(StringLookupFactory.INSTANCE.environmentVariableStringLookup())),
 
     /**
-     * The lookup for files.
+     * The lookup for file content, accessed using the prefix "{@value StringLookupFactory#KEY_FILE}".
      *
+     * @see StringLookupFactory#fileStringLookup()
      * @since 2.4
      */
     FILE(StringLookupFactory.KEY_FILE, new StringLookupAdapter(StringLookupFactory.INSTANCE.fileStringLookup())),
 
     /**
-     * The lookup for Java platform information.
+     * The lookup for Java platform information, accessed using the prefix "{@value StringLookupFactory#KEY_JAVA}".
      *
+     * @see StringLookupFactory#javaPlatformStringLookup()
      * @since 2.4
      */
     JAVA(StringLookupFactory.KEY_JAVA, new StringLookupAdapter(StringLookupFactory.INSTANCE.javaPlatformStringLookup())),
 
     /**
-     * The lookup for localhost information.
+     * The lookup for localhost information, accessed using the prefix "{@value StringLookupFactory#KEY_LOCALHOST}".
      *
+     * @see StringLookupFactory#localHostStringLookup()
      * @since 2.4
      */
     LOCAL_HOST(StringLookupFactory.KEY_LOCALHOST, new StringLookupAdapter(StringLookupFactory.INSTANCE.localHostStringLookup())),
 
     /**
-     * The lookup for properties.
+     * The lookup for properties, accessed using the prefix "{@value StringLookupFactory#KEY_PROPERTIES}".
      *
+     * @see StringLookupFactory#propertiesStringLookup()
      * @since 2.4
      */
     PROPERTIES(StringLookupFactory.KEY_PROPERTIES, new StringLookupAdapter(StringLookupFactory.INSTANCE.propertiesStringLookup())),
 
     /**
-     * The lookup for resource bundles.
+     * The lookup for resource bundles, accessed using the prefix "{@value StringLookupFactory#KEY_RESOURCE_BUNDLE}".
      *
+     * @see StringLookupFactory#resourceBundleStringLookup()
      * @since 2.4
      */
     RESOURCE_BUNDLE(StringLookupFactory.KEY_RESOURCE_BUNDLE, new StringLookupAdapter(StringLookupFactory.INSTANCE.resourceBundleStringLookup())),
 
     /**
-     * The lookup for scripts.
+     * The lookup for scripts, accessed using the prefix "{@value StringLookupFactory#KEY_SCRIPT}".
      *
+     * @see StringLookupFactory#scriptStringLookup()
      * @since 2.4
      */
     SCRIPT(StringLookupFactory.KEY_SCRIPT, new StringLookupAdapter(StringLookupFactory.INSTANCE.scriptStringLookup())),
 
     /**
-     * The lookup for system properties.
+     * The lookup for system properties, accessed using the prefix "{@value StringLookupFactory#KEY_SYS}".
+     *
+     * @see StringLookupFactory#systemPropertyStringLookup()
      */
     SYSTEM_PROPERTIES(StringLookupFactory.KEY_SYS, new StringLookupAdapter(StringLookupFactory.INSTANCE.systemPropertyStringLookup())),
 
     /**
-     * The lookup for URLs.
+     * The lookup for URLs, accessed using the prefix "{@value StringLookupFactory#KEY_URL}".
      *
+     * @see StringLookupFactory#urlStringLookup()
      * @since 2.4
      */
     URL(StringLookupFactory.KEY_URL, new StringLookupAdapter(StringLookupFactory.INSTANCE.urlStringLookup())),
 
     /**
-     * The lookup for URL decoding.
+     * The lookup for URL decoding, accessed using the prefix "{@value StringLookupFactory#KEY_URL_DECODER}".
      *
+     * @see StringLookupFactory#urlDecoderStringLookup()
      * @since 2.4
      */
     URL_DECODER(StringLookupFactory.KEY_URL_DECODER, new StringLookupAdapter(StringLookupFactory.INSTANCE.urlDecoderStringLookup())),
 
     /**
-     * The lookup for URL decoding.
+     * The lookup for URL encoding, accessed using the prefix "{@value StringLookupFactory#KEY_URL_ENCODER}".
      *
+     * @see StringLookupFactory#urlEncoderStringLookup()
      * @since 2.4
      */
     URL_ENCODER(StringLookupFactory.KEY_URL_ENCODER, new StringLookupAdapter(StringLookupFactory.INSTANCE.urlEncoderStringLookup())),
 
     /**
-     * The lookup for URL decoding.
+     * The lookup for XML content, accessed using the prefix "{@value StringLookupFactory#KEY_XML}".
      *
+     * @see StringLookupFactory#xmlStringLookup()
      * @since 2.4
      */
     XML(StringLookupFactory.KEY_XML, new StringLookupAdapter(StringLookupFactory.INSTANCE.xmlStringLookup()));
