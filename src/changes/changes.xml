@@ -117,10 +117,10 @@
        </action>
        <action type="update" dev="mattjuntunen" due-to="Dependabot, Matt Juntunen, kinow, Gary Gregory">
          Bump Spring dependency versions:
-         org.springframework:spring-beans 4.3.26.RELEASE -> 5.3.20
-         org.springframework:spring-context 4.3.26.RELEASE -> 5.3.20
-         org.springframework:spring-core 4.3.26.RELEASE -> 5.3.20
-         org.springframework:spring-test 4.3.26.RELEASE -> 5.3.20
+         org.springframework:spring-beans 4.3.26.RELEASE -> 5.3.21
+         org.springframework:spring-context 4.3.26.RELEASE -> 5.3.21
+         org.springframework:spring-core 4.3.26.RELEASE -> 5.3.21
+         org.springframework:spring-test 4.3.26.RELEASE -> 5.3.21
          #165, #172
        </action>
        <action type="update" dev="mattjuntunen" due-to="Dependabot, Matt Juntunen">
