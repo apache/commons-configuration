@@ -199,8 +199,8 @@ public class ConfigurationInterpolator {
      * cause no defaults to be configured.
      * </p>
      *
-     * <p><strong>Default Lookups</strong></p>
      * <table>
+     * <caption>Default Lookups</caption>
      * <tr>
      *  <th>Prefix</th>
      *  <th>Lookup</th>
@@ -263,8 +263,8 @@ public class ConfigurationInterpolator {
      * </tr>
      * </table>
      *
-     * <p><strong>Additional Lookups (not included by default)</strong></p>
      * <table>
+     * <caption>Additional Lookups (not included by default)</caption>
      * <tr>
      *  <th>Prefix</th>
      *  <th>Lookup</th>
