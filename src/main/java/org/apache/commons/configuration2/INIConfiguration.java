@@ -210,7 +210,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
     /**
      * Constant for the line separator.
      */
-    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     /**
      * The characters used for quoting values.
@@ -540,15 +540,15 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
                         escape = true;
                     } else if (!escape && quote == c) {
                         stop = true;
-                    } else if (escape && quote == c) {
-                        escape = false;
-                        result.append(c);
                     } else {
-                        if (escape) {
+                        if (escape && quote == c) {
                             escape = false;
-                            result.append('\\');
+                        } else {
+                            if (escape) {
+                                escape = false;
+                                result.append('\\');
+                            }
                         }
-
                         result.append(c);
                     }
                 } else if (isCommentChar(c) && Character.isWhitespace(lastChar)) {

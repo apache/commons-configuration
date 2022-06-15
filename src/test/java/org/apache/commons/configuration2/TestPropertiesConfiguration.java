@@ -215,7 +215,7 @@ public class TestPropertiesConfiguration {
     /** Constant for a test property value. */
     private static final String PROP_VALUE = "value";
     /** Constant for the line break character. */
-    private static final String CR = System.getProperty("line.separator");
+    private static final String CR = System.lineSeparator();
 
     /** The File that we test with */
     private static final String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
@@ -928,7 +928,7 @@ public class TestPropertiesConfiguration {
      */
     @Test
     public void testLineSeparator() throws ConfigurationException {
-        final String EOL = System.getProperty("line.separator");
+        final String EOL = System.lineSeparator();
         conf = new PropertiesConfiguration();
         conf.setHeader("My header");
         conf.setProperty("prop", "value");

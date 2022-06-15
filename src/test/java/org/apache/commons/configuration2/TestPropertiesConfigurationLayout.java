@@ -134,7 +134,7 @@ public class TestPropertiesConfigurationLayout {
     }
 
     /** Constant for the line break character. */
-    private static final String CR = System.getProperty("line.separator");
+    private static final String CR = System.lineSeparator();
 
     /** Constant for the normalized line break character. */
     private static final String CRNORM = "\n";

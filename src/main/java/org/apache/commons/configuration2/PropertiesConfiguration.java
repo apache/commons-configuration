@@ -1029,7 +1029,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
     private static final char[] WHITE_SPACE = {' ', '\t', '\f'};
 
     /** Constant for the platform specific line separator. */
-    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    private static final String LINE_SEPARATOR = System.lineSeparator();
 
     /** Constant for the radix of hex numbers. */
     private static final int HEX_RADIX = 16;
@@ -1228,11 +1228,9 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
                         // uh-oh, we're in unicode country....
                         inUnicode = true;
                     } else {
-                        if (!needsUnescape(ch)) {
-                            // JUP simply throws away the \ of unknown escape sequences
-                            if (!jupCompatible) {
-                                out.append('\\');
-                            }
+                        // JUP simply throws away the \ of unknown escape sequences
+                        if (!needsUnescape(ch) && !jupCompatible) {
+                            out.append('\\');
                         }
                         out.append(ch);
                     }

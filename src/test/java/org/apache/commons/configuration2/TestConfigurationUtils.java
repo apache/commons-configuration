@@ -520,7 +520,7 @@ public class TestConfigurationUtils {
     @Test
     public void testToString() {
         final Configuration config = new BaseConfiguration();
-        final String lineSeparator = System.getProperty("line.separator");
+        final String lineSeparator = System.lineSeparator();
 
         assertEquals("String representation of an empty configuration", "", ConfigurationUtils.toString(config));
 

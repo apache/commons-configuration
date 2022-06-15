@@ -614,13 +614,12 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
                 parent.addChild(newChild);
                 XMLListReference.assignListReference(refs, newChild, null);
             }
-        } else if (values.size() == 1) {
-            // we will have to replace the value because it might
-            // contain escaped delimiters
-            child.value(values.iterator().next());
-            addedChildNode = child.create();
-            parent.addChild(addedChildNode);
         } else {
+            if (values.size() == 1) {
+                // we will have to replace the value because it might
+                // contain escaped delimiters
+                child.value(values.iterator().next());
+            }
             addedChildNode = child.create();
             parent.addChild(addedChildNode);
         }
