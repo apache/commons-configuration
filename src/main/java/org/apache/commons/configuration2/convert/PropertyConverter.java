@@ -67,10 +67,10 @@ public final class PropertyConverter {
     /** Constant for the argument classes of the Number constructor that takes a String. */
     private static final Class<?>[] CONSTR_ARGS = {String.class};
 
-    /** The fully qualified name of {@code javax.mail.internet.InternetAddress} */
-    private static final String INTERNET_ADDRESS_CLASSNAME = "javax.mail.internet.InternetAddress";
+    /** The fully qualified name of {@code javax.mail.internet.InternetAddress}, as used in the javamail-1.* API.  */
+    private static final String INTERNET_ADDRESS_CLASSNAME_JAVAX = "javax.mail.internet.InternetAddress";
 
-    /** The fully qualified name of {@code jakarta.mail.internet.InternetAddress} */
+    /** The fully qualified name of {@code jakarta.mail.internet.InternetAddress}, as used in the javamail-2.0+ API. */
     private static final String INTERNET_ADDRESS_CLASSNAME_JAKARTA = "jakarta.mail.internet.InternetAddress";
 
     /**
@@ -151,10 +151,12 @@ public final class PropertyConverter {
             return convertToEnum(cls, value);
         } else if (Color.class.equals(cls)) {
             return toColor(value);
-        } else if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME)) {
-            return toInternetAddress(value);
+        } else if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME_JAVAX)) {
+            // javamail-1.* With javax.mail.* namespace.
+            return toInternetAddress(value, INTERNET_ADDRESS_CLASSNAME_JAVAX);
         } else if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME_JAKARTA)) {
-            return toInternetAddress(value);
+            // javamail-2.0+, with jakarta.mail.* namespace.
+            return toInternetAddress(value, INTERNET_ADDRESS_CLASSNAME_JAKARTA);
         } else if (InetAddress.class.isAssignableFrom(cls)) {
             return toInetAddress(value);
         } else if (Duration.class.equals(cls)) {
@@ -600,36 +602,28 @@ public final class PropertyConverter {
     }
 
     /**
-     * Convert the specified value into an email address.
+     * Convert the specified value into an email address with the given class name.
      *
      * @param value the value to convert
+     * @param targetClassName the fully qualified name of the {@code InternetAddress} class to convert to, e.g.,
+     *      {@value #INTERNET_ADDRESS_CLASSNAME_JAVAX} or {@value #INTERNET_ADDRESS_CLASSNAME_JAKARTA}
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to an email address
      *
      * @since 1.5
      */
-    static Object toInternetAddress(final Object value) throws ConversionException {
-        if (value.getClass().getName().equals(INTERNET_ADDRESS_CLASSNAME)) {
-            return value;
-        }
-        if (value.getClass().getName().equals(INTERNET_ADDRESS_CLASSNAME_JAKARTA)) {
+    static Object toInternetAddress(final Object value, final String targetClassName) throws ConversionException {
+        if (value.getClass().getName().equals(targetClassName)) {
             return value;
         }
         if (!(value instanceof String)) {
-            throw new ConversionException("The value " + value + " can't be converted to a InternetAddress");
+            throw new ConversionException("The value " + value + " can't be converted to an InternetAddress");
         }
         try {
-            try {
-                // javamail-2.0+, with jakarta.mail.* namespace.
-                final Constructor<?> ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME_JAKARTA).getConstructor(String.class);
-                return ctor.newInstance(value);
-            } catch (ClassNotFoundException e) {
-                // maybe javamail-1.*? With javax.mail.* namespace.
-                final Constructor<?> ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME).getConstructor(String.class);
-                return ctor.newInstance(value);
-            }
+            final Constructor<?> ctor = Class.forName(targetClassName).getConstructor(String.class);
+            return ctor.newInstance(value);
         } catch (final Exception e) {
-            throw new ConversionException("The value " + value + " can't be converted to a InternetAddress", e);
+            throw new ConversionException("The value " + value + " can't be converted to an InternetAddress", e);
         }
     }
 

@@ -48,6 +48,7 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
+import jakarta.mail.internet.InternetAddress;
 import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;
 
@@ -70,18 +71,6 @@ public class TestDataConfiguration {
 
     /** The test instance. */
     private DataConfiguration conf;
-
-    /**
-     * Create an instance of InternetAddress. This trick is necessary to compile and run the test with Java 1.3 and the
-     * javamail-1.4 which is not compatible with Java 1.3.
-     *
-     * <p>javamail-2.0 had a namespace change, moving javax.mail.* to jakarta.mail.*. This test verifies if we have
-     * javax.mail.* in the classpath before trying the Jakarta classes.</p>
-     */
-    private Object createInternetAddress(final String email) throws Exception {
-        final Class<?> cls = Class.forName("jakarta.mail.internet.InternetAddress");
-        return cls.getConstructor(String.class).newInstance(email);
-    }
 
     @Before
     public void setUp() throws Exception {
@@ -358,7 +347,7 @@ public class TestDataConfiguration {
         // email address
         conf.addProperty("email.string", "ebourg@apache.org");
         conf.addProperty("email.string.interpolated", "${email.string}");
-        conf.addProperty("email.object", createInternetAddress("ebourg@apache.org"));
+        conf.addProperty("email.object", new InternetAddress("ebourg@apache.org"));
     }
 
     /**
@@ -842,7 +831,7 @@ public class TestDataConfiguration {
         }
 
         try {
-            conf.get(Class.forName("jakarta.mail.internet.InternetAddress"), "key1");
+            conf.get(InternetAddress.class, "key1");
             fail("getInternetAddress didn't throw a ConversionException");
         } catch (final ConversionException e) {
             // expected
@@ -1829,7 +1818,7 @@ public class TestDataConfiguration {
 
     @Test
     public void testGetInternetAddress() throws Exception {
-        final Object expected = createInternetAddress("ebourg@apache.org");
+        final Object expected = new InternetAddress("ebourg@apache.org");
 
         // address as string
         assertEquals(expected, conf.get(expected.getClass(), "email.string"));
@@ -1851,7 +1840,7 @@ public class TestDataConfiguration {
 
     @Test(expected = ConversionException.class)
     public void testGetInternetAddressInvalidType() throws Exception {
-        final Object expected = createInternetAddress("ebourg@apache.org");
+        final Object expected = new InternetAddress("ebourg@apache.org");
         conf.setProperty("email.invalid", "ebourg@apache@org");
         conf.get(expected.getClass(), "email.invalid");
     }
