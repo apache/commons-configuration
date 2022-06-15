@@ -44,7 +44,7 @@ Apache Commons Configuration
 ===================
 
 [![Build Status](https://travis-ci.org/apache/commons-configuration.svg)](https://travis-ci.org/apache/commons-configuration)
-[![Coverage Status](https://coveralls.io/repos/apache/commons-configuration/badge.svg)](https://coveralls.io/r/apache/commons-configuration)
+[![Coverage Status](https://codecov.io/gh/apache/commons-configuration/branch/master/graph/badge.svg)](https://app.codecov.io/gh/apache/commons-configuration)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-configuration2/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.apache.commons/commons-configuration2/)
 [![Javadocs](https://javadoc.io/badge/org.apache.commons/commons-configuration2/2.7.svg)](https://javadoc.io/doc/org.apache.commons/commons-configuration2/2.7)
 
