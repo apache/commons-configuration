@@ -45,6 +45,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * @since 2.0
  */
 public class BuilderConfigurationWrapperFactory {
+
     /** The current {@code EventSourceSupport} value. */
     private final EventSourceSupport eventSourceSupport;
 
@@ -85,7 +86,7 @@ public class BuilderConfigurationWrapperFactory {
     }
 
     /**
-     * Returns the level of {@code EventSource} support used when generating {@code ImmutableConfiguration} objects.
+     * Gets the level of {@code EventSource} support used when generating {@code ImmutableConfiguration} objects.
      *
      * @return the level of {@code EventSource} support
      */
@@ -94,7 +95,7 @@ public class BuilderConfigurationWrapperFactory {
     }
 
     /**
-     * Returns a {@code ImmutableConfiguration} object which wraps the specified {@code ConfigurationBuilder}. Each access
+     * Creates a {@code ImmutableConfiguration} object which wraps the specified {@code ConfigurationBuilder}. Each access
      * of the configuration is delegated to a corresponding call on the {@code ImmutableConfiguration} object managed by the
      * builder. This is a convenience method which allows creating wrapper configurations without having to instantiate this
      * class.
@@ -118,27 +119,20 @@ public class BuilderConfigurationWrapperFactory {
             throw new IllegalArgumentException("Builder must not be null!");
         }
 
-        return ifcClass.cast(Proxy.newProxyInstance(BuilderConfigurationWrapperFactory.class.getClassLoader(), fetchSupportedInterfaces(ifcClass, evSrcSupport),
+        return ifcClass.cast(Proxy.newProxyInstance(BuilderConfigurationWrapperFactory.class.getClassLoader(), getSupportedInterfaces(ifcClass, evSrcSupport),
             new BuilderConfigurationWrapperInvocationHandler(builder, evSrcSupport)));
     }
 
     /**
-     * Returns an array with the classes the generated proxy has to support.
+     * Gets an array with the classes the generated proxy has to support.
      *
      * @param ifcClass the class of the configuration objects returned by this method; this must be an interface class and
      *        must not be <b>null</b>
      * @param evSrcSupport the level of {@code EventSource} support
      * @return an array with the interface classes to implement
      */
-    private static Class<?>[] fetchSupportedInterfaces(final Class<?> ifcClass, final EventSourceSupport evSrcSupport) {
-        if (EventSourceSupport.NONE == evSrcSupport) {
-            return new Class<?>[] {ifcClass};
-        }
-
-        final Class<?>[] result = new Class<?>[2];
-        result[0] = EventSource.class;
-        result[1] = ifcClass;
-        return result;
+    private static Class<?>[] getSupportedInterfaces(final Class<?> ifcClass, final EventSourceSupport evSrcSupport) {
+        return EventSourceSupport.NONE == evSrcSupport ? new Class<?>[] {ifcClass} : new Class<?>[] {EventSource.class, ifcClass};
     }
 
     /**
@@ -180,6 +174,7 @@ public class BuilderConfigurationWrapperFactory {
      * wrapped builder is implemented.
      */
     private static class BuilderConfigurationWrapperInvocationHandler implements InvocationHandler {
+
         /** The wrapped builder. */
         private final ConfigurationBuilder<? extends ImmutableConfiguration> builder;
 
@@ -209,14 +204,13 @@ public class BuilderConfigurationWrapperFactory {
          * @param method the method to be invoked
          * @param args method arguments
          * @return the return value of the method
-         * @throws Throwable if an error occurs
+         * @throws ReflectiveOperationException if an error occurs
+         * @throws ConfigurationException if an error occurs
          */
         @Override
-        public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-            if (EventSource.class.equals(method.getDeclaringClass())) {
-                return handleEventSourceInvocation(method, args);
-            }
-            return handleConfigurationInvocation(method, args);
+        public Object invoke(final Object proxy, final Method method, final Object[] args) throws ReflectiveOperationException, ConfigurationException {
+            return EventSource.class.equals(method.getDeclaringClass()) ? handleEventSourceInvocation(method, args)
+                : handleConfigurationInvocation(method, args);
         }
 
         /**
@@ -241,8 +235,7 @@ public class BuilderConfigurationWrapperFactory {
          * @throws ReflectiveOperationException if an error occurs
          */
         private Object handleEventSourceInvocation(final Method method, final Object... args) throws ReflectiveOperationException {
-            final Object target = EventSourceSupport.DUMMY == eventSourceSupport ? ConfigurationUtils.asEventSource(this, true) : builder;
-            return method.invoke(target, args);
+            return method.invoke(EventSourceSupport.DUMMY == eventSourceSupport ? ConfigurationUtils.asEventSource(this, true) : builder, args);
         }
     }
 }
