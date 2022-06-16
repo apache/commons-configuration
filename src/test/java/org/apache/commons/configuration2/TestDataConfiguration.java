@@ -345,9 +345,9 @@ public class TestDataConfiguration {
         conf.addProperty("ip.object", InetAddress.getByName("127.0.0.1"));
 
         // email address
-        conf.addProperty("email.string", "ebourg@apache.org");
+        conf.addProperty("email.string", "dev@test.org");
         conf.addProperty("email.string.interpolated", "${email.string}");
-        conf.addProperty("email.object", new InternetAddress("ebourg@apache.org"));
+        conf.addProperty("email.object", new InternetAddress("dev@test.org"));
     }
 
     /**
@@ -1818,7 +1818,7 @@ public class TestDataConfiguration {
 
     @Test
     public void testGetInternetAddress() throws Exception {
-        final Object expected = new InternetAddress("ebourg@apache.org");
+        final Object expected = new InternetAddress("dev@test.org");
 
         // address as string
         assertEquals(expected, conf.get(expected.getClass(), "email.string"));
@@ -1829,7 +1829,7 @@ public class TestDataConfiguration {
         // interpolated value
         assertEquals(expected, conf.get(expected.getClass(), "email.string.interpolated"));
 
-        conf.setProperty("email.invalid", "ebourg@apache@org");
+        conf.setProperty("email.invalid", "dev@test@org");
         try {
             conf.get(expected.getClass(), "email.invalid");
             fail("ConversionException should be thrown for invalid emails");
@@ -1840,8 +1840,8 @@ public class TestDataConfiguration {
 
     @Test(expected = ConversionException.class)
     public void testGetInternetAddressInvalidType() throws Exception {
-        final Object expected = new InternetAddress("ebourg@apache.org");
-        conf.setProperty("email.invalid", "ebourg@apache@org");
+        final Object expected = new InternetAddress("dev@test.org");
+        conf.setProperty("email.invalid", "dev@test@org");
         conf.get(expected.getClass(), "email.invalid");
     }
 

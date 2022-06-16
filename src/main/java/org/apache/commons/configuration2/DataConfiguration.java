@@ -65,7 +65,7 @@ import org.apache.commons.lang3.StringUtils;
  * title.color = #0000FF
  * remote.host = 192.168.0.53
  * default.locales = fr,en,de
- * email.contact = ebourg@apache.org, tester@test.org
+ * email.contact = dev@test.org, tester@test.org
  * </pre>
  *
  * Usage:

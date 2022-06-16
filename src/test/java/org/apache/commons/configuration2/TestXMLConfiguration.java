@@ -1371,7 +1371,7 @@ public class TestXMLConfiguration {
         conf.setEntityResolver(resolver);
         conf.setSchemaValidation(true);
         load(conf, testFile2);
-        conf.setProperty("Employee.Email", "JohnDoe@apache.org");
+        conf.setProperty("Employee.Email", "JohnDoe@test.org");
         try {
             conf.validate();
             fail("No validation failure on save");
