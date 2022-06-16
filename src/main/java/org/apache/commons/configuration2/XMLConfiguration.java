@@ -502,7 +502,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
         boolean hasChildren = false;
 
         for (int i = 0; i < list.getLength(); i++) {
-            final org.w3c.dom.Node w3cNode = list.item(i);
+            final Node w3cNode = list.item(i);
             if (w3cNode instanceof Element) {
                 final Element child = (Element) w3cNode;
                 final ImmutableNode.Builder childNode = new ImmutableNode.Builder();
@@ -559,7 +559,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
         final Map<String, String> attrmap = new HashMap<>();
 
         for (int i = 0; i < attributes.getLength(); ++i) {
-            final org.w3c.dom.Node w3cNode = attributes.item(i);
+            final Node w3cNode = attributes.item(i);
             if (w3cNode instanceof Attr) {
                 final Attr attr = (Attr) w3cNode;
                 attrmap.put(attr.getName(), attr.getValue());
@@ -771,8 +771,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
 
         // Remove all existing text nodes
         for (int i = 0; i < children.getLength(); i++) {
-            final org.w3c.dom.Node nd = children.item(i);
-            if (nd.getNodeType() == org.w3c.dom.Node.TEXT_NODE) {
+            final Node nd = children.item(i);
+            if (nd.getNodeType() == Node.TEXT_NODE) {
                 elem.removeChild(nd);
             }
         }
@@ -1035,7 +1035,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
          * @param element the element to be removed
          */
         private void removeReference(final Element element) {
-            final org.w3c.dom.Node parentElem = element.getParentNode();
+            final Node parentElem = element.getParentNode();
             if (parentElem != null) {
                 parentElem.removeChild(element);
             }
@@ -1108,9 +1108,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
             Text result = null;
             // Find all Text nodes
             final NodeList children = elem.getChildNodes();
-            final Collection<org.w3c.dom.Node> textNodes = new ArrayList<>();
+            final Collection<Node> textNodes = new ArrayList<>();
             for (int i = 0; i < children.getLength(); i++) {
-                final org.w3c.dom.Node nd = children.item(i);
+                final Node nd = children.item(i);
                 if (nd instanceof Text) {
                     if (result == null) {
                         result = (Text) nd;
@@ -1127,7 +1127,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
             }
 
             // Remove all but the first Text node
-            for (final org.w3c.dom.Node tn : textNodes) {
+            for (final Node tn : textNodes) {
                 elem.removeChild(tn);
             }
             return result;
