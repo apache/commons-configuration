@@ -54,7 +54,7 @@ public class TestBeanHelper {
         private int createBeanCount;
 
         @Override
-        public Object createBean(final BeanCreationContext bcc) throws Exception {
+        public Object createBean(final BeanCreationContext bcc) {
             createBeanCount++;
             parameter = bcc.getParameter();
             if (BeanCreationTestBean.class.equals(bcc.getBeanClass())) {
