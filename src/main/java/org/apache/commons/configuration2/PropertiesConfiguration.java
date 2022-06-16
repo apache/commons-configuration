@@ -955,7 +955,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
                 if (forceSingleLine) {
                     try {
                         v = String.valueOf(getDelimiterHandler().escapeList(values, valueTransformer));
-                    } catch (final UnsupportedOperationException uoex) {
+                    } catch (final UnsupportedOperationException ignored) {
                         // the handler may not support escaping lists,
                         // then the list is written in multiple lines
                     }
