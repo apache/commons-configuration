@@ -40,8 +40,9 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
  * @param <T> the concrete type of the {@code ImmutableConfiguration} class produced by this builder
  */
 public interface ConfigurationBuilder<T extends ImmutableConfiguration> extends EventSource {
+
     /**
-     * Returns the configuration provided by this builder. An implementation has to perform all necessary steps for creating
+     * Gets the configuration provided by this builder. An implementation has to perform all necessary steps for creating
      * and initializing a {@code ImmutableConfiguration} object.
      *
      * @return the configuration
