@@ -96,10 +96,10 @@ public final class BeanHelper {
     /**
      * Constructs a new instance of {@code BeanHelper} and sets the specified default {@code BeanFactory}.
      *
-     * @param defFactory the default {@code BeanFactory} (can be <b>null</b>, then a default instance is used)
+     * @param defaultBeanFactory the default {@code BeanFactory} (can be <b>null</b>, then a default instance is used)
      */
-    public BeanHelper(final BeanFactory defFactory) {
-        defaultBeanFactory = defFactory != null ? defFactory : DefaultBeanFactory.INSTANCE;
+    public BeanHelper(final BeanFactory defaultBeanFactory) {
+        this.defaultBeanFactory = defaultBeanFactory != null ? defaultBeanFactory : DefaultBeanFactory.INSTANCE;
     }
 
     /**
