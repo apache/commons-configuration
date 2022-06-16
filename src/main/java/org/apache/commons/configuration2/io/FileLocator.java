@@ -323,16 +323,6 @@ public final class FileLocator {
         return Objects.hash(basePath, encoding, fileName, fileSystem, locationStrategy, sourceURL, urlConnectionOptions);
     }
 
-    /**
-     * Returns the source URL as a string. Result is never null. Comparisons are done on this string to avoid blocking
-     * network calls.
-     *
-     * @return the source URL as a string (not null)
-     */
-    private String sourceURLAsString() {
-        return sourceURL != null ? sourceURL.toExternalForm() : StringUtils.EMPTY;
-    }
-
     @Override
     public String toString() {
         return "FileLocator [basePath=" + basePath + ", encoding=" + encoding + ", fileName=" + fileName + ", fileSystem=" + fileSystem + ", locationStrategy="
