@@ -23,6 +23,7 @@ import java.lang.reflect.Proxy;
 import org.apache.commons.configuration2.ConfigurationUtils;
 import org.apache.commons.configuration2.ImmutableConfiguration;
 import org.apache.commons.configuration2.event.EventSource;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 
 /**
  * <p>
@@ -226,7 +227,7 @@ public class BuilderConfigurationWrapperFactory {
          * @return the return value of the method
          * @throws Exception if an error occurs
          */
-        private Object handleConfigurationInvocation(final Method method, final Object[] args) throws Exception {
+        private Object handleConfigurationInvocation(final Method method, final Object[] args) throws ReflectiveOperationException, ConfigurationException {
             return method.invoke(builder.getConfiguration(), args);
         }
 
