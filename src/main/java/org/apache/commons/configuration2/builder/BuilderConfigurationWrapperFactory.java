@@ -237,9 +237,9 @@ public class BuilderConfigurationWrapperFactory {
          * @param method the method to be invoked
          * @param args method arguments
          * @return the return value of the method
-         * @throws Exception if an error occurs
+         * @throws ReflectiveOperationException if an error occurs
          */
-        private Object handleEventSourceInvocation(final Method method, final Object... args) throws Exception {
+        private Object handleEventSourceInvocation(final Method method, final Object... args) throws ReflectiveOperationException {
             final Object target = EventSourceSupport.DUMMY == eventSourceSupport ? ConfigurationUtils.asEventSource(this, true) : builder;
             return method.invoke(target, args);
         }
