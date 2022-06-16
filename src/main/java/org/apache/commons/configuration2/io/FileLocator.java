@@ -19,8 +19,6 @@ package org.apache.commons.configuration2.io;
 import java.net.URL;
 import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
-
 /**
  * <p>
  * A class describing the location of a file.
