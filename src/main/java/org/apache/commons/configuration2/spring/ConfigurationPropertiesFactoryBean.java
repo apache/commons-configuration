@@ -33,7 +33,7 @@ import org.springframework.util.Assert;
 /**
  * <p>
  * FactoryBean which wraps a Commons CompositeConfiguration object for usage with PropertiesLoaderSupport. This allows
- * the compositeConfiguration object to behave like a normal java.util.Properties object which can be passed on to
+ * the compositeConfiguration object to behave like a normal {@link Properties} object which can be passed on to
  * setProperties() method allowing PropertyOverrideConfigurer and PropertyPlaceholderConfigurer to take advantage of
  * Commons Configuration.
  * </p>
@@ -43,7 +43,6 @@ import org.springframework.util.Assert;
  *
  * @see java.util.Properties
  * @see org.springframework.core.io.support.PropertiesLoaderSupport
- *
  */
 public class ConfigurationPropertiesFactoryBean implements InitializingBean, FactoryBean<Properties> {
 
@@ -80,7 +79,7 @@ public class ConfigurationPropertiesFactoryBean implements InitializingBean, Fac
      */
     @Override
     public Class<?> getObjectType() {
-        return java.util.Properties.class;
+        return Properties.class;
     }
 
     /**
