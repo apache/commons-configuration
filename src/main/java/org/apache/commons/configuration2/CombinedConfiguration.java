@@ -653,14 +653,17 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             return;
         }
 
+        boolean success = false;
         try {
             if (!isUpToDate()) {
                 getSubConfigurationParentModel().replaceRoot(constructCombinedNode(), this);
                 upToDate = true;
             }
-        } catch (final RuntimeException rex) {
-            endWrite();
-            throw rex;
+            success = true;
+        } finally {
+            if (!success) {
+                endWrite();
+            }
         }
     }
 

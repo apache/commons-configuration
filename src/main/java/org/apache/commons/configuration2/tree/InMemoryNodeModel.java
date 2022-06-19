@@ -986,7 +986,7 @@ public class InMemoryNodeModel implements NodeModel<ImmutableNode> {
      * @param key the invalid key causing this exception
      * @return the exception
      */
-    private static RuntimeException attributeKeyException(final String key) {
+    private static IllegalArgumentException attributeKeyException(final String key) {
         return new IllegalArgumentException("New nodes cannot be added to an attribute key: " + key);
     }
 

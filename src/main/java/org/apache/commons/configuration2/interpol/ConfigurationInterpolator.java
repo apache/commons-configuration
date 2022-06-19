@@ -206,59 +206,59 @@ public class ConfigurationInterpolator {
      *  <th>Lookup</th>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_BASE64_DECODER}</td>
+     *  <td>"base64Decoder"</td>
      *  <td>{@link DefaultLookups#BASE64_DECODER BASE64_DECODER}</td>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_BASE64_ENCODER}</td>
+     *  <td>"base64Encoder"</td>
      *  <td>{@link DefaultLookups#BASE64_ENCODER BASE64_ENCODER}</td>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_CONST}</td>
+     *  <td>"const"</td>
      *  <td>{@link DefaultLookups#CONST CONST}</td>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_DATE}</td>
+     *  <td>"date"</td>
      *  <td>{@link DefaultLookups#DATE DATE}</td>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_ENV}</td>
+     *  <td>"env"</td>
      *  <td>{@link DefaultLookups#ENVIRONMENT ENVIRONMENT}</td>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_FILE}</td>
+     *  <td>"file"</td>
      *  <td>{@link DefaultLookups#FILE FILE}</td>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_JAVA}</td>
+     *  <td>"java"</td>
      *  <td>{@link DefaultLookups#JAVA JAVA}</td>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_LOCALHOST}</td>
+     *  <td>"localhost"</td>
      *  <td>{@link DefaultLookups#LOCAL_HOST LOCAL_HOST}</td>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_PROPERTIES}</td>
+     *  <td>"properties"</td>
      *  <td>{@link DefaultLookups#PROPERTIES PROPERTIES}</td>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_RESOURCE_BUNDLE}</td>
+     *  <td>"resourceBundle"</td>
      *  <td>{@link DefaultLookups#RESOURCE_BUNDLE RESOURCE_BUNDLE}</td>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_SYS}</td>
+     *  <td>"sys"</td>
      *  <td>{@link DefaultLookups#SYSTEM_PROPERTIES SYSTEM_PROPERTIES}</td>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_URL_DECODER}</td>
+     *  <td>"urlDecoder"</td>
      *  <td>{@link DefaultLookups#URL_DECODER URL_DECODER}</td>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_URL_ENCODER}</td>
+     *  <td>"urlEncoder"</td>
      *  <td>{@link DefaultLookups#URL_ENCODER URL_ENCODER}</td>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_XML}</td>
+     *  <td>"xml"</td>
      *  <td>{@link DefaultLookups#XML XML}</td>
      * </tr>
      * </table>
@@ -270,15 +270,15 @@ public class ConfigurationInterpolator {
      *  <th>Lookup</th>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_DNS}</td>
+     *  <td>"dns"</td>
      *  <td>{@link DefaultLookups#DNS DNS}</td>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_URL}</td>
+     *  <td>"url"</td>
      *  <td>{@link DefaultLookups#URL URL}</td>
      * </tr>
      * <tr>
-     *  <td>{@value org.apache.commons.text.lookup.StringLookupFactory#KEY_SCRIPT}</td>
+     *  <td>"script"</td>
      *  <td>{@link DefaultLookups#SCRIPT SCRIPT}</td>
      * </tr>
      * </table>
