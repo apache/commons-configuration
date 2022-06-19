@@ -33,7 +33,7 @@ import org.apache.commons.configuration2.event.EventType;
  */
 public class ConfigurationBuilderEvent extends Event {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -7488811456039315104L;
 
     /** The common super type for all events related to configuration builders. */
     public static final EventType<ConfigurationBuilderEvent> ANY = new EventType<>(Event.ANY, "BUILDER");

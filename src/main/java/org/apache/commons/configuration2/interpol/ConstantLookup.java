@@ -92,9 +92,9 @@ public class ConstantLookup implements Lookup {
      * @param className the name of the class
      * @param fieldName the name of the member field of that class to read
      * @return the field's value
-     * @throws ReflectiveOperationException if an error occurs
+     * @throws Exception if an error occurs
      */
-    protected Object resolveField(final String className, final String fieldName) throws ReflectiveOperationException {
+    protected Object resolveField(final String className, final String fieldName) throws Exception {
         return fetchClass(className).getField(fieldName).get(null);
     }
 

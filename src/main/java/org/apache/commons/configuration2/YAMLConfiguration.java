@@ -17,6 +17,12 @@
 
 package org.apache.commons.configuration2;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.Map;
+
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.io.InputStreamSupport;
@@ -26,12 +32,6 @@ import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.Writer;
-import java.util.Map;
 
 /**
  * <p>
@@ -84,7 +84,8 @@ public class YAMLConfiguration extends AbstractYAMLBasedConfiguration implements
         dump(out, options);
     }
 
-    public void dump(final Writer out, final DumperOptions options) {
+    public void dump(final Writer out, final DumperOptions options)
+            throws ConfigurationException, IOException {
         final Yaml yaml = new Yaml(options);
         yaml.dump(constructMap(getNodeModel().getNodeHandler().getRootNode()), out);
     }

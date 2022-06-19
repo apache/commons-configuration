@@ -39,7 +39,7 @@ public class Event extends EventObject {
      */
     public static final EventType<Event> ANY = new EventType<>(null, "ANY");
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -8168310049858198944L;
 
     /**
      * Constant for the format used in toString() for a property representation.
