@@ -20,6 +20,7 @@ import java.io.File;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * This class is a subset of org.apache.commons.io.FileUtils, git-svn-id:
@@ -32,7 +33,7 @@ class FileUtils {
     /**
      * The UTF-8 character set, used to decode octets in URLs.
      */
-    private static final Charset UTF8 = Charset.forName("UTF-8");
+    private static final Charset UTF8 = StandardCharsets.UTF_8;
 
     /**
      * Convert from a {@code URL} to a {@code File}.
@@ -85,7 +86,7 @@ class FileUtils {
                     } finally {
                         if (bytes.position() > 0) {
                             bytes.flip();
-                            buffer.append(UTF8.decode(bytes).toString());
+                            buffer.append(UTF8.decode(bytes));
                             bytes.clear();
                         }
                     }
