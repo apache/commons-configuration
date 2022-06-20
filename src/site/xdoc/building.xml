@@ -34,13 +34,11 @@
             "mvn install". This will compile the source and tests, run the tests, and then
             package the jar. The jar will also be copied into the local maven repository
             for use by other builds. According to the minimum Java version of
-            Commons Configuration, this build requires a JDK 1.6 or higher.
+            Commons Configuration, this build requires a JDK 8 or higher.
           </p>
           <p>
             To build the web site run "mvn site". When it completes the web site will reside in
             the target/site directory and may be viewed by opening target/site/index.html.
-            Note that due to a dependency to a maven reporting plugin, the build of the site
-            requires JDK 1.7 or higher.
           </p>
         </section>
     </body>
