@@ -228,7 +228,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      *
      * @param key the property key
      * @param number the number of blank lines to add before this property definition
-     * @since 2.8.0
+     * @since 2.8
      */
     public void setBlankLinesBefore(final String key, final int number) {
         fetchLayoutData(key).setBlankLines(number);
@@ -772,7 +772,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
          * Returns the number of blank lines before this property.
          *
          * @return the number of blank lines before this property
-         * @since 2.8.0
+         * @since 2.8
          */
         public int getBlankLines() {
             return blankLines;
@@ -793,7 +793,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
          * Sets the number of properties before this property.
          *
          * @param blankLines the number of properties before this property
-         * @since 2.8.0
+         * @since 2.8
          */
         public void setBlankLines(final int blankLines) {
             this.blankLines = blankLines;
