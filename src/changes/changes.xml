@@ -21,7 +21,7 @@
     <author email="dev@commons.apache.org">Apache Commons Community</author>
   </properties>
   <body>
-    <release version="2.8.0" date="2020-MM-DD"
+    <release version="2.8" date="2020-MM-DD"
              description="Minor release with new features and updated dependencies.">
        <!-- FIX -->
        <action issue="CONFIGURATION-753" type="fix" dev="mattjuntunen">

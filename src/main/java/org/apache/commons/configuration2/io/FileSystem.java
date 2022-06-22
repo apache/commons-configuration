@@ -57,7 +57,7 @@ public abstract class FileSystem {
      * @return TODO
      * @throws ConfigurationException TODO
      *
-     * @since 2.8.0
+     * @since 2.8
      */
     public InputStream getInputStream(final URL url, final URLConnectionOptions urlConnectionOptions) throws ConfigurationException {
         return getInputStream(url);
