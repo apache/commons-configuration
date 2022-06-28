@@ -211,6 +211,9 @@
        <action type="update" dev="kinow" due-to="Dependabot">
           Bump mailapi from 1.6.6 to 2.0.1 #186.
        </action>
+       <action type="update" dev="kinow" due-to="sullis">
+          Use GitHub Actions setup-java Maven cache property #190.
+       </action>
     </release>
     <release version="2.7" date="2020-03-07"
              description="Minor release with new features and updated dependencies.">
