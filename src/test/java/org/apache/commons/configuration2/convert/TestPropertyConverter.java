@@ -48,7 +48,8 @@ public class TestPropertyConverter {
         // The result is 0.1000000000000000055511151231257827021181583404541015625.
         // See Sonar rule: https://rules.sonarsource.com/java/type/Bug/RSPEC-2111
         final double d = 0.1;
-        assertEquals("Incorrect BigDecimal value", new BigDecimal(d), PropertyConverter.toBigDecimal(d));
+        // Use BigDecimal#valueOf() Fix PMD AvoidDecimalLiteralsInBigDecimalConstructor
+        assertEquals("Incorrect BigDecimal value", BigDecimal.valueOf(d), PropertyConverter.toBigDecimal(d));
     }
 
     /**

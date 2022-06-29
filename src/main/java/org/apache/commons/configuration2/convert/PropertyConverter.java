@@ -345,7 +345,7 @@ public final class PropertyConverter {
         if (n instanceof BigDecimal) {
             return (BigDecimal) n;
         }
-        return new BigDecimal(n.doubleValue());
+        return BigDecimal.valueOf(n.doubleValue());
     }
 
     /**

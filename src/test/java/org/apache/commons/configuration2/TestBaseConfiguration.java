@@ -667,7 +667,7 @@ public class TestBaseConfiguration {
 
         assertEquals("Wrong Long returned", Long.valueOf(42L), config.getLong(KEY_NUMBER, null));
         assertEquals("Wrong BigInt returned", new BigInteger("42"), config.getBigInteger(KEY_NUMBER));
-        assertEquals("Wrong DigDecimal returned", new BigDecimal("42"), config.getBigDecimal(KEY_NUMBER));
+        assertEquals("Wrong DigDecimal returned", new BigDecimal("42.0"), config.getBigDecimal(KEY_NUMBER));
     }
 
     @Test
