@@ -543,11 +543,9 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
                     } else {
                         if (escape && quote == c) {
                             escape = false;
-                        } else {
-                            if (escape) {
-                                escape = false;
-                                result.append('\\');
-                            }
+                        } else if (escape) {
+                            escape = false;
+                            result.append('\\');
                         }
                         result.append(c);
                     }
