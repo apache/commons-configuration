@@ -25,7 +25,7 @@ import java.util.Objects;
 /**
  * Carries options and operates on {@link URLConnection}.
  *
- * @since 2.8
+ * @since 2.8.0
  */
 public final class URLConnectionOptions {
 

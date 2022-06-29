@@ -121,7 +121,7 @@ public interface FileBasedBuilderProperties<T> {
      * @param url the {@code URL} location
      * @param urlConnectionOptions options
      * @return a reference to this object for method chaining
-     * @since 2.8
+     * @since 2.8.0
      */
     default T setURL(final URL url, final URLConnectionOptions urlConnectionOptions) {
         return setURL(url);

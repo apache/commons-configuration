@@ -95,7 +95,7 @@ public class ConfigurationInterpolator {
      * {@link #getDefaultPrefixLookups()} method. Use of this property is only required
      * in cases where the set of default lookups must be modified.
      *
-     * @since 2.8
+     * @since 2.8.0
      */
     public static final String DEFAULT_PREFIX_LOOKUPS_PROPERTY =
             "org.apache.commons.configuration2.interpol.ConfigurationInterpolator.defaultPrefixLookups";

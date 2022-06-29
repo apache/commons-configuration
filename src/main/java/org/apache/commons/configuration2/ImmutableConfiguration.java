@@ -318,7 +318,7 @@ public interface ImmutableConfiguration {
      * @return The associated Duration if key is found and has valid format, default value otherwise.
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         Duration.
-     * @since 2.8
+     * @since 2.8.0
      */
     default Duration getDuration(final String key) {
         final String string = getString(key);
@@ -336,7 +336,7 @@ public interface ImmutableConfiguration {
      * @return The associated Duration if key is found and has valid format, default value otherwise.
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         Duration.
-     * @since 2.8
+     * @since 2.8.0
      */
     default Duration getDuration(final String key, final Duration defaultValue) {
         final Object value = getProperty(key);
@@ -378,7 +378,7 @@ public interface ImmutableConfiguration {
      *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         String.
-     * @since 2.8
+     * @since 2.8.0
      */
     default <T extends Enum<T>> T getEnum(final String key, final Class<T> enumType) {
         try {
@@ -400,7 +400,7 @@ public interface ImmutableConfiguration {
      *
      * @throws org.apache.commons.configuration2.ex.ConversionException is thrown if the key maps to an object that is not a
      *         Enum.
-     * @since 2.8
+     * @since 2.8.0
      */
     default <T extends Enum<T>> T getEnum(final String key, final Class<T> enumType, final T defaultValue) {
         final String strValue = getString(key, null);
