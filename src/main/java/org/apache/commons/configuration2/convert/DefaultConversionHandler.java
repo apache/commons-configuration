@@ -149,7 +149,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * @return <b>true</b> if this is a complex object, <b>false</b> otherwise
      */
     protected boolean isComplexObject(final Object src) {
-        return src instanceof Iterator<?> || src instanceof Iterable<?> || (src != null && src.getClass().isArray());
+        return src instanceof Iterator<?> || src instanceof Iterable<?> || src != null && src.getClass().isArray();
     }
 
     /**
@@ -162,7 +162,7 @@ public class DefaultConversionHandler implements ConversionHandler {
      * @return a flag whether this object is an empty element
      */
     protected boolean isEmptyElement(final Object src) {
-        return (src instanceof CharSequence) && ((CharSequence) src).length() == 0;
+        return src instanceof CharSequence && ((CharSequence) src).length() == 0;
     }
 
     /**

@@ -622,7 +622,7 @@ public class PropertiesConfigurationLayout implements EventListener<Configuratio
      * @return the line without comment character
      */
     static String stripCommentChar(final String s, final boolean comment) {
-        if (StringUtils.isBlank(s) || (isCommentLine(s) == comment)) {
+        if (StringUtils.isBlank(s) || isCommentLine(s) == comment) {
             return s;
         }
         if (!comment) {

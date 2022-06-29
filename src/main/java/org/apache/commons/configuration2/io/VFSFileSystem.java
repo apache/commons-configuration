@@ -216,7 +216,7 @@ public class VFSFileSystem extends DefaultFileSystem {
 
     @Override
     public URL getURL(final String basePath, final String file) throws MalformedURLException {
-        if ((basePath != null && UriParser.extractScheme(basePath) == null) || (basePath == null && UriParser.extractScheme(file) == null)) {
+        if (basePath != null && UriParser.extractScheme(basePath) == null || basePath == null && UriParser.extractScheme(file) == null) {
             return super.getURL(basePath, file);
         }
         try {

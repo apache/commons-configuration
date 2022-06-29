@@ -400,7 +400,7 @@ public class DefaultConfigurationKey {
      */
     private String removeAttributeMarkers(final String key) {
         return key.substring(getSymbols().getAttributeStart().length(),
-            key.length() - ((getSymbols().getAttributeEnd() != null) ? getSymbols().getAttributeEnd().length() : 0));
+            key.length() - (getSymbols().getAttributeEnd() != null ? getSymbols().getAttributeEnd().length() : 0));
     }
 
     /**
@@ -430,7 +430,7 @@ public class DefaultConfigurationKey {
      * @return the escaped key
      */
     private String escapeDelimiters(final String key) {
-        return (getSymbols().getEscapedDelimiter() == null || key.indexOf(getSymbols().getPropertyDelimiter()) < 0) ? key
+        return getSymbols().getEscapedDelimiter() == null || key.indexOf(getSymbols().getPropertyDelimiter()) < 0 ? key
             : StringUtils.replace(key, getSymbols().getPropertyDelimiter(), getSymbols().getEscapedDelimiter());
     }
 
@@ -560,7 +560,7 @@ public class DefaultConfigurationKey {
         public boolean isAttribute() {
             // if attribute emulation mode is active, the last part of a key is
             // always an attribute key, too
-            return attribute || (isAttributeEmulatingMode() && !hasNext());
+            return attribute || isAttributeEmulatingMode() && !hasNext();
         }
 
         /**

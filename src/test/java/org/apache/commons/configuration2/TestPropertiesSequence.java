@@ -117,7 +117,7 @@ public class TestPropertiesSequence {
             final String key = keys.next();
             final String[] keyParts = StringUtils.split(key, ".");
 
-            if ((keyParts.length == 3) && keyParts[0].equals("prefix") && keyParts[2].equals("postfix")) {
+            if (keyParts.length == 3 && keyParts[0].equals("prefix") && keyParts[2].equals("postfix")) {
                 final String serviceKey = keyParts[1];
 
                 if (!mapping.containsKey(serviceKey)) {
@@ -130,7 +130,7 @@ public class TestPropertiesSequence {
             final String key = keys.next();
             final String[] keyParts = StringUtils.split(key, ".");
 
-            if ((keyParts.length == 3) && keyParts[0].equals("prefix") && keyParts[2].equals("postfix")) {
+            if (keyParts.length == 3 && keyParts[0].equals("prefix") && keyParts[2].equals("postfix")) {
                 final String serviceKey = keyParts[1];
 
                 if (!mapping2.containsKey(serviceKey)) {

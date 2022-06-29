@@ -310,7 +310,7 @@ public class NodeStructureHelper {
 
         int foundIdx = 0;
         for (final ImmutableNode node : parent) {
-            if (childName.equals(node.getNodeName()) && (foundIdx++ == childIndex)) {
+            if (childName.equals(node.getNodeName()) && foundIdx++ == childIndex) {
                 return findNode(node, components, currentIdx + 1);
             }
         }

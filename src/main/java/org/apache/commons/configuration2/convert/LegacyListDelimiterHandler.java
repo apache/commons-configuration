@@ -99,7 +99,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler {
                 // if the last value ended with an escape character, it has
                 // to be escaped itself; otherwise the list delimiter will
                 // be escaped
-                if (lastValue.endsWith(ESCAPE) && (countTrailingBS(lastValue) / 2) % 2 != 0) {
+                if (lastValue.endsWith(ESCAPE) && countTrailingBS(lastValue) / 2 % 2 != 0) {
                     buf.append(ESCAPE).append(ESCAPE);
                 }
                 buf.append(getDelimiter());

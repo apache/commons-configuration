@@ -589,7 +589,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
      */
     private static boolean lineContinues(final String line) {
         final String s = line.trim();
-        return s.equals(LINE_CONT) || (s.length() > 2 && s.endsWith(LINE_CONT) && Character.isWhitespace(s.charAt(s.length() - 2)));
+        return s.equals(LINE_CONT) || s.length() > 2 && s.endsWith(LINE_CONT) && Character.isWhitespace(s.charAt(s.length() - 2));
     }
 
     /**
@@ -657,7 +657,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
         for (int i = 0; i < separators.length(); i++) {
             final char sep = separators.charAt(i);
             final int pos = line.indexOf(sep);
-            if ((pos >= 0) && (index < 0 || pos < index)) {
+            if (pos >= 0 && (index < 0 || pos < index)) {
                 index = pos;
             }
         }
@@ -869,7 +869,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements F
 
                 @Override
                 public int getChildrenCount(final ImmutableNode node, final String name) {
-                    final List<ImmutableNode> children = (name != null) ? super.getChildren(node, name) : super.getChildren(node);
+                    final List<ImmutableNode> children = name != null ? super.getChildren(node, name) : super.getChildren(node);
                     return filterChildrenOfGlobalSection(node, children).size();
                 }
 

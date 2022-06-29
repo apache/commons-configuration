@@ -346,7 +346,7 @@ public class PropertiesConfiguration extends BaseConfiguration implements FileBa
 
                 // while a property line continues there are no comments (even if the line from
                 // the file looks like one)
-                if (isCommentLine(line) && (buffer.length() == 0)) {
+                if (isCommentLine(line) && buffer.length() == 0) {
                     getCommentLines().add(line);
                     continue;
                 }

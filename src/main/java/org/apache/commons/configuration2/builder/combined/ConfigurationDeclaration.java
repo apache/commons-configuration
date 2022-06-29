@@ -148,8 +148,8 @@ public class ConfigurationDeclaration extends XMLBeanDeclaration {
         }
 
         final Set<String> attributes = getAttributeNames();
-        return (CombinedConfigurationBuilder.ATTR_ATNAME.equals(name) && !attributes.contains(RESERVED_PREFIX + CombinedConfigurationBuilder.ATTR_ATNAME))
-            || (CombinedConfigurationBuilder.ATTR_OPTIONALNAME.equals(name)
-                && !attributes.contains(RESERVED_PREFIX + CombinedConfigurationBuilder.ATTR_OPTIONALNAME));
+        return CombinedConfigurationBuilder.ATTR_ATNAME.equals(name) && !attributes.contains(RESERVED_PREFIX + CombinedConfigurationBuilder.ATTR_ATNAME)
+            || CombinedConfigurationBuilder.ATTR_OPTIONALNAME.equals(name)
+                && !attributes.contains(RESERVED_PREFIX + CombinedConfigurationBuilder.ATTR_OPTIONALNAME);
     }
 }

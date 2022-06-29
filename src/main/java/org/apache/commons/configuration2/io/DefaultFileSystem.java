@@ -202,7 +202,7 @@ public class DefaultFileSystem extends FileSystem {
         // create the path to the file if the file doesn't exist
         if (file != null && !file.exists()) {
             final File parent = file.getParentFile();
-            if ((parent != null && !parent.exists()) && !parent.mkdirs()) {
+            if (parent != null && !parent.exists() && !parent.mkdirs()) {
                 throw new ConfigurationException("Cannot create path: " + parent);
             }
         }

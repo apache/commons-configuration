@@ -527,7 +527,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
             childrenFlag = hasChildren || attributes.size() > 1;
         }
         final String text = determineValue(buffer.toString(), childrenFlag, trimFlag);
-        if (!text.isEmpty() || (!childrenFlag && level != 0)) {
+        if (!text.isEmpty() || !childrenFlag && level != 0) {
             refValue.setValue(text);
         }
         return attributes;
@@ -544,7 +544,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements F
      * @return the value to be stored for this node
      */
     private static String determineValue(final String content, final boolean hasChildren, final boolean trimFlag) {
-        final boolean shouldTrim = trimFlag || (StringUtils.isBlank(content) && hasChildren);
+        final boolean shouldTrim = trimFlag || StringUtils.isBlank(content) && hasChildren;
         return shouldTrim ? content.trim() : content;
     }
 
