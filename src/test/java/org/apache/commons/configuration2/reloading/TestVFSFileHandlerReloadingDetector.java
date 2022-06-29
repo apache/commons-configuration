@@ -148,7 +148,7 @@ public class TestVFSFileHandlerReloadingDetector {
      * @throws IOException if an error occurs
      */
     private void writeTestFile(final File file, final String value) throws IOException {
-        try (final FileWriter out = new FileWriter(file)) {
+        try (FileWriter out = new FileWriter(file)) {
             out.write(String.format(FMT_XML, value));
         }
     }

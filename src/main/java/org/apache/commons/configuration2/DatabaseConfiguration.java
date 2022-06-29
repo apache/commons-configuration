@@ -299,7 +299,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
             @Override
             protected Object performOperation() throws SQLException {
                 final List<Object> results = new ArrayList<>();
-                try (final ResultSet rs = openResultSet(String.format(SQL_GET_PROPERTY, table, keyColumn), true, key)) {
+                try (ResultSet rs = openResultSet(String.format(SQL_GET_PROPERTY, table, keyColumn), true, key)) {
                     while (rs.next()) {
                         final Object value = extractPropertyValue(rs);
                         // Split value if it contains the list delimiter
@@ -344,7 +344,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
                 }
                 query.append(")");
 
-                try (final PreparedStatement pstmt = initStatement(query.toString(), false, key, String.valueOf(obj))) {
+                try (PreparedStatement pstmt = initStatement(query.toString(), false, key, String.valueOf(obj))) {
                     if (configurationNameColumn != null) {
                         pstmt.setString(3, configurationName);
                     }
@@ -389,7 +389,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
         final JdbcOperation<Integer> op = new JdbcOperation<Integer>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null) {
             @Override
             protected Integer performOperation() throws SQLException {
-                try (final ResultSet rs = openResultSet(String.format(SQL_IS_EMPTY, table), true)) {
+                try (ResultSet rs = openResultSet(String.format(SQL_IS_EMPTY, table), true)) {
                     return rs.next() ? Integer.valueOf(rs.getInt(1)) : null;
                 }
             }
@@ -412,7 +412,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
         final JdbcOperation<Boolean> op = new JdbcOperation<Boolean>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, key, null) {
             @Override
             protected Boolean performOperation() throws SQLException {
-                try (final ResultSet rs = openResultSet(String.format(SQL_GET_PROPERTY, table, keyColumn), true, key)) {
+                try (ResultSet rs = openResultSet(String.format(SQL_GET_PROPERTY, table, keyColumn), true, key)) {
                     return rs.next();
                 }
             }
@@ -434,7 +434,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
         new JdbcOperation<Void>(ConfigurationErrorEvent.WRITE, ConfigurationEvent.CLEAR_PROPERTY, key, null) {
             @Override
             protected Void performOperation() throws SQLException {
-                try (final PreparedStatement ps = initStatement(String.format(SQL_CLEAR_PROPERTY, table, keyColumn), true, key)) {
+                try (PreparedStatement ps = initStatement(String.format(SQL_CLEAR_PROPERTY, table, keyColumn), true, key)) {
                     ps.executeUpdate();
                     return null;
                 }
@@ -471,7 +471,7 @@ public class DatabaseConfiguration extends AbstractConfiguration {
         new JdbcOperation<Collection<String>>(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null) {
             @Override
             protected Collection<String> performOperation() throws SQLException {
-                try (final ResultSet rs = openResultSet(String.format(SQL_GET_KEYS, keyColumn, table), true)) {
+                try (ResultSet rs = openResultSet(String.format(SQL_GET_KEYS, keyColumn, table), true)) {
                     while (rs.next()) {
                         keys.add(rs.getString(1));
                     }

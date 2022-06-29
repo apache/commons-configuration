@@ -179,7 +179,7 @@ public class DefaultFileSystem extends FileSystem {
             url = new URL(baseURL, fileName);
 
             // check if the file exists
-            try (final InputStream in = url.openStream()) {
+            try (InputStream in = url.openStream()) {
                 // nothing
                 in.available();
             }

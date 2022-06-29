@@ -135,7 +135,7 @@ public class TestINIConfiguration {
      * @throws ConfigurationException if an error occurs
      */
     private static void load(final INIConfiguration instance, final String data) throws ConfigurationException {
-        try (final StringReader reader = new StringReader(data)) {
+        try (StringReader reader = new StringReader(data)) {
             instance.read(reader);
         } catch (final IOException e) {
             throw new ConfigurationException(e);

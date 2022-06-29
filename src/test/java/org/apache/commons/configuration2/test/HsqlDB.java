@@ -59,7 +59,7 @@ public class HsqlDB {
     }
 
     private String getFileContents(final String fileName) throws Exception {
-        try (final FileReader fr = new FileReader(fileName)) {
+        try (FileReader fr = new FileReader(fileName)) {
 
             final char fileBuf[] = new char[1024];
             final StringBuilder sb = new StringBuilder(1000);
