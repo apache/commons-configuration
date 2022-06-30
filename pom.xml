@@ -805,6 +805,17 @@
           <excludeFilterFile>${basedir}/conf/findbugs-exclude-filter.xml</excludeFilterFile>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <configuration>
+          <!-- Show errors in console output, especially for CI PR builds -->
+          <printFailingErrors>true</printFailingErrors>
+          <excludeRoots>
+            <excludeRoot>target/generated-sources/javacc</excludeRoot>
+          </excludeRoots>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <profiles>
