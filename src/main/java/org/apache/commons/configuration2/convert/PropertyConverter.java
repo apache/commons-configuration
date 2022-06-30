@@ -48,7 +48,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * A utility class to convert the configuration properties into any type.
  *
- * @since 2.8
+ * @since 2.8.0
  */
 public final class PropertyConverter {
 
@@ -302,7 +302,7 @@ public final class PropertyConverter {
      * @param value the value to convert
      * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a Duration
-     * @since 2.8
+     * @since 2.8.0
      */
     public static Duration toDuration(final Object value) throws ConversionException {
         if (value instanceof Duration) {
