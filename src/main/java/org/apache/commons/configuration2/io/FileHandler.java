@@ -1223,7 +1223,7 @@ public class FileHandler {
      *
      * @param url the location of the file as URL
      * @param urlConnectionOptions URL connection options
-     * @since 2.8
+     * @since 2.8.0
      */
     public void setURL(final URL url, final URLConnectionOptions urlConnectionOptions) {
         new Updater() {

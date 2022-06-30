@@ -207,7 +207,8 @@ application.title = ${application.name} ${application.version}
       <code>${prefix:name}</code>. The prefix tells Commons Configuration that
       the variable is to be evaluated in a certain context. We have already seen
       that the context is the current configuration instance if the prefix is
-      missing. The following other prefix names are supported by default:
+      missing. The following table lists a few of the prefixes supported by default.
+      (See the next section for more details.)
       <table border="1">
       <tr>
         <th>Prefix</th>
@@ -268,10 +269,46 @@ java.home = ${env:JAVA_HOME}
     </p>
     </subsection>
 
+    <subsection name="Default interpolation lookups">
+    <p>
+        Commons configuration comes with a number of default prefix interpolators in addition
+        to the few demonstrated above. The full list can be found in the documentation of
+        the <code><a href="../apidocs/org/apache/commons/configuration2/interpol/ConfigurationInterpolator.html#getDefaultPrefixLookups()">
+        ConfigurationInterpolator.getDefaultPrefixLookups()</a></code> method. This method returns a map of 
+        standard interpolation lookup objects keyed by prefix, which are enabled by default in all 
+        interpolation operations performed through the <code>Configuration</code> interface. Prior to version 
+        <code>2.8.0</code>, this map was constant. However, starting in version <code>2.8.0</code>, the lookups 
+        included in this map can be optionally configured via system property, allowing users greater control over the 
+        types of interpolation performed in their applications. The system property in question is named
+        <code>org.apache.commons.configuration2.interpol.ConfigurationInterpolator.defaultPrefixLookups</code>
+        and is expected to contain a comma-separated list of names from the
+        <code><a href="../apidocs/org/apache/commons/configuration2/interpol/DefaultLookups.html">DefaultLookups</a></code>
+        enum. For example, launching an application with the system property given below will only enable the
+        <code>sys</code> and <code>env</code> lookups.
+    </p>
+<source><![CDATA[
+org.apache.commons.configuration2.interpol.ConfigurationInterpolator.defaultPrefixLookups=SYSTEM_PROPERTIES,ENVIRONMENT
+]]></source>
+    <p>
+        It is also important to note that starting in version <code>2.8.0</code>, several previously enabled
+        default lookups were changed to be disabled by default. These include the
+        <code><a href="../apidocs/org/apache/commons/configuration2/interpol/DefaultLookups.html#DNS">dns</a></code>,
+        <code><a href="../apidocs/org/apache/commons/configuration2/interpol/DefaultLookups.html#URL">url</a></code>, and
+        <code><a href="../apidocs/org/apache/commons/configuration2/interpol/DefaultLookups.html#SCRIPT">script</a></code> lookups.
+        These lookups are still present in the library but must be explicitly enabled by either
+        <ol> 
+            <li>listing them in the system property described above (along with all other enabled lookups), or</li>
+            <li>adding them programmatically using the techniques laid out in the next section.</li>
+        </ol>.
+        Users who do not make use of these disabled lookups do not need to make any changes to their code or
+        deployment scripts when upgrading from previous versions to <code>2.8.0</code>.
+    </p>
+    </subsection>
+
     <subsection name="Customizing interpolation">
     <p>
       This sub section goes a bit behind the scenes of interpolation and
-      explains some approaches how you can add your own interpolation facilities.
+      explains some approaches for adding your own interpolation facilities.
       Under the hood the implementation of interpolation relies on objects
       implementing the
       <code><a href="../apidocs/org/apache/commons/configuration2/interpol/Lookup.html">
