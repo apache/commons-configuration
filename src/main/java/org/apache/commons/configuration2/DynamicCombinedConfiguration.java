@@ -605,18 +605,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration {
     }
 
     /**
-     * Returns a copy of this object. This implementation performs a deep clone, i.e. all contained configurations will be
-     * cloned, too. For this to work, all contained configurations must be cloneable. Registered event listeners won't be
-     * cloned. The clone will use the same node combiner than the original.
-     *
-     * @return the copied object
-     */
-    @Override
-    public Object clone() {
-        return super.clone();
-    }
-
-    /**
      * Invalidates the current combined configuration. This means that the next time a property is accessed the combined
      * node structure must be re-constructed. Invalidation of a combined configuration also means that an event of type
      * {@code EVENT_COMBINED_INVALIDATE} is fired. Note that while other events most times appear twice (once before and
