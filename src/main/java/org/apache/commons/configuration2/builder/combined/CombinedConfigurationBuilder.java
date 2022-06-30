@@ -1020,7 +1020,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      */
     private void addDefinitionBuilderChangeListener(final ConfigurationBuilder<? extends HierarchicalConfiguration<?>> defBuilder) {
         defBuilder.addEventListener(ConfigurationBuilderEvent.RESET, event -> {
-            synchronized (CombinedConfigurationBuilder.this) {
+            synchronized (this) {
                 reset();
                 definitionBuilder = defBuilder;
             }
