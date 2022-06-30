@@ -601,7 +601,7 @@
     use slightly older site and javadoc versions here in order to be able to generate all reports. -->
     
     <commons.site-plugin.version>3.10.0</commons.site-plugin.version>
-    <commons.javadoc.version>3.3.2</commons.javadoc.version>    
+    <commons.javadoc.version>3.4.0</commons.javadoc.version>    
 
     <checkstyle.version>9.3</checkstyle.version>
     <!-- commons.animal-sniffer.version 1.21 fails on Java 17. -->
