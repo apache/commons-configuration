@@ -50,6 +50,7 @@
         <li><a href="howto_basicfeatures.html#Handling_of_missing_properties">Handling of missing properties</a></li>
         <li><a href="howto_basicfeatures.html#List_handling">List handling</a></li>
         <li><a href="howto_basicfeatures.html#Variable_Interpolation">Variable Interpolation</a></li>
+        <li><a href="howto_basicfeatures.html#Default_interpolation_lookups">Default interpolation lookups</a></li>
         <li><a href="howto_basicfeatures.html#Customizing_interpolation">Customizing interpolation</a></li>
         <li><a href="howto_basicfeatures.html#Using_Expressions">Using Expressions</a></li>
         <li><a href="howto_basicfeatures.html#Data_type_conversions">Data type conversions</a></li>

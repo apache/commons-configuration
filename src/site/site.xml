@@ -37,7 +37,8 @@
       <item name="Release History"                      href="/changes-report.html"/>
       <item name="${project.version}" collapse="true"   href="/index.html">
         <item name="User's Guide"                       href="/userguide/user_guide.html"/>
-        <item name="Upgrade Guide"                      href="/userguide/upgradeto2_0.html"/>
+        <item name="Upgrade Guide: 1.x to 2.0"          href="/userguide/upgradeto2_0.html"/>
+        <item name="Upgrade Guide: 2.x"                 href="/userguide/upgradeto2_x.html"/>
         <item name="Javadoc"                            href="/apidocs/index.html"/>
         <item name="Runtime Dependencies"               href="/dependencies.html"/>
       </item>
