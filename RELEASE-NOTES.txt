@@ -1,4 +1,115 @@
                         Apache Commons Configuration
+                        Version 2.8.0
+                        Release Notes
+
+
+INTRODUCTION:
+=============
+
+This document contains the release notes for this version of the Commons
+Configuration component. It describes the changes since the previous version.
+The Commons Configuration software library provides a generic configuration
+interface which enables an application to read configuration data from a variety
+of sources.
+
+Tools to assist in the reading of configuration/preferences files in
+various formats
+
+Minor release with new features and updated dependencies.
+
+Changes in this version include:
+
+New features:
+o                     Implement Iterable in ImmutableNode #74. Thanks to SethiPandi.
+o                     Add PropertiesConfigurationLayout.getBlankLinesBefore() and deprecate getBlancLinesBefore(). Thanks to Gary Gregory.
+o                     Add PropertiesConfigurationLayout.setBlankLinesBefore() and deprecate setBlancLinesBefore(). Thanks to Gary Gregory.
+o                     Add PropertiesConfigurationLayout.PropertyLayoutData.getBlankLines() and deprecate getBlancLines(). Thanks to Gary Gregory.
+o                     Add PropertiesConfigurationLayout.PropertyLayoutData.setBlankLines() and deprecate setBlancLines(). Thanks to Gary Gregory.
+o CONFIGURATION-789:  Add ImmutableConfiguration.getEnum() methods. Thanks to Gary Gregory.
+o CONFIGURATION-789:  Add ImmutableConfiguration.getDuration() methods. Thanks to Gary Gregory.
+
+Fixed Bugs:
+o CONFIGURATION-753:  Make interpolation of collections and arrays in ConfigurationInterpolator consistent with
+                      behavior of DefaultConversionHandler. Add ConfigurationInterpolator.setStringConverter to
+                      allow customized string conversion behavior.
+o CONFIGURATION-795:  Computation of blank lines after header comment #82. Thanks to dpeger.
+o CONFIGURATION-801:  Remove redundant initializer #110. Thanks to Arturo Bernal.
+o CONFIGURATION-802:  Use final #111. Thanks to Arturo Bernal.
+o CONFIGURATION-803:  Java 8 lambda improvements and more #112. Thanks to Arturo Bernal.
+o CONFIGURATION-804:  Redundant local variable #113. Thanks to Arturo Bernal.
+o CONFIGURATION-805:  Use try with resource #114. Thanks to Arturo Bernal.
+o CONFIGURATION-805:  [Javadoc] Specify that typed getList returns null for missing key #100. Thanks to Roman Zaynetdinov.
+o                     Mention EnvironmentConfiguration in the list of configuration sources #45. Thanks to Oliver B. Fischer.
+o CONFIGURATION-808:  DefaultListDelimiterHandler.escapeList working only for List>String< #137. Thanks to cigaly.
+o                     Use final #141. Thanks to Arturo Bernal.
+o                     Replace test asserts by simpler but equivalent calls. #139 Thanks to Arturo Bernal.
+o CONFIGURATION-764:  Single Variable Interpolation #182. Thanks to Ning Zhang, Matt Juntunen, Bruno P. Kinoshita, Gary Gregory.
+o                     Implement proper concurrency in ConstantLookup. Thanks to Gary Gregory.
+o CONFIGURATION-813:  Support new namespace jakarta.mail.* used by javamail 2.0+ (first release October 2020) #186. Thanks to Dependabot.
+
+Changes:
+o                     Unclosed file handle when reading config from JAR file URL.
+                      Add and use FileBasedBuilderProperties.setURL(URL, URLConnectionOptions). Thanks to Robin Jansohn, Gary Gregory, Rob Spoor.
+o                     Make default interpolation prefix lookups configurable via system property. Remove dns, url, and script 
+                      lookups from defaults. If these lookups are required for use in AbstractConfiguration subclasses, they must 
+                      be enabled via system property. See ConfigurationInterpolator.getDefaultPrefixLookups() for details.
+o                     Bump actions/cache from 2 to 3.0.4 #99, #151, #169. Thanks to Dependabot, Gary Gregory.
+o                     Bump actions/checkout from 1 to 3 #47, #62, #70, #85, #150, #163. Thanks to Dependabot.
+o                     Bump actions/setup-java from 1.4.0 to 3 #63, #65, #73, #174. Thanks to Dependabot, Gary Gregory.
+o                     Bump codeql-action from v1 to v2. Thanks to Dependabot, Matt Juntunen.
+o                     Bump Spring dependency versions:
+                      org.springframework:spring-beans 4.3.26.RELEASE -> 5.3.21
+                      org.springframework:spring-context 4.3.26.RELEASE -> 5.3.21
+                      org.springframework:spring-core 4.3.26.RELEASE -> 5.3.21
+                      org.springframework:spring-test 4.3.26.RELEASE -> 5.3.21
+                      #165, #172 Thanks to Dependabot, Matt Juntunen, kinow, Gary Gregory.
+o                     Bump commons-parent from 52 to 53. Thanks to Dependabot, Matt Juntunen.
+o CONFIGURATION-787:  Bump Apache Commons Lang from 3.9 to 3.12.0. Thanks to Gary Gregory.
+o CONFIGURATION-790:  Bump com.fasterxml.jackson.core:jackson-databind from 2.10.3 to 2.13.3, #60. Thanks to Gary Gregory, Dependabot.
+o                     Bump Slf4j test dependencies:
+                      org.slf4j:slf4j-api 1.7.26 -> 1.7.33,
+                      org.slf4j:slf4j-ext 1.7.26 -> 1.7.33,
+                      org.slf4j:slf4j-log4j12 1.7.26 -> 1.7.33,
+                      org.slf4j:slf4j-nop 1.7.26 -> 1.7.33. Thanks to Gary Gregory.
+o                     Bump commons-parent from 50 to 52. Thanks to Dependabot.
+o                     Bump mailapi from 1.6.4 to 1.6.7 #48. Thanks to Dependabot, Gary Gregory.
+o                     Bump spotbugs-maven-plugin from 3.1.12.2 to 4.7.0.0, #55, #75, #79, #93, #116, #183. Thanks to Dependabot, Gary Gregory.
+o                     Bump hsqldb from 2.5.0 to 2.5.2 #54, #128. Thanks to Dependabot.
+o                     Bump commons-text from 1.8 to 1.9. Thanks to Gary Gregory.
+o                     Bump servlet-api from 2.4 to 2.5 #58. Thanks to Gary Gregory.
+o                     Bump maven-checkstyle-plugin from 3.1.0 to 3.1.2, #57, #97. Thanks to Gary Gregory.
+o                     Bump commons-pool2 from 2.8.0 to 2.10.0, #61, #124. Thanks to Dependabot, Gary Gregory.
+o                     Bump optional commons-codec from 1.14 to 1.15. Thanks to Gary Gregory.
+o                     Bump checkstyle from 8.26 to 9.3, #66, #71, #90, #101, #118, #121, #132, #155. Thanks to Dependabot, Gary Gregory.
+o                     Bump commons.jacoco.version 0.8.5 to 0.8.8 (Fixes Java 15 builds). Thanks to Gary Gregory.
+o                     Bump tests from commons-pool2 2.10.0 to 2.11.1. Thanks to Gary Gregory.
+o                     Bump tests from commons-dbcp2 2.7.0 to 2.9.0. Thanks to Gary Gregory.
+o                     Bump snakeyaml from 1.26 to 1.30 #68, #126, #137. Thanks to Dependabot, Gary Gregory.
+o                     Bump commons.japicmp.version from 0.14.1 to 0.15.7. Thanks to Gary Gregory.
+o                     Bump junit from 4.13 to 4.13.2 #78. Thanks to Dependabot, Gary Gregory.
+o                     Bump Apache Commons VFS 2.6.0 -> 2.9.0. Thanks to Gary Gregory.
+o                     Bump jackson-databind from 2.11.3 to 2.13.2.2 ,#88, #94, #127, #159, #168, #173. Thanks to Dependabot.
+o                     Bump commons.animal-sniffer.version 1.19 -> 1.20. Thanks to Gary Gregory.
+o                     Bump commons.javadoc.version from 3.1.1 to 3.4.0. Thanks to Gary Gregory.
+o                     Bump org.dbunit:dbunit from 2.7.0 to 2.7.3, #167. Thanks to Gary Gregory, Dependabot.
+o                     Bump tests to hamcrest v2.2 #143. Thanks to John Patrick.
+o                     Bump slf4j.version from 1.7.33 to 1.7.36 #166. Thanks to Dependabot.
+o                     Bump mailapi from 1.6.6 to 2.0.1 #186. Thanks to Dependabot.
+o                     Use GitHub Actions setup-java Maven cache property #190. Thanks to sullis.
+
+
+Historical list of changes: https://commons.apache.org/proper/commons-configuration/changes-report.html
+
+For complete information on Apache Commons Configuration, including instructions on how to submit bug reports,
+patches, or suggestions for improvement, see the Apache Apache Commons Configuration website:
+
+https://commons.apache.org/proper/commons-configuration/
+
+Download it from https://commons.apache.org/proper/commons-configuration//download_text.cgi
+
+=============================================================================
+
+                        Apache Commons Configuration
                         Version 2.7
                         Release Notes
 
@@ -40,7 +151,7 @@ o CONFIGURATION-778:  Update optional Apache Commons Codec from 1.13 to 1.14. Th
 o                     Update tests from JUnit 4.12 to 4.13. Thanks to Gary Gregory.
 o CONFIGURATION-779:  Update optional jackson-databind from 2.10.1 to 2.10.2. Thanks to Gary Gregory.
 o CONFIGURATION-783:  Update com.fasterxml.jackson.core:jackson-databind from 2.10.2 to 2.10.3. Thanks to Gary Gregory.
-o CONFIGURATION-784:  Update org.yaml:snakeyaml from 1.25 to 1.26 and tweak parser configuration. Thanks to Gary Gregory.
+o CONFIGURATION-784:  Update org.yaml:snakeyaml from 1.25 to 1.26 and tweak parser configuration. Thanks to Gary Gregory.
 o CONFIGURATION-785:  Update org.springframework:spring-* from 4.3.25.RELEASE to 4.3.26.RELEASE. Thanks to Gary Gregory.
 o                     Update org.apache.commons:commons-parent from 48 to 50 Thanks to Rob Tompkins.
 
