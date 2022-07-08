@@ -21,8 +21,10 @@
     <author email="dev@commons.apache.org">Apache Commons Community</author>
   </properties>
   <body>
-    <release version="2.9.0" date="TBD"
-             description="Minor release with new features and updated dependencies.">
+    <release version="2.9.0" date="TBD" description="Minor release with new features and updated dependencies.">
+      <action type="update" dev="ggregory" due-to="Dependabot">
+        Bump spotbugs-maven-plugin from 4.7.0.0 to 4.7.1.0 #193.
+      </action>
     </release>
     <release version="2.8.0" date="2022-07-05"
              description="Minor release with new features and updated dependencies.">
