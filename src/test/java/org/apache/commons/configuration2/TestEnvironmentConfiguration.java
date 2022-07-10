@@ -17,14 +17,15 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Iterator;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for EnvironmentConfiguration.
@@ -33,7 +34,7 @@ public class TestEnvironmentConfiguration {
     /** Stores the configuration to be tested. */
     private EnvironmentConfiguration config;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         config = new EnvironmentConfiguration();
     }
@@ -41,26 +42,26 @@ public class TestEnvironmentConfiguration {
     /**
      * Tries to add another property. This should cause an exception.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testAddProperty() {
-        config.addProperty("JAVA_HOME", "C:\\java");
+        assertThrows(UnsupportedOperationException.class, () -> config.addProperty("JAVA_HOME", "C:\\java"));
     }
 
     /**
      * Tests removing all properties. This should not be possible.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testClear() {
-        config.clear();
+        assertThrows(UnsupportedOperationException.class, config::clear);
     }
 
     /**
      * Tests removing properties. This should not be possible.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testClearProperty() {
         final String key = config.getKeys().next();
-        config.clearProperty(key);
+        assertThrows(UnsupportedOperationException.class, () -> config.clearProperty(key));
     }
 
     /**
@@ -70,21 +71,21 @@ public class TestEnvironmentConfiguration {
     @Test
     public void testInit() {
         boolean found = false;
-        assertFalse("No properties found", config.isEmpty());
+        assertFalse(config.isEmpty(), "No properties found");
         for (final Iterator<String> it = config.getKeys(); it.hasNext();) {
             final String key = it.next();
-            assertTrue("Key not found: " + key, config.containsKey(key));
-            assertNotNull("No value for property " + key, config.getString(key));
+            assertTrue(config.containsKey(key), "Key not found: " + key);
+            assertNotNull(config.getString(key), "No value for property " + key);
             found = true;
         }
-        assertTrue("No property keys returned", found);
+        assertTrue(found, "No property keys returned");
     }
 
     /**
      * Tries to set the value of a property. This should cause an exception.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testSetProperty() {
-        config.setProperty("JAVA_HOME", "C:\\java");
+        assertThrows(UnsupportedOperationException.class, () -> config.setProperty("JAVA_HOME", "C:\\java"));
     }
 }

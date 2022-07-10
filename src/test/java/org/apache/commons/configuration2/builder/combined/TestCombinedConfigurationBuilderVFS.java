@@ -16,7 +16,7 @@
  */
 package org.apache.commons.configuration2.builder.combined;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.File;
 import java.util.HashMap;
@@ -31,7 +31,7 @@ import org.apache.commons.configuration2.builder.fluent.FileBasedBuilderParamete
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.VFSFileSystem;
 import org.apache.commons.configuration2.tree.ImmutableNode;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A specialized test class for {@code CombinedConfigurationBuilder} which uses a VFS file system for accessing
@@ -61,6 +61,6 @@ public class TestCombinedConfigurationBuilderVFS extends TestCombinedConfigurati
         final BasicConfigurationBuilder<? extends HierarchicalConfiguration<ImmutableNode>> defBuilder = createDefinitionBuilder(defConfig);
         builder.configure(new CombinedBuilderParametersImpl().setDefinitionBuilder(defBuilder).setBasePath(deepDir.getAbsolutePath()));
         final Configuration config = builder.getConfiguration();
-        assertEquals("Wrong property value", "somevalue", config.getString("somekey"));
+        assertEquals("somevalue", config.getString("somekey"), "Wrong property value");
     }
 }

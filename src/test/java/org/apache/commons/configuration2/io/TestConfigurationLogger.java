@@ -17,14 +17,14 @@
 
 package org.apache.commons.configuration2.io;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.sameInstance;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.BaseConfiguration;
@@ -32,7 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.Log4JLogger;
 import org.apache.commons.logging.impl.NoOpLog;
 import org.easymock.EasyMock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code ConfigurationLogger}.
@@ -48,7 +48,7 @@ public class TestConfigurationLogger {
     @Test
     public void testAbstractConfigurationDefaultLogger() {
         final AbstractConfiguration config = new BaseConfiguration();
-        assertThat("Wrong default logger", config.getLogger().getLog(), instanceOf(NoOpLog.class));
+        assertInstanceOf(NoOpLog.class, config.getLogger().getLog(), "Wrong default logger");
     }
 
     /**
@@ -60,7 +60,7 @@ public class TestConfigurationLogger {
         final AbstractConfiguration config = new BaseConfiguration();
 
         config.setLogger(logger);
-        assertThat("Logger not set", config.getLogger(), sameInstance(logger));
+        assertSame(logger, config.getLogger(), "Logger not set");
     }
 
     /**
@@ -72,7 +72,7 @@ public class TestConfigurationLogger {
         config.setLogger(new ConfigurationLogger(getClass()));
 
         config.setLogger(null);
-        assertThat("Logger not disabled", config.getLogger().getLog(), instanceOf(NoOpLog.class));
+        assertInstanceOf(NoOpLog.class, config.getLogger().getLog(), "Logger not disabled");
     }
 
     /**
@@ -96,7 +96,7 @@ public class TestConfigurationLogger {
     public void testDummyLogger() {
         final ConfigurationLogger logger = ConfigurationLogger.newDummyLogger();
 
-        assertThat("Wrong internal logger", logger.getLog(), instanceOf(NoOpLog.class));
+        assertInstanceOf(NoOpLog.class, logger.getLog(), "Wrong internal logger");
     }
 
     /**
@@ -145,17 +145,17 @@ public class TestConfigurationLogger {
     /**
      * Tries to create an instance without passing a logger class.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInitNoLoggerClass() {
-        new ConfigurationLogger((Class<?>) null);
+        assertThrows(IllegalArgumentException.class, () -> new ConfigurationLogger((Class<?>) null));
     }
 
     /**
      * Tries to create an instance without passing in a logger name.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInitNoLoggerName() {
-        new ConfigurationLogger((String) null);
+        assertThrows(IllegalArgumentException.class, () -> new ConfigurationLogger((String) null));
     }
 
     /**
@@ -166,9 +166,9 @@ public class TestConfigurationLogger {
         final ConfigurationLogger logger1 = new ConfigurationLogger(getClass().getName());
         final ConfigurationLogger logger2 = new ConfigurationLogger(getClass());
 
-        assertNotNull("No internal logger", logger1.getLog());
+        assertNotNull(logger1.getLog(), "No internal logger");
         if (logger1.getLog() instanceof Log4JLogger) {
-            assertEquals("Different internal Log4JLoggers", logger1.getLog(), logger2.getLog());
+            assertEquals(logger1.getLog(), logger2.getLog(), "Different internal Log4JLoggers");
         } else {
             // TODO assert what for the Slf4j adapter?
         }
@@ -184,7 +184,7 @@ public class TestConfigurationLogger {
         EasyMock.replay(log);
         final ConfigurationLogger logger = new ConfigurationLogger(log);
 
-        assertTrue("No debug log", logger.isDebugEnabled());
+        assertTrue(logger.isDebugEnabled(), "No debug log");
         EasyMock.verify(log);
     }
 
@@ -198,7 +198,7 @@ public class TestConfigurationLogger {
         EasyMock.replay(log);
         final ConfigurationLogger logger = new ConfigurationLogger(log);
 
-        assertFalse("Wrong info log", logger.isInfoEnabled());
+        assertFalse(logger.isInfoEnabled(), "Wrong info log");
         EasyMock.verify(log);
     }
 
@@ -215,9 +215,9 @@ public class TestConfigurationLogger {
             }
         };
 
-        assertNull("Got an internal logger", logger.getLog());
+        assertNull(logger.getLog(), "Got an internal logger");
         logger.info(MSG);
-        assertEquals("Message not logged", MSG, buf.toString());
+        assertEquals(MSG, buf.toString(), "Message not logged");
     }
 
     /**

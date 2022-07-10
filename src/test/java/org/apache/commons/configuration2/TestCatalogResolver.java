@@ -17,16 +17,17 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.resolver.CatalogResolver;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for CatalogResolver.
@@ -52,7 +53,7 @@ public class TestCatalogResolver {
         handler.load(fileName);
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         resolver = new CatalogResolver();
         resolver.setCatalogFiles(CATALOG_FILES);
@@ -61,7 +62,7 @@ public class TestCatalogResolver {
         config.setEntityResolver(resolver);
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         resolver = null;
         config = null;
@@ -78,28 +79,25 @@ public class TestCatalogResolver {
     public void testLogger() throws Exception {
         final ConfigurationLogger log = new ConfigurationLogger(this.getClass());
         resolver.setLogger(log);
-        assertNotNull("No Logger returned", resolver.getLogger());
-        assertSame("Incorrect Logger", log, resolver.getLogger());
+        assertNotNull(resolver.getLogger(), "No Logger returned");
+        assertSame(log, resolver.getLogger(), "Incorrect Logger");
     }
 
     @Test
-    public void testPublic() throws ConfigurationException {
-        load(PUBLIC_FILE);
+    public void testPublic() {
+        assertDoesNotThrow(() -> load(PUBLIC_FILE));
     }
 
     @Test
-    public void testRewriteSystem() throws ConfigurationException {
-        load(REWRITE_SYSTEM_FILE);
+    public void testRewriteSystem() {
+        assertDoesNotThrow(() -> load(REWRITE_SYSTEM_FILE));
     }
 
     /**
      * Tests that the schema can be resolved and that XMLConfiguration will validate the file using the schema.
-     *
-     * @throws Exception
      */
     @Test
-    public void testSchemaResolver() throws ConfigurationException {
-        load(REWRITE_SCHEMA_FILE);
+    public void testSchemaResolver() {
+        assertDoesNotThrow(() -> load(REWRITE_SCHEMA_FILE));
     }
-
 }

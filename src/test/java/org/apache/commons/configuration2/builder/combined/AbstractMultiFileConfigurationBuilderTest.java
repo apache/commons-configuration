@@ -20,7 +20,7 @@ import org.apache.commons.configuration2.builder.BasicBuilderParameters;
 import org.apache.commons.configuration2.builder.BuilderParameters;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.DefaultLookups;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 
 /**
  * A base class for test classes for {@code MultiFileConfigurationBuilder} and derived classes. This class provides some
@@ -81,7 +81,7 @@ public class AbstractMultiFileConfigurationBuilderTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         switchToConfig(null);
     }

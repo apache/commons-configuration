@@ -17,6 +17,8 @@
 
 package org.apache.commons.configuration2.web;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -26,7 +28,7 @@ import javax.servlet.ServletContext;
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.TestAbstractConfiguration;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for the {@link ServletFilterConfiguration} class.
@@ -80,14 +82,14 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration {
     }
 
     @Override
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testAddPropertyDirect() {
-        super.testAddPropertyDirect();
+        assertThrows(UnsupportedOperationException.class, super::testAddPropertyDirect);
     }
 
     @Override
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testClearProperty() {
-        super.testClearProperty();
+        assertThrows(UnsupportedOperationException.class, super::testClearProperty);
     }
 }

@@ -17,11 +17,11 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,8 +31,8 @@ import java.util.List;
 import org.apache.commons.configuration2.convert.LegacyListDelimiterHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.io.FileHandler;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test loading multiple configurations.
@@ -49,7 +49,7 @@ public class TestNullCompositeConfiguration {
     private final String testProperties2 = ConfigurationAssert.getTestFile("test2.properties").getAbsolutePath();
     private final String testPropertiesXML = ConfigurationAssert.getTestFile("test.xml").getAbsolutePath();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         cc = new CompositeConfiguration();
         final ListDelimiterHandler listHandler = new LegacyListDelimiterHandler(',');
@@ -81,16 +81,16 @@ public class TestNullCompositeConfiguration {
 
         String[] values = cc.getStringArray("test.short");
 
-        assertEquals("Number of values before add is wrong!", 1, values.length);
-        assertEquals("First Value before add is wrong", "1", values[0]);
+        assertEquals(1, values.length, "Number of values before add is wrong!");
+        assertEquals("1", values[0], "First Value before add is wrong");
 
         cc.addProperty("test.short", "88");
 
         values = cc.getStringArray("test.short");
 
-        assertEquals("Number of values is wrong!", 2, values.length);
-        assertEquals("First Value is wrong", "1", values[0]);
-        assertEquals("Third Value is wrong", "88", values[1]);
+        assertEquals(2, values.length, "Number of values is wrong!");
+        assertEquals("1", values[0], "First Value is wrong");
+        assertEquals("88", values[1], "Third Value is wrong");
     }
 
     @Test
@@ -147,7 +147,7 @@ public class TestNullCompositeConfiguration {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
         cc.clearProperty("test.short");
-        assertFalse("Make sure test.short is gone!", cc.containsKey("test.short"));
+        assertFalse(cc.containsKey("test.short"), "Make sure test.short is gone!");
     }
 
     /**
@@ -217,33 +217,33 @@ public class TestNullCompositeConfiguration {
 
         // check the composite 'array' property
         List<Object> list = cc.getList("array");
-        assertNotNull("null list", list);
-        assertEquals("list size", 2, list.size());
-        assertTrue("'value1' not found in the list", list.contains("value1"));
-        assertTrue("'value2' not found in the list", list.contains("value2"));
+        assertNotNull(list, "null list");
+        assertEquals(2, list.size(), "list size");
+        assertTrue(list.contains("value1"), "'value1' not found in the list");
+        assertTrue(list.contains("value2"), "'value2' not found in the list");
 
         // add an element to the list in the composite configuration
         cc.addProperty("array", "value5");
 
         // test the new list
         list = cc.getList("array");
-        assertNotNull("null list", list);
-        assertEquals("list size", 3, list.size());
-        assertTrue("'value1' not found in the list", list.contains("value1"));
-        assertTrue("'value2' not found in the list", list.contains("value2"));
-        assertTrue("'value5' not found in the list", list.contains("value5"));
+        assertNotNull(list, "null list");
+        assertEquals(3, list.size(), "list size");
+        assertTrue(list.contains("value1"), "'value1' not found in the list");
+        assertTrue(list.contains("value2"), "'value2' not found in the list");
+        assertTrue(list.contains("value5"), "'value5' not found in the list");
     }
 
     @Test
     public void testGetProperty() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(conf2);
-        assertEquals("Make sure we get the property from conf1 first", "test.properties", cc.getString("propertyInOrder"));
+        assertEquals("test.properties", cc.getString("propertyInOrder"), "Make sure we get the property from conf1 first");
         cc.clear();
 
         cc.addConfiguration(conf2);
         cc.addConfiguration(conf1);
-        assertEquals("Make sure we get the property from conf2 first", "test2.properties", cc.getString("propertyInOrder"));
+        assertEquals("test2.properties", cc.getString("propertyInOrder"), "Make sure we get the property from conf2 first");
     }
 
     @Test
@@ -251,10 +251,10 @@ public class TestNullCompositeConfiguration {
         cc.addConfiguration(conf1);
         cc.addConfiguration(conf2);
 
-        assertNull("Bogus property is not null!", cc.getString("bogus.property"));
+        assertNull(cc.getString("bogus.property"), "Bogus property is not null!");
 
-        assertFalse("Should be false", cc.getBoolean("test.missing.boolean", false));
-        assertTrue("Should be true", cc.getBoolean("test.missing.boolean.true", true));
+        assertFalse(cc.getBoolean("test.missing.boolean", false), "Should be false");
+        assertTrue(cc.getBoolean("test.missing.boolean.true", true), "Should be true");
     }
 
     @Test
@@ -276,7 +276,7 @@ public class TestNullCompositeConfiguration {
 
         assertEquals("test string", c.getString("string"));
 
-        assertNull("XXX should have been null!", c.getString("XXX"));
+        assertNull(c.getString("XXX"), "XXX should have been null!");
 
         // test defaults
         assertEquals("test string", c.getString("string", "some default value"));
@@ -303,12 +303,12 @@ public class TestNullCompositeConfiguration {
 
         Configuration subset = cc.subset("test");
         assertNotNull(subset);
-        assertFalse("Shouldn't be empty", subset.isEmpty());
-        assertEquals("Make sure the initial loaded configs subset overrides any later add configs subset", "1", subset.getString("short"));
+        assertFalse(subset.isEmpty(), "Shouldn't be empty");
+        assertEquals("1", subset.getString("short"), "Make sure the initial loaded configs subset overrides any later add configs subset");
 
         cc.setProperty("test.short", "43");
         subset = cc.subset("test");
-        assertEquals("Make sure the initial loaded configs subset overrides any later add configs subset", "43", subset.getString("short"));
+        assertEquals("43", subset.getString("short"), "Make sure the initial loaded configs subset overrides any later add configs subset");
     }
 
     @Test
@@ -328,10 +328,10 @@ public class TestNullCompositeConfiguration {
         cc.addProperty("array", "value5");
 
         final List<Object> list = cc.getList("array");
-        assertEquals("Wrong number of elements", 3, list.size());
-        assertEquals("Wrong element 1", "value1", list.get(0));
-        assertEquals("Wrong element 2", "value2", list.get(1));
-        assertEquals("Wrong element 3", "value5", list.get(2));
+        assertEquals(3, list.size(), "Wrong number of elements");
+        assertEquals("value1", list.get(0), "Wrong element 1");
+        assertEquals("value2", list.get(1), "Wrong element 2");
+        assertEquals("value5", list.get(2), "Wrong element 3");
     }
 
     /**
@@ -359,12 +359,12 @@ public class TestNullCompositeConfiguration {
     public void testMultipleTypesOfConfigs() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
-        assertEquals("Make sure we get the property from conf1 first", 1, cc.getInt("test.short"));
+        assertEquals(1, cc.getInt("test.short"), "Make sure we get the property from conf1 first");
         cc.clear();
 
         cc.addConfiguration(xmlConf);
         cc.addConfiguration(conf1);
-        assertEquals("Make sure we get the property from xml", 8, cc.getInt("test.short"));
+        assertEquals(8, cc.getInt("test.short"), "Make sure we get the property from xml");
     }
 
     @Test
@@ -419,6 +419,6 @@ public class TestNullCompositeConfiguration {
 
     @Test
     public void testThrowExceptionOnMissing() {
-        assertFalse("Throw Exception Property is set!", cc.isThrowExceptionOnMissing());
+        assertFalse(cc.isThrowExceptionOnMissing(), "Throw Exception Property is set!");
     }
 }

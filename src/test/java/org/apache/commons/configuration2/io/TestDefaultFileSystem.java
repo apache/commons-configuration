@@ -16,14 +16,15 @@
  */
 package org.apache.commons.configuration2.io;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.File;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code DefaultFileSystem}. Note: This class tests only basic functionality. Other parts are tested by
@@ -34,7 +35,7 @@ public class TestDefaultFileSystem {
     /** The file system to be tested. */
     private DefaultFileSystem fileSystem;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         fileSystem = new DefaultFileSystem();
     }
@@ -44,15 +45,16 @@ public class TestDefaultFileSystem {
      */
     @Test
     public void testDefaultLogger() {
-        assertNotNull("No default logger", fileSystem.getLogger());
+        assertNotNull(fileSystem.getLogger(), "No default logger");
     }
 
     /**
      * Tests that an invalid output path causes an exception to be thrown when creating an ouput stream.
      */
-    @Test(expected = ConfigurationException.class)
-    public void testGetOutputStreamInvalidPath() throws ConfigurationException {
-        fileSystem.getOutputStream(new File(""));
+    @Test
+    public void testGetOutputStreamInvalidPath() {
+        final File file = new File("");
+        assertThrows(ConfigurationException.class, () -> fileSystem.getOutputStream(file));
     }
 
     /**
@@ -62,6 +64,6 @@ public class TestDefaultFileSystem {
     public void testSetLogger() {
         final ConfigurationLogger log = new ConfigurationLogger(getClass());
         fileSystem.setLogger(log);
-        assertSame("Logger not set", log, fileSystem.getLogger());
+        assertSame(log, fileSystem.getLogger(), "Logger not set");
     }
 }

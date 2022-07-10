@@ -16,9 +16,10 @@
  */
 package org.apache.commons.configuration2.event;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code Event}.
@@ -28,17 +29,17 @@ public class TestEvent {
     /**
      * Tries to create an instance without a source.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInitNoSource() {
-        new Event(null, Event.ANY);
+        assertThrows(IllegalArgumentException.class, () -> new Event(null, Event.ANY));
     }
 
     /**
      * Tries to create an instance without a type.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInitNoType() {
-        new Event(this, null);
+        assertThrows(IllegalArgumentException.class, () -> new Event(this, null));
     }
 
     /**
@@ -48,6 +49,6 @@ public class TestEvent {
     public void testToString() {
         final Event event = new Event(this, Event.ANY);
         final String s = event.toString();
-        assertEquals("Wrong string representation", "Event [ source=" + this + " eventType=" + Event.ANY + " ]", s);
+        assertEquals("Event [ source=" + this + " eventType=" + Event.ANY + " ]", s, "Wrong string representation");
     }
 }

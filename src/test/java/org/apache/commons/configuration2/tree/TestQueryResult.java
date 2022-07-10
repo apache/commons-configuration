@@ -18,13 +18,14 @@ package org.apache.commons.configuration2.tree;
 
 import static org.apache.commons.configuration2.ConfigurationAssert.checkEquals;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code QueryResult}.
@@ -43,7 +44,7 @@ public class TestQueryResult {
     /** A test parent node for an attribute. */
     private static ImmutableNode attributeNode;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() {
         resultNode = new ImmutableNode.Builder().name("resultNode").value(42).create();
         attributeNode = new ImmutableNode.Builder().name("attributeNode").addAttribute(ATTR, VALUE).create();
@@ -95,16 +96,17 @@ public class TestQueryResult {
     @Test
     public void testGetAttributeValue() {
         final QueryResult<ImmutableNode> result = QueryResult.createAttributeResult(attributeNode, ATTR);
-        assertEquals("Wrong value", VALUE, result.getAttributeValue(new InMemoryNodeModel().getNodeHandler()));
+        assertEquals(VALUE, result.getAttributeValue(new InMemoryNodeModel().getNodeHandler()), "Wrong value");
     }
 
     /**
      * Tries to query an attribute value for a non-attribute result.
      */
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testGetAttributeValueNoAttributeResult() {
         final QueryResult<ImmutableNode> result = QueryResult.createNodeResult(resultNode);
-        result.getAttributeValue(new InMemoryNodeModel().getNodeHandler());
+        final NodeHandler<ImmutableNode> nodeHandler = new InMemoryNodeModel().getNodeHandler();
+        assertThrows(IllegalStateException.class, () -> result.getAttributeValue(nodeHandler));
     }
 
     /**
@@ -113,7 +115,7 @@ public class TestQueryResult {
     @Test
     public void testIsAttributeResultFalse() {
         final QueryResult<ImmutableNode> result = QueryResult.createNodeResult(resultNode);
-        assertFalse("An attribute result", result.isAttributeResult());
+        assertFalse(result.isAttributeResult(), "An attribute result");
     }
 
     /**
@@ -122,7 +124,7 @@ public class TestQueryResult {
     @Test
     public void testIsAttributeResultTrue() {
         final QueryResult<ImmutableNode> result = QueryResult.createAttributeResult(attributeNode, ATTR);
-        assertTrue("Not an attribute result", result.isAttributeResult());
+        assertTrue(result.isAttributeResult(), "Not an attribute result");
     }
 
     /**

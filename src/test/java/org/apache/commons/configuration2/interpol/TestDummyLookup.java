@@ -16,9 +16,9 @@
  */
 package org.apache.commons.configuration2.interpol;
 
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code DummyLookup}.
@@ -30,7 +30,7 @@ public class TestDummyLookup {
      */
     @Test
     public void testLookup() {
-        assertNull("Got a result (1)", DummyLookup.INSTANCE.lookup("someVariable"));
-        assertNull("Got a result (2)", DummyLookup.INSTANCE.lookup(null));
+        assertNull(DummyLookup.INSTANCE.lookup("someVariable"), "Got a result (1)");
+        assertNull(DummyLookup.INSTANCE.lookup(null), "Got a result (2)");
     }
 }

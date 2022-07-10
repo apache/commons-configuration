@@ -16,9 +16,9 @@
  */
 package org.apache.commons.configuration2.builder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -43,7 +43,7 @@ public class BuilderEventListenerImpl implements EventListener<ConfigurationBuil
      * Checks that no further events have been received by this listener.
      */
     public void assertNoMoreEvents() {
-        assertFalse("Too many events", initIterator().hasNext());
+        assertFalse(initIterator().hasNext(), "Too many events");
     }
 
     /**
@@ -68,9 +68,9 @@ public class BuilderEventListenerImpl implements EventListener<ConfigurationBuil
      */
     public <T extends ConfigurationBuilderEvent> T nextEvent(final EventType<T> eventType) {
         final Iterator<ConfigurationBuilderEvent> it = initIterator();
-        assertTrue("Too few events received", it.hasNext());
+        assertTrue(it.hasNext(), "Too few events received");
         final ConfigurationBuilderEvent nextEvent = it.next();
-        assertEquals("Wrong event type", eventType, nextEvent.getEventType());
+        assertEquals(eventType, nextEvent.getEventType(), "Wrong event type");
         // Safe cast because of the comparison of the event type
         @SuppressWarnings("unchecked")
         final T resultEvent = (T) nextEvent;

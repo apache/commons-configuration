@@ -16,11 +16,12 @@
  */
 package org.apache.commons.configuration2.tree.xpath;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -35,8 +36,8 @@ import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.commons.jxpath.ri.model.NodePointerFactory;
 import org.easymock.EasyMock;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for XPathExpressionEngine.
@@ -63,18 +64,18 @@ public class TestXPathExpressionEngine {
      * @param expected an array with the expected path elements
      */
     private static void checkAddPath(final NodeAddData<ImmutableNode> data, final boolean attr, final String... expected) {
-        assertSame("Wrong parent node", root, data.getParent());
+        assertSame(root, data.getParent(), "Wrong parent node");
         final List<String> path = data.getPathNodes();
-        assertEquals("Incorrect number of path nodes", expected.length - 1, path.size());
+        assertEquals(expected.length - 1, path.size(), "Incorrect number of path nodes");
         final Iterator<String> it = path.iterator();
         for (int idx = 0; idx < expected.length - 1; idx++) {
-            assertEquals("Wrong node at position " + idx, expected[idx], it.next());
+            assertEquals(expected[idx], it.next(), "Wrong node at position " + idx);
         }
-        assertEquals("Wrong name of new node", expected[expected.length - 1], data.getNewNodeName());
-        assertEquals("Incorrect attribute flag", attr, data.isAttribute());
+        assertEquals(expected[expected.length - 1], data.getNewNodeName(), "Wrong name of new node");
+        assertEquals(attr, data.isAttribute(), "Incorrect attribute flag");
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
         root = new ImmutableNode.Builder().name(ROOT_NAME).create();
         handler = new InMemoryNodeModel(root).getNodeHandler();
@@ -90,8 +91,8 @@ public class TestXPathExpressionEngine {
         EasyMock.replay(factory);
         final XPathExpressionEngine engine = new XPathExpressionEngine(factory);
         final List<QueryResult<ImmutableNode>> results = engine.query(root, key, handler);
-        assertEquals("Incorrect number of results", 1, results.size());
-        assertSame("Wrong result node", root, results.get(0).getNode());
+        assertEquals(1, results.size(), "Incorrect number of results");
+        assertSame(root, results.get(0).getNode(), "Wrong result node");
     }
 
     /**
@@ -103,7 +104,7 @@ public class TestXPathExpressionEngine {
     private void checkInvalidAddPath(final String path) {
         final XPathExpressionEngine engine = new XPathExpressionEngine();
         final QueryResult<ImmutableNode> res = QueryResult.createNodeResult(root);
-        engine.createNodeAddData(path, res);
+        assertThrows(IllegalArgumentException.class, () -> engine.createNodeAddData(path, res));
     }
 
     /**
@@ -138,7 +139,7 @@ public class TestXPathExpressionEngine {
     @Test
     public void testAttributeKeyOfRootNode() {
         final XPathExpressionEngine engine = new XPathExpressionEngine();
-        assertEquals("Wrong key for root attribute", "@child", engine.attributeKey(null, "child"));
+        assertEquals("@child", engine.attributeKey(null, "child"), "Wrong key for root attribute");
     }
 
     /**
@@ -153,7 +154,7 @@ public class TestXPathExpressionEngine {
         final ImmutableNode parent = parentBuilder.create();
         final NodeHandler<ImmutableNode> testHandler = new InMemoryNodeModel(parent).getNodeHandler();
         final XPathExpressionEngine engine = new XPathExpressionEngine();
-        assertEquals("Wrong canonical key", "parent/child[1]", engine.canonicalKey(c1, "parent", testHandler));
+        assertEquals("parent/child[1]", engine.canonicalKey(c1, "parent", testHandler), "Wrong canonical key");
     }
 
     /**
@@ -166,7 +167,7 @@ public class TestXPathExpressionEngine {
         final ImmutableNode parent = parentBuilder.addChild(c1).create();
         final NodeHandler<ImmutableNode> testHandler = new InMemoryNodeModel(parent).getNodeHandler();
         final XPathExpressionEngine engine = new XPathExpressionEngine();
-        assertEquals("Wrong key", "child[1]", engine.canonicalKey(c1, null, testHandler));
+        assertEquals("child[1]", engine.canonicalKey(c1, null, testHandler), "Wrong key");
     }
 
     /**
@@ -175,7 +176,7 @@ public class TestXPathExpressionEngine {
     @Test
     public void testCanonicalKeyRootNoParentKey() {
         final XPathExpressionEngine engine = new XPathExpressionEngine();
-        assertEquals("Wrong key", "", engine.canonicalKey(root, null, handler));
+        assertEquals("", engine.canonicalKey(root, null, handler), "Wrong key");
     }
 
     /**
@@ -184,7 +185,7 @@ public class TestXPathExpressionEngine {
     @Test
     public void testCanonicalKeyRootWithParentKey() {
         final XPathExpressionEngine engine = new XPathExpressionEngine();
-        assertEquals("Wrong key", "parent", engine.canonicalKey(root, "parent", handler));
+        assertEquals("parent", engine.canonicalKey(root, "parent", handler), "Wrong key");
     }
 
     /**
@@ -200,8 +201,8 @@ public class TestXPathExpressionEngine {
         final ImmutableNode parent = parentBuilder.create();
         final NodeHandler<ImmutableNode> testHandler = new InMemoryNodeModel(parent).getNodeHandler();
         final XPathExpressionEngine engine = new XPathExpressionEngine();
-        assertEquals("Wrong key 1", "parent/child[1]", engine.canonicalKey(c1, "parent", testHandler));
-        assertEquals("Wrong key 2", "parent/child[2]", engine.canonicalKey(c2, "parent", testHandler));
+        assertEquals("parent/child[1]", engine.canonicalKey(c1, "parent", testHandler), "Wrong key 1");
+        assertEquals("parent/child[2]", engine.canonicalKey(c2, "parent", testHandler), "Wrong key 2");
     }
 
     /**
@@ -210,7 +211,7 @@ public class TestXPathExpressionEngine {
     @Test
     public void testDefaultContextFactory() {
         final XPathExpressionEngine engine = new XPathExpressionEngine();
-        assertNotNull("No context factory", engine.getContextFactory());
+        assertNotNull(engine.getContextFactory(), "No context factory");
     }
 
     /**
@@ -219,7 +220,7 @@ public class TestXPathExpressionEngine {
     @Test
     public void testNodeKeyAttribute() {
         final XPathExpressionEngine engine = new XPathExpressionEngine();
-        assertEquals("Wrong attribute key", "node/@attr", engine.attributeKey("node", "attr"));
+        assertEquals("node/@attr", engine.attributeKey("node", "attr"), "Wrong attribute key");
     }
 
     /**
@@ -228,7 +229,7 @@ public class TestXPathExpressionEngine {
     @Test
     public void testNodeKeyForRootChild() {
         final XPathExpressionEngine engine = new XPathExpressionEngine();
-        assertEquals("Wrong key for root child node", ROOT_NAME, engine.nodeKey(root, "", handler));
+        assertEquals(ROOT_NAME, engine.nodeKey(root, "", handler), "Wrong key for root child node");
     }
 
     /**
@@ -237,7 +238,7 @@ public class TestXPathExpressionEngine {
     @Test
     public void testNodeKeyForRootNode() {
         final XPathExpressionEngine engine = new XPathExpressionEngine();
-        assertEquals("Wrong key for root node", "", engine.nodeKey(root, null, handler));
+        assertEquals("", engine.nodeKey(root, null, handler), "Wrong key for root node");
     }
 
     /**
@@ -246,7 +247,7 @@ public class TestXPathExpressionEngine {
     @Test
     public void testNodeKeyNoNodeName() {
         final XPathExpressionEngine engine = new XPathExpressionEngine();
-        assertEquals("Null name not detected", "test", engine.nodeKey(new ImmutableNode.Builder().create(), "test", handler));
+        assertEquals("test", engine.nodeKey(new ImmutableNode.Builder().create(), "test", handler), "Null name not detected");
     }
 
     /**
@@ -255,7 +256,7 @@ public class TestXPathExpressionEngine {
     @Test
     public void testNodeKeyNormal() {
         final XPathExpressionEngine engine = new XPathExpressionEngine();
-        assertEquals("Wrong node key", "parent/" + ROOT_NAME, engine.nodeKey(root, "parent", handler));
+        assertEquals("parent/" + ROOT_NAME, engine.nodeKey(root, "parent", handler), "Wrong node key");
     }
 
     /**
@@ -271,7 +272,7 @@ public class TestXPathExpressionEngine {
                 found = true;
             }
         }
-        assertTrue("No configuration pointer factory found", found);
+        assertTrue(found, "No configuration pointer factory found");
     }
 
     /**
@@ -299,25 +300,25 @@ public class TestXPathExpressionEngine {
     /**
      * Tests an add operation where the key is empty.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testPrepareAddEmptyKey() {
         final XPathExpressionEngine engine = new XPathExpressionEngine();
-        engine.prepareAdd(root, "", handler);
+        assertThrows(IllegalArgumentException.class, () -> engine.prepareAdd(root, "", handler));
     }
 
     /**
      * Tests an add operation with an empty path for the new node.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testPrepareAddEmptyPath() {
         final XPathExpressionEngine engine = new XPathExpressionEngine();
-        engine.prepareAdd(root, TEST_KEY + " ", handler);
+        assertThrows(IllegalArgumentException.class, () -> engine.prepareAdd(root, TEST_KEY + " ", handler));
     }
 
     /**
      * Tests an add operation with an invalid path: the path contains an attribute in the middle part.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testPrepareAddInvalidAttributePath() {
         checkInvalidAddPath("a/path/with@an/attribute");
     }
@@ -325,7 +326,7 @@ public class TestXPathExpressionEngine {
     /**
      * Tests an add operation with an invalid path: the path contains an attribute after a slash.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testPrepareAddInvalidAttributePath2() {
         checkInvalidAddPath("a/path/with/@attribute");
     }
@@ -333,17 +334,17 @@ public class TestXPathExpressionEngine {
     /**
      * Tests an add operation with a query that does not return a single node.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testPrepareAddInvalidParent() {
         final JXPathContext ctx = expectSelect();
         final XPathExpressionEngine engine = setUpEngine(ctx);
-        engine.prepareAdd(root, TEST_KEY + " test", handler);
+        assertThrows(IllegalArgumentException.class, () -> engine.prepareAdd(root, TEST_KEY + " test", handler));
     }
 
     /**
      * Tests an add operation with an invalid path.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testPrepareAddInvalidPath() {
         checkInvalidAddPath("an/invalid//path");
     }
@@ -351,7 +352,7 @@ public class TestXPathExpressionEngine {
     /**
      * Tests an add operation with an invalid path that contains multiple attribute components.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testPrepareAddInvalidPathMultipleAttributes() {
         checkInvalidAddPath("an@attribute@path");
     }
@@ -359,7 +360,7 @@ public class TestXPathExpressionEngine {
     /**
      * Tests an add operation with an invalid path that starts with a slash.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testPrepareAddInvalidPathWithSlash() {
         checkInvalidAddPath("/a/path/node");
     }
@@ -378,10 +379,10 @@ public class TestXPathExpressionEngine {
     /**
      * Tests an add operation where the key is null.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testPrepareAddNullKey() {
         final XPathExpressionEngine engine = new XPathExpressionEngine();
-        engine.prepareAdd(root, null, handler);
+        assertThrows(IllegalArgumentException.class, () -> engine.prepareAdd(root, null, handler));
     }
 
     /**
@@ -420,11 +421,11 @@ public class TestXPathExpressionEngine {
     /**
      * Tests that it is not possible to add nodes to an attribute.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testPrepareAddToAttributeResult() {
         final XPathExpressionEngine engine = new XPathExpressionEngine();
         final QueryResult<ImmutableNode> result = QueryResult.createAttributeResult(root, TEST_KEY);
-        engine.createNodeAddData("path", result);
+        assertThrows(IllegalArgumentException.class, () -> engine.createNodeAddData("path", result));
     }
 
     /**
@@ -436,8 +437,8 @@ public class TestXPathExpressionEngine {
         final JXPathContext ctx = expectSelect(attrResult);
         final XPathExpressionEngine engine = setUpEngine(ctx);
         final List<QueryResult<ImmutableNode>> result = engine.query(root, TEST_KEY, handler);
-        assertEquals("Incorrect number of results", 1, result.size());
-        assertSame("Wrong result", attrResult, result.get(0));
+        assertEquals(1, result.size(), "Incorrect number of results");
+        assertSame(attrResult, result.get(0), "Wrong result");
     }
 
     /**
@@ -448,9 +449,9 @@ public class TestXPathExpressionEngine {
         final JXPathContext ctx = expectSelect(root);
         final XPathExpressionEngine engine = setUpEngine(ctx);
         final List<QueryResult<ImmutableNode>> result = engine.query(root, TEST_KEY, handler);
-        assertEquals("Incorrect number of results", 1, result.size());
-        assertSame("Wrong result node", root, result.get(0).getNode());
-        assertFalse("No node result", result.get(0).isAttributeResult());
+        assertEquals(1, result.size(), "Incorrect number of results");
+        assertSame(root, result.get(0).getNode(), "Wrong result node");
+        assertFalse(result.get(0).isAttributeResult(), "No node result");
     }
 
     /**
@@ -476,6 +477,6 @@ public class TestXPathExpressionEngine {
     public void testQueryWithoutResult() {
         final JXPathContext ctx = expectSelect();
         final XPathExpressionEngine engine = setUpEngine(ctx);
-        assertTrue("Got results", engine.query(root, TEST_KEY, handler).isEmpty());
+        assertTrue(engine.query(root, TEST_KEY, handler).isEmpty(), "Got results");
     }
 }

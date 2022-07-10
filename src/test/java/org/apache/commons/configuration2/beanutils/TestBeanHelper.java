@@ -16,11 +16,12 @@
  */
 package org.apache.commons.configuration2.beanutils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,8 +33,8 @@ import org.apache.commons.beanutils.LazyDynaBean;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for BeanHelper.
@@ -106,12 +107,12 @@ public class TestBeanHelper {
      * @param bean the bean to be checked
      */
     private void checkBean(final BeanCreationTestBean bean) {
-        assertEquals("Wrong string property", TEST_STRING, bean.getStringValue());
-        assertEquals("Wrong int property", TEST_INT, bean.getIntValue());
+        assertEquals(TEST_STRING, bean.getStringValue(), "Wrong string property");
+        assertEquals(TEST_INT, bean.getIntValue(), "Wrong int property");
         final BeanCreationTestBean buddy = bean.getBuddy();
-        assertNotNull("Buddy was not set", buddy);
-        assertEquals("Wrong string property in buddy", "Another test string", buddy.getStringValue());
-        assertEquals("Wrong int property in buddy", 100, buddy.getIntValue());
+        assertNotNull(buddy, "Buddy was not set");
+        assertEquals("Another test string", buddy.getStringValue(), "Wrong string property in buddy");
+        assertEquals(100, buddy.getIntValue(), "Wrong int property in buddy");
     }
 
     /**
@@ -120,13 +121,13 @@ public class TestBeanHelper {
      * @param bean the bean to be checked
      */
     private void checkBean(final BeanCreationTestBeanWithListChild bean) {
-        assertEquals("Wrong string property", TEST_STRING, bean.getStringValue());
-        assertEquals("Wrong int property", TEST_INT, bean.getIntValue());
+        assertEquals(TEST_STRING, bean.getStringValue(), "Wrong string property");
+        assertEquals(TEST_INT, bean.getIntValue(), "Wrong int property");
         final List<BeanCreationTestBean> children = bean.getChildren();
-        assertNotNull("Children were not set", children);
-        assertEquals("Wrong number of children created", children.size(), 2);
-        assertNotNull("First child was set as null", children.get(0));
-        assertNotNull("Second child was set as null", children.get(1));
+        assertNotNull(children, "Children were not set");
+        assertEquals(2, children.size(), "Wrong number of children created");
+        assertNotNull(children.get(0), "First child was set as null");
+        assertNotNull(children.get(1), "Second child was set as null");
     }
 
     /**
@@ -139,14 +140,14 @@ public class TestBeanHelper {
         final BeanDeclarationTestImpl childBean = new BeanDeclarationTestImpl();
         final Map<String, Object> properties2 = new HashMap<>();
         properties2.put("stringValue", name + " Another test string");
-        properties2.put("intValue", Integer.valueOf(100));
+        properties2.put("intValue", 100);
         childBean.setBeanProperties(properties2);
         childBean.setBeanClassName(BeanCreationTestBean.class.getName());
 
         return childBean;
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         helper = new BeanHelper(new TestBeanFactory());
     }
@@ -165,7 +166,7 @@ public class TestBeanHelper {
         final BeanDeclarationTestImpl buddyData = new BeanDeclarationTestImpl();
         final Map<String, Object> properties2 = new HashMap<>();
         properties2.put("stringValue", "Another test string");
-        properties2.put("intValue", Integer.valueOf(100));
+        properties2.put("intValue", 100);
         buddyData.setBeanProperties(properties2);
         buddyData.setBeanClassName(BeanCreationTestBean.class.getName());
 
@@ -207,8 +208,8 @@ public class TestBeanHelper {
         src.setFooter("TestFooter");
         final LazyDynaBean dest = new LazyDynaBean();
         BeanHelper.copyProperties(dest, src);
-        assertEquals("Wrong footer property", "TestFooter", dest.get("footer"));
-        assertEquals("Wrong header property", "TestHeader", dest.get("header"));
+        assertEquals("TestFooter", dest.get("footer"), "Wrong footer property");
+        assertEquals("TestHeader", dest.get("header"), "Wrong header property");
     }
 
     /**
@@ -222,8 +223,8 @@ public class TestBeanHelper {
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(BeanCreationTestBean.class.getName());
         checkBean((BeanCreationTestBean) helper.createBean(data, null));
-        assertNull("A parameter was passed", factory.parameter);
-        assertEquals("Factory not called", 1, factory.getCreateBeanCount());
+        assertNull(factory.parameter, "A parameter was passed");
+        assertEquals(1, factory.getCreateBeanCount(), "Factory not called");
     }
 
     /**
@@ -246,19 +247,19 @@ public class TestBeanHelper {
         data.setBeanClassName(BeanCreationTestBean.class.getName());
         checkBean((BeanCreationTestBean) helper.createBean(data, null));
         final TestBeanFactory factory = (TestBeanFactory) helper.getDefaultBeanFactory();
-        assertTrue("Factory not called", factory.getCreateBeanCount() > 0);
+        assertTrue(factory.getCreateBeanCount() > 0, "Factory not called");
     }
 
     /**
      * Tests creating a bean when the factory throws an exception.
      */
-    @Test(expected = ConfigurationRuntimeException.class)
+    @Test
     public void testCreateBeanWithException() {
         helper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(getClass().getName());
-        helper.createBean(data, null);
+        assertThrows(ConfigurationRuntimeException.class, () -> helper.createBean(data, null));
     }
 
     /**
@@ -272,19 +273,19 @@ public class TestBeanHelper {
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         checkBean((BeanCreationTestBean) helper.createBean(data, null));
-        assertEquals("Factory not called", 1, factory.getCreateBeanCount());
+        assertEquals(1, factory.getCreateBeanCount(), "Factory not called");
     }
 
     /**
      * Tries to create a bean with a non existing class. This should cause an exception.
      */
-    @Test(expected = ConfigurationRuntimeException.class)
+    @Test
     public void testCreateBeanWithInvalidClass() {
         helper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName("non.existing.ClassName");
-        helper.createBean(data, null);
+        assertThrows(ConfigurationRuntimeException.class, () -> helper.createBean(data, null));
     }
 
     /**
@@ -298,27 +299,27 @@ public class TestBeanHelper {
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(BeanCreationTestBeanWithListChild.class.getName());
         checkBean((BeanCreationTestBeanWithListChild) helper.createBean(data, null));
-        assertNull("A parameter was passed", factory.parameter);
-        assertEquals("Factory not called", 1, factory.getCreateBeanCount());
+        assertNull(factory.parameter, "A parameter was passed");
+        assertEquals(1, factory.getCreateBeanCount(), "Factory not called");
     }
 
     /**
      * Tries to create a bean if no class is provided. This should cause an exception.
      */
-    @Test(expected = ConfigurationRuntimeException.class)
+    @Test
     public void testCreateBeanWithNoClass() {
         helper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
-        helper.createBean(data, null);
+        assertThrows(ConfigurationRuntimeException.class, () -> helper.createBean(data, null));
     }
 
     /**
      * Tests creating a bean when no bean declaration is provided. This should cause an exception.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateBeanWithNullDeclaration() {
-        helper.createBean(null);
+        assertThrows(IllegalArgumentException.class, () -> helper.createBean(null));
     }
 
     /**
@@ -326,25 +327,25 @@ public class TestBeanHelper {
      */
     @Test
     public void testCreateBeanWithParameter() {
-        final Object param = Integer.valueOf(42);
+        final Object param = 42;
         final TestBeanFactory factory = new TestBeanFactory();
         helper.registerBeanFactory(TEST_FACTORY, factory);
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(BeanCreationTestBean.class.getName());
         checkBean((BeanCreationTestBean) helper.createBean(data, null, param));
-        assertSame("Wrong parameter", param, factory.parameter);
+        assertSame(param, factory.parameter, "Wrong parameter");
     }
 
     /**
      * Tests creating a bean using a non registered factory.
      */
-    @Test(expected = ConfigurationRuntimeException.class)
+    @Test
     public void testCreateBeanWithUnknownFactory() {
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(BeanCreationTestBean.class.getName());
-        helper.createBean(data, null);
+        assertThrows(ConfigurationRuntimeException.class, () -> helper.createBean(data, null));
     }
 
     /**
@@ -356,15 +357,15 @@ public class TestBeanHelper {
         final DynaBean bean = BeanHelper.createWrapDynaBean(config);
         final String value = "TestFooter";
         bean.set("footer", value);
-        assertEquals("Property not set", value, config.getFooter());
+        assertEquals(value, config.getFooter(), "Property not set");
     }
 
     /**
      * Tries to create a wrapper DynaBean for a null bean.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateWrapDynaBeanNull() {
-        BeanHelper.createWrapDynaBean(null);
+        assertThrows(IllegalArgumentException.class, () -> BeanHelper.createWrapDynaBean(null));
     }
 
     /**
@@ -373,7 +374,7 @@ public class TestBeanHelper {
     @Test
     public void testDefaultBeanFactory() {
         helper = new BeanHelper();
-        assertSame("Wrong default bean factory", DefaultBeanFactory.INSTANCE, helper.getDefaultBeanFactory());
+        assertSame(DefaultBeanFactory.INSTANCE, helper.getDefaultBeanFactory(), "Wrong default bean factory");
     }
 
     /**
@@ -381,7 +382,7 @@ public class TestBeanHelper {
      */
     @Test
     public void testDefaultInstance() {
-        assertSame("Wrong factory for default instance", DefaultBeanFactory.INSTANCE, BeanHelper.INSTANCE.getDefaultBeanFactory());
+        assertSame(DefaultBeanFactory.INSTANCE, BeanHelper.INSTANCE.getDefaultBeanFactory(), "Wrong factory for default instance");
     }
 
     /**
@@ -391,8 +392,8 @@ public class TestBeanHelper {
     public void testDeregisterBeanFactory() {
         final BeanFactory factory = new TestBeanFactory();
         helper.registerBeanFactory(TEST_FACTORY, factory);
-        assertSame("Could not deregister factory", factory, helper.deregisterBeanFactory(TEST_FACTORY));
-        assertTrue("List of factories is not empty", helper.registeredFactoryNames().isEmpty());
+        assertSame(factory, helper.deregisterBeanFactory(TEST_FACTORY), "Could not deregister factory");
+        assertTrue(helper.registeredFactoryNames().isEmpty(), "List of factories is not empty");
     }
 
     /**
@@ -400,7 +401,7 @@ public class TestBeanHelper {
      */
     @Test
     public void testDeregisterBeanFactoryNonExisting() {
-        assertNull("deregistering non existing factory", helper.deregisterBeanFactory(TEST_FACTORY));
+        assertNull(helper.deregisterBeanFactory(TEST_FACTORY), "deregistering non existing factory");
     }
 
     /**
@@ -408,7 +409,7 @@ public class TestBeanHelper {
      */
     @Test
     public void testDeregisterBeanFactoryNull() {
-        assertNull("deregistering null factory", helper.deregisterBeanFactory(null));
+        assertNull(helper.deregisterBeanFactory(null), "deregistering null factory");
     }
 
     /**
@@ -426,11 +427,12 @@ public class TestBeanHelper {
      * Tries to initialize a bean with a bean declaration that contains an invalid property value. This should cause an
      * exception.
      */
-    @Test(expected = ConfigurationRuntimeException.class)
+    @Test
     public void testInitBeanWithInvalidProperty() {
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.getBeanProperties().put("nonExistingProperty", Boolean.TRUE);
-        helper.initBean(new BeanCreationTestBean(), data);
+        final BeanCreationTestBean bean = new BeanCreationTestBean();
+        assertThrows(ConfigurationRuntimeException.class, () -> helper.initBean(bean, data));
     }
 
     /**
@@ -441,9 +443,9 @@ public class TestBeanHelper {
         final BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
         final BeanCreationTestBean bean = new BeanCreationTestBean();
         helper.initBean(bean, data);
-        assertNull("Wrong string property", bean.getStringValue());
-        assertEquals("Wrong int property", 0, bean.getIntValue());
-        assertNull("Buddy was set", bean.getBuddy());
+        assertNull(bean.getStringValue(), "Wrong string property");
+        assertEquals(0, bean.getIntValue(), "Wrong int property");
+        assertNull(bean.getBuddy(), "Buddy was set");
     }
 
     /**
@@ -454,7 +456,7 @@ public class TestBeanHelper {
         final BeanFactory factory = EasyMock.createMock(BeanFactory.class);
         EasyMock.replay(factory);
         helper = new BeanHelper(factory);
-        assertSame("Wrong default bean factory", factory, helper.getDefaultBeanFactory());
+        assertSame(factory, helper.getDefaultBeanFactory(), "Wrong default bean factory");
     }
 
     /**
@@ -463,24 +465,25 @@ public class TestBeanHelper {
     @Test
     public void testRegisterBeanFactory() {
         helper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
-        assertEquals("Wrong number of registered factories", 1, helper.registeredFactoryNames().size());
-        assertTrue("Test factory is not contained", helper.registeredFactoryNames().contains(TEST_FACTORY));
+        assertEquals(1, helper.registeredFactoryNames().size(), "Wrong number of registered factories");
+        assertTrue(helper.registeredFactoryNames().contains(TEST_FACTORY), "Test factory is not contained");
     }
 
     /**
      * Tries to register a null factory. This should cause an exception.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testRegisterBeanFactoryNull() {
-        helper.registerBeanFactory(TEST_FACTORY, null);
+        assertThrows(IllegalArgumentException.class, () -> helper.registerBeanFactory(TEST_FACTORY, null));
     }
 
     /**
      * Tries to register a bean factory with a null name. This should cause an exception.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testRegisterBeanFactoryNullName() {
-        helper.registerBeanFactory(null, new TestBeanFactory());
+        final BeanFactory beanFactory = new TestBeanFactory();
+        assertThrows(IllegalArgumentException.class, () -> helper.registerBeanFactory(null, beanFactory));
     }
 
     /**
@@ -488,6 +491,6 @@ public class TestBeanHelper {
      */
     @Test
     public void testRegisteredFactoriesEmptyForNewInstance() {
-        assertTrue("List of registered factories is not empty", helper.registeredFactoryNames().isEmpty());
+        assertTrue(helper.registeredFactoryNames().isEmpty(), "List of registered factories is not empty");
     }
 }

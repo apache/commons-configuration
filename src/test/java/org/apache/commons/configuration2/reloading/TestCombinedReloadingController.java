@@ -16,9 +16,10 @@
  */
 package org.apache.commons.configuration2.reloading;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +27,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.easymock.EasyMock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code CombinedReloadingController}.
@@ -77,7 +78,7 @@ public class TestCombinedReloadingController {
             EasyMock.expect(rc.checkForReloading(null)).andReturn(Boolean.FALSE);
         }
         replaySubControllers();
-        assertFalse("Wrong result", ctrl.checkForReloading("someParam"));
+        assertFalse(ctrl.checkForReloading("someParam"), "Wrong result");
         verifySubSontrollers();
     }
 
@@ -91,7 +92,7 @@ public class TestCombinedReloadingController {
         EasyMock.expect(subControllers[1].checkForReloading(null)).andReturn(Boolean.TRUE);
         EasyMock.expect(subControllers[2].checkForReloading(null)).andReturn(Boolean.FALSE);
         replaySubControllers();
-        assertTrue("Wrong result", ctrl.checkForReloading("someData"));
+        assertTrue(ctrl.checkForReloading("someData"), "Wrong result");
         verifySubSontrollers();
     }
 
@@ -103,36 +104,36 @@ public class TestCombinedReloadingController {
         final CombinedReloadingController ctrl = setUpController();
         replaySubControllers();
         final Collection<ReloadingController> subs = ctrl.getSubControllers();
-        assertEquals("Wrong number of sub controllers", subControllers.length, subs.size());
-        assertTrue("Wrong sub controllers", subs.containsAll(Arrays.asList(subControllers)));
+        assertEquals(subControllers.length, subs.size(), "Wrong number of sub controllers");
+        assertTrue(subs.containsAll(Arrays.asList(subControllers)), "Wrong sub controllers");
     }
 
     /**
      * Tests that the list of sub controllers cannot be manipulated.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testGetSubControllersModify() {
         final Collection<ReloadingController> subs = setUpController().getSubControllers();
-        subs.clear();
+        assertThrows(UnsupportedOperationException.class, subs::clear);
     }
 
     /**
      * Tries to create an instance without a collection.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInitNull() {
-        new CombinedReloadingController(null);
+        assertThrows(IllegalArgumentException.class, () -> new CombinedReloadingController(null));
     }
 
     /**
      * Tries to create an instance with a collection containing a null entry.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInitNullEntries() {
         initSubControllers();
         final Collection<ReloadingController> ctrls = new ArrayList<>(Arrays.asList(subControllers));
         ctrls.add(null);
-        new CombinedReloadingController(ctrls);
+        assertThrows(IllegalArgumentException.class, () -> new CombinedReloadingController(ctrls));
     }
 
     /**

@@ -16,14 +16,14 @@
  */
 package org.apache.commons.configuration2.io;
 
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.net.URL;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code FileSystemLocationStrategy}.
@@ -33,7 +33,7 @@ public class TestFileSystemLocationStrategy {
     /** The strategy to be tested. */
     private FileSystemLocationStrategy strategy;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         strategy = new FileSystemLocationStrategy();
     }
@@ -52,7 +52,7 @@ public class TestFileSystemLocationStrategy {
         final FileLocator locator = FileLocatorUtils.fileLocator().basePath(basePath).fileName(fileName).fileSystem(FileLocatorUtils.DEFAULT_FILE_SYSTEM)
             .sourceURL(ConfigurationAssert.getTestURL("test.properties")).create();
 
-        assertSame("Wrong result", url, strategy.locate(fs, locator));
+        assertSame(url, strategy.locate(fs, locator), "Wrong result");
         EasyMock.verify(fs);
     }
 }

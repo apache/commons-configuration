@@ -17,13 +17,13 @@
 
 package org.apache.commons.configuration2.web;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.BaseConfiguration;
@@ -31,9 +31,9 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationMap;
 import org.apache.commons.configuration2.TestAbstractConfiguration;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
-import org.junit.Test;
-
-import com.mockobjects.servlet.MockHttpServletRequest;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mockito;
 
 /**
  * Test case for the {@link ServletRequestConfiguration} class.
@@ -47,17 +47,12 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration {
      * @return the servlet request configuration
      */
     private ServletRequestConfiguration createConfiguration(final Configuration base) {
-        final ServletRequest request = new MockHttpServletRequest() {
-            @Override
-            public Map<?, ?> getParameterMap() {
-                return new ConfigurationMap(base);
-            }
-
-            @Override
-            public String[] getParameterValues(final String key) {
-                return base.getStringArray(key);
-            }
-        };
+        final HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        Mockito.when(request.getParameterMap()).thenAnswer(invocation -> new ConfigurationMap(base));
+        Mockito.when(request.getParameterValues(ArgumentMatchers.any())).thenAnswer(invocation -> {
+            final String key = invocation.getArgument(0, String.class);
+            return base.getStringArray(key);
+        });
 
         final ServletRequestConfiguration config = new ServletRequestConfiguration(request);
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
@@ -78,31 +73,23 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration {
 
     @Override
     protected AbstractConfiguration getEmptyConfiguration() {
-        final ServletRequest request = new MockHttpServletRequest() {
-            @Override
-            public String getParameter(final String key) {
-                return null;
-            }
-
-            @Override
-            public Map<?, ?> getParameterMap() {
-                return new HashMap<>();
-            }
-        };
+        final HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        Mockito.when(request.getParameter(ArgumentMatchers.any())).thenReturn(null);
+        Mockito.when(request.getParameterMap()).thenAnswer(invocation -> new HashMap<>());
 
         return new ServletRequestConfiguration(request);
     }
 
     @Override
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testAddPropertyDirect() {
-        super.testAddPropertyDirect();
+        assertThrows(UnsupportedOperationException.class, super::testAddPropertyDirect);
     }
 
     @Override
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testClearProperty() {
-        super.testClearProperty();
+        assertThrows(UnsupportedOperationException.class, super::testClearProperty);
     }
 
     /**
@@ -116,15 +103,15 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration {
         final BaseConfiguration config = new BaseConfiguration();
         config.addProperty(listKey, values);
 
-        assertEquals("Wrong number of list elements", values.length, config.getList(listKey).size());
+        assertEquals(values.length, config.getList(listKey).size(), "Wrong number of list elements");
 
         final Configuration c = createConfiguration(config);
         final List<?> v = c.getList(listKey);
 
-        assertEquals("Wrong number of elements in list", values.length, v.size());
+        assertEquals(values.length, v.size(), "Wrong number of elements in list");
 
         for (int i = 0; i < values.length; i++) {
-            assertEquals("Wrong value at index " + i, values[i].replace("\\", ""), v.get(i));
+            assertEquals(values[i].replace("\\", ""), v.get(i), "Wrong value at index " + i);
         }
     }
 }

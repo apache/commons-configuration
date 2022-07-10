@@ -16,23 +16,24 @@
  */
 package org.apache.commons.configuration2;
 
-import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
-import org.apache.commons.configuration2.convert.DisabledListDelimiterHandler;
-import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
-import org.apache.commons.configuration2.io.FileHandler;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
-import org.junit.Test;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
+import org.apache.commons.configuration2.convert.DisabledListDelimiterHandler;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
+import org.apache.commons.configuration2.io.FileHandler;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class to test the handling of list structures in XMLConfiguration.
@@ -117,7 +118,7 @@ public class TestXMLListHandling {
         return writer.toString();
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         config = readFromString(SOURCE);
     }
@@ -139,10 +140,10 @@ public class TestXMLListHandling {
      * Tries to save the configuration with a different list delimiter handler which does not support escaping of lists.
      * This should fail with a meaningful exception message.
      */
-    @Test(expected = ConfigurationRuntimeException.class)
-    public void testIncompatibleListDelimiterOnSaving() throws ConfigurationException {
+    @Test
+    public void testIncompatibleListDelimiterOnSaving() {
         config.setListDelimiterHandler(DisabledListDelimiterHandler.INSTANCE);
-        saveToString();
+        assertThrows(ConfigurationRuntimeException.class, () -> saveToString());
     }
 
     /**
@@ -151,11 +152,11 @@ public class TestXMLListHandling {
     @Test
     public void testMixedList() throws ConfigurationException {
         final List<String> expected = Arrays.asList("foo", "blah", "bar", "baz");
-        assertEquals("Wrong list value (1)", expected, config.getList("mixed.values"));
+        assertEquals(expected, config.getList("mixed.values"), "Wrong list value (1)");
         final String xml = saveToString();
 
         final XMLConfiguration c2 = readFromString(xml);
-        assertEquals("Wrong list value (2)", expected, c2.getList("mixed.values"));
+        assertEquals(expected, c2.getList("mixed.values"), "Wrong list value (2)");
     }
 
     /**

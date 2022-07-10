@@ -17,12 +17,13 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.apache.commons.configuration2.TempDirUtils.newFile;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,10 +49,9 @@ import org.apache.commons.configuration2.sync.LockMode;
 import org.apache.commons.configuration2.sync.ReadWriteSynchronizer;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.io.FileUtils;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class TestDynamicCombinedConfiguration {
     private class ReaderThread extends Thread {
@@ -187,14 +187,14 @@ public class TestDynamicCombinedConfiguration {
     /** A helper object for creating builder parameters. */
     private static Parameters parameters;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpOnce() {
         parameters = new Parameters();
     }
 
-    /** Helper object for creating temporary files. */
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    /** A folder for temporary files. */
+    @TempDir
+    public File tempFolder;
 
     private void copyFile(final File input, final File output) throws IOException {
         FileUtils.copyFile(input, output, StandardCopyOption.REPLACE_EXISTING);
@@ -234,7 +234,7 @@ public class TestDynamicCombinedConfiguration {
         builder.configure(parameters.fileBased().setFile(MULTI_TENENT_FILE).setSynchronizer(new ReadWriteSynchronizer()));
         final CombinedConfiguration config = builder.getConfiguration();
 
-        assertEquals("Wrong value", "50", config.getString("rowsPerPage"));
+        assertEquals("50", config.getString("rowsPerPage"), "Wrong value");
         final Thread testThreads[] = new Thread[THREAD_COUNT];
         final int failures[] = new int[THREAD_COUNT];
 
@@ -248,7 +248,7 @@ public class TestDynamicCombinedConfiguration {
             testThreads[i].join();
             totalFailures += failures[i];
         }
-        assertEquals(totalFailures + " failures Occurred", 0, totalFailures);
+        assertEquals(0, totalFailures, totalFailures + " failures Occurred");
     }
 
     @Test
@@ -258,12 +258,12 @@ public class TestDynamicCombinedConfiguration {
         builder.configure(parameters.fileBased().setFile(MULTI_TENENT_FILE).setSynchronizer(new ReadWriteSynchronizer()));
         final CombinedConfiguration config = builder.getConfiguration();
 
-        assertEquals(config.getString("rowsPerPage"), "50");
+        assertEquals("50", config.getString("rowsPerPage"));
 
         final Thread testThreads[] = new Thread[THREAD_COUNT];
         final int failures[] = new int[THREAD_COUNT];
         System.setProperty("Id", "2002");
-        assertEquals("Wrong value", "25", config.getString("rowsPerPage"));
+        assertEquals("25", config.getString("rowsPerPage"), "Wrong value");
         for (int i = 0; i < testThreads.length; ++i) {
             testThreads[i] = new ReloadThread(builder, failures, i, LOOP_COUNT, false, null, "25");
             testThreads[i].start();
@@ -275,17 +275,17 @@ public class TestDynamicCombinedConfiguration {
             totalFailures += failures[i];
         }
         System.getProperties().remove("Id");
-        assertEquals(totalFailures + " failures Occurred", 0, totalFailures);
+        assertEquals(0, totalFailures, totalFailures + " failures Occurred");
     }
 
     @Test
     public void testConcurrentGetAndReloadFile() throws Exception {
         final int threadCount = 25;
         System.getProperties().remove("Id");
-        System.setProperty("TemporaryFolder", folder.getRoot().getAbsolutePath());
+        System.setProperty("TemporaryFolder", tempFolder.getAbsolutePath());
         // create a new configuration
         File input = new File("target/test-classes/testMultiDynamic_default.xml");
-        final File output = folder.newFile("testMultiDynamic_default.xml");
+        final File output = newFile("testMultiDynamic_default.xml", tempFolder);
         output.delete();
         output.getParentFile().mkdir();
         copyFile(input, output);
@@ -295,7 +295,7 @@ public class TestDynamicCombinedConfiguration {
             .setDefinitionBuilderParameters(new FileBasedBuilderParametersImpl().setFile(MULTI_DYNAMIC_FILE)).registerChildDefaultsHandler(
                 FileBasedBuilderProperties.class, new CopyObjectDefaultHandler(new FileBasedBuilderParametersImpl().setReloadingRefreshDelay(1L))));
         CombinedConfiguration config = builder.getConfiguration();
-        assertEquals("Wrong property value (1)", "ID0001", config.getString("Product/FIIndex/FI[@id='123456781']"));
+        assertEquals("ID0001", config.getString("Product/FIIndex/FI[@id='123456781']"), "Wrong property value (1)");
 
         final ReaderThread testThreads[] = new ReaderThread[threadCount];
         for (int i = 0; i < testThreads.length; ++i) {
@@ -310,12 +310,12 @@ public class TestDynamicCombinedConfiguration {
         copyFile(input, output);
 
         Thread.sleep(2000);
-        assertTrue("Changed file not detected", builder.getReloadingController().checkForReloading(null));
+        assertTrue(builder.getReloadingController().checkForReloading(null), "Changed file not detected");
         config = builder.getConfiguration();
         final String id = config.getString("Product/FIIndex/FI[@id='123456782']");
-        assertNotNull("File did not reload, id is null", id);
+        assertNotNull(id, "File did not reload, id is null");
         final String rows = config.getString("rowsPerPage");
-        assertEquals("Incorrect value for rowsPerPage", "25", rows);
+        assertEquals("25", rows, "Incorrect value for rowsPerPage");
 
         for (final ReaderThread testThread : testThreads) {
             testThread.shutdown();
@@ -335,7 +335,7 @@ public class TestDynamicCombinedConfiguration {
         builder.configure(parameters.fileBased().setFile(MULTI_TENENT_FILE).setSynchronizer(new ReadWriteSynchronizer()));
         final CombinedConfiguration config = builder.getConfiguration();
 
-        assertEquals(config.getString("rowsPerPage"), "50");
+        assertEquals("50", config.getString("rowsPerPage"));
 
         final Thread testThreads[] = new Thread[THREAD_COUNT];
         final int failures[] = new int[THREAD_COUNT];
@@ -358,7 +358,7 @@ public class TestDynamicCombinedConfiguration {
                 System.out.println("Thread " + i + " " + failures[i]);
             }
         }
-        assertEquals(totalFailures + " failures Occurred", 0, totalFailures);
+        assertEquals(0, totalFailures, totalFailures + " failures Occurred");
     }
 
     @Test
@@ -391,9 +391,9 @@ public class TestDynamicCombinedConfiguration {
         assertEquals("OK-1", config.getString("buttons/name"));
         assertEquals(3, config.getMaxIndex("buttons/name"));
         assertEquals("a\\,b\\,c", config.getString("split/list2"));
-        assertEquals("Wrong size", 18, config.size());
+        assertEquals(18, config.size(), "Wrong size");
         config.addProperty("listDelimiterTest", "1,2,3");
-        assertEquals("List delimiter not detected", "1", config.getString("listDelimiterTest"));
+        assertEquals("1", config.getString("listDelimiterTest"), "List delimiter not detected");
     }
 
     /**
@@ -405,7 +405,7 @@ public class TestDynamicCombinedConfiguration {
         final Configuration child = new PropertiesConfiguration();
         config.addConfiguration(child);
         final SynchronizerTestImpl sync = prepareSynchronizerTest(config);
-        assertSame("Wrong configuration", child, config.getConfiguration(0));
+        assertSame(child, config.getConfiguration(0), "Wrong configuration");
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -416,7 +416,7 @@ public class TestDynamicCombinedConfiguration {
     public void testGetConfigurationByNameSynchronized() {
         final DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
         final SynchronizerTestImpl sync = prepareSynchronizerTest(config);
-        assertNull("Wrong result", config.getConfiguration("unknown config"));
+        assertNull(config.getConfiguration("unknown config"), "Wrong result");
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -465,7 +465,7 @@ public class TestDynamicCombinedConfiguration {
         builder.configure(parameters.fileBased().setFile(MULTI_TENENT_FILE).setSynchronizer(new ReadWriteSynchronizer()));
         final CombinedConfiguration config = builder.getConfiguration();
         config.getConfiguration(1).setProperty("rowsPerPage", "25");
-        assertEquals("Value not changed", "25", config.getString("rowsPerPage"));
+        assertEquals("25", config.getString("rowsPerPage"), "Value not changed");
     }
 
     private void verify(final String key, final DynamicCombinedConfiguration config, final int rows) {

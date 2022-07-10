@@ -16,10 +16,11 @@
  */
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 
@@ -28,8 +29,8 @@ import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.sync.LockMode;
 import org.apache.commons.configuration2.sync.NoOpSynchronizer;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * A test class for the synchronization capabilities of {@code AbstractConfiguration}. This class mainly checks the
@@ -60,7 +61,7 @@ public class TestAbstractConfigurationSynchronization {
     /** A test configuration. */
     private AbstractConfiguration config;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         // any concrete class will do
         final PropertiesConfiguration c = new PropertiesConfiguration();
@@ -113,7 +114,7 @@ public class TestAbstractConfigurationSynchronization {
      */
     @Test
     public void testContainsKeySychronized() {
-        assertTrue("Wrong result", config.containsKey(PROP));
+        assertTrue(config.containsKey(PROP), "Wrong result");
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -132,7 +133,7 @@ public class TestAbstractConfigurationSynchronization {
      */
     @Test
     public void testDefaultSynchronizer() {
-        assertSame("Wrong default synchronizer", NoOpSynchronizer.INSTANCE, new PropertiesConfiguration().getSynchronizer());
+        assertSame(NoOpSynchronizer.INSTANCE, new PropertiesConfiguration().getSynchronizer(), "Wrong default synchronizer");
     }
 
     /**
@@ -149,7 +150,7 @@ public class TestAbstractConfigurationSynchronization {
      */
     @Test
     public void testGetKeysSynchronized() {
-        assertTrue("No keys", config.getKeys().hasNext());
+        assertTrue(config.getKeys().hasNext(), "No keys");
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -158,8 +159,8 @@ public class TestAbstractConfigurationSynchronization {
      */
     @Test
     public void testGetPropertySynchronized() {
-        assertEquals("Wrong raw value", "true", config.getProperty(PROP));
-        assertTrue("Wrong boolean value", config.getBoolean(PROP));
+        assertEquals("true", config.getProperty(PROP), "Wrong raw value");
+        assertTrue(config.getBoolean(PROP), "Wrong boolean value");
         sync.verify(Methods.BEGIN_READ, Methods.END_READ, Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -168,16 +169,16 @@ public class TestAbstractConfigurationSynchronization {
      */
     @Test
     public void testIsEmptySynchronized() {
-        assertFalse("Configuration is empty", config.isEmpty());
+        assertFalse(config.isEmpty(), "Configuration is empty");
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
     /**
      * Tests lock() with a null argument.
      */
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testLockNull() {
-        config.lock(null);
+        assertThrows(NullPointerException.class, () -> config.lock(null));
     }
 
     /**
@@ -213,7 +214,7 @@ public class TestAbstractConfigurationSynchronization {
      */
     @Test
     public void testSizeSynchronized() {
-        assertFalse("Wrong size", config.isEmpty());
+        assertFalse(config.isEmpty(), "Wrong size");
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -224,7 +225,7 @@ public class TestAbstractConfigurationSynchronization {
     public void testSubsetSynchronized() {
         final AbstractConfiguration subset = (AbstractConfiguration) config.subset("configuration");
         sync.verify();
-        assertEquals("Wrong synchronizer for subset", NoOpSynchronizer.INSTANCE, subset.getSynchronizer());
+        assertEquals(NoOpSynchronizer.INSTANCE, subset.getSynchronizer(), "Wrong synchronizer for subset");
     }
 
     /**

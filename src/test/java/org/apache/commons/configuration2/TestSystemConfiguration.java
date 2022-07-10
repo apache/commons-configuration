@@ -17,8 +17,9 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.apache.commons.configuration2.TempDirUtils.newFile;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,18 +29,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Tests for {@code SystemConfiguration}.
  *
  */
 public class TestSystemConfiguration {
-    /** An object for creating temporary files. */
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    /** A folder for temporary files. */
+    @TempDir
+    public File tempFolder;
 
     /**
      * Tests an append operation with a system configuration while system properties are modified from another thread. This
@@ -72,7 +72,7 @@ public class TestSystemConfiguration {
             for (final Iterator<String> keys = config.getKeys(); keys.hasNext();) {
                 final String key = keys.next();
                 if (!property.equals(key)) {
-                    assertEquals("Wrong value for " + key, config.getString(key), props.getString(key));
+                    assertEquals(config.getString(key), props.getString(key), "Wrong value for " + key);
                 }
             }
         } finally {
@@ -88,7 +88,7 @@ public class TestSystemConfiguration {
         final String testProperty = "someTest";
         final SystemConfiguration config = new SystemConfiguration();
         config.setProperty(testProperty, "true");
-        assertEquals("System property not changed", "true", System.getProperty(testProperty));
+        assertEquals("true", System.getProperty(testProperty), "System property not changed");
     }
 
     @Test
@@ -96,7 +96,7 @@ public class TestSystemConfiguration {
         final PropertiesConfiguration props = new PropertiesConfiguration();
         props.addProperty("test.name", "Apache");
         SystemConfiguration.setSystemProperties(props);
-        assertEquals("System Properties", "Apache", System.getProperty("test.name"));
+        assertEquals("Apache", System.getProperty("test.name"), "System Properties");
     }
 
     /**
@@ -104,7 +104,7 @@ public class TestSystemConfiguration {
      */
     @Test
     public void testSetSystemPropertiesFromPropertiesFile() throws ConfigurationException, IOException {
-        final File file = folder.newFile("sys.properties");
+        final File file = newFile("sys.properties", tempFolder);
         final PropertiesConfiguration pconfig = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(pconfig);
         pconfig.addProperty("fromFile", Boolean.TRUE);
@@ -112,7 +112,7 @@ public class TestSystemConfiguration {
         handler.save();
         SystemConfiguration.setSystemProperties(handler.getBasePath(), handler.getFileName());
         final SystemConfiguration sconf = new SystemConfiguration();
-        assertTrue("Property from file not found", sconf.getBoolean("fromFile"));
+        assertTrue(sconf.getBoolean("fromFile"), "Property from file not found");
     }
 
     @Test
@@ -121,6 +121,6 @@ public class TestSystemConfiguration {
         props.put("test.number", "123");
 
         final Configuration conf = new SystemConfiguration();
-        assertEquals("number", 123, conf.getInt("test.number"));
+        assertEquals(123, conf.getInt("test.number"), "number");
     }
 }

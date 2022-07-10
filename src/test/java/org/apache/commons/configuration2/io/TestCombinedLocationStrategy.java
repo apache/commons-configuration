@@ -16,9 +16,10 @@
  */
 package org.apache.commons.configuration2.io;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -27,8 +28,8 @@ import java.util.LinkedList;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
 import org.easymock.EasyMock;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code CombinedLocationStrategy}.
@@ -41,7 +42,7 @@ public class TestCombinedLocationStrategy {
     /** A URL indicating a successful locate() operation. */
     private static URL locateURL;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpOnce() throws Exception {
         locator = FileLocatorUtils.fileLocator().fileName("testFile.tst").create();
         locateURL = ConfigurationAssert.getTestURL("test.xml");
@@ -60,10 +61,10 @@ public class TestCombinedLocationStrategy {
      */
     private void checkSubStrategies(final CombinedLocationStrategy strategy) {
         final Collection<FileLocationStrategy> subs = strategy.getSubStrategies();
-        assertEquals("Wrong number of strategies", getSubStrategies().length, subs.size());
+        assertEquals(getSubStrategies().length, subs.size(), "Wrong number of strategies");
         int idx = 0;
         for (final FileLocationStrategy strat : subs) {
-            assertEquals("Wrong sub strategy at " + idx, getSubStrategies()[idx++], strat);
+            assertEquals(getSubStrategies()[idx++], strat, "Wrong sub strategy at " + idx);
         }
     }
 
@@ -114,20 +115,21 @@ public class TestCombinedLocationStrategy {
     /**
      * Tests that the collection with sub strategies cannot be modified.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testGetSubStrategiesModify() {
         final CombinedLocationStrategy strategy = createCombinedStrategy();
-        strategy.getSubStrategies().clear();
+        final Collection<FileLocationStrategy> strategies = strategy.getSubStrategies();
+        assertThrows(UnsupportedOperationException.class, strategies::clear);
     }
 
     /**
      * Tries to create an instance containing a null element.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInitCollectionWithNullEntries() {
         final Collection<FileLocationStrategy> col = new LinkedList<>(Arrays.asList(getSubStrategies()));
         col.add(null);
-        new CombinedLocationStrategy(col);
+        assertThrows(IllegalArgumentException.class, () -> new CombinedLocationStrategy(col));
     }
 
     /**
@@ -144,9 +146,9 @@ public class TestCombinedLocationStrategy {
     /**
      * Tries to create an instance with a null collection.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInitNullCollection() {
-        new CombinedLocationStrategy(null);
+        assertThrows(IllegalArgumentException.class, () -> new CombinedLocationStrategy(null));
     }
 
     /**
@@ -158,7 +160,7 @@ public class TestCombinedLocationStrategy {
         EasyMock.expect(getSubStrategies()[1].locate(getFileSystem(), locator)).andReturn(null);
         replaySubStrategies();
         final CombinedLocationStrategy strategy = createCombinedStrategy();
-        assertNull("Got a URL", strategy.locate(getFileSystem(), locator));
+        assertNull(strategy.locate(getFileSystem(), locator), "Got a URL");
         verifySubStrategies();
     }
 
@@ -170,7 +172,7 @@ public class TestCombinedLocationStrategy {
         EasyMock.expect(getSubStrategies()[0].locate(getFileSystem(), locator)).andReturn(locateURL);
         replaySubStrategies();
         final CombinedLocationStrategy strategy = createCombinedStrategy();
-        assertSame("Wrong result", locateURL, strategy.locate(getFileSystem(), locator));
+        assertSame(locateURL, strategy.locate(getFileSystem(), locator), "Wrong result");
         verifySubStrategies();
     }
 
@@ -183,7 +185,7 @@ public class TestCombinedLocationStrategy {
         EasyMock.expect(getSubStrategies()[1].locate(getFileSystem(), locator)).andReturn(locateURL);
         replaySubStrategies();
         final CombinedLocationStrategy strategy = createCombinedStrategy();
-        assertSame("Wrong result", locateURL, strategy.locate(getFileSystem(), locator));
+        assertSame(locateURL, strategy.locate(getFileSystem(), locator), "Wrong result");
         verifySubStrategies();
     }
 

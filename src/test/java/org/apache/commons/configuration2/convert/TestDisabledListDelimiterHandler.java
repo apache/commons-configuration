@@ -16,17 +16,19 @@
  */
 package org.apache.commons.configuration2.convert;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code DisabledListDelimiterHandler}. Note that some functionality of the base class is tested, too.
@@ -47,15 +49,15 @@ public class TestDisabledListDelimiterHandler {
     private static void checkIterator(final Iterable<?> container) {
         final Iterator<?> it = container.iterator();
         for (final Object o : VALUES) {
-            assertEquals("Wrong value", o, it.next());
+            assertEquals(o, it.next(), "Wrong value");
         }
-        assertFalse("Iterator has too many objects", it.hasNext());
+        assertFalse(it.hasNext(), "Iterator has too many objects");
     }
 
     /** The instance to be tested. */
     private DisabledListDelimiterHandler handler;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         handler = new DisabledListDelimiterHandler();
     }
@@ -63,9 +65,10 @@ public class TestDisabledListDelimiterHandler {
     /**
      * Tests escapeList(). This operation is not supported.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testEscapeList() {
-        handler.escapeList(Arrays.asList(VALUES), ListDelimiterHandler.NOOP_TRANSFORMER);
+        final List<Object> values = Arrays.asList(VALUES);
+        assertThrows(UnsupportedOperationException.class, () -> handler.escapeList(values, ListDelimiterHandler.NOOP_TRANSFORMER));
     }
 
     /**
@@ -74,7 +77,7 @@ public class TestDisabledListDelimiterHandler {
     @Test
     public void testEscapeNonStringValue() {
         final Object value = 42;
-        assertEquals("Wrong escaped object", value, handler.escape(value, ListDelimiterHandler.NOOP_TRANSFORMER));
+        assertEquals(value, handler.escape(value, ListDelimiterHandler.NOOP_TRANSFORMER), "Wrong escaped object");
     }
 
     /**
@@ -86,7 +89,7 @@ public class TestDisabledListDelimiterHandler {
         final Object value = 42;
         EasyMock.expect(trans.transformValue(value)).andReturn(STR_VALUE);
         EasyMock.replay(trans);
-        assertEquals("Wrong escaped object", STR_VALUE, handler.escape(value, trans));
+        assertEquals(STR_VALUE, handler.escape(value, trans), "Wrong escaped object");
         EasyMock.verify(trans);
     }
 
@@ -95,7 +98,7 @@ public class TestDisabledListDelimiterHandler {
      */
     @Test
     public void testEscapeStringValue() {
-        assertEquals("Wrong escaped string", STR_VALUE, handler.escape(STR_VALUE, ListDelimiterHandler.NOOP_TRANSFORMER));
+        assertEquals(STR_VALUE, handler.escape(STR_VALUE, ListDelimiterHandler.NOOP_TRANSFORMER), "Wrong escaped string");
     }
 
     /**
@@ -107,7 +110,7 @@ public class TestDisabledListDelimiterHandler {
         final String testStr = "Some other string";
         EasyMock.expect(trans.transformValue(testStr)).andReturn(STR_VALUE);
         EasyMock.replay(trans);
-        assertEquals("Wrong escaped string", STR_VALUE, handler.escape(testStr, trans));
+        assertEquals(STR_VALUE, handler.escape(testStr, trans), "Wrong escaped string");
         EasyMock.verify(trans);
     }
 
@@ -117,8 +120,8 @@ public class TestDisabledListDelimiterHandler {
     @Test
     public void testFlattenArrayWithLimit() {
         final Collection<?> res = handler.flatten(VALUES, 1);
-        assertEquals("Wrong collection size", 1, res.size());
-        assertEquals("Wrong element", VALUES[0], res.iterator().next());
+        assertEquals(1, res.size(), "Wrong collection size");
+        assertEquals(VALUES[0], res.iterator().next(), "Wrong element");
     }
 
     /**
@@ -130,10 +133,10 @@ public class TestDisabledListDelimiterHandler {
         src.add(STR_VALUE);
         src.add(VALUES);
         final Collection<?> res = handler.flatten(src, 2);
-        assertEquals("Wrong collection size", 2, res.size());
+        assertEquals(2, res.size(), "Wrong collection size");
         final Iterator<?> it = res.iterator();
-        assertEquals("Wrong element (1)", STR_VALUE, it.next());
-        assertEquals("Wrong element (2)", VALUES[0], it.next());
+        assertEquals(STR_VALUE, it.next(), "Wrong element (1)");
+        assertEquals(VALUES[0], it.next(), "Wrong element (2)");
     }
 
     /**
@@ -143,8 +146,8 @@ public class TestDisabledListDelimiterHandler {
     public void testFlattenCollectionWithLimit() {
         final Collection<Object> src = Arrays.asList(VALUES);
         final Collection<?> res = handler.flatten(src, 1);
-        assertEquals("Wrong collection size", 1, res.size());
-        assertEquals("Wrong element", VALUES[0], res.iterator().next());
+        assertEquals(1, res.size(), "Wrong collection size");
+        assertEquals(VALUES[0], res.iterator().next(), "Wrong element");
     }
 
     /**
@@ -176,7 +179,7 @@ public class TestDisabledListDelimiterHandler {
      */
     @Test
     public void testParseNull() {
-        assertFalse("Got a value", handler.parse(null).iterator().hasNext());
+        assertFalse(handler.parse(null).iterator().hasNext(), "Got a value");
     }
 
     /**
@@ -185,7 +188,7 @@ public class TestDisabledListDelimiterHandler {
     @Test
     public void testParseSimpleValue() {
         final Iterator<?> it = handler.parse(STR_VALUE).iterator();
-        assertEquals("Wrong value", STR_VALUE, it.next());
-        assertFalse("Too many values", it.hasNext());
+        assertEquals(STR_VALUE, it.next(), "Wrong value");
+        assertFalse(it.hasNext(), "Too many values");
     }
 }

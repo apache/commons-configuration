@@ -16,17 +16,17 @@
  */
 package org.apache.commons.configuration2.interpol;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
+import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.ConfigurationLogger;
-import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,7 +35,7 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for ExprLookup.
@@ -84,7 +84,7 @@ public class TestExprLookup {
         final ExprLookup.Variables vars = new ExprLookup.Variables();
         vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
         final ExprLookup lookup = new ExprLookup(vars);
-        assertEquals("Wrong variables", vars, lookup.getVariables());
+        assertEquals(vars, lookup.getVariables(), "Wrong variables");
     }
 
     /**
@@ -97,7 +97,7 @@ public class TestExprLookup {
         final ExprLookup lookup = new ExprLookup(vars);
         final ExprLookup.Variables vars2 = lookup.getVariables();
         vars2.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
-        assertEquals("Modified variables", vars, lookup.getVariables());
+        assertEquals(vars, lookup.getVariables(), "Modified variables");
     }
 
     @Test
@@ -121,7 +121,7 @@ public class TestExprLookup {
         String str = lookup.lookup(PATTERN1);
         assertTrue(str.startsWith("Goodbye"));
         str = lookup.lookup(PATTERN2);
-        assertTrue("Incorrect value: " + str, str.equals("value Some text"));
+        assertTrue(str.equals("value Some text"), "Incorrect value: " + str);
         //logger.removeAppender(app);
     }
 
@@ -147,7 +147,7 @@ public class TestExprLookup {
             String str = lookup.lookup(PATTERN1);
             assertTrue(str.startsWith("Goodbye"));
             str = lookup.lookup(PATTERN2);
-            assertTrue("Incorrect value: " + str, str.equals("value Some text"));
+            assertTrue(str.equals("value Some text"), "Incorrect value: " + str);
             logger.removeAppender(app);
         }
     }
@@ -161,7 +161,7 @@ public class TestExprLookup {
         vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
         final ExprLookup lookup = new ExprLookup(vars);
         final String value = "test";
-        assertEquals("Wrong result", value, lookup.lookup(value));
+        assertEquals(value, lookup.lookup(value), "Wrong result");
     }
 
     /**
@@ -176,7 +176,7 @@ public class TestExprLookup {
         lookup.setInterpolator(config.getInterpolator());
         final String pattern = "System.currentTimeMillis()";
         final String result = lookup.lookup(pattern);
-        assertNotEquals("Not replaced", pattern, result);
+        assertNotEquals(pattern, result, "Not replaced");
     }
 
     /**
@@ -189,6 +189,6 @@ public class TestExprLookup {
         final ExprLookup lookup = new ExprLookup(vars);
         final XMLConfiguration config = loadConfig();
         lookup.setInterpolator(config.getInterpolator());
-        assertNull("Wrong result", lookup.lookup("System.getProperty('undefined.property')"));
+        assertNull(lookup.lookup("System.getProperty('undefined.property')"), "Wrong result");
     }
 }

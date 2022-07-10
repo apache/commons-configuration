@@ -16,13 +16,14 @@
  */
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.Reader;
 import java.io.StringReader;
@@ -36,8 +37,8 @@ import org.apache.commons.configuration2.convert.LegacyListDelimiterHandler;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.EventListener;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for PropertiesConfigurationLayout.
@@ -164,7 +165,7 @@ public class TestPropertiesConfigurationLayout {
      * @throws ConfigurationException if an error occurs
      */
     private void checkLayoutString(final String expected) throws ConfigurationException {
-        assertEquals("Wrong layout file content", expected, getLayoutString());
+        assertEquals(expected, getLayoutString(), "Wrong layout file content");
     }
 
     /**
@@ -178,12 +179,7 @@ public class TestPropertiesConfigurationLayout {
         builder.addProperty(TEST_KEY, TEST_VALUE);
         builder.addProperty("anotherProp", "anotherValue");
         builder.addComment("A footer comment");
-        try {
-            layout.load(config, builder.getReader());
-        } catch (final ConfigurationException cex) {
-            // should not happen
-            fail("Exception was thrown: " + cex);
-        }
+        assertDoesNotThrow(() -> layout.load(config, builder.getReader()));
     }
 
     /**
@@ -198,7 +194,7 @@ public class TestPropertiesConfigurationLayout {
         return out.toString();
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         config = new LayoutTestConfiguration();
         config.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
@@ -219,9 +215,9 @@ public class TestPropertiesConfigurationLayout {
         builder.addComment(null);
         builder.addProperty(TEST_KEY, TEST_VALUE);
         layout.load(config, builder.getReader());
-        assertEquals("Wrong number of blank lines", 2, layout.getBlankLinesBefore(TEST_KEY));
-        assertEquals("Wrong comment", TEST_COMMENT + CRNORM, layout.getCanonicalComment(TEST_KEY, false));
-        assertEquals("Wrong property value", TEST_VALUE, config.getString(TEST_KEY));
+        assertEquals(2, layout.getBlankLinesBefore(TEST_KEY), "Wrong number of blank lines");
+        assertEquals(TEST_COMMENT + CRNORM, layout.getCanonicalComment(TEST_KEY, false), "Wrong comment");
+        assertEquals(TEST_VALUE, config.getString(TEST_KEY), "Wrong property value");
     }
 
     /**
@@ -235,9 +231,9 @@ public class TestPropertiesConfigurationLayout {
         builder.addComment(TEST_COMMENT);
         builder.addProperty(TEST_KEY, TEST_VALUE);
         layout.load(config, builder.getReader());
-        assertEquals("Wrong number of blank lines", 2, layout.getBlankLinesBefore(TEST_KEY));
-        assertEquals("Wrong comment", TEST_COMMENT, layout.getCanonicalComment(TEST_KEY, false));
-        assertEquals("Wrong property value", TEST_VALUE, config.getString(TEST_KEY));
+        assertEquals(2, layout.getBlankLinesBefore(TEST_KEY), "Wrong number of blank lines");
+        assertEquals(TEST_COMMENT, layout.getCanonicalComment(TEST_KEY, false), "Wrong comment");
+        assertEquals(TEST_VALUE, config.getString(TEST_KEY), "Wrong property value");
     }
 
     /**
@@ -251,8 +247,8 @@ public class TestPropertiesConfigurationLayout {
         builder.addComment(TEST_COMMENT);
         builder.addProperty(TEST_KEY, TEST_VALUE + "2");
         layout.load(config, builder.getReader());
-        assertEquals("Wrong combined comment", TEST_COMMENT + CRNORM + TEST_COMMENT, layout.getCanonicalComment(TEST_KEY, false));
-        assertEquals("Wrong combined blank numbers", 0, layout.getBlankLinesBefore(TEST_KEY));
+        assertEquals(TEST_COMMENT + CRNORM + TEST_COMMENT, layout.getCanonicalComment(TEST_KEY, false), "Wrong combined comment");
+        assertEquals(0, layout.getBlankLinesBefore(TEST_KEY), "Wrong combined blank numbers");
     }
 
     /**
@@ -262,10 +258,10 @@ public class TestPropertiesConfigurationLayout {
     public void testEventAdd() {
         final ConfigurationEvent event = new ConfigurationEvent(this, ConfigurationEvent.ADD_PROPERTY, TEST_KEY, TEST_VALUE, false);
         layout.onEvent(event);
-        assertTrue("Property not stored", layout.getKeys().contains(TEST_KEY));
-        assertEquals("Blanc lines before new property", 0, layout.getBlankLinesBefore(TEST_KEY));
-        assertTrue("No single line property", layout.isSingleLine(TEST_KEY));
-        assertEquals("Wrong separator", " = ", layout.getSeparator(TEST_KEY));
+        assertTrue(layout.getKeys().contains(TEST_KEY), "Property not stored");
+        assertEquals(0, layout.getBlankLinesBefore(TEST_KEY), "Blanc lines before new property");
+        assertTrue(layout.isSingleLine(TEST_KEY), "No single line property");
+        assertEquals(" = ", layout.getSeparator(TEST_KEY), "Wrong separator");
     }
 
     /**
@@ -275,7 +271,7 @@ public class TestPropertiesConfigurationLayout {
     public void testEventAddBefore() {
         final ConfigurationEvent event = new ConfigurationEvent(this, ConfigurationEvent.ADD_PROPERTY, TEST_KEY, TEST_VALUE, true);
         layout.onEvent(event);
-        assertFalse("Property already stored", layout.getKeys().contains(TEST_KEY));
+        assertFalse(layout.getKeys().contains(TEST_KEY), "Property already stored");
     }
 
     /**
@@ -288,8 +284,8 @@ public class TestPropertiesConfigurationLayout {
         layout.load(config, builder.getReader());
         final ConfigurationEvent event = new ConfigurationEvent(this, ConfigurationEvent.ADD_PROPERTY, TEST_KEY, TEST_VALUE, false);
         layout.onEvent(event);
-        assertFalse("No multi-line property", layout.isSingleLine(TEST_KEY));
-        assertEquals("Comment was modified", TEST_COMMENT, layout.getCanonicalComment(TEST_KEY, false));
+        assertFalse(layout.isSingleLine(TEST_KEY), "No multi-line property");
+        assertEquals(TEST_COMMENT, layout.getCanonicalComment(TEST_KEY, false), "Comment was modified");
     }
 
     /**
@@ -300,7 +296,7 @@ public class TestPropertiesConfigurationLayout {
         final ConfigurationEvent event = new ConfigurationEvent(this, ConfigurationEvent.ADD_PROPERTY, TEST_KEY, TEST_VALUE, false);
         layout.onEvent(event);
         layout.onEvent(event);
-        assertFalse("No multi-line property", layout.isSingleLine(TEST_KEY));
+        assertFalse(layout.isSingleLine(TEST_KEY), "No multi-line property");
     }
 
     /**
@@ -311,8 +307,8 @@ public class TestPropertiesConfigurationLayout {
         fillLayout();
         final ConfigurationEvent event = new ConfigurationEvent(this, ConfigurationEvent.CLEAR, null, null, false);
         layout.onEvent(event);
-        assertTrue("Keys not empty", layout.getKeys().isEmpty());
-        assertNull("Header comment was not reset", layout.getHeaderComment());
+        assertTrue(layout.getKeys().isEmpty(), "Keys not empty");
+        assertNull(layout.getHeaderComment(), "Header comment was not reset");
     }
 
     /**
@@ -324,7 +320,7 @@ public class TestPropertiesConfigurationLayout {
         layout.onEvent(event);
         event = new ConfigurationEvent(this, ConfigurationEvent.CLEAR_PROPERTY, TEST_KEY, null, false);
         layout.onEvent(event);
-        assertFalse("Property still existing", layout.getKeys().contains(TEST_KEY));
+        assertFalse(layout.getKeys().contains(TEST_KEY), "Property still existing");
     }
 
     /**
@@ -334,7 +330,7 @@ public class TestPropertiesConfigurationLayout {
     public void testEventSetNonExisting() {
         final ConfigurationEvent event = new ConfigurationEvent(this, ConfigurationEvent.SET_PROPERTY, TEST_KEY, TEST_VALUE, false);
         layout.onEvent(event);
-        assertTrue("New property was not found", layout.getKeys().contains(TEST_KEY));
+        assertTrue(layout.getKeys().contains(TEST_KEY), "New property was not found");
     }
 
     /**
@@ -342,17 +338,17 @@ public class TestPropertiesConfigurationLayout {
      */
     @Test
     public void testGetNonExistingLayouData() {
-        assertNull("A comment was found", layout.getComment("unknown"));
-        assertTrue("A multi-line property", layout.isSingleLine("unknown"));
-        assertEquals("Leading blank lines", 0, layout.getBlankLinesBefore("unknown"));
+        assertNull(layout.getComment("unknown"), "A comment was found");
+        assertTrue(layout.isSingleLine("unknown"), "A multi-line property");
+        assertEquals(0, layout.getBlankLinesBefore("unknown"), "Leading blank lines");
     }
 
     /**
      * Tests accessing a property with a null key. This should throw an exception.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGetNullLayouttData() {
-        layout.setComment(null, TEST_COMMENT);
+        assertThrows(IllegalArgumentException.class, () -> layout.setComment(null, TEST_COMMENT));
     }
 
     /**
@@ -364,8 +360,8 @@ public class TestPropertiesConfigurationLayout {
         builder.addComment(null);
         builder.addProperty(TEST_KEY, TEST_VALUE);
         layout.load(config, builder.getReader());
-        assertEquals("Wrong header comment", TEST_COMMENT, layout.getCanonicalHeaderComment(false));
-        assertNull("Wrong comment for property", layout.getCanonicalComment(TEST_KEY, false));
+        assertEquals(TEST_COMMENT, layout.getCanonicalHeaderComment(false), "Wrong header comment");
+        assertNull(layout.getCanonicalComment(TEST_KEY, false), "Wrong comment for property");
     }
 
     /**
@@ -373,8 +369,8 @@ public class TestPropertiesConfigurationLayout {
      */
     @Test
     public void testHeaderCommentNull() {
-        assertNull("No null comment with comment chars", layout.getCanonicalHeaderComment(true));
-        assertNull("No null comment without comment chars", layout.getCanonicalHeaderComment(false));
+        assertNull(layout.getCanonicalHeaderComment(true), "No null comment with comment chars");
+        assertNull(layout.getCanonicalHeaderComment(false), "No null comment without comment chars");
     }
 
     /**
@@ -388,8 +384,8 @@ public class TestPropertiesConfigurationLayout {
         builder.addComment(null);
         builder.addProperty(TEST_KEY, TEST_VALUE);
         layout.load(config, builder.getReader());
-        assertEquals("Wrong header comment", TEST_COMMENT + CRNORM + CRNORM + TEST_COMMENT, layout.getCanonicalHeaderComment(false));
-        assertNull("Wrong comment for property", layout.getComment(TEST_KEY));
+        assertEquals(TEST_COMMENT + CRNORM + CRNORM + TEST_COMMENT, layout.getCanonicalHeaderComment(false), "Wrong header comment");
+        assertNull(layout.getComment(TEST_KEY), "Wrong comment for property");
     }
 
     /**
@@ -406,8 +402,8 @@ public class TestPropertiesConfigurationLayout {
         builder.addProperty(TEST_KEY, TEST_VALUE);
         layout.setHeaderComment(presetHeaderComment);
         layout.load(config, builder.getReader());
-        assertEquals("Wrong header comment", presetHeaderComment, layout.getCanonicalHeaderComment(false));
-        assertNull("Wrong comment for property", layout.getComment(TEST_KEY));
+        assertEquals(presetHeaderComment, layout.getCanonicalHeaderComment(false), "Wrong header comment");
+        assertNull(layout.getComment(TEST_KEY), "Wrong comment for property");
     }
 
     /**
@@ -423,8 +419,8 @@ public class TestPropertiesConfigurationLayout {
         builder.addComment(TEST_COMMENT);
         builder.addProperty(TEST_KEY, TEST_VALUE);
         layout.load(config, builder.getReader());
-        assertEquals("Wrong header comment", TEST_COMMENT + CRNORM + CRNORM + TEST_COMMENT, layout.getCanonicalHeaderComment(false));
-        assertEquals("Wrong comment for property", TEST_COMMENT, layout.getCanonicalComment(TEST_KEY, false));
+        assertEquals(TEST_COMMENT + CRNORM + CRNORM + TEST_COMMENT, layout.getCanonicalHeaderComment(false), "Wrong header comment");
+        assertEquals(TEST_COMMENT, layout.getCanonicalComment(TEST_KEY, false), "Wrong comment for property");
     }
 
     /**
@@ -432,14 +428,14 @@ public class TestPropertiesConfigurationLayout {
      */
     @Test
     public void testInit() {
-        assertTrue("Object contains keys", layout.getKeys().isEmpty());
-        assertNull("Header comment not null", layout.getHeaderComment());
+        assertTrue(layout.getKeys().isEmpty(), "Object contains keys");
+        assertNull(layout.getHeaderComment(), "Header comment not null");
         final Iterator<EventListener<? super ConfigurationEvent>> it = config.getEventListeners(ConfigurationEvent.ANY).iterator();
-        assertTrue("No event listener registered", it.hasNext());
-        assertSame("Layout not registered as event listener", layout, it.next());
-        assertFalse("Multiple event listeners registered", it.hasNext());
-        assertFalse("Force single line flag set", layout.isForceSingleLine());
-        assertNull("Got a global separator", layout.getGlobalSeparator());
+        assertTrue(it.hasNext(), "No event listener registered");
+        assertSame(layout, it.next(), "Layout not registered as event listener");
+        assertFalse(it.hasNext(), "Multiple event listeners registered");
+        assertFalse(layout.isForceSingleLine(), "Force single line flag set");
+        assertNull(layout.getGlobalSeparator(), "Got a global separator");
     }
 
     /**
@@ -449,12 +445,12 @@ public class TestPropertiesConfigurationLayout {
     public void testInitCopy() {
         fillLayout();
         final PropertiesConfigurationLayout l2 = new PropertiesConfigurationLayout(layout);
-        assertEquals("Wrong number of keys", layout.getKeys().size(), l2.getKeys().size());
+        assertEquals(layout.getKeys().size(), l2.getKeys().size(), "Wrong number of keys");
         for (final String key : layout.getKeys()) {
-            assertTrue("Key was not found: " + key, l2.getKeys().contains(key));
+            assertTrue(l2.getKeys().contains(key), "Key was not found: " + key);
         }
-        assertEquals("Wrong header comment", layout.getHeaderComment(), l2.getHeaderComment());
-        assertEquals("Wrong footer comment", layout.getFooterComment(), l2.getFooterComment());
+        assertEquals(layout.getHeaderComment(), l2.getHeaderComment(), "Wrong header comment");
+        assertEquals(layout.getFooterComment(), l2.getFooterComment(), "Wrong footer comment");
     }
 
     /**
@@ -464,11 +460,11 @@ public class TestPropertiesConfigurationLayout {
     public void testInitCopyModify() {
         fillLayout();
         final PropertiesConfigurationLayout l2 = new PropertiesConfigurationLayout(layout);
-        assertEquals("Comments are not equal", layout.getComment(TEST_KEY), l2.getComment(TEST_KEY));
+        assertEquals(layout.getComment(TEST_KEY), l2.getComment(TEST_KEY), "Comments are not equal");
         layout.setComment(TEST_KEY, "A new comment");
-        assertEquals("Comment was changed", TEST_COMMENT, l2.getCanonicalComment(TEST_KEY, false));
+        assertEquals(TEST_COMMENT, l2.getCanonicalComment(TEST_KEY, false), "Comment was changed");
         l2.setBlankLinesBefore(TEST_KEY, l2.getBlankLinesBefore(TEST_KEY) + 1);
-        assertNotEquals("Blanc lines do not differ", layout.getBlankLinesBefore(TEST_KEY), l2.getBlankLinesBefore(TEST_KEY));
+        assertNotEquals(layout.getBlankLinesBefore(TEST_KEY), l2.getBlankLinesBefore(TEST_KEY), "Blanc lines do not differ");
     }
 
     /**
@@ -477,7 +473,7 @@ public class TestPropertiesConfigurationLayout {
     @Test
     public void testInitNull() {
         layout = new PropertiesConfigurationLayout(null);
-        assertTrue("Object contains keys", layout.getKeys().isEmpty());
+        assertTrue(layout.getKeys().isEmpty(), "Object contains keys");
     }
 
     /**
@@ -487,8 +483,8 @@ public class TestPropertiesConfigurationLayout {
     public void testIsSingleLine() throws ConfigurationException {
         builder.addProperty(TEST_KEY, TEST_VALUE + "," + TEST_VALUE + "2");
         layout.load(config, builder.getReader());
-        assertTrue("Wrong single line flag", layout.isSingleLine(TEST_KEY));
-        assertEquals("Wrong number of values", 2, config.getList(TEST_KEY).size());
+        assertTrue(layout.isSingleLine(TEST_KEY), "Wrong single line flag");
+        assertEquals(2, config.getList(TEST_KEY).size(), "Wrong number of values");
     }
 
     /**
@@ -500,8 +496,8 @@ public class TestPropertiesConfigurationLayout {
         builder.addProperty("anotherProp", "a value");
         builder.addProperty(TEST_KEY, TEST_VALUE + "2");
         layout.load(config, builder.getReader());
-        assertFalse("Wrong single line flag", layout.isSingleLine(TEST_KEY));
-        assertEquals("Wrong number of values", 2, config.getList(TEST_KEY).size());
+        assertFalse(layout.isSingleLine(TEST_KEY), "Wrong single line flag");
+        assertEquals(2, config.getList(TEST_KEY).size(), "Wrong number of values");
     }
 
     /**
@@ -513,7 +509,7 @@ public class TestPropertiesConfigurationLayout {
         builder.addLine(" ");
         builder.addProperty(TEST_KEY, TEST_VALUE);
         layout.load(config, builder.getReader());
-        assertEquals("Wrong comment", TEST_COMMENT + CRNORM + " ", layout.getCanonicalComment(TEST_KEY, false));
+        assertEquals(TEST_COMMENT + CRNORM + " ", layout.getCanonicalComment(TEST_KEY, false), "Wrong comment");
     }
 
     /**
@@ -543,13 +539,13 @@ public class TestPropertiesConfigurationLayout {
         builder.addComment(TEST_COMMENT);
         builder.addProperty(TEST_KEY, TEST_VALUE);
         layout.load(config, builder.getReader());
-        assertNull("A header comment was found", layout.getHeaderComment());
-        assertEquals("Wrong number of properties", 1, layout.getKeys().size());
-        assertTrue("Property not found", layout.getKeys().contains(TEST_KEY));
-        assertEquals("Comment not found", TEST_COMMENT, layout.getCanonicalComment(TEST_KEY, false));
-        assertEquals("Wrong number of blank lines", 0, layout.getBlankLinesBefore(TEST_KEY));
-        assertTrue("Wrong single line flag", layout.isSingleLine(TEST_KEY));
-        assertEquals("Property not stored in config", TEST_VALUE, config.getString(TEST_KEY));
+        assertNull(layout.getHeaderComment(), "A header comment was found");
+        assertEquals(1, layout.getKeys().size(), "Wrong number of properties");
+        assertTrue(layout.getKeys().contains(TEST_KEY), "Property not found");
+        assertEquals(TEST_COMMENT, layout.getCanonicalComment(TEST_KEY, false), "Comment not found");
+        assertEquals(0, layout.getBlankLinesBefore(TEST_KEY), "Wrong number of blank lines");
+        assertTrue(layout.isSingleLine(TEST_KEY), "Wrong single line flag");
+        assertEquals(TEST_VALUE, config.getString(TEST_KEY), "Property not stored in config");
     }
 
     /**
@@ -575,11 +571,11 @@ public class TestPropertiesConfigurationLayout {
 
         layout.load(config, builder.getReader());
 
-        assertEquals("Wrong header comment", "Header comment", layout.getCanonicalHeaderComment(false));
-        assertFalse("Include property was stored", layout.getKeys().contains(PropertiesConfiguration.getInclude()));
-        assertEquals("Wrong comment for property",
-            TEST_COMMENT + CRNORM + "A nested header comment." + CRNORM + "With multiple lines" + CRNORM + CRNORM + "Second comment",
-            layout.getCanonicalComment(TEST_KEY, false));
+        assertEquals("Header comment", layout.getCanonicalHeaderComment(false), "Wrong header comment");
+        assertFalse(layout.getKeys().contains(PropertiesConfiguration.getInclude()), "Include property was stored");
+        assertEquals(TEST_COMMENT + CRNORM + "A nested header comment." + CRNORM + "With multiple lines" + CRNORM + CRNORM + "Second comment",
+                layout.getCanonicalComment(TEST_KEY, false),
+                "Wrong comment for property");
     }
 
     /**
@@ -609,8 +605,8 @@ public class TestPropertiesConfigurationLayout {
         fillLayout();
         layout.setComment("NonExistingKey", "NonExistingComment");
         final String output = getLayoutString();
-        assertFalse("Non existing key was found", output.contains("NonExistingKey"));
-        assertFalse("Non existing comment was found", output.contains("NonExistingComment"));
+        assertFalse(output.contains("NonExistingKey"), "Non existing key was found");
+        assertFalse(output.contains("NonExistingComment"), "Non existing comment was found");
     }
 
     /**
@@ -683,7 +679,7 @@ public class TestPropertiesConfigurationLayout {
     public void testSetNullComment() {
         fillLayout();
         layout.setComment(TEST_KEY, null);
-        assertNull("Comment was not reset", layout.getComment(TEST_KEY));
+        assertNull(layout.getComment(TEST_KEY), "Comment was not reset");
     }
 
     /**
@@ -701,9 +697,11 @@ public class TestPropertiesConfigurationLayout {
      */
     @Test
     public void testTrimComment() {
-        assertEquals("Wrong trimmed comment", "This is a comment" + CR + "that spans multiple" + CR + "lines in a" + CR + " complex way.",
-            PropertiesConfigurationLayout.trimComment("   # This is a comment" + CR + "that spans multiple" + CR + "!lines in a" + CR + " complex way.",
-                false));
+        assertEquals("This is a comment" + CR + "that spans multiple" + CR + "lines in a" + CR + " complex way.",
+                PropertiesConfigurationLayout.trimComment(
+                        "   # This is a comment" + CR + "that spans multiple" + CR + "!lines in a" + CR + " complex way.",
+                        false
+                ), "Wrong trimmed comment");
     }
 
     /**
@@ -711,8 +709,9 @@ public class TestPropertiesConfigurationLayout {
      */
     @Test
     public void testTrimCommentFalse() {
-        assertEquals("Wrong trimmed comment", "# Comment with" + CR + " ! some mixed " + CR + "#comment" + CR + "# lines",
-            PropertiesConfigurationLayout.trimComment("Comment with" + CR + " ! some mixed " + CR + "#comment" + CR + "lines", true));
+        assertEquals("# Comment with" + CR + " ! some mixed " + CR + "#comment" + CR + "# lines",
+                PropertiesConfigurationLayout.trimComment("Comment with" + CR + " ! some mixed " + CR + "#comment" + CR + "lines", true),
+                "Wrong trimmed comment");
     }
 
     /**
@@ -720,7 +719,8 @@ public class TestPropertiesConfigurationLayout {
      */
     @Test
     public void testTrimCommentTrainlingCR() {
-        assertEquals("Wrong trimmed comment", "Comment with" + CR + "trailing CR" + CR,
-            PropertiesConfigurationLayout.trimComment("Comment with" + CR + "! trailing CR" + CR, false));
+        assertEquals("Comment with" + CR + "trailing CR" + CR,
+                PropertiesConfigurationLayout.trimComment("Comment with" + CR + "! trailing CR" + CR, false),
+                "Wrong trimmed comment");
     }
 }

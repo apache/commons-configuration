@@ -17,6 +17,11 @@
 
 package org.apache.commons.configuration2;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
@@ -29,30 +34,25 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.yaml.snakeyaml.Yaml;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Unit test for {@link YAMLConfiguration}
  */
 public class TestYAMLConfiguration {
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+    /** A folder for temporary files. */
+    @TempDir
+    public File tempFolder;
 
     /** The files that we test with. */
     private final String testYaml = ConfigurationAssert.getTestFile("test.yaml").getAbsolutePath();
 
     private YAMLConfiguration yamlConfiguration;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         yamlConfiguration = new YAMLConfiguration();
         yamlConfiguration.read(new FileReader(testYaml));
@@ -77,7 +77,7 @@ public class TestYAMLConfiguration {
     @Test
     public void testGetProperty_integer() {
         final Object property = yamlConfiguration.getProperty("int1");
-        assertTrue("property should be an Integer", property instanceof Integer);
+        assertInstanceOf(Integer.class, property, "property should be an Integer");
         assertEquals(37, property);
     }
 
@@ -110,30 +110,24 @@ public class TestYAMLConfiguration {
 
     @Test
     public void testObjectCreationFromReader() {
-        final File createdFile = new File(temporaryFolder.getRoot(), "data.txt");
+        final File createdFile = new File(tempFolder, "data.txt");
         final String yaml = "!!java.io.FileOutputStream [" + createdFile.getAbsolutePath() + "]";
+        final StringReader reader = new StringReader(yaml);
 
-        try {
-            yamlConfiguration.read(new StringReader(yaml));
-            fail("Loading configuration did not cause an exception!");
-        } catch (final ConfigurationException e) {
-            // expected
-        }
-        assertFalse("Java object was created", createdFile.exists());
+        assertThrows(ConfigurationException.class, () -> yamlConfiguration.read(reader),
+                "Loading configuration did not cause an exception!");
+        assertFalse(createdFile.exists(), "Java object was created");
     }
 
     @Test
     public void testObjectCreationFromStream() {
-        final File createdFile = new File(temporaryFolder.getRoot(), "data.txt");
+        final File createdFile = new File(tempFolder, "data.txt");
         final String yaml = "!!java.io.FileOutputStream [" + createdFile.getAbsolutePath() + "]";
+        final ByteArrayInputStream inputStream = new ByteArrayInputStream(yaml.getBytes(StandardCharsets.UTF_8));
 
-        try {
-            yamlConfiguration.read(new ByteArrayInputStream(yaml.getBytes(StandardCharsets.UTF_8)));
-            fail("Loading configuration did not cause an exception!");
-        } catch (final ConfigurationException e) {
-            // expected
-        }
-        assertFalse("Java object was created", createdFile.exists());
+        assertThrows(ConfigurationException.class, () -> yamlConfiguration.read(inputStream),
+                "Loading configuration did not cause an exception!");
+        assertFalse(createdFile.exists(), "Java object was created");
     }
 
     @Test
@@ -144,14 +138,14 @@ public class TestYAMLConfiguration {
         final String output = sw.toString();
 
         // ..and then try parsing it back as using SnakeYAML
-        final Map parsed = new Yaml().loadAs(output, Map.class);
+        final Map<?, ?> parsed = new Yaml().loadAs(output, Map.class);
         assertEquals(6, parsed.entrySet().size());
         assertEquals("value1", parsed.get("key1"));
 
-        final Map key2 = (Map) parsed.get("key2");
+        final Map<?, ?> key2 = (Map<?, ?>) parsed.get("key2");
         assertEquals("value23", key2.get("key3"));
 
-        final List<String> key5 = (List<String>) ((Map) parsed.get("key4")).get("key5");
+        final List<?> key5 = (List<?>) ((Map<?, ?>) parsed.get("key4")).get("key5");
         assertEquals(2, key5.size());
         assertEquals("col1", key5.get(0));
         assertEquals("col2", key5.get(1));

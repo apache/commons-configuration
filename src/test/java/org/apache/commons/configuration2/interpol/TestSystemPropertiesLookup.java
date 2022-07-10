@@ -16,13 +16,13 @@
  */
 package org.apache.commons.configuration2.interpol;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code SystemPropertiesLookup}.
@@ -32,7 +32,7 @@ public class TestSystemPropertiesLookup {
     /** The lookup object to be tested. */
     private Lookup lookup;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         lookup = DefaultLookups.SYSTEM_PROPERTIES.getLookup();
     }
@@ -43,7 +43,7 @@ public class TestSystemPropertiesLookup {
     @Test
     public void testLookupProperties() {
         for (final Map.Entry<Object, Object> e : System.getProperties().entrySet()) {
-            assertEquals("Wrong property value for " + e.getKey(), e.getValue(), lookup.lookup(String.valueOf(e.getKey())));
+            assertEquals(e.getValue(), lookup.lookup(String.valueOf(e.getKey())), "Wrong property value for " + e.getKey());
         }
     }
 
@@ -52,6 +52,6 @@ public class TestSystemPropertiesLookup {
      */
     @Test
     public void testLookupUnknownProperty() {
-        assertNull("Got a value", lookup.lookup("a non existing system property!"));
+        assertNull(lookup.lookup("a non existing system property!"), "Got a value");
     }
 }

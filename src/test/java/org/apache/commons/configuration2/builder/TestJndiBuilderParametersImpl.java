@@ -16,8 +16,8 @@
  */
 package org.apache.commons.configuration2.builder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.util.Map;
 
@@ -25,8 +25,8 @@ import javax.naming.Context;
 
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code JndiBuilderParametersImpl}.
@@ -36,7 +36,7 @@ public class TestJndiBuilderParametersImpl {
     /** The parameters object to be tested. */
     private JndiBuilderParametersImpl params;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         params = new JndiBuilderParametersImpl();
     }
@@ -49,7 +49,7 @@ public class TestJndiBuilderParametersImpl {
         params.setPrefix("somePrefix");
         params.setThrowExceptionOnMissing(true);
         final Map<String, Object> paramsMap = params.getParameters();
-        assertEquals("Wrong exception flag", Boolean.TRUE, paramsMap.get("throwExceptionOnMissing"));
+        assertEquals(Boolean.TRUE, paramsMap.get("throwExceptionOnMissing"), "Wrong exception flag");
     }
 
     /**
@@ -63,8 +63,8 @@ public class TestJndiBuilderParametersImpl {
         BeanHelper.setProperty(params, "context", ctx);
         BeanHelper.setProperty(params, "prefix", prefix);
         final Map<String, Object> paramsMap = params.getParameters();
-        assertSame("Context not in map", ctx, paramsMap.get("context"));
-        assertEquals("Prefix not in map", prefix, paramsMap.get("prefix"));
+        assertSame(ctx, paramsMap.get("context"), "Context not in map");
+        assertEquals(prefix, paramsMap.get("prefix"), "Prefix not in map");
     }
 
     /**
@@ -74,9 +74,9 @@ public class TestJndiBuilderParametersImpl {
     public void testSetContext() {
         final Context ctx = EasyMock.createMock(Context.class);
         EasyMock.replay(ctx);
-        assertSame("Wrong result", params, params.setContext(ctx));
+        assertSame(params, params.setContext(ctx), "Wrong result");
         final Map<String, Object> paramsMap = params.getParameters();
-        assertSame("Context not in map", ctx, paramsMap.get("context"));
+        assertSame(ctx, paramsMap.get("context"), "Context not in map");
     }
 
     /**
@@ -85,8 +85,8 @@ public class TestJndiBuilderParametersImpl {
     @Test
     public void testSetPrefix() {
         final String prefix = "testJndiPrefix";
-        assertSame("Wrong result", params, params.setPrefix(prefix));
+        assertSame(params, params.setPrefix(prefix), "Wrong result");
         final Map<String, Object> paramsMap = params.getParameters();
-        assertEquals("Prefix not in map", prefix, paramsMap.get("prefix"));
+        assertEquals(prefix, paramsMap.get("prefix"), "Prefix not in map");
     }
 }

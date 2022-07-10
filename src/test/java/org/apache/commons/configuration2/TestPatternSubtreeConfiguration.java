@@ -17,7 +17,8 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.File;
 import java.io.StringWriter;
@@ -26,8 +27,8 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for simple MultiConfigurationTest.
@@ -38,14 +39,14 @@ public class TestPatternSubtreeConfiguration {
     private static final String PATTERN = "BusinessClient[@name='${sys:Id}']";
     private XMLConfiguration conf;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         conf = new XMLConfiguration();
         new FileHandler(conf).load(CONFIG_FILE);
     }
 
     /**
-     * Rigourous Test :-)
+     * Rigorous Test :-)
      */
     @Test
     public void testMultiConfiguration() {
@@ -65,20 +66,23 @@ public class TestPatternSubtreeConfiguration {
     /**
      * Tests a read operation if the wrapped configuration does not implement FileBased.
      */
-    @Test(expected = ConfigurationException.class)
-    public void testReadNotFileBased() throws ConfigurationException {
+    @Test
+    public void testReadNotFileBased() {
         final HierarchicalConfiguration<ImmutableNode> hc = new BaseHierarchicalConfiguration();
         final PatternSubtreeConfigurationWrapper config = new PatternSubtreeConfigurationWrapper(hc, PATTERN);
-        new FileHandler(config).load(CONFIG_FILE);
+        final FileHandler fileHandler = new FileHandler(config);
+        assertThrows(ConfigurationException.class, () -> fileHandler.load(CONFIG_FILE));
     }
 
     /**
      * Tests a write operation if the wrapped configuration does not implement FileBased.
      */
-    @Test(expected = ConfigurationException.class)
-    public void testSaveNotFileBased() throws ConfigurationException {
+    @Test
+    public void testSaveNotFileBased() {
         final HierarchicalConfiguration<ImmutableNode> hc = new BaseHierarchicalConfiguration();
         final PatternSubtreeConfigurationWrapper config = new PatternSubtreeConfigurationWrapper(hc, PATTERN);
-        new FileHandler(config).save(new StringWriter());
+        final FileHandler fileHandler = new FileHandler(config);
+        final StringWriter writer = new StringWriter();
+        assertThrows(ConfigurationException.class, () -> fileHandler.save(writer));
     }
 }

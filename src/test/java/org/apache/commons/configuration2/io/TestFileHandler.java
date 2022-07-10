@@ -16,13 +16,16 @@
  */
 package org.apache.commons.configuration2.io;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.apache.commons.configuration2.TempDirUtils.newFile;
+import static org.apache.commons.configuration2.TempDirUtils.newFolder;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -50,9 +53,8 @@ import org.apache.commons.configuration2.SynchronizerTestImpl;
 import org.apache.commons.configuration2.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.easymock.EasyMock;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
  * Test class for {@code FileHandler}.
@@ -167,7 +169,7 @@ public class TestFileHandler {
          * @param expMethods the expected methods as plain string
          */
         public void checkMethods(final String expMethods) {
-            assertEquals("Wrong listener methods", expMethods, methods.toString());
+            assertEquals(expMethods, methods.toString(), "Wrong listener methods");
         }
 
         @Override
@@ -195,7 +197,7 @@ public class TestFileHandler {
          * @param method the called method
          */
         private void methodCalled(final FileHandler handler, final String method) {
-            assertEquals("Wrong file handler", expHandler, handler);
+            assertEquals(expHandler, handler, "Wrong file handler");
             methods.append(method);
         }
 
@@ -224,9 +226,9 @@ public class TestFileHandler {
      * @param content the data object which was passed the locator
      */
     private static void checkEmptyLocator(final FileBasedFileLocatorAwareTestImpl content) {
-        assertNull("Got a URL", content.getLocator().getSourceURL());
-        assertNull("Got a base path", content.getLocator().getBasePath());
-        assertNull("Got a file name", content.getLocator().getFileName());
+        assertNull(content.getLocator().getSourceURL(), "Got a URL");
+        assertNull(content.getLocator().getBasePath(), "Got a base path");
+        assertNull(content.getLocator().getFileName(), "Got a file name");
     }
 
     /**
@@ -236,12 +238,11 @@ public class TestFileHandler {
      * @return the content of this file
      */
     private static String readFile(final File f) {
-        try (Reader in = new FileReader(f)) {
-            return readReader(in);
-        } catch (final IOException ioex) {
-            fail("Could not read file: " + ioex);
-            return null; // cannot happen
-        }
+        return assertDoesNotThrow(() -> {
+            try (Reader in = new FileReader(f)) {
+                return readReader(in);
+            }
+        }, "Could not read file");
     }
 
     /**
@@ -260,9 +261,9 @@ public class TestFileHandler {
         return buf.toString();
     }
 
-    /** Helper object for managing temporary files. */
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    /** A folder for temporary files. */
+    @TempDir
+    public File tempFolder;
 
     /**
      * Creates a test file with the test content.
@@ -280,43 +281,34 @@ public class TestFileHandler {
      * @return the File object pointing to the test file
      */
     private File createTestFile(final File f) {
-        Writer out = null;
-        File file = f;
-        try {
+        return assertDoesNotThrow(() -> {
+            File file = f;
             if (file == null) {
-                file = folder.newFile();
+                file = newFile(tempFolder);
             }
-            out = new FileWriter(file);
-            out.write(CONTENT);
-        } catch (final IOException ioex) {
-            fail("Could not create test file: " + ioex);
-            return null; // cannot happen
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (final IOException ioex) {
-                    // ignore
-                }
+            try (Writer out = new FileWriter(file)) {
+                out.write(CONTENT);
             }
-        }
-        return file;
+            return file;
+        }, "Could not create test file");
     }
 
     /**
      * Tries to add a null listener.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testAddFileHandlerListenerNull() {
-        new FileHandler().addFileHandlerListener(null);
+        final FileHandler fileHandler = new FileHandler();
+        assertThrows(IllegalArgumentException.class, () -> fileHandler.addFileHandlerListener(null));
     }
 
     /**
      * Tries to invoke the assignment constructor with a null handler.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testAssignNullHandler() {
-        new FileHandler(new FileBasedTestImpl(), null);
+        final FileBased obj = new FileBasedTestImpl();
+        assertThrows(IllegalArgumentException.class, () -> new FileHandler(obj, null));
     }
 
     /**
@@ -330,8 +322,8 @@ public class TestFileHandler {
         final FileBased content = new FileBasedTestImpl();
         final FileHandler h2 = new FileHandler(content, h1);
         h1.setFileName("someOtherFile.txt");
-        assertSame("Content not set", content, h2.getContent());
-        assertEquals("Wrong location", f, h2.getFile());
+        assertSame(content, h2.getContent(), "Content not set");
+        assertEquals(f, h2.getFile(), "Wrong location");
     }
 
     /**
@@ -342,11 +334,11 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler();
         handler.setFile(createTestFile());
         handler.clearLocation();
-        assertFalse("Location defined", handler.isLocationDefined());
-        assertNull("Got a file", handler.getFile());
-        assertNull("Got a URL", handler.getURL());
-        assertNull("Got a base path", handler.getBasePath());
-        assertNull("Got a path", handler.getPath());
+        assertFalse(handler.isLocationDefined(), "Location defined");
+        assertNull(handler.getFile(), "Got a file");
+        assertNull(handler.getURL(), "Got a URL");
+        assertNull(handler.getBasePath(), "Got a base path");
+        assertNull(handler.getPath(), "Got a path");
     }
 
     /**
@@ -354,7 +346,7 @@ public class TestFileHandler {
      */
     @Test
     public void testGetBasePathUndefined() {
-        assertNull("Got a base path", new FileHandler().getBasePath());
+        assertNull(new FileHandler().getBasePath(), "Got a base path");
     }
 
     /**
@@ -362,7 +354,7 @@ public class TestFileHandler {
      */
     @Test
     public void testGetFileNameUndefined() {
-        assertNull("Got a file name", new FileHandler().getFileName());
+        assertNull(new FileHandler().getFileName(), "Got a file name");
     }
 
     /**
@@ -371,7 +363,7 @@ public class TestFileHandler {
     @Test
     public void testGetFileSystemDefault() {
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
-        assertEquals("Wrong default file system", FileLocatorUtils.DEFAULT_FILE_SYSTEM, handler.getFileSystem());
+        assertEquals(FileLocatorUtils.DEFAULT_FILE_SYSTEM, handler.getFileSystem(), "Wrong default file system");
     }
 
     /**
@@ -380,8 +372,8 @@ public class TestFileHandler {
     @Test
     public void testGetLocationStrategyDefault() {
         final FileHandler handler = new FileHandler();
-        assertNull("Strategy in locator", handler.getFileLocator().getLocationStrategy());
-        assertSame("Wrong default strategy", FileLocatorUtils.DEFAULT_LOCATION_STRATEGY, handler.getLocationStrategy());
+        assertNull(handler.getFileLocator().getLocationStrategy(), "Strategy in locator");
+        assertSame(FileLocatorUtils.DEFAULT_LOCATION_STRATEGY, handler.getLocationStrategy(), "Wrong default strategy");
     }
 
     /**
@@ -393,7 +385,7 @@ public class TestFileHandler {
         final Map<String, Object> map = new HashMap<>();
         FileLocatorUtils.put(locator, map);
         final FileHandler handler = FileHandler.fromMap(map);
-        assertEquals("Wrong locator", locator, handler.getFileLocator());
+        assertEquals(locator, handler.getFileLocator(), "Wrong locator");
     }
 
     /**
@@ -420,11 +412,11 @@ public class TestFileHandler {
                 t.join();
             }
             final FileLocator locator = handler.getFileLocator();
-            assertEquals("Wrong file name", TEST_FILENAME, locator.getFileName());
-            assertNull("Got a URL", locator.getSourceURL());
-            assertEquals("Wrong encoding", encoding, locator.getEncoding());
-            assertSame("Wrong file system", fileSystem, locator.getFileSystem());
-            assertSame("Wrong location strategy", locationStrategy, locator.getLocationStrategy());
+            assertEquals(TEST_FILENAME, locator.getFileName(), "Wrong file name");
+            assertNull(locator.getSourceURL(), "Got a URL");
+            assertEquals(encoding, locator.getEncoding(), "Wrong encoding");
+            assertSame(fileSystem, locator.getFileSystem(), "Wrong file system");
+            assertSame(locationStrategy, locator.getLocationStrategy(), "Wrong location strategy");
         }
     }
 
@@ -435,7 +427,7 @@ public class TestFileHandler {
     public void testIsLocationDefinedBasePathOnly() {
         final FileHandler handler = new FileHandler();
         handler.setBasePath(createTestFile().getParent());
-        assertFalse("Location defined", handler.isLocationDefined());
+        assertFalse(handler.isLocationDefined(), "Location defined");
     }
 
     /**
@@ -444,7 +436,7 @@ public class TestFileHandler {
     @Test
     public void testIsLocationDefinedFalse() {
         final FileHandler handler = new FileHandler();
-        assertFalse("Location defined", handler.isLocationDefined());
+        assertFalse(handler.isLocationDefined(), "Location defined");
     }
 
     /**
@@ -454,7 +446,7 @@ public class TestFileHandler {
     public void testIsLocationDefinedFile() {
         final FileHandler handler = new FileHandler();
         handler.setFile(createTestFile());
-        assertTrue("Location not defined", handler.isLocationDefined());
+        assertTrue(handler.isLocationDefined(), "Location not defined");
     }
 
     /**
@@ -464,7 +456,7 @@ public class TestFileHandler {
     public void testIsLocationDefinedFileName() {
         final FileHandler handler = new FileHandler();
         handler.setFileName(createTestFile().getName());
-        assertTrue("Location not defined", handler.isLocationDefined());
+        assertTrue(handler.isLocationDefined(), "Location not defined");
     }
 
     /**
@@ -474,7 +466,7 @@ public class TestFileHandler {
     public void testIsLocationDefinedPath() {
         final FileHandler handler = new FileHandler();
         handler.setPath(createTestFile().getAbsolutePath());
-        assertTrue("Location not defined", handler.isLocationDefined());
+        assertTrue(handler.isLocationDefined(), "Location not defined");
     }
 
     /**
@@ -484,25 +476,26 @@ public class TestFileHandler {
     public void testIsLocationDefinedURL() throws IOException {
         final FileHandler handler = new FileHandler();
         handler.setURL(createTestFile().toURI().toURL());
-        assertTrue("Location not defined", handler.isLocationDefined());
+        assertTrue(handler.isLocationDefined(), "Location not defined");
     }
 
     /**
      * Tests that it is not possible to load a directory using the load() method which expects a File.
      */
-    @Test(expected = ConfigurationException.class)
-    public void testLoadDirectoryFile() throws ConfigurationException {
+    @Test
+    public void testLoadDirectoryFile() {
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
-        handler.load(ConfigurationAssert.TEST_DIR);
+        assertThrows(ConfigurationException.class, () -> handler.load(ConfigurationAssert.TEST_DIR));
     }
 
     /**
      * Checks that loading a directory instead of a file throws an exception.
      */
-    @Test(expected = ConfigurationException.class)
-    public void testLoadDirectoryString() throws ConfigurationException {
+    @Test
+    public void testLoadDirectoryString() {
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
-        handler.load(ConfigurationAssert.TEST_DIR.getAbsolutePath());
+        final String fileName = ConfigurationAssert.TEST_DIR.getAbsolutePath();
+        assertThrows(ConfigurationException.class, () -> handler.load(fileName));
     }
 
     /**
@@ -527,7 +520,7 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler(content);
         handler.setFile(file);
         handler.load();
-        assertEquals("Wrong result", file.toURI().toURL().toString() + ": " + CONTENT, content.getContent());
+        assertEquals(file.toURI().toURL().toString() + ": " + CONTENT, content.getContent(), "Wrong result");
     }
 
     /**
@@ -562,7 +555,7 @@ public class TestFileHandler {
         final FileHandler config1 = new FileHandler(content);
         config1.setFileName("config/deep/deeptest.properties");
         config1.load();
-        assertFalse("No data loaded", content.getContent().isEmpty());
+        assertFalse(content.getContent().isEmpty(), "No data loaded");
     }
 
     /**
@@ -574,7 +567,7 @@ public class TestFileHandler {
         final File file = createTestFile();
         final FileHandler handler = new FileHandler(content);
         handler.load(file);
-        assertEquals("Wrong content", CONTENT, content.getContent());
+        assertEquals(CONTENT, content.getContent(), "Wrong content");
     }
 
     /**
@@ -588,7 +581,7 @@ public class TestFileHandler {
         handler.setBasePath(file.getParentFile().getAbsolutePath());
         handler.setFileName(file.getName());
         handler.load();
-        assertEquals("Wrong content", CONTENT, content.getContent());
+        assertEquals(CONTENT, content.getContent(), "Wrong content");
     }
 
     /**
@@ -598,12 +591,8 @@ public class TestFileHandler {
     public void testLoadFromFileNoContent() {
         final FileHandler handler = new FileHandler();
         final File file = createTestFile();
-        try {
-            handler.load(file);
-            fail("Missing content not detected!");
-        } catch (final ConfigurationException cex) {
-            assertEquals("Wrong message", "No content available!", cex.getMessage());
-        }
+        final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> handler.load(file), "Missing content not detected!");
+        assertEquals("No content available!", cex.getMessage(), "Wrong message");
     }
 
     /**
@@ -615,7 +604,7 @@ public class TestFileHandler {
         final FileBasedTestImpl content = new FileBasedTestImpl();
         final FileHandler handler = new FileHandler(content);
         handler.load(file.getAbsolutePath());
-        assertEquals("Wrong content", CONTENT, content.getContent());
+        assertEquals(CONTENT, content.getContent(), "Wrong content");
     }
 
     /**
@@ -628,7 +617,7 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler(content);
         handler.setURL(ConfigurationAssert.getTestURL("test.xml"));
         handler.load(file.getAbsolutePath());
-        assertEquals("Wrong content", CONTENT, content.getContent());
+        assertEquals(CONTENT, content.getContent(), "Wrong content");
     }
 
     /**
@@ -642,7 +631,7 @@ public class TestFileHandler {
         try (Reader in = new FileReader(file)) {
             handler.load(in);
         }
-        assertEquals("Wrong content", CONTENT, content.getContent());
+        assertEquals(CONTENT, content.getContent(), "Wrong content");
     }
 
     /**
@@ -657,12 +646,8 @@ public class TestFileHandler {
         EasyMock.expectLastCall().andThrow(ioex);
         EasyMock.replay(content);
         final FileHandler handler = new FileHandler(content);
-        try {
-            handler.load(in);
-            fail("IOException not detected!");
-        } catch (final ConfigurationException cex) {
-            assertEquals("Wrong root cause", ioex, cex.getCause());
-        }
+        final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> handler.load(in), "IOException not detected!");
+        assertEquals(ioex, cex.getCause(), "Wrong root cause");
         EasyMock.verify(content);
     }
 
@@ -677,7 +662,7 @@ public class TestFileHandler {
         try (FileInputStream in = new FileInputStream(file)) {
             handler.load(in);
         }
-        assertEquals("Wrong content", CONTENT, content.getContent());
+        assertEquals(CONTENT, content.getContent(), "Wrong content");
     }
 
     /**
@@ -689,7 +674,7 @@ public class TestFileHandler {
         final FileBasedTestImpl content = new FileBasedTestImpl();
         final FileHandler handler = new FileHandler(content);
         handler.load(file.toURI().toURL());
-        assertEquals("Wrong content", CONTENT, content.getContent());
+        assertEquals(CONTENT, content.getContent(), "Wrong content");
     }
 
     /**
@@ -702,7 +687,7 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler(content);
         handler.setURL(file.toURI().toURL());
         handler.load();
-        assertEquals("Wrong content", CONTENT, content.getContent());
+        assertEquals(CONTENT, content.getContent(), "Wrong content");
     }
 
     /**
@@ -714,7 +699,7 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler(content);
         final ByteArrayInputStream bin = new ByteArrayInputStream(CONTENT.getBytes());
         handler.load(bin);
-        assertEquals("Wrong content", "InputStream = " + CONTENT, content.getContent());
+        assertEquals("InputStream = " + CONTENT, content.getContent(), "Wrong content");
     }
 
     /**
@@ -729,33 +714,29 @@ public class TestFileHandler {
         EasyMock.expectLastCall().andThrow(ioex);
         EasyMock.replay(content);
         final FileHandler handler = new FileHandler(content);
-        try {
-            handler.load(bin);
-            fail("IOException not detected!");
-        } catch (final ConfigurationException cex) {
-            assertEquals("Wrong cause", ioex, cex.getCause());
-        }
+        final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> handler.load(bin), "IOException not detected!");
+        assertEquals(ioex, cex.getCause(), "Wrong cause");
         EasyMock.verify(content);
     }
 
     /**
      * Tries to call a load() method if no content object is available.
      */
-    @Test(expected = ConfigurationException.class)
-    public void testLoadNoContent() throws ConfigurationException {
+    @Test
+    public void testLoadNoContent() {
         final FileHandler handler = new FileHandler();
         final StringReader reader = new StringReader(CONTENT);
-        handler.load(reader);
+        assertThrows(ConfigurationException.class, () -> handler.load(reader));
     }
 
     /**
      * Tries to load data if no location has been set.
      */
-    @Test(expected = ConfigurationException.class)
-    public void testLoadNoLocation() throws ConfigurationException {
+    @Test
+    public void testLoadNoLocation() {
         final FileBasedTestImpl content = new FileBasedTestImpl();
         final FileHandler handler = new FileHandler(content);
-        handler.load();
+        assertThrows(ConfigurationException.class, handler::load);
     }
 
     /**
@@ -779,18 +760,18 @@ public class TestFileHandler {
     public void testLocateSuccess() throws ConfigurationException {
         final FileHandler handler = new FileHandler();
         handler.setFileName(TEST_FILENAME);
-        assertTrue("Wrong result", handler.locate());
+        assertTrue(handler.locate(), "Wrong result");
         final FileLocator locator = handler.getFileLocator();
-        assertNotNull("URL not filled", locator.getSourceURL());
-        assertNotNull("Base path not filled", locator.getBasePath());
-        assertEquals("Wrong file name", TEST_FILENAME, locator.getFileName());
+        assertNotNull(locator.getSourceURL(), "URL not filled");
+        assertNotNull(locator.getBasePath(), "Base path not filled");
+        assertEquals(TEST_FILENAME, locator.getFileName(), "Wrong file name");
 
         // check whether the correct URL was obtained
         final PropertiesConfiguration config = new PropertiesConfiguration();
         final FileHandler h2 = new FileHandler(config);
         h2.setURL(locator.getSourceURL());
         h2.load();
-        assertTrue("Configuration not loaded", config.getBoolean("configuration.loaded"));
+        assertTrue(config.getBoolean("configuration.loaded"), "Configuration not loaded");
     }
 
     /**
@@ -801,8 +782,8 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler();
         handler.setBasePath("only/a/base/path");
         final FileLocator locator = handler.getFileLocator();
-        assertFalse("Wrong result", handler.locate());
-        assertSame("Locator was changed", locator, handler.getFileLocator());
+        assertFalse(handler.locate(), "Wrong result");
+        assertSame(locator, handler.getFileLocator(), "Locator was changed");
     }
 
     /**
@@ -813,8 +794,8 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler();
         handler.setFileName("unknown file");
         final FileLocator locator = handler.getFileLocator();
-        assertFalse("Wrong result", handler.locate());
-        assertSame("Locator was changed", locator, handler.getFileLocator());
+        assertFalse(handler.locate(), "Wrong result");
+        assertSame(locator, handler.getFileLocator(), "Locator was changed");
     }
 
     /**
@@ -849,7 +830,7 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler();
         final FileHandlerListenerTestImpl listener = new FileHandlerListenerTestImpl(handler);
         handler.addFileHandlerListener(listener);
-        handler.setFile(folder.newFile());
+        handler.setFile(newFile(tempFolder));
         listener.checkMethods("locationChanged");
     }
 
@@ -910,7 +891,7 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler();
         final FileHandlerListenerTestImpl listener = new FileHandlerListenerTestImpl(handler);
         handler.addFileHandlerListener(listener);
-        final URL url = folder.newFile().toURI().toURL();
+        final URL url = newFile(tempFolder).toURI().toURL();
         handler.setURL(url);
         listener.checkMethods("locationChanged");
     }
@@ -925,7 +906,7 @@ public class TestFileHandler {
         final String encoding = "testEncoding";
         handler.setEncoding(encoding);
         handler.save(new StringWriter());
-        assertEquals("Encoding not set", encoding, content.getLocator().getEncoding());
+        assertEquals(encoding, content.getLocator().getEncoding(), "Encoding not set");
     }
 
     /**
@@ -933,11 +914,11 @@ public class TestFileHandler {
      */
     @Test
     public void testPathWithPlus() throws ConfigurationException, IOException {
-        final File saveFile = folder.newFile("test+config.properties");
+        final File saveFile = newFile("test+config.properties", tempFolder);
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
         handler.setFile(saveFile);
         handler.save();
-        assertEquals("Wrong content", CONTENT, readFile(saveFile));
+        assertEquals(CONTENT, readFile(saveFile), "Wrong content");
     }
 
     /**
@@ -945,7 +926,7 @@ public class TestFileHandler {
      */
     @Test
     public void testPathWithSpaces() throws ConfigurationException, IOException {
-        final File path = folder.newFolder("path with spaces");
+        final File path = newFolder("path with spaces", tempFolder);
         final File confFile = new File(path, "config-test.properties");
         final File testFile = createTestFile(confFile);
         final URL url = testFile.toURI().toURL();
@@ -953,10 +934,10 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler(content);
         handler.setURL(url);
         handler.load();
-        assertEquals("Wrong data read", CONTENT, content.getContent());
+        assertEquals(CONTENT, content.getContent(), "Wrong data read");
         final File out = new File(path, "out.txt");
         handler.save(out);
-        assertEquals("Wrong data written", CONTENT, readFile(out));
+        assertEquals(CONTENT, readFile(out), "Wrong data written");
     }
 
     /**
@@ -969,7 +950,7 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
         handler.setFileSystem(sys);
         handler.resetFileSystem();
-        assertEquals("Not default file system", FileLocatorUtils.DEFAULT_FILE_SYSTEM, handler.getFileSystem());
+        assertEquals(FileLocatorUtils.DEFAULT_FILE_SYSTEM, handler.getFileSystem(), "Not default file system");
     }
 
     /**
@@ -980,7 +961,7 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
         final FileHandlerListenerTestImpl listener = new FileHandlerListenerTestImpl(handler);
         handler.addFileHandlerListener(listener);
-        final File f = folder.newFile();
+        final File f = newFile(tempFolder);
         handler.save(f);
         listener.checkMethods("savingsaved");
     }
@@ -990,11 +971,11 @@ public class TestFileHandler {
      */
     @Test
     public void testSaveFileLocatorAware() throws ConfigurationException, IOException {
-        final File file = folder.newFile();
+        final File file = newFile(tempFolder);
         final FileBasedFileLocatorAwareTestImpl content = new FileBasedFileLocatorAwareTestImpl();
         final FileHandler handler = new FileHandler(content);
         handler.save(file);
-        assertEquals("Wrong file content", file.toURI().toURL() + ": " + CONTENT, readFile(file));
+        assertEquals(file.toURI().toURL() + ": " + CONTENT, readFile(file), "Wrong file content");
     }
 
     /**
@@ -1022,10 +1003,10 @@ public class TestFileHandler {
     /**
      * Tries to save the locator if no location has been set.
      */
-    @Test(expected = ConfigurationException.class)
-    public void testSaveNoLocation() throws ConfigurationException {
+    @Test
+    public void testSaveNoLocation() {
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
-        handler.save();
+        assertThrows(ConfigurationException.class, handler::save);
     }
 
     /**
@@ -1038,7 +1019,7 @@ public class TestFileHandler {
         final SynchronizerTestImpl sync = new SynchronizerTestImpl();
         config.setSynchronizer(sync);
         final FileHandler handler = new FileHandler(config);
-        final File f = folder.newFile();
+        final File f = newFile(tempFolder);
         handler.save(f);
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
     }
@@ -1048,10 +1029,10 @@ public class TestFileHandler {
      */
     @Test
     public void testSaveToFile() throws ConfigurationException, IOException {
-        final File file = folder.newFile();
+        final File file = newFile(tempFolder);
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
         handler.save(file);
-        assertEquals("Wrong content", CONTENT, readFile(file));
+        assertEquals(CONTENT, readFile(file), "Wrong content");
     }
 
     /**
@@ -1059,10 +1040,10 @@ public class TestFileHandler {
      */
     @Test
     public void testSaveToFileName() throws ConfigurationException, IOException {
-        final File file = folder.newFile();
+        final File file = newFile(tempFolder);
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
         handler.save(file.getAbsolutePath());
-        assertEquals("Wrong content", CONTENT, readFile(file));
+        assertEquals(CONTENT, readFile(file), "Wrong content");
     }
 
     /**
@@ -1070,11 +1051,11 @@ public class TestFileHandler {
      */
     @Test
     public void testSaveToFileNameLocation() throws ConfigurationException, IOException {
-        final File file = folder.newFile();
+        final File file = newFile(tempFolder);
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
         handler.setFileName(file.getAbsolutePath());
         handler.save();
-        assertEquals("Wrong content", CONTENT, readFile(file));
+        assertEquals(CONTENT, readFile(file), "Wrong content");
     }
 
     /**
@@ -1083,20 +1064,17 @@ public class TestFileHandler {
     @Test
     public void testSaveToFileNameURLException() throws IOException {
         final FileSystem fs = EasyMock.createMock(FileSystem.class);
-        final File file = folder.newFile();
+        final File file = newFile(tempFolder);
         final String basePath = "some base path";
         final MalformedURLException urlex = new MalformedURLException("Test exception");
-        EasyMock.expect(fs.getURL(basePath, file.getName())).andThrow(urlex);
+        final String fileName = file.getName();
+        EasyMock.expect(fs.getURL(basePath, fileName)).andThrow(urlex);
         EasyMock.replay(fs);
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
         handler.setBasePath(basePath);
         handler.setFileSystem(fs);
-        try {
-            handler.save(file.getName());
-            fail("URL exception not detected!");
-        } catch (final ConfigurationException cex) {
-            assertEquals("Wrong cause", urlex, cex.getCause());
-        }
+        final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> handler.save(fileName), "URL exception not detected!");
+        assertEquals(urlex, cex.getCause(), "Wrong cause");
         EasyMock.verify(fs);
     }
 
@@ -1106,17 +1084,14 @@ public class TestFileHandler {
     @Test
     public void testSaveToFileNameURLNotResolved() throws IOException {
         final FileSystem fs = EasyMock.createMock(FileSystem.class);
-        final File file = folder.newFile();
-        EasyMock.expect(fs.getURL(null, file.getName())).andReturn(null);
+        final File file = newFile(tempFolder);
+        final String fileName = file.getName();
+        EasyMock.expect(fs.getURL(null, fileName)).andReturn(null);
         EasyMock.replay(fs);
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
         handler.setFileSystem(fs);
-        try {
-            handler.save(file.getName());
-            fail("Unresolved URL not detected!");
-        } catch (final ConfigurationException cex) {
-            EasyMock.verify(fs);
-        }
+        assertThrows(ConfigurationException.class, () -> handler.save(fileName), "Unresolved URL not detected!");
+        EasyMock.verify(fs);
     }
 
     /**
@@ -1124,12 +1099,12 @@ public class TestFileHandler {
      */
     @Test
     public void testSaveToStream() throws ConfigurationException, IOException {
-        final File file = folder.newFile();
+        final File file = newFile(tempFolder);
         try (FileOutputStream out = new FileOutputStream(file)) {
             final FileHandler handler = new FileHandler(new FileBasedTestImpl());
             handler.save(out);
         }
-        assertEquals("Wrong content", CONTENT, readFile(file));
+        assertEquals(CONTENT, readFile(file), "Wrong content");
     }
 
     /**
@@ -1137,11 +1112,11 @@ public class TestFileHandler {
      */
     @Test
     public void testSaveToURL() throws Exception {
-        final File file = folder.newFile();
+        final File file = newFile(tempFolder);
         final URL url = file.toURI().toURL();
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
         handler.save(url);
-        assertEquals("Wrong content", CONTENT, readFile(file));
+        assertEquals(CONTENT, readFile(file), "Wrong content");
     }
 
     /**
@@ -1149,11 +1124,11 @@ public class TestFileHandler {
      */
     @Test
     public void testSaveToURLLocation() throws ConfigurationException, IOException {
-        final File file = folder.newFile();
+        final File file = newFile(tempFolder);
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
         handler.setURL(file.toURI().toURL());
         handler.save();
-        assertEquals("Wrong content", CONTENT, readFile(file));
+        assertEquals(CONTENT, readFile(file), "Wrong content");
     }
 
     /**
@@ -1165,7 +1140,7 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler(content);
         final StringWriter out = new StringWriter();
         handler.save(out);
-        assertEquals("Wrong content", CONTENT, out.toString());
+        assertEquals(CONTENT, out.toString(), "Wrong content");
     }
 
     /**
@@ -1180,22 +1155,19 @@ public class TestFileHandler {
         EasyMock.expectLastCall().andThrow(ioex);
         EasyMock.replay(content);
         final FileHandler handler = new FileHandler(content);
-        try {
-            handler.save(out);
-            fail("IOException not detected!");
-        } catch (final ConfigurationException cex) {
-            assertEquals("Wrong cause", ioex, cex.getCause());
-        }
+        final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> handler.save(out), "IOException not detected!");
+        assertEquals(ioex, cex.getCause(), "Wrong cause");
         EasyMock.verify(content);
     }
 
     /**
      * Tries to save something to a Writer if no content is set.
      */
-    @Test(expected = ConfigurationException.class)
-    public void testSaveToWriterNoContent() throws ConfigurationException {
+    @Test
+    public void testSaveToWriterNoContent() {
         final FileHandler handler = new FileHandler();
-        handler.save(new StringWriter());
+        StringWriter writer = new StringWriter();
+        assertThrows(ConfigurationException.class, () -> handler.save(writer));
     }
 
     /**
@@ -1208,9 +1180,9 @@ public class TestFileHandler {
         final String basePath = ConfigurationAssert.TEST_DIR_NAME;
         handler.setBasePath(basePath);
         final FileLocator locator = handler.getFileLocator();
-        assertEquals("Wrong base path", basePath, locator.getBasePath());
-        assertNull("Got a URL", locator.getSourceURL());
-        assertNull("Got a file name", locator.getFileName());
+        assertEquals(basePath, locator.getBasePath(), "Wrong base path");
+        assertNull(locator.getSourceURL(), "Got a URL");
+        assertNull(locator.getFileName(), "Got a file name");
     }
 
     /**
@@ -1220,7 +1192,7 @@ public class TestFileHandler {
     public void testSetBasePathFileScheme() {
         final FileHandler handler = new FileHandler();
         handler.setBasePath("file:/test/path/");
-        assertEquals("Wrong base path", "file:///test/path/", handler.getFileLocator().getBasePath());
+        assertEquals("file:///test/path/", handler.getFileLocator().getBasePath(), "Wrong base path");
     }
 
     /**
@@ -1232,9 +1204,9 @@ public class TestFileHandler {
         final File directory = ConfigurationAssert.TEST_DIR;
         final File file = ConfigurationAssert.getTestFile(TEST_FILENAME);
         handler.setFile(file);
-        assertEquals("Wrong base path", directory.getAbsolutePath(), handler.getBasePath());
-        assertEquals("Wrong file name", TEST_FILENAME, handler.getFileName());
-        assertEquals("Wrong path", file.getAbsolutePath(), handler.getPath());
+        assertEquals(directory.getAbsolutePath(), handler.getBasePath(), "Wrong base path");
+        assertEquals(TEST_FILENAME, handler.getFileName(), "Wrong file name");
+        assertEquals(file.getAbsolutePath(), handler.getPath(), "Wrong path");
     }
 
     /**
@@ -1245,16 +1217,16 @@ public class TestFileHandler {
         final FileLocator locator = FileLocatorUtils.fileLocator().fileName(TEST_FILENAME).create();
         final FileHandler handler = new FileHandler();
         handler.setFileLocator(locator);
-        assertEquals("Handler not initialized", TEST_FILENAME, handler.getFileName());
+        assertEquals(TEST_FILENAME, handler.getFileName(), "Handler not initialized");
     }
 
     /**
      * Tries to set the FileLocator to null.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testSetFileLocatorNull() {
         final FileHandler handler = new FileHandler();
-        handler.setFileLocator(null);
+        assertThrows(IllegalArgumentException.class, () -> handler.setFileLocator(null));
     }
 
     /**
@@ -1265,10 +1237,10 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler();
         handler.setURL(ConfigurationAssert.getTestURL(TEST_FILENAME));
         handler.setFileName(TEST_FILENAME);
-        assertNull("Got a base path", handler.getBasePath());
-        assertEquals("Wrong file name", TEST_FILENAME, handler.getFileName());
-        assertEquals("Wrong file name in locator", TEST_FILENAME, handler.getFileLocator().getFileName());
-        assertNull("Got a URL", handler.getFileLocator().getSourceURL());
+        assertNull(handler.getBasePath(), "Got a base path");
+        assertEquals(TEST_FILENAME, handler.getFileName(), "Wrong file name");
+        assertEquals(TEST_FILENAME, handler.getFileLocator().getFileName(), "Wrong file name in locator");
+        assertNull(handler.getFileLocator().getSourceURL(), "Got a URL");
     }
 
     /**
@@ -1278,7 +1250,7 @@ public class TestFileHandler {
     public void testSetFileNameFileScheme() {
         final FileHandler handler = new FileHandler();
         handler.setFileName("file:/test/path/test.txt");
-        assertEquals("Wrong file name", "file:///test/path/test.txt", handler.getFileLocator().getFileName());
+        assertEquals("file:///test/path/test.txt", handler.getFileLocator().getFileName(), "Wrong file name");
     }
 
     /**
@@ -1290,9 +1262,9 @@ public class TestFileHandler {
         EasyMock.replay(sys);
         final FileHandler handler = new FileHandler(new FileBasedTestImpl());
         handler.setFileSystem(sys);
-        assertSame("File system not set", sys, handler.getFileSystem());
+        assertSame(sys, handler.getFileSystem(), "File system not set");
         handler.setFileSystem(null);
-        assertEquals("Not default file system", FileLocatorUtils.DEFAULT_FILE_SYSTEM, handler.getFileSystem());
+        assertEquals(FileLocatorUtils.DEFAULT_FILE_SYSTEM, handler.getFileSystem(), "Not default file system");
     }
 
     /**
@@ -1304,8 +1276,8 @@ public class TestFileHandler {
         EasyMock.replay(strategy);
         final FileHandler handler = new FileHandler();
         handler.setLocationStrategy(strategy);
-        assertSame("Wrong strategy in locator", strategy, handler.getFileLocator().getLocationStrategy());
-        assertSame("Wrong strategy", strategy, handler.getLocationStrategy());
+        assertSame(strategy, handler.getFileLocator().getLocationStrategy(), "Wrong strategy in locator");
+        assertSame(strategy, handler.getLocationStrategy(), "Wrong strategy");
     }
 
     /**
@@ -1315,12 +1287,12 @@ public class TestFileHandler {
     public void testSetPath() throws MalformedURLException {
         final FileHandler handler = new FileHandler();
         handler.setPath(ConfigurationAssert.TEST_DIR_NAME + File.separator + TEST_FILENAME);
-        assertEquals("Wrong file name", TEST_FILENAME, handler.getFileName());
-        assertEquals("Wrong base path", ConfigurationAssert.TEST_DIR.getAbsolutePath(), handler.getBasePath());
+        assertEquals(TEST_FILENAME, handler.getFileName(), "Wrong file name");
+        assertEquals(ConfigurationAssert.TEST_DIR.getAbsolutePath(), handler.getBasePath(), "Wrong base path");
         final File file = ConfigurationAssert.getTestFile(TEST_FILENAME);
-        assertEquals("Wrong path", file.getAbsolutePath(), handler.getPath());
-        assertEquals("Wrong URL", file.toURI().toURL(), handler.getURL());
-        assertNull("Got a URL", handler.getFileLocator().getSourceURL());
+        assertEquals(file.getAbsolutePath(), handler.getPath(), "Wrong path");
+        assertEquals(file.toURI().toURL(), handler.getURL(), "Wrong URL");
+        assertNull(handler.getFileLocator().getSourceURL(), "Got a URL");
     }
 
     /**
@@ -1356,9 +1328,9 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler();
         handler.setURL(new URL("https://commons.apache.org/configuration/index.html"));
 
-        assertEquals("base path", "https://commons.apache.org/configuration/", handler.getBasePath());
-        assertEquals("file name", "index.html", handler.getFileName());
-        assertNull("Got a file name in locator", handler.getFileLocator().getFileName());
+        assertEquals("https://commons.apache.org/configuration/", handler.getBasePath(), "base path");
+        assertEquals("index.html", handler.getFileName(), "file name");
+        assertNull(handler.getFileLocator().getFileName(), "Got a file name in locator");
     }
 
     /**
@@ -1370,8 +1342,8 @@ public class TestFileHandler {
         // file URL - This url is invalid, a valid url would be
         // file:///temp/test.properties.
         handler.setURL(new URL("file:/temp/test.properties"));
-        assertEquals("base path", "file:///temp/", handler.getBasePath());
-        assertEquals("file name", TEST_FILENAME, handler.getFileName());
+        assertEquals("file:///temp/", handler.getBasePath(), "base path");
+        assertEquals(TEST_FILENAME, handler.getFileName(), "file name");
     }
 
     /**
@@ -1383,9 +1355,9 @@ public class TestFileHandler {
         handler.setURL(ConfigurationAssert.getTestURL(TEST_FILENAME));
         handler.setURL(null);
         final FileLocator locator = handler.getFileLocator();
-        assertNull("Got a base path", locator.getBasePath());
-        assertNull("Got a file name", locator.getFileName());
-        assertNull("Got a URL", locator.getSourceURL());
+        assertNull(locator.getBasePath(), "Got a base path");
+        assertNull(locator.getFileName(), "Got a file name");
+        assertNull(locator.getSourceURL(), "Got a URL");
     }
 
     /**
@@ -1396,8 +1368,8 @@ public class TestFileHandler {
         final FileHandler handler = new FileHandler();
         final URL url = new URL("https://issues.apache.org/bugzilla/show_bug.cgi?id=37886");
         handler.setURL(url);
-        assertEquals("Base path incorrect", "https://issues.apache.org/bugzilla/", handler.getBasePath());
-        assertEquals("File name incorrect", "show_bug.cgi", handler.getFileName());
-        assertEquals("URL was not correctly stored", url, handler.getURL());
+        assertEquals("https://issues.apache.org/bugzilla/", handler.getBasePath(), "Base path incorrect");
+        assertEquals("show_bug.cgi", handler.getFileName(), "File name incorrect");
+        assertEquals(url, handler.getURL(), "URL was not correctly stored");
     }
 }

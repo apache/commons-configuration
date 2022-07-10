@@ -455,16 +455,10 @@
     </dependency>
 
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13.2</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.8.2</version>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.hamcrest</groupId>
-          <artifactId>hamcrest-core</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -475,33 +469,9 @@
     </dependency>
 
     <dependency>
-      <groupId>junit-addons</groupId>
-      <artifactId>junit-addons</artifactId>
-      <version>1.4</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>xerces</groupId>
-          <artifactId>xmlParserAPIs</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>xerces</groupId>
-          <artifactId>xercesImpl</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>mockobjects</groupId>
-      <artifactId>mockobjects-core</artifactId>
-      <version>0.09</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>mockobjects</groupId>
-      <artifactId>mockobjects-jdk1.4-j2ee1.3</artifactId>
-      <version>0.09</version>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>4.6.1</version>
       <scope>test</scope>
     </dependency>
 

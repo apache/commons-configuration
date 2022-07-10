@@ -16,9 +16,10 @@
  */
 package org.apache.commons.configuration2.reloading;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -26,8 +27,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code PeriodicReloadingTrigger}.
@@ -79,7 +80,7 @@ public class TestPeriodicReloadingTrigger {
         }
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         executor = EasyMock.createMock(ScheduledExecutorService.class);
         controller = EasyMock.createMock(ReloadingController.class);
@@ -91,15 +92,15 @@ public class TestPeriodicReloadingTrigger {
     @Test
     public void testDefaultExecutor() {
         final PeriodicReloadingTrigger trigger = new PeriodicReloadingTrigger(controller, CTRL_PARAM, PERIOD, UNIT);
-        assertNotNull("No executor service", trigger.getExecutorService());
+        assertNotNull(trigger.getExecutorService(), "No executor service");
     }
 
     /**
      * Tries to create an instance without a controller.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInitNoController() {
-        new PeriodicReloadingTrigger(null, CTRL_PARAM, PERIOD, UNIT);
+        assertThrows(IllegalArgumentException.class, () -> new PeriodicReloadingTrigger(null, CTRL_PARAM, PERIOD, UNIT));
     }
 
     /**
@@ -107,7 +108,7 @@ public class TestPeriodicReloadingTrigger {
      */
     @Test
     public void testIsRunningAfterInit() {
-        assertFalse("Running", createTrigger().isRunning());
+        assertFalse(createTrigger().isRunning(), "Running");
     }
 
     /**
@@ -151,7 +152,7 @@ public class TestPeriodicReloadingTrigger {
         EasyMock.replay(future, controller, executor);
         final PeriodicReloadingTrigger trigger = createTrigger();
         trigger.start();
-        assertTrue("Not started", trigger.isRunning());
+        assertTrue(trigger.isRunning(), "Not started");
         refTask.getValue().run();
         EasyMock.verify(future, controller, executor);
     }
@@ -182,7 +183,7 @@ public class TestPeriodicReloadingTrigger {
         final PeriodicReloadingTrigger trigger = createTrigger();
         trigger.start();
         trigger.stop();
-        assertFalse("Still running", trigger.isRunning());
+        assertFalse(trigger.isRunning(), "Still running");
         EasyMock.verify(future, controller, executor);
     }
 
