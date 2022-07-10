@@ -198,6 +198,8 @@ public class TestDynamicCombinedConfiguration {
 
     private void copyFile(final File input, final File output) throws IOException {
         FileUtils.copyFile(input, output, StandardCopyOption.REPLACE_EXISTING);
+        // On Windows, the last modified time is copied by default. Change the last modified time manually.
+        output.setLastModified(System.currentTimeMillis());
     }
 
     /**
