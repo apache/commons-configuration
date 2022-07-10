@@ -17,9 +17,10 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -31,8 +32,8 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXSource;
 
 import org.apache.commons.jxpath.JXPathContext;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -71,10 +72,10 @@ public class TestBaseConfigurationXMLReader {
     private void check(final JXPathContext ctx, final String path, final String[] values) {
         final Iterator<?> it = ctx.iterate(path);
         for (final String value : values) {
-            assertTrue("Too few values", it.hasNext());
-            assertEquals("Wrong property value", value, it.next());
+            assertTrue(it.hasNext(), "Too few values");
+            assertEquals(value, it.next(), "Wrong property value");
         }
-        assertFalse("Too many values", it.hasNext());
+        assertFalse(it.hasNext(), "Too many values");
     }
 
     private void checkDocument(final BaseConfigurationXMLReader creader, final String rootName) throws Exception {
@@ -85,8 +86,8 @@ public class TestBaseConfigurationXMLReader {
         final Node root = ((Document) result.getNode()).getDocumentElement();
         final JXPathContext ctx = JXPathContext.newContext(root);
 
-        assertEquals("Wrong root name", rootName, root.getNodeName());
-        assertEquals("Wrong number of children", 3, ctx.selectNodes("/*").size());
+        assertEquals(rootName, root.getNodeName(), "Wrong root name");
+        assertEquals(3, ctx.selectNodes("/*").size(), "Wrong number of children");
 
         check(ctx, "world/continents/continent", CONTINENTS);
         check(ctx, "world/greeting", new String[] {"Hello", "Salute"});
@@ -98,7 +99,7 @@ public class TestBaseConfigurationXMLReader {
         check(ctx, "test", "true");
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         config = new BaseConfiguration();
         config.addProperty("world.continents.continent", Arrays.asList(CONTINENTS));
@@ -121,16 +122,16 @@ public class TestBaseConfigurationXMLReader {
         checkDocument(configReader, "config");
     }
 
-    @Test(expected = IOException.class)
-    public void testParseIOException() throws SAXException, IOException {
+    @Test
+    public void testParseIOException() {
         final BaseConfigurationXMLReader reader = new BaseConfigurationXMLReader();
-        reader.parse("document");
+        assertThrows(IOException.class, () -> reader.parse("document"));
     }
 
-    @Test(expected = SAXException.class)
-    public void testParseSAXException() throws IOException, SAXException {
+    @Test
+    public void testParseSAXException() {
         configReader.setContentHandler(new TestContentHandler());
-        configReader.parse("systemID");
+        assertThrows(SAXException.class, () -> configReader.parse("systemID"));
     }
 
     @Test

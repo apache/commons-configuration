@@ -16,10 +16,11 @@
  */
 package org.apache.commons.configuration2.tree;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -30,8 +31,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * A test class for {@code InMemoryNodeModel} which tests functionality related to node references. This test class
@@ -78,7 +79,7 @@ public class TestInMemoryNodeModelReferences {
         return refs;
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         resolver = NodeStructureHelper.createResolverMock();
         NodeStructureHelper.expectResolveKeyForQueries(resolver);
@@ -99,7 +100,7 @@ public class TestInMemoryNodeModelReferences {
 
         model.mergeRoot(node, newName, null, null, resolver);
         final ImmutableNode root = model.getNodeHandler().getRootNode();
-        assertEquals("Wrong root name", newName, root.getNodeName());
+        assertEquals(newName, root.getNodeName(), "Wrong root name");
     }
 
     /**
@@ -113,8 +114,8 @@ public class TestInMemoryNodeModelReferences {
         model.mergeRoot(node, null, null, rootRef, resolver);
         final ReferenceNodeHandler refHandler = model.getReferenceNodeHandler();
         final ImmutableNode checkNode = NodeStructureHelper.nodeForKey(model, "Simmons/Ilium");
-        assertEquals("Wrong reference for node", checkNode.getNodeName(), refHandler.getReference(checkNode));
-        assertEquals("Wrong root reference", rootRef, refHandler.getReference(refHandler.getRootNode()));
+        assertEquals(checkNode.getNodeName(), refHandler.getReference(checkNode), "Wrong reference for node");
+        assertEquals(rootRef, refHandler.getReference(refHandler.getRootNode()), "Wrong root reference");
     }
 
     /**
@@ -125,8 +126,8 @@ public class TestInMemoryNodeModelReferences {
         final ImmutableNode node = new ImmutableNode.Builder().addAttribute("key", "value").create();
         model.mergeRoot(node, null, null, null, resolver);
         final ImmutableNode root = model.getNodeHandler().getRootNode();
-        assertEquals("Wrong number of attributes", 1, root.getAttributes().size());
-        assertEquals("Wrong attribute", "value", root.getAttributes().get("key"));
+        assertEquals(1, root.getAttributes().size(), "Wrong number of attributes");
+        assertEquals("value", root.getAttributes().get("key"), "Wrong attribute");
     }
 
     /**
@@ -137,8 +138,8 @@ public class TestInMemoryNodeModelReferences {
         final ImmutableNode node = NodeStructureHelper.createNode("newNode", "test");
         model.mergeRoot(node, null, null, null, resolver);
         final ImmutableNode root = model.getNodeHandler().getRootNode();
-        assertEquals("Wrong node name", NodeStructureHelper.ROOT_AUTHORS_TREE.getNodeName(), root.getNodeName());
-        assertEquals("Wrong node value", "test", root.getValue());
+        assertEquals(NodeStructureHelper.ROOT_AUTHORS_TREE.getNodeName(), root.getNodeName(), "Wrong node name");
+        assertEquals("test", root.getValue(), "Wrong node value");
     }
 
     /**
@@ -149,7 +150,7 @@ public class TestInMemoryNodeModelReferences {
         final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
         final Collection<ImmutableNode> nodes = collectNodes(handler.getRootNode());
         for (final ImmutableNode node : nodes) {
-            assertEquals("Wrong reference", node.getNodeName(), handler.getReference(node));
+            assertEquals(node.getNodeName(), handler.getReference(node), "Wrong reference");
         }
     }
 
@@ -160,8 +161,8 @@ public class TestInMemoryNodeModelReferences {
     public void testQueryReferencesAfterUpdate() {
         model.addProperty("Simmons.Hyperion", Collections.singleton("Lamia"), resolver);
         final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
-        assertEquals("Wrong reference 1", "Hyperion", handler.getReference(NodeStructureHelper.nodeForKey(model, "Simmons/Hyperion")));
-        assertEquals("Wrong reference 2", "Simmons", handler.getReference(NodeStructureHelper.nodeForKey(model, "Simmons")));
+        assertEquals("Hyperion", handler.getReference(NodeStructureHelper.nodeForKey(model, "Simmons/Hyperion")), "Wrong reference 1");
+        assertEquals("Simmons", handler.getReference(NodeStructureHelper.nodeForKey(model, "Simmons")), "Wrong reference 2");
     }
 
     /**
@@ -170,7 +171,7 @@ public class TestInMemoryNodeModelReferences {
     @Test
     public void testQueryReferenceUnknown() {
         final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
-        assertNull("Got a reference", handler.getReference(new ImmutableNode.Builder().create()));
+        assertNull(handler.getReference(new ImmutableNode.Builder().create()), "Got a reference");
     }
 
     /**
@@ -183,9 +184,9 @@ public class TestInMemoryNodeModelReferences {
         final List<Object> removedRefs = handler.removedReferences();
         final int authorIdx = 2;
         for (int i = 0; i < NodeStructureHelper.worksLength(authorIdx); i++) {
-            assertTrue("Work not found: " + i, removedRefs.contains(NodeStructureHelper.work(authorIdx, i)));
+            assertTrue(removedRefs.contains(NodeStructureHelper.work(authorIdx, i)), "Work not found: " + i);
             for (int j = 0; j < NodeStructureHelper.personaeLength(authorIdx, i); j++) {
-                assertTrue("Persona not found: " + j, removedRefs.contains(NodeStructureHelper.persona(authorIdx, i, j)));
+                assertTrue(removedRefs.contains(NodeStructureHelper.persona(authorIdx, i, j)), "Persona not found: " + j);
             }
         }
     }
@@ -196,18 +197,18 @@ public class TestInMemoryNodeModelReferences {
     @Test
     public void testQueryRemovedReferencesEmpty() {
         final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
-        assertTrue("Got removed references", handler.removedReferences().isEmpty());
+        assertTrue(handler.removedReferences().isEmpty(), "Got removed references");
     }
 
     /**
      * Tests that the list with removed references cannot be modified.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testRemovedReferencesModify() {
         model.clearTree("Simmons", resolver);
         final ReferenceNodeHandler handler = model.getReferenceNodeHandler();
         final List<Object> removedRefs = handler.removedReferences();
-        removedRefs.add("another one");
+        assertThrows(UnsupportedOperationException.class, () -> removedRefs.add("another one"));
     }
 
     /**
@@ -222,16 +223,16 @@ public class TestInMemoryNodeModelReferences {
 
         model.replaceRoot(NodeStructureHelper.ROOT_AUTHORS_TREE, resolver);
         final ImmutableNode node = model.getTrackedNode(selector);
-        assertEquals("Wrong tracked node", trackedNode, node);
-        assertFalse("Node is detached", model.isTrackedNodeDetached(selector));
-        assertNull("Reference not cleared", model.getReferenceNodeHandler().getReference(trackedNode));
+        assertEquals(trackedNode, node, "Wrong tracked node");
+        assertFalse(model.isTrackedNodeDetached(selector), "Node is detached");
+        assertNull(model.getReferenceNodeHandler().getReference(trackedNode), "Reference not cleared");
     }
 
     /**
      * Tries to call replaceRoot() with a null node.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testReplaceRootNull() {
-        model.replaceRoot(null, resolver);
+        assertThrows(IllegalArgumentException.class, () -> model.replaceRoot(null, resolver));
     }
 }

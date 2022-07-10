@@ -16,10 +16,11 @@
  */
 package org.apache.commons.configuration2.builder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Map;
 
@@ -30,9 +31,9 @@ import org.apache.commons.configuration2.builder.fluent.XMLBuilderParameters;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code DefaultParametersManager}.
@@ -62,10 +63,10 @@ public class TestDefaultParametersManager {
      * @param map the map with parameters
      */
     private static void checkDefaultValues(final Map<String, Object> map) {
-        assertEquals("Wrong delimiter handler", listHandler, map.get("listDelimiterHandler"));
-        assertEquals("Wrong exception flag value", Boolean.TRUE, map.get("throwExceptionOnMissing"));
+        assertEquals(listHandler, map.get("listDelimiterHandler"), "Wrong delimiter handler");
+        assertEquals(Boolean.TRUE, map.get("throwExceptionOnMissing"), "Wrong exception flag value");
         final FileBasedBuilderParametersImpl fbparams = FileBasedBuilderParametersImpl.fromParameters(map);
-        assertEquals("Wrong encoding", DEF_ENCODING, fbparams.getFileHandler().getEncoding());
+        assertEquals(DEF_ENCODING, fbparams.getFileHandler().getEncoding(), "Wrong encoding");
     }
 
     /**
@@ -74,12 +75,12 @@ public class TestDefaultParametersManager {
      * @param map the map with parameters
      */
     private static void checkNoDefaultValues(final Map<String, Object> map) {
-        assertFalse("Got base properties", map.containsKey("throwExceptionOnMissing"));
+        assertFalse(map.containsKey("throwExceptionOnMissing"), "Got base properties");
         final FileBasedBuilderParametersImpl fbParams = FileBasedBuilderParametersImpl.fromParameters(map, true);
-        assertNull("Got an encoding", fbParams.getFileHandler().getEncoding());
+        assertNull(fbParams.getFileHandler().getEncoding(), "Got an encoding");
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
         listHandler = EasyMock.createMock(ListDelimiterHandler.class);
     }
@@ -90,7 +91,7 @@ public class TestDefaultParametersManager {
     /** The manager to be tested. */
     private DefaultParametersManager manager;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         parameters = new Parameters();
         manager = new DefaultParametersManager();
@@ -122,7 +123,7 @@ public class TestDefaultParametersManager {
         manager.initializeParameters(params);
         final Map<String, Object> map = params.getParameters();
         checkDefaultValues(map);
-        assertSame("Expression engine not set", engine, map.get("expressionEngine"));
+        assertSame(engine, map.get("expressionEngine"), "Expression engine not set");
     }
 
     /**
@@ -165,17 +166,18 @@ public class TestDefaultParametersManager {
     /**
      * Tries to register a default handler without a class.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testRegisterDefaultsHandlerNoClass() {
-        manager.registerDefaultsHandler(null, new FileBasedDefaultsHandler());
+        final FileBasedDefaultsHandler handler = new FileBasedDefaultsHandler();
+        assertThrows(IllegalArgumentException.class, () -> manager.registerDefaultsHandler(null, handler));
     }
 
     /**
      * Tries to register a null default handler.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testRegisterDefaultsHandlerNoHandler() {
-        manager.registerDefaultsHandler(BasicBuilderProperties.class, null);
+        assertThrows(IllegalArgumentException.class, () -> manager.registerDefaultsHandler(BasicBuilderProperties.class, null));
     }
 
     /**

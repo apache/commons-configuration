@@ -16,15 +16,15 @@
  */
 package org.apache.commons.configuration2.io;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.net.URL;
 
 import org.apache.commons.configuration2.ConfigurationAssert;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code ProvidedURLLocationStrategy}.
@@ -34,7 +34,7 @@ public class TestProvidedURLLocationStrategy {
     /** The strategy to be tested. */
     private ProvidedURLLocationStrategy strategy;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         strategy = new ProvidedURLLocationStrategy();
     }
@@ -47,7 +47,7 @@ public class TestProvidedURLLocationStrategy {
         final FileSystem fs = EasyMock.createMock(FileSystem.class);
         EasyMock.replay(fs);
         final FileLocator locator = FileLocatorUtils.fileLocator().basePath("somePath").fileName("someFile.xml").create();
-        assertNull("Got a URL", strategy.locate(fs, locator));
+        assertNull(strategy.locate(fs, locator), "Got a URL");
     }
 
     /**
@@ -59,6 +59,6 @@ public class TestProvidedURLLocationStrategy {
         EasyMock.replay(fs);
         final URL url = ConfigurationAssert.getTestURL("test.xml");
         final FileLocator locator = FileLocatorUtils.fileLocator().sourceURL(url).create();
-        assertSame("Wrong URL", url, strategy.locate(fs, locator));
+        assertSame(url, strategy.locate(fs, locator), "Wrong URL");
     }
 }

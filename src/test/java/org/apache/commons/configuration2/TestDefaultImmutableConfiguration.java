@@ -17,7 +17,8 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -32,9 +33,9 @@ import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.commons.configuration2.ex.ConversionException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests {@link ImmutableConfiguration} default methods.
@@ -337,8 +338,8 @@ public class TestDefaultImmutableConfiguration {
 
     private final MapImmutableConfiguration config = new MapImmutableConfiguration();
 
-    @Before
-    @After
+    @BeforeEach
+    @AfterEach
     public void clearMap() {
         config.map.clear();
     }
@@ -349,21 +350,20 @@ public class TestDefaultImmutableConfiguration {
         config.map.put("durationD", d.toString());
         final Duration oneD = Duration.ofSeconds(1);
         final Duration twoD = Duration.ofSeconds(2);
-        assertEquals("This returns 1(Duration)", oneD, config.getDuration("durationD"));
-        assertEquals("This returns 1(Duration)", oneD, config.getDuration("durationD", twoD));
-        assertEquals("This returns 2(default Duration)", twoD, config.getDuration("numberNotInConfig", twoD));
-        assertEquals("This returns 1(Duration)", oneD, config.getDuration("durationD", twoD));
+        assertEquals(oneD, config.getDuration("durationD"), "This returns 1(Duration)");
+        assertEquals(oneD, config.getDuration("durationD", twoD), "This returns 1(Duration)");
+        assertEquals(twoD, config.getDuration("numberNotInConfig", twoD), "This returns 2(default Duration)");
+        assertEquals(oneD, config.getDuration("durationD", twoD), "This returns 1(Duration)");
     }
 
-    @Test(expected = ConversionException.class)
+    @Test
     public void testGetDurationIncompatibleType() {
         config.map.put("test.empty", "");
-        config.getDuration("test.empty");
+        assertThrows(ConversionException.class, () -> config.getDuration("test.empty"));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testGetDurationUnknown() {
-        config.getDuration("numberNotInConfig");
+        assertThrows(NoSuchElementException.class, () -> config.getDuration("numberNotInConfig"));
     }
-
 }

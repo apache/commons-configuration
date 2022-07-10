@@ -16,10 +16,10 @@
  */
 package org.apache.commons.configuration2.event;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -53,14 +53,14 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements 
      * @param minEvents the minimum number of expected events
      */
     public void checkEventCount(final int minEvents) {
-        assertTrue("Too view events received", events.size() >= minEvents);
+        assertTrue(events.size() >= minEvents, "Too view events received");
     }
 
     /**
      * Checks if all events has been processed.
      */
     public void done() {
-        assertTrue("Too many events received", events.isEmpty());
+        assertTrue(events.isEmpty(), "Too many events received");
     }
 
     /**
@@ -70,12 +70,12 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements 
      * @return the event object
      */
     public T nextEvent(final EventType<?> expectedType) {
-        assertFalse("Too few events received", events.isEmpty());
+        assertFalse(events.isEmpty(), "Too few events received");
         final T e = events.remove(0);
         if (expectedSource != null) {
-            assertEquals("Wrong event source", expectedSource, e.getSource());
+            assertEquals(expectedSource, e.getSource(), "Wrong event source");
         }
-        assertEquals("Wrong event type", expectedType, e.getEventType());
+        assertEquals(expectedType, e.getEventType(), "Wrong event type");
         return e;
     }
 
@@ -93,7 +93,7 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements 
     public void skipToLast(final EventType<?> type) {
         while (events.size() > 1) {
             final T e = events.remove(0);
-            assertNotSame("Found end event in details", type, e.getEventType());
+            assertNotSame(type, e.getEventType(), "Found end event in details");
         }
     }
 }

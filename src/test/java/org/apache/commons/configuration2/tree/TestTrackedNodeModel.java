@@ -16,16 +16,17 @@
  */
 package org.apache.commons.configuration2.tree;
 
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code TrackedNodeModel}.
@@ -41,7 +42,7 @@ public class TestTrackedNodeModel {
     /** A mock resolver. */
     private static NodeKeyResolver<ImmutableNode> resolver;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
         selector = new NodeSelector("someKey");
         final NodeKeyResolver<ImmutableNode> resolverMock = EasyMock.createMock(NodeKeyResolver.class);
@@ -66,7 +67,7 @@ public class TestTrackedNodeModel {
         return handler;
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         parentModel = EasyMock.createMock(InMemoryNodeModel.class);
         modelSupport = EasyMock.createMock(InMemoryNodeModelSupport.class);
@@ -143,7 +144,7 @@ public class TestTrackedNodeModel {
         EasyMock.expect(parentModel.clearTree(KEY, selector, resolver)).andReturn(removed);
         EasyMock.replay(parentModel);
 
-        assertSame("Wrong removed elements", removed, setUpModel().clearTree(KEY, resolver));
+        assertSame(removed, setUpModel().clearTree(KEY, resolver), "Wrong removed elements");
         EasyMock.verify(parentModel);
     }
 
@@ -184,7 +185,7 @@ public class TestTrackedNodeModel {
         EasyMock.replay(handler, parentModel);
 
         final TrackedNodeModel model = setUpModel();
-        assertSame("Wrong root node", root, model.getInMemoryRepresentation());
+        assertSame(root, model.getInMemoryRepresentation(), "Wrong root node");
     }
 
     /**
@@ -195,24 +196,24 @@ public class TestTrackedNodeModel {
         final NodeHandler<ImmutableNode> handler = expectGetNodeHandler();
         EasyMock.replay(handler, parentModel);
 
-        assertSame("Wrong node handler", handler, setUpModel().getNodeHandler());
+        assertSame(handler, setUpModel().getNodeHandler(), "Wrong node handler");
         EasyMock.verify(parentModel);
     }
 
     /**
      * Tries to create an instance without a parent model.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInitNoParentModel() {
-        new TrackedNodeModel(null, selector, true);
+        assertThrows(IllegalArgumentException.class, () -> new TrackedNodeModel(null, selector, true));
     }
 
     /**
      * Tries to create an instance without a selector.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInitNoSelector() {
-        new TrackedNodeModel(modelSupport, null, true);
+        assertThrows(IllegalArgumentException.class, () -> new TrackedNodeModel(modelSupport, null, true));
     }
 
     /**

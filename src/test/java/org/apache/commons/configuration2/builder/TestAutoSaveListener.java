@@ -20,8 +20,8 @@ import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code AutoSaveListener}.
@@ -43,7 +43,7 @@ public class TestAutoSaveListener {
         listener.onEvent(new ConfigurationEvent(this, ConfigurationEvent.ADD_PROPERTY, "someProperty", "someValue", before));
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         builder = EasyMock.createMock(FileBasedConfigurationBuilder.class);
         listener = new AutoSaveListener(builder);

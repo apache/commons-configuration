@@ -17,11 +17,11 @@
 package org.apache.commons.configuration2.tree;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code DefaultExpressionEngineSymbols}.
@@ -44,9 +44,9 @@ public class TestDefaultExpressionEngineSymbols {
      * @param o2 object 2
      */
     private static void expEqual(final Object o1, final Object o2) {
-        assertEquals("Not equal", o1, o2);
-        assertEquals("Not symmetric", o2, o1);
-        assertEquals("Different hash codes", o1.hashCode(), o2.hashCode());
+        assertEquals(o1, o2, "Not equal");
+        assertEquals(o2, o1, "Not symmetric");
+        assertEquals(o1.hashCode(), o2.hashCode(), "Different hash codes");
     }
 
     /**
@@ -56,9 +56,9 @@ public class TestDefaultExpressionEngineSymbols {
      * @param o2 object 2
      */
     private static void expNE(final Object o1, final Object o2) {
-        assertNotEquals("Equal", o1, o2);
+        assertNotEquals(o1, o2, "Equal");
         if (o2 != null) {
-            assertNotEquals("Not symmetric", o2, o1);
+            assertNotEquals(o2, o1, "Not symmetric");
         }
     }
 
@@ -67,12 +67,12 @@ public class TestDefaultExpressionEngineSymbols {
      */
     @Test
     public void testDefaultSymbols() {
-        assertEquals("Wrong delimiter", ".", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getPropertyDelimiter());
-        assertEquals("Wrong escaped delimiter", "..", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getEscapedDelimiter());
-        assertEquals("Wrong index start", "(", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexStart());
-        assertEquals("Wrong index end", ")", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexEnd());
-        assertEquals("Wrong attribute start", "[@", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getAttributeStart());
-        assertEquals("Wrong attribute end", "]", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getAttributeEnd());
+        assertEquals(".", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getPropertyDelimiter(), "Wrong delimiter");
+        assertEquals("..", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getEscapedDelimiter(), "Wrong escaped delimiter");
+        assertEquals("(", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexStart(), "Wrong index start");
+        assertEquals(")", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexEnd(), "Wrong index end");
+        assertEquals("[@", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getAttributeStart(), "Wrong attribute start");
+        assertEquals("]", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getAttributeEnd(), "Wrong attribute end");
     }
 
     /**

@@ -16,13 +16,13 @@
  */
 package org.apache.commons.configuration2.interpol;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Map;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for EnvironmentLookup.
@@ -31,7 +31,7 @@ public class TestEnvironmentLookup {
     /** The lookup to be tested. */
     private Lookup lookup;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         lookup = DefaultLookups.ENVIRONMENT.getLookup();
     }
@@ -42,7 +42,7 @@ public class TestEnvironmentLookup {
     @Test
     public void testLookup() {
         for (final Map.Entry<String, String> e : System.getenv().entrySet()) {
-            assertEquals("Wrong value for " + e.getKey(), e.getValue(), lookup.lookup(e.getKey()));
+            assertEquals(e.getValue(), lookup.lookup(e.getKey()), "Wrong value for " + e.getKey());
         }
     }
 
@@ -51,6 +51,6 @@ public class TestEnvironmentLookup {
      */
     @Test
     public void testLookupNonExisting() {
-        assertNull("Got result for non existing environment variable", lookup.lookup("a non existing variable!"));
+        assertNull(lookup.lookup("a non existing variable!"), "Got result for non existing environment variable");
     }
 }

@@ -16,13 +16,14 @@
  */
 package org.apache.commons.configuration2.tree;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.easymock.EasyMock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code NodeTreeWalker}.
@@ -177,7 +178,7 @@ public class TestNodeTreeWalker {
         final List<String> expected = expectBFS();
         final TestVisitor visitor = new TestVisitor();
         NodeTreeWalker.INSTANCE.walkBFS(NodeStructureHelper.ROOT_AUTHORS_TREE, visitor, createHandler());
-        assertEquals("Wrong visited nodes", expected, visitor.getVisitedNodes());
+        assertEquals(expected, visitor.getVisitedNodes(), "Wrong visited nodes");
     }
 
     /**
@@ -200,7 +201,7 @@ public class TestNodeTreeWalker {
         final int nodeCount = 9;
         visitor.setMaxNodeCount(nodeCount);
         NodeTreeWalker.INSTANCE.walkBFS(NodeStructureHelper.ROOT_AUTHORS_TREE, visitor, createHandler());
-        assertEquals("Wrong number of visited nodes", nodeCount, visitor.getVisitedNodes().size());
+        assertEquals(nodeCount, visitor.getVisitedNodes().size(), "Wrong number of visited nodes");
     }
 
     /**
@@ -211,7 +212,7 @@ public class TestNodeTreeWalker {
         final List<String> expected = expectDFS();
         final TestVisitor visitor = new TestVisitor();
         NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE, visitor, createHandler());
-        assertEquals("Wrong visited nodes", expected, visitor.getVisitedNodes());
+        assertEquals(expected, visitor.getVisitedNodes(), "Wrong visited nodes");
     }
 
     /**
@@ -234,22 +235,24 @@ public class TestNodeTreeWalker {
         final int nodeCount = 5;
         visitor.setMaxNodeCount(nodeCount);
         NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE, visitor, createHandler());
-        assertEquals("Wrong number of visited nodes", nodeCount, visitor.getVisitedNodes().size());
+        assertEquals(nodeCount, visitor.getVisitedNodes().size(), "Wrong number of visited nodes");
     }
 
     /**
      * Tries a walk() operation without a node handler.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testWalkNoNodeHandler() {
-        NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE, new TestVisitor(), null);
+        final TestVisitor visitor = new TestVisitor();
+        assertThrows(IllegalArgumentException.class, () -> NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE, visitor, null));
     }
 
     /**
      * Tries a walk operation without a visitor.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testWalkNoVisitor() {
-        NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE, null, createHandler());
+        final NodeHandler<ImmutableNode> handler = createHandler();
+        assertThrows(IllegalArgumentException.class, () -> NodeTreeWalker.INSTANCE.walkDFS(NodeStructureHelper.ROOT_AUTHORS_TREE, null, handler));
     }
 }

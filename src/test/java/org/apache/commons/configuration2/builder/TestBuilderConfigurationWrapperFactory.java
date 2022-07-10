@@ -16,11 +16,12 @@
  */
 package org.apache.commons.configuration2.builder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
 
@@ -35,7 +36,7 @@ import org.apache.commons.configuration2.event.EventListenerTestImpl;
 import org.apache.commons.configuration2.event.EventSource;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.easymock.EasyMock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code BuilderConfigurationWrapperFactory}.
@@ -50,12 +51,7 @@ public class TestBuilderConfigurationWrapperFactory {
      */
     private ConfigurationBuilder<BaseHierarchicalConfiguration> createBuilderMock(final BaseHierarchicalConfiguration conf) {
         final ConfigurationBuilder<BaseHierarchicalConfiguration> builder = EasyMock.createMock(ConfigurationBuilder.class);
-        try {
-            EasyMock.expect(builder.getConfiguration()).andReturn(conf).anyTimes();
-        } catch (final ConfigurationException e) {
-            // Cannot happen
-            fail("Unexpected exception: " + e);
-        }
+        assertDoesNotThrow(() -> EasyMock.expect(builder.getConfiguration()).andReturn(conf).anyTimes());
         return builder;
     }
 
@@ -71,27 +67,28 @@ public class TestBuilderConfigurationWrapperFactory {
         conf.addProperty("test2", "42");
         final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory();
         final HierarchicalConfiguration<?> wrapper = factory.createBuilderConfigurationWrapper(HierarchicalConfiguration.class, builder);
-        assertEquals("Wrong value (1)", "value1", wrapper.getString("test1"));
-        assertEquals("Wrong value (2)", 42, wrapper.getInt("test2"));
-        assertSame("Wrong root node", conf.getNodeModel().getNodeHandler().getRootNode(), wrapper.getNodeModel().getNodeHandler().getRootNode());
+        assertEquals("value1", wrapper.getString("test1"), "Wrong value (1)");
+        assertEquals(42, wrapper.getInt("test2"), "Wrong value (2)");
+        assertSame(conf.getNodeModel().getNodeHandler().getRootNode(), wrapper.getNodeModel().getNodeHandler().getRootNode(), "Wrong root node");
     }
 
     /**
      * Tries to create a wrapper without passing a builder.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateBuilderConfigurationWrapperNoBuilder() {
         final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory();
-        factory.createBuilderConfigurationWrapper(Configuration.class, null);
+        assertThrows(IllegalArgumentException.class, () -> factory.createBuilderConfigurationWrapper(Configuration.class, null));
     }
 
     /**
      * Tries to create a wrapper without passing an interface class.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testCreateBuilderConfigurationWrapperNoClass() {
         final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory(EventSourceSupport.BUILDER);
-        factory.createBuilderConfigurationWrapper(null, createBuilderMock(new BaseHierarchicalConfiguration()));
+        final ConfigurationBuilder<BaseHierarchicalConfiguration> builder = createBuilderMock(new BaseHierarchicalConfiguration());
+        assertThrows(IllegalArgumentException.class, () -> factory.createBuilderConfigurationWrapper(null, builder));
     }
 
     /**
@@ -100,7 +97,7 @@ public class TestBuilderConfigurationWrapperFactory {
     @Test
     public void testDefaultEventSourceSupport() {
         final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory();
-        assertEquals("Wrong result", EventSourceSupport.NONE, factory.getEventSourceSupport());
+        assertEquals(EventSourceSupport.NONE, factory.getEventSourceSupport(), "Wrong result");
     }
 
     /**
@@ -116,12 +113,12 @@ public class TestBuilderConfigurationWrapperFactory {
 
         src.addEventListener(ConfigurationEvent.ANY, l1);
         src.addEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2);
-        assertTrue("Wrong result for existing listener", src.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2));
-        assertFalse("Wrong result for non-existing listener", src.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2));
+        assertTrue(src.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2), "Wrong result for existing listener");
+        assertFalse(src.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2), "Wrong result for non-existing listener");
         final PropertiesConfiguration config = builder.getConfiguration();
         final Collection<EventListener<? super ConfigurationEvent>> listeners = config.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL);
-        assertTrue("Registered listener not found", listeners.contains(l1));
-        assertFalse("Removed listener still found", listeners.contains(l2));
+        assertTrue(listeners.contains(l1), "Registered listener not found");
+        assertFalse(listeners.contains(l2), "Removed listener still found");
     }
 
     /**
@@ -164,6 +161,6 @@ public class TestBuilderConfigurationWrapperFactory {
         EasyMock.replay(builder);
         final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory();
         final HierarchicalConfiguration<?> wrapper = factory.createBuilderConfigurationWrapper(HierarchicalConfiguration.class, builder);
-        assertFalse("EventSource support", wrapper instanceof EventSource);
+        assertFalse(wrapper instanceof EventSource, "EventSource support");
     }
 }

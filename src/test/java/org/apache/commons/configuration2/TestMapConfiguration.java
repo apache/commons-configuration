@@ -17,9 +17,9 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +29,7 @@ import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.EventListenerTestImpl;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for MapConfiguration.
@@ -72,7 +72,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration {
         config.addProperty(KEY, TRIM_VALUE);
         config.addProperty(KEY, "anotherValue");
         final List<Object> values = config.getList(KEY);
-        assertEquals("Wrong number of values", 3, values.size());
+        assertEquals(3, values.size(), "Wrong number of values");
     }
 
     @Test
@@ -80,7 +80,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration {
         final MapConfiguration config = (MapConfiguration) getConfiguration();
         final MapConfiguration copy = (MapConfiguration) config.clone();
         final StrictConfigurationComparator comp = new StrictConfigurationComparator();
-        assertTrue("Configurations are not equal", comp.compare(config, copy));
+        assertTrue(comp.compare(config, copy), "Configurations are not equal");
     }
 
     /**
@@ -95,8 +95,8 @@ public class TestMapConfiguration extends TestAbstractConfiguration {
         config.addProperty(keyValue, 42);
         final MapConfiguration clone = (MapConfiguration) config.clone();
         clone.setProperty(keyValue, 43);
-        assertEquals("Wrong interpolation in original", "The answer is 42.", config.getString(keyAnswer));
-        assertEquals("Wrong interpolation in clone", "The answer is 43.", clone.getString(keyAnswer));
+        assertEquals("The answer is 42.", config.getString(keyAnswer), "Wrong interpolation in original");
+        assertEquals("The answer is 43.", clone.getString(keyAnswer), "Wrong interpolation in clone");
     }
 
     /**
@@ -107,12 +107,12 @@ public class TestMapConfiguration extends TestAbstractConfiguration {
         final MapConfiguration config = (MapConfiguration) getConfiguration();
         config.addEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(config));
         final MapConfiguration copy = (MapConfiguration) config.clone();
-        assertTrue("Event listeners were copied", copy.getEventListeners(ConfigurationEvent.ANY).isEmpty());
+        assertTrue(copy.getEventListeners(ConfigurationEvent.ANY).isEmpty(), "Event listeners were copied");
 
         config.addProperty("cloneTest", Boolean.TRUE);
-        assertFalse("Map not decoupled", copy.containsKey("cloneTest"));
+        assertFalse(copy.containsKey("cloneTest"), "Map not decoupled");
         copy.clearProperty("key1");
-        assertEquals("Map not decoupled (2)", "value1", config.getString("key1"));
+        assertEquals("value1", config.getString("key1"), "Map not decoupled (2)");
     }
 
     @Test
@@ -130,7 +130,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration {
     public void testGetPropertyTrim() {
         final MapConfiguration config = (MapConfiguration) getConfiguration();
         config.getMap().put(KEY, SPACE_VALUE);
-        assertEquals("Wrong trimmed value", TRIM_VALUE, config.getProperty(KEY));
+        assertEquals(TRIM_VALUE, config.getProperty(KEY), "Wrong trimmed value");
     }
 
     /**
@@ -141,7 +141,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration {
         final MapConfiguration config = (MapConfiguration) getConfiguration();
         config.getMap().put(KEY, SPACE_VALUE);
         config.setTrimmingDisabled(true);
-        assertEquals("Wrong trimmed value", SPACE_VALUE, config.getProperty(KEY));
+        assertEquals(SPACE_VALUE, config.getProperty(KEY), "Wrong trimmed value");
     }
 
     /**
@@ -153,6 +153,6 @@ public class TestMapConfiguration extends TestAbstractConfiguration {
         final MapConfiguration config = (MapConfiguration) getConfiguration();
         config.getMap().put(KEY, SPACE_VALUE);
         config.setListDelimiterHandler(new DisabledListDelimiterHandler());
-        assertEquals("Wrong trimmed value", SPACE_VALUE, config.getProperty(KEY));
+        assertEquals(SPACE_VALUE, config.getProperty(KEY), "Wrong trimmed value");
     }
 }

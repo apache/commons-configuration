@@ -16,7 +16,10 @@
  */
 package org.apache.commons.configuration2;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.NameClassPair;
@@ -25,28 +28,55 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 
-import com.mockobjects.dynamic.C;
-import com.mockobjects.dynamic.Mock;
+import org.mockito.Mockito;
 
 /**
  * A mock implementation of the {@code InitialContextFactory} interface. This implementation will return a mock context
  * that contains some test data.
  */
 public class MockInitialContextFactory implements InitialContextFactory {
+
+    /**
+     * A {@link NamingEnumeration} implementation that's backed by an iterator.
+     */
+    private static final class ListBasedNamingEnumeration implements NamingEnumeration<NameClassPair> {
+
+        private final Iterator<NameClassPair> iterator;
+
+        private ListBasedNamingEnumeration(List<NameClassPair> pairs) {
+            this.iterator = pairs.iterator();
+        }
+
+        @Override
+        public boolean hasMore() throws NamingException {
+            return hasMoreElements();
+        }
+
+        @Override
+        public boolean hasMoreElements() {
+            return iterator.hasNext();
+        }
+
+        @Override
+        public NameClassPair next() throws NamingException {
+            return nextElement();
+        }
+
+        @Override
+        public NameClassPair nextElement() {
+            return iterator.next();
+        }
+
+        @Override
+        public void close() throws NamingException {
+        }
+    }
+
     /**
      * Constant for the use cycles environment property. If this property is present in the environment, a cyclic context
      * will be created.
      */
     public static final String PROP_CYCLES = "useCycles";
-
-    /** Constant for the lookup method. */
-    private static final String METHOD_LOOKUP = "lookup";
-
-    /** Constant for the list method. */
-    private static final String METHOD_LIST = "list";
-
-    /** Constant for the close method. */
-    private static final String METHOD_CLOSE = "close";
 
     /** Constant for the name of the missing property. */
     private static final String MISSING_PROP = "/missing";
@@ -64,16 +94,15 @@ public class MockInitialContextFactory implements InitialContextFactory {
     private static final String[] MISSING_NAMES = {"missing/list", "test/imaginarykey", "foo/bar"};
 
     /**
-     * Adds a new name-and-value pair to an enum mock.
+     * Adds a new name-and-value pair to list of {@link NameClassPair}s.
      *
-     * @param mockEnum the enum mock
+     * @param pairs the list to add to
      * @param name the name
      * @param value the value
      */
-    private void addEnumPair(final Mock mockEnum, final String name, final Object value) {
+    private void addEnumPair(final List<NameClassPair> pairs, final String name, final Object value) {
         final NameClassPair ncp = new NameClassPair(name, value.getClass().getName());
-        mockEnum.expectAndReturn("hasMore", true);
-        mockEnum.expectAndReturn("next", ncp);
+        pairs.add(ncp);
     }
 
     /**
@@ -83,8 +112,8 @@ public class MockInitialContextFactory implements InitialContextFactory {
      * @param name the name of the property
      * @param value the value of the property
      */
-    private void bind(final Mock mockCtx, final String name, final String value) {
-        mockCtx.matchAndReturn(METHOD_LOOKUP, C.eq(name), value);
+    private void bind(final Context mockCtx, final String name, final String value) throws NamingException {
+        Mockito.when(mockCtx.lookup(name)).thenReturn(value);
         bindError(mockCtx, name + MISSING_PROP);
     }
 
@@ -94,18 +123,8 @@ public class MockInitialContextFactory implements InitialContextFactory {
      * @param mockCtx the mock
      * @param name the name of the property
      */
-    private void bindError(final Mock mockCtx, final String name) {
-        mockCtx.matchAndThrow(METHOD_LOOKUP, C.eq(name), new NameNotFoundException("unknown property"));
-    }
-
-    /**
-     * Closes an enumeration mock.
-     *
-     * @param mockEnum the mock
-     */
-    private void closeEnum(final Mock mockEnum) {
-        mockEnum.expectAndReturn("hasMore", false);
-        mockEnum.expect(METHOD_CLOSE);
+    private void bindError(final Context mockCtx, final String name) throws NamingException {
+        Mockito.when(mockCtx.lookup(name)).thenThrow(new NameNotFoundException("unknown property"));
     }
 
     /**
@@ -114,8 +133,8 @@ public class MockInitialContextFactory implements InitialContextFactory {
      * @param prefix the prefix
      * @return the mock for the context
      */
-    private Mock createCtxMock(final String prefix) {
-        final Mock mockCtx = new Mock(Context.class);
+    private Context createCtxMock(final String prefix) throws NamingException {
+        final Context mockCtx = Mockito.mock(Context.class);
         for (int i = 0; i < PROP_NAMES.length; i++) {
             bind(mockCtx, prefix + PROP_NAMES[i], PROP_VALUES[i]);
             final String errProp = prefix.isEmpty() ? PREFIX + PROP_NAMES[i] : PROP_NAMES[i];
@@ -124,42 +143,35 @@ public class MockInitialContextFactory implements InitialContextFactory {
         for (final String element : MISSING_NAMES) {
             bindError(mockCtx, element);
         }
-        mockCtx.matchAndReturn("hashCode", System.identityHashCode(mockCtx.proxy()));
 
         return mockCtx;
     }
 
     /**
-     * Creates and initializes a mock for a naming enumeration that expects to be closed. This is a shortcut of
-     * createEnumMock(mockCtx, names, values, true);
+     * Creates and initializes a naming enumeration. This is a shortcut of wrapping the result of
+     * {@link #createNameClassPairs(String[], Object[])} in an instance of {@link ListBasedNamingEnumeration}.
      *
-     * @param mockCtx the mock representing the context
      * @param names the names contained in the iteration
      * @param values the corresponding values
      * @return the mock for the enumeration
      */
-    private Mock createEnumMock(final Mock mockCtx, final String[] names, final Object[] values) {
-        return createEnumMock(mockCtx, names, values, true);
+    private NamingEnumeration<NameClassPair> createNamingEnumeration(final String[] names, final Object[] values) {
+        return new ListBasedNamingEnumeration(createNameClassPairs(names, values));
     }
 
     /**
-     * Creates and initializes a mock for a naming enumeration.
+     * Creates and initializes a list of {@link NameClassPair}s that can be used to create a naming enumeration.
      *
-     * @param mockCtx the mock representing the context
      * @param names the names contained in the iteration
      * @param values the corresponding values
-     * @param close a flag whether the enumeration should expect to be closed
      * @return the mock for the enumeration
      */
-    private Mock createEnumMock(final Mock mockCtx, final String[] names, final Object[] values, final boolean close) {
-        final Mock mockEnum = new Mock(NamingEnumeration.class);
+    private List<NameClassPair> createNameClassPairs(final String[] names, final Object[] values) {
+        final List<NameClassPair> pairs = new ArrayList<>();
         for (int i = 0; i < names.length; i++) {
-            addEnumPair(mockEnum, names[i], values[i]);
+            addEnumPair(pairs, names[i], values[i]);
         }
-        if (close) {
-            closeEnum(mockEnum);
-        }
-        return mockEnum;
+        return pairs;
     }
 
     /**
@@ -173,27 +185,28 @@ public class MockInitialContextFactory implements InitialContextFactory {
     public Context getInitialContext(@SuppressWarnings("rawtypes") final Hashtable env) throws NamingException {
         final boolean useCycles = env.containsKey(PROP_CYCLES);
 
-        final Mock mockTopCtx = createCtxMock(PREFIX);
-        final Mock mockCycleCtx = createCtxMock("");
-        final Mock mockPrfxCtx = createCtxMock("");
-        final Mock mockBaseCtx = new Mock(Context.class);
-        mockBaseCtx.matchAndReturn(METHOD_LOOKUP, C.eq(""), mockTopCtx.proxy());
-        mockBaseCtx.matchAndReturn(METHOD_LOOKUP, C.eq("test"), mockPrfxCtx.proxy());
-        mockTopCtx.matchAndReturn(METHOD_LOOKUP, C.eq("test"), mockPrfxCtx.proxy());
-        mockPrfxCtx.matchAndReturn(METHOD_LIST, C.eq(""), createEnumMock(mockPrfxCtx, PROP_NAMES, PROP_VALUES).proxy());
+        final Context mockTopCtx = createCtxMock(PREFIX);
+        final Context mockCycleCtx = createCtxMock("");
+        final Context mockPrfxCtx = createCtxMock("");
+        final Context mockBaseCtx = Mockito.mock(Context.class);
+        Mockito.when(mockBaseCtx.lookup("")).thenReturn(mockTopCtx);
+        Mockito.when(mockBaseCtx.lookup("test")).thenReturn(mockPrfxCtx);
+        Mockito.when(mockTopCtx.lookup("test")).thenReturn(mockPrfxCtx);
+        Mockito.when(mockPrfxCtx.list("")).thenAnswer(invocation -> createNamingEnumeration(PROP_NAMES, PROP_VALUES));
 
         if (useCycles) {
-            mockTopCtx.matchAndReturn(METHOD_LOOKUP, C.eq("cycle"), mockCycleCtx.proxy());
-            mockTopCtx.matchAndReturn(METHOD_LIST, C.eq(""),
-                createEnumMock(mockTopCtx, new String[] {"test", "cycle"}, new Object[] {mockPrfxCtx.proxy(), mockCycleCtx.proxy()}).proxy());
-            final Mock mockEnum = createEnumMock(mockCycleCtx, PROP_NAMES, PROP_VALUES, false);
-            addEnumPair(mockEnum, "cycleCtx", mockCycleCtx.proxy());
-            closeEnum(mockEnum);
-            mockCycleCtx.matchAndReturn(METHOD_LIST, C.eq(""), mockEnum.proxy());
-            mockCycleCtx.matchAndReturn(METHOD_LOOKUP, C.eq("cycleCtx"), mockCycleCtx.proxy());
+            Mockito.when(mockTopCtx.lookup("cycle")).thenReturn(mockCycleCtx);
+            Mockito.when(mockTopCtx.list("")).thenAnswer(invocation ->
+                    createNamingEnumeration(new String[] {"test", "cycle"}, new Object[] {mockPrfxCtx, mockCycleCtx}));
+            Mockito.when(mockCycleCtx.list("")).thenAnswer(invocation -> {
+                final List<NameClassPair> pairs = createNameClassPairs(PROP_NAMES, PROP_VALUES);
+                addEnumPair(pairs, "cycleCtx", mockCycleCtx);
+                return new ListBasedNamingEnumeration(pairs);
+            });
+            Mockito.when(mockCycleCtx.lookup("cycleCtx")).thenReturn(mockCycleCtx);
         } else {
-            mockTopCtx.matchAndReturn(METHOD_LIST, C.eq(""), createEnumMock(mockTopCtx, new String[] {"test"}, new Object[] {mockPrfxCtx.proxy()}).proxy());
+            Mockito.when(mockTopCtx.list("")).thenAnswer(invocation -> createNamingEnumeration(new String[] {"test"}, new Object[] {mockPrfxCtx}));
         }
-        return (Context) mockBaseCtx.proxy();
+        return mockBaseCtx;
     }
 }

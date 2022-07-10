@@ -17,13 +17,14 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -46,10 +47,8 @@ import org.apache.commons.configuration2.ex.ConversionException;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.Lookup;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
-
-import junitx.framework.ListAssert;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests some basic functions of the BaseConfiguration class. Missing keys will throw Exceptions
@@ -63,7 +62,7 @@ public class TestBaseConfiguration {
     protected static Class<?> incompatibleElementException = ConversionException.class;
     protected BaseConfiguration config;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         config = new BaseConfiguration();
         config.setThrowExceptionOnMissing(true);
@@ -80,7 +79,7 @@ public class TestBaseConfiguration {
         config.addProperty("complex.property", props);
 
         Object val = config.getProperty("complex.property");
-        assertTrue(val instanceof Collection);
+        assertInstanceOf(Collection.class, val);
         Collection<?> col = (Collection<?>) val;
         assertEquals(10, col.size());
 
@@ -91,7 +90,7 @@ public class TestBaseConfiguration {
         final Object[] data = {"The", props, "over,the", "lazy", "dog."};
         config.setProperty("complex.property", data);
         val = config.getProperty("complex.property");
-        assertTrue(val instanceof Collection);
+        assertInstanceOf(Collection.class, val);
         col = (Collection<?>) val;
         final Iterator<?> it = col.iterator();
         final StringTokenizer tok = new StringTokenizer("The quick brown fox jumps over the lazy dog.", " ");
@@ -117,8 +116,8 @@ public class TestBaseConfiguration {
 
         for (final Iterator<String> it = config.getKeys(); it.hasNext();) {
             final String key = it.next();
-            assertTrue("Key not found: " + key, config2.containsKey(key));
-            assertEquals("Wrong value for key " + key, config.getProperty(key), config2.getProperty(key));
+            assertTrue(config2.containsKey(key), "Key not found: " + key);
+            assertEquals(config.getProperty(key), config2.getProperty(key), "Wrong value for key " + key);
         }
     }
 
@@ -132,8 +131,8 @@ public class TestBaseConfiguration {
         config.addProperty(KEY_NUMBER, 42);
         final BaseConfiguration clone = (BaseConfiguration) config.clone();
         clone.setProperty(KEY_NUMBER, 43);
-        assertEquals("Wrong interpolation in original", "The answer is 42.", config.getString(keyAnswer));
-        assertEquals("Wrong interpolation in clone", "The answer is 43.", clone.getString(keyAnswer));
+        assertEquals("The answer is 42.", config.getString(keyAnswer), "Wrong interpolation in original");
+        assertEquals("The answer is 43.", clone.getString(keyAnswer), "Wrong interpolation in clone");
     }
 
     /**
@@ -146,7 +145,7 @@ public class TestBaseConfiguration {
         config.addProperty(key, "value2");
         final BaseConfiguration config2 = (BaseConfiguration) config.clone();
         config2.addProperty(key, "value3");
-        assertEquals("Wrong number of original properties", 2, config.getList(key).size());
+        assertEquals(2, config.getList(key).size(), "Wrong number of original properties");
     }
 
     /**
@@ -160,11 +159,11 @@ public class TestBaseConfiguration {
         final BaseConfiguration config2 = (BaseConfiguration) config.clone();
 
         config2.addProperty("clone", Boolean.TRUE);
-        assertFalse("New key appears in original", config.containsKey("clone"));
+        assertFalse(config.containsKey("clone"), "New key appears in original");
         config2.setProperty("original", Boolean.FALSE);
-        assertTrue("Wrong value of original property", config.getBoolean("original"));
+        assertTrue(config.getBoolean("original"), "Wrong value of original property");
 
-        assertTrue("Event listener was copied", config2.getEventListeners(ConfigurationEvent.ANY).isEmpty());
+        assertTrue(config2.getEventListeners(ConfigurationEvent.ANY).isEmpty(), "Event listener was copied");
     }
 
     @Test
@@ -172,15 +171,15 @@ public class TestBaseConfiguration {
         final String prop = "hey, that's a test";
         config.setProperty("prop.string", prop);
         final List<Object> list = config.getList("prop.string");
-        assertEquals("Wrong number of list elements", 2, list.size());
-        assertEquals("Wrong element 1", "hey", list.get(0));
+        assertEquals(2, list.size(), "Wrong number of list elements");
+        assertEquals("hey", list.get(0), "Wrong element 1");
     }
 
     @Test
     public void testCommaSeparatedStringEscaped() {
         final String prop2 = "hey\\, that's a test";
         config.setProperty("prop.string", prop2);
-        assertEquals("Wrong value", "hey, that's a test", config.getString("prop.string"));
+        assertEquals("hey, that's a test", config.getString("prop.string"), "Wrong value");
     }
 
     @Test
@@ -189,20 +188,20 @@ public class TestBaseConfiguration {
         final BigDecimal number = new BigDecimal("123.456");
         final BigDecimal defaultValue = new BigDecimal("654.321");
 
-        assertEquals("Existing key", number, config.getBigDecimal("numberBigD"));
-        assertEquals("Existing key with default value", number, config.getBigDecimal("numberBigD", defaultValue));
-        assertEquals("Missing key with default value", defaultValue, config.getBigDecimal("numberNotInConfig", defaultValue));
+        assertEquals(number, config.getBigDecimal("numberBigD"), "Existing key");
+        assertEquals(number, config.getBigDecimal("numberBigD", defaultValue), "Existing key with default value");
+        assertEquals(defaultValue, config.getBigDecimal("numberNotInConfig", defaultValue), "Missing key with default value");
     }
 
-    @Test(expected = ConversionException.class)
+    @Test
     public void testGetBigDecimalIncompatibleType() {
         config.setProperty("test.empty", "");
-        config.getBigDecimal("test.empty");
+        assertThrows(ConversionException.class, () -> config.getBigDecimal("test.empty"));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testGetBigDecimalUnknown() {
-        config.getBigDecimal("numberNotInConfig");
+        assertThrows(NoSuchElementException.class, () -> config.getBigDecimal("numberNotInConfig"));
     }
 
     @Test
@@ -211,58 +210,58 @@ public class TestBaseConfiguration {
         final BigInteger number = new BigInteger("1234567890");
         final BigInteger defaultValue = new BigInteger("654321");
 
-        assertEquals("Existing key", number, config.getBigInteger("numberBigI"));
-        assertEquals("Existing key with default value", number, config.getBigInteger("numberBigI", defaultValue));
-        assertEquals("Missing key with default value", defaultValue, config.getBigInteger("numberNotInConfig", defaultValue));
+        assertEquals(number, config.getBigInteger("numberBigI"), "Existing key");
+        assertEquals(number, config.getBigInteger("numberBigI", defaultValue), "Existing key with default value");
+        assertEquals(defaultValue, config.getBigInteger("numberNotInConfig", defaultValue), "Missing key with default value");
     }
 
-    @Test(expected = ConversionException.class)
+    @Test
     public void testGetBigIntegerIncompatibleType() {
         config.setProperty("test.empty", "");
-        config.getBigInteger("test.empty");
+        assertThrows(ConversionException.class, () -> config.getBigInteger("test.empty"));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testGetBigIntegerUnknown() {
-        config.getBigInteger("numberNotInConfig");
+        assertThrows(NoSuchElementException.class, () -> config.getBigInteger("numberNotInConfig"));
     }
 
     @Test
     public void testGetBinaryValue() {
         config.setProperty("number", "0b11111111");
-        assertEquals("byte value", (byte) 0xFF, config.getByte("number"));
+        assertEquals((byte) 0xFF, config.getByte("number"), "byte value");
 
         config.setProperty("number", "0b1111111111111111");
-        assertEquals("short value", (short) 0xFFFF, config.getShort("number"));
+        assertEquals((short) 0xFFFF, config.getShort("number"), "short value");
 
         config.setProperty("number", "0b11111111111111111111111111111111");
-        assertEquals("int value", 0xFFFFFFFF, config.getInt("number"));
+        assertEquals(0xFFFFFFFF, config.getInt("number"), "int value");
 
         config.setProperty("number", "0b1111111111111111111111111111111111111111111111111111111111111111");
-        assertEquals("long value", 0xFFFFFFFFFFFFFFFFL, config.getLong("number"));
+        assertEquals(0xFFFFFFFFFFFFFFFFL, config.getLong("number"), "long value");
 
-        assertEquals("long value", 0xFFFFFFFFFFFFFFFFL, config.getBigInteger("number").longValue());
+        assertEquals(0xFFFFFFFFFFFFFFFFL, config.getBigInteger("number").longValue(), "long value");
     }
 
     @Test
     public void testGetBoolean() {
         config.setProperty("boolA", Boolean.TRUE);
         final boolean boolT = true, boolF = false;
-        assertEquals("This returns true", boolT, config.getBoolean("boolA"));
-        assertEquals("This returns true, not the default", boolT, config.getBoolean("boolA", boolF));
-        assertEquals("This returns false(default)", boolF, config.getBoolean("boolNotInConfig", boolF));
-        assertEquals("This returns true(Boolean)", Boolean.valueOf(boolT), config.getBoolean("boolA", Boolean.valueOf(boolF)));
+        assertEquals(boolT, config.getBoolean("boolA"), "This returns true");
+        assertEquals(boolT, config.getBoolean("boolA", boolF), "This returns true, not the default");
+        assertEquals(boolF, config.getBoolean("boolNotInConfig", boolF), "This returns false(default)");
+        assertEquals(Boolean.valueOf(boolT), config.getBoolean("boolA", Boolean.valueOf(boolF)), "This returns true(Boolean)");
     }
 
-    @Test(expected = ConversionException.class)
+    @Test
     public void testGetBooleanIncompatibleType() {
         config.setProperty("test.empty", "");
-        config.getBoolean("test.empty");
+        assertThrows(ConversionException.class, () -> config.getBoolean("test.empty"));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testGetBooleanUnknown() {
-        config.getBoolean("numberNotInConfig");
+        assertThrows(NoSuchElementException.class, () -> config.getBoolean("numberNotInConfig"));
     }
 
     @Test
@@ -270,21 +269,21 @@ public class TestBaseConfiguration {
         config.setProperty("number", "1");
         final byte oneB = 1;
         final byte twoB = 2;
-        assertEquals("This returns 1(byte)", oneB, config.getByte("number"));
-        assertEquals("This returns 1(byte)", oneB, config.getByte("number", twoB));
-        assertEquals("This returns 2(default byte)", twoB, config.getByte("numberNotInConfig", twoB));
-        assertEquals("This returns 1(Byte)", Byte.valueOf(oneB), config.getByte("number", Byte.valueOf("2")));
+        assertEquals(oneB, config.getByte("number"), "This returns 1(byte)");
+        assertEquals(oneB, config.getByte("number", twoB), "This returns 1(byte)");
+        assertEquals(twoB, config.getByte("numberNotInConfig", twoB), "This returns 2(default byte)");
+        assertEquals(Byte.valueOf(oneB), config.getByte("number", Byte.valueOf("2")), "This returns 1(Byte)");
     }
 
-    @Test(expected = ConversionException.class)
+    @Test
     public void testGetByteIncompatibleType() {
         config.setProperty("test.empty", "");
-        config.getByte("test.empty");
+        assertThrows(ConversionException.class, () -> config.getByte("test.empty"));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testGetByteUnknown() {
-        config.getByte("numberNotInConfig");
+        assertThrows(NoSuchElementException.class, () -> config.getByte("numberNotInConfig"));
     }
 
     @Test
@@ -292,21 +291,21 @@ public class TestBaseConfiguration {
         config.setProperty("numberD", "1.0");
         final double oneD = 1;
         final double twoD = 2;
-        assertEquals("This returns 1(double)", oneD, config.getDouble("numberD"), 0);
-        assertEquals("This returns 1(double)", oneD, config.getDouble("numberD", twoD), 0);
-        assertEquals("This returns 2(default double)", twoD, config.getDouble("numberNotInConfig", twoD), 0);
-        assertEquals("This returns 1(Double)", Double.valueOf(oneD), config.getDouble("numberD", Double.valueOf("2")));
+        assertEquals(oneD, config.getDouble("numberD"), 0, "This returns 1(double)");
+        assertEquals(oneD, config.getDouble("numberD", twoD), 0, "This returns 1(double)");
+        assertEquals(twoD, config.getDouble("numberNotInConfig", twoD), 0, "This returns 2(default double)");
+        assertEquals(Double.valueOf(oneD), config.getDouble("numberD", Double.valueOf("2")), "This returns 1(Double)");
     }
 
-    @Test(expected = ConversionException.class)
+    @Test
     public void testGetDoubleIncompatibleType() {
         config.setProperty("test.empty", "");
-        config.getDouble("test.empty");
+        assertThrows(ConversionException.class, () -> config.getDouble("test.empty"));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testGetDoubleUnknown() {
-        config.getDouble("numberNotInConfig");
+        assertThrows(NoSuchElementException.class, () -> config.getDouble("numberNotInConfig"));
     }
 
     @Test
@@ -315,21 +314,21 @@ public class TestBaseConfiguration {
         config.setProperty("durationD", d.toString());
         final Duration oneD = Duration.ofSeconds(1);
         final Duration twoD = Duration.ofSeconds(2);
-        assertEquals("This returns 1(Duration)", oneD, config.getDuration("durationD"));
-        assertEquals("This returns 1(Duration)", oneD, config.getDuration("durationD", twoD));
-        assertEquals("This returns 2(default Duration)", twoD, config.getDuration("numberNotInConfig", twoD));
-        assertEquals("This returns 1(Duration)", oneD, config.getDuration("durationD", twoD));
+        assertEquals(oneD, config.getDuration("durationD"), "This returns 1(Duration)");
+        assertEquals(oneD, config.getDuration("durationD", twoD), "This returns 1(Duration)");
+        assertEquals(twoD, config.getDuration("numberNotInConfig", twoD), "This returns 2(default Duration)");
+        assertEquals(oneD, config.getDuration("durationD", twoD), "This returns 1(Duration)");
     }
 
-    @Test(expected = ConversionException.class)
+    @Test
     public void testGetDurationIncompatibleType() {
         config.setProperty("test.empty", "");
-        config.getDuration("test.empty");
+        assertThrows(ConversionException.class, () -> config.getDuration("test.empty"));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testGetDurationUnknown() {
-        config.getDuration("numberNotInConfig");
+        assertThrows(NoSuchElementException.class, () -> config.getDuration("numberNotInConfig"));
     }
 
     @Test
@@ -339,23 +338,13 @@ public class TestBaseConfiguration {
         final EnumFixture enum1 = EnumFixture.SMALLTALK;
         final EnumFixture defaultValue = EnumFixture.JAVA;
         //
-        assertEquals("Existing key", enum1, config.getEnum("testEnum", EnumFixture.class));
-        assertEquals("Existing key with default value", enum1, config.getEnum("testEnum", EnumFixture.class, defaultValue));
-        assertEquals("Missing key with default value", defaultValue, config.getEnum("stringNotInConfig", EnumFixture.class, defaultValue));
+        assertEquals(enum1, config.getEnum("testEnum", EnumFixture.class), "Existing key");
+        assertEquals(enum1, config.getEnum("testEnum", EnumFixture.class, defaultValue), "Existing key with default value");
+        assertEquals(defaultValue, config.getEnum("stringNotInConfig", EnumFixture.class, defaultValue), "Missing key with default value");
         //
-        try {
-            config.getEnum("testBadEnum", EnumFixture.class);
-            fail("Expected " + ConversionException.class);
-        } catch (final ConversionException e) {
-            // expected
-        }
+        assertThrows(ConversionException.class, () -> config.getEnum("testBadEnum", EnumFixture.class));
         //
-        try {
-            config.getEnum("testBadEnum", EnumFixture.class, defaultValue);
-            fail("Expected " + ConversionException.class);
-        } catch (final ConversionException e) {
-            // expected
-        }
+        assertThrows(ConversionException.class, () -> config.getEnum("testBadEnum", EnumFixture.class, defaultValue));
     }
 
     @Test
@@ -363,38 +352,38 @@ public class TestBaseConfiguration {
         config.setProperty("numberF", "1.0");
         final float oneF = 1;
         final float twoF = 2;
-        assertEquals("This returns 1(float)", oneF, config.getFloat("numberF"), 0);
-        assertEquals("This returns 1(float)", oneF, config.getFloat("numberF", twoF), 0);
-        assertEquals("This returns 2(default float)", twoF, config.getFloat("numberNotInConfig", twoF), 0);
-        assertEquals("This returns 1(Float)", Float.valueOf(oneF), config.getFloat("numberF", Float.valueOf("2")));
+        assertEquals(oneF, config.getFloat("numberF"), 0, "This returns 1(float)");
+        assertEquals(oneF, config.getFloat("numberF", twoF), 0, "This returns 1(float)");
+        assertEquals(twoF, config.getFloat("numberNotInConfig", twoF), 0, "This returns 2(default float)");
+        assertEquals(Float.valueOf(oneF), config.getFloat("numberF", Float.valueOf("2")), "This returns 1(Float)");
     }
 
-    @Test(expected = ConversionException.class)
+    @Test
     public void testGetFloatIncompatibleType() {
         config.setProperty("test.empty", "");
-        config.getFloat("test.empty");
+        assertThrows(ConversionException.class, () -> config.getFloat("test.empty"));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testGetFloatUnknown() {
-        config.getFloat("numberNotInConfig");
+        assertThrows(NoSuchElementException.class, () -> config.getFloat("numberNotInConfig"));
     }
 
     @Test
     public void testGetHexadecimalValue() {
         config.setProperty("number", "0xFF");
-        assertEquals("byte value", (byte) 0xFF, config.getByte("number"));
+        assertEquals((byte) 0xFF, config.getByte("number"), "byte value");
 
         config.setProperty("number", "0xFFFF");
-        assertEquals("short value", (short) 0xFFFF, config.getShort("number"));
+        assertEquals((short) 0xFFFF, config.getShort("number"), "short value");
 
         config.setProperty("number", "0xFFFFFFFF");
-        assertEquals("int value", 0xFFFFFFFF, config.getInt("number"));
+        assertEquals(0xFFFFFFFF, config.getInt("number"), "int value");
 
         config.setProperty("number", "0xFFFFFFFFFFFFFFFF");
-        assertEquals("long value", 0xFFFFFFFFFFFFFFFFL, config.getLong("number"));
+        assertEquals(0xFFFFFFFFFFFFFFFFL, config.getLong("number"), "long value");
 
-        assertEquals("long value", 0xFFFFFFFFFFFFFFFFL, config.getBigInteger("number").longValue());
+        assertEquals(0xFFFFFFFFFFFFFFFFL, config.getBigInteger("number").longValue(), "long value");
     }
 
     @Test
@@ -407,7 +396,7 @@ public class TestBaseConfiguration {
         list.add("1");
         list.add("1");
 
-        ListAssert.assertEquals("'array' property", list, config.getList("array"));
+        assertEquals(list, config.getList("array"), "'array' property");
     }
 
     @Test
@@ -419,25 +408,25 @@ public class TestBaseConfiguration {
         config.addProperty("booleanValue", "${boolean}");
 
         // primitive types
-        assertTrue("boolean interpolation", config.getBoolean("booleanValue"));
-        assertEquals("byte interpolation", 1, config.getByte("value"));
-        assertEquals("short interpolation", 1, config.getShort("value"));
-        assertEquals("int interpolation", 1, config.getInt("value"));
-        assertEquals("long interpolation", 1, config.getLong("value"));
-        assertEquals("float interpolation", 1, config.getFloat("value"), 0);
-        assertEquals("double interpolation", 1, config.getDouble("value"), 0);
+        assertTrue(config.getBoolean("booleanValue"), "boolean interpolation");
+        assertEquals(1, config.getByte("value"), "byte interpolation");
+        assertEquals(1, config.getShort("value"), "short interpolation");
+        assertEquals(1, config.getInt("value"), "int interpolation");
+        assertEquals(1, config.getLong("value"), "long interpolation");
+        assertEquals(1, config.getFloat("value"), 0, "float interpolation");
+        assertEquals(1, config.getDouble("value"), 0, "double interpolation");
 
         // primitive wrappers
-        assertEquals("Boolean interpolation", Boolean.TRUE, config.getBoolean("booleanValue", null));
-        assertEquals("Byte interpolation", Byte.valueOf("1"), config.getByte("value", null));
-        assertEquals("Short interpolation", Short.valueOf("1"), config.getShort("value", null));
-        assertEquals("Integer interpolation", Integer.valueOf("1"), config.getInteger("value", null));
-        assertEquals("Long interpolation", Long.valueOf("1"), config.getLong("value", null));
-        assertEquals("Float interpolation", Float.valueOf("1"), config.getFloat("value", null));
-        assertEquals("Double interpolation", Double.valueOf("1"), config.getDouble("value", null));
+        assertEquals(Boolean.TRUE, config.getBoolean("booleanValue", null), "Boolean interpolation");
+        assertEquals(Byte.valueOf("1"), config.getByte("value", null), "Byte interpolation");
+        assertEquals(Short.valueOf("1"), config.getShort("value", null), "Short interpolation");
+        assertEquals(Integer.valueOf("1"), config.getInteger("value", null), "Integer interpolation");
+        assertEquals(Long.valueOf("1"), config.getLong("value", null), "Long interpolation");
+        assertEquals(Float.valueOf("1"), config.getFloat("value", null), "Float interpolation");
+        assertEquals(Double.valueOf("1"), config.getDouble("value", null), "Double interpolation");
 
-        assertEquals("BigInteger interpolation", new BigInteger("1"), config.getBigInteger("value", null));
-        assertEquals("BigDecimal interpolation", new BigDecimal("1"), config.getBigDecimal("value", null));
+        assertEquals(new BigInteger("1"), config.getBigInteger("value", null), "BigInteger interpolation");
+        assertEquals(new BigDecimal("1"), config.getBigDecimal("value", null), "BigDecimal interpolation");
     }
 
     /**
@@ -453,10 +442,10 @@ public class TestBaseConfiguration {
         config.addProperty("number", "1");
         config.addProperty("number", "2");
         final List<Object> list = config.getList("number");
-        assertNotNull("The list is null", list);
-        assertEquals("List size", 2, list.size());
-        assertTrue("The number 1 is missing from the list", list.contains("1"));
-        assertTrue("The number 2 is missing from the list", list.contains("2"));
+        assertNotNull(list, "The list is null");
+        assertEquals(2, list.size(), "List size");
+        assertTrue(list.contains("1"), "The number 1 is missing from the list");
+        assertTrue(list.contains("2"), "The number 2 is missing from the list");
     }
 
     @Test
@@ -464,32 +453,32 @@ public class TestBaseConfiguration {
         config.setProperty("numberL", "1");
         final long oneL = 1;
         final long twoL = 2;
-        assertEquals("This returns 1(long)", oneL, config.getLong("numberL"));
-        assertEquals("This returns 1(long)", oneL, config.getLong("numberL", twoL));
-        assertEquals("This returns 2(default long)", twoL, config.getLong("numberNotInConfig", twoL));
-        assertEquals("This returns 1(Long)", Long.valueOf(oneL), config.getLong("numberL", Long.valueOf("2")));
+        assertEquals(oneL, config.getLong("numberL"), "This returns 1(long)");
+        assertEquals(oneL, config.getLong("numberL", twoL), "This returns 1(long)");
+        assertEquals(twoL, config.getLong("numberNotInConfig", twoL), "This returns 2(default long)");
+        assertEquals(Long.valueOf(oneL), config.getLong("numberL", Long.valueOf("2")), "This returns 1(Long)");
     }
 
-    @Test(expected = ConversionException.class)
+    @Test
     public void testGetLongIncompatibleTypes() {
         config.setProperty("test.empty", "");
-        config.getLong("test.empty");
+        assertThrows(ConversionException.class, () -> config.getLong("test.empty"));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testGetLongUnknown() {
-        config.getLong("numberNotInConfig");
+        assertThrows(NoSuchElementException.class, () -> config.getLong("numberNotInConfig"));
     }
 
     @Test
     public void testGetProperty() {
         /* should be empty and return null */
-        assertNull("This returns null", config.getProperty("foo"));
+        assertNull(config.getProperty("foo"), "This returns null");
 
         /* add a real value, and get it two different ways */
         config.setProperty("number", "1");
-        assertEquals("This returns '1'", config.getProperty("number"), "1");
-        assertEquals("This returns '1'", config.getString("number"), "1");
+        assertEquals(config.getProperty("number"), "1", "This returns '1'");
+        assertEquals(config.getString("number"), "1", "This returns '1'");
     }
 
     @Test
@@ -497,21 +486,21 @@ public class TestBaseConfiguration {
         config.setProperty("numberS", "1");
         final short oneS = 1;
         final short twoS = 2;
-        assertEquals("This returns 1(short)", oneS, config.getShort("numberS"));
-        assertEquals("This returns 1(short)", oneS, config.getShort("numberS", twoS));
-        assertEquals("This returns 2(default short)", twoS, config.getShort("numberNotInConfig", twoS));
-        assertEquals("This returns 1(Short)", Short.valueOf(oneS), config.getShort("numberS", Short.valueOf("2")));
+        assertEquals(oneS, config.getShort("numberS"), "This returns 1(short)");
+        assertEquals(oneS, config.getShort("numberS", twoS), "This returns 1(short)");
+        assertEquals(twoS, config.getShort("numberNotInConfig", twoS), "This returns 2(default short)");
+        assertEquals(Short.valueOf(oneS), config.getShort("numberS", Short.valueOf("2")), "This returns 1(Short)");
     }
 
-    @Test(expected = ConversionException.class)
+    @Test
     public void testGetShortIncompatibleType() {
         config.setProperty("test.empty", "");
-        config.getShort("test.empty");
+        assertThrows(ConversionException.class, () -> config.getShort("test.empty"));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testGetShortUnknown() {
-        config.getShort("numberNotInConfig");
+        assertThrows(NoSuchElementException.class, () -> config.getShort("numberNotInConfig"));
     }
 
     @Test
@@ -520,9 +509,9 @@ public class TestBaseConfiguration {
         final String string = "The quick brown fox";
         final String defaultValue = "jumps over the lazy dog";
 
-        assertEquals("Existing key", string, config.getString("testString"));
-        assertEquals("Existing key with default value", string, config.getString("testString", defaultValue));
-        assertEquals("Missing key with default value", defaultValue, config.getString("stringNotInConfig", defaultValue));
+        assertEquals(string, config.getString("testString"), "Existing key");
+        assertEquals(string, config.getString("testString", defaultValue), "Existing key with default value");
+        assertEquals(defaultValue, config.getString("stringNotInConfig", defaultValue), "Missing key with default value");
     }
 
     /**
@@ -532,12 +521,12 @@ public class TestBaseConfiguration {
     public void testGetStringForListValue() {
         config.addProperty("number", "1");
         config.addProperty("number", "2");
-        assertEquals("Wrong result", "1", config.getString("number"));
+        assertEquals("1", config.getString("number"), "Wrong result");
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testGetStringUnknown() {
-        config.getString("stringNotInConfig");
+        assertThrows(NoSuchElementException.class, () -> config.getString("stringNotInConfig"));
     }
 
     /**
@@ -554,14 +543,14 @@ public class TestBaseConfiguration {
         defLookups.add(defLookup);
         config.installInterpolator(prefixLookups, defLookups);
         final ConfigurationInterpolator interpolator = config.getInterpolator();
-        assertEquals("Wrong prefix lookups", prefixLookups, interpolator.getLookups());
+        assertEquals(prefixLookups, interpolator.getLookups(), "Wrong prefix lookups");
         final List<Lookup> defLookups2 = interpolator.getDefaultLookups();
-        assertEquals("Wrong number of default lookups", 2, defLookups2.size());
-        assertSame("Wrong default lookup 1", defLookup, defLookups2.get(0));
+        assertEquals(2, defLookups2.size(), "Wrong number of default lookups");
+        assertSame(defLookup, defLookups2.get(0), "Wrong default lookup 1");
         final String var = "testVariable";
         final Object value = 42;
         config.addProperty(var, value);
-        assertEquals("Wrong lookup result", value, defLookups2.get(1).lookup(var));
+        assertEquals(value, defLookups2.get(1).lookup(var), "Wrong lookup result");
     }
 
     /**
@@ -650,7 +639,7 @@ public class TestBaseConfiguration {
     public void testNoInterpolator() {
         config.setProperty("test", "${value}");
         config.setInterpolator(null);
-        assertEquals("Wrong result", "${value}", config.getString("test"));
+        assertEquals("${value}", config.getString("test"), "Wrong result");
     }
 
     /**
@@ -659,22 +648,22 @@ public class TestBaseConfiguration {
     @Test
     public void testNumberConversions() {
         config.setProperty(KEY_NUMBER, Integer.valueOf(42));
-        assertEquals("Wrong int returned", 42, config.getInt(KEY_NUMBER));
-        assertEquals("Wrong long returned", 42L, config.getLong(KEY_NUMBER));
-        assertEquals("Wrong byte returned", (byte) 42, config.getByte(KEY_NUMBER));
-        assertEquals("Wrong float returned", 42.0f, config.getFloat(KEY_NUMBER), 0.01f);
-        assertEquals("Wrong double returned", 42.0, config.getDouble(KEY_NUMBER), 0.001);
+        assertEquals(42, config.getInt(KEY_NUMBER), "Wrong int returned");
+        assertEquals(42L, config.getLong(KEY_NUMBER), "Wrong long returned");
+        assertEquals((byte) 42, config.getByte(KEY_NUMBER), "Wrong byte returned");
+        assertEquals(42.0f, config.getFloat(KEY_NUMBER), 0.01f, "Wrong float returned");
+        assertEquals(42.0, config.getDouble(KEY_NUMBER), 0.001, "Wrong double returned");
 
-        assertEquals("Wrong Long returned", Long.valueOf(42L), config.getLong(KEY_NUMBER, null));
-        assertEquals("Wrong BigInt returned", new BigInteger("42"), config.getBigInteger(KEY_NUMBER));
-        assertEquals("Wrong DigDecimal returned", new BigDecimal("42.0"), config.getBigDecimal(KEY_NUMBER));
+        assertEquals(Long.valueOf(42L), config.getLong(KEY_NUMBER, null), "Wrong Long returned");
+        assertEquals(new BigInteger("42"), config.getBigInteger(KEY_NUMBER), "Wrong BigInt returned");
+        assertEquals(new BigDecimal("42.0"), config.getBigDecimal(KEY_NUMBER), "Wrong DigDecimal returned");
     }
 
     @Test
     public void testPropertyAccess() {
         config.clearProperty("prop.properties");
         config.setProperty("prop.properties", "");
-        assertEquals("This returns an empty Properties object", config.getProperties("prop.properties"), new Properties());
+        assertEquals(config.getProperties("prop.properties"), new Properties(), "This returns an empty Properties object");
         config.clearProperty("prop.properties");
         config.setProperty("prop.properties", "foo=bar, baz=moo, seal=clubber");
 
@@ -682,7 +671,7 @@ public class TestBaseConfiguration {
         p.setProperty("foo", "bar");
         p.setProperty("baz", "moo");
         p.setProperty("seal", "clubber");
-        assertEquals("This returns a filled in Properties object", config.getProperties("prop.properties"), p);
+        assertEquals(config.getProperties("prop.properties"), p, "This returns a filled in Properties object");
     }
 
     /**
@@ -693,7 +682,7 @@ public class TestBaseConfiguration {
         final ConfigurationInterpolator interpolator = EasyMock.createMock(ConfigurationInterpolator.class);
         EasyMock.replay(interpolator);
         config.setInterpolator(interpolator);
-        assertSame("Interpolator not set", interpolator, config.getInterpolator());
+        assertSame(interpolator, config.getInterpolator(), "Interpolator not set");
     }
 
     /**
@@ -705,7 +694,7 @@ public class TestBaseConfiguration {
         for (int i = 0; i < count; i++) {
             config.addProperty("key" + i, "value" + i);
         }
-        assertEquals("Wrong size", count, config.size());
+        assertEquals(count, config.size(), "Wrong size");
     }
 
     @Test
@@ -721,8 +710,8 @@ public class TestBaseConfiguration {
 
         Configuration subEprop = config.subset("prop");
 
-        assertEquals("Returns the full string", prop, subEprop.getString("string"));
-        assertEquals("Wrong list size", 1, subEprop.getList("string").size());
+        assertEquals(prop, subEprop.getString("string"), "Returns the full string");
+        assertEquals(1, subEprop.getList("string").size(), "Wrong list size");
 
         Iterator<String> it = subEprop.getKeys();
         it.next();
@@ -735,6 +724,6 @@ public class TestBaseConfiguration {
 
     @Test
     public void testThrowExceptionOnMissing() {
-        assertTrue("Throw Exception Property is not set!", config.isThrowExceptionOnMissing());
+        assertTrue(config.isThrowExceptionOnMissing(), "Throw Exception Property is not set!");
     }
 }

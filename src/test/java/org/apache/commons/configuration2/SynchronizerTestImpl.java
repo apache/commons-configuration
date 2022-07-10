@@ -16,8 +16,8 @@
  */
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.configuration2.sync.Synchronizer;
 
@@ -104,7 +104,7 @@ public class SynchronizerTestImpl implements Synchronizer {
      * @param expMethods the expected methods
      */
     public void verify(final Methods... expMethods) {
-        assertEquals("Wrong methods invoked", constructExpectedMethods(expMethods), methods.toString());
+        assertEquals(constructExpectedMethods(expMethods), methods.toString(), "Wrong methods invoked");
     }
 
     /**
@@ -113,7 +113,7 @@ public class SynchronizerTestImpl implements Synchronizer {
      * @param expMethods the expected methods
      */
     public void verifyContains(final Methods... expMethods) {
-        assertTrue("Expected methods not found: " + methods, methods.toString().indexOf(constructExpectedMethods(expMethods)) >= 0);
+        assertTrue(methods.toString().indexOf(constructExpectedMethods(expMethods)) >= 0, "Expected methods not found: " + methods);
     }
 
     /**
@@ -122,7 +122,7 @@ public class SynchronizerTestImpl implements Synchronizer {
      * @param expMethods the expected methods
      */
     public void verifyEnd(final Methods... expMethods) {
-        assertTrue("Wrong methods at start: " + methods, methods.toString().endsWith(constructExpectedMethods(expMethods)));
+        assertTrue(methods.toString().endsWith(constructExpectedMethods(expMethods)), "Wrong methods at start: " + methods);
     }
 
     /**
@@ -131,6 +131,6 @@ public class SynchronizerTestImpl implements Synchronizer {
      * @param expMethods the expected methods
      */
     public void verifyStart(final Methods... expMethods) {
-        assertTrue("Wrong methods at start: " + methods, methods.toString().startsWith(constructExpectedMethods(expMethods)));
+        assertTrue(methods.toString().startsWith(constructExpectedMethods(expMethods)), "Wrong methods at start: " + methods);
     }
 }

@@ -16,12 +16,12 @@
  */
 package org.apache.commons.configuration2.tree;
 
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code TrackedNodeHandler}.
@@ -31,7 +31,7 @@ public class TestTrackedNodeHandler {
     /** A test root node. */
     private static ImmutableNode root;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
         root = new ImmutableNode.Builder().name("ROOT").create();
     }
@@ -42,7 +42,7 @@ public class TestTrackedNodeHandler {
     /** The handler to be tested. */
     private TrackedNodeHandler handler;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         parentHandler = EasyMock.createMock(NodeHandler.class);
         handler = new TrackedNodeHandler(root, parentHandler);
@@ -58,7 +58,7 @@ public class TestTrackedNodeHandler {
         EasyMock.expect(parentHandler.getParent(node)).andReturn(parent);
         EasyMock.replay(parentHandler);
 
-        assertSame("Wrong parent node", parent, handler.getParent(node));
+        assertSame(parent, handler.getParent(node), "Wrong parent node");
         EasyMock.verify(parentHandler);
     }
 
@@ -67,6 +67,6 @@ public class TestTrackedNodeHandler {
      */
     @Test
     public void testGetRootNode() {
-        assertSame("Wrong root node", root, handler.getRootNode());
+        assertSame(root, handler.getRootNode(), "Wrong root node");
     }
 }

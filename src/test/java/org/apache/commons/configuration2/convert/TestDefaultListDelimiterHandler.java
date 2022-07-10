@@ -16,15 +16,15 @@
  */
 package org.apache.commons.configuration2.convert;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code DefaultListDelimiterHandler}.
@@ -44,14 +44,14 @@ public class TestDefaultListDelimiterHandler {
      */
     private void checkSplit(final String value, final boolean trim, final String... expectedElements) {
         final Collection<String> elems = handler.split(value, trim);
-        assertEquals("Wrong number of elements", expectedElements.length, elems.size());
+        assertEquals(expectedElements.length, elems.size(), "Wrong number of elements");
         int idx = 0;
         for (final String elem : elems) {
-            assertEquals("Wrong value at " + idx, expectedElements[idx++], elem);
+            assertEquals(expectedElements[idx++], elem, "Wrong value at " + idx);
         }
     }
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         handler = new DefaultListDelimiterHandler(',');
     }
@@ -60,7 +60,7 @@ public class TestDefaultListDelimiterHandler {
     public void testEscapeIntegerList() {
         final ValueTransformer trans = ListDelimiterHandler.NOOP_TRANSFORMER;
         final List<Integer> data = Arrays.asList(1, 2, 3, 4);
-        assertEquals("1,2,3,4", handler.escapeList(data, trans));
+        assertEquals(handler.escapeList(data, trans), "1,2,3,4");
     }
 
     /**
@@ -70,7 +70,7 @@ public class TestDefaultListDelimiterHandler {
     public void testEscapeList() {
         final ValueTransformer trans = value -> String.valueOf(value) + "_trans";
         final List<String> data = Arrays.asList("simple", "Hello,world!", "\\,\\", "end");
-        assertEquals("Wrong result", "simple_trans,Hello\\,world!_trans," + "\\\\\\,\\\\_trans,end_trans", handler.escapeList(data, trans));
+        assertEquals("simple_trans,Hello\\,world!_trans," + "\\\\\\,\\\\_trans,end_trans", handler.escapeList(data, trans), "Wrong result");
     }
 
     /**
@@ -78,7 +78,7 @@ public class TestDefaultListDelimiterHandler {
      */
     @Test
     public void testEscapeStringBackslash() {
-        assertEquals("Wrong result", "C:\\\\Temp\\\\", handler.escapeString("C:\\Temp\\"));
+        assertEquals("C:\\\\Temp\\\\", handler.escapeString("C:\\Temp\\"), "Wrong result");
     }
 
     /**
@@ -86,7 +86,7 @@ public class TestDefaultListDelimiterHandler {
      */
     @Test
     public void testEscapeStringListDelimiter() {
-        assertEquals("Wrong result", "3\\,1415", handler.escapeString("3,1415"));
+        assertEquals("3\\,1415", handler.escapeString("3,1415"), "Wrong result");
     }
 
     /**
@@ -94,7 +94,7 @@ public class TestDefaultListDelimiterHandler {
      */
     @Test
     public void testEscapeStringListDelimiterAndBackslash() {
-        assertEquals("Wrong result", "C:\\\\Temp\\\\\\,\\\\\\\\Share\\,/root", handler.escapeString("C:\\Temp\\,\\\\Share,/root"));
+        assertEquals("C:\\\\Temp\\\\\\,\\\\\\\\Share\\,/root", handler.escapeString("C:\\Temp\\,\\\\Share,/root"), "Wrong result");
     }
 
     /**
@@ -102,7 +102,7 @@ public class TestDefaultListDelimiterHandler {
      */
     @Test
     public void testEscapeStringNoSpecialCharacter() {
-        assertEquals("Wrong result", "test", handler.escapeString("test"));
+        assertEquals("test", handler.escapeString("test"), "Wrong result");
     }
 
     /**
@@ -113,7 +113,7 @@ public class TestDefaultListDelimiterHandler {
         final ValueTransformer trans = EasyMock.createMock(ValueTransformer.class);
         EasyMock.expect(trans.transformValue("a\\,b")).andReturn("ok");
         EasyMock.replay(trans);
-        assertEquals("Wrong result", "ok", handler.escape("a,b", trans));
+        assertEquals("ok", handler.escape("a,b", trans), "Wrong result");
         EasyMock.verify(trans);
     }
 

@@ -17,11 +17,8 @@
 
 package org.apache.commons.configuration2;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.MapType;
-import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -30,8 +27,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.MapType;
 
 /**
  * Unit test for {@link JSONConfiguration} Not ideal: it uses the Jackson JSON parser just like
@@ -43,7 +43,7 @@ public class TestJSONConfiguration {
 
     private JSONConfiguration jsonConfiguration;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         jsonConfiguration = new JSONConfiguration();
         jsonConfiguration.read(new FileReader(testJson));
@@ -74,7 +74,7 @@ public class TestJSONConfiguration {
     @Test
     public void testGetProperty_integer() {
         final Object property = jsonConfiguration.getProperty("int1");
-        assertTrue("property should be an Integer", property instanceof Integer);
+        assertInstanceOf(Integer.class, property, "property should be an Integer");
         assertEquals(37, property);
     }
 
@@ -119,10 +119,10 @@ public class TestJSONConfiguration {
         assertEquals(7, parsed.entrySet().size());
         assertEquals("value1", parsed.get("key1"));
 
-        final Map key2 = (Map) parsed.get("key2");
+        final Map<?, ?> key2 = (Map<? , ?>) parsed.get("key2");
         assertEquals("value23", key2.get("key3"));
 
-        final List<String> key5 = (List<String>) ((Map) parsed.get("key4")).get("key5");
+        final List<?> key5 = (List<?>) ((Map<?, ?>) parsed.get("key4")).get("key5");
         assertEquals(2, key5.size());
         assertEquals("col1", key5.get(0));
         assertEquals("col2", key5.get(1));

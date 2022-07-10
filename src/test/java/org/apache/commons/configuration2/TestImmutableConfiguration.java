@@ -17,11 +17,11 @@
 package org.apache.commons.configuration2;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,7 +31,7 @@ import java.util.Set;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A test class which tests functionality related to immutable configurations.
@@ -75,12 +75,9 @@ public class TestImmutableConfiguration {
         final String property = "nonExistingProperty";
         config.setThrowExceptionOnMissing(true);
         final ImmutableConfiguration ic = ConfigurationUtils.unmodifiableConfiguration(config);
-        try {
-            ic.getString(property);
-            fail("Exception for missing property not thrown!");
-        } catch (final NoSuchElementException e) {
-            assertThat("Wrong message", e.getMessage(), containsString(property));
-        }
+        final NoSuchElementException e = assertThrows(NoSuchElementException.class, () -> ic.getString(property),
+                "Exception for missing property not thrown!");
+        assertThat("Wrong message", e.getMessage(), containsString(property));
     }
 
     /**
@@ -90,8 +87,8 @@ public class TestImmutableConfiguration {
     public void testImmutableSubset() throws ConfigurationException {
         final ImmutableConfiguration conf = ConfigurationUtils.unmodifiableConfiguration(createTestConfig());
         final ImmutableConfiguration subset = conf.immutableSubset("test");
-        assertFalse("No content", subset.isEmpty());
-        assertEquals("Wrong value", 1000000, subset.getLong("long"));
+        assertFalse(subset.isEmpty(), "No content");
+        assertEquals(1000000, subset.getLong("long"), "Wrong value");
     }
 
     /**
@@ -101,22 +98,24 @@ public class TestImmutableConfiguration {
     public void testUnmodifiableConfigurationAccess() throws ConfigurationException {
         final Configuration confOrg = createTestConfig();
         final ImmutableConfiguration conf = ConfigurationUtils.unmodifiableConfiguration(confOrg);
-        assertFalse("Empty", conf.isEmpty());
+        assertFalse(conf.isEmpty(), "Empty");
         for (final Iterator<String> it = confOrg.getKeys(); it.hasNext();) {
             final String key = it.next();
-            assertTrue("Key not contained: " + key, conf.containsKey(key));
-            assertEquals("Wrong value for " + key, confOrg.getProperty(key), conf.getProperty(key));
+            assertTrue(conf.containsKey(key), "Key not contained: " + key);
+            assertEquals(confOrg.getProperty(key), conf.getProperty(key), "Wrong value for " + key);
         }
     }
 
     /**
      * Tests that a cast to a mutable configuration is not possible.
      */
-    @Test(expected = ClassCastException.class)
+    @Test
     public void testUnmodifiableConfigurationCast() throws ConfigurationException {
         final ImmutableConfiguration conf = ConfigurationUtils.unmodifiableConfiguration(createTestConfig());
-        final Configuration mutableConf = (Configuration) conf;
-        mutableConf.clear();
+        assertThrows(ClassCastException.class, () -> {
+            final Configuration mutableConf = (Configuration) conf;
+            mutableConf.clear();
+        });
     }
 
     /**
@@ -126,18 +125,18 @@ public class TestImmutableConfiguration {
     public void testUnmodifiableConfigurationIterate() throws ConfigurationException {
         final Configuration confOrg = createTestConfig();
         final ImmutableConfiguration conf = ConfigurationUtils.unmodifiableConfiguration(confOrg);
-        assertEquals("Different keys", fetchKeys(confOrg.getKeys()), fetchKeys(conf.getKeys()));
+        assertEquals(fetchKeys(confOrg.getKeys()), fetchKeys(conf.getKeys()), "Different keys");
     }
 
     /**
      * Tests that it is not possible to remove keys using the iterator.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testUnmodifiableConfigurationIteratorRemove() throws ConfigurationException {
         final ImmutableConfiguration conf = ConfigurationUtils.unmodifiableConfiguration(createTestConfig());
         final Iterator<String> it = conf.getKeys();
         it.next();
-        it.remove();
+        assertThrows(UnsupportedOperationException.class, it::remove);
     }
 
     /**
@@ -150,15 +149,15 @@ public class TestImmutableConfiguration {
         final String key = "new.property";
         final String value = "new value";
         confOrg.addProperty(key, value);
-        assertEquals("Value not set", value, conf.getString(key));
+        assertEquals(value, conf.getString(key), "Value not set");
     }
 
     /**
      * Tries to create an immutable configuration from a null object.
      */
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testUnmodifiableConfigurationNull() {
-        ConfigurationUtils.unmodifiableConfiguration(null);
+        assertThrows(NullPointerException.class, () -> ConfigurationUtils.unmodifiableConfiguration(null));
     }
 
     /**
@@ -167,13 +166,13 @@ public class TestImmutableConfiguration {
     @Test
     public void testUnmodifiableConfigurationOtherTypes() throws ConfigurationException {
         final ImmutableConfiguration conf = ConfigurationUtils.unmodifiableConfiguration(createTestConfig());
-        assertEquals("Wrong byte", (byte) 10, conf.getByte("test.byte"));
-        assertTrue("Wrong boolean", conf.getBoolean("test.boolean"));
-        assertEquals("Wrong double", 10.25, conf.getDouble("test.double"), .05);
-        assertEquals("Wrong float", 20.25f, conf.getFloat("test.float"), .05);
-        assertEquals("Wrong int", 10, conf.getInt("test.integer"));
-        assertEquals("Wrong long", 1000000L, conf.getLong("test.long"));
-        assertEquals("Wrong short", (short) 1, conf.getShort("test.short"));
+        assertEquals((byte) 10, conf.getByte("test.byte"), "Wrong byte");
+        assertTrue(conf.getBoolean("test.boolean"), "Wrong boolean");
+        assertEquals(10.25, conf.getDouble("test.double"), .05, "Wrong double");
+        assertEquals(20.25f, conf.getFloat("test.float"), .05, "Wrong float");
+        assertEquals(10, conf.getInt("test.integer"), "Wrong int");
+        assertEquals(1000000L, conf.getLong("test.long"), "Wrong long");
+        assertEquals((short) 1, conf.getShort("test.short"), "Wrong short");
     }
 
     /**
@@ -185,7 +184,7 @@ public class TestImmutableConfiguration {
         final String key = "test";
         conf.addProperty(key, Boolean.TRUE);
         final ImmutableHierarchicalConfiguration ihc = ConfigurationUtils.unmodifiableConfiguration(conf);
-        assertTrue("Property not found", ihc.getBoolean(key));
-        assertEquals("Wrong max index", 0, ihc.getMaxIndex(key));
+        assertTrue(ihc.getBoolean(key), "Property not found");
+        assertEquals(0, ihc.getMaxIndex(key), "Wrong max index");
     }
 }

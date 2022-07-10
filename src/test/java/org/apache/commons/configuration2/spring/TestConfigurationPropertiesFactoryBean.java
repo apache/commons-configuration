@@ -16,8 +16,11 @@
  */
 package org.apache.commons.configuration2.spring;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.StringReader;
 import java.util.Properties;
@@ -27,9 +30,8 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.PropertiesConfigurationLayout;
 import org.apache.commons.configuration2.XMLConfiguration;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -40,14 +42,14 @@ public class TestConfigurationPropertiesFactoryBean {
 
     private ConfigurationPropertiesFactoryBean configurationFactory;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         configurationFactory = new ConfigurationPropertiesFactoryBean();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testAfterPropertiesSet() throws Exception {
-        configurationFactory.afterPropertiesSet();
+        assertThrows(IllegalArgumentException.class, configurationFactory::afterPropertiesSet);
     }
 
     @Test
@@ -57,7 +59,7 @@ public class TestConfigurationPropertiesFactoryBean {
 
         final Configuration[] configsGet = configurationFactory.getConfigurations();
         configsGet[0] = null;
-        assertArrayEquals("Configurations were changed", configs, configurationFactory.getConfigurations());
+        assertArrayEquals(configs, configurationFactory.getConfigurations(), "Configurations were changed");
     }
 
     @Test
@@ -67,22 +69,22 @@ public class TestConfigurationPropertiesFactoryBean {
 
         final Resource[] locationsGet = configurationFactory.getLocations();
         locationsGet[1] = null;
-        assertArrayEquals("Locations were changed", locations, configurationFactory.getLocations());
+        assertArrayEquals(locations, configurationFactory.getLocations(), "Locations were changed");
     }
 
     @Test
     public void testGetObject() throws Exception {
         configurationFactory.setConfigurations(new BaseConfiguration());
-        Assert.assertNull(configurationFactory.getObject());
+        assertNull(configurationFactory.getObject());
         configurationFactory.afterPropertiesSet();
-        Assert.assertNotNull(configurationFactory.getObject());
+        assertNotNull(configurationFactory.getObject());
     }
 
     @Test
     public void testInitialConfiguration() throws Exception {
         configurationFactory = new ConfigurationPropertiesFactoryBean(new BaseConfiguration());
         configurationFactory.afterPropertiesSet();
-        Assert.assertNotNull(configurationFactory.getConfiguration());
+        assertNotNull(configurationFactory.getConfiguration());
     }
 
     @Test
@@ -92,7 +94,7 @@ public class TestConfigurationPropertiesFactoryBean {
         configurationFactory.afterPropertiesSet();
 
         final Properties props = configurationFactory.getObject();
-        Assert.assertEquals("duke", props.getProperty("java"));
+        assertEquals("duke", props.getProperty("java"));
     }
 
     @Test
@@ -108,8 +110,8 @@ public class TestConfigurationPropertiesFactoryBean {
         configurationFactory.setConfigurations(one, two);
         configurationFactory.afterPropertiesSet();
         final Properties props = configurationFactory.getObject();
-        Assert.assertEquals("foo", props.getProperty("bar"));
-        Assert.assertEquals("bar", props.getProperty("foo"));
+        assertEquals("foo", props.getProperty("bar"));
+        assertEquals("bar", props.getProperty("foo"));
     }
 
     @Test
@@ -119,7 +121,7 @@ public class TestConfigurationPropertiesFactoryBean {
 
         configurationFactory.setConfigurations(configsUpdate);
         configsUpdate[0] = null;
-        assertArrayEquals("Configurations were changed", configs, configurationFactory.getConfigurations());
+        assertArrayEquals(configs, configurationFactory.getConfigurations(), "Configurations were changed");
     }
 
     @Test
@@ -129,12 +131,12 @@ public class TestConfigurationPropertiesFactoryBean {
 
         configurationFactory.setLocations(locationsUpdate);
         locationsUpdate[0] = new ClassPathResource("other");
-        assertArrayEquals("Locations were changed", locations, configurationFactory.getLocations());
+        assertArrayEquals(locations, configurationFactory.getLocations(), "Locations were changed");
     }
 
     @Test
     public void testSetLocationsNull() {
         configurationFactory.setLocations(null);
-        assertNull("Got locations", configurationFactory.getLocations());
+        assertNull(configurationFactory.getLocations(), "Got locations");
     }
 }

@@ -16,15 +16,15 @@
  */
 package org.apache.commons.configuration2.tree.xpath;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.configuration2.tree.ImmutableNode;
 import org.apache.commons.configuration2.tree.InMemoryNodeModel;
 import org.apache.commons.configuration2.tree.NodeHandler;
 import org.apache.commons.jxpath.JXPathContext;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code XPathContextFactory}.
@@ -34,7 +34,7 @@ public class TestXPathContextFactory {
     /** The factory to be tested. */
     private XPathContextFactory factory;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         factory = new XPathContextFactory();
     }
@@ -48,9 +48,9 @@ public class TestXPathContextFactory {
         final NodeHandler<ImmutableNode> handler = new InMemoryNodeModel(node).getNodeHandler();
         final JXPathContext context = factory.createContext(node, handler);
 
-        assertTrue("No lenient mode", context.isLenient());
+        assertTrue(context.isLenient(), "No lenient mode");
         final ConfigurationNodePointerFactory.NodeWrapper<?> wrapper = (ConfigurationNodePointerFactory.NodeWrapper<?>) context.getContextBean();
-        assertSame("Wrong node", node, wrapper.getNode());
-        assertSame("Wrong handler", handler, wrapper.getNodeHandler());
+        assertSame(node, wrapper.getNode(), "Wrong node");
+        assertSame(handler, wrapper.getNodeHandler(), "Wrong handler");
     }
 }

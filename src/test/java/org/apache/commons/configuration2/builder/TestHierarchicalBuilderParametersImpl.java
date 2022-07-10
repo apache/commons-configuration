@@ -16,16 +16,16 @@
  */
 package org.apache.commons.configuration2.builder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 import java.util.Map;
 
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code HierarchicalBuilderParametersImpl}.
@@ -35,7 +35,7 @@ public class TestHierarchicalBuilderParametersImpl {
     /** The parameters object to be tested. */
     private HierarchicalBuilderParametersImpl params;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         params = new HierarchicalBuilderParametersImpl();
     }
@@ -49,8 +49,8 @@ public class TestHierarchicalBuilderParametersImpl {
         BeanHelper.setProperty(params, "expressionEngine", engine);
         BeanHelper.setProperty(params, "throwExceptionOnMissing", Boolean.TRUE);
         final Map<String, Object> map = params.getParameters();
-        assertSame("Wrong expression engine", engine, map.get("expressionEngine"));
-        assertEquals("Wrong exception flag", Boolean.TRUE, map.get("throwExceptionOnMissing"));
+        assertSame(engine, map.get("expressionEngine"), "Wrong expression engine");
+        assertEquals(Boolean.TRUE, map.get("throwExceptionOnMissing"), "Wrong exception flag");
     }
 
     /**
@@ -66,8 +66,8 @@ public class TestHierarchicalBuilderParametersImpl {
 
         params2.inheritFrom(params.getParameters());
         final Map<String, Object> parameters = params2.getParameters();
-        assertEquals("Exception flag not set", Boolean.TRUE, parameters.get("throwExceptionOnMissing"));
-        assertEquals("Expression engine not set", engine, parameters.get("expressionEngine"));
+        assertEquals(Boolean.TRUE, parameters.get("throwExceptionOnMissing"), "Exception flag not set");
+        assertEquals(engine, parameters.get("expressionEngine"), "Expression engine not set");
     }
 
     /**
@@ -77,7 +77,7 @@ public class TestHierarchicalBuilderParametersImpl {
     public void testSetExpressionEngine() {
         final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
         EasyMock.replay(engine);
-        assertSame("Wrong result", params, params.setExpressionEngine(engine));
-        assertSame("Wrong expression engine", engine, params.getParameters().get("expressionEngine"));
+        assertSame(params, params.setExpressionEngine(engine), "Wrong result");
+        assertSame(engine, params.getParameters().get("expressionEngine"), "Wrong expression engine");
     }
 }

@@ -16,14 +16,15 @@
  */
 package org.apache.commons.configuration2.builder;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Map;
 
 import org.apache.commons.configuration2.ex.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
 import org.easymock.EasyMock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code CopyObjectDefaultHandler}.
@@ -41,13 +42,13 @@ public class TestCopyObjectDefaultHandler {
         final CopyObjectDefaultHandler handler = new CopyObjectDefaultHandler(paramsXml);
         final FileBasedBuilderParametersImpl paramsFb = new FileBasedBuilderParametersImpl();
         handler.initializeDefaults(paramsFb);
-        assertEquals("Wrong refresh", refresh, paramsFb.getReloadingRefreshDelay());
+        assertEquals(refresh, paramsFb.getReloadingRefreshDelay(), "Wrong refresh");
     }
 
     /**
      * Tests whether exceptions during copying are re-thrown as runtime exceptions.
      */
-    @Test(expected = ConfigurationRuntimeException.class)
+    @Test
     public void testInitializeDefaultsException() {
         final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
         final XMLBuilderParametersImpl source = new XMLBuilderParametersImpl();
@@ -60,7 +61,7 @@ public class TestCopyObjectDefaultHandler {
         };
 
         final CopyObjectDefaultHandler handler = new CopyObjectDefaultHandler(source);
-        handler.initializeDefaults(dest);
+        assertThrows(ConfigurationRuntimeException.class, () -> handler.initializeDefaults(dest));
     }
 
     /**
@@ -75,15 +76,15 @@ public class TestCopyObjectDefaultHandler {
         final FileBasedBuilderParametersImpl copy = new FileBasedBuilderParametersImpl();
         handler.initializeDefaults(copy);
         final Map<String, Object> map = copy.getParameters();
-        assertEquals("Wrong exception flag", Boolean.TRUE, map.get("throwExceptionOnMissing"));
-        assertEquals("Wrong refresh", refresh, copy.getReloadingRefreshDelay());
+        assertEquals(Boolean.TRUE, map.get("throwExceptionOnMissing"), "Wrong exception flag");
+        assertEquals(refresh, copy.getReloadingRefreshDelay(), "Wrong refresh");
     }
 
     /**
      * Tries to create an instance without a source object.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInitNull() {
-        new CopyObjectDefaultHandler(null);
+        assertThrows(IllegalArgumentException.class, () -> new CopyObjectDefaultHandler(null));
     }
 }

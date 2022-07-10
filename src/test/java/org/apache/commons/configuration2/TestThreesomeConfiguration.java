@@ -1,5 +1,3 @@
-package org.apache.commons.configuration2;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -17,14 +15,16 @@ package org.apache.commons.configuration2;
  * limitations under the License.
  */
 
-import static org.junit.Assert.assertEquals;
+package org.apache.commons.configuration2;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
 import org.apache.commons.configuration2.convert.LegacyListDelimiterHandler;
 import org.apache.commons.configuration2.io.FileHandler;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * A base class for testing {@link org.apache.commons.configuration2.BaseHierarchicalConfiguration} extensions.
@@ -33,7 +33,7 @@ import org.junit.Test;
 public class TestThreesomeConfiguration {
     protected Configuration conf;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         final PropertiesConfiguration c = new PropertiesConfiguration();
         c.setListDelimiterHandler(new LegacyListDelimiterHandler(','));

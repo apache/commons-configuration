@@ -16,12 +16,13 @@
  */
 package org.apache.commons.configuration2.builder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,7 +31,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.configuration2.ConfigurationDecoder;
-import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.convert.ConversionHandler;
 import org.apache.commons.configuration2.convert.DefaultConversionHandler;
@@ -39,11 +39,12 @@ import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.interpol.InterpolatorSpecification;
 import org.apache.commons.configuration2.interpol.Lookup;
+import org.apache.commons.configuration2.io.ConfigurationLogger;
 import org.apache.commons.configuration2.sync.ReadWriteSynchronizer;
 import org.apache.commons.configuration2.sync.Synchronizer;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code BasicBuilderParameters}.
@@ -53,7 +54,7 @@ public class TestBasicBuilderParameters {
     /** The instance to be tested. */
     private BasicBuilderParameters params;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         params = new BasicBuilderParameters();
     }
@@ -70,8 +71,8 @@ public class TestBasicBuilderParameters {
         Collection<?> defLooks = (Collection<?>) params.getParameters().get("defaultLookups");
         defLooks.clear();
         defLooks = (Collection<?>) clone.getParameters().get("defaultLookups");
-        assertEquals("Wrong number of default lookups", 1, defLooks.size());
-        assertTrue("Wrong default lookup", defLooks.contains(look));
+        assertEquals(1, defLooks.size(), "Wrong number of default lookups");
+        assertTrue(defLooks.contains(look), "Wrong default lookup");
     }
 
     /**
@@ -86,8 +87,8 @@ public class TestBasicBuilderParameters {
         Map<?, ?> map = (Map<?, ?>) params.getParameters().get("prefixLookups");
         map.clear();
         map = (Map<?, ?>) clone.getParameters().get("prefixLookups");
-        assertEquals("Wrong number of lookups", 1, map.size());
-        assertSame("Wrong lookup", look, map.get("test"));
+        assertEquals(1, map.size(), "Wrong number of lookups");
+        assertSame(look, map.get("test"), "Wrong lookup");
     }
 
     /**
@@ -107,10 +108,10 @@ public class TestBasicBuilderParameters {
         params.setListDelimiterHandler(handler2);
         params.setThrowExceptionOnMissing(false);
         final Map<String, Object> map = clone.getParameters();
-        assertSame("Wrong logger", log, map.get("logger"));
-        assertSame("Wrong interpolator", ci, map.get("interpolator"));
-        assertEquals("Wrong list delimiter handler", handler1, map.get("listDelimiterHandler"));
-        assertEquals("Wrong exception flag", Boolean.TRUE, map.get("throwExceptionOnMissing"));
+        assertSame(log, map.get("logger"), "Wrong logger");
+        assertSame(ci, map.get("interpolator"), "Wrong interpolator");
+        assertEquals(handler1, map.get("listDelimiterHandler"), "Wrong list delimiter handler");
+        assertEquals(Boolean.TRUE, map.get("throwExceptionOnMissing"), "Wrong exception flag");
     }
 
     /**
@@ -119,7 +120,7 @@ public class TestBasicBuilderParameters {
     @Test
     public void testDefaults() {
         final Map<String, Object> paramMap = params.getParameters();
-        assertTrue("Got parameters", paramMap.isEmpty());
+        assertTrue(paramMap.isEmpty(), "Got parameters");
     }
 
     /**
@@ -127,15 +128,15 @@ public class TestBasicBuilderParameters {
      */
     @Test
     public void testFetchBeanHelperNoSet() {
-        assertNull("Got a BeanHelper", BasicBuilderParameters.fetchBeanHelper(params.getParameters()));
+        assertNull(BasicBuilderParameters.fetchBeanHelper(params.getParameters()), "Got a BeanHelper");
     }
 
     /**
      * Tries to invoke fetchBeanHelper() on a null map.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testFetchBeanHelperNullMap() {
-        BasicBuilderParameters.fetchBeanHelper(null);
+        assertThrows(IllegalArgumentException.class, () -> BasicBuilderParameters.fetchBeanHelper(null));
     }
 
     /**
@@ -156,10 +157,10 @@ public class TestBasicBuilderParameters {
         params.setDefaultLookups(defLookups);
         final Map<String, Object> map = params.getParameters();
         final InterpolatorSpecification spec = BasicBuilderParameters.fetchInterpolatorSpecification(map);
-        assertSame("Wrong parent", parent, spec.getParentInterpolator());
-        assertEquals("Wrong prefix lookups", prefixLookups, spec.getPrefixLookups());
-        assertEquals("Wrong number of default lookups", 1, spec.getDefaultLookups().size());
-        assertTrue("Wrong default lookup", spec.getDefaultLookups().contains(l3));
+        assertSame(parent, spec.getParentInterpolator(), "Wrong parent");
+        assertEquals(prefixLookups, spec.getPrefixLookups(), "Wrong prefix lookups");
+        assertEquals(1, spec.getDefaultLookups().size(), "Wrong number of default lookups");
+        assertTrue(spec.getDefaultLookups().contains(l3), "Wrong default lookup");
     }
 
     /**
@@ -168,60 +169,60 @@ public class TestBasicBuilderParameters {
     @Test
     public void testFetchInterpolatorSpecificationEmpty() {
         final InterpolatorSpecification spec = BasicBuilderParameters.fetchInterpolatorSpecification(params.getParameters());
-        assertNull("Got an interpolator", spec.getInterpolator());
-        assertTrue("Got lookups", spec.getDefaultLookups().isEmpty());
+        assertNull(spec.getInterpolator(), "Got an interpolator");
+        assertTrue(spec.getDefaultLookups().isEmpty(), "Got lookups");
     }
 
     /**
      * Tests fetchInterpolatorSpecification() if the collection with default lookups contains an invalid value.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testFetchInterpolatorSpecificationInvalidCollectionValue() {
         final Map<String, Object> map = new HashMap<>();
         map.put("defaultLookups", Collections.singleton("not a lookup"));
-        BasicBuilderParameters.fetchInterpolatorSpecification(map);
+        assertThrows(IllegalArgumentException.class, () -> BasicBuilderParameters.fetchInterpolatorSpecification(map));
     }
 
     /**
      * Tests fetchInterpolatorSpecification() if the map contains a property of an invalid data type.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testFetchInterpolatorSpecificationInvalidDataType() {
         final Map<String, Object> map = new HashMap<>();
         map.put("interpolator", this);
-        BasicBuilderParameters.fetchInterpolatorSpecification(map);
+        assertThrows(IllegalArgumentException.class, () -> BasicBuilderParameters.fetchInterpolatorSpecification(map));
     }
 
     /**
      * Tests fetchInterpolatorSpecification() if the map with prefix lookups contains an invalid key.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testFetchInterpolatorSpecificationInvalidMapKey() {
         final Map<String, Object> map = new HashMap<>();
         final Map<Object, Object> prefix = new HashMap<>();
         prefix.put(42, EasyMock.createMock(Lookup.class));
         map.put("prefixLookups", prefix);
-        BasicBuilderParameters.fetchInterpolatorSpecification(map);
+        assertThrows(IllegalArgumentException.class, () -> BasicBuilderParameters.fetchInterpolatorSpecification(map));
     }
 
     /**
      * Tests fetchInterpolatorSpecification() if the map with prefix lookups contains an invalid value.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testFetchInterpolatorSpecificationInvalidMapValue() {
         final Map<String, Object> map = new HashMap<>();
         final Map<Object, Object> prefix = new HashMap<>();
         prefix.put("test", this);
         map.put("prefixLookups", prefix);
-        BasicBuilderParameters.fetchInterpolatorSpecification(map);
+        assertThrows(IllegalArgumentException.class, () -> BasicBuilderParameters.fetchInterpolatorSpecification(map));
     }
 
     /**
      * Tries to obtain an {@code InterpolatorSpecification} from a null map.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testFetchInterpolatorSpecificationNull() {
-        BasicBuilderParameters.fetchInterpolatorSpecification(null);
+        assertThrows(IllegalArgumentException.class, () -> BasicBuilderParameters.fetchInterpolatorSpecification(null));
     }
 
     /**
@@ -232,8 +233,8 @@ public class TestBasicBuilderParameters {
         final ConfigurationInterpolator ci = EasyMock.createMock(ConfigurationInterpolator.class);
         params.setInterpolator(ci);
         final InterpolatorSpecification spec = BasicBuilderParameters.fetchInterpolatorSpecification(params.getParameters());
-        assertSame("Wrong interpolator", ci, spec.getInterpolator());
-        assertNull("Got a parent", spec.getParentInterpolator());
+        assertSame(ci, spec.getInterpolator(), "Wrong interpolator");
+        assertNull(spec.getParentInterpolator(), "Got a parent");
     }
 
     /**
@@ -245,8 +246,8 @@ public class TestBasicBuilderParameters {
         final Map<String, Object> mapCopy = new HashMap<>(map1);
         map1.put("otherProperty", "value");
         final Map<String, Object> map2 = params.getParameters();
-        assertNotSame("Same map returned", map1, map2);
-        assertEquals("Different properties", mapCopy, map2);
+        assertNotSame(map1, map2, "Same map returned");
+        assertEquals(mapCopy, map2, "Different properties");
     }
 
     /**
@@ -266,21 +267,21 @@ public class TestBasicBuilderParameters {
 
         p2.inheritFrom(params.getParameters());
         final Map<String, Object> parameters = p2.getParameters();
-        assertEquals("Bean helper not set", beanHelper, parameters.get("config-BeanHelper"));
-        assertEquals("Decoder not set", decoder, parameters.get("configurationDecoder"));
-        assertEquals("Conversion handler not set", conversionHandler, parameters.get("conversionHandler"));
-        assertEquals("Delimiter handler not set", listDelimiterHandler, parameters.get("listDelimiterHandler"));
-        assertEquals("Logger not set", logger, parameters.get("logger"));
-        assertEquals("Synchronizer not set", synchronizer, parameters.get("synchronizer"));
-        assertEquals("Exception flag not set", Boolean.TRUE, parameters.get("throwExceptionOnMissing"));
+        assertEquals(beanHelper, parameters.get("config-BeanHelper"), "Bean helper not set");
+        assertEquals(decoder, parameters.get("configurationDecoder"), "Decoder not set");
+        assertEquals(conversionHandler, parameters.get("conversionHandler"), "Conversion handler not set");
+        assertEquals(listDelimiterHandler, parameters.get("listDelimiterHandler"), "Delimiter handler not set");
+        assertEquals(logger, parameters.get("logger"), "Logger not set");
+        assertEquals(synchronizer, parameters.get("synchronizer"), "Synchronizer not set");
+        assertEquals(Boolean.TRUE, parameters.get("throwExceptionOnMissing"), "Exception flag not set");
     }
 
     /**
      * Tests whether null input is handled by inheritFrom().
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInheritFromNull() {
-        params.inheritFrom(null);
+        assertThrows(IllegalArgumentException.class, () -> params.inheritFrom(null));
     }
 
     /**
@@ -292,8 +293,8 @@ public class TestBasicBuilderParameters {
 
         p2.inheritFrom(Collections.<String, Object>emptyMap());
         final Map<String, Object> parameters = p2.getParameters();
-        assertEquals("Wrong number of properties", 1, parameters.size());
-        assertEquals("Exception flag not set", Boolean.TRUE, parameters.get("throwExceptionOnMissing"));
+        assertEquals(1, parameters.size(), "Wrong number of properties");
+        assertEquals(Boolean.TRUE, parameters.get("throwExceptionOnMissing"), "Exception flag not set");
     }
 
     /**
@@ -314,18 +315,18 @@ public class TestBasicBuilderParameters {
         params.setListDelimiterHandler(handler2);
         params.merge(p);
         final Map<String, Object> map = params.getParameters();
-        assertEquals("Wrong list delimiter handler", handler2, map.get("listDelimiterHandler"));
-        assertEquals("Wrong exception flag", Boolean.TRUE, map.get("throwExceptionOnMissing"));
-        assertEquals("Wrong other property", "test", map.get("other"));
-        assertFalse("Reserved property was copied", map.containsKey(BuilderParameters.RESERVED_PARAMETER_PREFIX + "test"));
+        assertEquals(handler2, map.get("listDelimiterHandler"), "Wrong list delimiter handler");
+        assertEquals(Boolean.TRUE, map.get("throwExceptionOnMissing"), "Wrong exception flag");
+        assertEquals("test", map.get("other"), "Wrong other property");
+        assertFalse(map.containsKey(BuilderParameters.RESERVED_PARAMETER_PREFIX + "test"), "Reserved property was copied");
     }
 
     /**
      * Tries a merge with a null object.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testMergeNull() {
-        params.merge(null);
+        assertThrows(IllegalArgumentException.class, () -> params.merge(null));
     }
 
     /**
@@ -334,8 +335,8 @@ public class TestBasicBuilderParameters {
     @Test
     public void testSetBeanHelper() {
         final BeanHelper helper = new BeanHelper();
-        assertSame("Wrong result", params, params.setBeanHelper(helper));
-        assertSame("BeanHelper not set", helper, BasicBuilderParameters.fetchBeanHelper(params.getParameters()));
+        assertSame(params, params.setBeanHelper(helper), "Wrong result");
+        assertSame(helper, BasicBuilderParameters.fetchBeanHelper(params.getParameters()), "BeanHelper not set");
     }
 
     /**
@@ -345,8 +346,8 @@ public class TestBasicBuilderParameters {
     public void testSetConfigurationDecoder() {
         final ConfigurationDecoder decoder = EasyMock.createMock(ConfigurationDecoder.class);
         EasyMock.replay(decoder);
-        assertSame("Wrong result", params, params.setConfigurationDecoder(decoder));
-        assertSame("Decoder not set", decoder, params.getParameters().get("configurationDecoder"));
+        assertSame(params, params.setConfigurationDecoder(decoder), "Wrong result");
+        assertSame(decoder, params.getParameters().get("configurationDecoder"), "Decoder not set");
     }
 
     /**
@@ -356,8 +357,8 @@ public class TestBasicBuilderParameters {
     public void testSetConversionHandler() {
         final ConversionHandler handler = EasyMock.createMock(ConversionHandler.class);
         EasyMock.replay(handler);
-        assertSame("Wrong result", params, params.setConversionHandler(handler));
-        assertSame("ConversionHandler not set", handler, params.getParameters().get("conversionHandler"));
+        assertSame(params, params.setConversionHandler(handler), "Wrong result");
+        assertSame(handler, params.getParameters().get("conversionHandler"), "ConversionHandler not set");
     }
 
     /**
@@ -367,13 +368,13 @@ public class TestBasicBuilderParameters {
     public void testSetDefaultLookups() {
         final Lookup look = EasyMock.createMock(Lookup.class);
         final Collection<Lookup> looks = Collections.singleton(look);
-        assertSame("Wrong result", params, params.setDefaultLookups(looks));
+        assertSame(params, params.setDefaultLookups(looks), "Wrong result");
         final Collection<?> col = (Collection<?>) params.getParameters().get("defaultLookups");
-        assertNotSame("No copy was created", col, looks);
-        assertEquals("Wrong number of lookups", 1, col.size());
-        assertSame("Wrong lookup", look, col.iterator().next());
+        assertNotSame(col, looks, "No copy was created");
+        assertEquals(1, col.size(), "Wrong number of lookups");
+        assertSame(look, col.iterator().next(), "Wrong lookup");
         final Collection<?> col2 = (Collection<?>) params.getParameters().get("defaultLookups");
-        assertNotSame("No copy in parameters", col, col2);
+        assertNotSame(col, col2, "No copy in parameters");
     }
 
     /**
@@ -383,7 +384,7 @@ public class TestBasicBuilderParameters {
     public void testSetDefaultLookupsNull() {
         params.setDefaultLookups(new ArrayList<>());
         params.setDefaultLookups(null);
-        assertFalse("Found key", params.getParameters().containsKey("defaultLookups"));
+        assertFalse(params.getParameters().containsKey("defaultLookups"), "Found key");
     }
 
     /**
@@ -393,8 +394,8 @@ public class TestBasicBuilderParameters {
     public void testSetInterpolator() {
         final ConfigurationInterpolator ci = EasyMock.createMock(ConfigurationInterpolator.class);
         EasyMock.replay(ci);
-        assertSame("Wrong result", params, params.setInterpolator(ci));
-        assertSame("Wrong interpolator", ci, params.getParameters().get("interpolator"));
+        assertSame(params, params.setInterpolator(ci), "Wrong result");
+        assertSame(ci, params.getParameters().get("interpolator"), "Wrong interpolator");
     }
 
     /**
@@ -404,8 +405,8 @@ public class TestBasicBuilderParameters {
     public void testSetListDelimiter() {
         final ListDelimiterHandler handler = EasyMock.createMock(ListDelimiterHandler.class);
         EasyMock.replay(handler);
-        assertSame("Wrong result", params, params.setListDelimiterHandler(handler));
-        assertSame("Wrong delimiter handler", handler, params.getParameters().get("listDelimiterHandler"));
+        assertSame(params, params.setListDelimiterHandler(handler), "Wrong result");
+        assertSame(handler, params.getParameters().get("listDelimiterHandler"), "Wrong delimiter handler");
     }
 
     /**
@@ -415,8 +416,8 @@ public class TestBasicBuilderParameters {
     public void testSetLogger() {
         final ConfigurationLogger log = EasyMock.createMock(ConfigurationLogger.class);
         EasyMock.replay(log);
-        assertSame("Wrong result", params, params.setLogger(log));
-        assertSame("Wrong logger parameter", log, params.getParameters().get("logger"));
+        assertSame(params, params.setLogger(log), "Wrong result");
+        assertSame(log, params.getParameters().get("logger"), "Wrong logger parameter");
     }
 
     /**
@@ -433,9 +434,9 @@ public class TestBasicBuilderParameters {
         params.setInterpolator(ci);
         params.setParentInterpolator(parent);
         final Map<String, Object> map = params.getParameters();
-        assertFalse("Got prefix lookups", map.containsKey("prefixLookups"));
-        assertFalse("Got default lookups", map.containsKey("defaultLookups"));
-        assertFalse("Got a parent interpolator", map.containsKey("parentInterpolator"));
+        assertFalse(map.containsKey("prefixLookups"), "Got prefix lookups");
+        assertFalse(map.containsKey("defaultLookups"), "Got default lookups");
+        assertFalse(map.containsKey("parentInterpolator"), "Got a parent interpolator");
     }
 
     /**
@@ -445,8 +446,8 @@ public class TestBasicBuilderParameters {
     public void testSetParentInterpolator() {
         final ConfigurationInterpolator parent = EasyMock.createMock(ConfigurationInterpolator.class);
         EasyMock.replay(parent);
-        assertSame("Wrong result", params, params.setParentInterpolator(parent));
-        assertSame("Wrong parent", parent, params.getParameters().get("parentInterpolator"));
+        assertSame(params, params.setParentInterpolator(parent), "Wrong result");
+        assertSame(parent, params.getParameters().get("parentInterpolator"), "Wrong parent");
     }
 
     /**
@@ -456,13 +457,13 @@ public class TestBasicBuilderParameters {
     public void testSetPrefixLookups() {
         final Lookup look = EasyMock.createMock(Lookup.class);
         final Map<String, Lookup> lookups = Collections.singletonMap("test", look);
-        assertSame("Wrong result", params, params.setPrefixLookups(lookups));
+        assertSame(params, params.setPrefixLookups(lookups), "Wrong result");
         final Map<?, ?> map = (Map<?, ?>) params.getParameters().get("prefixLookups");
-        assertNotSame("No copy was created", lookups, map);
-        assertEquals("Wrong lookup", look, map.get("test"));
-        assertEquals("Wrong number of lookups", 1, map.size());
+        assertNotSame(lookups, map, "No copy was created");
+        assertEquals(look, map.get("test"), "Wrong lookup");
+        assertEquals(1, map.size(), "Wrong number of lookups");
         final Map<?, ?> map2 = (Map<?, ?>) params.getParameters().get("prefixLookups");
-        assertNotSame("No copy in parameters", map, map2);
+        assertNotSame(map, map2, "No copy in parameters");
     }
 
     /**
@@ -472,7 +473,7 @@ public class TestBasicBuilderParameters {
     public void testSetPrefixLookupsNull() {
         params.setPrefixLookups(new HashMap<>());
         params.setPrefixLookups(null);
-        assertFalse("Found key", params.getParameters().containsKey("prefixLookups"));
+        assertFalse(params.getParameters().containsKey("prefixLookups"), "Found key");
     }
 
     /**
@@ -482,8 +483,8 @@ public class TestBasicBuilderParameters {
     public void testSetSynchronizer() {
         final Synchronizer sync = EasyMock.createMock(Synchronizer.class);
         EasyMock.replay(sync);
-        assertSame("Wrong result", params, params.setSynchronizer(sync));
-        assertSame("Synchronizer not set", sync, params.getParameters().get("synchronizer"));
+        assertSame(params, params.setSynchronizer(sync), "Wrong result");
+        assertSame(sync, params.getParameters().get("synchronizer"), "Synchronizer not set");
     }
 
     /**
@@ -491,7 +492,7 @@ public class TestBasicBuilderParameters {
      */
     @Test
     public void testSetThrowExceptionOnMissing() {
-        assertSame("Wrong result", params, params.setThrowExceptionOnMissing(true));
-        assertEquals("Wrong flag value", Boolean.TRUE, params.getParameters().get("throwExceptionOnMissing"));
+        assertSame(params, params.setThrowExceptionOnMissing(true), "Wrong result");
+        assertEquals(Boolean.TRUE, params.getParameters().get("throwExceptionOnMissing"), "Wrong flag value");
     }
 }

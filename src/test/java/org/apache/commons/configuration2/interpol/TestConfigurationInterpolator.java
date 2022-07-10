@@ -16,14 +16,14 @@
  */
 package org.apache.commons.configuration2.interpol;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,8 +41,8 @@ import java.util.function.Function;
 
 import org.apache.commons.text.lookup.StringLookupFactory;
 import org.easymock.EasyMock;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for ConfigurationInterpolator.
@@ -89,7 +89,7 @@ public class TestConfigurationInterpolator {
     /** Stores the object to be tested. */
     private ConfigurationInterpolator interpolator;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         interpolator = new ConfigurationInterpolator();
     }
@@ -104,8 +104,8 @@ public class TestConfigurationInterpolator {
         lookups.add(setUpTestLookup("test", "value"));
         interpolator.addDefaultLookups(lookups);
         final List<Lookup> lookups2 = interpolator.getDefaultLookups();
-        assertEquals("Wrong number of default lookups", 2, lookups2.size());
-        assertTrue("Wrong content", lookups2.containsAll(lookups));
+        assertEquals(2, lookups2.size(), "Wrong number of default lookups");
+        assertTrue(lookups2.containsAll(lookups), "Wrong content");
     }
 
     /**
@@ -114,7 +114,7 @@ public class TestConfigurationInterpolator {
     @Test
     public void testAddDefaultLookupsNull() {
         interpolator.addDefaultLookups(null);
-        assertTrue("Got default lookups", interpolator.getDefaultLookups().isEmpty());
+        assertTrue(interpolator.getDefaultLookups().isEmpty(), "Got default lookups");
     }
 
     /**
@@ -125,9 +125,9 @@ public class TestConfigurationInterpolator {
         final Lookup lookup = EasyMock.createMock(Lookup.class);
         EasyMock.replay(lookup);
         interpolator.registerLookup(TEST_PREFIX, lookup);
-        assertTrue("Derigstration not successfull", interpolator.deregisterLookup(TEST_PREFIX));
-        assertFalse("Deregistered prefix still contained", interpolator.prefixSet().contains(TEST_PREFIX));
-        assertTrue("Lookups not empty", interpolator.getLookups().isEmpty());
+        assertTrue(interpolator.deregisterLookup(TEST_PREFIX), "Derigstration not successfull");
+        assertFalse(interpolator.prefixSet().contains(TEST_PREFIX), "Deregistered prefix still contained");
+        assertTrue(interpolator.getLookups().isEmpty(), "Lookups not empty");
     }
 
     /**
@@ -135,7 +135,7 @@ public class TestConfigurationInterpolator {
      */
     @Test
     public void testDeregisterLookupNonExisting() {
-        assertFalse("Could deregister unknown lookup", interpolator.deregisterLookup(TEST_PREFIX));
+        assertFalse(interpolator.deregisterLookup(TEST_PREFIX), "Could deregister unknown lookup");
     }
 
     /**
@@ -143,14 +143,14 @@ public class TestConfigurationInterpolator {
      */
     @Test
     public void testEnableSubstitutionInVariables() {
-        assertFalse("Variable substitution enabled", interpolator.isEnableSubstitutionInVariables());
+        assertFalse(interpolator.isEnableSubstitutionInVariables(), "Variable substitution enabled");
         interpolator.addDefaultLookup(setUpTestLookup("java.version", "1.4"));
         interpolator.addDefaultLookup(setUpTestLookup("jre-1.4", "C:\\java\\1.4"));
         final String var = "${jre-${java.version}}";
-        assertEquals("Wrong result (1)", var, interpolator.interpolate(var));
+        assertEquals(var, interpolator.interpolate(var), "Wrong result (1)");
         interpolator.setEnableSubstitutionInVariables(true);
-        assertTrue("Variable substitution not enabled", interpolator.isEnableSubstitutionInVariables());
-        assertEquals("Wrong result (2)", "C:\\java\\1.4", interpolator.interpolate(var));
+        assertTrue(interpolator.isEnableSubstitutionInVariables(), "Variable substitution not enabled");
+        assertEquals("C:\\java\\1.4", interpolator.interpolate(var), "Wrong result (2)");
     }
 
     /**
@@ -162,7 +162,7 @@ public class TestConfigurationInterpolator {
         EasyMock.replay(ci);
         final InterpolatorSpecification spec = new InterpolatorSpecification.Builder().withDefaultLookup(EasyMock.createMock(Lookup.class))
             .withParentInterpolator(interpolator).withInterpolator(ci).create();
-        assertSame("Wrong result", ci, ConfigurationInterpolator.fromSpecification(spec));
+        assertSame(ci, ConfigurationInterpolator.fromSpecification(spec), "Wrong result");
     }
 
     /**
@@ -181,20 +181,20 @@ public class TestConfigurationInterpolator {
             .withStringConverter(stringConverter)
             .create();
         final ConfigurationInterpolator ci = ConfigurationInterpolator.fromSpecification(spec);
-        assertEquals("Wrong number of default lookups", 1, ci.getDefaultLookups().size());
-        assertTrue("Wrong default lookup", ci.getDefaultLookups().contains(defLookup));
-        assertEquals("Wrong number of prefix lookups", 1, ci.getLookups().size());
-        assertSame("Wrong prefix lookup", preLookup, ci.getLookups().get("p"));
-        assertSame("Wrong parent", interpolator, ci.getParentInterpolator());
-        assertSame("Wrong string converter", stringConverter, ci.getStringConverter());
+        assertEquals(1, ci.getDefaultLookups().size(), "Wrong number of default lookups");
+        assertTrue(ci.getDefaultLookups().contains(defLookup), "Wrong default lookup");
+        assertEquals(1, ci.getLookups().size(), "Wrong number of prefix lookups");
+        assertSame(preLookup, ci.getLookups().get("p"), "Wrong prefix lookup");
+        assertSame(interpolator, ci.getParentInterpolator(), "Wrong parent");
+        assertSame(stringConverter, ci.getStringConverter(), "Wrong string converter");
     }
 
     /**
      * Tries to obtain an instance from a null specification.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testFromSpecificationNull() {
-        ConfigurationInterpolator.fromSpecification(null);
+        assertThrows(IllegalArgumentException.class, () -> ConfigurationInterpolator.fromSpecification(null));
     }
 
     /**
@@ -204,7 +204,7 @@ public class TestConfigurationInterpolator {
     public void testGetDefaultLookupsModify() {
         final List<Lookup> lookups = interpolator.getDefaultLookups();
         lookups.add(setUpTestLookup());
-        assertTrue("List was modified", interpolator.getDefaultLookups().isEmpty());
+        assertTrue(interpolator.getDefaultLookups().isEmpty(), "List was modified");
     }
 
     /**
@@ -221,22 +221,24 @@ public class TestConfigurationInterpolator {
 
         final Map<String, Lookup> lookups = ConfigurationInterpolator.getDefaultPrefixLookups();
 
-        assertEquals("Wrong number of lookups", included.size(), lookups.size());
+        assertEquals(included.size(), lookups.size(), "Wrong number of lookups");
         for (final DefaultLookups l : included) {
-            assertSame("Wrong entry for " + l, l.getLookup(), lookups.get(l.getPrefix()));
+            assertSame(l.getLookup(), lookups.get(l.getPrefix()), "Wrong entry for " + l);
         }
 
         for (final DefaultLookups l : excluded) {
-            assertNull("Unexpected entry for " + l, lookups.get(l.getPrefix()));
+            assertNull(lookups.get(l.getPrefix()), "Unexpected entry for " + l);
         }
     }
 
     /**
      * Tests that the map with default lookups cannot be modified.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testGetDefaultPrefixLookupsModify() {
-        ConfigurationInterpolator.getDefaultPrefixLookups().put("test", EasyMock.createMock(Lookup.class));
+        final Map<String, Lookup> lookups = ConfigurationInterpolator.getDefaultPrefixLookups();
+        final Lookup lookup = EasyMock.createMock(Lookup.class);
+        assertThrows(UnsupportedOperationException.class, () -> lookups.put("test", lookup));
     }
 
     /**
@@ -246,7 +248,7 @@ public class TestConfigurationInterpolator {
     public void testGetLookupsModify() {
         final Map<String, Lookup> lookups = interpolator.getLookups();
         lookups.put(TEST_PREFIX, setUpTestLookup());
-        assertTrue("Map was modified", interpolator.getLookups().isEmpty());
+        assertTrue(interpolator.getLookups().isEmpty(), "Map was modified");
     }
 
     /**
@@ -258,8 +260,8 @@ public class TestConfigurationInterpolator {
         interpolator.addDefaultLookup(setUpTestLookup("x", Arrays.asList(1, 2)));
         interpolator.addDefaultLookup(setUpTestLookup("y", "abc"));
         interpolator.setStringConverter(stringConverter);
-        assertSame("Wrong string converter", stringConverter, interpolator.getStringConverter());
-        assertEquals("Wrong value", "'abc': '[1, 2]'", interpolator.interpolate("${y}: ${x}"));
+        assertSame(stringConverter, interpolator.getStringConverter(), "Wrong string converter");
+        assertEquals("'abc': '[1, 2]'", interpolator.interpolate("${y}: ${x}"), "Wrong value");
     }
 
     /**
@@ -272,8 +274,8 @@ public class TestConfigurationInterpolator {
         interpolator.addDefaultLookup(setUpTestLookup("y", "abc"));
         interpolator.setStringConverter(stringConverter);
         interpolator.setStringConverter(null);
-        assertNotSame("Wrong string converter", stringConverter, interpolator.getStringConverter());
-        assertEquals("Wrong value", "abc: 1", interpolator.interpolate("${y}: ${x}"));
+        assertNotSame(stringConverter, interpolator.getStringConverter(), "Wrong string converter");
+        assertEquals("abc: 1", interpolator.interpolate("${y}: ${x}"), "Wrong value");
     }
 
     /**
@@ -281,12 +283,11 @@ public class TestConfigurationInterpolator {
      */
     @Test
     public void testInit() {
-        assertTrue("A default lookup is set", interpolator.getDefaultLookups().isEmpty());
-        assertTrue("Got predefined lookups", interpolator.getLookups().isEmpty());
-        assertNull("Got a parent interpolator", interpolator.getParentInterpolator());
-        assertNotNull("Missing string converter", interpolator.getStringConverter());
-        assertEquals("Incorrect string converter value", "1",
-                interpolator.getStringConverter().apply(Arrays.asList(1, 2)));
+        assertTrue(interpolator.getDefaultLookups().isEmpty(), "A default lookup is set");
+        assertTrue(interpolator.getLookups().isEmpty(), "Got predefined lookups");
+        assertNull(interpolator.getParentInterpolator(), "Got a parent interpolator");
+        assertNotNull(interpolator.getStringConverter(), "Missing string converter");
+        assertEquals("1", interpolator.getStringConverter().apply(Arrays.asList(1, 2)), "Incorrect string converter value");
     }
 
     /**
@@ -295,7 +296,7 @@ public class TestConfigurationInterpolator {
     @Test
     public void testInterpolateEmptyVariable() {
         final String value = "${}";
-        assertEquals("Wrong result", value, interpolator.interpolate(value));
+        assertEquals(value, interpolator.interpolate(value), "Wrong result");
     }
 
     /**
@@ -304,7 +305,7 @@ public class TestConfigurationInterpolator {
     @Test
     public void testInterpolateBlankVariable() {
         final String value = "${ }";
-        assertEquals("Wrong result", value, interpolator.interpolate(value));
+        assertEquals(value, interpolator.interpolate(value), "Wrong result");
     }
 
     /**
@@ -313,7 +314,7 @@ public class TestConfigurationInterpolator {
     @Test
     public void testInterpolateObject() {
         final Object value = 42;
-        assertSame("Value was changed", value, interpolator.interpolate(value));
+        assertSame(value, interpolator.interpolate(value), "Value was changed");
     }
 
     /**
@@ -322,7 +323,7 @@ public class TestConfigurationInterpolator {
     @Test
     public void testInterpolateCollection() {
         final List<Integer> value = Arrays.asList(1, 2);
-        assertSame("Value was changed", value, interpolator.interpolate(value));
+        assertSame(value, interpolator.interpolate(value), "Value was changed");
     }
 
     /**
@@ -331,7 +332,7 @@ public class TestConfigurationInterpolator {
     @Test
     public void testInterpolateArray() {
         final int[] value = {1, 2};
-        assertSame("Value was changed", value, interpolator.interpolate(value));
+        assertSame(value, interpolator.interpolate(value), "Value was changed");
     }
 
     /**
@@ -341,7 +342,7 @@ public class TestConfigurationInterpolator {
     public void testInterpolateString() {
         final String value = "${" + TEST_PREFIX + ':' + TEST_NAME + "}";
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
-        assertEquals("Wrong result", TEST_VALUE, interpolator.interpolate(value));
+        assertEquals(TEST_VALUE, interpolator.interpolate(value), "Wrong result");
     }
 
     /**
@@ -350,7 +351,7 @@ public class TestConfigurationInterpolator {
     @Test
     public void testInterpolateStringUnknownVariable() {
         final String value = "${unknownVariable}";
-        assertEquals("Wrong result", value, interpolator.interpolate(value));
+        assertEquals(value, interpolator.interpolate(value), "Wrong result");
     }
 
     /**
@@ -361,7 +362,7 @@ public class TestConfigurationInterpolator {
         final String value = "The ${subject} jumps over ${object}.";
         interpolator.addDefaultLookup(setUpTestLookup("subject", "quick brown fox"));
         interpolator.addDefaultLookup(setUpTestLookup("object", "the lazy dog"));
-        assertEquals("Wrong result", "The quick brown fox jumps over the lazy dog.", interpolator.interpolate(value));
+        assertEquals("The quick brown fox jumps over the lazy dog.", interpolator.interpolate(value), "Wrong result");
     }
 
     /**
@@ -373,7 +374,7 @@ public class TestConfigurationInterpolator {
         interpolator.addDefaultLookup(setUpTestLookup("x", 1));
         interpolator.addDefaultLookup(setUpTestLookup("y", 2));
         interpolator.addDefaultLookup(setUpTestLookup("result", false));
-        assertEquals("Wrong result", "1 = 2 is false", interpolator.interpolate(value));
+        assertEquals("1 = 2 is false", interpolator.interpolate(value), "Wrong result");
     }
 
     /**
@@ -393,7 +394,7 @@ public class TestConfigurationInterpolator {
         interpolator.addDefaultLookup(setUpTestLookup("emptyIt", empty.iterator()));
         interpolator.addDefaultLookup(setUpTestLookup("null", containsNull));
         interpolator.addDefaultLookup(setUpTestLookup("nullIt", containsNull.iterator()));
-        assertEquals("Wrong result", "abc123${empty}${null}1${emptyIt}${nullIt}", interpolator.interpolate(value));
+        assertEquals("abc123${empty}${null}1${emptyIt}${nullIt}", interpolator.interpolate(value), "Wrong result");
     }
 
     /**
@@ -410,7 +411,7 @@ public class TestConfigurationInterpolator {
         interpolator.addDefaultLookup(setUpTestLookup("single", single));
         interpolator.addDefaultLookup(setUpTestLookup("empty", empty));
         interpolator.addDefaultLookup(setUpTestLookup("null", containsNull));
-        assertEquals("Wrong result", "abc123${empty}${null}", interpolator.interpolate(value));
+        assertEquals("abc123${empty}${null}", interpolator.interpolate(value), "Wrong result");
     }
 
     /**
@@ -420,7 +421,7 @@ public class TestConfigurationInterpolator {
     public void testInterpolationSingleVariable() {
         final Object value = 42;
         interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
-        assertEquals("Wrong result", value, interpolator.interpolate("${" + TEST_NAME + "}"));
+        assertEquals(value, interpolator.interpolate("${" + TEST_NAME + "}"), "Wrong result");
     }
 
     /**
@@ -431,7 +432,7 @@ public class TestConfigurationInterpolator {
     public void testInterpolationSingleCollectionVariable() {
         final List<Integer> value = Arrays.asList(42);
         interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
-        assertEquals("Wrong result", value, interpolator.interpolate("${" + TEST_NAME + "}"));
+        assertEquals(value, interpolator.interpolate("${" + TEST_NAME + "}"), "Wrong result");
     }
 
     /**
@@ -442,7 +443,7 @@ public class TestConfigurationInterpolator {
     public void testInterpolationSingleArrayVariable() {
         final int[] value = {42, -1};
         interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
-        assertEquals("Wrong result", value, interpolator.interpolate("${" + TEST_NAME + "}"));
+        assertEquals(value, interpolator.interpolate("${" + TEST_NAME + "}"), "Wrong result");
     }
 
     /**
@@ -452,9 +453,9 @@ public class TestConfigurationInterpolator {
     public void testInterpolationSingleVariableDefaultValue() {
         final Object value = 42;
         interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, value));
-        assertEquals("Wrong result", "${I_am_not_defined}", interpolator.interpolate("${I_am_not_defined}"));
-        assertEquals("Wrong result", "42", interpolator.interpolate("${I_am_not_defined:-42}"));
-        assertEquals("Wrong result", "", interpolator.interpolate("${I_am_not_defined:-}"));
+        assertEquals("${I_am_not_defined}", interpolator.interpolate("${I_am_not_defined}"), "Wrong result");
+        assertEquals("42", interpolator.interpolate("${I_am_not_defined:-42}"), "Wrong result");
+        assertEquals("", interpolator.interpolate("${I_am_not_defined:-}"), "Wrong result");
     }
 
     /**
@@ -464,7 +465,7 @@ public class TestConfigurationInterpolator {
     public void testInterpolationVariableIncomplete() {
         final String value = "${" + TEST_NAME;
         interpolator.addDefaultLookup(setUpTestLookup(TEST_NAME, "someValue"));
-        assertEquals("Wrong result", value, interpolator.interpolate(value));
+        assertEquals(value, interpolator.interpolate(value), "Wrong result");
     }
 
     /**
@@ -475,7 +476,7 @@ public class TestConfigurationInterpolator {
     public void testInterpolationBeginningAndEndingRiskyVariableLookups() {
         interpolator.registerLookups(ConfigurationInterpolator.getDefaultPrefixLookups());
         final String result = (String) interpolator.interpolate("${date:yyyy-MM}-${date:dd}");
-        assertTrue("Wrong result: " + result, result.matches("\\d{4}-\\d{2}-\\d{2}"));
+        assertTrue(result.matches("\\d{4}-\\d{2}-\\d{2}"), "Wrong result: " + result);
     }
 
     /**
@@ -485,7 +486,7 @@ public class TestConfigurationInterpolator {
     public void testNullSafeLookupExisting() {
         final Lookup look = EasyMock.createMock(Lookup.class);
         EasyMock.replay(look);
-        assertSame("Wrong result", look, ConfigurationInterpolator.nullSafeLookup(look));
+        assertSame(look, ConfigurationInterpolator.nullSafeLookup(look), "Wrong result");
     }
 
     /**
@@ -494,18 +495,18 @@ public class TestConfigurationInterpolator {
     @Test
     public void testNullSafeLookupNull() {
         final Lookup lookup = ConfigurationInterpolator.nullSafeLookup(null);
-        assertNull("Got a lookup result", lookup.lookup("someVar"));
+        assertNull(lookup.lookup("someVar"), "Got a lookup result");
     }
 
     /**
      * Tests that the prefix set cannot be modified.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testPrefixSetModify() {
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
         final Iterator<String> it = interpolator.prefixSet().iterator();
         it.next();
-        it.remove();
+        assertThrows(UnsupportedOperationException.class, it::remove);
     }
 
     /**
@@ -516,25 +517,26 @@ public class TestConfigurationInterpolator {
         final Lookup lookup = EasyMock.createMock(Lookup.class);
         EasyMock.replay(lookup);
         interpolator.registerLookup(TEST_PREFIX, lookup);
-        assertSame("New lookup not registered", lookup, interpolator.getLookups().get(TEST_PREFIX));
-        assertTrue("Not in prefix set", interpolator.prefixSet().contains(TEST_PREFIX));
-        assertTrue("Default lookups were changed", interpolator.getDefaultLookups().isEmpty());
+        assertSame(lookup, interpolator.getLookups().get(TEST_PREFIX), "New lookup not registered");
+        assertTrue(interpolator.prefixSet().contains(TEST_PREFIX), "Not in prefix set");
+        assertTrue(interpolator.getDefaultLookups().isEmpty(), "Default lookups were changed");
     }
 
     /**
      * Tests registering a null lookup object. This should cause an exception.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testRegisterLookupNull() {
-        interpolator.registerLookup(TEST_PREFIX, null);
+        assertThrows(IllegalArgumentException.class, () -> interpolator.registerLookup(TEST_PREFIX, null));
     }
 
     /**
      * Tests registering a lookup object for an undefined prefix. This should cause an exception.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testRegisterLookupNullPrefix() {
-        interpolator.registerLookup(null, EasyMock.createMock(Lookup.class));
+        final Lookup lookup = EasyMock.createMock(Lookup.class);
+        assertThrows(IllegalArgumentException.class, () -> interpolator.registerLookup(null, lookup));
     }
 
     /**
@@ -550,9 +552,9 @@ public class TestConfigurationInterpolator {
         lookups.put(prefix2, l2);
         interpolator.registerLookups(lookups);
         final Map<String, Lookup> lookups2 = interpolator.getLookups();
-        assertEquals("Wrong number of lookups", 2, lookups2.size());
-        assertEquals("Wrong l1", l1, lookups2.get(TEST_PREFIX));
-        assertEquals("Wrong l2", l2, lookups2.get(prefix2));
+        assertEquals(2, lookups2.size(), "Wrong number of lookups");
+        assertEquals(l1, lookups2.get(TEST_PREFIX), "Wrong l1");
+        assertEquals(l2, lookups2.get(prefix2), "Wrong l2");
     }
 
     /**
@@ -561,7 +563,7 @@ public class TestConfigurationInterpolator {
     @Test
     public void testRegisterLookupsNull() {
         interpolator.registerLookups(null);
-        assertTrue("Got lookups", interpolator.getLookups().isEmpty());
+        assertTrue(interpolator.getLookups().isEmpty(), "Got lookups");
     }
 
     /**
@@ -573,9 +575,9 @@ public class TestConfigurationInterpolator {
         lookups.add(setUpTestLookup());
         lookups.add(setUpTestLookup("test", "value"));
         interpolator.addDefaultLookups(lookups);
-        assertTrue("Wrong result", interpolator.removeDefaultLookup(lookups.get(0)));
-        assertFalse("Lookup still available", interpolator.getDefaultLookups().contains(lookups.get(0)));
-        assertEquals("Wrong number of default lookups", 1, interpolator.getDefaultLookups().size());
+        assertTrue(interpolator.removeDefaultLookup(lookups.get(0)), "Wrong result");
+        assertFalse(interpolator.getDefaultLookups().contains(lookups.get(0)), "Lookup still available");
+        assertEquals(1, interpolator.getDefaultLookups().size(), "Wrong number of default lookups");
     }
 
     /**
@@ -583,7 +585,7 @@ public class TestConfigurationInterpolator {
      */
     @Test
     public void testRemoveDefaultLookupNonExisting() {
-        assertFalse("Wrong result", interpolator.removeDefaultLookup(setUpTestLookup()));
+        assertFalse(interpolator.removeDefaultLookup(setUpTestLookup()), "Wrong result");
     }
 
     /**
@@ -598,7 +600,7 @@ public class TestConfigurationInterpolator {
         EasyMock.expect(l2.lookup(TEST_NAME)).andReturn(TEST_VALUE);
         EasyMock.replay(l1, l2, l3);
         interpolator.addDefaultLookups(Arrays.asList(l1, l2, l3));
-        assertEquals("Wrong variable value", TEST_VALUE, interpolator.resolve(TEST_NAME));
+        assertEquals(TEST_VALUE, interpolator.resolve(TEST_NAME), "Wrong variable value");
         EasyMock.verify(l1, l2, l3);
     }
 
@@ -611,7 +613,7 @@ public class TestConfigurationInterpolator {
         final String varName = TEST_PREFIX + ':' + TEST_NAME + "2";
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
         interpolator.addDefaultLookup(setUpTestLookup(varName, TEST_VALUE));
-        assertEquals("Variable is not resolved by default lookup", TEST_VALUE, interpolator.resolve(varName));
+        assertEquals(TEST_VALUE, interpolator.resolve(varName), "Variable is not resolved by default lookup");
     }
 
     /**
@@ -620,7 +622,7 @@ public class TestConfigurationInterpolator {
     @Test
     public void testResolveDefaultEmptyVarName() {
         interpolator.addDefaultLookup(setUpTestLookup("", TEST_VALUE));
-        assertEquals("Wrong variable value", TEST_VALUE, interpolator.resolve(""));
+        assertEquals(TEST_VALUE, interpolator.resolve(""), "Wrong variable value");
     }
 
     /**
@@ -629,7 +631,7 @@ public class TestConfigurationInterpolator {
     @Test
     public void testResolveEmptyPrefix() {
         interpolator.registerLookup("", setUpTestLookup());
-        assertEquals("Wrong variable value", TEST_VALUE, interpolator.resolve(":" + TEST_NAME));
+        assertEquals(TEST_VALUE, interpolator.resolve(":" + TEST_NAME), "Wrong variable value");
     }
 
     /**
@@ -638,7 +640,7 @@ public class TestConfigurationInterpolator {
     @Test
     public void testResolveEmptyVarName() {
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup("", TEST_VALUE));
-        assertEquals("Wrong variable value", TEST_VALUE, interpolator.resolve(TEST_PREFIX + ":"));
+        assertEquals(TEST_VALUE, interpolator.resolve(TEST_PREFIX + ":"), "Wrong variable value");
     }
 
     /**
@@ -646,7 +648,7 @@ public class TestConfigurationInterpolator {
      */
     @Test
     public void testResolveNoDefault() {
-        assertNull("Variable could be resolved", interpolator.resolve(TEST_NAME));
+        assertNull(interpolator.resolve(TEST_NAME), "Variable could be resolved");
     }
 
     /**
@@ -654,7 +656,7 @@ public class TestConfigurationInterpolator {
      */
     @Test
     public void testResolveNull() {
-        assertNull("Could resolve null variable", interpolator.resolve(null));
+        assertNull(interpolator.resolve(null), "Could resolve null variable");
     }
 
     /**
@@ -667,7 +669,7 @@ public class TestConfigurationInterpolator {
         EasyMock.replay(parent);
         interpolator.setParentInterpolator(parent);
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
-        assertEquals("Wrong value", TEST_VALUE, interpolator.resolve(TEST_PREFIX + ':' + TEST_NAME));
+        assertEquals(TEST_VALUE, interpolator.resolve(TEST_PREFIX + ':' + TEST_NAME), "Wrong value");
     }
 
     /**
@@ -679,7 +681,7 @@ public class TestConfigurationInterpolator {
         EasyMock.expect(parent.resolve(TEST_NAME)).andReturn(TEST_VALUE);
         EasyMock.replay(parent);
         interpolator.setParentInterpolator(parent);
-        assertEquals("Wrong value", TEST_VALUE, interpolator.resolve(TEST_NAME));
+        assertEquals(TEST_VALUE, interpolator.resolve(TEST_NAME), "Wrong value");
         EasyMock.verify(parent);
     }
 
@@ -690,7 +692,7 @@ public class TestConfigurationInterpolator {
     @Test
     public void testResolveWithPrefix() {
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
-        assertEquals("Wrong variable value", TEST_VALUE, interpolator.resolve(TEST_PREFIX + ':' + TEST_NAME));
+        assertEquals(TEST_VALUE, interpolator.resolve(TEST_PREFIX + ':' + TEST_NAME), "Wrong variable value");
     }
 
     /**
@@ -699,8 +701,8 @@ public class TestConfigurationInterpolator {
     @Test
     public void testResolveWithUnknownPrefix() {
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
-        assertNull("Variable could be resolved", interpolator.resolve("UnknownPrefix:" + TEST_NAME));
-        assertNull("Variable with empty prefix could be resolved", interpolator.resolve(":" + TEST_NAME));
+        assertNull(interpolator.resolve("UnknownPrefix:" + TEST_NAME), "Variable could be resolved");
+        assertNull(interpolator.resolve(":" + TEST_NAME), "Variable with empty prefix could be resolved");
     }
 
     @Test
@@ -800,13 +802,9 @@ public class TestConfigurationInterpolator {
         final Properties props = new Properties();
         props.setProperty(ConfigurationInterpolator.DEFAULT_PREFIX_LOOKUPS_PROPERTY, "base64_encoder nope");
 
-        try {
-            new ConfigurationInterpolator.DefaultPrefixLookupsHolder(props);
-
-            fail("Operation should have failed");
-        } catch (Exception exc) {
-            assertEquals("Invalid default lookups definition: base64_encoder nope", exc.getMessage());
-        }
+        Exception exc = assertThrows(Exception.class, () -> new ConfigurationInterpolator.DefaultPrefixLookupsHolder(props),
+                "Operation should have failed");
+        assertEquals("Invalid default lookups definition: base64_encoder nope", exc.getMessage());
     }
 
     private static void checkDefaultPrefixLookupsHolder(final Properties props, final String... keys) {
@@ -822,12 +820,12 @@ public class TestConfigurationInterpolator {
         final Set<String> remainingKeys = new HashSet<>(lookupMap.keySet());
 
         for (final String key : keys) {
-            assertNotNull("Expected map to contain string lookup for key " + key, key);
+            assertNotNull(key, "Expected map to contain string lookup for key " + key);
 
             remainingKeys.remove(key);
         }
 
-        assertTrue("Unexpected keys in lookup map: " + remainingKeys, remainingKeys.isEmpty());
+        assertTrue(remainingKeys.isEmpty(), "Unexpected keys in lookup map: " + remainingKeys);
     }
 
     /**

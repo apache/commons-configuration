@@ -1,5 +1,3 @@
-package org.apache.commons.configuration2;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -17,10 +15,12 @@ package org.apache.commons.configuration2;
  * limitations under the License.
  */
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
+package org.apache.commons.configuration2;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Iterator;
 import java.util.List;
@@ -29,7 +29,7 @@ import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.builder.combined.CombinedConfigurationBuilder;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Compare the behavior of various methods between CompositeConfiguration and normal (Properties) Configuration
@@ -47,10 +47,10 @@ public class TestEqualBehavior {
         while (it1.hasNext() && it2.hasNext()) {
             final String key1 = it1.next();
             final String key2 = it2.next();
-            assertEquals(msg + ", Keys: ", key1, key2);
-            assertEquals(msg + ", Contains: ", c1.containsKey(key1), c2.containsKey(key2));
+            assertEquals(key1, key2, msg + ", Keys: ");
+            assertEquals(c1.containsKey(key1), c2.containsKey(key2), msg + ", Contains: ");
         }
-        assertEquals(msg + ", Iterator: ", it1.hasNext(), it2.hasNext());
+        assertEquals(it1.hasNext(), it2.hasNext(), msg + ", Iterator: ");
     }
 
     /**
@@ -60,16 +60,16 @@ public class TestEqualBehavior {
         final String[] s1 = c1.getStringArray(key);
         final String[] s2 = c2.getStringArray(key);
 
-        assertEquals(msg + ", length: ", s1.length, s2.length);
+        assertEquals(s1.length, s2.length, msg + ", length: ");
 
         for (int i = 0; i < s1.length; i++) {
-            assertEquals(msg + ", String Array: ", s1[i], s2[i]);
+            assertEquals(s1[i], s2[i], msg + ", String Array: ");
         }
 
         final List<Object> list1 = c1.getList(key);
         final List<Object> list2 = c2.getList(key);
 
-        assertEquals(msg + ", Size: ", list1.size(), list2.size());
+        assertEquals(list1.size(), list2.size(), msg + ", Size: ");
 
         final Iterator<Object> it1 = list1.iterator();
         final Iterator<Object> it2 = list2.iterator();
@@ -77,9 +77,9 @@ public class TestEqualBehavior {
         while (it1.hasNext() && it2.hasNext()) {
             final String val1 = (String) it1.next();
             final String val2 = (String) it2.next();
-            assertEquals(msg + ", List: ", val1, val2);
+            assertEquals(val1, val2, msg + ", List: ");
         }
-        assertEquals(msg + ", Iterator End: ", it1.hasNext(), it2.hasNext());
+        assertEquals(it1.hasNext(), it2.hasNext(), msg + ", Iterator End: ");
     }
 
     private Configuration setupCompositeConfiguration() throws ConfigurationException {

@@ -17,8 +17,8 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -71,14 +71,14 @@ public class ConfigurationAssert {
         // check that the actual configuration contains all the properties of the expected configuration
         for (final Iterator<String> it = expected.getKeys(); it.hasNext();) {
             final String key = it.next();
-            assertTrue("The actual configuration doesn't contain the expected key '" + key + "'", actual.containsKey(key));
-            assertEquals("Value of the '" + key + "' property", expected.getProperty(key), actual.getProperty(key));
+            assertTrue(actual.containsKey(key), "The actual configuration doesn't contain the expected key '" + key + "'");
+            assertEquals(expected.getProperty(key), actual.getProperty(key), "Value of the '" + key + "' property");
         }
 
         // check that the actual configuration has no extra properties
         for (final Iterator<String> it = actual.getKeys(); it.hasNext();) {
             final String key = it.next();
-            assertTrue("The actual configuration contains an extra key '" + key + "'", expected.containsKey(key));
+            assertTrue(expected.containsKey(key), "The actual configuration contains an extra key '" + key + "'");
         }
     }
 
@@ -91,12 +91,12 @@ public class ConfigurationAssert {
      * @param expEquals the expected result of equals()
      */
     public static void checkEquals(final Object o1, final Object o2, final boolean expEquals) {
-        assertEquals("Wrong result of equals()", expEquals, o1.equals(o2));
+        assertEquals(expEquals, o1.equals(o2), "Wrong result of equals()");
         if (o2 != null) {
-            assertEquals("Not symmetric", expEquals, o2.equals(o1));
+            assertEquals(expEquals, o2.equals(o1), "Not symmetric");
         }
         if (expEquals) {
-            assertEquals("Different hash codes", o1.hashCode(), o2.hashCode());
+            assertEquals(o1.hashCode(), o2.hashCode(), "Different hash codes");
         }
     }
 

@@ -17,7 +17,7 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.StringReader;
 
@@ -26,7 +26,7 @@ import org.apache.commons.configuration2.convert.LegacyListDelimiterHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for {@code XMLConfiguration} related to CONFIGURATION-605: XMLConfiguration drops configuration key immediately
@@ -39,11 +39,11 @@ public class TestXMLConfiguration_605 {
      * @param config the configuration to be checked
      */
     private static void checkConfiguration(final Configuration config) {
-        assertTrue("Configuration has key key0", config.containsKey("key0"));
-        assertTrue("Configuration has key key1", config.containsKey("key1"));
-        assertTrue("Configuration has key key3", config.containsKey("key3"));
+        assertTrue(config.containsKey("key0"), "Configuration has key key0");
+        assertTrue(config.containsKey("key1"), "Configuration has key key1");
+        assertTrue(config.containsKey("key3"), "Configuration has key key3");
 
-        assertTrue("Configuration has key key2", config.containsKey("key2"));
+        assertTrue(config.containsKey("key2"), "Configuration has key key2");
     }
 
     /**

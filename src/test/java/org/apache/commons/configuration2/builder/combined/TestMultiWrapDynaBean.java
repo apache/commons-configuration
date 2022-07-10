@@ -16,9 +16,10 @@
  */
 package org.apache.commons.configuration2.builder.combined;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,7 +33,7 @@ import org.apache.commons.configuration2.builder.BasicBuilderParameters;
 import org.apache.commons.configuration2.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.convert.ListDelimiterHandler;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code MultiWrapDynaBean} and {@code MultiWrapDynaClass}.
@@ -112,9 +113,10 @@ public class TestMultiWrapDynaBean {
     /**
      * Tests the contains() implementation. This operation is not available.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testContains() {
-        createBean(false).contains(MAPPED_PROPERTY, "someKey");
+        final MultiWrapDynaBean bean = createBean(false);
+        assertThrows(UnsupportedOperationException.class, () -> bean.contains(MAPPED_PROPERTY, "someKey"));
     }
 
     /**
@@ -123,8 +125,8 @@ public class TestMultiWrapDynaBean {
     @Test
     public void testGetDynaClass() {
         final DynaClass cls = createBean(false).getDynaClass();
-        assertNotNull("Property not found (1)", cls.getDynaProperty("throwExceptionOnMissing"));
-        assertNotNull("Property not found (2)", cls.getDynaProperty("text"));
+        assertNotNull(cls.getDynaProperty("throwExceptionOnMissing"), "Property not found (1)");
+        assertNotNull(cls.getDynaProperty("text"), "Property not found (2)");
     }
 
     /**
@@ -132,15 +134,16 @@ public class TestMultiWrapDynaBean {
      */
     @Test
     public void testGetDynaClassName() {
-        assertNull("Got a class name", createBean(false).getDynaClass().getName());
+        assertNull(createBean(false).getDynaClass().getName(), "Got a class name");
     }
 
     /**
      * Tries to create a new instance of the DynaClass. This is not possible.
      */
-    @Test(expected = UnsupportedOperationException.class)
-    public void testGetDynaClassNewInstance() throws Exception {
-        createBean(false).getDynaClass().newInstance();
+    @Test
+    public void testGetDynaClassNewInstance() {
+        final DynaClass dynaClass = createBean(false).getDynaClass();
+        assertThrows(UnsupportedOperationException.class, dynaClass::newInstance);
     }
 
     /**
@@ -150,7 +153,7 @@ public class TestMultiWrapDynaBean {
     public void testGetIndexedProperty() throws Exception {
         final MultiWrapDynaBean bean = createBean(false);
         wrapBean.setIndexedProperty(3, 20121117);
-        assertEquals("Wrong value", 20121117, PropertyUtils.getIndexedProperty(bean, "indexedProperty", 3));
+        assertEquals(20121117, PropertyUtils.getIndexedProperty(bean, "indexedProperty", 3), "Wrong value");
     }
 
     /**
@@ -162,15 +165,16 @@ public class TestMultiWrapDynaBean {
         final String key = "testKey";
         final String value = "Hello World";
         wrapDynaBean.set(MAPPED_PROPERTY, key, value);
-        assertEquals("Wrong value", value, PropertyUtils.getMappedProperty(bean, MAPPED_PROPERTY, key));
+        assertEquals(value, PropertyUtils.getMappedProperty(bean, MAPPED_PROPERTY, key), "Wrong value");
     }
 
     /**
      * Tries to access an unknown property.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGetPropertyUnknown() {
-        createBean(false).get("unknown property");
+        final MultiWrapDynaBean bean = createBean(false);
+        assertThrows(IllegalArgumentException.class, () -> bean.get("unknown property"));
     }
 
     /**
@@ -181,7 +185,7 @@ public class TestMultiWrapDynaBean {
         final MultiWrapDynaBean bean = createBean(false);
         final String text = "testText";
         wrapBean.setText(text);
-        assertEquals("Wrong value", text, PropertyUtils.getProperty(bean, "text"));
+        assertEquals(text, PropertyUtils.getProperty(bean, "text"), "Wrong value");
     }
 
     /**
@@ -201,16 +205,17 @@ public class TestMultiWrapDynaBean {
         PropertyUtils.setProperty(bean, "throwExceptionOnMissing", Boolean.TRUE);
         PropertyUtils.setProperty(bean, "listDelimiterHandler", listHandler);
         final Map<String, Object> map = params.getParameters();
-        assertEquals("Exception flag not set", Boolean.TRUE, map.get("throwExceptionOnMissing"));
-        assertEquals("List delimiter handler not set", listHandler, map.get("listDelimiterHandler"));
+        assertEquals(Boolean.TRUE, map.get("throwExceptionOnMissing"), "Exception flag not set");
+        assertEquals(listHandler, map.get("listDelimiterHandler"), "List delimiter handler not set");
     }
 
     /**
      * Tests the remove() implementation. This operation is not available.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testRemove() {
-        createBean(false).remove(MAPPED_PROPERTY, "someKey");
+        final MultiWrapDynaBean bean = createBean(false);
+        assertThrows(UnsupportedOperationException.class, () -> bean.remove(MAPPED_PROPERTY, "someKey"));
     }
 
     /**
@@ -219,7 +224,7 @@ public class TestMultiWrapDynaBean {
     @Test
     public void testSetIndexedProperty() throws Exception {
         PropertyUtils.setIndexedProperty(createBean(false), "indexedProperty", 1, 42);
-        assertEquals("Property not set", 42, wrapBean.getIndexedProperty(1));
+        assertEquals(42, wrapBean.getIndexedProperty(1), "Property not set");
     }
 
     /**
@@ -231,7 +236,7 @@ public class TestMultiWrapDynaBean {
         final String key = "testKey";
         final String text = "Hello World";
         PropertyUtils.setMappedProperty(bean, MAPPED_PROPERTY, key, text);
-        assertEquals("Property not set", text, wrapDynaBean.get(MAPPED_PROPERTY, key));
+        assertEquals(text, wrapDynaBean.get(MAPPED_PROPERTY, key), "Property not set");
     }
 
     /**
@@ -240,6 +245,6 @@ public class TestMultiWrapDynaBean {
     @Test
     public void testSetSimpleProperty() throws Exception {
         PropertyUtils.setProperty(createBean(false), "throwExceptionOnMissing", Boolean.TRUE);
-        assertEquals("Property not set", Boolean.TRUE, params.getParameters().get("throwExceptionOnMissing"));
+        assertEquals(Boolean.TRUE, params.getParameters().get("throwExceptionOnMissing"), "Property not set");
     }
 }

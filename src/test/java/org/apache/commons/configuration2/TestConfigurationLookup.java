@@ -16,13 +16,14 @@
  */
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code ConfigurationLookup}.
@@ -38,9 +39,9 @@ public class TestConfigurationLookup {
     /**
      * Tries to create an instance without a configuration.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInitNoConfig() {
-        new ConfigurationLookup(null);
+        assertThrows(IllegalArgumentException.class, () -> new ConfigurationLookup(null));
     }
 
     /**
@@ -55,10 +56,10 @@ public class TestConfigurationLookup {
         }
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);
         final Collection<?> col = (Collection<?>) lookup.lookup(VAR);
-        assertEquals("Wrong number of elements", count, col.size());
+        assertEquals(count, col.size(), "Wrong number of elements");
         final Iterator<?> it = col.iterator();
         for (int i = 0; i < count; i++) {
-            assertEquals("Wrong element at " + i, String.valueOf(VALUE) + i, it.next());
+            assertEquals(String.valueOf(VALUE) + i, it.next(), "Wrong element at " + i);
         }
     }
 
@@ -69,7 +70,7 @@ public class TestConfigurationLookup {
     public void testLookupNotFound() {
         final Configuration conf = new BaseConfiguration();
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);
-        assertNull("Got a value", lookup.lookup(VAR));
+        assertNull(lookup.lookup(VAR), "Got a value");
     }
 
     /**
@@ -80,7 +81,7 @@ public class TestConfigurationLookup {
         final BaseConfiguration conf = new BaseConfiguration();
         conf.setThrowExceptionOnMissing(true);
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);
-        assertNull("Got a value", lookup.lookup(VAR));
+        assertNull(lookup.lookup(VAR), "Got a value");
     }
 
     /**
@@ -91,6 +92,6 @@ public class TestConfigurationLookup {
         final Configuration conf = new BaseConfiguration();
         conf.addProperty(VAR, VALUE);
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);
-        assertEquals("Wrong result", VALUE, lookup.lookup(VAR));
+        assertEquals(VALUE, lookup.lookup(VAR), "Wrong result");
     }
 }

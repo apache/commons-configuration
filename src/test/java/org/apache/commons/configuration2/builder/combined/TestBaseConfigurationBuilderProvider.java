@@ -16,10 +16,12 @@
  */
 package org.apache.commons.configuration2.builder.combined;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.Configuration;
@@ -36,7 +38,7 @@ import org.apache.commons.configuration2.builder.ReloadingFileBasedConfiguration
 import org.apache.commons.configuration2.convert.DefaultListDelimiterHandler;
 import org.apache.commons.configuration2.convert.DisabledListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code BaseConfigurationBuilderProvider}.
@@ -58,7 +60,7 @@ public class TestBaseConfigurationBuilderProvider {
         final ConfigurationDeclaration decl = createDeclaration(declConfig);
         final BasicConfigurationBuilder<? extends Configuration> builder = (BasicConfigurationBuilder<? extends Configuration>) createProvider()
             .getConfigurationBuilder(decl);
-        assertEquals("Wrong flag value", expFlag, builder.isAllowFailOnInit());
+        assertEquals(expFlag, builder.isAllowFailOnInit(), "Wrong flag value");
     }
 
     /**
@@ -73,12 +75,12 @@ public class TestBaseConfigurationBuilderProvider {
         final ConfigurationDeclaration decl = createDeclaration(declConfig);
         final ConfigurationBuilder<? extends Configuration> builder = createProvider().getConfigurationBuilder(decl);
         final Configuration config = builder.getConfiguration();
-        assertEquals("Wrong configuration class", PropertiesConfiguration.class, config.getClass());
+        assertEquals(PropertiesConfiguration.class, config.getClass(), "Wrong configuration class");
         final PropertiesConfiguration pconfig = (PropertiesConfiguration) config;
-        assertTrue("Wrong exception flag", pconfig.isThrowExceptionOnMissing());
+        assertTrue(pconfig.isThrowExceptionOnMissing(), "Wrong exception flag");
         final DefaultListDelimiterHandler listHandler = (DefaultListDelimiterHandler) pconfig.getListDelimiterHandler();
-        assertEquals("Wrong list delimiter", ';', listHandler.getDelimiter());
-        assertTrue("Configuration not loaded", pconfig.getBoolean("configuration.loaded"));
+        assertEquals(';', listHandler.getDelimiter(), "Wrong list delimiter");
+        assertTrue(pconfig.getBoolean("configuration.loaded"), "Configuration not loaded");
         return builder;
     }
 
@@ -162,7 +164,7 @@ public class TestBaseConfigurationBuilderProvider {
     @Test
     public void testGetBuilderNotReloading() throws ConfigurationException {
         final ConfigurationBuilder<? extends Configuration> builder = checkBuilder(false);
-        assertEquals("Wrong builder class", FileBasedConfigurationBuilder.class, builder.getClass());
+        assertEquals(FileBasedConfigurationBuilder.class, builder.getClass(), "Wrong builder class");
     }
 
     /**
@@ -171,45 +173,48 @@ public class TestBaseConfigurationBuilderProvider {
     @Test
     public void testGetBuilderReloading() throws ConfigurationException {
         final ConfigurationBuilder<? extends Configuration> builder = checkBuilder(true);
-        assertEquals("Wrong builder class", ReloadingFileBasedConfigurationBuilder.class, builder.getClass());
+        assertEquals(ReloadingFileBasedConfigurationBuilder.class, builder.getClass(), "Wrong builder class");
     }
 
     /**
      * Tests that the collection with parameter classes cannot be modified.
      */
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testGetParameterClassesModify() {
         final BaseConfigurationBuilderProvider provider = new BaseConfigurationBuilderProvider(BasicConfigurationBuilder.class.getName(), null,
             PropertiesConfiguration.class.getName(), Arrays.asList(BasicBuilderParameters.class.getName()));
-        provider.getParameterClasses().clear();
+        final Collection<String> parameterClasses = provider.getParameterClasses();
+        assertThrows(UnsupportedOperationException.class, parameterClasses::clear);
     }
 
     /**
      * Tries to create a reloading builder if this is not supported by the provider.
      */
-    @Test(expected = ConfigurationException.class)
-    public void testGetReloadingBuilderNotSupported() throws ConfigurationException {
+    @Test
+    public void testGetReloadingBuilderNotSupported() {
         final BaseConfigurationBuilderProvider provider = new BaseConfigurationBuilderProvider(FileBasedConfigurationBuilder.class.getName(), null,
             PropertiesConfiguration.class.getName(), Arrays.asList(FileBasedBuilderParametersImpl.class.getName()));
         final HierarchicalConfiguration<?> declConfig = setUpConfig(true);
         final ConfigurationDeclaration decl = createDeclaration(declConfig);
-        provider.getConfigurationBuilder(decl);
+        assertThrows(ConfigurationException.class, () -> provider.getConfigurationBuilder(decl));
     }
 
     /**
      * Tries to create an instance without a builder class.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInitNoBuilderClass() {
-        new BaseConfigurationBuilderProvider(null, null, PropertiesConfiguration.class.getName(), null);
+        final String configClass = PropertiesConfiguration.class.getName();
+        assertThrows(IllegalArgumentException.class, () -> new BaseConfigurationBuilderProvider(null, null, configClass, null));
     }
 
     /**
      * Tries to create an instance without a configuration class.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInitNoConfigurationClass() {
-        new BaseConfigurationBuilderProvider(BasicConfigurationBuilder.class.getName(), null, null, null);
+        final String builderClass = BasicConfigurationBuilder.class.getName();
+        assertThrows(IllegalArgumentException.class, () -> new BaseConfigurationBuilderProvider(builderClass, null, null, null));
     }
 
     /**
@@ -219,6 +224,6 @@ public class TestBaseConfigurationBuilderProvider {
     public void testInitNoParameterClasses() {
         final BaseConfigurationBuilderProvider provider = new BaseConfigurationBuilderProvider(BasicConfigurationBuilder.class.getName(), null,
             PropertiesConfiguration.class.getName(), null);
-        assertTrue("Got parameter classes", provider.getParameterClasses().isEmpty());
+        assertTrue(provider.getParameterClasses().isEmpty(), "Got parameter classes");
     }
 }

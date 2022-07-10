@@ -17,12 +17,12 @@
 
 package org.apache.commons.configuration2;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  */
@@ -38,7 +38,7 @@ public class TestConfigurationMap {
     /**
      * Set up instance variables required by this test case.
      */
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         final BaseConfiguration configuration = new BaseConfiguration();
         for (int i = 0; i < properties.length; i++) {
@@ -50,7 +50,7 @@ public class TestConfigurationMap {
     /**
      * Tear down instance variables required by this test case.
      */
-    @After
+    @AfterEach
     public void tearDown() {
         map = null;
     }
@@ -62,11 +62,11 @@ public class TestConfigurationMap {
     public void testPut() {
         for (int i = 0; i < properties.length; i++) {
             Object object = map.put(properties[i], values[i]);
-            assertNotNull("Returned null from put.", object);
-            assertEquals("Returned wrong result.", values[i], object);
+            assertNotNull(object, "Returned null from put.");
+            assertEquals(values[i], object, "Returned wrong result.");
             object = map.get(properties[i]);
-            assertNotNull("Returned null from get.", object);
-            assertEquals("Returned wrong result.", values[i], object);
+            assertNotNull(object, "Returned null from get.");
+            assertEquals(values[i], object, "Returned wrong result.");
         }
     }
 

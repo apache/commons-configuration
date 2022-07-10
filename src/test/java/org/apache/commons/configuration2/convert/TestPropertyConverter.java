@@ -17,8 +17,9 @@
 
 package org.apache.commons.configuration2.convert;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.File;
 import java.lang.annotation.ElementType;
@@ -28,8 +29,8 @@ import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
 import org.apache.commons.configuration2.ex.ConversionException;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for PropertyConverter.
@@ -49,28 +50,29 @@ public class TestPropertyConverter {
         // See Sonar rule: https://rules.sonarsource.com/java/type/Bug/RSPEC-2111
         final double d = 0.1;
         // Use BigDecimal#valueOf() Fix PMD AvoidDecimalLiteralsInBigDecimalConstructor
-        assertEquals("Incorrect BigDecimal value", BigDecimal.valueOf(d), PropertyConverter.toBigDecimal(d));
+        assertEquals(BigDecimal.valueOf(d), PropertyConverter.toBigDecimal(d), "Incorrect BigDecimal value");
     }
 
     /**
      * See CONFIGURATION-766.
      */
     @Test
-    @Ignore
+    @Disabled
     public void testToBigDecimalStringConstructor() {
         // If the conversion uses new BigDecimal(0.1) the result is not exact due to round off.
         // The result is 0.1000000000000000055511151231257827021181583404541015625.
         // See Sonar rule: https://rules.sonarsource.com/java/type/Bug/RSPEC-2111
         final double d = 0.1;
-        assertEquals("Incorrect BigDecimal value", new BigDecimal(Double.toString(d)), PropertyConverter.toBigDecimal(d));
+        assertEquals(new BigDecimal(Double.toString(d)), PropertyConverter.toBigDecimal(d), "Incorrect BigDecimal value");
     }
 
     /**
      * Tests a failed conversion to character.
      */
-    @Test(expected = ConversionException.class)
+    @Test
     public void testToCharFailed() {
-        PropertyConverter.to(Character.TYPE, "FF", new DefaultConversionHandler());
+        final DefaultConversionHandler conversionHandler = new DefaultConversionHandler();
+        assertThrows(ConversionException.class, () -> PropertyConverter.to(Character.TYPE, "FF", conversionHandler));
     }
 
     /**
@@ -78,7 +80,7 @@ public class TestPropertyConverter {
      */
     @Test
     public void testToCharSuccess() {
-        assertEquals("Wrong conversion result", Character.valueOf('t'), PropertyConverter.to(Character.class, "t", new DefaultConversionHandler()));
+        assertEquals(Character.valueOf('t'), PropertyConverter.to(Character.class, "t", new DefaultConversionHandler()), "Wrong conversion result");
     }
 
     /**
@@ -92,32 +94,32 @@ public class TestPropertyConverter {
                 return "X";
             }
         };
-        assertEquals("Wrong conversion result", Character.valueOf('X'), PropertyConverter.to(Character.TYPE, value, new DefaultConversionHandler()));
+        assertEquals(Character.valueOf('X'), PropertyConverter.to(Character.TYPE, value, new DefaultConversionHandler()), "Wrong conversion result");
     }
 
     @Test
     public void testToEnumFromEnum() {
-        assertEquals(ElementType.METHOD, PropertyConverter.toEnum(ElementType.METHOD, ENUM_CLASS));
+        assertEquals(PropertyConverter.toEnum(ElementType.METHOD, ENUM_CLASS), ElementType.METHOD);
     }
 
-    @Test(expected = ConversionException.class)
+    @Test
     public void testToEnumFromInvalidNumber() {
-        PropertyConverter.toEnum(Integer.valueOf(-1), ENUM_CLASS);
+        assertThrows(ConversionException.class, () -> PropertyConverter.toEnum(-1, ENUM_CLASS));
     }
 
-    @Test(expected = ConversionException.class)
+    @Test
     public void testToEnumFromInvalidString() {
-        PropertyConverter.toEnum("FOO", ENUM_CLASS);
+        assertThrows(ConversionException.class, () -> PropertyConverter.toEnum("FOO", ENUM_CLASS));
     }
 
     @Test
     public void testToEnumFromNumber() {
-        assertEquals(ElementType.METHOD, PropertyConverter.toEnum(Integer.valueOf(ElementType.METHOD.ordinal()), ENUM_CLASS));
+        assertEquals(PropertyConverter.toEnum(Integer.valueOf(ElementType.METHOD.ordinal()), ENUM_CLASS), ElementType.METHOD);
     }
 
     @Test
     public void testToEnumFromString() {
-        assertEquals(ElementType.METHOD, PropertyConverter.toEnum("METHOD", ENUM_CLASS));
+        assertEquals(PropertyConverter.toEnum("METHOD", ENUM_CLASS), ElementType.METHOD);
     }
 
     /**
@@ -126,7 +128,7 @@ public class TestPropertyConverter {
     @Test
     public void testToFileDirect() {
         final File f = new File("dir", "file");
-        assertSame("Wrong file", f, PropertyConverter.toFile(f));
+        assertSame(f, PropertyConverter.toFile(f), "Wrong file");
     }
 
     /**
@@ -135,7 +137,7 @@ public class TestPropertyConverter {
     @Test
     public void testToFileFromPath() {
         final Path p = Paths.get("dir", "file");
-        assertEquals("Wrong conversion result", new File("dir", "file"), PropertyConverter.toFile(p));
+        assertEquals(new File("dir", "file"), PropertyConverter.toFile(p), "Wrong conversion result");
     }
 
     /**
@@ -143,7 +145,7 @@ public class TestPropertyConverter {
      */
     @Test
     public void testToFileFromString() {
-        assertEquals("Wrong conversion result", new File("dir", "file"), PropertyConverter.toFile("dir/file"));
+        assertEquals(new File("dir", "file"), PropertyConverter.toFile("dir/file"), "Wrong conversion result");
     }
 
     /**
@@ -152,7 +154,7 @@ public class TestPropertyConverter {
     @Test
     public void testToNoConversionNeeded() {
         final String value = "testValue";
-        assertEquals("Wrong conversion result", value, PropertyConverter.to(String.class, value, new DefaultConversionHandler()));
+        assertEquals(value, PropertyConverter.to(String.class, value, new DefaultConversionHandler()), "Wrong conversion result");
     }
 
     /**
@@ -161,9 +163,9 @@ public class TestPropertyConverter {
     @Test
     public void testToNumberDirect() {
         final Integer i = Integer.valueOf(42);
-        assertSame("Wrong integer", i, PropertyConverter.toNumber(i, Integer.class));
+        assertSame(i, PropertyConverter.toNumber(i, Integer.class), "Wrong integer");
         final BigDecimal d = new BigDecimal("3.1415");
-        assertSame("Wrong BigDecimal", d, PropertyConverter.toNumber(d, Integer.class));
+        assertSame(d, PropertyConverter.toNumber(d, Integer.class), "Wrong BigDecimal");
     }
 
     /**
@@ -172,7 +174,7 @@ public class TestPropertyConverter {
     @Test
     public void testToNumberFromBinaryString() {
         final Number n = PropertyConverter.toNumber("0b1111", Integer.class);
-        assertEquals("Incorrect Integer value", 15, n.intValue());
+        assertEquals(15, n.intValue(), "Incorrect Integer value");
     }
 
     /**
@@ -181,32 +183,32 @@ public class TestPropertyConverter {
     @Test
     public void testToNumberFromHexString() {
         final Number n = PropertyConverter.toNumber("0x10", Integer.class);
-        assertEquals("Incorrect Integer value", 16, n.intValue());
+        assertEquals(16, n.intValue(), "Incorrect Integer value");
     }
 
     /**
      * Tests conversion to numbers when an invalid binary value is passed in. This should cause an exception.
      */
-    @Test(expected = ConversionException.class)
+    @Test
     public void testToNumberFromInvalidBinaryString() {
-        PropertyConverter.toNumber("0bNotABinValue", Integer.class);
+        assertThrows(ConversionException.class, () -> PropertyConverter.toNumber("0bNotABinValue", Integer.class));
     }
 
     /**
      * Tests conversion to numbers when an invalid Hex value is passed in. This should cause an exception.
      */
-    @Test(expected = ConversionException.class)
+    @Test
     public void testToNumberFromInvalidHexString() {
-        PropertyConverter.toNumber("0xNotAHexValue", Integer.class);
+        assertThrows(ConversionException.class, () -> PropertyConverter.toNumber("0xNotAHexValue", Integer.class));
     }
 
     /**
      * Tests conversion to numbers when the passed in objects have no numeric String representation. This should cause an
      * exception.
      */
-    @Test(expected = ConversionException.class)
+    @Test
     public void testToNumberFromInvalidString() {
-        PropertyConverter.toNumber("Not a number", Byte.class);
+        assertThrows(ConversionException.class, () -> PropertyConverter.toNumber("Not a number", Byte.class));
     }
 
     /**
@@ -214,16 +216,16 @@ public class TestPropertyConverter {
      */
     @Test
     public void testToNumberFromString() {
-        assertEquals("Incorrect Integer value", Integer.valueOf(42), PropertyConverter.toNumber("42", Integer.class));
-        assertEquals("Incorrect Short value", Short.valueOf((short) 10), PropertyConverter.toNumber(new StringBuffer("10"), Short.class));
+        assertEquals(Integer.valueOf(42), PropertyConverter.toNumber("42", Integer.class), "Incorrect Integer value");
+        assertEquals(Short.valueOf((short) 10), PropertyConverter.toNumber(new StringBuffer("10"), Short.class), "Incorrect Short value");
     }
 
     /**
      * Tests conversion to numbers when the passed in target class is invalid. This should cause an exception.
      */
-    @Test(expected = ConversionException.class)
+    @Test
     public void testToNumberWithInvalidClass() {
-        PropertyConverter.toNumber("42", Object.class);
+        assertThrows(ConversionException.class, () -> PropertyConverter.toNumber("42", Object.class));
     }
 
     /**
@@ -232,7 +234,7 @@ public class TestPropertyConverter {
     @Test
     public void testToPathDirect() {
         final Path p = Paths.get("dir", "file");
-        assertSame("Wrong path", p, PropertyConverter.toPath(p));
+        assertSame(p, PropertyConverter.toPath(p), "Wrong path");
     }
 
     /**
@@ -241,7 +243,7 @@ public class TestPropertyConverter {
     @Test
     public void testToPathFromFile() {
         final File f = new File("dir", "file");
-        assertEquals("Wrong conversion result", Paths.get("dir", "file"), PropertyConverter.toPath(f));
+        assertEquals(Paths.get("dir", "file"), PropertyConverter.toPath(f), "Wrong conversion result");
     }
 
     /**
@@ -249,7 +251,7 @@ public class TestPropertyConverter {
      */
     @Test
     public void testToPathFromString() {
-        assertEquals("Wrong conversion result", Paths.get("dir", "file"), PropertyConverter.toPath("dir/file"));
+        assertEquals(Paths.get("dir", "file"), PropertyConverter.toPath("dir/file"), "Wrong conversion result");
     }
 
     /**
@@ -258,7 +260,7 @@ public class TestPropertyConverter {
     @Test
     public void testToPatternDirect() {
         final Pattern p = Pattern.compile(".+");
-        assertSame("Wrong pattern", p, PropertyConverter.toPattern(p));
+        assertSame(p, PropertyConverter.toPattern(p), "Wrong pattern");
     }
 
     /**
@@ -267,7 +269,7 @@ public class TestPropertyConverter {
     @Test
     public void testToPatternFromString() {
         final Pattern p = Pattern.compile(".+");
-        assertEquals("Wrong conversion result", p.pattern(), PropertyConverter.toPattern(".+").pattern());
+        assertEquals(p.pattern(), PropertyConverter.toPattern(".+").pattern(), "Wrong conversion result");
     }
 
     /**
@@ -277,7 +279,7 @@ public class TestPropertyConverter {
     public void testToStringConversion() {
         final Integer src = 42;
         final Object result = PropertyConverter.to(String.class, src, new DefaultConversionHandler());
-        assertEquals("Wrong resulting string", "42", result);
+        assertEquals("42", result, "Wrong resulting string");
     }
 
 }

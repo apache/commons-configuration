@@ -16,12 +16,12 @@
  */
 package org.apache.commons.configuration2.tree;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for UnionCombiner.
@@ -44,8 +44,8 @@ public class TestUnionCombiner extends AbstractCombinerTest {
     @Test
     public void testAttributes() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals("Wrong number of attributes", 0, config.getMaxIndex("database.tables.table(0)[@id]"));
-        assertEquals("Wrong value of attribute", 1, config.getInt("database.tables.table(0)[@id](0)"));
+        assertEquals(0, config.getMaxIndex("database.tables.table(0)[@id]"), "Wrong number of attributes");
+        assertEquals(1, config.getInt("database.tables.table(0)[@id](0)"), "Wrong value of attribute");
     }
 
     /**
@@ -54,11 +54,11 @@ public class TestUnionCombiner extends AbstractCombinerTest {
     @Test
     public void testLists() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals("Too few list elements", 2, config.getMaxIndex("net.service.url"));
-        assertEquals("Wrong first service", "http://service1.org", config.getString("net.service.url(0)"));
-        assertEquals("Wrong second service", "http://service2.org", config.getString("net.service.url(1)"));
-        assertEquals("Wrong service attribute", 2, config.getInt("net.service.url(2)[@type]"));
-        assertEquals("Wrong number of server elements", 3, config.getMaxIndex("net.server.url"));
+        assertEquals(2, config.getMaxIndex("net.service.url"), "Too few list elements");
+        assertEquals("http://service1.org", config.getString("net.service.url(0)"), "Wrong first service");
+        assertEquals("http://service2.org", config.getString("net.service.url(1)"), "Wrong second service");
+        assertEquals(2, config.getInt("net.service.url(2)[@type]"), "Wrong service attribute");
+        assertEquals(3, config.getMaxIndex("net.server.url"), "Wrong number of server elements");
     }
 
     /**
@@ -67,11 +67,11 @@ public class TestUnionCombiner extends AbstractCombinerTest {
     @Test
     public void testSimpleValues() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals("Too few bgcolors", 1, config.getMaxIndex("gui.bgcolor"));
-        assertEquals("Wrong first color", "green", config.getString("gui.bgcolor(0)"));
-        assertEquals("Wrong second color", "black", config.getString("gui.bgcolor(1)"));
-        assertEquals("Wrong number of selcolors", 0, config.getMaxIndex("gui.selcolor"));
-        assertEquals("Wrong selcolor", "yellow", config.getString("gui.selcolor"));
+        assertEquals(1, config.getMaxIndex("gui.bgcolor"), "Too few bgcolors");
+        assertEquals("green", config.getString("gui.bgcolor(0)"), "Wrong first color");
+        assertEquals("black", config.getString("gui.bgcolor(1)"), "Wrong second color");
+        assertEquals(0, config.getMaxIndex("gui.selcolor"), "Wrong number of selcolors");
+        assertEquals("yellow", config.getString("gui.selcolor"), "Wrong selcolor");
     }
 
     /**
@@ -80,12 +80,12 @@ public class TestUnionCombiner extends AbstractCombinerTest {
     @Test
     public void testSimpleValuesWithAttributes() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals("Too few level elements", 1, config.getMaxIndex("gui.level"));
-        assertEquals("Wrong value of first element", 1, config.getInt("gui.level(0)"));
-        assertEquals("Wrong value of second element", 4, config.getInt("gui.level(1)"));
-        assertEquals("Wrong value of first attribute", 2, config.getInt("gui.level(0)[@default]"));
-        assertFalse("Found wrong attribute", config.containsKey("gui.level(0)[@min]"));
-        assertEquals("Wrong value of second attribute", 1, config.getInt("gui.level(1)[@min]"));
+        assertEquals(1, config.getMaxIndex("gui.level"), "Too few level elements");
+        assertEquals(1, config.getInt("gui.level(0)"), "Wrong value of first element");
+        assertEquals(4, config.getInt("gui.level(1)"), "Wrong value of second element");
+        assertEquals(2, config.getInt("gui.level(0)[@default]"), "Wrong value of first attribute");
+        assertFalse(config.containsKey("gui.level(0)[@min]"), "Found wrong attribute");
+        assertEquals(1, config.getInt("gui.level(1)[@min]"), "Wrong value of second attribute");
     }
 
     /**
@@ -96,9 +96,9 @@ public class TestUnionCombiner extends AbstractCombinerTest {
     public void testTableList() throws ConfigurationException {
         combiner.addListNode("table");
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals("Wrong name of first table", "documents", config.getString("database.tables.table(0).name"));
-        assertEquals("Wrong id of first table", 1, config.getInt("database.tables.table(0)[@id]"));
-        assertEquals("Wrong name of second table", "tasks", config.getString("database.tables.table(1).name"));
-        assertEquals("Wrong id of second table", 2, config.getInt("database.tables.table(1)[@id]"));
+        assertEquals("documents", config.getString("database.tables.table(0).name"), "Wrong name of first table");
+        assertEquals(1, config.getInt("database.tables.table(0)[@id]"), "Wrong id of first table");
+        assertEquals("tasks", config.getString("database.tables.table(1).name"), "Wrong name of second table");
+        assertEquals(2, config.getInt("database.tables.table(1)[@id]"), "Wrong id of second table");
     }
 }

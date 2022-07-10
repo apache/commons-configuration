@@ -16,14 +16,14 @@
  */
 package org.apache.commons.configuration2.sync;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import org.easymock.EasyMock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code ReadWriteSynchronizer}.
@@ -253,10 +253,10 @@ public class TestReadWriteSynchronizer {
         }
         for (final ReaderThread t : readerThreads) {
             t.join();
-            assertEquals("Got read errors", 0, t.getErrors());
+            assertEquals(0, t.getErrors(), "Got read errors");
         }
         sync.beginRead();
-        assertEquals("Wrong sum of money", TOTAL_MONEY, sumUpAccounts(account1, account2));
+        assertEquals(TOTAL_MONEY, sumUpAccounts(account1, account2), "Wrong sum of money");
         sync.endRead();
     }
 }

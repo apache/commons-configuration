@@ -18,7 +18,7 @@
 package org.apache.commons.configuration2;
 
 import org.apache.commons.configuration2.io.FileHandler;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * Test if non-string properties are handled correctly.
@@ -28,7 +28,7 @@ public class TestNonStringProperties extends BaseNonStringProperties {
     /** The File that we test with */
     private final String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         final PropertiesConfiguration c = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(c);

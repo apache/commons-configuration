@@ -16,7 +16,7 @@
  */
 package org.apache.commons.configuration2.builder;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
@@ -26,7 +26,7 @@ import org.apache.commons.configuration2.reloading.ReloadingController;
 import org.apache.commons.configuration2.reloading.ReloadingDetector;
 import org.apache.commons.configuration2.reloading.ReloadingEvent;
 import org.easymock.EasyMock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test class for {@code ReloadingBuilderSupportListener}.
@@ -46,7 +46,7 @@ public class TestReloadingBuilderSupportListener {
         builder.addEventListener(ConfigurationBuilderEvent.ANY, builderListener);
 
         final ReloadingBuilderSupportListener listener = ReloadingBuilderSupportListener.connect(builder, controller);
-        assertNotNull("No listener returned", listener);
+        assertNotNull(listener, "No listener returned");
         controller.checkForReloading(null);
         builderListener.nextEvent(ConfigurationBuilderEvent.RESET);
         builderListener.assertNoMoreEvents();
@@ -65,7 +65,7 @@ public class TestReloadingBuilderSupportListener {
         final BasicConfigurationBuilder<Configuration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
 
         final ReloadingBuilderSupportListener listener = ReloadingBuilderSupportListener.connect(builder, controller);
-        assertNotNull("No listener returned", listener);
+        assertNotNull(listener, "No listener returned");
         builder.getConfiguration();
         EasyMock.verify(controller);
     }
