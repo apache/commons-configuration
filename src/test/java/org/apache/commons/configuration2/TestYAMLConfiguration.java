@@ -77,7 +77,7 @@ public class TestYAMLConfiguration {
     @Test
     public void testGetProperty_integer() {
         final Object property = yamlConfiguration.getProperty("int1");
-        assertInstanceOf(Integer.class, property, "property should be an Integer");
+        assertInstanceOf(Integer.class, property);
         assertEquals(37, property);
     }
 
@@ -114,9 +114,8 @@ public class TestYAMLConfiguration {
         final String yaml = "!!java.io.FileOutputStream [" + createdFile.getAbsolutePath() + "]";
         final StringReader reader = new StringReader(yaml);
 
-        assertThrows(ConfigurationException.class, () -> yamlConfiguration.read(reader),
-                "Loading configuration did not cause an exception!");
-        assertFalse(createdFile.exists(), "Java object was created");
+        assertThrows(ConfigurationException.class, () -> yamlConfiguration.read(reader));
+        assertFalse(createdFile.exists());
     }
 
     @Test
@@ -125,9 +124,8 @@ public class TestYAMLConfiguration {
         final String yaml = "!!java.io.FileOutputStream [" + createdFile.getAbsolutePath() + "]";
         final ByteArrayInputStream inputStream = new ByteArrayInputStream(yaml.getBytes(StandardCharsets.UTF_8));
 
-        assertThrows(ConfigurationException.class, () -> yamlConfiguration.read(inputStream),
-                "Loading configuration did not cause an exception!");
-        assertFalse(createdFile.exists(), "Java object was created");
+        assertThrows(ConfigurationException.class, () -> yamlConfiguration.read(inputStream));
+        assertFalse(createdFile.exists());
     }
 
     @Test
@@ -146,8 +144,6 @@ public class TestYAMLConfiguration {
         assertEquals("value23", key2.get("key3"));
 
         final List<?> key5 = (List<?>) ((Map<?, ?>) parsed.get("key4")).get("key5");
-        assertEquals(2, key5.size());
-        assertEquals("col1", key5.get(0));
-        assertEquals("col2", key5.get(1));
+        assertEquals(Arrays.asList("col1", "col2"), key5);
     }
 }

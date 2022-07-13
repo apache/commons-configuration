@@ -48,7 +48,7 @@ public class TestConfigurationLogger {
     @Test
     public void testAbstractConfigurationDefaultLogger() {
         final AbstractConfiguration config = new BaseConfiguration();
-        assertInstanceOf(NoOpLog.class, config.getLogger().getLog(), "Wrong default logger");
+        assertInstanceOf(NoOpLog.class, config.getLogger().getLog());
     }
 
     /**
@@ -60,7 +60,7 @@ public class TestConfigurationLogger {
         final AbstractConfiguration config = new BaseConfiguration();
 
         config.setLogger(logger);
-        assertSame(logger, config.getLogger(), "Logger not set");
+        assertSame(logger, config.getLogger());
     }
 
     /**
@@ -72,7 +72,7 @@ public class TestConfigurationLogger {
         config.setLogger(new ConfigurationLogger(getClass()));
 
         config.setLogger(null);
-        assertInstanceOf(NoOpLog.class, config.getLogger().getLog(), "Logger not disabled");
+        assertInstanceOf(NoOpLog.class, config.getLogger().getLog());
     }
 
     /**
@@ -96,7 +96,7 @@ public class TestConfigurationLogger {
     public void testDummyLogger() {
         final ConfigurationLogger logger = ConfigurationLogger.newDummyLogger();
 
-        assertInstanceOf(NoOpLog.class, logger.getLog(), "Wrong internal logger");
+        assertInstanceOf(NoOpLog.class, logger.getLog());
     }
 
     /**
@@ -166,9 +166,9 @@ public class TestConfigurationLogger {
         final ConfigurationLogger logger1 = new ConfigurationLogger(getClass().getName());
         final ConfigurationLogger logger2 = new ConfigurationLogger(getClass());
 
-        assertNotNull(logger1.getLog(), "No internal logger");
+        assertNotNull(logger1.getLog());
         if (logger1.getLog() instanceof Log4JLogger) {
-            assertEquals(logger1.getLog(), logger2.getLog(), "Different internal Log4JLoggers");
+            assertEquals(logger1.getLog(), logger2.getLog());
         } else {
             // TODO assert what for the Slf4j adapter?
         }
@@ -184,7 +184,7 @@ public class TestConfigurationLogger {
         EasyMock.replay(log);
         final ConfigurationLogger logger = new ConfigurationLogger(log);
 
-        assertTrue(logger.isDebugEnabled(), "No debug log");
+        assertTrue(logger.isDebugEnabled());
         EasyMock.verify(log);
     }
 
@@ -198,7 +198,7 @@ public class TestConfigurationLogger {
         EasyMock.replay(log);
         final ConfigurationLogger logger = new ConfigurationLogger(log);
 
-        assertFalse(logger.isInfoEnabled(), "Wrong info log");
+        assertFalse(logger.isInfoEnabled());
         EasyMock.verify(log);
     }
 
@@ -215,9 +215,9 @@ public class TestConfigurationLogger {
             }
         };
 
-        assertNull(logger.getLog(), "Got an internal logger");
+        assertNull(logger.getLog());
         logger.info(MSG);
-        assertEquals(MSG, buf.toString(), "Message not logged");
+        assertEquals(MSG, buf.toString());
     }
 
     /**

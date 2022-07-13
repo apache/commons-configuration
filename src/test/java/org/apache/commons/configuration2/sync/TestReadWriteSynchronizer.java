@@ -253,10 +253,10 @@ public class TestReadWriteSynchronizer {
         }
         for (final ReaderThread t : readerThreads) {
             t.join();
-            assertEquals(0, t.getErrors(), "Got read errors");
+            assertEquals(0, t.getErrors());
         }
         sync.beginRead();
-        assertEquals(TOTAL_MONEY, sumUpAccounts(account1, account2), "Wrong sum of money");
+        assertEquals(TOTAL_MONEY, sumUpAccounts(account1, account2));
         sync.endRead();
     }
 }

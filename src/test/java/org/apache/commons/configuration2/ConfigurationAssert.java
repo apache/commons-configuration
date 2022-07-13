@@ -91,12 +91,12 @@ public class ConfigurationAssert {
      * @param expEquals the expected result of equals()
      */
     public static void checkEquals(final Object o1, final Object o2, final boolean expEquals) {
-        assertEquals(expEquals, o1.equals(o2), "Wrong result of equals()");
+        assertEquals(expEquals, o1.equals(o2));
         if (o2 != null) {
-            assertEquals(expEquals, o2.equals(o1), "Not symmetric");
+            assertEquals(expEquals, o2.equals(o1));
         }
         if (expEquals) {
-            assertEquals(o1.hashCode(), o2.hashCode(), "Different hash codes");
+            assertEquals(o1.hashCode(), o2.hashCode());
         }
     }
 

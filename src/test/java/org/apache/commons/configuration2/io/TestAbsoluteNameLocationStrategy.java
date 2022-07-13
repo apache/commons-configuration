@@ -53,7 +53,7 @@ public class TestAbsoluteNameLocationStrategy {
         final File file = ConfigurationAssert.getTestFile("test.xml");
         final FileLocator locator = FileLocatorUtils.fileLocator().fileName(file.getAbsolutePath()).create();
         final URL url = strategy.locate(fileSystem, locator);
-        assertEquals(file.getAbsoluteFile(), FileLocatorUtils.fileFromURL(url).getAbsoluteFile(), "Wrong URL");
+        assertEquals(file.getAbsoluteFile(), FileLocatorUtils.fileFromURL(url).getAbsoluteFile());
     }
 
     /**
@@ -62,7 +62,7 @@ public class TestAbsoluteNameLocationStrategy {
     @Test
     public void testNoAbsoluteFileName() {
         final FileLocator locator = FileLocatorUtils.fileLocator().fileName("test.xml").create();
-        assertNull(strategy.locate(fileSystem, locator), "Got a URL");
+        assertNull(strategy.locate(fileSystem, locator));
     }
 
     /**
@@ -71,7 +71,7 @@ public class TestAbsoluteNameLocationStrategy {
     @Test
     public void testNoFileName() {
         final FileLocator locator = FileLocatorUtils.fileLocator().create();
-        assertNull(strategy.locate(fileSystem, locator), "Got a URL");
+        assertNull(strategy.locate(fileSystem, locator));
     }
 
     /**
@@ -81,6 +81,6 @@ public class TestAbsoluteNameLocationStrategy {
     public void testNonExistingAbsoluteFile() {
         final File file = ConfigurationAssert.getOutFile("NotExistingFile.tst");
         final FileLocator locator = FileLocatorUtils.fileLocator().fileName(file.getAbsolutePath()).create();
-        assertNull(strategy.locate(fileSystem, locator), "Got a URL");
+        assertNull(strategy.locate(fileSystem, locator));
     }
 }

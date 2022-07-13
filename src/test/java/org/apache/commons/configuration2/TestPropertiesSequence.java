@@ -54,12 +54,8 @@ public class TestPropertiesSequence {
         final List<String> keysSimpleConfiguration = ConfigurationAssert.keysToList(a);
         final List<String> keysCompositeConfiguration = ConfigurationAssert.keysToList(b);
 
-        assertFalse(keysSimpleConfiguration.isEmpty(), "Size:" + keysSimpleConfiguration.size());
-        assertEquals(keysSimpleConfiguration.size(), keysCompositeConfiguration.size());
-
-        for (int i = 0; i < keysSimpleConfiguration.size(); i++) {
-            assertEquals(keysSimpleConfiguration.get(i), keysCompositeConfiguration.get(i));
-        }
+        assertFalse(keysSimpleConfiguration.isEmpty());
+        assertEquals(keysSimpleConfiguration, keysCompositeConfiguration);
     }
 
     @Test
@@ -88,12 +84,8 @@ public class TestPropertiesSequence {
         final List<String> keysSimpleConfiguration = ConfigurationAssert.keysToList(a);
         final List<String> keysCompositeConfiguration = ConfigurationAssert.keysToList(b);
 
-        assertFalse(keysSimpleConfiguration.isEmpty(), "Size:" + keysSimpleConfiguration.size());
-        assertEquals(keysSimpleConfiguration.size(), keysCompositeConfiguration.size());
-
-        for (int i = 0; i < keysSimpleConfiguration.size(); i++) {
-            assertEquals(keysSimpleConfiguration.get(i), keysCompositeConfiguration.get(i));
-        }
+        assertFalse(keysSimpleConfiguration.isEmpty());
+        assertEquals(keysSimpleConfiguration, keysCompositeConfiguration);
     }
 
     @Test

@@ -17,6 +17,7 @@
 
 package org.apache.commons.configuration2;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -60,26 +61,12 @@ public class TestEqualBehavior {
         final String[] s1 = c1.getStringArray(key);
         final String[] s2 = c2.getStringArray(key);
 
-        assertEquals(s1.length, s2.length, msg + ", length: ");
-
-        for (int i = 0; i < s1.length; i++) {
-            assertEquals(s1[i], s2[i], msg + ", String Array: ");
-        }
+        assertArrayEquals(s1, s2, msg + ", String Array: ");
 
         final List<Object> list1 = c1.getList(key);
         final List<Object> list2 = c2.getList(key);
 
-        assertEquals(list1.size(), list2.size(), msg + ", Size: ");
-
-        final Iterator<Object> it1 = list1.iterator();
-        final Iterator<Object> it2 = list2.iterator();
-
-        while (it1.hasNext() && it2.hasNext()) {
-            final String val1 = (String) it1.next();
-            final String val2 = (String) it2.next();
-            assertEquals(val1, val2, msg + ", List: ");
-        }
-        assertEquals(it1.hasNext(), it2.hasNext(), msg + ", Iterator End: ");
+        assertEquals(list1, list2, msg + ", List: ");
     }
 
     private Configuration setupCompositeConfiguration() throws ConfigurationException {

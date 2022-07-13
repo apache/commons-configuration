@@ -56,8 +56,8 @@ public class TestConfigurationConverter {
 
         final Map<Object, Object> map = ConfigurationConverter.getMap(config);
 
-        assertNotNull(map, "null map");
-        assertEquals("teststring", map.get("string"), "'string' property");
+        assertNotNull(map);
+        assertEquals("teststring", map.get("string"));
     }
 
     /**
@@ -68,11 +68,11 @@ public class TestConfigurationConverter {
         final BaseConfiguration config = createTestConfiguration();
         final Properties props = ConfigurationConverter.getProperties(config);
 
-        assertNotNull(props, "null properties");
-        assertEquals("teststring", props.getProperty("string"), "'string' property");
-        assertEquals("teststring", props.getProperty("interpolated"), "'interpolated' property");
-        assertEquals("item 1,item 2", props.getProperty("array"), "'array' property");
-        assertEquals("teststring,teststring", props.getProperty("interpolated-array"), "'interpolated-array' property");
+        assertNotNull(props);
+        assertEquals("teststring", props.getProperty("string"));
+        assertEquals("teststring", props.getProperty("interpolated"));
+        assertEquals("item 1,item 2", props.getProperty("array"));
+        assertEquals("teststring,teststring", props.getProperty("interpolated-array"));
     }
 
     /**
@@ -83,7 +83,7 @@ public class TestConfigurationConverter {
         final BaseConfiguration config = createTestConfiguration();
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(';'));
         final Properties props = ConfigurationConverter.getProperties(config);
-        assertEquals("item 1;item 2", props.getProperty("array"), "'array' property");
+        assertEquals("item 1;item 2", props.getProperty("array"));
     }
 
     /**
@@ -102,7 +102,7 @@ public class TestConfigurationConverter {
         }).anyTimes();
         EasyMock.replay(src);
         final Properties props = ConfigurationConverter.getProperties(src);
-        assertEquals("item 1,item 2", props.getProperty("array"), "'array' property");
+        assertEquals("item 1,item 2", props.getProperty("array"));
     }
 
     /**
@@ -114,7 +114,7 @@ public class TestConfigurationConverter {
         final BaseConfiguration config = new BaseConfiguration();
         config.addProperty("scalar", Integer.valueOf(42));
         final Properties props = ConfigurationConverter.getProperties(config);
-        assertEquals("42", props.getProperty("scalar"), "Wrong value");
+        assertEquals("42", props.getProperty("scalar"));
     }
 
     @Test
@@ -127,11 +127,11 @@ public class TestConfigurationConverter {
         final AbstractConfiguration config = (AbstractConfiguration) ConfigurationConverter.getConfiguration(props);
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
 
-        assertEquals("teststring", config.getString("string"), "This returns 'teststring'");
+        assertEquals("teststring", config.getString("string"));
         final List<Object> item1 = config.getList("list");
-        assertEquals("item 1", item1.get(0), "This returns 'item 1'");
+        assertEquals("item 1", item1.get(0));
 
-        assertEquals(123, config.getInt("int"), "This returns 123");
+        assertEquals(123, config.getInt("int"));
     }
 
 }

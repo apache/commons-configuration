@@ -74,7 +74,7 @@ public class TestJSONConfiguration {
     @Test
     public void testGetProperty_integer() {
         final Object property = jsonConfiguration.getProperty("int1");
-        assertInstanceOf(Integer.class, property, "property should be an Integer");
+        assertInstanceOf(Integer.class, property);
         assertEquals(37, property);
     }
 
@@ -123,9 +123,7 @@ public class TestJSONConfiguration {
         assertEquals("value23", key2.get("key3"));
 
         final List<?> key5 = (List<?>) ((Map<?, ?>) parsed.get("key4")).get("key5");
-        assertEquals(2, key5.size());
-        assertEquals("col1", key5.get(0));
-        assertEquals("col2", key5.get(1));
+        assertEquals(Arrays.asList("col1", "col2"), key5);
 
         final List<?> capitals = (List<?>) parsed.get("capitals");
         final Map<?, ?> capUk = (Map<?, ?>) capitals.get(1);

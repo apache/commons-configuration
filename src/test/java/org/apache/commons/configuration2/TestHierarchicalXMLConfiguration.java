@@ -76,16 +76,16 @@ public class TestHierarchicalXMLConfiguration {
         assertEquals("documents", config.getProperty("tables.table(1).name"));
 
         Object prop = config.getProperty("tables.table.fields.field.name");
-        assertInstanceOf(Collection.class, prop);
-        assertEquals(10, ((Collection<?>) prop).size());
+        Collection<?> collection = assertInstanceOf(Collection.class, prop);
+        assertEquals(10, collection.size());
 
         prop = config.getProperty("tables.table(0).fields.field.type");
-        assertInstanceOf(Collection.class, prop);
-        assertEquals(5, ((Collection<?>) prop).size());
+        collection = assertInstanceOf(Collection.class, prop);
+        assertEquals(5, collection.size());
 
         prop = config.getProperty("tables.table(1).fields.field.type");
-        assertInstanceOf(Collection.class, prop);
-        assertEquals(5, ((Collection<?>) prop).size());
+        collection = assertInstanceOf(Collection.class, prop);
+        assertEquals(5, collection.size());
     }
 
     /** Fixture setup. */
@@ -260,19 +260,19 @@ public class TestHierarchicalXMLConfiguration {
         handler.load(new File(TEST_FILE2).getAbsoluteFile().toURI().toURL());
 
         // Validate comment in element ignored
-        assertEquals("Case1Text", config.getString("case1"), "Comment in element must not change element value.");
+        assertEquals("Case1Text", config.getString("case1"));
 
         // Validate sibling comment ignored
-        assertEquals("Case2Text", config.getString("case2.child"), "Comment as sibling must not change element value.");
+        assertEquals("Case2Text", config.getString("case2.child"));
 
         // Validate comment ignored, CDATA processed
-        assertEquals("Case3Text", config.getString("case3"), "Comment and use of CDATA must not change element value.");
+        assertEquals("Case3Text", config.getString("case3"));
 
         // Validate comment and processing instruction ignored
-        assertEquals("Case4Text", config.getString("case4"), "Comment and use of PI must not change element value.");
+        assertEquals("Case4Text", config.getString("case4"));
 
         // Validate comment ignored in parent attribute
-        assertEquals("Case5Text", config.getString("case5[@attr]"), "Comment must not change attribute node value.");
+        assertEquals("Case5Text", config.getString("case5[@attr]"));
 
         // Validate non-text nodes haven't snuck in as keys
         final Iterator<String> iter = config.getKeys();
@@ -281,6 +281,6 @@ public class TestHierarchicalXMLConfiguration {
             iter.next();
             count++;
         }
-        assertEquals(KEY_COUNT, count, "Config must contain only " + KEY_COUNT + " keys.");
+        assertEquals(KEY_COUNT, count);
     }
 }

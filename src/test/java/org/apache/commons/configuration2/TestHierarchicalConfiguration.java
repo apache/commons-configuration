@@ -18,11 +18,11 @@ package org.apache.commons.configuration2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -65,10 +65,10 @@ public class TestHierarchicalConfiguration {
         final String key = "tables.table(0)";
         final List<HierarchicalConfiguration<ImmutableNode>> children = withUpdates ? config.childConfigurationsAt(key, true)
             : config.childConfigurationsAt(key);
-        assertEquals(2, children.size(), "Wrong number of elements");
+        assertEquals(2, children.size());
         final HierarchicalConfiguration<ImmutableNode> sub = children.get(0);
         sub.setProperty(null, NEW_NAME);
-        assertEquals(expectedName, config.getString(key + ".name"), "Wrong value in parent");
+        assertEquals(expectedName, config.getString(key + ".name"));
     }
 
     /**
@@ -94,7 +94,7 @@ public class TestHierarchicalConfiguration {
         final List<HierarchicalConfiguration<ImmutableNode>> lstFlds = withUpdates ? config.configurationsAt(key, true) : config.configurationsAt(key);
         checkSubConfigurations(lstFlds);
         lstFlds.get(0).setProperty("name", NEW_NAME);
-        assertEquals(expName, config.getString("tables.table(1).fields.field(0).name"), "Wrong name in parent");
+        assertEquals(expName, config.getString("tables.table(1).fields.field(0).name"));
     }
 
     /**
@@ -117,7 +117,7 @@ public class TestHierarchicalConfiguration {
      * @param lstFlds the list with sub configurations
      */
     private void checkSubConfigurations(final List<? extends ImmutableConfiguration> lstFlds) {
-        assertEquals(NodeStructureHelper.fieldsLength(1), lstFlds.size(), "Wrong size of fields");
+        assertEquals(NodeStructureHelper.fieldsLength(1), lstFlds.size());
         for (int i = 0; i < NodeStructureHelper.fieldsLength(1); i++) {
             final ImmutableConfiguration sub = lstFlds.get(i);
             assertEquals(NodeStructureHelper.field(1, i), sub.getString("name"), "Wrong field at position " + i);
@@ -136,7 +136,7 @@ public class TestHierarchicalConfiguration {
      */
     @Test
     public void testChildConfigurationsAtNotFound() {
-        assertTrue(config.childConfigurationsAt("not.existing.key").isEmpty(), "Got children");
+        assertTrue(config.childConfigurationsAt("not.existing.key").isEmpty());
     }
 
     /**
@@ -144,7 +144,7 @@ public class TestHierarchicalConfiguration {
      */
     @Test
     public void testChildConfigurationsAtNoUniqueKey() {
-        assertTrue(config.childConfigurationsAt("tables.table").isEmpty(), "Got children");
+        assertTrue(config.childConfigurationsAt("tables.table").isEmpty());
     }
 
     /**
@@ -197,10 +197,10 @@ public class TestHierarchicalConfiguration {
         config.addProperty("test.other", "check");
         final HierarchicalConfiguration<ImmutableNode> sub = config.configurationAt("test.sub", true);
         sub.clear();
-        assertTrue(sub.isEmpty(), "Sub not empty");
-        assertNull(config.getString("test.sub.test"), "Key still found");
+        assertTrue(sub.isEmpty());
+        assertNull(config.getString("test.sub.test"));
         sub.setProperty("test", "failure!");
-        assertNull(config.getString("test.sub.test"), "Node not detached");
+        assertNull(config.getString("test.sub.test"));
     }
 
     /**
@@ -225,12 +225,14 @@ public class TestHierarchicalConfiguration {
     @Test
     public void testConfigurationAtReadAccess() {
         final HierarchicalConfiguration<ImmutableNode> subConfig = config.configurationAt("tables.table(1)");
-        assertEquals(NodeStructureHelper.table(1), subConfig.getString("name"), "Wrong table name");
+        assertEquals(NodeStructureHelper.table(1), subConfig.getString("name"));
         final List<Object> lstFlds = subConfig.getList("fields.field.name");
-        assertEquals(NodeStructureHelper.fieldsLength(1), lstFlds.size(), "Wrong number of fields");
+
+        final List<String> expected = new ArrayList<>();
         for (int i = 0; i < NodeStructureHelper.fieldsLength(1); i++) {
-            assertEquals(NodeStructureHelper.field(1, i), lstFlds.get(i), "Wrong field at position " + i);
+            expected.add(NodeStructureHelper.field(1, i));
         }
+        assertEquals(expected, lstFlds);
     }
 
     /**
@@ -256,7 +258,7 @@ public class TestHierarchicalConfiguration {
     public void testConfigurationAtUpdateParentConnected() {
         final HierarchicalConfiguration<ImmutableNode> subConfig = config.configurationAt("tables.table(1)", true);
         config.setProperty("tables.table(1).fields.field(2).name", "testField");
-        assertEquals("testField", subConfig.getString("fields.field(2).name"), "Change visible in sub config");
+        assertEquals("testField", subConfig.getString("fields.field(2).name"));
     }
 
     /**
@@ -266,7 +268,7 @@ public class TestHierarchicalConfiguration {
     public void testConfigurationAtUpdateParentIndependent() {
         final HierarchicalConfiguration<ImmutableNode> subConfig = config.configurationAt("tables.table(1)");
         config.setProperty("tables.table(1).fields.field(2).name", "testField");
-        assertEquals(NodeStructureHelper.field(1, 2), subConfig.getString("fields.field(2).name"), "Change visible in sub config");
+        assertEquals(NodeStructureHelper.field(1, 2), subConfig.getString("fields.field(2).name"));
     }
 
     /**
@@ -276,7 +278,7 @@ public class TestHierarchicalConfiguration {
     public void testConfigurationAtUpdateSubConfigConnected() {
         final HierarchicalConfiguration<ImmutableNode> subConfig = config.configurationAt("tables.table(1)", true);
         subConfig.setProperty("name", "testTable");
-        assertEquals("testTable", config.getString("tables.table(1).name"), "Change not visible in parent");
+        assertEquals("testTable", config.getString("tables.table(1).name"));
     }
 
     /**
@@ -286,8 +288,8 @@ public class TestHierarchicalConfiguration {
     public void testConfigurationAtUpdateSubConfigIndependent() {
         final HierarchicalConfiguration<ImmutableNode> subConfig = config.configurationAt("tables.table(1)");
         subConfig.setProperty("name", "testTable");
-        assertEquals("testTable", subConfig.getString("name"), "Value not changed");
-        assertEquals(NodeStructureHelper.table(1), config.getString("tables.table(1).name"), "Change visible in parent");
+        assertEquals("testTable", subConfig.getString("name"));
+        assertEquals(NodeStructureHelper.table(1), config.getString("tables.table(1).name"));
     }
 
     /**
@@ -300,8 +302,8 @@ public class TestHierarchicalConfiguration {
         config.setThrowExceptionOnMissing(true);
         final List<HierarchicalConfiguration<ImmutableNode>> subs = config.configurationsAt(key, true);
         final BaseHierarchicalConfiguration sub = (BaseHierarchicalConfiguration) subs.get(0);
-        assertEquals(config.getListDelimiterHandler(), sub.getListDelimiterHandler(), "Wrong delimiter handler");
-        assertTrue(sub.isThrowExceptionOnMissing(), "Wrong exception flag");
+        assertEquals(config.getListDelimiterHandler(), sub.getListDelimiterHandler());
+        assertTrue(sub.isThrowExceptionOnMissing());
     }
 
     /**
@@ -311,7 +313,7 @@ public class TestHierarchicalConfiguration {
     public void testConfigurationsAtAttributeKey() {
         final String attrKey = "tables.table(0)[@type]";
         config.addProperty(attrKey, "user");
-        assertTrue(config.configurationsAt(attrKey).isEmpty(), "Got configurations");
+        assertTrue(config.configurationsAt(attrKey).isEmpty());
     }
 
     /**
@@ -319,7 +321,7 @@ public class TestHierarchicalConfiguration {
      */
     @Test
     public void testConfigurationsAtEmpty() {
-        assertTrue(config.configurationsAt("unknown.key").isEmpty(), "List is not empty");
+        assertTrue(config.configurationsAt("unknown.key").isEmpty());
     }
 
     /**
@@ -344,13 +346,13 @@ public class TestHierarchicalConfiguration {
     @Test
     public void testImmutableChildConfigurationsAt() {
         final List<ImmutableHierarchicalConfiguration> children = config.immutableChildConfigurationsAt("tables.table(0)");
-        assertEquals(2, children.size(), "Wrong number of elements");
+        assertEquals(2, children.size());
         final ImmutableHierarchicalConfiguration c1 = children.get(0);
-        assertEquals("name", c1.getRootElementName(), "Wrong name (1)");
-        assertEquals(NodeStructureHelper.table(0), c1.getString(null), "Wrong table name");
+        assertEquals("name", c1.getRootElementName());
+        assertEquals(NodeStructureHelper.table(0), c1.getString(null));
         final ImmutableHierarchicalConfiguration c2 = children.get(1);
-        assertEquals("fields", c2.getRootElementName(), "Wrong name (2)");
-        assertEquals(NodeStructureHelper.field(0, 0), c2.getString("field(0).name"), "Wrong field name");
+        assertEquals("fields", c2.getRootElementName());
+        assertEquals(NodeStructureHelper.field(0, 0), c2.getString("field(0).name"));
     }
 
     /**
@@ -359,12 +361,14 @@ public class TestHierarchicalConfiguration {
     @Test
     public void testImmutableConfigurationAt() {
         final ImmutableHierarchicalConfiguration subConfig = config.immutableConfigurationAt("tables.table(1)");
-        assertEquals(NodeStructureHelper.table(1), subConfig.getString("name"), "Wrong table name");
+        assertEquals(NodeStructureHelper.table(1), subConfig.getString("name"));
         final List<Object> lstFlds = subConfig.getList("fields.field.name");
-        assertEquals(NodeStructureHelper.fieldsLength(1), lstFlds.size(), "Wrong number of fields");
+
+        final List<String> expected = new ArrayList<>();
         for (int i = 0; i < NodeStructureHelper.fieldsLength(1); i++) {
-            assertEquals(NodeStructureHelper.field(1, i), lstFlds.get(i), "Wrong field at position " + i);
+            expected.add(NodeStructureHelper.field(1, i));
         }
+        assertEquals(expected, lstFlds);
     }
 
     /**
@@ -376,7 +380,7 @@ public class TestHierarchicalConfiguration {
         final ImmutableHierarchicalConfiguration subConfig = config.immutableConfigurationAt("tables.table(1)", true);
         config.addProperty("tables.table(-1).name", newTableName);
         config.clearTree("tables.table(1)");
-        assertEquals(newTableName, subConfig.getString("name"), "Name not updated");
+        assertEquals(newTableName, subConfig.getString("name"));
     }
 
     /**
@@ -403,7 +407,7 @@ public class TestHierarchicalConfiguration {
     @Test
     public void testInitCopyNull() {
         final BaseHierarchicalConfiguration copy = new BaseHierarchicalConfiguration((HierarchicalConfiguration<ImmutableNode>) null);
-        assertTrue(copy.isEmpty(), "Configuration not empty");
+        assertTrue(copy.isEmpty());
     }
 
     /**
@@ -434,7 +438,7 @@ public class TestHierarchicalConfiguration {
     @Test
     public void testInterpolatedConfigurationEmpty() {
         config = new BaseHierarchicalConfiguration();
-        assertTrue(config.interpolatedConfiguration().isEmpty(), "Got content");
+        assertTrue(config.interpolatedConfiguration().isEmpty());
     }
 
     /**
@@ -455,7 +459,7 @@ public class TestHierarchicalConfiguration {
         config.addProperty("prop2.prop[@attr]", "${var}");
         final Configuration sub1 = config.subset("prop2");
         final Configuration sub2 = sub1.subset("prop");
-        assertEquals("value", sub2.getString("[@attr]"), "Wrong value");
+        assertEquals("value", sub2.getString("[@attr]"));
     }
 
     @Test
@@ -465,9 +469,8 @@ public class TestHierarchicalConfiguration {
         assertEquals(NodeStructureHelper.table(0), subset.getProperty("name"));
 
         Object prop = subset.getProperty("fields.field.name");
-        assertNotNull(prop);
-        assertInstanceOf(Collection.class, prop);
-        assertEquals(5, ((Collection<?>) prop).size());
+        Collection<?> collection = assertInstanceOf(Collection.class, prop);
+        assertEquals(5, collection.size());
 
         for (int i = 0; i < NodeStructureHelper.fieldsLength(0); i++) {
             final DefaultConfigurationKey key = createConfigurationKey();
@@ -477,23 +480,23 @@ public class TestHierarchicalConfiguration {
         }
 
         // test the subset on the second table
-        assertTrue(config.subset("tables.table(2)").isEmpty(), "subset is not empty");
+        assertTrue(config.subset("tables.table(2)").isEmpty());
 
         // test the subset on the fields
         subset = config.subset("tables.table.fields.field");
         prop = subset.getProperty("name");
-        assertInstanceOf(Collection.class, prop, "prop is not a collection");
+        collection = assertInstanceOf(Collection.class, prop);
         int expectedFieldCount = 0;
         for (int i = 0; i < NodeStructureHelper.tablesLength(); i++) {
             expectedFieldCount += NodeStructureHelper.fieldsLength(i);
         }
-        assertEquals(expectedFieldCount, ((Collection<?>) prop).size(), "Wrong number of fields");
+        assertEquals(expectedFieldCount, collection.size());
 
         assertEquals(NodeStructureHelper.field(0, 0), subset.getProperty("name(0)"));
 
         // test the subset on the field names
         subset = config.subset("tables.table.fields.field.name");
-        assertTrue(subset.isEmpty(), "subset is not empty");
+        assertTrue(subset.isEmpty());
     }
 
     /**
@@ -504,8 +507,8 @@ public class TestHierarchicalConfiguration {
         final String key = "tables.table(0)[@type]";
         config.addProperty(key, "system");
         final BaseHierarchicalConfiguration subset = (BaseHierarchicalConfiguration) config.subset(key);
-        assertTrue(subset.getModel().getNodeHandler().getRootNode().getChildren().isEmpty(), "Got children of root node");
-        assertEquals("system", subset.getString("[@type]"), "Attribute not found");
+        assertTrue(subset.getModel().getNodeHandler().getRootNode().getChildren().isEmpty());
+        assertEquals("system", subset.getString("[@type]"));
     }
 
     /**
@@ -516,10 +519,10 @@ public class TestHierarchicalConfiguration {
     public void testSubsetMultipleNodesWithValues() {
         config.setProperty("tables.table(0).fields", "My fields");
         Configuration subset = config.subset("tables.table.fields");
-        assertEquals("My fields", subset.getString(""), "Wrong value of root");
+        assertEquals("My fields", subset.getString(""));
         config.setProperty("tables.table(1).fields", "My other fields");
         subset = config.subset("tables.table.fields");
-        assertNull(subset.getString(""), "Root value is not null though there are multiple values");
+        assertNull(subset.getString(""));
     }
 
     /**
@@ -530,7 +533,7 @@ public class TestHierarchicalConfiguration {
     public void testSubsetNodeWithValue() {
         config.setProperty("tables.table(0).fields", "My fields");
         final Configuration subset = config.subset("tables.table(0).fields");
-        assertEquals(NodeStructureHelper.field(0, 0), subset.getString("field(0).name"), "Wrong field name");
-        assertEquals("My fields", subset.getString(""), "Wrong value of root");
+        assertEquals(NodeStructureHelper.field(0, 0), subset.getString("field(0).name"));
+        assertEquals("My fields", subset.getString(""));
     }
 }

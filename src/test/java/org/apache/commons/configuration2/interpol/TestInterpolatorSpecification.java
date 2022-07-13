@@ -52,8 +52,8 @@ public class TestInterpolatorSpecification {
      * @param defLook2 default lookup 2
      */
     private static void checkDefaultLookups(final InterpolatorSpecification spec, final Lookup defLook1, final Lookup defLook2) {
-        assertEquals(2, spec.getDefaultLookups().size(), "Wrong number of default lookups");
-        assertTrue(spec.getDefaultLookups().containsAll(Arrays.asList(defLook1, defLook2)), "Wrong default lookups");
+        assertEquals(2, spec.getDefaultLookups().size());
+        assertTrue(spec.getDefaultLookups().containsAll(Arrays.asList(defLook1, defLook2)));
     }
 
     /**
@@ -64,9 +64,9 @@ public class TestInterpolatorSpecification {
      * @param prefLook2 prefix lookup 2
      */
     private static void checkPrefixLookups(final InterpolatorSpecification spec, final Lookup prefLook1, final Lookup prefLook2) {
-        assertEquals(2, spec.getPrefixLookups().size(), "Wrong number of prefix lookups");
-        assertSame(prefLook1, spec.getPrefixLookups().get(PREFIX1), "Wrong prefix lookup 1");
-        assertSame(prefLook2, spec.getPrefixLookups().get(PREFIX2), "Wrong prefix lookup 2");
+        assertEquals(2, spec.getPrefixLookups().size());
+        assertSame(prefLook1, spec.getPrefixLookups().get(PREFIX1));
+        assertSame(prefLook2, spec.getPrefixLookups().get(PREFIX2));
     }
 
     /**
@@ -124,9 +124,9 @@ public class TestInterpolatorSpecification {
             .withParentInterpolator(parent)
             .withStringConverter(stringConverter)
             .create();
-        assertNull(spec.getInterpolator(), "Got an interpolator");
-        assertSame(parent, spec.getParentInterpolator(), "Wrong parent interpolator");
-        assertSame(stringConverter, spec.getStringConverter(), "Wrong string converter");
+        assertNull(spec.getInterpolator());
+        assertSame(parent, spec.getParentInterpolator());
+        assertSame(stringConverter, spec.getStringConverter());
         checkPrefixLookups(spec, prefLook1, prefLook2);
         checkDefaultLookups(spec, defLook1, defLook2);
     }
@@ -152,9 +152,9 @@ public class TestInterpolatorSpecification {
             .withInterpolator(interpolator)
             .withStringConverter(stringConverter)
             .create();
-        assertSame(interpolator, spec.getInterpolator(), "Wrong interpolator");
-        assertSame(parent, spec.getParentInterpolator(), "Wrong parent interpolator");
-        assertSame(stringConverter, spec.getStringConverter(), "Wrong string converter");
+        assertSame(interpolator, spec.getInterpolator());
+        assertSame(parent, spec.getParentInterpolator());
+        assertSame(stringConverter, spec.getStringConverter());
         checkPrefixLookups(spec, prefLook1, prefLook2);
         checkDefaultLookups(spec, defLook1, defLook2);
     }
@@ -214,7 +214,7 @@ public class TestInterpolatorSpecification {
     @Test
     public void testWithDefaultLookupsNull() {
         final InterpolatorSpecification spec = builder.withDefaultLookups(null).create();
-        assertTrue(spec.getDefaultLookups().isEmpty(), "No empty default lookups collection");
+        assertTrue(spec.getDefaultLookups().isEmpty());
     }
 
     /**
@@ -240,6 +240,6 @@ public class TestInterpolatorSpecification {
     @Test
     public void testWithPrefixLookupsNull() {
         final InterpolatorSpecification spec = builder.withPrefixLookups(null).create();
-        assertTrue(spec.getPrefixLookups().isEmpty(), "No empty map with prefix lookups");
+        assertTrue(spec.getPrefixLookups().isEmpty());
     }
 }

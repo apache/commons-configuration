@@ -104,15 +104,15 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         builder.addEventListener(ConfigurationEvent.ANY, l1);
         switchToConfig(1);
         final XMLConfiguration config = builder.getConfiguration();
-        assertTrue(config.getEventListeners(ConfigurationEvent.ANY).contains(l1), "Listener not added");
+        assertTrue(config.getEventListeners(ConfigurationEvent.ANY).contains(l1));
         builder.addEventListener(Event.ANY, l2);
-        assertTrue(config.getEventListeners(Event.ANY).contains(l2), "Listener 2 not added");
-        assertTrue(builder.removeEventListener(Event.ANY, l2), "Wrong result");
-        assertFalse(builder.removeEventListener(Event.ANY, l2), "Wrong result after removal");
-        assertFalse(config.getEventListeners(Event.ANY).contains(l2), "Listener not removed");
+        assertTrue(config.getEventListeners(Event.ANY).contains(l2));
+        assertTrue(builder.removeEventListener(Event.ANY, l2));
+        assertFalse(builder.removeEventListener(Event.ANY, l2));
+        assertFalse(config.getEventListeners(Event.ANY).contains(l2));
         switchToConfig(2);
         final XMLConfiguration config2 = builder.getConfiguration();
-        assertFalse(config2.getEventListeners(Event.ANY).contains(l2), "Listener not globally removed");
+        assertFalse(config2.getEventListeners(Event.ANY).contains(l2));
     }
 
     /**
@@ -126,9 +126,9 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         switchToConfig(1);
         builder.getConfiguration();
         final ConfigurationBuilderEvent event = listener.nextEvent(ConfigurationBuilderEvent.CONFIGURATION_REQUEST);
-        assertEquals(builder, event.getSource(), "Wrong event source of request event");
+        assertEquals(builder, event.getSource());
         final ConfigurationBuilderResultCreatedEvent createdEvent = listener.nextEvent(ConfigurationBuilderResultCreatedEvent.RESULT_CREATED);
-        assertEquals(builder, createdEvent.getSource(), "Wrong source of creation event");
+        assertEquals(builder, createdEvent.getSource());
         listener.assertNoMoreEvents();
     }
 
@@ -145,8 +145,8 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         final XMLConfiguration configuration = builder.getConfiguration();
         managedBuilders.iterator().next().resetResult();
         final ConfigurationBuilderEvent event = listener.nextEvent(ConfigurationBuilderEvent.RESET);
-        assertSame(builder, event.getSource(), "Wrong event source");
-        assertNotSame(configuration, builder.getConfiguration(), "Configuration not reset");
+        assertSame(builder, event.getSource());
+        assertNotSame(configuration, builder.getConfiguration());
     }
 
     /**
@@ -158,12 +158,12 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         final MultiFileConfigurationBuilder<XMLConfiguration> builder = createBuilderWithAccessToManagedBuilders(managedBuilders);
         switchToConfig(1);
         builder.getConfiguration();
-        assertEquals(1, managedBuilders.size(), "Wrong number of managed builders (1)");
+        assertEquals(1, managedBuilders.size());
         builder.getConfiguration();
-        assertEquals(1, managedBuilders.size(), "Wrong number of managed builders (2)");
+        assertEquals(1, managedBuilders.size());
         switchToConfig(2);
         builder.getConfiguration();
-        assertEquals(2, managedBuilders.size(), "Wrong number of managed builders (3)");
+        assertEquals(2, managedBuilders.size());
     }
 
     /**
@@ -178,7 +178,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         builder.resetParameters();
         builder.configure(createTestBuilderParameters(null));
         builder.getConfiguration();
-        assertEquals(2, managedBuilders.size(), "Wrong number of managed builders");
+        assertEquals(2, managedBuilders.size());
     }
 
     /**
@@ -201,7 +201,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
             true);
         switchToConfig("unknown configuration ID");
         final XMLConfiguration config = builder.getConfiguration();
-        assertTrue(config.isEmpty(), "Got content");
+        assertTrue(config.isEmpty());
     }
 
     /**
@@ -212,11 +212,11 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         final MultiFileConfigurationBuilder<XMLConfiguration> builder = createTestBuilder(null);
         final String key = "rowsPerPage";
         switchToConfig(1);
-        assertEquals(15, builder.getConfiguration().getInt(key), "Wrong property (1)");
+        assertEquals(15, builder.getConfiguration().getInt(key));
         switchToConfig(2);
-        assertEquals(25, builder.getConfiguration().getInt(key), "Wrong property (2)");
+        assertEquals(25, builder.getConfiguration().getInt(key));
         switchToConfig(3);
-        assertEquals(35, builder.getConfiguration().getInt(key), "Wrong property (3)");
+        assertEquals(35, builder.getConfiguration().getInt(key));
     }
 
     /**
@@ -229,7 +229,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         final FileBasedConfigurationBuilder<XMLConfiguration> managedBuilder1 = builder.getManagedBuilder();
         switchToConfig(2);
         final FileBasedConfigurationBuilder<XMLConfiguration> managedBuilder2 = builder.getManagedBuilder();
-        assertNotSame(managedBuilder1.getFileHandler(), managedBuilder2.getFileHandler(), "Managed parameters not cloned");
+        assertNotSame(managedBuilder1.getFileHandler(), managedBuilder2.getFileHandler());
     }
 
     /**
@@ -243,7 +243,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         final MultiFileConfigurationBuilder<XMLConfiguration> builder = new MultiFileConfigurationBuilder<>(XMLConfiguration.class);
         builder.configure(params);
         switchToConfig(1);
-        assertEquals(15, builder.getConfiguration().getInt("rowsPerPage"), "Wrong property");
+        assertEquals(15, builder.getConfiguration().getInt("rowsPerPage"));
     }
 
     /**
@@ -255,9 +255,9 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         final MultiFileConfigurationBuilder<XMLConfiguration> builder = new MultiFileConfigurationBuilder<>(XMLConfiguration.class);
         builder.configure(params);
         final ConfigurationInterpolator interpolator = builder.getInterpolator();
-        assertNotNull(interpolator, "No interpolator");
+        assertNotNull(interpolator);
         builder.resetParameters();
-        assertNotSame(interpolator, builder.getInterpolator(), "No new interpolator");
+        assertNotSame(interpolator, builder.getInterpolator());
     }
 
     /**
@@ -275,10 +275,10 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         builder.configure(params);
         switchToConfig(1);
         final XMLConfiguration config = builder.getConfiguration();
-        assertSame(engine, config.getExpressionEngine(), "Wrong expression engine");
+        assertSame(engine, config.getExpressionEngine());
         final DefaultListDelimiterHandler listHandler = (DefaultListDelimiterHandler) config.getListDelimiterHandler();
-        assertEquals(';', listHandler.getDelimiter(), "Wrong list delimiter");
-        assertNotSame(ci, config.getInterpolator(), "Interpolator was copied");
+        assertEquals(';', listHandler.getDelimiter());
+        assertNotSame(ci, config.getInterpolator());
     }
 
     /**
@@ -310,7 +310,7 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         builder.configure(params);
         final BuilderConfigurationWrapperFactory wrapFactory = new BuilderConfigurationWrapperFactory();
         config.addConfiguration(wrapFactory.createBuilderConfigurationWrapper(HierarchicalConfiguration.class, builder), "Multi");
-        assertTrue(config.isEmpty(), "Got configuration data");
+        assertTrue(config.isEmpty());
     }
 
     /**
@@ -342,6 +342,6 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         while (cause != null && !(cause instanceof SAXParseException)) {
             cause = cause.getCause();
         }
-        assertNotNull(cause, "SAXParseException was not thrown");
+        assertNotNull(cause);
     }
 }

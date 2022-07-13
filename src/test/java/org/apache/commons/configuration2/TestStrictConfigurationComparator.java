@@ -43,31 +43,31 @@ public class TestStrictConfigurationComparator {
     @Test
     public void testCompare() {
         // Identity comparison for empty configuration
-        assertTrue(comparator.compare(configuration, configuration), "Compare an empty configuration with itself");
+        assertTrue(comparator.compare(configuration, configuration));
 
         configuration.setProperty("one", "1");
         configuration.setProperty("two", "2");
         configuration.setProperty("three", "3");
 
         // Identify comparison for non-empty configuration
-        assertTrue(comparator.compare(configuration, configuration), "Compare a configuration with itself");
+        assertTrue(comparator.compare(configuration, configuration));
 
         // Create the second configuration
         final Configuration other = new BaseConfiguration();
-        assertFalse(comparator.compare(configuration, other), "Compare a configuration with an empty one");
+        assertFalse(comparator.compare(configuration, other));
 
         other.setProperty("one", "1");
         other.setProperty("two", "2");
         other.setProperty("three", "3");
 
         // Two identical, non-empty configurations
-        assertTrue(comparator.compare(configuration, other), "Compare a configuration with an identical one");
+        assertTrue(comparator.compare(configuration, other));
 
         other.setProperty("four", "4");
-        assertFalse(comparator.compare(configuration, other), "Compare our configuration with another that has an additional key mapping");
+        assertFalse(comparator.compare(configuration, other));
 
         configuration.setProperty("four", "4");
-        assertTrue(comparator.compare(configuration, other), "Compare our configuration with another that is identical");
+        assertTrue(comparator.compare(configuration, other));
     }
 
     @Test

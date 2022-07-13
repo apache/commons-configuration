@@ -152,11 +152,11 @@ public class TestXMLListHandling {
     @Test
     public void testMixedList() throws ConfigurationException {
         final List<String> expected = Arrays.asList("foo", "blah", "bar", "baz");
-        assertEquals(expected, config.getList("mixed.values"), "Wrong list value (1)");
+        assertEquals(expected, config.getList("mixed.values"));
         final String xml = saveToString();
 
         final XMLConfiguration c2 = readFromString(xml);
-        assertEquals(expected, c2.getList("mixed.values"), "Wrong list value (2)");
+        assertEquals(expected, c2.getList("mixed.values"));
     }
 
     /**

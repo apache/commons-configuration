@@ -73,7 +73,7 @@ public class TestDefaultConversionHandler {
      * @param expResult the expected result
      */
     private void checkSingleValue(final Integer expResult) {
-        assertEquals(Integer.parseInt(REPLACEMENT), expResult.intValue(), "Wrong result");
+        assertEquals(Integer.parseInt(REPLACEMENT), expResult.intValue());
     }
 
     @BeforeEach
@@ -86,7 +86,7 @@ public class TestDefaultConversionHandler {
      */
     @Test
     public void testGetDateFormatNotSet() {
-        assertEquals(DefaultConversionHandler.DEFAULT_DATE_FORMAT, handler.getDateFormat(), "Wrong date format");
+        assertEquals(DefaultConversionHandler.DEFAULT_DATE_FORMAT, handler.getDateFormat());
     }
 
     @Test
@@ -108,7 +108,7 @@ public class TestDefaultConversionHandler {
     public void testSetDateFormat() {
         final String dateFormat = "dd.MM.yyyy";
         handler.setDateFormat(dateFormat);
-        assertEquals(dateFormat, handler.getDateFormat(), "Date format not changed");
+        assertEquals(dateFormat, handler.getDateFormat());
     }
 
     /**
@@ -117,7 +117,7 @@ public class TestDefaultConversionHandler {
     @Test
     public void testToArrayEmptyString() {
         final int[] array = (int[]) handler.toArray("", Integer.TYPE, null);
-        assertEquals(0, array.length, "Got elements");
+        assertEquals(0, array.length);
     }
 
     /**
@@ -125,7 +125,7 @@ public class TestDefaultConversionHandler {
      */
     @Test
     public void testToArrayNullInput() {
-        assertNull(handler.toArray(null, Integer.class, null), "Wrong result");
+        assertNull(handler.toArray(null, Integer.class, null));
     }
 
     /**
@@ -135,9 +135,7 @@ public class TestDefaultConversionHandler {
     public void testToArrayObject() {
         final List<String> src = Arrays.asList(VAR, "100");
         final Integer[] array = (Integer[]) handler.toArray(src, Integer.class, createInterpolator());
-        assertEquals(src.size(), array.length, "Wrong number of elements");
-        assertEquals(Integer.valueOf(REPLACEMENT), array[0], "Wrong element (1)");
-        assertEquals(Integer.valueOf(src.get(1)), array[1], "Wrong element (2)");
+        assertArrayEquals(new Integer[] {Integer.valueOf(REPLACEMENT), Integer.valueOf(src.get(1))}, array);
     }
 
     /**
@@ -147,8 +145,7 @@ public class TestDefaultConversionHandler {
     public void testToArrayPrimitiveOtherType() {
         final List<String> src = Arrays.asList(VAR, "100");
         final int[] array = (int[]) handler.toArray(src, Integer.TYPE, createInterpolator());
-        assertEquals(Integer.parseInt(REPLACEMENT), array[0], "Wrong element (1)");
-        assertEquals(Integer.parseInt(src.get(1)), array[1], "Wrong element (2)");
+        assertArrayEquals(new int[] {Integer.parseInt(REPLACEMENT), Integer.parseInt(src.get(1))}, array);
     }
 
     /**
@@ -158,7 +155,7 @@ public class TestDefaultConversionHandler {
     public void testToArrayPrimitiveSameType() {
         final int[] src = {1, 2, 3, 4, 5, 6};
         final int[] array = (int[]) handler.toArray(src, Integer.TYPE, createInterpolator());
-        assertArrayEquals(src, array, "Wrong array result");
+        assertArrayEquals(src, array);
     }
 
     /**
@@ -168,10 +165,7 @@ public class TestDefaultConversionHandler {
     public void testToArrayPrimitiveWrapperType() {
         final Integer[] src = {0, 1, 2, 4, 8, 16, 32, 64, 128};
         final int[] array = (int[]) handler.toArray(src, Integer.TYPE, createInterpolator());
-        assertEquals(src.length, array.length, "Wrong array length");
-        for (int i = 0; i < src.length; i++) {
-            assertEquals(src[i].intValue(), array[i], "Wrong element at " + i);
-        }
+        assertArrayEquals(new int[] {0, 1, 2, 4, 8, 16, 32, 64, 128}, array);
     }
 
     /**
@@ -180,12 +174,12 @@ public class TestDefaultConversionHandler {
     @Test
     public void testToCalendarWithDefaultFormat() {
         final Calendar cal = handler.to("2013-08-19 21:17:22", Calendar.class, null);
-        assertEquals(19, cal.get(Calendar.DATE), "Wrong day");
-        assertEquals(Calendar.AUGUST, cal.get(Calendar.MONTH), "Wrong month");
-        assertEquals(2013, cal.get(Calendar.YEAR), "Wrong year");
-        assertEquals(21, cal.get(Calendar.HOUR_OF_DAY), "Wrong hour");
-        assertEquals(17, cal.get(Calendar.MINUTE), "Wrong minute");
-        assertEquals(22, cal.get(Calendar.SECOND), "Wrong second");
+        assertEquals(19, cal.get(Calendar.DATE));
+        assertEquals(Calendar.AUGUST, cal.get(Calendar.MONTH));
+        assertEquals(2013, cal.get(Calendar.YEAR));
+        assertEquals(21, cal.get(Calendar.HOUR_OF_DAY));
+        assertEquals(17, cal.get(Calendar.MINUTE));
+        assertEquals(22, cal.get(Calendar.SECOND));
     }
 
     /**
@@ -196,7 +190,7 @@ public class TestDefaultConversionHandler {
     public void testToCollectionEmptyString() {
         final List<Integer> col = new ArrayList<>(1);
         handler.toCollection("", Integer.class, null, col);
-        assertTrue(col.isEmpty(), "Got elements");
+        assertTrue(col.isEmpty());
     }
 
     /**
@@ -215,7 +209,7 @@ public class TestDefaultConversionHandler {
     public void testToCollectionNullInput() {
         final ArrayList<Integer> col = new ArrayList<>();
         handler.toCollection(null, Integer.class, null, col);
-        assertTrue(col.isEmpty(), "Got elements");
+        assertTrue(col.isEmpty());
     }
 
     /**
@@ -226,9 +220,7 @@ public class TestDefaultConversionHandler {
         final Object[] src = {VAR, "100"};
         final List<Integer> col = new ArrayList<>(src.length);
         handler.toCollection(src, Integer.class, createInterpolator(), col);
-        assertEquals(src.length, col.size(), "Wrong number of elements");
-        assertEquals(Integer.parseInt(REPLACEMENT), col.get(0).intValue(), "Wrong element (1)");
-        assertEquals(Integer.parseInt(src[1].toString()), col.get(1).intValue(), "Wrong element (2)");
+        assertEquals(Arrays.asList(Integer.valueOf(REPLACEMENT), Integer.valueOf(src[1].toString())), col);
     }
 
     /**
@@ -240,9 +232,9 @@ public class TestDefaultConversionHandler {
         final Date dt = handler.to("19.08.2013", Date.class, null);
         final Calendar cal = Calendar.getInstance();
         cal.setTime(dt);
-        assertEquals(19, cal.get(Calendar.DATE), "Wrong day");
-        assertEquals(Calendar.AUGUST, cal.get(Calendar.MONTH), "Wrong month");
-        assertEquals(2013, cal.get(Calendar.YEAR), "Wrong year");
+        assertEquals(19, cal.get(Calendar.DATE));
+        assertEquals(Calendar.AUGUST, cal.get(Calendar.MONTH));
+        assertEquals(2013, cal.get(Calendar.YEAR));
     }
 
     /**
@@ -276,7 +268,7 @@ public class TestDefaultConversionHandler {
      */
     @Test
     public void testToFromEmptyCollection() {
-        assertNull(handler.to(new ArrayList<>(), Integer.class, createInterpolator()), "Wrong result");
+        assertNull(handler.to(new ArrayList<>(), Integer.class, createInterpolator()));
     }
 
     /**
@@ -302,7 +294,7 @@ public class TestDefaultConversionHandler {
      */
     @Test
     public void testToNull() {
-        assertNull(handler.to(null, Integer.class, null), "Wrong result");
+        assertNull(handler.to(null, Integer.class, null));
     }
 
     /**
@@ -312,7 +304,7 @@ public class TestDefaultConversionHandler {
     public void testToPrimitive() {
         final Long value = 20130819214935L;
         final Object result = handler.to(value.toString(), Long.TYPE, null);
-        assertEquals(value, result, "Wrong conversion result");
+        assertEquals(value, result);
     }
 
     /**

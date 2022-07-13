@@ -17,6 +17,7 @@
 package org.apache.commons.configuration2.convert;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -44,11 +45,7 @@ public class TestDefaultListDelimiterHandler {
      */
     private void checkSplit(final String value, final boolean trim, final String... expectedElements) {
         final Collection<String> elems = handler.split(value, trim);
-        assertEquals(expectedElements.length, elems.size(), "Wrong number of elements");
-        int idx = 0;
-        for (final String elem : elems) {
-            assertEquals(expectedElements[idx++], elem, "Wrong value at " + idx);
-        }
+        assertIterableEquals(Arrays.asList(expectedElements), elems);
     }
 
     @BeforeEach
@@ -60,7 +57,7 @@ public class TestDefaultListDelimiterHandler {
     public void testEscapeIntegerList() {
         final ValueTransformer trans = ListDelimiterHandler.NOOP_TRANSFORMER;
         final List<Integer> data = Arrays.asList(1, 2, 3, 4);
-        assertEquals(handler.escapeList(data, trans), "1,2,3,4");
+        assertEquals("1,2,3,4", handler.escapeList(data, trans));
     }
 
     /**
@@ -70,7 +67,7 @@ public class TestDefaultListDelimiterHandler {
     public void testEscapeList() {
         final ValueTransformer trans = value -> String.valueOf(value) + "_trans";
         final List<String> data = Arrays.asList("simple", "Hello,world!", "\\,\\", "end");
-        assertEquals("simple_trans,Hello\\,world!_trans," + "\\\\\\,\\\\_trans,end_trans", handler.escapeList(data, trans), "Wrong result");
+        assertEquals("simple_trans,Hello\\,world!_trans," + "\\\\\\,\\\\_trans,end_trans", handler.escapeList(data, trans));
     }
 
     /**
@@ -78,7 +75,7 @@ public class TestDefaultListDelimiterHandler {
      */
     @Test
     public void testEscapeStringBackslash() {
-        assertEquals("C:\\\\Temp\\\\", handler.escapeString("C:\\Temp\\"), "Wrong result");
+        assertEquals("C:\\\\Temp\\\\", handler.escapeString("C:\\Temp\\"));
     }
 
     /**
@@ -86,7 +83,7 @@ public class TestDefaultListDelimiterHandler {
      */
     @Test
     public void testEscapeStringListDelimiter() {
-        assertEquals("3\\,1415", handler.escapeString("3,1415"), "Wrong result");
+        assertEquals("3\\,1415", handler.escapeString("3,1415"));
     }
 
     /**
@@ -94,7 +91,7 @@ public class TestDefaultListDelimiterHandler {
      */
     @Test
     public void testEscapeStringListDelimiterAndBackslash() {
-        assertEquals("C:\\\\Temp\\\\\\,\\\\\\\\Share\\,/root", handler.escapeString("C:\\Temp\\,\\\\Share,/root"), "Wrong result");
+        assertEquals("C:\\\\Temp\\\\\\,\\\\\\\\Share\\,/root", handler.escapeString("C:\\Temp\\,\\\\Share,/root"));
     }
 
     /**
@@ -102,7 +99,7 @@ public class TestDefaultListDelimiterHandler {
      */
     @Test
     public void testEscapeStringNoSpecialCharacter() {
-        assertEquals("test", handler.escapeString("test"), "Wrong result");
+        assertEquals("test", handler.escapeString("test"));
     }
 
     /**
@@ -113,7 +110,7 @@ public class TestDefaultListDelimiterHandler {
         final ValueTransformer trans = EasyMock.createMock(ValueTransformer.class);
         EasyMock.expect(trans.transformValue("a\\,b")).andReturn("ok");
         EasyMock.replay(trans);
-        assertEquals("ok", handler.escape("a,b", trans), "Wrong result");
+        assertEquals("ok", handler.escape("a,b", trans));
         EasyMock.verify(trans);
     }
 

@@ -49,6 +49,6 @@ public class TestEvent {
     public void testToString() {
         final Event event = new Event(this, Event.ANY);
         final String s = event.toString();
-        assertEquals("Event [ source=" + this + " eventType=" + Event.ANY + " ]", s, "Wrong string representation");
+        assertEquals("Event [ source=" + this + " eventType=" + Event.ANY + " ]", s);
     }
 }

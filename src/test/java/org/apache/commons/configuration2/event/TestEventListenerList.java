@@ -98,17 +98,17 @@ public class TestEventListenerList {
          * @param expMessage the expected message
          */
         public void assertEvent(final Object expSource, final EventType<?> expType, final String expMessage) {
-            assertNotNull(receivedEvent, "No event received");
-            assertEquals(expSource, receivedEvent.getSource(), "Wrong source");
-            assertEquals(expType, receivedEvent.getEventType(), "Wrong event type");
-            assertEquals(expMessage, receivedEvent.getMessage(), "Wrong message");
+            assertNotNull(receivedEvent);
+            assertEquals(expSource, receivedEvent.getSource());
+            assertEquals(expType, receivedEvent.getEventType());
+            assertEquals(expMessage, receivedEvent.getMessage());
         }
 
         /**
          * Checks that this listener has not received any event.
          */
         public void assertNoEvent() {
-            assertNull(receivedEvent, "Unexpected event received: " + receivedEvent);
+            assertNull(receivedEvent);
         }
 
         @Override
@@ -162,8 +162,7 @@ public class TestEventListenerList {
      */
     private void checkEventListenersForType(final EventType<? extends Event> eventType, final EventListener<?>... expListeners) {
         final List<?> listeners = fetchElements(list.getEventListeners(eventType));
-        assertEquals(expListeners.length, listeners.size(), "Wrong number of listeners");
-        assertTrue(listeners.containsAll(Arrays.asList(expListeners)), "Wrong event listeners: " + listeners);
+        assertEquals(Arrays.asList(expListeners), listeners);
     }
 
     @BeforeEach
@@ -187,14 +186,14 @@ public class TestEventListenerList {
         list.addAll(list2);
         final Iterator<EventListenerRegistrationData<?>> it = list.getRegistrations().iterator();
         EventListenerRegistrationData<?> reg = it.next();
-        assertEquals(typeBase, reg.getEventType(), "Wrong type (1)");
-        assertEquals(l1, reg.getListener(), "Wrong listener (1)");
+        assertEquals(typeBase, reg.getEventType());
+        assertEquals(l1, reg.getListener());
         reg = it.next();
-        assertEquals(typeSub1, reg.getEventType(), "Wrong type (2)");
-        assertEquals(l2, reg.getListener(), "Wrong listener (2)");
+        assertEquals(typeSub1, reg.getEventType());
+        assertEquals(l2, reg.getListener());
         reg = it.next();
-        assertEquals(typeBase, reg.getEventType(), "Wrong type (3)");
-        assertEquals(l3, reg.getListener(), "Wrong listener (3)");
+        assertEquals(typeBase, reg.getEventType());
+        assertEquals(l3, reg.getListener());
     }
 
     /**
@@ -214,7 +213,7 @@ public class TestEventListenerList {
         list.addEventListener(typeSub2, new ListenerTestImpl());
 
         list.clear();
-        assertTrue(list.getRegistrations().isEmpty(), "Got listeners");
+        assertTrue(list.getRegistrations().isEmpty());
     }
 
     /**
@@ -235,7 +234,7 @@ public class TestEventListenerList {
         final EventListener<EventSub2> listener = event -> {};
         list.addEventListener(typeSub2, listener);
         final EventListenerList.EventListenerIterator<EventSub2> iterator = list.getEventListenerIterator(typeSub2);
-        assertTrue(iterator.hasNext(), "No elements");
+        assertTrue(iterator.hasNext());
         final Event event = new EventBase(this, typeBase, "Test");
         assertThrows(IllegalArgumentException.class, () -> iterator.invokeNext(event));
     }
@@ -262,9 +261,9 @@ public class TestEventListenerList {
 
         final List<EventListenerRegistrationData<? extends EventBase>> regs = list.getRegistrationsForSuperType(typeBase);
         final Iterator<EventListenerRegistrationData<? extends EventBase>> iterator = regs.iterator();
-        assertEquals(l1, iterator.next().getListener(), "Wrong listener 1");
-        assertEquals(l2, iterator.next().getListener(), "Wrong listener 2");
-        assertFalse(iterator.hasNext(), "Too many elements");
+        assertEquals(l1, iterator.next().getListener());
+        assertEquals(l2, iterator.next().getListener());
+        assertFalse(iterator.hasNext());
     }
 
     /**
@@ -303,7 +302,7 @@ public class TestEventListenerList {
     public void testGetEventListenersIteratorRemove() {
         list.addEventListener(typeBase, new ListenerTestImpl());
         final Iterator<EventListener<? super EventBase>> iterator = list.getEventListeners(typeBase).iterator();
-        assertTrue(iterator.hasNext(), "Wrong result");
+        assertTrue(iterator.hasNext());
         assertThrows(UnsupportedOperationException.class, iterator::remove);
     }
 
@@ -333,7 +332,7 @@ public class TestEventListenerList {
      */
     @Test
     public void testGetEventListenersNull() {
-        assertTrue(fetchElements(list.getEventListeners(null)).isEmpty(), "Got listeners");
+        assertTrue(fetchElements(list.getEventListeners(null)).isEmpty());
     }
 
     /**
@@ -347,9 +346,7 @@ public class TestEventListenerList {
         list.addEventListener(reg2);
 
         final List<EventListenerRegistrationData<?>> registrations = list.getRegistrations();
-        assertEquals(2, registrations.size(), "Wrong number of registrations");
-        assertTrue(registrations.contains(reg1), "Registration 1 not found");
-        assertTrue(registrations.contains(reg2), "Registration 2 not found");
+        assertEquals(Arrays.asList(reg1, reg2), registrations);
     }
 
     /**
@@ -477,7 +474,7 @@ public class TestEventListenerList {
         final ListenerTestImpl listener = new ListenerTestImpl();
         list.addEventListener(typeSub1, listener);
 
-        assertTrue(list.removeEventListener(typeSub1, listener), "Wrong result");
+        assertTrue(list.removeEventListener(typeSub1, listener));
         list.fire(new EventSub1(this, typeSub1, MESSAGE));
         listener.assertNoEvent();
     }
@@ -490,7 +487,7 @@ public class TestEventListenerList {
         final ListenerTestImpl listener = new ListenerTestImpl();
         list.addEventListener(typeSub1, listener);
 
-        assertFalse(list.removeEventListener(typeBase, listener), "Wrong result");
+        assertFalse(list.removeEventListener(typeBase, listener));
     }
 
     /**
@@ -499,7 +496,7 @@ public class TestEventListenerList {
     @Test
     public void testRemoveEventListenerNonExistingListener() {
         list.addEventListener(typeBase, new ListenerTestImpl());
-        assertFalse(list.removeEventListener(typeBase, new ListenerTestImpl()), "Wrong result");
+        assertFalse(list.removeEventListener(typeBase, new ListenerTestImpl()));
     }
 
     /**
@@ -507,7 +504,7 @@ public class TestEventListenerList {
      */
     @Test
     public void testRemoveEventListenerNullListener() {
-        assertFalse(list.removeEventListener(typeBase, null), "Wrong result");
+        assertFalse(list.removeEventListener(typeBase, null));
     }
 
     /**
@@ -515,7 +512,7 @@ public class TestEventListenerList {
      */
     @Test
     public void testRemoveEventListenerNullRegistration() {
-        assertFalse(list.removeEventListener(null), "Wrong result");
+        assertFalse(list.removeEventListener(null));
     }
 
     /**
@@ -523,7 +520,7 @@ public class TestEventListenerList {
      */
     @Test
     public void testRemoveEventListenerNullType() {
-        assertFalse(list.removeEventListener(null, new ListenerTestImpl()), "Wrong result");
+        assertFalse(list.removeEventListener(null, new ListenerTestImpl()));
     }
 
     /**

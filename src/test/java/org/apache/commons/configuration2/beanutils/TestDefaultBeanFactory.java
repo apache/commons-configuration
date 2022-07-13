@@ -16,6 +16,9 @@
  */
 package org.apache.commons.configuration2.beanutils;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -130,10 +133,10 @@ public class TestDefaultBeanFactory {
         props.put("throwExceptionOnMissing", Boolean.TRUE);
         decl.setBeanProperties(props);
         final Object bean = factory.createBean(createBcc(PropertiesConfiguration.class, decl));
-        assertNotNull(bean, "New bean is null");
-        assertEquals(PropertiesConfiguration.class, bean.getClass(), "Bean is of wrong class");
+        assertNotNull(bean);
+        assertEquals(PropertiesConfiguration.class, bean.getClass());
         final PropertiesConfiguration config = (PropertiesConfiguration) bean;
-        assertTrue(config.isThrowExceptionOnMissing(), "Bean was not initialized");
+        assertTrue(config.isThrowExceptionOnMissing());
     }
 
     /**
@@ -147,8 +150,8 @@ public class TestDefaultBeanFactory {
         args.add(ConstructorArg.forValue("42"));
         decl.setConstructorArgs(args);
         final BeanCreationTestCtorBean bean = (BeanCreationTestCtorBean) factory.createBean(createBcc(BeanCreationTestCtorBean.class, decl));
-        assertEquals("test", bean.getStringValue(), "Wrong string property");
-        assertEquals(42, bean.getIntValue(), "Wrong int property");
+        assertEquals("test", bean.getStringValue());
+        assertEquals(42, bean.getIntValue());
     }
 
     /**
@@ -164,8 +167,8 @@ public class TestDefaultBeanFactory {
         final BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
         decl.setConstructorArgs(Collections.singleton(ConstructorArg.forBeanDeclaration(declNested, BeanCreationTestBean.class.getName())));
         final BeanCreationTestCtorBean bean = (BeanCreationTestCtorBean) factory.createBean(createBcc(BeanCreationTestCtorBean.class, decl));
-        assertNotNull(bean.getBuddy(), "Buddy bean was not set");
-        assertEquals("test", bean.getBuddy().getStringValue(), "Wrong property of buddy bean");
+        assertNotNull(bean.getBuddy());
+        assertEquals("test", bean.getBuddy().getStringValue());
     }
 
     /**
@@ -173,7 +176,7 @@ public class TestDefaultBeanFactory {
      */
     @Test
     public void testDefaultConversionHandler() {
-        assertSame(DefaultConversionHandler.INSTANCE, factory.getConversionHandler(), "Wrong default conversion handler");
+        assertSame(DefaultConversionHandler.INSTANCE, factory.getConversionHandler());
     }
 
     /**
@@ -200,9 +203,7 @@ public class TestDefaultBeanFactory {
         decl.setConstructorArgs(args);
         final Constructor<BeanCreationTestCtorBean> ctor = DefaultBeanFactory.findMatchingConstructor(BeanCreationTestCtorBean.class, decl);
         final Class<?>[] paramTypes = ctor.getParameterTypes();
-        assertEquals(2, paramTypes.length, "Wrong number of parameters");
-        assertEquals(String.class, paramTypes[0], "Wrong parameter type 1");
-        assertEquals(Integer.TYPE, paramTypes[1], "Wrong parameter type 2");
+        assertArrayEquals(new Class<?>[] {String.class, Integer.TYPE}, paramTypes);
     }
 
     /**
@@ -216,8 +217,7 @@ public class TestDefaultBeanFactory {
         decl.setConstructorArgs(args);
         final Constructor<BeanCreationTestCtorBean> ctor = DefaultBeanFactory.findMatchingConstructor(BeanCreationTestCtorBean.class, decl);
         final Class<?>[] paramTypes = ctor.getParameterTypes();
-        assertEquals(1, paramTypes.length, "Wrong number of parameters");
-        assertEquals(BeanCreationTestBean.class, paramTypes[0], "Wrong parameter type");
+        assertArrayEquals(new Class<?>[] {BeanCreationTestBean.class}, paramTypes);
     }
 
     /**
@@ -227,7 +227,7 @@ public class TestDefaultBeanFactory {
     public void testFindMatchingConstructorNoArgs() {
         final BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
         final Constructor<BeanCreationTestBean> ctor = DefaultBeanFactory.findMatchingConstructor(BeanCreationTestBean.class, decl);
-        assertEquals(0, ctor.getParameterTypes().length, "Not the standard constructor");
+        assertEquals(0, ctor.getParameterTypes().length);
     }
 
     /**
@@ -242,9 +242,9 @@ public class TestDefaultBeanFactory {
         final ConfigurationRuntimeException crex = assertThrows(ConfigurationRuntimeException.class,
                 () -> DefaultBeanFactory.findMatchingConstructor(BeanCreationTestCtorBean.class, decl));
         final String msg = crex.getMessage();
-        assertTrue(msg.indexOf(BeanCreationTestCtorBean.class.getName()) > 0, "Bean class not found:" + msg);
-        assertTrue(msg.indexOf(TEST_STRING) > 0, "Parameter value not found: " + msg);
-        assertTrue(msg.indexOf("(" + getClass().getName() + ')') > 0, "Parameter type not found: " + msg);
+        assertThat(msg, containsString(BeanCreationTestCtorBean.class.getName()));
+        assertThat(msg, containsString(TEST_STRING));
+        assertThat(msg, containsString("(" + getClass().getName() + ')'));
     }
 
     /**
@@ -252,7 +252,7 @@ public class TestDefaultBeanFactory {
      */
     @Test
     public void testGetDefaultBeanClass() {
-        assertNull(factory.getDefaultBeanClass(), "Default class is not null");
+        assertNull(factory.getDefaultBeanClass());
     }
 
     /**
@@ -263,6 +263,6 @@ public class TestDefaultBeanFactory {
         final ConversionHandler handler = EasyMock.createMock(ConversionHandler.class);
         EasyMock.replay(handler);
         factory = new DefaultBeanFactory(handler);
-        assertSame(handler, factory.getConversionHandler(), "Wrong conversion handler");
+        assertSame(handler, factory.getConversionHandler());
     }
 }

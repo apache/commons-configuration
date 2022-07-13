@@ -88,7 +88,7 @@ public class TestSystemConfiguration {
         final String testProperty = "someTest";
         final SystemConfiguration config = new SystemConfiguration();
         config.setProperty(testProperty, "true");
-        assertEquals("true", System.getProperty(testProperty), "System property not changed");
+        assertEquals("true", System.getProperty(testProperty));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class TestSystemConfiguration {
         final PropertiesConfiguration props = new PropertiesConfiguration();
         props.addProperty("test.name", "Apache");
         SystemConfiguration.setSystemProperties(props);
-        assertEquals("Apache", System.getProperty("test.name"), "System Properties");
+        assertEquals("Apache", System.getProperty("test.name"));
     }
 
     /**
@@ -112,7 +112,7 @@ public class TestSystemConfiguration {
         handler.save();
         SystemConfiguration.setSystemProperties(handler.getBasePath(), handler.getFileName());
         final SystemConfiguration sconf = new SystemConfiguration();
-        assertTrue(sconf.getBoolean("fromFile"), "Property from file not found");
+        assertTrue(sconf.getBoolean("fromFile"));
     }
 
     @Test
@@ -121,6 +121,6 @@ public class TestSystemConfiguration {
         props.put("test.number", "123");
 
         final Configuration conf = new SystemConfiguration();
-        assertEquals(123, conf.getInt("test.number"), "number");
+        assertEquals(123, conf.getInt("test.number"));
     }
 }

@@ -84,7 +84,7 @@ public class TestExprLookup {
         final ExprLookup.Variables vars = new ExprLookup.Variables();
         vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
         final ExprLookup lookup = new ExprLookup(vars);
-        assertEquals(vars, lookup.getVariables(), "Wrong variables");
+        assertEquals(vars, lookup.getVariables());
     }
 
     /**
@@ -97,7 +97,7 @@ public class TestExprLookup {
         final ExprLookup lookup = new ExprLookup(vars);
         final ExprLookup.Variables vars2 = lookup.getVariables();
         vars2.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
-        assertEquals(vars, lookup.getVariables(), "Modified variables");
+        assertEquals(vars, lookup.getVariables());
     }
 
     @Test
@@ -121,7 +121,7 @@ public class TestExprLookup {
         String str = lookup.lookup(PATTERN1);
         assertTrue(str.startsWith("Goodbye"));
         str = lookup.lookup(PATTERN2);
-        assertTrue(str.equals("value Some text"), "Incorrect value: " + str);
+        assertEquals("value Some text", str);
         //logger.removeAppender(app);
     }
 
@@ -147,7 +147,7 @@ public class TestExprLookup {
             String str = lookup.lookup(PATTERN1);
             assertTrue(str.startsWith("Goodbye"));
             str = lookup.lookup(PATTERN2);
-            assertTrue(str.equals("value Some text"), "Incorrect value: " + str);
+            assertEquals("value Some text", str);
             logger.removeAppender(app);
         }
     }
@@ -161,7 +161,7 @@ public class TestExprLookup {
         vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
         final ExprLookup lookup = new ExprLookup(vars);
         final String value = "test";
-        assertEquals(value, lookup.lookup(value), "Wrong result");
+        assertEquals(value, lookup.lookup(value));
     }
 
     /**
@@ -176,7 +176,7 @@ public class TestExprLookup {
         lookup.setInterpolator(config.getInterpolator());
         final String pattern = "System.currentTimeMillis()";
         final String result = lookup.lookup(pattern);
-        assertNotEquals(pattern, result, "Not replaced");
+        assertNotEquals(pattern, result);
     }
 
     /**
@@ -189,6 +189,6 @@ public class TestExprLookup {
         final ExprLookup lookup = new ExprLookup(vars);
         final XMLConfiguration config = loadConfig();
         lookup.setInterpolator(config.getInterpolator());
-        assertNull(lookup.lookup("System.getProperty('undefined.property')"), "Wrong result");
+        assertNull(lookup.lookup("System.getProperty('undefined.property')"));
     }
 }

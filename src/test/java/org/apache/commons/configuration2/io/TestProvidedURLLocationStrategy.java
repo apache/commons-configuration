@@ -47,7 +47,7 @@ public class TestProvidedURLLocationStrategy {
         final FileSystem fs = EasyMock.createMock(FileSystem.class);
         EasyMock.replay(fs);
         final FileLocator locator = FileLocatorUtils.fileLocator().basePath("somePath").fileName("someFile.xml").create();
-        assertNull(strategy.locate(fs, locator), "Got a URL");
+        assertNull(strategy.locate(fs, locator));
     }
 
     /**
@@ -59,6 +59,6 @@ public class TestProvidedURLLocationStrategy {
         EasyMock.replay(fs);
         final URL url = ConfigurationAssert.getTestURL("test.xml");
         final FileLocator locator = FileLocatorUtils.fileLocator().sourceURL(url).create();
-        assertSame(url, strategy.locate(fs, locator), "Wrong URL");
+        assertSame(url, strategy.locate(fs, locator));
     }
 }

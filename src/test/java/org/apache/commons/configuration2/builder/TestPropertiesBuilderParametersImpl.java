@@ -54,10 +54,10 @@ public class TestPropertiesBuilderParametersImpl {
         BeanHelper.setProperty(params, "IOFactory", factory);
         BeanHelper.setProperty(params, "throwExceptionOnMissing", Boolean.TRUE);
         BeanHelper.setProperty(params, "fileName", "test.properties");
-        assertEquals("test.properties", params.getFileHandler().getFileName(), "Wrong file name");
+        assertEquals("test.properties", params.getFileHandler().getFileName());
         final Map<String, Object> paramsMap = params.getParameters();
-        assertEquals(Boolean.TRUE, paramsMap.get("throwExceptionOnMissing"), "Wrong exception flag");
-        assertSame(factory, params.getParameters().get("IOFactory"), "Factory not set");
+        assertEquals(Boolean.TRUE, paramsMap.get("throwExceptionOnMissing"));
+        assertSame(factory, params.getParameters().get("IOFactory"));
     }
 
     /**
@@ -73,11 +73,11 @@ public class TestPropertiesBuilderParametersImpl {
 
         params2.inheritFrom(params.getParameters());
         final Map<String, Object> parameters = params2.getParameters();
-        assertEquals(Boolean.TRUE, parameters.get("throwExceptionOnMissing"), "Exception flag not set");
-        assertEquals(includeListener, parameters.get("includeListener"), "IncludeListener not set");
-        assertEquals(factory, parameters.get("IOFactory"), "IOFactory not set");
-        assertEquals(Boolean.FALSE, parameters.get("includesAllowed"), "Include flag not set");
-        assertNull(parameters.get("layout"), "Layout was copied");
+        assertEquals(Boolean.TRUE, parameters.get("throwExceptionOnMissing"));
+        assertEquals(includeListener, parameters.get("includeListener"));
+        assertEquals(factory, parameters.get("IOFactory"));
+        assertEquals(Boolean.FALSE, parameters.get("includesAllowed"));
+        assertNull(parameters.get("layout"));
     }
 
     /**
@@ -87,8 +87,8 @@ public class TestPropertiesBuilderParametersImpl {
     public void testSetIncludeListener() {
         final ConfigurationConsumer<ConfigurationException> includeListener = EasyMock.createMock(ConfigurationConsumer.class);
         EasyMock.replay(includeListener);
-        assertSame(params, params.setIncludeListener(includeListener), "Wrong result");
-        assertSame(includeListener, params.getParameters().get("includeListener"), "IncludeListener not set");
+        assertSame(params, params.setIncludeListener(includeListener));
+        assertSame(includeListener, params.getParameters().get("includeListener"));
     }
 
     /**
@@ -101,7 +101,7 @@ public class TestPropertiesBuilderParametersImpl {
             .configure(params.setIncludeListener(includeListener));
 
         final PropertiesConfiguration config = builder.getConfiguration();
-        assertEquals(includeListener, config.getIncludeListener(), "Wrong IncludeListener");
+        assertEquals(includeListener, config.getIncludeListener());
     }
 
     /**
@@ -109,8 +109,8 @@ public class TestPropertiesBuilderParametersImpl {
      */
     @Test
     public void testSetIncludesAllowed() {
-        assertSame(params, params.setIncludesAllowed(true), "Wrong result");
-        assertEquals(Boolean.TRUE, params.getParameters().get("includesAllowed"), "Value not set");
+        assertSame(params, params.setIncludesAllowed(true));
+        assertEquals(Boolean.TRUE, params.getParameters().get("includesAllowed"));
     }
 
     /**
@@ -120,8 +120,8 @@ public class TestPropertiesBuilderParametersImpl {
     public void testSetIOFactory() {
         final PropertiesConfiguration.IOFactory factory = EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
         EasyMock.replay(factory);
-        assertSame(params, params.setIOFactory(factory), "Wrong result");
-        assertSame(factory, params.getParameters().get("IOFactory"), "Factory not set");
+        assertSame(params, params.setIOFactory(factory));
+        assertSame(factory, params.getParameters().get("IOFactory"));
     }
 
     /**
@@ -134,7 +134,7 @@ public class TestPropertiesBuilderParametersImpl {
             .configure(params.setIOFactory(factory));
 
         final PropertiesConfiguration config = builder.getConfiguration();
-        assertEquals(factory, config.getIOFactory(), "Wrong IO factory");
+        assertEquals(factory, config.getIOFactory());
     }
 
     /**
@@ -143,7 +143,7 @@ public class TestPropertiesBuilderParametersImpl {
     @Test
     public void testSetLayout() {
         final PropertiesConfigurationLayout layout = new PropertiesConfigurationLayout();
-        assertSame(params, params.setLayout(layout), "Wrong result");
-        assertSame(layout, params.getParameters().get("layout"), "Layout not set");
+        assertSame(params, params.setLayout(layout));
+        assertSame(layout, params.getParameters().get("layout"));
     }
 }

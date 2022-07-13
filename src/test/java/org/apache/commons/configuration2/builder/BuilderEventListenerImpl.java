@@ -43,7 +43,7 @@ public class BuilderEventListenerImpl implements EventListener<ConfigurationBuil
      * Checks that no further events have been received by this listener.
      */
     public void assertNoMoreEvents() {
-        assertFalse(initIterator().hasNext(), "Too many events");
+        assertFalse(initIterator().hasNext());
     }
 
     /**
@@ -68,9 +68,9 @@ public class BuilderEventListenerImpl implements EventListener<ConfigurationBuil
      */
     public <T extends ConfigurationBuilderEvent> T nextEvent(final EventType<T> eventType) {
         final Iterator<ConfigurationBuilderEvent> it = initIterator();
-        assertTrue(it.hasNext(), "Too few events received");
+        assertTrue(it.hasNext());
         final ConfigurationBuilderEvent nextEvent = it.next();
-        assertEquals(eventType, nextEvent.getEventType(), "Wrong event type");
+        assertEquals(eventType, nextEvent.getEventType());
         // Safe cast because of the comparison of the event type
         @SuppressWarnings("unchecked")
         final T resultEvent = (T) nextEvent;

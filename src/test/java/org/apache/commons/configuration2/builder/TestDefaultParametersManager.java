@@ -63,10 +63,10 @@ public class TestDefaultParametersManager {
      * @param map the map with parameters
      */
     private static void checkDefaultValues(final Map<String, Object> map) {
-        assertEquals(listHandler, map.get("listDelimiterHandler"), "Wrong delimiter handler");
-        assertEquals(Boolean.TRUE, map.get("throwExceptionOnMissing"), "Wrong exception flag value");
+        assertEquals(listHandler, map.get("listDelimiterHandler"));
+        assertEquals(Boolean.TRUE, map.get("throwExceptionOnMissing"));
         final FileBasedBuilderParametersImpl fbparams = FileBasedBuilderParametersImpl.fromParameters(map);
-        assertEquals(DEF_ENCODING, fbparams.getFileHandler().getEncoding(), "Wrong encoding");
+        assertEquals(DEF_ENCODING, fbparams.getFileHandler().getEncoding());
     }
 
     /**
@@ -75,9 +75,9 @@ public class TestDefaultParametersManager {
      * @param map the map with parameters
      */
     private static void checkNoDefaultValues(final Map<String, Object> map) {
-        assertFalse(map.containsKey("throwExceptionOnMissing"), "Got base properties");
+        assertFalse(map.containsKey("throwExceptionOnMissing"));
         final FileBasedBuilderParametersImpl fbParams = FileBasedBuilderParametersImpl.fromParameters(map, true);
-        assertNull(fbParams.getFileHandler().getEncoding(), "Got an encoding");
+        assertNull(fbParams.getFileHandler().getEncoding());
     }
 
     @BeforeAll
@@ -123,7 +123,7 @@ public class TestDefaultParametersManager {
         manager.initializeParameters(params);
         final Map<String, Object> map = params.getParameters();
         checkDefaultValues(map);
-        assertSame(engine, map.get("expressionEngine"), "Expression engine not set");
+        assertSame(engine, map.get("expressionEngine"));
     }
 
     /**

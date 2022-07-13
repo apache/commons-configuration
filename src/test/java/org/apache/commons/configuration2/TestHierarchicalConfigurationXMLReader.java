@@ -59,11 +59,11 @@ public class TestHierarchicalConfigurationXMLReader {
         final Node root = ((Document) result.getNode()).getDocumentElement();
         final JXPathContext ctx = JXPathContext.newContext(root);
 
-        assertEquals("database", root.getNodeName(), "Wrong name of root element");
-        assertEquals(1, ctx.selectNodes("/*").size(), "Wrong number of children of root");
-        assertEquals(2, ctx.selectNodes("/tables/table").size(), "Wrong number of tables");
-        assertEquals("users", ctx.getValue("/tables/table[1]/name"), "Wrong name of first table");
-        assertEquals(5, ctx.selectNodes("/tables/table[1]/fields/field").size(), "Wrong number of fields in first table");
-        assertEquals("system", ctx.getValue("/tables/table[1]/@tableType"), "Wrong attribute value");
+        assertEquals("database", root.getNodeName());
+        assertEquals(1, ctx.selectNodes("/*").size());
+        assertEquals(2, ctx.selectNodes("/tables/table").size());
+        assertEquals("users", ctx.getValue("/tables/table[1]/name"));
+        assertEquals(5, ctx.selectNodes("/tables/table[1]/fields/field").size());
+        assertEquals("system", ctx.getValue("/tables/table[1]/@tableType"));
     }
 }

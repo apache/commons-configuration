@@ -49,9 +49,9 @@ public class TestDisabledListDelimiterHandler {
     private static void checkIterator(final Iterable<?> container) {
         final Iterator<?> it = container.iterator();
         for (final Object o : VALUES) {
-            assertEquals(o, it.next(), "Wrong value");
+            assertEquals(o, it.next());
         }
-        assertFalse(it.hasNext(), "Iterator has too many objects");
+        assertFalse(it.hasNext());
     }
 
     /** The instance to be tested. */
@@ -77,7 +77,7 @@ public class TestDisabledListDelimiterHandler {
     @Test
     public void testEscapeNonStringValue() {
         final Object value = 42;
-        assertEquals(value, handler.escape(value, ListDelimiterHandler.NOOP_TRANSFORMER), "Wrong escaped object");
+        assertEquals(value, handler.escape(value, ListDelimiterHandler.NOOP_TRANSFORMER));
     }
 
     /**
@@ -89,7 +89,7 @@ public class TestDisabledListDelimiterHandler {
         final Object value = 42;
         EasyMock.expect(trans.transformValue(value)).andReturn(STR_VALUE);
         EasyMock.replay(trans);
-        assertEquals(STR_VALUE, handler.escape(value, trans), "Wrong escaped object");
+        assertEquals(STR_VALUE, handler.escape(value, trans));
         EasyMock.verify(trans);
     }
 
@@ -98,7 +98,7 @@ public class TestDisabledListDelimiterHandler {
      */
     @Test
     public void testEscapeStringValue() {
-        assertEquals(STR_VALUE, handler.escape(STR_VALUE, ListDelimiterHandler.NOOP_TRANSFORMER), "Wrong escaped string");
+        assertEquals(STR_VALUE, handler.escape(STR_VALUE, ListDelimiterHandler.NOOP_TRANSFORMER));
     }
 
     /**
@@ -110,7 +110,7 @@ public class TestDisabledListDelimiterHandler {
         final String testStr = "Some other string";
         EasyMock.expect(trans.transformValue(testStr)).andReturn(STR_VALUE);
         EasyMock.replay(trans);
-        assertEquals(STR_VALUE, handler.escape(testStr, trans), "Wrong escaped string");
+        assertEquals(STR_VALUE, handler.escape(testStr, trans));
         EasyMock.verify(trans);
     }
 
@@ -120,8 +120,8 @@ public class TestDisabledListDelimiterHandler {
     @Test
     public void testFlattenArrayWithLimit() {
         final Collection<?> res = handler.flatten(VALUES, 1);
-        assertEquals(1, res.size(), "Wrong collection size");
-        assertEquals(VALUES[0], res.iterator().next(), "Wrong element");
+        assertEquals(1, res.size());
+        assertEquals(VALUES[0], res.iterator().next());
     }
 
     /**
@@ -133,10 +133,10 @@ public class TestDisabledListDelimiterHandler {
         src.add(STR_VALUE);
         src.add(VALUES);
         final Collection<?> res = handler.flatten(src, 2);
-        assertEquals(2, res.size(), "Wrong collection size");
+        assertEquals(2, res.size());
         final Iterator<?> it = res.iterator();
-        assertEquals(STR_VALUE, it.next(), "Wrong element (1)");
-        assertEquals(VALUES[0], it.next(), "Wrong element (2)");
+        assertEquals(STR_VALUE, it.next());
+        assertEquals(VALUES[0], it.next());
     }
 
     /**
@@ -146,8 +146,8 @@ public class TestDisabledListDelimiterHandler {
     public void testFlattenCollectionWithLimit() {
         final Collection<Object> src = Arrays.asList(VALUES);
         final Collection<?> res = handler.flatten(src, 1);
-        assertEquals(1, res.size(), "Wrong collection size");
-        assertEquals(VALUES[0], res.iterator().next(), "Wrong element");
+        assertEquals(1, res.size());
+        assertEquals(VALUES[0], res.iterator().next());
     }
 
     /**
@@ -179,7 +179,7 @@ public class TestDisabledListDelimiterHandler {
      */
     @Test
     public void testParseNull() {
-        assertFalse(handler.parse(null).iterator().hasNext(), "Got a value");
+        assertFalse(handler.parse(null).iterator().hasNext());
     }
 
     /**
@@ -188,7 +188,7 @@ public class TestDisabledListDelimiterHandler {
     @Test
     public void testParseSimpleValue() {
         final Iterator<?> it = handler.parse(STR_VALUE).iterator();
-        assertEquals(STR_VALUE, it.next(), "Wrong value");
-        assertFalse(it.hasNext(), "Too many values");
+        assertEquals(STR_VALUE, it.next());
+        assertFalse(it.hasNext());
     }
 }

@@ -85,8 +85,8 @@ public class TestReloadingController {
         EasyMock.replay(detector, l);
         final ReloadingController ctrl = createController();
         ctrl.addEventListener(ReloadingEvent.ANY, l);
-        assertFalse(ctrl.checkForReloading(null), "Wrong result");
-        assertFalse(ctrl.isInReloadingState(), "In reloading state");
+        assertFalse(ctrl.checkForReloading(null));
+        assertFalse(ctrl.isInReloadingState());
         EasyMock.verify(detector, l);
     }
 
@@ -101,8 +101,8 @@ public class TestReloadingController {
         EasyMock.replay(detector, l);
         final ReloadingController ctrl = createController();
         ctrl.addEventListener(ReloadingEvent.ANY, l);
-        assertTrue(ctrl.checkForReloading(1), "Wrong result (1)");
-        assertTrue(ctrl.checkForReloading(2), "Wrong result (2)");
+        assertTrue(ctrl.checkForReloading(1));
+        assertTrue(ctrl.checkForReloading(2));
         EasyMock.verify(detector, l);
     }
 
@@ -120,13 +120,13 @@ public class TestReloadingController {
         final ReloadingController ctrl = createController();
         ctrl.addEventListener(ReloadingEvent.ANY, lRemoved);
         ctrl.addEventListener(ReloadingEvent.ANY, l);
-        assertTrue(ctrl.removeEventListener(ReloadingEvent.ANY, lRemoved), "Wrong result");
+        assertTrue(ctrl.removeEventListener(ReloadingEvent.ANY, lRemoved));
         final Object testData = "Some test data";
-        assertTrue(ctrl.checkForReloading(testData), "Wrong result");
-        assertTrue(ctrl.isInReloadingState(), "Not in reloading state");
-        assertSame(ctrl, evRef.getValue().getSource(), "Wrong event source");
-        assertSame(ctrl, evRef.getValue().getController(), "Wrong controller");
-        assertEquals(testData, evRef.getValue().getData(), "Wrong event data");
+        assertTrue(ctrl.checkForReloading(testData));
+        assertTrue(ctrl.isInReloadingState());
+        assertSame(ctrl, evRef.getValue().getSource());
+        assertSame(ctrl, evRef.getValue().getController());
+        assertEquals(testData, evRef.getValue().getData());
         EasyMock.verify(l, lRemoved, detector);
     }
 
@@ -143,7 +143,7 @@ public class TestReloadingController {
      */
     @Test
     public void testReloadingEventType() {
-        assertEquals(Event.ANY, ReloadingEvent.ANY.getSuperType(), "Wrong super event type");
+        assertEquals(Event.ANY, ReloadingEvent.ANY.getSuperType());
     }
 
     /**
@@ -151,7 +151,7 @@ public class TestReloadingController {
      */
     @Test
     public void testReloadingStateAfterInit() {
-        assertFalse(createController().isInReloadingState(), "In reloading state");
+        assertFalse(createController().isInReloadingState());
     }
 
     /**
@@ -174,7 +174,7 @@ public class TestReloadingController {
         final ReloadingController ctrl = createController();
         ctrl.checkForReloading(null);
         ctrl.resetReloadingState();
-        assertFalse(ctrl.isInReloadingState(), "In reloading state");
+        assertFalse(ctrl.isInReloadingState());
         EasyMock.verify(detector);
     }
 }

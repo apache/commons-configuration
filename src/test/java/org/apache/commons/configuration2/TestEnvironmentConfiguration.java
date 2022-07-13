@@ -71,14 +71,14 @@ public class TestEnvironmentConfiguration {
     @Test
     public void testInit() {
         boolean found = false;
-        assertFalse(config.isEmpty(), "No properties found");
+        assertFalse(config.isEmpty());
         for (final Iterator<String> it = config.getKeys(); it.hasNext();) {
             final String key = it.next();
             assertTrue(config.containsKey(key), "Key not found: " + key);
             assertNotNull(config.getString(key), "No value for property " + key);
             found = true;
         }
-        assertTrue(found, "No property keys returned");
+        assertTrue(found);
     }
 
     /**

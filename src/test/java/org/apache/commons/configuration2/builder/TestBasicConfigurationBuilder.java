@@ -186,8 +186,8 @@ public class TestBasicConfigurationBuilder {
         final PropertiesConfiguration config = builder.getConfiguration();
         builder.addEventListener(ConfigurationEvent.ANY, l2);
         final Collection<EventListener<? super ConfigurationEvent>> listeners = config.getEventListeners(ConfigurationEvent.ANY);
-        assertTrue(listeners.contains(l1), "Listener 1 not registered");
-        assertTrue(listeners.contains(l2), "Listener 2 not registered");
+        assertTrue(listeners.contains(l1));
+        assertTrue(listeners.contains(l2));
     }
 
     /**
@@ -199,10 +199,10 @@ public class TestBasicConfigurationBuilder {
             createTestParameters());
         final Map<String, Object> params = createTestParameters();
         params.put("anotherParameter", "value");
-        assertSame(builder, builder.addParameters(params), "Wrong result");
+        assertSame(builder, builder.addParameters(params));
         final Map<String, Object> params2 = builder.getParameters();
-        assertTrue(params2.keySet().containsAll(createTestParameters().keySet()), "No original parameters");
-        assertEquals("value", params2.get("anotherParameter"), "Additional parameter not found");
+        assertTrue(params2.keySet().containsAll(createTestParameters().keySet()));
+        assertEquals("value", params2.get("anotherParameter"));
     }
 
     /**
@@ -214,7 +214,7 @@ public class TestBasicConfigurationBuilder {
             createTestParameters());
         final Map<String, Object> params = builder.getParameters();
         builder.addParameters(null);
-        assertEquals(params, builder.getParameters(), "Parameters changed");
+        assertEquals(params, builder.getParameters());
     }
 
     /**
@@ -234,7 +234,7 @@ public class TestBasicConfigurationBuilder {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
         builder.configure(new BasicBuilderParameters().setBeanHelper(helper));
         final PropertiesConfiguration config = builder.getConfiguration();
-        assertTrue(classesPassedToFactory.contains(config.getClass()), "BeanFactory was not used correctly");
+        assertTrue(classesPassedToFactory.contains(config.getClass()));
     }
 
     /**
@@ -245,7 +245,7 @@ public class TestBasicConfigurationBuilder {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class)
             .configure(new BasicBuilderParameters().setListDelimiterHandler(listHandler).setThrowExceptionOnMissing(true));
         final Map<String, Object> params2 = new HashMap<>(builder.getParameters());
-        assertEquals(createTestParameters(), params2, "Wrong parameters");
+        assertEquals(createTestParameters(), params2);
     }
 
     /**
@@ -262,9 +262,9 @@ public class TestBasicConfigurationBuilder {
 
         builder.connectToReloadingController(controller);
         controller.checkForReloading(null);
-        assertTrue(controller.isInReloadingState(), "Not in reloading state");
-        assertNotSame(configuration, builder.getConfiguration(), "No new configuration created");
-        assertFalse(controller.isInReloadingState(), "Still in reloading state");
+        assertTrue(controller.isInReloadingState());
+        assertNotSame(configuration, builder.getConfiguration());
+        assertFalse(controller.isInReloadingState());
     }
 
     /**
@@ -292,15 +292,15 @@ public class TestBasicConfigurationBuilder {
         builder.copyEventListeners(builder2);
         final XMLConfiguration config = builder2.getConfiguration();
         Collection<EventListener<? super ConfigurationEvent>> listeners = config.getEventListeners(ConfigurationEvent.ANY);
-        assertEquals(1, listeners.size(), "Wrong number of listeners");
-        assertTrue(listeners.contains(l1), "Wrong listener");
+        assertEquals(1, listeners.size());
+        assertTrue(listeners.contains(l1));
         listeners = config.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL);
-        assertEquals(2, listeners.size(), "Wrong number of listeners for hierarchical");
-        assertTrue(listeners.contains(l1), "Listener 1 not found");
-        assertTrue(listeners.contains(l2), "Listener 2 not found");
+        assertEquals(2, listeners.size());
+        assertTrue(listeners.contains(l1));
+        assertTrue(listeners.contains(l2));
         final Collection<EventListener<? super ConfigurationErrorEvent>> errListeners = config.getEventListeners(ConfigurationErrorEvent.ANY);
-        assertEquals(1, errListeners.size(), "Wrong number of error listeners");
-        assertTrue(errListeners.contains(l3), "Wrong error listener");
+        assertEquals(1, errListeners.size());
+        assertTrue(errListeners.contains(l3));
     }
 
     /**
@@ -314,8 +314,8 @@ public class TestBasicConfigurationBuilder {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class)
             .configure(new EventListenerParameters().addEventListener(ConfigurationEvent.ANY, listener1).addEventListener(regData));
         final PropertiesConfiguration config = builder.getConfiguration();
-        assertTrue(config.getEventListeners(ConfigurationEvent.ANY).contains(listener1), "Configuration listener not found");
-        assertTrue(config.getEventListeners(regData.getEventType()).contains(regData.getListener()), "Error listener not found");
+        assertTrue(config.getEventListeners(ConfigurationEvent.ANY).contains(listener1));
+        assertTrue(config.getEventListeners(regData.getEventType()).contains(regData.getListener()));
     }
 
     /**
@@ -325,8 +325,8 @@ public class TestBasicConfigurationBuilder {
     public void testGetConfiguration() throws ConfigurationException {
         final PropertiesConfiguration config = new BasicConfigurationBuilder<>(PropertiesConfiguration.class)
             .configure(new BasicBuilderParameters().setListDelimiterHandler(listHandler).setThrowExceptionOnMissing(true)).getConfiguration();
-        assertTrue(config.isThrowExceptionOnMissing(), "Wrong exception flag");
-        assertEquals(listHandler, config.getListDelimiterHandler(), "Wrong list delimiter handler");
+        assertTrue(config.isThrowExceptionOnMissing());
+        assertEquals(listHandler, config.getListDelimiterHandler());
     }
 
     /**
@@ -344,12 +344,12 @@ public class TestBasicConfigurationBuilder {
             threads[i].start();
         }
         startLatch.countDown();
-        assertTrue(endLatch.await(5, TimeUnit.SECONDS), "Timeout");
+        assertTrue(endLatch.await(5, TimeUnit.SECONDS));
         final Set<Object> results = new HashSet<>();
         for (final AccessBuilderThread t : threads) {
             results.add(t.result);
         }
-        assertEquals(1, results.size(), "Wrong number of result objects");
+        assertEquals(1, results.size());
     }
 
     /**
@@ -386,7 +386,7 @@ public class TestBasicConfigurationBuilder {
         final BasicConfigurationBuilder<InitializableConfiguration> builder = new BasicConfigurationBuilder<>(InitializableConfiguration.class);
         builder.configure(new BasicBuilderParameters().setThrowExceptionOnMissing(true));
         final InitializableConfiguration config = builder.getConfiguration();
-        assertEquals("Initialized with flag true", config.getInitProperty(), "Property not correctly initialized");
+        assertEquals("Initialized with flag true", config.getInitProperty());
     }
 
     /**
@@ -396,7 +396,7 @@ public class TestBasicConfigurationBuilder {
     public void testInitializationErrorAllowed() throws ConfigurationException {
         final BasicConfigurationBuilderInitFailImpl builder = new BasicConfigurationBuilderInitFailImpl(true);
         final PropertiesConfiguration config = builder.getConfiguration();
-        assertTrue(config.isEmpty(), "Got data");
+        assertTrue(config.isEmpty());
     }
 
     /**
@@ -424,7 +424,7 @@ public class TestBasicConfigurationBuilder {
         final Map<String, Object> params = createTestParameters();
         final BasicConfigurationBuilder<Configuration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class, params);
         final Map<String, Object> params2 = new HashMap<>(builder.getParameters());
-        assertEquals(createTestParameters(), params2, "Wrong parameters");
+        assertEquals(createTestParameters(), params2);
     }
 
     /**
@@ -436,7 +436,7 @@ public class TestBasicConfigurationBuilder {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class, params);
         params.put("anotherParameter", "value");
         final Map<String, Object> params2 = new HashMap<>(builder.getParameters());
-        assertEquals(createTestParameters(), params2, "Wrong parameters");
+        assertEquals(createTestParameters(), params2);
     }
 
     /**
@@ -445,7 +445,7 @@ public class TestBasicConfigurationBuilder {
     @Test
     public void testInitWithParametersNull() {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class, null);
-        assertTrue(builder.getParameters().isEmpty(), "Got parameters");
+        assertTrue(builder.getParameters().isEmpty());
     }
 
     /**
@@ -459,12 +459,12 @@ public class TestBasicConfigurationBuilder {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
         builder.addEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l1);
         builder.addEventListener(ConfigurationEvent.ANY, l2);
-        assertTrue(builder.removeEventListener(ConfigurationEvent.ANY, l2), "Wrong result");
+        assertTrue(builder.removeEventListener(ConfigurationEvent.ANY, l2));
         final PropertiesConfiguration config = builder.getConfiguration();
-        assertFalse(config.getEventListeners(ConfigurationEvent.ANY).contains(l2), "Removed listener was registered");
-        assertTrue(config.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL).contains(l1), "Listener not registered");
+        assertFalse(config.getEventListeners(ConfigurationEvent.ANY).contains(l2));
+        assertTrue(config.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL).contains(l1));
         builder.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l1);
-        assertFalse(config.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL).contains(l1), "Listener still registered");
+        assertFalse(config.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL).contains(l1));
     }
 
     /**
@@ -492,7 +492,7 @@ public class TestBasicConfigurationBuilder {
         params.put("config-test", "a test");
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class, params);
         final PropertiesConfiguration config = builder.getConfiguration();
-        assertTrue(config.isThrowExceptionOnMissing(), "Flag not set");
+        assertTrue(config.isThrowExceptionOnMissing());
     }
 
     /**
@@ -505,8 +505,8 @@ public class TestBasicConfigurationBuilder {
         final PropertiesConfiguration config = builder.getConfiguration();
         builder.reset();
         final PropertiesConfiguration config2 = builder.getConfiguration();
-        assertNotSame(config, config2, "No new result");
-        assertFalse(config2.isThrowExceptionOnMissing(), "Parameters not reset");
+        assertNotSame(config, config2);
+        assertFalse(config2.isThrowExceptionOnMissing());
     }
 
     /**
@@ -517,7 +517,7 @@ public class TestBasicConfigurationBuilder {
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class,
             createTestParameters());
         builder.resetParameters();
-        assertTrue(builder.getParameters().isEmpty(), "Still got parameters");
+        assertTrue(builder.getParameters().isEmpty());
     }
 
     /**
@@ -530,8 +530,8 @@ public class TestBasicConfigurationBuilder {
         final PropertiesConfiguration config = builder.getConfiguration();
         builder.resetResult();
         final PropertiesConfiguration config2 = builder.getConfiguration();
-        assertNotSame(config, config2, "No new result");
-        assertTrue(config2.isThrowExceptionOnMissing(), "Wrong property");
+        assertNotSame(config, config2);
+        assertTrue(config2.isThrowExceptionOnMissing());
     }
 
     /**
@@ -542,8 +542,8 @@ public class TestBasicConfigurationBuilder {
         final Map<String, Object> params1 = new HashMap<>();
         params1.put("someParameter", "value");
         final BasicConfigurationBuilder<PropertiesConfiguration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class, params1);
-        assertSame(builder, builder.setParameters(createTestParameters()), "Wrong result");
+        assertSame(builder, builder.setParameters(createTestParameters()));
         final Map<String, Object> params2 = new HashMap<>(builder.getParameters());
-        assertEquals(createTestParameters(), params2, "Wrong parameters");
+        assertEquals(createTestParameters(), params2);
     }
 }

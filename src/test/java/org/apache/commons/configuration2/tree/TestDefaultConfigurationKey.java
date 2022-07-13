@@ -81,7 +81,7 @@ public class TestDefaultConfigurationKey {
         key.append("tables").append("table(0).");
         key.append("fields.").append("field(1)");
         key.append(null).append(TESTATTR);
-        assertEquals(TESTKEY, key.toString(), "Wrong key");
+        assertEquals(TESTKEY, key.toString());
     }
 
     /**
@@ -90,7 +90,7 @@ public class TestDefaultConfigurationKey {
     @Test
     public void testAppendAttribute() {
         key.appendAttribute("dataType");
-        assertEquals(TESTATTR, key.toString(), "Attribute key not correctly appended");
+        assertEquals(TESTATTR, key.toString());
     }
 
     /**
@@ -101,7 +101,7 @@ public class TestDefaultConfigurationKey {
         key.append("tables").append("table.").appendIndex(0);
         key.append("fields.").append("field").appendIndex(1);
         key.appendAttribute("dataType");
-        assertEquals(TESTKEY, key.toString(), "Wrong complex key");
+        assertEquals(TESTKEY, key.toString());
     }
 
     /**
@@ -110,7 +110,7 @@ public class TestDefaultConfigurationKey {
     @Test
     public void testAppendDecoratedAttributeKey() {
         key.appendAttribute(TESTATTR);
-        assertEquals(TESTATTR, key.toString(), "Decorated attribute key not correctly appended");
+        assertEquals(TESTATTR, key.toString());
     }
 
     /**
@@ -120,7 +120,7 @@ public class TestDefaultConfigurationKey {
     public void testAppendDelimiters() {
         key.append("key..").append("test").append(".");
         key.append(".more").append("..tests");
-        assertEquals("key...test.more...tests", key.toString(), "Wrong key");
+        assertEquals("key...test.more...tests", key.toString());
     }
 
     /**
@@ -132,7 +132,7 @@ public class TestDefaultConfigurationKey {
         key = new DefaultConfigurationKey(expressionEngine);
         key.append("key.......").append("test").append(".");
         key.append(".more").append("..tests");
-        assertEquals("key.test.more.tests", key.toString(), "Wrong constructed key");
+        assertEquals("key.test.more.tests", key.toString());
     }
 
     /**
@@ -141,7 +141,7 @@ public class TestDefaultConfigurationKey {
     @Test
     public void testAppendIndex() {
         key.append("test").appendIndex(42);
-        assertEquals("test(42)", key.toString(), "Index was not correctly appended");
+        assertEquals("test(42)", key.toString());
     }
 
     /**
@@ -150,7 +150,7 @@ public class TestDefaultConfigurationKey {
     @Test
     public void testAppendNullAttributeKey() {
         key.appendAttribute(null);
-        assertEquals("", key.toString(), "Null attribute key not correctly appended");
+        assertEquals("", key.toString());
     }
 
     /**
@@ -160,7 +160,7 @@ public class TestDefaultConfigurationKey {
     public void testAppendWithEscapeFlag() {
         key.append(".key.test.", true);
         key.append(".more").append(".tests", true);
-        assertEquals("..key..test...more...tests", key.toString(), "Wrong constructed key");
+        assertEquals("..key..test...more...tests", key.toString());
     }
 
     /**
@@ -170,16 +170,16 @@ public class TestDefaultConfigurationKey {
     public void testAttributeKeyWithIndex() {
         key.append(TESTATTR);
         key.appendIndex(0);
-        assertEquals(TESTATTR + "(0)", key.toString(), "Wrong attribute key with index");
+        assertEquals(TESTATTR + "(0)", key.toString());
 
         final DefaultConfigurationKey.KeyIterator it = key.iterator();
-        assertTrue(it.hasNext(), "No first element");
+        assertTrue(it.hasNext());
         it.next();
-        assertTrue(it.hasIndex(), "Index not found");
-        assertEquals(0, it.getIndex(), "Incorrect index");
-        assertTrue(it.isAttribute(), "Attribute not found");
-        assertEquals("dataType", it.currentKey(false), "Wrong plain key");
-        assertEquals(TESTATTR, it.currentKey(true), "Wrong decorated key");
+        assertTrue(it.hasIndex());
+        assertEquals(0, it.getIndex());
+        assertTrue(it.isAttribute());
+        assertEquals("dataType", it.currentKey(false));
+        assertEquals(TESTATTR, it.currentKey(true));
     }
 
     /**
@@ -187,9 +187,9 @@ public class TestDefaultConfigurationKey {
      */
     @Test
     public void testAttributeName() {
-        assertEquals("test", key.attributeName("test"), "Plain key not detected");
-        assertEquals("dataType", key.attributeName(TESTATTR), "Attribute markers not stripped");
-        assertNull(key.attributeName(null), "Null key not processed");
+        assertEquals("test", key.attributeName("test"));
+        assertEquals("dataType", key.attributeName(TESTATTR));
+        assertNull(key.attributeName(null));
     }
 
     /**
@@ -200,22 +200,22 @@ public class TestDefaultConfigurationKey {
         final DefaultConfigurationKey k1 = key(TESTKEY);
         DefaultConfigurationKey k2 = key("tables.table(0).name");
         DefaultConfigurationKey kc = k1.commonKey(k2);
-        assertEquals(key("tables.table(0)"), kc, "Wrong common key (1)");
-        assertEquals(kc, k2.commonKey(k1), "Not symmetric");
+        assertEquals(key("tables.table(0)"), kc);
+        assertEquals(kc, k2.commonKey(k1));
 
         k2 = key("tables.table(1).fields.field(1)");
         kc = k1.commonKey(k2);
-        assertEquals(key("tables"), kc, "Wrong common key (2)");
+        assertEquals(key("tables"), kc);
 
         k2 = key("completely.different.key");
         kc = k1.commonKey(k2);
-        assertEquals(0, kc.length(), "Got a common key for different keys");
+        assertEquals(0, kc.length());
 
         kc = k1.commonKey(key);
-        assertEquals(0, kc.length(), "Got a common key for empty key");
+        assertEquals(0, kc.length());
 
         kc = k1.commonKey(k1);
-        assertEquals(kc, k1, "Wrong result for reflexiv invocation");
+        assertEquals(kc, k1);
     }
 
     /**
@@ -231,9 +231,9 @@ public class TestDefaultConfigurationKey {
      */
     @Test
     public void testConstructAttributeKey() {
-        assertEquals(TESTATTR, key.constructAttributeKey("dataType"), "Wrong attribute key");
-        assertEquals(TESTATTR, key.constructAttributeKey(TESTATTR), "Attribute key was incorrectly converted");
-        assertEquals("", key.constructAttributeKey(null), "Null key could not be processed");
+        assertEquals(TESTATTR, key.constructAttributeKey("dataType"));
+        assertEquals(TESTATTR, key.constructAttributeKey(TESTATTR));
+        assertEquals("", key.constructAttributeKey(null));
     }
 
     /**
@@ -246,8 +246,8 @@ public class TestDefaultConfigurationKey {
             .create();
         expressionEngine = new DefaultExpressionEngine(symbols);
         key = new DefaultConfigurationKey(expressionEngine);
-        assertEquals(".test", key.constructAttributeKey("test"), "Wrong attribute key");
-        assertEquals(".test", key.constructAttributeKey(".test"), "Attribute key was incorrectly converted");
+        assertEquals(".test", key.constructAttributeKey("test"));
+        assertEquals(".test", key.constructAttributeKey(".test"));
     }
 
     /**
@@ -258,15 +258,15 @@ public class TestDefaultConfigurationKey {
         final DefaultConfigurationKey k1 = key(TESTKEY);
         DefaultConfigurationKey k2 = key("tables.table(0).name");
         DefaultConfigurationKey kd = k1.differenceKey(k2);
-        assertEquals("name", kd.toString(), "Wrong difference (1)");
+        assertEquals("name", kd.toString());
 
         k2 = key("tables.table(1).fields.field(1)");
         kd = k1.differenceKey(k2);
-        assertEquals("table(1).fields.field(1)", kd.toString(), "Wrong difference (2)");
+        assertEquals("table(1).fields.field(1)", kd.toString());
 
         k2 = key("completely.different.key");
         kd = k1.differenceKey(k2);
-        assertEquals(k2, kd, "Wrong difference (3)");
+        assertEquals(k2, kd);
     }
 
     /**
@@ -276,7 +276,7 @@ public class TestDefaultConfigurationKey {
     public void testDifferenceKeySame() {
         final DefaultConfigurationKey k1 = key(TESTKEY);
         final DefaultConfigurationKey kd = k1.differenceKey(k1);
-        assertEquals(0, kd.length(), "Got difference for same keys");
+        assertEquals(0, kd.length());
     }
 
     /**
@@ -285,16 +285,16 @@ public class TestDefaultConfigurationKey {
     @Test
     public void testEquals() {
         final DefaultConfigurationKey k1 = key(TESTKEY);
-        assertEquals(k1, k1, "Key not equal to itself");
+        assertEquals(k1, k1);
         final DefaultConfigurationKey k2 = key(TESTKEY);
-        assertEquals(k1, k2, "Keys are not equal");
-        assertEquals(k2, k1, "Not reflexiv");
-        assertEquals(k1.hashCode(), k2.hashCode(), "Hash codes not equal");
+        assertEquals(k1, k2);
+        assertEquals(k2, k1);
+        assertEquals(k1.hashCode(), k2.hashCode());
         k2.append("anotherPart");
-        assertNotEquals(k1, k2, "Keys considered equal");
-        assertNotEquals(k2, k1, "Keys considered equal (2)");
-        assertNotEquals(null, k1, "Key equals null key");
-        assertNotEquals(TESTKEY, k1, "Equal with string");
+        assertNotEquals(k1, k2);
+        assertNotEquals(k2, k1);
+        assertNotEquals(null, k1);
+        assertNotEquals(TESTKEY, k1);
     }
 
     /**
@@ -302,9 +302,9 @@ public class TestDefaultConfigurationKey {
      */
     @Test
     public void testIsAttributeKey() {
-        assertTrue(key.isAttributeKey(TESTATTR), "Attribute key not detected");
-        assertFalse(key.isAttributeKey(TESTPROPS), "Property key considered as attribute");
-        assertFalse(key.isAttributeKey(null), "Null key considered as attribute");
+        assertTrue(key.isAttributeKey(TESTATTR));
+        assertFalse(key.isAttributeKey(TESTPROPS));
+        assertFalse(key.isAttributeKey(null));
     }
 
     /**
@@ -317,8 +317,8 @@ public class TestDefaultConfigurationKey {
             .setAttributeStart(DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER).create();
         expressionEngine = new DefaultExpressionEngine(symbols);
         key = new DefaultConfigurationKey(expressionEngine);
-        assertTrue(key.isAttributeKey(DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER + "test"), "Attribute key not detected");
-        assertFalse(key.isAttributeKey(TESTATTR), "Property key considered as attribute key");
+        assertTrue(key.isAttributeKey(DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER + "test"));
+        assertFalse(key.isAttributeKey(TESTATTR));
     }
 
     /**
@@ -328,22 +328,22 @@ public class TestDefaultConfigurationKey {
     public void testIterate() {
         key.append(TESTKEY);
         final DefaultConfigurationKey.KeyIterator it = key.iterator();
-        assertTrue(it.hasNext(), "No key parts");
-        assertEquals("tables", it.nextKey(), "Wrong key part");
-        assertEquals("table", it.nextKey(), "Wrong key part");
-        assertTrue(it.hasIndex(), "No index found");
-        assertEquals(0, it.getIndex(), "Wrong index");
-        assertEquals("fields", it.nextKey(), "Wrong key part");
-        assertFalse(it.hasIndex(), "Found an index");
-        assertEquals("field", it.nextKey(true), "Wrong key part");
-        assertEquals(1, it.getIndex(), "Wrong index");
-        assertFalse(it.isAttribute(), "Found an attribute");
-        assertEquals("field", it.currentKey(true), "Wrong current key");
-        assertEquals("dataType", it.nextKey(), "Wrong key part");
-        assertEquals("[@dataType]", it.currentKey(true), "Wrong decorated key part");
-        assertTrue(it.isAttribute(), "Attribute not found");
-        assertFalse(it.hasNext(), "Too many key parts");
-        assertThrows(NoSuchElementException.class, it::next, "Could iterate over the iteration's end!");
+        assertTrue(it.hasNext());
+        assertEquals("tables", it.nextKey());
+        assertEquals("table", it.nextKey());
+        assertTrue(it.hasIndex());
+        assertEquals(0, it.getIndex());
+        assertEquals("fields", it.nextKey());
+        assertFalse(it.hasIndex());
+        assertEquals("field", it.nextKey(true));
+        assertEquals(1, it.getIndex());
+        assertFalse(it.isAttribute());
+        assertEquals("field", it.currentKey(true));
+        assertEquals("dataType", it.nextKey());
+        assertEquals("[@dataType]", it.currentKey(true));
+        assertTrue(it.isAttribute());
+        assertFalse(it.hasNext());
+        assertThrows(NoSuchElementException.class, it::next);
     }
 
     /**
@@ -358,10 +358,10 @@ public class TestDefaultConfigurationKey {
         key.append(".strange");
         assertEquals("\\.my\\.elem.trailing\\.dot\\..strange", key.toString());
         final DefaultConfigurationKey.KeyIterator kit = key.iterator();
-        assertEquals(".my.elem", kit.nextKey(), "Wrong first part");
-        assertEquals("trailing.dot.", kit.nextKey(), "Wrong second part");
-        assertEquals("strange", kit.nextKey(), "Wrong third part");
-        assertFalse(kit.hasNext(), "Too many parts");
+        assertEquals(".my.elem", kit.nextKey());
+        assertEquals("trailing.dot.", kit.nextKey());
+        assertEquals("strange", kit.nextKey());
+        assertFalse(kit.hasNext());
     }
 
     /**
@@ -374,16 +374,16 @@ public class TestDefaultConfigurationKey {
         key = new DefaultConfigurationKey(expressionEngine);
         key.append("this.isa.key");
         final DefaultConfigurationKey.KeyIterator kit = key.iterator();
-        assertEquals("this", kit.next(), "Wrong first key part");
-        assertFalse(kit.isAttribute(), "First part is an attribute");
-        assertTrue(kit.isPropertyKey(), "First part is not a property key");
-        assertEquals("isa", kit.next(), "Wrong second key part");
-        assertFalse(kit.isAttribute(), "Second part is an attribute");
-        assertTrue(kit.isPropertyKey(), "Second part is not a property key");
-        assertEquals("key", kit.next(), "Wrong third key part");
-        assertTrue(kit.isAttribute(), "Third part is not an attribute");
-        assertTrue(kit.isPropertyKey(), "Third part is not a property key");
-        assertEquals("key", kit.currentKey(true), "Wrong decorated key part");
+        assertEquals("this", kit.next());
+        assertFalse(kit.isAttribute());
+        assertTrue(kit.isPropertyKey());
+        assertEquals("isa", kit.next());
+        assertFalse(kit.isAttribute());
+        assertTrue(kit.isPropertyKey());
+        assertEquals("key", kit.next());
+        assertTrue(kit.isAttribute());
+        assertTrue(kit.isPropertyKey());
+        assertEquals("key", kit.currentKey(true));
     }
 
     /**
@@ -396,10 +396,10 @@ public class TestDefaultConfigurationKey {
         key.append(".strange");
         assertEquals("my..elem.trailing..dot...strange", key.toString());
         final DefaultConfigurationKey.KeyIterator kit = key.iterator();
-        assertEquals("my.elem", kit.nextKey(), "Wrong first part");
-        assertEquals("trailing.dot.", kit.nextKey(), "Wrong second part");
-        assertEquals("strange", kit.nextKey(), "Wrong third part");
-        assertFalse(kit.hasNext(), "Too many parts");
+        assertEquals("my.elem", kit.nextKey());
+        assertEquals("trailing.dot.", kit.nextKey());
+        assertEquals("strange", kit.nextKey());
+        assertFalse(kit.hasNext());
     }
 
     /**
@@ -409,21 +409,21 @@ public class TestDefaultConfigurationKey {
     public void testIterateStrangeKeys() {
         key = new DefaultConfigurationKey(expressionEngine, "key.");
         DefaultConfigurationKey.KeyIterator it = key.iterator();
-        assertTrue(it.hasNext(), "Too few key parts");
-        assertEquals("key", it.next(), "Wrong key part");
-        assertFalse(it.hasNext(), "Too many key parts");
+        assertTrue(it.hasNext());
+        assertEquals("key", it.next());
+        assertFalse(it.hasNext());
 
         key = new DefaultConfigurationKey(expressionEngine, ".");
         it = key.iterator();
-        assertFalse(it.hasNext(), "Simple delimiter key has more parts");
+        assertFalse(it.hasNext());
 
         key = new DefaultConfigurationKey(expressionEngine, "key().index()undefined(0).test");
         it = key.iterator();
-        assertEquals("key()", it.next(), "Wrong first part");
-        assertFalse(it.hasIndex(), "Index detected in first part");
-        assertEquals("index()undefined", it.nextKey(false), "Wrong second part");
-        assertTrue(it.hasIndex(), "No index detected in second part");
-        assertEquals(0, it.getIndex(), "Wrong index value");
+        assertEquals("key()", it.next());
+        assertFalse(it.hasIndex());
+        assertEquals("index()undefined", it.nextKey(false));
+        assertTrue(it.hasIndex());
+        assertEquals(0, it.getIndex());
     }
 
     /**
@@ -434,15 +434,15 @@ public class TestDefaultConfigurationKey {
         key.append("directory.platform(x86).path");
         final DefaultConfigurationKey.KeyIterator kit = key.iterator();
         String part = kit.nextKey();
-        assertEquals("directory", part, "Wrong part 1");
-        assertFalse(kit.hasIndex(), "Has index 1");
+        assertEquals("directory", part);
+        assertFalse(kit.hasIndex());
         part = kit.nextKey();
-        assertEquals("platform(x86)", part, "Wrong part 2");
-        assertFalse(kit.hasIndex(), "Has index 2");
+        assertEquals("platform(x86)", part);
+        assertFalse(kit.hasIndex());
         part = kit.nextKey();
-        assertEquals("path", part, "Wrong part 3");
-        assertFalse(kit.hasIndex(), "Has index 3");
-        assertFalse(kit.hasNext(), "Too many elements");
+        assertEquals("path", part);
+        assertFalse(kit.hasIndex());
+        assertFalse(kit.hasNext());
     }
 
     /**
@@ -453,13 +453,13 @@ public class TestDefaultConfigurationKey {
         expressionEngine = new DefaultExpressionEngine(symbols().setEscapedDelimiter(null).create());
         key = new DefaultConfigurationKey(expressionEngine);
         key.append("..my..elem.trailing..dot...strange");
-        assertEquals("my..elem.trailing..dot...strange", key.toString(), "Wrong key");
+        assertEquals("my..elem.trailing..dot...strange", key.toString());
         final DefaultConfigurationKey.KeyIterator kit = key.iterator();
         final String[] parts = {"my", "elem", "trailing", "dot", "strange"};
         for (int i = 0; i < parts.length; i++) {
             assertEquals(parts[i], kit.next(), "Wrong key part " + i);
         }
-        assertFalse(kit.hasNext(), "Too many parts");
+        assertFalse(kit.hasNext());
     }
 
     /**
@@ -481,12 +481,12 @@ public class TestDefaultConfigurationKey {
     @Test
     public void testLength() {
         key.append(TESTPROPS);
-        assertEquals(TESTPROPS.length(), key.length(), "Wrong length");
+        assertEquals(TESTPROPS.length(), key.length());
         key.appendAttribute("dataType");
-        assertEquals(TESTKEY.length(), key.length(), "Wrong length");
+        assertEquals(TESTKEY.length(), key.length());
         key.setLength(TESTPROPS.length());
-        assertEquals(TESTPROPS.length(), key.length(), "Wrong length after shortening");
-        assertEquals(TESTPROPS, key.toString(), "Wrong resulting key");
+        assertEquals(TESTPROPS.length(), key.length());
+        assertEquals(TESTPROPS, key.toString());
     }
 
     /**
@@ -502,9 +502,9 @@ public class TestDefaultConfigurationKey {
      */
     @Test
     public void testTrim() {
-        assertEquals("test", key.trim(".test."), "Key was not trimmed");
-        assertEquals("", key.trim(null), "Null key could not be processed");
-        assertEquals("", key.trim(DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER), "Delimiter could not be processed");
+        assertEquals("test", key.trim(".test."));
+        assertEquals("", key.trim(null));
+        assertEquals("", key.trim(DefaultExpressionEngineSymbols.DEFAULT_PROPERTY_DELIMITER));
     }
 
     /**
@@ -512,8 +512,8 @@ public class TestDefaultConfigurationKey {
      */
     @Test
     public void testTrimLeft() {
-        assertEquals("test.", key.trimLeft(".test."), "Key was not left trimmed");
-        assertEquals("..test.", key.trimLeft("..test."), "Too much left trimming");
+        assertEquals("test.", key.trimLeft(".test."));
+        assertEquals("..test.", key.trimLeft("..test."));
     }
 
     /**
@@ -521,7 +521,7 @@ public class TestDefaultConfigurationKey {
      */
     @Test
     public void testTrimRight() {
-        assertEquals(".test", key.trimRight(".test."), "Key was not right trimmed");
-        assertEquals(".test..", key.trimRight(".test.."), "Too much right trimming");
+        assertEquals(".test", key.trimRight(".test."));
+        assertEquals(".test..", key.trimRight(".test.."));
     }
 }

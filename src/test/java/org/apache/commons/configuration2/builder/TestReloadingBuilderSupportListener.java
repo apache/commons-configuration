@@ -46,7 +46,7 @@ public class TestReloadingBuilderSupportListener {
         builder.addEventListener(ConfigurationBuilderEvent.ANY, builderListener);
 
         final ReloadingBuilderSupportListener listener = ReloadingBuilderSupportListener.connect(builder, controller);
-        assertNotNull(listener, "No listener returned");
+        assertNotNull(listener);
         controller.checkForReloading(null);
         builderListener.nextEvent(ConfigurationBuilderEvent.RESET);
         builderListener.assertNoMoreEvents();
@@ -65,7 +65,7 @@ public class TestReloadingBuilderSupportListener {
         final BasicConfigurationBuilder<Configuration> builder = new BasicConfigurationBuilder<>(PropertiesConfiguration.class);
 
         final ReloadingBuilderSupportListener listener = ReloadingBuilderSupportListener.connect(builder, controller);
-        assertNotNull(listener, "No listener returned");
+        assertNotNull(listener);
         builder.getConfiguration();
         EasyMock.verify(controller);
     }

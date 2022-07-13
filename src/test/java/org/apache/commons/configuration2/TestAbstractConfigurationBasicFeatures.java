@@ -149,10 +149,12 @@ public class TestAbstractConfigurationBasicFeatures {
         config.addProperty("test", lstValues1);
         config.addProperty("test", Arrays.asList(lstValues2));
         final List<Object> lst = config.getList("test");
-        assertEquals(6, lst.size(), "Wrong number of list elements");
+
+        final List<Object> expected = new ArrayList<>();
         for (int i = 0; i < lst.size(); i++) {
-            assertEquals("value" + (i + 1), lst.get(i), "Wrong list element at " + i);
+            expected.add("value" + (i + 1));
         }
+        assertEquals(expected, lst);
     }
 
     /**
@@ -165,10 +167,10 @@ public class TestAbstractConfigurationBasicFeatures {
     private void checkCopyEvents(final CollectingConfigurationListener l, final Configuration src, final EventType<?> eventType) {
         final Map<String, ConfigurationEvent> events = new HashMap<>();
         for (final ConfigurationEvent e : l.events) {
-            assertEquals(eventType, e.getEventType(), "Wrong event type");
+            assertEquals(eventType, e.getEventType());
             assertTrue(src.containsKey(e.getPropertyName()), "Unknown property: " + e.getPropertyName());
             if (!e.isBeforeUpdate()) {
-                assertTrue(events.containsKey(e.getPropertyName()), "After event without before event");
+                assertTrue(events.containsKey(e.getPropertyName()));
             } else {
                 events.put(e.getPropertyName(), e);
             }
@@ -189,8 +191,7 @@ public class TestAbstractConfigurationBasicFeatures {
         final BaseConfiguration config = new BaseConfiguration();
         config.addProperty(KEY_PREFIX, value);
         final List<Object> lst = config.getList(KEY_PREFIX);
-        assertEquals(1, lst.size(), "Wrong number of values");
-        assertEquals(value.toString(), lst.get(0), "Wrong value");
+        assertEquals(Arrays.asList(value.toString()), lst);
     }
 
     /**
@@ -202,8 +203,7 @@ public class TestAbstractConfigurationBasicFeatures {
         final BaseConfiguration config = new BaseConfiguration();
         config.addProperty(KEY_PREFIX, value);
         final String[] array = config.getStringArray(KEY_PREFIX);
-        assertEquals(1, array.length, "Wrong number of elements");
-        assertEquals(value.toString(), array[0], "Wrong value");
+        assertArrayEquals(new String[] {value.toString()}, array);
     }
 
     /**
@@ -213,11 +213,9 @@ public class TestAbstractConfigurationBasicFeatures {
      */
     private void checkListProperties(final Configuration config) {
         List<Object> values = config.getList("list1");
-        assertEquals(3, values.size(), "Wrong number of elements in list 1");
+        assertEquals(3, values.size());
         values = config.getList("list2");
-        assertEquals(2, values.size(), "Wrong number of elements in list 2");
-        assertEquals("3,1415", values.get(0), "Wrong value 1");
-        assertEquals("9,81", values.get(1), "Wrong value 2");
+        assertEquals(Arrays.asList("3,1415", "9,81"), values);
     }
 
     /**
@@ -281,9 +279,7 @@ public class TestAbstractConfigurationBasicFeatures {
             final String key = KEY_PREFIX + i;
             if (srcConfig.containsKey(key)) {
                 final List<Object> values = config.getList(key);
-                assertEquals(2, values.size(), "Value not added: " + key);
-                assertEquals("value" + i, values.get(0), "Wrong value 1 for " + key);
-                assertEquals("src" + i, values.get(1), "Wrong value 2 for " + key);
+                assertEquals(Arrays.asList("value" + i, "src" + i), values, "Wrong values for " + key);
             } else {
                 assertEquals("value" + i, config.getProperty(key), "Value modified: " + key);
             }
@@ -300,7 +296,7 @@ public class TestAbstractConfigurationBasicFeatures {
         dstConfig.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         srcConfig.setProperty(KEY_PREFIX, "C:\\Temp\\,D:\\Data");
         dstConfig.append(srcConfig);
-        assertEquals(srcConfig.getString(KEY_PREFIX), dstConfig.getString(KEY_PREFIX), "Wrong property value");
+        assertEquals(srcConfig.getString(KEY_PREFIX), dstConfig.getString(KEY_PREFIX));
     }
 
     /**
@@ -356,7 +352,7 @@ public class TestAbstractConfigurationBasicFeatures {
             config.addProperty("key" + i, "value" + i);
         }
         config.clear();
-        assertTrue(config.isEmpty(), "Configuration not empty");
+        assertTrue(config.isEmpty());
     }
 
     /**
@@ -387,7 +383,7 @@ public class TestAbstractConfigurationBasicFeatures {
         dstConfig.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         srcConfig.setProperty(KEY_PREFIX, "C:\\Temp\\,D:\\Data");
         dstConfig.copy(srcConfig);
-        assertEquals(srcConfig.getString(KEY_PREFIX), dstConfig.getString(KEY_PREFIX), "Wrong property value");
+        assertEquals(srcConfig.getString(KEY_PREFIX), dstConfig.getString(KEY_PREFIX));
     }
 
     /**
@@ -443,7 +439,7 @@ public class TestAbstractConfigurationBasicFeatures {
     @Test
     public void testDefaultConversionHandler() {
         final PropertiesConfiguration config = new PropertiesConfiguration();
-        assertEquals(DefaultConversionHandler.class, config.getConversionHandler().getClass(), "Wrong default conversion handler");
+        assertEquals(DefaultConversionHandler.class, config.getConversionHandler().getClass());
     }
 
     /**
@@ -453,7 +449,7 @@ public class TestAbstractConfigurationBasicFeatures {
     public void testDefaultConversionHandlerSharedInstance() {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         final PropertiesConfiguration config2 = new PropertiesConfiguration();
-        assertSame(config.getConversionHandler(), config2.getConversionHandler(), "Multiple conversion handlers");
+        assertSame(config.getConversionHandler(), config2.getConversionHandler());
     }
 
     /**
@@ -462,7 +458,7 @@ public class TestAbstractConfigurationBasicFeatures {
     @Test
     public void testDefaultListDelimiterHandler() {
         final BaseConfiguration config = new BaseConfiguration();
-        assertInstanceOf(DisabledListDelimiterHandler.class, config.getListDelimiterHandler(), "Wrong list delimiter handler");
+        assertInstanceOf(DisabledListDelimiterHandler.class, config.getListDelimiterHandler());
     }
 
     /**
@@ -473,7 +469,7 @@ public class TestAbstractConfigurationBasicFeatures {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         final Integer value = 20130816;
         config.addProperty(KEY_PREFIX, value.toString());
-        assertEquals(value, config.get(Integer.class, KEY_PREFIX), "Wrong result");
+        assertEquals(value, config.get(Integer.class, KEY_PREFIX));
     }
 
     /**
@@ -488,7 +484,7 @@ public class TestAbstractConfigurationBasicFeatures {
             expected[i] = Integer.valueOf(i);
         }
         final Integer[] result = config.get(Integer[].class, KEY_PREFIX);
-        assertArrayEquals(expected, result, "Wrong result");
+        assertArrayEquals(expected, result);
     }
 
     /**
@@ -521,7 +517,7 @@ public class TestAbstractConfigurationBasicFeatures {
             expected[i] = (short) i;
         }
         final short[] result = config.get(short[].class, KEY_PREFIX, ArrayUtils.EMPTY_SHORT_ARRAY);
-        assertArrayEquals(expected, result, "Wrong result");
+        assertArrayEquals(expected, result);
     }
 
     /**
@@ -530,7 +526,7 @@ public class TestAbstractConfigurationBasicFeatures {
     @Test
     public void testGetArrayUnknownNoDefault() {
         final PropertiesConfiguration config = new PropertiesConfiguration();
-        assertNull(config.get(Integer[].class, KEY_PREFIX), "Wrong result");
+        assertNull(config.get(Integer[].class, KEY_PREFIX));
     }
 
     /**
@@ -540,7 +536,7 @@ public class TestAbstractConfigurationBasicFeatures {
     public void testGetArrayUnknownWithDefault() {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         final int[] defValue = {1, 2, 3};
-        assertArrayEquals(defValue, config.get(int[].class, KEY_PREFIX, defValue), "Wrong result");
+        assertArrayEquals(defValue, config.get(int[].class, KEY_PREFIX, defValue));
     }
 
     /**
@@ -551,8 +547,8 @@ public class TestAbstractConfigurationBasicFeatures {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         final List<Integer> expected = prepareListTest(config);
         final List<Integer> result = new ArrayList<>(PROP_COUNT);
-        assertSame(result, config.getCollection(Integer.class, KEY_PREFIX, result), "Wrong result");
-        assertEquals(expected, result, "Wrong converted content");
+        assertSame(result, config.getCollection(Integer.class, KEY_PREFIX, result));
+        assertEquals(expected, result);
     }
 
     /**
@@ -563,7 +559,7 @@ public class TestAbstractConfigurationBasicFeatures {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         final List<Integer> expected = prepareListTest(config);
         final Collection<Integer> result = config.getCollection(Integer.class, KEY_PREFIX, null, new ArrayList<>());
-        assertEquals(expected, result, "Wrong result");
+        assertEquals(expected, result);
     }
 
     /**
@@ -575,8 +571,7 @@ public class TestAbstractConfigurationBasicFeatures {
         config.addProperty(KEY_PREFIX, "1");
         final List<Integer> result = new ArrayList<>(1);
         config.getCollection(Integer.class, KEY_PREFIX, result);
-        assertEquals(1, result.size(), "Wrong number of elements");
-        assertEquals(Integer.valueOf(1), result.get(0), "Wrong element");
+        assertEquals(Arrays.asList(1), result);
     }
 
     /**
@@ -586,8 +581,8 @@ public class TestAbstractConfigurationBasicFeatures {
     public void testGetCollectionUnknownNoDefault() {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         final List<Integer> result = new ArrayList<>();
-        assertNull(config.getCollection(Integer.class, KEY_PREFIX, result), "Wrong result");
-        assertTrue(result.isEmpty(), "Got elements");
+        assertNull(config.getCollection(Integer.class, KEY_PREFIX, result));
+        assertTrue(result.isEmpty());
     }
 
     /**
@@ -598,7 +593,7 @@ public class TestAbstractConfigurationBasicFeatures {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         final List<Integer> defValue = Arrays.asList(1, 2, 4, 8, 16, 32);
         final Collection<Integer> result = config.getCollection(Integer.class, KEY_PREFIX, null, defValue);
-        assertEquals(defValue, result, "Wrong result");
+        assertEquals(defValue, result);
     }
 
     /**
@@ -627,7 +622,7 @@ public class TestAbstractConfigurationBasicFeatures {
         final ConfigurationDecoder decoder = EasyMock.createMock(ConfigurationDecoder.class);
         EasyMock.replay(decoder);
         final PropertiesConfiguration config = new PropertiesConfiguration();
-        assertNull(config.getEncodedString(KEY_PREFIX, decoder), "Got a value");
+        assertNull(config.getEncodedString(KEY_PREFIX, decoder));
     }
 
     /**
@@ -643,7 +638,7 @@ public class TestAbstractConfigurationBasicFeatures {
 
         final PropertiesConfiguration config = new PropertiesConfiguration();
         config.addProperty(KEY_PREFIX, value);
-        assertEquals(decodedValue, config.getEncodedString(KEY_PREFIX, decoder), "Wrong decoded value");
+        assertEquals(decodedValue, config.getEncodedString(KEY_PREFIX, decoder));
     }
 
     /**
@@ -660,7 +655,7 @@ public class TestAbstractConfigurationBasicFeatures {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         config.setConfigurationDecoder(decoder);
         config.addProperty(KEY_PREFIX, value);
-        assertEquals(decodedValue, config.getEncodedString(KEY_PREFIX), "Wrong decoded value");
+        assertEquals(decodedValue, config.getEncodedString(KEY_PREFIX));
     }
 
     /**
@@ -671,7 +666,7 @@ public class TestAbstractConfigurationBasicFeatures {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         final List<Integer> expected = prepareListTest(config);
         final List<Integer> result = config.getList(Integer.class, KEY_PREFIX);
-        assertEquals(expected, result, "Wrong result");
+        assertEquals(expected, result);
     }
 
     /**
@@ -694,7 +689,7 @@ public class TestAbstractConfigurationBasicFeatures {
     @Test
     public void testGetListUnknownNoDefault() {
         final PropertiesConfiguration config = new PropertiesConfiguration();
-        assertNull(config.getList(Integer.class, KEY_PREFIX), "Wrong result");
+        assertNull(config.getList(Integer.class, KEY_PREFIX));
     }
 
     /**
@@ -704,7 +699,7 @@ public class TestAbstractConfigurationBasicFeatures {
     public void testGetListUnknownWithDefault() {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         final List<Integer> defValue = Arrays.asList(1, 2, 3);
-        assertEquals(defValue, config.getList(Integer.class, KEY_PREFIX, defValue), "Wrong result");
+        assertEquals(defValue, config.getList(Integer.class, KEY_PREFIX, defValue));
     }
 
     /**
@@ -728,7 +723,7 @@ public class TestAbstractConfigurationBasicFeatures {
     public void testGetStringArrayUnknown() {
         final BaseConfiguration config = new BaseConfiguration();
         final String[] array = config.getStringArray(KEY_PREFIX);
-        assertEquals(0, array.length, "Got elements");
+        assertEquals(0, array.length);
     }
 
     /**
@@ -737,7 +732,7 @@ public class TestAbstractConfigurationBasicFeatures {
     @Test
     public void testGetUnknownNoDefaultValue() {
         final PropertiesConfiguration config = new PropertiesConfiguration();
-        assertNull(config.get(Integer.class, KEY_PREFIX), "Wrong result");
+        assertNull(config.get(Integer.class, KEY_PREFIX));
     }
 
     /**
@@ -747,7 +742,7 @@ public class TestAbstractConfigurationBasicFeatures {
     public void testGetUnknownWithDefaultValue() {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         final Integer defaultValue = 2121;
-        assertEquals(defaultValue, config.get(Integer.class, KEY_PREFIX, defaultValue), "Wrong result");
+        assertEquals(defaultValue, config.get(Integer.class, KEY_PREFIX, defaultValue));
     }
 
     /**
@@ -769,7 +764,7 @@ public class TestAbstractConfigurationBasicFeatures {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         config.setThrowExceptionOnMissing(true);
         final Integer defaultValue = 2121;
-        assertEquals(defaultValue, config.get(Integer.class, KEY_PREFIX, defaultValue), "Wrong result");
+        assertEquals(defaultValue, config.get(Integer.class, KEY_PREFIX, defaultValue));
     }
 
     /**
@@ -779,10 +774,10 @@ public class TestAbstractConfigurationBasicFeatures {
     public void testInstallInterpolatorNull() {
         final AbstractConfiguration config = new TestConfigurationImpl(new PropertiesConfiguration());
         config.installInterpolator(null, null);
-        assertTrue(config.getInterpolator().getLookups().isEmpty(), "Got prefix lookups");
+        assertTrue(config.getInterpolator().getLookups().isEmpty());
         final List<Lookup> defLookups = config.getInterpolator().getDefaultLookups();
-        assertEquals(1, defLookups.size(), "Wrong number of default lookups");
-        assertInstanceOf(ConfigurationLookup.class, defLookups.get(0), "Wrong default lookup");
+        assertEquals(1, defLookups.size());
+        assertInstanceOf(ConfigurationLookup.class, defLookups.get(0));
     }
 
     /**
@@ -796,7 +791,7 @@ public class TestAbstractConfigurationBasicFeatures {
         config.addProperty(keyArray, values);
         config.addProperty(KEY_PREFIX, "${" + keyArray + "}");
 
-        assertArrayEquals(values, config.getStringArray(KEY_PREFIX), "Wrong property");
+        assertArrayEquals(values, config.getStringArray(KEY_PREFIX));
     }
 
     /**
@@ -816,8 +811,7 @@ public class TestAbstractConfigurationBasicFeatures {
         final AbstractConfiguration config = new TestConfigurationImpl(new PropertiesConfiguration());
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         config.addProperty("mypath", "$${DB2UNIVERSAL_JDBC_DRIVER_PATH}/db2jcc.jar\\,$${DB2UNIVERSAL_JDBC_DRIVER_PATH}/db2jcc_license_cu.jar");
-        assertEquals("${DB2UNIVERSAL_JDBC_DRIVER_PATH}/db2jcc.jar,${DB2UNIVERSAL_JDBC_DRIVER_PATH}/db2jcc_license_cu.jar",
-                config.getString("mypath"), "Wrong interpolated value");
+        assertEquals("${DB2UNIVERSAL_JDBC_DRIVER_PATH}/db2jcc.jar,${DB2UNIVERSAL_JDBC_DRIVER_PATH}/db2jcc_license_cu.jar", config.getString("mypath"));
     }
 
     /**
@@ -831,7 +825,7 @@ public class TestAbstractConfigurationBasicFeatures {
         config.addProperty(keyList, values);
         config.addProperty(KEY_PREFIX, "${" + keyList + "}");
 
-        assertEquals(values, config.getList(String.class, KEY_PREFIX), "Wrong property");
+        assertEquals(values, config.getList(String.class, KEY_PREFIX));
     }
 
     /**
@@ -845,7 +839,7 @@ public class TestAbstractConfigurationBasicFeatures {
         config.addProperty("animal_attr", "quick brown");
         config.addProperty("target_attr", "lazy");
         config.addProperty(KEY_PREFIX, SUBST_TXT);
-        assertEquals("The quick brown fox jumps over the lazy dog.", config.getString(KEY_PREFIX), "Wrong complex interpolation");
+        assertEquals("The quick brown fox jumps over the lazy dog.", config.getString(KEY_PREFIX));
     }
 
     /**
@@ -857,7 +851,7 @@ public class TestAbstractConfigurationBasicFeatures {
         config.addProperty("animal", "quick brown fox");
         config.addProperty("target", "lazy dog");
         config.addProperty(KEY_PREFIX, SUBST_TXT);
-        assertEquals("The quick brown fox jumps over the lazy dog.", config.getString(KEY_PREFIX), "Wrong interpolation");
+        assertEquals("The quick brown fox jumps over the lazy dog.", config.getString(KEY_PREFIX));
     }
 
     /**
@@ -872,7 +866,7 @@ public class TestAbstractConfigurationBasicFeatures {
         config.addProperty(keyList, values);
         config.addProperty(KEY_PREFIX, "result = ${" + keyList + "}");
 
-        assertEquals("result = some", config.getString(KEY_PREFIX), "Wrong interpolation");
+        assertEquals("result = some", config.getString(KEY_PREFIX));
     }
 
     /**
@@ -885,7 +879,7 @@ public class TestAbstractConfigurationBasicFeatures {
         config.addProperty("target", "lazy dog");
         config.addProperty(KEY_PREFIX, SUBST_TXT);
         config.setInterpolator(null);
-        assertEquals(SUBST_TXT, config.getString(KEY_PREFIX), "Interpolation was performed");
+        assertEquals(SUBST_TXT, config.getString(KEY_PREFIX));
     }
 
     /**
@@ -896,7 +890,7 @@ public class TestAbstractConfigurationBasicFeatures {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         config.addProperty("animal", "quick brown fox");
         config.addProperty(KEY_PREFIX, SUBST_TXT);
-        assertEquals("The quick brown fox jumps over the ${target}.", config.getString(KEY_PREFIX), "Wrong interpolation");
+        assertEquals("The quick brown fox jumps over the ${target}.", config.getString(KEY_PREFIX));
     }
 
     /**
@@ -909,7 +903,7 @@ public class TestAbstractConfigurationBasicFeatures {
         config.addProperty("java.version", "1.4");
         config.addProperty("jre-1.4", "C:\\java\\1.4");
         config.addProperty("jre.path", "${jre-${java.version}}");
-        assertEquals("C:\\java\\1.4", config.getString("jre.path"), "Wrong path");
+        assertEquals("C:\\java\\1.4", config.getString("jre.path"));
     }
 
     /**
@@ -920,7 +914,7 @@ public class TestAbstractConfigurationBasicFeatures {
         final PropertiesConfiguration config = new PropertiesConfiguration();
         final ConversionHandler handler = new DefaultConversionHandler();
         config.setConversionHandler(handler);
-        assertSame(handler, config.getConversionHandler(), "Handler not set");
+        assertSame(handler, config.getConversionHandler());
     }
 
     /**
@@ -943,9 +937,9 @@ public class TestAbstractConfigurationBasicFeatures {
         config.getInterpolator().addDefaultLookup(new ConfigurationLookup(new PropertiesConfiguration()));
         config.setDefaultLookups(Collections.singleton(look));
         final List<Lookup> lookups = config.getInterpolator().getDefaultLookups();
-        assertEquals(3, lookups.size(), "Wrong number of default lookups");
-        assertSame(look, lookups.get(1), "Wrong lookup at 1");
-        assertInstanceOf(ConfigurationLookup.class, lookups.get(2), "Wrong lookup at 2: " + lookups);
+        assertEquals(3, lookups.size());
+        assertSame(look, lookups.get(1));
+        assertInstanceOf(ConfigurationLookup.class, lookups.get(2));
     }
 
     /**
@@ -959,9 +953,9 @@ public class TestAbstractConfigurationBasicFeatures {
         config.setInterpolator(null);
         config.setDefaultLookups(Collections.singleton(look));
         final List<Lookup> lookups = config.getInterpolator().getDefaultLookups();
-        assertEquals(2, lookups.size(), "Wrong number of default lookups");
-        assertSame(look, lookups.get(0), "Wrong lookup at 0");
-        assertInstanceOf(ConfigurationLookup.class, lookups.get(1), "Wrong lookup at 1");
+        assertEquals(2, lookups.size());
+        assertSame(look, lookups.get(0));
+        assertInstanceOf(ConfigurationLookup.class, lookups.get(1));
     }
 
     /**
@@ -984,8 +978,8 @@ public class TestAbstractConfigurationBasicFeatures {
         final AbstractConfiguration config = new TestConfigurationImpl(new PropertiesConfiguration());
         final ConfigurationInterpolator ci = config.getInterpolator();
         config.setParentInterpolator(parent);
-        assertSame(parent, config.getInterpolator().getParentInterpolator(), "Parent was not set");
-        assertSame(ci, config.getInterpolator(), "Interpolator was changed");
+        assertSame(parent, config.getInterpolator().getParentInterpolator());
+        assertSame(ci, config.getInterpolator());
     }
 
     /**
@@ -999,7 +993,7 @@ public class TestAbstractConfigurationBasicFeatures {
         final AbstractConfiguration config = new TestConfigurationImpl(new PropertiesConfiguration());
         config.setInterpolator(null);
         config.setParentInterpolator(parent);
-        assertSame(parent, config.getInterpolator().getParentInterpolator(), "Parent was not set");
+        assertSame(parent, config.getInterpolator().getParentInterpolator());
     }
 
     /**
@@ -1015,8 +1009,8 @@ public class TestAbstractConfigurationBasicFeatures {
         lookups.put("test", look);
         config.setPrefixLookups(lookups);
         final Map<String, Lookup> lookups2 = config.getInterpolator().getLookups();
-        assertEquals(count + 1, lookups2.size(), "Not added");
-        assertSame(look, lookups2.get("test"), "Not found");
+        assertEquals(count + 1, lookups2.size());
+        assertSame(look, lookups2.get("test"));
     }
 
     /**
@@ -1030,8 +1024,8 @@ public class TestAbstractConfigurationBasicFeatures {
         config.setInterpolator(null);
         config.setPrefixLookups(Collections.singletonMap("test", look));
         final Map<String, Lookup> lookups = config.getInterpolator().getLookups();
-        assertEquals(1, lookups.size(), "Wrong number of lookups");
-        assertSame(look, lookups.get("test"), "Not found");
+        assertEquals(1, lookups.size());
+        assertSame(look, lookups.get("test"));
     }
 
     /**
@@ -1043,6 +1037,6 @@ public class TestAbstractConfigurationBasicFeatures {
         for (int i = 0; i < PROP_COUNT; i++) {
             config.addProperty(KEY_PREFIX + i, "value" + i);
         }
-        assertEquals(PROP_COUNT, config.size(), "Wrong size");
+        assertEquals(PROP_COUNT, config.size());
     }
 }

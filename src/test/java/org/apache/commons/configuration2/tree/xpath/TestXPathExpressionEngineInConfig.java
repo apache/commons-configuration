@@ -58,9 +58,9 @@ public class TestXPathExpressionEngineInConfig {
         config.addProperty("tables/table[last()]/fields/field/name", "taskid");
         config.addProperty("tables/table[last()]/fields/field[last()]/@type", "int");
         config.addProperty("tables table/name", "documents");
-        assertEquals("tasks", config.getString("tables/table[1]/name"), "Wrong table 1");
-        assertEquals("documents", config.getString("tables/table[2]/name"), "Wrong table 2");
-        assertEquals("int", config.getString("tables/table[1]/fields/field[1]/@type"), "Wrong field type");
+        assertEquals("tasks", config.getString("tables/table[1]/name"));
+        assertEquals("documents", config.getString("tables/table[2]/name"));
+        assertEquals("int", config.getString("tables/table[1]/fields/field[1]/@type"));
     }
 
     /**
@@ -88,7 +88,7 @@ public class TestXPathExpressionEngineInConfig {
     public void testSetPropertyExisting() {
         config.addProperty(" " + KEY, "failure");
         config.setProperty(KEY, VALUE);
-        assertEquals(VALUE, config.getString(KEY), "Value not changed");
+        assertEquals(VALUE, config.getString(KEY));
     }
 
     /**
@@ -99,7 +99,7 @@ public class TestXPathExpressionEngineInConfig {
         final String keyAttr = KEY + "/@attr";
         config.addProperty(" " + KEY, "test");
         config.setProperty(keyAttr, VALUE);
-        assertEquals(VALUE, config.getString(keyAttr), "Value not set");
+        assertEquals(VALUE, config.getString(keyAttr));
     }
 
     /**
@@ -108,7 +108,7 @@ public class TestXPathExpressionEngineInConfig {
     @Test
     public void testSetPropertyNewKey() {
         config.setProperty(KEY, VALUE);
-        assertEquals(VALUE, config.getString(KEY), "Value not set");
+        assertEquals(VALUE, config.getString(KEY));
     }
 
     /**
@@ -119,6 +119,6 @@ public class TestXPathExpressionEngineInConfig {
         final String testKey = KEY + "/sub";
         config.addProperty(" " + KEY, "test");
         config.setProperty(testKey, VALUE);
-        assertEquals(VALUE, config.getString(testKey), "Value not set");
+        assertEquals(VALUE, config.getString(testKey));
     }
 }

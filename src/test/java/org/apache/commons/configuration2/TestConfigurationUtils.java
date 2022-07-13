@@ -124,12 +124,12 @@ public class TestConfigurationUtils {
         List<Object> expected = new ArrayList<>();
         expected.add("value3");
         expected.add("value1");
-        assertEquals(expected, conf2.getList("key1"), "'key1' property");
+        assertEquals(expected, conf2.getList("key1"));
 
         expected = new ArrayList<>();
         expected.add("value4");
         expected.add("value2");
-        assertEquals(expected, conf2.getList("key2"), "'key2' property");
+        assertEquals(expected, conf2.getList("key2"));
     }
 
     /**
@@ -146,7 +146,7 @@ public class TestConfigurationUtils {
     @Test
     public void testAsEventSourceSupported() {
         final XMLConfiguration src = new XMLConfiguration();
-        assertSame(src, ConfigurationUtils.asEventSource(src, true), "Wrong result");
+        assertSame(src, ConfigurationUtils.asEventSource(src, true));
     }
 
     /**
@@ -158,7 +158,7 @@ public class TestConfigurationUtils {
         EasyMock.replay(cl);
         final EventSource source = ConfigurationUtils.asEventSource(this, true);
         source.addEventListener(ConfigurationEvent.ANY, cl);
-        assertFalse(source.removeEventListener(ConfigurationEvent.ANY, cl), "Wrong result (1)");
+        assertFalse(source.removeEventListener(ConfigurationEvent.ANY, cl));
         source.addEventListener(ConfigurationEvent.ANY, null);
     }
 
@@ -170,8 +170,8 @@ public class TestConfigurationUtils {
         final BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
         conf.addProperty("test", "yes");
         final BaseHierarchicalConfiguration copy = (BaseHierarchicalConfiguration) ConfigurationUtils.cloneConfiguration(conf);
-        assertNotSame(conf, copy, "Same object was returned");
-        assertEquals("yes", copy.getString("test"), "Property was not cloned");
+        assertNotSame(conf, copy);
+        assertEquals("yes", copy.getString("test"));
     }
 
     /**
@@ -188,7 +188,7 @@ public class TestConfigurationUtils {
      */
     @Test
     public void testCloneConfigurationNull() {
-        assertNull(ConfigurationUtils.cloneConfiguration(null), "Wrong return value");
+        assertNull(ConfigurationUtils.cloneConfiguration(null));
     }
 
     /**
@@ -202,7 +202,7 @@ public class TestConfigurationUtils {
                 throw new ConfigurationRuntimeException();
             }
         };
-        assertSame(params, ConfigurationUtils.cloneIfPossible(params), "Wrong result");
+        assertSame(params, ConfigurationUtils.cloneIfPossible(params));
     }
 
     /**
@@ -211,7 +211,7 @@ public class TestConfigurationUtils {
     @Test
     public void testCloneIfPossibleNotSupported() {
         final Long value = 20130116221714L;
-        assertSame(value, ConfigurationUtils.cloneIfPossible(value), "Wrong result");
+        assertSame(value, ConfigurationUtils.cloneIfPossible(value));
     }
 
     /**
@@ -219,7 +219,7 @@ public class TestConfigurationUtils {
      */
     @Test
     public void testCloneIfPossibleNull() {
-        assertNull(ConfigurationUtils.cloneIfPossible(null), "Wrong result");
+        assertNull(ConfigurationUtils.cloneIfPossible(null));
     }
 
     /**
@@ -231,7 +231,7 @@ public class TestConfigurationUtils {
         params.setPublicID("testID");
         params.setSchemaValidation(true);
         final XMLBuilderParametersImpl clone = (XMLBuilderParametersImpl) ConfigurationUtils.cloneIfPossible(params);
-        assertNotSame(params, clone, "No clone was created");
+        assertNotSame(params, clone);
         final Map<String, Object> map = clone.getParameters();
         for (final Map.Entry<String, Object> e : params.getParameters().entrySet()) {
             if (!e.getKey().startsWith("config-")) {
@@ -247,7 +247,7 @@ public class TestConfigurationUtils {
     public void testCloneSynchronizerClone() {
         final CloneableSynchronizer sync = new CloneableSynchronizer(false);
         final CloneableSynchronizer sync2 = (CloneableSynchronizer) ConfigurationUtils.cloneSynchronizer(sync);
-        assertTrue(sync2.isCloned(), "Not cloned");
+        assertTrue(sync2.isCloned());
     }
 
     /**
@@ -266,8 +266,8 @@ public class TestConfigurationUtils {
     public void testCloneSynchronizerNewInstance() {
         final SynchronizerTestImpl sync = new SynchronizerTestImpl();
         final SynchronizerTestImpl sync2 = (SynchronizerTestImpl) ConfigurationUtils.cloneSynchronizer(sync);
-        assertNotNull(sync2, "Clone is null");
-        assertNotSame(sync, sync2, "Same instance");
+        assertNotNull(sync2);
+        assertNotSame(sync, sync2);
     }
 
     /**
@@ -275,7 +275,7 @@ public class TestConfigurationUtils {
      */
     @Test
     public void testCloneSynchronizerNoOp() {
-        assertSame(NoOpSynchronizer.INSTANCE, ConfigurationUtils.cloneSynchronizer(NoOpSynchronizer.INSTANCE), "Wrong result");
+        assertSame(NoOpSynchronizer.INSTANCE, ConfigurationUtils.cloneSynchronizer(NoOpSynchronizer.INSTANCE));
     }
 
     /**
@@ -293,7 +293,7 @@ public class TestConfigurationUtils {
     public void testConvertHierarchicalToHierarchical() {
         final Configuration conf = new BaseHierarchicalConfiguration();
         conf.addProperty("test", "yes");
-        assertSame(conf, ConfigurationUtils.convertToHierarchical(conf), "Wrong configuration returned");
+        assertSame(conf, ConfigurationUtils.convertToHierarchical(conf));
     }
 
     /**
@@ -303,8 +303,8 @@ public class TestConfigurationUtils {
     public void testConvertHierarchicalToHierarchicalEngine() {
         final BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
         final ExpressionEngine engine = new DefaultExpressionEngine(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
-        assertSame(hc, ConfigurationUtils.convertToHierarchical(hc, engine), "Created new configuration");
-        assertSame(engine, hc.getExpressionEngine(), "Engine was not set");
+        assertSame(hc, ConfigurationUtils.convertToHierarchical(hc, engine));
+        assertSame(engine, hc.getExpressionEngine());
     }
 
     /**
@@ -316,8 +316,8 @@ public class TestConfigurationUtils {
         final BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
         final ExpressionEngine engine = new DefaultExpressionEngine(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS);
         hc.setExpressionEngine(engine);
-        assertSame(hc, ConfigurationUtils.convertToHierarchical(hc, null), "Created new configuration");
-        assertSame(engine, hc.getExpressionEngine(), "Expression engine was changed");
+        assertSame(hc, ConfigurationUtils.convertToHierarchical(hc, null));
+        assertSame(engine, hc.getExpressionEngine());
     }
 
     /**
@@ -325,7 +325,7 @@ public class TestConfigurationUtils {
      */
     @Test
     public void testConvertNullToHierarchical() {
-        assertNull(ConfigurationUtils.convertToHierarchical(null), "Wrong conversion result for null config");
+        assertNull(ConfigurationUtils.convertToHierarchical(null));
     }
 
     /**
@@ -355,9 +355,9 @@ public class TestConfigurationUtils {
         final BaseConfiguration conf = new BaseConfiguration();
         conf.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         conf.addProperty("test.key", "1\\,2\\,3");
-        assertEquals("1,2,3", conf.getString("test.key"), "Wrong property value");
+        assertEquals("1,2,3", conf.getString("test.key"));
         final HierarchicalConfiguration<?> hc = ConfigurationUtils.convertToHierarchical(conf);
-        assertEquals("1,2,3", hc.getString("test.key"), "Escaped list delimiters not correctly handled");
+        assertEquals("1,2,3", hc.getString("test.key"));
     }
 
     /**
@@ -371,8 +371,8 @@ public class TestConfigurationUtils {
         final DefaultExpressionEngine engine = new DefaultExpressionEngine(
             new DefaultExpressionEngineSymbols.Builder(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS).setIndexStart("[").setIndexEnd("]").create());
         final HierarchicalConfiguration<?> hc = ConfigurationUtils.convertToHierarchical(conf, engine);
-        assertTrue(hc.getBoolean("test(a)"), "Wrong value for test(a)");
-        assertFalse(hc.getBoolean("test(b)"), "Wrong value for test(b)");
+        assertTrue(hc.getBoolean("test(a)"));
+        assertFalse(hc.getBoolean("test(b)"));
     }
 
     /**
@@ -385,9 +385,9 @@ public class TestConfigurationUtils {
         config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         config.addProperty("test", "1,2,3");
         final HierarchicalConfiguration<?> hc = ConfigurationUtils.convertToHierarchical(config);
-        assertEquals(1, hc.getInt("test(0)"), "Wrong value 1");
-        assertEquals(2, hc.getInt("test(1)"), "Wrong value 2");
-        assertEquals(3, hc.getInt("test(2)"), "Wrong value 3");
+        assertEquals(1, hc.getInt("test(0)"));
+        assertEquals(2, hc.getInt("test(1)"));
+        assertEquals(3, hc.getInt("test(2)"));
     }
 
     /**
@@ -403,7 +403,7 @@ public class TestConfigurationUtils {
         final HierarchicalConfiguration<ImmutableNode> hc = (HierarchicalConfiguration<ImmutableNode>) ConfigurationUtils.convertToHierarchical(config);
         final ImmutableNode rootNode = hc.getNodeModel().getNodeHandler().getRootNode();
         final ImmutableNode nodeX = rootNode.getChildren().get(0);
-        assertEquals(1, nodeX.getChildren().size(), "Wrong number of children of x");
+        assertEquals(1, nodeX.getChildren().size());
     }
 
     @Test
@@ -421,8 +421,8 @@ public class TestConfigurationUtils {
         // copy the source configuration into the target configuration
         ConfigurationUtils.copy(conf1, conf2);
 
-        assertEquals("value1", conf2.getProperty("key1"), "'key1' property");
-        assertEquals("value2", conf2.getProperty("key2"), "'key2' property");
+        assertEquals("value1", conf2.getProperty("key1"));
+        assertEquals("value2", conf2.getProperty("key2"));
     }
 
     /**
@@ -472,7 +472,7 @@ public class TestConfigurationUtils {
                 throw new ClassNotFoundException(name);
             }
         });
-        assertEquals(CLS_NAME, ConfigurationUtils.loadClass(CLS_NAME).getName(), "Wrong class");
+        assertEquals(CLS_NAME, ConfigurationUtils.loadClass(CLS_NAME).getName());
     }
 
     /**
@@ -481,7 +481,7 @@ public class TestConfigurationUtils {
     @Test
     public void testLoadClassCCLNull() throws ClassNotFoundException {
         Thread.currentThread().setContextClassLoader(null);
-        assertEquals(CLS_NAME, ConfigurationUtils.loadClass(CLS_NAME).getName(), "Wrong class");
+        assertEquals(CLS_NAME, ConfigurationUtils.loadClass(CLS_NAME).getName());
     }
 
     /**
@@ -490,7 +490,7 @@ public class TestConfigurationUtils {
     @Test
     public void testLoadClassFromCCL() throws ClassNotFoundException {
         Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-        assertEquals(CLS_NAME, ConfigurationUtils.loadClass(CLS_NAME).getName(), "Wrong class");
+        assertEquals(CLS_NAME, ConfigurationUtils.loadClass(CLS_NAME).getName());
     }
 
     /**
@@ -498,7 +498,7 @@ public class TestConfigurationUtils {
      */
     @Test
     public void testLoadClassNoExFound() {
-        assertEquals(CLS_NAME, ConfigurationUtils.loadClassNoEx(CLS_NAME).getName(), "Wrong class");
+        assertEquals(CLS_NAME, ConfigurationUtils.loadClassNoEx(CLS_NAME).getName());
     }
 
     /**
@@ -522,18 +522,18 @@ public class TestConfigurationUtils {
         final Configuration config = new BaseConfiguration();
         final String lineSeparator = System.lineSeparator();
 
-        assertEquals("", ConfigurationUtils.toString(config), "String representation of an empty configuration");
+        assertEquals("", ConfigurationUtils.toString(config));
 
         config.setProperty("one", "1");
-        assertEquals("one=1", ConfigurationUtils.toString(config), "String representation of a configuration");
+        assertEquals("one=1", ConfigurationUtils.toString(config));
 
         config.setProperty("two", "2");
-        assertEquals("one=1" + lineSeparator + "two=2", ConfigurationUtils.toString(config), "String representation of a configuration");
+        assertEquals("one=1" + lineSeparator + "two=2", ConfigurationUtils.toString(config));
 
         config.clearProperty("one");
-        assertEquals("two=2", ConfigurationUtils.toString(config), "String representation of a configuration");
+        assertEquals("two=2", ConfigurationUtils.toString(config));
 
         config.setProperty("one", "1");
-        assertEquals("two=2" + lineSeparator + "one=1", ConfigurationUtils.toString(config), "String representation of a configuration");
+        assertEquals("two=2" + lineSeparator + "one=1", ConfigurationUtils.toString(config));
     }
 }

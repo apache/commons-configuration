@@ -43,9 +43,9 @@ public class ErrorListenerTestImpl extends AbstractEventListenerTestImpl<Configu
      */
     public Throwable checkEvent(final EventType<?> type, final EventType<?> opType, final String propName, final Object propValue) {
         final ConfigurationErrorEvent e = nextEvent(type);
-        assertEquals(opType, e.getErrorOperationType(), "Wrong operation event type");
-        assertEquals(propName, e.getPropertyName(), "Wrong property name");
-        assertEquals(propValue, e.getPropertyValue(), "Wrong property value");
+        assertEquals(opType, e.getErrorOperationType());
+        assertEquals(propName, e.getPropertyName());
+        assertEquals(propValue, e.getPropertyValue());
         return e.getCause();
     }
 }

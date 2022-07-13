@@ -75,12 +75,12 @@ public class TestXMLPropertiesConfiguration {
         final Document doc = dBuilder.parse(file);
         final XMLPropertiesConfiguration conf = new XMLPropertiesConfiguration(doc.getDocumentElement());
 
-        assertEquals("Description of the property list", conf.getHeader(), "header");
+        assertEquals("Description of the property list", conf.getHeader());
 
-        assertFalse(conf.isEmpty(), "The configuration is empty");
-        assertEquals("value1", conf.getProperty("key1"), "'key1' property");
-        assertEquals("value2", conf.getProperty("key2"), "'key2' property");
-        assertEquals("value3", conf.getProperty("key3"), "'key3' property");
+        assertFalse(conf.isEmpty());
+        assertEquals("value1", conf.getProperty("key1"));
+        assertEquals("value2", conf.getProperty("key2"));
+        assertEquals("value3", conf.getProperty("key3"));
     }
 
     @Test
@@ -111,23 +111,23 @@ public class TestXMLPropertiesConfiguration {
         final XMLPropertiesConfiguration conf2 = load(saveFile.getAbsolutePath());
 
         // test the configuration
-        assertEquals("Description of the new property list", conf2.getHeader(), "header");
+        assertEquals("Description of the new property list", conf2.getHeader());
 
-        assertFalse(conf2.isEmpty(), "The configuration is empty");
-        assertEquals("value1", conf2.getProperty("key1"), "'key1' property");
-        assertEquals("value3", conf2.getProperty("key3"), "'key3' property");
-        assertEquals("value4", conf2.getProperty("key4"), "'key4' property");
+        assertFalse(conf2.isEmpty());
+        assertEquals("value1", conf2.getProperty("key1"));
+        assertEquals("value3", conf2.getProperty("key3"));
+        assertEquals("value4", conf2.getProperty("key4"));
     }
 
     @Test
     public void testLoad() throws Exception {
         final XMLPropertiesConfiguration conf = load(TEST_PROPERTIES_FILE);
-        assertEquals("Description of the property list", conf.getHeader(), "header");
+        assertEquals("Description of the property list", conf.getHeader());
 
-        assertFalse(conf.isEmpty(), "The configuration is empty");
-        assertEquals("value1", conf.getProperty("key1"), "'key1' property");
-        assertEquals("value2", conf.getProperty("key2"), "'key2' property");
-        assertEquals("value3", conf.getProperty("key3"), "'key3' property");
+        assertFalse(conf.isEmpty());
+        assertEquals("value1", conf.getProperty("key1"));
+        assertEquals("value2", conf.getProperty("key2"));
+        assertEquals("value3", conf.getProperty("key3"));
     }
 
     @Test
@@ -149,11 +149,11 @@ public class TestXMLPropertiesConfiguration {
         final XMLPropertiesConfiguration conf2 = load(saveFile.getAbsolutePath());
 
         // test the configuration
-        assertEquals("Description of the new property list", conf2.getHeader(), "header");
+        assertEquals("Description of the new property list", conf2.getHeader());
 
-        assertFalse(conf2.isEmpty(), "The configuration is empty");
-        assertEquals("value1", conf2.getProperty("key1"), "'key1' property");
-        assertEquals("value3", conf2.getProperty("key3"), "'key3' property");
-        assertEquals("value4", conf2.getProperty("key4"), "'key4' property");
+        assertFalse(conf2.isEmpty());
+        assertEquals("value1", conf2.getProperty("key1"));
+        assertEquals("value3", conf2.getProperty("key3"));
+        assertEquals("value4", conf2.getProperty("key4"));
     }
 }

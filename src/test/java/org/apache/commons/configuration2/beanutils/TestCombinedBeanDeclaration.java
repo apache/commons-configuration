@@ -19,11 +19,11 @@ package org.apache.commons.configuration2.beanutils;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,7 +79,7 @@ public class TestCombinedBeanDeclaration {
         EasyMock.expect(decl(0).getBeanClassName()).andReturn(null);
         EasyMock.expect(decl(1).getBeanClassName()).andReturn(getClass().getName());
         replay();
-        assertEquals(getClass().getName(), cd.getBeanClassName(), "Wrong bean class");
+        assertEquals(getClass().getName(), cd.getBeanClassName());
         verify();
     }
 
@@ -89,7 +89,7 @@ public class TestCombinedBeanDeclaration {
     @Test
     public void testGetBeanClassNameUndefined() {
         final CombinedBeanDeclaration cd = new CombinedBeanDeclaration();
-        assertNull(cd.getBeanClassName(), "Got a bean class name");
+        assertNull(cd.getBeanClassName());
     }
 
     /**
@@ -102,7 +102,7 @@ public class TestCombinedBeanDeclaration {
         EasyMock.expect(decl(0).getBeanFactoryName()).andReturn(null);
         EasyMock.expect(decl(1).getBeanFactoryName()).andReturn(name);
         replay();
-        assertEquals(name, cd.getBeanFactoryName(), "Wrong factory name");
+        assertEquals(name, cd.getBeanFactoryName());
         verify();
     }
 
@@ -112,7 +112,7 @@ public class TestCombinedBeanDeclaration {
     @Test
     public void testGetBeanFactoryNameUndefined() {
         final CombinedBeanDeclaration cd = new CombinedBeanDeclaration();
-        assertNull(cd.getBeanFactoryName(), "Got a factory name");
+        assertNull(cd.getBeanFactoryName());
     }
 
     /**
@@ -125,7 +125,7 @@ public class TestCombinedBeanDeclaration {
         EasyMock.expect(decl(0).getBeanFactoryParameter()).andReturn(null);
         EasyMock.expect(decl(1).getBeanFactoryParameter()).andReturn(param);
         replay();
-        assertSame(param, cd.getBeanFactoryParameter(), "Wrong parameter");
+        assertSame(param, cd.getBeanFactoryParameter());
         verify();
     }
 
@@ -135,7 +135,7 @@ public class TestCombinedBeanDeclaration {
     @Test
     public void testGetBeanFactoryParameterUndefined() {
         final CombinedBeanDeclaration cd = new CombinedBeanDeclaration();
-        assertNull(cd.getBeanFactoryParameter(), "Got a factory parameter");
+        assertNull(cd.getBeanFactoryParameter());
     }
 
     /**
@@ -158,10 +158,13 @@ public class TestCombinedBeanDeclaration {
         EasyMock.expect(decl(2).getBeanProperties()).andReturn(props3);
         replay();
         final Map<String, Object> props = cd.getBeanProperties();
-        assertEquals(4, props.size(), "Wrong number of properties");
-        for (int i = 1; i <= 4; i++) {
-            assertEquals("value" + i, props.get("param" + i), "Wrong property");
-        }
+
+        final Map<String, String> expected = new HashMap<>();
+        expected.put("param1", "value1");
+        expected.put("param2", "value2");
+        expected.put("param3", "value3");
+        expected.put("param4", "value4");
+        assertEquals(expected, props);
         verify();
     }
 
@@ -174,7 +177,7 @@ public class TestCombinedBeanDeclaration {
         EasyMock.expect(child.getBeanProperties()).andReturn(null);
         EasyMock.replay(child);
         final CombinedBeanDeclaration cd = new CombinedBeanDeclaration(child);
-        assertTrue(cd.getBeanProperties().isEmpty(), "Got bean properties");
+        assertEquals(Collections.emptyMap(), cd.getBeanProperties());
     }
 
     /**
@@ -187,7 +190,7 @@ public class TestCombinedBeanDeclaration {
         EasyMock.expect(decl(0).getConstructorArgs()).andReturn(null);
         EasyMock.expect(decl(1).getConstructorArgs()).andReturn(args);
         replay();
-        assertSame(args, cd.getConstructorArgs(), "Wrong constructor arguments");
+        assertSame(args, cd.getConstructorArgs());
         verify();
     }
 
@@ -201,7 +204,7 @@ public class TestCombinedBeanDeclaration {
         EasyMock.expect(decl(1).getConstructorArgs()).andReturn(new ArrayList<>());
         EasyMock.expect(decl(2).getConstructorArgs()).andReturn(null);
         replay();
-        assertTrue(cd.getConstructorArgs().isEmpty(), "Got constructor arguments");
+        assertEquals(Collections.emptyList(), new ArrayList<>(cd.getConstructorArgs()));
         verify();
     }
 
@@ -225,10 +228,13 @@ public class TestCombinedBeanDeclaration {
         EasyMock.expect(decl(2).getNestedBeanDeclarations()).andReturn(decls3);
         replay();
         final Map<String, Object> decls = cd.getNestedBeanDeclarations();
-        assertEquals(4, decls.size(), "Wrong number of declarations");
-        for (int i = 1; i <= 4; i++) {
-            assertEquals("value" + i, decls.get("param" + i), "Wrong declaration");
-        }
+
+        final Map<String, String> expected = new HashMap<>();
+        expected.put("param1", "value1");
+        expected.put("param2", "value2");
+        expected.put("param3", "value3");
+        expected.put("param4", "value4");
+        assertEquals(expected, decls);
         verify();
     }
 
@@ -241,7 +247,7 @@ public class TestCombinedBeanDeclaration {
         EasyMock.expect(child.getNestedBeanDeclarations()).andReturn(null);
         EasyMock.replay(child);
         final CombinedBeanDeclaration cd = new CombinedBeanDeclaration(child);
-        assertTrue(cd.getNestedBeanDeclarations().isEmpty(), "Got bean declarations");
+        assertEquals(Collections.emptyMap(), cd.getNestedBeanDeclarations());
     }
 
     /**

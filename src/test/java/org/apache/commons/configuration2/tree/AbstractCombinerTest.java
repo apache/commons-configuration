@@ -81,7 +81,7 @@ public abstract class AbstractCombinerTest {
      */
     @Test
     public void testInit() {
-        assertTrue(combiner.getListNodes().isEmpty(), "Combiner has list nodes");
-        assertFalse(combiner.isListNode(NodeStructureHelper.createNode("test", null)), "Node is list node");
+        assertTrue(combiner.getListNodes().isEmpty());
+        assertFalse(combiner.isListNode(NodeStructureHelper.createNode("test", null)));
     }
 }

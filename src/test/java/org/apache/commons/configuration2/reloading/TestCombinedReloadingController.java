@@ -16,8 +16,8 @@
  */
 package org.apache.commons.configuration2.reloading;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -78,7 +78,7 @@ public class TestCombinedReloadingController {
             EasyMock.expect(rc.checkForReloading(null)).andReturn(Boolean.FALSE);
         }
         replaySubControllers();
-        assertFalse(ctrl.checkForReloading("someParam"), "Wrong result");
+        assertFalse(ctrl.checkForReloading("someParam"));
         verifySubSontrollers();
     }
 
@@ -92,7 +92,7 @@ public class TestCombinedReloadingController {
         EasyMock.expect(subControllers[1].checkForReloading(null)).andReturn(Boolean.TRUE);
         EasyMock.expect(subControllers[2].checkForReloading(null)).andReturn(Boolean.FALSE);
         replaySubControllers();
-        assertTrue(ctrl.checkForReloading("someData"), "Wrong result");
+        assertTrue(ctrl.checkForReloading("someData"));
         verifySubSontrollers();
     }
 
@@ -104,8 +104,7 @@ public class TestCombinedReloadingController {
         final CombinedReloadingController ctrl = setUpController();
         replaySubControllers();
         final Collection<ReloadingController> subs = ctrl.getSubControllers();
-        assertEquals(subControllers.length, subs.size(), "Wrong number of sub controllers");
-        assertTrue(subs.containsAll(Arrays.asList(subControllers)), "Wrong sub controllers");
+        assertIterableEquals(Arrays.asList(subControllers), subs);
     }
 
     /**

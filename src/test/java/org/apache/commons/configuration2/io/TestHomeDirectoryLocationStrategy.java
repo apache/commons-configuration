@@ -72,8 +72,8 @@ public class TestHomeDirectoryLocationStrategy {
     @Test
     public void testInitDefaults() {
         final HomeDirectoryLocationStrategy strategy = new HomeDirectoryLocationStrategy();
-        assertEquals(System.getProperty("user.home"), strategy.getHomeDirectory(), "Wrong home directory");
-        assertFalse(strategy.isEvaluateBasePath(), "Wrong base path flag");
+        assertEquals(System.getProperty("user.home"), strategy.getHomeDirectory());
+        assertFalse(strategy.isEvaluateBasePath());
     }
 
     /**
@@ -84,7 +84,7 @@ public class TestHomeDirectoryLocationStrategy {
         newFile(FILE_NAME, tempFolder);
         final FileLocator locator = FileLocatorUtils.fileLocator().basePath(BASE_PATH).fileName(FILE_NAME).create();
         final HomeDirectoryLocationStrategy strategy = setUpStrategy(true);
-        assertNull(strategy.locate(fileSystem, locator), "Got a URL");
+        assertNull(strategy.locate(fileSystem, locator));
     }
 
     /**
@@ -96,7 +96,7 @@ public class TestHomeDirectoryLocationStrategy {
         final FileLocator locator = FileLocatorUtils.fileLocator().basePath(BASE_PATH).fileName(FILE_NAME).create();
         final HomeDirectoryLocationStrategy strategy = setUpStrategy(false);
         final URL url = strategy.locate(fileSystem, locator);
-        assertEquals(file.getAbsoluteFile(), FileLocatorUtils.fileFromURL(url).getAbsoluteFile(), "Wrong URL");
+        assertEquals(file.getAbsoluteFile(), FileLocatorUtils.fileFromURL(url).getAbsoluteFile());
     }
 
     /**
@@ -106,11 +106,11 @@ public class TestHomeDirectoryLocationStrategy {
     public void testLocateSuccessInSubFolder() throws IOException {
         final File sub = newFolder(BASE_PATH, tempFolder);
         final File file = new File(sub, FILE_NAME);
-        assertTrue(file.createNewFile(), "Could not create file");
+        assertTrue(file.createNewFile());
         final FileLocator locator = FileLocatorUtils.fileLocator().basePath(BASE_PATH).fileName(FILE_NAME).create();
         final HomeDirectoryLocationStrategy strategy = setUpStrategy(true);
         final URL url = strategy.locate(fileSystem, locator);
-        assertEquals(file.getAbsoluteFile(), FileLocatorUtils.fileFromURL(url).getAbsoluteFile(), "Wrong URL");
+        assertEquals(file.getAbsoluteFile(), FileLocatorUtils.fileFromURL(url).getAbsoluteFile());
     }
 
     /**
@@ -122,7 +122,7 @@ public class TestHomeDirectoryLocationStrategy {
         final FileLocator locator = FileLocatorUtils.fileLocator().fileName(FILE_NAME).create();
         final HomeDirectoryLocationStrategy strategy = setUpStrategy(true);
         final URL url = strategy.locate(fileSystem, locator);
-        assertEquals(file.getAbsoluteFile(), FileLocatorUtils.fileFromURL(url).getAbsoluteFile(), "Wrong URL");
+        assertEquals(file.getAbsoluteFile(), FileLocatorUtils.fileFromURL(url).getAbsoluteFile());
     }
 
     /**
@@ -132,6 +132,6 @@ public class TestHomeDirectoryLocationStrategy {
     public void testNoFileName() {
         final FileLocator locator = FileLocatorUtils.fileLocator().basePath(BASE_PATH).create();
         final HomeDirectoryLocationStrategy strategy = setUpStrategy(true);
-        assertNull(strategy.locate(fileSystem, locator), "Got a URL");
+        assertNull(strategy.locate(fileSystem, locator));
     }
 }

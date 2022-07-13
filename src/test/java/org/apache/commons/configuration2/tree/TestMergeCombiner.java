@@ -40,16 +40,16 @@ public class TestMergeCombiner extends AbstractCombinerTest {
      * @return the node for the table element
      */
     private ImmutableNode checkTable(final HierarchicalConfiguration<ImmutableNode> config) {
-        assertEquals(1, config.getMaxIndex("database.tables.table"), "Wrong number of tables");
+        assertEquals(1, config.getMaxIndex("database.tables.table"));
         final HierarchicalConfiguration<ImmutableNode> c = config.configurationAt("database.tables.table(0)");
-        assertEquals("documents", c.getString("name"), "Wrong table name");
-        assertEquals(2, c.getMaxIndex("fields.field.name"), "Wrong number of fields");
-        assertEquals("docname", c.getString("fields.field(1).name"), "Wrong field");
+        assertEquals("documents", c.getString("name"));
+        assertEquals(2, c.getMaxIndex("fields.field.name"));
+        assertEquals("docname", c.getString("fields.field(1).name"));
 
         final NodeHandler<ImmutableNode> nodeHandler = config.getNodeModel().getNodeHandler();
         final List<QueryResult<ImmutableNode>> nds = config.getExpressionEngine().query(nodeHandler.getRootNode(), "database.tables.table", nodeHandler);
-        assertFalse(nds.isEmpty(), "No node found");
-        assertFalse(nds.get(0).isAttributeResult(), "Not a node result");
+        assertFalse(nds.isEmpty());
+        assertFalse(nds.get(0).isAttributeResult());
         return nds.get(0).getNode();
     }
 
@@ -69,10 +69,10 @@ public class TestMergeCombiner extends AbstractCombinerTest {
     @Test
     public void testAttributes() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals(1, config.getInt("gui.level[@min]"), "Wrong value of min attribute");
-        assertEquals(2, config.getInt("gui.level[@default]"), "Wrong value of default attribute");
-        assertEquals(0, config.getMaxIndex("database.tables.table(0)[@id]"), "Wrong number of id attributes");
-        assertEquals(1, config.getInt("database.tables.table(0)[@id]"), "Wrong value of table id");
+        assertEquals(1, config.getInt("gui.level[@min]"));
+        assertEquals(2, config.getInt("gui.level[@default]"));
+        assertEquals(0, config.getMaxIndex("database.tables.table(0)[@id]"));
+        assertEquals(1, config.getInt("database.tables.table(0)[@id]"));
     }
 
     /**
@@ -89,9 +89,9 @@ public class TestMergeCombiner extends AbstractCombinerTest {
     @Test
     public void testListFromFirstStructure() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals(0, config.getMaxIndex("net.service.url"), "Wrong number of services");
-        assertEquals("http://service1.org", config.getString("net.service.url"), "Wrong service");
-        assertFalse(config.containsKey("net.service.url[@type]"), "Type attribute available");
+        assertEquals(0, config.getMaxIndex("net.service.url"));
+        assertEquals("http://service1.org", config.getString("net.service.url"));
+        assertFalse(config.containsKey("net.service.url[@type]"));
     }
 
     /**
@@ -100,8 +100,8 @@ public class TestMergeCombiner extends AbstractCombinerTest {
     @Test
     public void testListFromSecondStructure() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals(3, config.getMaxIndex("net.server.url"), "Wrong number of servers");
-        assertEquals("http://testsvr.com", config.getString("net.server.url(2)"), "Wrong server");
+        assertEquals(3, config.getMaxIndex("net.server.url"));
+        assertEquals("http://testsvr.com", config.getString("net.server.url(2)"));
     }
 
     @Test
@@ -109,14 +109,14 @@ public class TestMergeCombiner extends AbstractCombinerTest {
         // combiner.setDebugStream(System.out);
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
         config.setExpressionEngine(new XPathExpressionEngine());
-        assertEquals(3, config.getMaxIndex("Channels/Channel"), "Wrong number of Channels");
-        assertEquals("My Channel", config.getString("Channels/Channel[@id='1']/Name"), "Bad Channel 1 Name");
-        assertEquals("half", config.getString("Channels/Channel[@id='1']/@type"), "Bad Channel Type");
-        assertEquals("Channel 2", config.getString("Channels/Channel[@id='2']/Name"), "Bad Channel 2 Name");
-        assertEquals("full", config.getString("Channels/Channel[@id='2']/@type"), "Bad Channel Type");
-        assertEquals("test 1 data", config.getString("Channels/Channel[@id='1']/ChannelData"), "Bad Channel Data");
-        assertEquals("test 2 data", config.getString("Channels/Channel[@id='2']/ChannelData"), "Bad Channel Data");
-        assertEquals("more test 2 data", config.getString("Channels/Channel[@id='2']/MoreChannelData"), "Bad Channel Data");
+        assertEquals(3, config.getMaxIndex("Channels/Channel"));
+        assertEquals("My Channel", config.getString("Channels/Channel[@id='1']/Name"));
+        assertEquals("half", config.getString("Channels/Channel[@id='1']/@type"));
+        assertEquals("Channel 2", config.getString("Channels/Channel[@id='2']/Name"));
+        assertEquals("full", config.getString("Channels/Channel[@id='2']/@type"));
+        assertEquals("test 1 data", config.getString("Channels/Channel[@id='1']/ChannelData"));
+        assertEquals("test 2 data", config.getString("Channels/Channel[@id='2']/ChannelData"));
+        assertEquals("more test 2 data", config.getString("Channels/Channel[@id='2']/MoreChannelData"));
 
     }
 
@@ -126,10 +126,10 @@ public class TestMergeCombiner extends AbstractCombinerTest {
     @Test
     public void testOverrideValues() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals("Admin", config.getString("base.services.security.login.user"), "Wrong user");
-        assertEquals("default", config.getString("base.services.security.login.user[@type]"), "Wrong user type");
-        assertNull(config.getString("base.services.security.login.passwd"), "Wrong password");
-        assertEquals("secret", config.getString("base.services.security.login.passwd[@type]"), "Wrong password type");
+        assertEquals("Admin", config.getString("base.services.security.login.user"));
+        assertEquals("default", config.getString("base.services.security.login.user[@type]"));
+        assertNull(config.getString("base.services.security.login.passwd"));
+        assertEquals("secret", config.getString("base.services.security.login.passwd[@type]"));
     }
 
     /**
@@ -138,10 +138,10 @@ public class TestMergeCombiner extends AbstractCombinerTest {
     @Test
     public void testSimpleValues() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals(0, config.getMaxIndex("gui.bgcolor"), "Wrong number of bgcolors");
-        assertEquals("green", config.getString("gui.bgcolor"), "Wrong bgcolor");
-        assertEquals("yellow", config.getString("gui.selcolor"), "Wrong selcolor");
-        assertEquals("blue", config.getString("gui.fgcolor"), "Wrong fgcolor");
-        assertEquals(1, config.getInt("gui.level"), "Wrong level");
+        assertEquals(0, config.getMaxIndex("gui.bgcolor"));
+        assertEquals("green", config.getString("gui.bgcolor"));
+        assertEquals("yellow", config.getString("gui.selcolor"));
+        assertEquals("blue", config.getString("gui.fgcolor"));
+        assertEquals(1, config.getInt("gui.level"));
     }
 }

@@ -58,7 +58,7 @@ public class TestTrackedNodeHandler {
         EasyMock.expect(parentHandler.getParent(node)).andReturn(parent);
         EasyMock.replay(parentHandler);
 
-        assertSame(parent, handler.getParent(node), "Wrong parent node");
+        assertSame(parent, handler.getParent(node));
         EasyMock.verify(parentHandler);
     }
 
@@ -67,6 +67,6 @@ public class TestTrackedNodeHandler {
      */
     @Test
     public void testGetRootNode() {
-        assertSame(root, handler.getRootNode(), "Wrong root node");
+        assertSame(root, handler.getRootNode());
     }
 }

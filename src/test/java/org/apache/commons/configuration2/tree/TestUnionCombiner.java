@@ -44,8 +44,8 @@ public class TestUnionCombiner extends AbstractCombinerTest {
     @Test
     public void testAttributes() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals(0, config.getMaxIndex("database.tables.table(0)[@id]"), "Wrong number of attributes");
-        assertEquals(1, config.getInt("database.tables.table(0)[@id](0)"), "Wrong value of attribute");
+        assertEquals(0, config.getMaxIndex("database.tables.table(0)[@id]"));
+        assertEquals(1, config.getInt("database.tables.table(0)[@id](0)"));
     }
 
     /**
@@ -54,11 +54,11 @@ public class TestUnionCombiner extends AbstractCombinerTest {
     @Test
     public void testLists() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals(2, config.getMaxIndex("net.service.url"), "Too few list elements");
-        assertEquals("http://service1.org", config.getString("net.service.url(0)"), "Wrong first service");
-        assertEquals("http://service2.org", config.getString("net.service.url(1)"), "Wrong second service");
-        assertEquals(2, config.getInt("net.service.url(2)[@type]"), "Wrong service attribute");
-        assertEquals(3, config.getMaxIndex("net.server.url"), "Wrong number of server elements");
+        assertEquals(2, config.getMaxIndex("net.service.url"));
+        assertEquals("http://service1.org", config.getString("net.service.url(0)"));
+        assertEquals("http://service2.org", config.getString("net.service.url(1)"));
+        assertEquals(2, config.getInt("net.service.url(2)[@type]"));
+        assertEquals(3, config.getMaxIndex("net.server.url"));
     }
 
     /**
@@ -67,11 +67,11 @@ public class TestUnionCombiner extends AbstractCombinerTest {
     @Test
     public void testSimpleValues() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals(1, config.getMaxIndex("gui.bgcolor"), "Too few bgcolors");
-        assertEquals("green", config.getString("gui.bgcolor(0)"), "Wrong first color");
-        assertEquals("black", config.getString("gui.bgcolor(1)"), "Wrong second color");
-        assertEquals(0, config.getMaxIndex("gui.selcolor"), "Wrong number of selcolors");
-        assertEquals("yellow", config.getString("gui.selcolor"), "Wrong selcolor");
+        assertEquals(1, config.getMaxIndex("gui.bgcolor"));
+        assertEquals("green", config.getString("gui.bgcolor(0)"));
+        assertEquals("black", config.getString("gui.bgcolor(1)"));
+        assertEquals(0, config.getMaxIndex("gui.selcolor"));
+        assertEquals("yellow", config.getString("gui.selcolor"));
     }
 
     /**
@@ -80,12 +80,12 @@ public class TestUnionCombiner extends AbstractCombinerTest {
     @Test
     public void testSimpleValuesWithAttributes() throws ConfigurationException {
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals(1, config.getMaxIndex("gui.level"), "Too few level elements");
-        assertEquals(1, config.getInt("gui.level(0)"), "Wrong value of first element");
-        assertEquals(4, config.getInt("gui.level(1)"), "Wrong value of second element");
-        assertEquals(2, config.getInt("gui.level(0)[@default]"), "Wrong value of first attribute");
-        assertFalse(config.containsKey("gui.level(0)[@min]"), "Found wrong attribute");
-        assertEquals(1, config.getInt("gui.level(1)[@min]"), "Wrong value of second attribute");
+        assertEquals(1, config.getMaxIndex("gui.level"));
+        assertEquals(1, config.getInt("gui.level(0)"));
+        assertEquals(4, config.getInt("gui.level(1)"));
+        assertEquals(2, config.getInt("gui.level(0)[@default]"));
+        assertFalse(config.containsKey("gui.level(0)[@min]"));
+        assertEquals(1, config.getInt("gui.level(1)[@min]"));
     }
 
     /**
@@ -96,9 +96,9 @@ public class TestUnionCombiner extends AbstractCombinerTest {
     public void testTableList() throws ConfigurationException {
         combiner.addListNode("table");
         final BaseHierarchicalConfiguration config = createCombinedConfiguration();
-        assertEquals("documents", config.getString("database.tables.table(0).name"), "Wrong name of first table");
-        assertEquals(1, config.getInt("database.tables.table(0)[@id]"), "Wrong id of first table");
-        assertEquals("tasks", config.getString("database.tables.table(1).name"), "Wrong name of second table");
-        assertEquals(2, config.getInt("database.tables.table(1)[@id]"), "Wrong id of second table");
+        assertEquals("documents", config.getString("database.tables.table(0).name"));
+        assertEquals(1, config.getInt("database.tables.table(0)[@id]"));
+        assertEquals("tasks", config.getString("database.tables.table(1).name"));
+        assertEquals(2, config.getInt("database.tables.table(1)[@id]"));
     }
 }

@@ -41,7 +41,7 @@ public class TestBasePathLocationStrategy {
      * @param url the URL to be checked
      */
     private static void checkURL(final URL url) {
-        assertEquals(FileLocatorUtils.fileFromURL(url).getAbsoluteFile(), ConfigurationAssert.getTestFile(TEST_FILE).getAbsoluteFile(), "Wrong URL");
+        assertEquals(FileLocatorUtils.fileFromURL(url).getAbsoluteFile(), ConfigurationAssert.getTestFile(TEST_FILE).getAbsoluteFile());
     }
 
     /** A mock for the file system. */
@@ -83,7 +83,7 @@ public class TestBasePathLocationStrategy {
     @Test
     public void testNullBasePath() {
         final FileLocator locator = FileLocatorUtils.fileLocator().fileName(TEST_FILE).create();
-        assertNull(strategy.locate(fileSystem, locator), "Got a URL");
+        assertNull(strategy.locate(fileSystem, locator));
     }
 
     /**
@@ -92,6 +92,6 @@ public class TestBasePathLocationStrategy {
     @Test
     public void testNullFileName() {
         final FileLocator locator = FileLocatorUtils.fileLocator().basePath(ConfigurationAssert.getTestFile(TEST_FILE).getAbsolutePath()).create();
-        assertNull(strategy.locate(fileSystem, locator), "Got a URL");
+        assertNull(strategy.locate(fileSystem, locator));
     }
 }

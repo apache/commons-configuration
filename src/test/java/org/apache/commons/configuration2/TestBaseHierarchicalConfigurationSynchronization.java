@@ -103,7 +103,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
             } catch (final InterruptedException e) {
                 fail("Waiting was interrupted: " + e);
             }
-            assertEquals("I'm complex!", value, "Wrong value");
+            assertEquals("I'm complex!", value);
         }
     }
 
@@ -114,9 +114,9 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      * @return a flag whether the root node of this configuration is detached
      */
     private static boolean isDetached(final HierarchicalConfiguration<ImmutableNode> c) {
-        assertInstanceOf(SubnodeConfiguration.class, c, "Not a sub configuration");
-        final InMemoryNodeModel nodeModel = ((SubnodeConfiguration) c).getRootNodeModel();
-        return nodeModel.isTrackedNodeDetached(((SubnodeConfiguration) c).getRootSelector());
+        final SubnodeConfiguration subnodeConfig = assertInstanceOf(SubnodeConfiguration.class, c);
+        final InMemoryNodeModel nodeModel = subnodeConfig.getRootNodeModel();
+        return nodeModel.isTrackedNodeDetached(subnodeConfig.getRootSelector());
     }
 
     /** The test synchronizer. */
@@ -154,7 +154,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
     @Test
     public void testChildConfigurationsAtSynchronized() {
         final List<HierarchicalConfiguration<ImmutableNode>> subs = config.childConfigurationsAt("clear");
-        assertFalse(subs.isEmpty(), "No subnode configurations");
+        assertFalse(subs.isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -180,8 +180,8 @@ public class TestBaseHierarchicalConfigurationSynchronization {
         final HierarchicalConfiguration<ImmutableNode> sub2 = copy.configurationAt("element2.subelement", true);
         // This must not cause a validate operation on sub1, but on sub2
         copy.clearTree("element2");
-        assertTrue(isDetached(sub2), "Sub2 not detached");
-        assertFalse(isDetached(sub), "Sub 1 was detached");
+        assertTrue(isDetached(sub2));
+        assertFalse(isDetached(sub));
     }
 
     /**
@@ -191,7 +191,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
     public void testCloneSynchronized() {
         final BaseHierarchicalConfiguration clone = (BaseHierarchicalConfiguration) config.clone();
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNotSame(config.getSynchronizer(), clone.getSynchronizer(), "Synchronizer was not cloned");
+        assertNotSame(config.getSynchronizer(), clone.getSynchronizer());
     }
 
     /**
@@ -200,7 +200,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
     @Test
     public void testConfigurationAtSynchronized() {
         final HierarchicalConfiguration<ImmutableNode> sub = config.configurationAt("element2");
-        assertEquals("I'm complex!", sub.getString("subelement.subsubelement"), "Wrong property");
+        assertEquals("I'm complex!", sub.getString("subelement.subsubelement"));
         sync.verify(Methods.BEGIN_READ, Methods.END_READ, Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -210,7 +210,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
     @Test
     public void testConfigurationsAtSynchronized() {
         final List<HierarchicalConfiguration<ImmutableNode>> subs = config.configurationsAt("list.item");
-        assertFalse(subs.isEmpty(), "No subnode configurations");
+        assertFalse(subs.isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -221,7 +221,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
     public void testCopyConstructorSynchronized() {
         final BaseHierarchicalConfiguration copy = new BaseHierarchicalConfiguration(config);
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertNotSame(sync, copy.getSynchronizer(), "Synchronizer was copied");
+        assertNotSame(sync, copy.getSynchronizer());
     }
 
     /**
@@ -229,7 +229,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      */
     @Test
     public void testGetMaxIndexSynchronized() {
-        assertTrue(config.getMaxIndex("list.item") > 0, "Wrong max index");
+        assertTrue(config.getMaxIndex("list.item") > 0);
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -238,7 +238,7 @@ public class TestBaseHierarchicalConfigurationSynchronization {
      */
     @Test
     public void testGetRootElementNameSynchronized() {
-        assertEquals("testconfig", config.getRootElementName(), "Wrong root element name");
+        assertEquals("testconfig", config.getRootElementName());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -279,8 +279,8 @@ public class TestBaseHierarchicalConfigurationSynchronization {
         final HierarchicalConfiguration<ImmutableNode> sub = config.configurationAt("element2", true);
         final HierarchicalConfiguration<ImmutableNode> subsub = sub.configurationAt("subelement", true);
         config.clearTree("element2.subelement");
-        assertFalse(isDetached(sub), "Sub1 detached");
-        assertTrue(isDetached(subsub), "Sub2 still attached");
+        assertFalse(isDetached(sub));
+        assertTrue(isDetached(subsub));
     }
 
     /**
@@ -292,8 +292,8 @@ public class TestBaseHierarchicalConfigurationSynchronization {
         final HierarchicalConfiguration<ImmutableNode> subsub = sub.configurationAt("subelement", true);
         final HierarchicalConfiguration<ImmutableNode> sub2 = config.configurationAt("element2.subelement", true);
         sub.clearTree("subelement");
-        assertTrue(isDetached(sub2), "Sub2 still attached");
-        assertTrue(isDetached(subsub), "Subsub still attached");
+        assertTrue(isDetached(sub2));
+        assertTrue(isDetached(subsub));
     }
 
     /**
@@ -303,6 +303,6 @@ public class TestBaseHierarchicalConfigurationSynchronization {
     public void testSubsetSynchronized() {
         final Configuration subset = config.subset("test");
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
-        assertSame(sync, subset.getSynchronizer(), "Wrong Synchronizer");
+        assertSame(sync, subset.getSynchronizer());
     }
 }

@@ -39,11 +39,11 @@ public class TestXMLConfiguration_605 {
      * @param config the configuration to be checked
      */
     private static void checkConfiguration(final Configuration config) {
-        assertTrue(config.containsKey("key0"), "Configuration has key key0");
-        assertTrue(config.containsKey("key1"), "Configuration has key key1");
-        assertTrue(config.containsKey("key3"), "Configuration has key key3");
+        assertTrue(config.containsKey("key0"));
+        assertTrue(config.containsKey("key1"));
+        assertTrue(config.containsKey("key3"));
 
-        assertTrue(config.containsKey("key2"), "Configuration has key key2");
+        assertTrue(config.containsKey("key2"));
     }
 
     /**

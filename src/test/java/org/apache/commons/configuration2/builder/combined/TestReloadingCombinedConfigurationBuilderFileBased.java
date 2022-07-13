@@ -180,7 +180,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
         final File src2 = writeReloadFile(null, 1, 1);
         writeDefinitionFile(defFile, src1);
         CombinedConfiguration config = builder.getConfiguration();
-        assertEquals(0, config.getInt(testProperty(1)), "Wrong initial value");
+        assertEquals(0, config.getInt(testProperty(1)));
 
         // No change definition file
         boolean reloaded = false;
@@ -191,9 +191,9 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
                 Thread.sleep(100);
             }
         }
-        assertTrue(reloaded, "Need for reload not detected");
+        assertTrue(reloaded);
         config = builder.getConfiguration();
-        assertEquals(1, config.getInt(testProperty(1)), "Wrong reloaded value");
+        assertEquals(1, config.getInt(testProperty(1)));
     }
 
     @BeforeEach
@@ -221,7 +221,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
             .registerChildDefaultsHandler(FileBasedBuilderProperties.class,
                 new CopyObjectDefaultHandler(new FileBasedBuilderParametersImpl().setReloadingDetectorFactory(detectorFactory))));
 
-        assertEquals("100", builder.getConfiguration().getString("/property[@name='config']/@value"), "Wrong initial value");
+        assertEquals("100", builder.getConfiguration().getString("/property[@name='config']/@value"));
 
         final Thread testThreads[] = new Thread[threadCount];
         final int failures[] = new int[threadCount];
@@ -236,7 +236,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
             testThreads[i].join();
             totalFailures += failures[i];
         }
-        assertEquals(0, totalFailures, totalFailures + " failures Occurred");
+        assertEquals(0, totalFailures);
     }
 
     /**
@@ -275,20 +275,20 @@ public class TestReloadingCombinedConfigurationBuilderFileBased {
         builder.configure(parameters.combined().setDefinitionBuilder(new ConstantConfigurationBuilder(defConf)).registerChildDefaultsHandler(
             FileBasedBuilderProperties.class, new CopyObjectDefaultHandler(new FileBasedBuilderParametersImpl().setReloadingDetectorFactory(detectorFactory))));
         CombinedConfiguration config = builder.getConfiguration();
-        assertEquals(0, config.getInt(testProperty(1)), "Wrong initial value (1)");
-        assertEquals(0, config.getInt(testProperty(2)), "Wrong initial value (2)");
+        assertEquals(0, config.getInt(testProperty(1)));
+        assertEquals(0, config.getInt(testProperty(2)));
 
         writeReloadFile(xmlConf1, 1, 1);
         builder.getReloadingController().checkForReloading(null);
         config = builder.getConfiguration();
-        assertEquals(1, config.getInt(testProperty(1)), "Updated value not reloaded (1)");
-        assertEquals(0, config.getInt(testProperty(2)), "Value modified");
+        assertEquals(1, config.getInt(testProperty(1)));
+        assertEquals(0, config.getInt(testProperty(2)));
 
         writeReloadFile(xmlConf2, 2, 2);
         builder.getReloadingController().checkForReloading(null);
         config = builder.getConfiguration();
-        assertEquals(1, config.getInt(testProperty(1)), "Wrong value for config 1");
-        assertEquals(2, config.getInt(testProperty(2)), "Updated value not reloaded (2)");
+        assertEquals(1, config.getInt(testProperty(1)));
+        assertEquals(2, config.getInt(testProperty(2)));
     }
 
     /**

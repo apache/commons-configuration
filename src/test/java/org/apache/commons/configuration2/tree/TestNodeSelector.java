@@ -120,7 +120,7 @@ public class TestNodeSelector {
         EasyMock.replay(resolverMock);
 
         final NodeSelector selector = new NodeSelector(KEY);
-        assertSame(target, selector.select(root, resolverMock, handler), "Wrong target");
+        assertSame(target, selector.select(root, resolverMock, handler));
     }
 
     /**
@@ -129,7 +129,7 @@ public class TestNodeSelector {
     @Test
     public void testSelectMultipleTargets() {
         final NodeSelector selector = new NodeSelector("tables.table.name");
-        assertNull(selector.select(root, resolver, handler), "Got a result");
+        assertNull(selector.select(root, resolver, handler));
     }
 
     /**
@@ -142,7 +142,7 @@ public class TestNodeSelector {
         EasyMock.replay(resolverMock);
 
         final NodeSelector selector = new NodeSelector(KEY);
-        assertNull(selector.select(root, resolverMock, handler), "Got a result");
+        assertNull(selector.select(root, resolverMock, handler));
     }
 
     /**
@@ -152,8 +152,8 @@ public class TestNodeSelector {
     public void testSelectSingleKeySuccess() {
         final NodeSelector selector = new NodeSelector("tables.table(0).name");
         final ImmutableNode target = selector.select(root, resolver, handler);
-        assertEquals("name", target.getNodeName(), "Wrong name");
-        assertEquals(NodeStructureHelper.table(0), target.getValue(), "Wrong value");
+        assertEquals("name", target.getNodeName());
+        assertEquals(NodeStructureHelper.table(0), target.getValue());
     }
 
     /**
@@ -164,7 +164,7 @@ public class TestNodeSelector {
         final NodeSelector selectorParent = new NodeSelector("tables.table(0)");
         final NodeSelector selector = selectorParent.subSelector("fields.field(1).name");
         final ImmutableNode target = selector.select(root, resolver, handler);
-        assertEquals(NodeStructureHelper.field(0, 1), target.getValue(), "Wrong node selected");
+        assertEquals(NodeStructureHelper.field(0, 1), target.getValue());
     }
 
     /**
@@ -178,7 +178,7 @@ public class TestNodeSelector {
         final int fldIdx = NodeStructureHelper.fieldsLength(1) - 1;
         final NodeSelector selector = second.subSelector("field(" + fldIdx + ").name");
         final ImmutableNode target = selector.select(root, resolver, handler);
-        assertEquals(NodeStructureHelper.field(1, fldIdx), target.getValue(), "Wrong target node");
+        assertEquals(NodeStructureHelper.field(1, fldIdx), target.getValue());
     }
 
     /**
@@ -188,7 +188,7 @@ public class TestNodeSelector {
     public void testSelectSubKeyMultipleResults() {
         final NodeSelector selectorParent = new NodeSelector("tables.table");
         final NodeSelector selector = selectorParent.subSelector("fields.field(1).name");
-        assertNull(selector.select(root, resolver, handler), "Got a result");
+        assertNull(selector.select(root, resolver, handler));
     }
 
     /**
@@ -198,7 +198,7 @@ public class TestNodeSelector {
     public void testSelectSubKeyUnknown() {
         final NodeSelector selectorParent = new NodeSelector("tables.unknown");
         final NodeSelector selector = selectorParent.subSelector("fields.field(1).name");
-        assertNull(selector.select(root, resolver, handler), "Got a result");
+        assertNull(selector.select(root, resolver, handler));
     }
 
     /**

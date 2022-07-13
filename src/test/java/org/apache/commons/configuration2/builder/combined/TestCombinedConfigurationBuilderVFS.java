@@ -61,6 +61,6 @@ public class TestCombinedConfigurationBuilderVFS extends TestCombinedConfigurati
         final BasicConfigurationBuilder<? extends HierarchicalConfiguration<ImmutableNode>> defBuilder = createDefinitionBuilder(defConfig);
         builder.configure(new CombinedBuilderParametersImpl().setDefinitionBuilder(defBuilder).setBasePath(deepDir.getAbsolutePath()));
         final Configuration config = builder.getConfiguration();
-        assertEquals("somevalue", config.getString("somekey"), "Wrong property value");
+        assertEquals("somevalue", config.getString("somekey"));
     }
 }

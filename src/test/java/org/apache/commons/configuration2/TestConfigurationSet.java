@@ -76,11 +76,11 @@ public class TestConfigurationSet {
             assertTrue(found, "Could not find property " + entry.getKey());
             iterator.remove();
         }
-        assertTrue(set.isEmpty(), "Iterator failed to remove all properties.");
+        assertTrue(set.isEmpty());
     }
 
     @Test
     public void testSize() {
-        assertEquals(properties.length, set.size(), "Entry set does not match properties size.");
+        assertEquals(properties.length, set.size());
     }
 }

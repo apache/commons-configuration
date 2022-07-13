@@ -49,7 +49,7 @@ public class TestJndiBuilderParametersImpl {
         params.setPrefix("somePrefix");
         params.setThrowExceptionOnMissing(true);
         final Map<String, Object> paramsMap = params.getParameters();
-        assertEquals(Boolean.TRUE, paramsMap.get("throwExceptionOnMissing"), "Wrong exception flag");
+        assertEquals(Boolean.TRUE, paramsMap.get("throwExceptionOnMissing"));
     }
 
     /**
@@ -63,8 +63,8 @@ public class TestJndiBuilderParametersImpl {
         BeanHelper.setProperty(params, "context", ctx);
         BeanHelper.setProperty(params, "prefix", prefix);
         final Map<String, Object> paramsMap = params.getParameters();
-        assertSame(ctx, paramsMap.get("context"), "Context not in map");
-        assertEquals(prefix, paramsMap.get("prefix"), "Prefix not in map");
+        assertSame(ctx, paramsMap.get("context"));
+        assertEquals(prefix, paramsMap.get("prefix"));
     }
 
     /**
@@ -74,9 +74,9 @@ public class TestJndiBuilderParametersImpl {
     public void testSetContext() {
         final Context ctx = EasyMock.createMock(Context.class);
         EasyMock.replay(ctx);
-        assertSame(params, params.setContext(ctx), "Wrong result");
+        assertSame(params, params.setContext(ctx));
         final Map<String, Object> paramsMap = params.getParameters();
-        assertSame(ctx, paramsMap.get("context"), "Context not in map");
+        assertSame(ctx, paramsMap.get("context"));
     }
 
     /**
@@ -85,8 +85,8 @@ public class TestJndiBuilderParametersImpl {
     @Test
     public void testSetPrefix() {
         final String prefix = "testJndiPrefix";
-        assertSame(params, params.setPrefix(prefix), "Wrong result");
+        assertSame(params, params.setPrefix(prefix));
         final Map<String, Object> paramsMap = params.getParameters();
-        assertEquals(prefix, paramsMap.get("prefix"), "Prefix not in map");
+        assertEquals(prefix, paramsMap.get("prefix"));
     }
 }

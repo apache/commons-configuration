@@ -52,6 +52,6 @@ public class TestSystemPropertiesLookup {
      */
     @Test
     public void testLookupUnknownProperty() {
-        assertNull(lookup.lookup("a non existing system property!"), "Got a value");
+        assertNull(lookup.lookup("a non existing system property!"));
     }
 }

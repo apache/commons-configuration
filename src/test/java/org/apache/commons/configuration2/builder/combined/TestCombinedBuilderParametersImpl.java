@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,10 +68,10 @@ public class TestCombinedBuilderParametersImpl {
         defParams.setSystemID("someSysID");
         params.setDefinitionBuilderParameters(defParams);
         final CombinedBuilderParametersImpl clone = params.clone();
-        assertEquals(params.getBasePath(), clone.getBasePath(), "Wrong field value");
-        assertNotSame(params.getDefinitionBuilderParameters(), clone.getDefinitionBuilderParameters(), "Parameters object not cloned");
+        assertEquals(params.getBasePath(), clone.getBasePath());
+        assertNotSame(params.getDefinitionBuilderParameters(), clone.getDefinitionBuilderParameters());
         assertEquals(params.getDefinitionBuilderParameters().getParameters().get("systemID"),
-            clone.getDefinitionBuilderParameters().getParameters().get("systemID"), "Wrong field value in parameters object");
+                clone.getDefinitionBuilderParameters().getParameters().get("systemID"));
     }
 
     /**
@@ -79,8 +80,8 @@ public class TestCombinedBuilderParametersImpl {
     @Test
     public void testFromParametersCreate() {
         final CombinedBuilderParametersImpl params = CombinedBuilderParametersImpl.fromParameters(new HashMap<>(), true);
-        assertNotNull(params, "No instance");
-        assertNull(params.getDefinitionBuilder(), "Got data");
+        assertNotNull(params);
+        assertNull(params.getDefinitionBuilder());
     }
 
     /**
@@ -90,7 +91,7 @@ public class TestCombinedBuilderParametersImpl {
     public void testFromParametersExisting() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         final Map<String, Object> map = params.getParameters();
-        assertSame(params, CombinedBuilderParametersImpl.fromParameters(map), "Wrong result");
+        assertSame(params, CombinedBuilderParametersImpl.fromParameters(map));
     }
 
     /**
@@ -98,7 +99,7 @@ public class TestCombinedBuilderParametersImpl {
      */
     @Test
     public void testFromParametersNotFound() {
-        assertNull(CombinedBuilderParametersImpl.fromParameters(new HashMap<>()), "Got an instance");
+        assertNull(CombinedBuilderParametersImpl.fromParameters(new HashMap<>()));
     }
 
     /**
@@ -109,8 +110,8 @@ public class TestCombinedBuilderParametersImpl {
         final DefaultParametersManager manager = EasyMock.createMock(DefaultParametersManager.class);
         EasyMock.replay(manager);
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        assertSame(params, params.setChildDefaultParametersManager(manager), "Wrong result");
-        assertSame(manager, params.getChildDefaultParametersManager(), "Wrong manager");
+        assertSame(params, params.setChildDefaultParametersManager(manager));
+        assertSame(manager, params.getChildDefaultParametersManager());
     }
 
     /**
@@ -119,7 +120,7 @@ public class TestCombinedBuilderParametersImpl {
     @Test
     public void testGetChildDefaultParametersManagerUndefined() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        assertNotNull(params.getChildDefaultParametersManager(), "No default manager");
+        assertNotNull(params.getChildDefaultParametersManager());
     }
 
     /**
@@ -130,7 +131,7 @@ public class TestCombinedBuilderParametersImpl {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         params.setThrowExceptionOnMissing(true);
         final Map<String, Object> map = params.getParameters();
-        assertEquals(Boolean.TRUE, map.get("throwExceptionOnMissing"), "Exception flag not found");
+        assertEquals(Boolean.TRUE, map.get("throwExceptionOnMissing"));
     }
 
     /**
@@ -139,7 +140,7 @@ public class TestCombinedBuilderParametersImpl {
     @Test
     public void testGetProvidersInitial() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        assertTrue(params.getProviders().isEmpty(), "Got providers");
+        assertEquals(Collections.emptyMap(), params.getProviders());
     }
 
     /**
@@ -165,9 +166,9 @@ public class TestCombinedBuilderParametersImpl {
 
         params2.inheritFrom(params.getParameters());
         final Map<String, Object> parameters = params2.getParameters();
-        assertEquals(Boolean.TRUE, parameters.get("throwExceptionOnMissing"), "Exception flag not set");
-        assertEquals(manager, params2.getChildDefaultParametersManager(), "Default manager not set");
-        assertFalse(params2.isInheritSettings(), "Inherit flag not set");
+        assertEquals(Boolean.TRUE, parameters.get("throwExceptionOnMissing"));
+        assertEquals(manager, params2.getChildDefaultParametersManager());
+        assertFalse(params2.isInheritSettings());
     }
 
     /**
@@ -180,7 +181,7 @@ public class TestCombinedBuilderParametersImpl {
 
         params2.inheritFrom(params.getParameters());
         final Map<String, Object> parameters = params2.getParameters();
-        assertEquals(Boolean.TRUE, parameters.get("throwExceptionOnMissing"), "Exception flag not set");
+        assertEquals(Boolean.TRUE, parameters.get("throwExceptionOnMissing"));
     }
 
     /**
@@ -189,7 +190,7 @@ public class TestCombinedBuilderParametersImpl {
     @Test
     public void testProviderForUnknown() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        assertNull(params.providerForTag("someTag"), "Got a provider");
+        assertNull(params.providerForTag("someTag"));
     }
 
     /**
@@ -203,7 +204,7 @@ public class TestCombinedBuilderParametersImpl {
         EasyMock.replay(manager, handler);
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         params.setChildDefaultParametersManager(manager);
-        assertSame(params, params.registerChildDefaultsHandler(BuilderParameters.class, handler), "Wrong result");
+        assertSame(params, params.registerChildDefaultsHandler(BuilderParameters.class, handler));
         EasyMock.verify(manager);
     }
 
@@ -218,7 +219,7 @@ public class TestCombinedBuilderParametersImpl {
         EasyMock.replay(manager, handler);
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         params.setChildDefaultParametersManager(manager);
-        assertSame(params, params.registerChildDefaultsHandler(BuilderParameters.class, handler, FileBasedBuilderParameters.class), "Wrong result");
+        assertSame(params, params.registerChildDefaultsHandler(BuilderParameters.class, handler, FileBasedBuilderParameters.class));
         EasyMock.verify(manager);
     }
 
@@ -236,10 +237,10 @@ public class TestCombinedBuilderParametersImpl {
         final Map<String, ConfigurationBuilderProvider> map = new HashMap<>();
         map.put(tagPrefix, provider2);
         map.put(tagPrefix + 1, provider3);
-        assertSame(params, params.registerMissingProviders(map), "Wrong result");
-        assertEquals(2, params.getProviders().size(), "Wrong number of providers");
-        assertSame(provider1, params.providerForTag(tagPrefix), "Wrong provider (1)");
-        assertSame(provider3, params.providerForTag(tagPrefix + 1), "Wrong provider (2)");
+        assertSame(params, params.registerMissingProviders(map));
+        assertEquals(2, params.getProviders().size());
+        assertSame(provider1, params.providerForTag(tagPrefix));
+        assertSame(provider3, params.providerForTag(tagPrefix + 1));
     }
 
     /**
@@ -277,10 +278,10 @@ public class TestCombinedBuilderParametersImpl {
         params.registerProvider(tagPrefix, provider1);
         params2.registerProvider(tagPrefix, provider2);
         params2.registerProvider(tagPrefix + 1, provider3);
-        assertSame(params, params.registerMissingProviders(params2), "Wrong result");
-        assertEquals(2, params.getProviders().size(), "Wrong number of providers");
-        assertSame(provider1, params.providerForTag(tagPrefix), "Wrong provider (1)");
-        assertSame(provider3, params.providerForTag(tagPrefix + 1), "Wrong provider (2)");
+        assertSame(params, params.registerMissingProviders(params2));
+        assertEquals(2, params.getProviders().size());
+        assertSame(provider1, params.providerForTag(tagPrefix));
+        assertSame(provider3, params.providerForTag(tagPrefix + 1));
     }
 
     /**
@@ -301,11 +302,11 @@ public class TestCombinedBuilderParametersImpl {
         EasyMock.replay(provider);
         final String tagName = "testTag";
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        assertSame(params, params.registerProvider(tagName, provider), "Wrong result");
+        assertSame(params, params.registerProvider(tagName, provider));
         final Map<String, ConfigurationBuilderProvider> providers = params.getProviders();
-        assertEquals(1, providers.size(), "Wrong number of providers");
-        assertSame(provider, providers.get(tagName), "Wrong provider (1)");
-        assertSame(provider, params.providerForTag(tagName), "Wrong provider (2)");
+        assertEquals(1, providers.size());
+        assertSame(provider, providers.get(tagName));
+        assertSame(provider, params.providerForTag(tagName));
     }
 
     /**
@@ -334,8 +335,8 @@ public class TestCombinedBuilderParametersImpl {
     public void testSetBasePath() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
         final String basePath = ConfigurationAssert.OUT_DIR.getAbsolutePath();
-        assertSame(params, params.setBasePath(basePath), "Wrong result");
-        assertEquals(basePath, params.getBasePath(), "Wrong base path");
+        assertSame(params, params.setBasePath(basePath));
+        assertEquals(basePath, params.getBasePath());
     }
 
     /**
@@ -349,9 +350,9 @@ public class TestCombinedBuilderParametersImpl {
         BeanHelper.setProperty(params, "basePath", "testPath");
         BeanHelper.setProperty(params, "definitionBuilderParameters", defparams);
         BeanHelper.setProperty(params, "inheritSettings", false);
-        assertEquals("testPath", params.getBasePath(), "Wrong path");
-        assertSame(defparams, params.getDefinitionBuilderParameters(), "Wrong def parameters");
-        assertFalse(params.isInheritSettings(), "Wrong inherit flag");
+        assertEquals("testPath", params.getBasePath());
+        assertSame(defparams, params.getDefinitionBuilderParameters());
+        assertFalse(params.isInheritSettings());
     }
 
     /**
@@ -360,10 +361,10 @@ public class TestCombinedBuilderParametersImpl {
     @Test
     public void testSetDefinitionBuilder() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        assertNull(params.getDefinitionBuilder(), "Got a definition builder");
+        assertNull(params.getDefinitionBuilder());
         final ConfigurationBuilder<XMLConfiguration> builder = new BasicConfigurationBuilder<>(XMLConfiguration.class);
-        assertSame(params, params.setDefinitionBuilder(builder), "Wrong result");
-        assertSame(builder, params.getDefinitionBuilder(), "Builder was not set");
+        assertSame(params, params.setDefinitionBuilder(builder));
+        assertSame(builder, params.getDefinitionBuilder());
     }
 
     /**
@@ -374,8 +375,8 @@ public class TestCombinedBuilderParametersImpl {
         final BuilderParameters defparams = EasyMock.createMock(BuilderParameters.class);
         EasyMock.replay(defparams);
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        assertSame(params, params.setDefinitionBuilderParameters(defparams), "Wrong result");
-        assertSame(defparams, params.getDefinitionBuilderParameters(), "Wrong parameters object");
+        assertSame(params, params.setDefinitionBuilderParameters(defparams));
+        assertSame(defparams, params.getDefinitionBuilderParameters());
     }
 
     /**
@@ -384,8 +385,8 @@ public class TestCombinedBuilderParametersImpl {
     @Test
     public void testSetInheritSettings() {
         final CombinedBuilderParametersImpl params = new CombinedBuilderParametersImpl();
-        assertTrue(params.isInheritSettings(), "Wrong initial value");
-        assertSame(params, params.setInheritSettings(false), "Wrong result");
-        assertFalse(params.isInheritSettings(), "Property not set");
+        assertTrue(params.isInheritSettings());
+        assertSame(params, params.setInheritSettings(false));
+        assertFalse(params.isInheritSettings());
     }
 }

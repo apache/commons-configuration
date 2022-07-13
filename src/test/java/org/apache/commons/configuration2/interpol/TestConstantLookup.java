@@ -67,7 +67,7 @@ public class TestConstantLookup {
      */
     @Test
     public void testLookupConstant() {
-        assertEquals(FIELD, lookup.lookup(variable("FIELD")), "Wrong value of constant");
+        assertEquals(FIELD, lookup.lookup(variable("FIELD")));
     }
 
     /**
@@ -75,7 +75,7 @@ public class TestConstantLookup {
      */
     @Test
     public void testLookupInvalidSyntax() {
-        assertNull(lookup.lookup("InvalidVariableName"), "Non null return value for invalid variable name");
+        assertNull(lookup.lookup("InvalidVariableName"));
     }
 
     /**
@@ -83,7 +83,7 @@ public class TestConstantLookup {
      */
     @Test
     public void testLookupNonExisting() {
-        assertNull(lookup.lookup(variable("NO_FIELD")), "Non null return value for non existing constant");
+        assertNull(lookup.lookup(variable("NO_FIELD")));
     }
 
     /**
@@ -93,8 +93,8 @@ public class TestConstantLookup {
     public void testLookupNonStringFromCache() {
         final String var = KeyEvent.class.getName() + ".VK_ESCAPE";
         final Object expected = KeyEvent.VK_ESCAPE;
-        assertEquals(expected, lookup.lookup(var), "Wrong result of first lookup");
-        assertEquals(expected, lookup.lookup(var), "Wrong result of 2nd lookup");
+        assertEquals(expected, lookup.lookup(var));
+        assertEquals(expected, lookup.lookup(var));
     }
 
     /**
@@ -102,7 +102,7 @@ public class TestConstantLookup {
      */
     @Test
     public void testLookupNull() {
-        assertNull(lookup.lookup(null), "Non null return value for null variable");
+        assertNull(lookup.lookup(null));
     }
 
     /**
@@ -110,7 +110,7 @@ public class TestConstantLookup {
      */
     @Test
     public void testLookupPrivate() {
-        assertNull(lookup.lookup(variable("PRIVATE_FIELD")), "Non null return value for non accessible field");
+        assertNull(lookup.lookup(variable("PRIVATE_FIELD")));
     }
 
     /**
@@ -118,7 +118,7 @@ public class TestConstantLookup {
      */
     @Test
     public void testLookupUnknownClass() {
-        assertNull(lookup.lookup("org.apache.commons.configuration.NonExistingConfig." + FIELD), "Non null return value for unknown class");
+        assertNull(lookup.lookup("org.apache.commons.configuration.NonExistingConfig." + FIELD));
     }
 
     /**

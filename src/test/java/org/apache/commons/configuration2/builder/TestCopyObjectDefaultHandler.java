@@ -42,7 +42,7 @@ public class TestCopyObjectDefaultHandler {
         final CopyObjectDefaultHandler handler = new CopyObjectDefaultHandler(paramsXml);
         final FileBasedBuilderParametersImpl paramsFb = new FileBasedBuilderParametersImpl();
         handler.initializeDefaults(paramsFb);
-        assertEquals(refresh, paramsFb.getReloadingRefreshDelay(), "Wrong refresh");
+        assertEquals(refresh, paramsFb.getReloadingRefreshDelay());
     }
 
     /**
@@ -76,8 +76,8 @@ public class TestCopyObjectDefaultHandler {
         final FileBasedBuilderParametersImpl copy = new FileBasedBuilderParametersImpl();
         handler.initializeDefaults(copy);
         final Map<String, Object> map = copy.getParameters();
-        assertEquals(Boolean.TRUE, map.get("throwExceptionOnMissing"), "Wrong exception flag");
-        assertEquals(refresh, copy.getReloadingRefreshDelay(), "Wrong refresh");
+        assertEquals(Boolean.TRUE, map.get("throwExceptionOnMissing"));
+        assertEquals(refresh, copy.getReloadingRefreshDelay());
     }
 
     /**

@@ -17,11 +17,13 @@
 package org.apache.commons.configuration2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -56,11 +58,12 @@ public class TestConfigurationLookup {
         }
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);
         final Collection<?> col = (Collection<?>) lookup.lookup(VAR);
-        assertEquals(count, col.size(), "Wrong number of elements");
-        final Iterator<?> it = col.iterator();
+
+        final List<String> expected = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            assertEquals(String.valueOf(VALUE) + i, it.next(), "Wrong element at " + i);
+            expected.add(String.valueOf(VALUE) + i);
         }
+        assertIterableEquals(expected, col);
     }
 
     /**
@@ -70,7 +73,7 @@ public class TestConfigurationLookup {
     public void testLookupNotFound() {
         final Configuration conf = new BaseConfiguration();
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);
-        assertNull(lookup.lookup(VAR), "Got a value");
+        assertNull(lookup.lookup(VAR));
     }
 
     /**
@@ -81,7 +84,7 @@ public class TestConfigurationLookup {
         final BaseConfiguration conf = new BaseConfiguration();
         conf.setThrowExceptionOnMissing(true);
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);
-        assertNull(lookup.lookup(VAR), "Got a value");
+        assertNull(lookup.lookup(VAR));
     }
 
     /**
@@ -92,6 +95,6 @@ public class TestConfigurationLookup {
         final Configuration conf = new BaseConfiguration();
         conf.addProperty(VAR, VALUE);
         final ConfigurationLookup lookup = new ConfigurationLookup(conf);
-        assertEquals(VALUE, lookup.lookup(VAR), "Wrong result");
+        assertEquals(VALUE, lookup.lookup(VAR));
     }
 }

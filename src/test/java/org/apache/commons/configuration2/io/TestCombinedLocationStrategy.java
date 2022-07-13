@@ -16,7 +16,7 @@
  */
 package org.apache.commons.configuration2.io;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -61,11 +61,7 @@ public class TestCombinedLocationStrategy {
      */
     private void checkSubStrategies(final CombinedLocationStrategy strategy) {
         final Collection<FileLocationStrategy> subs = strategy.getSubStrategies();
-        assertEquals(getSubStrategies().length, subs.size(), "Wrong number of strategies");
-        int idx = 0;
-        for (final FileLocationStrategy strat : subs) {
-            assertEquals(getSubStrategies()[idx++], strat, "Wrong sub strategy at " + idx);
-        }
+        assertIterableEquals(Arrays.asList(getSubStrategies()), subs);
     }
 
     /**
@@ -160,7 +156,7 @@ public class TestCombinedLocationStrategy {
         EasyMock.expect(getSubStrategies()[1].locate(getFileSystem(), locator)).andReturn(null);
         replaySubStrategies();
         final CombinedLocationStrategy strategy = createCombinedStrategy();
-        assertNull(strategy.locate(getFileSystem(), locator), "Got a URL");
+        assertNull(strategy.locate(getFileSystem(), locator));
         verifySubStrategies();
     }
 
@@ -172,7 +168,7 @@ public class TestCombinedLocationStrategy {
         EasyMock.expect(getSubStrategies()[0].locate(getFileSystem(), locator)).andReturn(locateURL);
         replaySubStrategies();
         final CombinedLocationStrategy strategy = createCombinedStrategy();
-        assertSame(locateURL, strategy.locate(getFileSystem(), locator), "Wrong result");
+        assertSame(locateURL, strategy.locate(getFileSystem(), locator));
         verifySubStrategies();
     }
 
@@ -185,7 +181,7 @@ public class TestCombinedLocationStrategy {
         EasyMock.expect(getSubStrategies()[1].locate(getFileSystem(), locator)).andReturn(locateURL);
         replaySubStrategies();
         final CombinedLocationStrategy strategy = createCombinedStrategy();
-        assertSame(locateURL, strategy.locate(getFileSystem(), locator), "Wrong result");
+        assertSame(locateURL, strategy.locate(getFileSystem(), locator));
         verifySubStrategies();
     }
 
