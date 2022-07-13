@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
+
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.EventListenerRegistrationData;
 import org.apache.commons.configuration2.event.EventListenerTestImpl;
@@ -37,11 +39,11 @@ public class TestEventListenerParameters {
     public void testAddEventListener() {
         final EventListenerTestImpl listener = new EventListenerTestImpl(null);
         final EventListenerParameters parameters = new EventListenerParameters();
-        assertSame(parameters, parameters.addEventListener(ConfigurationEvent.ADD_PROPERTY, listener), "Wrong result");
-        assertEquals(1, parameters.getListeners().getRegistrations().size(), "Wrong number of registrations");
+        assertSame(parameters, parameters.addEventListener(ConfigurationEvent.ADD_PROPERTY, listener));
+        assertEquals(1, parameters.getListeners().getRegistrations().size());
         final EventListenerRegistrationData<?> reg = parameters.getListeners().getRegistrations().get(0);
-        assertEquals(ConfigurationEvent.ADD_PROPERTY, reg.getEventType(), "Wrong event type");
-        assertEquals(listener, reg.getListener(), "Wrong listener");
+        assertEquals(ConfigurationEvent.ADD_PROPERTY, reg.getEventType());
+        assertEquals(listener, reg.getListener());
     }
 
     /**
@@ -52,9 +54,8 @@ public class TestEventListenerParameters {
         final EventListenerRegistrationData<ConfigurationEvent> reg = new EventListenerRegistrationData<>(ConfigurationEvent.SET_PROPERTY,
             new EventListenerTestImpl(null));
         final EventListenerParameters parameters = new EventListenerParameters();
-        assertSame(parameters, parameters.addEventListener(reg), "Wrong result");
-        assertEquals(1, parameters.getListeners().getRegistrations().size(), "Wrong number of registrations");
-        assertEquals(reg, parameters.getListeners().getRegistrations().get(0), "Wrong registration");
+        assertSame(parameters, parameters.addEventListener(reg));
+        assertEquals(Arrays.asList(reg), parameters.getListeners().getRegistrations());
     }
 
     /**
@@ -63,7 +64,7 @@ public class TestEventListenerParameters {
     @Test
     public void testGetParameters() {
         final EventListenerParameters parameters = new EventListenerParameters();
-        assertTrue(parameters.getParameters().isEmpty(), "Got parameters");
+        assertTrue(parameters.getParameters().isEmpty());
     }
 
     /**
@@ -72,6 +73,6 @@ public class TestEventListenerParameters {
     @Test
     public void testRegistrationsAfterCreation() {
         final EventListenerParameters parameters = new EventListenerParameters();
-        assertTrue(parameters.getListeners().getRegistrations().isEmpty(), "Got registrations");
+        assertTrue(parameters.getListeners().getRegistrations().isEmpty());
     }
 }

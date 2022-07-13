@@ -114,7 +114,7 @@ public class TestAbstractConfigurationSynchronization {
      */
     @Test
     public void testContainsKeySychronized() {
-        assertTrue(config.containsKey(PROP), "Wrong result");
+        assertTrue(config.containsKey(PROP));
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -133,7 +133,7 @@ public class TestAbstractConfigurationSynchronization {
      */
     @Test
     public void testDefaultSynchronizer() {
-        assertSame(NoOpSynchronizer.INSTANCE, new PropertiesConfiguration().getSynchronizer(), "Wrong default synchronizer");
+        assertSame(NoOpSynchronizer.INSTANCE, new PropertiesConfiguration().getSynchronizer());
     }
 
     /**
@@ -150,7 +150,7 @@ public class TestAbstractConfigurationSynchronization {
      */
     @Test
     public void testGetKeysSynchronized() {
-        assertTrue(config.getKeys().hasNext(), "No keys");
+        assertTrue(config.getKeys().hasNext());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -159,8 +159,8 @@ public class TestAbstractConfigurationSynchronization {
      */
     @Test
     public void testGetPropertySynchronized() {
-        assertEquals("true", config.getProperty(PROP), "Wrong raw value");
-        assertTrue(config.getBoolean(PROP), "Wrong boolean value");
+        assertEquals("true", config.getProperty(PROP));
+        assertTrue(config.getBoolean(PROP));
         sync.verify(Methods.BEGIN_READ, Methods.END_READ, Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -169,7 +169,7 @@ public class TestAbstractConfigurationSynchronization {
      */
     @Test
     public void testIsEmptySynchronized() {
-        assertFalse(config.isEmpty(), "Configuration is empty");
+        assertFalse(config.isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -214,7 +214,7 @@ public class TestAbstractConfigurationSynchronization {
      */
     @Test
     public void testSizeSynchronized() {
-        assertFalse(config.isEmpty(), "Wrong size");
+        assertFalse(config.isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -225,7 +225,7 @@ public class TestAbstractConfigurationSynchronization {
     public void testSubsetSynchronized() {
         final AbstractConfiguration subset = (AbstractConfiguration) config.subset("configuration");
         sync.verify();
-        assertEquals(NoOpSynchronizer.INSTANCE, subset.getSynchronizer(), "Wrong synchronizer for subset");
+        assertEquals(NoOpSynchronizer.INSTANCE, subset.getSynchronizer());
     }
 
     /**

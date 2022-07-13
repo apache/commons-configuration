@@ -18,6 +18,7 @@ package org.apache.commons.configuration2.builder.fluent;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -60,8 +61,8 @@ public class TestParameters {
      * @param map the map to be tested
      */
     private static void checkBasicProperties(final Map<String, Object> map) {
-        assertEquals(listHandler, map.get("listDelimiterHandler"), "Wrong delimiter handler");
-        assertEquals(Boolean.TRUE, map.get("throwExceptionOnMissing"), "Wrong exception flag value");
+        assertEquals(listHandler, map.get("listDelimiterHandler"));
+        assertEquals(Boolean.TRUE, map.get("throwExceptionOnMissing"));
     }
 
     /**
@@ -71,20 +72,10 @@ public class TestParameters {
      * @param ifcClasses the interface classes to be implemented
      */
     private static void checkInheritance(final Object params, final Class<?>... ifcClasses) {
-        checkInstanceOf(params, BasicBuilderProperties.class);
+        assertInstanceOf(BasicBuilderProperties.class, params);
         for (final Class<?> c : ifcClasses) {
-            checkInstanceOf(params, c);
+            assertInstanceOf(c, params);
         }
-    }
-
-    /**
-     * Helper method for testing whether the given object is an instance of the provided class.
-     *
-     * @param obj the object to be checked
-     * @param cls the class
-     */
-    private static void checkInstanceOf(final Object obj, final Class<?> cls) {
-        assertTrue(cls.isInstance(obj), obj + " is not an instance of " + cls);
     }
 
     /**
@@ -117,8 +108,8 @@ public class TestParameters {
 
         final Parameters params = new Parameters(manager);
         final XMLBuilderParameters xmlParams = params.xml();
-        assertEquals(1, initializedParams.size(), "Wrong number of initializations");
-        assertSame(xmlParams, initializedParams.get(0), "Wrong initialized object");
+        assertEquals(1, initializedParams.size());
+        assertSame(xmlParams, initializedParams.get(0));
     }
 
     /**
@@ -127,7 +118,7 @@ public class TestParameters {
     @Test
     public void testBasic() {
         final BasicBuilderParameters basic = new Parameters().basic();
-        assertNotNull(basic, "No result object");
+        assertNotNull(basic);
     }
 
     /**
@@ -138,7 +129,7 @@ public class TestParameters {
         final Map<String, Object> map = new Parameters().combined().setThrowExceptionOnMissing(true).setBasePath("test").setListDelimiterHandler(listHandler)
             .getParameters();
         final CombinedBuilderParametersImpl cparams = CombinedBuilderParametersImpl.fromParameters(map);
-        assertEquals("test", cparams.getBasePath(), "Wrong base path");
+        assertEquals("test", cparams.getBasePath());
         checkBasicProperties(map);
     }
 
@@ -150,9 +141,9 @@ public class TestParameters {
         final Map<String, Object> map = new Parameters().database().setThrowExceptionOnMissing(true).setAutoCommit(true).setTable("table")
             .setListDelimiterHandler(listHandler).setKeyColumn("keyColumn").getParameters();
         checkBasicProperties(map);
-        assertEquals("table", map.get("table"), "Wrong table name");
-        assertEquals("keyColumn", map.get("keyColumn"), "Wrong key column name");
-        assertEquals(Boolean.TRUE, map.get("autoCommit"), "Wrong auto commit flag");
+        assertEquals("table", map.get("table"));
+        assertEquals("keyColumn", map.get("keyColumn"));
+        assertEquals(Boolean.TRUE, map.get("autoCommit"));
     }
 
     /**
@@ -161,7 +152,7 @@ public class TestParameters {
     @Test
     public void testDefaultParametersManager() {
         final Parameters parameters = new Parameters();
-        assertNotNull(parameters.getDefaultParametersManager(), "No default manager");
+        assertNotNull(parameters.getDefaultParametersManager());
     }
 
     /**
@@ -172,8 +163,8 @@ public class TestParameters {
         final Map<String, Object> map = new Parameters().fileBased().setThrowExceptionOnMissing(true).setEncoding(DEF_ENCODING)
             .setListDelimiterHandler(listHandler).setFileName("test.xml").getParameters();
         final FileBasedBuilderParametersImpl fbparams = FileBasedBuilderParametersImpl.fromParameters(map);
-        assertEquals("test.xml", fbparams.getFileHandler().getFileName(), "Wrong file name");
-        assertEquals(DEF_ENCODING, fbparams.getFileHandler().getEncoding(), "Wrong encoding");
+        assertEquals("test.xml", fbparams.getFileHandler().getFileName());
+        assertEquals(DEF_ENCODING, fbparams.getFileHandler().getEncoding());
         checkBasicProperties(map);
     }
 
@@ -195,8 +186,8 @@ public class TestParameters {
             .setListDelimiterHandler(listHandler).getParameters();
         checkBasicProperties(map);
         final FileBasedBuilderParametersImpl fbp = FileBasedBuilderParametersImpl.fromParameters(map);
-        assertEquals("test.xml", fbp.getFileHandler().getFileName(), "Wrong file name");
-        assertEquals(engine, map.get("expressionEngine"), "Wrong expression engine");
+        assertEquals("test.xml", fbp.getFileHandler().getFileName());
+        assertEquals(engine, map.get("expressionEngine"));
     }
 
     /**
@@ -214,15 +205,13 @@ public class TestParameters {
     @Test
     public void testInheritance() {
         final Object params = new Parameters().xml();
-        assertInstanceOf(FileBasedBuilderParameters.class, params, "No instance of base interface");
-        assertTrue(FileBasedBuilderParameters.class.isInstance(params), "No instance of base interface (dynamic)");
-        final FileBasedBuilderParameters fbParams = (FileBasedBuilderParameters) params;
+        final FileBasedBuilderParameters fbParams = assertInstanceOf(FileBasedBuilderParameters.class, params);
         fbParams.setListDelimiterHandler(listHandler).setFileName("test.xml").setThrowExceptionOnMissing(true);
         final ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
         ((HierarchicalBuilderParameters) params).setExpressionEngine(engine);
         final Map<String, Object> map = fbParams.getParameters();
         checkBasicProperties(map);
-        assertSame(engine, map.get("expressionEngine"), "Wrong expression engine");
+        assertSame(engine, map.get("expressionEngine"));
     }
 
     /**
@@ -232,7 +221,7 @@ public class TestParameters {
     public void testJndi() {
         final Map<String, Object> map = new Parameters().jndi().setThrowExceptionOnMissing(true).setPrefix("test").setListDelimiterHandler(listHandler)
             .getParameters();
-        assertEquals("test", map.get("prefix"), "Wrong prefix");
+        assertEquals("test", map.get("prefix"));
         checkBasicProperties(map);
     }
 
@@ -247,8 +236,8 @@ public class TestParameters {
             .setListDelimiterHandler(listHandler).setManagedBuilderParameters(bp).getParameters();
         checkBasicProperties(map);
         final MultiFileBuilderParametersImpl params = MultiFileBuilderParametersImpl.fromParameters(map);
-        assertSame(bp, params.getManagedBuilderParameters(), "Wrong builder parameters");
-        assertEquals(pattern, params.getFilePattern(), "Wrong pattern");
+        assertSame(bp, params.getManagedBuilderParameters());
+        assertEquals(pattern, params.getFilePattern());
     }
 
     /**
@@ -271,10 +260,10 @@ public class TestParameters {
         // @formatter:on
         checkBasicProperties(map);
         final FileBasedBuilderParametersImpl fbp = FileBasedBuilderParametersImpl.fromParameters(map);
-        assertEquals("test.properties", fbp.getFileHandler().getFileName(), "Wrong file name");
-        assertEquals(Boolean.FALSE, map.get("includesAllowed"), "Wrong includes flag");
-        assertSame(includeListener, map.get("includeListener"), "Wrong include listener");
-        assertSame(factory, map.get("IOFactory"), "Wrong factory");
+        assertEquals("test.properties", fbp.getFileHandler().getFileName());
+        assertEquals(Boolean.FALSE, map.get("includesAllowed"));
+        assertSame(includeListener, map.get("includeListener"));
+        assertSame(factory, map.get("IOFactory"));
     }
 
     /**
@@ -292,8 +281,8 @@ public class TestParameters {
     public void testProxyObjectMethods() {
         final FileBasedBuilderParameters params = new Parameters().fileBased();
         final String s = params.toString();
-        assertTrue(s.indexOf(FileBasedBuilderParametersImpl.class.getSimpleName()) >= 0, "Wrong string: " + s);
-        assertTrue(params.hashCode() != 0, "No hash code");
+        assertTrue(s.indexOf(FileBasedBuilderParametersImpl.class.getSimpleName()) >= 0);
+        assertNotEquals(0, params.hashCode());
     }
 
     /**
@@ -336,10 +325,10 @@ public class TestParameters {
             .setExpressionEngine(engine).setListDelimiterHandler(listHandler).setSchemaValidation(true).getParameters();
         checkBasicProperties(map);
         final FileBasedBuilderParametersImpl fbp = FileBasedBuilderParametersImpl.fromParameters(map);
-        assertEquals("test.xml", fbp.getFileHandler().getFileName(), "Wrong file name");
-        assertEquals(Boolean.TRUE, map.get("validating"), "Wrong validation flag");
-        assertEquals(Boolean.TRUE, map.get("schemaValidation"), "Wrong schema flag");
-        assertEquals(engine, map.get("expressionEngine"), "Wrong expression engine");
+        assertEquals("test.xml", fbp.getFileHandler().getFileName());
+        assertEquals(Boolean.TRUE, map.get("validating"));
+        assertEquals(Boolean.TRUE, map.get("schemaValidation"));
+        assertEquals(engine, map.get("expressionEngine"));
     }
 
     /**

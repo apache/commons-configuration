@@ -67,7 +67,7 @@ public class TestConfigurationAttributePointer {
      */
     @Test
     public void testAttributeIterator() {
-        assertNull(pointer.attributeIterator(new QName(null, "test")), "Returned an attribute iterator");
+        assertNull(pointer.attributeIterator(new QName(null, "test")));
     }
 
     /**
@@ -75,7 +75,7 @@ public class TestConfigurationAttributePointer {
      */
     @Test
     public void testChildIterator() {
-        assertNull(pointer.childIterator(null, false, null), "Returned an iterator for children");
+        assertNull(pointer.childIterator(null, false, null));
     }
 
     /**
@@ -83,7 +83,7 @@ public class TestConfigurationAttributePointer {
      */
     @Test
     public void testGetBaseValue() {
-        assertEquals(ATTR_VALUE, pointer.getBaseValue(), "Wrong base value");
+        assertEquals(ATTR_VALUE, pointer.getBaseValue());
     }
 
     /**
@@ -92,11 +92,10 @@ public class TestConfigurationAttributePointer {
     @Test
     public void testGetImmediateNode() {
         final Object node = pointer.getImmediateNode();
-        assertInstanceOf(QueryResult.class, node, "Wrong node class");
-        final QueryResult<?> proxy = (QueryResult<?>) node;
-        assertTrue(proxy.isAttributeResult(), "No attribute result");
-        assertEquals(parent.getConfigurationNode(), proxy.getNode(), "Wrong parent node");
-        assertEquals(ATTR_NAME, proxy.getAttributeName(), "Wrong attribute name");
+        final QueryResult<?> proxy = assertInstanceOf(QueryResult.class, node);
+        assertTrue(proxy.isAttributeResult());
+        assertEquals(parent.getConfigurationNode(), proxy.getNode());
+        assertEquals(ATTR_NAME, proxy.getAttributeName());
     }
 
     /**
@@ -104,7 +103,7 @@ public class TestConfigurationAttributePointer {
      */
     @Test
     public void testGetLength() {
-        assertEquals(1, pointer.getLength(), "Wrong length");
+        assertEquals(1, pointer.getLength());
     }
 
     /**
@@ -113,8 +112,8 @@ public class TestConfigurationAttributePointer {
     @Test
     public void testGetName() {
         final QName name = pointer.getName();
-        assertEquals(ATTR_NAME, name.getName(), "Wrong name");
-        assertNull(name.getPrefix(), "Prefix not null");
+        assertEquals(ATTR_NAME, name.getName());
+        assertNull(name.getPrefix());
     }
 
     /**
@@ -122,7 +121,7 @@ public class TestConfigurationAttributePointer {
      */
     @Test
     public void testGetParentPointer() {
-        assertSame(parent, pointer.getParentPointer(), "Wrong parent pointer");
+        assertSame(parent, pointer.getParentPointer());
     }
 
     /**
@@ -130,7 +129,7 @@ public class TestConfigurationAttributePointer {
      */
     @Test
     public void testGetValue() {
-        assertEquals(ATTR_VALUE, pointer.getValue(), "Wrong value");
+        assertEquals(ATTR_VALUE, pointer.getValue());
     }
 
     /**
@@ -138,7 +137,7 @@ public class TestConfigurationAttributePointer {
      */
     @Test
     public void testIsAttribute() {
-        assertTrue(pointer.isAttribute(), "Not an attribute");
+        assertTrue(pointer.isAttribute());
     }
 
     /**
@@ -146,7 +145,7 @@ public class TestConfigurationAttributePointer {
      */
     @Test
     public void testIsCollection() {
-        assertFalse(pointer.isCollection(), "Wrong collection flag");
+        assertFalse(pointer.isCollection());
     }
 
     /**
@@ -154,7 +153,7 @@ public class TestConfigurationAttributePointer {
      */
     @Test
     public void testIsLeaf() {
-        assertTrue(pointer.isLeaf(), "Wrong leaf flag");
+        assertTrue(pointer.isLeaf());
     }
 
     /**
@@ -171,8 +170,8 @@ public class TestConfigurationAttributePointer {
     @Test
     public void testTestNode() {
         NodeTest test = new NodeTypeTest(Compiler.NODE_TYPE_TEXT);
-        assertTrue(pointer.testNode(test), "No a text node");
+        assertTrue(pointer.testNode(test));
         test = new NodeTypeTest(Compiler.NODE_TYPE_COMMENT);
-        assertFalse(pointer.testNode(test), "A comment node");
+        assertFalse(pointer.testNode(test));
     }
 }

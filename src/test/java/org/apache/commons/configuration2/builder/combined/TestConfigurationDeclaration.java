@@ -69,27 +69,27 @@ public class TestConfigurationDeclaration {
         final HierarchicalConfiguration<?> config = new BaseHierarchicalConfiguration();
         config.addProperty("xml.fileName", "test.xml");
         ConfigurationDeclaration decl = createDeclaration(config.configurationAt("xml"));
-        assertNull(decl.getAt(), "Found an at attribute");
-        assertFalse(decl.isOptional(), "Found an optional attribute");
+        assertNull(decl.getAt());
+        assertFalse(decl.isOptional());
         config.addProperty("xml[@config-at]", "test1");
         decl = createDeclaration(config.configurationAt("xml"));
-        assertEquals("test1", decl.getAt(), "Wrong value of at attribute");
+        assertEquals("test1", decl.getAt());
         config.addProperty("xml[@at]", "test2");
         decl = createDeclaration(config.configurationAt("xml"));
-        assertEquals("test1", decl.getAt(), "Wrong value of config-at attribute");
+        assertEquals("test1", decl.getAt());
         config.clearProperty("xml[@config-at]");
         decl = createDeclaration(config.configurationAt("xml"));
-        assertEquals("test2", decl.getAt(), "Old at attribute not detected");
+        assertEquals("test2", decl.getAt());
         config.addProperty("xml[@config-optional]", "true");
         decl = createDeclaration(config.configurationAt("xml"));
-        assertTrue(decl.isOptional(), "Wrong value of optional attribute");
+        assertTrue(decl.isOptional());
         config.addProperty("xml[@optional]", "false");
         decl = createDeclaration(config.configurationAt("xml"));
-        assertTrue(decl.isOptional(), "Wrong value of config-optional attribute");
+        assertTrue(decl.isOptional());
         config.clearProperty("xml[@config-optional]");
         config.setProperty("xml[@optional]", Boolean.TRUE);
         decl = createDeclaration(config.configurationAt("xml"));
-        assertTrue(decl.isOptional(), "Old optional attribute not detected");
+        assertTrue(decl.isOptional());
     }
 
     /**
@@ -98,10 +98,10 @@ public class TestConfigurationDeclaration {
     @Test
     public void testConfigurationDeclarationIsReserved() {
         final ConfigurationDeclaration decl = createDeclaration(null);
-        assertTrue(decl.isReservedAttributeName("at"), "Attribute at not recognized");
-        assertTrue(decl.isReservedAttributeName("optional"), "Attribute optional not recognized");
-        assertTrue(decl.isReservedAttributeName("config-class"), "Inherited attribute not recognized");
-        assertFalse(decl.isReservedAttributeName("different"), "Wrong reserved attribute");
+        assertTrue(decl.isReservedAttributeName("at"));
+        assertTrue(decl.isReservedAttributeName("optional"));
+        assertTrue(decl.isReservedAttributeName("config-class"));
+        assertFalse(decl.isReservedAttributeName("different"));
     }
 
     /**

@@ -43,9 +43,9 @@ public class TestJNDIEnvironmentValues {
 
     @Test
     public void testClearProperty() {
-        assertNotNull(conf.getShort("test.short", null), "null short for the 'test.short' key");
+        assertNotNull(conf.getShort("test.short", null));
         conf.clearProperty("test.short");
-        assertNull(conf.getShort("test.short", null), "'test.short' property not cleared");
+        assertNull(conf.getShort("test.short", null));
     }
 
     @Test
@@ -59,13 +59,13 @@ public class TestJNDIEnvironmentValues {
         boolean found = false;
         final Iterator<String> it = conf.getKeys();
 
-        assertTrue(it.hasNext(), "no key found");
+        assertTrue(it.hasNext());
 
         while (it.hasNext() && !found) {
             found = "test.boolean".equals(it.next());
         }
 
-        assertTrue(found, "'test.boolean' key not found");
+        assertTrue(found);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class TestJNDIEnvironmentValues {
             found = "test.boolean".equals(it.next());
         }
 
-        assertTrue(found, "'test.boolean' key not found");
+        assertTrue(found);
     }
 
     @Test
@@ -89,14 +89,14 @@ public class TestJNDIEnvironmentValues {
             found = "test.boolean".equals(it.next());
         }
 
-        assertTrue(found, "'test.boolean' key not found");
+        assertTrue(found);
     }
 
     @Test
     public void testGetKeysWithUnknownPrefix() {
         // test for a unknown prefix
         final Iterator<String> it = conf.getKeys("foo.bar");
-        assertFalse(it.hasNext(), "no key should be found");
+        assertFalse(it.hasNext());
     }
 
     @Test
@@ -112,7 +112,7 @@ public class TestJNDIEnvironmentValues {
 
     @Test
     public void testIsEmpty() {
-        assertFalse(conf.isEmpty(), "the configuration shouldn't be empty");
+        assertFalse(conf.isEmpty());
     }
 
     @Test
@@ -131,6 +131,6 @@ public class TestJNDIEnvironmentValues {
 
     @Test
     public void testThrowExceptionOnMissing() {
-        assertTrue(conf.isThrowExceptionOnMissing(), "Throw Exception Property is not set!");
+        assertTrue(conf.isThrowExceptionOnMissing());
     }
 }

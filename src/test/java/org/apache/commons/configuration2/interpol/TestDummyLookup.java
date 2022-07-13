@@ -30,7 +30,7 @@ public class TestDummyLookup {
      */
     @Test
     public void testLookup() {
-        assertNull(DummyLookup.INSTANCE.lookup("someVariable"), "Got a result (1)");
-        assertNull(DummyLookup.INSTANCE.lookup(null), "Got a result (2)");
+        assertNull(DummyLookup.INSTANCE.lookup("someVariable"));
+        assertNull(DummyLookup.INSTANCE.lookup(null));
     }
 }

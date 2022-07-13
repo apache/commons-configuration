@@ -107,7 +107,7 @@ public class TestJNDIConfiguration {
     private void checkErrorListener(final EventType<? extends ConfigurationErrorEvent> type, final EventType<?> opEventType, final String propName,
         final Object propValue) {
         final Throwable exception = listener.checkEvent(type, opEventType, propName, propValue);
-        assertInstanceOf(NamingException.class, exception, "Wrong exception class");
+        assertInstanceOf(NamingException.class, exception);
         listener = null;
     }
 
@@ -166,13 +166,13 @@ public class TestJNDIConfiguration {
 
     @Test
     public void testChangePrefix() {
-        assertEquals("true", conf.getString("test.boolean"), "'test.boolean' property");
-        assertNull(conf.getString("boolean"), "'boolean' property");
+        assertEquals("true", conf.getString("test.boolean"));
+        assertNull(conf.getString("boolean"));
 
         // change the prefix
         conf.setPrefix("test");
-        assertNull(conf.getString("test.boolean"), "'test.boolean' property");
-        assertEquals("true", conf.getString("boolean"), "'boolean' property");
+        assertNull(conf.getString("test.boolean"));
+        assertEquals("true", conf.getString("boolean"));
     }
 
     @Test
@@ -180,21 +180,21 @@ public class TestJNDIConfiguration {
         // test the constructor accepting a context
         JNDIConfiguration c = new JNDIConfiguration(new InitialContext());
 
-        assertEquals("true", c.getString("test.boolean"), "'test.boolean' property");
+        assertEquals("true", c.getString("test.boolean"));
 
         // test the constructor accepting a context and a prefix
         c = new JNDIConfiguration(new InitialContext(), "test");
 
-        assertEquals("true", c.getString("boolean"), "'boolean' property");
+        assertEquals("true", c.getString("boolean"));
     }
 
     @Test
     public void testContainsKey() {
         final String key = "test.boolean";
-        assertTrue(conf.containsKey(key), "'" + key + "' not found");
+        assertTrue(conf.containsKey(key));
 
         conf.clearProperty(key);
-        assertFalse(conf.containsKey(key), "'" + key + "' still found");
+        assertFalse(conf.containsKey(key));
     }
 
     /**
@@ -202,7 +202,7 @@ public class TestJNDIConfiguration {
      */
     @Test
     public void testContainsKeyError() {
-        assertFalse(setUpErrorConfig().containsKey("key"), "Key contained after error");
+        assertFalse(setUpErrorConfig().containsKey("key"));
         checkErrorListener(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, "key", null);
     }
 
@@ -231,7 +231,7 @@ public class TestJNDIConfiguration {
      */
     @Test
     public void testGetKeysError() {
-        assertFalse(setUpErrorConfig().getKeys().hasNext(), "Iteration not empty");
+        assertFalse(setUpErrorConfig().getKeys().hasNext());
         checkErrorListener(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null);
     }
 
@@ -241,7 +241,7 @@ public class TestJNDIConfiguration {
     @Test
     public void testGetKeysNoData() {
         conf.installException(new NameNotFoundException("Test exception"));
-        assertFalse(conf.getKeys().hasNext(), "Got keys");
+        assertFalse(conf.getKeys().hasNext());
         listener.done();
     }
 
@@ -262,7 +262,7 @@ public class TestJNDIConfiguration {
      */
     @Test
     public void testGetPropertyError() {
-        assertNull(setUpErrorConfig().getProperty("key"), "Wrong property value after error");
+        assertNull(setUpErrorConfig().getProperty("key"));
         checkErrorListener(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, "key", null);
     }
 
@@ -281,7 +281,7 @@ public class TestJNDIConfiguration {
      */
     @Test
     public void testIsEmptyError() throws Exception {
-        assertTrue(setUpErrorConfig().isEmpty(), "Error config not empty");
+        assertTrue(setUpErrorConfig().isEmpty());
         checkErrorListener(ConfigurationErrorEvent.READ, ConfigurationErrorEvent.READ, null, null);
     }
 
@@ -296,7 +296,7 @@ public class TestJNDIConfiguration {
     @Test
     public void testLogListener() throws NamingException {
         final JNDIConfiguration c = new JNDIConfiguration();
-        assertEquals(1, c.getEventListeners(ConfigurationErrorEvent.ANY).size(), "No error log listener registered");
+        assertEquals(1, c.getEventListeners(ConfigurationErrorEvent.ANY).size());
     }
 
     @Test
@@ -318,17 +318,17 @@ public class TestJNDIConfiguration {
 
     @Test
     public void testResetRemovedProperties() throws Exception {
-        assertEquals("true", conf.getString("test.boolean"), "'test.boolean' property");
+        assertEquals("true", conf.getString("test.boolean"));
 
         // remove the property
         conf.clearProperty("test.boolean");
-        assertNull(conf.getString("test.boolean"), "'test.boolean' property");
+        assertNull(conf.getString("test.boolean"));
 
         // change the context
         conf.setContext(new InitialContext());
 
         // get the property
-        assertEquals("true", conf.getString("test.boolean"), "'test.boolean' property");
+        assertEquals("true", conf.getString("test.boolean"));
     }
 
     @Test

@@ -48,9 +48,9 @@ public class TestXPathContextFactory {
         final NodeHandler<ImmutableNode> handler = new InMemoryNodeModel(node).getNodeHandler();
         final JXPathContext context = factory.createContext(node, handler);
 
-        assertTrue(context.isLenient(), "No lenient mode");
+        assertTrue(context.isLenient());
         final ConfigurationNodePointerFactory.NodeWrapper<?> wrapper = (ConfigurationNodePointerFactory.NodeWrapper<?>) context.getContextBean();
-        assertSame(node, wrapper.getNode(), "Wrong node");
-        assertSame(handler, wrapper.getNodeHandler(), "Wrong handler");
+        assertSame(node, wrapper.getNode());
+        assertSame(handler, wrapper.getNodeHandler());
     }
 }

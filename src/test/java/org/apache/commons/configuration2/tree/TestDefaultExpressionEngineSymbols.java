@@ -44,9 +44,9 @@ public class TestDefaultExpressionEngineSymbols {
      * @param o2 object 2
      */
     private static void expEqual(final Object o1, final Object o2) {
-        assertEquals(o1, o2, "Not equal");
-        assertEquals(o2, o1, "Not symmetric");
-        assertEquals(o1.hashCode(), o2.hashCode(), "Different hash codes");
+        assertEquals(o1, o2);
+        assertEquals(o2, o1);
+        assertEquals(o1.hashCode(), o2.hashCode());
     }
 
     /**
@@ -56,9 +56,9 @@ public class TestDefaultExpressionEngineSymbols {
      * @param o2 object 2
      */
     private static void expNE(final Object o1, final Object o2) {
-        assertNotEquals(o1, o2, "Equal");
+        assertNotEquals(o1, o2);
         if (o2 != null) {
-            assertNotEquals(o2, o1, "Not symmetric");
+            assertNotEquals(o2, o1);
         }
     }
 
@@ -67,12 +67,12 @@ public class TestDefaultExpressionEngineSymbols {
      */
     @Test
     public void testDefaultSymbols() {
-        assertEquals(".", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getPropertyDelimiter(), "Wrong delimiter");
-        assertEquals("..", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getEscapedDelimiter(), "Wrong escaped delimiter");
-        assertEquals("(", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexStart(), "Wrong index start");
-        assertEquals(")", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexEnd(), "Wrong index end");
-        assertEquals("[@", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getAttributeStart(), "Wrong attribute start");
-        assertEquals("]", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getAttributeEnd(), "Wrong attribute end");
+        assertEquals(".", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getPropertyDelimiter());
+        assertEquals("..", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getEscapedDelimiter());
+        assertEquals("(", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexStart());
+        assertEquals(")", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getIndexEnd());
+        assertEquals("[@", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getAttributeStart());
+        assertEquals("]", DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS.getAttributeEnd());
     }
 
     /**

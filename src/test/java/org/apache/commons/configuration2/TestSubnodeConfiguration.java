@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -94,8 +96,8 @@ public class TestSubnodeConfiguration {
 
         final Configuration sub = parent.configurationAt("test.absolute.dir", withUpdates);
         for (int i = 1; i < 4; i++) {
-            assertEquals("/home/foo/path" + i, parent.getString("test.absolute.dir.dir" + i), "Wrong interpolation in parent");
-            assertEquals("/home/foo/path" + i, sub.getString("dir" + i), "Wrong interpolation in sub");
+            assertEquals("/home/foo/path" + i, parent.getString("test.absolute.dir.dir" + i));
+            assertEquals("/home/foo/path" + i, sub.getString("dir" + i));
         }
     }
 
@@ -103,12 +105,14 @@ public class TestSubnodeConfiguration {
      * Checks whether the sub configuration has the expected content.
      */
     private void checkSubConfigContent() {
-        assertEquals(NodeStructureHelper.table(0), config.getString("name"), "Wrong table name");
+        assertEquals(NodeStructureHelper.table(0), config.getString("name"));
         final List<Object> fields = config.getList("fields.field.name");
-        assertEquals(NodeStructureHelper.fieldsLength(0), fields.size(), "Wrong number of fields");
+
+        final List<String> expected = new ArrayList<>();
         for (int i = 0; i < NodeStructureHelper.fieldsLength(0); i++) {
-            assertEquals(NodeStructureHelper.field(0, i), fields.get(i), "Wrong field at position " + i);
+            expected.add(NodeStructureHelper.field(0, i));
         }
+        assertEquals(expected, fields);
     }
 
     @BeforeEach
@@ -151,12 +155,12 @@ public class TestSubnodeConfiguration {
     public void testAddProperty() {
         setUpSubnodeConfig();
         config.addProperty("[@table-type]", "test");
-        assertEquals("test", parent.getString("tables.table(0)[@table-type]"), "Attribute not set");
+        assertEquals("test", parent.getString("tables.table(0)[@table-type]"));
 
         parent.addProperty("tables.table(0).fields.field(-1).name", "newField");
         final List<Object> fields = config.getList("fields.field.name");
-        assertEquals(NodeStructureHelper.fieldsLength(0) + 1, fields.size(), "New field was not added");
-        assertEquals("newField", fields.get(fields.size() - 1), "Wrong last field");
+        assertEquals(NodeStructureHelper.fieldsLength(0) + 1, fields.size());
+        assertEquals("newField", fields.get(fields.size() - 1));
     }
 
     /**
@@ -166,16 +170,16 @@ public class TestSubnodeConfiguration {
     public void testClone() {
         setUpSubnodeConfig();
         final SubnodeConfiguration copy = (SubnodeConfiguration) config.clone();
-        assertNotSame(config.getModel(), copy.getModel(), "Same model");
+        assertNotSame(config.getModel(), copy.getModel());
         final TrackedNodeModel subModel = (TrackedNodeModel) copy.getModel();
-        assertEquals(SELECTOR, subModel.getSelector(), "Wrong selector");
+        assertEquals(SELECTOR, subModel.getSelector());
         final InMemoryNodeModel parentModel = (InMemoryNodeModel) parent.getModel();
-        assertEquals(parentModel, subModel.getParentModel(), "Wrong parent model");
+        assertEquals(parentModel, subModel.getParentModel());
 
         // Check whether the track count was increased
         parentModel.untrackNode(SELECTOR);
         parentModel.untrackNode(SELECTOR);
-        assertTrue(subModel.isReleaseTrackedNodeOnFinalize(), "Wrong finalize flag");
+        assertTrue(subModel.isReleaseTrackedNodeOnFinalize());
     }
 
     /**
@@ -200,9 +204,9 @@ public class TestSubnodeConfiguration {
     public void testConfiguarationAtNoUpdates() {
         setUpSubnodeConfig();
         final HierarchicalConfiguration<ImmutableNode> sub2 = config.configurationAt("fields.field(1)");
-        assertEquals(NodeStructureHelper.field(0, 1), sub2.getString("name"), "Wrong value of property");
+        assertEquals(NodeStructureHelper.field(0, 1), sub2.getString("name"));
         parent.setProperty("tables.table(0).fields.field(1).name", "otherName");
-        assertEquals(NodeStructureHelper.field(0, 1), sub2.getString("name"), "Change of parent is visible");
+        assertEquals(NodeStructureHelper.field(0, 1), sub2.getString("name"));
     }
 
     /**
@@ -212,8 +216,8 @@ public class TestSubnodeConfiguration {
     public void testConfigurationAtWithUpdateSupport() {
         setUpSubnodeConfig();
         final SubnodeConfiguration sub2 = (SubnodeConfiguration) config.configurationAt("fields.field(1)", true);
-        assertEquals(NodeStructureHelper.field(0, 1), sub2.getString("name"), "Wrong value of property");
-        assertEquals(config, sub2.getParent(), "Wrong parent");
+        assertEquals(NodeStructureHelper.field(0, 1), sub2.getString("name"));
+        assertEquals(config, sub2.getParent());
     }
 
     /**
@@ -223,9 +227,7 @@ public class TestSubnodeConfiguration {
     public void testGetKeys() {
         setUpSubnodeConfig();
         final Set<String> keys = new HashSet<>(ConfigurationAssert.keysToList(config));
-        assertEquals(2, keys.size(), "Incorrect number of keys");
-        assertTrue(keys.contains("name"), "Key 1 not contained");
-        assertTrue(keys.contains("fields.field.name"), "Key 2 not contained");
+        assertEquals(new HashSet<>(Arrays.asList("name", "fields.field.name")), keys);
     }
 
     /**
@@ -236,7 +238,7 @@ public class TestSubnodeConfiguration {
         setUpSubnodeConfig();
         final InMemoryNodeModel nodeModel = config.getNodeModel();
 
-        assertEquals("table", nodeModel.getNodeHandler().getRootNode().getNodeName(), "Wrong root node");
+        assertEquals("table", nodeModel.getNodeHandler().getRootNode().getNodeName());
     }
 
     /**
@@ -255,9 +257,8 @@ public class TestSubnodeConfiguration {
     public void testInitSubNodeConfig() {
         setUpSubnodeConfig();
         assertSame(NodeStructureHelper.nodeForKey(parent.getModel().getNodeHandler().getRootNode(), "tables/table(0)"),
-                config.getModel().getNodeHandler().getRootNode(),
-                "Wrong root node in subnode");
-        assertSame(parent, config.getParent(), "Wrong parent config");
+                config.getModel().getNodeHandler().getRootNode());
+        assertSame(parent, config.getParent());
     }
 
     /**
@@ -285,10 +286,10 @@ public class TestSubnodeConfiguration {
         parent.addProperty("tablespaces.tablespace.name", "default");
         parent.addProperty("tablespaces.tablespace(-1).name", "test");
         parent.addProperty("tables.table(0).tablespace", "${tablespaces.tablespace(0).name}");
-        assertEquals("default", parent.getString("tables.table(0).tablespace"), "Wrong interpolated tablespace");
+        assertEquals("default", parent.getString("tables.table(0).tablespace"));
 
         setUpSubnodeConfig();
-        assertEquals("default", config.getString("tablespace"), "Wrong interpolated tablespace in subnode");
+        assertEquals("default", config.getString("tablespace"));
     }
 
     /**
@@ -330,8 +331,8 @@ public class TestSubnodeConfiguration {
         parent.addProperty("test.absolute.dir.dir2", "${dir1}");
 
         final Configuration sub = parent.configurationAt("test.absolute.dir");
-        assertEquals("/home/foo/path1", sub.getString("dir1"), "Wrong interpolation in subnode");
-        assertEquals("/home/foo/path1", sub.getString("dir2"), "Wrong local interpolation in subnode");
+        assertEquals("/home/foo/path1", sub.getString("dir1"));
+        assertEquals("/home/foo/path1", sub.getString("dir2"));
     }
 
     @Test
@@ -343,7 +344,7 @@ public class TestSubnodeConfiguration {
         final ConfigurationInterpolator interpolator = parent.getInterpolator();
         interpolator.registerLookup("brackets", key -> "(" + key + ")");
         setUpSubnodeConfig();
-        assertEquals("(x)", config.getString("var", ""), "Local lookup was not inherited");
+        assertEquals("(x)", config.getString("var", ""));
     }
 
     /**
@@ -376,13 +377,11 @@ public class TestSubnodeConfiguration {
     public void testSetExpressionEngine() {
         parent.setExpressionEngine(new XPathExpressionEngine());
         setUpSubnodeConfig("tables/table[1]");
-        assertEquals(NodeStructureHelper.field(0, 1), config.getString("fields/field[2]/name"), "Wrong field name");
+        assertEquals(NodeStructureHelper.field(0, 1), config.getString("fields/field[2]/name"));
         final Set<String> keys = ConfigurationAssert.keysToSet(config);
-        assertEquals(2, keys.size(), "Wrong number of keys");
-        assertTrue(keys.contains("name"), "Key 1 not contained");
-        assertTrue(keys.contains("fields/field/name"), "Key 2 not contained");
+        assertEquals(new HashSet<>(Arrays.asList("name", "fields/field/name")), keys);
         config.setExpressionEngine(null);
-        assertInstanceOf(XPathExpressionEngine.class, parent.getExpressionEngine(), "Expression engine reset on parent");
+        assertInstanceOf(XPathExpressionEngine.class, parent.getExpressionEngine());
     }
 
     /**
@@ -395,11 +394,11 @@ public class TestSubnodeConfiguration {
         parent.setListDelimiterHandler(handler1);
         setUpSubnodeConfig();
         parent.setListDelimiterHandler(handler2);
-        assertEquals(handler1, config.getListDelimiterHandler(), "List delimiter handler not obtained from parent");
+        assertEquals(handler1, config.getListDelimiterHandler());
         config.addProperty("newProp", "test1,test2/test3");
-        assertEquals("test1,test2", parent.getString("tables.table(0).newProp"), "List was incorrectly splitted");
+        assertEquals("test1,test2", parent.getString("tables.table(0).newProp"));
         config.setListDelimiterHandler(DisabledListDelimiterHandler.INSTANCE);
-        assertEquals(handler2, parent.getListDelimiterHandler(), "List delimiter changed on parent");
+        assertEquals(handler2, parent.getListDelimiterHandler());
     }
 
     /**
@@ -411,11 +410,11 @@ public class TestSubnodeConfiguration {
         setUpSubnodeConfig();
         config.setProperty(null, "testTable");
         config.setProperty("name", NodeStructureHelper.table(0) + "_tested");
-        assertEquals("testTable", parent.getString("tables.table(0)"), "Root value was not set");
-        assertEquals(NodeStructureHelper.table(0) + "_tested", parent.getString("tables.table(0).name"), "Table name was not changed");
+        assertEquals("testTable", parent.getString("tables.table(0)"));
+        assertEquals(NodeStructureHelper.table(0) + "_tested", parent.getString("tables.table(0).name"));
 
         parent.setProperty("tables.table(0).fields.field(1).name", "testField");
-        assertEquals("testField", config.getString("fields.field(1).name"), "Field name was not changed");
+        assertEquals("testField", config.getString("fields.field(1).name"));
     }
 
     /**
@@ -425,7 +424,7 @@ public class TestSubnodeConfiguration {
     public void testSetThrowExceptionOnMissing() {
         parent.setThrowExceptionOnMissing(true);
         setUpSubnodeConfig();
-        assertTrue(config.isThrowExceptionOnMissing(), "Exception flag not fetchted from parent");
+        assertTrue(config.isThrowExceptionOnMissing());
         assertThrows(NoSuchElementException.class, () -> config.getString("non existing key"));
     }
 
@@ -437,6 +436,6 @@ public class TestSubnodeConfiguration {
         parent.setThrowExceptionOnMissing(true);
         setUpSubnodeConfig();
         config.setThrowExceptionOnMissing(false);
-        assertTrue(parent.isThrowExceptionOnMissing(), "Exception flag reset on parent");
+        assertTrue(parent.isThrowExceptionOnMissing());
     }
 }

@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -113,28 +114,21 @@ public class TestPropertyListConfiguration {
         load(config2, saveFile);
         final Object array = config2.getProperty("foo");
 
-        assertNotNull(array, "data not found");
-        assertEquals(byte[].class, array.getClass(), "property type");
+        assertNotNull(array);
+        assertEquals(byte[].class, array.getClass());
         assertArrayEquals(expected, (byte[]) array);
     }
 
     @Test
     public void testArray() {
-        final String key = "array";
-        assertNotNull(config.getProperty(key), "array null");
-
-        final List<?> list = (List<?>) config.getProperty(key);
-        assertFalse(list.isEmpty(), "array is empty");
-
-        assertEquals("value1", list.get(0), "1st value");
-        assertEquals("value2", list.get(1), "2nd value");
-        assertEquals("value3", list.get(2), "3rd value");
+        final List<?> list = assertInstanceOf(List.class, config.getProperty("array"));
+        assertEquals(Arrays.asList("value1", "value2", "value3"), list);
     }
 
     @Test
     public void testData() {
-        assertInstanceOf(byte[].class, config.getProperty("data"), "data");
-        assertArrayEquals("foo bar".getBytes(), (byte[]) config.getProperty("data"), "data");
+        byte[] bytes = assertInstanceOf(byte[].class, config.getProperty("data"));
+        assertArrayEquals("foo bar".getBytes(), bytes);
     }
 
     @Test
@@ -145,13 +139,13 @@ public class TestPropertyListConfiguration {
         cal.setTimeZone(TimeZone.getTimeZone("GMT+0100"));
         final Date date = cal.getTime();
 
-        assertEquals(date, config.getProperty("date"), "date");
+        assertEquals(date, config.getProperty("date"));
     }
 
     @Test
     public void testDictionary() {
-        assertEquals("bar1", config.getProperty("dictionary.foo1"), "1st element in dictionary");
-        assertEquals("bar2", config.getProperty("dictionary.foo2"), "2nd element in dictionary");
+        assertEquals("bar1", config.getProperty("dictionary.foo1"));
+        assertEquals("bar2", config.getProperty("dictionary.foo2"));
     }
 
     @Test
@@ -161,33 +155,30 @@ public class TestPropertyListConfiguration {
         final Object array = config.getProperty(key);
 
         // root array
-        assertNotNull(array, "array not found");
-        assertInstanceOf(List.class, array, "the array element is not parsed as a List");
+        assertNotNull(array);
+        assertInstanceOf(List.class, array);
         final List<?> list = config.getList(key);
 
-        assertFalse(list.isEmpty(), "empty array");
-        assertEquals(2, list.size(), "size");
+        assertEquals(2, list.size());
 
         // 1st dictionary
-        assertInstanceOf(Configuration.class, list.get(0), "the dict element is not parsed as a Configuration");
-        final Configuration conf1 = (Configuration) list.get(0);
-        assertFalse(conf1.isEmpty(), "configuration 1 is empty");
-        assertEquals("bar", conf1.getProperty("foo"), "configuration element");
+        final Configuration conf1 = assertInstanceOf(Configuration.class, list.get(0));
+        assertFalse(conf1.isEmpty());
+        assertEquals("bar", conf1.getProperty("foo"));
 
         // 2nd dictionary
-        assertInstanceOf(Configuration.class, list.get(1), "the dict element is not parsed as a Configuration");
-        final Configuration conf2 = (Configuration) list.get(1);
-        assertFalse(conf2.isEmpty(), "configuration 2 is empty");
-        assertEquals("value", conf2.getProperty("key"), "configuration element");
+        final Configuration conf2 = assertInstanceOf(Configuration.class, list.get(1));
+        assertFalse(conf2.isEmpty());
+        assertEquals("value", conf2.getProperty("key"));
     }
 
     @Test
     public void testEmptyArray() {
         final String key = "empty-array";
-        assertNotNull(config.getProperty(key), "array null");
+        assertNotNull(config.getProperty(key));
 
         final List<?> list = (List<?>) config.getProperty(key);
-        assertTrue(list.isEmpty(), "array is not empty");
+        assertTrue(list.isEmpty());
     }
 
     /**
@@ -199,22 +190,22 @@ public class TestPropertyListConfiguration {
         cal.clear();
         cal.set(2007, Calendar.OCTOBER, 29, 23, 4, 30);
         cal.setTimeZone(TimeZone.getTimeZone("GMT-0230"));
-        assertEquals("<*D2007-10-29 23:04:30 -0230>", PropertyListConfiguration.formatDate(cal), "Wrong date literal (1)");
+        assertEquals("<*D2007-10-29 23:04:30 -0230>", PropertyListConfiguration.formatDate(cal));
         cal.clear();
         cal.set(2007, Calendar.OCTOBER, 30, 22, 2, 15);
         cal.setTimeZone(TimeZone.getTimeZone("GMT+1111"));
-        assertEquals("<*D2007-10-30 22:02:15 +1111>", PropertyListConfiguration.formatDate(cal), "Wrong date literal (2)");
+        assertEquals("<*D2007-10-30 22:02:15 +1111>", PropertyListConfiguration.formatDate(cal));
     }
 
     @Test
     public void testInitCopy() {
         final PropertyListConfiguration copy = new PropertyListConfiguration(config);
-        assertFalse(copy.isEmpty(), "Nothing was copied");
+        assertFalse(copy.isEmpty());
     }
 
     @Test
     public void testLoad() {
-        assertFalse(config.isEmpty(), "the configuration is empty");
+        assertFalse(config.isEmpty());
     }
 
     @Test
@@ -222,8 +213,7 @@ public class TestPropertyListConfiguration {
         config = new PropertyListConfiguration();
         final FileHandler fileHandler = new FileHandler(config);
         final StringReader reader = new StringReader("");
-        final ConfigurationException e = assertThrows(ConfigurationException.class, () -> fileHandler.load(reader),
-                "No exception thrown on loading an empty file");
+        final ConfigurationException e = assertThrows(ConfigurationException.class, () -> fileHandler.load(reader));
         assertNotNull(e.getMessage());
     }
 
@@ -234,33 +224,24 @@ public class TestPropertyListConfiguration {
         final Object array = config.getProperty(key);
 
         // root array
-        assertNotNull(array, "array not found");
-        assertInstanceOf(List.class, array, "the array element is not parsed as a List");
+        assertNotNull(array);
+        assertInstanceOf(List.class, array);
         final List<?> list = config.getList(key);
 
-        assertFalse(list.isEmpty(), "empty array");
-        assertEquals(2, list.size(), "size");
+        assertEquals(2, list.size());
 
         // 1st array
-        assertInstanceOf(List.class, list.get(0), "the array element is not parsed as a List");
-        final List<?> list1 = (List<?>) list.get(0);
-        assertFalse(list1.isEmpty(), "nested array 1 is empty");
-        assertEquals(2, list1.size(), "size");
-        assertEquals("a", list1.get(0), "1st element");
-        assertEquals("b", list1.get(1), "2nd element");
+        final List<?> list1 = assertInstanceOf(List.class, list.get(0));
+        assertEquals(Arrays.asList("a", "b"), list1);
 
         // 2nd array
-        assertInstanceOf(List.class, list.get(1), "the array element is not parsed as a List");
-        final List<?> list2 = (List<?>) list.get(1);
-        assertFalse(list2.isEmpty(), "nested array 2 is empty");
-        assertEquals(2, list2.size(), "size");
-        assertEquals("c", list2.get(0), "1st element");
-        assertEquals("d", list2.get(1), "2nd element");
+        final List<?> list2 = assertInstanceOf(List.class, list.get(1));
+        assertEquals(Arrays.asList("c", "d"), list2);
     }
 
     @Test
     public void testNestedDictionaries() {
-        assertEquals("value", config.getString("nested-dictionaries.foo.bar.key"), "nested property");
+        assertEquals("value", config.getString("nested-dictionaries.foo.bar.key"));
     }
 
     /**
@@ -297,18 +278,18 @@ public class TestPropertyListConfiguration {
 
     @Test
     public void testQuotedString() {
-        assertEquals("string2", config.getProperty("quoted-string"), "quoted-string");
-        assertEquals("this is a string", config.getProperty("quoted-string2"), "quoted-string2");
-        assertEquals("this is a \"complex\" string {(=,;)}", config.getProperty("complex-string"), "complex-string");
+        assertEquals("string2", config.getProperty("quoted-string"));
+        assertEquals("this is a string", config.getProperty("quoted-string2"));
+        assertEquals("this is a \"complex\" string {(=,;)}", config.getProperty("complex-string"));
     }
 
     @Test
     public void testQuoteString() {
-        assertNull(config.quoteString(null), "null string");
-        assertEquals("abcd", config.quoteString("abcd"), "simple string");
-        assertEquals("\"ab cd\"", config.quoteString("ab cd"), "string with a space");
-        assertEquals("\"foo\\\"bar\"", config.quoteString("foo\"bar"), "string with a quote");
-        assertEquals("\"foo;bar\"", config.quoteString("foo;bar"), "string with a special char");
+        assertNull(config.quoteString(null));
+        assertEquals("abcd", config.quoteString("abcd"));
+        assertEquals("\"ab cd\"", config.quoteString("ab cd"));
+        assertEquals("\"foo\\\"bar\"", config.quoteString("foo\"bar"));
+        assertEquals("\"foo;bar\"", config.quoteString("foo;bar"));
     }
 
     @Test
@@ -317,7 +298,7 @@ public class TestPropertyListConfiguration {
 
         // save the configuration
         saveConfig(savedFile);
-        assertTrue(savedFile.exists(), "The saved file doesn't exist");
+        assertTrue(savedFile.exists());
 
         // read the configuration and compare the properties
         final PropertyListConfiguration checkConfig = new PropertyListConfiguration();
@@ -365,7 +346,7 @@ public class TestPropertyListConfiguration {
 
         // save the configuration
         saveConfig(savedFile);
-        assertTrue(savedFile.exists(), "The saved file doesn't exist");
+        assertTrue(savedFile.exists());
 
         // read the configuration and compare the properties
         final PropertyListConfiguration checkConfig = new PropertyListConfiguration();
@@ -390,13 +371,13 @@ public class TestPropertyListConfiguration {
         load(config2, saveFile);
         final Object array = config2.getProperty("foo");
 
-        assertNotNull(array, "data not found");
-        assertEquals(byte[].class, array.getClass(), "property type");
+        assertNotNull(array);
+        assertEquals(byte[].class, array.getClass());
         assertArrayEquals(expected, (byte[]) array);
     }
 
     @Test
     public void testString() {
-        assertEquals("string1", config.getProperty("simple-string"), "simple-string");
+        assertEquals("string1", config.getProperty("simple-string"));
     }
 }

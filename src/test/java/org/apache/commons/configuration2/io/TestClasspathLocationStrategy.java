@@ -55,7 +55,7 @@ public class TestClasspathLocationStrategy {
     @Test
     public void testLocateFailed() {
         final FileLocator locator = FileLocatorUtils.fileLocator().fileName("non existing resource name!").create();
-        assertNull(strategy.locate(fileSystem, locator), "Got a URL");
+        assertNull(strategy.locate(fileSystem, locator));
     }
 
     /**
@@ -64,7 +64,7 @@ public class TestClasspathLocationStrategy {
     @Test
     public void testLocateNoFileName() {
         final FileLocator locator = FileLocatorUtils.fileLocator().fileName("").create();
-        assertNull(strategy.locate(fileSystem, locator), "Got a URL");
+        assertNull(strategy.locate(fileSystem, locator));
     }
 
     /**

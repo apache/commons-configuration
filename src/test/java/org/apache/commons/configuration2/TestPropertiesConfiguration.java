@@ -20,6 +20,9 @@ package org.apache.commons.configuration2;
 import static org.apache.commons.configuration2.TempDirUtils.newFile;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -29,7 +32,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -256,12 +258,9 @@ public class TestPropertiesConfiguration {
      */
     private void checkBackslashList(final String key) {
         final Object prop = conf.getProperty("test." + key);
-        assertInstanceOf(List.class, prop, "Not a list");
-        final List<?> list = (List<?>) prop;
-        assertEquals(2, list.size(), "Wrong number of list elements");
+        final List<?> list = assertInstanceOf(List.class, prop);
         final String prefix = "\\\\" + key;
-        assertEquals(prefix + "a", list.get(0), "Wrong element 1");
-        assertEquals(prefix + "b", list.get(1), "Wrong element 2");
+        assertEquals(Arrays.asList(prefix + "a", prefix + "b"), list);
     }
 
     /**
@@ -324,7 +323,7 @@ public class TestPropertiesConfiguration {
 
         // remove the test save file if it exists
         if (testSavePropertiesFile.exists()) {
-            assertTrue(testSavePropertiesFile.delete(), "Test output file could not be deleted");
+            assertTrue(testSavePropertiesFile.delete());
         }
     }
 
@@ -379,12 +378,12 @@ public class TestPropertiesConfiguration {
      */
     @Test
     public void testChangingListDelimiter() throws Exception {
-        assertEquals("a^b^c", conf.getString("test.other.delimiter"), "Wrong initial string");
+        assertEquals("a^b^c", conf.getString("test.other.delimiter"));
         final PropertiesConfiguration pc2 = new PropertiesConfiguration();
         pc2.setListDelimiterHandler(new DefaultListDelimiterHandler('^'));
         load(pc2, testProperties);
-        assertEquals("a", pc2.getString("test.other.delimiter"), "Should obtain the first value");
-        assertEquals(3, pc2.getList("test.other.delimiter").size(), "Wrong list size");
+        assertEquals("a", pc2.getString("test.other.delimiter"));
+        assertEquals(3, pc2.getList("test.other.delimiter").size());
     }
 
     /**
@@ -393,8 +392,8 @@ public class TestPropertiesConfiguration {
     @Test
     public void testClearFooterComment() {
         conf.clear();
-        assertNull(conf.getFooter(), "Still got a footer comment");
-        assertNull(conf.getHeader(), "Still got a header comment");
+        assertNull(conf.getFooter());
+        assertNull(conf.getHeader());
     }
 
     /**
@@ -404,16 +403,16 @@ public class TestPropertiesConfiguration {
     @Test
     public void testClone() throws ConfigurationException {
         final PropertiesConfiguration copy = (PropertiesConfiguration) conf.clone();
-        assertNotSame(conf.getLayout(), copy.getLayout(), "Copy has same layout object");
-        assertEquals(1, conf.getEventListeners(ConfigurationEvent.ANY).size(), "Wrong number of event listeners for original");
-        assertEquals(1, copy.getEventListeners(ConfigurationEvent.ANY).size(), "Wrong number of event listeners for clone");
-        assertSame(conf.getLayout(), conf.getEventListeners(ConfigurationEvent.ANY).iterator().next(), "Wrong event listener for original");
-        assertSame(copy.getLayout(), copy.getEventListeners(ConfigurationEvent.ANY).iterator().next(), "Wrong event listener for clone");
+        assertNotSame(conf.getLayout(), copy.getLayout());
+        assertEquals(1, conf.getEventListeners(ConfigurationEvent.ANY).size());
+        assertEquals(1, copy.getEventListeners(ConfigurationEvent.ANY).size());
+        assertSame(conf.getLayout(), conf.getEventListeners(ConfigurationEvent.ANY).iterator().next());
+        assertSame(copy.getLayout(), copy.getEventListeners(ConfigurationEvent.ANY).iterator().next());
         final StringWriter outConf = new StringWriter();
         new FileHandler(conf).save(outConf);
         final StringWriter outCopy = new StringWriter();
         new FileHandler(copy).save(outCopy);
-        assertEquals(outConf.toString(), outCopy.toString(), "Output from copy is different");
+        assertEquals(outConf.toString(), outCopy.toString());
     }
 
     /**
@@ -423,7 +422,7 @@ public class TestPropertiesConfiguration {
     public void testCloneNullLayout() {
         conf = new PropertiesConfiguration();
         final PropertiesConfiguration copy = (PropertiesConfiguration) conf.clone();
-        assertNotSame(conf.getLayout(), copy.getLayout(), "Layout objects are the same");
+        assertNotSame(conf.getLayout(), copy.getLayout());
     }
 
     /**
@@ -431,8 +430,8 @@ public class TestPropertiesConfiguration {
      */
     @Test
     public void testComment() {
-        assertFalse(conf.containsKey("#comment"), "comment line starting with '#' parsed as a property");
-        assertFalse(conf.containsKey("!comment"), "comment line starting with '!' parsed as a property");
+        assertFalse(conf.containsKey("#comment"));
+        assertFalse(conf.containsKey("!comment"));
     }
 
     /**
@@ -456,7 +455,7 @@ public class TestPropertiesConfiguration {
         conf = new PropertiesConfiguration();
         conf.setIncludesAllowed(false);
         conf.read(in);
-        assertEquals(PROP_VALUE, conf.getString(PROP_NAME), "Data not loaded");
+        assertEquals(PROP_VALUE, conf.getString(PROP_NAME));
     }
 
     @Test
@@ -490,7 +489,7 @@ public class TestPropertiesConfiguration {
         final FileHandler handler = new FileHandler(conf);
         handler.load(new StringReader("\\u0066\\u006f\\u006f=bar"));
 
-        assertEquals("bar", conf.getString("foo"), "value of the 'foo' property");
+        assertEquals("bar", conf.getString("foo"));
     }
 
     /**
@@ -498,11 +497,11 @@ public class TestPropertiesConfiguration {
      */
     @Test
     public void testEscapedKeyValueSeparator() {
-        assertEquals("foo", conf.getProperty("test.separator=in.key"), "Escaped separator '=' not supported in keys");
-        assertEquals("bar", conf.getProperty("test.separator:in.key"), "Escaped separator ':' not supported in keys");
-        assertEquals("foo", conf.getProperty("test.separator\tin.key"), "Escaped separator '\\t' not supported in keys");
-        assertEquals("bar", conf.getProperty("test.separator\fin.key"), "Escaped separator '\\f' not supported in keys");
-        assertEquals("foo", conf.getProperty("test.separator in.key"), "Escaped separator ' ' not supported in keys");
+        assertEquals("foo", conf.getProperty("test.separator=in.key"));
+        assertEquals("bar", conf.getProperty("test.separator:in.key"));
+        assertEquals("foo", conf.getProperty("test.separator\tin.key"));
+        assertEquals("bar", conf.getProperty("test.separator\fin.key"));
+        assertEquals("foo", conf.getProperty("test.separator in.key"));
     }
 
     /**
@@ -515,11 +514,11 @@ public class TestPropertiesConfiguration {
         conf.setProperty(PROP_NAME, text);
         final StringWriter out = new StringWriter();
         new FileHandler(conf).save(out);
-        assertTrue(out.toString().contains(text), "Value was escaped: " + out);
+        assertTrue(out.toString().contains(text));
         saveTestConfig();
         final PropertiesConfiguration c2 = new PropertiesConfiguration();
         load(c2, testSavePropertiesFile.getAbsolutePath());
-        assertEquals(text, c2.getString(PROP_NAME), "Wrong value");
+        assertEquals(text, c2.getString(PROP_NAME));
     }
 
     /**
@@ -535,7 +534,7 @@ public class TestPropertiesConfiguration {
         handler.load();
         handler.save();
 
-        assertTrue(file.exists(), "Missing file " + file);
+        assertTrue(file.exists());
     }
 
     /**
@@ -545,7 +544,7 @@ public class TestPropertiesConfiguration {
     public void testGetFooterSynchronized() {
         final SynchronizerTestImpl sync = new SynchronizerTestImpl();
         conf.setSynchronizer(sync);
-        assertNotNull(conf.getFooter(), "No footer comment");
+        assertNotNull(conf.getFooter());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -556,7 +555,7 @@ public class TestPropertiesConfiguration {
     public void testGetHeaderSynchronized() {
         final SynchronizerTestImpl sync = new SynchronizerTestImpl();
         conf.setSynchronizer(sync);
-        assertNull(conf.getHeader(), "Got a header comment");
+        assertNull(conf.getHeader());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -565,7 +564,7 @@ public class TestPropertiesConfiguration {
      */
     @Test
     public void testGetIOFactoryDefault() {
-        assertNotNull(conf.getIOFactory(), "No default IO factory");
+        assertNotNull(conf.getIOFactory());
     }
 
     /**
@@ -574,24 +573,24 @@ public class TestPropertiesConfiguration {
     @Test
     public void testGetLayout() {
         final PropertiesConfigurationLayout layout = conf.getLayout();
-        assertNotNull(layout, "Layout is null");
-        assertSame(layout, conf.getLayout(), "Different object returned");
+        assertNotNull(layout);
+        assertSame(layout, conf.getLayout());
         conf.setLayout(null);
         final PropertiesConfigurationLayout layout2 = conf.getLayout();
-        assertNotNull(layout2, "Layout 2 is null");
-        assertNotSame(layout, layout2, "Same object returned");
+        assertNotNull(layout2);
+        assertNotSame(layout, layout2);
     }
 
     @Test
     public void testGetStringWithEscapedChars() {
         final String property = conf.getString("test.unescape");
-        assertEquals("This \n string \t contains \" escaped \\ characters", property, "String with escaped characters");
+        assertEquals("This \n string \t contains \" escaped \\ characters", property);
     }
 
     @Test
     public void testGetStringWithEscapedComma() {
         final String property = conf.getString("test.unescape.list-separator");
-        assertEquals("This string contains , an escaped list separator", property, "String with an escaped list separator");
+        assertEquals("This string contains , an escaped list separator", property);
     }
 
     @Test
@@ -732,7 +731,7 @@ public class TestPropertiesConfiguration {
 
         // save the configuration
         saveTestConfig();
-        assertTrue(testSavePropertiesFile.exists(), "The saved file doesn't exist");
+        assertTrue(testSavePropertiesFile.exists());
 
         // read the configuration and compare the properties
         checkSavedConfig();
@@ -743,11 +742,11 @@ public class TestPropertiesConfiguration {
      */
     @Test
     public void testIsCommentLine() {
-        assertTrue(PropertiesConfiguration.isCommentLine("# a comment"), "Comment not detected");
-        assertTrue(PropertiesConfiguration.isCommentLine("! a comment"), "Alternative comment not detected");
-        assertTrue(PropertiesConfiguration.isCommentLine("#a comment"), "Comment with no space not detected");
-        assertTrue(PropertiesConfiguration.isCommentLine("    ! a comment"), "Comment with leading space not detected");
-        assertFalse(PropertiesConfiguration.isCommentLine("   a#comment"), "Wrong comment");
+        assertTrue(PropertiesConfiguration.isCommentLine("# a comment"));
+        assertTrue(PropertiesConfiguration.isCommentLine("! a comment"));
+        assertTrue(PropertiesConfiguration.isCommentLine("#a comment"));
+        assertTrue(PropertiesConfiguration.isCommentLine("    ! a comment"));
+        assertFalse(PropertiesConfiguration.isCommentLine("   a#comment"));
     }
 
     /**
@@ -774,7 +773,6 @@ public class TestPropertiesConfiguration {
 
         for (final Object key : jup.keySet()) {
             final String keyString = key.toString();
-            // System.out.println(keyString);
             assertEquals(jup.getProperty(keyString), conf.getProperty(keyString), "Wrong property value for '" + keyString + "'");
         }
     }
@@ -802,7 +800,7 @@ public class TestPropertiesConfiguration {
 
         // save the configuration
         saveTestConfig();
-        assertTrue(testSavePropertiesFile.exists(), "The saved file doesn't exist");
+        assertTrue(testSavePropertiesFile.exists());
 
         // load the saved file...
         final Properties testProps = new Properties();
@@ -846,7 +844,7 @@ public class TestPropertiesConfiguration {
         final FileHandler handler = new FileHandler(conf);
         handler.setEncoding(StandardCharsets.UTF_8.name());
         handler.save(testSavePropertiesFile);
-        assertTrue(testSavePropertiesFile.exists(), "The saved file doesn't exist");
+        assertTrue(testSavePropertiesFile.exists());
 
         // load the saved file...
         final Properties testProps = new Properties();
@@ -866,9 +864,7 @@ public class TestPropertiesConfiguration {
 
         // ensure that the written properties file contains no Unicode escapes
         for (final String line : Files.readAllLines(testSavePropertiesFile.toPath())) {
-            if (line.contains("\\u")) {
-                fail("Unicode escape found in line: " + line);
-            }
+            assertThat(line, not(containsString("\\u")));
         }
     }
 
@@ -891,7 +887,7 @@ public class TestPropertiesConfiguration {
                 }
             }
         }
-        assertEquals(separatorTests.length, foundLines.size(), "No all separators were found: " + foundLines);
+        assertThat(foundLines, containsInAnyOrder(separatorTests));
     }
 
     /**
@@ -899,11 +895,11 @@ public class TestPropertiesConfiguration {
      */
     @Test
     public void testKeyValueSeparators() {
-        assertEquals("foo", conf.getProperty("test.separator.equal"), "equal separator not properly parsed");
-        assertEquals("foo", conf.getProperty("test.separator.colon"), "colon separator not properly parsed");
-        assertEquals("foo", conf.getProperty("test.separator.tab"), "tab separator not properly parsed");
-        assertEquals("foo", conf.getProperty("test.separator.formfeed"), "formfeed separator not properly parsed");
-        assertEquals("foo", conf.getProperty("test.separator.whitespace"), "whitespace separator not properly parsed");
+        assertEquals("foo", conf.getProperty("test.separator.equal"));
+        assertEquals("foo", conf.getProperty("test.separator.colon"));
+        assertEquals("foo", conf.getProperty("test.separator.tab"));
+        assertEquals("foo", conf.getProperty("test.separator.formfeed"));
+        assertEquals("foo", conf.getProperty("test.separator.whitespace"));
     }
 
     /**
@@ -919,8 +915,8 @@ public class TestPropertiesConfiguration {
         final StringWriter out = new StringWriter();
         new FileHandler(conf).save(out);
         final String content = out.toString();
-        assertEquals(0, content.indexOf("# My header" + EOL + EOL), "Header could not be found");
-        assertTrue(content.indexOf("prop = value" + EOL) > 0, "Property could not be found");
+        assertEquals(0, content.indexOf("# My header" + EOL + EOL));
+        assertThat(content, containsString("prop = value" + EOL));
     }
 
     /**
@@ -1006,7 +1002,7 @@ public class TestPropertiesConfiguration {
         conf = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(conf);
         handler.load(in);
-        assertEquals("true", conf.getString("include.loaded"), "Include file not loaded");
+        assertEquals("true", conf.getString("include.loaded"));
     }
 
     /**
@@ -1026,7 +1022,7 @@ public class TestPropertiesConfiguration {
         handler.setFileName("includeoptional.properties");
         handler.load();
 
-        assertTrue(pc.getBoolean("includeoptional.loaded"), "Make sure we have multiple keys");
+        assertTrue(pc.getBoolean("includeoptional.loaded"));
     }
 
     @Test
@@ -1042,7 +1038,7 @@ public class TestPropertiesConfiguration {
         handler.setFileName("test.properties");
         handler.load();
 
-        assertTrue(pc.getBoolean("test.boolean"), "Make sure we have multiple keys");
+        assertTrue(pc.getBoolean("test.boolean"));
     }
 
     @Test
@@ -1053,18 +1049,14 @@ public class TestPropertiesConfiguration {
         handler.setFileName("test.properties");
         handler.load();
 
-        assertTrue(pc.getBoolean("test.boolean"), "Make sure we have multiple keys");
+        assertTrue(pc.getBoolean("test.boolean"));
     }
 
     @Test
     public void testMixedArray() {
         final String[] array = conf.getStringArray("test.mixed.array");
 
-        assertEquals(4, array.length, "array length");
-        assertEquals("a", array[0], "1st element");
-        assertEquals("b", array[1], "2nd element");
-        assertEquals("c", array[2], "3rd element");
-        assertEquals("d", array[3], "4th element");
+        assertArrayEquals(new String[] {"a", "b", "c", "d"}, array);
     }
 
     @Test
@@ -1072,7 +1064,7 @@ public class TestPropertiesConfiguration {
         final String property = "This is a value spread out across several adjacent " + "natural lines by escaping the line terminator with "
             + "a backslash character.";
 
-        assertEquals(property, conf.getString("test.multilines"), "'test.multilines' property");
+        assertEquals(property, conf.getString("test.multilines"));
     }
 
     /**
@@ -1083,9 +1075,9 @@ public class TestPropertiesConfiguration {
         conf = new PropertiesConfiguration();
         final FileHandler handler = new FileHandler(conf);
         handler.load(ConfigurationAssert.getTestFile("config/testMultiInclude.properties"));
-        assertEquals("topValue", conf.getString("top"), "Wrong top-level property");
-        assertEquals(100, conf.getInt("property.c"), "Wrong included property (1)");
-        assertTrue(conf.getBoolean("include.loaded"), "Wrong included property (2)");
+        assertEquals("topValue", conf.getString("top"));
+        assertEquals(100, conf.getInt("property.c"));
+        assertTrue(conf.getBoolean("include.loaded"));
     }
 
     /**
@@ -1094,10 +1086,7 @@ public class TestPropertiesConfiguration {
     @Test
     public void testNewLineEscaping() {
         final List<Object> list = conf.getList("test.path");
-        assertEquals(3, list.size());
-        assertEquals("C:\\path1\\", list.get(0));
-        assertEquals("C:\\path2\\", list.get(1));
-        assertEquals("C:\\path3\\complex\\test\\", list.get(2));
+        assertEquals(Arrays.asList("C:\\path1\\", "C:\\path2\\", "C:\\path3\\complex\\test\\"), list);
     }
 
     /**
@@ -1108,8 +1097,8 @@ public class TestPropertiesConfiguration {
         final DummyLayout layout = new DummyLayout();
         conf.setLayout(layout);
         conf.propertyLoaded("layoutLoadedProperty", "yes", null);
-        assertEquals(0, layout.loadCalls, "Layout's load() was called");
-        assertEquals("yes", conf.getString("layoutLoadedProperty"), "Property not added");
+        assertEquals(0, layout.loadCalls);
+        assertEquals("yes", conf.getString("layoutLoadedProperty"));
     }
 
     /**
@@ -1120,8 +1109,8 @@ public class TestPropertiesConfiguration {
         final DummyLayout layout = new DummyLayout();
         conf.setLayout(layout);
         conf.propertyLoaded(PropertiesConfiguration.getInclude(), "testClasspath.properties,testEqual.properties", new ArrayDeque<>());
-        assertEquals(2, layout.loadCalls, "Layout's load() was not correctly called");
-        assertFalse(conf.containsKey(PropertiesConfiguration.getInclude()), "Property was added");
+        assertEquals(2, layout.loadCalls);
+        assertFalse(conf.containsKey(PropertiesConfiguration.getInclude()));
     }
 
     /**
@@ -1133,8 +1122,8 @@ public class TestPropertiesConfiguration {
         conf.setLayout(layout);
         conf.setIncludesAllowed(false);
         conf.propertyLoaded(PropertiesConfiguration.getInclude(), "testClassPath.properties,testEqual.properties", null);
-        assertEquals(0, layout.loadCalls, "Layout's load() was called");
-        assertFalse(conf.containsKey(PropertiesConfiguration.getInclude()), "Property was added");
+        assertEquals(0, layout.loadCalls);
+        assertFalse(conf.containsKey(PropertiesConfiguration.getInclude()));
     }
 
     /**
@@ -1145,7 +1134,7 @@ public class TestPropertiesConfiguration {
     public void testReadCalledDirectly() throws IOException {
         conf = new PropertiesConfiguration();
         try (Reader in = new FileReader(ConfigurationAssert.getTestFile("test.properties"))) {
-            final ConfigurationException e = assertThrows(ConfigurationException.class, () -> conf.read(in), "No exception thrown!");
+            final ConfigurationException e = assertThrows(ConfigurationException.class, () -> conf.read(in));
             assertThat(e.getMessage(), containsString("FileHandler"));
         }
     }
@@ -1155,8 +1144,8 @@ public class TestPropertiesConfiguration {
      */
     @Test
     public void testReadFooterComment() {
-        assertEquals("\n# This is a foot comment\n", conf.getFooter(), "Wrong footer comment");
-        assertEquals("\nThis is a foot comment\n", conf.getLayout().getCanonicalFooterCooment(false), "Wrong footer comment from layout");
+        assertEquals("\n# This is a foot comment\n", conf.getFooter());
+        assertEquals("\nThis is a foot comment\n", conf.getLayout().getCanonicalFooterCooment(false));
     }
 
     /**
@@ -1179,7 +1168,7 @@ public class TestPropertiesConfiguration {
 
         // save the configuration
         saveTestConfig();
-        assertTrue(testSavePropertiesFile.exists(), "The saved file doesn't exist");
+        assertTrue(testSavePropertiesFile.exists());
 
         // read the configuration and compare the properties
         checkSavedConfig();
@@ -1192,7 +1181,7 @@ public class TestPropertiesConfiguration {
     public void testSaveEscapedEscapingCharacter() throws ConfigurationException {
         conf.addProperty("test.dirs", "C:\\Temp\\\\,D:\\Data\\\\,E:\\Test\\");
         final List<Object> dirs = conf.getList("test.dirs");
-        assertEquals(3, dirs.size(), "Wrong number of list elements");
+        assertEquals(3, dirs.size());
         saveTestConfig();
         checkSavedConfig();
     }
@@ -1226,8 +1215,8 @@ public class TestPropertiesConfiguration {
         final MockHttpURLStreamHandler handler = new MockHttpURLStreamHandler(HttpURLConnection.HTTP_BAD_REQUEST, testSavePropertiesFile);
         final URL url = new URL(null, "http://jakarta.apache.org", handler);
         final FileHandler fileHandler = new FileHandler(conf);
-        final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> fileHandler.save(url), "Response code was not checked!");
-        assertInstanceOf(IOException.class, cex.getCause(), "Wrong root cause: " + cex);
+        final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> fileHandler.save(url));
+        assertInstanceOf(IOException.class, cex.getCause());
     }
 
     /**
@@ -1239,8 +1228,8 @@ public class TestPropertiesConfiguration {
         final URL url = new URL(null, "http://jakarta.apache.org", handler);
         new FileHandler(conf).save(url);
         final MockHttpURLConnection con = handler.getMockConnection();
-        assertTrue(con.getDoOutput(), "Wrong output flag");
-        assertEquals("PUT", con.getRequestMethod(), "Wrong method");
+        assertTrue(con.getDoOutput());
+        assertEquals("PUT", con.getRequestMethod());
         checkSavedConfig();
     }
 
@@ -1267,12 +1256,12 @@ public class TestPropertiesConfiguration {
         handler.setFile(testSavePropertiesFile);
         final DataConfiguration dataConfig = new DataConfiguration(conf);
         dataConfig.setProperty("foo", "bar");
-        assertEquals("bar", conf.getString("foo"), "Property not set");
+        assertEquals("bar", conf.getString("foo"));
 
         handler.save();
         final PropertiesConfiguration config2 = new PropertiesConfiguration();
         load(config2, testSavePropertiesFile.getAbsolutePath());
-        assertEquals("bar", config2.getString("foo"), "Property not saved");
+        assertEquals("bar", config2.getString("foo"));
     }
 
     /**
@@ -1416,7 +1405,7 @@ public class TestPropertiesConfiguration {
         saveTestConfig();
         conf.clear();
         load(conf, testSavePropertiesFile.getAbsolutePath());
-        assertEquals(list, conf.getProperty(prop), "Wrong list property");
+        assertEquals(list, conf.getProperty(prop));
     }
 
     /**
@@ -1428,7 +1417,7 @@ public class TestPropertiesConfiguration {
         final StringWriter writer = new StringWriter();
         new FileHandler(conf).save(writer);
         final String s = writer.toString();
-        assertTrue(s.contains(PROP_NAME + " = http://www.apache.org"), "Value not found: " + s);
+        assertTrue(s.contains(PROP_NAME + " = http://www.apache.org"));
     }
 
     /**
@@ -1436,7 +1425,7 @@ public class TestPropertiesConfiguration {
      */
     @Test
     public void testUnEscapeCharacters() {
-        assertEquals("#1 =: me!", conf.getString("test.unescape.characters"), "Wrong value");
+        assertEquals("#1 =: me!", conf.getString("test.unescape.characters"));
     }
 
     @Test
@@ -1455,6 +1444,6 @@ public class TestPropertiesConfiguration {
         conf.setFooter(footer);
         final StringWriter out = new StringWriter();
         conf.write(out);
-        assertEquals(PROP_NAME + " = " + PROP_VALUE + CR + "# " + footer + CR, out.toString(), "Wrong result");
+        assertEquals(PROP_NAME + " = " + PROP_VALUE + CR + "# " + footer + CR, out.toString());
     }
 }

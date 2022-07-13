@@ -45,7 +45,7 @@ public class TestDefaultFileSystem {
      */
     @Test
     public void testDefaultLogger() {
-        assertNotNull(fileSystem.getLogger(), "No default logger");
+        assertNotNull(fileSystem.getLogger());
     }
 
     /**
@@ -64,6 +64,6 @@ public class TestDefaultFileSystem {
     public void testSetLogger() {
         final ConfigurationLogger log = new ConfigurationLogger(getClass());
         fileSystem.setLogger(log);
-        assertSame(log, fileSystem.getLogger(), "Logger not set");
+        assertSame(log, fileSystem.getLogger());
     }
 }

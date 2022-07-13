@@ -75,7 +75,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
         final ConfigurationDeclaration decl = setUpDecl();
         final BuilderParameters params = new FileBasedBuilderParametersImpl().setPath("C:\\Test\\someTestConfiguration." + EXT);
         final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
-        assertEquals(MATCH_CLASS, provider.determineConfigurationClass(decl, Collections.singleton(params)), "Wrong class");
+        assertEquals(MATCH_CLASS, provider.determineConfigurationClass(decl, Collections.singleton(params)));
     }
 
     /**
@@ -86,7 +86,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
         final ConfigurationDeclaration decl = setUpDecl();
         final BuilderParameters params = new FileBasedBuilderParametersImpl().setPath("C:\\Test\\someTestConfiguration.properties");
         final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
-        assertEquals(DEF_CLASS, provider.determineConfigurationClass(decl, Collections.singleton(params)), "Wrong class");
+        assertEquals(DEF_CLASS, provider.determineConfigurationClass(decl, Collections.singleton(params)));
     }
 
     /**
@@ -97,7 +97,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
         final ConfigurationDeclaration decl = setUpDecl();
         final BuilderParameters params = new FileBasedBuilderParametersImpl().setPath("C:\\Test\\someTestConfiguration." + EXT.toUpperCase(Locale.ENGLISH));
         final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
-        assertEquals(MATCH_CLASS, provider.determineConfigurationClass(decl, Collections.singleton(params)), "Wrong class");
+        assertEquals(MATCH_CLASS, provider.determineConfigurationClass(decl, Collections.singleton(params)));
     }
 
     /**
@@ -108,7 +108,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
         final ConfigurationDeclaration decl = setUpDecl();
         final BuilderParameters params = new FileBasedBuilderParametersImpl().setPath("C:\\Test\\someTestConfiguration");
         final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
-        assertEquals(DEF_CLASS, provider.determineConfigurationClass(decl, Collections.singleton(params)), "Wrong class");
+        assertEquals(DEF_CLASS, provider.determineConfigurationClass(decl, Collections.singleton(params)));
     }
 
     /**
@@ -118,7 +118,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
     public void testDetermineConfigurationClassNoParams() throws ConfigurationException {
         final ConfigurationDeclaration decl = setUpDecl();
         final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
-        assertEquals(DEF_CLASS, provider.determineConfigurationClass(decl, new ArrayList<>()), "Wrong class");
+        assertEquals(DEF_CLASS, provider.determineConfigurationClass(decl, new ArrayList<>()));
     }
 
     /**
@@ -129,7 +129,7 @@ public class TestFileExtensionConfigurationBuilderProvider {
         final ConfigurationDeclaration decl = setUpDecl();
         final BuilderParameters params = new FileBasedBuilderParametersImpl();
         final FileExtensionConfigurationBuilderProvider provider = setUpProvider();
-        assertEquals(DEF_CLASS, provider.determineConfigurationClass(decl, Collections.singleton(params)), "Wrong class");
+        assertEquals(DEF_CLASS, provider.determineConfigurationClass(decl, Collections.singleton(params)));
     }
 
     /**
@@ -169,8 +169,8 @@ public class TestFileExtensionConfigurationBuilderProvider {
     public void testInitSuper() {
         final FileExtensionConfigurationBuilderProvider provider = new FileExtensionConfigurationBuilderProvider(BasicConfigurationBuilder.class.getName(),
             ReloadingFileBasedConfigurationBuilder.class.getName(), MATCH_CLASS, DEF_CLASS, EXT, null);
-        assertEquals(BasicConfigurationBuilder.class.getName(), provider.getBuilderClass(), "Wrong builder class");
-        assertEquals(ReloadingFileBasedConfigurationBuilder.class.getName(), provider.getReloadingBuilderClass(), "Wrong reloading builder class");
-        assertEquals(DEF_CLASS, provider.getConfigurationClass(), "Wrong configuration class");
+        assertEquals(BasicConfigurationBuilder.class.getName(), provider.getBuilderClass());
+        assertEquals(ReloadingFileBasedConfigurationBuilder.class.getName(), provider.getReloadingBuilderClass());
+        assertEquals(DEF_CLASS, provider.getConfigurationClass());
     }
 }

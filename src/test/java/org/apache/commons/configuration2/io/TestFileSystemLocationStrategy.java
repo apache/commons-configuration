@@ -52,7 +52,7 @@ public class TestFileSystemLocationStrategy {
         final FileLocator locator = FileLocatorUtils.fileLocator().basePath(basePath).fileName(fileName).fileSystem(FileLocatorUtils.DEFAULT_FILE_SYSTEM)
             .sourceURL(ConfigurationAssert.getTestURL("test.properties")).create();
 
-        assertSame(url, strategy.locate(fs, locator), "Wrong result");
+        assertSame(url, strategy.locate(fs, locator));
         EasyMock.verify(fs);
     }
 }

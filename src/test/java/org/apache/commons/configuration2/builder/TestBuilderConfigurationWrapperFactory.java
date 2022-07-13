@@ -67,9 +67,9 @@ public class TestBuilderConfigurationWrapperFactory {
         conf.addProperty("test2", "42");
         final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory();
         final HierarchicalConfiguration<?> wrapper = factory.createBuilderConfigurationWrapper(HierarchicalConfiguration.class, builder);
-        assertEquals("value1", wrapper.getString("test1"), "Wrong value (1)");
-        assertEquals(42, wrapper.getInt("test2"), "Wrong value (2)");
-        assertSame(conf.getNodeModel().getNodeHandler().getRootNode(), wrapper.getNodeModel().getNodeHandler().getRootNode(), "Wrong root node");
+        assertEquals("value1", wrapper.getString("test1"));
+        assertEquals(42, wrapper.getInt("test2"));
+        assertSame(conf.getNodeModel().getNodeHandler().getRootNode(), wrapper.getNodeModel().getNodeHandler().getRootNode());
     }
 
     /**
@@ -97,7 +97,7 @@ public class TestBuilderConfigurationWrapperFactory {
     @Test
     public void testDefaultEventSourceSupport() {
         final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory();
-        assertEquals(EventSourceSupport.NONE, factory.getEventSourceSupport(), "Wrong result");
+        assertEquals(EventSourceSupport.NONE, factory.getEventSourceSupport());
     }
 
     /**
@@ -113,12 +113,12 @@ public class TestBuilderConfigurationWrapperFactory {
 
         src.addEventListener(ConfigurationEvent.ANY, l1);
         src.addEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2);
-        assertTrue(src.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2), "Wrong result for existing listener");
-        assertFalse(src.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2), "Wrong result for non-existing listener");
+        assertTrue(src.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2));
+        assertFalse(src.removeEventListener(ConfigurationEvent.ANY_HIERARCHICAL, l2));
         final PropertiesConfiguration config = builder.getConfiguration();
         final Collection<EventListener<? super ConfigurationEvent>> listeners = config.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL);
-        assertTrue(listeners.contains(l1), "Registered listener not found");
-        assertFalse(listeners.contains(l2), "Removed listener still found");
+        assertTrue(listeners.contains(l1));
+        assertFalse(listeners.contains(l2));
     }
 
     /**
@@ -161,6 +161,6 @@ public class TestBuilderConfigurationWrapperFactory {
         EasyMock.replay(builder);
         final BuilderConfigurationWrapperFactory factory = new BuilderConfigurationWrapperFactory();
         final HierarchicalConfiguration<?> wrapper = factory.createBuilderConfigurationWrapper(HierarchicalConfiguration.class, builder);
-        assertFalse(wrapper instanceof EventSource, "EventSource support");
+        assertFalse(wrapper instanceof EventSource);
     }
 }

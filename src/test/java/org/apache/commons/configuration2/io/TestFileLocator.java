@@ -59,12 +59,12 @@ public class TestFileLocator {
      * @param locator the locator to check
      */
     private static void checkLocator(final FileLocator locator) {
-        assertEquals(BASE_PATH, locator.getBasePath(), "Wrong base path");
-        assertEquals(FILE_NAME, locator.getFileName(), "Wrong file name");
-        assertEquals(ENCODING, locator.getEncoding(), "Wrong encoding");
-        assertEquals(sourceURL.toExternalForm(), locator.getSourceURL().toExternalForm(), "Wrong URL");
-        assertSame(fileSystem, locator.getFileSystem(), "Wrong file system");
-        assertSame(locationStrategy, locator.getLocationStrategy(), "Wrong location strategy");
+        assertEquals(BASE_PATH, locator.getBasePath());
+        assertEquals(FILE_NAME, locator.getFileName());
+        assertEquals(ENCODING, locator.getEncoding());
+        assertEquals(sourceURL.toExternalForm(), locator.getSourceURL().toExternalForm());
+        assertSame(fileSystem, locator.getFileSystem());
+        assertSame(locationStrategy, locator.getLocationStrategy());
     }
 
     @BeforeAll
@@ -102,12 +102,12 @@ public class TestFileLocator {
     @Test
     public void testCreateFileLocatorUndefined() {
         final FileLocator locator = FileLocatorUtils.fileLocator().create();
-        assertNull(locator.getBasePath(), "Got a base path");
-        assertNull(locator.getFileName(), "Got a file name");
-        assertNull(locator.getSourceURL(), "Got a URL");
-        assertNull(locator.getEncoding(), "Got an encoding");
-        assertNull(locator.getFileSystem(), "Got a file system");
-        assertNull(locator.getLocationStrategy(), "Got a location strategy");
+        assertNull(locator.getBasePath());
+        assertNull(locator.getFileName());
+        assertNull(locator.getSourceURL());
+        assertNull(locator.getEncoding());
+        assertNull(locator.getFileSystem());
+        assertNull(locator.getLocationStrategy());
     }
 
     /**
@@ -137,7 +137,7 @@ public class TestFileLocator {
     @Test
     public void testFileLocatorEqualsNull() {
         final FileLocator loc = FileLocatorUtils.fileLocator().fileName(FILE_NAME).create();
-        assertNotEquals(null, loc, "Wrong result");
+        assertNotEquals(null, loc);
     }
 
     /**
@@ -146,7 +146,7 @@ public class TestFileLocator {
     @Test
     public void testFileLocatorEqualsOtherClass() {
         final FileLocator loc = FileLocatorUtils.fileLocator().fileName(FILE_NAME).create();
-        assertNotEquals(loc, this, "Wrong result");
+        assertNotEquals(loc, this);
     }
 
     /**

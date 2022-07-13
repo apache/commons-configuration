@@ -59,7 +59,7 @@ public class TestConfigurationPropertiesFactoryBean {
 
         final Configuration[] configsGet = configurationFactory.getConfigurations();
         configsGet[0] = null;
-        assertArrayEquals(configs, configurationFactory.getConfigurations(), "Configurations were changed");
+        assertArrayEquals(configs, configurationFactory.getConfigurations());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class TestConfigurationPropertiesFactoryBean {
 
         final Resource[] locationsGet = configurationFactory.getLocations();
         locationsGet[1] = null;
-        assertArrayEquals(locations, configurationFactory.getLocations(), "Locations were changed");
+        assertArrayEquals(locations, configurationFactory.getLocations());
     }
 
     @Test
@@ -121,7 +121,7 @@ public class TestConfigurationPropertiesFactoryBean {
 
         configurationFactory.setConfigurations(configsUpdate);
         configsUpdate[0] = null;
-        assertArrayEquals(configs, configurationFactory.getConfigurations(), "Configurations were changed");
+        assertArrayEquals(configs, configurationFactory.getConfigurations());
     }
 
     @Test
@@ -131,12 +131,12 @@ public class TestConfigurationPropertiesFactoryBean {
 
         configurationFactory.setLocations(locationsUpdate);
         locationsUpdate[0] = new ClassPathResource("other");
-        assertArrayEquals(locations, configurationFactory.getLocations(), "Locations were changed");
+        assertArrayEquals(locations, configurationFactory.getLocations());
     }
 
     @Test
     public void testSetLocationsNull() {
         configurationFactory.setLocations(null);
-        assertNull(configurationFactory.getLocations(), "Got locations");
+        assertNull(configurationFactory.getLocations());
     }
 }

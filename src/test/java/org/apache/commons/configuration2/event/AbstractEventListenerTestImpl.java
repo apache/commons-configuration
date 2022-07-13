@@ -53,14 +53,14 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements 
      * @param minEvents the minimum number of expected events
      */
     public void checkEventCount(final int minEvents) {
-        assertTrue(events.size() >= minEvents, "Too view events received");
+        assertTrue(events.size() >= minEvents);
     }
 
     /**
      * Checks if all events has been processed.
      */
     public void done() {
-        assertTrue(events.isEmpty(), "Too many events received");
+        assertTrue(events.isEmpty());
     }
 
     /**
@@ -70,12 +70,12 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements 
      * @return the event object
      */
     public T nextEvent(final EventType<?> expectedType) {
-        assertFalse(events.isEmpty(), "Too few events received");
+        assertFalse(events.isEmpty());
         final T e = events.remove(0);
         if (expectedSource != null) {
-            assertEquals(expectedSource, e.getSource(), "Wrong event source");
+            assertEquals(expectedSource, e.getSource());
         }
-        assertEquals(expectedType, e.getEventType(), "Wrong event type");
+        assertEquals(expectedType, e.getEventType());
         return e;
     }
 
@@ -93,7 +93,7 @@ public abstract class AbstractEventListenerTestImpl<T extends Event> implements 
     public void skipToLast(final EventType<?> type) {
         while (events.size() > 1) {
             final T e = events.remove(0);
-            assertNotSame(type, e.getEventType(), "Found end event in details");
+            assertNotSame(type, e.getEventType());
         }
     }
 }

@@ -72,10 +72,10 @@ public class TestBaseConfigurationXMLReader {
     private void check(final JXPathContext ctx, final String path, final String[] values) {
         final Iterator<?> it = ctx.iterate(path);
         for (final String value : values) {
-            assertTrue(it.hasNext(), "Too few values");
-            assertEquals(value, it.next(), "Wrong property value");
+            assertTrue(it.hasNext());
+            assertEquals(value, it.next());
         }
-        assertFalse(it.hasNext(), "Too many values");
+        assertFalse(it.hasNext());
     }
 
     private void checkDocument(final BaseConfigurationXMLReader creader, final String rootName) throws Exception {
@@ -86,8 +86,8 @@ public class TestBaseConfigurationXMLReader {
         final Node root = ((Document) result.getNode()).getDocumentElement();
         final JXPathContext ctx = JXPathContext.newContext(root);
 
-        assertEquals(rootName, root.getNodeName(), "Wrong root name");
-        assertEquals(3, ctx.selectNodes("/*").size(), "Wrong number of children");
+        assertEquals(rootName, root.getNodeName());
+        assertEquals(3, ctx.selectNodes("/*").size());
 
         check(ctx, "world/continents/continent", CONTINENTS);
         check(ctx, "world/greeting", new String[] {"Hello", "Salute"});

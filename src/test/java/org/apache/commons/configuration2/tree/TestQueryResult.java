@@ -96,7 +96,7 @@ public class TestQueryResult {
     @Test
     public void testGetAttributeValue() {
         final QueryResult<ImmutableNode> result = QueryResult.createAttributeResult(attributeNode, ATTR);
-        assertEquals(VALUE, result.getAttributeValue(new InMemoryNodeModel().getNodeHandler()), "Wrong value");
+        assertEquals(VALUE, result.getAttributeValue(new InMemoryNodeModel().getNodeHandler()));
     }
 
     /**
@@ -115,7 +115,7 @@ public class TestQueryResult {
     @Test
     public void testIsAttributeResultFalse() {
         final QueryResult<ImmutableNode> result = QueryResult.createNodeResult(resultNode);
-        assertFalse(result.isAttributeResult(), "An attribute result");
+        assertFalse(result.isAttributeResult());
     }
 
     /**
@@ -124,7 +124,7 @@ public class TestQueryResult {
     @Test
     public void testIsAttributeResultTrue() {
         final QueryResult<ImmutableNode> result = QueryResult.createAttributeResult(attributeNode, ATTR);
-        assertTrue(result.isAttributeResult(), "Not an attribute result");
+        assertTrue(result.isAttributeResult());
     }
 
     /**

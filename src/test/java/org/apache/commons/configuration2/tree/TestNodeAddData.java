@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,8 +56,7 @@ public class TestNodeAddData {
         pathNodes.add(PATH_NODE_NAME);
         final NodeAddData<ImmutableNode> data = new NodeAddData<>(parentNode, TEST_NODENAME, false, pathNodes);
         pathNodes.add("anotherNode");
-        assertEquals(1, data.getPathNodes().size(), "Wrong number of path nodes");
-        assertEquals(PATH_NODE_NAME, data.getPathNodes().get(0), "Wrong path node");
+        assertEquals(Arrays.asList(PATH_NODE_NAME), data.getPathNodes());
     }
 
     /**
@@ -75,7 +75,7 @@ public class TestNodeAddData {
     @Test
     public void testPathNodesNull() {
         final NodeAddData<ImmutableNode> data = new NodeAddData<>(parentNode, TEST_NODENAME, false, null);
-        assertTrue(data.getPathNodes().isEmpty(), "Got path nodes");
+        assertTrue(data.getPathNodes().isEmpty());
     }
 
     /**

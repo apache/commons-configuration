@@ -42,8 +42,8 @@ public class EventListenerTestImpl extends AbstractEventListenerTestImpl<Configu
      */
     public void checkEvent(final EventType<?> type, final String propName, final Object propValue, final boolean before) {
         final ConfigurationEvent e = nextEvent(type);
-        assertEquals(propName, e.getPropertyName(), "Wrong property name");
-        assertEquals(propValue, e.getPropertyValue(), "Wrong property value");
-        assertEquals(before, e.isBeforeUpdate(), "Wrong before flag");
+        assertEquals(propName, e.getPropertyName());
+        assertEquals(propValue, e.getPropertyValue());
+        assertEquals(before, e.isBeforeUpdate());
     }
 }

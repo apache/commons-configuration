@@ -54,7 +54,7 @@ public class TestReloadingCombinedConfigurationBuilder {
     @Test
     public void testInitWithFailOnInitFlag() {
         builder = new ReloadingCombinedConfigurationBuilder(null, true);
-        assertTrue(builder.isAllowFailOnInit(), "Flag not set");
+        assertTrue(builder.isAllowFailOnInit());
     }
 
     /**
@@ -66,7 +66,7 @@ public class TestReloadingCombinedConfigurationBuilder {
         params.setFile(ConfigurationAssert.getTestFile("testDigesterConfiguration.xml"));
         builder = new ReloadingCombinedConfigurationBuilder(params.getParameters());
         final CombinedConfiguration cc = builder.getConfiguration();
-        assertTrue(cc.getBoolean("test.boolean"), "Property not found");
+        assertTrue(cc.getBoolean("test.boolean"));
     }
 
     /**
@@ -79,11 +79,11 @@ public class TestReloadingCombinedConfigurationBuilder {
         builder.getConfiguration();
         final CombinedReloadingController rc = (CombinedReloadingController) builder.getReloadingController();
         final Collection<ReloadingController> subControllers = rc.getSubControllers();
-        assertEquals(2, subControllers.size(), "Wrong number of sub controllers");
+        assertEquals(2, subControllers.size());
         final ReloadingControllerSupport ccBuilder = (ReloadingControllerSupport) builder.getNamedBuilder("cc");
-        assertTrue(subControllers.contains(ccBuilder.getReloadingController()), "Sub controller not found");
+        assertTrue(subControllers.contains(ccBuilder.getReloadingController()));
         final CombinedReloadingController rc2 = (CombinedReloadingController) ccBuilder.getReloadingController();
-        assertEquals(3, rc2.getSubControllers().size(), "Wrong number of sub controllers (2)");
+        assertEquals(3, rc2.getSubControllers().size());
     }
 
     /**
@@ -96,7 +96,7 @@ public class TestReloadingCombinedConfigurationBuilder {
             .setDefinitionBuilderParameters(new FileBasedBuilderParametersImpl().setFile(testFile)));
         builder.getConfiguration();
         final CombinedReloadingController rc = (CombinedReloadingController) builder.getReloadingController();
-        assertTrue(rc.getSubControllers().isEmpty(), "Got sub reloading controllers");
+        assertTrue(rc.getSubControllers().isEmpty());
     }
 
     /**
@@ -106,12 +106,12 @@ public class TestReloadingCombinedConfigurationBuilder {
     public void testReloadableDefinitionBuilder() throws ConfigurationException {
         final File testFile = ConfigurationAssert.getTestFile("testDigesterConfiguration.xml");
         final ReloadingCombinedConfigurationBuilder confBuilder = builder.configure(new FileBasedBuilderParametersImpl().setFile(testFile));
-        assertSame(builder, confBuilder, "Wrong configured builder instance");
+        assertSame(builder, confBuilder);
         builder.getConfiguration();
         final CombinedReloadingController rc = (CombinedReloadingController) builder.getReloadingController();
         final Collection<ReloadingController> subControllers = rc.getSubControllers();
-        assertEquals(1, subControllers.size(), "Wrong number of sub controllers");
+        assertEquals(1, subControllers.size());
         final ReloadingController subctrl = ((ReloadingControllerSupport) builder.getDefinitionBuilder()).getReloadingController();
-        assertSame(subctrl, subControllers.iterator().next(), "Wrong sub controller");
+        assertSame(subctrl, subControllers.iterator().next());
     }
 }

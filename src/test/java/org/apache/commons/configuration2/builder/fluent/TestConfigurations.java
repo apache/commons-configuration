@@ -180,7 +180,7 @@ public class TestConfigurations {
     @Test
     public void testDefaultParameters() {
         final Configurations configs = new Configurations();
-        assertNotNull(configs.getParameters(), "No parameters");
+        assertNotNull(configs.getParameters());
     }
 
     /**
@@ -191,7 +191,7 @@ public class TestConfigurations {
         final Configurations configs = new Configurations();
         final File file = ConfigurationAssert.getTestFile(TEST_PROPERTIES);
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = configs.fileBasedBuilder(PropertiesConfiguration.class, file);
-        assertEquals(file.toURI(), builder.getFileHandler().getFile().toURI(), "Wrong file");
+        assertEquals(file.toURI(), builder.getFileHandler().getFile().toURI());
     }
 
     /**
@@ -202,7 +202,7 @@ public class TestConfigurations {
         final Configurations configs = new Configurations();
         final String filePath = absolutePath(TEST_PROPERTIES);
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = configs.fileBasedBuilder(PropertiesConfiguration.class, filePath);
-        assertEquals(filePath, builder.getFileHandler().getFileName(), "Wrong path");
+        assertEquals(filePath, builder.getFileHandler().getFileName());
     }
 
     /**
@@ -213,7 +213,7 @@ public class TestConfigurations {
         final Configurations configs = new Configurations();
         final URL url = ConfigurationAssert.getTestURL("test.properties");
         final FileBasedConfigurationBuilder<PropertiesConfiguration> builder = configs.fileBasedBuilder(PropertiesConfiguration.class, url);
-        assertEquals(url, builder.getFileHandler().getURL(), "Wrong URL");
+        assertEquals(url, builder.getFileHandler().getURL());
     }
 
     /**
@@ -313,7 +313,7 @@ public class TestConfigurations {
     public void testInitWithParameters() {
         final Parameters params = new Parameters();
         final Configurations configs = new Configurations(params);
-        assertSame(params, configs.getParameters(), "Wrong parameters");
+        assertSame(params, configs.getParameters());
     }
 
     /**

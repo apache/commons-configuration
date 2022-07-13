@@ -144,7 +144,7 @@ public class TestTrackedNodeModel {
         EasyMock.expect(parentModel.clearTree(KEY, selector, resolver)).andReturn(removed);
         EasyMock.replay(parentModel);
 
-        assertSame(removed, setUpModel().clearTree(KEY, resolver), "Wrong removed elements");
+        assertSame(removed, setUpModel().clearTree(KEY, resolver));
         EasyMock.verify(parentModel);
     }
 
@@ -185,7 +185,7 @@ public class TestTrackedNodeModel {
         EasyMock.replay(handler, parentModel);
 
         final TrackedNodeModel model = setUpModel();
-        assertSame(root, model.getInMemoryRepresentation(), "Wrong root node");
+        assertSame(root, model.getInMemoryRepresentation());
     }
 
     /**
@@ -196,7 +196,7 @@ public class TestTrackedNodeModel {
         final NodeHandler<ImmutableNode> handler = expectGetNodeHandler();
         EasyMock.replay(handler, parentModel);
 
-        assertSame(handler, setUpModel().getNodeHandler(), "Wrong node handler");
+        assertSame(handler, setUpModel().getNodeHandler());
         EasyMock.verify(parentModel);
     }
 

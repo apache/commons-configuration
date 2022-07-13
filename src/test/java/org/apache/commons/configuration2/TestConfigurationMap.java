@@ -62,11 +62,11 @@ public class TestConfigurationMap {
     public void testPut() {
         for (int i = 0; i < properties.length; i++) {
             Object object = map.put(properties[i], values[i]);
-            assertNotNull(object, "Returned null from put.");
-            assertEquals(values[i], object, "Returned wrong result.");
+            assertNotNull(object);
+            assertEquals(values[i], object);
             object = map.get(properties[i]);
-            assertNotNull(object, "Returned null from get.");
-            assertEquals(values[i], object, "Returned wrong result.");
+            assertNotNull(object);
+            assertEquals(values[i], object);
         }
     }
 

@@ -79,8 +79,8 @@ public class TestCatalogResolver {
     public void testLogger() throws Exception {
         final ConfigurationLogger log = new ConfigurationLogger(this.getClass());
         resolver.setLogger(log);
-        assertNotNull(resolver.getLogger(), "No Logger returned");
-        assertSame(log, resolver.getLogger(), "Incorrect Logger");
+        assertNotNull(resolver.getLogger());
+        assertSame(log, resolver.getLogger());
     }
 
     @Test

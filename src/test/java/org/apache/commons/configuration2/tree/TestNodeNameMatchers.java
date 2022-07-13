@@ -51,8 +51,8 @@ public class TestNodeNameMatchers {
      * @param matcher the matcher to be tested
      */
     private void checkMatcherWithNullInput(final NodeMatcher<String> matcher) {
-        assertFalse(matcher.matches(createNode(NODE_NAME), handler, null), "Match (1)");
-        assertFalse(matcher.matches(createNode(null), handler, NODE_NAME), "Match (2)");
+        assertFalse(matcher.matches(createNode(NODE_NAME), handler, null));
+        assertFalse(matcher.matches(createNode(null), handler, NODE_NAME));
     }
 
     @BeforeEach
@@ -67,9 +67,9 @@ public class TestNodeNameMatchers {
     @Test
     public void testEqualsIgnoreCaseMatch() {
         final ImmutableNode node = createNode(NODE_NAME);
-        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME), "No match (1)");
-        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME.toLowerCase(Locale.ENGLISH)), "No match (2)");
-        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME.toUpperCase(Locale.ENGLISH)), "No match (3)");
+        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME));
+        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME.toLowerCase(Locale.ENGLISH)));
+        assertTrue(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME.toUpperCase(Locale.ENGLISH)));
     }
 
     /**
@@ -78,7 +78,7 @@ public class TestNodeNameMatchers {
     @Test
     public void testEqualsIgnoreCaseNoMatch() {
         final ImmutableNode node = createNode(NODE_NAME);
-        assertFalse(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME + "_other"), "Match");
+        assertFalse(NodeNameMatchers.EQUALS_IGNORE_CASE.matches(node, handler, NODE_NAME + "_other"));
     }
 
     /**
@@ -95,7 +95,7 @@ public class TestNodeNameMatchers {
     @Test
     public void testEqualsMatch() {
         final ImmutableNode node = createNode(NODE_NAME);
-        assertTrue(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME), "No match");
+        assertTrue(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME));
     }
 
     /**
@@ -104,8 +104,8 @@ public class TestNodeNameMatchers {
     @Test
     public void testEqualsNoMatch() {
         final ImmutableNode node = createNode(NODE_NAME);
-        assertFalse(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME + "_other"), "Match (1)");
-        assertFalse(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME.toLowerCase(Locale.ENGLISH)), "Match (2)");
+        assertFalse(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME + "_other"));
+        assertFalse(NodeNameMatchers.EQUALS.matches(node, handler, NODE_NAME.toLowerCase(Locale.ENGLISH)));
     }
 
     /**

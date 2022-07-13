@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,12 +108,12 @@ public class TestBeanHelper {
      * @param bean the bean to be checked
      */
     private void checkBean(final BeanCreationTestBean bean) {
-        assertEquals(TEST_STRING, bean.getStringValue(), "Wrong string property");
-        assertEquals(TEST_INT, bean.getIntValue(), "Wrong int property");
+        assertEquals(TEST_STRING, bean.getStringValue());
+        assertEquals(TEST_INT, bean.getIntValue());
         final BeanCreationTestBean buddy = bean.getBuddy();
-        assertNotNull(buddy, "Buddy was not set");
-        assertEquals("Another test string", buddy.getStringValue(), "Wrong string property in buddy");
-        assertEquals(100, buddy.getIntValue(), "Wrong int property in buddy");
+        assertNotNull(buddy);
+        assertEquals("Another test string", buddy.getStringValue());
+        assertEquals(100, buddy.getIntValue());
     }
 
     /**
@@ -121,13 +122,13 @@ public class TestBeanHelper {
      * @param bean the bean to be checked
      */
     private void checkBean(final BeanCreationTestBeanWithListChild bean) {
-        assertEquals(TEST_STRING, bean.getStringValue(), "Wrong string property");
-        assertEquals(TEST_INT, bean.getIntValue(), "Wrong int property");
+        assertEquals(TEST_STRING, bean.getStringValue());
+        assertEquals(TEST_INT, bean.getIntValue());
         final List<BeanCreationTestBean> children = bean.getChildren();
-        assertNotNull(children, "Children were not set");
-        assertEquals(2, children.size(), "Wrong number of children created");
-        assertNotNull(children.get(0), "First child was set as null");
-        assertNotNull(children.get(1), "Second child was set as null");
+        assertNotNull(children);
+        assertEquals(2, children.size());
+        assertNotNull(children.get(0));
+        assertNotNull(children.get(1));
     }
 
     /**
@@ -208,8 +209,8 @@ public class TestBeanHelper {
         src.setFooter("TestFooter");
         final LazyDynaBean dest = new LazyDynaBean();
         BeanHelper.copyProperties(dest, src);
-        assertEquals("TestFooter", dest.get("footer"), "Wrong footer property");
-        assertEquals("TestHeader", dest.get("header"), "Wrong header property");
+        assertEquals("TestFooter", dest.get("footer"));
+        assertEquals("TestHeader", dest.get("header"));
     }
 
     /**
@@ -223,8 +224,8 @@ public class TestBeanHelper {
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(BeanCreationTestBean.class.getName());
         checkBean((BeanCreationTestBean) helper.createBean(data, null));
-        assertNull(factory.parameter, "A parameter was passed");
-        assertEquals(1, factory.getCreateBeanCount(), "Factory not called");
+        assertNull(factory.parameter);
+        assertEquals(1, factory.getCreateBeanCount());
     }
 
     /**
@@ -247,7 +248,7 @@ public class TestBeanHelper {
         data.setBeanClassName(BeanCreationTestBean.class.getName());
         checkBean((BeanCreationTestBean) helper.createBean(data, null));
         final TestBeanFactory factory = (TestBeanFactory) helper.getDefaultBeanFactory();
-        assertTrue(factory.getCreateBeanCount() > 0, "Factory not called");
+        assertTrue(factory.getCreateBeanCount() > 0);
     }
 
     /**
@@ -273,7 +274,7 @@ public class TestBeanHelper {
         final BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         checkBean((BeanCreationTestBean) helper.createBean(data, null));
-        assertEquals(1, factory.getCreateBeanCount(), "Factory not called");
+        assertEquals(1, factory.getCreateBeanCount());
     }
 
     /**
@@ -299,8 +300,8 @@ public class TestBeanHelper {
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(BeanCreationTestBeanWithListChild.class.getName());
         checkBean((BeanCreationTestBeanWithListChild) helper.createBean(data, null));
-        assertNull(factory.parameter, "A parameter was passed");
-        assertEquals(1, factory.getCreateBeanCount(), "Factory not called");
+        assertNull(factory.parameter);
+        assertEquals(1, factory.getCreateBeanCount());
     }
 
     /**
@@ -334,7 +335,7 @@ public class TestBeanHelper {
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(BeanCreationTestBean.class.getName());
         checkBean((BeanCreationTestBean) helper.createBean(data, null, param));
-        assertSame(param, factory.parameter, "Wrong parameter");
+        assertSame(param, factory.parameter);
     }
 
     /**
@@ -357,7 +358,7 @@ public class TestBeanHelper {
         final DynaBean bean = BeanHelper.createWrapDynaBean(config);
         final String value = "TestFooter";
         bean.set("footer", value);
-        assertEquals(value, config.getFooter(), "Property not set");
+        assertEquals(value, config.getFooter());
     }
 
     /**
@@ -374,7 +375,7 @@ public class TestBeanHelper {
     @Test
     public void testDefaultBeanFactory() {
         helper = new BeanHelper();
-        assertSame(DefaultBeanFactory.INSTANCE, helper.getDefaultBeanFactory(), "Wrong default bean factory");
+        assertSame(DefaultBeanFactory.INSTANCE, helper.getDefaultBeanFactory());
     }
 
     /**
@@ -382,7 +383,7 @@ public class TestBeanHelper {
      */
     @Test
     public void testDefaultInstance() {
-        assertSame(DefaultBeanFactory.INSTANCE, BeanHelper.INSTANCE.getDefaultBeanFactory(), "Wrong factory for default instance");
+        assertSame(DefaultBeanFactory.INSTANCE, BeanHelper.INSTANCE.getDefaultBeanFactory());
     }
 
     /**
@@ -392,8 +393,8 @@ public class TestBeanHelper {
     public void testDeregisterBeanFactory() {
         final BeanFactory factory = new TestBeanFactory();
         helper.registerBeanFactory(TEST_FACTORY, factory);
-        assertSame(factory, helper.deregisterBeanFactory(TEST_FACTORY), "Could not deregister factory");
-        assertTrue(helper.registeredFactoryNames().isEmpty(), "List of factories is not empty");
+        assertSame(factory, helper.deregisterBeanFactory(TEST_FACTORY));
+        assertEquals(Collections.emptySet(), helper.registeredFactoryNames());
     }
 
     /**
@@ -401,7 +402,7 @@ public class TestBeanHelper {
      */
     @Test
     public void testDeregisterBeanFactoryNonExisting() {
-        assertNull(helper.deregisterBeanFactory(TEST_FACTORY), "deregistering non existing factory");
+        assertNull(helper.deregisterBeanFactory(TEST_FACTORY));
     }
 
     /**
@@ -409,7 +410,7 @@ public class TestBeanHelper {
      */
     @Test
     public void testDeregisterBeanFactoryNull() {
-        assertNull(helper.deregisterBeanFactory(null), "deregistering null factory");
+        assertNull(helper.deregisterBeanFactory(null));
     }
 
     /**
@@ -443,9 +444,9 @@ public class TestBeanHelper {
         final BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
         final BeanCreationTestBean bean = new BeanCreationTestBean();
         helper.initBean(bean, data);
-        assertNull(bean.getStringValue(), "Wrong string property");
-        assertEquals(0, bean.getIntValue(), "Wrong int property");
-        assertNull(bean.getBuddy(), "Buddy was set");
+        assertNull(bean.getStringValue());
+        assertEquals(0, bean.getIntValue());
+        assertNull(bean.getBuddy());
     }
 
     /**
@@ -456,7 +457,7 @@ public class TestBeanHelper {
         final BeanFactory factory = EasyMock.createMock(BeanFactory.class);
         EasyMock.replay(factory);
         helper = new BeanHelper(factory);
-        assertSame(factory, helper.getDefaultBeanFactory(), "Wrong default bean factory");
+        assertSame(factory, helper.getDefaultBeanFactory());
     }
 
     /**
@@ -465,8 +466,7 @@ public class TestBeanHelper {
     @Test
     public void testRegisterBeanFactory() {
         helper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
-        assertEquals(1, helper.registeredFactoryNames().size(), "Wrong number of registered factories");
-        assertTrue(helper.registeredFactoryNames().contains(TEST_FACTORY), "Test factory is not contained");
+        assertEquals(Collections.singleton(TEST_FACTORY), helper.registeredFactoryNames());
     }
 
     /**
@@ -491,6 +491,6 @@ public class TestBeanHelper {
      */
     @Test
     public void testRegisteredFactoriesEmptyForNewInstance() {
-        assertTrue(helper.registeredFactoryNames().isEmpty(), "List of registered factories is not empty");
+        assertEquals(Collections.emptySet(), helper.registeredFactoryNames());
     }
 }

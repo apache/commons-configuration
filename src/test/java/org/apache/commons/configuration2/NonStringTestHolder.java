@@ -66,7 +66,6 @@ public class NonStringTestHolder {
     public void testDoubleDefaultValue() throws Exception {
         final double testValue = 10.25;
         final double doubleValue = configuration.getDouble("test.double.missing", 10.25);
-
         assertEquals(testValue, doubleValue, 0.01);
     }
 
@@ -95,12 +94,12 @@ public class NonStringTestHolder {
     }
 
     public void testIsEmpty() throws Exception {
-        assertFalse(configuration.isEmpty(), "Configuration should not be empty");
+        assertFalse(configuration.isEmpty());
     }
 
     public void testListMissing() throws Exception {
         final List<?> list = configuration.getList("missing.list");
-        assertTrue(list.isEmpty(), "'missing.list' is not empty");
+        assertTrue(list.isEmpty());
     }
 
     public void testLong() throws Exception {
@@ -136,6 +135,6 @@ public class NonStringTestHolder {
             foundKeyValue = "short".equals(key);
         }
 
-        assertTrue(foundKeyValue, "'short' key not found in the subset key iterator");
+        assertTrue(foundKeyValue);
     }
 }

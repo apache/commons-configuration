@@ -145,12 +145,12 @@ public class TestXMLDocumentHelper {
         final XMLDocumentHelper helper = XMLDocumentHelper.forSourceDocument(loadDocument(file));
         final XMLDocumentHelper copy = helper.createCopy();
         final Collection<Node> texts = findTextElements(helper.getDocument());
-        assertFalse(texts.isEmpty(), "No texts");
+        assertFalse(texts.isEmpty());
         for (final Node n : texts) {
             final Text txtSrc = (Text) n;
             final Text txtCopy = (Text) copy.getElementMapping().get(n);
             assertNotNull(txtCopy, "No matching element for " + n);
-            assertEquals(txtSrc.getData(), txtCopy.getData(), "Wrong text");
+            assertEquals(txtSrc.getData(), txtCopy.getData());
         }
     }
 
@@ -161,10 +161,10 @@ public class TestXMLDocumentHelper {
     public void testCopyDocument() throws Exception {
         final XMLDocumentHelper helper = XMLDocumentHelper.forSourceDocument(loadDocument());
         final XMLDocumentHelper copy = helper.createCopy();
-        assertNotSame(helper.getDocument(), copy.getDocument(), "Same documents");
+        assertNotSame(helper.getDocument(), copy.getDocument());
         final String doc1 = documentToString(helper);
         final String doc2 = documentToString(copy);
-        assertEquals(doc1, doc2, "Different document contents");
+        assertEquals(doc1, doc2);
     }
 
     /**
@@ -193,9 +193,8 @@ public class TestXMLDocumentHelper {
         EasyMock.expect(factory.newDocumentBuilder()).andThrow(pcex);
         EasyMock.replay(factory);
 
-        final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> XMLDocumentHelper.createDocumentBuilder(factory),
-                "Exception not detected!");
-        assertEquals(pcex, cex.getCause(), "Wrong cause");
+        final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> XMLDocumentHelper.createDocumentBuilder(factory));
+        assertEquals(pcex, cex.getCause());
     }
 
     /**
@@ -203,7 +202,7 @@ public class TestXMLDocumentHelper {
      */
     @Test
     public void testCreateTransformerFactory() {
-        assertNotNull(XMLDocumentHelper.createTransformerFactory(), "No factory");
+        assertNotNull(XMLDocumentHelper.createTransformerFactory());
     }
 
     /**
@@ -216,9 +215,8 @@ public class TestXMLDocumentHelper {
         EasyMock.expect(factory.newTransformer()).andThrow(cause);
         EasyMock.replay(factory);
 
-        final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> XMLDocumentHelper.createTransformer(factory),
-                "Exception not detected!");
-        assertEquals(cause, cex.getCause(), "Wrong cause");
+        final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> XMLDocumentHelper.createTransformer(factory));
+        assertEquals(cause, cex.getCause());
     }
 
     /**
@@ -227,7 +225,7 @@ public class TestXMLDocumentHelper {
     @Test
     public void testElementMappingForNewDocument() throws ConfigurationException {
         final XMLDocumentHelper helper = XMLDocumentHelper.forNewDocument(ELEMENT);
-        assertTrue(helper.getElementMapping().isEmpty(), "Got an element mapping");
+        assertTrue(helper.getElementMapping().isEmpty());
     }
 
     /**
@@ -237,7 +235,7 @@ public class TestXMLDocumentHelper {
     public void testElementMappingForSourceDocument() throws Exception {
         final Document doc = loadDocument();
         final XMLDocumentHelper helper = XMLDocumentHelper.forSourceDocument(doc);
-        assertTrue(helper.getElementMapping().isEmpty(), "Got an element mapping");
+        assertTrue(helper.getElementMapping().isEmpty());
     }
 
     /**
@@ -248,11 +246,11 @@ public class TestXMLDocumentHelper {
         final XMLDocumentHelper helper = XMLDocumentHelper.forNewDocument(ELEMENT);
         final Document doc = helper.getDocument();
         final Element rootElement = doc.getDocumentElement();
-        assertEquals(ELEMENT, rootElement.getNodeName(), "Wrong root element name");
+        assertEquals(ELEMENT, rootElement.getNodeName());
         final NodeList childNodes = rootElement.getChildNodes();
-        assertEquals(0, childNodes.getLength(), "Got child nodes");
-        assertNull(helper.getSourcePublicID(), "Got a public ID");
-        assertNull(helper.getSourceSystemID(), "Got a system ID");
+        assertEquals(0, childNodes.getLength());
+        assertNull(helper.getSourcePublicID());
+        assertNull(helper.getSourceSystemID());
     }
 
     /**
@@ -262,8 +260,8 @@ public class TestXMLDocumentHelper {
     public void testInitForSourceDocument() throws Exception {
         final Document doc = loadDocument();
         final XMLDocumentHelper helper = XMLDocumentHelper.forSourceDocument(doc);
-        assertNotSame(doc, helper.getDocument(), "Same source document");
-        assertEquals(documentToString(doc), documentToString(helper), "Wrong document content");
+        assertNotSame(doc, helper.getDocument());
+        assertEquals(documentToString(doc), documentToString(helper));
     }
 
     /**
@@ -279,8 +277,7 @@ public class TestXMLDocumentHelper {
         EasyMock.expectLastCall().andThrow(tex);
         EasyMock.replay(transformer, src, res);
 
-        final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> XMLDocumentHelper.transform(transformer, src, res),
-                "Exception not detected!");
-        assertEquals(tex, cex.getCause(), "Wrong cause");
+        final ConfigurationException cex = assertThrows(ConfigurationException.class, () -> XMLDocumentHelper.transform(transformer, src, res));
+        assertEquals(tex, cex.getCause());
     }
 }

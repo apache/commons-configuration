@@ -350,10 +350,10 @@ public class TestDefaultImmutableConfiguration {
         config.map.put("durationD", d.toString());
         final Duration oneD = Duration.ofSeconds(1);
         final Duration twoD = Duration.ofSeconds(2);
-        assertEquals(oneD, config.getDuration("durationD"), "This returns 1(Duration)");
-        assertEquals(oneD, config.getDuration("durationD", twoD), "This returns 1(Duration)");
-        assertEquals(twoD, config.getDuration("numberNotInConfig", twoD), "This returns 2(default Duration)");
-        assertEquals(oneD, config.getDuration("durationD", twoD), "This returns 1(Duration)");
+        assertEquals(oneD, config.getDuration("durationD"));
+        assertEquals(oneD, config.getDuration("durationD", twoD));
+        assertEquals(twoD, config.getDuration("numberNotInConfig", twoD));
+        assertEquals(oneD, config.getDuration("durationD", twoD));
     }
 
     @Test

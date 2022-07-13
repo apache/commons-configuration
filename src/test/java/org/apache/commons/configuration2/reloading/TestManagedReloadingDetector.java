@@ -42,8 +42,8 @@ public class TestManagedReloadingDetector {
     @Test
     public void testRefresh() {
         strategy.refresh();
-        assertTrue(strategy.isReloadingRequired(), "Reloading request not detected");
-        assertTrue(strategy.isReloadingRequired(), "Reloading state not permanent");
+        assertTrue(strategy.isReloadingRequired());
+        assertTrue(strategy.isReloadingRequired());
     }
 
     /**
@@ -53,7 +53,7 @@ public class TestManagedReloadingDetector {
     public void testReloadingPerformed() {
         strategy.refresh();
         strategy.reloadingPerformed();
-        assertFalse(strategy.isReloadingRequired(), "Reloading state not reset");
+        assertFalse(strategy.isReloadingRequired());
     }
 
     /**
@@ -61,6 +61,6 @@ public class TestManagedReloadingDetector {
      */
     @Test
     public void testReloadingRequiredInitial() {
-        assertFalse(strategy.isReloadingRequired(), "Wrong result");
+        assertFalse(strategy.isReloadingRequired());
     }
 }

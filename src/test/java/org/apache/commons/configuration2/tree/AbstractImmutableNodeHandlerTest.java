@@ -62,7 +62,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
     @Test
     public void testGetParentForRoot() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
-        assertNull(handler.getParent(ROOT_AUTHORS_TREE), "Got a parent");
+        assertNull(handler.getParent(ROOT_AUTHORS_TREE));
     }
 
     /**
@@ -104,7 +104,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
     public void testNodeHandlerGetAttributes() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
         final ImmutableNode node = nodeForKey(handler, "Puck");
-        assertEquals(node.getAttributes().keySet(), handler.getAttributes(node), "Wrong attributes");
+        assertEquals(node.getAttributes().keySet(), handler.getAttributes(node));
     }
 
     /**
@@ -125,7 +125,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
     public void testNodeHandlerGetAttributeValue() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
         final ImmutableNode node = nodeForKey(handler, "Prospero");
-        assertEquals("Shakespeare", handler.getAttributeValue(node, NodeStructureHelper.ATTR_AUTHOR), "Wrong value");
+        assertEquals("Shakespeare", handler.getAttributeValue(node, NodeStructureHelper.ATTR_AUTHOR));
     }
 
     /**
@@ -135,7 +135,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
     public void testNodeHandlerGetChildAtIndex() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
         final ImmutableNode node = nodeForKey(handler, NodeStructureHelper.author(0));
-        assertSame(node.getChildren().get(1), handler.getChild(node, 1), "Wrong child");
+        assertSame(node.getChildren().get(1), handler.getChild(node, 1));
     }
 
     /**
@@ -145,7 +145,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
     public void testNodeHandlerGetChildren() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
         final ImmutableNode node = nodeForKey(handler, NodeStructureHelper.author(0));
-        assertSame(node.getChildren(), handler.getChildren(node), "Wrong children");
+        assertSame(node.getChildren(), handler.getChildren(node));
     }
 
     /**
@@ -156,9 +156,9 @@ public abstract class AbstractImmutableNodeHandlerTest {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
         final String name = "Achilles";
         final Set<ImmutableNode> children = new HashSet<>(handler.getChildren(ROOT_PERSONAE_TREE, name));
-        assertEquals(3, children.size(), "Wrong number of children");
+        assertEquals(3, children.size());
         for (final ImmutableNode c : children) {
-            assertEquals(name, c.getNodeName(), "Wrong node name");
+            assertEquals(name, c.getNodeName());
         }
     }
 
@@ -179,7 +179,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
     public void testNodeHandlerGetChildrenCountAll() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
         final ImmutableNode node = nodeForKey(handler, NodeStructureHelper.author(0));
-        assertEquals(NodeStructureHelper.worksLength(0), handler.getChildrenCount(node, null), "Wrong number of children");
+        assertEquals(NodeStructureHelper.worksLength(0), handler.getChildrenCount(node, null));
     }
 
     /**
@@ -188,7 +188,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
     @Test
     public void testNodeHandlerGetChildrenCountSpecific() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
-        assertEquals(3, handler.getChildrenCount(ROOT_PERSONAE_TREE, "Achilles"), "Wrong number of children");
+        assertEquals(3, handler.getChildrenCount(ROOT_PERSONAE_TREE, "Achilles"));
     }
 
     /**
@@ -209,12 +209,14 @@ public abstract class AbstractImmutableNodeHandlerTest {
         };
 
         final List<ImmutableNode> result = handler.getMatchingChildren(handler.getRootNode(), matcher, target);
-        assertEquals(1, result.size(), "Wrong number of matched nodes");
-        assertSame(target, result.get(0), "Wrong result");
-        assertEquals(NodeStructureHelper.authorsLength(), encounteredAuthors.size(), "Wrong number of encountered nodes");
+        assertEquals(1, result.size());
+        assertSame(target, result.get(0));
+
+        final Set<String> expectedAuthors = new HashSet<>();
         for (int i = 0; i < NodeStructureHelper.authorsLength(); i++) {
-            assertTrue(encounteredAuthors.contains(NodeStructureHelper.author(i)), "Author not found: " + NodeStructureHelper.author(i));
+            expectedAuthors.add(NodeStructureHelper.author(i));
         }
+        assertEquals(expectedAuthors, encounteredAuthors);
     }
 
     /**
@@ -223,8 +225,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
     @Test
     public void testNodeHandlerGetMatchingChildrenCount() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
-        assertEquals(NodeStructureHelper.authorsLength(), handler.getMatchingChildrenCount(handler.getRootNode(), new DummyNodeMatcher(), this),
-                "Wrong result");
+        assertEquals(NodeStructureHelper.authorsLength(), handler.getMatchingChildrenCount(handler.getRootNode(), new DummyNodeMatcher(), this));
     }
 
     /**
@@ -243,7 +244,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
     @Test
     public void testNodeHandlerHasAttributesFalse() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
-        assertFalse(handler.hasAttributes(ROOT_PERSONAE_TREE), "Got attributes");
+        assertFalse(handler.hasAttributes(ROOT_PERSONAE_TREE));
     }
 
     /**
@@ -253,7 +254,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
     public void testNodeHandlerHasAttributesTrue() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
         final ImmutableNode node = nodeForKey(handler, "Puck");
-        assertTrue(handler.hasAttributes(node), "No attributes");
+        assertTrue(handler.hasAttributes(node));
     }
 
     /**
@@ -265,7 +266,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
         final String key = "Simmons/Hyperion";
         final ImmutableNode parent = nodeForKey(handler, key);
         final ImmutableNode child = nodeForKey(handler, key + "/Weintraub");
-        assertEquals(3, handler.indexOfChild(parent, child), "Wrong child index");
+        assertEquals(3, handler.indexOfChild(parent, child));
     }
 
     /**
@@ -276,7 +277,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
         final ImmutableNode parent = nodeForKey(handler, "Homer/Ilias");
         final ImmutableNode child = nodeForKey(handler, "Shakespeare/Troilus and Cressida/Achilles");
-        assertEquals(-1, handler.indexOfChild(parent, child), "Wrong child index");
+        assertEquals(-1, handler.indexOfChild(parent, child));
     }
 
     /**
@@ -286,7 +287,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
     public void testNodeHandlerIsDefinedAttributes() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
         final ImmutableNode node = new ImmutableNode.Builder().addAttribute(NodeStructureHelper.ATTR_AUTHOR, NodeStructureHelper.author(0)).create();
-        assertTrue(handler.isDefined(node), "Not defined");
+        assertTrue(handler.isDefined(node));
     }
 
     /**
@@ -296,7 +297,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
     public void testNodeHandlerIsDefinedChildren() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
         final ImmutableNode node = nodeForKey(handler, NodeStructureHelper.author(2));
-        assertTrue(handler.isDefined(node), "Not defined");
+        assertTrue(handler.isDefined(node));
     }
 
     /**
@@ -306,7 +307,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
     public void testNodeHandlerIsDefinedFalse() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
         final ImmutableNode node = new ImmutableNode.Builder().name(NodeStructureHelper.author(1)).create();
-        assertFalse(handler.isDefined(node), "Defined");
+        assertFalse(handler.isDefined(node));
     }
 
     /**
@@ -316,7 +317,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
     public void testNodeHandlerIsDefinedValue() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_PERSONAE_TREE);
         final ImmutableNode node = new ImmutableNode.Builder().value(42).create();
-        assertTrue(handler.isDefined(node), "Not defined");
+        assertTrue(handler.isDefined(node));
     }
 
     /**
@@ -326,7 +327,7 @@ public abstract class AbstractImmutableNodeHandlerTest {
     public void testNodeHandlerName() {
         final NodeHandler<ImmutableNode> handler = createHandler(ROOT_AUTHORS_TREE);
         final ImmutableNode author = nodeForKey(handler, NodeStructureHelper.author(0));
-        assertEquals(NodeStructureHelper.author(0), handler.nodeName(author), "Wrong node name");
+        assertEquals(NodeStructureHelper.author(0), handler.nodeName(author));
     }
 
     /**
@@ -338,6 +339,6 @@ public abstract class AbstractImmutableNodeHandlerTest {
         ImmutableNode work = nodeForKey(handler, "Shakespeare/The Tempest");
         final int year = 1611;
         work = work.setValue(year);
-        assertEquals(year, handler.getValue(work), "Wrong value");
+        assertEquals(year, handler.getValue(work));
     }
 }

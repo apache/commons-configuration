@@ -60,8 +60,8 @@ public class TestVFSFileHandlerReloadingDetector {
     public void testGetRefreshDelay() throws Exception {
         final long delay = 20130325L;
         final VFSFileHandlerReloadingDetector strategy = new VFSFileHandlerReloadingDetector(null, delay);
-        assertNotNull(strategy.getFileHandler(), "No file handler was created");
-        assertEquals(delay, strategy.getRefreshDelay(), "Wrong refresh delay");
+        assertNotNull(strategy.getFileHandler());
+        assertEquals(delay, strategy.getRefreshDelay());
     }
 
     /**
@@ -78,7 +78,7 @@ public class TestVFSFileHandlerReloadingDetector {
         // Workaround OpenJDK 8 and 9 bug JDK-8177809
         // https://bugs.openjdk.java.net/browse/JDK-8177809
         final long expectedMillis = Files.getLastModifiedTime(file.toPath()).toMillis();
-        assertEquals(expectedMillis, modificationDate, "Wrong modification date");
+        assertEquals(expectedMillis, modificationDate);
     }
 
     /**
@@ -99,7 +99,7 @@ public class TestVFSFileHandlerReloadingDetector {
                 return fo;
             }
         };
-        assertEquals(0, strategy.getLastModificationDate(), "Got a modification date");
+        assertEquals(0, strategy.getLastModificationDate());
         EasyMock.verify(fo);
     }
 
@@ -113,7 +113,7 @@ public class TestVFSFileHandlerReloadingDetector {
         handler.setFileSystem(new VFSFileSystem());
         handler.setFile(file);
         final VFSFileHandlerReloadingDetector strategy = new VFSFileHandlerReloadingDetector(handler);
-        assertEquals(0, strategy.getLastModificationDate(), "Got a modification date");
+        assertEquals(0, strategy.getLastModificationDate());
     }
 
     /**
@@ -122,7 +122,7 @@ public class TestVFSFileHandlerReloadingDetector {
     @Test
     public void testLastModificationDateUndefinedHandler() {
         final VFSFileHandlerReloadingDetector strategy = new VFSFileHandlerReloadingDetector();
-        assertEquals(0, strategy.getLastModificationDate(), "Got a modification date");
+        assertEquals(0, strategy.getLastModificationDate());
     }
 
     /**

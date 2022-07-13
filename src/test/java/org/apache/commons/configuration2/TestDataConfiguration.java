@@ -358,7 +358,7 @@ public class TestDataConfiguration {
         final String key = "test.property";
         conf.addProperty(key, "someValue");
         conf.clearProperty(key);
-        assertFalse(conf.containsKey(key), "Property still found");
+        assertFalse(conf.containsKey(key));
     }
 
     /**
@@ -369,7 +369,7 @@ public class TestDataConfiguration {
         final String key = "test.property";
         conf.addProperty(key, "someValue");
         conf.clearPropertyDirect(key);
-        assertFalse(conf.containsKey(key), "Property still found");
+        assertFalse(conf.containsKey(key));
     }
 
     /**
@@ -403,99 +403,99 @@ public class TestDataConfiguration {
         conf.addProperty("key1", new Object());
         conf.addProperty("key2", "xxxxxx");
 
-        assertThrows(ConversionException.class, () -> conf.getBooleanArray("key1"), "getBooleanArray didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getBooleanArray("key2"), "getBooleanArray didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getBooleanArray("key1"));
+        assertThrows(ConversionException.class, () -> conf.getBooleanArray("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getBooleanList("key1"), "getBooleanList didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getBooleanList("key2"), "getBooleanList didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getBooleanList("key1"));
+        assertThrows(ConversionException.class, () -> conf.getBooleanList("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getByteArray("key1"), "getByteArray didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getByteArray("key2"), "getByteArray didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getByteArray("key1"));
+        assertThrows(ConversionException.class, () -> conf.getByteArray("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getByteList("key1"), "getByteList didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getByteList("key2"), "getByteList didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getByteList("key1"));
+        assertThrows(ConversionException.class, () -> conf.getByteList("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getShortArray("key1"), "getShortArray didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getShortArray("key2"), "getShortArray didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getShortArray("key1"));
+        assertThrows(ConversionException.class, () -> conf.getShortArray("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getShortList("key1"), "getShortList didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getShortList("key2"), "getShortList didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getShortList("key1"));
+        assertThrows(ConversionException.class, () -> conf.getShortList("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getIntArray("key1"), "getIntArray didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getIntArray("key2"), "getIntArray didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getIntArray("key1"));
+        assertThrows(ConversionException.class, () -> conf.getIntArray("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getIntegerList("key1"), "getIntegerList didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getIntegerList("key2"), "getIntegerList didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getIntegerList("key1"));
+        assertThrows(ConversionException.class, () -> conf.getIntegerList("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getLongArray("key1"), "getLongArray didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getLongArray("key2"), "getLongArray didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getLongArray("key1"));
+        assertThrows(ConversionException.class, () -> conf.getLongArray("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getLongList("key1"), "getLongList didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getLongList("key2"), "getLongList didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getLongList("key1"));
+        assertThrows(ConversionException.class, () -> conf.getLongList("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getFloatArray("key1"), "getFloatArray didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getFloatArray("key2"), "getFloatArray didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getFloatArray("key1"));
+        assertThrows(ConversionException.class, () -> conf.getFloatArray("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getFloatList("key1"), "getFloatList didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getFloatList("key2"), "getFloatList didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getFloatList("key1"));
+        assertThrows(ConversionException.class, () -> conf.getFloatList("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getDoubleArray("key1"), "getDoubleArray didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getDoubleArray("key2"), "getDoubleArray didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getDoubleArray("key1"));
+        assertThrows(ConversionException.class, () -> conf.getDoubleArray("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getDoubleList("key1"), "getDoubleList didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getDoubleList("key2"), "getDoubleList didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getDoubleList("key1"));
+        assertThrows(ConversionException.class, () -> conf.getDoubleList("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getBigIntegerArray("key1"), "getBigIntegerArray didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getBigIntegerArray("key2"), "getBigIntegerArray didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getBigIntegerArray("key1"));
+        assertThrows(ConversionException.class, () -> conf.getBigIntegerArray("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getBigIntegerList("key1"), "getBigIntegerList didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getBigIntegerList("key2"), "getBigIntegerList didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getBigIntegerList("key1"));
+        assertThrows(ConversionException.class, () -> conf.getBigIntegerList("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getBigDecimalArray("key1"), "getBigDecimalArray didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getBigDecimalArray("key2"), "getBigDecimalArray didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getBigDecimalArray("key1"));
+        assertThrows(ConversionException.class, () -> conf.getBigDecimalArray("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getBigDecimalList("key1"), "getBigDecimalList didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getBigDecimalList("key2"), "getBigDecimalList didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getBigDecimalList("key1"));
+        assertThrows(ConversionException.class, () -> conf.getBigDecimalList("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getURLArray("key1"), "getURLArray didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getURLArray("key2"), "getURLArray didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getURLArray("key1"));
+        assertThrows(ConversionException.class, () -> conf.getURLArray("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getURLList("key1"), "getURLList didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getURLList("key2"), "getURLList didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getURLList("key1"));
+        assertThrows(ConversionException.class, () -> conf.getURLList("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getLocaleArray("key1"), "getLocaleArray didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getLocaleArray("key2"), "getLocaleArray didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getLocaleArray("key1"));
+        assertThrows(ConversionException.class, () -> conf.getLocaleArray("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getLocaleList("key1"), "getLocaleList didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getLocaleList("key2"), "getLocaleList didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getLocaleList("key1"));
+        assertThrows(ConversionException.class, () -> conf.getLocaleList("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getColorArray("key1"), "getColorArray didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getColorArray("key2"), "getColorArray didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getColorArray("key1"));
+        assertThrows(ConversionException.class, () -> conf.getColorArray("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getColorList("key1"), "getColorList didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getColorList("key2"), "getColorList didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getColorList("key1"));
+        assertThrows(ConversionException.class, () -> conf.getColorList("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getDateArray("key1"), "getDateArray didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getDateArray("key2"), "getDateArray didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getDateArray("key1"));
+        assertThrows(ConversionException.class, () -> conf.getDateArray("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getDate("key1", DATE_PATTERN), "getDate didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getDate("key2", DATE_PATTERN), "getDate didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getDate("key1", DATE_PATTERN));
+        assertThrows(ConversionException.class, () -> conf.getDate("key2", DATE_PATTERN));
 
-        assertThrows(ConversionException.class, () -> conf.getDateList("key1"), "getDateList didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getDateList("key2"), "getDateList didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getDateList("key1"));
+        assertThrows(ConversionException.class, () -> conf.getDateList("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getCalendar("key1", DATE_PATTERN), "getCalendar didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getCalendar("key2", DATE_PATTERN), "getCalendar didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getCalendar("key1", DATE_PATTERN));
+        assertThrows(ConversionException.class, () -> conf.getCalendar("key2", DATE_PATTERN));
 
-        assertThrows(ConversionException.class, () -> conf.getCalendarArray("key1"), "getCalendarArray didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getCalendarArray("key2"), "getCalendarArray didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getCalendarArray("key1"));
+        assertThrows(ConversionException.class, () -> conf.getCalendarArray("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.getCalendarList("key1"), "getCalendarList didn't throw a ConversionException");
-        assertThrows(ConversionException.class, () -> conf.getCalendarList("key2"), "getCalendarList didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.getCalendarList("key1"));
+        assertThrows(ConversionException.class, () -> conf.getCalendarList("key2"));
 
-        assertThrows(ConversionException.class, () -> conf.get(InetAddress.class, "key1"), "getInetAddress didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.get(InetAddress.class, "key1"));
 
-        assertThrows(ConversionException.class, () -> conf.get(InternetAddress.class, "key1"), "getInternetAddress didn't throw a ConversionException");
+        assertThrows(ConversionException.class, () -> conf.get(InternetAddress.class, "key1"));
     }
 
     /**
@@ -503,9 +503,8 @@ public class TestDataConfiguration {
      */
     @Test
     public void testConversionExceptionCause() {
-        final ConversionException cex = assertThrows(ConversionException.class, () -> conf.get(Integer.TYPE, "uri.string"),
-                "No conversion exception thrown!");
-        assertInstanceOf(NumberFormatException.class, cex.getCause(), "Wrong cause");
+        final ConversionException cex = assertThrows(ConversionException.class, () -> conf.get(Integer.TYPE, "uri.string"));
+        assertInstanceOf(NumberFormatException.class, cex.getCause());
     }
 
     @Test
@@ -818,12 +817,11 @@ public class TestDataConfiguration {
         final Calendar defaultValue = Calendar.getInstance();
         defaultValue.setTime(new Date());
         assertEquals(conf.getCalendar("calendar", defaultValue), defaultValue);
-        assertNull(conf.getCalendar("unknownkey", DATE_PATTERN), "non null object for a missing key");
+        assertNull(conf.getCalendar("unknownkey", DATE_PATTERN));
 
         conf.setThrowExceptionOnMissing(true);
 
-        assertThrows(NoSuchElementException.class, () -> conf.getCalendar("unknownkey", DATE_PATTERN),
-                "NoSuchElementException should be thrown for missing properties");
+        assertThrows(NoSuchElementException.class, () -> conf.getCalendar("unknownkey", DATE_PATTERN));
 
         final Calendar expected = Calendar.getInstance();
         expected.setTime(format.parse("2004-01-01"));
@@ -901,7 +899,7 @@ public class TestDataConfiguration {
 
         conf.addProperty("calendar.format", "01/01/2004");
         conf.addProperty("calendar.format", "12/31/2004");
-        assertArrayEquals(expected, conf.getCalendarArray("calendar.format", "MM/dd/yyyy"), "Wrong calendars with format");
+        assertArrayEquals(expected, conf.getCalendarArray("calendar.format", "MM/dd/yyyy"));
     }
 
     @Test
@@ -961,26 +959,26 @@ public class TestDataConfiguration {
     public void testGetColor() {
         // RRGGBB
         conf.setProperty("color", "FF0000");
-        assertEquals(Color.red, conf.getColor("color"), "color");
+        assertEquals(Color.red, conf.getColor("color"));
 
         // #RRGGBB
         conf.setProperty("color", "#00FF00");
-        assertEquals(Color.green, conf.getColor("color"), "color");
+        assertEquals(Color.green, conf.getColor("color"));
 
         // #RRGGBBAA
         conf.setProperty("color", "#01030507");
         final Color color = conf.getColor("color");
-        assertNotNull(color, "null color");
-        assertEquals(1, color.getRed(), "red");
-        assertEquals(3, color.getGreen(), "green");
-        assertEquals(5, color.getBlue(), "blue");
-        assertEquals(7, color.getAlpha(), "alpha");
+        assertNotNull(color);
+        assertEquals(1, color.getRed());
+        assertEquals(3, color.getGreen());
+        assertEquals(5, color.getBlue());
+        assertEquals(7, color.getAlpha());
 
         // interpolated value
         assertEquals(Color.red, conf.getColor("color.string.interpolated"));
 
         // default value
-        assertEquals(conf.getColor("unknownkey", Color.cyan), Color.cyan);
+        assertEquals(Color.cyan, conf.getColor("unknownkey", Color.cyan));
     }
 
     @Test
@@ -1059,7 +1057,7 @@ public class TestDataConfiguration {
         final Configuration baseconf = new BaseConfiguration();
         final DataConfiguration conf = new DataConfiguration(baseconf);
 
-        assertEquals(baseconf, conf.getConfiguration(), "base configuration");
+        assertEquals(baseconf, conf.getConfiguration());
     }
 
     @Test
@@ -1069,12 +1067,11 @@ public class TestDataConfiguration {
         // missing Date
         final Date defaultValue = new Date();
         assertEquals(conf.getDate("date", defaultValue), defaultValue);
-        assertNull(conf.getDate("unknownkey", DATE_PATTERN), "non null object for a missing key");
+        assertNull(conf.getDate("unknownkey", DATE_PATTERN));
 
         conf.setThrowExceptionOnMissing(true);
 
-        assertThrows(NoSuchElementException.class, () -> conf.getDate("unknownkey", DATE_PATTERN),
-                "NoSuchElementException should be thrown for missing properties");
+        assertThrows(NoSuchElementException.class, () -> conf.getDate("unknownkey", DATE_PATTERN));
 
         // Date string
         assertEquals(expected, conf.getDate("date.string"));
@@ -1140,7 +1137,7 @@ public class TestDataConfiguration {
 
         conf.addProperty("date.format", "01/01/2004");
         conf.addProperty("date.format", "12/31/2004");
-        assertArrayEquals(expected, conf.getDateArray("date.format", "MM/dd/yyyy"), "Wrong dates with format");
+        assertArrayEquals(expected, conf.getDateArray("date.format", "MM/dd/yyyy"));
     }
 
     @Test
@@ -1202,7 +1199,7 @@ public class TestDataConfiguration {
         final DefaultConversionHandler handler = new DefaultConversionHandler();
         handler.setDateFormat(DATE_PATTERN);
         conf.setConversionHandler(handler);
-        assertEquals(expectedDate(), conf.getDate("date.string"), "Wrong result");
+        assertEquals(expectedDate(), conf.getDate("date.string"));
     }
 
     /**
@@ -1211,7 +1208,7 @@ public class TestDataConfiguration {
     @Test
     public void testGetDateNoFormatPropertyDirectlySpecified() throws Exception {
         conf.clearProperty(DataConfiguration.DATE_FORMAT_KEY);
-        assertEquals(expectedDate(), conf.getDate("date.string", DATE_PATTERN), "Wrong result");
+        assertEquals(expectedDate(), conf.getDate("date.string", DATE_PATTERN));
     }
 
     @Test
@@ -1479,8 +1476,7 @@ public class TestDataConfiguration {
         assertEquals(conf.get(expected.getClass(), "email.string.interpolated"), expected);
 
         conf.setProperty("email.invalid", "dev@test@org");
-        assertThrows(ConversionException.class, () -> conf.get(expected.getClass(), "email.invalid"),
-                "ConversionException should be thrown for invalid emails");
+        assertThrows(ConversionException.class, () -> conf.get(expected.getClass(), "email.invalid"));
     }
 
     @Test
@@ -1503,41 +1499,41 @@ public class TestDataConfiguration {
         baseconf.setProperty("foo", "bar");
 
         final Iterator<String> it = conf.getKeys();
-        assertTrue(it.hasNext(), "the iterator is empty");
-        assertEquals("foo", it.next(), "unique key");
-        assertFalse(it.hasNext(), "the iterator is not exhausted");
+        assertTrue(it.hasNext());
+        assertEquals("foo", it.next());
+        assertFalse(it.hasNext());
     }
 
     @Test
     public void testGetLocale() {
         // language
         conf.setProperty("locale", "fr");
-        assertEquals(new Locale("fr", ""), conf.getLocale("locale"), "language");
+        assertEquals(new Locale("fr", ""), conf.getLocale("locale"));
 
         // language + variant
         conf.setProperty("locale", "fr__POSIX");
-        assertEquals(new Locale("fr", "", "POSIX"), conf.getLocale("locale"), "language + variant");
+        assertEquals(new Locale("fr", "", "POSIX"), conf.getLocale("locale"));
 
         // country
         conf.setProperty("locale", "_FR");
-        assertEquals(new Locale("", "FR"), conf.getLocale("locale"), "country");
+        assertEquals(new Locale("", "FR"), conf.getLocale("locale"));
 
         // country + variant
         conf.setProperty("locale", "_FR_WIN");
-        assertEquals(new Locale("", "FR", "WIN"), conf.getLocale("locale"), "country + variant");
+        assertEquals(new Locale("", "FR", "WIN"), conf.getLocale("locale"));
 
         // language + country
         conf.setProperty("locale", "fr_FR");
-        assertEquals(new Locale("fr", "FR"), conf.getLocale("locale"), "language + country");
+        assertEquals(new Locale("fr", "FR"), conf.getLocale("locale"));
 
         // language + country + variant
         conf.setProperty("locale", "fr_FR_MAC");
-        assertEquals(new Locale("fr", "FR", "MAC"), conf.getLocale("locale"), "language + country + variant");
+        assertEquals(new Locale("fr", "FR", "MAC"), conf.getLocale("locale"));
 
         // default value
         conf.setProperty("locale", "fr");
-        assertEquals(Locale.FRENCH, conf.getLocale("locale", Locale.GERMAN), "Existing key with default value");
-        assertEquals(Locale.GERMAN, conf.getLocale("localeNotInConfig", Locale.GERMAN), "Missing key with default value");
+        assertEquals(Locale.FRENCH, conf.getLocale("locale", Locale.GERMAN));
+        assertEquals(Locale.GERMAN, conf.getLocale("localeNotInConfig", Locale.GERMAN));
 
         // interpolated value
         assertEquals(Locale.FRENCH, conf.getLocale("locale.string.interpolated"));
@@ -1704,7 +1700,7 @@ public class TestDataConfiguration {
         final String key = "test.str";
         final String value = "someTestValue";
         conf.addProperty(key, value);
-        assertEquals(value, conf.get(String.class, key), "Wrong result");
+        assertEquals(value, conf.get(String.class, key));
     }
 
     @Test
@@ -1786,7 +1782,7 @@ public class TestDataConfiguration {
 
     @Test
     public void testGetUnknown() {
-        assertNull(conf.get(Object.class, "unknownkey"), "non null object for a missing key");
+        assertNull(conf.get(Object.class, "unknownkey"));
     }
 
     @Test
@@ -1978,10 +1974,10 @@ public class TestDataConfiguration {
         final Configuration baseconf = new BaseConfiguration();
         final DataConfiguration conf = new DataConfiguration(baseconf);
 
-        assertTrue(conf.isEmpty(), "not empty");
+        assertTrue(conf.isEmpty());
 
         baseconf.setProperty("foo", "bar");
 
-        assertFalse(conf.isEmpty(), "empty");
+        assertFalse(conf.isEmpty());
     }
 }

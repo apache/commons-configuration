@@ -20,8 +20,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 import org.apache.commons.configuration2.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration2.Configuration;
@@ -60,7 +62,7 @@ public class TestBaseConfigurationBuilderProvider {
         final ConfigurationDeclaration decl = createDeclaration(declConfig);
         final BasicConfigurationBuilder<? extends Configuration> builder = (BasicConfigurationBuilder<? extends Configuration>) createProvider()
             .getConfigurationBuilder(decl);
-        assertEquals(expFlag, builder.isAllowFailOnInit(), "Wrong flag value");
+        assertEquals(expFlag, builder.isAllowFailOnInit());
     }
 
     /**
@@ -75,12 +77,12 @@ public class TestBaseConfigurationBuilderProvider {
         final ConfigurationDeclaration decl = createDeclaration(declConfig);
         final ConfigurationBuilder<? extends Configuration> builder = createProvider().getConfigurationBuilder(decl);
         final Configuration config = builder.getConfiguration();
-        assertEquals(PropertiesConfiguration.class, config.getClass(), "Wrong configuration class");
+        assertEquals(PropertiesConfiguration.class, config.getClass());
         final PropertiesConfiguration pconfig = (PropertiesConfiguration) config;
-        assertTrue(pconfig.isThrowExceptionOnMissing(), "Wrong exception flag");
+        assertTrue(pconfig.isThrowExceptionOnMissing());
         final DefaultListDelimiterHandler listHandler = (DefaultListDelimiterHandler) pconfig.getListDelimiterHandler();
-        assertEquals(';', listHandler.getDelimiter(), "Wrong list delimiter");
-        assertTrue(pconfig.getBoolean("configuration.loaded"), "Configuration not loaded");
+        assertEquals(';', listHandler.getDelimiter());
+        assertTrue(pconfig.getBoolean("configuration.loaded"));
         return builder;
     }
 
@@ -164,7 +166,7 @@ public class TestBaseConfigurationBuilderProvider {
     @Test
     public void testGetBuilderNotReloading() throws ConfigurationException {
         final ConfigurationBuilder<? extends Configuration> builder = checkBuilder(false);
-        assertEquals(FileBasedConfigurationBuilder.class, builder.getClass(), "Wrong builder class");
+        assertEquals(FileBasedConfigurationBuilder.class, builder.getClass());
     }
 
     /**
@@ -173,7 +175,7 @@ public class TestBaseConfigurationBuilderProvider {
     @Test
     public void testGetBuilderReloading() throws ConfigurationException {
         final ConfigurationBuilder<? extends Configuration> builder = checkBuilder(true);
-        assertEquals(ReloadingFileBasedConfigurationBuilder.class, builder.getClass(), "Wrong builder class");
+        assertEquals(ReloadingFileBasedConfigurationBuilder.class, builder.getClass());
     }
 
     /**
@@ -224,6 +226,6 @@ public class TestBaseConfigurationBuilderProvider {
     public void testInitNoParameterClasses() {
         final BaseConfigurationBuilderProvider provider = new BaseConfigurationBuilderProvider(BasicConfigurationBuilder.class.getName(), null,
             PropertiesConfiguration.class.getName(), null);
-        assertTrue(provider.getParameterClasses().isEmpty(), "Got parameter classes");
+        assertEquals(Collections.emptyList(), new ArrayList<>(provider.getParameterClasses()));
     }
 }

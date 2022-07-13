@@ -49,8 +49,8 @@ public class TestDatabaseBuilderParametersImpl {
         BeanHelper.setProperty(params, "table", "testTable");
         BeanHelper.setProperty(params, "autoCommit", Boolean.FALSE);
         final Map<String, Object> map = params.getParameters();
-        assertEquals("testTable", map.get("table"), "Wrong table name");
-        assertEquals(Boolean.FALSE, map.get("autoCommit"), "Wrong auto commit");
+        assertEquals("testTable", map.get("table"));
+        assertEquals(Boolean.FALSE, map.get("autoCommit"));
     }
 
     /**
@@ -58,8 +58,8 @@ public class TestDatabaseBuilderParametersImpl {
      */
     @Test
     public void testSetAutoCommit() {
-        assertSame(params, params.setAutoCommit(true), "Wrong result");
-        assertEquals(Boolean.TRUE, params.getParameters().get("autoCommit"), "Wrong auto commit flag");
+        assertSame(params, params.setAutoCommit(true));
+        assertEquals(Boolean.TRUE, params.getParameters().get("autoCommit"));
     }
 
     /**
@@ -68,8 +68,8 @@ public class TestDatabaseBuilderParametersImpl {
     @Test
     public void testSetConfigurationName() {
         final String confName = "TestConfiguration";
-        assertSame(params, params.setConfigurationName(confName), "Wrong result");
-        assertEquals(confName, params.getParameters().get("configurationName"), "Wrong configuration name");
+        assertSame(params, params.setConfigurationName(confName));
+        assertEquals(confName, params.getParameters().get("configurationName"));
     }
 
     /**
@@ -78,8 +78,8 @@ public class TestDatabaseBuilderParametersImpl {
     @Test
     public void testSetConfigurationNameColumn() {
         final String colName = "CONFIG_COLUMN";
-        assertSame(params, params.setConfigurationNameColumn(colName), "Wrong result");
-        assertEquals(colName, params.getParameters().get("configurationNameColumn"), "Wrong configuration name column");
+        assertSame(params, params.setConfigurationNameColumn(colName));
+        assertEquals(colName, params.getParameters().get("configurationNameColumn"));
     }
 
     /**
@@ -89,8 +89,8 @@ public class TestDatabaseBuilderParametersImpl {
     public void testSetDataSource() {
         final DataSource src = EasyMock.createMock(DataSource.class);
         EasyMock.replay(src);
-        assertSame(params, params.setDataSource(src), "Wrong result");
-        assertSame(src, params.getParameters().get("dataSource"), "Data source not set");
+        assertSame(params, params.setDataSource(src));
+        assertSame(src, params.getParameters().get("dataSource"));
     }
 
     /**
@@ -99,8 +99,8 @@ public class TestDatabaseBuilderParametersImpl {
     @Test
     public void testSetKeyColumn() {
         final String colName = "KEY_COLUMN";
-        assertSame(params, params.setKeyColumn(colName), "Wrong result");
-        assertEquals(colName, params.getParameters().get("keyColumn"), "Wrong key column name");
+        assertSame(params, params.setKeyColumn(colName));
+        assertEquals(colName, params.getParameters().get("keyColumn"));
     }
 
     /**
@@ -109,8 +109,8 @@ public class TestDatabaseBuilderParametersImpl {
     @Test
     public void testSetTable() {
         final String table = "TestTable";
-        assertSame(params, params.setTable(table), "Wrong result");
-        assertEquals(table, params.getParameters().get("table"), "Wrong table name");
+        assertSame(params, params.setTable(table));
+        assertEquals(table, params.getParameters().get("table"));
     }
 
     /**
@@ -119,7 +119,7 @@ public class TestDatabaseBuilderParametersImpl {
     @Test
     public void testSetValueColumn() {
         final String colName = "VALUE_COLUMN";
-        assertSame(params, params.setValueColumn(colName), "Wrong result");
-        assertEquals(colName, params.getParameters().get("valueColumn"), "Wrong value column name");
+        assertSame(params, params.setValueColumn(colName));
+        assertEquals(colName, params.getParameters().get("valueColumn"));
     }
 }

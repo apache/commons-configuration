@@ -78,8 +78,8 @@ public class TestCombinedConfiguration {
          * @param expectedOthers the expected number of other events
          */
         public void checkEvent(final int expectedInvalidate, final int expectedOthers) {
-            assertEquals(expectedInvalidate, invalidateEvents, "Wrong number of invalidate events");
-            assertEquals(expectedOthers, otherEvents, "Wrong number of other events");
+            assertEquals(expectedInvalidate, invalidateEvents);
+            assertEquals(expectedOthers, otherEvents);
         }
 
         @Override
@@ -263,15 +263,15 @@ public class TestCombinedConfiguration {
      */
     private void checkAddConfig(final AbstractConfiguration c) {
         final Collection<EventListener<? super ConfigurationEvent>> listeners = c.getEventListeners(ConfigurationEvent.ANY);
-        assertEquals(1, listeners.size(), "Wrong number of configuration listeners");
-        assertTrue(listeners.contains(config), "Combined config is no listener");
+        assertEquals(1, listeners.size());
+        assertTrue(listeners.contains(config));
     }
 
     /**
      * Helper method for testing that the combined root node has not yet been constructed.
      */
     private void checkCombinedRootNotConstructed() {
-        assertTrue(config.getModel().getNodeHandler().getRootNode().getChildren().isEmpty(), "Root node was constructed");
+        assertTrue(config.getModel().getNodeHandler().getRootNode().getChildren().isEmpty());
     }
 
     /**
@@ -282,8 +282,8 @@ public class TestCombinedConfiguration {
     private void checkConfigurationsAt(final boolean withUpdates) {
         setUpSubConfigTest();
         final List<HierarchicalConfiguration<ImmutableNode>> subs = config.configurationsAt(SUB_KEY, withUpdates);
-        assertEquals(1, subs.size(), "Wrong number of sub configurations");
-        assertTrue(subs.get(0).getBoolean(TEST_KEY), "Wrong value in sub configuration");
+        assertEquals(1, subs.size());
+        assertTrue(subs.get(0).getBoolean(TEST_KEY));
     }
 
     /**
@@ -292,9 +292,9 @@ public class TestCombinedConfiguration {
      * @param c the removed configuration
      */
     private void checkRemoveConfig(final AbstractConfiguration c) {
-        assertTrue(c.getEventListeners(ConfigurationEvent.ANY).isEmpty(), "Listener was not removed");
-        assertEquals(0, config.getNumberOfConfigurations(), "Wrong number of contained configs");
-        assertTrue(config.getConfigurationNames().isEmpty(), "Name was not removed");
+        assertTrue(c.getEventListeners(ConfigurationEvent.ANY).isEmpty());
+        assertEquals(0, config.getNumberOfConfigurations());
+        assertTrue(config.getConfigurationNames().isEmpty());
         listener.checkEvent(2, 0);
     }
 
@@ -347,9 +347,9 @@ public class TestCombinedConfiguration {
      */
     @Test
     public void testAccessPropertyEmpty() {
-        assertFalse(config.containsKey(TEST_KEY), "Found a key");
-        assertNull(config.getString("test.comment"), "Key has a value");
-        assertTrue(config.isEmpty(), "Config is not empty");
+        assertFalse(config.containsKey(TEST_KEY));
+        assertNull(config.getString("test.comment"));
+        assertTrue(config.isEmpty());
     }
 
     /**
@@ -360,10 +360,10 @@ public class TestCombinedConfiguration {
         config.addConfiguration(setUpTestConfiguration());
         config.addConfiguration(setUpTestConfiguration(), null, "prefix1");
         config.addConfiguration(setUpTestConfiguration(), null, "prefix2");
-        assertTrue(config.getBoolean(TEST_KEY), "Prop1 not found");
-        assertTrue(config.getBoolean("prefix1." + TEST_KEY), "Prop 2 not found");
-        assertTrue(config.getBoolean("prefix2." + TEST_KEY), "Prop 3 not found");
-        assertFalse(config.isEmpty(), "Configuration is empty");
+        assertTrue(config.getBoolean(TEST_KEY));
+        assertTrue(config.getBoolean("prefix1." + TEST_KEY));
+        assertTrue(config.getBoolean("prefix2." + TEST_KEY));
+        assertFalse(config.isEmpty());
         listener.checkEvent(3, 0);
     }
 
@@ -375,10 +375,10 @@ public class TestCombinedConfiguration {
         final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c);
         checkAddConfig(c);
-        assertEquals(1, config.getNumberOfConfigurations(), "Wrong number of configs");
-        assertTrue(config.getConfigurationNames().isEmpty(), "Name list is not empty");
-        assertSame(c, config.getConfiguration(0), "Added config not found");
-        assertTrue(config.getBoolean(TEST_KEY), "Wrong property value");
+        assertEquals(1, config.getNumberOfConfigurations());
+        assertTrue(config.getConfigurationNames().isEmpty());
+        assertSame(c, config.getConfiguration(0));
+        assertTrue(config.getBoolean(TEST_KEY));
         listener.checkEvent(1, 0);
     }
 
@@ -390,7 +390,7 @@ public class TestCombinedConfiguration {
         final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c, null, "my");
         checkAddConfig(c);
-        assertTrue(config.getBoolean("my." + TEST_KEY), "Wrong property value");
+        assertTrue(config.getBoolean("my." + TEST_KEY));
     }
 
     /**
@@ -401,7 +401,7 @@ public class TestCombinedConfiguration {
         final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c, null, "This..is.a.complex");
         checkAddConfig(c);
-        assertTrue(config.getBoolean("This..is.a.complex." + TEST_KEY), "Wrong property value");
+        assertTrue(config.getBoolean("This..is.a.complex." + TEST_KEY));
     }
 
     /**
@@ -423,13 +423,13 @@ public class TestCombinedConfiguration {
         final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c, TEST_NAME);
         checkAddConfig(c);
-        assertEquals(1, config.getNumberOfConfigurations(), "Wrong number of configs");
-        assertSame(c, config.getConfiguration(0), "Added config not found");
-        assertSame(c, config.getConfiguration(TEST_NAME), "Added config not found by name");
+        assertEquals(1, config.getNumberOfConfigurations());
+        assertSame(c, config.getConfiguration(0));
+        assertSame(c, config.getConfiguration(TEST_NAME));
         final Set<String> names = config.getConfigurationNames();
-        assertEquals(1, names.size(), "Wrong number of config names");
-        assertTrue(names.contains(TEST_NAME), "Name not found");
-        assertTrue(config.getBoolean(TEST_KEY), "Wrong property value");
+        assertEquals(1, names.size());
+        assertTrue(names.contains(TEST_NAME));
+        assertTrue(config.getBoolean(TEST_KEY));
         listener.checkEvent(1, 0);
     }
 
@@ -460,9 +460,9 @@ public class TestCombinedConfiguration {
         config.addConfiguration(setUpTestConfiguration());
 
         config.clear();
-        assertEquals(0, config.getNumberOfConfigurations(), "Still configs contained");
-        assertTrue(config.getConfigurationNames().isEmpty(), "Still names contained");
-        assertTrue(config.isEmpty(), "Config is not empty");
+        assertEquals(0, config.getNumberOfConfigurations());
+        assertTrue(config.getConfigurationNames().isEmpty());
+        assertTrue(config.isEmpty());
 
         listener.checkEvent(3, 2);
     }
@@ -478,7 +478,7 @@ public class TestCombinedConfiguration {
 
         config.clear();
         for (final EventListener<?> listener : child.getEventListeners(ConfigurationEvent.ANY)) {
-            assertNotEquals(config, listener, "Still registered");
+            assertNotEquals(config, listener);
         }
     }
 
@@ -492,12 +492,11 @@ public class TestCombinedConfiguration {
         config.addConfiguration(new PropertiesConfiguration(), "props");
 
         final CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
-        assertNotNull(cc2.getModel().getNodeHandler().getRootNode(), "No root node");
-        assertEquals(config.getNumberOfConfigurations(), cc2.getNumberOfConfigurations(), "Wrong number of contained configurations");
-        assertSame(config.getNodeCombiner(), cc2.getNodeCombiner(), "Wrong node combiner");
-        assertEquals(config.getConfigurationNames().size(), cc2.getConfigurationNames().size(), "Wrong number of names");
-        assertTrue(Collections.disjoint(cc2.getEventListeners(ConfigurationEvent.ANY), config.getEventListeners(ConfigurationEvent.ANY)),
-                "Found duplicate event listeners");
+        assertNotNull(cc2.getModel().getNodeHandler().getRootNode());
+        assertEquals(config.getNumberOfConfigurations(), cc2.getNumberOfConfigurations());
+        assertSame(config.getNodeCombiner(), cc2.getNodeCombiner());
+        assertEquals(config.getConfigurationNames().size(), cc2.getConfigurationNames().size());
+        assertTrue(Collections.disjoint(cc2.getEventListeners(ConfigurationEvent.ANY), config.getEventListeners(ConfigurationEvent.ANY)));
 
         final StrictConfigurationComparator comp = new StrictConfigurationComparator();
         for (int i = 0; i < config.getNumberOfConfigurations(); i++) {
@@ -506,7 +505,7 @@ public class TestCombinedConfiguration {
             assertTrue(comp.compare(config.getConfiguration(i), cc2.getConfiguration(i)), "Configs not equal at " + i);
         }
 
-        assertTrue(comp.compare(config, cc2), "Combined configs not equal");
+        assertTrue(comp.compare(config, cc2));
     }
 
     /**
@@ -516,9 +515,9 @@ public class TestCombinedConfiguration {
     public void testCloneModify() {
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME);
         final CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
-        assertTrue(cc2.getConfigurationNames().contains(TEST_NAME), "Name is missing");
+        assertTrue(cc2.getConfigurationNames().contains(TEST_NAME));
         cc2.removeConfiguration(TEST_NAME);
-        assertFalse(config.getConfigurationNames().isEmpty(), "Names in original changed");
+        assertFalse(config.getConfigurationNames().isEmpty());
     }
 
     /**
@@ -555,15 +554,15 @@ public class TestCombinedConfiguration {
         config.addConfiguration(x2);
         config.addConfiguration(x1);
         XMLConfiguration x3 = new XMLConfiguration(config);
-        assertEquals("value2.2", x3.getString("key2"), "Wrong element value");
-        assertEquals("USER2", x3.getString("key2[@override]"), "Wrong attribute value");
+        assertEquals("value2.2", x3.getString("key2"));
+        assertEquals("USER2", x3.getString("key2[@override]"));
         final StringWriter w = new StringWriter();
         new FileHandler(x3).save(w);
         final String s = w.toString();
         x3 = new XMLConfiguration();
         new FileHandler(x3).load(new StringReader(s));
-        assertEquals("value2.2", x3.getString("key2"), "Wrong element value after load");
-        assertEquals("USER2", x3.getString("key2[@override]"), "Wrong attribute value after load");
+        assertEquals("value2.2", x3.getString("key2"));
+        assertEquals("USER2", x3.getString("key2[@override]"));
     }
 
     /**
@@ -612,7 +611,7 @@ public class TestCombinedConfiguration {
         for (final Thread t : threads) {
             t.join();
         }
-        assertEquals(0, errorCount.get(), "Got errors");
+        assertEquals(0, errorCount.get());
     }
 
     /**
@@ -647,9 +646,9 @@ public class TestCombinedConfiguration {
         final DefaultExpressionEngine engineConvert = new DefaultExpressionEngine(
             new DefaultExpressionEngineSymbols.Builder(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS).setIndexStart("[").setIndexEnd("]").create());
         config.setConversionExpressionEngine(engineConvert);
-        assertEquals("1", config.getString("test(a)<0>"), "Wrong property 1");
-        assertEquals("2", config.getString("test(a)<1>"), "Wrong property 2");
-        assertEquals("3", config.getString("test(a)<2>"), "Wrong property 3");
+        assertEquals("1", config.getString("test(a)<0>"));
+        assertEquals("2", config.getString("test(a)<1>"));
+        assertEquals("3", config.getString("test(a)<2>"));
     }
 
     /**
@@ -661,7 +660,7 @@ public class TestCombinedConfiguration {
         sub.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         sub.addProperty("test.pi", "3\\,1415");
         config.addConfiguration(sub);
-        assertEquals("3,1415", config.getString("test.pi"), "Wrong value");
+        assertEquals("3,1415", config.getString("test.pi"));
     }
 
     /**
@@ -670,7 +669,7 @@ public class TestCombinedConfiguration {
     @Test
     public void testGetConfigurationByIdxSynchronized() {
         final SynchronizerTestImpl sync = setUpSynchronizerTest();
-        assertNotNull(config.getConfiguration(0), "No configuration");
+        assertNotNull(config.getConfiguration(0));
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         checkCombinedRootNotConstructed();
     }
@@ -681,7 +680,7 @@ public class TestCombinedConfiguration {
     @Test
     public void testGetConfigurationByNameSynchronized() {
         final SynchronizerTestImpl sync = setUpSynchronizerTest();
-        assertNotNull(config.getConfiguration(CHILD1), "No configuration");
+        assertNotNull(config.getConfiguration(CHILD1));
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         checkCombinedRootNotConstructed();
     }
@@ -693,11 +692,11 @@ public class TestCombinedConfiguration {
         final AbstractConfiguration pc = new PropertiesConfiguration();
         config.addConfiguration(pc, "props");
         final List<String> list = config.getConfigurationNameList();
-        assertNotNull(list, "No list of configurations returned");
-        assertEquals(3, list.size(), "Incorrect number of configurations");
+        assertNotNull(list);
+        assertEquals(3, list.size());
         final String name = list.get(1);
-        assertNotNull(name, "No name returned");
-        assertEquals(TEST_NAME, name, "Incorrect configuration name");
+        assertNotNull(name);
+        assertEquals(TEST_NAME, name);
     }
 
     /**
@@ -706,7 +705,7 @@ public class TestCombinedConfiguration {
     @Test
     public void testGetConfigurationNameListSynchronized() {
         final SynchronizerTestImpl sync = setUpSynchronizerTest();
-        assertFalse(config.getConfigurationNameList().isEmpty(), "No child names");
+        assertFalse(config.getConfigurationNameList().isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         checkCombinedRootNotConstructed();
     }
@@ -717,7 +716,7 @@ public class TestCombinedConfiguration {
     @Test
     public void testGetConfigurationNamesSynchronized() {
         final SynchronizerTestImpl sync = setUpSynchronizerTest();
-        assertFalse(config.getConfigurationNames().isEmpty(), "No child names");
+        assertFalse(config.getConfigurationNames().isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         checkCombinedRootNotConstructed();
     }
@@ -729,10 +728,10 @@ public class TestCombinedConfiguration {
         final AbstractConfiguration pc = new PropertiesConfiguration();
         config.addConfiguration(pc, "props");
         final List<Configuration> list = config.getConfigurations();
-        assertNotNull(list, "No list of configurations returned");
-        assertEquals(3, list.size(), "Incorrect number of configurations");
+        assertNotNull(list);
+        assertEquals(3, list.size());
         final Configuration c = list.get(2);
-        assertSame(c, pc, "Incorrect configuration");
+        assertSame(pc, c);
     }
 
     /**
@@ -741,7 +740,7 @@ public class TestCombinedConfiguration {
     @Test
     public void testGetConfigurationsSynchronized() {
         final SynchronizerTestImpl sync = setUpSynchronizerTest();
-        assertFalse(config.getConfigurations().isEmpty(), "No child configurations");
+        assertFalse(config.getConfigurations().isEmpty());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         checkCombinedRootNotConstructed();
     }
@@ -752,7 +751,7 @@ public class TestCombinedConfiguration {
     @Test
     public void testGetConversionExpressionEngineSynchronized() {
         final SynchronizerTestImpl sync = setUpSynchronizerTest();
-        assertNull(config.getConversionExpressionEngine(), "Got a conversion engine");
+        assertNull(config.getConversionExpressionEngine());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         checkCombinedRootNotConstructed();
     }
@@ -782,7 +781,7 @@ public class TestCombinedConfiguration {
     @Test
     public void testGetNodeCombinerSynchronized() {
         final SynchronizerTestImpl sync = setUpSynchronizerTest();
-        assertNotNull(config.getNodeCombiner(), "No node combiner");
+        assertNotNull(config.getNodeCombiner());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         checkCombinedRootNotConstructed();
     }
@@ -793,7 +792,7 @@ public class TestCombinedConfiguration {
     @Test
     public void testGetNumberOfConfigurationsSynchronized() {
         final SynchronizerTestImpl sync = setUpSynchronizerTest();
-        assertEquals(2, config.getNumberOfConfigurations(), "Wrong number of configurations");
+        assertEquals(2, config.getNumberOfConfigurations());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         checkCombinedRootNotConstructed();
     }
@@ -806,7 +805,7 @@ public class TestCombinedConfiguration {
         setUpSourceTest();
         final String key = "yet.another.key";
         config.addProperty(key, Boolean.TRUE);
-        assertEquals(config, config.getSource(key), "Wrong source for key");
+        assertEquals(config, config.getSource(key));
     }
 
     /**
@@ -815,7 +814,7 @@ public class TestCombinedConfiguration {
     @Test
     public void testGetSourceHierarchical() {
         setUpSourceTest();
-        assertEquals(config.getConfiguration(CHILD1), config.getSource(TEST_KEY), "Wrong source configuration");
+        assertEquals(config.getConfiguration(CHILD1), config.getSource(TEST_KEY));
     }
 
     /**
@@ -827,7 +826,7 @@ public class TestCombinedConfiguration {
         setUpSourceTest();
         final String key = "list.key";
         config.getConfiguration(CHILD1).addProperty(key, "1,2,3");
-        assertEquals(config.getConfiguration(CHILD1), config.getSource(key), "Wrong source for multi-value property");
+        assertEquals(config.getConfiguration(CHILD1), config.getSource(key));
     }
 
     /**
@@ -849,7 +848,7 @@ public class TestCombinedConfiguration {
     @Test
     public void testGetSourceNonHierarchical() {
         setUpSourceTest();
-        assertEquals(config.getConfiguration(CHILD2), config.getSource("another.key"), "Wrong source configuration");
+        assertEquals(config.getConfiguration(CHILD2), config.getSource("another.key"));
     }
 
     /**
@@ -870,9 +869,9 @@ public class TestCombinedConfiguration {
         config.getConfiguration(CHILD1).addProperty(key, "1,2,3");
         config.getConfiguration(CHILD2).addProperty(key, "a,b,c");
         final Set<Configuration> sources = config.getSources(key);
-        assertEquals(2, sources.size(), "Wrong number of sources");
-        assertTrue(sources.contains(config.getConfiguration(CHILD1)), "Source 1 not found");
-        assertTrue(sources.contains(config.getConfiguration(CHILD2)), "Source 2 not found");
+        assertEquals(2, sources.size());
+        assertTrue(sources.contains(config.getConfiguration(CHILD1)));
+        assertTrue(sources.contains(config.getConfiguration(CHILD2)));
     }
 
     /**
@@ -881,7 +880,7 @@ public class TestCombinedConfiguration {
     @Test
     public void testGetSourcesUnknownKey() {
         setUpSourceTest();
-        assertTrue(config.getSources("non.existing,key").isEmpty(), "Got sources");
+        assertTrue(config.getSources("non.existing,key").isEmpty());
     }
 
     /**
@@ -890,7 +889,7 @@ public class TestCombinedConfiguration {
     @Test
     public void testGetSourceSynchronized() {
         final SynchronizerTestImpl sync = setUpSynchronizerTest();
-        assertNotNull(config.getSource(TEST_KEY), "No source found");
+        assertNotNull(config.getSource(TEST_KEY));
         sync.verifyStart(Methods.BEGIN_READ);
         sync.verifyEnd(Methods.END_READ);
     }
@@ -901,7 +900,7 @@ public class TestCombinedConfiguration {
     @Test
     public void testGetSourceUnknown() {
         setUpSourceTest();
-        assertNull(config.getSource("an.unknown.key"), "Wrong result for unknown key");
+        assertNull(config.getSource("an.unknown.key"));
     }
 
     /**
@@ -912,7 +911,7 @@ public class TestCombinedConfiguration {
         setUpSourceTest();
         final CombinedConfiguration cc = new CombinedConfiguration();
         cc.addConfiguration(config);
-        assertEquals(config, cc.getSource(TEST_KEY), "Wrong source");
+        assertEquals(config, cc.getSource(TEST_KEY));
     }
 
     /**
@@ -920,10 +919,10 @@ public class TestCombinedConfiguration {
      */
     @Test
     public void testInit() {
-        assertEquals(0, config.getNumberOfConfigurations(), "Already configurations contained");
-        assertTrue(config.getConfigurationNames().isEmpty(), "Set of names is not empty");
-        assertInstanceOf(UnionCombiner.class, config.getNodeCombiner(), "Wrong node combiner");
-        assertNull(config.getConfiguration(TEST_NAME), "Test config was found");
+        assertEquals(0, config.getNumberOfConfigurations());
+        assertTrue(config.getConfigurationNames().isEmpty());
+        assertInstanceOf(UnionCombiner.class, config.getNodeCombiner());
+        assertNull(config.getConfiguration(TEST_NAME));
     }
 
     /**
@@ -933,10 +932,10 @@ public class TestCombinedConfiguration {
     public void testInvalidateEventBeforeAndAfterChange() {
         ConfigurationEvent event = new ConfigurationEvent(config, ConfigurationEvent.ANY, null, null, true);
         config.onEvent(event);
-        assertEquals(1, listener.invalidateEvents, "No invalidate event fired");
+        assertEquals(1, listener.invalidateEvents);
         event = new ConfigurationEvent(config, ConfigurationEvent.ANY, null, null, false);
         config.onEvent(event);
-        assertEquals(1, listener.invalidateEvents, "Another invalidate event fired");
+        assertEquals(1, listener.invalidateEvents);
     }
 
     /**
@@ -963,8 +962,8 @@ public class TestCombinedConfiguration {
             }
         };
         config.addConfiguration(childEx);
-        final Exception ex = assertThrows(Exception.class, () -> config.lock(LockMode.READ), "Exception not detected!");
-        assertEquals(testEx, ex, "Unexpected exception");
+        final Exception ex = assertThrows(Exception.class, () -> config.lock(LockMode.READ));
+        assertEquals(testEx, ex);
         // 1 x add configuration, then obtain read lock and create root node
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE, Methods.BEGIN_READ, Methods.END_READ, Methods.BEGIN_WRITE, Methods.END_WRITE);
     }
@@ -977,7 +976,7 @@ public class TestCombinedConfiguration {
         final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c);
         checkAddConfig(c);
-        assertTrue(config.removeConfiguration(c), "Config could not be removed");
+        assertTrue(config.removeConfiguration(c));
         checkRemoveConfig(c);
     }
 
@@ -988,7 +987,7 @@ public class TestCombinedConfiguration {
     public void testRemoveConfigurationAt() {
         final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c);
-        assertSame(c, config.removeConfigurationAt(0), "Wrong config removed");
+        assertSame(c, config.removeConfigurationAt(0));
         checkRemoveConfig(c);
     }
 
@@ -999,7 +998,7 @@ public class TestCombinedConfiguration {
     public void testRemoveConfigurationByName() {
         final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c, TEST_NAME);
-        assertSame(c, config.removeConfiguration(TEST_NAME), "Wrong config removed");
+        assertSame(c, config.removeConfiguration(TEST_NAME));
         checkRemoveConfig(c);
     }
 
@@ -1008,7 +1007,7 @@ public class TestCombinedConfiguration {
      */
     @Test
     public void testRemoveConfigurationByUnknownName() {
-        assertNull(config.removeConfiguration("unknownName"), "Could remove configuration by unknown name");
+        assertNull(config.removeConfiguration("unknownName"));
         listener.checkEvent(0, 0);
     }
 
@@ -1030,7 +1029,7 @@ public class TestCombinedConfiguration {
     public void testRemoveNamedConfigurationAt() {
         final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c, TEST_NAME);
-        assertSame(c, config.removeConfigurationAt(0), "Wrong config removed");
+        assertSame(c, config.removeConfigurationAt(0));
         checkRemoveConfig(c);
     }
 
@@ -1039,7 +1038,7 @@ public class TestCombinedConfiguration {
      */
     @Test
     public void testRemoveNonContainedConfiguration() {
-        assertFalse(config.removeConfiguration(setUpTestConfiguration()), "Could remove non contained config");
+        assertFalse(config.removeConfiguration(setUpTestConfiguration()));
         listener.checkEvent(0, 0);
     }
 
@@ -1061,7 +1060,7 @@ public class TestCombinedConfiguration {
     public void testSetNodeCombiner() {
         final NodeCombiner combiner = new UnionCombiner();
         config.setNodeCombiner(combiner);
-        assertSame(combiner, config.getNodeCombiner(), "Node combiner was not set");
+        assertSame(combiner, config.getNodeCombiner());
         listener.checkEvent(1, 0);
     }
 
@@ -1091,10 +1090,10 @@ public class TestCombinedConfiguration {
     public void testSubConfigurationWithUpdates() {
         final AbstractConfiguration srcConfig = setUpSubConfigTest();
         final HierarchicalConfiguration<ImmutableNode> sub = config.configurationAt(SUB_KEY, true);
-        assertTrue(sub.getBoolean(TEST_KEY), "Wrong value before update");
+        assertTrue(sub.getBoolean(TEST_KEY));
         srcConfig.setProperty(TEST_KEY, Boolean.FALSE);
-        assertFalse(sub.getBoolean(TEST_KEY), "Wrong value after update");
-        assertFalse(config.getBoolean(SUB_KEY + '.' + TEST_KEY), "Wrong value from combined configuration");
+        assertFalse(sub.getBoolean(TEST_KEY));
+        assertFalse(config.getBoolean(SUB_KEY + '.' + TEST_KEY));
     }
 
     /**
@@ -1105,7 +1104,7 @@ public class TestCombinedConfiguration {
         final AbstractConfiguration c = setUpTestConfiguration();
         config.addConfiguration(c);
         c.addProperty("test.otherTest", "yes");
-        assertEquals("yes", config.getString("test.otherTest"), "New property not found");
+        assertEquals("yes", config.getString("test.otherTest"));
         listener.checkEvent(2, 0);
     }
 }

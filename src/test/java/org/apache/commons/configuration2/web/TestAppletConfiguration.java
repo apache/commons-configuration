@@ -102,8 +102,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration {
     @Test
     public void testAddPropertyDirect() {
         if (supportsApplet) {
-            assertThrows(UnsupportedOperationException.class, super::testAddPropertyDirect,
-                    "addPropertyDirect should throw an UnsupportedException");
+            assertThrows(UnsupportedOperationException.class, super::testAddPropertyDirect);
         }
     }
 
@@ -111,8 +110,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration {
     @Test
     public void testClearProperty() {
         if (supportsApplet) {
-            assertThrows(UnsupportedOperationException.class, super::testClearProperty,
-                    "testClearProperty should throw an UnsupportedException");
+            assertThrows(UnsupportedOperationException.class, super::testClearProperty);
         }
     }
 }

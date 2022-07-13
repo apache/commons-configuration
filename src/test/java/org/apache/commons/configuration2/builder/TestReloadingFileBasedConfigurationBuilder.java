@@ -90,8 +90,8 @@ public class TestReloadingFileBasedConfigurationBuilder {
         final long refreshDelay = 60000L;
         params.setReloadingRefreshDelay(refreshDelay);
         final FileHandlerReloadingDetector detector = (FileHandlerReloadingDetector) builder.createReloadingDetector(handler, params);
-        assertSame(handler, detector.getFileHandler(), "Wrong file handler");
-        assertEquals(refreshDelay, detector.getRefreshDelay(), "Wrong refresh delay");
+        assertSame(handler, detector.getFileHandler());
+        assertEquals(refreshDelay, detector.getRefreshDelay());
     }
 
     /**
@@ -108,7 +108,7 @@ public class TestReloadingFileBasedConfigurationBuilder {
         params.setReloadingDetectorFactory(factory);
         final ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder = new ReloadingFileBasedConfigurationBuilder<>(
             PropertiesConfiguration.class);
-        assertSame(detector, builder.createReloadingDetector(handler, params), "Wrong detector");
+        assertSame(detector, builder.createReloadingDetector(handler, params));
         EasyMock.verify(factory);
     }
 
@@ -123,8 +123,8 @@ public class TestReloadingFileBasedConfigurationBuilder {
         final ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder = new ReloadingFileBasedConfigurationBuilder<>(
             PropertiesConfiguration.class, params);
         final PropertiesConfiguration conf = builder.getConfiguration();
-        assertTrue(conf.isThrowExceptionOnMissing(), "Property not set");
-        assertTrue(conf.isEmpty(), "Not empty");
+        assertTrue(conf.isThrowExceptionOnMissing());
+        assertTrue(conf.isEmpty());
     }
 
     /**
@@ -134,7 +134,7 @@ public class TestReloadingFileBasedConfigurationBuilder {
     public void testInitAllowFailOnInitFlag() {
         final ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder = new ReloadingFileBasedConfigurationBuilder<>(
             PropertiesConfiguration.class, null, true);
-        assertTrue(builder.isAllowFailOnInit(), "Flag not set");
+        assertTrue(builder.isAllowFailOnInit());
     }
 
     /**
@@ -167,9 +167,9 @@ public class TestReloadingFileBasedConfigurationBuilder {
         final ReloadingFileBasedConfigurationBuilderTestImpl builder = new ReloadingFileBasedConfigurationBuilderTestImpl(detector);
         builder.getConfiguration();
         final ReloadingDetector ctrlDetector = builder.getReloadingController().getDetector();
-        assertTrue(ctrlDetector.isReloadingRequired(), "Wrong result (1)");
-        assertFalse(ctrlDetector.isReloadingRequired(), "Wrong result (2)");
-        assertSame(builder.getFileHandler(), builder.getHandlerForDetector(), "Wrong file handler");
+        assertTrue(ctrlDetector.isReloadingRequired());
+        assertFalse(ctrlDetector.isReloadingRequired());
+        assertSame(builder.getFileHandler(), builder.getHandlerForDetector());
         EasyMock.verify(detector);
     }
 
@@ -182,7 +182,7 @@ public class TestReloadingFileBasedConfigurationBuilder {
             PropertiesConfiguration.class);
         final ReloadingDetector ctrlDetector = builder.getReloadingController().getDetector();
         ctrlDetector.reloadingPerformed();
-        assertFalse(ctrlDetector.isReloadingRequired(), "Wrong result");
+        assertFalse(ctrlDetector.isReloadingRequired());
     }
 
     /**
@@ -213,8 +213,8 @@ public class TestReloadingFileBasedConfigurationBuilder {
         final PropertiesConfiguration config1 = builder.getConfiguration();
         builder.getReloadingController().checkForReloading(null);
         final PropertiesConfiguration config2 = builder.getConfiguration();
-        assertNotSame(config1, config2, "No new configuration instance");
-        assertFalse(builder.getReloadingController().isInReloadingState(), "Still in reloading state");
+        assertNotSame(config1, config2);
+        assertFalse(builder.getReloadingController().isInReloadingState());
         EasyMock.verify(detector);
     }
 }

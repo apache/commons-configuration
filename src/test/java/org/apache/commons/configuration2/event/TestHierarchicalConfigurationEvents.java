@@ -43,13 +43,12 @@ public class TestHierarchicalConfigurationEvents extends AbstractTestConfigurati
      * @param before the expected before flag
      */
     private void checkSubnodeEvent(final ConfigurationEvent event, final boolean before) {
-        assertEquals(before, event.isBeforeUpdate(), "Wrong before flag of nesting event");
-        assertInstanceOf(ConfigurationEvent.class, event.getPropertyValue(), "No subnode event found in value");
-        final ConfigurationEvent evSub = (ConfigurationEvent) event.getPropertyValue();
-        assertEquals(ConfigurationEvent.ADD_PROPERTY, evSub.getEventType(), "Wrong event type");
-        assertEquals("newProp", evSub.getPropertyName(), "Wrong property name");
-        assertEquals("newValue", evSub.getPropertyValue(), "Wrong property value");
-        assertEquals(before, evSub.isBeforeUpdate(), "Wrong before flag");
+        assertEquals(before, event.isBeforeUpdate());
+        final ConfigurationEvent evSub = assertInstanceOf(ConfigurationEvent.class, event.getPropertyValue());
+        assertEquals(ConfigurationEvent.ADD_PROPERTY, evSub.getEventType());
+        assertEquals("newProp", evSub.getPropertyName());
+        assertEquals("newValue", evSub.getPropertyValue());
+        assertEquals(before, evSub.isBeforeUpdate());
     }
 
     @Override

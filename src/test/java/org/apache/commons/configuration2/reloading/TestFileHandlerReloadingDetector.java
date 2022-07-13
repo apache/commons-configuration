@@ -80,7 +80,7 @@ public class TestFileHandlerReloadingDetector {
     @Test
     public void testDefaultRefreshDelay() {
         final FileHandlerReloadingDetector detector = new FileHandlerReloadingDetector();
-        assertEquals(5000, detector.getRefreshDelay(), "Wrong delay");
+        assertEquals(5000, detector.getRefreshDelay());
     }
 
     /**
@@ -92,8 +92,8 @@ public class TestFileHandlerReloadingDetector {
         final URL url = new URL("jar:" + new File("conf/resources.jar").getAbsoluteFile().toURI().toURL() + "!/test-jar.xml");
         detector.getFileHandler().setURL(url);
         final File file = detector.getFile();
-        assertNotNull(file, "Detector's file is null");
-        assertEquals("resources.jar", file.getName(), "Detector does not monitor the jar file");
+        assertNotNull(file);
+        assertEquals("resources.jar", file.getName());
     }
 
     /** The detector to be tested. */
@@ -104,7 +104,7 @@ public class TestFileHandlerReloadingDetector {
     public void testInitWithFileHandler() {
         final FileHandler handler = new FileHandler();
         final FileHandlerReloadingDetector detector = new FileHandlerReloadingDetector(handler);
-        assertSame(handler, detector.getFileHandler(), "Different file handler");
+        assertSame(handler, detector.getFileHandler());
     }
 
     /**
@@ -115,7 +115,7 @@ public class TestFileHandlerReloadingDetector {
         final FileHandlerReloadingDetector detector = new FileHandlerReloadingDetector();
         detector.getFileHandler().setFile(new File("NonExistingFile.txt"));
         detector.reloadingPerformed();
-        assertFalse(detector.isReloadingRequired(), "Reloading required");
+        assertFalse(detector.isReloadingRequired());
     }
 
     /**
@@ -124,7 +124,7 @@ public class TestFileHandlerReloadingDetector {
     @Test
     public void testIsReloadingRequiredNoLocation() {
         final FileHandlerReloadingDetector detector = new FileHandlerReloadingDetector();
-        assertFalse(detector.isReloadingRequired(), "Reloading");
+        assertFalse(detector.isReloadingRequired());
     }
 
     /**
@@ -138,8 +138,8 @@ public class TestFileHandlerReloadingDetector {
         EasyMock.expect(f.lastModified()).andReturn(LAST_MODIFIED + 1);
         EasyMock.replay(f);
         final FileHandlerReloadingDetector detector = new FileHandlerReloadingDetectorTestImpl(f);
-        assertFalse(detector.isReloadingRequired(), "Reloading required");
-        assertTrue(detector.isReloadingRequired(), "Reloading not detected");
+        assertFalse(detector.isReloadingRequired());
+        assertTrue(detector.isReloadingRequired());
     }
 
     /**
@@ -148,7 +148,7 @@ public class TestFileHandlerReloadingDetector {
     @Test
     public void testLocationAfterInit() {
         final FileHandlerReloadingDetector detector = new FileHandlerReloadingDetector();
-        assertFalse(detector.getFileHandler().isLocationDefined(), "Got a location");
+        assertFalse(detector.getFileHandler().isLocationDefined());
     }
 
     /**
@@ -162,8 +162,8 @@ public class TestFileHandlerReloadingDetector {
         EasyMock.replay(f);
         final FileHandlerReloadingDetector detector = new FileHandlerReloadingDetectorTestImpl(f, 60 * 60 * 1000L);
         detector.reloadingPerformed();
-        assertFalse(detector.isReloadingRequired(), "Reloading initially required");
-        assertFalse(detector.isReloadingRequired(), "Reloading required");
+        assertFalse(detector.isReloadingRequired());
+        assertFalse(detector.isReloadingRequired());
     }
 
     /**
@@ -178,7 +178,7 @@ public class TestFileHandlerReloadingDetector {
         EasyMock.replay(f);
         final FileHandlerReloadingDetector detector = new FileHandlerReloadingDetectorTestImpl(f);
         detector.refresh();
-        assertTrue(detector.isReloadingRequired(), "Reloading not detected");
+        assertTrue(detector.isReloadingRequired());
     }
 
     /**
@@ -194,11 +194,11 @@ public class TestFileHandlerReloadingDetector {
         EasyMock.replay(f);
         final FileHandlerReloadingDetector detector = new FileHandlerReloadingDetectorTestImpl(f);
         detector.refresh();
-        assertFalse(detector.isReloadingRequired(), "Reloading required");
-        assertTrue(detector.isReloadingRequired(), "Reloading not detected");
+        assertFalse(detector.isReloadingRequired());
+        assertTrue(detector.isReloadingRequired());
         detector.reloadingPerformed();
-        assertFalse(detector.isReloadingRequired(), "Still reloading required");
-        assertTrue(detector.isReloadingRequired(), "Next reloading not detected");
+        assertFalse(detector.isReloadingRequired());
+        assertTrue(detector.isReloadingRequired());
     }
 
     /**
@@ -213,10 +213,10 @@ public class TestFileHandlerReloadingDetector {
         EasyMock.expect(f.lastModified()).andReturn(LAST_MODIFIED + 2);
         EasyMock.replay(f);
         final FileHandlerReloadingDetector detector = new FileHandlerReloadingDetectorTestImpl(f);
-        assertFalse(detector.isReloadingRequired(), "Reloading required");
-        assertTrue(detector.isReloadingRequired(), "Reloading not detected");
+        assertFalse(detector.isReloadingRequired());
+        assertTrue(detector.isReloadingRequired());
         detector.reloadingPerformed();
-        assertFalse(detector.isReloadingRequired(), "Still reloading required");
-        assertTrue(detector.isReloadingRequired(), "Next reloading not detected");
+        assertFalse(detector.isReloadingRequired());
+        assertTrue(detector.isReloadingRequired());
     }
 }

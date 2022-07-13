@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -136,7 +136,7 @@ public class TestDefaultExpressionEngine {
     private void checkAttributeValue(final String key, final String attr, final Object expValue) {
         final List<QueryResult<ImmutableNode>> results = checkKey(key, attr, 1);
         final QueryResult<ImmutableNode> result = results.get(0);
-        assertTrue(result.isAttributeResult(), "Not an attribute result");
+        assertTrue(result.isAttributeResult());
         assertEquals(expValue, result.getAttributeValue(handler), "Wrong attribute value for key " + key);
     }
 
@@ -172,7 +172,7 @@ public class TestDefaultExpressionEngine {
     private void checkKeyValue(final String key, final String name, final String value) {
         final List<QueryResult<ImmutableNode>> results = checkKey(key, name, 1);
         final QueryResult<ImmutableNode> result = results.get(0);
-        assertFalse(result.isAttributeResult(), "No node result");
+        assertFalse(result.isAttributeResult());
         assertEquals(value, result.getNode().getValue(), "Wrong value for key " + key);
     }
 
@@ -183,11 +183,7 @@ public class TestDefaultExpressionEngine {
      * @param expected the expected path nodes
      */
     private void checkNodePath(final NodeAddData<ImmutableNode> data, final String... expected) {
-        assertEquals(expected.length, data.getPathNodes().size(), "Wrong number of path nodes");
-        final Iterator<String> it = data.getPathNodes().iterator();
-        for (int i = 0; i < expected.length; i++) {
-            assertEquals(expected[i], it.next(), "Wrong path node " + i);
-        }
+        assertEquals(Arrays.asList(expected), data.getPathNodes());
     }
 
     /**
@@ -198,8 +194,8 @@ public class TestDefaultExpressionEngine {
     private void checkQueryRootNode(final String key) {
         final List<QueryResult<ImmutableNode>> results = checkKey(key, null, 1);
         final QueryResult<ImmutableNode> result = results.get(0);
-        assertFalse(result.isAttributeResult(), "No node result");
-        assertSame(root, result.getNode(), "Not the root node");
+        assertFalse(result.isAttributeResult());
+        assertSame(root, result.getNode());
     }
 
     /**
@@ -210,7 +206,7 @@ public class TestDefaultExpressionEngine {
      */
     private ImmutableNode fetchNode(final String key) {
         final QueryResult<ImmutableNode> result = query(key, 1).get(0);
-        assertFalse(result.isAttributeResult(), "An attribute result");
+        assertFalse(result.isAttributeResult());
         return result.getNode();
     }
 
@@ -223,7 +219,7 @@ public class TestDefaultExpressionEngine {
      */
     private List<QueryResult<ImmutableNode>> query(final String key, final int expCount) {
         final List<QueryResult<ImmutableNode>> nodes = engine.query(root, key, handler);
-        assertEquals(expCount, nodes.size(), "Wrong number of result nodes for key " + key);
+        assertEquals(expCount, nodes.size());
         return nodes;
     }
 
@@ -260,7 +256,7 @@ public class TestDefaultExpressionEngine {
      */
     @Test
     public void testAttributeKey() {
-        assertEquals("tables.table[@type]", engine.attributeKey("tables.table", "type"), "Wrong attribute key");
+        assertEquals("tables.table[@type]", engine.attributeKey("tables.table", "type"));
     }
 
     /**
@@ -268,7 +264,7 @@ public class TestDefaultExpressionEngine {
      */
     @Test
     public void testAttributeKeyNoParent() {
-        assertEquals("[@test]", engine.attributeKey(null, "test"), "Wrong key for null parent");
+        assertEquals("[@test]", engine.attributeKey(null, "test"));
     }
 
     /**
@@ -276,7 +272,7 @@ public class TestDefaultExpressionEngine {
      */
     @Test
     public void testAttributeKeyRoot() {
-        assertEquals("[@test]", engine.attributeKey("", "test"), "Wrong key for root attribute");
+        assertEquals("[@test]", engine.attributeKey("", "test"));
     }
 
     /**
@@ -285,7 +281,7 @@ public class TestDefaultExpressionEngine {
     @Test
     public void testAttributeKeyWithAlternativeSyntax() {
         setUpAlternativeSyntax();
-        assertEquals("@test", engine.attributeKey("", "test"), "Wrong attribute key");
+        assertEquals("@test", engine.attributeKey("", "test"));
     }
 
     /**
@@ -294,7 +290,7 @@ public class TestDefaultExpressionEngine {
     @Test
     public void testCanonicalKeyNoDuplicates() {
         final ImmutableNode node = fetchNode("tables.table(0).name");
-        assertEquals("table.name(0)", engine.canonicalKey(node, "table", handler), "Wrong canonical key");
+        assertEquals("table.name(0)", engine.canonicalKey(node, "table", handler));
     }
 
     /**
@@ -303,7 +299,7 @@ public class TestDefaultExpressionEngine {
     @Test
     public void testCanonicalKeyNoParentKey() {
         final ImmutableNode node = fetchNode("tables.table(0).fields.field(1).name");
-        assertEquals("name(0)", engine.canonicalKey(node, null, handler), "Wrong key");
+        assertEquals("name(0)", engine.canonicalKey(node, null, handler));
     }
 
     /**
@@ -311,7 +307,7 @@ public class TestDefaultExpressionEngine {
      */
     @Test
     public void testCanonicalKeyRootNoParentKey() {
-        assertEquals("", engine.canonicalKey(root, null, handler), "Wrong key");
+        assertEquals("", engine.canonicalKey(root, null, handler));
     }
 
     /**
@@ -319,7 +315,7 @@ public class TestDefaultExpressionEngine {
      */
     @Test
     public void testCanonicalKeyRootWithParentKey() {
-        assertEquals("parent", engine.canonicalKey(root, "parent", handler), "Wrong key");
+        assertEquals("parent", engine.canonicalKey(root, "parent", handler));
     }
 
     /**
@@ -329,8 +325,8 @@ public class TestDefaultExpressionEngine {
     public void testCanonicalKeyWithDuplicates() {
         final ImmutableNode tab1 = fetchNode("tables.table(0)");
         final ImmutableNode tab2 = fetchNode("tables.table(1)");
-        assertEquals("tables.table(0)", engine.canonicalKey(tab1, "tables", handler), "Wrong key 1");
-        assertEquals("tables.table(1)", engine.canonicalKey(tab2, "tables", handler), "Wrong key 2");
+        assertEquals("tables.table(0)", engine.canonicalKey(tab1, "tables", handler));
+        assertEquals("tables.table(1)", engine.canonicalKey(tab2, "tables", handler));
     }
 
     /**
@@ -338,7 +334,7 @@ public class TestDefaultExpressionEngine {
      */
     @Test
     public void testDefaultSymbols() {
-        assertSame(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS, engine.getSymbols(), "Wrong default symbols");
+        assertSame(DefaultExpressionEngineSymbols.DEFAULT_SYMBOLS, engine.getSymbols());
     }
 
     /**
@@ -355,9 +351,9 @@ public class TestDefaultExpressionEngine {
     @Test
     public void testNodeKey() {
         final ImmutableNode node = root.getChildren().get(0);
-        assertEquals("tables", engine.nodeKey(node, "", handler), "Invalid name for descendant of root");
-        assertEquals("test.tables", engine.nodeKey(node, "test", handler), "Parent key not respected");
-        assertEquals("a.full.parent.key.tables", engine.nodeKey(node, "a.full.parent.key", handler), "Full parent key not taken into account");
+        assertEquals("tables", engine.nodeKey(node, "", handler));
+        assertEquals("test.tables", engine.nodeKey(node, "test", handler));
+        assertEquals("a.full.parent.key.tables", engine.nodeKey(node, "a.full.parent.key", handler));
     }
 
     /**
@@ -366,7 +362,7 @@ public class TestDefaultExpressionEngine {
     @Test
     public void testNodeKeyWithAlternativeSyntax() {
         setUpAlternativeSyntax();
-        assertEquals("tables/table", engine.nodeKey(root.getChildren().get(0).getChildren().get(0), "tables", handler), "Wrong child key");
+        assertEquals("tables/table", engine.nodeKey(root.getChildren().get(0).getChildren().get(0), "tables", handler));
     }
 
     /**
@@ -379,7 +375,7 @@ public class TestDefaultExpressionEngine {
         final DefaultExpressionEngineSymbols symbols = new DefaultExpressionEngineSymbols.Builder(engine.getSymbols())
             .setAttributeStart(engine.getSymbols().getPropertyDelimiter()).create();
         engine = new DefaultExpressionEngine(symbols);
-        assertEquals("/test", engine.attributeKey("", "test"), "Wrong attribute key");
+        assertEquals("/test", engine.attributeKey("", "test"));
     }
 
     /**
@@ -388,9 +384,8 @@ public class TestDefaultExpressionEngine {
     @Test
     public void testNodeKeyWithEscapedDelimiters() {
         final ImmutableNode node = root.getChildren().get(1);
-        assertEquals("connection..settings", engine.nodeKey(node, "", handler), "Wrong escaped key");
-        assertEquals("connection..settings.usr..name", engine.nodeKey(node.getChildren().get(0), engine.nodeKey(node, "", handler), handler),
-                "Wrong complex escaped key");
+        assertEquals("connection..settings", engine.nodeKey(node, "", handler));
+        assertEquals("connection..settings.usr..name", engine.nodeKey(node.getChildren().get(0), engine.nodeKey(node, "", handler), handler));
     }
 
     /**
@@ -398,8 +393,8 @@ public class TestDefaultExpressionEngine {
      */
     @Test
     public void testNodeKeyWithRoot() {
-        assertEquals("", engine.nodeKey(root, null, handler), "Wrong name for root node");
-        assertEquals("test", engine.nodeKey(root, "test", handler), "Null name not detected");
+        assertEquals("", engine.nodeKey(root, null, handler));
+        assertEquals("test", engine.nodeKey(root, "test", handler));
     }
 
     /**
@@ -408,10 +403,10 @@ public class TestDefaultExpressionEngine {
     @Test
     public void testPrepareAddAttribute() {
         final NodeAddData<ImmutableNode> data = engine.prepareAdd(root, "tables.table(0)[@tableSpace]", handler);
-        assertEquals(tables[0], data.getParent().getChildren().get(0).getValue(), "Wrong table node");
-        assertEquals("tableSpace", data.getNewNodeName(), "Wrong name of new node");
-        assertTrue(data.isAttribute(), "Attribute not detected");
-        assertTrue(data.getPathNodes().isEmpty(), "Path nodes available");
+        assertEquals(tables[0], data.getParent().getChildren().get(0).getValue());
+        assertEquals("tableSpace", data.getNewNodeName());
+        assertTrue(data.isAttribute());
+        assertTrue(data.getPathNodes().isEmpty());
     }
 
     /**
@@ -420,9 +415,9 @@ public class TestDefaultExpressionEngine {
     @Test
     public void testPrepareAddAttributeRoot() {
         final NodeAddData<ImmutableNode> data = engine.prepareAdd(root, "[@newAttr]", handler);
-        assertSame(root, data.getParent(), "Root node is not parent");
-        assertEquals("newAttr", data.getNewNodeName(), "Wrong name of new node");
-        assertTrue(data.isAttribute(), "Attribute not detected");
+        assertSame(root, data.getParent());
+        assertEquals("newAttr", data.getNewNodeName());
+        assertTrue(data.isAttribute());
     }
 
     /**
@@ -431,18 +426,18 @@ public class TestDefaultExpressionEngine {
     @Test
     public void testPrepareAddDirectly() {
         NodeAddData<ImmutableNode> data = engine.prepareAdd(root, "newNode", handler);
-        assertSame(root, data.getParent(), "Wrong parent node");
-        assertTrue(data.getPathNodes().isEmpty(), "Path nodes available");
-        assertEquals("newNode", data.getNewNodeName(), "Wrong name of new node");
-        assertFalse(data.isAttribute(), "New node is an attribute");
+        assertSame(root, data.getParent());
+        assertTrue(data.getPathNodes().isEmpty());
+        assertEquals("newNode", data.getNewNodeName());
+        assertFalse(data.isAttribute());
 
         data = engine.prepareAdd(root, "tables.table.fields.field.name", handler);
-        assertEquals("name", data.getNewNodeName(), "Wrong name of new node");
-        assertTrue(data.getPathNodes().isEmpty(), "Path nodes available");
-        assertEquals("field", data.getParent().getNodeName(), "Wrong parent node");
+        assertEquals("name", data.getNewNodeName());
+        assertTrue(data.getPathNodes().isEmpty());
+        assertEquals("field", data.getParent().getNodeName());
         final ImmutableNode nd = data.getParent().getChildren().get(0);
-        assertEquals("name", nd.getNodeName(), "Field has no name node");
-        assertEquals("version", nd.getValue(), "Incorrect name");
+        assertEquals("name", nd.getNodeName());
+        assertEquals("version", nd.getValue());
     }
 
     @Test
@@ -476,8 +471,8 @@ public class TestDefaultExpressionEngine {
     public void testPrepareAddWithAlternativeMatcher() {
         setUpAlternativeMatcher();
         final NodeAddData<ImmutableNode> data = engine.prepareAdd(root, "tables_.table._fields__._field.name", handler);
-        assertEquals("name", data.getNewNodeName(), "Wrong name of new node");
-        assertTrue(data.getPathNodes().isEmpty(), "Path nodes available");
+        assertEquals("name", data.getNewNodeName());
+        assertTrue(data.getPathNodes().isEmpty());
     }
 
     /**
@@ -487,14 +482,14 @@ public class TestDefaultExpressionEngine {
     public void testPrepareAddWithAlternativeSyntax() {
         setUpAlternativeSyntax();
         NodeAddData<ImmutableNode> data = engine.prepareAdd(root, "tables/table[0]/test", handler);
-        assertEquals("test", data.getNewNodeName(), "Wrong name of new node");
-        assertFalse(data.isAttribute(), "New node is attribute");
-        assertEquals(tables[0], data.getParent().getChildren().get(0).getValue(), "Wrong parent node");
+        assertEquals("test", data.getNewNodeName());
+        assertFalse(data.isAttribute());
+        assertEquals(tables[0], data.getParent().getChildren().get(0).getValue());
 
         data = engine.prepareAdd(root, "a/complete/new/path@attr", handler);
-        assertEquals("attr", data.getNewNodeName(), "Wrong name of new attribute");
+        assertEquals("attr", data.getNewNodeName());
         checkNodePath(data, "a", "complete", "new", "path");
-        assertSame(root, data.getParent(), "Root is not parent");
+        assertSame(root, data.getParent());
     }
 
     /**
@@ -503,16 +498,16 @@ public class TestDefaultExpressionEngine {
     @Test
     public void testPrepareAddWithIndex() {
         NodeAddData<ImmutableNode> data = engine.prepareAdd(root, "tables.table(0).tableSpace", handler);
-        assertEquals("tableSpace", data.getNewNodeName(), "Wrong name of new node");
-        assertTrue(data.getPathNodes().isEmpty(), "Path nodes available");
-        assertEquals("table", data.getParent().getNodeName(), "Wrong type of parent node");
+        assertEquals("tableSpace", data.getNewNodeName());
+        assertTrue(data.getPathNodes().isEmpty());
+        assertEquals("table", data.getParent().getNodeName());
         final ImmutableNode node = data.getParent().getChildren().get(0);
-        assertEquals(tables[0], node.getValue(), "Wrong table");
+        assertEquals(tables[0], node.getValue());
 
         data = engine.prepareAdd(root, "tables.table(1).fields.field(2).alias", handler);
-        assertEquals("alias", data.getNewNodeName(), "Wrong name of new node");
-        assertEquals("field", data.getParent().getNodeName(), "Wrong type of parent node");
-        assertEquals("creationDate", data.getParent().getChildren().get(0).getValue(), "Wrong field node");
+        assertEquals("alias", data.getNewNodeName());
+        assertEquals("field", data.getParent().getNodeName());
+        assertEquals("creationDate", data.getParent().getChildren().get(0).getValue());
     }
 
     /**
@@ -521,19 +516,19 @@ public class TestDefaultExpressionEngine {
     @Test
     public void testPrepareAddWithPath() {
         NodeAddData<ImmutableNode> data = engine.prepareAdd(root, "tables.table(1).fields.field(-1).name", handler);
-        assertEquals("name", data.getNewNodeName(), "Wrong name of new node");
+        assertEquals("name", data.getNewNodeName());
         checkNodePath(data, "field");
-        assertEquals("fields", data.getParent().getNodeName(), "Wrong type of parent node");
+        assertEquals("fields", data.getParent().getNodeName());
 
         data = engine.prepareAdd(root, "tables.table(-1).name", handler);
-        assertEquals("name", data.getNewNodeName(), "Wrong name of new node");
+        assertEquals("name", data.getNewNodeName());
         checkNodePath(data, "table");
-        assertEquals("tables", data.getParent().getNodeName(), "Wrong type of parent node");
+        assertEquals("tables", data.getParent().getNodeName());
 
         data = engine.prepareAdd(root, "a.complete.new.path", handler);
-        assertEquals("path", data.getNewNodeName(), "Wrong name of new node");
+        assertEquals("path", data.getNewNodeName());
         checkNodePath(data, "a", "complete", "new");
-        assertSame(root, data.getParent(), "Root is not parent");
+        assertSame(root, data.getParent());
     }
 
     /**
@@ -547,12 +542,12 @@ public class TestDefaultExpressionEngine {
         engine = new DefaultExpressionEngine(symbols);
 
         NodeAddData<ImmutableNode> data = engine.prepareAdd(root, "tables.table(0).test", handler);
-        assertEquals("test", data.getNewNodeName(), "Wrong name of new node");
-        assertFalse(data.isAttribute(), "New node is an attribute");
-        assertEquals("table", data.getParent().getNodeName(), "Wrong type of parent node");
+        assertEquals("test", data.getNewNodeName());
+        assertFalse(data.isAttribute());
+        assertEquals("table", data.getParent().getNodeName());
 
         data = engine.prepareAdd(root, "a.complete.new.path", handler);
-        assertFalse(data.isAttribute(), "New node is an attribute");
+        assertFalse(data.isAttribute());
         checkNodePath(data, "a", "complete", "new");
     }
 

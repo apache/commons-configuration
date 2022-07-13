@@ -35,11 +35,11 @@ public class TestPropertyListParser {
     @Test
     public void testFilterData() throws Exception {
         final byte[] expected = {0x20, 0x20};
-        assertArrayEquals(null, parser.filterData(null), "null string");
-        assertArrayEquals(expected, parser.filterData("<2020>"), "data with < >");
-        assertArrayEquals(expected, parser.filterData("2020"), "data without < >");
-        assertArrayEquals(expected, parser.filterData("20 20"), "data with space");
-        assertArrayEquals(new byte[] {9, 0x20}, parser.filterData("920"), "odd length");
+        assertArrayEquals(null, parser.filterData(null));
+        assertArrayEquals(expected, parser.filterData("<2020>"));
+        assertArrayEquals(expected, parser.filterData("2020"));
+        assertArrayEquals(expected, parser.filterData("20 20"));
+        assertArrayEquals(new byte[] {9, 0x20}, parser.filterData("920"));
     }
 
     @Test
@@ -54,21 +54,21 @@ public class TestPropertyListParser {
         calendar.set(Calendar.MILLISECOND, 0);
         calendar.setTimeZone(new SimpleTimeZone(60 * 60 * 1000, "Apache/Jakarta"));
 
-        assertEquals(calendar.getTime(), parser.parseDate("<*D2002-03-22 11:30:00 +0100>"), "parsed date");
+        assertEquals(calendar.getTime(), parser.parseDate("<*D2002-03-22 11:30:00 +0100>"));
     }
 
     @Test
     public void testRemoveQuotes() {
-        assertEquals("abc", parser.removeQuotes("abc"), "unquoted string");
-        assertEquals("abc", parser.removeQuotes("\"abc\""), "quoted string");
-        assertEquals("", parser.removeQuotes("\"\""), "empty quotes");
-        assertEquals("", parser.removeQuotes(""), "empty string");
-        assertNull(parser.removeQuotes(null), "null string");
+        assertEquals("abc", parser.removeQuotes("abc"));
+        assertEquals("abc", parser.removeQuotes("\"abc\""));
+        assertEquals("", parser.removeQuotes("\"\""));
+        assertEquals("", parser.removeQuotes(""));
+        assertNull(parser.removeQuotes(null));
     }
 
     @Test
     public void testUnescapeQuotes() {
-        assertEquals("aaa\"bbb\"ccc", parser.unescapeQuotes("aaa\"bbb\"ccc"), "non escaped quotes");
-        assertEquals("aaa\"bbb\"ccc", parser.unescapeQuotes("aaa\\\"bbb\\\"ccc"), "escaped quotes");
+        assertEquals("aaa\"bbb\"ccc", parser.unescapeQuotes("aaa\"bbb\"ccc"));
+        assertEquals("aaa\"bbb\"ccc", parser.unescapeQuotes("aaa\\\"bbb\\\"ccc"));
     }
 }

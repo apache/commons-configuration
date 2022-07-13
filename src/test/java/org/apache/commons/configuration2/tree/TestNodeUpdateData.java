@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -90,8 +91,7 @@ public class TestNodeUpdateData {
         final NodeUpdateData<Object> data = new NodeUpdateData<>(map, null, null, null);
         map.put(result("anotherTest"), "anotherValue");
         final Map<QueryResult<Object>, Object> changedValues = data.getChangedValues();
-        assertEquals(1, changedValues.size(), "Wrong number of changed values");
-        assertEquals("value", changedValues.get(result("test")), "Wrong changed value");
+        assertEquals(Collections.singletonMap(result("test"), "value"), changedValues);
     }
 
     /**
@@ -104,8 +104,8 @@ public class TestNodeUpdateData {
         final NodeUpdateData<Object> data = new NodeUpdateData<>(null, col, null, null);
         col.add("anotherValue");
         final Collection<Object> newValues = data.getNewValues();
-        assertEquals(1, newValues.size(), "Wrong number of new values");
-        assertEquals(42, newValues.iterator().next(), "Wrong value");
+        assertEquals(1, newValues.size());
+        assertEquals(42, newValues.iterator().next());
     }
 
     /**
@@ -114,9 +114,9 @@ public class TestNodeUpdateData {
     @Test
     public void testInitNoData() {
         final NodeUpdateData<Object> data = new NodeUpdateData<>(null, null, null, null);
-        assertTrue(data.getChangedValues().isEmpty(), "Got changed values");
-        assertTrue(data.getNewValues().isEmpty(), "Got new values");
-        assertTrue(data.getRemovedNodes().isEmpty(), "Got removed nodes");
+        assertTrue(data.getChangedValues().isEmpty());
+        assertTrue(data.getNewValues().isEmpty());
+        assertTrue(data.getRemovedNodes().isEmpty());
     }
 
     /**
@@ -129,7 +129,7 @@ public class TestNodeUpdateData {
         final NodeUpdateData<Object> data = new NodeUpdateData<>(null, null, col, null);
         col.add(result("n2"));
         final Collection<QueryResult<Object>> removedNodes = data.getRemovedNodes();
-        assertEquals(1, removedNodes.size(), "Wrong number of new values");
-        assertEquals(result("n1"), removedNodes.iterator().next(), "Wrong value");
+        assertEquals(1, removedNodes.size());
+        assertEquals(result("n1"), removedNodes.iterator().next());
     }
 }

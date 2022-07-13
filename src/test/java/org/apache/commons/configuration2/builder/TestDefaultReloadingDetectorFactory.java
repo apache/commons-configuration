@@ -17,8 +17,8 @@
 package org.apache.commons.configuration2.builder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.configuration2.io.FileHandler;
@@ -49,8 +49,8 @@ public class TestDefaultReloadingDetectorFactory {
         final Long refreshDelay = 10000L;
         params.setReloadingRefreshDelay(refreshDelay);
         final FileHandlerReloadingDetector detector = (FileHandlerReloadingDetector) factory.createReloadingDetector(handler, params);
-        assertSame(handler, detector.getFileHandler(), "Wrong file handler");
-        assertEquals(refreshDelay.longValue(), detector.getRefreshDelay(), "Wrong refresh delay");
+        assertSame(handler, detector.getFileHandler());
+        assertEquals(refreshDelay.longValue(), detector.getRefreshDelay());
     }
 
     /**
@@ -61,6 +61,6 @@ public class TestDefaultReloadingDetectorFactory {
         final FileHandler handler = new FileHandler();
         final FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         final FileHandlerReloadingDetector detector = (FileHandlerReloadingDetector) factory.createReloadingDetector(handler, params);
-        assertTrue(detector.getRefreshDelay() != 0, "No default refresh delay");
+        assertNotEquals(0, detector.getRefreshDelay());
     }
 }

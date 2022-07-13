@@ -27,10 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -74,12 +74,12 @@ public class TestCompositeConfiguration {
     private void checkSetListDelimiterHandler() {
         cc.addProperty("test.list", "a/b/c");
         cc.addProperty("test.property", "a,b,c");
-        assertEquals(3, cc.getList("test.list").size(), "Wrong number of list elements");
-        assertEquals("a,b,c", cc.getString("test.property"), "Wrong value of property");
+        assertEquals(3, cc.getList("test.list").size());
+        assertEquals("a,b,c", cc.getString("test.property"));
 
         final AbstractConfiguration config = (AbstractConfiguration) cc.getInMemoryConfiguration();
         final DefaultListDelimiterHandler listHandler = (DefaultListDelimiterHandler) config.getListDelimiterHandler();
-        assertEquals('/', listHandler.getDelimiter(), "Wrong list delimiter");
+        assertEquals('/', listHandler.getDelimiter());
     }
 
     /**
@@ -106,7 +106,7 @@ public class TestCompositeConfiguration {
 
         cc.addConfiguration(p.subset("prefix"));
         cc.addConfiguration(p);
-        assertEquals("override", cc.getString("bar"), "Wrong value on direct access");
+        assertEquals("override", cc.getString("bar"));
     }
 
     @BeforeEach
@@ -151,15 +151,15 @@ public class TestCompositeConfiguration {
     @Test
     public void testAddFirstRemoveConfigurations() throws Exception {
         cc.addConfigurationFirst(conf1);
-        assertEquals(2, cc.getNumberOfConfigurations(), "Number of configurations");
+        assertEquals(2, cc.getNumberOfConfigurations());
         cc.addConfigurationFirst(conf1);
-        assertEquals(2, cc.getNumberOfConfigurations(), "Number of configurations");
+        assertEquals(2, cc.getNumberOfConfigurations());
         cc.addConfigurationFirst(conf2);
-        assertEquals(3, cc.getNumberOfConfigurations(), "Number of configurations");
+        assertEquals(3, cc.getNumberOfConfigurations());
         cc.removeConfiguration(conf1);
-        assertEquals(2, cc.getNumberOfConfigurations(), "Number of configurations");
+        assertEquals(2, cc.getNumberOfConfigurations());
         cc.clear();
-        assertEquals(1, cc.getNumberOfConfigurations(), "Number of configurations");
+        assertEquals(1, cc.getNumberOfConfigurations());
     }
 
     /**
@@ -173,30 +173,27 @@ public class TestCompositeConfiguration {
 
         String[] values = cc.getStringArray("test.short");
 
-        assertEquals(1, values.length, "Number of values before add is wrong!");
-        assertEquals("1", values[0], "First Value before add is wrong");
+        assertArrayEquals(new String[] {"1"}, values);
 
         cc.addProperty("test.short", "88");
 
         values = cc.getStringArray("test.short");
 
-        assertEquals(2, values.length, "Number of values is wrong!");
-        assertEquals("1", values[0], "First Value is wrong");
-        assertEquals("88", values[1], "Third Value is wrong");
+        assertArrayEquals(new String[] {"1", "88"}, values);
     }
 
     @Test
     public void testAddRemoveConfigurations() throws Exception {
         cc.addConfiguration(conf1);
-        assertEquals(2, cc.getNumberOfConfigurations(), "Number of configurations");
+        assertEquals(2, cc.getNumberOfConfigurations());
         cc.addConfiguration(conf1);
-        assertEquals(2, cc.getNumberOfConfigurations(), "Number of configurations");
+        assertEquals(2, cc.getNumberOfConfigurations());
         cc.addConfiguration(conf2);
-        assertEquals(3, cc.getNumberOfConfigurations(), "Number of configurations");
+        assertEquals(3, cc.getNumberOfConfigurations());
         cc.removeConfiguration(conf1);
-        assertEquals(2, cc.getNumberOfConfigurations(), "Number of configurations");
+        assertEquals(2, cc.getNumberOfConfigurations());
         cc.clear();
-        assertEquals(1, cc.getNumberOfConfigurations(), "Number of configurations");
+        assertEquals(1, cc.getNumberOfConfigurations());
     }
 
     @Test
@@ -242,22 +239,22 @@ public class TestCompositeConfiguration {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
         cc.clearProperty("test.short");
-        assertFalse(cc.containsKey("test.short"), "Make sure test.short is gone!");
+        assertFalse(cc.containsKey("test.short"));
     }
 
     @Test
     public void testClone() {
         final CompositeConfiguration cc2 = (CompositeConfiguration) cc.clone();
-        assertEquals(cc.getNumberOfConfigurations(), cc2.getNumberOfConfigurations(), "Wrong number of contained configurations");
+        assertEquals(cc.getNumberOfConfigurations(), cc2.getNumberOfConfigurations());
 
         final StrictConfigurationComparator comp = new StrictConfigurationComparator();
         for (int i = 0; i < cc.getNumberOfConfigurations(); i++) {
             assertEquals(cc.getConfiguration(i).getClass(), cc2.getConfiguration(i).getClass(), "Wrong configuration class at " + i);
-            assertNotSame(cc.getConfiguration(i), cc2.getConfiguration(i), "Configuration was not cloned");
+            assertNotSame(cc.getConfiguration(i), cc2.getConfiguration(i));
             assertTrue(comp.compare(cc.getConfiguration(i), cc2.getConfiguration(i)), "Configurations at " + i + " not equal");
         }
 
-        assertTrue(comp.compare(cc, cc2), "Configurations are not equal");
+        assertTrue(comp.compare(cc, cc2));
     }
 
     /**
@@ -267,7 +264,7 @@ public class TestCompositeConfiguration {
     public void testCloneEventListener() {
         cc.addEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(null));
         final CompositeConfiguration cc2 = (CompositeConfiguration) cc.clone();
-        assertTrue(cc2.getEventListeners(ConfigurationEvent.ANY).isEmpty(), "Listeners have been cloned");
+        assertTrue(cc2.getEventListeners(ConfigurationEvent.ANY).isEmpty());
     }
 
     /**
@@ -276,7 +273,7 @@ public class TestCompositeConfiguration {
     @Test
     public void testCloneInterpolation() {
         final CompositeConfiguration cc2 = (CompositeConfiguration) cc.clone();
-        assertNotSame(cc.getInterpolator(), cc2.getInterpolator(), "Interpolator was not cloned");
+        assertNotSame(cc.getInterpolator(), cc2.getInterpolator());
     }
 
     /**
@@ -320,11 +317,11 @@ public class TestCompositeConfiguration {
     public void testEventClearProperty() {
         cc.addConfiguration(conf1);
         final String key = "configuration.loaded";
-        assertTrue(cc.getBoolean(key), "Wrong value for property");
+        assertTrue(cc.getBoolean(key));
         final EventListenerTestImpl listener = new EventListenerTestImpl(cc);
         cc.addEventListener(ConfigurationEvent.ANY, listener);
         cc.clearProperty(key);
-        assertFalse(cc.containsKey(key), "Key still present");
+        assertFalse(cc.containsKey(key));
         listener.checkEvent(ConfigurationEvent.CLEAR_PROPERTY, key, null, true);
         listener.checkEvent(ConfigurationEvent.CLEAR_PROPERTY, key, null, false);
         listener.done();
@@ -349,7 +346,7 @@ public class TestCompositeConfiguration {
     @Test
     public void testGetConfigurationSynchronized() {
         final SynchronizerTestImpl sync = installSynchronizer();
-        assertEquals(conf1, cc.getConfiguration(0), "Wrong result");
+        assertEquals(conf1, cc.getConfiguration(0));
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -377,10 +374,7 @@ public class TestCompositeConfiguration {
         for (final Iterator<String> keys = cc.getKeys("test"); keys.hasNext();) {
             iteratedList.add(keys.next());
         }
-        assertEquals(orderedList.size(), iteratedList.size());
-        for (int i = 0; i < orderedList.size(); i++) {
-            assertEquals(orderedList.get(i), iteratedList.get(i));
-        }
+        assertEquals(orderedList, iteratedList);
     }
 
     /**
@@ -397,10 +391,7 @@ public class TestCompositeConfiguration {
         for (final Iterator<String> keys = cc.getKeys(); keys.hasNext();) {
             iteratedList.add(keys.next());
         }
-        assertEquals(orderedList.size(), iteratedList.size());
-        for (int i = 0; i < orderedList.size(); i++) {
-            assertEquals(orderedList.get(i), iteratedList.get(i));
-        }
+        assertEquals(orderedList, iteratedList);
     }
 
     @Test
@@ -418,21 +409,14 @@ public class TestCompositeConfiguration {
 
         // check the composite 'array' property
         List<Object> list = cc.getList("array");
-        assertNotNull(list, "null list");
-        assertEquals(2, list.size(), "list size");
-        assertTrue(list.contains("value1"), "'value1' not found in the list");
-        assertTrue(list.contains("value2"), "'value2' not found in the list");
+        assertEquals(Arrays.asList("value1", "value2"), list);
 
         // add an element to the list in the composite configuration
         cc.addProperty("array", "value5");
 
         // test the new list
         list = cc.getList("array");
-        assertNotNull(list, "null list");
-        assertEquals(3, list.size(), "list size");
-        assertTrue(list.contains("value1"), "'value1' not found in the list");
-        assertTrue(list.contains("value2"), "'value2' not found in the list");
-        assertTrue(list.contains("value5"), "'value5' not found in the list");
+        assertEquals(Arrays.asList("value1", "value2", "value5"), list);
     }
 
     /**
@@ -442,8 +426,7 @@ public class TestCompositeConfiguration {
     public void testGetListWithInterpolation() {
         prepareInterpolationTest();
         final List<Object> lst = cc.getList("bar");
-        assertEquals(1, lst.size(), "Wrong number of values");
-        assertEquals("override", lst.get(0), "Wrong value in list");
+        assertEquals(Arrays.asList("override"), lst);
     }
 
     /**
@@ -452,7 +435,7 @@ public class TestCompositeConfiguration {
     @Test
     public void testGetNumberOfConfigurationsSynchronized() {
         final SynchronizerTestImpl sync = installSynchronizer();
-        assertEquals(3, cc.getNumberOfConfigurations(), "Wrong number of configurations");
+        assertEquals(3, cc.getNumberOfConfigurations());
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -460,17 +443,17 @@ public class TestCompositeConfiguration {
     public void testGetProperty() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(conf2);
-        assertEquals("test.properties", cc.getString("propertyInOrder"), "Make sure we get the property from conf1 first");
+        assertEquals("test.properties", cc.getString("propertyInOrder"));
         cc.clear();
 
         cc.addConfiguration(conf2);
         cc.addConfiguration(conf1);
-        assertEquals("test2.properties", cc.getString("propertyInOrder"), "Make sure we get the property from conf2 first");
+        assertEquals("test2.properties", cc.getString("propertyInOrder"));
         cc.clear();
 
         cc.addConfiguration(conf1);
         cc.addConfigurationFirst(conf2);
-        assertEquals("test2.properties", cc.getString("propertyInOrder"), "Make sure we get the property from conf2 first");
+        assertEquals("test2.properties", cc.getString("propertyInOrder"));
         cc.clear();
     }
 
@@ -481,8 +464,8 @@ public class TestCompositeConfiguration {
         final NoSuchElementException nsee = assertThrows(NoSuchElementException.class, () -> cc.getString("bogus.property"));
         assertTrue(nsee.getMessage().contains("bogus.property"));
 
-        assertFalse(cc.getBoolean("test.missing.boolean", false), "Should be false");
-        assertTrue(cc.getBoolean("test.missing.boolean.true", true), "Should be true");
+        assertFalse(cc.getBoolean("test.missing.boolean", false));
+        assertTrue(cc.getBoolean("test.missing.boolean.true", true));
     }
 
     @Test
@@ -500,7 +483,7 @@ public class TestCompositeConfiguration {
     public void testGetSourceInMemory() {
         setUpSourceTest();
         cc.addProperty(TEST_PROPERTY, Boolean.TRUE);
-        assertSame(cc.getInMemoryConfiguration(), cc.getSource(TEST_PROPERTY), "Source not found in in-memory config");
+        assertSame(cc.getInMemoryConfiguration(), cc.getSource(TEST_PROPERTY));
     }
 
     /**
@@ -530,7 +513,7 @@ public class TestCompositeConfiguration {
     public void testGetSourceSingle() {
         setUpSourceTest();
         conf1.addProperty(TEST_PROPERTY, Boolean.TRUE);
-        assertSame(conf1, cc.getSource(TEST_PROPERTY), "Wrong source configuration");
+        assertSame(conf1, cc.getSource(TEST_PROPERTY));
     }
 
     /**
@@ -539,7 +522,7 @@ public class TestCompositeConfiguration {
     @Test
     public void testGetSourceUnknown() {
         setUpSourceTest();
-        assertNull(cc.getSource(TEST_PROPERTY), "Wrong source for unknown key");
+        assertNull(cc.getSource(TEST_PROPERTY));
     }
 
     /**
@@ -549,8 +532,7 @@ public class TestCompositeConfiguration {
     public void testGetStringArrayWithInterpolation() {
         prepareInterpolationTest();
         final String[] values = cc.getStringArray("bar");
-        assertEquals(1, values.length, "Wrong number of values");
-        assertEquals("override", values[0], "Wrong value in array");
+        assertArrayEquals(new String[] {"override"}, values);
     }
 
     @Test
@@ -590,12 +572,12 @@ public class TestCompositeConfiguration {
 
         Configuration subset = cc.subset("test");
         assertNotNull(subset);
-        assertFalse(subset.isEmpty(), "Shouldn't be empty");
-        assertEquals("1", subset.getString("short"), "Make sure the initial loaded configs subset overrides any later add configs subset");
+        assertFalse(subset.isEmpty());
+        assertEquals("1", subset.getString("short"));
 
         cc.setProperty("test.short", "43");
         subset = cc.subset("test");
-        assertEquals("43", subset.getString("short"), "Make sure the initial loaded configs subset overrides any later add configs subset");
+        assertEquals("43", subset.getString("short"));
     }
 
     @Test
@@ -606,8 +588,8 @@ public class TestCompositeConfiguration {
         configs.add(conf2);
 
         final CompositeConfiguration config = new CompositeConfiguration(configs);
-        assertEquals(4, config.getNumberOfConfigurations(), "Number of configurations");
-        assertTrue(config.getInMemoryConfiguration().isEmpty(), "The in memory configuration is not empty");
+        assertEquals(4, config.getNumberOfConfigurations());
+        assertTrue(config.getInMemoryConfiguration().isEmpty());
     }
 
     /**
@@ -621,7 +603,7 @@ public class TestCompositeConfiguration {
         props.addProperty("keyMultiValues", values);
         props.addProperty("keyReference", "${keyMultiValues}");
         cc.addConfiguration(props);
-        assertArrayEquals(values, cc.getStringArray("keyReference"), "Wrong interpolated value");
+        assertArrayEquals(values, cc.getStringArray("keyReference"));
     }
 
     /**
@@ -636,7 +618,7 @@ public class TestCompositeConfiguration {
         c2.addProperty("property.one.ref", "${property.one}");
         cc.addConfiguration(c1);
         cc.addConfiguration(c2);
-        assertEquals("one", cc.getString("property.one.ref"), "Wrong interpolated value");
+        assertEquals("one", cc.getString("property.one.ref"));
     }
 
     /**
@@ -674,9 +656,7 @@ public class TestCompositeConfiguration {
         c2.addProperty("c2.value", "test2");
         cc.addConfiguration(c2);
         final List<Object> lst = cc.getList("c1.value");
-        assertEquals(2, lst.size(), "Wrong list size");
-        assertEquals("test1", lst.get(0), "Wrong first element");
-        assertEquals("test2", lst.get(1), "Wrong second element");
+        assertEquals(Arrays.asList("test1", "test2"), lst);
     }
 
     /**
@@ -686,12 +666,12 @@ public class TestCompositeConfiguration {
     public void testMultipleTypesOfConfigs() throws Exception {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
-        assertEquals(1, cc.getInt("test.short"), "Make sure we get the property from conf1 first");
+        assertEquals(1, cc.getInt("test.short"));
         cc.clear();
 
         cc.addConfiguration(xmlConf);
         cc.addConfiguration(conf1);
-        assertEquals(8, cc.getInt("test.short"), "Make sure we get the property from xml");
+        assertEquals(8, cc.getInt("test.short"));
     }
 
     @Test
@@ -722,9 +702,9 @@ public class TestCompositeConfiguration {
         cc.addProperty("newProperty1", "newValue1");
         cc.addConfiguration(conf2, true);
         cc.addProperty("newProperty2", "newValue2");
-        assertEquals("conf1", cc.getString(TEST_PROPERTY), "Wrong property");
-        assertEquals("newValue1", conf1.getString("newProperty1"), "Not added to in-memory config");
-        assertEquals("newValue2", conf2.getString("newProperty2"), "In-memory config not changed");
+        assertEquals("conf1", cc.getString(TEST_PROPERTY));
+        assertEquals("newValue1", conf1.getString("newProperty1"));
+        assertEquals("newValue2", conf2.getString("newProperty2"));
     }
 
     /**
@@ -795,10 +775,7 @@ public class TestCompositeConfiguration {
         config.addProperty("list", "${base}.bar3");
 
         final String[] array = config.getStringArray("list");
-        assertEquals(3, array.length, "size");
-        assertEquals("foo.bar1", array[0], "1st element");
-        assertEquals("foo.bar2", array[1], "2nd element");
-        assertEquals("foo.bar3", array[2], "3rd element");
+        assertArrayEquals(new String[] {"foo.bar1", "foo.bar2", "foo.bar3"}, array);
     }
 
     /**
@@ -818,7 +795,7 @@ public class TestCompositeConfiguration {
 
     @Test
     public void testThrowExceptionOnMissing() {
-        assertTrue(cc.isThrowExceptionOnMissing(), "Throw Exception Property is not set!");
+        assertTrue(cc.isThrowExceptionOnMissing());
     }
 
     /**
@@ -831,9 +808,9 @@ public class TestCompositeConfiguration {
         conf2.setProperty(TEST_PROPERTY, "conf2");
         cc.addConfiguration(conf1, true);
         cc.addConfiguration(conf2);
-        assertEquals(2, cc.getNumberOfConfigurations(), "Wrong number of configurations");
-        assertEquals("conf1", cc.getString(TEST_PROPERTY), "Wrong property");
+        assertEquals(2, cc.getNumberOfConfigurations());
+        assertEquals("conf1", cc.getString(TEST_PROPERTY));
         cc.addProperty("newProperty", "newValue");
-        assertEquals("newValue", conf1.getString("newProperty"), "Not added to in-memory config");
+        assertEquals("newValue", conf1.getString("newProperty"));
     }
 }

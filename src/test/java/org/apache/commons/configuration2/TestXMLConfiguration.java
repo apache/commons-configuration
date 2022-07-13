@@ -257,10 +257,7 @@ public class TestXMLConfiguration {
         conf.addProperty("test.array", "value2");
 
         final List<Object> list = conf.getList("test.array");
-        assertNotNull(list, "null list");
-        assertTrue(list.contains("value1"), "'value1' element missing");
-        assertTrue(list.contains("value2"), "'value2' element missing");
-        assertEquals(2, list.size(), "list size");
+        assertEquals(Arrays.asList("value1", "value2"), list);
     }
 
     /**
@@ -281,10 +278,10 @@ public class TestXMLConfiguration {
         saveTestConfig();
         final XMLConfiguration c2 = new XMLConfiguration();
         load(c2, testSaveConf.getAbsolutePath());
-        assertEquals("true", c2.getString("add.nodes.test"), "Value was not saved");
-        assertEquals("yes", c2.getString("add.nodes.test.child"), "Child value was not saved");
-        assertEquals("existing", c2.getString("add.nodes.test[@attr]"), "Attr value was not saved");
-        assertEquals("anotherValue", c2.getString("add.nodes.test2"), "Node2 not saved");
+        assertEquals("true", c2.getString("add.nodes.test"));
+        assertEquals("yes", c2.getString("add.nodes.test.child"));
+        assertEquals("existing", c2.getString("add.nodes.test[@attr]"));
+        assertEquals("anotherValue", c2.getString("add.nodes.test2"));
     }
 
     /**
@@ -307,20 +304,20 @@ public class TestXMLConfiguration {
     public void testAddNodesToSubnodeConfiguration() throws Exception {
         final HierarchicalConfiguration<ImmutableNode> sub = conf.configurationAt("element2", true);
         sub.addProperty("newKey", "newvalue");
-        assertEquals("newvalue", conf.getString("element2.newKey"), "Property not added");
+        assertEquals("newvalue", conf.getString("element2.newKey"));
     }
 
     @Test
     public void testAddObjectAttribute() {
         conf.addProperty("test.boolean[@value]", Boolean.TRUE);
-        assertTrue(conf.getBoolean("test.boolean[@value]"), "test.boolean[@value]");
+        assertTrue(conf.getBoolean("test.boolean[@value]"));
     }
 
     @Test
     public void testAddObjectProperty() {
         // add a non string property
         conf.addProperty("test.boolean", Boolean.TRUE);
-        assertTrue(conf.getBoolean("test.boolean"), "'test.boolean'");
+        assertTrue(conf.getBoolean("test.boolean"));
     }
 
     @Test
@@ -329,7 +326,7 @@ public class TestXMLConfiguration {
         final XMLConfiguration config = new XMLConfiguration();
         config.addProperty("test.string", "hello");
 
-        assertEquals("hello", config.getString("test.string"), "'test.string'");
+        assertEquals("hello", config.getString("test.string"));
     }
 
     /**
@@ -346,7 +343,7 @@ public class TestXMLConfiguration {
         saveTestConfig();
         final XMLConfiguration conf2 = new XMLConfiguration();
         load(conf2, testSaveConf.getAbsolutePath());
-        assertEquals(list, conf2.getProperty(prop), "Wrong list property");
+        assertEquals(list, conf2.getProperty(prop));
     }
 
     /**
@@ -374,7 +371,7 @@ public class TestXMLConfiguration {
         saveTestConfig();
         final XMLConfiguration checkConfig = new XMLConfiguration();
         load(checkConfig, testSaveConf.getAbsolutePath());
-        assertEquals("v1", checkConfig.getString("errorTest[@multiAttr]"), "Wrong attribute value");
+        assertEquals("v1", checkConfig.getString("errorTest[@multiAttr]"));
     }
 
     /**
@@ -393,7 +390,7 @@ public class TestXMLConfiguration {
         conf.addNodes("test.autosave", nodes);
         final XMLConfiguration c2 = new XMLConfiguration();
         load(c2, testSaveConf.getAbsolutePath());
-        assertTrue(c2.getBoolean("test.autosave.addNodesTest"), "Added nodes are not saved");
+        assertTrue(c2.getBoolean("test.autosave.addNodesTest"));
     }
 
     /**
@@ -409,10 +406,10 @@ public class TestXMLConfiguration {
         final String newValue = "I am autosaved";
         final Configuration sub = conf.configurationAt("element2.subelement", true);
         sub.setProperty("subsubelement", newValue);
-        assertEquals(newValue, conf.getString("element2.subelement.subsubelement"), "Change not visible to parent");
+        assertEquals(newValue, conf.getString("element2.subelement.subsubelement"));
         final XMLConfiguration conf2 = new XMLConfiguration();
         load(conf2, testSaveConf.getAbsolutePath());
-        assertEquals(newValue, conf2.getString("element2.subelement.subsubelement"), "Change was not saved");
+        assertEquals(newValue, conf2.getString("element2.subelement.subsubelement"));
     }
 
     /**
@@ -430,102 +427,102 @@ public class TestXMLConfiguration {
         final HierarchicalConfiguration<?> sub1 = conf.configurationAt("element2", true);
         final HierarchicalConfiguration<?> sub2 = sub1.configurationAt("subelement", true);
         sub2.setProperty("subsubelement", newValue);
-        assertEquals(newValue, conf.getString("element2.subelement.subsubelement"), "Change not visible to parent");
+        assertEquals(newValue, conf.getString("element2.subelement.subsubelement"));
         final XMLConfiguration conf2 = new XMLConfiguration();
         load(conf2, testSaveConf.getAbsolutePath());
-        assertEquals(newValue, conf2.getString("element2.subelement.subsubelement"), "Change was not saved");
+        assertEquals(newValue, conf2.getString("element2.subelement.subsubelement"));
     }
 
     @Test
     public void testClearAttributeMultipleDisjoined() throws Exception {
         String key = "clear.list.item[@id]";
         conf.clearProperty(key);
-        assertNull(conf.getProperty(key), key);
-        assertNull(conf.getProperty(key), key);
+        assertNull(conf.getProperty(key));
+        assertNull(conf.getProperty(key));
         key = "clear.list.item";
-        assertNotNull(conf.getProperty(key), key);
-        assertNotNull(conf.getProperty(key), key);
+        assertNotNull(conf.getProperty(key));
+        assertNotNull(conf.getProperty(key));
     }
 
     @Test
     public void testClearAttributeNonExisting() {
         final String key = "clear[@id]";
         conf.clearProperty(key);
-        assertNull(conf.getProperty(key), key);
-        assertNull(conf.getProperty(key), key);
+        assertNull(conf.getProperty(key));
+        assertNull(conf.getProperty(key));
     }
 
     @Test
     public void testClearAttributeSingle() {
         String key = "clear.element2[@id]";
         conf.clearProperty(key);
-        assertNull(conf.getProperty(key), key);
-        assertNull(conf.getProperty(key), key);
+        assertNull(conf.getProperty(key));
+        assertNull(conf.getProperty(key));
         key = "clear.element2";
-        assertNotNull(conf.getProperty(key), key);
-        assertNotNull(conf.getProperty(key), key);
+        assertNotNull(conf.getProperty(key));
+        assertNotNull(conf.getProperty(key));
     }
 
     @Test
     public void testClearPropertyCData() {
         final String key = "clear.cdata";
         conf.clearProperty(key);
-        assertNull(conf.getProperty(key), key);
-        assertNull(conf.getProperty(key), key);
+        assertNull(conf.getProperty(key));
+        assertNull(conf.getProperty(key));
     }
 
     @Test
     public void testClearPropertyMultipleDisjoined() throws Exception {
         final String key = "list.item";
         conf.clearProperty(key);
-        assertNull(conf.getProperty(key), key);
-        assertNull(conf.getProperty(key), key);
+        assertNull(conf.getProperty(key));
+        assertNull(conf.getProperty(key));
     }
 
     @Test
     public void testClearPropertyMultipleSiblings() {
         String key = "clear.list.item";
         conf.clearProperty(key);
-        assertNull(conf.getProperty(key), key);
-        assertNull(conf.getProperty(key), key);
+        assertNull(conf.getProperty(key));
+        assertNull(conf.getProperty(key));
         key = "clear.list.item[@id]";
-        assertNotNull(conf.getProperty(key), key);
-        assertNotNull(conf.getProperty(key), key);
+        assertNotNull(conf.getProperty(key));
+        assertNotNull(conf.getProperty(key));
     }
 
     @Test
     public void testClearPropertyNonText() {
         final String key = "clear.comment";
         conf.clearProperty(key);
-        assertNull(conf.getProperty(key), key);
-        assertNull(conf.getProperty(key), key);
+        assertNull(conf.getProperty(key));
+        assertNull(conf.getProperty(key));
     }
 
     @Test
     public void testClearPropertyNotExisting() {
         final String key = "clearly";
         conf.clearProperty(key);
-        assertNull(conf.getProperty(key), key);
-        assertNull(conf.getProperty(key), key);
+        assertNull(conf.getProperty(key));
+        assertNull(conf.getProperty(key));
     }
 
     @Test
     public void testClearPropertySingleElement() {
         final String key = "clear.element";
         conf.clearProperty(key);
-        assertNull(conf.getProperty(key), key);
-        assertNull(conf.getProperty(key), key);
+        assertNull(conf.getProperty(key));
+        assertNull(conf.getProperty(key));
     }
 
     @Test
     public void testClearPropertySingleElementWithAttribute() {
         String key = "clear.element2";
         conf.clearProperty(key);
-        assertNull(conf.getProperty(key), key);
-        assertNull(conf.getProperty(key), key);
+        assertNull(conf.getProperty(key));
+        assertNull(conf.getProperty(key));
         key = "clear.element2[@id]";
-        assertNotNull(conf.getProperty(key), key);
-        assertNotNull(conf.getProperty(key), key);
+        assertNotNull(conf.getProperty(key));
+        assertNotNull(conf.getProperty(key));
     }
 
     /**
@@ -538,7 +535,7 @@ public class TestXMLConfiguration {
         final StringReader in = new StringReader(xml);
         final FileHandler handler = new FileHandler(conf);
         handler.load(in);
-        assertEquals("text", conf.getString(""), "Wrong text of root");
+        assertEquals("text", conf.getString(""));
 
         conf.clearProperty("");
         saveTestConfig();
@@ -551,8 +548,7 @@ public class TestXMLConfiguration {
     @Test
     public void testClone() {
         final Configuration c = (Configuration) conf.clone();
-        assertInstanceOf(XMLConfiguration.class, c);
-        final XMLConfiguration copy = (XMLConfiguration) c;
+        final XMLConfiguration copy = assertInstanceOf(XMLConfiguration.class, c);
         assertNotNull(conf.getDocument());
         assertNull(copy.getDocument());
 
@@ -573,8 +569,8 @@ public class TestXMLConfiguration {
         new FileHandler(c).save(testSaveConf);
         final XMLConfiguration c2 = new XMLConfiguration();
         load(c2, testSaveConf.getAbsolutePath());
-        assertTrue(c2.getBoolean("test.newProperty"), "New property after clone() was not saved");
-        assertFalse(c2.containsKey("test.orgProperty"), "Property of original config was saved");
+        assertTrue(c2.getBoolean("test.newProperty"));
+        assertFalse(c2.containsKey("test.orgProperty"));
     }
 
     /**
@@ -591,7 +587,7 @@ public class TestXMLConfiguration {
         final FileBasedConfigurationBuilder<XMLConfiguration> builder = new FileBasedConfigurationBuilder<>(XMLConfiguration.class);
         builder.configure(new FileBasedBuilderParametersImpl().setFileName(testProperties));
         XMLConfiguration config = builder.getConfiguration();
-        assertNotNull(config.getProperty("test.short"), "Property not found");
+        assertNotNull(config.getProperty("test.short"));
 
         final Thread testThreads[] = new Thread[THREAD_COUNT];
         for (int i = 0; i < testThreads.length; ++i) {
@@ -601,7 +597,7 @@ public class TestXMLConfiguration {
 
         for (int i = 0; i < LOOP_COUNT; i++) {
             config = builder.getConfiguration();
-            assertNotNull(config.getProperty("test.short"), "Property not found");
+            assertNotNull(config.getProperty("test.short"));
         }
 
         for (final Thread testThread : testThreads) {
@@ -615,8 +611,8 @@ public class TestXMLConfiguration {
     @Test
     public void testCopyNull() {
         conf = new XMLConfiguration(null);
-        assertTrue(conf.isEmpty(), "Not empty");
-        assertEquals("configuration", conf.getRootElementName(), "Wrong root element name");
+        assertTrue(conf.isEmpty());
+        assertEquals("configuration", conf.getRootElementName());
     }
 
     /**
@@ -629,11 +625,11 @@ public class TestXMLConfiguration {
         conf.clear();
         new FileHandler(conf).load(new StringReader(xml));
         XMLConfiguration copy = new XMLConfiguration(conf);
-        assertEquals(rootName, copy.getRootElementName(), "Wrong name of root element");
+        assertEquals(rootName, copy.getRootElementName());
         new FileHandler(copy).save(testSaveConf);
         copy = new XMLConfiguration();
         load(copy, testSaveConf.getAbsolutePath());
-        assertEquals(rootName, copy.getRootElementName(), "Wrong name of root element after save");
+        assertEquals(rootName, copy.getRootElementName());
     }
 
     /**
@@ -646,10 +642,10 @@ public class TestXMLConfiguration {
         conf.setRootElementName(rootName);
         conf.setProperty("test", Boolean.TRUE);
         final XMLConfiguration copy = new XMLConfiguration(conf);
-        assertEquals(rootName, copy.getRootElementName(), "Wrong name of root element");
+        assertEquals(rootName, copy.getRootElementName());
         new FileHandler(copy).save(testSaveConf);
         load(copy, testSaveConf.getAbsolutePath());
-        assertEquals(rootName, copy.getRootElementName(), "Wrong name of root element after save");
+        assertEquals(rootName, copy.getRootElementName());
     }
 
     /**
@@ -741,13 +737,13 @@ public class TestXMLConfiguration {
     public void testEmptyAttribute() throws ConfigurationException {
         final String key = "element3[@value]";
         conf.setProperty(key, "");
-        assertTrue(conf.containsKey(key), "Key not found");
-        assertEquals("", conf.getString(key), "Wrong value");
+        assertTrue(conf.containsKey(key));
+        assertEquals("", conf.getString(key));
         saveTestConfig();
         conf = new XMLConfiguration();
         load(conf, testSaveConf.getAbsolutePath());
-        assertTrue(conf.containsKey(key), "Key not found after save");
-        assertEquals("", conf.getString(key), "Wrong value after save");
+        assertTrue(conf.containsKey(key));
+        assertEquals("", conf.getString(key));
     }
 
     /**
@@ -773,15 +769,15 @@ public class TestXMLConfiguration {
     @Test
     public void testEmptyReload() throws ConfigurationException {
         conf = new XMLConfiguration();
-        assertTrue(conf.isEmpty(), "Newly created configuration not empty");
+        assertTrue(conf.isEmpty());
         saveTestConfig();
         load(conf, testSaveConf.getAbsolutePath());
-        assertTrue(conf.isEmpty(), "Reloaded configuration not empty");
+        assertTrue(conf.isEmpty());
     }
 
     @Test
     public void testGetAttribute() {
-        assertEquals("foo", conf.getProperty("element3[@name]"), "element3[@name]");
+        assertEquals("foo", conf.getProperty("element3[@name]"));
     }
 
     @Test
@@ -810,13 +806,11 @@ public class TestXMLConfiguration {
 
         // test single element
         property = conf.getProperty("element");
-        assertNotNull(property);
         assertInstanceOf(String.class, property);
         assertEquals("value", property);
 
         // test single attribute
         property = conf.getProperty("element3[@name]");
-        assertNotNull(property);
         assertInstanceOf(String.class, property);
         assertEquals("foo", property);
 
@@ -826,38 +820,23 @@ public class TestXMLConfiguration {
 
         // test cdata element
         property = conf.getProperty("test.cdata");
-        assertNotNull(property);
         assertInstanceOf(String.class, property);
         assertEquals("<cdata value>", property);
 
         // test multiple sibling elements
         property = conf.getProperty("list.sublist.item");
-        assertNotNull(property);
-        assertInstanceOf(List.class, property);
-        List<?> list = (List<?>) property;
-        assertEquals(2, list.size());
-        assertEquals("five", list.get(0));
-        assertEquals("six", list.get(1));
+        List<?> list = assertInstanceOf(List.class, property);
+        assertEquals(Arrays.asList("five", "six"), list);
 
         // test multiple, disjoined elements
         property = conf.getProperty("list.item");
-        assertNotNull(property);
-        assertInstanceOf(List.class, property);
-        list = (List<?>) property;
-        assertEquals(4, list.size());
-        assertEquals("one", list.get(0));
-        assertEquals("two", list.get(1));
-        assertEquals("three", list.get(2));
-        assertEquals("four", list.get(3));
+        list = assertInstanceOf(List.class, property);
+        assertEquals(Arrays.asList("one", "two", "three", "four"), list);
 
         // test multiple, disjoined attributes
         property = conf.getProperty("list.item[@name]");
-        assertNotNull(property);
-        assertInstanceOf(List.class, property);
-        list = (List<?>) property;
-        assertEquals(2, list.size());
-        assertEquals("one", list.get(0));
-        assertEquals("three", list.get(1));
+        list = assertInstanceOf(List.class, property);
+        assertEquals(Arrays.asList("one", "three"), list);
     }
 
     @Test
@@ -878,7 +857,7 @@ public class TestXMLConfiguration {
         final XMLConfiguration copy = new XMLConfiguration(conf);
         copy.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         assertEquals("value", copy.getProperty("element"));
-        assertNull(copy.getDocument(), "Document was copied, too");
+        assertNull(copy.getDocument());
 
         new FileHandler(copy).save(testSaveConf);
         checkSavedConfig();
@@ -889,10 +868,10 @@ public class TestXMLConfiguration {
      */
     @Test
     public void testListWithAttributes() {
-        assertEquals(6, conf.getList("attrList.a").size(), "Wrong number of <a> elements");
-        assertEquals("ABC", conf.getString("attrList.a(0)"), "Wrong value of first element");
-        assertEquals("x", conf.getString("attrList.a(0)[@name]"), "Wrong value of first name attribute");
-        assertEquals(6, conf.getList("attrList.a[@name]").size(), "Wrong number of name attributes");
+        assertEquals(6, conf.getList("attrList.a").size());
+        assertEquals("ABC", conf.getString("attrList.a(0)"));
+        assertEquals("x", conf.getString("attrList.a(0)[@name]"));
+        assertEquals(6, conf.getList("attrList.a[@name]").size());
     }
 
     /**
@@ -901,11 +880,11 @@ public class TestXMLConfiguration {
      */
     @Test
     public void testListWithAttributesMultiValue() {
-        assertEquals("1", conf.getString("attrList.a(1)"), "Wrong value of 2nd element");
-        assertEquals("y", conf.getString("attrList.a(1)[@name]"), "Wrong value of 2nd name attribute");
+        assertEquals("1", conf.getString("attrList.a(1)"));
+        assertEquals("y", conf.getString("attrList.a(1)[@name]"));
         for (int i = 1; i <= 3; i++) {
-            assertEquals(i, conf.getInt("attrList.a(" + i + ")"), "Wrong value of element " + (i + 1));
-            assertEquals("y", conf.getString("attrList.a(" + i + ")[@name]"), "Wrong name attribute for element " + i);
+            assertEquals(i, conf.getInt("attrList.a(" + i + ")"));
+            assertEquals("y", conf.getString("attrList.a(" + i + ")[@name]"));
         }
     }
 
@@ -918,9 +897,9 @@ public class TestXMLConfiguration {
         for (int i = 1; i <= 2; i++) {
             final String idxStr = String.format("(%d)", Integer.valueOf(i + 3));
             final String nodeKey = "attrList.a" + idxStr;
-            assertEquals("value" + i, conf.getString(nodeKey), "Wrong value of multi-valued node");
-            assertEquals("u", conf.getString(nodeKey + "[@name]"), "Wrong name attribute at " + i);
-            assertEquals("yes", conf.getString(nodeKey + "[@test]"), "Wrong test attribute at " + i);
+            assertEquals("value" + i, conf.getString(nodeKey));
+            assertEquals("u", conf.getString(nodeKey + "[@name]"));
+            assertEquals("yes", conf.getString(nodeKey + "[@test]"));
         }
     }
 
@@ -930,7 +909,7 @@ public class TestXMLConfiguration {
     @Test
     public void testLoadAndSaveFromFile() throws Exception {
         // If the file does not exist, an empty config is created
-        assertFalse(testSaveConf.exists(), "File exists");
+        assertFalse(testSaveConf.exists());
         final FileBasedConfigurationBuilder<XMLConfiguration> builder = new FileBasedConfigurationBuilder<>(XMLConfiguration.class, null, true);
         builder.configure(new FileBasedBuilderParametersImpl().setFile(testSaveConf));
         conf = builder.getConfiguration();
@@ -1005,8 +984,7 @@ public class TestXMLConfiguration {
         conf.clear();
         load(conf, testProperties);
         final List<Object> expr = conf.getList("expressions[@value]");
-        assertEquals(1, expr.size(), "Wrong list size");
-        assertEquals("a || (b && c) | !d", expr.get(0), "Wrong element 1");
+        assertEquals(Arrays.asList("a || (b && c) | !d"), expr);
     }
 
     /**
@@ -1017,9 +995,7 @@ public class TestXMLConfiguration {
         conf.addProperty("element3[@name]", "bar");
 
         final List<Object> list = conf.getList("element3[@name]");
-        assertNotNull(list, "null list");
-        assertTrue(list.contains("bar"), "'bar' element missing");
-        assertEquals(1, list.size(), "list size");
+        assertEquals(Arrays.asList("bar"), list);
     }
 
     /**
@@ -1027,8 +1003,8 @@ public class TestXMLConfiguration {
      */
     @Test
     public void testPreserveSpace() {
-        assertEquals(" ", conf.getString("space.blank"), "Wrong value of blank");
-        assertEquals(" * * ", conf.getString("space.stars"), "Wrong value of stars");
+        assertEquals(" ", conf.getString("space.blank"));
+        assertEquals(" * * ", conf.getString("space.stars"));
     }
 
     /**
@@ -1036,7 +1012,7 @@ public class TestXMLConfiguration {
      */
     @Test
     public void testPreserveSpaceInvalid() {
-        assertEquals("Some other text", conf.getString("space.testInvalid"), "Invalid not trimmed");
+        assertEquals("Some other text", conf.getString("space.testInvalid"));
     }
 
     /**
@@ -1045,8 +1021,8 @@ public class TestXMLConfiguration {
      */
     @Test
     public void testPreserveSpaceOnElement() {
-        assertEquals(" preserved ", conf.getString("spaceElement"), "Wrong value spaceElement");
-        assertEquals("   ", conf.getString("spaceBlankElement"), "Wrong value of spaceBlankElement");
+        assertEquals(" preserved ", conf.getString("spaceElement"));
+        assertEquals("   ", conf.getString("spaceBlankElement"));
     }
 
     /**
@@ -1054,7 +1030,7 @@ public class TestXMLConfiguration {
      */
     @Test
     public void testPreserveSpaceOverride() {
-        assertEquals("Some text", conf.getString("space.description"), "Not trimmed");
+        assertEquals("Some text", conf.getString("space.description"));
     }
 
     /**
@@ -1065,7 +1041,7 @@ public class TestXMLConfiguration {
         final SynchronizerTestImpl sync = new SynchronizerTestImpl();
         conf.setSynchronizer(sync);
         conf.setPublicID(PUBLIC_ID);
-        assertEquals(PUBLIC_ID, conf.getPublicID(), "PublicID not set");
+        assertEquals(PUBLIC_ID, conf.getPublicID());
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE, Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -1078,7 +1054,7 @@ public class TestXMLConfiguration {
         conf = new XMLConfiguration();
         final String content = "<configuration><test>1</test></configuration>";
         final ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes());
-        final ConfigurationException e = assertThrows(ConfigurationException.class, () -> conf.read(bis), "No exception thrown!");
+        final ConfigurationException e = assertThrows(ConfigurationException.class, () -> conf.read(bis));
         assertThat(e.getMessage(), containsString("FileHandler"));
     }
 
@@ -1112,7 +1088,7 @@ public class TestXMLConfiguration {
         conf = new XMLConfiguration(hc);
         saveTestConfig();
         final XMLConfiguration checkConfig = checkSavedConfig();
-        assertEquals("element2", checkConfig.getRootElementName(), "Wrong name of root element");
+        assertEquals("element2", checkConfig.getRootElementName());
     }
 
     /**
@@ -1188,7 +1164,7 @@ public class TestXMLConfiguration {
         saveTestConfig();
         final XMLConfiguration conf2 = new XMLConfiguration();
         load(conf2, testSaveConf.getAbsolutePath());
-        assertEquals("C:\\Temp", conf2.getString("path"), "Wrong windows path");
+        assertEquals("C:\\Temp", conf2.getString("path"));
     }
 
     /**
@@ -1244,11 +1220,11 @@ public class TestXMLConfiguration {
         conf = new XMLConfiguration();
         load(conf, "testDtdPublic.xml");
 
-        assertEquals(PUBLIC_ID, conf.getPublicID(), "Wrong public ID");
-        assertEquals(SYSTEM_ID, conf.getSystemID(), "Wrong system ID");
+        assertEquals(PUBLIC_ID, conf.getPublicID());
+        assertEquals(SYSTEM_ID, conf.getSystemID());
         final StringWriter out = new StringWriter();
         new FileHandler(conf).save(out);
-        assertThat("Did not find DOCTYPE", out.toString(), containsString(DOCTYPE));
+        assertThat(out.toString(), containsString(DOCTYPE));
     }
 
     /**
@@ -1257,13 +1233,13 @@ public class TestXMLConfiguration {
      */
     @Test
     public void testSaveWithDoctypeIDs() throws ConfigurationException {
-        assertNull(conf.getPublicID(), "A public ID was found");
-        assertNull(conf.getSystemID(), "A system ID was found");
+        assertNull(conf.getPublicID());
+        assertNull(conf.getSystemID());
         conf.setPublicID(PUBLIC_ID);
         conf.setSystemID(SYSTEM_ID);
         final StringWriter out = new StringWriter();
         new FileHandler(conf).save(out);
-        assertThat("Did not find DOCTYPE", out.toString(), containsString(DOCTYPE + "testconfig" + DOCTYPE_DECL));
+        assertThat(out.toString(), containsString(DOCTYPE + "testconfig" + DOCTYPE_DECL));
     }
 
     /**
@@ -1278,7 +1254,7 @@ public class TestXMLConfiguration {
 
         final StringWriter out = new StringWriter();
         handler.save(out);
-        assertThat("Encoding was not written to file", out.toString(), containsString("encoding=\"" + ENCODING + "\""));
+        assertThat(out.toString(), containsString("encoding=\"" + ENCODING + "\""));
     }
 
     /**
@@ -1289,7 +1265,7 @@ public class TestXMLConfiguration {
     public void testSaveWithInvalidTransformerFactory() {
         System.setProperty(PROP_FACTORY, "an.invalid.Class");
         try {
-            assertThrows(TransformerFactoryConfigurationError.class, () -> saveTestConfig(), "Could save with invalid TransformerFactory!");
+            assertThrows(TransformerFactoryConfigurationError.class, () -> saveTestConfig());
         } finally {
             System.getProperties().remove(PROP_FACTORY);
         }
@@ -1313,7 +1289,7 @@ public class TestXMLConfiguration {
     @Test
     public void testSaveWithRootAttributes() throws ConfigurationException {
         conf.setProperty("[@xmlns:ex]", "http://example.com/");
-        assertEquals("http://example.com/", conf.getString("[@xmlns:ex]"), "Root attribute not set");
+        assertEquals("http://example.com/", conf.getString("[@xmlns:ex]"));
         final FileHandler handler = new FileHandler(conf);
 
         final StringWriter out = new StringWriter();
@@ -1325,7 +1301,7 @@ public class TestXMLConfiguration {
     public void testSaveWithRootAttributes_ByHand() throws ConfigurationException {
         conf = new XMLConfiguration();
         conf.addProperty("[@xmlns:foo]", "http://example.com/");
-        assertEquals("http://example.com/", conf.getString("[@xmlns:foo]"), "Root attribute not set");
+        assertEquals("http://example.com/", conf.getString("[@xmlns:foo]"));
         final FileHandler handler = new FileHandler(conf);
 
         final StringWriter out = new StringWriter();
@@ -1367,21 +1343,20 @@ public class TestXMLConfiguration {
         conf.setSchemaValidation(true);
         load(conf, testFile2);
         conf.setProperty("Employee.Email", "JohnDoe@test.org");
-        final Exception e = assertThrows(Exception.class, conf::validate, "No validation failure on save");
+        final Exception e = assertThrows(Exception.class, conf::validate);
         final Throwable cause = e.getCause();
-        assertNotNull(cause, "No cause for exception on save");
-        assertInstanceOf(SAXParseException.class, cause, "Incorrect exception on save");
+        assertInstanceOf(SAXParseException.class, cause);
     }
 
     @Test
     public void testSetAttribute() {
         // replace an existing attribute
         conf.setProperty("element3[@name]", "bar");
-        assertEquals("bar", conf.getProperty("element3[@name]"), "element3[@name]");
+        assertEquals("bar", conf.getProperty("element3[@name]"));
 
         // set a new attribute
         conf.setProperty("foo[@bar]", "value");
-        assertEquals("value", conf.getProperty("foo[@bar]"), "foo[@bar]");
+        assertEquals("value", conf.getProperty("foo[@bar]"));
 
         conf.setProperty("name1", "value1");
         assertEquals("value1", conf.getProperty("name1"));
@@ -1391,8 +1366,8 @@ public class TestXMLConfiguration {
     public void testSetProperty() throws Exception {
         conf.setProperty("element.string", "hello");
 
-        assertEquals("hello", conf.getString("element.string"), "'element.string'");
-        assertEquals("hello", conf.getProperty("element.string"), "XML value of element.string");
+        assertEquals("hello", conf.getString("element.string"));
+        assertEquals("hello", conf.getProperty("element.string"));
     }
 
     /**
@@ -1407,7 +1382,7 @@ public class TestXMLConfiguration {
         saveTestConfig();
         final XMLConfiguration conf2 = new XMLConfiguration();
         load(conf2, testSaveConf.getAbsolutePath());
-        assertEquals(list, conf2.getProperty(prop), "Wrong list property");
+        assertEquals(list, conf2.getProperty(prop));
     }
 
     /**
@@ -1416,25 +1391,25 @@ public class TestXMLConfiguration {
     @Test
     public void testSetRootAttribute() throws ConfigurationException {
         conf.setProperty("[@test]", "true");
-        assertEquals("true", conf.getString("[@test]"), "Root attribute not set");
+        assertEquals("true", conf.getString("[@test]"));
         saveTestConfig();
         XMLConfiguration checkConf = checkSavedConfig();
-        assertTrue(checkConf.containsKey("[@test]"), "Attribute not found after save");
+        assertTrue(checkConf.containsKey("[@test]"));
         checkConf.setProperty("[@test]", "newValue");
         conf = checkConf;
         saveTestConfig();
         checkConf = checkSavedConfig();
-        assertEquals("newValue", checkConf.getString("[@test]"), "Attribute not modified after save");
+        assertEquals("newValue", checkConf.getString("[@test]"));
     }
 
     @Test
     public void testSetRootNamespace() throws ConfigurationException {
         conf.addProperty("[@xmlns:foo]", "http://example.com/");
         conf.addProperty("foo:bar", "foobar");
-        assertEquals("http://example.com/", conf.getString("[@xmlns:foo]"), "Root attribute not set");
+        assertEquals("http://example.com/", conf.getString("[@xmlns:foo]"));
         saveTestConfig();
         final XMLConfiguration checkConf = checkSavedConfig();
-        assertTrue(checkConf.containsKey("[@xmlns:foo]"), "Attribute not found after save");
+        assertTrue(checkConf.containsKey("[@xmlns:foo]"));
         checkConf.setProperty("[@xmlns:foo]", "http://example.net/");
     }
 
@@ -1484,7 +1459,7 @@ public class TestXMLConfiguration {
         final SynchronizerTestImpl sync = new SynchronizerTestImpl();
         conf.setSynchronizer(sync);
         conf.setSystemID(SYSTEM_ID);
-        assertEquals(SYSTEM_ID, conf.getSystemID(), "SystemID not set");
+        assertEquals(SYSTEM_ID, conf.getSystemID());
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE, Methods.BEGIN_READ, Methods.END_READ);
     }
 
@@ -1559,7 +1534,7 @@ public class TestXMLConfiguration {
     @Test
     public void testXPathExpressionEngine() {
         conf.setExpressionEngine(new XPathExpressionEngine());
-        assertEquals("foo\"bar", conf.getString("test[1]/entity/@name"), "Wrong attribute value");
+        assertEquals("foo\"bar", conf.getString("test[1]/entity/@name"));
         conf.clear();
         assertNull(conf.getString("test[1]/entity/@name"));
     }

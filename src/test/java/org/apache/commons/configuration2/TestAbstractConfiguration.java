@@ -19,6 +19,7 @@ package org.apache.commons.configuration2;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -29,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -62,33 +64,33 @@ public abstract class TestAbstractConfiguration {
     public void testAddPropertyDirect() {
         final AbstractConfiguration config = getConfiguration();
         config.addPropertyDirect("key3", "value3");
-        assertEquals("value3", config.getProperty("key3"), "key3");
+        assertEquals("value3", config.getProperty("key3"));
 
         config.addPropertyDirect("key3", "value4");
         config.addPropertyDirect("key3", "value5");
         final List<Object> list = config.getList("key3");
-        assertNotNull(list, "no list found for the 'key3' property");
+        assertNotNull(list);
 
         final List<Object> expected = new ArrayList<>();
         expected.add("value3");
         expected.add("value4");
         expected.add("value5");
 
-        assertEquals(expected, list, "values for the 'key3' property");
+        assertEquals(expected, list);
     }
 
     @Test
     public void testClearProperty() {
         final Configuration config = getConfiguration();
         config.clearProperty("key2");
-        assertFalse(config.containsKey("key2"), "key2 not cleared");
+        assertFalse(config.containsKey("key2"));
     }
 
     @Test
     public void testContainsKey() {
         final Configuration config = getConfiguration();
-        assertTrue(config.containsKey("key1"), "key1 not found");
-        assertFalse(config.containsKey("key3"), "key3 found");
+        assertTrue(config.containsKey("key1"));
+        assertFalse(config.containsKey("key3"));
     }
 
     /**
@@ -97,11 +99,10 @@ public abstract class TestAbstractConfiguration {
     @Test
     public void testGetBigIntegerConversion() {
         final Configuration config = getConfiguration();
-        final ConversionException cex = assertThrows(ConversionException.class, () -> config.getBigInteger("key1"),
-                "No conversion exception thrown!");
-        assertTrue(cex.getMessage().contains("'key1'"), "Key not found in exception message: " + cex);
-        assertTrue(cex.getMessage().contains(BigInteger.class.getName()), "Target class not found in exception message: " + cex);
-        assertTrue(cex.getMessage().contains(config.getString("key1")), "Value not found in exception message: " + cex);
+        final ConversionException cex = assertThrows(ConversionException.class, () -> config.getBigInteger("key1"));
+        assertThat(cex.getMessage(), containsString("'key1'"));
+        assertThat(cex.getMessage(), containsString(BigInteger.class.getName()));
+        assertThat(cex.getMessage(), containsString(config.getString("key1")));
     }
 
     @Test
@@ -111,8 +112,8 @@ public abstract class TestAbstractConfiguration {
 
         final String[] expectedKeys = {"key1", "key2", "list", "listesc"};
 
-        assertNotNull(keys, "null iterator");
-        assertTrue(keys.hasNext(), "empty iterator");
+        assertNotNull(keys);
+        assertTrue(keys.hasNext());
 
         final List<String> actualKeys = new ArrayList<>();
         while (keys.hasNext()) {
@@ -125,16 +126,16 @@ public abstract class TestAbstractConfiguration {
     @Test
     public void testGetProperty() {
         final Configuration config = getConfiguration();
-        assertEquals("value1", config.getProperty("key1"), "key1");
-        assertEquals("value2", config.getProperty("key2"), "key2");
-        assertNull(config.getProperty("key3"), "key3");
+        assertEquals("value1", config.getProperty("key1"));
+        assertEquals("value2", config.getProperty("key2"));
+        assertNull(config.getProperty("key3"));
     }
 
     @Test
     public void testIsEmpty() {
         final Configuration config = getConfiguration();
-        assertFalse(config.isEmpty(), "the configuration is empty");
-        assertTrue(getEmptyConfiguration().isEmpty(), "the configuration is not empty");
+        assertFalse(config.isEmpty());
+        assertTrue(getEmptyConfiguration().isEmpty());
     }
 
     @Test
@@ -142,10 +143,8 @@ public abstract class TestAbstractConfiguration {
         final Configuration config = getConfiguration();
 
         final List<?> list = config.getList("list");
-        assertNotNull(config.getProperty("list"), "list not found");
-        assertEquals(2, list.size(), "list size");
-        assertTrue(list.contains("value1"), "'value1' is not in the list");
-        assertTrue(list.contains("value2"), "'value2' is not in the list");
+        assertNotNull(config.getProperty("list"));
+        assertEquals(Arrays.asList("value1", "value2"), list);
     }
 
     /**
@@ -153,7 +152,7 @@ public abstract class TestAbstractConfiguration {
      */
     @Test
     public void testListEscaped() {
-        assertEquals("value1,value2", getConfiguration().getString("listesc"), "Wrong value for escaped list");
+        assertEquals("value1,value2", getConfiguration().getString("listesc"));
     }
 
     /**
@@ -162,19 +161,19 @@ public abstract class TestAbstractConfiguration {
     @Test
     public void testSetLogger() {
         final AbstractConfiguration config = getEmptyConfiguration();
-        assertNotNull(config.getLogger(), "Default logger is null");
+        assertNotNull(config.getLogger());
         final ConfigurationLogger log = new ConfigurationLogger(config.getClass());
         config.setLogger(log);
-        assertSame(log, config.getLogger(), "Logger was not set");
+        assertSame(log, config.getLogger());
     }
 
     @Test
     public void testSize() {
-        assertEquals(4, getConfiguration().size(), "Wrong size");
+        assertEquals(4, getConfiguration().size());
     }
 
     @Test
     public void testSizeEmpty() {
-        assertEquals(0, getEmptyConfiguration().size(), "Wrong size of empty configuration");
+        assertEquals(0, getEmptyConfiguration().size());
     }
 }

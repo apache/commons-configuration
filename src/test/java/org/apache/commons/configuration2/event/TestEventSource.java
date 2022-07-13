@@ -80,8 +80,8 @@ public class TestEventSource {
         final EventListenerTestImpl l = new EventListenerTestImpl(this);
         source.addEventListener(ConfigurationEvent.ANY, l);
         final Collection<EventListener<? super ConfigurationEvent>> listeners = source.getEventListeners(ConfigurationEvent.ANY);
-        assertEquals(1, listeners.size(), "Wrong number of listeners");
-        assertTrue(listeners.contains(l), "Listener not in list");
+        assertEquals(1, listeners.size());
+        assertTrue(listeners.contains(l));
     }
 
     /**
@@ -108,8 +108,8 @@ public class TestEventSource {
 
         source.clearErrorListeners();
         final List<EventListenerRegistrationData<?>> regs = source.getEventListenerRegistrations();
-        assertEquals(1, regs.size(), "Wrong number of event listener registrations");
-        assertSame(cl, regs.get(0).getListener(), "Wrong remaining listener");
+        assertEquals(1, regs.size());
+        assertSame(cl, regs.get(0).getListener());
     }
 
     /**
@@ -121,8 +121,8 @@ public class TestEventSource {
         source.addEventListener(ConfigurationEvent.ANY_HIERARCHICAL, new EventListenerTestImpl(source));
 
         source.clearEventListeners();
-        assertTrue(source.getEventListeners(ConfigurationEvent.ANY).isEmpty(), "Got ANY listeners");
-        assertTrue(source.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL).isEmpty(), "Got HIERARCHICAL listeners");
+        assertTrue(source.getEventListeners(ConfigurationEvent.ANY).isEmpty());
+        assertTrue(source.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL).isEmpty());
     }
 
     /**
@@ -132,7 +132,7 @@ public class TestEventSource {
     public void testClone() throws CloneNotSupportedException {
         source.addEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(source));
         final BaseEventSource copy = (BaseEventSource) source.clone();
-        assertTrue(copy.getEventListenerRegistrations().isEmpty(), "Configuration listeners registered for clone");
+        assertTrue(copy.getEventListenerRegistrations().isEmpty());
     }
 
     /**
@@ -148,12 +148,12 @@ public class TestEventSource {
         final BaseEventSource source2 = new BaseEventSource();
         source.copyEventListeners(source2);
         Collection<EventListener<? super ConfigurationEvent>> listeners = source2.getEventListeners(ConfigurationEvent.ANY_HIERARCHICAL);
-        assertEquals(2, listeners.size(), "Wrong number of listeners (1)");
-        assertTrue(listeners.contains(l1), "l1 not found");
-        assertTrue(listeners.contains(l2), "l2 not found");
+        assertEquals(2, listeners.size());
+        assertTrue(listeners.contains(l1));
+        assertTrue(listeners.contains(l2));
         listeners = source2.getEventListeners(ConfigurationEvent.ANY);
-        assertEquals(1, listeners.size(), "Wrong number of listeners (2)");
-        assertTrue(listeners.contains(l1), "Wrong listener");
+        assertEquals(1, listeners.size());
+        assertTrue(listeners.contains(l1));
     }
 
     /**
@@ -180,14 +180,12 @@ public class TestEventSource {
         source.fireError(ConfigurationErrorEvent.WRITE, ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE, testException);
         lstRead.done();
         assertEquals(testException,
-                lstWrite.checkEvent(ConfigurationErrorEvent.WRITE, ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE),
-                "Wrong exception (1)");
+                lstWrite.checkEvent(ConfigurationErrorEvent.WRITE, ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE));
         lstWrite.done();
         assertEquals(testException,
-                lstAll.checkEvent(ConfigurationErrorEvent.WRITE, ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE),
-                "Wrong exception (2)");
+                lstAll.checkEvent(ConfigurationErrorEvent.WRITE, ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE));
         lstAll.done();
-        assertEquals(1, source.errorCount, "Wrong number of error events created");
+        assertEquals(1, source.errorCount);
     }
 
     /**
@@ -196,7 +194,7 @@ public class TestEventSource {
     @Test
     public void testFireErrorNoListeners() {
         source.fireError(ConfigurationErrorEvent.ANY, ConfigurationEvent.ANY, TEST_PROPNAME, TEST_PROPVALUE, new Exception());
-        assertEquals(0, source.errorCount, "An error event object was created");
+        assertEquals(0, source.errorCount);
     }
 
     /**
@@ -220,7 +218,7 @@ public class TestEventSource {
         source.addEventListener(ConfigurationEvent.ANY, l);
         source.setDetailEvents(false);
         source.fireEvent(ConfigurationEvent.SET_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE, false);
-        assertEquals(0, source.eventCount, "Event object was created");
+        assertEquals(0, source.eventCount);
         l.done();
     }
 
@@ -230,7 +228,7 @@ public class TestEventSource {
     @Test
     public void testFireEventNoListeners() {
         source.fireEvent(ConfigurationEvent.ADD_NODES, TEST_PROPNAME, TEST_PROPVALUE, false);
-        assertEquals(0, source.eventCount, "An event object was created");
+        assertEquals(0, source.eventCount);
     }
 
     /**
@@ -241,7 +239,7 @@ public class TestEventSource {
     public void testGetEventListenersAddNew() {
         final Collection<EventListener<? super ConfigurationEvent>> list = source.getEventListeners(ConfigurationEvent.ANY);
         source.addEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(null));
-        assertTrue(list.isEmpty(), "Listener snapshot not empty");
+        assertTrue(list.isEmpty());
     }
 
     /**
@@ -259,9 +257,9 @@ public class TestEventSource {
      */
     @Test
     public void testInit() {
-        assertTrue(source.getEventListenerRegistrations().isEmpty(), "Listeners list is not empty");
-        assertFalse(source.removeEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(null)), "Removing listener");
-        assertFalse(source.isDetailEvents(), "Detail events are enabled");
+        assertTrue(source.getEventListenerRegistrations().isEmpty());
+        assertFalse(source.removeEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(null)));
+        assertFalse(source.isDetailEvents());
     }
 
     /**
@@ -270,12 +268,12 @@ public class TestEventSource {
     @Test
     public void testRemoveEventListener() {
         final EventListenerTestImpl l = new EventListenerTestImpl(this);
-        assertFalse(source.removeEventListener(ConfigurationEvent.ANY, l), "Listener can be removed?");
+        assertFalse(source.removeEventListener(ConfigurationEvent.ANY, l));
         source.addEventListener(ConfigurationEvent.ADD_NODES, new EventListenerTestImpl(this));
         source.addEventListener(ConfigurationEvent.ANY, l);
-        assertFalse(source.removeEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(null)), "Unknown listener can be removed");
-        assertTrue(source.removeEventListener(ConfigurationEvent.ANY, l), "Could not remove listener");
-        assertFalse(source.getEventListeners(ConfigurationEvent.ANY).contains(l), "Listener still in list");
+        assertFalse(source.removeEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(null)));
+        assertTrue(source.removeEventListener(ConfigurationEvent.ANY, l));
+        assertFalse(source.getEventListeners(ConfigurationEvent.ANY).contains(l));
     }
 
     /**
@@ -295,7 +293,7 @@ public class TestEventSource {
         source.addEventListener(ConfigurationEvent.ANY, l);
         source.fireEvent(ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE, false);
         l.checkEvent(ConfigurationEvent.ADD_PROPERTY, TEST_PROPNAME, TEST_PROPVALUE, false);
-        assertEquals(1, source.getEventListeners(ConfigurationEvent.ANY).size(), "Listener was not removed");
+        assertEquals(1, source.getEventListeners(ConfigurationEvent.ANY).size());
     }
 
     /**
@@ -304,8 +302,8 @@ public class TestEventSource {
     @Test
     public void testRemoveNullEventListener() {
         source.addEventListener(ConfigurationEvent.ANY, new EventListenerTestImpl(null));
-        assertFalse(source.removeEventListener(ConfigurationEvent.ANY, null), "Null listener can be removed");
-        assertEquals(1, source.getEventListeners(ConfigurationEvent.ANY).size(), "Listener list was modified");
+        assertFalse(source.removeEventListener(ConfigurationEvent.ANY, null));
+        assertEquals(1, source.getEventListeners(ConfigurationEvent.ANY).size());
     }
 
     /**
@@ -314,11 +312,11 @@ public class TestEventSource {
     @Test
     public void testSetDetailEvents() {
         source.setDetailEvents(true);
-        assertTrue(source.isDetailEvents(), "Detail events are disabled");
+        assertTrue(source.isDetailEvents());
         source.setDetailEvents(true);
         source.setDetailEvents(false);
-        assertTrue(source.isDetailEvents(), "Detail events are disabled again");
+        assertTrue(source.isDetailEvents());
         source.setDetailEvents(false);
-        assertFalse(source.isDetailEvents(), "Detail events are still enabled");
+        assertFalse(source.isDetailEvents());
     }
 }

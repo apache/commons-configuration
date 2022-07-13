@@ -51,6 +51,6 @@ public class TestEnvironmentLookup {
      */
     @Test
     public void testLookupNonExisting() {
-        assertNull(lookup.lookup("a non existing variable!"), "Got result for non existing environment variable");
+        assertNull(lookup.lookup("a non existing variable!"));
     }
 }

@@ -20,6 +20,7 @@ package org.apache.commons.configuration2.web;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -103,15 +104,15 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration {
         final BaseConfiguration config = new BaseConfiguration();
         config.addProperty(listKey, values);
 
-        assertEquals(values.length, config.getList(listKey).size(), "Wrong number of list elements");
+        assertEquals(values.length, config.getList(listKey).size());
 
         final Configuration c = createConfiguration(config);
         final List<?> v = c.getList(listKey);
 
-        assertEquals(values.length, v.size(), "Wrong number of elements in list");
-
+        final List<String> expected = new ArrayList<>();
         for (int i = 0; i < values.length; i++) {
-            assertEquals(values[i].replace("\\", ""), v.get(i), "Wrong value at index " + i);
+            expected.add(values[i].replace("\\", ""));
         }
+        assertEquals(expected, v);
     }
 }
